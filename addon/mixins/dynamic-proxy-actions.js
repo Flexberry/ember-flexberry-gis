@@ -121,10 +121,11 @@ export default Ember.Mixin.create({
 
       // Retrieve & validate parentComponent.
       let parentComponent = this.get('targetObject');
+      let parentComponentSendAction = this.get('targetObject.sendAction');
       Ember.assert(
-        `Wrong type of \`targetObject.sendAction\` propery: actual type is ${Ember.typeOf(parentComponent.sendAction)}, ` +
+        `Wrong type of \`targetObject.sendAction\` propery: actual type is ${Ember.typeOf(parentComponentSendAction)}, ` +
         `but \`function\` is expected.`,
-        Ember.typeOf(parentComponent.sendAction) === 'function');
+        Ember.typeOf(parentComponentSendAction) === 'function');
 
       // Call action's with names specified in proxy-actions on parent component.
       // Here we can be sure that all dynamic proxy-actions are fully valid,
