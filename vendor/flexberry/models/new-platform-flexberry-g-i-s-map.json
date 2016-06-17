@@ -1,0 +1,234 @@
+﻿{
+  "modelName": "new-platform-flexberry-g-i-s-map",
+  "parentModelName": null,
+  "parentClassName": null,
+  "attrs": [
+    {
+      "name": "name",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": ""
+    },
+    {
+      "name": "center",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "zoom",
+      "type": "number",
+      "flexberryType": "int",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "public",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": true,
+      "defaultValue": ""
+    },
+    {
+      "name": "coordinateReferenceSystem",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "createTime",
+      "type": "string",
+      "flexberryType": "AuditNullableDateTime",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "creator",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "editTime",
+      "type": "string",
+      "flexberryType": "AuditNullableDateTime",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "editor",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    }
+  ],
+  "belongsTo": [],
+  "hasMany": [
+    {
+      "name": "layers",
+      "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
+      "inverse": "map"
+    }
+  ],
+  "projections": [
+    {
+      "name": "AuditView",
+      "modelName": "new-platform-flexberry-g-i-s-map",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Name",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "center",
+          "caption": "Center",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "zoom",
+          "caption": "Zoom",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "public",
+          "caption": "Public",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Coordinate reference system",
+          "hidden": false,
+          "index": 4
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": [
+        {
+          "projectionName": "AuditView",
+          "caption": "",
+          "name": "layers",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
+          "inverse": null
+        }
+      ]
+    },
+    {
+      "name": "MapE",
+      "modelName": "new-platform-flexberry-g-i-s-map",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Name",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "center",
+          "caption": "Center",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "zoom",
+          "caption": "Zoom",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "public",
+          "caption": "Public",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Coordinate reference system",
+          "hidden": false,
+          "index": 4
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": [
+        {
+          "projectionName": "MapLayerE",
+          "caption": "Layers",
+          "name": "layers",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
+          "inverse": null
+        }
+      ]
+    },
+    {
+      "name": "MapL",
+      "modelName": "new-platform-flexberry-g-i-s-map",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Name",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "center",
+          "caption": "Center",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "zoom",
+          "caption": "Zoom",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "public",
+          "caption": "Public",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Coordinate reference system",
+          "hidden": false,
+          "index": 4
+        },
+        {
+          "name": "createTime",
+          "caption": "Создание",
+          "hidden": false,
+          "index": 5
+        },
+        {
+          "name": "creator",
+          "caption": "Создатель",
+          "hidden": false,
+          "index": 6
+        },
+        {
+          "name": "editTime",
+          "caption": "Редактирование",
+          "hidden": false,
+          "index": 7
+        },
+        {
+          "name": "editor",
+          "caption": "Редактор",
+          "hidden": false,
+          "index": 8
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
+    }
+  ]
+}

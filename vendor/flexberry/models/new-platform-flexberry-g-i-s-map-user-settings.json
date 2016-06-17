@@ -1,0 +1,151 @@
+﻿{
+  "modelName": "new-platform-flexberry-g-i-s-map-user-settings",
+  "parentModelName": null,
+  "parentClassName": null,
+  "attrs": [
+    {
+      "name": "center",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "zoom",
+      "type": "number",
+      "flexberryType": "int",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "layerVisibility",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "user",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": ""
+    }
+  ],
+  "belongsTo": [
+    {
+      "name": "map",
+      "relatedTo": "new-platform-flexberry-g-i-s-map",
+      "inverse": null
+    }
+  ],
+  "hasMany": [],
+  "projections": [
+    {
+      "name": "MapUserSettingsE",
+      "modelName": "new-platform-flexberry-g-i-s-map-user-settings",
+      "attrs": [
+        {
+          "name": "center",
+          "caption": "Center",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "zoom",
+          "caption": "Zoom",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "layerVisibility",
+          "caption": "Layer visibility",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "user",
+          "caption": "User",
+          "hidden": false,
+          "index": 3
+        }
+      ],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "Map",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [
+            {
+              "name": "name",
+              "caption": "Name",
+              "hidden": false,
+              "index": 5
+            }
+          ],
+          "index": 4,
+          "caption": "Map",
+          "name": "map",
+          "relatedTo": "new-platform-flexberry-g-i-s-map",
+          "inverse": null
+        }
+      ],
+      "hasMany": []
+    },
+    {
+      "name": "MapUserSettingsL",
+      "modelName": "new-platform-flexberry-g-i-s-map-user-settings",
+      "attrs": [
+        {
+          "name": "center",
+          "caption": "Center",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "zoom",
+          "caption": "Zoom",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "layerVisibility",
+          "caption": "Layer visibility",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "user",
+          "caption": "User",
+          "hidden": false,
+          "index": 3
+        }
+      ],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "Map",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [
+            {
+              "name": "name",
+              "caption": "Name",
+              "hidden": false,
+              "index": 4
+            }
+          ],
+          "index": -1,
+          "caption": "Name",
+          "name": "map",
+          "relatedTo": "new-platform-flexberry-g-i-s-map",
+          "inverse": null
+        }
+      ],
+      "hasMany": []
+    }
+  ]
+}

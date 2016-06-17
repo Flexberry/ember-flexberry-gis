@@ -1,0 +1,128 @@
+﻿{
+  "modelName": "new-platform-flexberry-g-i-s-map-layer",
+  "parentModelName": null,
+  "parentClassName": null,
+  "attrs": [
+    {
+      "name": "name",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": ""
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": ""
+    },
+    {
+      "name": "visibility",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": true,
+      "defaultValue": "true"
+    },
+    {
+      "name": "settings",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "coordinateReferenceSystem",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    }
+  ],
+  "belongsTo": [
+    {
+      "name": "map",
+      "relatedTo": "new-platform-flexberry-g-i-s-map",
+      "inverse": "layers"
+    }
+  ],
+  "hasMany": [],
+  "projections": [
+    {
+      "name": "AuditView",
+      "modelName": "new-platform-flexberry-g-i-s-map-layer",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Name",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "type",
+          "caption": "Type",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "visibility",
+          "caption": "Visibility",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "settings",
+          "caption": "Settings",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Coordinate reference system",
+          "hidden": false,
+          "index": 4
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
+    },
+    {
+      "name": "MapLayerE",
+      "modelName": "new-platform-flexberry-g-i-s-map-layer",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Name",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "type",
+          "caption": "Type",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "visibility",
+          "caption": "Visibility",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "settings",
+          "caption": "Settings",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Coordinate reference system",
+          "hidden": false,
+          "index": 4
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+﻿{
+  "modelName": "new-platform-flexberry-g-i-s-layer-metadata",
+  "parentModelName": null,
+  "parentClassName": null,
+  "attrs": [
+    {
+      "name": "name",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": ""
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": ""
+    },
+    {
+      "name": "coordinateReferenceSystem",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "settings",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "createTime",
+      "type": "string",
+      "flexberryType": "AuditNullableDateTime",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "creator",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "editTime",
+      "type": "string",
+      "flexberryType": "AuditNullableDateTime",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "editor",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    }
+  ],
+  "belongsTo": [],
+  "hasMany": [],
+  "projections": [
+    {
+      "name": "AuditView",
+      "modelName": "new-platform-flexberry-g-i-s-layer-metadata",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Name",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "type",
+          "caption": "Type",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Coordinate reference system",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "settings",
+          "caption": "Settings",
+          "hidden": false,
+          "index": 3
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
+    },
+    {
+      "name": "LayerMetadataE",
+      "modelName": "new-platform-flexberry-g-i-s-layer-metadata",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Name",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "type",
+          "caption": "Type",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Coordinate reference system",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "settings",
+          "caption": "Settings",
+          "hidden": false,
+          "index": 3
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
+    },
+    {
+      "name": "LayerMetadataL",
+      "modelName": "new-platform-flexberry-g-i-s-layer-metadata",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Name",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "type",
+          "caption": "Type",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Coordinate reference system",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "settings",
+          "caption": "Settings",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "createTime",
+          "caption": "Создание",
+          "hidden": false,
+          "index": 4
+        },
+        {
+          "name": "creator",
+          "caption": "Создатель",
+          "hidden": false,
+          "index": 5
+        },
+        {
+          "name": "editTime",
+          "caption": "Редактирование",
+          "hidden": false,
+          "index": 6
+        },
+        {
+          "name": "editor",
+          "caption": "Редактор",
+          "hidden": false,
+          "index": 7
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
+    }
+  ]
+}

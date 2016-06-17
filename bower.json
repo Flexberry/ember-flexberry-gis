@@ -9,6 +9,7 @@
     "blueimp-file-upload": "9.11.2",
     "jquery-file-download": "1.4.4",
     "devicejs": "0.2.7",
-    "semantic-ui": "^2.1.8"
+    "semantic-ui": "^2.1.8",
+    "leaflet": "~0.7.7"
   }
 }
