@@ -14,12 +14,14 @@ module.exports = function(environment) {
     },
 
     APP: {
+      backendUrl: '/api'
       // Here you can pass flags/options to your application instance
       // when it is created
     }
   };
 
   if (environment === 'development') {
+    ENV.APP.backendUrl = '/api/';
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
