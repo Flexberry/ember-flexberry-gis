@@ -1,7 +1,7 @@
 import DS from 'ember-data';
-import __BaseModel from './base';
+import BaseModel from 'ember-flexberry/models/base';
 import Proj from 'ember-flexberry-data';
-let Model = __BaseModel.extend({
+let Model = BaseModel.extend({
   name: DS.attr('string'),
   type: DS.attr('string'),
   visibility: DS.attr('boolean'),

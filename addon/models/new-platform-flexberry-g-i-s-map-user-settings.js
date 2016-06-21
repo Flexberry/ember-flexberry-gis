@@ -1,7 +1,7 @@
 import DS from 'ember-data';
-import __BaseModel from './base';
+import BaseModel from 'ember-flexberry/models/base';
 import Proj from 'ember-flexberry-data';
-let Model = __BaseModel.extend({
+let Model = BaseModel.extend({
   center: DS.attr('string'),
   zoom: DS.attr('number'),
   layerVisibility: DS.attr('string'),
