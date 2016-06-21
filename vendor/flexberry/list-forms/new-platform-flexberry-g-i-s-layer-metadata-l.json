@@ -1,0 +1,13 @@
+﻿{
+  "newForm": "new-platform-flexberry-g-i-s-layer-metadata-e",
+  "editForm": "new-platform-flexberry-g-i-s-layer-metadata-e",
+  "caption": null,
+  "name": "NewPlatformFlexberryGISLayerMetadataL",
+  "attrs": [],
+  "projections": [
+    {
+      "modelName": "new-platform-flexberry-g-i-s-layer-metadata",
+      "modelProjection": "LayerMetadataL"
+    }
+  ]
+}

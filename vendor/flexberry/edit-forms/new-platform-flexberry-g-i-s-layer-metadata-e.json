@@ -1,0 +1,12 @@
+﻿{
+  "propertyLookup": [],
+  "caption": null,
+  "name": "NewPlatformFlexberryGISLayerMetadataE",
+  "attrs": [],
+  "projections": [
+    {
+      "modelName": "new-platform-flexberry-g-i-s-layer-metadata",
+      "modelProjection": "LayerMetadataE"
+    }
+  ]
+}

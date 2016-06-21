@@ -1,0 +1,12 @@
+﻿{
+  "propertyLookup": [],
+  "caption": null,
+  "name": "NewPlatformFlexberryGISMapE",
+  "attrs": [],
+  "projections": [
+    {
+      "modelName": "new-platform-flexberry-g-i-s-map",
+      "modelProjection": "MapE"
+    }
+  ]
+}
