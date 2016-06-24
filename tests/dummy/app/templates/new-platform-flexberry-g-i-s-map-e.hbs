@@ -64,9 +64,9 @@
 </div>
 
 <div class="field">
-  {{#if model.errors.lon}}
+  {{#if model.errors.lng}}
   <span style="color:red">
-    {{model.errors.lon}}
+    {{model.errors.lng}}
   </span>
   {{/if}}
   {{
@@ -74,9 +74,9 @@
   placeholder='(no value)'
   readonly=readonly
   required=true
-  value=model.lon
-  class=(if model.errors.lon 'error' '')
-  label='Lon'
+  value=model.lng
+  class=(if model.errors.lng 'error' '')
+  label='Lng'
   }}
 </div>
 

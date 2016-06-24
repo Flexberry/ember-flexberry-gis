@@ -4,7 +4,7 @@ import Proj from 'ember-flexberry-data';
 let Model = BaseModel.extend({
   name: DS.attr('string'),
   lat: DS.attr('number'),
-  lon: DS.attr('number'),
+  lng: DS.attr('number'),
   zoom: DS.attr('number'),
   public: DS.attr('boolean'),
   coordinateReferenceSystem: DS.attr('string'),
@@ -24,7 +24,7 @@ Model.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map', {
   public: Proj.attr('Public'),
   coordinateReferenceSystem: Proj.attr('Coordinate reference system'),
   lat: Proj.attr(''),
-  lon: Proj.attr(''),
+  lng: Proj.attr(''),
   layers: Proj.hasMany('new-platform-flexberry-g-i-s-map-layer', '', {
     name: Proj.attr('Name'),
     type: Proj.attr('Type'),
@@ -36,7 +36,7 @@ Model.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map', {
 Model.defineProjection('MapE', 'new-platform-flexberry-g-i-s-map', {
   name: Proj.attr('Name'),
   lat: Proj.attr('Lat'),
-  lon: Proj.attr('Lon'),
+  lng: Proj.attr('Lon'),
   zoom: Proj.attr('Zoom'),
   public: Proj.attr('Public'),
   coordinateReferenceSystem: Proj.attr('Coordinate reference system'),
