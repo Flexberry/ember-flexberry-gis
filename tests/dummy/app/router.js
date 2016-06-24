@@ -8,6 +8,10 @@ const Router = Ember.Router.extend({
 
 Router.map(function() {
   gisRouterSetup(this);
+  
+  this.route('new-platform-flexberry-g-i-s-map-l');
+  this.route('new-platform-flexberry-g-i-s-map-e', { path: 'new-platform-flexberry-g-i-s-map-e/:id' });
+  this.route('new-platform-flexberry-g-i-s-map-e.new', { path: 'new-platform-flexberry-g-i-s-map-e/new' });
 });
 
 export default Router;

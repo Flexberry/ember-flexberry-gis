@@ -1,0 +1,140 @@
+<h3 class="ui header">{{title}}</h3>
+
+{{#if errorMessages}}
+  {{#each errorMessages as |currentError|}}
+    {{ui-message
+      type='error'
+      closeable=true
+      visible=true
+      title='Error occurred'
+      message=currentError
+    }}
+  {{/each}}
+{{/if}}
+<form class="ui form flexberry-vertical-form" role="form">
+  <div class="field">
+    <div class="flexberry-edit-panel">
+      {{#unless readonly}}
+        <button type="submit" class="ui positive button" {{action 'save'}}>
+          {{t "forms.edit-form.save-button-text"}}
+        </button>
+        {{#unless model.isNew}}
+          <button type="submit" class="ui negative button" {{action 'delete'}}>
+            {{t "forms.edit-form.delete-button-text"}}
+          </button>
+        {{/unless}}
+      {{/unless}}
+      <button type="submit" class="ui button" {{action 'close'}}>
+        {{t "forms.edit-form.close-button-text"}}
+      </button>
+    </div>
+  </div>
+  <div class="field">
+  {{#if model.errors.name}}
+  <span style="color:red">
+    {{model.errors.name}}
+  </span>
+  {{/if}}
+  {{
+  flexberry-field
+  placeholder='(no value)'
+  readonly=readonly
+  required=true
+  value=model.name
+  class=(if model.errors.name 'error' '')
+  label='Name'
+  }}
+</div>
+
+<div class="field">
+  {{#if model.errors.lat}}
+  <span style="color:red">
+    {{model.errors.lat}}
+  </span>
+  {{/if}}
+  {{
+  flexberry-field
+  placeholder='(no value)'
+  readonly=readonly
+  required=true
+  value=model.lat
+  class=(if model.errors.lat 'error' '')
+  label='Lat'
+  }}
+</div>
+
+<div class="field">
+  {{#if model.errors.lon}}
+  <span style="color:red">
+    {{model.errors.lon}}
+  </span>
+  {{/if}}
+  {{
+  flexberry-field
+  placeholder='(no value)'
+  readonly=readonly
+  required=true
+  value=model.lon
+  class=(if model.errors.lon 'error' '')
+  label='Lon'
+  }}
+</div>
+
+<div class="field">
+  {{#if model.errors.zoom}}
+  <span style="color:red">
+    {{model.errors.zoom}}
+  </span>
+  {{/if}}
+  {{
+  flexberry-field
+  placeholder='(no value)'
+  readonly=readonly
+  required=true
+  value=model.zoom
+  class=(if model.errors.zoom 'error' '')
+  label='Zoom'
+  }}
+</div>
+
+<div class="field">
+  <label>Public</label>
+  {{#if model.errors.public}}
+  <span style="color:red">{{model.errors.public}}</span>
+  {{/if}}
+  {{flexberry-checkbox readonly=readonly checked=model.public}}
+</div>
+
+<div class="field">
+  {{#if model.errors.coordinateReferenceSystem}}
+  <span style="color:red">
+    {{model.errors.coordinateReferenceSystem}}
+  </span>
+  {{/if}}
+  {{
+  flexberry-field
+  placeholder='(no value)'
+  readonly=readonly
+  required=true
+  value=model.coordinateReferenceSystem
+  class=(if model.errors.coordinateReferenceSystem 'error' '')
+  label='Coordinate reference system'
+  }}
+</div>
+
+<div class="field">
+  <label>Layers</label>
+  {{#if model.errors.layers}}
+    <span style="color:red">{{model.errors.layers}}</span>
+  {{/if}}
+  {{flexberry-groupedit
+    componentName="layersGroupEdit"
+    modelProjection=modelProjection.attributes.layers
+    content=model.layers
+    readonly=readonly
+    orderable=false
+    class=(if model.errors.layers 'error' '')
+  }}
+</div>
+
+</form>

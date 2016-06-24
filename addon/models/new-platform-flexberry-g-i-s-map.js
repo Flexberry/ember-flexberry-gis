@@ -3,7 +3,8 @@ import BaseModel from 'ember-flexberry/models/base';
 import Proj from 'ember-flexberry-data';
 let Model = BaseModel.extend({
   name: DS.attr('string'),
-  center: DS.attr('string'),
+  lat: DS.attr('number'),
+  lon: DS.attr('number'),
   zoom: DS.attr('number'),
   public: DS.attr('boolean'),
   coordinateReferenceSystem: DS.attr('string'),
@@ -19,10 +20,11 @@ let Model = BaseModel.extend({
 });
 Model.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map', {
   name: Proj.attr('Name'),
-  center: Proj.attr('Center'),
   zoom: Proj.attr('Zoom'),
   public: Proj.attr('Public'),
   coordinateReferenceSystem: Proj.attr('Coordinate reference system'),
+  lat: Proj.attr(''),
+  lon: Proj.attr(''),
   layers: Proj.hasMany('new-platform-flexberry-g-i-s-map-layer', '', {
     name: Proj.attr('Name'),
     type: Proj.attr('Type'),
@@ -33,7 +35,8 @@ Model.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map', {
 });
 Model.defineProjection('MapE', 'new-platform-flexberry-g-i-s-map', {
   name: Proj.attr('Name'),
-  center: Proj.attr('Center'),
+  lat: Proj.attr('Lat'),
+  lon: Proj.attr('Lon'),
   zoom: Proj.attr('Zoom'),
   public: Proj.attr('Public'),
   coordinateReferenceSystem: Proj.attr('Coordinate reference system'),
@@ -47,8 +50,6 @@ Model.defineProjection('MapE', 'new-platform-flexberry-g-i-s-map', {
 });
 Model.defineProjection('MapL', 'new-platform-flexberry-g-i-s-map', {
   name: Proj.attr('Name'),
-  center: Proj.attr('Center'),
-  zoom: Proj.attr('Zoom'),
   public: Proj.attr('Public'),
   coordinateReferenceSystem: Proj.attr('Coordinate reference system'),
   createTime: Proj.attr('Создание'),

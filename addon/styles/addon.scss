@@ -9,4 +9,10 @@
 .loading-message {
   text-align: center;
   color: #aaa;
-} 
+}
+
+.leaflet-container {
+    font-family: inherit;
+    height: 300px;
+    width: 100%;
+}

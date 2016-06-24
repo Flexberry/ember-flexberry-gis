@@ -5,14 +5,23 @@ export default Ember.Controller.extend({
     nodes: [
       {
         link: 'index',
-        title: 'Home',
+        caption: 'Home',
         children: null
       },
       {
         link: null,
-        title: 'Objects',
+        caption: 'Objects',
         children: [
-
+          {
+            link: 'new-platform-flexberry-g-i-s-map-l',
+            caption: 'map metadata editor',
+            children: null
+          },
+          {
+            link: 'maps',
+            caption: 'maps view',
+            children: null
+          }
         ]
       }
     ]
