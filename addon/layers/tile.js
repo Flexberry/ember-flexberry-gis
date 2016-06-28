@@ -1,3 +1,3 @@
 export default {
-  component: 'f-tile-layer'
+  component: 'tile-layer'
 };

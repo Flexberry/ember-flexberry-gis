@@ -1,3 +1,3 @@
 export default {
-  component: 'f-wms-tile-layer'
+  component: 'wms-tile-layer'
 };
