@@ -5,7 +5,7 @@ let Model = BaseModel.extend({
   name: DS.attr('string'),
   type: DS.attr('string'),
   coordinateReferenceSystem: DS.attr('string'),
-  settings: DS.attr('string'),
+  settings: DS.attr('jsonobject'),
   createTime: DS.attr('string'),
   creator: DS.attr('string'),
   editTime: DS.attr('string'),

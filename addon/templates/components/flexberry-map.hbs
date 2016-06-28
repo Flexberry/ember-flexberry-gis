@@ -1,9 +1,0 @@
-Something
-
-{{#leaflet-map lat=model.lat lng=model.lng zoom=model.zoom}}
-  {{#each model.layers as |layer|}}
-    {{#if (eq layer.type 'Tile') }}
-       {{tile-layer url="http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"}}
-    {{/if}}
-  {{/each}}
-{{/leaflet-map}}

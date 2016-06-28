@@ -1,1 +1,5 @@
-{{flexberry-map model=model}}
+{{#leaflet-map lat=model.lat lng=model.lng zoom=model.zoom}}
+  {{#each model.layers as |layer|}}
+    {{flexberry-layer layer=layer}}
+  {{/each}}
+{{/leaflet-map}}

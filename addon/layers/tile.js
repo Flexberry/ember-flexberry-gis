@@ -1,9 +1,4 @@
-import Ember from 'ember';
-import TileLayer from 'ember-leaflet/components/tile-layer';
-
-export default Ember.Object.extend({
+export default {
   type: 'Tile',
-  createLayer: function(properties){
-
-  }
-});
+  component: 'f-tile-layer'
+};

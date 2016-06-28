@@ -5,7 +5,7 @@ let Model = BaseModel.extend({
   name: DS.attr('string'),
   type: DS.attr('string'),
   visibility: DS.attr('boolean'),
-  settings: DS.attr('string'),
+  settings: DS.attr('jsonobject'),
   coordinateReferenceSystem: DS.attr('string'),
   map: DS.belongsTo('new-platform-flexberry-g-i-s-map', { inverse: 'layers', async: false }),
   validations: {
