@@ -1,0 +1,41 @@
+<h3 class="ui header">Map layer</h3>
+<form class="ui {{formState}} form flexberry-vertical-form" role="form">
+  <div class="field">
+    <div class="sixteen wide">
+      {{flexberry-validationsummary errors=model.errors}}
+    </div>
+  </div>
+  <div class="field">
+    <div class="flexberry-edit-panel">
+      {{#unless readonly}}
+        {{#unless (and hasParentRoute (not saveBeforeRouteLeave))}}
+          <button type="submit" class="ui positive button" {{action "save"}}>Save</button>
+        {{/unless}}
+        {{#unless (and hasParentRoute (not saveBeforeRouteLeave))}}
+          <button type="submit" class="ui positive button" {{action "saveAndClose"}}>Save and close</button>
+        {{/unless}}
+        {{#unless (and model.isNew (or (not hasParentRoute) (and hasParentRoute saveBeforeRouteLeave)))}}
+          <button type="submit" class="ui negative button" {{action "delete"}}>Delete</button>
+        {{/unless}}
+      {{/unless}}
+      <button type="submit" class="ui button" {{action 'close'}}>Close</button>
+    </div>
+  </div>
+  <div class="field {{if model.errors.name "error" ""}}">
+    {{flexberry-field
+      value=model.name
+      label='Name'
+      readonly=readonly
+    }}
+    {{flexberry-validationmessage error=model.errors.address pointing="pointing"}}
+  </div>
+  <div class="field {{if model.errors.type "error" ""}}">
+    {{flexberry-field
+      value=model.type
+      label='Type'
+      readonly=readonly
+    }}
+    {{flexberry-validationmessage error=model.errors.type pointing="pointing"}}
+  </div>
+  {{outlet 'new-platform-flexberry-g-i-s-map-layer-setting'}}
+</form>
