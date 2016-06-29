@@ -5,10 +5,13 @@ export default Ember.Mixin.create({
 
   _settingRecord: undefined,
 
+  _saveValueToFieldName: undefined,
+
   actions: {
-    renderMainTemplate(layerType, objectToRender, renderInto) {
+    renderMainTemplate(layerType, objectToRender, renderInto, saveValueToFieldName) {
       Ember.assert('objectToRender is not defined', objectToRender);
       Ember.assert('renderInto is not defined', renderInto);
+      Ember.assert('renderInto is not defined', saveValueToFieldName);
 
       let templateName = 'new-platform-flexberry-g-i-s-map-layer-unknown';
       let modelName;
@@ -34,7 +37,10 @@ export default Ember.Mixin.create({
       if (modelName) {
         let modelToRender = this._formModelByObject(objectToRender, modelName);
         renderOptions.model = modelToRender;
-        this.set('_settingRecord', modelToRender);
+        this.setProperties({
+          _settingRecord: modelToRender,
+          _saveValueToFieldName: saveValueToFieldName
+        });
 
         let modelConstructor = modelToRender.constructor;
         Ember.get(modelConstructor, 'attributes').forEach((attribute) => {
@@ -60,7 +66,10 @@ export default Ember.Mixin.create({
         this.removeObserver('_settingRecord.' + attribute.name, this, this._createdModelChange);
       });
 
-      this.set('_settingRecord', undefined);
+      this.setProperties({
+        _settingRecord: undefined,
+        _saveValueToFieldName: undefined
+      });
       oldRecord.destroyRecord();
     }
   },
@@ -69,7 +78,15 @@ export default Ember.Mixin.create({
     let _settingRecord = this.get('_settingRecord');
     if (_settingRecord) {
       let changedObject = this._formObjectByModel(_settingRecord);
-      alert('test');
+      let saveValueToFieldName = this.get('_saveValueToFieldName');
+      let fullPropertyPath = 'controller.model.' + saveValueToFieldName;
+      let currentValue = this.get(fullPropertyPath);
+      if (currentValue) {
+        changedObject = Ember.merge(currentValue, changedObject);
+      }
+
+      this.set(fullPropertyPath, changedObject);
+      this.get('controller.model').makeDirty();
     }
   },
 

@@ -3,7 +3,9 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   value: undefined,
 
-  linkToField: undefined,
+  saveValueToFieldName: undefined,
+
+  linkToFieldValue: undefined,
 
   renderMainTemplate: 'renderMainTemplate',
 
@@ -11,8 +13,6 @@ export default Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-
-    Ember.assert('renderInto should be defined', this.get('renderInto'));
   },
 
   didInsertElement() {
@@ -26,8 +26,15 @@ export default Ember.Component.extend({
   },
 
   _linkToFieldChanged() {
-    let linkToField = this.get('linkToField');
+    let renderInto = this.get('renderInto');
+    Ember.assert('renderInto should be defined', renderInto);
+
+    let saveValueToFieldName = this.get('saveValueToFieldName');
+    Ember.assert('saveValueToFieldName should be defined', saveValueToFieldName);
+
+    let linkToFieldValue = this.get('linkToFieldValue');
     let value = this.get('value');
-    this.sendAction('renderMainTemplate', linkToField, value, this.get('renderInto'));
+
+    this.sendAction('renderMainTemplate', linkToFieldValue, value, renderInto, saveValueToFieldName);
   }
 });
