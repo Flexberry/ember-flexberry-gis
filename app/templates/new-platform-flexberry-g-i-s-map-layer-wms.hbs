@@ -1,1 +1,17 @@
 <h3 class="ui header">Wms</h3>
+<div class="field {{if model.errors.type "error" ""}}">
+  {{flexberry-field
+    value=model.url
+    label='Url'
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.url pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.type "error" ""}}">
+  {{flexberry-field
+    value=model.version
+    label='Url'
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.version pointing="pointing"}}
+</div>

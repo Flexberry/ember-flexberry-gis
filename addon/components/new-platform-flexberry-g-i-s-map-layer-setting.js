@@ -27,6 +27,7 @@ export default Ember.Component.extend({
 
   _linkToFieldChanged() {
     let linkToField = this.get('linkToField');
-    this.sendAction('renderMainTemplate', linkToField, this.get('renderInto'));
+    let value = this.get('value');
+    this.sendAction('renderMainTemplate', linkToField, value, this.get('renderInto'));
   }
 });

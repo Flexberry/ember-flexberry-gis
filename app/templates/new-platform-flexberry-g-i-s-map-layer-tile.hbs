@@ -1,1 +1,9 @@
 <h3 class="ui header">Tile</h3>
+<div class="field {{if model.errors.type "error" ""}}">
+  {{flexberry-field
+    value=model.url
+    label='Url'
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.url pointing="pointing"}}
+</div>
