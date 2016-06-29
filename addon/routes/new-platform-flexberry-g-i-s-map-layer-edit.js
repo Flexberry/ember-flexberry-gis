@@ -3,8 +3,9 @@
 */
 
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
+import SettingRouteMixin from 'ember-flexberry-gis/mixins/new-platform-flexberry-g-i-s-map-layer-setting-route';
 
-export default EditFormRoute.extend({
+export default EditFormRoute.extend(SettingRouteMixin, {
   /**
     Name of model projection to be used as record's properties limitation.
 
@@ -22,22 +23,4 @@ export default EditFormRoute.extend({
     @default 'new-platform-flexberry-g-i-s-map-layer'
    */
   modelName: 'new-platform-flexberry-g-i-s-map-layer',
-
-  actions: {
-    renderLayerTemplate(layerType) {
-      let templateName = 'new-platform-flexberry-g-i-s-map-layer-unknown';
-      switch(layerType) {
-        case 'tile':
-          templateName = 'new-platform-flexberry-g-i-s-map-layer-tile';
-          break;
-        case 'wms':
-          templateName = 'new-platform-flexberry-g-i-s-map-layer-wms';
-          break;
-      }
-
-      this.render(templateName, {
-        outlet: 'new-platform-flexberry-g-i-s-map-layer-setting'
-      });
-    }
-  }
 });

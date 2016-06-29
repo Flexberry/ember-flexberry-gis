@@ -3,8 +3,9 @@
 */
 
 import EditFormNewRoute from 'ember-flexberry/routes/edit-form-new';
+import SettingRouteMixin from 'ember-flexberry-gis/mixins/new-platform-flexberry-g-i-s-map-layer-setting-route';
 
-export default EditFormNewRoute.extend({
+export default EditFormNewRoute.extend(SettingRouteMixin, {
   /**
     Name of model projection to be used as record's properties limitation.
 

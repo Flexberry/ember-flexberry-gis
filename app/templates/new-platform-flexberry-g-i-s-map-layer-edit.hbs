@@ -37,5 +37,9 @@
     }}
     {{flexberry-validationmessage error=model.errors.type pointing="pointing"}}
   </div>
-  {{outlet 'new-platform-flexberry-g-i-s-map-layer-setting'}}
+  {{new-platform-flexberry-g-i-s-map-layer-setting
+    value=model.settings
+    linkToField=model.type
+    renderInto='new-platform-flexberry-g-i-s-map-layer-edit'
+  }}
 </form>

@@ -13,14 +13,5 @@ export default BaseEditFormController.extend({
     @type String
     @default 'ember-flexberry-dummy-suggestion-list'
    */
-  parentRoute: 'maps',
-
-  _layerTypeChanged: Ember.observer('model.type', function () {
-    this._renderProperLayerTemplate();
-  }),
-
-  _renderProperLayerTemplate() {
-    let currentLayerType = this.get('model.type');
-    this.send('renderLayerTemplate', currentLayerType);
-  }
+  parentRoute: 'maps'
 });
