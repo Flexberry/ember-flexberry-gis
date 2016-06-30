@@ -1,6 +1,5 @@
-<h3 class="ui header">Wms</h3>
 <div class="field {{if model.errors.url "error" ""}}">
-  <label>Url</label>
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-wms.url"}}</label>
   {{flexberry-textbox
     value=model.url
     readonly=readonly
@@ -8,7 +7,7 @@
   {{flexberry-validationmessage error=model.errors.url pointing="pointing"}}
 </div>
 <div class="field {{if model.errors.layers "error" ""}}">
-  <label>Layers</label>
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-wms.layers"}}</label>
   {{flexberry-textbox
     value=model.layers
     readonly=readonly
@@ -16,7 +15,7 @@
   {{flexberry-validationmessage error=model.errors.layers pointing="pointing"}}
 </div>
 <div class="field {{if model.errors.styles "error" ""}}">
-  <label>Styles</label>
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-wms.styles"}}</label>
   {{flexberry-textbox
     value=model.styles
     readonly=readonly
@@ -24,7 +23,7 @@
   {{flexberry-validationmessage error=model.errors.styles pointing="pointing"}}
 </div>
 <div class="field {{if model.errors.format "error" ""}}">
-  <label>Format</label>
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-wms.format"}}</label>
   {{flexberry-textbox
     value=model.format
     readonly=readonly
@@ -32,14 +31,14 @@
   {{flexberry-validationmessage error=model.errors.format pointing="pointing"}}
 </div>
 <div class="field {{if model.errors.transparent "error" ""}}">
-  <label>Transparent</label>
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-wms.transparent"}}</label>
   {{flexberry-checkbox
     value=model.transparent
   }}
   {{flexberry-validationmessage error=model.errors.transparent pointing="left pointing"}}
 </div>
 <div class="field {{if model.errors.version "error" ""}}">
-  <label>Version</label>
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-wms.version"}}</label>
   {{flexberry-textbox
     value=model.version
     readonly=readonly
@@ -47,7 +46,7 @@
   {{flexberry-validationmessage error=model.errors.version pointing="pointing"}}
 </div>
 <div class="field {{if model.errors.crs "error" ""}}">
-  <label>Crs</label>
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-wms.crs"}}</label>
   {{flexberry-textbox
     value=model.crs
     readonly=readonly
