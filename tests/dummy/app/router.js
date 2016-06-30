@@ -12,6 +12,10 @@ Router.map(function() {
   this.route('new-platform-flexberry-g-i-s-map-l');
   this.route('new-platform-flexberry-g-i-s-map-e', { path: 'new-platform-flexberry-g-i-s-map-e/:id' });
   this.route('new-platform-flexberry-g-i-s-map-e.new', { path: 'new-platform-flexberry-g-i-s-map-e/new' });
+
+  // Components examples routes (sorted by component's names).
+  this.route('components-examples/flexberry-ddau-checkbox/settings-example');
+  this.route('components-examples/flexberry-ddau-tree/settings-example');
 });
 
 export default Router;
