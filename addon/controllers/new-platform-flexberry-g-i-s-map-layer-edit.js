@@ -2,7 +2,6 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
 import BaseEditFormController from 'ember-flexberry/controllers/edit-form';
 
 export default BaseEditFormController.extend({

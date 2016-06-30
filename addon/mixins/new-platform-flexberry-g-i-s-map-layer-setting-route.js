@@ -53,7 +53,7 @@ export default Ember.Mixin.create({
   },
 
   resetController(controller, isExiting, transition) {
-    this._super(...arguments);
+    this._super(controller, isExiting, transition);
 
     this._clearOldRecord();
   },
@@ -80,13 +80,14 @@ export default Ember.Mixin.create({
       let changedObject = this._formObjectByModel(_settingRecord);
       let saveValueToFieldName = this.get('_saveValueToFieldName');
       let fullPropertyPath = 'controller.model.' + saveValueToFieldName;
-      let currentValue = this.get(fullPropertyPath);
-      if (currentValue) {
-        changedObject = Ember.merge(currentValue, changedObject);
+      let currentValueAsString = this.get(fullPropertyPath);
+      let currentValueAsObject = this._deserializeJsonObjectFromString(currentValueAsString);
+      if (currentValueAsObject) {
+        changedObject = Ember.merge(currentValueAsObject, changedObject);
       }
 
-      this.set(fullPropertyPath, changedObject);
-      this.get('controller.model').makeDirty();
+      let changedObjectAsString = this._serializeJsonObjectIntoString(changedObject);
+      this.set(fullPropertyPath, changedObjectAsString);
     }
   },
 
@@ -106,5 +107,16 @@ export default Ember.Mixin.create({
     });
 
     return result;
+  },
+
+  _serializeJsonObjectIntoString(jsonObjectToSerialize) {
+    return JSON.stringify(jsonObjectToSerialize);
+  },
+
+  _deserializeJsonObjectFromString(stringToDeserialize) {
+    if (stringToDeserialize) {
+      return JSON.parse(stringToDeserialize);
+    }
+    return {};
   }
 });
