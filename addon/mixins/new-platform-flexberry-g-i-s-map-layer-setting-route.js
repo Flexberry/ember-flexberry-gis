@@ -8,6 +8,15 @@ import Ember from 'ember';
   Mixin for {{#crossLink "DS.Route"}}Route{{/crossLink}} to support work
   of component {{#crossLink "NewPlatformFlexberryGISMapLayerSettingComponent"}}{{/crossLink}}.
 
+  Now it supports following layer types:
+  -  'tile' (name of model and template new-platform-flexberry-g-i-s-map-layer-tile');
+  -  'wms' (name of model and template new-platform-flexberry-g-i-s-map-layer-wms').
+
+  In order to add support of new layer it is necessary to:
+  - add corresponding model to "models" folder;
+  - add corresponding template to "templates" folder;
+  - add such variant to {{#crossLink "NewPlatformFlexberryGISMapLayerSettingRouteMixin/actions.renderMainTemplate:method"}}{{/crossLink}}.
+
   @class NewPlatformFlexberryGISMapLayerSettingRouteMixin
   @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
