@@ -1,5 +1,5 @@
 /**
-  @module ember-flexberry
+  @module ember-flexberry-gis
 */
 
 import Ember from 'ember';
