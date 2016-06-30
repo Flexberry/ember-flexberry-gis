@@ -1,13 +1,54 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 
+/**
+  Mixin for {{#crossLink "DS.Route"}}Route{{/crossLink}} to support work
+  of component {{#crossLink "NewPlatformFlexberryGISMapLayerSettingComponent"}}{{/crossLink}}.
+
+  @class NewPlatformFlexberryGISMapLayerSettingRouteMixin
+  @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+*/
 export default Ember.Mixin.create({
+  /**
+    Ember data store.
+
+    @property _store
+    @private
+    @type Service
+  */
   _store: Ember.inject.service('store'),
 
+  /**
+    Current displayed on component record.
+
+    @property _settingRecord
+    @private
+    @type DS.Model
+  */
   _settingRecord: undefined,
 
+  /**
+    Name of field of model where changed value has to be written to.
+
+    @property _saveValueToFieldName
+    @private
+    @type String
+  */
   _saveValueToFieldName: undefined,
 
   actions: {
+    /**
+      It renders proper template depending on provided type.
+
+      @method actions.renderMainTemplate
+      @param {String} layerType Type of layer (depending on it rendered template will be chosen).
+      @param {Object} objectToRender Object that will be displayed on rendered template.
+      @param {String} renderInto Name of template into which new template will be rendered.
+      @param {String} saveValueToFieldName Name of field of model where changed value has to be written to.
+    */
     renderMainTemplate(layerType, objectToRender, renderInto, saveValueToFieldName) {
       Ember.assert('objectToRender is not defined', objectToRender);
       Ember.assert('renderInto is not defined', renderInto);
@@ -52,12 +93,22 @@ export default Ember.Mixin.create({
     }
   },
 
+  /**
+    A hook you can use to reset controller values either when the model changes or the route is exiting.
+    [More info](http://emberjs.com/api/classes/Ember.Route.html#method_resetController).
+  */
   resetController(controller, isExiting, transition) {
     this._super(controller, isExiting, transition);
 
     this._clearOldRecord();
   },
 
+  /**
+    It destroys the record that was displayed before, removes observers, etc.
+
+    @method _clearOldRecord
+    @private
+  */
   _clearOldRecord() {
     let oldRecord = this.get('_settingRecord');
     if (oldRecord) {
@@ -74,6 +125,12 @@ export default Ember.Mixin.create({
     }
   },
 
+  /**
+    It handles changes of displayed record and saves it to provided field.
+
+    @method _createdModelChange
+    @private
+  */
   _createdModelChange() {
     let _settingRecord = this.get('_settingRecord');
     if (_settingRecord) {
@@ -85,6 +142,16 @@ export default Ember.Mixin.create({
     }
   },
 
+  /**
+    It forms ember model of provided type by object.
+
+    @method _formModelByObject
+    @private
+
+    @param {Object} currentObject Object that will be a basis for ember model.
+    @param {String} modelType Type of ember model to create.
+    @return {DS.Model} Created by object ember model of provided type.
+  */
   _formModelByObject(currentObject, modelType) {
     Ember.assert('currentObject is not defined', currentObject);
     Ember.assert('modelType is not defined', modelType);
@@ -93,7 +160,18 @@ export default Ember.Mixin.create({
     return store.createRecord(modelType, currentObject);
   },
 
+  /**
+    It forms object from attributes of ember model.
+
+    @method _formObjectByModel
+    @private
+
+    @param {DS.Model} currentModel Ember model from where attributes and its values will be taken.
+    @return {Object} Created by ember model object.
+  */
   _formObjectByModel(currentModel) {
+    Ember.assert('currentModel is not defined', currentModel);
+
     let modelConstructor = currentModel.constructor;
     let result = {};
     Ember.get(modelConstructor, 'attributes').forEach((attribute) => {
@@ -103,6 +181,15 @@ export default Ember.Mixin.create({
     return result;
   },
 
+  /**
+    It serializes object to string.
+
+    @method _serializeJsonObjectIntoString
+    @private
+
+    @param {Object} jsonObjectToSerialize Object to serialize to string.
+    @return {String} Serialized object.
+  */
   _serializeJsonObjectIntoString(jsonObjectToSerialize) {
     return JSON.stringify(jsonObjectToSerialize);
   }

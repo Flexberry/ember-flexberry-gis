@@ -4,13 +4,19 @@
 
 import BaseEditFormController from 'ember-flexberry/controllers/edit-form';
 
+/**
+  Controller for edit form of {{#crossLink "NewPlatformFlexberryGISMapLayer"}}{{/crossLink}}.
+
+  @class NewPlatformFlexberryGISMapLayerEditController
+  @extends BaseEditFormController
+*/
 export default BaseEditFormController.extend({
   /**
     Route name for transition after close edit form.
 
     @property parentRoute
     @type String
-    @default 'ember-flexberry-dummy-suggestion-list'
+    @default 'maps'
    */
   parentRoute: 'maps'
 });

@@ -1,6 +1,18 @@
+/**
+  @module ember-flexberry-gis
+*/
+
+import Ember from 'ember';
 import DS from 'ember-data';
 import BaseModel from 'ember-flexberry/models/base';
 import Proj from 'ember-flexberry-data';
+
+/**
+  Model for layer.
+
+  @class NewPlatformFlexberryGISMapLayerModel
+  @extends BaseModel
+*/
 let Model = BaseModel.extend({
   name: DS.attr('string'),
   type: DS.attr('string'),

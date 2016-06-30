@@ -3,9 +3,17 @@
 */
 
 import EditFormNewRoute from 'ember-flexberry/routes/edit-form-new';
-import SettingRouteMixin from 'ember-flexberry-gis/mixins/new-platform-flexberry-g-i-s-map-layer-setting-route';
+import NewPlatformFlexberryGISMapLayerSettingRouteMixin
+  from 'ember-flexberry-gis/mixins/new-platform-flexberry-g-i-s-map-layer-setting-route';
 
-export default EditFormNewRoute.extend(SettingRouteMixin, {
+/**
+  Route for create form of {{#crossLink "NewPlatformFlexberryGISMapLayer"}}{{/crossLink}}.
+
+  @class NewPlatformFlexberryGISMapLayerEditNewRoute
+  @extends EditFormNewRoute
+  @uses NewPlatformFlexberryGISMapLayerSettingRouteMixin
+*/
+export default EditFormNewRoute.extend(NewPlatformFlexberryGISMapLayerSettingRouteMixin, {
   /**
     Name of model projection to be used as record's properties limitation.
 

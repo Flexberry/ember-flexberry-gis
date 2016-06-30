@@ -1,6 +1,16 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import DS from 'ember-data';
 import BaseModel from 'ember-flexberry/models/base';
 
+/**
+  Model to display tile layer settings.
+
+  @class NewPlatformFlexberryGISMapLayerTileModel
+  @extends BaseModel
+*/
 let Model = BaseModel.extend({
   url: DS.attr('string'),
   minZoom: DS.attr('number'),

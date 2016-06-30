@@ -27,13 +27,21 @@
       label='Name'
       readonly=readonly
     }}
-    {{flexberry-validationmessage error=model.errors.address pointing="pointing"}}
+    {{flexberry-validationmessage error=model.errors.name pointing="pointing"}}
+  </div>
+  <div class="field {{if model.errors.coordinateReferenceSystem "error" ""}}">
+    {{flexberry-field
+      value=model.coordinateReferenceSystem
+      label='CoordinateReferenceSystem'
+      readonly=(or readonly (not model.isNew))
+    }}
+    {{flexberry-validationmessage error=model.errors.coordinateReferenceSystem pointing="pointing"}}
   </div>
   <div class="field {{if model.errors.type "error" ""}}">
     {{flexberry-field
       value=model.type
       label='Type'
-      readonly=readonly
+      readonly=(or readonly (not model.isNew))
     }}
     {{flexberry-validationmessage error=model.errors.type pointing="pointing"}}
   </div>
