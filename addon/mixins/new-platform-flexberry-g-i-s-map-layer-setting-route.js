@@ -80,12 +80,6 @@ export default Ember.Mixin.create({
       let changedObject = this._formObjectByModel(_settingRecord);
       let saveValueToFieldName = this.get('_saveValueToFieldName');
       let fullPropertyPath = 'controller.model.' + saveValueToFieldName;
-      let currentValueAsString = this.get(fullPropertyPath);
-      let currentValueAsObject = this._deserializeJsonObjectFromString(currentValueAsString);
-      if (currentValueAsObject) {
-        changedObject = Ember.merge(currentValueAsObject, changedObject);
-      }
-
       let changedObjectAsString = this._serializeJsonObjectIntoString(changedObject);
       this.set(fullPropertyPath, changedObjectAsString);
     }
@@ -111,12 +105,5 @@ export default Ember.Mixin.create({
 
   _serializeJsonObjectIntoString(jsonObjectToSerialize) {
     return JSON.stringify(jsonObjectToSerialize);
-  },
-
-  _deserializeJsonObjectFromString(stringToDeserialize) {
-    if (stringToDeserialize) {
-      return JSON.parse(stringToDeserialize);
-    }
-    return {};
   }
 });

@@ -1,17 +1,56 @@
 <h3 class="ui header">Wms</h3>
-<div class="field {{if model.errors.type "error" ""}}">
-  {{flexberry-field
+<div class="field {{if model.errors.url "error" ""}}">
+  <label>Url</label>
+  {{flexberry-textbox
     value=model.url
-    label='Url'
     readonly=readonly
   }}
   {{flexberry-validationmessage error=model.errors.url pointing="pointing"}}
 </div>
-<div class="field {{if model.errors.type "error" ""}}">
-  {{flexberry-field
+<div class="field {{if model.errors.layers "error" ""}}">
+  <label>Layers</label>
+  {{flexberry-textbox
+    value=model.layers
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.layers pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.styles "error" ""}}">
+  <label>Styles</label>
+  {{flexberry-textbox
+    value=model.styles
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.styles pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.format "error" ""}}">
+  <label>Format</label>
+  {{flexberry-textbox
+    value=model.format
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.format pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.transparent "error" ""}}">
+  <label>Transparent</label>
+  {{flexberry-checkbox
+    value=model.transparent
+  }}
+  {{flexberry-validationmessage error=model.errors.transparent pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.version "error" ""}}">
+  <label>Version</label>
+  {{flexberry-textbox
     value=model.version
-    label='Version'
     readonly=readonly
   }}
   {{flexberry-validationmessage error=model.errors.version pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.crs "error" ""}}">
+  <label>Crs</label>
+  {{flexberry-textbox
+    value=model.crs
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.crs pointing="pointing"}}
 </div>

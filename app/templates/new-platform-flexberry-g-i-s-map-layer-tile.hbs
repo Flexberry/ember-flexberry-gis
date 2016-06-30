@@ -1,9 +1,153 @@
 <h3 class="ui header">Tile</h3>
-<div class="field {{if model.errors.type "error" ""}}">
-  {{flexberry-field
+<div class="field {{if model.errors.url "error" ""}}">
+  <label>Url</label>
+  {{flexberry-textbox
     value=model.url
-    label='Url'
     readonly=readonly
   }}
   {{flexberry-validationmessage error=model.errors.url pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.minZoom "error" ""}}">
+  <label>MinZoom</label>
+  {{flexberry-textbox
+    value=model.minZoom
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.minZoom pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.maxZoom "error" ""}}">
+  <label>MaxZoom</label>
+  {{flexberry-textbox
+    value=model.maxZoom
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.maxZoom pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.maxNativeZoom "error" ""}}">
+  <label>MaxNativeZoom</label>
+  {{flexberry-textbox
+    value=model.maxNativeZoom
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.maxNativeZoom pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.tileSize "error" ""}}">
+  <label>TileSize</label>
+  {{flexberry-textbox
+    value=model.tileSize
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.tileSize pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.subdomains "error" ""}}">
+  <label>Subdomains</label>
+  {{flexberry-textbox
+    value=model.subdomains
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.subdomains pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.errorTileUrl "error" ""}}">
+  <label>ErrorTileUrl</label>
+  {{flexberry-textbox
+    value=model.errorTileUrl
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.errorTileUrl pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.attribution "error" ""}}">
+  <label>Attribution</label>
+  {{flexberry-textbox
+    value=model.attribution
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.attribution pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.tms "error" ""}}">
+  <label>Tms</label>
+  {{flexberry-checkbox
+    value=model.tms
+  }}
+  {{flexberry-validationmessage error=model.errors.tms pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.continuousWorld "error" ""}}">
+  <label>ContinuousWorld</label>
+  {{flexberry-checkbox
+    value=model.continuousWorld
+  }}
+  {{flexberry-validationmessage error=model.errors.continuousWorld pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.noWrap "error" ""}}">
+  <label>NoWrap</label>
+  {{flexberry-checkbox
+    value=model.noWrap
+  }}
+  {{flexberry-validationmessage error=model.errors.noWrap pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.zoomOffset "error" ""}}">
+  <label>ZoomOffset</label>
+  {{flexberry-textbox
+    value=model.zoomOffset
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.zoomOffset pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.zoomReverse "error" ""}}">
+  <label>ZoomReverse</label>
+  {{flexberry-checkbox
+    value=model.zoomReverse
+  }}
+  {{flexberry-validationmessage error=model.errors.zoomReverse pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.opacity "error" ""}}">
+  <label>Opacity</label>
+  {{flexberry-textbox
+    value=model.opacity
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.opacity pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.zIndex "error" ""}}">
+  <label>ZIndex</label>
+  {{flexberry-textbox
+    value=model.zIndex
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.zIndex pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.unloadInvisibleTiles "error" ""}}">
+  <label>UnloadInvisibleTiles</label>
+  {{flexberry-checkbox
+    value=model.unloadInvisibleTiles
+  }}
+  {{flexberry-validationmessage error=model.errors.unloadInvisibleTiles pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.updateWhenIdle "error" ""}}">
+  <label>UpdateWhenIdle</label>
+  {{flexberry-checkbox
+    value=model.updateWhenIdle
+  }}
+  {{flexberry-validationmessage error=model.errors.updateWhenIdle pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.detectRetina "error" ""}}">
+  <label>DetectRetina</label>
+  {{flexberry-checkbox
+    value=model.detectRetina
+  }}
+  {{flexberry-validationmessage error=model.errors.detectRetina pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.reuseTiles "error" ""}}">
+  <label>ReuseTiles</label>
+  {{flexberry-checkbox
+    value=model.reuseTiles
+  }}
+  {{flexberry-validationmessage error=model.errors.reuseTiles pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.bounds "error" ""}}">
+  <label>Bounds</label>
+  {{flexberry-textbox
+    value=model.bounds
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.bounds pointing="pointing"}}
 </div>

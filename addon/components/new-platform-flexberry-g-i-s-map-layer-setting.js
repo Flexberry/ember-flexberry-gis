@@ -18,11 +18,11 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
     this._linkToFieldChanged();
-    this.addObserver('linkToField', this, this._linkToFieldChanged);
+    this.addObserver('linkToFieldValue', this, this._linkToFieldChanged);
   },
 
   willDestroyElement() {
-    this.removeObserver('linkToField', this, this._linkToFieldChanged);
+    this.removeObserver('linkToFieldValue', this, this._linkToFieldChanged);
   },
 
   _linkToFieldChanged() {
