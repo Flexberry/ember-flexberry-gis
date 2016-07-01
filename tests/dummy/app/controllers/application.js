@@ -99,6 +99,21 @@ export default Ember.Controller.extend({
         children: null
       }, {
         link: null,
+        caption: i18n.t('forms.application.sitemap.gis-objects.caption'),
+        title: i18n.t('forms.application.sitemap.gis-objects.title'),
+        children: [{
+          link: 'new-platform-flexberry-g-i-s-map-l',
+          caption: i18n.t('forms.application.sitemap.gis-objects.new-platform-flexberry-g-i-s-map-l.caption'),
+          title: i18n.t('forms.application.sitemap.gis-objects.new-platform-flexberry-g-i-s-map-l.title'),
+          children: null
+        }, {
+          link: 'maps',
+          caption: i18n.t('forms.application.sitemap.gis-objects.maps.caption'),
+          title: i18n.t('forms.application.sitemap.gis-objects.maps.title'),
+          children: null
+        }]
+      }, {
+        link: null,
         caption: i18n.t('forms.application.sitemap.components-examples.caption'),
         title: i18n.t('forms.application.sitemap.components-examples.title'),
         children: [{
