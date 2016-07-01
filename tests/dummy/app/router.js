@@ -12,6 +12,9 @@ Router.map(function() {
   this.route('new-platform-flexberry-g-i-s-map-l');
   this.route('new-platform-flexberry-g-i-s-map-e', { path: 'new-platform-flexberry-g-i-s-map-e/:id' });
   this.route('new-platform-flexberry-g-i-s-map-e.new', { path: 'new-platform-flexberry-g-i-s-map-e/new' });
+
+  this.route('new-platform-flexberry-g-i-s-map-layer-edit', { path: 'new-platform-flexberry-g-i-s-map-layer-edit/:id' });
+  this.route('new-platform-flexberry-g-i-s-map-layer-edit.new', { path: 'new-platform-flexberry-g-i-s-map-layer-edit/new' });
 });
 
 export default Router;
