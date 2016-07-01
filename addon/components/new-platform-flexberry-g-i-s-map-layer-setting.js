@@ -13,7 +13,7 @@ import Ember from 'ember';
   {{new-platform-flexberry-g-i-s-map-layer-setting
     value=model.settingsAsObject
     linkToFieldValue=model.type
-    renderInto='new-platform-flexberry-g-i-s-map-layer-edit'
+    renderInto="new-platform-flexberry-g-i-s-map-layer-edit"
     saveValueToFieldName='settings'
   }}
   ```
