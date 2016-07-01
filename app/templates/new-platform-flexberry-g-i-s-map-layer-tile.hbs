@@ -1,0 +1,152 @@
+<div class="field {{if model.errors.url "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.url"}}</label>
+  {{flexberry-textbox
+    value=model.url
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.url pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.minZoom "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.minZoom"}}</label>
+  {{flexberry-textbox
+    value=model.minZoom
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.minZoom pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.maxZoom "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.maxZoom"}}</label>
+  {{flexberry-textbox
+    value=model.maxZoom
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.maxZoom pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.maxNativeZoom "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.maxNativeZoom"}}</label>
+  {{flexberry-textbox
+    value=model.maxNativeZoom
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.maxNativeZoom pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.tileSize "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.tileSize"}}</label>
+  {{flexberry-textbox
+    value=model.tileSize
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.tileSize pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.subdomains "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.subdomains"}}</label>
+  {{flexberry-textbox
+    value=model.subdomains
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.subdomains pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.errorTileUrl "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.errorTileUrl"}}</label>
+  {{flexberry-textbox
+    value=model.errorTileUrl
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.errorTileUrl pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.attribution "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.attribution"}}</label>
+  {{flexberry-textbox
+    value=model.attribution
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.attribution pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.tms "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.tms"}}</label>
+  {{flexberry-checkbox
+    value=model.tms
+  }}
+  {{flexberry-validationmessage error=model.errors.tms pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.continuousWorld "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.continuousWorld"}}</label>
+  {{flexberry-checkbox
+    value=model.continuousWorld
+  }}
+  {{flexberry-validationmessage error=model.errors.continuousWorld pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.noWrap "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.noWrap"}}</label>
+  {{flexberry-checkbox
+    value=model.noWrap
+  }}
+  {{flexberry-validationmessage error=model.errors.noWrap pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.zoomOffset "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.zoomOffset"}}</label>
+  {{flexberry-textbox
+    value=model.zoomOffset
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.zoomOffset pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.zoomReverse "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.zoomReverse"}}</label>
+  {{flexberry-checkbox
+    value=model.zoomReverse
+  }}
+  {{flexberry-validationmessage error=model.errors.zoomReverse pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.opacity "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.opacity"}}</label>
+  {{flexberry-textbox
+    value=model.opacity
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.opacity pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.zIndex "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.zIndex"}}</label>
+  {{flexberry-textbox
+    value=model.zIndex
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.zIndex pointing="pointing"}}
+</div>
+<div class="field {{if model.errors.unloadInvisibleTiles "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.unloadInvisibleTiles"}}</label>
+  {{flexberry-checkbox
+    value=model.unloadInvisibleTiles
+  }}
+  {{flexberry-validationmessage error=model.errors.unloadInvisibleTiles pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.updateWhenIdle "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.updateWhenIdle"}}</label>
+  {{flexberry-checkbox
+    value=model.updateWhenIdle
+  }}
+  {{flexberry-validationmessage error=model.errors.updateWhenIdle pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.detectRetina "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.detectRetina"}}</label>
+  {{flexberry-checkbox
+    value=model.detectRetina
+  }}
+  {{flexberry-validationmessage error=model.errors.detectRetina pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.reuseTiles "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.reuseTiles"}}</label>
+  {{flexberry-checkbox
+    value=model.reuseTiles
+  }}
+  {{flexberry-validationmessage error=model.errors.reuseTiles pointing="left pointing"}}
+</div>
+<div class="field {{if model.errors.bounds "error" ""}}">
+  <label>{{t "forms.new-platform-flexberry-g-i-s-map-layer-tile.bounds"}}</label>
+  {{flexberry-textbox
+    value=model.bounds
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.bounds pointing="pointing"}}
+</div>

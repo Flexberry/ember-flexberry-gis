@@ -5,7 +5,6 @@ moduleForModel('new-platform-flexberry-g-i-s-layer-metadata', 'Unit | Serializer
   needs: [
     'serializer:new-platform-flexberry-g-i-s-layer-metadata',
     'transform:file',
-    'transform:jsonobject',
 
     'model:new-platform-flexberry-g-i-s-layer-metadata',
     'model:new-platform-flexberry-g-i-s-map-layer',

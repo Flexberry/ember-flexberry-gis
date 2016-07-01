@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import DS from 'ember-data';
 import BaseModel from 'ember-flexberry/models/base';
 import Proj from 'ember-flexberry-data';
@@ -5,7 +6,7 @@ let Model = BaseModel.extend({
   name: DS.attr('string'),
   type: DS.attr('string'),
   coordinateReferenceSystem: DS.attr('string'),
-  settings: DS.attr('jsonobject'),
+  settings: DS.attr('string'),
   createTime: DS.attr('string'),
   creator: DS.attr('string'),
   editTime: DS.attr('string'),
@@ -13,7 +14,15 @@ let Model = BaseModel.extend({
   validations: {
     name: { presence: true },
     type: { presence: true }
-  }
+  },
+
+  settingsAsObject: Ember.computed('settings', function() {
+    let stringToDeserialize = this.get('settings');
+    if (stringToDeserialize) {
+      return JSON.parse(stringToDeserialize);
+    }
+    return {};
+  })
 });
 Model.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-layer-metadata', {
   name: Proj.attr('Name'),
