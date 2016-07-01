@@ -74,21 +74,5 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
     });
 
     return componentSettingsMetadata;
-  }),
-
-  actions: {
-    /**
-      Handles component's 'valueChange' action.
-      Updates value in model's 'flag' property.
-
-      @method actions.onModelFlagChange
-    */
-    onModelFlagChange(e) {
-      // Set new value to model's 'flag' property.
-      this.set('model.flag', e.newValue);
-
-      // Log jQuery 'change' event triggered after checkbox input was clicked.
-      console.log(e.event);
-    }
-  }
+  })
 });
