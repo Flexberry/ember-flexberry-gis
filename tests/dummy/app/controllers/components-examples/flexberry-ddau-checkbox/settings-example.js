@@ -1,13 +1,7 @@
 import Ember from 'ember';
+import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-ddau-checkbox-actions-handler';
 
-export default Ember.Controller.extend({
-  /**
-    Flag: indicates whether 'flexberry-ddau-checkbox' component is in 'readonly' mode or not.
-    @property readonly
-    @type Boolean
-   */
-  readonly: false,
-
+export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin, {
   /**
     Component's wrapper CSS classes.
     @property class
@@ -16,15 +10,33 @@ export default Ember.Controller.extend({
   class: '',
 
   /**
+    Flag: indicates whether 'flexberry-ddau-checkbox' component is in 'readonly' mode or not.
+    @property readonly
+    @type Boolean
+   */
+  readonly: false,
+
+  /**
+    Text for 'flexberry-ddau-checkbox' 'label' property.
+
+    @property label
+    @type String
+    @default null
+  */
+  label: null,
+
+  /**
     Template text for 'flexberry-ddau-checkbox' component.
     @property componentTemplateText
     @type String
    */
   componentTemplateText: new Ember.Handlebars.SafeString(
     '{{flexberry-ddau-checkbox<br>' +
-    '  value=model.flag<br>' +
-    '  readonly=readonly<br>' +
     '  class=class<br>' +
+    '  value=model.flag<br>' +
+    '  label=label<br>' +
+    '  readonly=readonly<br>' +
+    '  change=(action \"onCheckboxChange\" \"model.flag\")<br>' +
     '}}'),
 
   /**
@@ -33,19 +45,8 @@ export default Ember.Controller.extend({
     @type Object[]
    */
   componentSettingsMetadata: Ember.computed('i18n.locale', function() {
-    var componentSettingsMetadata = Ember.A();
-    componentSettingsMetadata.pushObject({
-      settingName: 'value',
-      settingType: 'boolean',
-      settingDefaultValue: undefined,
-      bindedControllerPropertieName: 'model.flag'
-    });
-    componentSettingsMetadata.pushObject({
-      settingName: 'readonly',
-      settingType: 'boolean',
-      settingDefaultValue: false,
-      bindedControllerPropertieName: 'readonly'
-    });
+    let componentSettingsMetadata = Ember.A();
+
     componentSettingsMetadata.pushObject({
       settingName: 'class',
       settingType: 'css',
@@ -53,10 +54,41 @@ export default Ember.Controller.extend({
       settingAvailableItems: ['radio', 'slider', 'toggle'],
       bindedControllerPropertieName: 'class'
     });
+    componentSettingsMetadata.pushObject({
+      settingName: 'value',
+      settingType: 'boolean',
+      settingDefaultValue: undefined,
+      bindedControllerPropertieName: 'model.flag'
+    });
+    componentSettingsMetadata.pushObject({
+      settingName: 'label',
+      settingType: 'string',
+      settingDefaultValue: null,
+      bindedControllerPropertieName: 'label'
+    });
+    componentSettingsMetadata.pushObject({
+      settingName: 'readonly',
+      settingType: 'boolean',
+      settingDefaultValue: false,
+      bindedControllerPropertieName: 'readonly'
+    });
 
     return componentSettingsMetadata;
   }),
 
   actions: {
+    /**
+      Handles component's 'valueChange' action.
+      Updates value in model's 'flag' property.
+
+      @method actions.onModelFlagChange
+    */
+    onModelFlagChange(e) {
+      // Set new value to model's 'flag' property.
+      this.set('model.flag', e.newValue);
+
+      // Log jQuery 'change' event triggered after checkbox input was clicked.
+      console.log(e.event);
+    }
   }
 });

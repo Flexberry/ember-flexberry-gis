@@ -6,7 +6,13 @@
       componentSettingsMetadata=componentSettingsMetadata
       componentTemplateText=componentTemplateText
     }}
-      Component is not developed yet
+      {{flexberry-ddau-checkbox
+        class=class
+        value=model.flag
+        label=label
+        readonly=readonly
+        change=(action "onCheckboxChange" "model.flag")
+      }}
     {{/settings-example}}
   </div>
 </form>
