@@ -8,9 +8,10 @@ import { InvokeActionMixin } from 'ember-invoke-action';
 
 /**
   Checkbox component with Semantic UI style and "Data Down Actions UP (DDAU)" pattern one way binding.
-  Component doesn't mutate passed value by its own, it only invokes 'valueChange' action,
+  Component doesn't mutate passed value by its own, it only invokes 'change' action,
   which signalizes to the route, controller, or another component, that passed value should be mutated.
   See a [paper](https://emberway.io/ember-js-goodbye-mvc-part-1-21777ecfd708) about DDAU pattern.
+  See Semantic UI checkbox [documentation](http://semantic-ui.com/modules/checkbox.html).
 
   Usage with manual 'change' action handling:
   templates/my-form.hbs
@@ -60,7 +61,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     Any other names can be added through conponent's 'class' property.
     ```handlebars
-    {{flexberry-ddau-checkbox class="toggle" value=model.flag valueChange=(action "onModelFlagChange")}}
+    {{flexberry-ddau-checkbox class="toggle" value=model.flag change=(action "onModelFlagChange")}}
     ```
 
     @property classNames
@@ -105,18 +106,6 @@ export default Ember.Component.extend(InvokeActionMixin, {
    */
   readonly: false,
 
-  /**
-    Flag: indicates whether component's label is defined.
-
-    @property _hasLabel
-    @type String
-    @default null
-    @readonly
-  */
-  _hasLabel: Ember.computed('label', function() {
-    return !Ember.isBlank(this.get('label'));
-  }),
-
   actions: {
     /**
       Handles checkbox input's 'change' action.
@@ -131,7 +120,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
         event: e
       });
 
-      // Return false to prevent component's 'change' event bubbling;
+      // Return false to prevent input's 'change' event bubbling.
       return false;
     }
   },
@@ -139,8 +128,8 @@ export default Ember.Component.extend(InvokeActionMixin, {
   /**
     Initializes DOM-related component's properties.
   */
-  didInsertElement(...args) {
-    this._super(...args);
+  didInsertElement() {
+    this._super(...arguments);
 
     // Initialize Semantic UI checkbox.
     this.$().checkbox();
@@ -149,8 +138,8 @@ export default Ember.Component.extend(InvokeActionMixin, {
   /**
     Destroys DOM-related component's properties.
   */
-  willDestroyElement(...args) {
-    this._super(...args);
+  willDestroyElement() {
+    this._super(...arguments);
 
     // Destroys Semantic UI checkbox.
     this.$().checkbox('destroy');

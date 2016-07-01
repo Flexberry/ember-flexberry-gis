@@ -1,7 +1,3 @@
-/**
-  @module ember-flexberry-dummy
- */
-
 import Ember from 'ember';
 
 /**
@@ -9,7 +5,7 @@ import Ember from 'ember';
 
   @class NumberInputComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
- */
+*/
 export default Ember.Component.extend({
   /**
     Override wrapper tag name to disable component's wrapping div.
@@ -17,7 +13,7 @@ export default Ember.Component.extend({
     @property tagName
     @type String
     @default ''
-   */
+  */
   tagName: '',
 
   /**
@@ -25,7 +21,7 @@ export default Ember.Component.extend({
 
     @property inputValue
     @type String
-   */
+  */
   inputValue: undefined,
 
   /**
@@ -33,12 +29,12 @@ export default Ember.Component.extend({
 
     @property value
     @type Number
-   */
+  */
   value: undefined,
 
   /**
     Handles changes in inputValue.
-   */
+  */
   inputValueDidChange: Ember.observer('inputValue', function() {
     let value = parseInt(this.get('inputValue'), 10);
     this.set('value', isNaN(value) ? undefined : value);
@@ -46,7 +42,7 @@ export default Ember.Component.extend({
 
   /**
     Initializes component.
-   */
+  */
   init() {
     this._super(...arguments);
 

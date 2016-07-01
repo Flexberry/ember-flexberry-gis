@@ -1,7 +1,3 @@
-/**
-  @module ember-flexberry-dummy
- */
-
 import Ember from 'ember';
 
 /**
@@ -9,7 +5,7 @@ import Ember from 'ember';
 
   @class SettingsExampleComponent
   @extends Ember.Component
- */
+*/
 export default Ember.Component.extend({
   /**
     A hash of controller properties.
@@ -17,7 +13,7 @@ export default Ember.Component.extend({
     @property controllerProperties
     @type Object
     @default null
-   */
+  */
   controllerProperties: null,
 
   /**
@@ -26,7 +22,7 @@ export default Ember.Component.extend({
     @property componentSettingsMetadata
     @type Object
     @default null
-   */
+  */
   componentSettingsMetadata: null,
 
   /**
@@ -34,6 +30,6 @@ export default Ember.Component.extend({
 
     @property componentTemplateText
     @type String
-   */
+  */
   componentTemplateText: null
 });

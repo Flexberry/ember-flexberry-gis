@@ -1,26 +1,25 @@
-/**
-  @module ember-flexberry-gis-dummy
-*/
-
 import Ember from 'ember';
 
 /**
   CSS picker component.
+
   @class CssPickerComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 export default Ember.Component.extend({
   /**
     Items containing possible CSS classes names with flags indicating whether class is selected or not.
-    @private
+
     @property _items
     @type Object[]
+    @private
   */
   _items: undefined,
 
   actions: {
     /**
       Handles changes in checkboxes related to CSS classes names.
+
       @method actions.onChange
     */
     onChange() {
@@ -37,6 +36,7 @@ export default Ember.Component.extend({
 
   /**
     Items containing possible CSS classes names.
+
     @property items
     @type Object[]
   */
@@ -44,6 +44,7 @@ export default Ember.Component.extend({
 
   /**
     Single value combined from selected CSS classes names.
+
     @property value
     @type String
    */
@@ -75,8 +76,10 @@ export default Ember.Component.extend({
   }),
 
   /**
-    Generates items containing possible CSS classes names with flags indicating whether class is selected or not..
+    Generates items containing possible CSS classes names with flags indicating whether class is selected or not.
+
     @method _generateItems
+    @private
   */
   _generateItems() {
     let items = Ember.A(this.get('items'));
@@ -92,7 +95,9 @@ export default Ember.Component.extend({
   /**
     Changes items flags indicating whether class is selected or not
     (depending on current value combined from selected CSS classes names).
+
     @method _checkItems
+    @private
   */
   _checkItems() {
     let classNames = Ember.A((this.get('value') || '').split(' '));

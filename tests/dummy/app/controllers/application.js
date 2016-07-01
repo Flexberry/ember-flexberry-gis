@@ -3,6 +3,12 @@ import config from '../config/environment';
 
 const version = config.APP.version;
 
+/**
+  Application controller.
+
+  @class ApplicationController
+  @extends <a href="http://emberjs.com/api/classes/Ember.Controller.html">Ember.Controller</a>
+*/
 export default Ember.Controller.extend({
   actions: {
     /**
