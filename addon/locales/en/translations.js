@@ -1,10 +1,4 @@
-import Ember from 'ember';
-import emberFlexberryTranslations from 'ember-flexberry/locales/en/translations';
-
-const translations = {};
-Ember.$.extend(true, translations, emberFlexberryTranslations);
-
-Ember.$.extend(true, translations, {
+let translations = {
   'forms': {
     'new-platform-flexberry-g-i-s-map-layer-tile': {
       'url': 'Url',
@@ -43,6 +37,6 @@ Ember.$.extend(true, translations, {
       'unknown-layer': 'Unknown layer type'
     }
   }
-});
+};
 
 export default translations;
