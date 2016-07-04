@@ -52,6 +52,16 @@ import { InvokeActionMixin } from 'ember-invoke-action';
 */
 export default Ember.Component.extend(InvokeActionMixin, {
   /**
+    Reference to selected component's inner <input type="checkbox">.
+
+    @property _checkboxInput
+    @type <a href="http://api.jquery.com/Types/#jQuery">JQueryObject</a>
+    @default null
+    @private
+  */
+  _checkboxInput: null,
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -75,9 +85,9 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     @property classNameBindings
     @type String[]
-    @default ['readonly:read-only']
+    @default ['value:checked', 'readonly:read-only']
   */
-  classNameBindings: ['readonly:read-only'],
+  classNameBindings: ['value:checked', 'readonly:read-only'],
 
   /**
     Component's value (if true, then checkbox is checked).
@@ -120,6 +130,11 @@ export default Ember.Component.extend(InvokeActionMixin, {
         event: e
       });
 
+      // Synchronize checkbox input state with binded value.
+      // Otherwise such situation is possible when value wasn't mutated by 'change' action handler,
+      // but checkbox is checked, because user clicked on it.
+      this.get('_checkboxInput').prop('checked', this.get('value') === true);
+
       // Return false to prevent input's 'change' event bubbling.
       return false;
     }
@@ -133,6 +148,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // Initialize Semantic UI checkbox.
     this.$().checkbox();
+    this.set('_checkboxInput', this.$('input'));
   },
 
   /**
@@ -142,6 +158,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     this._super(...arguments);
 
     // Destroys Semantic UI checkbox.
+    this.set('_checkboxInput', null);
     this.$().checkbox('destroy');
   }
 });
