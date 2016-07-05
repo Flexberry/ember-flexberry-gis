@@ -12,10 +12,14 @@ let Model = BaseModel.extend({
   creator: DS.attr('string'),
   editTime: DS.attr('string'),
   editor: DS.attr('string'),
-  layers: DS.hasMany('new-platform-flexberry-g-i-s-map-layer', { inverse: 'map', async: false }),
+  rootLayer: DS.belongsTo('new-platform-flexberry-g-i-s-map-layer', { inverse: null, async: false }),
+
+  layers: null,
+
   validations: {
     name: { presence: true },
-    public: { presence: true }
+    public: { presence: true },
+    rootLayer: { presence: true }
   }
 });
 Model.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map', {
@@ -25,27 +29,19 @@ Model.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map', {
   coordinateReferenceSystem: Proj.attr('Coordinate reference system'),
   lat: Proj.attr(''),
   lng: Proj.attr(''),
-  layers: Proj.hasMany('new-platform-flexberry-g-i-s-map-layer', '', {
-    name: Proj.attr('Name'),
-    type: Proj.attr('Type'),
-    visibility: Proj.attr('Visibility'),
-    settings: Proj.attr('Settings'),
-    coordinateReferenceSystem: Proj.attr('Coordinate reference system')
+  rootLayer: Proj.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
+
   })
 });
 Model.defineProjection('MapE', 'new-platform-flexberry-g-i-s-map', {
   name: Proj.attr('Name'),
   lat: Proj.attr('Lat'),
-  lng: Proj.attr('Lon'),
+  lng: Proj.attr('Lng'),
   zoom: Proj.attr('Zoom'),
   public: Proj.attr('Public'),
   coordinateReferenceSystem: Proj.attr('Coordinate reference system'),
-  layers: Proj.hasMany('new-platform-flexberry-g-i-s-map-layer', 'Layers', {
-    name: Proj.attr('Name'),
-    type: Proj.attr('Type'),
-    visibility: Proj.attr('Visibility'),
-    settings: Proj.attr('Settings'),
-    coordinateReferenceSystem: Proj.attr('Coordinate reference system')
+  rootLayer: Proj.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
+
   })
 });
 Model.defineProjection('MapL', 'new-platform-flexberry-g-i-s-map', {
