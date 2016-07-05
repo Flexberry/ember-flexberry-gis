@@ -17,7 +17,7 @@ export default EditFormRoute.extend({
         new QueryBuilder(that.store)
           .from(queryModel)
           .selectByProjection('MapLayerE')
-          .where('hierarchy', FilterOperator.Eq, layer.id);
+          .where('parent', FilterOperator.Eq, layer.id);
 
       let promises = [];
       let childs = [];
