@@ -52,16 +52,6 @@ import { InvokeActionMixin } from 'ember-invoke-action';
 */
 export default Ember.Component.extend(InvokeActionMixin, {
   /**
-    Reference to selected component's inner <input type="checkbox">.
-
-    @property _checkboxInput
-    @type <a href="http://api.jquery.com/Types/#jQuery">JQueryObject</a>
-    @default null
-    @private
-  */
-  _checkboxInput: null,
-
-  /**
     Reference to component's template.
   */
   layout,
@@ -119,21 +109,25 @@ export default Ember.Component.extend(InvokeActionMixin, {
   actions: {
     /**
       Handles checkbox input's 'change' action.
-      Invokes component's 'change' action.
+      Invokes component's 'change', 'check', 'uncheck' actions.
 
       @method actions.onChange
       @param {Object} e Inner checkbox input's 'change' [event object](http://api.jquery.com/category/events/event-object/).
     */
     onChange(e) {
+      let checked = e.target.checked;
+
+      // Invoke common 'change' action.
       this.invokeAction('change', {
-        newValue: e.target.checked,
+        newValue: checked,
         event: e
       });
 
-      // Synchronize checkbox input state with binded value.
-      // Otherwise such situation is possible when value wasn't mutated by 'change' action handler,
-      // but checkbox is checked, because user clicked on it.
-      this.get('_checkboxInput').prop('checked', this.get('value') === true);
+      // Invoke state-related 'check' or 'uncheck' action.
+      this.invokeAction(checked ? 'check' : 'uncheck', {
+        newValue: checked,
+        event: e
+      });
 
       // Return false to prevent input's 'change' event bubbling.
       return false;
@@ -148,7 +142,6 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // Initialize Semantic UI checkbox.
     this.$().checkbox();
-    this.set('_checkboxInput', this.$('input'));
   },
 
   /**
@@ -158,7 +151,6 @@ export default Ember.Component.extend(InvokeActionMixin, {
     this._super(...arguments);
 
     // Destroys Semantic UI checkbox.
-    this.set('_checkboxInput', null);
     this.$().checkbox('destroy');
   }
 });

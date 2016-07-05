@@ -23,6 +23,53 @@ test('Component renders properly', function(assert) {
   assert.strictEqual($checkboxInput.prop('checked'), false, 'Component\'s inner checkbox input isn\'t checked');
 });
 
+test('Component invokes actions', function(assert) {
+  assert.expect(9);
+
+  let latestEventObjects = {
+    change: null,
+    check: null,
+    uncheck: null,
+  };
+
+  // Bind component's action handlers.
+  this.set('actions.onFlagChange', e => {
+    latestEventObjects.change = e;
+  });
+  this.set('actions.onFlagCheck', e => {
+    latestEventObjects.check = e;
+  });
+  this.set('actions.onFlagUncheck', e => {
+    latestEventObjects.uncheck = e;
+  });
+  this.render(hbs`{{flexberry-ddau-checkbox change=(action \"onFlagChange\") check=(action \"onFlagCheck\") uncheck=(action \"onFlagUncheck\")}}`);
+
+  // Retrieve component.
+  let $component = this.$().children();
+
+  assert.strictEqual(latestEventObjects.change, null, 'Component\'s \'change\' action wasn\'t invoked before click');
+  assert.strictEqual(latestEventObjects.check, null, 'Component\'s \'check\' action wasn\'t invoked before click');
+  assert.strictEqual(latestEventObjects.uncheck, null, 'Component\'s \'uncheck\' action wasn\'t invoked before click');
+
+  // Imitate first click on component.
+  $component.click();
+
+  assert.notStrictEqual(latestEventObjects.change, null, 'Component\'s \'change\' action was invoked after first click');
+  assert.notStrictEqual(latestEventObjects.check, null, 'Component\'s \'check\' action was invoked after first click');
+  assert.strictEqual(latestEventObjects.uncheck, null, 'Component\'s \'uncheck\' action wasn\'t invoked after first click');
+
+  latestEventObjects.change = null;
+  latestEventObjects.check = null;
+  latestEventObjects.uncheck = null;
+
+  // Imitate second click on component.
+  $component.click();
+
+  assert.notStrictEqual(latestEventObjects.change, null, 'Component\'s \'change\' action was invoked after second click');
+  assert.strictEqual(latestEventObjects.check, null, 'Component\'s \'check\' action wasn\'t invoked after second click');
+  assert.notStrictEqual(latestEventObjects.uncheck, null, 'Component\'s \'uncheck\' action was invoked after second click');
+});
+
 test('Component doesn\'t change binded value (without \'change\' action handler)', function(assert) {
   assert.expect(3);
 
@@ -40,11 +87,13 @@ test('Component doesn\'t change binded value (without \'change\' action handler)
   // Imitate click on component.
   $component.click();
 
-  // Check component's & binded value's states after click.
+  // Check component's state after click (it should be changed).
   assert.strictEqual(
     $checkboxInput.prop('checked'),
-    false,
+    true,
     'Component\'s inner checkbox input isn\'t checked after click (without \'change\' action handler)');
+
+  // Check binded value state after click (it should be unchanged, because 'change' action handler is not defined).
   assert.strictEqual(
     this.get('flag'),
     false,
