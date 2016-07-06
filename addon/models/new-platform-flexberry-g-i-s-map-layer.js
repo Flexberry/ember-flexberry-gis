@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import DS from 'ember-data';
 import BaseModel from 'ember-flexberry/models/base';
 import Proj from 'ember-flexberry-data';
@@ -10,6 +11,14 @@ let Model = BaseModel.extend({
   parent: DS.belongsTo('new-platform-flexberry-g-i-s-map-layer', { inverse: null, async: false }),
 
   layers: null,
+
+  settingsAsObject: Ember.computed('settings', function () {
+    let stringToDeserialize = this.get('settings');
+    if (stringToDeserialize) {
+      return JSON.parse(stringToDeserialize);
+    }
+    return {};
+  }),
 
   validations: {
     type: { presence: true }

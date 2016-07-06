@@ -7,42 +7,36 @@ export default EditFormRoute.extend({
   modelProjection: 'MapE',
   modelName: 'new-platform-flexberry-g-i-s-map',
 
-  loadChildLayers(layer) {
-    let that = this;
+  loadLayer(layer) {
     return new Ember.RSVP.Promise((resolve, reject) => {
+      if(layer.get('type') === 'group') {
+        this.loadChildLayers(layer)
+        .then(layers => layer.set('layers', layers))
+        .then(() => resolve(layer))
+        .catch(reason => reject(reason));
+      }
+      else
+      {
+        resolve(layer);
+      }
+    });
+  },
 
+  loadChildLayers(layer) {
       let queryModel = 'new-platform-flexberry-g-i-s-map-layer';
 
       let query =
-        new QueryBuilder(that.store)
+        new QueryBuilder(this.store)
           .from(queryModel)
           .selectByProjection('MapLayerE')
           .where('parent', FilterOperator.Eq, layer.id);
 
-      let promises = [];
-      let childs = [];
-
-      that.store
+      return this.store
         .query(queryModel, query.build())
         .then(queryLayers => {
-
-          queryLayers.forEach(child => {
-
-            if (child.get('type') === 'group') {
-              let childPromise = that.loadChildLayers(child);
-              promises.push(childPromise);
-              childPromise.then(layers => child.set('layers', layers));
-            }
-
-            childs.push(child);
-          });
-        })
-        .catch(ex => reject(ex));
-
-      Ember.RSVP.Promise.all(promises).then(resolve(childs));
-    });
-
-
+          let promises = queryLayers.map(lyr => this.loadLayer(lyr));
+          return Ember.RSVP.Promise.all(promises);
+        });
   },
 
   model() {
