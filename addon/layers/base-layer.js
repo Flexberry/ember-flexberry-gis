@@ -10,7 +10,7 @@ export default Ember.Object.extend({
 
   leafletRequiredOptions: [],
 
-  requiredOptions: computed(function() {
+  requiredOptions: computed(function () {
     let leafletRequiredOptions = this.get('leafletRequiredOptions');
     let options = [];
     leafletRequiredOptions.forEach(optionName => {
@@ -23,7 +23,7 @@ export default Ember.Object.extend({
 
   leafletOptions: [],
 
-  options: computed(function() {
+  options: computed(function () {
     let leafletOptions = this.get('leafletOptions');
     let options = {};
     leafletOptions.forEach(optionName => {
@@ -35,11 +35,11 @@ export default Ember.Object.extend({
     return options;
   }),
 
-  toggleVisible: function() {
-    if(this.get('model.visibility')){
+  toggleVisible: function () {
+    if (this.get('model.visibility')) {
       this.get('container').addLayer(this.get('leafletLayer'));
     }
-    else{
+    else {
       this.get('container').removeLayer(this.get('leafletLayer'));
     }
   },
@@ -55,7 +55,15 @@ export default Ember.Object.extend({
     this.set('model', model);
     this.set('container', container);
     this.set('leafletLayer', this.createLayer());
+    this.addObserver('model.visibility', this.toggleVisible);
     this.toggleVisible();
-  }
+  },
 
+  setOrder(indexed) {
+    let leafLayer = this.get('leafletLayer');
+    if (leafLayer && leafLayer.setZIndex) {
+      leafLayer.setZIndex(indexed.index);
+      indexed.index++;
+    }
+  }
 });

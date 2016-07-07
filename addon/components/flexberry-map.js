@@ -15,6 +15,7 @@ export default Ember.Component.extend(ContainerMixin, {
     map.setView([0, 0], 2);
     this.set('leafletMap', map);
     this.buildLayers(map, this.get('model'));
+    this.setOrder({ index: 0 });
   },
 
   willDestoryElement() {

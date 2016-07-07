@@ -1,1 +1,5 @@
+{{#each model.layers as |layer|}}
+  {{flexberry-checkbox value=layer.visibility label=layer.name}}
+{{/each}}
+
 {{flexberry-map model=model}}
