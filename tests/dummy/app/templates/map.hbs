@@ -1,5 +1,8 @@
-{{#each model.layers as |layer|}}
-  {{flexberry-checkbox value=layer.visibility label=layer.name}}
-{{/each}}
-
-{{flexberry-map model=model}}
+<div class="ui grid">
+  <div class="twelve wide column">
+    {{flexberry-map model=model}}
+  </div>
+  <div class="four wide column">
+    {{layers-tree layers=model.layers}}
+  </div>
+</div>
