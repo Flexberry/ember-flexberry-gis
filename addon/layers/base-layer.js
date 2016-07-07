@@ -2,7 +2,7 @@ import Ember from 'ember';
 const { computed, assert } = Ember;
 
 export default Ember.Object.extend({
-  layer: undefined,
+  model: undefined,
 
   container: undefined,
 
@@ -14,7 +14,7 @@ export default Ember.Object.extend({
     let leafletRequiredOptions = this.get('leafletRequiredOptions');
     let options = [];
     leafletRequiredOptions.forEach(optionName => {
-      let optionValue = this.get('layer.settingsAsObject')[optionName];
+      let optionValue = this.get('model.settingsAsObject')[optionName];
       assert(`\`${optionName}\` is a required option but its value was \`${optionValue}\``, optionValue);
       options.push(optionValue);
     });
@@ -27,7 +27,7 @@ export default Ember.Object.extend({
     let leafletOptions = this.get('leafletOptions');
     let options = {};
     leafletOptions.forEach(optionName => {
-      let optionValue = this.get('layer.settingsAsObject')[optionName];
+      let optionValue = this.get('model.settingsAsObject')[optionName];
       if (optionValue !== undefined) {
         options[optionName] = optionValue;
       }
@@ -36,7 +36,7 @@ export default Ember.Object.extend({
   }),
 
   toggleVisible: function() {
-    if(this.get('layer.visibility')){
+    if(this.get('model.visibility')){
       this.get('container').addLayer(this.get('leafletLayer'));
     }
     else{
@@ -48,11 +48,11 @@ export default Ember.Object.extend({
     assert('BaseLayer\'s `createLayer` should be overriden.');
   },
 
-  buildLayer(container, layer) {
+  buildLayer(container, model) {
     assert('Should be built with container', container);
-    assert('Should be built with layer', layer);
+    assert('Should be built with layer', model);
 
-    this.set('layer', layer);
+    this.set('model', model);
     this.set('container', container);
     this.set('leafletLayer', this.createLayer());
     this.toggleVisible();
