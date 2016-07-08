@@ -8,7 +8,7 @@ export default Ember.Component.extend(ContainerMixin, {
   model: undefined,
 
   center: Ember.computed('model.lat', 'model.lng', function () {
-    return L.latLng(this.get('model.lat'), this.get('model.lng'));
+    return L.latLng(this.get('model.lat') || 0, this.get('model.lng') || 0);
   }),
 
   zoom: Ember.computed('model.zoom', function() {
