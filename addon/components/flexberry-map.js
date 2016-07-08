@@ -7,14 +7,22 @@ export default Ember.Component.extend(ContainerMixin, {
 
   model: undefined,
 
+  center: Ember.computed('model.lat', 'model.lng', function () {
+    return L.latLng(this.get('model.lat'), this.get('model.lng'));
+  }),
+
+  zoom: Ember.computed('model.zoom', function() {
+    return this.get('model.zoom');
+  }),
+
   leafletMap: undefined,
 
   didInsertElement() {
     this._super(...arguments);
     let map = L.map(this.element, this.get('options'));
-    map.setView([0, 0], 2);
+    map.setView(this.get('center'), this.get('zoom'));
     this.set('leafletMap', map);
-    this.buildLayers(map, this.get('model'));
+    this.buildLayers(map);
     this.setOrder({ index: 0 });
   },
 

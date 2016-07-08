@@ -1,39 +1,17 @@
 import Ember from 'ember';
-const { computed, assert } = Ember;
+import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
 
-export default Ember.Object.extend({
+const { assert } = Ember;
+
+export default Ember.Object.extend(LeafletOptionsMixin, {
+
   model: undefined,
 
   container: undefined,
 
   leafletLayer: undefined,
 
-  leafletRequiredOptions: [],
-
-  requiredOptions: computed(function () {
-    let leafletRequiredOptions = this.get('leafletRequiredOptions');
-    let options = [];
-    leafletRequiredOptions.forEach(optionName => {
-      let optionValue = this.get('model.settingsAsObject')[optionName];
-      assert(`\`${optionName}\` is a required option but its value was \`${optionValue}\``, optionValue);
-      options.push(optionValue);
-    });
-    return options;
-  }),
-
-  leafletOptions: [],
-
-  options: computed(function () {
-    let leafletOptions = this.get('leafletOptions');
-    let options = {};
-    leafletOptions.forEach(optionName => {
-      let optionValue = this.get('model.settingsAsObject')[optionName];
-      if (optionValue !== undefined) {
-        options[optionName] = optionValue;
-      }
-    });
-    return options;
-  }),
+  order: undefined,
 
   toggleVisible: function () {
     if (this.get('model.visibility')) {
@@ -63,6 +41,7 @@ export default Ember.Object.extend({
     let leafLayer = this.get('leafletLayer');
     if (leafLayer && leafLayer.setZIndex) {
       leafLayer.setZIndex(indexed.index);
+      this.set('order', indexed.index);
       indexed.index++;
     }
   }
