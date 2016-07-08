@@ -3,7 +3,7 @@
 
 module.exports = {
   name: 'ember-flexberry-gis',
-  included(app) {
+  included: function(app) {
     app.import(app.bowerDirectory + '/leaflet/dist/leaflet-src.js');
 
     app.import(app.bowerDirectory + '/leaflet/dist/leaflet.css');
