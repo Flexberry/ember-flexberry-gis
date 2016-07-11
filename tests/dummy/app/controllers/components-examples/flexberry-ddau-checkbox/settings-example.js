@@ -10,20 +10,20 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
   class: '',
 
   /**
+    Text for 'flexberry-ddau-checkbox' 'caption' property.
+
+    @property caption
+    @type String
+    @default null
+  */
+  caption: null,
+
+  /**
     Flag: indicates whether 'flexberry-ddau-checkbox' component is in 'readonly' mode or not.
     @property readonly
     @type Boolean
    */
   readonly: false,
-
-  /**
-    Text for 'flexberry-ddau-checkbox' 'label' property.
-
-    @property label
-    @type String
-    @default null
-  */
-  label: null,
 
   /**
     Template text for 'flexberry-ddau-checkbox' component.
@@ -34,7 +34,7 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
     '{{flexberry-ddau-checkbox<br>' +
     '  class=class<br>' +
     '  value=model.flag<br>' +
-    '  label=label<br>' +
+    '  caption=caption<br>' +
     '  readonly=readonly<br>' +
     '  change=(action \"onCheckboxChange\" \"model.flag\")<br>' +
     '}}'),
@@ -61,10 +61,10 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
       bindedControllerPropertieName: 'model.flag'
     });
     componentSettingsMetadata.pushObject({
-      settingName: 'label',
+      settingName: 'caption',
       settingType: 'string',
       settingDefaultValue: null,
-      bindedControllerPropertieName: 'label'
+      bindedControllerPropertieName: 'caption'
     });
     componentSettingsMetadata.pushObject({
       settingName: 'readonly',

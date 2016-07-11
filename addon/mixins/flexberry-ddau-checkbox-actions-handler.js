@@ -14,15 +14,15 @@ import Ember from 'ember';
 export default Ember.Mixin.create({
   actions: {
     /**
-      Handles {{#crossLink "FlexberryDdauCheckboxComponent"}}flexberry-ddau-checkbox component's{{/crossLink}}
-      'change' action.
+      Handles {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox component's 'change' action{{/crossLink}}.
       It mutates value of property with given name to value of action's event object 'newValue' property.
 
       @method actions.onCheckboxChange
       @param {String} mutablePropertyPath Path to a property, which value must be mutated on action.
       @param {Object} e Action's event object.
       @param {Object} e.newValue New value for a property, which value must be mutated on action.
-      @param {Object} e.event Inner checkbox input's 'change' [event object](http://api.jquery.com/category/events/event-object/).
+      @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
+      which describes inner input's 'change' event.
 
       @example
       templates/my-form.hbs

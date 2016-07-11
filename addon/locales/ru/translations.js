@@ -39,7 +39,5 @@ export default {
   },
 
   'components': {
-    'flexberry-ddau-checkbox': {
-    }
   }
 };

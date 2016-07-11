@@ -7,8 +7,7 @@ export default Ember.Route.extend({
     @method model
   */
   model(params) {
-    return this.get('store')
-      .createRecord('components-examples/flexberry-ddau-checkbox/settings-example/base', {
-      });
+    return this.get('store').createRecord('components-examples/flexberry-ddau-checkbox/settings-example/base', {
+    });
   }
 });

@@ -107,7 +107,7 @@ test('Component changes binded value (with \'change\' action handler)', function
   
   // Bind component's 'change' action handler.
   this.set('actions.onFlagChange', e => {
-    assert.strictEqual(e.event.target.id, this.$('input')[0].id);
+    assert.strictEqual(e.originalEvent.target.id, this.$('input')[0].id);
     this.set('flag', e.newValue);
   });
 

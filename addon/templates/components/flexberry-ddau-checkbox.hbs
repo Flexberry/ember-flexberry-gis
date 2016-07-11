@@ -4,8 +4,11 @@
   component should display data, but not mutate it by its own.
 --}}
 {{input
+  class=flexberryClassNames.checkboxInput
   type="checkbox"
   checked=(get this "value")
   change=(action "onChange" preventDefault=false)
 }}
-<label>{{label}}</label>
+<label class={{flexberryClassNames.checkboxCaption}}>
+  {{caption}}
+</label>
