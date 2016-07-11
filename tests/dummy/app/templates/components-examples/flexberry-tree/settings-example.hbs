@@ -1,0 +1,131 @@
+<h3 class="ui header">{{t "forms.components-examples.flexberry-ddau-tree.settings-example.caption"}}</h3>
+<form class="ui form flexberry-vertical-form" role="form">
+  <div class="field">
+    {{#settings-example
+      controllerProperties=this
+      componentSettingsMetadata=componentSettingsMetadata
+      componentTemplateText=componentTemplateText
+    }}
+      {{#flexberry-tree
+        class=class
+        exclusive=exclusive
+        collapsible=collapsible
+        animateChildren=animateChildren
+        duration=duration
+      }}
+        {{#flexberry-treenode
+          caption="Node 1 (with child nodes)"
+          hasCheckbox=true
+          iconClass="pie chart icon"
+          beforeExpand=(action "onBeforeExpand")
+          beforeCollapse=(action "onBeforeCollapse")
+          checkboxChange=(action "onCheckboxChange")
+          checkboxCheck=(action "onCheckboxCheck")
+          checkboxUncheck=(action "onCheckboxUncheck")
+        }}
+          Node 1 custom content
+          
+          {{#flexberry-tree}}
+            {{flexberry-treenode
+              caption="Node 1.1 (leaf node)"
+              hasCheckbox=true
+              iconClass="pie chart icon"
+              beforeExpand=(action "onBeforeExpand")
+              beforeCollapse=(action "onBeforeCollapse")
+              checkboxChange=(action "onCheckboxChange")
+              checkboxCheck=(action "onCheckboxCheck")
+              checkboxUncheck=(action "onCheckboxUncheck")
+            }}
+
+            {{#flexberry-treenode
+              caption="Node 1.2 (with child nodes)"
+              hasCheckbox=true
+              iconClass="pie chart icon"
+              beforeExpand=(action "onBeforeExpand")
+              beforeCollapse=(action "onBeforeCollapse")
+              checkboxChange=(action "onCheckboxChange")
+              checkboxCheck=(action "onCheckboxCheck")
+              checkboxUncheck=(action "onCheckboxUncheck")
+            }}
+              Node 1.2 custom content
+
+              {{#flexberry-tree}}
+                {{#flexberry-treenode
+                  caption="Node 1.2.1 (with child nodes)"
+                  hasCheckbox=true
+                  iconClass="pie chart icon"
+                  beforeExpand=(action "onBeforeExpand")
+                  beforeCollapse=(action "onBeforeCollapse")
+                  checkboxChange=(action "onCheckboxChange")
+                  checkboxCheck=(action "onCheckboxCheck")
+                  checkboxUncheck=(action "onCheckboxUncheck")
+                }}
+                  Node 1.2.1 custom content
+                  {{#flexberry-tree}}
+                    {{flexberry-treenode
+                      caption="Node 1.2.1.1 (leaf node)"
+                      hasCheckbox=true
+                      iconClass="pie chart icon"
+                      beforeExpand=(action "onBeforeExpand")
+                      beforeCollapse=(action "onBeforeCollapse")
+                      checkboxChange=(action "onCheckboxChange")
+                      checkboxCheck=(action "onCheckboxCheck")
+                      checkboxUncheck=(action "onCheckboxUncheck")
+                    }}
+                  {{/flexberry-tree}}
+                {{/flexberry-treenode}}
+
+                {{flexberry-treenode
+                  caption="Node 1.2.2 (leaf node)"
+                  hasCheckbox=true
+                  iconClass="pie chart icon"
+                  beforeExpand=(action "onBeforeExpand")
+                  beforeCollapse=(action "onBeforeCollapse")
+                  checkboxChange=(action "onCheckboxChange")
+                  checkboxCheck=(action "onCheckboxCheck")
+                  checkboxUncheck=(action "onCheckboxUncheck")
+                }}
+              {{/flexberry-tree}}
+            {{/flexberry-treenode}}
+          {{/flexberry-tree}}
+        {{/flexberry-treenode}}
+
+        {{flexberry-treenode
+          caption="Node 2 (leaf node)"
+          hasCheckbox=true
+          iconClass="pie chart icon"
+          beforeExpand=(action "onBeforeExpand")
+          beforeCollapse=(action "onBeforeCollapse")
+          checkboxChange=(action "onCheckboxChange")
+          checkboxCheck=(action "onCheckboxCheck")
+          checkboxUncheck=(action "onCheckboxUncheck")
+        }}
+
+        {{#flexberry-treenode
+          caption="Node 3 (with child nodes)"
+          hasCheckbox=true
+          iconClass="pie chart icon"
+          beforeExpand=(action "onBeforeExpand")
+          beforeCollapse=(action "onBeforeCollapse")
+          checkboxChange=(action "onCheckboxChange")
+          checkboxCheck=(action "onCheckboxCheck")
+          checkboxUncheck=(action "onCheckboxUncheck")
+        }}
+          Node 3 custom content
+          {{#flexberry-tree}}
+            {{flexberry-treenode
+              caption="Node 3.1 (leaf node)"
+              hasCheckbox=true
+              iconClass="pie chart icon"
+              beforeExpand=(action "onBeforeExpand")
+              beforeCollapse=(action "onBeforeCollapse")
+              checkboxChange=(action "onCheckboxChange")
+              checkboxCheck=(action "onCheckboxCheck")
+              checkboxUncheck=(action "onCheckboxUncheck")
+            }}
+          {{/flexberry-tree}}
+        {{/flexberry-treenode}}
+      {{/flexberry-tree}}
+    {{/settings-example}}
+  </div>
+</form>

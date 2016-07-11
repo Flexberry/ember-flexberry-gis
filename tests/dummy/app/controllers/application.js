@@ -134,12 +134,12 @@ export default Ember.Controller.extend({
           }]
         }, {
           link: null,
-          caption: i18n.t('forms.application.sitemap.components-examples.flexberry-ddau-tree.caption'),
-          title: i18n.t('forms.application.sitemap.components-examples.flexberry-ddau-tree.title'),
+          caption: i18n.t('forms.application.sitemap.components-examples.flexberry-tree.caption'),
+          title: i18n.t('forms.application.sitemap.components-examples.flexberry-tree.title'),
           children: [{
-            link: 'components-examples/flexberry-ddau-tree/settings-example',
-            caption: i18n.t('forms.application.sitemap.components-examples.flexberry-ddau-tree.settings-example.caption'),
-            title: i18n.t('forms.application.sitemap.components-examples.flexberry-ddau-tree.settings-example.title'),
+            link: 'components-examples/flexberry-tree/settings-example',
+            caption: i18n.t('forms.application.sitemap.components-examples.flexberry-tree.settings-example.caption'),
+            title: i18n.t('forms.application.sitemap.components-examples.flexberry-tree.settings-example.title'),
             children: null
           }]
         }]

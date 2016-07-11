@@ -18,7 +18,7 @@ Router.map(function() {
 
   // Components examples routes (sorted by component's names).
   this.route('components-examples/flexberry-ddau-checkbox/settings-example');
-  this.route('components-examples/flexberry-ddau-tree/settings-example');
+  this.route('components-examples/flexberry-tree/settings-example');
 });
 
 export default Router;

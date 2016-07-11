@@ -81,8 +81,8 @@ Ember.$.extend(true, translations, {
               'title': ''
             }
           },
-          'flexberry-ddau-tree': {
-            'caption': 'flexberry-ddau-tree',
+          'flexberry-tree': {
+            'caption': 'flexberry-tree',
             'title': '',
             'settings-example': {
               'caption': 'Пример работы с настройками',
@@ -112,9 +112,9 @@ Ember.$.extend(true, translations, {
           'caption': 'Components-examples/flexberry-ddau-checkbox/settings-example'
         }
       },
-      'flexberry-ddau-tree': {
+      'flexberry-tree': {
         'settings-example': {
-          'caption': 'Components-examples/flexberry-ddau-tree/settings-example'
+          'caption': 'Components-examples/flexberry-tree/settings-example'
         }
       }
     },
