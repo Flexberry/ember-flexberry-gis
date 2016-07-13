@@ -2,7 +2,7 @@ import Ember from 'ember';
 import { moduleFor, test } from 'ember-qunit';
 import sinon from 'sinon';
 
-moduleFor('layer:base-layer', 'Unit | Layer | Base layer', {
+moduleFor('component:base-layer', 'Unit | Layer | Base layer', {
   unit: true
 });
 

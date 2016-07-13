@@ -1,4 +1,4 @@
-import BaseLayer from './base-layer';
+import BaseLayer from 'ember-flexberry-gis/components/base-layer';
 
 export default BaseLayer.extend({
   leafletRequiredOptions: [

@@ -1,11 +1,12 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-map';
-import ContainerMixin from 'ember-flexberry-gis/mixins/layercontainer';
 
-export default Ember.Component.extend(ContainerMixin, {
+export default Ember.Component.extend({
   layout,
 
   model: undefined,
+
+  mapElement: undefined,
 
   center: Ember.computed('model.lat', 'model.lng', function () {
     return L.latLng(this.get('model.lat') || 0, this.get('model.lng') || 0);
@@ -17,13 +18,19 @@ export default Ember.Component.extend(ContainerMixin, {
 
   leafletMap: undefined,
 
+  init() {
+    this._super(...arguments);
+    let mapElement = Ember.$("<div>")[0];
+    this.set('mapElement', mapElement);
+    let map = L.map(mapElement);
+    this.set('leafletMap', map);
+  },
+
   didInsertElement() {
     this._super(...arguments);
-    let map = L.map(this.element, this.get('options'));
+    this.$().append(this.get('mapElement'));
+    let map = this.get('leafletMap');
     map.setView(this.get('center'), this.get('zoom'));
-    this.set('leafletMap', map);
-    this.buildLayers(map);
-    this.setOrder({ index: 0 });
   },
 
   willDestoryElement() {

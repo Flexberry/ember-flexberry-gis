@@ -10,7 +10,7 @@ export default Ember.Mixin.create({
     let modellayers = this.get('model.layers') || [];
     let layers = [];
     modellayers.forEach(layer => {
-      let creator = getOwner(this).lookup(`layer:${layer.get('type')}`);
+      let creator = getOwner(this).lookup(`component:layers/${layer.get('type')}`);
       Ember.assert(`unknown layer type: ${layer.get('type')}`, creator);
       creator.buildLayer(container, layer);
       layers.push(creator);

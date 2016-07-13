@@ -1,4 +1,4 @@
-import TileLayer from './tile';
+import TileLayer from 'ember-flexberry-gis/components/layers/tile-layer';
 
 export default TileLayer.extend({
 
