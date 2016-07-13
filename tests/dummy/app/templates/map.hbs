@@ -1,8 +1,11 @@
 <div class="ui grid">
   <div class="twelve wide column">
-    {{flexberry-map model=model}}
+    {{flexberry-map model=model zoomControl=false onMoveend=(action "updateCenter")}}
   </div>
   <div class="four wide column">
-    {{layers-tree layers=model.layers}}
+    {{layers-tree layers=model.layers}}<br>
+    lat: {{flexberry-field value=model.lat}}
+    lng: {{flexberry-field value=model.lng}}
+    zoom: {{flexberry-field value=model.zoom}}
   </div>
 </div>

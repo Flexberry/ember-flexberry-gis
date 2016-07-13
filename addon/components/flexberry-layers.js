@@ -7,6 +7,8 @@ import layout from '../templates/components/flexberry-layers';
 export default Ember.Component.extend({
   layout,
 
+  tagName: '',
+
   /**
     Array of MapLayer
   */
@@ -17,10 +19,4 @@ export default Ember.Component.extend({
   */
   container: null,
 
-  /**
-    reference to flexberry-map component
-   */
-  map: null,
-
-  tagName: ''
 });
