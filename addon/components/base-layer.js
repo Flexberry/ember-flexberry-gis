@@ -1,28 +1,36 @@
 import Ember from 'ember';
 import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
+import LeafletPropertiesMixin from 'ember-flexberry-gis/mixins/leaflet-properties';
 
 const { assert } = Ember;
 
-export default Ember.Component.extend(LeafletOptionsMixin, {
+export default Ember.Component.extend(LeafletOptionsMixin, LeafletPropertiesMixin, {
   tagName: '',
 
   model: undefined,
 
   container: undefined,
 
-  leafletLayer: undefined,
+  index: Ember.computed('model.index', function () {
+    return this.get('model.index');
+  }),
 
-  order: undefined,
+  setZIndex: Ember.observer('index', function () {
+    let layer = this.get('_layer');
+    if (layer && layer.setZIndex) {
+      layer.setZIndex(this.get('index'));
+    }
+  }),
 
-  toggleVisible: Ember.observer('model.visibility', 'leafletLayer', function () {
+  _layer: undefined,
+
+  toggleVisible: Ember.observer('model.visibility', function () {
     Ember.assert('Try to change layer visibility without container', this.get('container'));
-    if (this.get('leafletLayer')) {
-      if (this.get('model.visibility')) {
-        this.get('container').addLayer(this.get('leafletLayer'));
-      }
-      else {
-        this.get('container').removeLayer(this.get('leafletLayer'));
-      }
+    if (this.get('model.visibility')) {
+      this.get('container').addLayer(this.get('_layer'));
+    }
+    else {
+      this.get('container').removeLayer(this.get('_layer'));
     }
   }),
 
@@ -32,11 +40,13 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
 
   init() {
     this._super(...arguments);
-    this.set('leafletLayer', this.createLayer());
+    this.set('_layer', this.createLayer());
+    this._addObservers();
   },
 
   didInsertElement() {
     this._super(...arguments);
     this.toggleVisible();
+    this.setZIndex();
   }
 });

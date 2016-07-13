@@ -9,34 +9,43 @@ export default EditFormRoute.extend({
 
   loadLayer(layer) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      if(layer.get('type') === 'group') {
+      if (layer.get('type') === 'group') {
         this.loadChildLayers(layer)
-        .then(layers => layer.set('layers', layers))
-        .then(() => resolve(layer))
-        .catch(reason => reject(reason));
+          .then(layers => layer.set('layers', layers))
+          .then(() => resolve(layer))
+          .catch(reason => reject(reason));
       }
-      else
-      {
+      else {
         resolve(layer);
       }
     });
   },
 
   loadChildLayers(layer) {
-      let queryModel = 'new-platform-flexberry-g-i-s-map-layer';
+    let queryModel = 'new-platform-flexberry-g-i-s-map-layer';
 
-      let query =
-        new QueryBuilder(this.store)
-          .from(queryModel)
-          .selectByProjection('MapLayerE')
-          .where('parent', FilterOperator.Eq, layer.id);
+    let query =
+      new QueryBuilder(this.store)
+        .from(queryModel)
+        .selectByProjection('MapLayerE')
+        .where('parent', FilterOperator.Eq, layer.id);
 
-      return this.store
-        .query(queryModel, query.build())
-        .then(queryLayers => {
-          let promises = queryLayers.map(lyr => this.loadLayer(lyr));
-          return Ember.RSVP.Promise.all(promises);
-        });
+    return this.store
+      .query(queryModel, query.build())
+      .then(queryLayers => {
+        let promises = queryLayers.map(lyr => this.loadLayer(lyr));
+        return Ember.RSVP.Promise.all(promises);
+      });
+  },
+
+  setIndex(layers, indexed) {
+    if (layers) {
+      layers.forEach(layer => {
+        layer.set('index', indexed.index);
+        indexed.index++;
+        this.setIndex(layer.get('layers'), indexed);
+      });
+    }
   },
 
   model() {
@@ -46,6 +55,7 @@ export default EditFormRoute.extend({
       return this.loadChildLayers(map.get('rootLayer'));
     }).then(layers => {
       baseModel.set('layers', layers);
+      this.setIndex(layers, { index: 0 });
       return baseModel;
     });
   }

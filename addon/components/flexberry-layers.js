@@ -17,5 +17,10 @@ export default Ember.Component.extend({
   */
   container: null,
 
+  /**
+    reference to flexberry-map component
+   */
+  map: null,
+
   tagName: ''
 });
