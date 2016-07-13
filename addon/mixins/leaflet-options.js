@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-const { computed, assert } = Ember;
+const { computed } = Ember;
 
 export default Ember.Mixin.create({
   leafletOptions: null,
