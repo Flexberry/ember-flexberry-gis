@@ -35,9 +35,13 @@ export default Ember.Component.extend(
 
     _layer: undefined,
 
-    toggleVisible: Ember.observer('model.visibility', function () {
+    visibility: Ember.computed('model.visibility', function() {
+      return this.get('model.visibility');
+    }),
+
+    toggleVisible: Ember.observer('visibility', function () {
       Ember.assert('Try to change layer visibility without container', this.get('container'));
-      if (this.get('model.visibility')) {
+      if (this.get('visibility')) {
         this.get('container').addLayer(this.get('_layer'));
       }
       else {
