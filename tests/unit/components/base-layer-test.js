@@ -2,8 +2,6 @@ import { moduleForComponent, test } from 'ember-qunit';
 import sinon from 'sinon';
 
 moduleForComponent('base-layer', 'Unit | Component | base layer', {
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar'],
   unit: true
 });
 
@@ -18,7 +16,6 @@ test('it should throw at init', function (assert) {
 });
 
 test('it should call layer.setZIndex on setZIndex', function (assert) {
-  // Creates the component instance
   let setZIndex = sinon.spy();
   let component = this.subject({
     createLayer() {

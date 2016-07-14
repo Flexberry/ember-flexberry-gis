@@ -32,8 +32,6 @@ export default Ember.Component.extend(
 
     _layer: undefined,
 
-    layers: [],
-
     init() {
       this._super(...arguments);
       let mapElement = Ember.$("<div>")[0];

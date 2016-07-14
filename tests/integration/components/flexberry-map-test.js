@@ -19,5 +19,4 @@ test('it renders', function(assert) {
       template block text
     {{/flexberry-map}}
   `);
-
 });
