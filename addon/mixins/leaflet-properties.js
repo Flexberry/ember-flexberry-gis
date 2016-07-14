@@ -27,7 +27,8 @@ export default Ember.Mixin.create({
 
   _removeObservers() {
     if (this._observers) {
-      this.get('leafletProperties').forEach(propExp => {
+      let properties = this.get('leafletProperties') || [];
+      properties.forEach(propExp => {
 
         let [property] = propExp.split(':');
 
