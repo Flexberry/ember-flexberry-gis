@@ -4,7 +4,7 @@ import layout from '../../templates/components/layers/group-layer';
 export default BaseLayer.extend({
   layout,
 
-  setZIndex() { },
+  setZIndex() {},
 
   createLayer() {
     return L.layerGroup();
