@@ -1,3 +1,7 @@
+/**
+  @module ember-flexberry-gis
+ */
+
 import Ember from 'ember';
 import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
 import LeafletPropertiesMixin from 'ember-flexberry-gis/mixins/leaflet-properties';
@@ -5,6 +9,11 @@ import LeafletEventsMixin from 'ember-flexberry-gis/mixins/leaflet-events';
 
 import layout from '../templates/components/flexberry-map';
 
+/**
+  FlexberryMap component for render leaflet map in ember applications.
+  @class FlexberryMapComponent
+  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+ */
 export default Ember.Component.extend(
   LeafletOptionsMixin,
   LeafletPropertiesMixin,
@@ -12,9 +21,21 @@ export default Ember.Component.extend(
   {
     layout,
 
-    model: undefined,
+    /**
+      Model with map properties and layers.
+      @property model
+      @type NewPlatformFlexberryGISMap
+      @default null
+     */
+    model: null,
 
-    mapElement: undefined,
+    /**
+      DOM element containig leaflet map.
+      @property mapElement
+      @type Element
+      @default null
+     */
+    mapElement: null,
 
     leafletEvents: ['moveend'],
 
@@ -22,15 +43,31 @@ export default Ember.Component.extend(
 
     leafletProperties: ['zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions'],
 
+    /**
+      Center of current map.
+      @property center
+      @type L.LatLng
+     */
     center: Ember.computed('model.lat', 'model.lng', function () {
       return L.latLng(this.get('model.lat') || 0, this.get('model.lng') || 0);
     }),
 
+    /**
+      Current map zoom.
+      @property zoom
+      @type Int
+     */
     zoom: Ember.computed('model.zoom', function () {
       return this.get('model.zoom');
     }),
 
-    _layer: undefined,
+    /**
+      Leaflet map object.
+      @property _layer
+      @type L.Map
+      @default null
+     */
+    _layer: null,
 
     init() {
       this._super(...arguments);

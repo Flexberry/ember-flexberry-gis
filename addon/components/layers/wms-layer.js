@@ -1,5 +1,14 @@
+/**
+  @module ember-flexberry-gis
+ */
+
 import TileLayer from 'ember-flexberry-gis/components/layers/tile-layer';
 
+/**
+  WMSLayerComponent for leaflet map.
+  @class WMSLayerComponent
+  @extend TileLayerComponent
+ */
 export default TileLayer.extend({
 
   leafletOptions: [

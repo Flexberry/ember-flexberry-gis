@@ -1,5 +1,15 @@
+/**
+  @module ember-flexberry-gis
+ */
+
+
 import BaseLayer from 'ember-flexberry-gis/components/base-layer';
 
+/**
+  TileLayerComponent for leaflet map.
+  @class TileLayerComponent
+  @extend BaseLayerComponent
+ */
 export default BaseLayer.extend({
   leafletRequiredOptions: [
     'url'
