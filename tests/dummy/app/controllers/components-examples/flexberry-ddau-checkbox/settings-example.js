@@ -49,9 +49,13 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
 
     componentSettingsMetadata.pushObject({
       settingName: 'class',
-      settingType: 'css',
+      settingType: 'enumeration',
+      settingAvailableItems: [
+        'radio',
+        'slider',
+        'toggle'
+      ],
       settingDefaultValue: '',
-      settingAvailableItems: ['radio', 'slider', 'toggle'],
       bindedControllerPropertieName: 'class'
     });
     componentSettingsMetadata.pushObject({

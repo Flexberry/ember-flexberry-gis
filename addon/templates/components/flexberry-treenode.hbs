@@ -1,5 +1,7 @@
-<div class="{{flexberryClassNames.treeNodeHeader}} title" onclick={{action "onHeaderClick" hasBlock preventDefault=false}}>
-  {{#if hasBlock}}
+<div
+  class="{{flexberryClassNames.treeNodeHeader}} title"
+  onclick={{action "onHeaderClick" (or hasBlock _hasNodes) preventDefault=false}}>
+  {{#if (or hasBlock _hasNodes)}}
     <i class="{{flexberryClassNames.treeNodeExpandCollapseIcon}} dropdown icon"></i>
   {{else}}
     {{!-- Here "visibility: hidden;" style is to force exactly the same padding for tree nodes without children --}}
@@ -21,6 +23,9 @@
   {{caption}}
 </div>
 <div class="{{flexberryClassNames.treeNodeContent}} content">
+  {{#if _hasNodes}}
+    {{flexberry-tree nodes=nodes}}
+  {{/if}}
   {{#if hasBlock}}
     {{yield}}
   {{/if}}

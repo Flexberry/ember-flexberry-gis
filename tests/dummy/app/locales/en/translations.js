@@ -114,7 +114,13 @@ Ember.$.extend(true, translations, {
       },
       'flexberry-tree': {
         'settings-example': {
-          'caption': 'Components-examples/flexberry-tree/settings-example'
+          'caption': 'Components-examples/flexberry-tree/settings-example',
+          'hbs-tree-tab-caption': 'Explicitly hbs-markup defined tree',
+          'hbs-tree-latest-clicked-node-caption': 'Latest clicked tree node settings',
+          'hbs-tree-latest-clicked-node-placeholder': 'Click on any tree node to display it\'s settings',
+          'json-tree-tab-caption': 'Dynamically JSON-object-defined tree',
+          'json-tree-latest-clicked-node-caption': 'Latest clicked tree node settings',
+          'json-tree-latest-clicked-node-placeholder': 'Click on any tree node to display it\'s settings',
         }
       }
     },
@@ -126,6 +132,8 @@ Ember.$.extend(true, translations, {
   'components': {
     'settings-example': {
       'component-template-caption': 'Component template',
+      'component-settings-caption': '',
+      'component-settings-placeholder': 'Component settings are not defined',
       'controller-properties-caption': 'Controller properties',
       'component-current-settings-caption': 'Component current settings values',
       'component-default-settings-caption': 'Component default settings values',

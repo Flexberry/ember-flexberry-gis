@@ -4,8 +4,8 @@
 
 import Ember from 'ember';
 import FlexberryTreenodeComponent from './flexberry-treenode';
+import FlexberryActionBindingMixin from '../mixins/flexberry-action-binding';
 import layout from '../templates/components/flexberry-tree';
-import { InvokeActionMixin } from 'ember-invoke-action';
 
 /**
   Component's CSS-classes names.
@@ -67,9 +67,9 @@ const flexberryClassNames = {
 
   @class FlexberryTreeComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
-  @uses <a href="https://github.com/martndemus/ember-invoke-action#mixin-usage">InvokeActionMixin</a>
+  @uses FlexberryActionBindingMixin
 */
-let FlexberryTreeComponent = Ember.Component.extend(InvokeActionMixin, {
+let FlexberryTreeComponent = Ember.Component.extend(FlexberryActionBindingMixin, {
   /**
     Flag: indicates whether tree isn't placed inside {{#crossLink "FlexberryTreenodeComponent"}}flexberry-treenode component{{/crossLink}}.
 
@@ -82,6 +82,20 @@ let FlexberryTreeComponent = Ember.Component.extend(InvokeActionMixin, {
     let parentView = this.get('parentView');
 
     return !(parentView instanceof FlexberryTreenodeComponent);
+  }),
+
+  /**
+    Flag: indicates whether some {{#crossLink "FlexberryTreeComponent/nodes:property"}}tree 'nodes'{{/childNodes}} are defined.
+
+    @property _hasNodes
+    @type boolean
+    @readonly
+    @private
+  */
+  _hasNodes: Ember.computed('nodes.[]', function() {
+    let nodes = this.get('nodes');
+
+    return Ember.isArray(nodes) && nodes.length > 0;
   }),
 
   /**
@@ -158,6 +172,18 @@ let FlexberryTreeComponent = Ember.Component.extend(InvokeActionMixin, {
     @default 350
   */
   duration: 350,
+
+  /**
+    Tree nodes.
+    This property is optional and must be used when there are too many child nodes,
+    and you don't want to define them explicitly in the .hbs markup,
+    then you can define nodes array somewhere in code & pass defined array to this component's property.
+
+    @property nodes
+    @type FlexberryTreenodeObject[]
+    @default null
+  */
+  nodes: null,
 
   /**
     Initializes [Semantic UI accordion](http://semantic-ui.com/modules/accordion.html) on component's wrapping <div>

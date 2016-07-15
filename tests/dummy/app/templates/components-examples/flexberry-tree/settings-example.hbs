@@ -1,131 +1,143 @@
-<h3 class="ui header">{{t "forms.components-examples.flexberry-ddau-tree.settings-example.caption"}}</h3>
+<h3 class="ui header">{{t "forms.components-examples.flexberry-tree.settings-example.caption"}}</h3>
 <form class="ui form flexberry-vertical-form" role="form">
   <div class="field">
-    {{#settings-example
-      controllerProperties=this
-      componentSettingsMetadata=componentSettingsMetadata
-      componentTemplateText=componentTemplateText
-    }}
-      {{#flexberry-tree
-        class=class
-        exclusive=exclusive
-        collapsible=collapsible
-        animateChildren=animateChildren
-        duration=duration
+    <div class="ui top attached tabular menu">
+      <a class="item active" data-tab="hbsTree">
+        {{t "forms.components-examples.flexberry-tree.settings-example.hbs-tree-tab-caption"}}
+      </a>
+      <a class="item" data-tab="jsonTree">
+        {{t "forms.components-examples.flexberry-tree.settings-example.json-tree-tab-caption"}}
+      </a>
+    </div>
+    <div class="ui bottom attached tab segment active" data-tab="hbsTree">
+      {{#settings-example
+        controllerProperties=this
+        componentSettingsMetadata=hbsTreeComponentSettingsMetadata
+        componentTemplateText=hbsTreeComponentTemplateText
       }}
-        {{#flexberry-treenode
-          caption="Node 1 (with child nodes)"
-          hasCheckbox=true
-          iconClass="pie chart icon"
-          beforeExpand=(action "onBeforeExpand")
-          beforeCollapse=(action "onBeforeCollapse")
-          checkboxChange=(action "onCheckboxChange")
-          checkboxCheck=(action "onCheckboxCheck")
-          checkboxUncheck=(action "onCheckboxUncheck")
+        {{#flexberry-tree
+          class=hbsTreeClass
+          exclusive=hbsTreeExclusive
+          collapsible=hbsTreeCollapsible
+          animateChildren=hbsTreeAnimateChildren
+          duration=hbsTreeDuration
         }}
-          Node 1 custom content
-          
-          {{#flexberry-tree}}
-            {{flexberry-treenode
-              caption="Node 1.1 (leaf node)"
-              hasCheckbox=true
-              iconClass="pie chart icon"
-              beforeExpand=(action "onBeforeExpand")
-              beforeCollapse=(action "onBeforeCollapse")
-              checkboxChange=(action "onCheckboxChange")
-              checkboxCheck=(action "onCheckboxCheck")
-              checkboxUncheck=(action "onCheckboxUncheck")
-            }}
-
-            {{#flexberry-treenode
-              caption="Node 1.2 (with child nodes)"
-              hasCheckbox=true
-              iconClass="pie chart icon"
-              beforeExpand=(action "onBeforeExpand")
-              beforeCollapse=(action "onBeforeCollapse")
-              checkboxChange=(action "onCheckboxChange")
-              checkboxCheck=(action "onCheckboxCheck")
-              checkboxUncheck=(action "onCheckboxUncheck")
-            }}
-              Node 1.2 custom content
-
-              {{#flexberry-tree}}
-                {{#flexberry-treenode
-                  caption="Node 1.2.1 (with child nodes)"
-                  hasCheckbox=true
-                  iconClass="pie chart icon"
-                  beforeExpand=(action "onBeforeExpand")
-                  beforeCollapse=(action "onBeforeCollapse")
-                  checkboxChange=(action "onCheckboxChange")
-                  checkboxCheck=(action "onCheckboxCheck")
-                  checkboxUncheck=(action "onCheckboxUncheck")
-                }}
-                  Node 1.2.1 custom content
-                  {{#flexberry-tree}}
-                    {{flexberry-treenode
-                      caption="Node 1.2.1.1 (leaf node)"
-                      hasCheckbox=true
-                      iconClass="pie chart icon"
-                      beforeExpand=(action "onBeforeExpand")
-                      beforeCollapse=(action "onBeforeCollapse")
-                      checkboxChange=(action "onCheckboxChange")
-                      checkboxCheck=(action "onCheckboxCheck")
-                      checkboxUncheck=(action "onCheckboxUncheck")
-                    }}
-                  {{/flexberry-tree}}
-                {{/flexberry-treenode}}
-
-                {{flexberry-treenode
-                  caption="Node 1.2.2 (leaf node)"
-                  hasCheckbox=true
-                  iconClass="pie chart icon"
-                  beforeExpand=(action "onBeforeExpand")
-                  beforeCollapse=(action "onBeforeCollapse")
-                  checkboxChange=(action "onCheckboxChange")
-                  checkboxCheck=(action "onCheckboxCheck")
-                  checkboxUncheck=(action "onCheckboxUncheck")
-                }}
-              {{/flexberry-tree}}
-            {{/flexberry-treenode}}
-          {{/flexberry-tree}}
-        {{/flexberry-treenode}}
-
-        {{flexberry-treenode
-          caption="Node 2 (leaf node)"
-          hasCheckbox=true
-          iconClass="pie chart icon"
-          beforeExpand=(action "onBeforeExpand")
-          beforeCollapse=(action "onBeforeCollapse")
-          checkboxChange=(action "onCheckboxChange")
-          checkboxCheck=(action "onCheckboxCheck")
-          checkboxUncheck=(action "onCheckboxUncheck")
+          {{#flexberry-treenode
+            caption=hbsTreeNodes.0.caption
+            hasCheckbox=hbsTreeNodes.0.hasCheckbox
+            checkboxValue=hbsTreeNodes.0.checkboxValue
+            iconClass=hbsTreeNodes.0.iconClass
+            headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0")
+            checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.checkboxValue")
+          }}
+            {{#flexberry-tree}}
+              {{flexberry-treenode
+                caption=hbsTreeNodes.0.nodes.0.caption
+                hasCheckbox=hbsTreeNodes.0.nodes.0.hasCheckbox
+                checkboxValue=hbsTreeNodes.0.nodes.0.checkboxValue
+                iconClass=hbsTreeNodes.0.nodes.0.iconClass
+                headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.0")
+                checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.0.checkboxValue")
+              }}
+              {{#flexberry-treenode
+                caption=hbsTreeNodes.0.nodes.1.caption
+                hasCheckbox=hbsTreeNodes.0.nodes.1.hasCheckbox
+                checkboxValue=hbsTreeNodes.0.nodes.1.checkboxValue
+                iconClass=hbsTreeNodes.0.nodes.1.iconClass
+                headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1")
+                checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.1.checkboxValue")
+              }}
+                {{#flexberry-tree}}
+                  {{#flexberry-treenode
+                    caption=hbsTreeNodes.0.nodes.1.nodes.0.caption
+                    hasCheckbox=hbsTreeNodes.0.nodes.1.nodes.0.hasCheckbox
+                    checkboxValue=hbsTreeNodes.0.nodes.1.nodes.0.checkboxValue
+                    iconClass=hbsTreeNodes.0.nodes.1.nodes.0.iconClass
+                    headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1.nodes.0")
+                    checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.1.nodes.0.checkboxValue")
+                  }}
+                    {{#flexberry-tree}}
+                      {{flexberry-treenode
+                        caption=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.caption
+                        hasCheckbox=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.hasCheckbox
+                        checkboxValue=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.checkboxValue
+                        iconClass=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.iconClass
+                        headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1.nodes.0.nodes.0")
+                        checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.checkboxValue")
+                      }}
+                    {{/flexberry-tree}}
+                  {{/flexberry-treenode}}
+                  {{flexberry-treenode
+                    caption=hbsTreeNodes.0.nodes.1.nodes.1.caption
+                    hasCheckbox=hbsTreeNodes.0.nodes.1.nodes.1.hasCheckbox
+                    checkboxValue=hbsTreeNodes.0.nodes.1.nodes.1.checkboxValue
+                    iconClass=hbsTreeNodes.0.nodes.1.nodes.1.iconClass
+                    headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1.nodes.1")
+                    checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.1.nodes.1.checkboxValue")
+                  }}
+                {{/flexberry-tree}}
+              {{/flexberry-treenode}}
+            {{/flexberry-tree}}
+          {{/flexberry-treenode}}
+          {{flexberry-treenode
+            caption=hbsTreeNodes.1.caption
+            hasCheckbox=hbsTreeNodes.1.hasCheckbox
+            checkboxValue=hbsTreeNodes.1.checkboxValue
+            iconClass=hbsTreeNodes.1.iconClass
+            headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.1")
+            checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.1.checkboxValue")
+          }}
+          {{#flexberry-treenode
+            caption=hbsTreeNodes.2.caption
+            hasCheckbox=hbsTreeNodes.2.hasCheckbox
+            checkboxValue=hbsTreeNodes.2.checkboxValue
+            iconClass=hbsTreeNodes.2.iconClass
+            headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.2")
+            checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.2.checkboxValue")
+          }}
+            {{#flexberry-tree}}
+              {{flexberry-treenode
+                caption=hbsTreeNodes.2.nodes.0.caption
+                hasCheckbox=hbsTreeNodes.2.nodes.0.hasCheckbox
+                checkboxValue=hbsTreeNodes.2.nodes.0.checkboxValue
+                iconClass=hbsTreeNodes.2.nodes.0.iconClass
+                headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.2.nodes.0")
+                checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.2.nodes.0.checkboxValue")
+              }}
+            {{/flexberry-tree}}
+          {{/flexberry-treenode}}
+        {{/flexberry-tree}}
+      {{/settings-example}}
+      <br>
+      {{settings-example
+        controllerProperties=this
+        componentSettingsMetadata=hbsTreeLatestClickedNodeComponentSettingsMetadata
+        componentSettingsCaption=(t "forms.components-examples.flexberry-tree.settings-example.hbs-tree-latest-clicked-node-caption")
+        componentSettingsPlaceholder=(t "forms.components-examples.flexberry-tree.settings-example.hbs-tree-latest-clicked-node-placeholder")
+      }}
+    </div>
+    <div class="ui bottom attached tab segment" data-tab="jsonTree">
+      {{#settings-example
+        controllerProperties=this
+        componentSettingsMetadata=jsonTreeComponentSettingsMetadata
+        componentTemplateText=jsonTreeComponentTemplateText
+      }}
+        {{flexberry-tree
+          class=jsonTreeClass
+          exclusive=jsonTreeExclusive
+          collapsible=jsonTreeCollapsible
+          animateChildren=jsonTreeAnimateChildren
+          duration=jsonTreeDuration
+          nodes=jsonTreeNodes
         }}
-
-        {{#flexberry-treenode
-          caption="Node 3 (with child nodes)"
-          hasCheckbox=true
-          iconClass="pie chart icon"
-          beforeExpand=(action "onBeforeExpand")
-          beforeCollapse=(action "onBeforeCollapse")
-          checkboxChange=(action "onCheckboxChange")
-          checkboxCheck=(action "onCheckboxCheck")
-          checkboxUncheck=(action "onCheckboxUncheck")
-        }}
-          Node 3 custom content
-          {{#flexberry-tree}}
-            {{flexberry-treenode
-              caption="Node 3.1 (leaf node)"
-              hasCheckbox=true
-              iconClass="pie chart icon"
-              beforeExpand=(action "onBeforeExpand")
-              beforeCollapse=(action "onBeforeCollapse")
-              checkboxChange=(action "onCheckboxChange")
-              checkboxCheck=(action "onCheckboxCheck")
-              checkboxUncheck=(action "onCheckboxUncheck")
-            }}
-          {{/flexberry-tree}}
-        {{/flexberry-treenode}}
-      {{/flexberry-tree}}
-    {{/settings-example}}
+      {{/settings-example}}
+      <br>
+      {{settings-example
+        controllerProperties=this
+        componentSettingsMetadata=jsonTreeLatestClickedNodeComponentSettingsMetadata
+        componentSettingsCaption=(t "forms.components-examples.flexberry-tree.settings-example.json-tree-latest-clicked-node-caption")
+        componentSettingsPlaceholder=(t "forms.components-examples.flexberry-tree.settings-example.json-tree-latest-clicked-node-placeholder")
+      }}
+    </div>
   </div>
 </form>

@@ -1,11 +1,17 @@
 <div class="ui segments">
-  <div class="ui segment">
+  {{#if componentTemplateText}}
     <div class="ui segment">
-      <h4 class="ui header">{{t "components.settings-example.component-template-caption"}}</h4>
-      <pre><code>{{componentTemplateText}}</code></pre>
+      <div class="ui segment">
+        <h4 class="ui header">{{t "components.settings-example.component-template-caption"}}</h4>
+        <pre><code>{{componentTemplateText}}</code></pre>
+      </div>
     </div>
-  </div>
+  {{/if}}
   <div class="ui segment">
+    {{#if componentSettingsCaption}}
+      <h4 class="ui header">{{componentSettingsCaption}}</h4>
+    {{/if}}
+    {{#if componentSettingsMetadata.length}}
     <table class="ui celled table flexberry-word-break">
       <thead>
         <tr><th>{{t "components.settings-example.controller-properties-caption"}}</th>
@@ -99,11 +105,16 @@
         {{/each}}
       </tbody>
     </table>
+    {{else}}
+      {{componentSettingsPlaceholder}}
+    {{/if}}
   </div>
-  <div class="ui segment">
+  {{#if hasBlock}}
     <div class="ui segment">
-      <h4 class="ui header">{{t "components.settings-example.component-with-applied-settings-caption"}}</h4>
-      {{yield}}
+      <div class="ui segment">
+        <h4 class="ui header">{{t "components.settings-example.component-with-applied-settings-caption"}}</h4>
+        {{yield}}
+      </div>
     </div>
-  </div>
+  {{/if}}
 </div>

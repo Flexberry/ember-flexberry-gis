@@ -3,8 +3,8 @@
 */
 
 import Ember from 'ember';
+import FlexberryActionBindingMixin from '../mixins/flexberry-action-binding';
 import layout from '../templates/components/flexberry-ddau-checkbox';
-import { InvokeActionMixin } from 'ember-invoke-action';
 
 /**
   Component's CSS-classes names.
@@ -69,9 +69,9 @@ const flexberryClassNames = {
 
   @class FlexberryDdauCheckboxComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
-  @uses <a href="https://github.com/martndemus/ember-invoke-action#mixin-usage">InvokeActionMixin</a>
+  @uses FlexberryActionBindingMixin
 */
-let FlexberryDdauCheckboxComponent = Ember.Component.extend(InvokeActionMixin, {
+let FlexberryDdauCheckboxComponent = Ember.Component.extend(FlexberryActionBindingMixin, {
   /**
     Reference to component's template.
   */
@@ -145,25 +145,25 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(InvokeActionMixin, {
       which describes inner input's 'change' event.
     */
     onChange(e) {
-      // Prevent input's 'change' event bubbling,
-      // otherwise component's 'change' action handler will be called twice
-      // (one for invoked component's custom 'change' action,
-      // and another for component's wrapping <div> bubbled 'change' event).
-      e.stopPropagation();
-
       let checked = e.target.checked === true;
 
       // Invoke component's custom 'change' action.
-      this.invokeAction('change', {
+      this.sendAction('change', {
         newValue: checked,
         originalEvent: e
       });
 
       // Invoke state-related 'check' or 'uncheck' action.
-      this.invokeAction(checked ? 'check' : 'uncheck', {
+      this.sendAction(checked ? 'check' : 'uncheck', {
         newValue: checked,
         originalEvent: e
       });
+
+      // Prevent input's 'change' event bubbling,
+      // otherwise component's 'change' action handler will be called twice
+      // (one for invoked component's custom 'change' action,
+      // and another for component's wrapping <div> bubbled 'change' event).
+      return false;
     }
   },
 

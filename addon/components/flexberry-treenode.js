@@ -4,8 +4,8 @@
 
 import Ember from 'ember';
 import FlexberryDdauCheckboxComponent from './flexberry-ddau-checkbox';
+import FlexberryActionBindingMixin from '../mixins/flexberry-action-binding';
 import layout from '../templates/components/flexberry-treenode';
-import { InvokeActionMixin } from 'ember-invoke-action';
 
 /**
   Component's CSS-classes names.
@@ -77,9 +77,23 @@ const flexberryClassNames = {
 
   @class FlexberryTreenodeComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
-  @uses <a href="https://github.com/martndemus/ember-invoke-action#mixin-usage">InvokeActionMixin</a>
+  @uses FlexberryActionBindingMixin
 */
-let FlexberryTreenodeComponent = Ember.Component.extend(InvokeActionMixin, {
+let FlexberryTreenodeComponent = Ember.Component.extend(FlexberryActionBindingMixin, {
+  /**
+    Flag: indicates whether some {{#crossLink "FlexberryTreenodeComponent/nodes:property"}}child 'nodes'{{/childNodes}} are defined.
+
+    @property _hasNodes
+    @type boolean
+    @readonly
+    @private
+  */
+  _hasNodes: Ember.computed('nodes.[]', function() {
+    let nodes = this.get('nodes');
+
+    return Ember.isArray(nodes) && nodes.length > 0;
+  }),
+
   /**
     Reference to component's template.
   */
@@ -111,8 +125,8 @@ let FlexberryTreenodeComponent = Ember.Component.extend(InvokeActionMixin, {
   caption: null,
 
   // TODO: move inner element's customizations into mixin,
-  // which will be able to add custom CSS-classes to element's
-  // by their flexberry-... CSS-class names: ['flexberry-tree-node-icon:map icon'].
+  // which will be able to add custom CSS-classes to component's inner element's
+  // by their flexberry-... CSS-class names: ['flexberry-treenode-icon:map icon', 'flexberry-treenode-checkbox:toggle', ...].
   // Some kind of class names bindings for elements with flexberry CSS-class names.
   /**
     CSS classes names for a tree node's icon.
@@ -155,10 +169,23 @@ let FlexberryTreenodeComponent = Ember.Component.extend(InvokeActionMixin, {
   */
   readonly: false,
 
+  /**
+    Child nodes.
+    This property is optional and must be used when there are too many child nodes,
+    and you don't want to define them explicitly in the .hbs markup,
+    then you can define nodes array somewhere in code & pass defined array to this component's property.
+
+    @property nodes
+    @type FlexberryTreenodeObject[]
+    @default null
+  */
+  nodes: null,
+
   actions: {
     /**
-      Handles node's header 'click' event.
+      Handles tree node header's 'click' event.
       Prevents 'click' event from bubbling for leaf nodes & for nodes which were clicked on nested checkboxes.
+      Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'headerClick'{{/crossLink}} action.
       Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'beforeExpand'{{/crossLink}} action.
       Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'beforeCollapse'{{/crossLink}} action.
 
@@ -170,27 +197,33 @@ let FlexberryTreenodeComponent = Ember.Component.extend(InvokeActionMixin, {
     onHeaderClick(nodeHasNestedContent, e) {
       // As the 'click' event target here could be passed either checkbox wrapping <div>,
       // or any inner element nested inside checkbox,
-      // that's why we should check not for a class name equality, but only for a class name prefix equality.
+      // that's why we should check not for a class names equality, but only for a class name prefixes equality.
       let clickTargetIsCheckbox = Ember.$(e.target).hasClass({
         withPrefix: FlexberryDdauCheckboxComponent.flexberryClassNames.prefix
       });
 
-      // Prevent node's click event from bubbling to disable expand/collapse animation in the following situations:
+      if (!clickTargetIsCheckbox) {
+        this.sendAction('headerClick', {
+          originalEvent: e
+        });
+      }
+
+      // Prevent node header's click event from bubbling to disable expand/collapse animation in the following situations:
       // if node was clicked on nested checkbox click,
       // if node is leaf (node without nested content).
       if (clickTargetIsCheckbox || !nodeHasNestedContent) {
         e.stopPropagation();
 
-        return false;
+        return;
       }
 
       let expandedNodeClassName = Ember.$.fn.accordion.settings.className.active;
       if (Ember.$(e.currentTarget).hasClass(expandedNodeClassName)) {
-        this.invokeAction('beforeCollapse', {
+        this.sendAction('beforeCollapse', {
           originalEvent: e
         });
       } else {
-        this.invokeAction('beforeExpand', {
+        this.sendAction('beforeExpand', {
           originalEvent: e
         });
       }
@@ -205,7 +238,7 @@ let FlexberryTreenodeComponent = Ember.Component.extend(InvokeActionMixin, {
       {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
     */
     onCheckboxChange(e) {
-      this.invokeAction('checkboxChange', e);
+      this.sendAction('checkboxChange', e);
 
       // Return false to prevent 'change' action bubbling.
       return false;
@@ -220,7 +253,7 @@ let FlexberryTreenodeComponent = Ember.Component.extend(InvokeActionMixin, {
       {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.check:method"}}flexberry-ddau-checkbox 'check' action{{/crossLink}}.
     */
     onCheckboxCheck(e) {
-      this.invokeAction('checkboxCheck', e);
+      this.sendAction('checkboxCheck', e);
 
       // Return false to prevent 'check' action bubbling.
       return false;
@@ -235,15 +268,25 @@ let FlexberryTreenodeComponent = Ember.Component.extend(InvokeActionMixin, {
       {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.uncheck:method"}}flexberry-ddau-checkbox 'uncheck' action{{/crossLink}}.
     */
     onCheckboxUncheck(e) {
-      this.invokeAction('checkboxUncheck', e);
+      this.sendAction('checkboxUncheck', e);
 
       // Return false to prevent 'uncheck' action bubbling.
       return false;
     }
-  }
+  },
+
+  /**
+    Component's action invoking when tree node's header has been clicked.
+
+    @method sendingActions.headerClick
+    @param {Object} e Action's event object.
+    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
+    which describes event that triggers this action.
+  */
 
   /**
     Component's action invoking before node will be expanded.
+    Node can be prevented from being expanded with call to action event object's 'originalEvent.stopPropagation()'.
 
     @method sendingActions.beforeExpand
     @param {Object} e Action's event object.
@@ -253,26 +296,9 @@ let FlexberryTreenodeComponent = Ember.Component.extend(InvokeActionMixin, {
 
   /**
     Component's action invoking before node will be collapsed.
+    Node can be prevented from being collapsed with call to action event object's 'originalEvent.stopPropagation()'.
 
     @method sendingActions.beforeCollapse
-    @param {Object} e Action's event object.
-    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
-    which describes event that triggers node's collapsing.
-  */
-
-  /**
-    Component's action invoking when node finishes it's expanding.
-
-    @method sendingActions.expand
-    @param {Object} e Action's event object.
-    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
-    which describes event that triggers node's expanding.
-  */
-
-  /**
-    Component's action invoking when node finishes it's collapsing.
-
-    @method sendingActions.collapse
     @param {Object} e Action's event object.
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes event that triggers node's collapsing.
