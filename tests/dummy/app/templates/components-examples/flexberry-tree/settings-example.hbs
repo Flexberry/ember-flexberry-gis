@@ -128,7 +128,21 @@
           collapsible=jsonTreeCollapsible
           animateChildren=jsonTreeAnimateChildren
           duration=jsonTreeDuration
-          nodes=jsonTreeNodes
+          nodes=(get-with-dynamic-actions this "jsonTreeNodes"
+            hierarchyPropertyName="nodes"
+            dynamicActions=(array
+              (hash
+                on="checkboxChange"
+                actionName="onTreenodeCheckboxChange"
+                actionArguments=(array "{% propertyPath %}.checkboxValue")
+              )
+              (hash
+                on="headerClick"
+                actionName="onTreenodeHeaderClick"
+                actionArguments=(array "{% propertyPath %}")
+              )
+            )
+          )
         }}
       {{/settings-example}}
       <br>

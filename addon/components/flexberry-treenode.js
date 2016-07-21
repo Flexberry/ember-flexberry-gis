@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import FlexberryDdauCheckboxComponent from './flexberry-ddau-checkbox';
-import FlexberryActionBindingMixin from '../mixins/flexberry-action-binding';
+import DynamicActionsMixin from '../mixins/dynamic-actions';
 import layout from '../templates/components/flexberry-treenode';
 
 /**
@@ -77,9 +77,9 @@ const flexberryClassNames = {
 
   @class FlexberryTreenodeComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
-  @uses FlexberryActionBindingMixin
+  @uses DynamicActionsMixin
 */
-let FlexberryTreenodeComponent = Ember.Component.extend(FlexberryActionBindingMixin, {
+let FlexberryTreenodeComponent = Ember.Component.extend(DynamicActionsMixin, {
   /**
     Flag: indicates whether some {{#crossLink "FlexberryTreenodeComponent/nodes:property"}}child 'nodes'{{/childNodes}} are defined.
 

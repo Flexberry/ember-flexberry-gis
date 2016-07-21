@@ -118,9 +118,9 @@ Ember.$.extend(true, translations, {
           'hbs-tree-tab-caption': 'Explicitly hbs-markup defined tree',
           'hbs-tree-latest-clicked-node-caption': 'Latest clicked tree node settings',
           'hbs-tree-latest-clicked-node-placeholder': 'Click on any tree node to display it\'s settings',
-          'json-tree-tab-caption': 'Dynamically JSON-object-defined tree',
+          'json-tree-tab-caption': 'JSON-object-defined tree',
           'json-tree-latest-clicked-node-caption': 'Latest clicked tree node settings',
-          'json-tree-latest-clicked-node-placeholder': 'Click on any tree node to display it\'s settings',
+          'json-tree-latest-clicked-node-placeholder': 'Click on any tree node to display it\'s settings'
         }
       }
     },

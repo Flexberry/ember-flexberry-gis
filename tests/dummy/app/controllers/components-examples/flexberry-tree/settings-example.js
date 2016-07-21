@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import FlexberryTreenodeActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-treenode-actions-handler';
-import FlexberryTreenodeObject from 'ember-flexberry-gis/objects/flexberry-treenode';
-import FlexberryActionBindingObject from 'ember-flexberry-gis/objects/flexberry-action-binding';
+import TreeNodeObject from 'ember-flexberry-gis/objects/tree-node';
 
 export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
   /**
@@ -54,14 +53,14 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
     Settings related to tree nodes hierarchy.
 
     @property hbsTreeNodes
-    @type FlexberryTreenodeObject[]
+    @type Object[]
   */
-  hbsTreeNodes: Ember.A([{
+  hbsTreeNodes: [{
     caption: 'Node 1 (with child nodes)',
     hasCheckbox: true,
     checkboxValue: false,
     iconClass: 'marker icon',
-    nodes: Ember.A([{
+    nodes: [{
       caption: 'Node 1.1 (leaf node)',
       hasCheckbox: true,
       checkboxValue: false,
@@ -72,26 +71,26 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
       hasCheckbox: true,
       checkboxValue: false,
       iconClass: 'location arrow icon',
-      nodes: Ember.A([{
+      nodes: [{
         caption: 'Node 1.2.1 (with child nodes)',
         hasCheckbox: true,
         checkboxValue: false,
         iconClass: 'area chart icon',
-        nodes: Ember.A([{
+        nodes: [{
           caption: 'Node 1.2.1.1 (leaf node)',
           hasCheckbox: true,
           checkboxValue: false,
           iconClass: 'envira gallery icon',
           nodes: null
-        }])
+        }]
       }, {
         caption: 'Node 1.2.2 (leaf node)',
         hasCheckbox: true,
         checkboxValue: false,
         iconClass: 'marker icon',
         nodes: null
-      }])
-    }])
+      }]
+    }]
   }, {
     caption: 'Node 2 (leaf node)',
     hasCheckbox: true,
@@ -103,14 +102,14 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
     hasCheckbox: true,
     checkboxValue: false,
     iconClass: 'location arrow icon',
-    nodes: Ember.A([{
+    nodes: [{
       caption: 'Node 3.1 (leaf node)',
       hasCheckbox: true,
       checkboxValue: false,
       iconClass: 'area chart icon',
       nodes: null
-    }])
-  }]),
+    }]
+  }],
 
   /**
     Component's template text.
@@ -370,141 +369,80 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
   jsonTreeDuration: 350,
 
   /**
-    Tree nodes hierarchy with nodes settings & action bindings.
+    Tree nodes hierarchy with nodes settings.
 
     @property jsonTreeNodes
-    @type FlexberryTreenodeObject[]
+    @type TreeNodeObject[]
   */
-  jsonTreeNodes: Ember.computed(function() {
-    let nodes = Ember.A([
-      FlexberryTreenodeObject.create({
-        caption: 'Node 1 (with child nodes)',
-        hasCheckbox: true,
-        checkboxValue: false,
-        iconClass: 'marker icon',
-        actionBindings: null,
-        nodes: Ember.A([
-          FlexberryTreenodeObject.create({
-            caption: 'Node 1.1 (leaf node)',
-            hasCheckbox: true,
-            checkboxValue: false,
-            iconClass: 'compass icon',
-            actionBindings: null,
-            nodes: null
-          }),
-          FlexberryTreenodeObject.create({
-            caption: 'Node 1.2 (with child nodes)',
-            hasCheckbox: true,
-            checkboxValue: false,
-            iconClass: 'location arrow icon',
-            actionBindings: null,
-            nodes: Ember.A([
-              FlexberryTreenodeObject.create({
-                caption: 'Node 1.2.1 (with child nodes)',
-                hasCheckbox: true,
-                checkboxValue: false,
-                iconClass: 'area chart icon',
-                actionBindings: null,
-                nodes: Ember.A([
-                  FlexberryTreenodeObject.create({
-                    caption: 'Node 1.2.1.1 (leaf node)',
-                    hasCheckbox: true,
-                    checkboxValue: false,
-                    iconClass: 'envira gallery icon',
-                    actionBindings: null,
-                    nodes: null
-                  })
-                ])
-              }),
-              FlexberryTreenodeObject.create({
-                caption: 'Node 1.2.2 (leaf node)',
-                hasCheckbox: true,
-                checkboxValue: false,
-                iconClass: 'marker icon',
-                actionBindings: null,
-                nodes: null
-              })
-            ])
-          }),
-        ])
-      }),
-      FlexberryTreenodeObject.create({
-        caption: 'Node 2 (leaf node)',
-        hasCheckbox: true,
-        checkboxValue: false,
-        iconClass: 'compass icon',
-        actionBindings: null,
-        nodes: null
-      }),
-      FlexberryTreenodeObject.create({
-        caption: 'Node 3 (with child nodes)',
-        hasCheckbox: true,
-        checkboxValue: false,
-        iconClass: 'location arrow icon',
-        actionBindings: null,
-        nodes: Ember.A([
-          FlexberryTreenodeObject.create({
-            caption: 'Node 3.1 (leaf node)',
-            hasCheckbox: true,
-            checkboxValue: false,
-            iconClass: 'area chart icon',
-            actionBindings: null,
-            nodes: null
-          })
-        ])
-      })
-    ]);
-
-    let headerClickActionBinding = FlexberryActionBindingObject.create({
-      on: 'headerClick',
-      actionHandler: (...args) => {
-        this.send('onTreenodeHeaderClick', ...args);
-      },
-      actionArguments: null
-    });
-
-    let checkboxChangeActionBinding = FlexberryActionBindingObject.create({
-      on: 'checkboxChange',
-      actionHandler: (...args) => {
-        this.send('onTreenodeCheckboxChange', ...args);
-      },
-      actionArguments: null
-    });
-
-    let setActionBindingsForNode = function(nodePropertyPath, node) {
-      if (Ember.isNone(nodes)) {
-        return;
-      }
-
-      let nodeHeaderClickActionBinding = Ember.copy(headerClickActionBinding);
-      nodeHeaderClickActionBinding.set('actionArguments', Ember.A([nodePropertyPath]));
-
-      let nodeCheckboxChangeActionBinding = Ember.copy(checkboxChangeActionBinding);
-      nodeCheckboxChangeActionBinding.set('actionArguments', Ember.A([nodePropertyPath + '.checkboxValue']));
-
-      let actionBindings = Ember.A([
-        nodeHeaderClickActionBinding,
-        nodeCheckboxChangeActionBinding
-      ]);
-      node.set('actionBindings', actionBindings);
-
-      setActionBindingsForNodes(nodePropertyPath + '.nodes', Ember.get(node, 'nodes'));
-    };
-
-    let setActionBindingsForNodes = function(nodesPropertyPath, nodes) {
-      if (!Ember.isArray(nodes)) {
-        return;
-      }
-
-      nodes.forEach((node, index) => {
-        setActionBindingsForNode(nodesPropertyPath + '.' + index, node);
-      });
-    };
-
-    setActionBindingsForNodes('jsonTreeNodes', nodes);
-
-    return nodes;
-  }),
+  jsonTreeNodes: Ember.A([
+    TreeNodeObject.create({
+      caption: 'Node 1 (with child nodes)',
+      hasCheckbox: true,
+      checkboxValue: false,
+      iconClass: 'marker icon',
+      nodes: Ember.A([
+        TreeNodeObject.create({
+          caption: 'Node 1.1 (leaf node)',
+          hasCheckbox: true,
+          checkboxValue: false,
+          iconClass: 'compass icon',
+          nodes: null
+        }),
+        TreeNodeObject.create({
+          caption: 'Node 1.2 (with child nodes)',
+          hasCheckbox: true,
+          checkboxValue: false,
+          iconClass: 'location arrow icon',
+          nodes: Ember.A([
+            TreeNodeObject.create({
+              caption: 'Node 1.2.1 (with child nodes)',
+              hasCheckbox: true,
+              checkboxValue: false,
+              iconClass: 'area chart icon',
+              nodes: Ember.A([
+                TreeNodeObject.create({
+                  caption: 'Node 1.2.1.1 (leaf node)',
+                  hasCheckbox: true,
+                  checkboxValue: false,
+                  iconClass: 'envira gallery icon',
+                  nodes: null
+                })
+              ])
+            }),
+            TreeNodeObject.create({
+              caption: 'Node 1.2.2 (leaf node)',
+              hasCheckbox: true,
+              checkboxValue: false,
+              iconClass: 'marker icon',
+              nodes: null
+            })
+          ])
+        }),
+      ])
+    }),
+    TreeNodeObject.create({
+      caption: 'Node 2 (leaf node)',
+      hasCheckbox: true,
+      checkboxValue: false,
+      iconClass: 'compass icon',
+      nodes: null
+    }),
+    TreeNodeObject.create({
+      caption: 'Node 3 (with child nodes)',
+      hasCheckbox: true,
+      checkboxValue: false,
+      iconClass: 'location arrow icon',
+      nodes: Ember.A([
+        TreeNodeObject.create({
+          caption: 'Node 3.1 (leaf node)',
+          hasCheckbox: true,
+          checkboxValue: false,
+          iconClass: 'area chart icon',
+          nodes: null
+        })
+      ])
+    })
+  ]),
 
   /**
     Component's template text.
@@ -519,7 +457,21 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
     '  collapsible=jsonTreeCollapsible<br>' +
     '  animateChildren=jsonTreeAnimateChildren<br>' +
     '  duration=jsonTreeDuration<br>' +
-    '  nodes=jsonTreeNodes<br>' +
+    '  nodes=(get-with-dynamic-actions this "jsonTreeNodes"<br>' +
+    '    hierarchyPropertyName="nodes"<br>' +
+    '    dynamicActions=(array<br>' +
+    '      (hash<br>' +
+    '        on="checkboxChange"<br>' +
+    '        actionName="onTreenodeCheckboxChange"<br>' +
+    '        actionArguments=(array "{% propertyPath %}.checkboxValue")<br>' +
+    '      )<br>' +
+    '      (hash<br>' +
+    '        on="headerClick"<br>' +
+    '        actionName="onTreenodeHeaderClick"<br>' +
+    '        actionArguments=(array "{% propertyPath %}")<br>' +
+    '      )<br>' +
+    '    )<br>' +
+    '  )<br>' +
     '}}'),
 
   /**
@@ -583,7 +535,7 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
   /**
     Component settings metadata for latest clicked tree node.
 
-    @property hbsTreeComponentSettingsMetadata
+    @property jsonTreeLatestClickedNodeComponentSettingsMetadata
     @type Object[]
   */
   jsonTreeLatestClickedNodeComponentSettingsMetadata: Ember.computed('jsonTreeLatestClickedNodePath', function() {
@@ -656,7 +608,7 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
         .closest('.tab.segment')
         .attr('data-tab');
 
-      // Remember latest clicked node properties path to a tree-related controller's property.
+      // Remember latest clicked node path to a tree-related controller's property.
       this.set(clickedNodeSettingsPrefix + 'LatestClickedNodePath', clickedNodePropertiesPath);
     }
   }
