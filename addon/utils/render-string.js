@@ -44,7 +44,7 @@ export default function(stringWithTemplates, options) {
     delimiters: ['{{', '}}']
   }, options || {});
 
-  let context = Ember.get(options, 'context');
+  let context = Ember.get(options, 'context') || {};
   let [leftDelimiter, rightDelimiter] = Ember.get(options, 'delimiters');
 
   let renderedString = Ember.copy(stringWithTemplates);
