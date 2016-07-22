@@ -9,9 +9,9 @@ moduleForComponent('flexberry-ddau-checkbox', 'Integration | Component | flexber
 });
 
 test('Component renders properly', function(assert) {
-  assert.expect(13);
+  assert.expect(17);
 
-  this.render(hbs`{{flexberry-ddau-checkbox caption=caption}}`);
+  this.render(hbs`{{flexberry-ddau-checkbox caption=caption class=class}}`);
 
   // Retrieve component, it's inner <input> & <label>.
   let $component = this.$().children();
@@ -56,6 +56,25 @@ test('Component renders properly', function(assert) {
     Ember.$.trim($checkboxCaption.text()),
     checkboxCaptionText,
     'Component\'s inner <label> text changes when component\'s \'caption\' property changes');
+
+  // Check wrapper's additional CSS-classes.
+  let additioanlCssClasses = 'additional-css-class-name and-another-one';
+  this.set('class', additioanlCssClasses);
+
+  Ember.A(additioanlCssClasses.split(' ')).forEach((cssClassName, index) => {
+    assert.strictEqual(
+    $component.hasClass(cssClassName),
+    true,
+    'Component\'s wrapper has additional css class \'' + cssClassName + '\'');
+  });
+
+  this.set('class', '');
+  Ember.A(additioanlCssClasses.split(' ')).forEach((cssClassName, index) => {
+    assert.strictEqual(
+    $component.hasClass(cssClassName),
+    false,
+    'Component\'s wrapper hasn\'t additional css class \'' + cssClassName + '\'');
+  });
 });
 
 test('Component invokes actions', function(assert) {
