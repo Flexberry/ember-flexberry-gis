@@ -1,5 +1,5 @@
 export function initialize(application ) {
-  application.registerOptionsForType('layer', { instantiate: false });
+  application.registerOptionsForType('layer',  { singleton: false });
 }
 
 export default {

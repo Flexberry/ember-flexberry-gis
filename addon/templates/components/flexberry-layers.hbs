@@ -1,0 +1,3 @@
+{{#each layers as |layer|}}
+  {{component (concat "layers/" layer.type "-layer") container=container model=layer}}
+{{/each}}

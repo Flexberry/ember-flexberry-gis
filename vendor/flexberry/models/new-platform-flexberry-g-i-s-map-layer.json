@@ -43,7 +43,7 @@
     {
       "polymorphic": false,
       "presence": false,
-      "name": "hierarchy",
+      "name": "parent",
       "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
       "inverse": null
     }
@@ -89,13 +89,13 @@
         {
           "lookupValue": null,
           "lookupValueField": null,
-          "relationName": "Hierarchy",
+          "relationName": "Parent",
           "belongsTo": [],
           "hidden": false,
           "attrs": [],
           "index": 5,
           "caption": "",
-          "name": "hierarchy",
+          "name": "parent",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
           "inverse": null
         }
@@ -141,13 +141,13 @@
         {
           "lookupValue": null,
           "lookupValueField": null,
-          "relationName": "Hierarchy",
+          "relationName": "Parent",
           "belongsTo": [],
           "hidden": false,
           "attrs": [],
           "index": 5,
           "caption": "",
-          "name": "hierarchy",
+          "name": "parent",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
           "inverse": null
         }

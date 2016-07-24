@@ -1,0 +1,14 @@
+{{#each layers as |layer|}}
+  <div class="title">
+    {{#if layer.layers}}
+    <i class="dropdown icon"></i>
+    {{else}}
+    <i class="icon"/>
+    {{/if}}
+    {{flexberry-checkbox value=layer.visibility label=layer.name}}
+  </div>
+  <div class="content margin">
+    {{layers-tree layers=layer.layers}}
+  </div>
+{{/each}}
+
