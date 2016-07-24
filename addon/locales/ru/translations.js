@@ -1,4 +1,4 @@
-let translations = {
+export default {
   'forms': {
     'new-platform-flexberry-g-i-s-map-layer-tile': {
       'url': 'Url',
@@ -36,7 +36,8 @@ let translations = {
     'new-platform-flexberry-g-i-s-map-layer-unknown': {
       'unknown-layer': 'Неизвестный тип слоя'
     }
+  },
+
+  'components': {
   }
 };
-
-export default translations;

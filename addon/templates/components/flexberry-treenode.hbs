@@ -1,0 +1,32 @@
+<div
+  class="{{flexberryClassNames.treeNodeHeader}} title"
+  onclick={{action "onHeaderClick" (or hasBlock _hasNodes) preventDefault=false}}>
+  {{#if (or hasBlock _hasNodes)}}
+    <i class="{{flexberryClassNames.treeNodeExpandCollapseIcon}} dropdown icon"></i>
+  {{else}}
+    {{!-- Here "visibility: hidden;" style is to force exactly the same padding for tree nodes without children --}}
+    <i class="{{flexberryClassNames.treeNodeExpandCollapseIcon}} dropdown icon" style="visibility: hidden;"></i>
+  {{/if}}
+  {{#if hasCheckbox}}
+    {{flexberry-ddau-checkbox
+      class=flexberryClassNames.treeNodeCheckbox
+      value=checkboxValue
+      readonly=readonly
+      change=(action "onCheckboxChange")
+      check=(action "onCheckboxCheck")
+      uncheck=(action "onCheckboxUncheck")
+    }}
+  {{/if}}
+  {{#if iconClass}}
+    <i class="{{flexberryClassNames.treeNodeIcon}} {{iconClass}}"></i>
+  {{/if}}
+  {{caption}}
+</div>
+<div class="{{flexberryClassNames.treeNodeContent}} content">
+  {{#if _hasNodes}}
+    {{flexberry-tree nodes=nodes}}
+  {{/if}}
+  {{#if hasBlock}}
+    {{yield}}
+  {{/if}}
+</div>
