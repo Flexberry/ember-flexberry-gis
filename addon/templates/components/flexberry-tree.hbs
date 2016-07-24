@@ -1,0 +1,16 @@
+{{#if _hasNodes}}
+  {{#each nodes as |node|}}
+    {{flexberry-treenode
+      caption=node.caption
+      iconClass=node.iconClass
+      hasCheckbox=node.hasCheckbox
+      checkboxValue=node.checkboxValue
+      readonly=node.readonly
+      nodes=node.nodes
+      dynamicActions=node.dynamicActions
+    }}
+  {{/each}}
+{{/if}}
+{{#if hasBlock}}
+  {{yield}}
+{{/if}}
