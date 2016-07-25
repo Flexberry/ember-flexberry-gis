@@ -28,7 +28,7 @@ export default Ember.Object.extend({
 
   /**
     Handler (callback) for the component's action specified in
-    {{#crossLink "FlexberryActionBindingExtendedObject/on:property"}}'on'{{/crossLink}} property.
+    {{#crossLink "DynamicActionObject/on:property"}}'on'{{/crossLink}} property.
     Will be called with {{#crossLink "DynamicActionObject/actionContext:property"}given context{{/crossLink}}
     (if context is defined).
 
@@ -41,7 +41,7 @@ export default Ember.Object.extend({
   /**
     Name of the action existing in {{#crossLink "DynamicActionObject/actionContext:property"}given context{{/crossLink}}
     which will be triggered when component sent it's action specified in
-    {{#crossLink "FlexberryActionBindingExtendedObject/on:property"}}'on'{{/crossLink}} property.
+    {{#crossLink "DynamicActionObject/on:property"}}'on'{{/crossLink}} property.
 
     @property actionName
     @type String
