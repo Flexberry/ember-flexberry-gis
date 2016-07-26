@@ -4,7 +4,9 @@
 
 import Ember from 'ember';
 import FlexberryDdauCheckboxComponent from './flexberry-ddau-checkbox';
+import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
+import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
 import layout from '../templates/components/flexberry-treenode';
 
 /**
@@ -77,9 +79,15 @@ const flexberryClassNames = {
 
   @class FlexberryTreenodeComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
+  @uses DynamicProxyActionsMixin
 */
-let FlexberryTreenodeComponent = Ember.Component.extend(DynamicActionsMixin, {
+let FlexberryTreenodeComponent = Ember.Component.extend(
+  DynamicPropertiesMixin,
+  DynamicActionsMixin,
+  DynamicProxyActionsMixin, {
+
   /**
     Flag: indicates whether some {{#crossLink "FlexberryTreenodeComponent/nodes:property"}}child 'nodes'{{/childNodes}} are defined.
 
