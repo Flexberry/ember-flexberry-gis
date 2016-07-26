@@ -4,9 +4,10 @@
 
 import Ember from 'ember';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
+import FlexberryLayersTreeComponentMixin from '../mixins/flexberry-layerstree-component';
 import layout from '../templates/components/flexberry-layerstreenode';
 
-let FlexberryLayersTreeNodeComponent = Ember.Component.extend(DynamicActionsMixin, {
+let FlexberryLayersTreeNodeComponent = Ember.Component.extend(DynamicActionsMixin, FlexberryLayersTreeComponentMixin, {
   /**
     Reference to component's template.
   */
@@ -20,17 +21,7 @@ let FlexberryLayersTreeNodeComponent = Ember.Component.extend(DynamicActionsMixi
   coordinateReferenceSystem: undefined,
   iconClass: Ember.computed('type', function() {
     let type = this.get('type');
-    let iconClasses = 'world icon';
-    switch (type) {
-      case 'wms':
-        iconClasses = 'sticky note icon';
-        break;
-      case 'tile':
-        iconClasses = 'sticky note outline icon';
-        break;
-    }
-
-    return iconClasses;
+    return this.getIconClassByType(type);
   })
 });
 
