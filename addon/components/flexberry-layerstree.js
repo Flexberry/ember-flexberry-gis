@@ -43,11 +43,40 @@ let FlexberryLayersTreeComponent = Ember.Component.extend(DynamicActionsMixin, F
         hasCheckbox: true,
         checkboxValue: layer.get('visibility'),
         iconClass: this.getIconClassByType(layer.get('type')),
-        dynamicActions: layer.get('dynamicActions'),
+        dynamicActions: this._convertDynamicActions(layer.get('dynamicActions')),
         nodes: this._convertLayersToNodes(layer.get('layers'))
       });
     });
     return nodes;
+  },
+
+  _convertDynamicActions(dynamicActions) {
+    if (!dynamicActions || !Ember.isArray(dynamicActions)) {
+      return null;
+    }
+
+    if (dynamicActions.length <= 0) {
+      return [];
+    }
+
+    let nodesDynamicActions = dynamicActions.map((dynamicAction) => {
+      let dynamicActionOn = dynamicAction.on;
+      switch (dynamicActionOn) {
+        case 'visibilityChange':
+          dynamicActionOn = 'checkboxChange';
+          break;
+        case 'becameVisible':
+          dynamicActionOn = 'checkboxCheck';
+          break;
+        case 'becameInvisible':
+          dynamicActionOn = 'checkboxUncheck';
+          break;
+      }
+
+      dynamicAction.on = dynamicActionOn;
+      return dynamicAction;
+    });
+    return nodesDynamicActions;
   }
 });
 
