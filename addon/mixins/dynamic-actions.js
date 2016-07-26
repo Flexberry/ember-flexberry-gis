@@ -12,28 +12,28 @@ let validateDynamicActionProperties = function(dynamicAction, dynamicActionIndex
   // Property 'on' must be a string.
   let on = Ember.get(dynamicAction, 'on');
   Ember.assert(
-    `Wrong type of dynamicActions[` + dynamicActionIndex + `].on property: ` +
+    `Wrong type of dynamicActions[${dynamicActionIndex}].on property: ` +
     `actual type is ${Ember.typeOf(on)}, but \`string\` is expected.`,
     Ember.typeOf(on) === 'string');
 
   // Property 'actionHandler' must be a function (if defined).
   let actionHandler = Ember.get(dynamicAction, 'actionHandler');
   Ember.assert(
-    `Wrong type of dynamicActions[` + dynamicActionIndex + `].actionHandler property: ` +
+    `Wrong type of dynamicActions[${dynamicActionIndex}].actionHandler property: ` +
     `actual type is ${Ember.typeOf(actionHandler)}, but \`function\` is expected.`,
     Ember.isNone(actionHandler) || Ember.typeOf(actionHandler) === 'function');
 
   // Property 'actionName' must be a string (if defined).
   let actionName = Ember.get(dynamicAction, 'actionName');
   Ember.assert(
-    `Wrong type of dynamicActions[` + dynamicActionIndex + `].actionName property: ` +
+    `Wrong type of dynamicActions[${dynamicActionIndex}].actionName property: ` +
     `actual type is ${Ember.typeOf(actionName)}, but \`string\` is expected.`,
     Ember.isNone(actionName) || Ember.typeOf(actionName) === 'string');
 
   // Action context's 'send' method must be defined if 'actionName' is defined.
   let actionContext = Ember.get(dynamicAction, 'actionContext');
   Ember.assert(
-    `Method \`send\` must be defined in given dynamicActions[` + dynamicActionIndex + `].actionContext ` +
+    `Method \`send\` must be defined in given dynamicActions[${dynamicActionIndex}].actionContext ` +
     `(${actionContext.toString()}) in order to trigger dynamic action with defined ` +
     `dynamicActions[` + dynamicActionIndex + `].actionName (${actionName}).`,
     Ember.isNone(actionName) ||
@@ -42,7 +42,7 @@ let validateDynamicActionProperties = function(dynamicAction, dynamicActionIndex
   // Property 'actionArguments' must be an array (if defined).
   let actionArguments = Ember.get(dynamicAction, 'actionArguments');
   Ember.assert(
-    `Wrong type of dynamicActions[` + dynamicActionIndex + `].actionArguments property: ` +
+    `Wrong type of dynamicActions[${dynamicActionIndex}].actionArguments property: ` +
     `actual type is ${Ember.typeOf(actionArguments)}, but \`array\` is expected.`,
     Ember.isNone(actionArguments) || Ember.isArray(actionArguments));
 };

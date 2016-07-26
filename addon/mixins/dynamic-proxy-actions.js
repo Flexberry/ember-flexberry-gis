@@ -12,21 +12,21 @@ let validateDynamicPoxyActionProperties = function(dynamicPropxyAction, dynamicP
   // Property 'on' must be a string.
   let on = Ember.get(dynamicPropxyAction, 'on');
   Ember.assert(
-    `Wrong type of dynamicProxyActions[` + dynamicProxyActionIndex + `].on property: ` +
+    `Wrong type of dynamicProxyActions[${dynamicProxyActionIndex}].on property: ` +
     `actual type is ${Ember.typeOf(on)}, but \`string\` is expected.`,
     Ember.typeOf(on) === 'string');
 
   // Property 'actionName' must be a string.
   let actionName = Ember.get(dynamicPropxyAction, 'actionName');
   Ember.assert(
-    `Wrong type of dynamicProxyActions[` + dynamicProxyActionIndex + `].actionName property: ` +
+    `Wrong type of dynamicProxyActions[${dynamicProxyActionIndex}].actionName property: ` +
     `actual type is ${Ember.typeOf(actionName)}, but \`string\` is expected.`,
     Ember.typeOf(actionName) === 'string');
 
   // Property 'actionArguments' must be an array (if defined).
   let actionArguments = Ember.get(dynamicPropxyAction, 'actionArguments');
   Ember.assert(
-    `Wrong type of dynamicProxyActions[` + dynamicProxyActionIndex + `].actionArguments property: ` +
+    `Wrong type of dynamicProxyActions[${dynamicProxyActionIndex}].actionArguments property: ` +
     `actual type is ${Ember.typeOf(actionArguments)}, but \`array\` is expected.`,
     Ember.isNone(actionArguments) || Ember.isArray(actionArguments));
 };
