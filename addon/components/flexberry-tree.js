@@ -49,7 +49,7 @@ const flexberryClassNames = {
           {{#flexberry-tree}}
             {{#flexberry-treenode caption="Node 1.2.1 (with child nodes)"}}
               Node 1.2.1 custom content
-              
+
               {{#flexberry-tree}}
                 {{flexberry-treenode caption="Node 1.2.1.1 (leaf node)"}}
               {{/flexberry-tree}}
@@ -81,7 +81,7 @@ let FlexberryTreeComponent = Ember.Component.extend(DynamicActionsMixin, {
   _isNotInsideTreeNode: Ember.computed('parentView', function() {
     let parentView = this.get('parentView');
 
-    return !(parentView instanceof FlexberryTreenodeComponent);
+    return !(parentView instanceof FlexberryTreenodeComponent || parentView.get('parentView') instanceof FlexberryTreenodeComponent);
   }),
 
   /**

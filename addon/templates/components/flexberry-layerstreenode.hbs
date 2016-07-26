@@ -1,0 +1,19 @@
+{{#if hasBlock}}
+  {{#flexberry-treenode
+    caption=name
+    iconClass=iconClass
+    hasCheckbox=true
+    checkboxValue=visibility
+    readonly=false
+  }}
+    {{yield}}
+  {{/flexberry-treenode}}
+{{else}}
+  {{flexberry-treenode
+    caption=name
+    iconClass=iconClass
+    hasCheckbox=true
+    checkboxValue=visibility
+    readonly=false
+  }}
+{{/if}}

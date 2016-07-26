@@ -1,0 +1,21 @@
+{{#if hasBlock}}
+  {{#flexberry-tree
+    class=class
+    exclusive=exclusive
+    collapsible=collapsible
+    animateChildren=animateChildren
+    duration=duration
+    nodes=layers
+  }}
+    {{yield}}
+  {{/flexberry-tree}}
+{{else}}
+  {{flexberry-tree
+    class=class
+    exclusive=exclusive
+    collapsible=collapsible
+    animateChildren=animateChildren
+    duration=duration
+    nodes=layers
+  }}
+{{/if}}
