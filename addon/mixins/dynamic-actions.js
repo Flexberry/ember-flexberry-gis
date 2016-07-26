@@ -34,8 +34,8 @@ let validateDynamicActionProperties = function(dynamicAction, dynamicActionIndex
   let actionContext = Ember.get(dynamicAction, 'actionContext');
   Ember.assert(
     `Method \`send\` must be defined in given dynamicActions[${dynamicActionIndex}].actionContext ` +
-    `(${actionContext.toString()}) in order to trigger dynamic action with defined ` +
-    `dynamicActions[` + dynamicActionIndex + `].actionName (${actionName}).`,
+    `in order to trigger dynamic action with defined ` +
+    `dynamicActions[` + dynamicActionIndex + `].actionName (\`${actionName}\`).`,
     Ember.isNone(actionName) ||
     (Ember.typeOf(actionName) === 'string' && !Ember.isNone(actionContext) && Ember.typeOf(actionContext.send) === 'function'));
 
