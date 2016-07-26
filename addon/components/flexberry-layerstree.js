@@ -43,6 +43,7 @@ let FlexberryLayersTreeComponent = Ember.Component.extend(DynamicActionsMixin, F
         hasCheckbox: true,
         checkboxValue: layer.get('visibility'),
         iconClass: this.getIconClassByType(layer.get('type')),
+        dynamicActions: layer.get('dynamicActions'),
         nodes: this._convertLayersToNodes(layer.get('layers'))
       });
     });

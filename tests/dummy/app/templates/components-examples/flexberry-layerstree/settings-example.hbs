@@ -25,9 +25,9 @@
             hierarchyPropertyName="layers"
             dynamicActions=(array
               (hash
-                on="checkboxChange"
-                actionName="onTreenodeCheckboxChange"
-                actionArguments=(array "{% propertyPath %}.checkboxValue")
+                on="visibilityChange"
+                actionName="onTreenodeVisibilityChange"
+                actionArguments=(array "{% propertyPath %}.visibility")
               )
               (hash
                 on="headerClick"
@@ -65,6 +65,8 @@
             visibility=hbsTreeNodes.0.visibility
             settings=hbsTreeNodes.0.settings
             coordinateReferenceSystem=hbsTreeNodes.0.coordinateReferenceSystem
+            headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0")
+            visibilityChange=(action "onTreenodeVisibilityChange" "hbsTreeNodes.0.visibility")
           }}
             {{#flexberry-layerstree}}
               {{#flexberry-layerstreenode
@@ -73,6 +75,8 @@
                 visibility=hbsTreeNodes.0.layers.0.visibility
                 settings=hbsTreeNodes.0.layers.0.settings
                 coordinateReferenceSystem=hbsTreeNodes.0.layers.0.coordinateReferenceSystem
+                headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.layers.0")
+                visibilityChange=(action "onTreenodeVisibilityChange" "hbsTreeNodes.0.layers.0.visibility")
               }}
                 {{#flexberry-layerstree}}
                   {{flexberry-layerstreenode
@@ -81,6 +85,8 @@
                     visibility=hbsTreeNodes.0.layers.0.layers.0.visibility
                     settings=hbsTreeNodes.0.layers.0.layers.0.settings
                     coordinateReferenceSystem=hbsTreeNodes.0.layers.0.layers.0.coordinateReferenceSystem
+                    headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.layers.0.layers.0")
+                    visibilityChange=(action "onTreenodeVisibilityChange" "hbsTreeNodes.0.layers.0.layers.0.visibility")
                   }}
                 {{/flexberry-layerstree}}
               {{/flexberry-layerstreenode}}
@@ -90,6 +96,8 @@
                 visibility=hbsTreeNodes.0.layers.1.visibility
                 settings=hbsTreeNodes.0.layers.1.settings
                 coordinateReferenceSystem=hbsTreeNodes.0.layers.1.coordinateReferenceSystem
+                headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.layers.1")
+                visibilityChange=(action "onTreenodeVisibilityChange" "hbsTreeNodes.0.layers.1.visibility")
               }}
             {{/flexberry-layerstree}}
           {{/flexberry-layerstreenode}}

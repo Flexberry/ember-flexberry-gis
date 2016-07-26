@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import FlexberryTreenodeActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-treenode-actions-handler';
+import FlexberryLayersTreenodeActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-layerstreenode-actions-handler';
 
-export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
+export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixin, {
   /**
     Ember data store.
 
@@ -67,29 +67,27 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
     name: 'layer1',
     type: 'wms',
     visibility: true,
-    settings: {
-      "url":"http://172.17.1.15:8080/geoserver/ows",
-      "layers":"osm_perm_region:perm_water_line",
-      "format":"image/png",
-      "transparent":"true",
-      "version":"1.3.0"},
+    settings: '{"url":"http://172.17.1.15:8080/geoserver/ows", ' +
+              '"layers":"osm_perm_region:perm_water_line", ' +
+              '"format":"image/png", ' +
+              '"transparent":"true", ' +
+              '"version":"1.3.0"}',
     coordinateReferenceSystem: null,
     layers: [{
       name: 'layer1.1',
       type: 'tile',
       visibility: true,
-      settings: {"url": "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" },
+      settings: '{"url": "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}',
       coordinateReferenceSystem: null,
       layers: [{
         name: 'layer1.1.1',
         type: 'wms',
         visibility: true,
-        settings: {
-          "url":"http://172.17.1.15:8080/geoserver/ows",
-          "layers":"osm_perm_region:perm_points_of_interest",
-          "format":"image/png",
-          "transparent":"true",
-          "version":"1.3.0"},
+        settings: '{"url":"http://172.17.1.15:8080/geoserver/ows",' +
+                  '"layers":"osm_perm_region:perm_points_of_interest",' +
+                  '"format":"image/png",' +
+                  '"transparent":"true",' +
+                  '"version":"1.3.0"}',
         coordinateReferenceSystem: null,
         layers: null
       }]
@@ -97,12 +95,11 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
         name: 'layer1.2',
         type: 'wms',
         visibility: false,
-        settings: {
-          "url":"http://172.17.1.15:8080/geoserver/ows",
-          "layers":"osm_perm_region:water_polygon_all",
-          "format":"image/png",
-          "transparent":"true",
-          "version":"1.3.0"},
+        settings: '{"url":"http://172.17.1.15:8080/geoserver/ows",' +
+                  '"layers":"osm_perm_region:water_polygon_all",' +
+                  '"format":"image/png",' +
+                  '"transparent":"true",' +
+                  '"version":"1.3.0"}',
         coordinateReferenceSystem: null,
         layers: null
       }
@@ -184,45 +181,38 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
     }
 
     componentSettingsMetadata.pushObject({
-      settingName: 'caption',
+      settingName: 'name',
       settingType: 'string',
-      settingDefaultValue: null,
-      bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.caption'
+      settingDefaultValue: undefined,
+      bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.name'
     });
+
     componentSettingsMetadata.pushObject({
-      settingName: 'hasCheckbox',
+      settingName: 'type',
+      settingType: 'string',
+      settingDefaultValue: undefined,
+      bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.type'
+    });
+
+    componentSettingsMetadata.pushObject({
+      settingName: 'visibility',
       settingType: 'boolean',
-      settingDefaultValue: false,
-      bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.hasCheckbox'
+      settingDefaultValue: undefined,
+      bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.visibility'
     });
+
     componentSettingsMetadata.pushObject({
-      settingName: 'checkboxValue',
-      settingType: 'boolean',
-      settingDefaultValue: false,
-      bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.checkboxValue'
+      settingName: 'settings',
+      settingType: 'string',
+      settingDefaultValue: undefined,
+      bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.settings'
     });
+
     componentSettingsMetadata.pushObject({
-      settingName: 'iconClass',
-      settingType: 'enumeration',
-      settingAvailableItems: [
-        'marker icon',
-        'compass icon',
-        'location arrow icon',
-        'area chart icon',
-        'envira gallery icon',
-        'small marker icon',
-        'small compass icon',
-        'small location arrow icon',
-        'small area chart icon',
-        'small envira gallery icon',
-        'big marker icon',
-        'big compass icon',
-        'big location arrow icon',
-        'big area chart icon',
-        'big envira gallery icon'
-      ],
-      settingDefaultValue: '',
-      bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.iconClass'
+      settingName: 'coordinateReferenceSystem',
+      settingType: 'string',
+      settingDefaultValue: undefined,
+      bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.coordinateReferenceSystem'
     });
 
     return componentSettingsMetadata;
@@ -274,13 +264,7 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
   */
   jsonTreeDuration: 350,
 
-  /**
-    Tree nodes hierarchy with nodes settings.
-
-    @property jsonTreeNodes
-    @type TreeNodeObject[]
-  */
-  jsonLayersTreeNodes: Ember.computed(function() {
+  init() {
     let store = this.get('_store');
     Ember.assert('Store is not defined.', store);
     let modelType = 'new-platform-flexberry-g-i-s-map-layer';
@@ -289,31 +273,29 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
         name: 'layer1',
         type: 'wms',
         visibility: 'true',
-        settings: {
-          "url":"http://172.17.1.15:8080/geoserver/ows",
-          "layers":"osm_perm_region:perm_water_line",
-          "format":"image/png",
-          "transparent":"true",
-          "version":"1.3.0"},
+        settings: '{"url":"http://172.17.1.15:8080/geoserver/ows", ' +
+                  '"layers":"osm_perm_region:perm_water_line", ' +
+                  '"format":"image/png", ' +
+                  '"transparent":"true", ' +
+                  '"version":"1.3.0"}',
         coordinateReferenceSystem: null,
         layers: Ember.A([
           store.createRecord(modelType, {
             name: 'layer1.1',
             type: 'tile',
             visibility: true,
-            settings: {"url": "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" },
+            settings: '{"url": "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}',
             coordinateReferenceSystem: null,
             layers: Ember.A([
               store.createRecord(modelType, {
                 name: 'layer1.1.1',
                 type: 'wms',
                 visibility: true,
-                settings: {
-                  "url":"http://172.17.1.15:8080/geoserver/ows",
-                  "layers":"osm_perm_region:perm_points_of_interest",
-                  "format":"image/png",
-                  "transparent":"true",
-                  "version":"1.3.0"},
+                settings: '{"url":"http://172.17.1.15:8080/geoserver/ows",' +
+                          '"layers":"osm_perm_region:perm_points_of_interest",' +
+                          '"format":"image/png",' +
+                          '"transparent":"true",' +
+                          '"version":"1.3.0"}',
                 coordinateReferenceSystem: null,
                 layers: null
               })
@@ -323,12 +305,11 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
             name: 'layer1.2',
             type: 'wms',
             visibility: false,
-            settings: {
-              "url":"http://172.17.1.15:8080/geoserver/ows",
-              "layers":"osm_perm_region:water_polygon_all",
-              "format":"image/png",
-              "transparent":"true",
-              "version":"1.3.0"},
+            settings: '{"url":"http://172.17.1.15:8080/geoserver/ows",' +
+                      '"layers":"osm_perm_region:water_polygon_all",' +
+                      '"format":"image/png",' +
+                      '"transparent":"true",' +
+                      '"version":"1.3.0"}',
             coordinateReferenceSystem: null,
             layers: null
           })
@@ -336,8 +317,16 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
       })
     ]);
 
-    return resultArray;
-  }),
+    this.set('jsonLayersTreeNodes', resultArray);
+  },
+
+  /**
+    Tree nodes hierarchy with nodes settings.
+
+    @property jsonTreeNodes
+    @type TreeNodeObject[]
+  */
+  jsonLayersTreeNodes: null,
 
   /**
     Component's template text.
@@ -421,45 +410,38 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
     }
 
     componentSettingsMetadata.pushObject({
-      settingName: 'caption',
+      settingName: 'name',
       settingType: 'string',
-      settingDefaultValue: null,
-      bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.caption'
+      settingDefaultValue: undefined,
+      bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.name'
     });
+
     componentSettingsMetadata.pushObject({
-      settingName: 'hasCheckbox',
+      settingName: 'type',
+      settingType: 'string',
+      settingDefaultValue: undefined,
+      bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.type'
+    });
+
+    componentSettingsMetadata.pushObject({
+      settingName: 'visibility',
       settingType: 'boolean',
-      settingDefaultValue: false,
-      bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.hasCheckbox'
+      settingDefaultValue: undefined,
+      bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.visibility'
     });
+
     componentSettingsMetadata.pushObject({
-      settingName: 'checkboxValue',
-      settingType: 'boolean',
-      settingDefaultValue: false,
-      bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.checkboxValue'
+      settingName: 'settings',
+      settingType: 'string',
+      settingDefaultValue: undefined,
+      bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.settings'
     });
+
     componentSettingsMetadata.pushObject({
-      settingName: 'iconClass',
-      settingType: 'enumeration',
-      settingAvailableItems: [
-        'marker icon',
-        'compass icon',
-        'location arrow icon',
-        'area chart icon',
-        'envira gallery icon',
-        'small marker icon',
-        'small compass icon',
-        'small location arrow icon',
-        'small area chart icon',
-        'small envira gallery icon',
-        'big marker icon',
-        'big compass icon',
-        'big location arrow icon',
-        'big area chart icon',
-        'big envira gallery icon'
-      ],
-      settingDefaultValue: '',
-      bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.iconClass'
+      settingName: 'coordinateReferenceSystem',
+      settingType: 'string',
+      settingDefaultValue: undefined,
+      bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.coordinateReferenceSystem'
     });
 
     return componentSettingsMetadata;
