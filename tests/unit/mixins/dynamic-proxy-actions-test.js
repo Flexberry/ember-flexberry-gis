@@ -29,7 +29,7 @@ test('Mixin throws assertion failed exception (while \'sendAction\' executes) if
   assert.expect(wrongDynamicProxyActionsArray.length);
 
   wrongDynamicProxyActionsArray.forEach((wrongDynamicProxyActions) => {
-    let component = ComponentWithDynamicProxyActionsMixin.create({ 
+    let component = ComponentWithDynamicProxyActionsMixin.create({
       dynamicProxyActions: wrongDynamicProxyActionsArray
     });
 
@@ -233,7 +233,7 @@ test('Mixin makes parent component to resend child component\'s actions specifie
   parentComponent.someNewAction = function(...args) {
     someNewActionHandlerArguments = Ember.A(args);
   };
-  
+
   component.sendAction('someAction', ...originalActionArguments);
   assert.strictEqual(
     someNewActionHandlerArguments[0] === dynamicProxyActionArguments[0] &&
@@ -242,4 +242,106 @@ test('Mixin makes parent component to resend child component\'s actions specifie
     someNewActionHandlerArguments[3] === originalActionArguments[1],
     true,
     'Parent component resends child component\'s \'someAction\' as \'someNewAction\' with additional arguments added to the beginning of the arguments array');
+});
+
+test('Mixin allows to add/remove \'dynamicProxyActions\' at run time', function (assert) {
+  assert.expect(2);
+
+  let dynamicProxyActions = Ember.A();
+
+  let component = ComponentWithDynamicProxyActionsMixin.create({
+    dynamicProxyActions: dynamicProxyActions
+  });
+
+  let parentComponent = Ember.Component.extend({}).create();
+  component.targetObject = parentComponent;
+
+  let someNewActionHandlerHasBeenCalled = false;
+  parentComponent.someNewAction = function() {
+    someNewActionHandlerHasBeenCalled = true;
+  };
+
+  let dynamicProxyAction = DynamicProxyActionObject.create({
+    on: 'someAction',
+    actionName: 'someNewAction',
+    actionArguments: null
+  });
+  component.get('dynamicProxyActions').pushObject(dynamicProxyAction);
+
+  component.sendAction('someAction');
+  assert.strictEqual(
+    someNewActionHandlerHasBeenCalled,
+    true,
+    'Parent component resends child component\'s \'someAction\' as \'someNewAction\' for dynamic action proxy added in run time');
+
+  someNewActionHandlerHasBeenCalled = false;
+  component.get('dynamicProxyActions').removeObject(dynamicProxyAction);
+
+  component.sendAction('someAction');
+  assert.strictEqual(
+    someNewActionHandlerHasBeenCalled,
+    false,
+    'Parent component doesn\'t resend child component\'s \'someAction\' as \'someNewAction\' for dynamic action proxy removed in run time');
+});
+
+test('Mixin makes parent component to resend child component\'s actions specified in multiple \'dynamicProxyActions\'', function (assert) {
+  assert.expect(4);
+
+  let component = ComponentWithDynamicProxyActionsMixin.create({
+    dynamicProxyActions: Ember.A([DynamicProxyActionObject.create({
+      on: 'firstAction',
+      actionName: 'newFirstAction',
+      actionArguments: null
+    }), DynamicProxyActionObject.create({
+      on: 'secondAction',
+      actionName: 'newSecondAction',
+      actionArguments: null
+    }), DynamicProxyActionObject.create({
+      on: 'firstAction',
+      actionName: 'newFirstActionAgain',
+      actionArguments: null
+    })])
+  });
+
+  let parentComponent = Ember.Component.extend({}).create();
+  component.targetObject = parentComponent;
+
+  let newFirstActionHandlerHasBeenCalled = false;
+  parentComponent.newFirstAction = function() {
+    newFirstActionHandlerHasBeenCalled = true;
+  };
+
+  let newSecondActionHandlerHasBeenCalled = false;
+  parentComponent.newSecondAction = function() {
+    newSecondActionHandlerHasBeenCalled = true;
+  };
+
+  let newFirstActionAgainHandlerHasBeenCalled = false;
+  parentComponent.newFirstActionAgain = function() {
+    newFirstActionAgainHandlerHasBeenCalled = true;
+  };
+
+  component.sendAction('firstAction');
+  assert.strictEqual(
+    newFirstActionHandlerHasBeenCalled && newFirstActionAgainHandlerHasBeenCalled,
+    true,
+    'Parent component resends child component\'s \'firstAction\' as \'newFirstAction\' & as \'newFirstActionAgain\'');
+  assert.strictEqual(
+    newSecondActionHandlerHasBeenCalled,
+    false,
+    'Parent component doesn\'t resend child component\'s \'secondAction\' as \'newSecondAction\'');
+
+  newFirstActionHandlerHasBeenCalled = false;
+  newSecondActionHandlerHasBeenCalled = false;
+  newFirstActionAgainHandlerHasBeenCalled = false;
+
+  component.sendAction('secondAction');
+  assert.strictEqual(
+    newSecondActionHandlerHasBeenCalled,
+    true,
+    'Parent component resends child component\'s \'secondAction\' as \'newSecondAction\'');
+  assert.strictEqual(
+    newFirstActionHandlerHasBeenCalled || newFirstActionAgainHandlerHasBeenCalled,
+    false,
+    'Parent component doesn\'t resend child component\'s \'firstAction\' as \'newSecondAction\' & as \'newFirstActionAgain\'');
 });
