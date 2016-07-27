@@ -7,12 +7,20 @@ import DynamicActionsMixin from '../mixins/dynamic-actions';
 import FlexberryLayersTreeComponentMixin from '../mixins/flexberry-layerstree-component';
 import layout from '../templates/components/flexberry-layerstreenode';
 
+const flexberryClassNamesPrefix = 'flexberry-layerstreenode';
+const flexberryClassNames = {
+  prefix: flexberryClassNamesPrefix,
+  wrapper: null,
+  treeNodeContent: flexberryClassNamesPrefix + '-content'
+};
+
 let FlexberryLayersTreeNodeComponent = Ember.Component.extend(DynamicActionsMixin, FlexberryLayersTreeComponentMixin, {
   /**
     Reference to component's template.
   */
   layout,
-  //tagName:'',
+  tagName:'',
+  flexberryClassNames,
 
   name: undefined,
   type: undefined,
@@ -61,6 +69,12 @@ let FlexberryLayersTreeNodeComponent = Ember.Component.extend(DynamicActionsMixi
     });
     return nodesDynamicActions;
   })
+});
+
+// Add component's CSS-class names as component's class static constants
+// to make them available outside of the component instance.
+FlexberryLayersTreeNodeComponent.reopenClass({
+  flexberryClassNames
 });
 
 export default FlexberryLayersTreeNodeComponent;

@@ -13,11 +13,13 @@
   dynamicActions=_convertedDynamicActions
   hasNodesOuter=(or hasBlock _hasLayers)
 }}
-<div class="{{flexberryClassNames.treeNodeContent}} content">
-  {{#if _hasLayers}}
-    {{flexberry-layerstree layers=layers}}
-  {{/if}}
-  {{#if hasBlock}}
-    {{yield}}
-  {{/if}}
-</div>
+{{#if (or hasBlock _hasLayers)}}
+  <div class="{{flexberryClassNames.treeNodeContent}} content">
+    {{#if _hasLayers}}
+      {{flexberry-layerstree layers=layers}}
+    {{/if}}
+    {{#if hasBlock}}
+      {{yield}}
+    {{/if}}
+  </div>
+{{/if}}
