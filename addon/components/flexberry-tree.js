@@ -49,6 +49,7 @@ const flexberryClassNames = {
           {{#flexberry-tree}}
             {{#flexberry-treenode caption="Node 1.2.1 (with child nodes)"}}
               Node 1.2.1 custom content
+
               {{#flexberry-tree}}
                 {{flexberry-treenode caption="Node 1.2.1.1 (leaf node)"}}
               {{/flexberry-tree}}

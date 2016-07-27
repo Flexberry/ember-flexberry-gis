@@ -112,7 +112,57 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
     @property hbsTreeComponentTemplateText
     @type String
   */
-  hbsTreeComponentTemplateText: new Ember.Handlebars.SafeString('FIX IT'),
+  hbsTreeComponentTemplateText: new Ember.Handlebars.SafeString(
+    '{{#flexberry-layerstree<br>' +
+    ' class=hbsTreeClass<br>' +
+    ' exclusive=hbsTreeExclusive<br>' +
+    ' collapsible=hbsTreeCollapsible<br>' +
+    ' animateChildren=hbsTreeAnimateChildren<br>' +
+    ' duration=hbsTreeDuration<br>' +
+    '}}<br>' +
+    ' {{#flexberry-layerstreenode<br>' +
+    '   name=hbsTreeNodes.0.name<br>' +
+    '   type=hbsTreeNodes.0.type<br>' +
+    '   visibility=hbsTreeNodes.0.visibility<br>' +
+    '   settings=hbsTreeNodes.0.settings<br>' +
+    '   coordinateReferenceSystem=hbsTreeNodes.0.coordinateReferenceSystem<br>' +
+    '   headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0")<br>' +
+    '   visibilityChange=(action "onTreenodeVisibilityChange" "hbsTreeNodes.0.visibility")<br>' +
+    ' }}<br>' +
+    '   {{#flexberry-layerstree}}<br>' +
+    '     {{#flexberry-layerstreenode<br>' +
+    '       name=hbsTreeNodes.0.layers.0.name<br>' +
+    '       type=hbsTreeNodes.0.layers.0.type<br>' +
+    '       visibility=hbsTreeNodes.0.layers.0.visibility<br>' +
+    '       settings=hbsTreeNodes.0.layers.0.settings<br>' +
+    '       coordinateReferenceSystem=hbsTreeNodes.0.layers.0.coordinateReferenceSystem<br>' +
+    '       headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.layers.0")<br>' +
+    '       visibilityChange=(action "onTreenodeVisibilityChange" "hbsTreeNodes.0.layers.0.visibility")<br>' +
+    '     }}<br>' +
+    '       {{#flexberry-layerstree}}<br>' +
+    '         {{flexberry-layerstreenode<br>' +
+    '           name=hbsTreeNodes.0.layers.0.layers.0.name<br>' +
+    '           type=hbsTreeNodes.0.layers.0.layers.0.type<br>' +
+    '           visibility=hbsTreeNodes.0.layers.0.layers.0.visibility<br>' +
+    '           settings=hbsTreeNodes.0.layers.0.layers.0.settings<br>' +
+    '           coordinateReferenceSystem=hbsTreeNodes.0.layers.0.layers.0.coordinateReferenceSystem<br>' +
+    '           headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.layers.0.layers.0")<br>' +
+    '           visibilityChange=(action "onTreenodeVisibilityChange" "hbsTreeNodes.0.layers.0.layers.0.visibility")<br>' +
+    '         }}<br>' +
+    '       {{/flexberry-layerstree}}<br>' +
+    '     {{/flexberry-layerstreenode}}<br>' +
+    '     {{flexberry-layerstreenode<br>' +
+    '       name=hbsTreeNodes.0.layers.1.name<br>' +
+    '       type=hbsTreeNodes.0.layers.1.type<br>' +
+    '       visibility=hbsTreeNodes.0.layers.1.visibility<br>' +
+    '       settings=hbsTreeNodes.0.layers.1.settings<br>' +
+    '       coordinateReferenceSystem=hbsTreeNodes.0.layers.1.coordinateReferenceSystem<br>' +
+    '       headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.layers.1")<br>' +
+    '       visibilityChange=(action "onTreenodeVisibilityChange" "hbsTreeNodes.0.layers.1.visibility")<br>' +
+    '     }}<br>' +
+    '   {{/flexberry-layerstree}}<br>' +
+    ' {{/flexberry-layerstreenode}}<br>' +
+    '{{/flexberry-layerstree}}'),
 
   /**
     Component settings metadata.
@@ -335,7 +385,28 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
     @type String
   */
   jsonTreeComponentTemplateText: new Ember.Handlebars.SafeString(
-    'FIX IT'),
+    '{{flexberry-layerstree<br>' +
+    ' class=jsonTreeClass<br>' +
+    ' exclusive=jsonTreeExclusive<br>' +
+    ' collapsible=jsonTreeCollapsible<br>' +
+    ' animateChildren=jsonTreeAnimateChildren<br>' +
+    ' duration=jsonTreeDuration<br>' +
+    ' layers=(get-with-dynamic-actions this "jsonLayersTreeNodes"<br>' +
+    '   hierarchyPropertyName="layers"<br>' +
+    '   dynamicActions=(array<br>' +
+    '     (hash<br>' +
+    '       on="visibilityChange"<br>' +
+    '       actionName="onTreenodeVisibilityChange"<br>' +
+    '       actionArguments=(array "{% propertyPath %}.visibility")<br>' +
+    '     )<br>' +
+    '     (hash<br>' +
+    '       on="headerClick"<br>' +
+    '       actionName="onTreenodeHeaderClick"<br>' +
+    '       actionArguments=(array "{% propertyPath %}")<br>' +
+    '     )<br>' +
+    '   )<br>' +
+    ' )<br>' +
+    '}}'),
 
   /**
     Component settings metadata.

@@ -3,7 +3,6 @@
 */
 
 import Ember from 'ember';
-import DynamicActionsMixin from '../mixins/dynamic-actions';
 import FlexberryLayersTreeComponentMixin from '../mixins/flexberry-layerstree-component';
 import layout from '../templates/components/flexberry-layerstreenode';
 

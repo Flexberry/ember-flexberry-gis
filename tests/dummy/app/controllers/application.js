@@ -142,6 +142,16 @@ export default Ember.Controller.extend({
             title: i18n.t('forms.application.sitemap.components-examples.flexberry-tree.settings-example.title'),
             children: null
           }]
+        }, {
+          link: null,
+          caption: i18n.t('forms.application.sitemap.components-examples.flexberry-layerstree.caption'),
+          title: i18n.t('forms.application.sitemap.components-examples.flexberry-layerstree.title'),
+          children: [{
+            link: 'components-examples/flexberry-layerstree/settings-example',
+            caption: i18n.t('forms.application.sitemap.components-examples.flexberry-layerstree.settings-example.caption'),
+            title: i18n.t('forms.application.sitemap.components-examples.flexberry-layerstree.settings-example.title'),
+            children: null
+          }]
         }]
       }, {
         link: null,
