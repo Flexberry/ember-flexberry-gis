@@ -59,7 +59,7 @@ const flexberryClassNames = {
           {{#flexberry-tree}}
             {{#flexberry-treenode caption="Node 1.2.1 (with child nodes)"}}
               Node 1.2.1 custom content
-              
+
               {{#flexberry-tree}}
                 {{flexberry-treenode caption="Node 1.2.1.1 (leaf node)"}}
               {{/flexberry-tree}}
@@ -107,7 +107,7 @@ let FlexberryTreenodeComponent = Ember.Component.extend(DynamicActionsMixin, {
 
   /**
     Overridden [tag name property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
-    Is blank to disable component's wrapping <div>. 
+    Is blank to disable component's wrapping <div>.
 
     @property tagName
     @type String
@@ -147,6 +147,15 @@ let FlexberryTreenodeComponent = Ember.Component.extend(DynamicActionsMixin, {
     @default false
   */
   hasCheckbox: false,
+
+  /**
+    Flag: indicates whether tree node has child nodes that are displayed by other component.
+
+    @property hasNodesOuter
+    @type Boolean
+    @default false
+  */
+  hasNodesOuter: false,
 
   /**
     Value binded to tree node's
