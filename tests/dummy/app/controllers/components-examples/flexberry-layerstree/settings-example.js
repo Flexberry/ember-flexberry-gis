@@ -64,7 +64,7 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
     @type Object[]
   */
   hbsTreeNodes: [{
-    name: 'layer1',
+    name: 'hbsLayer1',
     type: 'wms',
     visibility: true,
     settings: '{"url":"http://172.17.1.15:8080/geoserver/ows", ' +
@@ -74,13 +74,13 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
               '"version":"1.3.0"}',
     coordinateReferenceSystem: null,
     layers: [{
-      name: 'layer1.1',
+      name: 'hbsLayer1.1',
       type: 'tile',
       visibility: true,
       settings: '{"url": "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}',
       coordinateReferenceSystem: null,
       layers: [{
-        name: 'layer1.1.1',
+        name: 'hbsLayer1.1.1',
         type: 'wms',
         visibility: true,
         settings: '{"url":"http://172.17.1.15:8080/geoserver/ows",' +
@@ -92,7 +92,7 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
         layers: null
       }]
       }, {
-        name: 'layer1.2',
+        name: 'hbsLayer1.2',
         type: 'wms',
         visibility: false,
         settings: '{"url":"http://172.17.1.15:8080/geoserver/ows",' +
@@ -270,7 +270,7 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
     let modelType = 'new-platform-flexberry-g-i-s-map-layer';
     let resultArray = Ember.A([
       store.createRecord(modelType, {
-        name: 'layer1',
+        name: 'jsonLayer1',
         type: 'wms',
         visibility: 'true',
         settings: '{"url":"http://172.17.1.15:8080/geoserver/ows", ' +
@@ -281,14 +281,14 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
         coordinateReferenceSystem: null,
         layers: Ember.A([
           store.createRecord(modelType, {
-            name: 'layer1.1',
+            name: 'jsonLayer1.1',
             type: 'tile',
             visibility: true,
             settings: '{"url": "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}',
             coordinateReferenceSystem: null,
             layers: Ember.A([
               store.createRecord(modelType, {
-                name: 'layer1.1.1',
+                name: 'jsonLayer1.1.1',
                 type: 'wms',
                 visibility: true,
                 settings: '{"url":"http://172.17.1.15:8080/geoserver/ows",' +
@@ -302,7 +302,7 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
             ])
           }),
           store.createRecord(modelType, {
-            name: 'layer1.2',
+            name: 'jsonLayer1.2',
             type: 'wms',
             visibility: false,
             settings: '{"url":"http://172.17.1.15:8080/geoserver/ows",' +

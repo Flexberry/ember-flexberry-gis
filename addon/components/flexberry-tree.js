@@ -81,7 +81,7 @@ let FlexberryTreeComponent = Ember.Component.extend(DynamicActionsMixin, {
   _isNotInsideTreeNode: Ember.computed('parentView', function() {
     let parentView = this.get('parentView');
 
-    return !(parentView instanceof FlexberryTreenodeComponent || parentView.get('parentView') instanceof FlexberryTreenodeComponent);
+    return !(parentView instanceof FlexberryTreenodeComponent);
   }),
 
   /**
