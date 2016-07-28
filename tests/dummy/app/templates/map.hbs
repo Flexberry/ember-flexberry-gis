@@ -1,5 +1,11 @@
-{{#leaflet-map lat=model.lat lng=model.lng zoom=model.zoom}}
-  {{#each model.layers as |layer|}}
-    {{flexberry-layer layer=layer}}
-  {{/each}}
-{{/leaflet-map}}
+<div class="ui grid">
+  <div class="twelve wide column">
+    {{flexberry-map model=model zoomControl=true onMoveend=(action "updateCenter")}}
+  </div>
+  <div class="four wide column">
+    {{layers-tree layers=model.layers}}<br>
+    lat: {{flexberry-field value=model.lat}}
+    lng: {{flexberry-field value=model.lng}}
+    zoom: {{flexberry-field value=model.zoom}}
+  </div>
+</div>

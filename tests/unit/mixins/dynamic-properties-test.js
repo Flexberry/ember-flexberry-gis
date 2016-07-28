@@ -208,3 +208,4 @@ test('Mixin removes assigned \'dynamicProperties\' before owner will be destroye
     ownerPropertiesNames.contains('anotherProperty'), false,
     'Owner\'s properties keys doesn\'t contains \'anotherProperty\'');
 });
+

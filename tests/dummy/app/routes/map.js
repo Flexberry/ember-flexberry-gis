@@ -1,6 +1,4 @@
-import EditFormRoute from 'ember-flexberry/routes/edit-form';
+import FlexberryMapRoute from 'ember-flexberry-gis/routes/flexberry-map';
 
-export default EditFormRoute.extend({
-  modelProjection: 'MapE',
-  modelName: 'new-platform-flexberry-g-i-s-map'
+export default FlexberryMapRoute.extend({
 });

@@ -34,6 +34,8 @@
   ],
   "belongsTo": [
     {
+      "polymorphic": false,
+      "presence": true,
       "name": "map",
       "relatedTo": "new-platform-flexberry-g-i-s-map",
       "inverse": null

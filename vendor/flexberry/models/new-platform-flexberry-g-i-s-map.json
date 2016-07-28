@@ -11,16 +11,23 @@
       "defaultValue": ""
     },
     {
-      "name": "center",
-      "type": "string",
-      "flexberryType": "string",
+      "name": "lat",
+      "type": "number",
+      "flexberryType": "double",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "lng",
+      "type": "number",
+      "flexberryType": "double",
       "notNull": false,
       "defaultValue": ""
     },
     {
       "name": "zoom",
       "type": "number",
-      "flexberryType": "int",
+      "flexberryType": "double",
       "notNull": false,
       "defaultValue": ""
     },
@@ -67,14 +74,16 @@
       "defaultValue": ""
     }
   ],
-  "belongsTo": [],
-  "hasMany": [
+  "belongsTo": [
     {
-      "name": "layers",
+      "polymorphic": false,
+      "presence": true,
+      "name": "rootLayer",
       "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
-      "inverse": "map"
+      "inverse": null
     }
   ],
+  "hasMany": [],
   "projections": [
     {
       "name": "AuditView",
@@ -87,40 +96,52 @@
           "index": 0
         },
         {
-          "name": "center",
-          "caption": "Center",
-          "hidden": false,
-          "index": 1
-        },
-        {
           "name": "zoom",
           "caption": "Zoom",
           "hidden": false,
-          "index": 2
+          "index": 1
         },
         {
           "name": "public",
           "caption": "Public",
           "hidden": false,
-          "index": 3
+          "index": 2
         },
         {
           "name": "coordinateReferenceSystem",
           "caption": "Coordinate reference system",
           "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "lat",
+          "caption": "",
+          "hidden": false,
           "index": 4
+        },
+        {
+          "name": "lng",
+          "caption": "",
+          "hidden": false,
+          "index": 5
         }
       ],
-      "belongsTo": [],
-      "hasMany": [
+      "belongsTo": [
         {
-          "projectionName": "AuditView",
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "RootLayer",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 6,
           "caption": "",
-          "name": "layers",
+          "name": "rootLayer",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
           "inverse": null
         }
-      ]
+      ],
+      "hasMany": []
     },
     {
       "name": "MapE",
@@ -133,40 +154,52 @@
           "index": 0
         },
         {
-          "name": "center",
-          "caption": "Center",
+          "name": "lat",
+          "caption": "Lat",
           "hidden": false,
           "index": 1
+        },
+        {
+          "name": "lng",
+          "caption": "Lng",
+          "hidden": false,
+          "index": 2
         },
         {
           "name": "zoom",
           "caption": "Zoom",
           "hidden": false,
-          "index": 2
+          "index": 3
         },
         {
           "name": "public",
           "caption": "Public",
           "hidden": false,
-          "index": 3
+          "index": 4
         },
         {
           "name": "coordinateReferenceSystem",
           "caption": "Coordinate reference system",
           "hidden": false,
-          "index": 4
+          "index": 5
         }
       ],
-      "belongsTo": [],
-      "hasMany": [
+      "belongsTo": [
         {
-          "projectionName": "MapLayerE",
-          "caption": "Layers",
-          "name": "layers",
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "RootLayer",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 6,
+          "caption": "",
+          "name": "rootLayer",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
           "inverse": null
         }
-      ]
+      ],
+      "hasMany": []
     },
     {
       "name": "MapL",
@@ -179,52 +212,40 @@
           "index": 0
         },
         {
-          "name": "center",
-          "caption": "Center",
-          "hidden": false,
-          "index": 1
-        },
-        {
-          "name": "zoom",
-          "caption": "Zoom",
-          "hidden": false,
-          "index": 2
-        },
-        {
           "name": "public",
           "caption": "Public",
           "hidden": false,
-          "index": 3
+          "index": 1
         },
         {
           "name": "coordinateReferenceSystem",
           "caption": "Coordinate reference system",
           "hidden": false,
-          "index": 4
+          "index": 2
         },
         {
           "name": "createTime",
           "caption": "Создание",
           "hidden": false,
-          "index": 5
+          "index": 3
         },
         {
           "name": "creator",
           "caption": "Создатель",
           "hidden": false,
-          "index": 6
+          "index": 4
         },
         {
           "name": "editTime",
           "caption": "Редактирование",
           "hidden": false,
-          "index": 7
+          "index": 5
         },
         {
           "name": "editor",
           "caption": "Редактор",
           "hidden": false,
-          "index": 8
+          "index": 6
         }
       ],
       "belongsTo": [],

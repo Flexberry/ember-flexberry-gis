@@ -7,7 +7,7 @@
       "name": "name",
       "type": "string",
       "flexberryType": "string",
-      "notNull": true,
+      "notNull": false,
       "defaultValue": ""
     },
     {
@@ -21,7 +21,7 @@
       "name": "visibility",
       "type": "boolean",
       "flexberryType": "bool",
-      "notNull": true,
+      "notNull": false,
       "defaultValue": "true"
     },
     {
@@ -41,9 +41,11 @@
   ],
   "belongsTo": [
     {
-      "name": "map",
-      "relatedTo": "new-platform-flexberry-g-i-s-map",
-      "inverse": "layers"
+      "polymorphic": false,
+      "presence": false,
+      "name": "parent",
+      "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
+      "inverse": null
     }
   ],
   "hasMany": [],
@@ -83,7 +85,21 @@
           "index": 4
         }
       ],
-      "belongsTo": [],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "Parent",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 5,
+          "caption": "",
+          "name": "parent",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
+          "inverse": null
+        }
+      ],
       "hasMany": []
     },
     {
@@ -121,7 +137,21 @@
           "index": 4
         }
       ],
-      "belongsTo": [],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "Parent",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 5,
+          "caption": "",
+          "name": "parent",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
+          "inverse": null
+        }
+      ],
       "hasMany": []
     }
   ]
