@@ -1,0 +1,25 @@
+{{flexberry-treenode
+  caption=name
+  iconClass=_iconClass
+  hasCheckbox=true
+  checkboxValue=visibility
+  readonly=false
+  headerClick=headerClick
+  beforeExpand=beforeExpand
+  beforeCollapse=beforeCollapse
+  checkboxChange=visibilityChange
+  checkboxCheck=becameVisible
+  checkboxUncheck=becameInvisible
+  dynamicActions=_convertedDynamicActions
+  hasNodesOuter=(or hasBlock _hasLayers)
+}}
+{{#if (or hasBlock _hasLayers)}}
+  <div class="{{flexberryClassNames.treeNodeContent}} content">
+    {{#if _hasLayers}}
+      {{flexberry-layerstree layers=layers}}
+    {{/if}}
+    {{#if hasBlock}}
+      {{yield}}
+    {{/if}}
+  </div>
+{{/if}}

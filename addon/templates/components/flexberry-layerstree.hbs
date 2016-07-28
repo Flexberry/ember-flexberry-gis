@@ -1,0 +1,16 @@
+{{#if _hasLayers}}
+  {{#each layers as |layer|}}
+    {{flexberry-layerstreenode
+      name=layer.name
+      type=layer.type
+      visibility=layer.visibility
+      settings=layer.settings
+      coordinateReferenceSystem=layer.coordinateReferenceSystem
+      layers=layer.layers
+      dynamicActions=layer.dynamicActions
+    }}
+  {{/each}}
+{{/if}}
+{{#if hasBlock}}
+  {{yield}}
+{{/if}}
