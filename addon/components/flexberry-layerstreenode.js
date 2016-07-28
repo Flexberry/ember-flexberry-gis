@@ -39,28 +39,36 @@ const flexberryClassNames = {
   ```handlebars
   {{#flexberry-layerstree}}
     {{#flexberry-layerstreenode
-      name="hbsLayer1 (it is not a leaf)"
-      type="wms"
-      visibility=true
+      name=hbsTreeNodes.0.name
+      type=hbsTreeNodes.0.type
+      visibility=hbsTreeNodes.0.visibility
+      headerClick=(action "onLayersTreenodeHeaderClick" "hbsTreeNodes.0")
+      visibilityChange=(action "onLayersTreenodeVisibilityChange" "hbsTreeNodes.0.visibility")
     }}
       {{#flexberry-layerstree}}
         {{#flexberry-layerstreenode
-          name="hbsLayer1.1 (it is not a leaf)"
-          type="tile"
-          visibility=true
+          name=hbsTreeNodes.0.layers.0.name
+          type=hbsTreeNodes.0.layers.0.type
+          visibility=hbsTreeNodes.0.layers.0.visibility
+          headerClick=(action "onLayersTreenodeHeaderClick" "hbsTreeNodes.0.layers.0")
+          visibilityChange=(action "onLayersTreenodeVisibilityChange" "hbsTreeNodes.0.layers.0.visibility")
         }}
           {{#flexberry-layerstree}}
             {{flexberry-layerstreenode
-              name="hbsLayer1.1.1 (it is a leaf)"
-              type="wms"
-              visibility=true
+              name=hbsTreeNodes.0.layers.0.layers.0.name
+              type=hbsTreeNodes.0.layers.0.layers.0.type
+              visibility=hbsTreeNodes.0.layers.0.layers.0.visibility
+              headerClick=(action "onLayersTreenodeHeaderClick" "hbsTreeNodes.0.layers.0.layers.0")
+              visibilityChange=(action "onLayersTreenodeVisibilityChange" "hbsTreeNodes.0.layers.0.layers.0.visibility")
             }}
           {{/flexberry-layerstree}}
         {{/flexberry-layerstreenode}}
         {{flexberry-layerstreenode
-          name="hbsLayer1.2 (it is a leaf)"
-          type="wms"
-          visibility=true
+          name=hbsTreeNodes.0.layers.1.name
+          type=hbsTreeNodes.0.layers.1.type
+          visibility=hbsTreeNodes.0.layers.1.visibility
+          headerClick=(action "onLayersTreenodeHeaderClick" "hbsTreeNodes.0.layers.1")
+          visibilityChange=(action "onLayersTreenodeVisibilityChange" "hbsTreeNodes.0.layers.1.visibility")
         }}
       {{/flexberry-layerstree}}
     {{/flexberry-layerstreenode}}
@@ -75,12 +83,12 @@ const flexberryClassNames = {
       dynamicActions=(array
         (hash
           on="visibilityChange"
-          actionName="onTreenodeVisibilityChange"
+          actionName="onLayersTreenodeVisibilityChange"
           actionArguments=(array "{% propertyPath %}.visibility")
         )
         (hash
           on="headerClick"
-          actionName="onTreenodeHeaderClick"
+          actionName="onLayersTreenodeHeaderClick"
           actionArguments=(array "{% propertyPath %}")
         )
       )
@@ -188,7 +196,6 @@ let FlexberryLayersTreeNodeComponent = Ember.Component.extend(FlexberryLayersTre
 
     @property name
     @type String
-    @default undefined
   */
   name: undefined,
 
@@ -197,7 +204,6 @@ let FlexberryLayersTreeNodeComponent = Ember.Component.extend(FlexberryLayersTre
 
     @property type
     @type String
-    @default undefined
   */
   type: undefined,
 
@@ -215,7 +221,6 @@ let FlexberryLayersTreeNodeComponent = Ember.Component.extend(FlexberryLayersTre
 
     @property settings
     @type String
-    @default undefined
   */
   settings: undefined,
 
@@ -224,7 +229,6 @@ let FlexberryLayersTreeNodeComponent = Ember.Component.extend(FlexberryLayersTre
 
     @property coordinateReferenceSystem
     @type String
-    @default undefined
   */
   coordinateReferenceSystem: undefined,
 
@@ -236,7 +240,6 @@ let FlexberryLayersTreeNodeComponent = Ember.Component.extend(FlexberryLayersTre
 
     @property layers
     @type NewPlatformFlexberryGISMapLayerModel[]
-    @default undefined
   */
   layers: undefined,
 

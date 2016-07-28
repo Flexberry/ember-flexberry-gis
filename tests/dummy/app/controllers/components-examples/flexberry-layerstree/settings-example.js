@@ -3,15 +3,6 @@ import FlexberryLayersTreenodeActionsHandlerMixin from 'ember-flexberry-gis/mixi
 
 export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixin, {
   /**
-    Ember data store.
-
-    @property _store
-    @type DS.Store
-    @private
-  */
-  _store: Ember.inject.service('store'),
-
-  /**
     Component's wrapper CSS classes.
 
     @property hbsTreeClass
@@ -126,8 +117,8 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
     '   visibility=hbsTreeNodes.0.visibility<br>' +
     '   settings=hbsTreeNodes.0.settings<br>' +
     '   coordinateReferenceSystem=hbsTreeNodes.0.coordinateReferenceSystem<br>' +
-    '   headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0")<br>' +
-    '   visibilityChange=(action "onTreenodeVisibilityChange" "hbsTreeNodes.0.visibility")<br>' +
+    '   headerClick=(action "onLayersTreenodeHeaderClick" "hbsTreeNodes.0")<br>' +
+    '   visibilityChange=(action "onLayersTreenodeVisibilityChange" "hbsTreeNodes.0.visibility")<br>' +
     ' }}<br>' +
     '   {{#flexberry-layerstree}}<br>' +
     '     {{#flexberry-layerstreenode<br>' +
@@ -136,8 +127,8 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
     '       visibility=hbsTreeNodes.0.layers.0.visibility<br>' +
     '       settings=hbsTreeNodes.0.layers.0.settings<br>' +
     '       coordinateReferenceSystem=hbsTreeNodes.0.layers.0.coordinateReferenceSystem<br>' +
-    '       headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.layers.0")<br>' +
-    '       visibilityChange=(action "onTreenodeVisibilityChange" "hbsTreeNodes.0.layers.0.visibility")<br>' +
+    '       headerClick=(action "onLayersTreenodeHeaderClick" "hbsTreeNodes.0.layers.0")<br>' +
+    '       visibilityChange=(action "onLayersTreenodeVisibilityChange" "hbsTreeNodes.0.layers.0.visibility")<br>' +
     '     }}<br>' +
     '       {{#flexberry-layerstree}}<br>' +
     '         {{flexberry-layerstreenode<br>' +
@@ -146,8 +137,8 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
     '           visibility=hbsTreeNodes.0.layers.0.layers.0.visibility<br>' +
     '           settings=hbsTreeNodes.0.layers.0.layers.0.settings<br>' +
     '           coordinateReferenceSystem=hbsTreeNodes.0.layers.0.layers.0.coordinateReferenceSystem<br>' +
-    '           headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.layers.0.layers.0")<br>' +
-    '           visibilityChange=(action "onTreenodeVisibilityChange" "hbsTreeNodes.0.layers.0.layers.0.visibility")<br>' +
+    '           headerClick=(action "onLayersTreenodeHeaderClick" "hbsTreeNodes.0.layers.0.layers.0")<br>' +
+    '           visibilityChange=(action "onLayersTreenodeVisibilityChange" "hbsTreeNodes.0.layers.0.layers.0.visibility")<br>' +
     '         }}<br>' +
     '       {{/flexberry-layerstree}}<br>' +
     '     {{/flexberry-layerstreenode}}<br>' +
@@ -157,8 +148,8 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
     '       visibility=hbsTreeNodes.0.layers.1.visibility<br>' +
     '       settings=hbsTreeNodes.0.layers.1.settings<br>' +
     '       coordinateReferenceSystem=hbsTreeNodes.0.layers.1.coordinateReferenceSystem<br>' +
-    '       headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.layers.1")<br>' +
-    '       visibilityChange=(action "onTreenodeVisibilityChange" "hbsTreeNodes.0.layers.1.visibility")<br>' +
+    '       headerClick=(action "onLayersTreenodeHeaderClick" "hbsTreeNodes.0.layers.1")<br>' +
+    '       visibilityChange=(action "onLayersTreenodeVisibilityChange" "hbsTreeNodes.0.layers.1.visibility")<br>' +
     '     }}<br>' +
     '   {{/flexberry-layerstree}}<br>' +
     ' {{/flexberry-layerstreenode}}<br>' +
@@ -314,64 +305,9 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
   */
   jsonTreeDuration: 350,
 
-  init() {
-    let store = this.get('_store');
-    Ember.assert('Store is not defined.', store);
-    let modelType = 'new-platform-flexberry-g-i-s-map-layer';
-    let resultArray = Ember.A([
-      store.createRecord(modelType, {
-        name: 'jsonLayer1',
-        type: 'wms',
-        visibility: 'true',
-        settings: '{"url":"http://172.17.1.15:8080/geoserver/ows", ' +
-                  '"layers":"osm_perm_region:perm_water_line", ' +
-                  '"format":"image/png", ' +
-                  '"transparent":"true", ' +
-                  '"version":"1.3.0"}',
-        coordinateReferenceSystem: null,
-        layers: Ember.A([
-          store.createRecord(modelType, {
-            name: 'jsonLayer1.1',
-            type: 'tile',
-            visibility: true,
-            settings: '{"url": "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}',
-            coordinateReferenceSystem: null,
-            layers: Ember.A([
-              store.createRecord(modelType, {
-                name: 'jsonLayer1.1.1',
-                type: 'wms',
-                visibility: true,
-                settings: '{"url":"http://172.17.1.15:8080/geoserver/ows",' +
-                          '"layers":"osm_perm_region:perm_points_of_interest",' +
-                          '"format":"image/png",' +
-                          '"transparent":"true",' +
-                          '"version":"1.3.0"}',
-                coordinateReferenceSystem: null,
-                layers: null
-              })
-            ])
-          }),
-          store.createRecord(modelType, {
-            name: 'jsonLayer1.2',
-            type: 'wms',
-            visibility: false,
-            settings: '{"url":"http://172.17.1.15:8080/geoserver/ows",' +
-                      '"layers":"osm_perm_region:water_polygon_all",' +
-                      '"format":"image/png",' +
-                      '"transparent":"true",' +
-                      '"version":"1.3.0"}',
-            coordinateReferenceSystem: null,
-            layers: null
-          })
-        ])
-      })
-    ]);
-
-    this.set('jsonLayersTreeNodes', resultArray);
-  },
-
   /**
     Tree nodes hierarchy with nodes settings.
+    This property is initiated on route's level.
 
     @property jsonTreeNodes
     @type TreeNodeObject[]
@@ -396,12 +332,12 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
     '   dynamicActions=(array<br>' +
     '     (hash<br>' +
     '       on="visibilityChange"<br>' +
-    '       actionName="onTreenodeVisibilityChange"<br>' +
+    '       actionName="onLayersTreenodeVisibilityChange"<br>' +
     '       actionArguments=(array "{% propertyPath %}.visibility")<br>' +
     '     )<br>' +
     '     (hash<br>' +
     '       on="headerClick"<br>' +
-    '       actionName="onTreenodeHeaderClick"<br>' +
+    '       actionName="onLayersTreenodeHeaderClick"<br>' +
     '       actionArguments=(array "{% propertyPath %}")<br>' +
     '     )<br>' +
     '   )<br>' +
@@ -522,13 +458,13 @@ export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixi
     /**
       Handles tree nodes 'headerClick' action.
 
-      @method actions.onTreenodeHeaderClick
+      @method actions.onLayersTreenodeHeaderClick
       @param {String} clickedNodePropertiesPath Path to controller's property representing clicked tree node.
       @param {Object} e Action's event object
       @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
       which describes event that triggers this action.
     */
-    onTreenodeHeaderClick(...args) {
+    onLayersTreenodeHeaderClick(...args) {
       let actionEventObject = args[args.length - 1];
       let clickedNodePropertiesPath = args[0];
       let clickedNodeSettingsPrefix = Ember.$(actionEventObject.originalEvent.currentTarget)

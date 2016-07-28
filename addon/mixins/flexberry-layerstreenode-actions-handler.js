@@ -17,7 +17,7 @@ export default Ember.Mixin.create({
     /**
       Handles {{#crossLink "FlexberryLayersTreenodeComponent/sendingActions.headerClick:method"}}flexberry-layerstreenode component's 'headerClick' action{{/crossLink}}.
 
-      @method actions.onTreenodeHeaderClick
+      @method actions.onLayersTreenodeHeaderClick
       @param {Object} e Action's event object.
       @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
       which describes event that triggers node's 'headerClick' action.
@@ -27,7 +27,7 @@ export default Ember.Mixin.create({
       ```handlebars
         {{flexberry-layerstreenode
           name="Tree node"
-          headerClick=(action "onTreenodeHeaderClick")
+          headerClick=(action "onLayersTreenodeHeaderClick")
         }}
       ```
 
@@ -40,13 +40,13 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onTreenodeHeaderClick(...args) {
+    onLayersTreenodeHeaderClick(...args) {
     },
 
     /**
       Handles {{#crossLink "FlexberryLayersTreenodeComponent/sendingActions.beforeExpand:method"}}flexberry-layerstreenode component's 'beforeExpand' action{{/crossLink}}.
 
-      @method actions.onTreenodeBeforeExpand
+      @method actions.onLayersTreenodeBeforeExpand
       @param {Object} e Action's event object.
       @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
       which describes event that triggers node's expanding.
@@ -56,7 +56,7 @@ export default Ember.Mixin.create({
       ```handlebars
         {{{flexberry-layerstreenode
           name="Tree node"
-          beforeExpand=(action "onTreenodeBeforeExpand")
+          beforeExpand=(action "onLayersTreenodeBeforeExpand")
         }}
       ```
 
@@ -69,13 +69,13 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onTreenodeBeforeExpand(...args) {
+    onLayersTreenodeBeforeExpand(...args) {
     },
 
     /**
       Handles {{#crossLink "FlexberryLayersTreenodeComponent/sendingActions.beforeExpand:method"}}flexberry-layerstreenode component's 'beforeCollapse' action{{/crossLink}}.
 
-      @method actions.onTreenodeBeforeCollapse
+      @method actions.onLayersTreenodeBeforeCollapse
       @param {Object} e Action's event object.
       @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
       which describes event that triggers node's collapsing.
@@ -85,7 +85,7 @@ export default Ember.Mixin.create({
       ```handlebars
         {{flexberry-layerstreenode
           name="Tree node"
-          beforeCollapse=(action "onTreenodeBeforeCollapse")
+          beforeCollapse=(action "onLayersTreenodeBeforeCollapse")
         }}
       ```
 
@@ -98,14 +98,14 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onTreenodeBeforeCollapse(...args) {
+    onLayersTreenodeBeforeCollapse(...args) {
     },
 
     /**
       Handles {{#crossLink "FlexberryLayersTreenodeComponent/sendingActions.visiblilityChange:method"}}flexberry-layerstreenode component's 'visiblilityChange' action{{/crossLink}}.
       It mutates value of property with given name to value of action's event object 'newValue' property.
 
-      @method actions.onTreenodeVisibilityChange
+      @method actions.onLayersTreenodeVisibilityChange
       @param {String} mutablePropertyPath Path to a property, which value must be mutated on action.
       @param {Object} e Action's event object.
       @param {Object} e.newValue New value for a property, which value must be mutated on action.
@@ -118,7 +118,7 @@ export default Ember.Mixin.create({
         {{flexberry-layerstreenode
           name="Tree node with checkbox"
           visibility=model.visibility
-          visiblilityChange=(action "onTreenodeVisibilityChange" "model.visibility")
+          visiblilityChange=(action "onLayersTreenodeVisibilityChange" "model.visibility")
         }}
       ```
 
@@ -131,7 +131,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onTreenodeVisibilityChange(...args) {
+    onLayersTreenodeVisibilityChange(...args) {
       let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
 
@@ -142,7 +142,7 @@ export default Ember.Mixin.create({
       Handles {{#crossLink "FlexberryLayersTreenodeComponent/sendingActions.becameVisible:method"}}flexberry-layerstreenode component's 'becameVisible' action{{/crossLink}}.
       It mutates value of property with given name to true.
 
-      @method actions.onTreenodeBecameVisible
+      @method actions.onLayersTreenodeBecameVisible
       @param {String} mutablePropertyPath Path to a property, which value must be mutated on action.
       @param {Object} e Action's event object.
       @param {Object} e.newValue New value for a property, which value must be mutated on action (always true in this action handler).
@@ -155,8 +155,8 @@ export default Ember.Mixin.create({
         {{flexberry-layerstreenode
           name="Tree node with checkbox"
           visibility=model.visibility
-          visiblilityChange=(action "onTreenodeVisibilityChange" "model.visibility")
-          becameVisible=(action "onTreenodeBecameVisible" "model.visibility")
+          visiblilityChange=(action "onLayersTreenodeVisibilityChange" "model.visibility")
+          becameVisible=(action "onLayersTreenodeBecameVisible" "model.visibility")
         }}
       ```
 
@@ -169,7 +169,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onTreenodeBecameVisible(...args) {
+    onLayersTreenodeBecameVisible(...args) {
       let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxCheck');
 
@@ -180,7 +180,7 @@ export default Ember.Mixin.create({
       Handles {{#crossLink "FlexberryLayersTreenodeComponent/sendingActions.becameInvisible:method"}}flexberry-layerstreenode component's 'becameInvisible' action{{/crossLink}}.
       It mutates value of property with given name to false.
 
-      @method actions.onTreenodeBecameInvisible
+      @method actions.onLayersTreenodeBecameInvisible
       @param {String} mutablePropertyPath Path to a property, which value must be mutated on action.
       @param {Object} e Action's event object.
       @param {Object} e.newValue New value for a property, which value must be mutated on action (always false in this action handler).
@@ -193,9 +193,9 @@ export default Ember.Mixin.create({
         {{flexberry-layerstreenode
           name="Tree node with checkbox"
           visibility=model.visibility
-          visiblilityChange=(action "onTreenodeVisibilityChange" "model.visibility")
-          becameVisible=(action "onTreenodeBecameVisible" "model.visibility")
-          becameInvisible=(action "onTreenodeBecameInvisible" "model.visibility")
+          visiblilityChange=(action "onLayersTreenodeVisibilityChange" "model.visibility")
+          becameVisible=(action "onLayersTreenodeBecameVisible" "model.visibility")
+          becameInvisible=(action "onLayersTreenodeBecameInvisible" "model.visibility")
         }}
       ```
 
@@ -208,7 +208,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onTreenodeBecameInvisible(...args) {
+    onLayersTreenodeBecameInvisible(...args) {
       let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxUncheck');
 
