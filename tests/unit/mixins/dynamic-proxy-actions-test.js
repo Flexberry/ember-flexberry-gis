@@ -45,7 +45,7 @@ test('Mixin throws assertion failed exception (while \'sendAction\' executes) if
   });
 });
 
-test('Mixin throws assertion failed exception if owner\'s \'targetObject\' doesn\'t have \'sendAction\' method.', function (assert) {
+test('Mixin throws assertion failed exception if owner\'s parent component doesn\'t have \'sendAction\' method.', function (assert) {
   let wrongTargetObjectsArray = Ember.A([null, 1, true, false, {}, [], function() {}, new Date(), new RegExp(), { sendAction: function() {} }]);
 
   // Assertion shouldn't be send for last object containing 'sendAction' method,
@@ -66,7 +66,7 @@ test('Mixin throws assertion failed exception if owner\'s \'targetObject\' doesn
       component.sendAction('someAction');
     } catch (ex) {
       assert.strictEqual(
-        (/wrong\s*type\s*of\s.*targetObject\.sendAction.*/gi).test(ex.message),
+        (/wrong\s*type\s*of\s.*parent\s.*sendAction.*/gi).test(ex.message),
         true,
         'Throws assertion failed exception if owner\'s \'targetObject\' doesn\'t have \'sendAction\' method.');
     }

@@ -12,10 +12,20 @@ import Ember from 'ember';
 */
 export default Ember.Object.extend({
   /**
+    Name of parent component's {{#crossLink "DynamicComponentsPlaceholderComponent"}}'dynamic-components-placeholder'{{/crossLink}}
+    placed somewhere in it's markup to which dynamic component must be added.
+
+    @property to
+    @type String
+    @default null
+  */
+  to: null,
+
+  /**
     Component name.
-    Will be used as first argument for ['component' helper]().
-    Component behind this name must use {{#crossLink "DynamicPropertiesMixin"}}dynamic-properties mixin{{/crossLink}},
-    {{#crossLink "DynamicActionsMixin"}}dynamic-actions mixin{{/crossLink}} and
+    Will be used as first argument for ['component' helper](http://emberjs.com/api/classes/Ember.Templates.helpers.html#method_component).
+    Component behind this name must use at least {{#crossLink "DynamicPropertiesMixin"}}dynamic-properties mixin{{/crossLink}},
+    and optionally {{#crossLink "DynamicActionsMixin"}}dynamic-actions mixin{{/crossLink}} &
     {{#crossLink "DynamicProxyActionsMixin"}}dynamic-proxy-actions mixin{{/crossLink}}.
 
     @property componentName
@@ -25,12 +35,13 @@ export default Ember.Object.extend({
   componentName: null,
 
   /**
-    Object containing dynamic properties that must be assigned to
-    component using {{#crossLink "DynamicPropertiesMixin"}}dynamic-properties mixin{{/crossLink}}.
+    Object containing properties that must be passed to
+    component using {{#crossLink "DynamicPropertiesMixin"}}dynamic-properties mixin{{/crossLink}}
+    through it's {#crossLink "DynamicPropertiesMixin:dynamicProperties"}}'dynamicProperties' property{{/crossLink}}.
 
-    @property dynamicProperties
+    @property componentProperties
     @type Object
     @default null
   */
-  dynamicProperties: null
+  componentProperties: null
 });

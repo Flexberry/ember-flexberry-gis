@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import DynamicComponentsPlaceholderComponent from '../components/dynamic-components-placeholder';
 
 // Validates every dynamic proxy action properties.
 // Not a mixin member, so yuidoc-comments are unnecessary.
@@ -51,36 +52,42 @@ export default Ember.Mixin.create({
     @readonly
     @private
   */
-  _dynamicProxyActions: Ember.computed('dynamicProxyActions.[]', function() {
-    let dynamicProxyActions = this.get('dynamicProxyActions');
-    let result = {};
+  _dynamicProxyActions: Ember.computed(
+    'dynamicProxyActions.[]',
+    'dynamicProxyActions.@each.on',
+    'dynamicProxyActions.@each.actionName',
+    'dynamicProxyActions.@each.actionArguments',
+    function() {
+      let dynamicProxyActions = this.get('dynamicProxyActions');
+      let result = {};
 
-    Ember.assert(
-      `Wrong type of \`dynamicProxyActions\` propery: ` +
-      `actual type is ${Ember.typeOf(dynamicProxyActions)}, but \`array\` is expected.`,
-      Ember.isNone(dynamicProxyActions) || Ember.isArray(dynamicProxyActions));
+      Ember.assert(
+        `Wrong type of \`dynamicProxyActions\` propery: ` +
+        `actual type is ${Ember.typeOf(dynamicProxyActions)}, but \`array\` is expected.`,
+        Ember.isNone(dynamicProxyActions) || Ember.isArray(dynamicProxyActions));
 
-    if (!Ember.isArray(dynamicProxyActions)) {
-      return result;
-    }
-
-    for (let i = 0, len = dynamicProxyActions.length; i < len; i++) {
-      let dynamicProxyAction = dynamicProxyActions[i];
-      validateDynamicPoxyActionProperties(dynamicProxyAction, i);
-
-      let on = Ember.get(dynamicProxyAction, 'on');
-      if (Ember.isNone(result[on])) {
-        result[on] = Ember.A();
+      if (!Ember.isArray(dynamicProxyActions)) {
+        return result;
       }
 
-      result[on].pushObject({
-        actionName: Ember.get(dynamicProxyAction, 'actionName'),
-        actionArguments: Ember.get(dynamicProxyAction, 'actionArguments')
-      });
-    }
+      for (let i = 0, len = dynamicProxyActions.length; i < len; i++) {
+        let dynamicProxyAction = dynamicProxyActions[i];
+        validateDynamicPoxyActionProperties(dynamicProxyAction, i);
 
-    return result;
-  }),
+        let on = Ember.get(dynamicProxyAction, 'on');
+        if (Ember.isNone(result[on])) {
+          result[on] = Ember.A();
+        }
+
+        result[on].pushObject({
+          actionName: Ember.get(dynamicProxyAction, 'actionName'),
+          actionArguments: Ember.get(dynamicProxyAction, 'actionArguments')
+        });
+      }
+
+      return result;
+    }
+  ),
 
   /**
     Component's proxy-actions, that be catched and resended by parent component
@@ -119,12 +126,18 @@ export default Ember.Mixin.create({
         return;
       }
 
-      // Retrieve & validate parentComponent.
+      // Retrieve parentComponent (skip dynamic-components-placeholder,
+      // because it is only inner renderer for child dynamic components and should be skipped
+      // in child actions proxying process).
       let parentComponent = this.get('targetObject');
-      let parentComponentSendAction = this.get('targetObject.sendAction');
+      while (!Ember.isNone(parentComponent) && parentComponent instanceof DynamicComponentsPlaceholderComponent) {
+        parentComponent = this.get('targetObject');
+      }
+
+      let parentComponentSendAction = Ember.isNone(parentComponent) ? undefined : Ember.get(parentComponent, 'sendAction');
       Ember.assert(
-        `Wrong type of \`targetObject.sendAction\` propery: actual type is ${Ember.typeOf(parentComponentSendAction)}, ` +
-        `but \`function\` is expected.`,
+        `Wrong type of parent component\`s \`sendAction\` propery: ` +
+        `actual type is ${Ember.typeOf(parentComponentSendAction)}, but \`function\` is expected.`,
         Ember.typeOf(parentComponentSendAction) === 'function');
 
       // Call action's with names specified in proxy-actions on parent component.

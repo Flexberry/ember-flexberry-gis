@@ -67,38 +67,46 @@ export default Ember.Mixin.create({
     @readonly
     @private
   */
-  _dynamicActions: Ember.computed('dynamicActions.[]', function() {
-    let dynamicActions = this.get('dynamicActions');
-    let result = {};
+  _dynamicActions: Ember.computed(
+    'dynamicActions.[]',
+    'dynamicActions.@each.on',
+    'dynamicActions.@each.actionHandler',
+    'dynamicActions.@each.actionName',
+    'dynamicActions.@each.actionContext',
+    'dynamicActions.@each.actionArguments',
+    function() {
+      let dynamicActions = this.get('dynamicActions');
+      let result = {};
 
-    Ember.assert(
-      `Wrong type of \`dynamicActions\` propery: ` +
-      `actual type is ${Ember.typeOf(dynamicActions)}, but \`array\` is expected.`,
-      Ember.isNone(dynamicActions) || Ember.isArray(dynamicActions));
+      Ember.assert(
+        `Wrong type of \`dynamicActions\` propery: ` +
+        `actual type is ${Ember.typeOf(dynamicActions)}, but \`array\` is expected.`,
+        Ember.isNone(dynamicActions) || Ember.isArray(dynamicActions));
 
-    if (!Ember.isArray(dynamicActions)) {
-      return result;
-    }
-
-    for (let i = 0, len = dynamicActions.length; i < len; i++) {
-      let dynamicAction = dynamicActions[i];
-      validateDynamicActionProperties(dynamicAction, i);
-
-      let on = Ember.get(dynamicAction, 'on');
-      if (Ember.isNone(result[on])) {
-        result[on] = Ember.A();
+      if (!Ember.isArray(dynamicActions)) {
+        return result;
       }
 
-      result[on].pushObject({
-        actionHandler: Ember.get(dynamicAction, 'actionHandler'),
-        actionName: Ember.get(dynamicAction, 'actionName'),
-        actionContext: Ember.get(dynamicAction, 'actionContext'),
-        actionArguments: Ember.get(dynamicAction, 'actionArguments')
-      });
-    }
+      for (let i = 0, len = dynamicActions.length; i < len; i++) {
+        let dynamicAction = dynamicActions[i];
+        validateDynamicActionProperties(dynamicAction, i);
 
-    return result;
-  }),
+        let on = Ember.get(dynamicAction, 'on');
+        if (Ember.isNone(result[on])) {
+          result[on] = Ember.A();
+        }
+
+        result[on].pushObject({
+          actionHandler: Ember.get(dynamicAction, 'actionHandler'),
+          actionName: Ember.get(dynamicAction, 'actionName'),
+          actionContext: Ember.get(dynamicAction, 'actionContext'),
+          actionArguments: Ember.get(dynamicAction, 'actionArguments')
+        });
+      }
+
+      return result;
+    }
+  ),
 
   /**
     Component's dynamic actions.
