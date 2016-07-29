@@ -73,6 +73,14 @@ Ember.$.extend(true, translations, {
         'components-examples': {
           'caption': 'Примеры компонентов',
           'title': '',
+          'flexberry-button': {
+            'caption': 'flexberry-button',
+            'title': '',
+            'settings-example': {
+              'caption': 'Пример работы с настройками',
+              'title': ''
+            }
+          },
           'flexberry-ddau-checkbox': {
             'caption': 'flexberry-ddau-checkbox',
             'title': '',
@@ -107,14 +115,19 @@ Ember.$.extend(true, translations, {
     },
 
     'components-examples': {
+      'flexberry-button': {
+        'settings-example': {
+          'caption': 'Пример работы с настройками flexberry-button'
+        }
+      },
       'flexberry-ddau-checkbox': {
         'settings-example': {
-          'caption': 'Components-examples/flexberry-ddau-checkbox/settings-example'
+          'caption': 'Пример работы с настройками flexberry-ddau-checkbox'
         }
       },
       'flexberry-tree': {
         'settings-example': {
-          'caption': 'Components-examples/flexberry-tree/settings-example',
+          'caption': 'Пример работы с настройками flexberry-tree',
           'hbs-tree-tab-caption': 'Дерево явно заданное в hbs-разметке',
           'hbs-tree-latest-clicked-node-caption': 'Настройки последней кликнутой вершины дерева',
           'hbs-tree-latest-clicked-node-placeholder': 'Кликните на любую вершину дерева, чтобы отобразить её настройки',

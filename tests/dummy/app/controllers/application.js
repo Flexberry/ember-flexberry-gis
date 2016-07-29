@@ -124,6 +124,16 @@ export default Ember.Controller.extend({
         title: i18n.t('forms.application.sitemap.components-examples.title'),
         children: [{
           link: null,
+          caption: i18n.t('forms.application.sitemap.components-examples.flexberry-button.caption'),
+          title: i18n.t('forms.application.sitemap.components-examples.flexberry-button.title'),
+          children: [{
+            link: 'components-examples/flexberry-button/settings-example',
+            caption: i18n.t('forms.application.sitemap.components-examples.flexberry-button.settings-example.caption'),
+            title: i18n.t('forms.application.sitemap.components-examples.flexberry-button.settings-example.title'),
+            children: null
+          }]
+        }, {
+          link: null,
           caption: i18n.t('forms.application.sitemap.components-examples.flexberry-ddau-checkbox.caption'),
           title: i18n.t('forms.application.sitemap.components-examples.flexberry-ddau-checkbox.title'),
           children: [{

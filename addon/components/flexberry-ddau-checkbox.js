@@ -6,6 +6,7 @@ import Ember from 'ember';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
 import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
+import DynamicComponentsMixin from '../mixins/dynamic-proxy-actions';
 import layout from '../templates/components/flexberry-ddau-checkbox';
 
 /**
@@ -74,11 +75,13 @@ const flexberryClassNames = {
   @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
   @uses DynamicProxyActionsMixin
+  @uses DynamicComponentsMixin
 */
 let FlexberryDdauCheckboxComponent = Ember.Component.extend(
   DynamicPropertiesMixin,
   DynamicActionsMixin,
-  DynamicProxyActionsMixin, {
+  DynamicProxyActionsMixin,
+  DynamicComponentsMixin, {
 
   /**
     Reference to component's template.
