@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import DomActionsMixin from '../mixins/dom-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
 import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
@@ -51,12 +52,14 @@ const flexberryClassNames = {
 
   @class FlexberryButtonComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses DomActionsMixin
   @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
   @uses DynamicProxyActionsMixin
   @uses DynamicComponentsMixin
 */
 let FlexberryButtonComponent = Ember.Component.extend(
+  DomActionsMixin,
   DynamicPropertiesMixin,
   DynamicActionsMixin,
   DynamicProxyActionsMixin,
@@ -126,15 +129,7 @@ let FlexberryButtonComponent = Ember.Component.extend(
     @type Boolean
     @default false
   */
-  readonly: false,
-
-  /**
-    Component's action invoking when button was clicked.
-
-    @method sendingActions.click
-    @param {Object} e Action's event object [jQuery event object](http://api.jquery.com/category/events/event-object/)
-    which describes triggered 'click' event.
-  */
+  readonly: false
 });
 
 // Add component's CSS-class names as component's class static constants

@@ -49,7 +49,7 @@ export default Ember.Mixin.create({
 
     @property _dynamicProxyActions
     @type Object
-    @readonly
+    @readOnly
     @private
   */
   _dynamicProxyActions: Ember.computed(

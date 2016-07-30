@@ -45,7 +45,7 @@ export default Ember.Mixin.create({
 
     @property _dynamicComponents
     @type Object
-    @readonly
+    @readOnly
     @private
   */
   _dynamicComponents: Ember.computed(

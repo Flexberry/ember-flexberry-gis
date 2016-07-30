@@ -35,7 +35,7 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
     '  class=class<br>' +
     '  caption=caption<br>' +
     '  readonly=readonly<br>' +
-    '  change=(action \"onButtonClick\")<br>' +
+    '  click=(action \"onButtonClick\")<br>' +
     '}}'),
 
   /**
@@ -81,7 +81,7 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
   }),
 
   actions: {
-    onButtonCLick(e) {
+    onButtonClick(e) {
       console.log('Button clicked. Click event-object: ', e);
     }
   }
