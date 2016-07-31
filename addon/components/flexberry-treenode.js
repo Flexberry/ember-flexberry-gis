@@ -4,9 +4,11 @@
 
 import Ember from 'ember';
 import FlexberryDdauCheckboxComponent from './flexberry-ddau-checkbox';
+import DomActionsMixin from '../mixins/dom-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
 import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
+import DynamicComponentsMixin from '../mixins/dynamic-components';
 import layout from '../templates/components/flexberry-treenode';
 
 /**
@@ -79,14 +81,18 @@ const flexberryClassNames = {
 
   @class FlexberryTreenodeComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses DomActionsMixin
   @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
   @uses DynamicProxyActionsMixin
+  @uses DynamicComponentsMixin
 */
 let FlexberryTreenodeComponent = Ember.Component.extend(
+  DomActionsMixin,
   DynamicPropertiesMixin,
   DynamicActionsMixin,
-  DynamicProxyActionsMixin, {
+  DynamicProxyActionsMixin,
+  DynamicComponentsMixin, {
 
   /**
     Flag: indicates whether some {{#crossLink "FlexberryTreenodeComponent/nodes:property"}}child 'nodes'{{/childNodes}} are defined.
@@ -114,7 +120,7 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
   flexberryClassNames,
 
   /**
-    Overridden [tag name property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
+    Overridden ['tagName' property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
     Is blank to disable component's wrapping <div>. 
 
     @property tagName

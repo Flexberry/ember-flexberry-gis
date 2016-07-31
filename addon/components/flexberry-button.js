@@ -7,7 +7,7 @@ import DomActionsMixin from '../mixins/dom-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
 import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
-import DynamicComponentsMixin from '../mixins/dynamic-proxy-actions';
+import DynamicComponentsMixin from '../mixins/dynamic-components';
 import layout from '../templates/components/flexberry-button';
 
 /**

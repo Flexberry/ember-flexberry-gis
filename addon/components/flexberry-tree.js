@@ -4,9 +4,11 @@
 
 import Ember from 'ember';
 import FlexberryTreenodeComponent from './flexberry-treenode';
+import DomActionsMixin from '../mixins/dom-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
 import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
+import DynamicComponentsMixin from '../mixins/dynamic-components';
 import layout from '../templates/components/flexberry-tree';
 
 /**
@@ -69,14 +71,18 @@ const flexberryClassNames = {
 
   @class FlexberryTreeComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses DomActionsMixin
   @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
   @uses DynamicProxyActionsMixin
+  @uses DynamicComponentsMixin
 */
 let FlexberryTreeComponent = Ember.Component.extend(
+  DomActionsMixin,
   DynamicPropertiesMixin,
   DynamicActionsMixin,
-  DynamicProxyActionsMixin, {
+  DynamicProxyActionsMixin,
+  DynamicComponentsMixin, {
 
   /**
     Flag: indicates whether tree isn't placed inside {{#crossLink "FlexberryTreenodeComponent"}}flexberry-treenode component{{/crossLink}}.
