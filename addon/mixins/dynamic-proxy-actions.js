@@ -131,7 +131,7 @@ export default Ember.Mixin.create({
       // in child actions proxying process).
       let parentComponent = this.get('targetObject');
       while (!Ember.isNone(parentComponent) && parentComponent instanceof DynamicComponentsPlaceholderComponent) {
-        parentComponent = this.get('targetObject');
+        parentComponent = parentComponent.get('targetObject');
       }
 
       let parentComponentSendAction = Ember.isNone(parentComponent) ? undefined : Ember.get(parentComponent, 'sendAction');
