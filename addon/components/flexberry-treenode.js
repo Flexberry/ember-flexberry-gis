@@ -3,7 +3,6 @@
 */
 
 import Ember from 'ember';
-import FlexberryDdauCheckboxComponent from './flexberry-ddau-checkbox';
 import DomActionsMixin from '../mixins/dom-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
@@ -32,6 +31,7 @@ const flexberryClassNamesPrefix = 'flexberry-treenode';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
+  treeNodePreventExpandCollapse: flexberryClassNamesPrefix + '-prevent-expand-collapse',
   treeNodeExpandCollapseIcon: flexberryClassNamesPrefix + '-expand-collapse-icon',
   treeNodeCheckbox: flexberryClassNamesPrefix + '-checkbox',
   treeNodeIcon: flexberryClassNamesPrefix + '-icon',
@@ -198,7 +198,7 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
   actions: {
     /**
       Handles tree node header's 'click' event.
-      Prevents 'click' event from bubbling for leaf nodes & for nodes which were clicked on nested checkboxes.
+      Prevents 'click' event from bubbling for leaf nodes.
       Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'headerClick'{{/crossLink}} action.
       Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'beforeExpand'{{/crossLink}} action.
       Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'beforeCollapse'{{/crossLink}} action.
@@ -209,23 +209,24 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
       which describes Inner header element's 'click' event.
     */
     onHeaderClick(nodeHasNestedContent, e) {
-      // As the 'click' event target here could be passed either checkbox wrapping <div>,
-      // or any inner element nested inside checkbox,
-      // that's why we should check not for a class names equality, but only for a class name prefixes equality.
-      let clickTargetIsCheckbox = Ember.$(e.target).hasClass({
-        withPrefix: FlexberryDdauCheckboxComponent.flexberryClassNames.prefix
+      // Send 'headerClick' action anyway.
+      this.sendAction('headerClick', {
+        originalEvent: e
       });
 
-      if (!clickTargetIsCheckbox) {
-        this.sendAction('headerClick', {
-          originalEvent: e
-        });
+      // As the 'click' event-target here could be passed either checkbox wrapping <div>,
+      // or any inner element nested inside checkbox, (same is true for any other component nested in tree node's header),
+      // that's why we should check for a special class-name in event-target itself & in it's parent elements.
+      let $clickTarget = Ember.$(e.target);
+      let clickTargetShouldPreventExpandCollapse = $clickTarget.hasClass(flexberryClassNames.treeNodePreventExpandCollapse);
+      if (!clickTargetShouldPreventExpandCollapse)  {
+        clickTargetShouldPreventExpandCollapse = $clickTarget.parents().hasClass(flexberryClassNames.treeNodePreventExpandCollapse);
       }
 
       // Prevent node header's click event from bubbling to disable expand/collapse animation in the following situations:
-      // if node was clicked on nested checkbox click,
+      // if click event-target is element containing special class-name preventing node from expanding/collapsing,
       // if node is leaf (node without nested content).
-      if (clickTargetIsCheckbox || !nodeHasNestedContent) {
+      if (clickTargetShouldPreventExpandCollapse || !nodeHasNestedContent) {
         e.stopPropagation();
 
         return;
@@ -253,9 +254,6 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
     */
     onCheckboxChange(e) {
       this.sendAction('checkboxChange', e);
-
-      // Return false to prevent 'change' action bubbling.
-      return false;
     },
 
     /**
@@ -268,9 +266,6 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
     */
     onCheckboxCheck(e) {
       this.sendAction('checkboxCheck', e);
-
-      // Return false to prevent 'check' action bubbling.
-      return false;
     },
 
     /**
@@ -283,9 +278,6 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
     */
     onCheckboxUncheck(e) {
       this.sendAction('checkboxUncheck', e);
-
-      // Return false to prevent 'uncheck' action bubbling.
-      return false;
     }
   },
 

@@ -13,6 +13,23 @@ import Ember from 'ember';
 */
 export default Ember.Mixin.create({
   /**
+    Flag: indicates whether component is tagless or not
+    (has empty [tagName](http://emberjs.com/api/classes/Ember.Component.html#property_tagName) or not).
+
+    @property isTagless
+    @type Boolean
+    @readOnly
+   */
+  isTagless: Ember.computed('tagName', function() {
+    let tagName = this.get('tagName');
+    if (Ember.typeOf(tagName) === 'string') {
+      tagName = Ember.$.trim(tagName);
+    }
+
+    return tagName === '';
+  }),
+
+  /**
     Object containing dynamic properties that must be assigned to
     component using {{#crossLink "DynamicPropertiesMixin"}}dynamic-properties mixin{{/crossLink}}.
 
@@ -51,7 +68,23 @@ export default Ember.Mixin.create({
     }
 
     let setDynamicProperty = () => {
-      this.set(propertyName, this.get(`dynamicProperties.${propertyName}`));
+      let propertyValue = this.get(`dynamicProperties.${propertyName}`);
+      if (!this.get('isTagless') && propertyName === 'class' && Ember.typeOf(propertyValue) === 'string') {
+        let customClassNames = propertyValue.split(' ');
+
+        let classNames = this.get('classNames');
+        if (!Ember.isArray(classNames)) {
+          classNames = [];
+          this.set('classNames', classNames);
+        }
+
+        Ember.A(customClassNames).forEach((className) => {
+          classNames.push(Ember.$.trim(className));
+        });
+
+      } else {
+        this.set(propertyName, propertyValue);
+      }
     };
 
     setDynamicProperty();

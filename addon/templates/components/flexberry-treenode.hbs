@@ -10,7 +10,7 @@
     {{/if}}
     {{#if hasCheckbox}}
       {{flexberry-ddau-checkbox
-        class=flexberryClassNames.treeNodeCheckbox
+        class=(concat flexberryClassNames.treeNodeCheckbox " " flexberryClassNames.treeNodePreventExpandCollapse)
         value=checkboxValue
         readonly=readonly
         change=(action "onCheckboxChange")
