@@ -3,10 +3,11 @@
 */
 
 import Ember from 'ember';
+import DomActionsMixin from '../mixins/dom-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
 import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
-import DynamicComponentsMixin from '../mixins/dynamic-proxy-actions';
+import DynamicComponentsMixin from '../mixins/dynamic-components';
 import layout from '../templates/components/flexberry-ddau-checkbox';
 
 /**
@@ -72,12 +73,14 @@ const flexberryClassNames = {
 
   @class FlexberryDdauCheckboxComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses DomActionsMixin
   @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
   @uses DynamicProxyActionsMixin
   @uses DynamicComponentsMixin
 */
 let FlexberryDdauCheckboxComponent = Ember.Component.extend(
+  DomActionsMixin,
   DynamicPropertiesMixin,
   DynamicActionsMixin,
   DynamicProxyActionsMixin,
@@ -146,16 +149,16 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
 
   actions: {
     /**
-      Handles checkbox input's 'change' action.
-      Invokes component's {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'change'{{/crossLink}}, 
+      Handles inner input's bubbled 'change' action.
+      Invokes component's {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'change'{{/crossLink}},
       {{#crossLink "FlexberryDdauCheckbox/sendingActions.check:method"}}'check'{{/crossLink}},
       {{#crossLink "FlexberryDdauCheckbox/sendingActions.uncheck:method"}}'uncheck'{{/crossLink}} actions.
 
-      @method actions.onChange
+      @method actions.change
       @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
       which describes inner input's 'change' event.
     */
-    onChange(e) {
+    change(e) {
       let checked = e.target.checked === true;
 
       // Invoke component's custom 'change' action.
@@ -170,10 +173,8 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
         originalEvent: e
       });
 
-      // Prevent input's 'change' event bubbling,
-      // otherwise component's 'change' action handler will be called twice
-      // (one for invoked component's custom 'change' action,
-      // and another for component's wrapping <div> bubbled 'change' event).
+      // Prevent second call to this.sendAction('change', ...) inside dom-actions mixin,
+      // otherwise component's outer 'change' action handler will be called twice.
       return false;
     }
   },

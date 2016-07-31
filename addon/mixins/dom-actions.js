@@ -362,7 +362,7 @@ export default Ember.Mixin.create({
 
     // Remove component's standard DOM-events handlers, because they are useless,
     // they are replaced with component's inner actions in 'didInsertElement' hook.
-    // Ember adds them in every component's render/rerender time, so we need to do remove them each time,
+    // Ember adds them in every component's render/rerender time, so we need to remove them each time,
     // otherwise DOM-actions will be triggered twice when they happen.
     for (let domEventName in availableDomEvents) {
       if (!availableDomEvents.hasOwnProperty(domEventName)) {
