@@ -24,56 +24,61 @@
         }}
           {{#flexberry-treenode
             caption=hbsTreeNodes.0.caption
-            hasCheckbox=hbsTreeNodes.0.hasCheckbox
-            checkboxValue=hbsTreeNodes.0.checkboxValue
-            iconClass=hbsTreeNodes.0.iconClass
             headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0")
-            checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.checkboxValue")
+            myButtonClick=(action "onMyButtonClick")
+            dynamicComponents=(array
+              (hash
+                to="headerStart"
+                componentName="flexberry-ddau-checkbox"
+                componentProperties=(hash
+                  value=hbsTreeNodes.0.checkboxValue
+                  dynamicProxyActions=(array
+                    (hash
+                      on="change"
+                      actionName="checkboxChange"
+                    )
+                  )
+                )
+              )
+              (hash
+                to="headerEnd"
+                componentName="flexberry-button"
+                componentProperties=(hash
+                  caption="My button"
+                  dynamicProxyActions=(array
+                    (hash
+                      on="click"
+                      actionName="myButtonClick"
+                    )
+                  )
+                )
+              )
+            )
           }}
             {{#flexberry-tree}}
               {{flexberry-treenode
                 caption=hbsTreeNodes.0.nodes.0.caption
-                hasCheckbox=hbsTreeNodes.0.nodes.0.hasCheckbox
-                checkboxValue=hbsTreeNodes.0.nodes.0.checkboxValue
-                iconClass=hbsTreeNodes.0.nodes.0.iconClass
                 headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.0")
-                checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.0.checkboxValue")
               }}
               {{#flexberry-treenode
                 caption=hbsTreeNodes.0.nodes.1.caption
-                hasCheckbox=hbsTreeNodes.0.nodes.1.hasCheckbox
-                checkboxValue=hbsTreeNodes.0.nodes.1.checkboxValue
-                iconClass=hbsTreeNodes.0.nodes.1.iconClass
                 headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1")
-                checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.1.checkboxValue")
               }}
                 {{#flexberry-tree}}
                   {{#flexberry-treenode
                     caption=hbsTreeNodes.0.nodes.1.nodes.0.caption
-                    hasCheckbox=hbsTreeNodes.0.nodes.1.nodes.0.hasCheckbox
-                    checkboxValue=hbsTreeNodes.0.nodes.1.nodes.0.checkboxValue
-                    iconClass=hbsTreeNodes.0.nodes.1.nodes.0.iconClass
                     headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1.nodes.0")
-                    checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.1.nodes.0.checkboxValue")
                   }}
                     {{#flexberry-tree}}
                       {{flexberry-treenode
                         caption=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.caption
-                        hasCheckbox=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.hasCheckbox
-                        checkboxValue=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.checkboxValue
-                        iconClass=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.iconClass
                         headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1.nodes.0.nodes.0")
-                        checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.checkboxValue")
                       }}
                     {{/flexberry-tree}}
                   {{/flexberry-treenode}}
                   {{flexberry-treenode
                     caption=hbsTreeNodes.0.nodes.1.nodes.1.caption
-                    hasCheckbox=hbsTreeNodes.0.nodes.1.nodes.1.hasCheckbox
-                    checkboxValue=hbsTreeNodes.0.nodes.1.nodes.1.checkboxValue
-                    iconClass=hbsTreeNodes.0.nodes.1.nodes.1.iconClass
                     headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1.nodes.1")
-                    checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.1.nodes.1.checkboxValue")
                   }}
                 {{/flexberry-tree}}
               {{/flexberry-treenode}}
@@ -81,28 +86,16 @@
           {{/flexberry-treenode}}
           {{flexberry-treenode
             caption=hbsTreeNodes.1.caption
-            hasCheckbox=hbsTreeNodes.1.hasCheckbox
-            checkboxValue=hbsTreeNodes.1.checkboxValue
-            iconClass=hbsTreeNodes.1.iconClass
             headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.1")
-            checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.1.checkboxValue")
           }}
           {{#flexberry-treenode
             caption=hbsTreeNodes.2.caption
-            hasCheckbox=hbsTreeNodes.2.hasCheckbox
-            checkboxValue=hbsTreeNodes.2.checkboxValue
-            iconClass=hbsTreeNodes.2.iconClass
             headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.2")
-            checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.2.checkboxValue")
           }}
             {{#flexberry-tree}}
               {{flexberry-treenode
                 caption=hbsTreeNodes.2.nodes.0.caption
-                hasCheckbox=hbsTreeNodes.2.nodes.0.hasCheckbox
-                checkboxValue=hbsTreeNodes.2.nodes.0.checkboxValue
-                iconClass=hbsTreeNodes.2.nodes.0.iconClass
                 headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.2.nodes.0")
-                checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.2.nodes.0.checkboxValue")
               }}
             {{/flexberry-tree}}
           {{/flexberry-treenode}}
@@ -131,11 +124,6 @@
           nodes=(get-with-dynamic-actions this "jsonTreeNodes"
             hierarchyPropertyName="nodes"
             dynamicActions=(array
-              (hash
-                on="checkboxChange"
-                actionName="onTreenodeCheckboxChange"
-                actionArguments=(array "{% propertyPath %}.checkboxValue")
-              )
               (hash
                 on="headerClick"
                 actionName="onTreenodeHeaderClick"

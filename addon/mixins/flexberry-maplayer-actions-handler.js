@@ -7,17 +7,17 @@ import FlexberryDdauCheckboxActionsHandlerMixin from './flexberry-ddau-checkbox-
 
 /**
   Mixin containing handlers for
-  {{#crossLink "FlexberryLayersTreenodeComponent"}}flexberry-layerstreenode component's{{/crossLink}} actions.
+  {{#crossLink "FlexberryMaplayerComponent"}}flexberry-maplayer component's{{/crossLink}} actions.
 
-  @class FlexberryLayersTreenodeActionsHandlerMixin
+  @class FlexberryMaplayerActionsHandlerMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
 export default Ember.Mixin.create({
   actions: {
     /**
-      Handles {{#crossLink "FlexberryLayersTreenodeComponent/sendingActions.headerClick:method"}}flexberry-layerstreenode component's 'headerClick' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.headerClick:method"}}flexberry-maplayers component's 'headerClick' action{{/crossLink}}.
 
-      @method actions.onLayersTreenodeHeaderClick
+      @method actions.onMapLayerHeaderClick
       @param {Object} e Action's event object.
       @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
       which describes event that triggers node's 'headerClick' action.
@@ -25,28 +25,28 @@ export default Ember.Mixin.create({
       @example
       templates/my-form.hbs
       ```handlebars
-        {{flexberry-layerstreenode
+        {{flexberry-maplayers
           name="Tree node"
-          headerClick=(action "onLayersTreenodeHeaderClick")
+          headerClick=(action "onMapLayerHeaderClick")
         }}
       ```
 
       controllers/my-form.js
       ```javascript
         import Ember from 'ember';
-        import FlexberryLayersTreenodeActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-layerstreenode-actions-handler';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
 
-        export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixin, {
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
         });
       ```
     */
-    onLayersTreenodeHeaderClick(...args) {
+    onMapLayerHeaderClick(...args) {
     },
 
     /**
-      Handles {{#crossLink "FlexberryLayersTreenodeComponent/sendingActions.beforeExpand:method"}}flexberry-layerstreenode component's 'beforeExpand' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}flexberry-maplayers component's 'beforeExpand' action{{/crossLink}}.
 
-      @method actions.onLayersTreenodeBeforeExpand
+      @method actions.onMapLayerBeforeExpand
       @param {Object} e Action's event object.
       @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
       which describes event that triggers node's expanding.
@@ -54,28 +54,28 @@ export default Ember.Mixin.create({
       @example
       templates/my-form.hbs
       ```handlebars
-        {{{flexberry-layerstreenode
+        {{{flexberry-maplayers
           name="Tree node"
-          beforeExpand=(action "onLayersTreenodeBeforeExpand")
+          beforeExpand=(action "onMapLayerBeforeExpand")
         }}
       ```
 
       controllers/my-form.js
       ```javascript
         import Ember from 'ember';
-        import FlexberryLayersTreenodeActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-layerstreenode-actions-handler';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
 
-        export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixin, {
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
         });
       ```
     */
-    onLayersTreenodeBeforeExpand(...args) {
+    onMapLayerBeforeExpand(...args) {
     },
 
     /**
-      Handles {{#crossLink "FlexberryLayersTreenodeComponent/sendingActions.beforeExpand:method"}}flexberry-layerstreenode component's 'beforeCollapse' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}flexberry-maplayers component's 'beforeCollapse' action{{/crossLink}}.
 
-      @method actions.onLayersTreenodeBeforeCollapse
+      @method actions.onMapLayerBeforeCollapse
       @param {Object} e Action's event object.
       @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
       which describes event that triggers node's collapsing.
@@ -83,29 +83,29 @@ export default Ember.Mixin.create({
       @example
       templates/my-form.hbs
       ```handlebars
-        {{flexberry-layerstreenode
+        {{flexberry-maplayers
           name="Tree node"
-          beforeCollapse=(action "onLayersTreenodeBeforeCollapse")
+          beforeCollapse=(action "onMapLayerBeforeCollapse")
         }}
       ```
 
       controllers/my-form.js
       ```javascript
         import Ember from 'ember';
-        import FlexberryLayersTreenodeActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-layerstreenode-actions-handler';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
 
-        export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixin, {
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
         });
       ```
     */
-    onLayersTreenodeBeforeCollapse(...args) {
+    onMapLayerBeforeCollapse(...args) {
     },
 
     /**
-      Handles {{#crossLink "FlexberryLayersTreenodeComponent/sendingActions.visiblilityChange:method"}}flexberry-layerstreenode component's 'visiblilityChange' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.visiblilityChange:method"}}flexberry-maplayers component's 'visiblilityChange' action{{/crossLink}}.
       It mutates value of property with given name to value of action's event object 'newValue' property.
 
-      @method actions.onLayersTreenodeVisibilityChange
+      @method actions.onMapLayerVisibilityChange
       @param {String} mutablePropertyPath Path to a property, which value must be mutated on action.
       @param {Object} e Action's event object.
       @param {Object} e.newValue New value for a property, which value must be mutated on action.
@@ -115,23 +115,23 @@ export default Ember.Mixin.create({
       @example
       templates/my-form.hbs
       ```handlebars
-        {{flexberry-layerstreenode
+        {{flexberry-maplayers
           name="Tree node with checkbox"
-          visibility=model.visibility
-          visiblilityChange=(action "onLayersTreenodeVisibilityChange" "model.visibility")
+          visibility=layer.visibility
+          visiblilityChange=(action "onMapLayerVisibilityChange" "layer.visibility")
         }}
       ```
 
       controllers/my-form.js
       ```javascript
         import Ember from 'ember';
-        import FlexberryLayersTreenodeActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-layerstreenode-actions-handler';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
 
-        export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixin, {
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
         });
       ```
     */
-    onLayersTreenodeVisibilityChange(...args) {
+    onMapLayerVisibilityChange(...args) {
       let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
 
@@ -139,10 +139,10 @@ export default Ember.Mixin.create({
     },
 
     /**
-      Handles {{#crossLink "FlexberryLayersTreenodeComponent/sendingActions.becameVisible:method"}}flexberry-layerstreenode component's 'becameVisible' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.becameVisible:method"}}flexberry-maplayers component's 'becameVisible' action{{/crossLink}}.
       It mutates value of property with given name to true.
 
-      @method actions.onLayersTreenodeBecameVisible
+      @method actions.onMapLayerBecameVisible
       @param {String} mutablePropertyPath Path to a property, which value must be mutated on action.
       @param {Object} e Action's event object.
       @param {Object} e.newValue New value for a property, which value must be mutated on action (always true in this action handler).
@@ -152,24 +152,24 @@ export default Ember.Mixin.create({
       @example
       templates/my-form.hbs
       ```handlebars
-        {{flexberry-layerstreenode
+        {{flexberry-maplayers
           name="Tree node with checkbox"
-          visibility=model.visibility
-          visiblilityChange=(action "onLayersTreenodeVisibilityChange" "model.visibility")
-          becameVisible=(action "onLayersTreenodeBecameVisible" "model.visibility")
+          visibility=layer.visibility
+          becameVisible=(action "onMapLayerBecameVisible" "layer.visibility")
+          becameInvisible=(action "onMapLayerBecameInvisible" "layer.visibility")
         }}
       ```
 
       controllers/my-form.js
       ```javascript
         import Ember from 'ember';
-        import FlexberryLayersTreenodeActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-layerstreenode-actions-handler';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
 
-        export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixin, {
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
         });
       ```
     */
-    onLayersTreenodeBecameVisible(...args) {
+    onMapLayerBecameVisible(...args) {
       let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxCheck');
 
@@ -177,10 +177,10 @@ export default Ember.Mixin.create({
     },
 
     /**
-      Handles {{#crossLink "FlexberryLayersTreenodeComponent/sendingActions.becameInvisible:method"}}flexberry-layerstreenode component's 'becameInvisible' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.becameInvisible:method"}}flexberry-maplayers component's 'becameInvisible' action{{/crossLink}}.
       It mutates value of property with given name to false.
 
-      @method actions.onLayersTreenodeBecameInvisible
+      @method actions.onMapLayerBecameInvisible
       @param {String} mutablePropertyPath Path to a property, which value must be mutated on action.
       @param {Object} e Action's event object.
       @param {Object} e.newValue New value for a property, which value must be mutated on action (always false in this action handler).
@@ -190,25 +190,24 @@ export default Ember.Mixin.create({
       @example
       templates/my-form.hbs
       ```handlebars
-        {{flexberry-layerstreenode
+        {{flexberry-maplayers
           name="Tree node with checkbox"
-          visibility=model.visibility
-          visiblilityChange=(action "onLayersTreenodeVisibilityChange" "model.visibility")
-          becameVisible=(action "onLayersTreenodeBecameVisible" "model.visibility")
-          becameInvisible=(action "onLayersTreenodeBecameInvisible" "model.visibility")
+          visibility=layer.visibility
+          becameVisible=(action "onMapLayerBecameVisible" "layer.visibility")
+          becameInvisible=(action "onMapLayerBecameInvisible" "layer.visibility")
         }}
       ```
 
       controllers/my-form.js
       ```javascript
         import Ember from 'ember';
-        import FlexberryLayersTreenodeActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-layerstreenode-actions-handler';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
 
-        export default Ember.Controller.extend(FlexberryLayersTreenodeActionsHandlerMixin, {
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
         });
       ```
     */
-    onLayersTreenodeBecameInvisible(...args) {
+    onMapLayerBecameInvisible(...args) {
       let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxUncheck');
 

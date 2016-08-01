@@ -17,9 +17,10 @@ Router.map(function() {
   this.route('new-platform-flexberry-g-i-s-map-layer-edit.new', { path: 'new-platform-flexberry-g-i-s-map-layer-edit/new' });
 
   // Components examples routes (sorted by component's names).
+  this.route('components-examples/flexberry-button/settings-example');
   this.route('components-examples/flexberry-ddau-checkbox/settings-example');
+  this.route('components-examples/flexberry-maplayers/settings-example');
   this.route('components-examples/flexberry-tree/settings-example');
-  this.route('components-examples/flexberry-layerstree/settings-example');
 });
 
 export default Router;

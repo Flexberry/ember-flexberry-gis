@@ -2,51 +2,210 @@ import Ember from 'ember';
 import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
 import { module, test } from 'qunit';
 
-let MixinImplementation = Ember.Object.extend(DynamicPropertiesMixin);
-let dynamicProperties = { firstProperty: 'firstProperty' };
+let ClassWithDynamicPropertiesMixin = Ember.Object.extend(DynamicPropertiesMixin, {});
 
-module('Unit | Mixin | dynamic properties mixin');
+module('Unit | Mixin | dynamic-properties mixin');
 
+test('Mixin throws assertion failed exception if specified \'dynamicProperties\' property is not an \'object\' or an \'instance\'', function (assert) {
+  let wrongDynamicPropertiesArray = Ember.A([1, true, false, 'some string', [], function() {}, new Date(), new RegExp()]);
 
+  assert.expect(wrongDynamicPropertiesArray.length);
 
-// Replace this with your real tests.
-test('it works', function (assert) {
-  let subject = MixinImplementation.create();
-  assert.ok(subject);
+  wrongDynamicPropertiesArray.forEach((wrongDynamicProperties) => {
+    try {
+      ClassWithDynamicPropertiesMixin.create({ dynamicProperties: wrongDynamicProperties });
+    } catch (ex) {
+      assert.strictEqual(
+        (/wrong\s*type\s*of\s*.*dynamicProperties.*/gi).test(ex.message),
+        true,
+        'Throws assertion failed exception if specified \'dynamicProperties\' property is \'' + Ember.typeOf(wrongDynamicProperties) + '\'');
+    }
+  });
 });
 
-test('it pass properties from dynamicProperties to object on init', function (assert) {
-  assert.expect(3);
+test('Mixin assignes it\'s owner\'s properties form the specified \'dynamicProperties\'', function (assert) {
+  assert.expect(1);
 
-  let subject = MixinImplementation.create({ dynamicProperties });
-  assert.ok(subject.get('firstProperty'));
-  assert.equal(subject.get('firstProperty'), 'firstProperty');
-  assert.deepEqual(subject.get('dynamicPropertiesNames'), ['firstProperty']);
+  let propertyValue = 'MyValue';
+  let dynamicProperties = { property: propertyValue };
+  let mixinOwner = ClassWithDynamicPropertiesMixin.create({ dynamicProperties: dynamicProperties });
+
+  assert.strictEqual(
+    mixinOwner.get('property'), propertyValue,
+    'Owner\'s properties are equals to related \'dynamicProperties\'');
 });
 
-test('it should pass properties from dynamicProperties to object on change property', function (assert) {
-  assert.expect(4);
+test('Mixin changes it\'s owner\'s properties (when something changes inside related \'dynamicProperties\')', function (assert) {
+  assert.expect(2);
 
-  let subject = MixinImplementation.create();
-  assert.notOk(subject.get('firstProperty'));
+  let propertyValue = 'MyValue';
+  let dynamicProperties = { property: propertyValue };
+  let mixinOwner = ClassWithDynamicPropertiesMixin.create({ dynamicProperties: dynamicProperties });
 
-  subject.set('dynamicProperties', dynamicProperties);
-  assert.ok(subject.get('firstProperty'));
-  assert.equal(subject.get('firstProperty'), 'firstProperty');
-  assert.deepEqual(subject.get('dynamicPropertiesNames'), ['firstProperty']);
+  assert.strictEqual(
+    mixinOwner.get('property'), propertyValue,
+    'Owner\'s properties are equals to related \'dynamicProperties\'');
+
+  let propertyChangedValue = 'MyChangedValue';
+  Ember.set(dynamicProperties, 'property', propertyChangedValue);
+
+  assert.strictEqual(
+    mixinOwner.get('property'), propertyChangedValue,
+    'Owner\'s properties changes when values inside \'dynamicProperties\' changes');
 });
 
-test('it should remove skipped properties', function (assert) {
-  assert.expect(5);
+test('Mixin removes old & adds new owner\'s properties (when reference to whole \'dynamicProperties\' object changes)', function (assert) {
+  assert.expect(22);
 
-  let subject = MixinImplementation.create({ dynamicProperties });
-  let secondProperties = { secondProperty: 'secondProperty' };
+  let propertyValue = 'MyProperty';
+  let anotherPropertyValue = 'MyAnotherProperty';
+  let dynamicProperties = { property: propertyValue, anotherProperty: anotherPropertyValue };
 
-  subject.set('dynamicProperties', secondProperties);
+  let usualPropertyValue = 'MyUsualProperty';
 
-  assert.notOk(subject.get('firstProperty'));
-  assert.notOk(subject.hasOwnProperty('firstProperty'));
-  assert.ok(subject.get('secondProperty'));
-  assert.equal(subject.get('secondProperty'), 'secondProperty');
-  assert.deepEqual(subject.get('dynamicPropertiesNames'), ['secondProperty']);
+  let mixinOwner = ClassWithDynamicPropertiesMixin.create({
+    usualProperty: usualPropertyValue,
+    dynamicProperties: dynamicProperties
+  });
+
+  assert.strictEqual(
+    mixinOwner.get('usualProperty'), usualPropertyValue,
+    'Owner\'s \'usualProperty\' is equals to it\'s initially defined value');
+  assert.strictEqual(
+    mixinOwner.get('property'), propertyValue,
+    'Owner\'s \'property\' is equals to related dynamicProperty');
+  assert.strictEqual(
+    mixinOwner.get('anotherProperty'), anotherPropertyValue,
+    'Owner\'s \'anotherProperty\' is equals to related dynamicProperty');
+
+  let ownerPropertiesNames = Ember.A(Object.keys(mixinOwner));
+  assert.strictEqual(
+    ownerPropertiesNames.contains('usualProperty'), true,
+    'Owner\'s properties keys contains \'usualProperty\'');
+  assert.strictEqual(
+    ownerPropertiesNames.contains('property'), true,
+    'Owner\'s properties keys contains \'property\'');
+  assert.strictEqual(
+    ownerPropertiesNames.contains('anotherProperty'), true,
+    'Owner\'s properties keys contains \'anotherProperty\'');
+
+  let newPropertyValue = 'MyNewProperty';
+  let newAnotherPropertyValue = 'MyNewAnotherProperty';
+  let newDynamicProperties = { newProperty: newPropertyValue, newAnotherProperty: newAnotherPropertyValue };
+  mixinOwner.set('dynamicProperties', newDynamicProperties);
+
+  assert.strictEqual(
+    mixinOwner.get('usualProperty'), usualPropertyValue,
+    'Owner\'s \'usualProperty\' is equals to it\'s initially defined value (after change of whole \'dynamicProperties\' object)');
+  assert.strictEqual(
+    Ember.typeOf(mixinOwner.get('property')), 'undefined',
+    'Owner\'s \'property\' is undefined (after change of whole \'dynamicProperties\' object)');
+  assert.strictEqual(
+    Ember.typeOf(mixinOwner.get('anotherProperty')), 'undefined',
+    'Owner\'s \'anotherProperty\' is undefined (after change of whole \'dynamicProperties\' object)');
+  assert.strictEqual(
+    mixinOwner.get('newProperty'), newPropertyValue,
+    'Owner\'s \'newProperty\' is equals to related dynamicProperty (after change of whole \'dynamicProperties\' object)');
+  assert.strictEqual(
+    mixinOwner.get('newAnotherProperty'), newAnotherPropertyValue,
+    'Owner\'s \'newAnotherProperty\' is equals to related dynamicProperty (after change of whole \'dynamicProperties\' object)');
+
+  ownerPropertiesNames = Ember.A(Object.keys(mixinOwner));
+  assert.strictEqual(
+    ownerPropertiesNames.contains('usualProperty'), true,
+    'Owner\'s properties keys contains \'usualProperty\' (after change of whole \'dynamicProperties\' object)');
+  assert.strictEqual(
+    ownerPropertiesNames.contains('property'), false,
+    'Owner\'s properties keys doesn\'t contains \'property\' (after change of whole \'dynamicProperties\' object)');
+  assert.strictEqual(
+    ownerPropertiesNames.contains('anotherProperty'), false,
+    'Owner\'s properties keys doesn\'t contains \'anotherProperty\' (after change of whole \'dynamicProperties\' object)');
+  assert.strictEqual(
+    ownerPropertiesNames.contains('newProperty'), true,
+    'Owner\'s properties keys contains \'newProperty\' (after change of whole \'dynamicProperties\' object)');
+  assert.strictEqual(
+    ownerPropertiesNames.contains('newAnotherProperty'), true,
+    'Owner\'s properties keys contains \'newAnotherProperty\' (after change of whole \'dynamicProperties\' object)');
+
+  mixinOwner.set('dynamicProperties', null);
+  assert.strictEqual(
+    mixinOwner.get('usualProperty'), usualPropertyValue,
+    'Owner\'s \'usualProperty\' is equals to it\'s initially defined value (after change of whole \'dynamicProperties\' object to null)');
+  assert.strictEqual(
+    Ember.typeOf(mixinOwner.get('newProperty')), 'undefined',
+    'Owner\'s \'newProperty\' is undefined (after change of whole \'dynamicProperties\' object to null)');
+  assert.strictEqual(
+    Ember.typeOf(mixinOwner.get('newAnotherProperty')), 'undefined',
+    'Owner\'s \'newAnotherProperty\' is undefined (after change of whole \'dynamicProperties\' object to null)');
+
+  ownerPropertiesNames = Ember.A(Object.keys(mixinOwner));
+  assert.strictEqual(
+    ownerPropertiesNames.contains('usualProperty'), true,
+    'Owner\'s properties keys contains \'usualProperty\' (after change of whole \'dynamicProperties\' object to null)');
+  assert.strictEqual(
+    ownerPropertiesNames.contains('newProperty'), false,
+    'Owner\'s properties keys doesn\'t contains \'newProperty\' (after change of whole \'dynamicProperties\' object to null)');
+  assert.strictEqual(
+    ownerPropertiesNames.contains('newAnotherProperty'), false,
+    'Owner\'s properties keys doesn\'t contains \'newAnotherProperty\' (after change of whole \'dynamicProperties\' object to null)');
 });
+
+test('Mixin removes assigned \'dynamicProperties\' before owner will be destroyed', function (assert) {
+  assert.expect(12);
+
+  let propertyValue = 'MyProperty';
+  let anotherPropertyValue = 'MyAnotherProperty';
+  let dynamicProperties = { property: propertyValue, anotherProperty: anotherPropertyValue };
+
+  let usualPropertyValue = 'MyUsualProperty';
+
+  let mixinOwner = ClassWithDynamicPropertiesMixin.create({
+    usualProperty: usualPropertyValue,
+    dynamicProperties: dynamicProperties
+  });
+
+  assert.strictEqual(
+    mixinOwner.get('usualProperty'), usualPropertyValue,
+    'Owner\'s \'usualProperty\' is equals to it\'s initially defined value');
+  assert.strictEqual(
+    mixinOwner.get('property'), propertyValue,
+    'Owner\'s \'property\' is equals to related dynamicProperty');
+  assert.strictEqual(
+    mixinOwner.get('anotherProperty'), anotherPropertyValue,
+    'Owner\'s \'anotherProperty\' is equals to related dynamicProperty');
+
+  let ownerPropertiesNames = Ember.A(Object.keys(mixinOwner));
+  assert.strictEqual(
+    ownerPropertiesNames.contains('usualProperty'), true,
+    'Owner\'s properties keys contains \'usualProperty\'');
+  assert.strictEqual(
+    ownerPropertiesNames.contains('property'), true,
+    'Owner\'s properties keys contains \'property\'');
+  assert.strictEqual(
+    ownerPropertiesNames.contains('anotherProperty'), true,
+    'Owner\'s properties keys contains \'anotherProperty\'');
+
+  mixinOwner.willDestroy();
+
+  assert.strictEqual(
+    mixinOwner.get('usualProperty'), usualPropertyValue,
+    'Owner\'s \'usualProperty\' is equals to it\'s initially defined value (after change of whole \'dynamicProperties\' object)');
+  assert.strictEqual(
+    Ember.typeOf(mixinOwner.get('property')), 'undefined',
+    'Owner\'s \'property\' is undefined (after change of whole \'dynamicProperties\' object)');
+  assert.strictEqual(
+    Ember.typeOf(mixinOwner.get('anotherProperty')), 'undefined',
+    'Owner\'s \'anotherProperty\' is undefined (after change of whole \'dynamicProperties\' object)');
+
+  ownerPropertiesNames = Ember.A(Object.keys(mixinOwner));
+  assert.strictEqual(
+    ownerPropertiesNames.contains('usualProperty'), true,
+    'Owner\'s properties keys contains \'usualProperty\'');
+  assert.strictEqual(
+    ownerPropertiesNames.contains('property'), false,
+    'Owner\'s properties keys doesn\'t contains \'property\'');
+  assert.strictEqual(
+    ownerPropertiesNames.contains('anotherProperty'), false,
+    'Owner\'s properties keys doesn\'t contains \'anotherProperty\'');
+});
+

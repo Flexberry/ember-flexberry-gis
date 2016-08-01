@@ -57,56 +57,29 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
   */
   hbsTreeNodes: [{
     caption: 'Node 1 (with child nodes)',
-    hasCheckbox: true,
-    checkboxValue: false,
-    iconClass: 'marker icon',
     nodes: [{
       caption: 'Node 1.1 (leaf node)',
-      hasCheckbox: true,
-      checkboxValue: false,
-      iconClass: 'compass icon',
       nodes: null
     }, {
       caption: 'Node 1.2 (with child nodes)',
-      hasCheckbox: true,
-      checkboxValue: false,
-      iconClass: 'location arrow icon',
       nodes: [{
         caption: 'Node 1.2.1 (with child nodes)',
-        hasCheckbox: true,
-        checkboxValue: false,
-        iconClass: 'area chart icon',
         nodes: [{
           caption: 'Node 1.2.1.1 (leaf node)',
-          hasCheckbox: true,
-          checkboxValue: false,
-          iconClass: 'envira gallery icon',
           nodes: null
         }]
       }, {
         caption: 'Node 1.2.2 (leaf node)',
-        hasCheckbox: true,
-        checkboxValue: false,
-        iconClass: 'marker icon',
         nodes: null
       }]
     }]
   }, {
     caption: 'Node 2 (leaf node)',
-    hasCheckbox: true,
-    checkboxValue: false,
-    iconClass: 'compass icon',
     nodes: null
   }, {
     caption: 'Node 3 (with child nodes)',
-    hasCheckbox: true,
-    checkboxValue: false,
-    iconClass: 'location arrow icon',
     nodes: [{
       caption: 'Node 3.1 (leaf node)',
-      hasCheckbox: true,
-      checkboxValue: false,
-      iconClass: 'area chart icon',
       nodes: null
     }]
   }],
@@ -127,56 +100,32 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
     '}}<br>' +
     '  {{#flexberry-treenode<br>' +
     '    caption=hbsTreeNodes.0.caption<br>' +
-    '    hasCheckbox=hbsTreeNodes.0.hasCheckbox<br>' +
-    '    checkboxValue=hbsTreeNodes.0.checkboxValue<br>' +
-    '    iconClass=hbsTreeNodes.0.iconClass<br>' +
     '    headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0")<br>' +
-    '    checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.checkboxValue")<br>' +
     '  }}<br>' +
     '    {{#flexberry-tree}}<br>' +
     '      {{flexberry-treenode<br>' +
     '        caption=hbsTreeNodes.0.nodes.0.caption<br>' +
-    '        hasCheckbox=hbsTreeNodes.0.nodes.0.hasCheckbox<br>' +
-    '        checkboxValue=hbsTreeNodes.0.nodes.0.checkboxValue<br>' +
-    '        iconClass=hbsTreeNodes.0.nodes.0.iconClass<br>' +
     '        headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.0")<br>' +
-    '        checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.0.checkboxValue")<br>' +
     '      }}<br>' +
     '      {{#flexberry-treenode<br>' +
     '        caption=hbsTreeNodes.0.nodes.1.caption<br>' +
-    '        hasCheckbox=hbsTreeNodes.0.nodes.1.hasCheckbox<br>' +
-    '        checkboxValue=hbsTreeNodes.0.nodes.1.checkboxValue<br>' +
-    '        iconClass=hbsTreeNodes.0.nodes.1.iconClass<br>' +
     '        headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1")<br>' +
-    '        checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.1.checkboxValue")<br>' +
     '      }}<br>' +
     '        {{#flexberry-tree}}<br>' +
     '          {{#flexberry-treenode<br>' +
     '            caption=hbsTreeNodes.0.nodes.1.nodes.0.caption<br>' +
-    '            hasCheckbox=hbsTreeNodes.0.nodes.1.nodes.0.hasCheckbox<br>' +
-    '            checkboxValue=hbsTreeNodes.0.nodes.1.nodes.0.checkboxValue<br>' +
-    '            iconClass=hbsTreeNodes.0.nodes.1.nodes.0.iconClass<br>' +
     '            headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1.nodes.0")<br>' +
-    '            checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.1.nodes.0.checkboxValue")<br>' +
     '          }}<br>' +
     '            {{#flexberry-tree}}<br>' +
     '              {{flexberry-treenode<br>' +
     '                caption=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.caption<br>' +
-    '                hasCheckbox=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.hasCheckbox<br>' +
-    '                checkboxValue=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.checkboxValue<br>' +
-    '                iconClass=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.iconClass<br>' +
     '                headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1.nodes.0.nodes.0")<br>' +
-    '                checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.checkboxValue")<br>' +
     '              }}<br>' +
     '            {{/flexberry-tree}}<br>' +
     '          {{/flexberry-treenode}}<br>' +
     '          {{flexberry-treenode<br>' +
     '            caption=hbsTreeNodes.0.nodes.1.nodes.1.caption<br>' +
-    '            hasCheckbox=hbsTreeNodes.0.nodes.1.nodes.1.hasCheckbox<br>' +
-    '            checkboxValue=hbsTreeNodes.0.nodes.1.nodes.1.checkboxValue<br>' +
-    '            iconClass=hbsTreeNodes.0.nodes.1.nodes.1.iconClass<br>' +
     '            headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1.nodes.1")<br>' +
-    '            checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.0.nodes.1.nodes.1.checkboxValue")<br>' +
     '          }}<br>' +
     '        {{/flexberry-tree}}<br>' +
     '      {{/flexberry-treenode}}<br>' +
@@ -184,28 +133,16 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
     '  {{/flexberry-treenode}}<br>' +
     '  {{flexberry-treenode<br>' +
     '    caption=hbsTreeNodes.1.caption<br>' +
-    '    hasCheckbox=hbsTreeNodes.1.hasCheckbox<br>' +
-    '    checkboxValue=hbsTreeNodes.1.checkboxValue<br>' +
-    '    iconClass=hbsTreeNodes.1.iconClass<br>' +
     '    headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.1")<br>' +
-    '    checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.1.checkboxValue")<br>' +
     '  }}<br>' +
     '  {{#flexberry-treenode<br>' +
     '    caption=hbsTreeNodes.2.caption<br>' +
-    '    hasCheckbox=hbsTreeNodes.2.hasCheckbox<br>' +
-    '    checkboxValue=hbsTreeNodes.2.checkboxValue<br>' +
-    '    iconClass=hbsTreeNodes.2.iconClass<br>' +
     '    headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.2")<br>' +
-    '    checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.2.checkboxValue")<br>' +
     '  }}<br>' +
     '    {{#flexberry-tree}}<br>' +
     '      {{flexberry-treenode<br>' +
     '        caption=hbsTreeNodes.2.nodes.0.caption<br>' +
-    '        hasCheckbox=hbsTreeNodes.2.nodes.0.hasCheckbox<br>' +
-    '        checkboxValue=hbsTreeNodes.2.nodes.0.checkboxValue<br>' +
-    '        iconClass=hbsTreeNodes.2.nodes.0.iconClass<br>' +
     '        headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.2.nodes.0")<br>' +
-    '        checkboxChange=(action "onTreenodeCheckboxChange" "hbsTreeNodes.2.nodes.0.checkboxValue")<br>' +
     '      }}<br>' +
     '    {{/flexberry-tree}}<br>' +
     '  {{/flexberry-treenode}}<br>' +
@@ -283,41 +220,6 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
       settingDefaultValue: null,
       bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.caption'
     });
-    componentSettingsMetadata.pushObject({
-      settingName: 'hasCheckbox',
-      settingType: 'boolean',
-      settingDefaultValue: false,
-      bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.hasCheckbox'
-    });
-    componentSettingsMetadata.pushObject({
-      settingName: 'checkboxValue',
-      settingType: 'boolean',
-      settingDefaultValue: false,
-      bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.checkboxValue'
-    });
-    componentSettingsMetadata.pushObject({
-      settingName: 'iconClass',
-      settingType: 'enumeration',
-      settingAvailableItems: [
-        'marker icon',
-        'compass icon',
-        'location arrow icon',
-        'area chart icon',
-        'envira gallery icon',
-        'small marker icon',
-        'small compass icon',
-        'small location arrow icon',
-        'small area chart icon',
-        'small envira gallery icon',
-        'big marker icon',
-        'big compass icon',
-        'big location arrow icon',
-        'big area chart icon',
-        'big envira gallery icon'
-      ],
-      settingDefaultValue: '',
-      bindedControllerPropertieName: hbsTreeLatestClickedNodePath + '.iconClass'
-    });
 
     return componentSettingsMetadata;
   }),
@@ -377,43 +279,25 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
   jsonTreeNodes: Ember.A([
     TreeNodeObject.create({
       caption: 'Node 1 (with child nodes)',
-      hasCheckbox: true,
-      checkboxValue: false,
-      iconClass: 'marker icon',
       nodes: Ember.A([
         TreeNodeObject.create({
           caption: 'Node 1.1 (leaf node)',
-          hasCheckbox: true,
-          checkboxValue: false,
-          iconClass: 'compass icon',
           nodes: null
         }),
         TreeNodeObject.create({
           caption: 'Node 1.2 (with child nodes)',
-          hasCheckbox: true,
-          checkboxValue: false,
-          iconClass: 'location arrow icon',
           nodes: Ember.A([
             TreeNodeObject.create({
               caption: 'Node 1.2.1 (with child nodes)',
-              hasCheckbox: true,
-              checkboxValue: false,
-              iconClass: 'area chart icon',
               nodes: Ember.A([
                 TreeNodeObject.create({
                   caption: 'Node 1.2.1.1 (leaf node)',
-                  hasCheckbox: true,
-                  checkboxValue: false,
-                  iconClass: 'envira gallery icon',
                   nodes: null
                 })
               ])
             }),
             TreeNodeObject.create({
               caption: 'Node 1.2.2 (leaf node)',
-              hasCheckbox: true,
-              checkboxValue: false,
-              iconClass: 'marker icon',
               nodes: null
             })
           ])
@@ -422,22 +306,13 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
     }),
     TreeNodeObject.create({
       caption: 'Node 2 (leaf node)',
-      hasCheckbox: true,
-      checkboxValue: false,
-      iconClass: 'compass icon',
       nodes: null
     }),
     TreeNodeObject.create({
       caption: 'Node 3 (with child nodes)',
-      hasCheckbox: true,
-      checkboxValue: false,
-      iconClass: 'location arrow icon',
       nodes: Ember.A([
         TreeNodeObject.create({
           caption: 'Node 3.1 (leaf node)',
-          hasCheckbox: true,
-          checkboxValue: false,
-          iconClass: 'area chart icon',
           nodes: null
         })
       ])
@@ -460,11 +335,6 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
     '  nodes=(get-with-dynamic-actions this "jsonTreeNodes"<br>' +
     '    hierarchyPropertyName="nodes"<br>' +
     '    dynamicActions=(array<br>' +
-    '      (hash<br>' +
-    '        on="checkboxChange"<br>' +
-    '        actionName="onTreenodeCheckboxChange"<br>' +
-    '        actionArguments=(array "{% propertyPath %}.checkboxValue")<br>' +
-    '      )<br>' +
     '      (hash<br>' +
     '        on="headerClick"<br>' +
     '        actionName="onTreenodeHeaderClick"<br>' +
@@ -552,41 +422,6 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
       settingDefaultValue: null,
       bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.caption'
     });
-    componentSettingsMetadata.pushObject({
-      settingName: 'hasCheckbox',
-      settingType: 'boolean',
-      settingDefaultValue: false,
-      bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.hasCheckbox'
-    });
-    componentSettingsMetadata.pushObject({
-      settingName: 'checkboxValue',
-      settingType: 'boolean',
-      settingDefaultValue: false,
-      bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.checkboxValue'
-    });
-    componentSettingsMetadata.pushObject({
-      settingName: 'iconClass',
-      settingType: 'enumeration',
-      settingAvailableItems: [
-        'marker icon',
-        'compass icon',
-        'location arrow icon',
-        'area chart icon',
-        'envira gallery icon',
-        'small marker icon',
-        'small compass icon',
-        'small location arrow icon',
-        'small area chart icon',
-        'small envira gallery icon',
-        'big marker icon',
-        'big compass icon',
-        'big location arrow icon',
-        'big area chart icon',
-        'big envira gallery icon'
-      ],
-      settingDefaultValue: '',
-      bindedControllerPropertieName: jsonTreeLatestClickedNodePath + '.iconClass'
-    });
 
     return componentSettingsMetadata;
   }),
@@ -610,6 +445,10 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
 
       // Remember latest clicked node path to a tree-related controller's property.
       this.set(clickedNodeSettingsPrefix + 'LatestClickedNodePath', clickedNodePropertiesPath);
+    },
+
+    onMyButtonClick() {
+      window.alert('My button clicked');
     }
   }
 });

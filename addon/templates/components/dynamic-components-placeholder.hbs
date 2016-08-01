@@ -1,0 +1,3 @@
+{{#each _dynamicComponentsRelatedToPlaceholder as |dynamicComponent|}}
+  {{component dynamicComponent.componentName dynamicProperties=dynamicComponent.componentProperties}}
+{{/each}}

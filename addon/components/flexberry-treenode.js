@@ -3,20 +3,21 @@
 */
 
 import Ember from 'ember';
-import FlexberryDdauCheckboxComponent from './flexberry-ddau-checkbox';
+import DomActionsMixin from '../mixins/dom-actions';
+import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
+import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
+import DynamicComponentsMixin from '../mixins/dynamic-components';
 import layout from '../templates/components/flexberry-treenode';
 
 /**
   Component's CSS-classes names.
-  JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
+  JSON-object containing string constants with CSS-classes names related to component's hbs-markup elements.
 
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-treenode').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name (null because component hasn't wrapping <div>).
   @property {String} flexberryClassNames.treeNodeExpandCollapseIcon Component's expand/collapse icon CSS-class name ('flexberry-treenode-expand-collapse-icon').
-  @property {String} flexberryClassNames.treeNodeCheckbox Component's checkbox CSS-class name('flexberry-treenode-checkbox').
-  @property {String} flexberryClassNames.treeNodeIcon Component's icon CSS-class name ('flexberry-treenode-icon').
   @property {String} flexberryClassNames.treeNodeHeader Component's header <div> CSS-class name ('flexberry-treenode-header').
   @property {String} flexberryClassNames.treeNodeContent Component's content <div> CSS-class name ('flexberry-treenode-content').
   @readonly
@@ -28,18 +29,14 @@ const flexberryClassNamesPrefix = 'flexberry-treenode';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
+  treeNodePreventExpandCollapse: flexberryClassNamesPrefix + '-prevent-expand-collapse',
   treeNodeExpandCollapseIcon: flexberryClassNamesPrefix + '-expand-collapse-icon',
-  treeNodeCheckbox: flexberryClassNamesPrefix + '-checkbox',
-  treeNodeIcon: flexberryClassNamesPrefix + '-icon',
   treeNodeHeader: flexberryClassNamesPrefix + '-header',
   treeNodeContent: flexberryClassNamesPrefix + '-content'
 };
 
 /**
-  Flexberry tree node component with [Semantic UI accordion](http://semantic-ui.com/modules/accordion.html) style
-  and ["Data Down Actions Up (DDAU)" pattern](https://emberway.io/ember-js-goodbye-mvc-part-1-21777ecfd708) one way bindings.
-  Component doesn't mutate passed data by its own, it only invokes actions,
-  which signalizes to the route, controller, or another component, that passed data should be mutated.
+  Flexberry tree node component with [Semantic UI accordion](http://semantic-ui.com/modules/accordion.html) style.
   Component must be used in combination with {{#crossLink "FlexberryTreeComponent"}}flexberry-tree component{{/crossLink}}
   as a wrapper for those tree nodes, which are placed on the same tree level.
 
@@ -59,7 +56,7 @@ const flexberryClassNames = {
           {{#flexberry-tree}}
             {{#flexberry-treenode caption="Node 1.2.1 (with child nodes)"}}
               Node 1.2.1 custom content
-
+              
               {{#flexberry-tree}}
                 {{flexberry-treenode caption="Node 1.2.1.1 (leaf node)"}}
               {{/flexberry-tree}}
@@ -77,9 +74,55 @@ const flexberryClassNames = {
 
   @class FlexberryTreenodeComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses DomActionsMixin
+  @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
+  @uses DynamicProxyActionsMixin
+  @uses DynamicComponentsMixin
 */
-let FlexberryTreenodeComponent = Ember.Component.extend(DynamicActionsMixin, {
+let FlexberryTreenodeComponent = Ember.Component.extend(
+  DomActionsMixin,
+  DynamicPropertiesMixin,
+  DynamicActionsMixin,
+  DynamicProxyActionsMixin,
+  DynamicComponentsMixin, {
+
+  /**
+    Name of component that will be used to display child nodes subtree.
+
+    @property _subtreeComponentName
+    @type String
+    @default 'flexberry-tree'
+    @private
+  */
+  _subtreeComponentName: 'flexberry-tree',
+
+  /**
+    Name of component's property in which child nodes (defined as JSON objects) are stored.
+
+    @property _subtreeNodesPropertyName
+    @type String
+    @default 'nodes'
+    @private
+  */
+  _subtreeNodesPropertyName: 'nodes',
+
+  /**
+    Object containing dynamicProperties for child nodes subtree component.
+
+    @property _subtreeProperties
+    @type Object
+    @readOnly
+    @private
+  */
+  _subtreeProperties: Ember.computed(function() {
+    let subtreeNodesPropertyName = this.get('_subtreeNodesPropertyName');
+    let subtreeProperties = {};
+    subtreeProperties[subtreeNodesPropertyName] = this.get(subtreeNodesPropertyName);
+
+    return subtreeProperties;
+  }),
+
   /**
     Flag: indicates whether some {{#crossLink "FlexberryTreenodeComponent/nodes:property"}}child 'nodes'{{/childNodes}} are defined.
 
@@ -88,8 +131,9 @@ let FlexberryTreenodeComponent = Ember.Component.extend(DynamicActionsMixin, {
     @readonly
     @private
   */
-  _hasNodes: Ember.computed('nodes.[]', function() {
-    let nodes = this.get('nodes');
+  _hasNodes: Ember.computed(function() {
+    let subtreeNodesPropertyName = this.get('_subtreeNodesPropertyName');
+    let nodes = this.get(subtreeNodesPropertyName);
 
     return Ember.isArray(nodes) && nodes.length > 0;
   }),
@@ -101,13 +145,13 @@ let FlexberryTreenodeComponent = Ember.Component.extend(DynamicActionsMixin, {
 
   /**
     Reference to component's CSS-classes names.
-    Must be also a component's instance property to be available from component's .hbs template.
+    Must be also a component's instance property to be available from component's hbs-markup.
   */
   flexberryClassNames,
 
   /**
-    Overridden [tag name property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
-    Is blank to disable component's wrapping <div>.
+    Overridden ['tagName' property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
+    Is blank to disable component's wrapping <div>. 
 
     @property tagName
     @type String
@@ -116,57 +160,13 @@ let FlexberryTreenodeComponent = Ember.Component.extend(DynamicActionsMixin, {
   tagName: '',
 
   /**
-    Tree node's caption (will be displayed near node).
+    Tree node's caption (will be displayed in node's header).
 
     @property caption
     @type String
     @default null
   */
   caption: null,
-
-  // TODO: move inner element's customizations into mixin,
-  // which will be able to add custom CSS-classes to component's inner element's
-  // by their flexberry-... CSS-class names: ['flexberry-treenode-icon:map icon', 'flexberry-treenode-checkbox:toggle', ...].
-  // Some kind of class names bindings for elements with flexberry CSS-class names.
-  /**
-    CSS classes names for a tree node's icon.
-    Will be used as <i class=...></i> class attribute if defined & not blank.
-
-    @property iconClass
-    @type String
-    @default ''
-  */
-  iconClass: '',
-
-  /**
-    Flag: indicates whether tree node has
-    {{#crossLink "FlexberryDdauCheckboxComponent"}}flexberry-ddau-checkbox component{{/crossLink}} or not.
-
-    @property showCheckbox
-    @type Boolean
-    @default false
-  */
-  hasCheckbox: false,
-
-  /**
-    Flag: indicates whether tree node has child nodes that are displayed by other component.
-
-    @property hasNodesOuter
-    @type Boolean
-    @default false
-  */
-  hasNodesOuter: false,
-
-  /**
-    Value binded to tree node's
-    {{#crossLink "FlexberryDdauCheckboxComponent"}}flexberry-ddau-checkbox component{{/crossLink}}
-    (if {{#crossLink "FlexberryTreenodeComponent/hasCheckbox:property"}}flexberry-ddau-checkbox 'hasCheckbox' property{{/crossLink}} is true).
-
-    @property value
-    @type Boolean
-    @default false
-  */
-  checkboxValue: false,
 
   /**
     Flag: indicates whether tree node is in readonly mode.
@@ -193,7 +193,7 @@ let FlexberryTreenodeComponent = Ember.Component.extend(DynamicActionsMixin, {
   actions: {
     /**
       Handles tree node header's 'click' event.
-      Prevents 'click' event from bubbling for leaf nodes & for nodes which were clicked on nested checkboxes.
+      Prevents 'click' event from bubbling for leaf nodes.
       Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'headerClick'{{/crossLink}} action.
       Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'beforeExpand'{{/crossLink}} action.
       Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'beforeCollapse'{{/crossLink}} action.
@@ -204,23 +204,24 @@ let FlexberryTreenodeComponent = Ember.Component.extend(DynamicActionsMixin, {
       which describes Inner header element's 'click' event.
     */
     onHeaderClick(nodeHasNestedContent, e) {
-      // As the 'click' event target here could be passed either checkbox wrapping <div>,
-      // or any inner element nested inside checkbox,
-      // that's why we should check not for a class names equality, but only for a class name prefixes equality.
-      let clickTargetIsCheckbox = Ember.$(e.target).hasClass({
-        withPrefix: FlexberryDdauCheckboxComponent.flexberryClassNames.prefix
+      // Send 'headerClick' action anyway.
+      this.sendAction('headerClick', {
+        originalEvent: e
       });
 
-      if (!clickTargetIsCheckbox) {
-        this.sendAction('headerClick', {
-          originalEvent: e
-        });
+      // As the 'click' event-target here could be passed any inner element nested inside node's header
+      // (even some inner elements of dynamic components nested inside node),
+      // that's why we should check for a special class-name in event-target itself & in it's parent elements.
+      let $clickTarget = Ember.$(e.target);
+      let clickTargetShouldPreventExpandCollapse = $clickTarget.hasClass(flexberryClassNames.treeNodePreventExpandCollapse);
+      if (!clickTargetShouldPreventExpandCollapse)  {
+        clickTargetShouldPreventExpandCollapse = $clickTarget.parents().hasClass(flexberryClassNames.treeNodePreventExpandCollapse);
       }
 
       // Prevent node header's click event from bubbling to disable expand/collapse animation in the following situations:
-      // if node was clicked on nested checkbox click,
+      // if click event-target is element containing special class-name preventing node from expanding/collapsing,
       // if node is leaf (node without nested content).
-      if (clickTargetIsCheckbox || !nodeHasNestedContent) {
+      if (clickTargetShouldPreventExpandCollapse || !nodeHasNestedContent) {
         e.stopPropagation();
 
         return;
@@ -236,51 +237,6 @@ let FlexberryTreenodeComponent = Ember.Component.extend(DynamicActionsMixin, {
           originalEvent: e
         });
       }
-    },
-
-    /**
-      Handles {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
-      Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.checkboxChange:method"}}'checkboxChange'{{/crossLink}} action.
-
-      @method actions.onCheckboxChange
-      @param {Object} e Event object from
-      {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
-    */
-    onCheckboxChange(e) {
-      this.sendAction('checkboxChange', e);
-
-      // Return false to prevent 'change' action bubbling.
-      return false;
-    },
-
-    /**
-      Handles {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.check:method"}}flexberry-ddau-checkbox 'check' action{{/crossLink}}.
-      Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.checkboxCheck:method"}}'checkboxCheck'{{/crossLink}} action.
-
-      @method actions.onCheckboxChange
-      @param {Object} e Event object from
-      {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.check:method"}}flexberry-ddau-checkbox 'check' action{{/crossLink}}.
-    */
-    onCheckboxCheck(e) {
-      this.sendAction('checkboxCheck', e);
-
-      // Return false to prevent 'check' action bubbling.
-      return false;
-    },
-
-    /**
-      Handles {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.uncheck:method"}}flexberry-ddau-checkbox 'uncheck' action{{/crossLink}}.
-      Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.checkboxUncheck:method"}}'checkboxUncheck'{{/crossLink}} action.
-
-      @method actions.onCheckboxChange
-      @param {Object} e Event object from
-      {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.uncheck:method"}}flexberry-ddau-checkbox 'uncheck' action{{/crossLink}}.
-    */
-    onCheckboxUncheck(e) {
-      this.sendAction('checkboxUncheck', e);
-
-      // Return false to prevent 'uncheck' action bubbling.
-      return false;
     }
   },
 
@@ -311,33 +267,6 @@ let FlexberryTreenodeComponent = Ember.Component.extend(DynamicActionsMixin, {
     @param {Object} e Action's event object.
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes event that triggers node's collapsing.
-  */
-
-  /**
-    Component's action invoking when tree node's {{#crossLink "FlexberryDdauCheckboxComponent"}}checkbox{{/crossLink}}
-    was clicked and it's 'checked' state changed.
-
-    @method sendingActions.checkboxChange
-    @param {Object} e Event object from
-    {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
-  */
-
-  /**
-    Component's action invoking when tree node's {{#crossLink "FlexberryDdauCheckboxComponent"}}checkbox{{/crossLink}}
-    was clicked and it's 'checked' state changed to 'checked=true'.
-
-    @method sendingActions.checkboxCheck
-    @param {Object} e Event object from
-    {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.check:method"}}flexberry-ddau-checkbox 'check' action{{/crossLink}}.
-  */
-
-  /**
-    Component's action invoking when tree node's {{#crossLink "FlexberryDdauCheckboxComponent"}}checkbox{{/crossLink}}
-    was clicked and it's 'checked' state changed to 'checked=false'.
-
-    @method sendingActions.checkboxUncheck
-    @param {Object} e Event object from
-    {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.uncheck:method"}}flexberry-ddau-checkbox 'uncheck' action{{/crossLink}}.
   */
 });
 

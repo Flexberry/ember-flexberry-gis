@@ -124,6 +124,16 @@ export default Ember.Controller.extend({
         title: i18n.t('forms.application.sitemap.components-examples.title'),
         children: [{
           link: null,
+          caption: i18n.t('forms.application.sitemap.components-examples.flexberry-button.caption'),
+          title: i18n.t('forms.application.sitemap.components-examples.flexberry-button.title'),
+          children: [{
+            link: 'components-examples/flexberry-button/settings-example',
+            caption: i18n.t('forms.application.sitemap.components-examples.flexberry-button.settings-example.caption'),
+            title: i18n.t('forms.application.sitemap.components-examples.flexberry-button.settings-example.title'),
+            children: null
+          }]
+        }, {
+          link: null,
           caption: i18n.t('forms.application.sitemap.components-examples.flexberry-ddau-checkbox.caption'),
           title: i18n.t('forms.application.sitemap.components-examples.flexberry-ddau-checkbox.title'),
           children: [{
@@ -134,22 +144,22 @@ export default Ember.Controller.extend({
           }]
         }, {
           link: null,
+          caption: i18n.t('forms.application.sitemap.components-examples.flexberry-maplayers.caption'),
+          title: i18n.t('forms.application.sitemap.components-examples.flexberry-maplayers.title'),
+          children: [{
+            link: 'components-examples/flexberry-maplayers/settings-example',
+            caption: i18n.t('forms.application.sitemap.components-examples.flexberry-maplayers.settings-example.caption'),
+            title: i18n.t('forms.application.sitemap.components-examples.flexberry-maplayers.settings-example.title'),
+            children: null
+          }]
+        }, {
+          link: null,
           caption: i18n.t('forms.application.sitemap.components-examples.flexberry-tree.caption'),
           title: i18n.t('forms.application.sitemap.components-examples.flexberry-tree.title'),
           children: [{
             link: 'components-examples/flexberry-tree/settings-example',
             caption: i18n.t('forms.application.sitemap.components-examples.flexberry-tree.settings-example.caption'),
             title: i18n.t('forms.application.sitemap.components-examples.flexberry-tree.settings-example.title'),
-            children: null
-          }]
-        }, {
-          link: null,
-          caption: i18n.t('forms.application.sitemap.components-examples.flexberry-layerstree.caption'),
-          title: i18n.t('forms.application.sitemap.components-examples.flexberry-layerstree.title'),
-          children: [{
-            link: 'components-examples/flexberry-layerstree/settings-example',
-            caption: i18n.t('forms.application.sitemap.components-examples.flexberry-layerstree.settings-example.caption'),
-            title: i18n.t('forms.application.sitemap.components-examples.flexberry-layerstree.settings-example.title'),
             children: null
           }]
         }]

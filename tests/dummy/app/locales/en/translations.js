@@ -73,6 +73,14 @@ Ember.$.extend(true, translations, {
         'components-examples': {
           'caption': 'Components examples',
           'title': '',
+          'flexberry-button': {
+            'caption': 'flexberry-button',
+            'title': '',
+            'settings-example': {
+              'caption': 'Settings example',
+              'title': ''
+            }
+          },
           'flexberry-ddau-checkbox': {
             'caption': 'flexberry-ddau-checkbox',
             'title': '',
@@ -81,16 +89,16 @@ Ember.$.extend(true, translations, {
               'title': ''
             }
           },
-          'flexberry-tree': {
-            'caption': 'flexberry-tree',
+          'flexberry-maplayers': {
+            'caption': 'flexberry-maplayers',
             'title': '',
             'settings-example': {
               'caption': 'Settings example',
               'title': ''
             }
           },
-          'flexberry-layerstree': {
-            'caption': 'flexberry-layerstree',
+          'flexberry-tree': {
+            'caption': 'flexberry-tree',
             'title': '',
             'settings-example': {
               'caption': 'Settings example',
@@ -115,25 +123,30 @@ Ember.$.extend(true, translations, {
     },
 
     'components-examples': {
+      'flexberry-button': {
+        'settings-example': {
+          'caption': 'Settings example for flexberry-button'
+        }
+      },
       'flexberry-ddau-checkbox': {
         'settings-example': {
-          'caption': 'Components-examples/flexberry-ddau-checkbox/settings-example'
+          'caption': 'Settings example for flexberry-ddau-checkbox'
+        }
+      },
+      'flexberry-maplayers': {
+        'settings-example': {
+          'caption': 'Settings example for flexberry-maplayers',
+          'hbs-layers-tab-caption': 'Explicitly hbs-markup defined layers tree',
+          'hbs-layers-latest-clicked-layer-caption': 'Latest clicked layer settings',
+          'hbs-layers-latest-clicked-layer-placeholder': 'Click on any layer to display it\'s settings',
+          'json-layers-tab-caption': 'JSON-object-defined layers tree',
+          'json-layers-latest-clicked-layer-caption': 'Latest clicked layer settings',
+          'json-layers-latest-clicked-layer-placeholder': 'Click on any layer to display it\'s settings'
         }
       },
       'flexberry-tree': {
         'settings-example': {
-          'caption': 'Components-examples/flexberry-tree/settings-example',
-          'hbs-tree-tab-caption': 'Explicitly hbs-markup defined tree',
-          'hbs-tree-latest-clicked-node-caption': 'Latest clicked tree node settings',
-          'hbs-tree-latest-clicked-node-placeholder': 'Click on any tree node to display it\'s settings',
-          'json-tree-tab-caption': 'JSON-object-defined tree',
-          'json-tree-latest-clicked-node-caption': 'Latest clicked tree node settings',
-          'json-tree-latest-clicked-node-placeholder': 'Click on any tree node to display it\'s settings'
-        }
-      },
-      'flexberry-layerstree': {
-        'settings-example': {
-          'caption': 'Components-examples/flexberry-layerstree/settings-example',
+          'caption': 'Settings example for flexberry-tree',
           'hbs-tree-tab-caption': 'Explicitly hbs-markup defined tree',
           'hbs-tree-latest-clicked-node-caption': 'Latest clicked tree node settings',
           'hbs-tree-latest-clicked-node-placeholder': 'Click on any tree node to display it\'s settings',
