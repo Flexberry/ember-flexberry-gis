@@ -26,34 +26,6 @@
             caption=hbsTreeNodes.0.caption
             headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0")
             myButtonClick=(action "onMyButtonClick")
-            dynamicComponents=(array
-              (hash
-                to="headerStart"
-                componentName="flexberry-ddau-checkbox"
-                componentProperties=(hash
-                  value=hbsTreeNodes.0.checkboxValue
-                  dynamicProxyActions=(array
-                    (hash
-                      on="change"
-                      actionName="checkboxChange"
-                    )
-                  )
-                )
-              )
-              (hash
-                to="headerEnd"
-                componentName="flexberry-button"
-                componentProperties=(hash
-                  caption="My button"
-                  dynamicProxyActions=(array
-                    (hash
-                      on="click"
-                      actionName="myButtonClick"
-                    )
-                  )
-                )
-              )
-            )
           }}
             {{#flexberry-tree}}
               {{flexberry-treenode
