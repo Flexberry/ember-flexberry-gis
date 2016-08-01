@@ -3,7 +3,6 @@
 */
 
 import Ember from 'ember';
-import FlexberryTreenodeComponent from './flexberry-treenode';
 import DomActionsMixin from '../mixins/dom-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
@@ -13,7 +12,7 @@ import layout from '../templates/components/flexberry-tree';
 
 /**
   Component's CSS-classes names.
-  JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
+  JSON-object containing string constants with CSS-classes names related to component's hbs-markup elements.
 
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-tree').
@@ -30,10 +29,7 @@ const flexberryClassNames = {
 };
 
 /**
-  Flexberry tree component with [Semantic UI accordion](http://semantic-ui.com/modules/accordion.html) style
-  and ["Data Down Actions UP (DDAU)" pattern](https://emberway.io/ember-js-goodbye-mvc-part-1-21777ecfd708) one way bindings.
-  Component doesn't mutate passed data by its own, it only invokes actions,
-  which signalizes to the route, controller, or another component, that passed data should be mutated.
+  Flexberry tree component with [Semantic UI accordion](http://semantic-ui.com/modules/accordion.html) style.
   Component must be used in combination with {{#crossLink "FlexberryTreenodeComponent"}}flexberry-treenode component{{/crossLink}},
   because it's only a wrapper for those tree nodes, which are placed on the same tree level.
 
@@ -53,7 +49,7 @@ const flexberryClassNames = {
           {{#flexberry-tree}}
             {{#flexberry-treenode caption="Node 1.2.1 (with child nodes)"}}
               Node 1.2.1 custom content
-              
+
               {{#flexberry-tree}}
                 {{flexberry-treenode caption="Node 1.2.1.1 (leaf node)"}}
               {{/flexberry-tree}}
@@ -85,6 +81,26 @@ let FlexberryTreeComponent = Ember.Component.extend(
   DynamicComponentsMixin, {
 
   /**
+    Name of component that will be used to display tree nodes.
+
+    @property _treeNodeComponentName
+    @type String
+    @default 'flexberry-layerstreenode'
+    @private
+  */
+  _treeNodeComponentName: 'flexberry-treenode',
+
+  /**
+    Name of component's property in which tree nodes (defined as JSON objects) are stored.
+
+    @property _treeNodesPropertyName
+    @type String
+    @default 'nodes'
+    @private
+  */
+  _treeNodesPropertyName: 'nodes',
+
+  /**
     Flag: indicates whether tree isn't placed inside {{#crossLink "FlexberryTreenodeComponent"}}flexberry-treenode component{{/crossLink}}.
 
     @property _isNotInsideTreeNode
@@ -92,10 +108,12 @@ let FlexberryTreeComponent = Ember.Component.extend(
     @readonly
     @private
   */
-  _isNotInsideTreeNode: Ember.computed('parentView', function() {
+  _isNotInsideTreeNode: Ember.computed('parentView', '_treeNodeComponentName', function() {
     let parentView = this.get('parentView');
+    let treeNodeComponentName = this.get('_treeNodeComponentName');
+    let treeNodeComponentClass = Ember.getOwner(this)._lookupFactory(`component:${treeNodeComponentName}`);
 
-    return !(parentView instanceof FlexberryTreenodeComponent);
+    return !(parentView instanceof treeNodeComponentClass);
   }),
 
   /**
@@ -106,8 +124,9 @@ let FlexberryTreeComponent = Ember.Component.extend(
     @readonly
     @private
   */
-  _hasNodes: Ember.computed('nodes.[]', function() {
-    let nodes = this.get('nodes');
+  _hasNodes: Ember.computed(function() {
+    let treeNodesPropertyName = this.get('_treeNodesPropertyName');
+    let nodes = this.get(treeNodesPropertyName);
 
     return Ember.isArray(nodes) && nodes.length > 0;
   }),
@@ -119,7 +138,7 @@ let FlexberryTreeComponent = Ember.Component.extend(
 
   /**
     Reference to component's CSS-classes names.
-    Must be also a component's instance property to be available from component's .hbs template.
+    Must be also a component's instance property to be available from component's hbs-markup.
   */
   flexberryClassNames,
 

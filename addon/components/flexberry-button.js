@@ -66,6 +66,44 @@ let FlexberryButtonComponent = Ember.Component.extend(
   DynamicComponentsMixin, {
 
   /**
+    Flag: indicates whether button has caption or not.
+
+    @property _hasCaption
+    @type Boolean
+    @readOnly
+    @private
+  */
+  _hasCaption: Ember.computed('caption', function() {
+    let caption = this.get('caption');
+    return Ember.typeOf(caption) === 'string' && Ember.$.trim(caption) !== '';
+  }),
+
+  /**
+    Flag: indicates whether button has icon or not.
+
+    @property _hasIcon
+    @type Boolean
+    @readOnly
+    @private
+  */
+  _hasIcon: Ember.computed('iconClass', function() {
+    let iconClass = this.get('iconClass');
+    return Ember.typeOf(iconClass) === 'string' && Ember.$.trim(iconClass) !== '';
+  }),
+
+  /**
+    Flag: indicates whether button has icon only (without caption).
+
+    @property _hasIconOnly
+    @type Boolean
+    @readOnly
+    @private
+  */
+  _hasIconOnly: Ember.computed('_hasIcon', '_hasCaption', function() {
+    return this.get('_hasIcon') && !this.get('_hasCaption');
+  }),
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -109,9 +147,9 @@ let FlexberryButtonComponent = Ember.Component.extend(
 
     @property classNameBindings
     @type String[]
-    @default ['readonly:disabled']
+    @default ['readonly:disabled', '_hasIconOnly:icon']
   */
-  classNameBindings: ['readonly:disabled'],
+  classNameBindings: ['readonly:disabled', '_hasIconOnly:icon'],
 
   /**
     Component's caption.
@@ -121,6 +159,15 @@ let FlexberryButtonComponent = Ember.Component.extend(
     @default null
   */
   caption: null,
+
+  /**
+    Component's icon CSS-class names.
+
+    @property iconClass
+    @type String
+    @default null
+  */
+  iconClass: null,
 
   /**
     Flag: indicates whether component is in readonly mode.

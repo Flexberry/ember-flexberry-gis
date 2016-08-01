@@ -1,0 +1,87 @@
+<h3 class="ui header">{{t "forms.components-examples.flexberry-maplayers.settings-example.caption"}}</h3>
+<form class="ui form flexberry-vertical-form" role="form">
+  <div class="field">
+    <div class="ui top attached tabular menu">
+      <a class="item active" data-tab="hbsLayers">
+        {{t "forms.components-examples.flexberry-maplayers.settings-example.hbs-layers-tab-caption"}}
+      </a>
+      <a class="item" data-tab="jsonLayers">
+        {{t "forms.components-examples.flexberry-maplayers.settings-example.json-layers-tab-caption"}}
+      </a>
+    </div>
+    <div class="ui bottom attached tab segment active" data-tab="hbsLayers">
+      {{#settings-example
+        controllerProperties=this
+        componentSettingsMetadata=hbsLayersComponentSettingsMetadata
+        componentTemplateText=hbsLayersComponentTemplateText
+      }}
+        {{#flexberry-maplayers
+          class=hbsLayersClass
+          exclusive=hbsLayersExclusive
+          collapsible=hbsLayersCollapsible
+          animateChildren=hbsLayersAnimateChildren
+          duration=hbsLayersDuration
+        }}
+          {{#flexberry-maplayer
+            name=hbsLayers.0.name
+            type=hbsLayers.0.type
+            visibility=hbsLayers.0.visibility
+            headerClick=(action "onMapLayerHeaderClick" "hbsLayers.0")
+            visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.0.visibility")
+          }}
+            {{#flexberry-maplayers}}
+              {{flexberry-maplayer
+                name=hbsLayers.0.layers.0.name
+                type=hbsLayers.0.layers.0.type
+                visibility=hbsLayers.0.layers.0.visibility
+                headerClick=(action "onMapLayerHeaderClick" "hbsLayers.0.layers.0")
+                visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.0.layers.0.visibility")
+              }}
+              {{flexberry-maplayer
+                name=hbsLayers.0.layers.1.name
+                type=hbsLayers.0.layers.1.type
+                visibility=hbsLayers.0.layers.1.visibility
+                headerClick=(action "onMapLayerHeaderClick" "hbsLayers.0.layers.1")
+                visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.0.layers.1.visibility")
+              }}
+            {{/flexberry-maplayers}}
+          {{/flexberry-maplayer}}
+          {{#flexberry-maplayer
+            name=hbsLayers.1.name
+            type=hbsLayers.1.type
+            visibility=hbsLayers.1.visibility
+            headerClick=(action "onMapLayerHeaderClick" "hbsLayers.1")
+            visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.1.visibility")
+          }}
+            {{#flexberry-maplayers}}
+              {{flexberry-maplayer
+                name=hbsLayers.1.layers.0.name
+                type=hbsLayers.1.layers.0.type
+                visibility=hbsLayers.1.layers.0.visibility
+                headerClick=(action "onMapLayerHeaderClick" "hbsLayers.1.layers.0")
+                visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.1.layers.0.visibility")
+              }}
+            {{/flexberry-maplayers}}
+          {{/flexberry-maplayer}}
+          {{flexberry-maplayer
+            name=hbsLayers.2.name
+            type=hbsLayers.2.type
+            visibility=hbsLayers.2.visibility
+            headerClick=(action "onMapLayerHeaderClick" "hbsLayers.2")
+            visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.2.visibility")
+          }}
+        {{/flexberry-maplayers}}
+      {{/settings-example}}
+      <br>
+      {{settings-example
+        controllerProperties=this
+        componentSettingsMetadata=hbsLayersLatestClickedLayerComponentSettingsMetadata
+        componentSettingsCaption=(t "forms.components-examples.flexberry-maplayers.settings-example.hbs-layers-latest-clicked-layer-caption")
+        componentSettingsPlaceholder=(t "forms.components-examples.flexberry-maplayers.settings-example.hbs-layers-latest-clicked-layer-placeholder")
+      }}
+    </div>
+    <div class="ui bottom attached tab segment" data-tab="jsonLayers">
+      Example is not developed yet
+    </div>
+  </div>
+</form>

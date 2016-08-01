@@ -4,10 +4,20 @@ import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry-gis/mixins
 export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin, {
   /**
     Component's wrapper CSS-classes.
+
     @property class
     @type String
   */
   class: '',
+
+  /**
+    Component's icon CSS-class names.
+
+    @property iconClass
+    @type String
+    @default null
+  */
+  iconClass: null,
 
   /**
     Text for 'flexberry-button' 'caption' property.
@@ -20,6 +30,7 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
 
   /**
     Flag: indicates whether 'flexberry-button' component is in 'readonly' mode or not.
+
     @property readonly
     @type Boolean
    */
@@ -27,12 +38,14 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
 
   /**
     Template text for 'flexberry-button' component.
+
     @property componentTemplateText
     @type String
    */
   componentTemplateText: new Ember.Handlebars.SafeString(
     '{{flexberry-button<br>' +
     '  class=class<br>' +
+    '  iconClass=class<br>' +
     '  caption=caption<br>' +
     '  readonly=readonly<br>' +
     '  click=(action \"onButtonClick\")<br>' +
@@ -40,6 +53,7 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
 
   /**
     Component settings metadata.
+
     @property componentSettingsMetadata
     @type Object[]
    */
@@ -63,6 +77,19 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
         'right attached'
       ],
       bindedControllerPropertieName: 'class'
+    });
+    componentSettingsMetadata.pushObject({
+      settingName: 'iconClass',
+      settingType: 'enumeration',
+      settingAvailableItems: [
+        'edit icon',
+        'cut icon',
+        'attach icon',
+        'add square icon',
+        'download icon'
+      ],
+      settingDefaultValue: null,
+      bindedControllerPropertieName: 'iconClass'
     });
     componentSettingsMetadata.pushObject({
       settingName: 'caption',
