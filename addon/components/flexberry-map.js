@@ -90,6 +90,7 @@ export default Ember.Component.extend(
       this.set('_layer', map);
       this._addObservers();
       this._addEventListeners();
+      this.sendAction('leafletMapDidInit', map);
     },
 
     didInsertElement() {
