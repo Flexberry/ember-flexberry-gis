@@ -22,6 +22,16 @@ export default Ember.Object.extend({
   to: null,
 
   /**
+    Flag: indicates whether component is visible (should be included in defined place markup) or not.
+    It is useful when you want to remove your component from markup (for example in readonly mode or in some other situations).
+
+    @property visible
+    @type Boolean
+    @default true
+  */
+  visible: true,
+
+  /**
     Component name.
     Will be used as first argument for ['component' helper](http://emberjs.com/api/classes/Ember.Templates.helpers.html#method_component).
     Component behind this name must use at least {{#crossLink "DynamicPropertiesMixin"}}dynamic-properties mixin{{/crossLink}},
@@ -43,5 +53,5 @@ export default Ember.Object.extend({
     @type Object
     @default null
   */
-  componentProperties: null
+  componentProperties: null,
 });

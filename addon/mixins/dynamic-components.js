@@ -16,6 +16,13 @@ let validateDynamicComponentProperties = function(dynamicComponent, dynamicCompo
     `actual type is ${Ember.typeOf(to)}, but \`string\` is expected.`,
     Ember.typeOf(to) === 'string');
 
+  // Property 'visible' must be a boolean flag (if defined).
+  let visible = Ember.get(dynamicComponent, 'visible');
+  Ember.assert(
+    `Wrong type of dynamicComponents[${dynamicComponentIndex}].visible property: ` +
+    `actual type is ${Ember.typeOf(visible)}, but \`boolean\` is expected.`,
+    Ember.isNone(visible) || Ember.typeOf(visible) === 'boolean');
+
   // Property 'componentName' must be a string.
   let componentName = Ember.get(dynamicComponent, 'componentName');
   Ember.assert(
@@ -75,6 +82,7 @@ export default Ember.Mixin.create({
         }
 
         result[to].pushObject({
+          visible: Ember.get(dynamicComponent, 'visible') !== false,
           componentName: Ember.get(dynamicComponent, 'componentName'),
           componentProperties: Ember.get(dynamicComponent, 'componentProperties')
         });

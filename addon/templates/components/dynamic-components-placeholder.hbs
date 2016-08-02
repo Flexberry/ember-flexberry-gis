@@ -1,3 +1,5 @@
 {{#each _dynamicComponentsRelatedToPlaceholder as |dynamicComponent|}}
-  {{component dynamicComponent.componentName dynamicProperties=dynamicComponent.componentProperties}}
+  {{#if dynamicComponent.visible}}
+    {{component dynamicComponent.componentName dynamicProperties=dynamicComponent.componentProperties}}
+  {{/if}}
 {{/each}}
