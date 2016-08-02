@@ -11,9 +11,12 @@ import BaseLayer from 'ember-flexberry-gis/components/base-layer';
   @extend BaseLayerComponent
  */
 export default BaseLayer.extend({
-  leafletRequiredOptions: [
-    'url'
-  ],
+  /**
+    Url of tile service
+    @property url
+    @type String
+   */
+  url: null,
 
   leafletOptions: [
     'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
@@ -23,6 +26,6 @@ export default BaseLayer.extend({
   ],
 
   createLayer () {
-    return L.tileLayer(...this.get('requiredOptions'), this.get('options'));
+    return L.tileLayer(this.get('url'), this.get('options'));
   }
 });

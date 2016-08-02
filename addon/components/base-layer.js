@@ -5,7 +5,6 @@
 import Ember from 'ember';
 import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
 import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
-import LeafletRequiredOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-required-options';
 import LeafletPropertiesMixin from 'ember-flexberry-gis/mixins/leaflet-properties';
 
 const { assert } = Ember;
@@ -18,7 +17,6 @@ const { assert } = Ember;
 export default Ember.Component.extend(
   DynamicPropertiesMixin,
   LeafletOptionsMixin,
-  LeafletRequiredOptionsMixin,
   LeafletPropertiesMixin,
   {
     /**
@@ -99,7 +97,7 @@ export default Ember.Component.extend(
     }),
 
     /**
-      Create layer with requiredOptions and options properties, should be overriden in child classes.
+      Create leaflet layer, should be overriden in child classes.
       @method
      */
     createLayer() {
