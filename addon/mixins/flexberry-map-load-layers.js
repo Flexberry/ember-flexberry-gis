@@ -8,7 +8,7 @@ import FilterOperator from 'ember-flexberry-data/query/filter-operator';
 
 /**
   Mixin for recursive load map layers from store
-  @class FlexberryMapLoadLayers
+  @class FlexberryMapLoadLayersMixin
   @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
  */
 export default Ember.Mixin.create({
