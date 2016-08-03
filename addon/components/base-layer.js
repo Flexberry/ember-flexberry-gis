@@ -25,14 +25,6 @@ export default Ember.Component.extend(
     tagName: '',
 
     /**
-      Model with layer parameters.
-      @property model
-      @type {{#crossLink NewPlatformFlexberryGISMapLayer}}
-      @default null
-     */
-    model: null,
-
-    /**
       Leaflet container for this layer.
       @property container
       @type L.Map|L.LayerGroup
@@ -44,14 +36,9 @@ export default Ember.Component.extend(
       This layer index, used for layer ordering in Map.
       @property index
       @type Int
+      @default null
      */
-    index: Ember.computed('model.index', function () {
-      return this.get('model.index');
-    }),
-
-    dynamicProperties: Ember.computed('model.settingsAsObject', function () {
-      return this.get('model.settingsAsObject');
-    }),
+    index: null,
 
     /**
       Call leaflet layer setZIndex if it presents.
@@ -77,10 +64,9 @@ export default Ember.Component.extend(
       Flag, indicates visible or not current layer on map.
       @property visibility
       @type Boolean
+      @default null
      */
-    visibility: Ember.computed('model.visibility', function () {
-      return this.get('model.visibility');
-    }),
+    visibility: null,
 
     /**
       Switch layer visible on map based on visibility property.

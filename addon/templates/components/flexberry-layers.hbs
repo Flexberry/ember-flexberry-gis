@@ -1,3 +1,8 @@
 {{#each layers as |layer|}}
-  {{component (concat "layers/" layer.type "-layer") container=container model=layer}}
+  {{component (concat "layers/" layer.type "-layer")
+    container=container
+    index=layer.index
+    visibility=layer.visibility
+    dynamicProperties=layer.settingsAsObject
+    layers=layer.layers}}
 {{/each}}
