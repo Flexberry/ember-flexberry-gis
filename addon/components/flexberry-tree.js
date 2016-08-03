@@ -207,6 +207,16 @@ let FlexberryTreeComponent = Ember.Component.extend(
   duration: 350,
 
   /**
+    Flag: indicates whether tree is in readonly mode.
+    If true, tree nodes data-related UI will be in readonly mode.
+
+    @property readonly
+    @type Boolean
+    @default false
+  */
+  readonly: false,
+
+  /**
     Tree nodes.
     This property is optional and must be used when there are too many child nodes,
     and you don't want to define them explicitly in the .hbs markup,

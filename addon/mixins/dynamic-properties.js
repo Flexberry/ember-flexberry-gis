@@ -77,11 +77,8 @@ export default Ember.Mixin.create({
     }
 
     let previousCustomClassNames = [];
-
-    let setDynamicProperty = () => {
-      let propertyValue = this.get(`dynamicProperties.${propertyName}`);
-      if (!this.get('isTagless') && propertyName === 'class') {
-        Ember.assert(
+    let setDynamicClassProperty = (propertyValue) => {
+      Ember.assert(
           `Wrong type of \`class\` property: ` +
           `actual type is \`${Ember.typeOf(propertyValue)}\`, but \`string\` is expected.`,
           Ember.typeOf(propertyValue) === 'string');
@@ -125,7 +122,13 @@ export default Ember.Mixin.create({
         });
 
         // Remember added custom class names in the context of property observer handler.
-        previousCustomClassNames = customClassNames;        
+        previousCustomClassNames = customClassNames;
+    };
+
+    let setDynamicProperty = () => {
+      let propertyValue = this.get(`dynamicProperties.${propertyName}`);
+      if (!this.get('isTagless') && propertyName === 'class') {
+        setDynamicClassProperty(propertyValue);
       } else {
         this.set(propertyName, propertyValue);
       }

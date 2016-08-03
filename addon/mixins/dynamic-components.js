@@ -85,11 +85,7 @@ export default Ember.Mixin.create({
             result[to] = Ember.A();
           }
 
-          result[to].pushObject({
-            visible: Ember.get(dynamicComponent, 'visible') !== false,
-            componentName: Ember.get(dynamicComponent, 'componentName'),
-            componentProperties: Ember.get(dynamicComponent, 'componentProperties')
-          });
+          result[to].pushObject(dynamicComponent);
         }
       };
 

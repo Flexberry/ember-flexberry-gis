@@ -1,5 +1,5 @@
 {{#each _dynamicComponentsRelatedToPlaceholder as |dynamicComponent|}}
-  {{#if dynamicComponent.visible}}
+  {{#if (not (eq dynamicComponent.visible false))}}
     {{component dynamicComponent.componentName dynamicProperties=dynamicComponent.componentProperties}}
   {{/if}}
 {{/each}}

@@ -79,10 +79,7 @@ export default Ember.Mixin.create({
           result[on] = Ember.A();
         }
 
-        result[on].pushObject({
-          actionName: Ember.get(dynamicProxyAction, 'actionName'),
-          actionArguments: Ember.get(dynamicProxyAction, 'actionArguments')
-        });
+        result[on].pushObject(dynamicProxyAction);
       }
 
       return result;

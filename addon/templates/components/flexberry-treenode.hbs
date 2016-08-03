@@ -20,7 +20,7 @@
 <div class="{{flexberryClassNames.treeNodeContent}} content">
   {{dynamic-components-placeholder name="contentStart"}}
   {{#if _hasNodes}}
-    {{component _subtreeComponentName dynamicProperties=_subtreeProperties}}
+    {{component _subtreeComponentName dynamicProperties=_subtreeProperties readonly=readonly}}
   {{/if}}
   {{#if hasBlock}}
     {{yield}}

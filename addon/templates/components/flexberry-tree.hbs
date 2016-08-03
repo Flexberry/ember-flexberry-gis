@@ -1,6 +1,6 @@
 {{#if _hasNodes}}
   {{#each (get this _treeNodesPropertyName) as |nodeProperties|}}
-    {{component _treeNodeComponentName dynamicProperties=nodeProperties}}
+    {{component _treeNodeComponentName dynamicProperties=nodeProperties readonly=readonly}}
   {{/each}}
 {{/if}}
 {{#if hasBlock}}

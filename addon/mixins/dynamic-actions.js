@@ -96,12 +96,7 @@ export default Ember.Mixin.create({
           result[on] = Ember.A();
         }
 
-        result[on].pushObject({
-          actionHandler: Ember.get(dynamicAction, 'actionHandler'),
-          actionName: Ember.get(dynamicAction, 'actionName'),
-          actionContext: Ember.get(dynamicAction, 'actionContext'),
-          actionArguments: Ember.get(dynamicAction, 'actionArguments')
-        });
+        result[on].pushObject(dynamicAction);
       }
 
       return result;

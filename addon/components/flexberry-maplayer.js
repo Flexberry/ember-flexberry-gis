@@ -30,6 +30,9 @@ const flexberryClassNames = {
   wrapper: null,
   visibilityCheckbox: flexberryClassNamesPrefix + '-visibility-checkbox',
   typeIcon: flexberryClassNamesPrefix + '-type-icon',
+  addButton: flexberryClassNamesPrefix + '-add-button',
+  editButton: flexberryClassNamesPrefix + '-edit-button',
+  removeButton: flexberryClassNamesPrefix + '-remove-button',
   baseClassNames: FlexberryTreenodeComponent.flexberryClassNames
 };
 
@@ -132,8 +135,8 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
   */
   _typeDidChange: Ember.on('init', Ember.observer('type', function() {
     let type = this.get('type');
-    let iconClass = 'marker icon';
 
+    let iconClass = 'marker icon';
     switch (type) {
       case 'group':
         iconClass = 'folder icon';
@@ -148,7 +151,29 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     this.set('_innerDynamicComponents.1.componentProperties.class', flexberryClassNames.typeIcon + ' ' + iconClass);
 
     // Show/hide flexberry-button for add operation.
-    this.set('_innerDynamicComponents.2.visible', type === 'group');
+    let readonly = this.get('readonly') === true;
+    this.set('_innerDynamicComponents.2.visible', type === 'group' && !readonly);
+  })),
+
+  /**
+    Observes & handles any changes in
+    {{#crossLink "FlexberryMaplayerComponent/readonly:property"}}'readonly' property{{/crossLink}},
+    then changes mode for visibility-checkbox and 'add', 'edit', 'remove' operations buttons visibility in
+    {{#crossLink "FlexberryMaplayerComponent/_innerDynamicComponents:property"}}'_innerDynamicComponents'{{/crossLink}}.
+
+    @method _readonlyDidChange
+    @private
+  */
+  _readonlyDidChange: Ember.on('init', Ember.observer('readonly', function() {
+    let readonly = this.get('readonly') === true;
+
+    // Change readonly-mode for visibility-checkbox.
+    this.set('_innerDynamicComponents.0..componentProperties.readonly', readonly);
+
+    // Show/hide flexberry-buttons for 'add', 'edit', 'remove' operations.
+    this.set('_innerDynamicComponents.2.visible', !readonly && this.get('type') === 'group');
+    this.set('_innerDynamicComponents.3.visible', !readonly);
+    this.set('_innerDynamicComponents.4.visible', !readonly);
   })),
 
   /**
@@ -244,7 +269,7 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
       to: 'headerEnd',
       componentName: 'flexberry-button',
       componentProperties: {
-        class: FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
+        class: flexberryClassNames.addButton + ' ' + FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
         iconClass: 'plus icon',
         dynamicProxyActions: Ember.A([{
           on: 'click',
@@ -255,7 +280,7 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
       to: 'headerEnd',
       componentName: 'flexberry-button',
       componentProperties: {
-        class: FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
+        class: flexberryClassNames.editButton + ' ' + FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
         iconClass: 'edit icon',
         dynamicProxyActions: Ember.A([{
           on: 'click',
@@ -266,7 +291,7 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
       to: 'headerEnd',
       componentName: 'flexberry-button',
       componentProperties: {
-        class: FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
+        class: flexberryClassNames.removeButton + ' ' + FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
         iconClass: 'trash icon',
         dynamicProxyActions: Ember.A([{
           on: 'click',
