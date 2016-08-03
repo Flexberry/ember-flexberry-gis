@@ -98,7 +98,7 @@ export default Ember.Component.extend(
 
     /**
       Create leaflet layer, should be overriden in child classes.
-      @method
+      @method createLayer
      */
     createLayer() {
       assert('BaseLayer\'s `createLayer` should be overriden.');
