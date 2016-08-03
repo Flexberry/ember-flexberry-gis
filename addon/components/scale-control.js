@@ -1,5 +1,4 @@
-import Ember from 'ember';
-import BaseControl from './flexberry-base-control';
+import BaseControl from 'ember-flexberry-gis/components/base-control';
 
 export default BaseControl.extend({
   leafletOptions: ['position', 'maxWidth', 'metric', 'imperial', 'updateWhenIdle'],
