@@ -56,41 +56,62 @@ export default Ember.Mixin.create({
     @private
   */
   _dynamicComponents: Ember.computed(
+    '_innerDynamicComponents.[]',
+    '_innerDynamicComponents.@each.to',
+    '_innerDynamicComponents.@each.componentName',
     'dynamicComponents.[]',
     'dynamicComponents.@each.to',
     'dynamicComponents.@each.componentName',
     function() {
-      let dynamicComponents = this.get('dynamicComponents');
       let result = {};
 
-      Ember.assert(
-        `Wrong type of \`dynamicComponents\` propery: ` +
-        `actual type is ${Ember.typeOf(dynamicComponents)}, but \`array\` is expected.`,
-        Ember.isNone(dynamicComponents) || Ember.isArray(dynamicComponents));
+      let includeDynamicComponents = (dynamicComponentsPropertyName) => {
+        let dynamicComponents = this.get(dynamicComponentsPropertyName);      
+        Ember.assert(
+          `Wrong type of \`${dynamicComponentsPropertyName}\` propery: ` +
+          `actual type is ${Ember.typeOf(dynamicComponents)}, but \`array\` is expected.`,
+          Ember.isNone(dynamicComponents) || Ember.isArray(dynamicComponents));
 
-      if (!Ember.isArray(dynamicComponents)) {
-        return result;
-      }
-
-      for (let i = 0, len = dynamicComponents.length; i < len; i++) {
-        let dynamicComponent = dynamicComponents[i];
-        validateDynamicComponentProperties(dynamicComponent, i);
-
-        let to = Ember.get(dynamicComponent, 'to');
-        if (Ember.isNone(result[to])) {
-          result[to] = Ember.A();
+        if (!Ember.isArray(dynamicComponents)) {
+          return result;
         }
 
-        result[to].pushObject({
-          visible: Ember.get(dynamicComponent, 'visible') !== false,
-          componentName: Ember.get(dynamicComponent, 'componentName'),
-          componentProperties: Ember.get(dynamicComponent, 'componentProperties')
-        });
-      }
+        for (let i = 0, len = dynamicComponents.length; i < len; i++) {
+          let dynamicComponent = dynamicComponents[i];
+          validateDynamicComponentProperties(dynamicComponent, i);
+
+          let to = Ember.get(dynamicComponent, 'to');
+          if (Ember.isNone(result[to])) {
+            result[to] = Ember.A();
+          }
+
+          result[to].pushObject({
+            visible: Ember.get(dynamicComponent, 'visible') !== false,
+            componentName: Ember.get(dynamicComponent, 'componentName'),
+            componentProperties: Ember.get(dynamicComponent, 'componentProperties')
+          });
+        }
+      };
+
+      // First include inner components.
+      includeDynamicComponents('_innerDynamicComponents');
+
+      // Include user-defined components.
+      includeDynamicComponents('dynamicComponents');      
 
       return result;
     }
   ),
+
+  /**
+    Inner child components which will be dynamically added to a defined component's places.
+
+    @property dynamicComponents
+    @type DynamicComponentObject[]
+    @default null
+    @private
+  */
+  _innerDynamicComponents: null,
 
   /**
     Additional child components which will be dynamically added to a defined component's places.

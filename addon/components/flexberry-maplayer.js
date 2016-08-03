@@ -109,45 +109,25 @@ const flexberryClassNames = {
 */
 let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
   /**
-    Dynamic properties for layer node's visibility checkbox.
-
-    @property _visibilityCheckboxProperties
-    @type Object
-    @default null
-    @private
-  */
-  _visibilityCheckboxProperties: null,
-
-  /**
     Observes & handles any changes in
     {{#crossLink "FlexberryMaplayerComponent/visibility:property"}}'visibility' property{{/crossLink}},
-    passes actual visibility value to a
-    {{#crossLink "FlexberryMaplayerComponent/_visibilityCheckboxProperties:property"}}'_visibilityCheckboxProperties'{{/crossLink}}.
+    passes actual visibility value to a related component settings in
+    {{#crossLink "FlexberryMaplayerComponent/_innerDynamicComponents:property"}}'_innerDynamicComponents'{{/crossLink}}.
 
     @method _visibilityDidChange
     @private
   */
   _visibilityDidChange: Ember.on('init', Ember.observer('visibility', function() {
-    this.set('_visibilityCheckboxProperties.value', this.get('visibility'));
+    this.set('_innerDynamicComponents.0.componentProperties.value', this.get('visibility'));
   })),
-
-  /**
-    Dynamic properties for layer node's icon (related to layer type).
-
-    @property _typeIconProperties
-    @type Object
-    @default null
-    @private
-  */
-  _typeIconProperties: null,
 
   /**
     Observes & handles any changes in
     {{#crossLink "FlexberryMaplayerComponent/type:property"}}'type' property{{/crossLink}},
-    calculates actual icon class dependent on type & passes calculated icon class to a
-    {{#crossLink "FlexberryMaplayerComponent/_typeIconProperties:property"}}'_typeIconProperties'{{/crossLink}}.
+    calculates actual icon class dependent on type & passes actual icon class to a related component settings in
+    {{#crossLink "FlexberryMaplayerComponent/_innerDynamicComponents:property"}}'_innerDynamicComponents'{{/crossLink}}.
 
-    @method _visibilityDidChange
+    @method _typeDidChange
     @private
   */
   _typeDidChange: Ember.on('init', Ember.observer('type', function() {
@@ -164,7 +144,11 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
         break;
     }
 
-    this.set('_typeIconProperties.class', flexberryClassNames.typeIcon + ' ' + iconClass);
+    // Set actual icon class for flexberry-icon.
+    this.set('_innerDynamicComponents.1.componentProperties.class', flexberryClassNames.typeIcon + ' ' + iconClass);
+
+    // Show/hide flexberry-button for add operation.
+    this.set('_innerDynamicComponents.2.visible', type === 'group');
   })),
 
   /**
@@ -178,14 +162,13 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
   */
   flexberryClassNames,
 
-  dynamicComponents: null,
-
   /**
     Tree node's caption (will be displayed in node's header).
 
     @property caption
     @type String
     @default null
+    @readOnly
   */
   caption: Ember.computed('name', function() {
     return this.get('name');
@@ -233,45 +216,66 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
   init() {
     this._super(...arguments);
 
-    // Add default components to layer nodes header.
-    let visibilityCheckboxProperties = {
-      class: flexberryClassNames.visibilityCheckbox + ' ' + FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
-      value: false,
-      dynamicProxyActions: Ember.A([{
-        on: 'change',
-        actionName: 'visibilityChange'
-      }, {
-        on: 'check',
-        actionName: 'becameVisible'
-      }, {
-        on: 'uncheck',
-        actionName: 'becameInvisible'
-      }])
-    };
-    this.set('_visibilityCheckboxProperties', visibilityCheckboxProperties);
-
-    let typeIconProperties = {
-      class: flexberryClassNames.typeIcon
-    };
-    this.set('_typeIconProperties', typeIconProperties);
-
-    let dynamicComponents = this.get('dynamicComponents');
-    if (!Ember.isArray(dynamicComponents)) {
-      dynamicComponents = Ember.A();
-      this.set('dynamicComponents', dynamicComponents);
-    }
-
-    dynamicComponents.insertAt(0, {
+    // Define additional child components as inner dynamic components (see dynamic-components mixin).
+    let innerDynamicComponents = Ember.A([{
       to: 'headerStart',
       componentName: 'flexberry-ddau-checkbox',
-      componentProperties: visibilityCheckboxProperties
-    });
-
-    dynamicComponents.insertAt(1, {
+      componentProperties: {
+        class: flexberryClassNames.visibilityCheckbox + ' ' + FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
+        value: false,
+        dynamicProxyActions: Ember.A([{
+          on: 'change',
+          actionName: 'visibilityChange'
+        }, {
+          on: 'check',
+          actionName: 'becameVisible'
+        }, {
+          on: 'uncheck',
+          actionName: 'becameInvisible'
+        }])
+      }
+    }, {
       to: 'headerStart',
       componentName: 'flexberry-icon',
-      componentProperties: typeIconProperties
-    });
+      componentProperties: {
+        class: flexberryClassNames.typeIcon
+      }
+    }, {
+      to: 'headerEnd',
+      componentName: 'flexberry-button',
+      componentProperties: {
+        class: FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
+        iconClass: 'plus icon',
+        dynamicProxyActions: Ember.A([{
+          on: 'click',
+          actionName: 'add'
+        }])
+      }
+    }, {
+      to: 'headerEnd',
+      componentName: 'flexberry-button',
+      componentProperties: {
+        class: FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
+        iconClass: 'edit icon',
+        dynamicProxyActions: Ember.A([{
+          on: 'click',
+          actionName: 'edit'
+        }])
+      }
+    }, {
+      to: 'headerEnd',
+      componentName: 'flexberry-button',
+      componentProperties: {
+        class: FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
+        iconClass: 'trash icon',
+        dynamicProxyActions: Ember.A([{
+          on: 'click',
+          actionName: 'remove'
+        }])
+      }
+    }]);
+
+    this.set('_innerDynamicComponents', innerDynamicComponents);
   }
 
   /**
