@@ -20,6 +20,6 @@ export default TileLayer.extend({
   ],
 
   createLayer() {
-    return L.tileLayer.wms(...this.get('requiredOptions'), this.get('options'));
+    return L.tileLayer.wms(this.get('url'), this.get('options'));
   }
 });

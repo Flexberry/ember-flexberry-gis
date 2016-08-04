@@ -1,3 +1,10 @@
-{{#each layers as |layer|}}
-  {{component (concat "layers/" layer.type "-layer") container=container model=layer}}
-{{/each}}
+{{#if leafletContainer}}
+  {{#each layers as |layer|}}
+    {{component (concat "layers/" layer.type "-layer")
+      leafletContainer=leafletContainer
+      index=layer.index
+      visibility=layer.visibility
+      dynamicProperties=layer.settingsAsObject
+      layers=layer.layers}}
+  {{/each}}
+{{/if}}

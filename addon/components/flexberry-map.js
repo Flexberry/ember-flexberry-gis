@@ -22,14 +22,6 @@ export default Ember.Component.extend(
     layout,
 
     /**
-      Model with map properties and layers.
-      @property model
-      @type NewPlatformFlexberryGISMap
-      @default null
-     */
-    model: null,
-
-    /**
       DOM element containig leaflet map.
       @property mapElement
       @type Element
@@ -39,17 +31,33 @@ export default Ember.Component.extend(
 
     leafletEvents: ['moveend'],
 
-    leafletOptions: ['zoomControl'],
+    leafletOptions: ['zoomControl', 'center', 'zoom', 'minZoom', 'maxZoom'],
 
     leafletProperties: ['zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions'],
+
+    /**
+      Latitude of map center
+      @property lat
+      @type numeric
+      @default null
+     */
+    lat: null,
+
+    /**
+      Longitude of map center
+      @property lng
+      @type numeric
+      @default null
+     */
+    lng: null,
 
     /**
       Center of current map.
       @property center
       @type L.LatLng
      */
-    center: Ember.computed('model.lat', 'model.lng', function () {
-      return L.latLng(this.get('model.lat') || 0, this.get('model.lng') || 0);
+    center: Ember.computed('lat', 'lng', function () {
+      return L.latLng(this.get('lat') || 0, this.get('lng') || 0);
     }),
 
     /**
@@ -57,9 +65,14 @@ export default Ember.Component.extend(
       @property zoom
       @type Int
      */
-    zoom: Ember.computed('model.zoom', function () {
-      return this.get('model.zoom');
-    }),
+    zoom: null,
+
+    /**
+      Array of map layers
+      @property layers
+      @type Array of NewPlatformFlexberryGISMapLayer
+     */
+    layers: null,
 
     /**
       Leaflet map object.
@@ -69,21 +82,13 @@ export default Ember.Component.extend(
      */
     _layer: null,
 
-    init() {
+    didInsertElement() {
       this._super(...arguments);
-      let mapElement = Ember.$("<div>")[0];
-      this.set('mapElement', mapElement);
-      let map = L.map(mapElement, this.get('options'));
+      let map = L.map(this.get('element'), this.get('options'));
       this.set('_layer', map);
       this._addObservers();
       this._addEventListeners();
-    },
-
-    didInsertElement() {
-      this._super(...arguments);
-      this.$().append(this.get('mapElement'));
-      let map = this.get('_layer');
-      map.setView(this.get('center'), this.get('zoom'));
+      this.sendAction('leafletMapDidInit', map);
     },
 
     willDestoryElement() {

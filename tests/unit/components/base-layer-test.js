@@ -54,7 +54,7 @@ test('should call toggleVisible and setZIndex on render', function(assert) {
   assert.ok(setZIndex.called, 'should call setZIndex');
 });
 
-test('should call container addLayer\removeLayer based on visibility property', function(assert) {
+test('should call container addLayer/removeLayer based on visibility property', function(assert) {
   assert.expect(4);
 
   let addLayer = sinon.spy();
@@ -63,7 +63,7 @@ test('should call container addLayer\removeLayer based on visibility property', 
   let component = this.subject({
     createLayer,
 
-    container: {
+    leafletContainer: {
       addLayer,
       removeLayer
     }

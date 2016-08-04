@@ -8,9 +8,9 @@ moduleForComponent('layers/group-layer', 'Integration | Component | layers/group
 test('it renders', function(assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
-  this.set('container', L.layerGroup());
+  this.set('leafletContainer', L.layerGroup());
 
-  this.render(hbs`{{layers/group-layer container=container}}`);
+  this.render(hbs`{{layers/group-layer leafletContainer=leafletContainer}}`);
 
   assert.equal(this.$().text().trim(), '');
 });
