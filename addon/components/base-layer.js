@@ -26,11 +26,11 @@ export default Ember.Component.extend(
 
     /**
       Leaflet container for this layer.
-      @property container
+      @property leafletContainer
       @type L.Map|L.LayerGroup
       @default null
      */
-    container: null,
+    leafletContainer: null,
 
     /**
       This layer index, used for layer ordering in Map.
@@ -73,12 +73,13 @@ export default Ember.Component.extend(
       @method toggleVisible
      */
     toggleVisible: Ember.observer('visibility', function () {
-      Ember.assert('Try to change layer visibility without container', this.get('container'));
+      let container = this.get('leafletContainer');
+      //Ember.assert('Try to change layer visibility without container', container);
       if (this.get('visibility')) {
-        this.get('container').addLayer(this.get('_layer'));
+        container.addLayer(this.get('_layer'));
       }
       else {
-        this.get('container').removeLayer(this.get('_layer'));
+        container.removeLayer(this.get('_layer'));
       }
     }),
 

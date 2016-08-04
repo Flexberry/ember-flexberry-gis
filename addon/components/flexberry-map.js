@@ -31,7 +31,7 @@ export default Ember.Component.extend(
 
     leafletEvents: ['moveend'],
 
-    leafletOptions: ['zoomControl'],
+    leafletOptions: ['zoomControl', 'center', 'zoom', 'minZoom', 'maxZoom'],
 
     leafletProperties: ['zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions'],
 
@@ -82,22 +82,13 @@ export default Ember.Component.extend(
      */
     _layer: null,
 
-    init() {
+    didInsertElement() {
       this._super(...arguments);
-      let mapElement = Ember.$("<div>")[0];
-      this.set('mapElement', mapElement);
-      let map = L.map(mapElement, this.get('options'));
+      let map = L.map(this.get('element'), this.get('options'));
       this.set('_layer', map);
       this._addObservers();
       this._addEventListeners();
       this.sendAction('leafletMapDidInit', map);
-    },
-
-    didInsertElement() {
-      this._super(...arguments);
-      this.$().append(this.get('mapElement'));
-      let map = this.get('_layer');
-      map.setView(this.get('center'), this.get('zoom'));
     },
 
     willDestoryElement() {
