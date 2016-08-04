@@ -16,6 +16,7 @@ export default EditFormRoute.extend(FlexberryMapLoadLayersMixin, {
   modelName: 'new-platform-flexberry-g-i-s-map',
 
   model() {
-    return this.loadMapLayers(this._super(...arguments));
+    let mapPromise = this._super(...arguments);
+    return this.loadMapLayers(mapPromise);
   }
 });
