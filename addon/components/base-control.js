@@ -10,13 +10,9 @@ import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
   BaseControl component for leaflet map controls
   @class BaseControlComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses LeafletOptionsMixin
 */
 export default Ember.Component.extend(LeafletOptionsMixin, {
-  /**
-    Overload wrapper tag name for disabling wrapper.
-  */
-  tagName: '',
-
   /**
     Leaflet map for this control
     @property map
@@ -24,6 +20,16 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
     @default null
    */
   map: null,
+
+  /**
+    Overload wrapper tag name for disabling wrapper.
+  */
+  tagName: '',
+
+  didInsertElement() {
+    this._super(...arguments);
+    this.initControl();
+  },
 
   /**
     Creates control instance, should be overridden in child classes
@@ -43,10 +49,5 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
       this.set('control', control);
       leafletMap.addControl(control);
     }
-  }),
-
-  didInsertElement() {
-    this._super(...arguments);
-    this.initControl();
-  }
+  })
 });

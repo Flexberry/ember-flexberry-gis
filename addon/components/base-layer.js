@@ -13,12 +13,24 @@ const { assert } = Ember;
   BaseLayer component for other flexberry-gis layers.
   @class BaseLayerComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses DynamicPropertiesMixin
+  @uses LeafletOptionsMixin
+  @uses LeafletPropertiesMixin
  */
 export default Ember.Component.extend(
   DynamicPropertiesMixin,
   LeafletOptionsMixin,
   LeafletPropertiesMixin,
   {
+    /**
+      Leaflet layer object init by settings from model.
+      @property _layer
+      @type L.Layer
+      @default null
+      @private
+     */
+    _layer: undefined,
+
     /**
       Overload wrapper tag name for disabling wrapper.
      */
@@ -52,21 +64,24 @@ export default Ember.Component.extend(
     }),
 
     /**
-      Leaflet layer object init by settings from model.
-      @property _layer
-      @type L.Layer
-      @default null
-      @private
-     */
-    _layer: undefined,
-
-    /**
       Flag, indicates visible or not current layer on map.
       @property visibility
       @type Boolean
       @default null
      */
     visibility: null,
+
+    init() {
+      this._super(...arguments);
+      this.set('_layer', this.createLayer());
+      this._addObservers();
+    },
+
+    didInsertElement() {
+      this._super(...arguments);
+      this.toggleVisible();
+      this.setZIndex();
+    },
 
     /**
       Switch layer visible on map based on visibility property.
@@ -89,17 +104,5 @@ export default Ember.Component.extend(
      */
     createLayer() {
       assert('BaseLayer\'s `createLayer` should be overridden.');
-    },
-
-    init() {
-      this._super(...arguments);
-      this.set('_layer', this.createLayer());
-      this._addObservers();
-    },
-
-    didInsertElement() {
-      this._super(...arguments);
-      this.toggleVisible();
-      this.setZIndex();
     }
   });
