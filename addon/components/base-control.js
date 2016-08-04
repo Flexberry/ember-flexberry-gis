@@ -26,7 +26,7 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
   map: null,
 
   /**
-    Creates control instance
+    Creates control instance, should be overridden in child classes
     @method createControl
     @return {L.Control} Returns new created control
    */
@@ -46,6 +46,7 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
   }),
 
   didInsertElement() {
+    this._super(...arguments);
     this.initControl();
   }
 });
