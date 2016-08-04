@@ -118,7 +118,7 @@ export default Ember.Mixin.create({
         {{flexberry-maplayers
           name="Tree node with checkbox"
           visibility=layer.visibility
-          visiblilityChange=(action "onMapLayerVisibilityChange" "layer.visibility")
+          changeVisiblility=(action "onMapLayerChangeVisibility" "layer.visibility")
         }}
       ```
 
@@ -131,7 +131,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerVisibilityChange(...args) {
+    onMapLayerChangeVisibility(...args) {
       let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
 
@@ -212,6 +212,97 @@ export default Ember.Mixin.create({
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxUncheck');
 
       actionHandler.apply(this, args);
-    }
-  }
+    },
+
+    /**
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.addChild:method"}}flexberry-maplayers component's 'addChild' action{{/crossLink}}.
+      It adds new child layer.
+
+      @method actions.onMapLayerAddChild
+      @param {String} layerPropertyPath Path to a layer, which to which child must be added on action.
+      @param {Object} e Action's event object.
+      @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
+      which describes event that triggers 'addChild' action.
+
+      @example
+      templates/my-form.hbs
+      ```handlebars
+        {{flexberry-maplayer
+          name="Tree node with checkbox"
+          addChild=(action "onMapLayerAddChild" "layers.0")
+        }}
+      ```
+
+      controllers/my-form.js
+      ```javascript
+        import Ember from 'ember';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
+
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
+        });
+      ```
+    */
+    onMapLayerAddChild(...args) {
+      let childLayersPropertyPath = args[0];
+      Ember.assert(
+        `Wrong type of \`childLayersPropertyPath\` argument: actual type is \`${Ember.typeOf(childLayersPropertyPath)}\`, ` +
+        `but \`string\` is expected`,
+        Ember.typeOf(childLayersPropertyPath) === 'string');
+
+      let childLayers = this.get(childLayersPropertyPath);
+      if (Ember.isNone(childLayers)) {
+        childLayers = Ember.A();
+        this.set(childLayersPropertyPath, childLayers);
+      }
+
+      Ember.assert(
+        `Wrong type of \`${childLayersPropertyPath}\` property: actual type is \`${Ember.typeOf(childLayers)}\`, ` +
+        `but \`Ember.NativeArray\` is expected`,
+        Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
+
+      let addChildLayer = (childLayer) => {
+        Ember.assert(
+          `Wrong type of \`childLayer\` argument: actual type is \`${Ember.typeOf(childLayer)}\`, ` +
+          `but \`object\` or  \`instance\` is expected`,
+          Ember.isNone(childLayer) || Ember.typeOf(childLayer) === 'object' || Ember.typeOf(childLayer) === 'instance');
+
+        if (Ember.isNone(childLayer)) {
+          return;
+        }
+
+        childLayers.pushObject(childLayer);
+      };
+
+      let createdLayer = this.createMapLayer();
+      if (createdLayer instanceof Ember.RSVP.Promise) {
+        createdLayer.then(addChildLayer);
+      } else {
+        addChildLayer(createdLayer);
+      }
+    },
+  },
+
+  createMapLayer() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      resolve({
+        name: 'New layer',
+        type: 'wms',
+        visibility: true
+      });
+    });
+  },
+
+  editMapLayer() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      resolve({
+        name: 'Edited layer',
+      });
+    });
+  },
+
+  removeMapLayer() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      resolve(true);
+    });
+  },
 });

@@ -128,7 +128,7 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
     '    visibility=hbsLayers.0.visibility<br>' +
     '    readonly=hbsLayers.0.readonly<br>' +
     '    headerClick=(action "onMapLayerHeaderClick" "hbsLayers.0")<br>' +
-    '    visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.0.visibility")<br>' +
+    '    changeVisibility=(action "onMapLayerChangeVisibility" "hbsLayers.0.visibility")<br>' +
     '  }}<br>' +
     '    {{#flexberry-maplayers}}<br>' +
     '      {{flexberry-maplayer<br>' +
@@ -137,7 +137,7 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
     '        visibility=hbsLayers.0.layers.0.visibility<br>' +
     '        readonly=hbsLayers.0.layers.0.readonly<br>' +
     '        headerClick=(action "onMapLayerHeaderClick" "hbsLayers.0.layers.0")<br>' +
-    '        visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.0.layers.0.visibility")<br>' +
+    '        changeVisibility=(action "onMapLayerChangeVisibility" "hbsLayers.0.layers.0.visibility")<br>' +
     '      }}<br>' +
     '      {{flexberry-maplayer<br>' +
     '        name=hbsLayers.0.layers.1.name<br>' +
@@ -145,7 +145,7 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
     '        visibility=hbsLayers.0.layers.1.visibility<br>' +
     '        readonly=hbsLayers.0.layers.1.readonly<br>' +
     '        headerClick=(action "onMapLayerHeaderClick" "hbsLayers.0.layers.1")<br>' +
-    '        visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.0.layers.1.visibility")<br>' +
+    '        changeVisibility=(action "onMapLayerChangeVisibility" "hbsLayers.0.layers.1.visibility")<br>' +
     '      }}<br>' +
     '    {{/flexberry-maplayers}}<br>' +
     '  {{/flexberry-maplayer}}<br>' +
@@ -155,7 +155,7 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
     '    visibility=hbsLayers.1.visibility<br>' +
     '    readonly=hbsLayers.1.readonly<br>' +
     '    headerClick=(action "onMapLayerHeaderClick" "hbsLayers.1")<br>' +
-    '    visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.1.visibility")<br>' +
+    '    changeVisibility=(action "onMapLayerChangeVisibility" "hbsLayers.1.visibility")<br>' +
     '  }}<br>' +
     '    {{#flexberry-maplayers}}<br>' +
     '      {{flexberry-maplayer<br>' +
@@ -164,7 +164,7 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
     '        visibility=hbsLayers.1.layers.0.visibility<br>' +
     '        readonly=hbsLayers.1.layers.0.readonly<br>' +
     '        headerClick=(action "onMapLayerHeaderClick" "hbsLayers.1.layers.0")<br>' +
-    '        visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.1.layers.0.visibility")<br>' +
+    '        changeVisibility=(action "onMapLayerChangeVisibility" "hbsLayers.1.layers.0.visibility")<br>' +
     '      }}<br>' +
     '    {{/flexberry-maplayers}}<br>' +
     '  {{/flexberry-maplayer}}<br>' +
@@ -174,7 +174,7 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
     '    visibility=hbsLayers.2.visibility<br>' +
     '    readonly=hbsLayers.2.readonly<br>' +
     '    headerClick=(action "onMapLayerHeaderClick" "hbsLayers.2")<br>' +
-    '    visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.2.visibility")<br>' +
+    '    changeVisibility=(action "onMapLayerChangeVisibility" "hbsLayers.2.visibility")<br>' +
     '  }}<br>' +
     '{{/flexberry-maplayers}}'),
 
@@ -277,6 +277,12 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
 
     return componentSettingsMetadata;
   }),
+
+  init() {
+    this._super(...arguments);
+
+    window.hbsLayers = this.get('hbsLayers');
+  },
 
   actions: {
     /**

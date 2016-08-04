@@ -25,7 +25,9 @@ import layout from '../templates/components/flexberry-tree';
 const flexberryClassNamesPrefix = 'flexberry-tree';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix
+  wrapper: flexberryClassNamesPrefix,
+  startToolbar: flexberryClassNamesPrefix + '-start-toolbar',
+  endToolbar: flexberryClassNamesPrefix + '-end-toolbar'
 };
 
 /**
@@ -121,14 +123,33 @@ let FlexberryTreeComponent = Ember.Component.extend(
 
     @property _hasNodes
     @type boolean
-    @readonly
+    @default null
     @private
   */
-  _hasNodes: Ember.computed(function() {
-    let treeNodesPropertyName = this.get('_treeNodesPropertyName');
-    let nodes = this.get(treeNodesPropertyName);
+  _hasNodes: null,
 
-    return Ember.isArray(nodes) && nodes.length > 0;
+  /**
+    Flag: indicates whether tree start toolbar has some nested components.
+
+    @property _startToolbarHasComponents
+    @type boolean
+    @readOnly
+    @private
+  */
+  _startToolbarHasComponents: Ember.computed('_dynamicComponents.startToolbarLeft.[]', '_dynamicComponents.startToolbarRight.[]', function() {
+    return this.get('_dynamicComponents.startToolbarLeft.length') > 0 || this.get('_dynamicComponents.startToolbarRight.length') > 0;
+  }),
+
+  /**
+    Flag: indicates whether tree end toolbar has some nested components.
+
+    @property _endToolbarHasComponents
+    @type boolean
+    @readOnly
+    @private
+  */
+  _endToolbarHasComponents: Ember.computed('_dynamicComponents.endToolbarLeft.[]', '_dynamicComponents.endToolbarRight.[]', function() {
+    return this.get('_dynamicComponents.endToolbarLeft.length') > 0 || this.get('_dynamicComponents.endToolbarRight.length') > 0;
   }),
 
   /**
@@ -284,6 +305,49 @@ let FlexberryTreeComponent = Ember.Component.extend(
       // Reinitialize Semantic UI accordion module to change it's settings.
       this._initializeAccordion();
   }),
+
+  /**
+    Observers changes in component's property with
+    {{#crossLink "FlexberyTreeComponent/_treeNodesPropertyName:property"}}specified name{{/crossLink}},
+    updates {{#crossLink "FlexberyTreeComponent/_hasNodes:property"}}'_hasNodes' property{{/crossLink}}.
+
+    @method _treeNodesDidChange
+    @private
+  */
+  _treeNodesDidChange: null,
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    // Name of property in which child nodes should be stored.
+    let treeNodesPropertyName = this.get('_treeNodesPropertyName');
+
+    let treeNodesDidChange = () => {
+      let nodes = this.get(treeNodesPropertyName);
+
+      this.set('_hasNodes', Ember.isArray(nodes) && nodes.length > 0);
+    };
+    treeNodesDidChange();
+
+    this.set('_treeNodesDidChange', treeNodesDidChange);
+    this.addObserver(`${treeNodesPropertyName}.[]`, treeNodesDidChange);
+  },
+
+  /**
+    Destroys component.
+  */
+  willDestroy() {
+    this._super(...arguments);
+
+    // Name of property in which child nodes should be stored.
+    let treeNodesPropertyName = this.get('_treeNodesPropertyName');
+
+    let treeNodesDidChange = this.get('_treeNodesDidChange');
+    this.removeObserver(`${treeNodesPropertyName}.[]`, treeNodesDidChange);
+  },
 
   /**
     Initializes DOM-related component's properties.

@@ -1,3 +1,15 @@
+{{#if (and _isNotInsideTreeNode _startToolbarHasComponents)}}
+  <div class="{{flexberryClassNames.startToolbar}}">
+    <div class="left-aligned">
+      {{dynamic-components-placeholder name="startToolbarLeft"}}
+    </div>
+    <div class="right-aligned">
+      {{dynamic-components-placeholder name="startToolbarRight"}}
+    </div>
+    <div class="clear-aligned">
+    </div>
+  </div>
+{{/if}}
 {{#if _hasNodes}}
   {{#each (get this _treeNodesPropertyName) as |nodeProperties|}}
     {{component _treeNodeComponentName dynamicProperties=nodeProperties readonly=readonly}}
@@ -5,4 +17,16 @@
 {{/if}}
 {{#if hasBlock}}
   {{yield}}
+{{/if}}
+{{#if (and _isNotInsideTreeNode _endToolbarHasComponents)}}
+  <div class="{{flexberryClassNames.endToolbar}}">
+    <div class="left-aligned">
+      {{dynamic-components-placeholder name="endToolbarLeft"}}
+    </div>
+    <div class="right-aligned">
+      {{dynamic-components-placeholder name="endToolbarRight"}}
+    </div>
+    <div class="clear-aligned">
+    </div>
+  </div>
 {{/if}}

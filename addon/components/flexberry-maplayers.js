@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
 import FlexberryTreeComponent from './flexberry-tree';
 
 // Use base component's layout without changes.
@@ -12,20 +13,20 @@ import layout from '../templates/components/flexberry-tree';
   JSON-object containing string constants with CSS-classes names related to component's hbs-markup elements.
 
   @property {Object} flexberryClassNames
-  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-maplayers').
-  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name (null).
-  @property {Object} flexberryClassNames.baseClassNames Reference to
-  {{#crossLink "FlexberryTreeComponent/flexberryClassNames:property"}}base class 'flexberryClassNames'{{/crossLink}}.
+  @property {String} flexberryClassNames.flexberryMaplayers.prefix Component's CSS-class names prefix ('flexberry-maplayers').
+  @property {String} flexberryClassNames.flexberryMaplayers.wrapper Component's wrapping <div> CSS-class name (null).
+  @property {String} flexberryClassNames.flexberryMaplayers.addChildButton Component's 'add' button CSS-class name ('flexberry-maplayers-add-button').
   @readonly
   @static
 
   @for FlexberryMaplayersComponent
 */
 const flexberryClassNamesPrefix = 'flexberry-maplayers';
-const flexberryClassNames = {
+const flexberryClassNames = FlexberryTreeComponent.flexberryClassNames;
+flexberryClassNames.flexberryMaplayers = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
-  baseClassNames: FlexberryTreeComponent.flexberryClassNames
+  addChildButton: flexberryClassNamesPrefix + '-add-button'
 };
 
 /**
@@ -145,7 +146,7 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
     @type String[]
     @default ['flexberry-maplayers']
   */
-  classNames: [flexberryClassNames.wrapper],
+  classNames: [flexberryClassNames.flexberryMaplayers.wrapper],
 
   /**
     Map's layers.
@@ -157,7 +158,46 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
     @type Object[]
     @default null
   */
-  layers: null
+  layers: null,
+
+  /**
+    Observes & handles any changes in
+    {{#crossLink "FlexberryMaplayersComponent/readonly:property"}}'readonly' property{{/crossLink}},
+    then changes mode for 'add' operation button visibility in
+    {{#crossLink "FlexberryMaplayersComponent/_innerDynamicComponents:property"}}'_innerDynamicComponents'{{/crossLink}}.
+
+    @method _readonlyDidChange
+    @private
+  */
+  _readonlyDidChange: Ember.on('init', Ember.observer('readonly', function() {
+    let readonly = this.get('readonly') === true;
+
+    // Show/hide flexberry-button for 'add' operation.
+    this.set('_innerDynamicComponents.0.visible', !readonly);
+  })),
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    // Define additional child components as inner dynamic components (see dynamic-components mixin).
+    let innerDynamicComponents = Ember.A([{
+      to: 'startToolbarRight',
+      componentName: 'flexberry-button',
+      componentProperties: {
+        class: flexberryClassNames.flexberryMaplayers.addChildButton,
+        iconClass: 'plus icon',
+        dynamicProxyActions: Ember.A([{
+          on: 'click',
+          actionName: 'addChild'
+        }])
+      }
+    }]);
+
+    this.set('_innerDynamicComponents', innerDynamicComponents);
+  },
 });
 
 // Add component's CSS-class names as component's class static constants

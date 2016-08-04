@@ -112,31 +112,20 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
 
     @property _subtreeProperties
     @type Object
-    @readOnly
+    @default null
     @private
   */
-  _subtreeProperties: Ember.computed(function() {
-    let subtreeNodesPropertyName = this.get('_subtreeNodesPropertyName');
-    let subtreeProperties = {};
-    subtreeProperties[subtreeNodesPropertyName] = this.get(subtreeNodesPropertyName);
-
-    return subtreeProperties;
-  }),
+  _subtreeProperties: null,
 
   /**
     Flag: indicates whether some {{#crossLink "FlexberryTreenodeComponent/nodes:property"}}child 'nodes'{{/childNodes}} are defined.
 
     @property _hasNodes
     @type boolean
-    @readonly
+    @default null
     @private
   */
-  _hasNodes: Ember.computed(function() {
-    let subtreeNodesPropertyName = this.get('_subtreeNodesPropertyName');
-    let nodes = this.get(subtreeNodesPropertyName);
-
-    return Ember.isArray(nodes) && nodes.length > 0;
-  }),
+  _hasNodes: null,
 
   /**
     Reference to component's template.
@@ -239,6 +228,58 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
       }
     }
   },
+
+  /**
+    Observers changes in component's property with
+    {{#crossLink "FlexberyTreenodeComponent/_subtreeNodesPropertyName:property"}}specified name{{/crossLink}},
+    updates {{#crossLink "FlexberyTreenodeComponent/_hasNodes:property"}}'_hasNodes' property{{/crossLink}},
+    and {{#crossLink "FlexberyTreenodeComponent/_subtreeProperties:property"}}'_subtreeProperties' property{{/crossLink}}.
+
+    @method _subtreeNodesDidChange
+    @private
+  */
+  _subtreeNodesDidChange: null,
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    // Name of property in which child nodes should be stored.
+    let subtreeNodesPropertyName = this.get('_subtreeNodesPropertyName');
+
+    // Initialize properties object, which will be passed to child nodes subtree component.
+    this.set('_subtreeProperties', {});
+
+    let subtreeNodesDidChange = () => {
+      let nodes = this.get(subtreeNodesPropertyName);
+
+      let subtreeProperties = this.get('_subtreeProperties');
+      if (Ember.get(subtreeProperties, subtreeNodesPropertyName) !== subtreeProperties) {
+        Ember.set(subtreeProperties, subtreeNodesPropertyName, nodes);
+      }
+
+      this.set('_hasNodes', Ember.isArray(nodes) && nodes.length > 0);
+    };
+    subtreeNodesDidChange();
+
+    this.set('_subtreeNodesDidChange', subtreeNodesDidChange);
+    this.addObserver(`${subtreeNodesPropertyName}.[]`, subtreeNodesDidChange);
+  },
+
+  /**
+    Destroys component.
+  */
+  willDestroy() {
+    this._super(...arguments);
+
+    // Name of property in which child nodes should be stored.
+    let subtreeNodesPropertyName = this.get('_subtreeNodesPropertyName');
+
+    let subtreeNodesDidChange = this.get('_subtreeNodesDidChange');
+    this.removeObserver(`${subtreeNodesPropertyName}.[]`, subtreeNodesDidChange);
+  }
 
   /**
     Component's action invoking when tree node's header has been clicked.

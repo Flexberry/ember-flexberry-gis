@@ -15,25 +15,26 @@ import layout from '../templates/components/flexberry-treenode';
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-maplayer').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name (null because component hasn't wrapping <div>).
-  @property {String} flexberryClassNames.visibilityCheckbox Component's visibility chackbox CSS-class name ('flexberry-maplayer-visibility-checkbox').
-  @property {String} flexberryClassNames.typeIcon Component's type icon CSS-class name ('flexberry-maplayer-type-icon').
-  @property {Object} flexberryClassNames.baseClassNames Reference to
-  {{#crossLink "FlexberryTreenodeComponent/flexberryClassNames:property"}}base class 'flexberryClassNames'{{/crossLink}}.
+  @property {String} flexberryClassNames.flexberryMaplayer.visibilityCheckbox Component's visibility chackbox CSS-class name ('flexberry-maplayer-visibility-checkbox').
+  @property {String} flexberryClassNames.flexberryMaplayer.typeIcon Component's type icon CSS-class name ('flexberry-maplayer-type-icon').
+  @property {String} flexberryClassNames.flexberryMaplayer.flexberryMaplayers.addChildButton Component's 'add' button CSS-class name ('flexberry-maplayer-add-button').
+  @property {String} flexberryClassNames.flexberryMaplayer.flexberryMaplayers.editButton Component's 'edit' button CSS-class name ('flexberry-maplayer-edit-button').
+  @property {String} flexberryClassNames.flexberryMaplayer.flexberryMaplayers.removeButton Component's 'remove' button CSS-class name ('flexberry-maplayer-remove-button').
   @readonly
   @static
 
   @for FlexberryMaplayerComponent
 */
 const flexberryClassNamesPrefix = 'flexberry-maplayer';
-const flexberryClassNames = {
+const flexberryClassNames = FlexberryTreenodeComponent.flexberryClassNames;
+flexberryClassNames.flexberryMaplayer = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
   visibilityCheckbox: flexberryClassNamesPrefix + '-visibility-checkbox',
   typeIcon: flexberryClassNamesPrefix + '-type-icon',
-  addButton: flexberryClassNamesPrefix + '-add-button',
+  addChildButton: flexberryClassNamesPrefix + '-add-button',
   editButton: flexberryClassNamesPrefix + '-edit-button',
-  removeButton: flexberryClassNamesPrefix + '-remove-button',
-  baseClassNames: FlexberryTreenodeComponent.flexberryClassNames
+  removeButton: flexberryClassNamesPrefix + '-remove-button'
 };
 
 /**
@@ -112,6 +113,26 @@ const flexberryClassNames = {
 */
 let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
   /**
+    Name of component that will be used to display child nodes subtree.
+
+    @property _subtreeComponentName
+    @type String
+    @default 'flexberry-maplayers'
+    @private
+  */
+  _subtreeComponentName: 'flexberry-maplayers',
+
+  /**
+    Name of component's property in which child nodes (defined as JSON objects) are stored.
+
+    @property _subtreeNodesPropertyName
+    @type String
+    @default 'layers'
+    @private
+  */
+  _subtreeNodesPropertyName: 'layers',
+
+  /**
     Observes & handles any changes in
     {{#crossLink "FlexberryMaplayerComponent/visibility:property"}}'visibility' property{{/crossLink}},
     passes actual visibility value to a related component settings in
@@ -148,7 +169,7 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     }
 
     // Set actual icon class for flexberry-icon.
-    this.set('_innerDynamicComponents.1.componentProperties.class', flexberryClassNames.typeIcon + ' ' + iconClass);
+    this.set('_innerDynamicComponents.1.componentProperties.class', flexberryClassNames.flexberryMaplayer.typeIcon + ' ' + iconClass);
 
     // Show/hide flexberry-button for add operation.
     let readonly = this.get('readonly') === true;
@@ -168,7 +189,7 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     let readonly = this.get('readonly') === true;
 
     // Change readonly-mode for visibility-checkbox.
-    this.set('_innerDynamicComponents.0..componentProperties.readonly', readonly);
+    this.set('_innerDynamicComponents.0.componentProperties.readonly', readonly);
 
     // Show/hide flexberry-buttons for 'add', 'edit', 'remove' operations.
     this.set('_innerDynamicComponents.2.visible', !readonly && this.get('type') === 'group');
@@ -238,19 +259,22 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
   */
   layers: null,
 
+  /**
+    Initializes component.
+  */
   init() {
     this._super(...arguments);
 
     // Define additional child components as inner dynamic components (see dynamic-components mixin).
     let innerDynamicComponents = Ember.A([{
-      to: 'headerStart',
+      to: 'headerLeft',
       componentName: 'flexberry-ddau-checkbox',
       componentProperties: {
-        class: flexberryClassNames.visibilityCheckbox + ' ' + FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
+        class: flexberryClassNames.flexberryMaplayer.visibilityCheckbox + ' ' + flexberryClassNames.treeNodePreventExpandCollapse,
         value: false,
         dynamicProxyActions: Ember.A([{
           on: 'change',
-          actionName: 'visibilityChange'
+          actionName: 'changeVisibility'
         }, {
           on: 'check',
           actionName: 'becameVisible'
@@ -260,27 +284,27 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
         }])
       }
     }, {
-      to: 'headerStart',
+      to: 'headerLeft',
       componentName: 'flexberry-icon',
       componentProperties: {
-        class: flexberryClassNames.typeIcon
+        class: flexberryClassNames.flexberryMaplayer.typeIcon
       }
     }, {
-      to: 'headerEnd',
+      to: 'headerRight',
       componentName: 'flexberry-button',
       componentProperties: {
-        class: flexberryClassNames.addButton + ' ' + FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
+        class: flexberryClassNames.flexberryMaplayer.addChildButton + ' ' + flexberryClassNames.treeNodePreventExpandCollapse,
         iconClass: 'plus icon',
         dynamicProxyActions: Ember.A([{
           on: 'click',
-          actionName: 'add'
+          actionName: 'addChild'
         }])
       }
     }, {
-      to: 'headerEnd',
+      to: 'headerRight',
       componentName: 'flexberry-button',
       componentProperties: {
-        class: flexberryClassNames.editButton + ' ' + FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
+        class: flexberryClassNames.flexberryMaplayer.editButton + ' ' + flexberryClassNames.treeNodePreventExpandCollapse,
         iconClass: 'edit icon',
         dynamicProxyActions: Ember.A([{
           on: 'click',
@@ -288,10 +312,10 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
         }])
       }
     }, {
-      to: 'headerEnd',
+      to: 'headerRight',
       componentName: 'flexberry-button',
       componentProperties: {
-        class: flexberryClassNames.removeButton + ' ' + FlexberryTreenodeComponent.flexberryClassNames.treeNodePreventExpandCollapse,
+        class: flexberryClassNames.flexberryMaplayer.removeButton + ' ' + flexberryClassNames.treeNodePreventExpandCollapse,
         iconClass: 'trash icon',
         dynamicProxyActions: Ember.A([{
           on: 'click',
@@ -301,7 +325,7 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     }]);
 
     this.set('_innerDynamicComponents', innerDynamicComponents);
-  }
+  },
 
   /**
     Component's action invoking when layer node's header has been clicked.
@@ -311,6 +335,8 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes event that triggers this action.
   */
+  headerClick() {
+  },
 
   /**
     Component's action invoking before layer node will be expanded.
@@ -321,6 +347,8 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes event that triggers node's expanding.
   */
+  beforeExpand() {
+  },
 
   /**
     Component's action invoking before layer node will be collapsed.
@@ -331,14 +359,18 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes event that triggers node's collapsing.
   */
+  beforeCollapse() {
+  },
 
   /**
     Component's action invoking when layer node's 'visibility' state changed.
 
-    @method sendingActions.visiblilityChange
+    @method sendingActions.changeVisibility
     @param {Object} e Event object from
     {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
   */
+  changeVisibility() {
+  },
 
   /**
     Component's action invoking when layer node's 'visibility' state changed to 'visibility=true'.
@@ -347,6 +379,8 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     @param {Object} e Event object from
     {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.check:method"}}flexberry-ddau-checkbox 'check' action{{/crossLink}}.
   */
+  becameVisible() {
+  },
 
   /**
     Component's action invoking when layer node's 'visibility' state changed to 'visibility=false'.
@@ -355,6 +389,50 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     @param {Object} e Event object from
     {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.uncheck:method"}}flexberry-ddau-checkbox 'uncheck' action{{/crossLink}}.
   */
+  becameInvisible() {
+  },
+
+  /**
+    Component's action invoking when user wants to add child layer into current.
+
+    @method sendingActions.addChild
+    @param {Object} e Action's event object.
+    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
+    which describes event that triggers this action.
+  */
+  addChild() {
+    Ember.assert(
+      `Handler for \`addChild\` action in not defined for \`flexberry-maplayer\` component.`,
+      false);
+  },
+
+  /**
+    Component's action invoking when user wants to edit current layer.
+
+    @method sendingActions.edit
+    @param {Object} e Action's event object.
+    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
+    which describes event that triggers this action.
+  */
+  edit() {
+    Ember.assert(
+      `Handler for \`edit\` action in not defined for \`flexberry-maplayer\` component.`,
+      false);
+  },
+
+  /**
+    Component's action invoking when user wants to remove current layer.
+
+    @method sendingActions.remove
+    @param {Object} e Action's event object.
+    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
+    which describes event that triggers this action.
+  */
+  remove() {
+    Ember.assert(
+      `Handler for \`remove\` action in not defined for \`flexberry-maplayer\` component.`,
+      false);
+  },
 });
 
 // Add component's CSS-class names as component's class static constants

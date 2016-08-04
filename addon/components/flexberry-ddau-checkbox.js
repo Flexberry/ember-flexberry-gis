@@ -197,7 +197,7 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
 
     // Destroys Semantic UI checkbox.
     this.$().checkbox('destroy');
-  }
+  },
 
   /**
     Component's action invoking when checkbox was clicked and it's 'checked' state changed.
@@ -208,6 +208,8 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes inner input's 'change' event.
   */
+  change() {
+  },
 
   /**
     Component's action invoking when checkbox was clicked and it's 'checked' state changed to 'checked=true'.
@@ -218,6 +220,8 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes inner input's 'change' event.
   */
+  check() {
+  },
 
   /**
     Component's action invoking when checkbox was clicked and it's 'checked' state changed to 'checked=false'.
@@ -228,6 +232,8 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes inner input's 'change' event.
   */
+  uncheck() {
+  }
 });
 
 // Add component's CSS-class names as component's class static constants

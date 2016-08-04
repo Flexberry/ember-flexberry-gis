@@ -28,7 +28,7 @@
             visibility=hbsLayers.0.visibility
             readonly=hbsLayers.0.readonly
             headerClick=(action "onMapLayerHeaderClick" "hbsLayers.0")
-            visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.0.visibility")
+            changeVisibility=(action "onMapLayerChangeVisibility" "hbsLayers.0.visibility")
           }}
             {{#flexberry-maplayers}}
               {{flexberry-maplayer
@@ -37,7 +37,7 @@
                 visibility=hbsLayers.0.layers.0.visibility
                 readonly=hbsLayers.0.layers.0.readonly
                 headerClick=(action "onMapLayerHeaderClick" "hbsLayers.0.layers.0")
-                visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.0.layers.0.visibility")
+                changeVisibility=(action "onMapLayerChangeVisibility" "hbsLayers.0.layers.0.visibility")
               }}
               {{flexberry-maplayer
                 name=hbsLayers.0.layers.1.name
@@ -45,7 +45,7 @@
                 visibility=hbsLayers.0.layers.1.visibility
                 readonly=hbsLayers.0.layers.1.readonly
                 headerClick=(action "onMapLayerHeaderClick" "hbsLayers.0.layers.1")
-                visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.0.layers.1.visibility")
+                changeVisibility=(action "onMapLayerChangeVisibility" "hbsLayers.0.layers.1.visibility")
               }}
             {{/flexberry-maplayers}}
           {{/flexberry-maplayer}}
@@ -55,7 +55,7 @@
             visibility=hbsLayers.1.visibility
             readonly=hbsLayers.1.readonly
             headerClick=(action "onMapLayerHeaderClick" "hbsLayers.1")
-            visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.1.visibility")
+            changeVisibility=(action "onMapLayerChangeVisibility" "hbsLayers.1.visibility")
           }}
             {{#flexberry-maplayers}}
               {{flexberry-maplayer
@@ -64,7 +64,7 @@
                 visibility=hbsLayers.1.layers.0.visibility
                 readonly=hbsLayers.1.layers.0.readonly
                 headerClick=(action "onMapLayerHeaderClick" "hbsLayers.1.layers.0")
-                visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.1.layers.0.visibility")
+                changeVisibility=(action "onMapLayerChangeVisibility" "hbsLayers.1.layers.0.visibility")
               }}
             {{/flexberry-maplayers}}
           {{/flexberry-maplayer}}
@@ -74,7 +74,7 @@
             visibility=hbsLayers.2.visibility
             readonly=hbsLayers.2.readonly
             headerClick=(action "onMapLayerHeaderClick" "hbsLayers.2")
-            visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.2.visibility")
+            changeVisibility=(action "onMapLayerChangeVisibility" "hbsLayers.2.visibility")
           }}
         {{/flexberry-maplayers}}
       {{/settings-example}}
