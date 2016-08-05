@@ -25,6 +25,7 @@ before_install:
 install:
   - npm install -g phantomjs-prebuilt
   - npm install -g bower
+  - npm install -g firebase-tools
   - npm install
   - npm rebuild node-sass
   - bower install
@@ -33,4 +34,6 @@ script:
   - ember try $EMBER_TRY_SCENARIO test
 
 after_success:
+  - test $EMBER_TRY_SCENARIO == "default" && test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "develop" && ember build -prod && firebase deploy --project flexberry-ember-gis-dev --token "$FIREBASE_TOKEN" -m "Travis Build №$TRAVIS_BUILD_NUMBER."
+  - test $EMBER_TRY_SCENARIO == "default" && test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && ember build -prod && firebase deploy --project flexberry-ember-gis --token "$FIREBASE_TOKEN" -m "Travis Build №$TRAVIS_BUILD_NUMBER."
   - test $EMBER_TRY_SCENARIO == "default" && test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_BRANCH == "develop") && bash scripts/update-docs.sh
