@@ -20,6 +20,13 @@ Ember addon for web mapping SPA.
 
 * [Auto-generated](http://flexberry.github.io/)
 
+## Demo
+
+Ember Flexberry comes with a [dummy app](/tests/dummy) that covers functionality of the addon.
+
+* [Stable version (master branch)](https://flexberry-ember-gis.firebaseapp.com)
+* [Bleeding edge version (develop branch)](https://flexberry-ember-dev.firebaseapp.com)
+
 ## Collaborating / Development
 
 Information on how to contribute to the project you can find [here](https://github.com/Flexberry/Home/blob/master/CONTRIBUTING.md).
