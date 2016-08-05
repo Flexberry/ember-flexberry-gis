@@ -22,7 +22,7 @@ Ember addon for web mapping SPA.
 
 ## Demo
 
-Ember Flexberry comes with a [dummy app](/tests/dummy) that covers functionality of the addon.
+Ember Flexberry GIS comes with a [dummy app](/tests/dummy) that covers functionality of the addon.
 
 * [Stable version (master branch)](https://flexberry-ember-gis.firebaseapp.com)
 * [Bleeding edge version (develop branch)](https://flexberry-ember-dev.firebaseapp.com)
