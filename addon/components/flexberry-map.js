@@ -13,25 +13,53 @@ import layout from '../templates/components/flexberry-map';
   FlexberryMap component for render leaflet map in ember applications.
   @class FlexberryMapComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses LeafletOptionsMixin
+  @uses LeafletPropertiesMixin
+  @uses LeafletEventsMixin
  */
 export default Ember.Component.extend(
   LeafletOptionsMixin,
   LeafletPropertiesMixin,
   LeafletEventsMixin,
   {
+    /**
+      Leaflet map object.
+      @property _layer
+      @type L.Map
+      @default null
+      @private
+     */
+    _layer: null,
+
     layout,
 
-    /**
-      DOM element containig leaflet map.
-      @property mapElement
-      @type Element
-      @default null
-     */
-    mapElement: null,
+    // Events this map can respond to.
+    leafletEvents: [
+      'click', 'dblclick', 'mousedown', 'mouseup', 'mouseover', 'mouseout',
+      'mousemove', 'contextmenu', 'focus', 'blur', 'preclick', 'load',
+      'unload', 'viewreset', 'movestart', 'move', 'moveend', 'dragstart',
+      'drag', 'dragend', 'zoomstart', 'zoomend', 'zoomlevelschange',
+      'resize', 'autopanstart', 'layeradd', 'layerremove',
+      'baselayerchange', 'overlayadd', 'overlayremove', 'locationfound',
+      'locationerror', 'popupopen', 'popupclose'
+    ],
 
-    leafletEvents: ['moveend'],
-
-    leafletOptions: ['zoomControl', 'center', 'zoom', 'minZoom', 'maxZoom'],
+    leafletOptions: [
+      // Map state options
+      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'crs',
+      // Interaction options
+      'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
+      'tap', 'tapTolerance', 'trackResize', 'worldCopyJump', 'closePopupOnClick',
+      'bounceAtZoomLimits',
+      // Keyboard navigation options
+      'keyboard', 'keyboardPanOffset', 'keyboardZoomOffset',
+      // Panning Inertia Options
+      'inertia', 'inertiaDeceleration', 'inertiaMaxSpeed', 'inertiaThreshold',
+      // Control options
+      'zoomControl', 'attributionControl',
+      // Animation options
+      'fadeAnimation', 'zoomAnimation', 'zoomAnimationThreshold', 'markerZoomAnimation'
+    ],
 
     leafletProperties: ['zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions'],
 
@@ -55,6 +83,7 @@ export default Ember.Component.extend(
       Center of current map.
       @property center
       @type L.LatLng
+      @default [0, 0]
      */
     center: Ember.computed('lat', 'lng', function () {
       return L.latLng(this.get('lat') || 0, this.get('lng') || 0);
@@ -64,6 +93,7 @@ export default Ember.Component.extend(
       Current map zoom.
       @property zoom
       @type Int
+      @default null
      */
     zoom: null,
 
@@ -73,14 +103,6 @@ export default Ember.Component.extend(
       @type Array of NewPlatformFlexberryGISMapLayer
      */
     layers: null,
-
-    /**
-      Leaflet map object.
-      @property _layer
-      @type L.Map
-      @default null
-     */
-    _layer: null,
 
     didInsertElement() {
       this._super(...arguments);

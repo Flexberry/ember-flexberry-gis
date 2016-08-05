@@ -31,3 +31,6 @@ install:
 
 script:
   - ember try $EMBER_TRY_SCENARIO test
+
+after_success:
+  - test $EMBER_TRY_SCENARIO == "default" && test $TRAVIS_PULL_REQUEST == "false" && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_BRANCH == "develop") && bash scripts/update-docs.sh
