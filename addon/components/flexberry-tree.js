@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import RequiredActionsMixin from '../mixins/required-actions';
 import DomActionsMixin from '../mixins/dom-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
@@ -69,6 +70,7 @@ const flexberryClassNames = {
 
   @class FlexberryTreeComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses RequiredActionsMixin
   @uses DomActionsMixin
   @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
@@ -76,6 +78,7 @@ const flexberryClassNames = {
   @uses DynamicComponentsMixin
 */
 let FlexberryTreeComponent = Ember.Component.extend(
+  RequiredActionsMixin,
   DomActionsMixin,
   DynamicPropertiesMixin,
   DynamicActionsMixin,

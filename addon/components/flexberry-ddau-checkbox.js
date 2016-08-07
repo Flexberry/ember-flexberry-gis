@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import RequiredActionsMixin from '../mixins/required-actions';
 import DomActionsMixin from '../mixins/dom-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
@@ -79,6 +80,7 @@ const flexberryClassNames = {
 
   @class FlexberryDdauCheckboxComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses RequiredActionsMixin
   @uses DomActionsMixin
   @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
@@ -86,11 +88,23 @@ const flexberryClassNames = {
   @uses DynamicComponentsMixin
 */
 let FlexberryDdauCheckboxComponent = Ember.Component.extend(
+  RequiredActionsMixin,
   DomActionsMixin,
   DynamicPropertiesMixin,
   DynamicActionsMixin,
   DynamicProxyActionsMixin,
   DynamicComponentsMixin, {
+
+  /**
+    Component's required actions names.
+    For actions enumerated in this array an assertion exceptions will be thrown,
+    if actions handlers are not defined for them.
+
+    @property _requiredActions
+    @type String[]
+    @default ['change']
+  */
+  _requiredActionNames: ['change'],
 
   /**
     Reference to component's template.

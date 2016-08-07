@@ -106,7 +106,18 @@ test('Component invokes actions', function(assert) {
 });
 
 test('Component doesn\'t change binded value (without \'change\' action handler)', function(assert) {
-  assert.expect(3);
+  // Mock Ember.assert method.
+  let thrownExceptions = Ember.A();
+  let originalEmberAssert = Ember.assert;
+  Ember.assert = function(...args) {
+    try {
+      originalEmberAssert(...args);
+    } catch (ex) {
+      thrownExceptions.pushObject(ex);
+    }
+  };
+
+  assert.expect(4);
 
   this.set('flag', false);
   this.render(hbs`{{flexberry-ddau-checkbox value=flag}}`);
@@ -132,6 +143,14 @@ test('Component doesn\'t change binded value (without \'change\' action handler)
     this.get('flag'),
     false,
     'Component doesn\'t change binded value (without \'change\' action handler)');
+
+  assert.strictEqual(
+    thrownExceptions.length === 1 && (/.*required.*change.*action.*not.*defined.*/gi).test(thrownExceptions[0].message),
+    true,
+    'Component throws single exception if \'change\' action handler is not defined');
+
+  // Clean up after mock Ember.assert.
+  Ember.assert = originalEmberAssert;
 });
 
 test('Component changes binded value (with \'change\' action handler)', function(assert) {

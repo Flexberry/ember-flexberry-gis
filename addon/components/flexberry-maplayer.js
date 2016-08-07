@@ -113,6 +113,17 @@ flexberryClassNames.flexberryMaplayer = {
 */
 let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
   /**
+    Component's required actions names.
+    For actions enumerated in this array an assertion exceptions will be thrown,
+    if actions handlers are not defined for them.
+
+    @property _requiredActions
+    @type String[]
+    @default ['changeVisibility', 'addChild', 'edit', 'remove']
+  */
+  _requiredActionNames: ['changeVisibility', 'addChild', 'edit', 'remove'],
+
+  /**
     Name of component that will be used to display child nodes subtree.
 
     @property _subtreeComponentName
@@ -329,8 +340,6 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes event that triggers this action.
   */
-  headerClick() {
-  },
 
   /**
     Component's action invoking before layer node will be expanded.
@@ -341,8 +350,6 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes event that triggers node's expanding.
   */
-  beforeExpand() {
-  },
 
   /**
     Component's action invoking before layer node will be collapsed.
@@ -353,8 +360,6 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes event that triggers node's collapsing.
   */
-  beforeCollapse() {
-  },
 
   /**
     Component's action invoking when layer node's 'visibility' state changed.
@@ -363,8 +368,6 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     @param {Object} e Event object from
     {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
   */
-  changeVisibility() {
-  },
 
   /**
     Component's action invoking when user wants to add child layer into current.
@@ -374,11 +377,6 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes event that triggers this action.
   */
-  addChild() {
-    Ember.assert(
-      `Handler for \`addChild\` action in not defined for \`flexberry-maplayer\` component.`,
-      false);
-  },
 
   /**
     Component's action invoking when user wants to edit current layer.
@@ -388,11 +386,6 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes event that triggers this action.
   */
-  edit() {
-    Ember.assert(
-      `Handler for \`edit\` action in not defined for \`flexberry-maplayer\` component.`,
-      false);
-  },
 
   /**
     Component's action invoking when user wants to remove current layer.
@@ -402,11 +395,6 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes event that triggers this action.
   */
-  remove() {
-    Ember.assert(
-      `Handler for \`remove\` action in not defined for \`flexberry-maplayer\` component.`,
-      false);
-  },
 });
 
 // Add component's CSS-class names as component's class static constants

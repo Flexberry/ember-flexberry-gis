@@ -103,6 +103,17 @@ flexberryClassNames.flexberryMaplayers = {
 */
 let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
   /**
+    Component's required actions names.
+    For actions enumerated in this array an assertion exceptions will be thrown,
+    if actions handlers are not defined for them.
+
+    @property _requiredActions
+    @type String[]
+    @default ['addChild']
+  */
+  _requiredActionNames: ['addChild'],
+
+  /**
     Name of component that will be used to display tree nodes.
 
     @property _treeNodeComponentName
@@ -197,7 +208,16 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
     }]);
 
     this.set('_innerDynamicComponents', innerDynamicComponents);
-  },
+  }
+
+  /**
+    Component's action invoking when user wants to add child layer into tree's root.
+
+    @method sendingActions.addChild
+    @param {Object} e Action's event object.
+    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
+    which describes event that triggers this action.
+  */
 });
 
 // Add component's CSS-class names as component's class static constants
