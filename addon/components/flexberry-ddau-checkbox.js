@@ -41,7 +41,10 @@ const flexberryClassNames = {
   Usage with manual 'change' action handling:
   templates/my-form.hbs
   ```handlebars
-  {{flexberry-ddau-checkbox value=model.flag change=(action "onModelFlagChange")}}
+  {{flexberry-ddau-checkbox
+    value=model.flag
+    change=(action "onModelFlagChange")
+  }}
   ```
 
   controllers/my-form.js
@@ -59,7 +62,10 @@ const flexberryClassNames = {
 
   Usage with {{#crossLink "FlexberryDdauCheckboxActionsHandlerMixin"}}flexberry-ddau-checkbox-actions-handler mixin{{/crossLink}}:
   ```handlebars
-  {{flexberry-ddau-checkbox value=model.flag change=(action "onCheckboxChange" "model.flag")}}
+  {{flexberry-ddau-checkbox
+    value=model.flag
+    change=(action "onCheckboxChange" "model.flag")
+  }}
   ```
 
   controllers/my-form.js
@@ -150,9 +156,7 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
   actions: {
     /**
       Handles inner input's bubbled 'change' action.
-      Invokes component's {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'change'{{/crossLink}},
-      {{#crossLink "FlexberryDdauCheckbox/sendingActions.check:method"}}'check'{{/crossLink}},
-      {{#crossLink "FlexberryDdauCheckbox/sendingActions.uncheck:method"}}'uncheck'{{/crossLink}} actions.
+      Invokes component's {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'change'{{/crossLink}} action.
 
       @method actions.change
       @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
@@ -163,12 +167,6 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
 
       // Invoke component's custom 'change' action.
       this.sendAction('change', {
-        newValue: checked,
-        originalEvent: e
-      });
-
-      // Invoke state-related 'check' or 'uncheck' action.
-      this.sendAction(checked ? 'check' : 'uncheck', {
         newValue: checked,
         originalEvent: e
       });
@@ -208,32 +206,6 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes inner input's 'change' event.
   */
-  change() {
-  },
-
-  /**
-    Component's action invoking when checkbox was clicked and it's 'checked' state changed to 'checked=true'.
-
-    @method sendingActions.check
-    @param {Object} e Action's event object.
-    @param {Boolean} e.newValue Component's new value (always true in this action handlers).
-    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
-    which describes inner input's 'change' event.
-  */
-  check() {
-  },
-
-  /**
-    Component's action invoking when checkbox was clicked and it's 'checked' state changed to 'checked=false'.
-
-    @method sendingActions.uncheck
-    @param {Object} e Action's event object.
-    @param {Boolean} e.newValue Component's new value (always false in this action handlers).
-    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
-    which describes inner input's 'change' event.
-  */
-  uncheck() {
-  }
 });
 
 // Add component's CSS-class names as component's class static constants

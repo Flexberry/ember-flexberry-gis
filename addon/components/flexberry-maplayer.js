@@ -275,12 +275,6 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
         dynamicProxyActions: Ember.A([{
           on: 'change',
           actionName: 'changeVisibility'
-        }, {
-          on: 'check',
-          actionName: 'becameVisible'
-        }, {
-          on: 'uncheck',
-          actionName: 'becameInvisible'
         }])
       }
     }, {
@@ -370,26 +364,6 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
   */
   changeVisibility() {
-  },
-
-  /**
-    Component's action invoking when layer node's 'visibility' state changed to 'visibility=true'.
-
-    @method sendingActions.becameVisible
-    @param {Object} e Event object from
-    {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.check:method"}}flexberry-ddau-checkbox 'check' action{{/crossLink}}.
-  */
-  becameVisible() {
-  },
-
-  /**
-    Component's action invoking when layer node's 'visibility' state changed to 'visibility=false'.
-
-    @method sendingActions.becameInvisible
-    @param {Object} e Event object from
-    {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.uncheck:method"}}flexberry-ddau-checkbox 'uncheck' action{{/crossLink}}.
-  */
-  becameInvisible() {
   },
 
   /**
