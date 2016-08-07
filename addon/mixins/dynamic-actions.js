@@ -118,6 +118,22 @@ export default Ember.Mixin.create({
   dynamicActions: null,
 
   /**
+    Returns flag, indicating whether action handler is defined, for action with the specified name, or not.
+
+    @method _actionHandlerIsDefined
+    @param {Object} options Method options
+    @param {String} options.actionName Name of component's action for which handler's existence this method should check. 
+    @returns {Boolean} Flag, indicating whether action handler is defined, for action with the specified name, or not.
+    @private
+  */
+  _actionHandlerIsDefined(options) {
+    options = options || {};
+    let actionName = Ember.get(options, 'actionName');
+
+    return this.get(`_dynamicActions.${actionName}.length`) > 0 || this._super(...arguments);
+  },
+
+  /**
     Initializes dynamic actions logic.
   */
   init() {
@@ -131,12 +147,22 @@ export default Ember.Mixin.create({
 
     // Override 'sendAction' method to add some custom logic.
     this.sendAction = (...args) => {
-      // Call standard logic first (send action outside of the component).
-      originalSendAction.apply(this, args);
-
-      // Get dynamically binded action handlers.
       let actionName = args[0];
-      let dynamicActions = this.get('_dynamicActions.' + actionName);
+      let originalSendActionIsOverridden = originalSendAction !== Ember.Component.prototype.sendAction;
+      let outerActionHandlerIsDefined = Ember.typeOf(this.get(`attrs.${actionName}`)) === 'function' ||
+        Ember.typeOf(this.get(`attrs.${actionName}`)) === 'string';
+
+      // Call for overridden send action, or call for standard 'sendAction' (sending action outside).
+      // Overridden 'sendAction' must be called anywhere,
+      // but call for standard 'sendAction' must be executed only if outer action handler is defined,
+      // otherwise ember will call to component's inner method with the same name (as action name),
+      // for example if you send 'remove' action, then (if outer handler isn't defined) component's
+      // 'remove' method will be called, what will cause unexpected behavior and exceptions.
+      if (originalSendActionIsOverridden || outerActionHandlerIsDefined) {
+        originalSendAction.apply(this, args);
+      }
+
+      let dynamicActions = this.get(`_dynamicActions.${actionName}`);
 
       // If no dynamic actions defined for action with given name,
       // break custom 'sendAction' logic then.
