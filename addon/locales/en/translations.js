@@ -47,6 +47,12 @@ export default {
         'caption': 'Cancel'
       }
     },
+    'flexberry-tree': {
+      'placeholder': 'Tree nodes are not defined'
+    },
+    'flexberry-maplayers': {
+      'placeholder': 'Layers are not defined'
+    },
     'flexberry-maplayer': {
       'remove-dialog': {
         'caption': 'Remove layer',

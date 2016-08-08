@@ -10,6 +10,7 @@ import DynamicActionsMixin from '../mixins/dynamic-actions';
 import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
 import DynamicComponentsMixin from '../mixins/dynamic-components';
 import layout from '../templates/components/flexberry-tree';
+import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -28,7 +29,8 @@ const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
   startToolbar: flexberryClassNamesPrefix + '-start-toolbar',
-  endToolbar: flexberryClassNamesPrefix + '-end-toolbar'
+  endToolbar: flexberryClassNamesPrefix + '-end-toolbar',
+  placeholder: flexberryClassNamesPrefix + '-placeholder'
 };
 
 /**
@@ -221,6 +223,16 @@ let FlexberryTreeComponent = Ember.Component.extend(
     @default ['_isNotInsideTreeNode:ui']
   */
   classNameBindings: ['_isNotInsideTreeNode:ui'],
+
+  /**
+    Component's placeholder.
+    Will be displayed if tree nodes are not defined.
+
+    @property placeholder
+    @type String
+    @default t('components.flexberry-tree.placeholder')
+  */
+  placeholder: t('components.flexberry-tree.placeholder'),
 
   /**
     Flag: indicates whether only one tree node can be expanded at the same time.

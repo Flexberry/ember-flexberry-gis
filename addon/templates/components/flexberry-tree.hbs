@@ -18,6 +18,11 @@
 {{#if hasBlock}}
   {{yield}}
 {{/if}}
+{{#if (not (or hasBlock _hasNodes))}}
+  <div class="{{flexberryClassNames.placeholder}} title">
+    {{placeholder}}
+  </div>
+{{/if}}
 {{#if (and _isNotInsideTreeNode _endToolbarHasComponents)}}
   <div class="{{flexberryClassNames.endToolbar}}">
     <div class="left-aligned">

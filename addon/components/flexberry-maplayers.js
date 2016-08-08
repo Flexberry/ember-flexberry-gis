@@ -7,6 +7,7 @@ import FlexberryTreeComponent from './flexberry-tree';
 
 // Use base component's layout without changes.
 import layout from '../templates/components/flexberry-tree';
+import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -181,6 +182,16 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
     @default ['flexberry-maplayers']
   */
   classNames: [flexberryClassNames.flexberryMaplayers.wrapper],
+
+  /**
+    Component's placeholder.
+    Will be displayed if tree nodes are not defined.
+
+    @property placeholder
+    @type String
+    @default t('components.flexberry-maplayers.placeholder')
+  */
+  placeholder: t('components.flexberry-maplayers.placeholder'),
 
   /**
     Map's layers.

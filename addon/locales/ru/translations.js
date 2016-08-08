@@ -47,6 +47,12 @@ export default {
         'caption': 'Отмена'
       }
     },
+    'flexberry-tree': {
+      'placeholder': 'Вершины дерева не заданы'
+    },
+    'flexberry-maplayers': {
+      'placeholder': 'Слои не заданы'
+    },
     'flexberry-maplayer': {
       'remove-dialog': {
         'caption': 'Удаление слоя',
