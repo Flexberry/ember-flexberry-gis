@@ -39,5 +39,25 @@ export default {
   },
 
   'components': {
+    'flexberry-dialog': {
+      'approve-button': {
+        'caption': 'Ok'
+      },
+      'deny-button': {
+        'caption': 'Cancel'
+      }
+    },
+    'flexberry-maplayer': {
+      'remove-dialog': {
+        'caption': 'Remove layer',
+        'content': 'Do you really want to remove \'{{name}}\' layer?',
+        'approve-button': {
+          'caption': 'Yes'
+        },
+        'deny-button': {
+          'caption': 'No'
+        }
+      }
+    }
   }
 };

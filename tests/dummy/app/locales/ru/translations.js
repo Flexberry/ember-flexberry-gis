@@ -147,9 +147,6 @@ Ember.$.extend(true, translations, {
       'flexberry-maplayers': {
         'settings-example': {
           'caption': 'Пример работы с настройками flexberry-maplayers',
-          'hbs-layers-tab-caption': 'Дерево слоёв явно заданное в hbs-разметке',
-          'hbs-layers-latest-clicked-layer-caption': 'Настройки последнего кликнутого слоя',
-          'hbs-layers-latest-clicked-layer-placeholder': 'Кликните на любой слой в дереве, чтобы отобразить его настройки',
           'json-layers-tab-caption': 'Дерево слоёв заданное JSON-объектом',
           'json-layers-latest-clicked-layer-caption': 'Настройки последнего кликнутого слоя',
           'json-layers-latest-clicked-layer-placeholder': 'Кликните на любой слой в дереве, чтобы отобразить его настройки'

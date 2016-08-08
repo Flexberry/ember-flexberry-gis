@@ -143,7 +143,7 @@ export default Ember.Mixin.create({
       It adds new child layer.
 
       @method actions.onMapLayerAddChild
-      @param {String} layerPropertyPath Path to a layer, which to which child must be added on action.
+      @param {String} layerPropertyPath Path to a layer, to which child must be added on action.
       @param {Object} e Action's event object.
       @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
       which describes event that triggers 'addChild' action.
@@ -153,7 +153,7 @@ export default Ember.Mixin.create({
       ```handlebars
         {{flexberry-maplayer
           name="Tree node with checkbox"
-          addChild=(action "onMapLayerAddChild" "layers.0")
+          addChild=(action "onMapLayerAddChild" "layers")
         }}
       ```
 
@@ -184,49 +184,61 @@ export default Ember.Mixin.create({
         `but \`Ember.NativeArray\` is expected`,
         Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
 
-      let addChildLayer = (childLayer) => {
-        Ember.assert(
-          `Wrong type of \`childLayer\` argument: actual type is \`${Ember.typeOf(childLayer)}\`, ` +
-          `but \`object\` or  \`instance\` is expected`,
-          Ember.isNone(childLayer) || Ember.typeOf(childLayer) === 'object' || Ember.typeOf(childLayer) === 'instance');
+      let { childLayer } = args[args.length - 1];
+      Ember.assert(
+        `Wrong type of \`childLayer\` argument: actual type is \`${Ember.typeOf(childLayer)}\`, ` +
+        `but \`object\` or  \`instance\` is expected`,
+        Ember.typeOf(childLayer) === 'object' || Ember.typeOf(childLayer) === 'instance');
 
-        if (Ember.isNone(childLayer)) {
-          return;
-        }
-
-        childLayers.pushObject(childLayer);
-      };
-
-      let createdLayer = this.createMapLayer();
-      if (createdLayer instanceof Ember.RSVP.Promise) {
-        createdLayer.then(addChildLayer);
-      } else {
-        addChildLayer(createdLayer);
-      }
+      childLayers.pushObject(childLayer);
     },
-  },
 
-  createMapLayer() {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      resolve({
-        name: 'New layer',
-        type: 'wms',
-        visibility: true
-      });
-    });
-  },
+    /**
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.remove:method"}}flexberry-maplayers component's 'remove' action{{/crossLink}}.
+      It removes specified layer.
 
-  editMapLayer() {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      resolve({
-        name: 'Edited layer',
-      });
-    });
-  },
+      @method actions.onMapLayerRemove
+      @param {String} removingLayerPropertyPath Path to a layer, which must be removed on action.
 
-  removeMapLayer() {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      resolve(true);
-    });
-  },
+      @example
+      templates/my-form.hbs
+      ```handlebars
+        {{flexberry-maplayer
+          name="Tree node with checkbox"
+          remove=(action "onMapLayerRemove" "layers.0")
+        }}
+      ```
+
+      controllers/my-form.js
+      ```javascript
+        import Ember from 'ember';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
+
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
+        });
+      ```
+    */
+    onMapLayerRemove(...args) {
+      let removingLayerPropertyPath = args[0];
+      Ember.assert(
+        `Wrong type of \`removingLayerPropertyPath\` argument: actual type is \`${Ember.typeOf(removingLayerPropertyPath)}\`, ` +
+        `but \`string\` is expected`,
+        Ember.typeOf(removingLayerPropertyPath) === 'string');
+
+      let indexOfLastPointInPath = removingLayerPropertyPath.lastIndexOf('.');
+      Ember.assert(
+        `Wrong value of \`removingLayerPropertyPath\` argument: it must contain at least two \`.\`-separated parts`,
+        indexOfLastPointInPath > 0);
+
+      let parentLayersPropertyPath = removingLayerPropertyPath.substring(0, indexOfLastPointInPath);
+      let parentLayers = this.get(parentLayersPropertyPath);
+      Ember.assert(
+        `Wrong type of \`parentLayers\` argument: actual type is \`${Ember.typeOf(parentLayers)}\`, ` +
+        `but \`Ember.NativeArray\` is expected`,
+        Ember.isArray(parentLayers) && Ember.typeOf(parentLayers.removeAt) === 'function');
+
+      let removingLayerIndex = parseInt(removingLayerPropertyPath.substring(indexOfLastPointInPath + 1), 10);
+      parentLayers.removeAt(removingLayerIndex, 1);
+    }
+  }
 });

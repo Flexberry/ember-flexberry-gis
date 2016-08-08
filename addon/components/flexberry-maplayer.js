@@ -34,7 +34,8 @@ flexberryClassNames.flexberryMaplayer = {
   typeIcon: flexberryClassNamesPrefix + '-type-icon',
   addChildButton: flexberryClassNamesPrefix + '-add-button',
   editButton: flexberryClassNamesPrefix + '-edit-button',
-  removeButton: flexberryClassNamesPrefix + '-remove-button'
+  removeButton: flexberryClassNamesPrefix + '-remove-button',
+  removeDialog: flexberryClassNamesPrefix + '-remove-dialog'
 };
 
 /**
@@ -199,9 +200,6 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
   _readonlyDidChange: Ember.on('init', Ember.observer('readonly', function() {
     let readonly = this.get('readonly') === true;
 
-    // Change readonly-mode for visibility-checkbox.
-    this.set('_innerDynamicComponents.0.componentProperties.readonly', readonly);
-
     // Show/hide flexberry-buttons for 'add', 'edit', 'remove' operations.
     this.set('_innerDynamicComponents.2.visible', !readonly && this.get('type') === 'group');
     this.set('_innerDynamicComponents.3.visible', !readonly);
@@ -270,11 +268,30 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
   */
   layers: null,
 
+  actions: {
+    onRemoveButtonClick() {
+      // Show remove dialog.
+      this.set('_innerDynamicComponents.5.componentProperties.visible', true);
+    },
+
+    onRemoveDialogHide() {
+      // Hide remove dialog
+      this.set('_innerDynamicComponents.5.componentProperties.visible', false);
+    },
+
+    onRemoveDialogApprove() {
+      // Send outer 'remove' action
+      this.sendAction('remove');
+    }
+  },
+
   /**
     Initializes component.
   */
   init() {
     this._super(...arguments);
+
+    let i18n = this.get('i18n');
 
     // Define additional child components as inner dynamic components (see dynamic-components mixin).
     let innerDynamicComponents = Ember.A([{
@@ -322,9 +339,30 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
       componentProperties: {
         class: flexberryClassNames.flexberryMaplayer.removeButton + ' ' + flexberryClassNames.treeNodePreventExpandCollapse,
         iconClass: 'trash icon',
-        dynamicProxyActions: Ember.A([{
+        dynamicActions: Ember.A([{
           on: 'click',
-          actionName: 'remove'
+          actionContext: this,
+          actionName: 'onRemoveButtonClick'
+        }])
+      }
+    }, {
+      to: 'contentEnd',
+      componentName: 'flexberry-dialog',
+      componentProperties: {
+        class: flexberryClassNames.flexberryMaplayer.removeDialog,
+        caption: i18n.t('components.flexberry-maplayer.remove-dialog.caption'),
+        approveButtonCaption: i18n.t('components.flexberry-maplayer.remove-dialog.approve-button.caption'),
+        denyButtonCaption: i18n.t('components.flexberry-maplayer.remove-dialog.deny-button.caption'),
+        content: i18n.t('components.flexberry-maplayer.remove-dialog.content', { name: this.get('name') }),
+        visible: false,
+        dynamicActions: Ember.A([{
+          on: 'approve',
+          actionContext: this,
+          actionName: 'onRemoveDialogApprove'
+        }, {
+          on: 'hide',
+          actionContext: this,
+          actionName: 'onRemoveDialogHide'
         }])
       }
     }]);

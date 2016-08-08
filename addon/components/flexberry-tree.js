@@ -139,9 +139,24 @@ let FlexberryTreeComponent = Ember.Component.extend(
     @readOnly
     @private
   */
-  _startToolbarHasComponents: Ember.computed('_dynamicComponents.startToolbarLeft.[]', '_dynamicComponents.startToolbarRight.[]', function() {
-    return this.get('_dynamicComponents.startToolbarLeft.length') > 0 || this.get('_dynamicComponents.startToolbarRight.length') > 0;
-  }),
+  _startToolbarHasComponents: Ember.computed(
+    '_dynamicComponents.startToolbarLeft.[]',
+    '_dynamicComponents.startToolbarLeft.@each.visible',
+    '_dynamicComponents.startToolbarRight.[]',
+    '_dynamicComponents.startToolbarRight.@each.visible',
+    function() {
+      let leftPartHasComponents = this.get('_dynamicComponents.startToolbarLeft.length') > 0 &&
+        this.get('_dynamicComponents.startToolbarLeft').every((dynamicComponent) => {
+          return dynamicComponent.visible !== false;
+        });
+      let rightPartHasComponents = this.get('_dynamicComponents.startToolbarRight.length') > 0 &&
+        this.get('_dynamicComponents.startToolbarRight').every((dynamicComponent) => {
+          return dynamicComponent.visible !== false;
+        });
+
+      return leftPartHasComponents || rightPartHasComponents;
+    }
+  ),
 
   /**
     Flag: indicates whether tree end toolbar has some nested components.
@@ -151,9 +166,24 @@ let FlexberryTreeComponent = Ember.Component.extend(
     @readOnly
     @private
   */
-  _endToolbarHasComponents: Ember.computed('_dynamicComponents.endToolbarLeft.[]', '_dynamicComponents.endToolbarRight.[]', function() {
-    return this.get('_dynamicComponents.endToolbarLeft.length') > 0 || this.get('_dynamicComponents.endToolbarRight.length') > 0;
-  }),
+  _endToolbarHasComponents: Ember.computed(
+    '_dynamicComponents.endToolbarLeft.[]',
+    '_dynamicComponents.endToolbarLeft.@each.visible',
+    '_dynamicComponents.endToolbarRight.[]',
+    '_dynamicComponents.endToolbarRight.@each.visible',
+    function() {
+      let leftPartHasComponents = this.get('_dynamicComponents.endToolbarLeft.length') > 0 &&
+        this.get('_dynamicComponents.endToolbarLeft').every((dynamicComponent) => {
+          return dynamicComponent.visible !== false;
+        });
+      let rightPartHasComponents = this.get('_dynamicComponents.endToolbarRight.length') > 0 &&
+        this.get('_dynamicComponents.endToolbarRight').every((dynamicComponent) => {
+          return dynamicComponent.visible !== false;
+        });
+
+      return leftPartHasComponents || rightPartHasComponents;
+    }
+  ),
 
   /**
     Reference to component's template.
