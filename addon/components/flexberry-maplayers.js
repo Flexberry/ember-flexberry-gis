@@ -128,10 +128,33 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
 
     @property _treeNodesPropertyName
     @type String
-    @default 'layers'
+    @default '_existingLayers'
     @private
   */
-  _treeNodesPropertyName: 'layers',
+  _treeNodesPropertyName: '_existingLayers',
+
+  /**
+    Map's layers filtered by their existence.
+
+    @property _existingLayers
+    @type Object[]
+    @readOnly
+  */
+  _existingLayers: Ember.computed('layers.@each.isDeleted', function() {
+    let layers = this.get('layers');
+    Ember.assert(
+      `Wrong type of \`layers\` property: actual type is \`${Ember.typeOf(layers)}\`, ` +
+      `but \`Ember.NativeArray\` is expected`,
+      Ember.isNone(layers) || Ember.isArray(layers) && Ember.typeOf(layers.filter) === 'function');
+
+    if (!Ember.isArray(layers)) {
+      return Ember.A();
+    }
+
+    return Ember.A(layers.filter((layer) => {
+      return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;  
+    }));
+  }),
 
   /**
     Reference to component's template.

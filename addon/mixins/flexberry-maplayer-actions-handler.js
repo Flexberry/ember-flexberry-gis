@@ -143,17 +143,16 @@ export default Ember.Mixin.create({
       It adds new child layer.
 
       @method actions.onMapLayerAddChild
-      @param {String} layerPropertyPath Path to a layer, to which child must be added on action.
+      @param {String} layerPath Path to a parent layers, to which new child layer must be added on action.
       @param {Object} e Action's event object.
-      @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
-      which describes event that triggers 'addChild' action.
+      @param {Object} e.layerProperties Object containing properties of new child layer.
 
       @example
       templates/my-form.hbs
       ```handlebars
         {{flexberry-maplayer
           name="Tree node with checkbox"
-          addChild=(action "onMapLayerAddChild" "layers")
+          addChild=(action "onMapLayerAddChild" "layers.0")
         }}
       ```
 
@@ -167,30 +166,50 @@ export default Ember.Mixin.create({
       ```
     */
     onMapLayerAddChild(...args) {
-      let childLayersPropertyPath = args[0];
-      Ember.assert(
-        `Wrong type of \`childLayersPropertyPath\` argument: actual type is \`${Ember.typeOf(childLayersPropertyPath)}\`, ` +
-        `but \`string\` is expected`,
-        Ember.typeOf(childLayersPropertyPath) === 'string');
+      let parentLayerPath = args[0];
+      let { childLayerProperties } = args[args.length - 1];
 
-      let childLayers = this.get(childLayersPropertyPath);
-      if (Ember.isNone(childLayers)) {
-        childLayers = Ember.A();
-        this.set(childLayersPropertyPath, childLayers);
-      }
+      this.createLayer({
+        layerPath: parentLayerPath,
+        layerProperties: childLayerProperties
+      });
+    },
 
-      Ember.assert(
-        `Wrong type of \`${childLayersPropertyPath}\` property: actual type is \`${Ember.typeOf(childLayers)}\`, ` +
-        `but \`Ember.NativeArray\` is expected`,
-        Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
+    /**
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.edit:method"}}flexberry-maplayers component's 'edit' action{{/crossLink}}.
+      It edits existing layer.
 
-      let { childLayer } = args[args.length - 1];
-      Ember.assert(
-        `Wrong type of \`childLayer\` argument: actual type is \`${Ember.typeOf(childLayer)}\`, ` +
-        `but \`object\` or  \`instance\` is expected`,
-        Ember.typeOf(childLayer) === 'object' || Ember.typeOf(childLayer) === 'instance');
+      @method actions.onMapLayerEdit
+      @param {String} layerPath Path to a layer, which must be edited on action.
+      @param {Object} e Action's event object.
+      @param {Object} e.layerProperties Object containing edited layer properties, which must be merged to layer on action.
 
-      childLayers.pushObject(childLayer);
+      @example
+      templates/my-form.hbs
+      ```handlebars
+        {{flexberry-maplayer
+          name="Tree node with checkbox"
+          edit=(action "onMapLayerEdit" "layers.0")
+        }}
+      ```
+
+      controllers/my-form.js
+      ```javascript
+        import Ember from 'ember';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
+
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
+        });
+      ```
+    */
+    onMapLayerEdit(...args) {
+      let editingLayerPath = args[0];
+      let { editedLayerProperties } = args[args.length - 1];
+
+      this.editLayer({
+        layerPath: editingLayerPath,
+        layerProperties: editedLayerProperties
+      });
     },
 
     /**
@@ -198,7 +217,8 @@ export default Ember.Mixin.create({
       It removes specified layer.
 
       @method actions.onMapLayerRemove
-      @param {String} removingLayerPropertyPath Path to a layer, which must be removed on action.
+      @param {String} layerPath Path to a layer, which must be removed on action.
+      @param {Object} e Action's event object.
 
       @example
       templates/my-form.hbs
@@ -219,26 +239,64 @@ export default Ember.Mixin.create({
       ```
     */
     onMapLayerRemove(...args) {
-      let removingLayerPropertyPath = args[0];
-      Ember.assert(
-        `Wrong type of \`removingLayerPropertyPath\` argument: actual type is \`${Ember.typeOf(removingLayerPropertyPath)}\`, ` +
-        `but \`string\` is expected`,
-        Ember.typeOf(removingLayerPropertyPath) === 'string');
+      let removingLayerPath = args[0];
 
-      let indexOfLastPointInPath = removingLayerPropertyPath.lastIndexOf('.');
-      Ember.assert(
-        `Wrong value of \`removingLayerPropertyPath\` argument: it must contain at least two \`.\`-separated parts`,
-        indexOfLastPointInPath > 0);
-
-      let parentLayersPropertyPath = removingLayerPropertyPath.substring(0, indexOfLastPointInPath);
-      let parentLayers = this.get(parentLayersPropertyPath);
-      Ember.assert(
-        `Wrong type of \`parentLayers\` argument: actual type is \`${Ember.typeOf(parentLayers)}\`, ` +
-        `but \`Ember.NativeArray\` is expected`,
-        Ember.isArray(parentLayers) && Ember.typeOf(parentLayers.removeAt) === 'function');
-
-      let removingLayerIndex = parseInt(removingLayerPropertyPath.substring(indexOfLastPointInPath + 1), 10);
-      parentLayers.removeAt(removingLayerIndex, 1);
+      this.removeLayer({
+        layerPath: removingLayerPath
+      });
     }
+  },
+
+  /**
+    Creates new layer as specified layer's child.
+
+    @method editLayer
+    @param {Object} options Method options.
+    @param {String} options.layerPath Path to parent layer.
+    @param {Object} options.layerProperties Object containing new layer properties.
+    @returns {Object} Edited layer.
+  */
+  createLayer(options) {
+    Ember.assert('Logic for \'createLayer\' method is not defined yet', false);
+  },
+
+  /**
+    Updates specified layer in hierarchy with given properties.
+
+    @method editLayer
+    @param {Object} options Method options.
+    @param {String} options.layerPath Path to editing layer.
+    @param {Object} options.layerProperties Object containing edited layer properties.
+    @returns {Object} Edited layer.
+  */
+  editLayer(options) {
+    Ember.assert('Logic for \'editLayer\' method is not defined yet', false);
+  },
+
+  /**
+    Removes specified layer from layers hierarchy.
+
+    @method removeLayer
+    @param {Object} options Method options.
+    @param {String} options.layerPath Path to removing layer.
+    @returns {Object} Removed layer.
+  */
+  removeLayer(options) {
+    options = options || {};
+    let layerPath = Ember.get(options, 'layerPath');
+
+    Ember.assert(
+      `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
+      `but \`string\` is expected`,
+      Ember.typeOf(layerPath) === 'string');
+
+    let layer = this.get(layerPath);
+    Ember.assert(
+      `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
+      `but \`object\` or  \`instance\` is expected`,
+      Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
+
+    Ember.set(layer, 'isDeleted', true);
+    return layer;
   }
 });

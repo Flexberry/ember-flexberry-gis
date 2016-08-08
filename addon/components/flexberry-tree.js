@@ -113,12 +113,12 @@ let FlexberryTreeComponent = Ember.Component.extend(
     @readonly
     @private
   */
-  _isNotInsideTreeNode: Ember.computed('parentView', '_treeNodeComponentName', function() {
-    let parentView = this.get('parentView');
+  _isNotInsideTreeNode: Ember.computed('targetObject', '_treeNodeComponentName', function() {
+    let targetObject = this.get('targetObject');
     let treeNodeComponentName = this.get('_treeNodeComponentName');
     let treeNodeComponentClass = Ember.getOwner(this)._lookupFactory(`component:${treeNodeComponentName}`);
 
-    return !(parentView instanceof treeNodeComponentClass);
+    return !(targetObject instanceof treeNodeComponentClass);
   }),
 
   /**
@@ -319,6 +319,33 @@ let FlexberryTreeComponent = Ember.Component.extend(
   },
 
   /**
+    Collapses component's parent node.
+
+    @method _collapseParentNode
+    @private
+  */
+  _collapseParentNode() {
+    let isNotInsideTreeNode = this.get('_isNotInsideTreeNode');
+    if (isNotInsideTreeNode) {
+      return;
+    }
+
+    let treeNodeComponentName = this.get('_treeNodeComponentName');
+    let treeNodeComponent = Ember.getOwner(this)._lookupFactory(`component:${treeNodeComponentName}`);
+    let expandedTreeNodeClass = Ember.$.fn.accordion.settings.className.active;
+
+    let $parentNodeContent = this.$().parents().closest(`.${treeNodeComponent.flexberryClassNames.treeNodeContent}`);
+    if ($parentNodeContent.hasClass(expandedTreeNodeClass)) {
+      $parentNodeContent.removeClass(expandedTreeNodeClass);
+    }
+
+    let $parentNodeHeader = $parentNodeContent.prev(`.${treeNodeComponent.flexberryClassNames.treeNodeHeader}`);
+    if ($parentNodeHeader.hasClass(expandedTreeNodeClass)) {
+      $parentNodeHeader.removeClass(expandedTreeNodeClass);
+    }
+  },
+
+  /**
     Reinitializes [Semantic UI accordion](http://semantic-ui.com/modules/accordion.html) on component's wrapping <div>
     when following component's accordion-related properties changed:
     {{crossLink "FlexberryTreeComponent/exclusive:property"}}'exclusive'{{/crossLink}},
@@ -400,6 +427,9 @@ let FlexberryTreeComponent = Ember.Component.extend(
 
     // Destroy Semantic UI accordion.
     this._destroyAccordion();
+
+    // Collapse parent node (if tree is destroyed then parent node hasn't child nodes anymore).
+    this._collapseParentNode();
   }
 });
 
