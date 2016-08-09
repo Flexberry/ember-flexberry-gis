@@ -304,13 +304,34 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
 
   actions: {
     onAddChildButtonClick() {
+      let i18n = this.get('i18n');
+
+      // Set dialog caption.
+      this.set(
+        '_innerDynamicComponents.5.componentProperties.caption',
+        i18n.t("components.layers-dialogs.add-layer.caption"));
+
       // Show dialog.
       this.set('_innerDynamicComponents.5.componentProperties.visible', true);
     },
 
     onAddChildDialogHide() {
-      // Hide dialog
+      // Hide dialog.
       this.set('_innerDynamicComponents.5.componentProperties.visible', false);
+
+      // Clean up dialog's content-related properties.
+      this.set(
+        '_innerDynamicComponents.5.componentProperties.type',
+        null);
+      this.set(
+        '_innerDynamicComponents.5.componentProperties.name',
+        null);
+      this.set(
+        '_innerDynamicComponents.5.componentProperties.coordinateReferenceSystem',
+        null);
+      this.set(
+        '_innerDynamicComponents.5.componentProperties.settings',
+        null);
     },
 
     onAddChildDialogApprove(...args) {
@@ -319,6 +340,13 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     },
 
     onEditButtonClick() {
+      let i18n = this.get('i18n');
+
+      // Set dialog caption.
+      this.set(
+        '_innerDynamicComponents.6.componentProperties.caption',
+        i18n.t("components.layers-dialogs.edit-layer.caption"));
+
       // Set dialog's content-related properties.
       this.set(
         '_innerDynamicComponents.6.componentProperties.type',
@@ -340,6 +368,20 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     onEditDialogHide() {
       // Hide dialog
       this.set('_innerDynamicComponents.6.componentProperties.visible', false);
+
+      // Clean up dialog's content-related properties.
+      this.set(
+        '_innerDynamicComponents.6.componentProperties.type',
+        null);
+      this.set(
+        '_innerDynamicComponents.6.componentProperties.name',
+        null);
+      this.set(
+        '_innerDynamicComponents.6.componentProperties.coordinateReferenceSystem',
+        null);
+      this.set(
+        '_innerDynamicComponents.6.componentProperties.settings',
+        null);
     },
 
     onEditDialogApprove(...args) {
@@ -348,6 +390,13 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
     },
 
     onRemoveButtonClick() {
+      let i18n = this.get('i18n');
+
+      // Set dialog caption.
+      this.set(
+        '_innerDynamicComponents.7.componentProperties.caption',
+        i18n.t("components.layers-dialogs.remove-layer.caption"));
+
       // Set dialog's content-related properties.
       this.set(
         '_innerDynamicComponents.7.componentProperties.name',
@@ -438,6 +487,7 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
         coordinateReferenceSystem: null,
         typeIsReadonly: false,
         visible: false,
+        caption: null,
         dynamicActions: Ember.A([{
           on: 'approve',
           actionContext: this,
@@ -459,6 +509,7 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
         coordinateReferenceSystem: null,
         typeIsReadonly: true,
         visible: false,
+        caption: null,
         dynamicActions: Ember.A([{
           on: 'approve',
           actionContext: this,
@@ -476,6 +527,7 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
         class: flexberryClassNames.flexberryMaplayer.removeDialog,
         name: null,
         visible: false,
+        caption: null,
         dynamicActions: Ember.A([{
           on: 'approve',
           actionContext: this,

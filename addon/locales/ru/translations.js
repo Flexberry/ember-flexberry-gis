@@ -70,6 +70,9 @@ export default {
           'caption': 'Система координат слоя (CRS)'
         }
       },
+      'add-layer': {
+        'caption': 'Добавление нового слоя'
+      },
       'edit-tile-layer-content': {
         'url': {
           'caption': 'Url'

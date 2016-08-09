@@ -9,6 +9,7 @@ import DynamicActionsMixin from '../../mixins/dynamic-actions';
 import DynamicProxyActionsMixin from '../../mixins/dynamic-proxy-actions';
 import DynamicComponentsMixin from '../../mixins/dynamic-components';
 import layout from '../../templates/components/layers-dialogs/edit-layer';
+import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -111,6 +112,15 @@ let EditLayerComponent = Ember.Component.extend(
   class: null,
 
   /**
+    Component's caption.
+
+    @property class
+    @type String
+    @default null
+  */
+  caption: t("components.layers-dialogs.edit-layer.caption"),
+
+  /**
     Editing layer name.
 
     @property name
@@ -124,9 +134,9 @@ let EditLayerComponent = Ember.Component.extend(
 
     @property type
     @type String
-    @default 'group'
+    @default null
   */
-  type: 'group',
+  type: null,
 
   /**
     Editing layer coordinate reference system (CRS).
@@ -168,7 +178,7 @@ let EditLayerComponent = Ember.Component.extend(
       let coordinateReferenceSystem = this.get('coordinateReferenceSystem');
       let settings = this.get(`_settings.${this.get('type')}`);
       if (!Ember.isNone(settings)) {
-        settings = JSON.stringify(settings);
+        settings = Object.keys(settings).length > 0 ? JSON.stringify(settings) : null;
       }
 
       this.sendAction('approve', {
@@ -191,6 +201,13 @@ let EditLayerComponent = Ember.Component.extend(
 
     onHide() {
       this.sendAction('hide');
+
+      // Clean up dialog.
+      this._initInnerSettings();
+      this.set('type', null);
+      this.set('name', null);
+      this.set('coordinateReferenceSystem', null);
+      this.set('settings', null);
     }
   },
 
@@ -216,7 +233,7 @@ let EditLayerComponent = Ember.Component.extend(
   }),
 
   /**
-    Performs initializations & clean ups for
+    Performs clean ups for
     {{#crossLink "EditLayerComponent/_settings:property"}}'_settings' property{{/crossLink}}.
 
     @method _initInnerSettings

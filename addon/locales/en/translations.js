@@ -70,6 +70,9 @@ export default {
           'caption': 'Layer coordinate reference system (CRS)'
         }
       },
+      'add-layer': {
+        'caption': 'Add new layer'
+      },
       'edit-tile-layer-content': {
         'url': {
           'caption': 'Url'
