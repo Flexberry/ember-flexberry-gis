@@ -167,12 +167,30 @@ export default Ember.Mixin.create({
     */
     onMapLayerAddChild(...args) {
       let parentLayerPath = args[0];
-      let { childLayerProperties } = args[args.length - 1];
+      let { layerProperties } = args[args.length - 1];
 
-      this.createLayer({
+      let childLayer = this.createLayer({
         layerPath: parentLayerPath,
-        layerProperties: childLayerProperties
+        layerProperties: layerProperties
       });
+
+      let parentLayer = this.get(parentLayerPath);
+      Ember.assert(
+        `Wrong type of \`parentLayer\` property: actual type is \`${Ember.typeOf(parentLayer)}\`, ` +
+        `but \`object\` or  \`instance\` is expected`,
+        Ember.typeOf(parentLayer) === 'object' || Ember.typeOf(parentLayer) === 'instance');
+
+      let childLayers = Ember.get(parentLayer, 'layers');
+      if (Ember.isNone(childLayers)) {
+        childLayers = Ember.A();
+        Ember.set(parentLayer, 'layers', childLayers);
+      }
+      Ember.assert(
+        `Wrong type of \`parentLayer.layers\` property: actual type is \`${Ember.typeOf(childLayers)}\`, ` +
+        `but \`Ember.NativeArray\` is expected`,
+        Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
+
+      childLayers.pushObject(childLayer);
     },
 
     /**
@@ -204,11 +222,11 @@ export default Ember.Mixin.create({
     */
     onMapLayerEdit(...args) {
       let editingLayerPath = args[0];
-      let { editedLayerProperties } = args[args.length - 1];
+      let { layerProperties } = args[args.length - 1];
 
       this.editLayer({
         layerPath: editingLayerPath,
-        layerProperties: editedLayerProperties
+        layerProperties: layerProperties
       });
     },
 
@@ -257,7 +275,20 @@ export default Ember.Mixin.create({
     @returns {Object} Edited layer.
   */
   createLayer(options) {
-    Ember.assert('Logic for \'createLayer\' method is not defined yet', false);
+    options = options || {};
+    let layerPath = Ember.get(options, 'layerPath');
+    Ember.assert(
+      `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
+      `but \`string\` is expected`,
+      Ember.typeOf(layerPath) === 'string');
+
+    let layerProperties = Ember.get(options, 'layerProperties');
+    Ember.assert(
+      `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
+      `but \`object\` or  \`instance\` is expected`,
+      Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
+
+    return layerProperties;
   },
 
   /**
@@ -270,7 +301,30 @@ export default Ember.Mixin.create({
     @returns {Object} Edited layer.
   */
   editLayer(options) {
-    Ember.assert('Logic for \'editLayer\' method is not defined yet', false);
+    options = options || {};
+    let layerPath = Ember.get(options, 'layerPath');
+    Ember.assert(
+      `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
+      `but \`string\` is expected`,
+      Ember.typeOf(layerPath) === 'string');
+
+    let layerProperties = Ember.get(options, 'layerProperties');
+    Ember.assert(
+      `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
+      `but \`object\` or  \`instance\` is expected`,
+      Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
+
+    let layer = this.get(layerPath);
+    Ember.assert(
+      `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
+      `but \`object\` or  \`instance\` is expected`,
+      Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
+
+    Ember.set(layer, 'type', Ember.get(layerProperties, 'type'));
+    Ember.set(layer, 'name', Ember.get(layerProperties, 'name'));
+    Ember.set(layer, 'coordinateReferenceSystem', Ember.get(layerProperties, 'coordinateReferenceSystem'));
+    Ember.set(layer, 'settings', Ember.get(layerProperties, 'settings'));
+    return layer;
   },
 
   /**
@@ -296,7 +350,11 @@ export default Ember.Mixin.create({
       `but \`object\` or  \`instance\` is expected`,
       Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
 
-    Ember.set(layer, 'isDeleted', true);
+    if (Ember.typeOf(layer.delete) === 'function') {
+      layer.delete();
+    } else {
+      Ember.set(layer, 'isDeleted', true);
+    }
     return layer;
   }
 });

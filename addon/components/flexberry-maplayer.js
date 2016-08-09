@@ -35,6 +35,8 @@ flexberryClassNames.flexberryMaplayer = {
   addChildButton: flexberryClassNamesPrefix + '-add-button',
   editButton: flexberryClassNamesPrefix + '-edit-button',
   removeButton: flexberryClassNamesPrefix + '-remove-button',
+  addChildDialog: flexberryClassNamesPrefix + '-add-child-dialog',
+  editDialog: flexberryClassNamesPrefix + '-edit-dialog',
   removeDialog: flexberryClassNamesPrefix + '-remove-dialog'
 };
 
@@ -280,6 +282,15 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
   visibility: false,
 
   /**
+    Layer's serialized type-related settings.
+
+    @property type
+    @type String
+    @default null
+  */
+  settings: null,
+
+  /**
     Child layers.
     This property is optional and must be used when there are too many child layers,
     and you don't want to define them explicitly in the .hbs markup,
@@ -292,19 +303,68 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
   layers: null,
 
   actions: {
-    onRemoveButtonClick() {
-      // Show remove dialog.
+    onAddChildButtonClick() {
+      // Show dialog.
       this.set('_innerDynamicComponents.5.componentProperties.visible', true);
     },
 
-    onRemoveDialogHide() {
-      // Hide remove dialog
+    onAddChildDialogHide() {
+      // Hide dialog
       this.set('_innerDynamicComponents.5.componentProperties.visible', false);
     },
 
-    onRemoveDialogApprove() {
-      // Send outer 'remove' action
-      this.sendAction('remove');
+    onAddChildDialogApprove(...args) {
+      // Send outer 'addChild' action.
+      this.sendAction('addChild', ...args);
+    },
+
+    onEditButtonClick() {
+      // Set dialog's content-related properties.
+      this.set(
+        '_innerDynamicComponents.6.componentProperties.type',
+        this.get('type'));
+      this.set(
+        '_innerDynamicComponents.6.componentProperties.name',
+        this.get('name'));
+      this.set(
+        '_innerDynamicComponents.6.componentProperties.coordinateReferenceSystem',
+        this.get('coordinateReferenceSystem'));
+      this.set(
+        '_innerDynamicComponents.6.componentProperties.settings',
+        this.get('settings'));
+
+      // Show dialog.
+      this.set('_innerDynamicComponents.6.componentProperties.visible', true);
+    },
+
+    onEditDialogHide() {
+      // Hide dialog
+      this.set('_innerDynamicComponents.6.componentProperties.visible', false);
+    },
+
+    onEditDialogApprove(...args) {
+      // Send outer 'edit' action.
+      this.sendAction('edit', ...args);
+    },
+
+    onRemoveButtonClick() {
+      // Set dialog's content-related properties.
+      this.set(
+        '_innerDynamicComponents.7.componentProperties.name',
+        this.get('name'));
+
+      // Show dialog.
+      this.set('_innerDynamicComponents.7.componentProperties.visible', true);
+    },
+
+    onRemoveDialogHide() {
+      // Hide dialog
+      this.set('_innerDynamicComponents.7.componentProperties.visible', false);
+    },
+
+    onRemoveDialogApprove(...args) {
+      // Send outer 'remove' action.
+      this.sendAction('remove', ...args);
     }
   },
 
@@ -313,8 +373,6 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
   */
   init() {
     this._super(...arguments);
-
-    let i18n = this.get('i18n');
 
     // Define additional child components as inner dynamic components (see dynamic-components mixin).
     let innerDynamicComponents = Ember.A([{
@@ -340,9 +398,10 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
       componentProperties: {
         class: flexberryClassNames.flexberryMaplayer.addChildButton + ' ' + flexberryClassNames.treeNodePreventExpandCollapse,
         iconClass: 'plus icon',
-        dynamicProxyActions: Ember.A([{
+        dynamicActions: Ember.A([{
           on: 'click',
-          actionName: 'addChild'
+          actionContext: this,
+          actionName: 'onAddChildButtonClick'
         }])
       }
     }, {
@@ -351,9 +410,10 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
       componentProperties: {
         class: flexberryClassNames.flexberryMaplayer.editButton + ' ' + flexberryClassNames.treeNodePreventExpandCollapse,
         iconClass: 'edit icon',
-        dynamicProxyActions: Ember.A([{
+        dynamicActions: Ember.A([{
           on: 'click',
-          actionName: 'edit'
+          actionContext: this,
+          actionName: 'onEditButtonClick'
         }])
       }
     }, {
@@ -370,13 +430,51 @@ let FlexberryMaplayerComponent = FlexberryTreenodeComponent.extend({
       }
     }, {
       to: 'contentEnd',
-      componentName: 'flexberry-dialog',
+      componentName: 'layers-dialogs/edit-layer',
+      componentProperties: {
+        class: flexberryClassNames.flexberryMaplayer.addChildDialog,
+        name: null,
+        settings: null,
+        coordinateReferenceSystem: null,
+        typeIsReadonly: false,
+        visible: false,
+        dynamicActions: Ember.A([{
+          on: 'approve',
+          actionContext: this,
+          actionName: 'onAddChildDialogApprove'
+        }, {
+          on: 'hide',
+          actionContext: this,
+          actionName: 'onAddChildDialogHide'
+        }])
+      }
+    }, {
+      to: 'contentEnd',
+      componentName: 'layers-dialogs/edit-layer',
+      componentProperties: {
+        class: flexberryClassNames.flexberryMaplayer.editDialog,
+        type: null,
+        name: null,
+        settings: null,
+        coordinateReferenceSystem: null,
+        typeIsReadonly: true,
+        visible: false,
+        dynamicActions: Ember.A([{
+          on: 'approve',
+          actionContext: this,
+          actionName: 'onEditDialogApprove'
+        }, {
+          on: 'hide',
+          actionContext: this,
+          actionName: 'onEditDialogHide'
+        }])
+      }
+    }, {
+      to: 'contentEnd',
+      componentName: 'layers-dialogs/remove-layer',
       componentProperties: {
         class: flexberryClassNames.flexberryMaplayer.removeDialog,
-        caption: i18n.t('components.flexberry-maplayer.remove-dialog.caption'),
-        approveButtonCaption: i18n.t('components.flexberry-maplayer.remove-dialog.approve-button.caption'),
-        denyButtonCaption: i18n.t('components.flexberry-maplayer.remove-dialog.deny-button.caption'),
-        content: i18n.t('components.flexberry-maplayer.remove-dialog.content', { name: this.get('name') }),
+        name: null,
         visible: false,
         dynamicActions: Ember.A([{
           on: 'approve',

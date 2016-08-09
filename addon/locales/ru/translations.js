@@ -47,6 +47,52 @@ export default {
         'caption': 'Отмена'
       }
     },
+    'layers-dialogs': {
+      'remove-layer': {
+        'caption': 'Удаление слоя',
+        'content': 'Вы действительно хотите удалить слой \'{{layerName}}\'?',
+        'approve-button': {
+          'caption': 'Да'
+        },
+        'deny-button': {
+          'caption': 'Нет'
+        }
+      },
+      'edit-layer': {
+        'caption': 'Редактирование слоя',
+        'layer-type': {
+          'caption': 'Тип слоя'
+        },
+        'layer-name': {
+          'caption': 'Имя слоя'
+        },
+        'layer-crs': {
+          'caption': 'Система координат слоя (CRS)'
+        }
+      },
+      'edit-tile-layer-content': {
+        'url': {
+          'caption': 'Url'
+        }
+      },
+      'edit-wms-layer-content': {
+        'url': {
+          'caption': 'Url'
+        },
+        'version': {
+          'caption': 'Версия WMS'
+        },
+        'layers': {
+          'caption': 'Слои'
+        },
+        'format': {
+          'caption': 'Формат изображений'
+        },
+        'transparent': {
+          'caption': 'Разрешить прозрачность на изображениях'
+        }
+      }
+    },
     'flexberry-tree': {
       'placeholder': 'Вершины дерева не заданы'
     },
@@ -54,16 +100,6 @@ export default {
       'placeholder': 'Слои не заданы'
     },
     'flexberry-maplayer': {
-      'remove-dialog': {
-        'caption': 'Удаление слоя',
-        'content': 'Вы действительно хотите удалить слой \'{{name}}\'?',
-        'approve-button': {
-          'caption': 'Да'
-        },
-        'deny-button': {
-          'caption': 'Нет'
-        }
-      }
     }
   }
 };

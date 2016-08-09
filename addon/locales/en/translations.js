@@ -47,6 +47,52 @@ export default {
         'caption': 'Cancel'
       }
     },
+    'layers-dialogs': {
+      'remove-layer': {
+        'caption': 'Remove layer',
+        'content': 'Do you really want to remove \'{{layerName}}\' layer?',
+        'approve-button': {
+          'caption': 'Yes'
+        },
+        'deny-button': {
+          'caption': 'No'
+        }
+      },
+      'edit-layer': {
+        'caption': 'Edit layer',
+        'layer-type': {
+          'caption': 'Layer type'
+        },
+        'layer-name': {
+          'caption': 'Layer name'
+        },
+        'layer-crs': {
+          'caption': 'Layer coordinate reference system (CRS)'
+        }
+      },
+      'edit-tile-layer-content': {
+        'url': {
+          'caption': 'Url'
+        }
+      },
+      'edit-wms-layer-content': {
+        'url': {
+          'caption': 'Url'
+        },
+        'version': {
+          'caption': 'WMS version'
+        },
+        'layers': {
+          'caption': 'Layers'
+        },
+        'format': {
+          'caption': 'Image format'
+        },
+        'transparent': {
+          'caption': 'Allow images transparency'
+        }
+      }
+    },
     'flexberry-tree': {
       'placeholder': 'Tree nodes are not defined'
     },
@@ -54,16 +100,6 @@ export default {
       'placeholder': 'Layers are not defined'
     },
     'flexberry-maplayer': {
-      'remove-dialog': {
-        'caption': 'Remove layer',
-        'content': 'Do you really want to remove \'{{name}}\' layer?',
-        'approve-button': {
-          'caption': 'Yes'
-        },
-        'deny-button': {
-          'caption': 'No'
-        }
-      }
     }
   }
 };

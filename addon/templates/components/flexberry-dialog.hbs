@@ -1,9 +1,11 @@
 <i class="{{flexberryClassNames.closeButton}} close icon"></i>
 <div class="{{flexberryClassNames.header}} header">
   {{caption}}
+  {{dynamic-components-placeholder name="header"}}
 </div>
 <div class="{{flexberryClassNames.content}} content">
   {{content}}
+  {{dynamic-components-placeholder name="content"}}
   {{yield}}
 </div>
 <div class="{{flexberryClassNames.toolbar}} actions">
@@ -15,4 +17,5 @@
     class=(concat flexberryClassNames.cancelButton " deny negative")
     caption=denyButtonCaption
   }}
+  {{dynamic-components-placeholder name="toolbar"}}
 </div>

@@ -1,0 +1,11 @@
+{{flexberry-dialog class="{{class}} {{flexberryClassNames.prefix}}"
+  caption=(t "components.layers-dialogs.remove-layer.caption")
+  content=(t "components.layers-dialogs.remove-layer.content" layerName=name)
+  approveButtonCaption=(t "components.layers-dialogs.remove-layer.approve-button.caption")
+  denyButtonCaption=(t "components.layers-dialogs.remove-layer.deny-button.caption")
+  visible=visible
+  approve=(action "onApprove")
+  deny=(action "onDeny")
+  show=(action "onShow")
+  hide=(action "onHide")
+}}

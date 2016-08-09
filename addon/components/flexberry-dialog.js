@@ -63,16 +63,12 @@ let FlexberryDialogComponent = Ember.Component.extend(
   DynamicComponentsMixin, {
 
   /**
-    Component's required actions names.
-    For actions enumerated in this array an assertion exceptions will be thrown,
-    if actions handlers are not defined for them.
+    Selected from DOM dialog block.
 
-    @property _requiredActions
-    @type String[]
-    @default ['approve', 'cancel']
+    @property _dialog
+    @type <a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>
+    @private
   */
-  _requiredActionNames: ['approve', 'cancel'],
-
   _dialog: null,
 
   /**
@@ -91,12 +87,12 @@ let FlexberryDialogComponent = Ember.Component.extend(
 
     Any other CSS-classes can be added through component's 'class' property.
     ```handlebars
-    {{flexberry-ddau-checkbox class="toggle" value=model.flag change=(action "onModelFlagChange")}}
+    {{flexberry-dialog class="large" approve=(action "onDialogApprove")}}
     ```
 
     @property classNames
     @type String[]
-    @default ['flexberry-checkbox', 'ui', 'checkbox']
+    @default ['flexberry-dialog', 'ui', 'modal']
   */
   classNames: [flexberryClassNames.wrapper, 'ui', 'modal'],
 
@@ -123,18 +119,18 @@ let FlexberryDialogComponent = Ember.Component.extend(
 
     @property approveButtonCaption
     @type String
-    @default t('components.flexberry-dialog.approve-button-caption')
+    @default t('components.flexberry-dialog.approve-button.caption')
   */
-  approveButtonCaption: t('components.flexberry-dialog.approve-button-caption'),
+  approveButtonCaption: t('components.flexberry-dialog.approve-button.caption'),
 
   /**
     Component's deny button caption.
 
     @property denyButtonCaption
     @type String
-    @default t('components.flexberry-dialog.deny-button-caption')
+    @default t('components.flexberry-dialog.deny-button.caption')
   */
-  denyButtonCaption: t('components.flexberry-dialog.deny-button-caption'),
+  denyButtonCaption: t('components.flexberry-dialog.deny-button.caption'),
 
   /**
     Component's vertical offset to allow for content outside of dialog, for example a close button, to be centered.
@@ -277,6 +273,7 @@ let FlexberryDialogComponent = Ember.Component.extend(
 
     // Destroys Semantic UI modal.
     $dialog.modal('destroy');
+    this.get('_dialog', null);
   },
 
   /**
