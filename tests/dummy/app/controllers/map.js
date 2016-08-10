@@ -6,6 +6,10 @@ export default EditFormController.extend({
       let center = e.target.getCenter();
       this.set('model.lat', center.lat);
       this.set('model.lng', center.lng);
+    },
+
+    leafletMapDidInit(leafletMap) {
+      this.set('leafletMap', leafletMap);
     }
   }
 });

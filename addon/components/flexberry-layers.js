@@ -25,10 +25,10 @@ export default Ember.Component.extend({
 
   /**
     Leaflet container for layers.
-    @property container
+    @property leafletContainer
     @type L.Map|L.LayerGroup
     @default null
   */
-  container: null,
+  leafletContainer: null,
 
 });

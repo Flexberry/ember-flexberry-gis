@@ -13,77 +13,104 @@ import layout from '../templates/components/flexberry-map';
   FlexberryMap component for render leaflet map in ember applications.
   @class FlexberryMapComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses LeafletOptionsMixin
+  @uses LeafletPropertiesMixin
+  @uses LeafletEventsMixin
  */
 export default Ember.Component.extend(
   LeafletOptionsMixin,
   LeafletPropertiesMixin,
   LeafletEventsMixin,
   {
+    /**
+      Leaflet map object.
+      @property _layer
+      @type L.Map
+      @default null
+      @private
+     */
+    _layer: null,
+
     layout,
 
-    /**
-      Model with map properties and layers.
-      @property model
-      @type NewPlatformFlexberryGISMap
-      @default null
-     */
-    model: null,
+    // Events this map can respond to.
+    leafletEvents: [
+      'click', 'dblclick', 'mousedown', 'mouseup', 'mouseover', 'mouseout',
+      'mousemove', 'contextmenu', 'focus', 'blur', 'preclick', 'load',
+      'unload', 'viewreset', 'movestart', 'move', 'moveend', 'dragstart',
+      'drag', 'dragend', 'zoomstart', 'zoomend', 'zoomlevelschange',
+      'resize', 'autopanstart', 'layeradd', 'layerremove',
+      'baselayerchange', 'overlayadd', 'overlayremove', 'locationfound',
+      'locationerror', 'popupopen', 'popupclose'
+    ],
 
-    /**
-      DOM element containig leaflet map.
-      @property mapElement
-      @type Element
-      @default null
-     */
-    mapElement: null,
-
-    leafletEvents: ['moveend'],
-
-    leafletOptions: ['zoomControl'],
+    leafletOptions: [
+      // Map state options
+      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'crs',
+      // Interaction options
+      'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
+      'tap', 'tapTolerance', 'trackResize', 'worldCopyJump', 'closePopupOnClick',
+      'bounceAtZoomLimits',
+      // Keyboard navigation options
+      'keyboard', 'keyboardPanOffset', 'keyboardZoomOffset',
+      // Panning Inertia Options
+      'inertia', 'inertiaDeceleration', 'inertiaMaxSpeed', 'inertiaThreshold',
+      // Control options
+      'zoomControl', 'attributionControl',
+      // Animation options
+      'fadeAnimation', 'zoomAnimation', 'zoomAnimationThreshold', 'markerZoomAnimation'
+    ],
 
     leafletProperties: ['zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions'],
+
+    /**
+      Latitude of map center
+      @property lat
+      @type numeric
+      @default null
+     */
+    lat: null,
+
+    /**
+      Longitude of map center
+      @property lng
+      @type numeric
+      @default null
+     */
+    lng: null,
 
     /**
       Center of current map.
       @property center
       @type L.LatLng
+      @default [0, 0]
      */
-    center: Ember.computed('model.lat', 'model.lng', function () {
-      return L.latLng(this.get('model.lat') || 0, this.get('model.lng') || 0);
+    center: Ember.computed('lat', 'lng', function () {
+      return L.latLng(this.get('lat') || 0, this.get('lng') || 0);
     }),
 
     /**
       Current map zoom.
       @property zoom
       @type Int
-     */
-    zoom: Ember.computed('model.zoom', function () {
-      return this.get('model.zoom');
-    }),
-
-    /**
-      Leaflet map object.
-      @property _layer
-      @type L.Map
       @default null
      */
-    _layer: null,
+    zoom: null,
 
-    init() {
-      this._super(...arguments);
-      let mapElement = Ember.$("<div>")[0];
-      this.set('mapElement', mapElement);
-      let map = L.map(mapElement, this.get('options'));
-      this.set('_layer', map);
-      this._addObservers();
-      this._addEventListeners();
-    },
+    /**
+      Array of map layers
+      @property layers
+      @type Array of NewPlatformFlexberryGISMapLayer
+     */
+    layers: null,
 
     didInsertElement() {
       this._super(...arguments);
-      this.$().append(this.get('mapElement'));
-      let map = this.get('_layer');
-      map.setView(this.get('center'), this.get('zoom'));
+      let map = L.map(this.get('element'), this.get('options'));
+      this.set('_layer', map);
+      this._addObservers();
+      this._addEventListeners();
+      this.sendAction('leafletMapDidInit', map);
     },
 
     willDestoryElement() {

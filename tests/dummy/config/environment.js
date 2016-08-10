@@ -1,7 +1,8 @@
 /* jshint node: true */
 
-module.exports = function(environment) {
-  var backendUrl = '';
+module.exports = function (environment) {
+  var backendUrl = 'https://flexberry-ember-gis.azurewebsites.net/';
+
   var ENV = {
     modulePrefix: 'dummy',
     environment: environment,
@@ -36,16 +37,6 @@ module.exports = function(environment) {
     }
   };
 
-  // Read more about CSP:
-  // http://www.ember-cli.com/#content-security-policy
-  // https://github.com/rwjblue/ember-cli-content-security-policy
-  // http://content-security-policy.com
-  ENV.contentSecurityPolicy = {
-    'style-src': "'self' 'unsafe-inline' https://fonts.googleapis.com",
-    'font-src': "'self' data: https://fonts.gstatic.com",
-    'connect-src': "'self' " + ENV.APP.backendUrls.root
-  };
-
   // Read more about ember-i18n: https://github.com/jamesarosen/ember-i18n.
   ENV.i18n = {
     // Should be defined to avoid ember-i18n deprecations.
@@ -60,7 +51,13 @@ module.exports = function(environment) {
   };
 
   if (environment === 'development') {
-    ENV.APP.backendUrl = 'http://localhost:63138/odata';
+    backendUrl = 'http://localhost:63138';
+
+    ENV.APP.backendUrl = backendUrl;
+    ENV.APP.backendUrls = {
+      root: backendUrl,
+      api: backendUrl + '/odata'
+    };
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
@@ -83,6 +80,16 @@ module.exports = function(environment) {
   if (environment === 'production') {
 
   }
+
+  // Read more about CSP:
+  // http://www.ember-cli.com/#content-security-policy
+  // https://github.com/rwjblue/ember-cli-content-security-policy
+  // http://content-security-policy.com
+  ENV.contentSecurityPolicy = {
+    'style-src': "'self' 'unsafe-inline' https://fonts.googleapis.com",
+    'font-src': "'self' data: https://fonts.gstatic.com",
+    'connect-src': "'self' " + ENV.APP.backendUrls.root
+  };
 
   return ENV;
 };

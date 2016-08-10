@@ -20,7 +20,7 @@ export default Ember.Mixin.create({
     @type Boolean
     @readOnly
    */
-  isTagless: Ember.computed('tagName', function() {
+  isTagless: Ember.computed('tagName', function () {
     let tagName = this.get('tagName');
     if (Ember.typeOf(tagName) === 'string') {
       tagName = Ember.$.trim(tagName);
@@ -199,7 +199,7 @@ export default Ember.Mixin.create({
     @method _dynamicPropertiesDidChange
     @private
   */
-  _dynamicPropertiesDidChange: Ember.on('init', Ember.observer('dynamicProperties', function () {
+  _dynamicPropertiesDidChange: Ember.observer('dynamicProperties', function () {
     let dynamicProperties = this.get('dynamicProperties');
     Ember.assert(
       `Wrong type of \`dynamicProperties\` property: ` +
@@ -225,7 +225,12 @@ export default Ember.Mixin.create({
     for (let i = 0, len = dynamicPropertiesNames.length; i < len; i++) {
       this._addDynamicProperty(dynamicPropertiesNames[i]);
     }
-  })),
+  }),
+
+  init() {
+    this._super(...arguments);
+    this._dynamicPropertiesDidChange();
+  },
 
   /**
     Executes component's DOM-related logic.

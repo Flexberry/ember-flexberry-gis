@@ -24,7 +24,7 @@ import Ember from 'ember';
       }
     })
     ```
-  @class LeafletOptionsMixin
+  @class LeafletPropertiesMixin
   @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
  */
 export default Ember.Mixin.create({
