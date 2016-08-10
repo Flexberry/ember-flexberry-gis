@@ -167,12 +167,16 @@ export default Ember.Mixin.create({
     */
     onMapLayerAddChild(...args) {
       let parentLayerPath = args[0];
-      let { layerProperties } = args[args.length - 1];
+      Ember.assert(
+        `Wrong type of \`parentLayerPath\` argument: actual type is \`${Ember.typeOf(parentLayerPath)}\`, ` +
+        `but \`string\` is expected`,
+        Ember.typeOf(parentLayerPath) === 'string');
 
-      let childLayer = this.createLayer({
-        layerPath: parentLayerPath,
-        layerProperties: layerProperties
-      });
+      let { layerProperties } = args[args.length - 1];
+      Ember.assert(
+        `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
+        `but \`object\` or  \`instance\` is expected`,
+        Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
 
       let parentLayer = this.get(parentLayerPath);
       Ember.assert(
@@ -185,10 +189,17 @@ export default Ember.Mixin.create({
         childLayers = Ember.A();
         Ember.set(parentLayer, 'layers', childLayers);
       }
+
       Ember.assert(
         `Wrong type of \`parentLayer.layers\` property: actual type is \`${Ember.typeOf(childLayers)}\`, ` +
         `but \`Ember.NativeArray\` is expected`,
         Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
+
+      let childLayer = this._createLayer({
+        parentLayerPath: parentLayerPath,
+        parentLayer: parentLayer,
+        layerProperties: layerProperties
+      });
 
       childLayers.pushObject(childLayer);
     },
@@ -221,11 +232,27 @@ export default Ember.Mixin.create({
       ```
     */
     onMapLayerEdit(...args) {
-      let editingLayerPath = args[0];
-      let { layerProperties } = args[args.length - 1];
+      let layerPath = args[0];
+      Ember.assert(
+        `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
+        `but \`string\` is expected`,
+        Ember.typeOf(layerPath) === 'string');
 
-      this.editLayer({
-        layerPath: editingLayerPath,
+      let { layerProperties } = args[args.length - 1];
+      Ember.assert(
+        `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
+        `but \`object\` or  \`instance\` is expected`,
+        Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
+
+      let layer = this.get(layerPath);
+      Ember.assert(
+        `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
+        `but \`object\` or  \`instance\` is expected`,
+        Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
+
+      this._editLayer({
+        layerPath: layerPath,
+        layer: layer,
         layerProperties: layerProperties
       });
     },
@@ -257,10 +284,21 @@ export default Ember.Mixin.create({
       ```
     */
     onMapLayerRemove(...args) {
-      let removingLayerPath = args[0];
+      let layerPath = args[0];
+      Ember.assert(
+        `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
+        `but \`string\` is expected`,
+        Ember.typeOf(layerPath) === 'string');
 
-      this.removeLayer({
-        layerPath: removingLayerPath
+      let layer = this.get(layerPath);
+      Ember.assert(
+        `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
+        `but \`object\` or  \`instance\` is expected`,
+        Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
+
+      this._removeLayer({
+        layerPath: layerPath,
+        layer: layer
       });
     }
   },
@@ -268,25 +306,17 @@ export default Ember.Mixin.create({
   /**
     Creates new layer as specified layer's child.
 
-    @method editLayer
+    @method _createLayer
     @param {Object} options Method options.
-    @param {String} options.layerPath Path to parent layer.
+    @param {String} options.parentLayerPath Path to parent layer.
+    @param {String} options.parentLayer Parent layer.
     @param {Object} options.layerProperties Object containing new layer properties.
-    @returns {Object} Edited layer.
+    @returns {Object} Created layer.
+    @private
   */
-  createLayer(options) {
+  _createLayer(options) {
     options = options || {};
-    let layerPath = Ember.get(options, 'layerPath');
-    Ember.assert(
-      `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
-      `but \`string\` is expected`,
-      Ember.typeOf(layerPath) === 'string');
-
     let layerProperties = Ember.get(options, 'layerProperties');
-    Ember.assert(
-      `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
-      `but \`object\` or  \`instance\` is expected`,
-      Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
 
     return layerProperties;
   },
@@ -294,31 +324,18 @@ export default Ember.Mixin.create({
   /**
     Updates specified layer in hierarchy with given properties.
 
-    @method editLayer
+    @method _editLayer
     @param {Object} options Method options.
     @param {String} options.layerPath Path to editing layer.
+    @param {String} options.layer Editing layer.
     @param {Object} options.layerProperties Object containing edited layer properties.
     @returns {Object} Edited layer.
+    @private
   */
-  editLayer(options) {
+  _editLayer(options) {
     options = options || {};
-    let layerPath = Ember.get(options, 'layerPath');
-    Ember.assert(
-      `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
-      `but \`string\` is expected`,
-      Ember.typeOf(layerPath) === 'string');
-
     let layerProperties = Ember.get(options, 'layerProperties');
-    Ember.assert(
-      `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
-      `but \`object\` or  \`instance\` is expected`,
-      Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
-
-    let layer = this.get(layerPath);
-    Ember.assert(
-      `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
-      `but \`object\` or  \`instance\` is expected`,
-      Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
+    let layer = Ember.get(options, 'layer');
 
     Ember.set(layer, 'type', Ember.get(layerProperties, 'type'));
     Ember.set(layer, 'name', Ember.get(layerProperties, 'name'));
@@ -330,31 +347,18 @@ export default Ember.Mixin.create({
   /**
     Removes specified layer from layers hierarchy.
 
-    @method removeLayer
+    @method _removeLayer
     @param {Object} options Method options.
     @param {String} options.layerPath Path to removing layer.
+    @param {String} options.layer Removing layer itself.
     @returns {Object} Removed layer.
+    @private
   */
-  removeLayer(options) {
+  _removeLayer(options) {
     options = options || {};
-    let layerPath = Ember.get(options, 'layerPath');
-
-    Ember.assert(
-      `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
-      `but \`string\` is expected`,
-      Ember.typeOf(layerPath) === 'string');
-
-    let layer = this.get(layerPath);
-    Ember.assert(
-      `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
-      `but \`object\` or  \`instance\` is expected`,
-      Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
-
-    if (Ember.typeOf(layer.delete) === 'function') {
-      layer.delete();
-    } else {
-      Ember.set(layer, 'isDeleted', true);
-    }
+    let layer = Ember.get(options, 'layer');
+    
+    Ember.set(layer, 'isDeleted', true);
     return layer;
   }
 });

@@ -47,6 +47,26 @@ let RemoveLayerComponent = Ember.Component.extend(
   DynamicComponentsMixin, {
 
   /**
+    Flag: indicating whether last user action was "approve" or not.
+
+    @property _isApproved
+    @type Boolean
+    @default false
+    @private
+  */
+  _isApproved: false,
+
+  /**
+    Flag: indicating whether last user action was "deny" or not.
+
+    @property _isDenied
+    @type Boolean
+    @default false
+    @private
+  */
+  _isDenied: false,
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -98,11 +118,11 @@ let RemoveLayerComponent = Ember.Component.extend(
 
   actions: {
     onApprove() {
-      this.sendAction('approve');
+      this.set('_isApproved', true);
     },
 
     onDeny() {
-      this.sendAction('deny');
+      this.set('_isDenied', false);
     },
 
     onShow() {
@@ -110,6 +130,21 @@ let RemoveLayerComponent = Ember.Component.extend(
     },
 
     onHide() {
+      // Send approve/deny actions.
+      // They must be sent after dialog's 'hide' animation complete,
+      // otherwise layer (with dialog attached to layer) will be removed earlier then dialog's 'hide' operation complete,
+      // which will cause Semantic UI exception.
+      if (this.get('_isApproved')) {
+        this.sendAction('approve');
+      } else if (this.get('_isDenied')) {
+        this.sendAction('deny');
+      }
+
+      // Clean up flags.
+      this.set('_isApproved', false);
+      this.set('_isDenied', false);
+
+      // Finally send 'hide' action.
       this.sendAction('hide');
     }
   }

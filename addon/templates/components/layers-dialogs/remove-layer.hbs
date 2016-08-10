@@ -1,4 +1,4 @@
-{{flexberry-dialog class="{{class}} {{flexberryClassNames.prefix}}"
+{{flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
   caption=(t "components.layers-dialogs.remove-layer.caption")
   content=(t "components.layers-dialogs.remove-layer.content" layerName=name)
   approveButtonCaption=(t "components.layers-dialogs.remove-layer.approve-button.caption")

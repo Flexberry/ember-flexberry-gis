@@ -1,4 +1,4 @@
-{{#flexberry-dialog class="{{class}} {{flexberryClassNames.prefix}}"
+{{#flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
   caption=caption
   visible=visible
   approve=(action "onApprove")
