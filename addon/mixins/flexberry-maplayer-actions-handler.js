@@ -181,10 +181,10 @@ export default Ember.Mixin.create({
       let parentLayer = this.get(parentLayerPath);
       Ember.assert(
         `Wrong type of \`parentLayer\` property: actual type is \`${Ember.typeOf(parentLayer)}\`, ` +
-        `but \`object\` or  \`instance\` is expected`,
-        Ember.typeOf(parentLayer) === 'object' || Ember.typeOf(parentLayer) === 'instance');
+        `but \`array\` or \`object\` or  \`instance\` is expected`,
+        Ember.isArray(parentLayer) || Ember.typeOf(parentLayer) === 'object' || Ember.typeOf(parentLayer) === 'instance');
 
-      let childLayers = Ember.get(parentLayer, 'layers');
+      let childLayers = Ember.isArray(parentLayer) ? parentLayer : Ember.get(parentLayer, 'layers');
       if (Ember.isNone(childLayers)) {
         childLayers = Ember.A();
         Ember.set(parentLayer, 'layers', childLayers);
@@ -200,6 +200,10 @@ export default Ember.Mixin.create({
         parentLayer: parentLayer,
         layerProperties: layerProperties
       });
+
+      if (Ember.get(childLayer, 'type') === 'group' && !Ember.isArray(Ember.get(childLayer, 'layers'))) {
+        Ember.set(childLayer, 'layers', Ember.A());
+      }
 
       childLayers.pushObject(childLayer);
     },

@@ -27,7 +27,8 @@ const flexberryClassNames = FlexberryTreeComponent.flexberryClassNames;
 flexberryClassNames.flexberryMaplayers = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
-  addChildButton: flexberryClassNamesPrefix + '-add-button'
+  addChildButton: flexberryClassNamesPrefix + '-add-child-button',
+  addChildDialog: flexberryClassNamesPrefix + '-add-child-dialog'
 };
 
 /**
@@ -221,6 +222,44 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
     this.set('_innerDynamicComponents.0.visible', !readonly);
   })),
 
+  actions: {
+    onAddChildButtonClick() {
+      let i18n = this.get('i18n');
+
+      // Set dialog caption.
+      this.set(
+        '_innerDynamicComponents.1.componentProperties.caption',
+        i18n.t("components.layers-dialogs.add-layer.caption"));
+
+      // Show dialog.
+      this.set('_innerDynamicComponents.1.componentProperties.visible', true);
+    },
+
+    onAddChildDialogHide() {
+      // Hide dialog.
+      this.set('_innerDynamicComponents.1.componentProperties.visible', false);
+
+      // Clean up dialog's content-related properties.
+      this.set(
+        '_innerDynamicComponents.1.componentProperties.type',
+        null);
+      this.set(
+        '_innerDynamicComponents.1.componentProperties.name',
+        null);
+      this.set(
+        '_innerDynamicComponents.1.componentProperties.coordinateReferenceSystem',
+        null);
+      this.set(
+        '_innerDynamicComponents.1.componentProperties.settings',
+        null);
+    },
+
+    onAddChildDialogApprove(...args) {
+      // Send outer 'addChild' action.
+      this.sendAction('addChild', ...args);
+    }
+  },
+
   /**
     Initializes component.
   */
@@ -234,9 +273,31 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
       componentProperties: {
         class: flexberryClassNames.flexberryMaplayers.addChildButton,
         iconClass: 'plus icon',
-        dynamicProxyActions: Ember.A([{
+        dynamicActions: Ember.A([{
           on: 'click',
-          actionName: 'addChild'
+          actionContext: this,
+          actionName: 'onAddChildButtonClick'
+        }])
+      }
+    }, {
+      to: 'treeEnd',
+      componentName: 'layers-dialogs/edit-layer',
+      componentProperties: {
+        class: flexberryClassNames.flexberryMaplayers.addChildDialog,
+        name: null,
+        settings: null,
+        coordinateReferenceSystem: null,
+        typeIsReadonly: false,
+        visible: false,
+        caption: null,
+        dynamicActions: Ember.A([{
+          on: 'approve',
+          actionContext: this,
+          actionName: 'onAddChildDialogApprove'
+        }, {
+          on: 'hide',
+          actionContext: this,
+          actionName: 'onAddChildDialogHide'
         }])
       }
     }]);

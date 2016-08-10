@@ -65,84 +65,6 @@ let getRenderedDynamicActionArguments = function(actionArguments, renderingConte
   return renderedActionArguments;
 };
 
-let bindDynamicActions = function(options) {
-  options = options || {};
-  let rootPropertyOwner = Ember.get(options, 'rootPropertyOwner');
-  let propertyValue = Ember.get(options, 'propertyValue');
-  let propertyPath = Ember.get(options, 'propertyPath');
-  let hierarchyPropertyName = Ember.get(options, 'hierarchyPropertyName');
-  let dynamicActions = Ember.get(options, 'dynamicActions');
-
-  if (Ember.isNone(propertyValue)) {
-    return;
-  }
-
-  // If property is array, then attach dynamic action bindings for each object in array.
-  if (Ember.isArray(propertyValue)) {
-    for(let i = 0, len = propertyValue.length; i < len; i++) {
-      let object = propertyValue[i];
-
-      bindDynamicActions({
-        rootPropertyOwner: rootPropertyOwner,
-        propertyOwner: propertyValue,
-        propertyValue: object,
-        propertyPath: propertyPath + '.' + i,
-        hierarchyPropertyName: hierarchyPropertyName,
-        dynamicActions: dynamicActions
-      });
-    }
-
-    return;
-  }
-
-  // Here 'propertyValue' must be strict an object or an instance.
-  Ember.assert(
-    `Wrong type of \`${propertyPath}\` property retrieved through \`get-with-action-bindings\` helper: ` +
-    `actual type is \`${Ember.typeOf(propertyValue)}\`, but \`object\` or \`instance\` is expected.`,
-    Ember.typeOf(propertyValue) === 'object' || Ember.typeOf(propertyValue) === 'instance');
-
-  // Prepare & set dynamic action bindings for current 'propertyValue' (which is always object or instance here).
-  if (Ember.isArray(dynamicActions)) {
-    let preparedDynamicActions = Ember.A();
-
-    for(let i = 0, len = dynamicActions.length; i < len; i++) {
-      let dynamicAction = dynamicActions[i];
-
-      // Helper shouldn't mutate given data, so we need to create new dynamic action with modified properties.
-      let preparedDynamicAction = DynamicActionObject.create({
-        on: Ember.get(dynamicAction, 'on'),
-        actionHandler: Ember.get(dynamicAction, 'actionHandler'),
-        actionName: Ember.get(dynamicAction, 'actionName'),
-
-        // Use 'rootPropertyOwner' as action context (if context is not defined explicitly).
-        actionContext: Ember.get(dynamicAction, 'actionContext') || rootPropertyOwner,
-
-        // Perform template substitutions inside action arguments.
-        actionArguments: getRenderedDynamicActionArguments(
-          Ember.get(dynamicAction, 'actionArguments'), {
-          propertyPath: propertyPath
-        })
-      });
-
-      preparedDynamicActions.pushObject(preparedDynamicAction);
-    }
-    
-    Ember.set(propertyValue, 'dynamicActions', preparedDynamicActions);
-  }
-
-  // Recursively bind dynamic actions to nested child objects.
-  if (!Ember.isBlank(hierarchyPropertyName) && Ember.typeOf(hierarchyPropertyName) === 'string') {
-    bindDynamicActions({
-      rootPropertyOwner: rootPropertyOwner,
-      propertyOwner: propertyValue,
-      propertyValue: Ember.get(propertyValue, hierarchyPropertyName),
-      propertyPath: propertyPath + '.' + hierarchyPropertyName,
-      hierarchyPropertyName: hierarchyPropertyName,
-      dynamicActions: dynamicActions
-    });
-  }
-};
-
 /**
   Get with dynamic actions helper.
   Retrieves property with the specified name from the specified object
@@ -231,6 +153,159 @@ let bindDynamicActions = function(options) {
 */
 export default Ember.Helper.extend({
   /**
+    Owner of hierarchy root property.
+
+    @property _rootPropertyOwner
+    @type Object
+    @default null
+    @private
+  */
+  _rootPropertyOwner: null,
+
+  /**
+    Array with objects containing names hierarchy properties and observer handlers related to them.
+    Each object in array has following structure: { propertyName: '...', propertyObserverHandler: function() { ... } }.
+
+    @property _hierarchyPropertiesMetadata
+    @type Object[]
+    @default null
+    @private
+   */
+  _hierarchyPropertiesMetadata: null,
+
+  /**
+    Adds observer for given hierarchy property, which will force helper to recompute
+    on any changes in the specified hierarchy property.
+
+    @method _addHierarchyPropertyObserver
+    @param {String} propertyName Hierarchy property name.
+    @private
+  */
+  _addHierarchyPropertyObserver(propertyName) {
+    let hierarchyPropertiesMetadata = this.get('_hierarchyPropertiesMetadata');
+    let rootPropertyOwner = this.get('_rootPropertyOwner');
+
+    let observerHandler = () => {
+      this.recompute();
+    };
+
+    Ember.addObserver(rootPropertyOwner, propertyName, observerHandler);
+    hierarchyPropertiesMetadata.pushObject({
+      propertyName: propertyName,
+      propertyObserverHandler: observerHandler
+    });
+  },
+
+  /**
+    Removes all previously attached to hierarchy properties observers.
+
+    @method _removeHierarchyPropertiesObservers
+    @private
+  */
+  _removeHierarchyPropertiesObservers() {
+    let hierarchyPropertiesMetadata = this.get('_hierarchyPropertiesMetadata');
+    let rootPropertyOwner = this.get('_rootPropertyOwner');
+
+    let len = hierarchyPropertiesMetadata.length;
+    while(--len >= 0) {
+      let metadata = hierarchyPropertiesMetadata[len];
+      let propertyName = Ember.get(metadata, 'propertyName');
+      let propertyObserverHandler = Ember.get(metadata, 'propertyObserverHandler');
+
+      Ember.removeObserver(rootPropertyOwner, propertyName, propertyObserverHandler);
+      hierarchyPropertiesMetadata.removeAt(len);
+    }
+  },
+
+  /**
+    Binds given dynamic actions to every object in the specified hierarchy.
+
+    @method _bindDynamicActions
+    @param {Object|Object[]} propertyValue Value of some property in the specified hierarchy.
+    @param {String} propertyPath Path to property in the specified hierarchy.
+    @param {String} Name of property that leads to nested child properties in the specified hierarchy.
+    @param {DynamicAction[]} Specified dynamic actions.
+    @private
+  */
+  _bindDynamicActions(options) {
+    options = options || {};
+    let propertyValue = Ember.get(options, 'propertyValue');
+    let propertyPath = Ember.get(options, 'propertyPath');
+    let hierarchyPropertyName = Ember.get(options, 'hierarchyPropertyName');
+    let dynamicActions = Ember.get(options, 'dynamicActions');
+
+    // Add & remember observer to force helper recompute, if some new objects appear in hierarchy.
+      this._addHierarchyPropertyObserver(`${propertyPath}.[]`);
+
+    if (Ember.isNone(propertyValue)) {
+      return;
+    }
+
+    // If property is array, then attach dynamic action bindings for each object in array.
+    if (Ember.isArray(propertyValue)) {
+      for(let i = 0, len = propertyValue.length; i < len; i++) {
+        let object = propertyValue[i];
+
+        this._bindDynamicActions({
+          propertyOwner: propertyValue,
+          propertyValue: object,
+          propertyPath: propertyPath + '.' + i,
+          hierarchyPropertyName: hierarchyPropertyName,
+          dynamicActions: dynamicActions
+        });
+      }
+
+      return;
+    }
+
+    // Here 'propertyValue' must be strict an object or an instance.
+    Ember.assert(
+      `Wrong type of \`${propertyPath}\` property retrieved through \`get-with-action-bindings\` helper: ` +
+      `actual type is \`${Ember.typeOf(propertyValue)}\`, but \`object\` or \`instance\` is expected.`,
+      Ember.typeOf(propertyValue) === 'object' || Ember.typeOf(propertyValue) === 'instance');
+
+    // Prepare & set dynamic action bindings for current 'propertyValue' (which is always object or instance here).
+    if (Ember.isArray(dynamicActions)) {
+      let preparedDynamicActions = Ember.A();
+
+      for(let i = 0, len = dynamicActions.length; i < len; i++) {
+        let dynamicAction = dynamicActions[i];
+
+        // Helper shouldn't mutate given data, so we need to create new dynamic action with modified properties.
+        let preparedDynamicAction = DynamicActionObject.create({
+          on: Ember.get(dynamicAction, 'on'),
+          actionHandler: Ember.get(dynamicAction, 'actionHandler'),
+          actionName: Ember.get(dynamicAction, 'actionName'),
+
+          // Use 'rootPropertyOwner' as action context (if context is not defined explicitly).
+          actionContext: Ember.get(dynamicAction, 'actionContext') || this.get('_rootPropertyOwner'),
+
+          // Perform template substitutions inside action arguments.
+          actionArguments: getRenderedDynamicActionArguments(
+            Ember.get(dynamicAction, 'actionArguments'), {
+            propertyPath: propertyPath
+          })
+        });
+
+        preparedDynamicActions.pushObject(preparedDynamicAction);
+      }
+      
+      Ember.set(propertyValue, 'dynamicActions', preparedDynamicActions);
+    }
+
+    // Recursively bind dynamic actions to nested child objects.
+    if (!Ember.isBlank(hierarchyPropertyName) && Ember.typeOf(hierarchyPropertyName) === 'string') {
+      this._bindDynamicActions({
+        propertyOwner: propertyValue,
+        propertyValue: Ember.get(propertyValue, hierarchyPropertyName),
+        propertyPath: propertyPath + '.' + hierarchyPropertyName,
+        hierarchyPropertyName: hierarchyPropertyName,
+        dynamicActions: dynamicActions
+      });
+    }
+  },
+
+  /**
     Overridden [Ember.Helper compute method](http://emberjs.com/api/classes/Ember.Helper.html#method_compute).
     Executes helper's logic, returns helper's value.
 
@@ -258,9 +333,10 @@ export default Ember.Helper.extend({
     let hierarchyPropertyName = Ember.get(hash, 'hierarchyPropertyName');
     let dynamicActions = Ember.get(hash, 'dynamicActions');
 
+    this.set('_rootPropertyOwner', propertyOwner);
+
     let propertyValue = Ember.get(propertyOwner, propertyName);
-    bindDynamicActions({
-      rootPropertyOwner: propertyOwner,
+    this._bindDynamicActions({
       propertyOwner: propertyOwner,
       propertyValue: propertyValue,
       propertyPath: propertyName,      
@@ -269,5 +345,33 @@ export default Ember.Helper.extend({
     });
 
     return propertyValue;
+  },
+
+  /**
+    Runs helper's {{#crossLink "GetWithDynamicActionsHelper/compute:method"}}'compute' method{{/crossLink}} again.
+  */
+  recompute() {
+    this._removeHierarchyPropertiesObservers();
+
+    this._super(...arguments);
+  },
+
+  /**
+    Initializes helper.
+  */
+  init() {
+    this._super(...arguments);
+
+    this.set('_hierarchyPropertiesMetadata', Ember.A());
+  },
+
+  /**
+    Destroys helper.
+  */
+  willDestroy() {
+    this._super(...arguments);
+
+    this._removeHierarchyPropertiesObservers();
+    this.set('_rootPropertyOwner', null);
   }
 });

@@ -346,12 +346,12 @@ let FlexberryTreeComponent = Ember.Component.extend(
     let treeNodeComponent = Ember.getOwner(this)._lookupFactory(`component:${treeNodeComponentName}`);
     let expandedTreeNodeClass = Ember.$.fn.accordion.settings.className.active;
 
-    let $parentNodeContent = this.$().parents().closest(`.${treeNodeComponent.flexberryClassNames.treeNodeContent}`);
+    let $parentNodeContent = Ember.$(this.$().parents(`.${treeNodeComponent.flexberryClassNames.treeNodeContent}`)[0]);
     if ($parentNodeContent.hasClass(expandedTreeNodeClass)) {
       $parentNodeContent.removeClass(expandedTreeNodeClass);
     }
 
-    let $parentNodeHeader = $parentNodeContent.prev(`.${treeNodeComponent.flexberryClassNames.treeNodeHeader}`);
+    let $parentNodeHeader = Ember.$($parentNodeContent.prev(`.${treeNodeComponent.flexberryClassNames.treeNodeHeader}`)[0]);
     if ($parentNodeHeader.hasClass(expandedTreeNodeClass)) {
       $parentNodeHeader.removeClass(expandedTreeNodeClass);
     }

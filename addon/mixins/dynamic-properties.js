@@ -54,7 +54,7 @@ export default Ember.Mixin.create({
     and observer handlers related to them.
     Each object in array has following structure: { propertyName: '...', propertyObserverHandler: function() { ... } }.
 
-    @property _assignedDynamicPropertiesMetadata
+    @property _dynamicPropertiesMetadata
     @type Object[]
     @default null
     @private
