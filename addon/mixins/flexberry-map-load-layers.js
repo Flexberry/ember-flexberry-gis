@@ -53,22 +53,6 @@ export default Ember.Mixin.create({
       });
   },
 
-
-  /**
-    Set Index for each layer in hierarhy
-    TODO: should be controlled by layers tree view and been stored in data
-    @private
-   */
-  _setIndex(layers, indexed) {
-    if (layers) {
-      layers.forEach(layer => {
-        layer.set('index', indexed.index);
-        indexed.index++;
-        this._setIndex(layer.get('layers'), indexed);
-      });
-    }
-  },
-
   /**
     Load layer hierarhy of specified flexberry-map model
     @method loadMapLayers
@@ -80,7 +64,6 @@ export default Ember.Mixin.create({
       return this._loadChildLayers(map.get('rootLayer'));
     }).then(layers => {
       baseModel.set('layers', layers);
-      this._setIndex(layers, { index: 0 });
       return mapPromise;
     });
   }
