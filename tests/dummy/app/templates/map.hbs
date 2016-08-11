@@ -13,7 +13,20 @@
 
   </div>
   <div class="four wide column">
-    {{layers-tree layers=model.layers}}<br>
+    {{flexberry-maplayers
+      exclusive=false
+      collapsible=true
+      animateChildren=false
+      layers=(get-with-dynamic-actions this "model.layers"
+        hierarchyPropertyName="layers"
+        dynamicActions=(array
+          (hash
+            on="changeVisibility"
+            actionName="onMapLayerChangeVisibility"
+            actionArguments=(array "{% propertyPath %}.visibility")
+          )
+        )
+      )}}<br>
     lat: {{flexberry-field value=model.lat}}
     lng: {{flexberry-field value=model.lng}}
     zoom: {{flexberry-field value=model.zoom}}

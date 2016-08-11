@@ -142,7 +142,7 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
     @type Object[]
     @readOnly
   */
-  _existingLayers: Ember.computed('layers.@each.isDeleted', function() {
+  _existingLayers: Ember.computed('layers.@each.isDeleted', function () {
     let layers = this.get('layers');
     Ember.assert(
       `Wrong type of \`layers\` property: actual type is \`${Ember.typeOf(layers)}\`, ` +
@@ -154,7 +154,17 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
     }
 
     return Ember.A(layers.filter((layer) => {
-      return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;  
+      return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
+    }).map((layer) => {
+      return {
+        name: Ember.get(layer, 'name'),
+        type: Ember.get(layer, 'type'),
+        visibility: Ember.get(layer, 'visibility'),
+        settings: Ember.get(layer, 'settings'),
+        coordinateReferenceSystem: Ember.get(layer, 'coordinateReferenceSystem'),
+        layers: Ember.get(layer, 'layers'),
+        dynamicActions: Ember.get(layer, 'dynamicActions')
+      };
     }));
   }),
 
@@ -215,7 +225,7 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
     @method _readonlyDidChange
     @private
   */
-  _readonlyDidChange: Ember.on('init', Ember.observer('readonly', function() {
+  _readonlyDidChange: Ember.on('init', Ember.observer('readonly', function () {
     let readonly = this.get('readonly') === true;
 
     // Show/hide flexberry-button for 'add' operation.
@@ -280,27 +290,27 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
         }])
       }
     }, {
-      to: 'treeEnd',
-      componentName: 'layers-dialogs/edit-layer',
-      componentProperties: {
-        class: flexberryClassNames.flexberryMaplayers.addChildDialog,
-        name: null,
-        settings: null,
-        coordinateReferenceSystem: null,
-        typeIsReadonly: false,
-        visible: false,
-        caption: null,
-        dynamicActions: Ember.A([{
-          on: 'approve',
-          actionContext: this,
-          actionName: 'onAddChildDialogApprove'
-        }, {
-          on: 'hide',
-          actionContext: this,
-          actionName: 'onAddChildDialogHide'
-        }])
-      }
-    }]);
+        to: 'treeEnd',
+        componentName: 'layers-dialogs/edit-layer',
+        componentProperties: {
+          class: flexberryClassNames.flexberryMaplayers.addChildDialog,
+          name: null,
+          settings: null,
+          coordinateReferenceSystem: null,
+          typeIsReadonly: false,
+          visible: false,
+          caption: null,
+          dynamicActions: Ember.A([{
+            on: 'approve',
+            actionContext: this,
+            actionName: 'onAddChildDialogApprove'
+          }, {
+              on: 'hide',
+              actionContext: this,
+              actionName: 'onAddChildDialogHide'
+            }])
+        }
+      }]);
 
     this.set('_innerDynamicComponents', innerDynamicComponents);
   }
