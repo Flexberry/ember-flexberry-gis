@@ -2,6 +2,14 @@
     font-family: inherit;
     height: 700px;
     width: 100%;
+
+    &.crosshair {
+      cursor: crosshair;
+    }
+
+    &.zoom-in {
+      cursor: zoom-in;
+    }
 }
 
 .left-aligned {
@@ -19,3 +27,4 @@
 .flexberry-tree .flexberry-tree {
   margin: 0 !important;
 }
+
