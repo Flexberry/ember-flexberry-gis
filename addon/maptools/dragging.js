@@ -12,4 +12,4 @@ export default MapTool.extend({
     let map = this.get('map');
     map.dragging.disable();
   }
-})
+});
