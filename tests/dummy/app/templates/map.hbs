@@ -2,7 +2,7 @@
   <div class="twelve wide column">
     {{#flexberry-maptoolbar leafletMap=leafletMap as |toolbar|}}
       <div class="ui icon buttons">
-        <button class="ui icon active button" {{action "activateTool" "dragging" target=toolbar}}>
+        <button class="ui icon button" {{action "activateTool" "dragging" target=toolbar}}>
           <i class="hand paper icon"></i>
         </button>
         <button class="ui icon button" {{action "activateTool" "zoom" target=toolbar}}>
@@ -15,6 +15,11 @@
           <i class="maximize icon"></i>
         </button>
       </div>
+      <div class="ui icon buttons">
+        <button class="ui icon button"  {{action "activateTool" "identify" target=toolbar}}>
+          <i class="info circle icon"></i>
+        </button>
+      </div>
     {{/flexberry-maptoolbar}}
     {{#flexberry-map
       lat=model.lat
@@ -24,9 +29,11 @@
       onMoveend=(action "updateCenter")
       leafletMapDidInit=(action "leafletMapDidInit") as |leafletMap|}}
       {{flexberry-layers leafletContainer=leafletMap layers=model.layers}}
+
+      {{scale-control map=leafletMap imperial=false}}
     {{/flexberry-map}}
 
-    {{scale-control map=leafletMap imperial=false}}
+
 
   </div>
   <div class="four wide column">
