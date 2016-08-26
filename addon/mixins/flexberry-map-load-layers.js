@@ -21,7 +21,7 @@ export default Ember.Mixin.create({
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (layer.get('type') === 'group') {
         this._loadChildLayers(layer)
-          .then(layers => layer.set('layers', layers))
+          .then(layers => layer.set('layers', Ember.A(layers)))
           .then(() => resolve(layer))
           .catch(reason => reject(reason));
       }
@@ -79,7 +79,7 @@ export default Ember.Mixin.create({
       baseModel = map;
       return this._loadChildLayers(map.get('rootLayer'));
     }).then(layers => {
-      baseModel.set('layers', layers);
+      baseModel.set('layers', Ember.A(layers));
       this._setIndex(layers, { index: 0 });
       return mapPromise;
     });
