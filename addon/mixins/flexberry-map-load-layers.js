@@ -79,7 +79,7 @@ export default Ember.Mixin.create({
       baseModel = map;
       return this._loadChildLayers(map.get('rootLayer'));
     }).then(layers => {
-      baseModel.set('layers', Ember.A(layers));
+      baseModel.set('rootLayer.layers', Ember.A(layers));
       this._setIndex(layers, { index: 0 });
       return mapPromise;
     });

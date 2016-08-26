@@ -4,7 +4,7 @@
       lat=model.lat
       lng=model.lng
       zoom=model.zoom
-      layers=model.layers
+      layers=model.rootLayer.layers
       zoomControl=true
       onMoveend=(action "updateCenter")
       leafletMapDidInit=(action "leafletMapDidInit")}}
@@ -15,7 +15,7 @@
   <div class="six wide column">
     {{flexberry-maplayers
       class="styled"
-      layers=(get-with-dynamic-actions this "model.layers"
+      layers=(get-with-dynamic-actions this "model.rootLayer.layers"
         hierarchyPropertyName="layers"
         dynamicActions=(array
           (hash
@@ -39,8 +39,10 @@
             actionArguments=(array "{% propertyPath %}.visibility")
           )
         )
-        add=(action "onMapLayerAdd" "model.layers")
-      )}}<br>
+      )
+      add=(action "onMapLayerAdd" "model.rootLayer")
+    }}
+    <br>
     lat: {{flexberry-field value=model.lat}}
     lng: {{flexberry-field value=model.lng}}
     zoom: {{flexberry-field value=model.zoom}}

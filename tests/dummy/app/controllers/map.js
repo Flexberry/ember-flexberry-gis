@@ -59,7 +59,6 @@ export default EditFormController.extend(FlexberryMaplayerActionsHandlerMixin, {
     let layer = Ember.get(options, 'layer');
     
     if (!Ember.isNone(layer)) {
-      Ember.set(layer, 'visibility', false);
       layer.deleteRecord();
     }
 

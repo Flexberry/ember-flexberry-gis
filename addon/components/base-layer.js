@@ -83,6 +83,13 @@ export default Ember.Component.extend(
       this.setZIndex();
     },
 
+    willDestroyElement() {
+      this._super(...arguments);
+
+      let container = this.get('leafletContainer');
+      container.removeLayer(this.get('_layer'));
+    },
+
     /**
       Switch layer visible on map based on visibility property.
       @method toggleVisible
