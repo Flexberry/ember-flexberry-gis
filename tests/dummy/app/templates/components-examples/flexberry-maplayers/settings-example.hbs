@@ -28,8 +28,8 @@
                 actionArguments=(array "{% propertyPath %}")
               )
               (hash
-                on="addChild"
-                actionName="onMapLayerAddChild"
+                on="add"
+                actionName="onMapLayerAdd"
                 actionArguments=(array "{% propertyPath %}")
               )
               (hash
@@ -49,7 +49,7 @@
               )
             )
           )
-          addChild=(action "onMapLayerAddChild" "jsonLayers")
+          add=(action "onMapLayerAdd" "jsonLayers")
         }}
       {{/settings-example}}
       <br>

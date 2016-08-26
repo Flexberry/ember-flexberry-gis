@@ -5,10 +5,8 @@
 import Ember from 'ember';
 import RequiredActionsMixin from '../mixins/required-actions';
 import DomActionsMixin from '../mixins/dom-actions';
-import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
-import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
-import DynamicComponentsMixin from '../mixins/dynamic-components';
+import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import layout from '../templates/components/flexberry-dialog';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -49,18 +47,14 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses RequiredActionsMixin
   @uses DomActionsMixin
-  @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
-  @uses DynamicProxyActionsMixin
-  @uses DynamicComponentsMixin
+  @uses DynamicPropertiesMixin
 */
 let FlexberryDialogComponent = Ember.Component.extend(
   RequiredActionsMixin,
   DomActionsMixin,
-  DynamicPropertiesMixin,
   DynamicActionsMixin,
-  DynamicProxyActionsMixin,
-  DynamicComponentsMixin, {
+  DynamicPropertiesMixin, {
 
   /**
     Selected from DOM dialog block.
@@ -142,26 +136,6 @@ let FlexberryDialogComponent = Ember.Component.extend(
   offset: 0,
 
   /**
-    Flag: indicates whether component is detachable.
-    If set to false, it will prevent the component from being moved to inside the dimmer.
-
-    @property detachable
-    @type Boolean
-    @default true
-  */
-  detachable: true,
-
-  /**
-    Flag: indicates whether component should observer changes.
-    Whether any change in component's DOM should automatically refresh cached positions.
-
-    @property observeChanges
-    @type Boolean
-    @default true
-  */
-  observeChanges: true,
-
-  /**
     Flag: indicates whether multiple dialogs are allowed at the same time.
 
     @property allowMultiple
@@ -193,9 +167,9 @@ let FlexberryDialogComponent = Ember.Component.extend(
 
     @property duration
     @type Number
-    @default 400
+    @default 300
   */
-  duration: 400,
+  duration: 200,
 
   /**
     Flag: indicates whether dialog is visible or not.
@@ -235,17 +209,30 @@ let FlexberryDialogComponent = Ember.Component.extend(
 
     // Initialize Semantic UI modal.
     let $dialog = this.$().modal({
+      detachable: true,
+      observeChanges: false,
       offset: this.get('offset'),
-      detachable: this.get('detachable'),
-      observeChanges: this.get('observeChanges'),
       allowMultiple: this.get('allowMultiple'),
       closable: this.get('closable'),
       transition: this.get('transition'),
       duration: this.get('duration'),
+      onShow: () => {
+        return this.sendAction('beforeShow');
+      },
+      onHide: () => {
+        if (this.get('isDestroying') || this.get('isDestroyed')) {
+          // Prevent hide animation on destroyed component to avoid animation exceptions.
+          return false;
+        }
+
+        return this.sendAction('beforeHide');
+      },
       onVisible: () => {
+        this.set('visible', true);
         return this.sendAction('show');
       },
       onHidden: () => {
+        this.set('visible', false);
         return this.sendAction('hide');
       },
       onApprove: () => {
@@ -256,8 +243,12 @@ let FlexberryDialogComponent = Ember.Component.extend(
       }
     });
 
+    // Show dialog if necessary.
+    if (this.get('visible') && !Ember.isNone($dialog)) {
+      $dialog.modal('show');
+    }
+
     this.set('_dialog', $dialog);
-    this._visibleDidChange();
   },
 
   /**
@@ -271,10 +262,27 @@ let FlexberryDialogComponent = Ember.Component.extend(
       return;
     }
 
-    // Destroys Semantic UI modal.
+    // Remove dialog from DOM (from its dimmer).
+    $dialog.remove();
+
+    // Hide dialog's dimmer.
+    $dialog.modal('hideDimmer');
+
+    // Destroy dialog.
     $dialog.modal('destroy');
-    this.get('_dialog', null);
   },
+
+  /**
+    Component's action invoking when dialog starts to show.
+
+    @method sendingActions.beforeShow
+  */
+
+  /**
+    Component's action invoking when dialog starts to hide.
+
+    @method sendingActions.beforeHide
+  */
 
   /**
     Component's action invoking when dialog is shown.

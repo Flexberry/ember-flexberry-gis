@@ -5,10 +5,8 @@
 import Ember from 'ember';
 import RequiredActionsMixin from '../mixins/required-actions';
 import DomActionsMixin from '../mixins/dom-actions';
-import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
-import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
-import DynamicComponentsMixin from '../mixins/dynamic-components';
+import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import layout from '../templates/components/flexberry-button';
 
 /**
@@ -55,18 +53,14 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses RequiredActionsMixin
   @uses DomActionsMixin
-  @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
-  @uses DynamicProxyActionsMixin
-  @uses DynamicComponentsMixin
+  @uses DynamicPropertiesMixin
 */
 let FlexberryButtonComponent = Ember.Component.extend(
   RequiredActionsMixin,
   DomActionsMixin,
-  DynamicPropertiesMixin,
   DynamicActionsMixin,
-  DynamicProxyActionsMixin,
-  DynamicComponentsMixin, {
+  DynamicPropertiesMixin, {
 
   /**
     Flag: indicates whether button has caption or not.

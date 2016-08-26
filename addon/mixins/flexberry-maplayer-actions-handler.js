@@ -142,7 +142,7 @@ export default Ember.Mixin.create({
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.addChild:method"}}flexberry-maplayers component's 'addChild' action{{/crossLink}}.
       It adds new child layer.
 
-      @method actions.onMapLayerAddChild
+      @method actions.onMapLayerAdd
       @param {String} layerPath Path to a parent layers, to which new child layer must be added on action.
       @param {Object} e Action's event object.
       @param {Object} e.layerProperties Object containing properties of new child layer.
@@ -152,7 +152,7 @@ export default Ember.Mixin.create({
       ```handlebars
         {{flexberry-maplayer
           name="Tree node with checkbox"
-          addChild=(action "onMapLayerAddChild" "layers.0")
+          add=(action "onMapLayerAdd" "layers.0")
         }}
       ```
 
@@ -165,7 +165,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerAddChild(...args) {
+    onMapLayerAdd(...args) {
       let parentLayerPath = args[0];
       Ember.assert(
         `Wrong type of \`parentLayerPath\` argument: actual type is \`${Ember.typeOf(parentLayerPath)}\`, ` +

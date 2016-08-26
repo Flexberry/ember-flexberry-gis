@@ -3,12 +3,14 @@
 */
 
 import Ember from 'ember';
+import FlexberryTreenodeComponent from '../components/flexberry-treenode';
+
+import SlotsMixin from 'ember-block-slots';
 import RequiredActionsMixin from '../mixins/required-actions';
 import DomActionsMixin from '../mixins/dom-actions';
-import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
-import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
-import DynamicComponentsMixin from '../mixins/dynamic-components';
+import DynamicPropertiesMixin from '../mixins/dynamic-properties';
+
 import layout from '../templates/components/flexberry-tree';
 import { translationMacro as t } from 'ember-i18n';
 
@@ -19,17 +21,21 @@ import { translationMacro as t } from 'ember-i18n';
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-tree').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-tree').
+  @property {String} flexberryClassNames.header Component's start toolbar CSS-class name ('flexberry-tree-header').
+  @property {String} flexberryClassNames.footer Component's end toolbar CSS-class name ('flexberry-tree-footer').
+  @property {String} flexberryClassNames.placeholder Component's placeholder CSS-class name ('flexberry-tree-placeholder').
   @readonly
   @static
 
-  @for FlexberryTreenodeComponent
+  @for FlexberryTreeComponent
 */
 const flexberryClassNamesPrefix = 'flexberry-tree';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  startToolbar: flexberryClassNamesPrefix + '-start-toolbar',
-  endToolbar: flexberryClassNamesPrefix + '-end-toolbar',
+  root: flexberryClassNamesPrefix + '-root',
+  header: flexberryClassNamesPrefix + '-header',
+  footer: flexberryClassNamesPrefix + '-footer',
   placeholder: flexberryClassNamesPrefix + '-placeholder'
 };
 
@@ -72,55 +78,31 @@ const flexberryClassNames = {
 
   @class FlexberryTreeComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
   @uses RequiredActionsMixin
   @uses DomActionsMixin
-  @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
-  @uses DynamicProxyActionsMixin
-  @uses DynamicComponentsMixin
+  @uses DynamicPropertiesMixin
 */
 let FlexberryTreeComponent = Ember.Component.extend(
+  SlotsMixin,
   RequiredActionsMixin,
   DomActionsMixin,
-  DynamicPropertiesMixin,
   DynamicActionsMixin,
-  DynamicProxyActionsMixin,
-  DynamicComponentsMixin, {
+  DynamicPropertiesMixin, {
 
   /**
-    Name of component that will be used to display tree nodes.
+    Flag: indicates whether tree is placed on root level (hasn't parent nodes).
 
-    @property _treeNodeComponentName
-    @type String
-    @default 'flexberry-layerstreenode'
-    @private
-  */
-  _treeNodeComponentName: 'flexberry-treenode',
-
-  /**
-    Name of component's property in which tree nodes (defined as JSON objects) are stored.
-
-    @property _treeNodesPropertyName
-    @type String
-    @default 'nodes'
-    @private
-  */
-  _treeNodesPropertyName: 'nodes',
-
-  /**
-    Flag: indicates whether tree isn't placed inside {{#crossLink "FlexberryTreenodeComponent"}}flexberry-treenode component{{/crossLink}}.
-
-    @property _isNotInsideTreeNode
+    @property _isRoot
     @type Boolean
     @readonly
     @private
   */
-  _isNotInsideTreeNode: Ember.computed('targetObject', '_treeNodeComponentName', function() {
-    let targetObject = this.get('targetObject');
-    let treeNodeComponentName = this.get('_treeNodeComponentName');
-    let treeNodeComponentClass = Ember.getOwner(this)._lookupFactory(`component:${treeNodeComponentName}`);
+  _isRoot: Ember.computed('parentViewExcludingSlots', function() {
+    let parentView = this.get('parentViewExcludingSlots');
 
-    return !(targetObject instanceof treeNodeComponentClass);
+    return !(parentView instanceof FlexberryTreenodeComponent);
   }),
 
   /**
@@ -128,64 +110,56 @@ let FlexberryTreeComponent = Ember.Component.extend(
 
     @property _hasNodes
     @type boolean
-    @default null
+    @readOnly
     @private
   */
-  _hasNodes: null,
+  _hasNodes: Ember.computed('nodes.[]', function() {
+    let nodes = this.get('nodes');
+
+    return Ember.isArray(nodes) && nodes.length > 0;
+  }),
 
   /**
-    Flag: indicates whether tree start toolbar has some nested components.
+    Flag: indicates whether some nested content for header is defined
+    (some yield markup for 'header').
 
-    @property _startToolbarHasComponents
+    @property _hasHeader
     @type boolean
     @readOnly
     @private
   */
-  _startToolbarHasComponents: Ember.computed(
-    '_dynamicComponents.startToolbarLeft.[]',
-    '_dynamicComponents.startToolbarLeft.@each.visible',
-    '_dynamicComponents.startToolbarRight.[]',
-    '_dynamicComponents.startToolbarRight.@each.visible',
-    function() {
-      let leftPartHasComponents = this.get('_dynamicComponents.startToolbarLeft.length') > 0 &&
-        this.get('_dynamicComponents.startToolbarLeft').every((dynamicComponent) => {
-          return dynamicComponent.visible !== false;
-        });
-      let rightPartHasComponents = this.get('_dynamicComponents.startToolbarRight.length') > 0 &&
-        this.get('_dynamicComponents.startToolbarRight').every((dynamicComponent) => {
-          return dynamicComponent.visible !== false;
-        });
-
-      return leftPartHasComponents || rightPartHasComponents;
-    }
-  ),
+  _hasHeader: Ember.computed('_slots.[]', '_isRoot', function() {
+    // Yielded {{block-slot "header"}} is defined and current tree is root.
+    return this._isRegistered('header') && this.get('isRoot');
+  }),
 
   /**
-    Flag: indicates whether tree end toolbar has some nested components.
+    Flag: indicates whether some nested content is defined
+    (some yield markup or {{#crossLink "FlexberryTreeComponent/nodes:property"}}'nodes'{{/childNodes}} are defined).
 
-    @property _endToolbarHasComponents
+    @property _hasContent
     @type boolean
     @readOnly
     @private
   */
-  _endToolbarHasComponents: Ember.computed(
-    '_dynamicComponents.endToolbarLeft.[]',
-    '_dynamicComponents.endToolbarLeft.@each.visible',
-    '_dynamicComponents.endToolbarRight.[]',
-    '_dynamicComponents.endToolbarRight.@each.visible',
-    function() {
-      let leftPartHasComponents = this.get('_dynamicComponents.endToolbarLeft.length') > 0 &&
-        this.get('_dynamicComponents.endToolbarLeft').every((dynamicComponent) => {
-          return dynamicComponent.visible !== false;
-        });
-      let rightPartHasComponents = this.get('_dynamicComponents.endToolbarRight.length') > 0 &&
-        this.get('_dynamicComponents.endToolbarRight').every((dynamicComponent) => {
-          return dynamicComponent.visible !== false;
-        });
+  _hasContent: Ember.computed('_slots.[]', '_hasNodes', function() {
+    // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
+    return this._isRegistered('content') || this.get('_hasNodes');
+  }),
 
-      return leftPartHasComponents || rightPartHasComponents;
-    }
-  ),
+  /**
+    Flag: indicates whether some nested content for footer is defined
+    (some yield markup for 'footer').
+
+    @property _hasFooter
+    @type boolean
+    @readOnly
+    @private
+  */
+  _hasFooter: Ember.computed('_slots.[]', '_isRoot', function() {
+    // Yielded {{block-slot "footer"}} is defined and current tree is root.
+    return this._isRegistered('footer') && this.get('isRoot');
+  }),
 
   /**
     Reference to component's template.
@@ -220,13 +194,13 @@ let FlexberryTreeComponent = Ember.Component.extend(
 
     @property classNameBindings
     @type String[]
-    @default ['_isNotInsideTreeNode:ui']
+    @default ['_isRoot:ui']
   */
-  classNameBindings: ['_isNotInsideTreeNode:ui'],
+  classNameBindings: ['_isRoot:ui', '_isRoot:' + flexberryClassNames.root],
 
   /**
     Component's placeholder.
-    Will be displayed if tree nodes are not defined.
+    Will be displayed if nested tree nodes are not defined.
 
     @property placeholder
     @type String
@@ -273,16 +247,6 @@ let FlexberryTreeComponent = Ember.Component.extend(
   duration: 350,
 
   /**
-    Flag: indicates whether tree is in readonly mode.
-    If true, tree nodes data-related UI will be in readonly mode.
-
-    @property readonly
-    @type Boolean
-    @default false
-  */
-  readonly: false,
-
-  /**
     Tree nodes.
     This property is optional and must be used when there are too many child nodes,
     and you don't want to define them explicitly in the .hbs markup,
@@ -306,8 +270,8 @@ let FlexberryTreeComponent = Ember.Component.extend(
     @private
   */
   _initializeAccordion() {
-    let isNotInsideTreeNode = this.get('_isNotInsideTreeNode');
-    if (isNotInsideTreeNode) {
+    let isRoot = this.get('_isRoot');
+    if (isRoot) {
       this.$().accordion({
         exclusive: this.get('exclusive'),
         collapsible: this.get('collapsible'),
@@ -324,36 +288,9 @@ let FlexberryTreeComponent = Ember.Component.extend(
     @private
   */
   _destroyAccordion() {
-    let isNotInsideTreeNode = this.get('_isNotInsideTreeNode');
-    if (isNotInsideTreeNode) {
+    let isRoot = this.get('_isRoot');
+    if (isRoot) {
       this.$().accordion('destroy');
-    }
-  },
-
-  /**
-    Collapses component's parent node.
-
-    @method _collapseParentNode
-    @private
-  */
-  _collapseParentNode() {
-    let isNotInsideTreeNode = this.get('_isNotInsideTreeNode');
-    if (isNotInsideTreeNode) {
-      return;
-    }
-
-    let treeNodeComponentName = this.get('_treeNodeComponentName');
-    let treeNodeComponent = Ember.getOwner(this)._lookupFactory(`component:${treeNodeComponentName}`);
-    let expandedTreeNodeClass = Ember.$.fn.accordion.settings.className.active;
-
-    let $parentNodeContent = Ember.$(this.$().parents(`.${treeNodeComponent.flexberryClassNames.treeNodeContent}`)[0]);
-    if ($parentNodeContent.hasClass(expandedTreeNodeClass)) {
-      $parentNodeContent.removeClass(expandedTreeNodeClass);
-    }
-
-    let $parentNodeHeader = Ember.$($parentNodeContent.prev(`.${treeNodeComponent.flexberryClassNames.treeNodeHeader}`)[0]);
-    if ($parentNodeHeader.hasClass(expandedTreeNodeClass)) {
-      $parentNodeHeader.removeClass(expandedTreeNodeClass);
     }
   },
 
@@ -379,49 +316,6 @@ let FlexberryTreeComponent = Ember.Component.extend(
   }),
 
   /**
-    Observers changes in component's property with
-    {{#crossLink "FlexberyTreeComponent/_treeNodesPropertyName:property"}}specified name{{/crossLink}},
-    updates {{#crossLink "FlexberyTreeComponent/_hasNodes:property"}}'_hasNodes' property{{/crossLink}}.
-
-    @method _treeNodesDidChange
-    @private
-  */
-  _treeNodesDidChange: null,
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-
-    // Name of property in which child nodes should be stored.
-    let treeNodesPropertyName = this.get('_treeNodesPropertyName');
-
-    let treeNodesDidChange = () => {
-      let nodes = this.get(treeNodesPropertyName);
-
-      this.set('_hasNodes', Ember.isArray(nodes) && nodes.length > 0);
-    };
-    treeNodesDidChange();
-
-    this.set('_treeNodesDidChange', treeNodesDidChange);
-    this.addObserver(`${treeNodesPropertyName}.[]`, treeNodesDidChange);
-  },
-
-  /**
-    Destroys component.
-  */
-  willDestroy() {
-    this._super(...arguments);
-
-    // Name of property in which child nodes should be stored.
-    let treeNodesPropertyName = this.get('_treeNodesPropertyName');
-
-    let treeNodesDidChange = this.get('_treeNodesDidChange');
-    this.removeObserver(`${treeNodesPropertyName}.[]`, treeNodesDidChange);
-  },
-
-  /**
     Initializes DOM-related component's properties.
   */
   didInsertElement() {
@@ -437,11 +331,11 @@ let FlexberryTreeComponent = Ember.Component.extend(
   willDestroyElement() {
     this._super(...arguments);
 
+    // Collapse parent node (if tree is destroyed then parent node hasn't child nodes anymore).
+    //this._collapseParentNode();
+
     // Destroy Semantic UI accordion.
     this._destroyAccordion();
-
-    // Collapse parent node (if tree is destroyed then parent node hasn't child nodes anymore).
-    this._collapseParentNode();
   }
 });
 

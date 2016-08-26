@@ -1,39 +1,37 @@
-{{dynamic-components-placeholder name="treeStart"}}
-{{#if (and _isNotInsideTreeNode _startToolbarHasComponents)}}
-  <div class="{{flexberryClassNames.startToolbar}}">
-    <div class="left-aligned">
-      {{dynamic-components-placeholder name="startToolbarLeft"}}
+{{!--
+  See https://github.com/ciena-blueplanet/ember-block-slots#usage
+  {{yield}} is required here to make yield-slots available.
+--}}
+{{yield}}
+
+{{#yield-slot "header"}}
+  {{#if _hasHeader}}
+    <div class="{{flexberryClassNames.header}}">
+      {{yield}}
     </div>
-    <div class="right-aligned">
-      {{dynamic-components-placeholder name="startToolbarRight"}}
-    </div>
-    <div class="clear-aligned">
-    </div>
-  </div>
-{{/if}}
-{{#if _hasNodes}}
-  {{#each (get this _treeNodesPropertyName) as |nodeProperties|}}
-    {{component _treeNodeComponentName dynamicProperties=nodeProperties readonly=readonly}}
+  {{/if}}
+{{/yield-slot}}
+{{#if _hasContent}}
+  {{#each nodes as |node|}}
+    {{flexberry-treenode
+      caption=node.caption
+      nodes=node.nodes
+      dynamicProperties=node.dynamicProperties
+      dynamicActions=node.dynamicActions
+    }}
   {{/each}}
-{{/if}}
-{{#if hasBlock}}
-  {{yield}}
-{{/if}}
-{{#if (not (or hasBlock _hasNodes))}}
+  {{#yield-slot "content"}}
+    {{yield}}
+  {{/yield-slot}}
+{{else if _isRoot}}
   <div class="{{flexberryClassNames.placeholder}} title">
     {{placeholder}}
   </div>
 {{/if}}
-{{#if (and _isNotInsideTreeNode _endToolbarHasComponents)}}
-  <div class="{{flexberryClassNames.endToolbar}}">
-    <div class="left-aligned">
-      {{dynamic-components-placeholder name="endToolbarLeft"}}
+{{#yield-slot "footer"}}
+  {{#if _hasFooter}}
+    <div class="{{flexberryClassNames.footer}}">
+      {{yield}}
     </div>
-    <div class="right-aligned">
-      {{dynamic-components-placeholder name="endToolbarRight"}}
-    </div>
-    <div class="clear-aligned">
-    </div>
-  </div>
-{{/if}}
-{{dynamic-components-placeholder name="treeEnd"}}
+  {{/if}}
+{{/yield-slot}}

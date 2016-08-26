@@ -1,29 +1,30 @@
+{{!--
+  See https://github.com/ciena-blueplanet/ember-block-slots#usage
+  {{yield}} is required here to make yield-slots available.
+--}}
+{{yield}}
+
 <div
-  class="{{flexberryClassNames.treeNodeHeader}} title"
-  onclick={{action "onHeaderClick" (or hasBlock _hasNodes) preventDefault=false}}>
-  <div class="left-aligned">
-    {{#if (or hasBlock _hasNodes)}}
-      <i class="{{flexberryClassNames.treeNodeExpandCollapseIcon}} dropdown icon"></i>
+  class="{{flexberryClassNames.header}} title"
+  onclick={{action "onHeaderClick" preventDefault=false}}>
+    {{#if _hasContent}}
+      <i class="{{flexberryClassNames.expandCollapseIcon}} dropdown icon"></i>
     {{else}}
       {{!-- Here "visibility: hidden;" style is to force exactly the same padding for tree nodes without children --}}
-      <i class="{{flexberryClassNames.treeNodeExpandCollapseIcon}} dropdown icon" style="visibility: hidden;"></i>
+      <i class="{{flexberryClassNames.expandCollapseIcon}} dropdown icon" style="visibility: hidden;"></i>
     {{/if}}
-    {{dynamic-components-placeholder name="headerLeft"}}
     {{caption}}
-  </div>
-  <div class="right-aligned">
-    {{dynamic-components-placeholder name="headerRight"}}
-  </div>
-  <div class="clear-aligned">
-  </div>
+    {{#yield-slot "header"}}
+      {{yield}}
+    {{/yield-slot}}
 </div>
-<div class="{{flexberryClassNames.treeNodeContent}} content">
-  {{dynamic-components-placeholder name="contentStart"}}
+<div class="{{flexberryClassNames.content}} content">
   {{#if _hasNodes}}
-    {{component _subtreeComponentName dynamicProperties=_subtreeProperties readonly=readonly}}
+    {{flexberry-tree
+      nodes=nodes
+    }}
   {{/if}}
-  {{#if hasBlock}}
+  {{#yield-slot "content"}}
     {{yield}}
-  {{/if}}
-  {{dynamic-components-placeholder name="contentEnd"}}
+  {{/yield-slot}}
 </div>

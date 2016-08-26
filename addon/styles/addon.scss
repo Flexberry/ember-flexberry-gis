@@ -1,29 +1,7 @@
+@import './components/flexberry-tree';
+
 .leaflet-container {
-    font-family: inherit;
-    height: 700px;
-    width: 100%;
-}
-
-.left-aligned {
-  float: left;
-}
-
-.right-aligned {
-  float: right;
-}
-
-.clear-aligned {
-  clear: both;
-}
-
-.flexberry-tree .flexberry-tree {
-  margin: 0 !important;
-}
-
-.ui.styled.accordion .flexberry-tree-start-toolbar, .ui.styled.accordion .flexberry-tree-end-toolbar {
-  padding: 0.75em 1em;
-}
-
-.flexberry-tree-placeholder {
-  text-align: center !important;
+  font-family: inherit;
+  height: 700px;
+  width: 100%;
 }

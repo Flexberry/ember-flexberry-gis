@@ -47,8 +47,9 @@ export default {
         'caption': 'Cancel'
       }
     },
+
     'layers-dialogs': {
-      'remove-layer': {
+      'remove': {
         'caption': 'Remove layer',
         'content': 'Do you really want to remove \'{{layerName}}\' layer?',
         'approve-button': {
@@ -58,50 +59,83 @@ export default {
           'caption': 'No'
         }
       },
-      'edit-layer': {
+
+      'edit': {
         'caption': 'Edit layer',
-        'layer-type': {
+        'approve-button': {
+          'caption': 'Ok'
+        },
+        'deny-button': {
+          'caption': 'Cancel'
+        },
+        'type-dropdown': {
           'caption': 'Layer type'
         },
-        'layer-name': {
+        'name-textbox': {
           'caption': 'Layer name'
         },
-        'layer-crs': {
+        'crs-textarea': {
           'caption': 'Layer coordinate reference system (CRS)'
         }
       },
-      'add-layer': {
-        'caption': 'Add new layer'
-      },
-      'edit-tile-layer-content': {
-        'url': {
-          'caption': 'Url'
+
+      'add': {
+        'caption': 'Add new layer',
+        'approve-button': {
+          'caption': 'Ok'
+        },
+        'deny-button': {
+          'caption': 'Cancel'
+        },
+        'type-dropdown': {
+          'caption': 'Layer type'
+        },
+        'name-textbox': {
+          'caption': 'Layer name'
+        },
+        'crs-textarea': {
+          'caption': 'Layer coordinate reference system (CRS)'
         }
       },
-      'edit-wms-layer-content': {
-        'url': {
-          'caption': 'Url'
+
+      'settings': {
+        'group': {
         },
-        'version': {
-          'caption': 'WMS version'
+
+        'tile': {
+          'url-textbox': {
+            'caption': 'Url'
+          }
         },
-        'layers': {
-          'caption': 'Layers'
-        },
-        'format': {
-          'caption': 'Image format'
-        },
-        'transparent': {
-          'caption': 'Allow images transparency'
+
+        'wms': {
+          'url-textbox': {
+            'caption': 'Url'
+          },
+          'version-textbox': {
+            'caption': 'WMS version'
+          },
+          'layers-textbox': {
+            'caption': 'Layers'
+          },
+          'format-textbox': {
+            'caption': 'Image format'
+          },
+          'transparent-checkbox': {
+            'caption': 'Allow images transparency'
+          }
         }
       }
     },
+
     'flexberry-tree': {
       'placeholder': 'Tree nodes are not defined'
     },
+
     'flexberry-maplayers': {
       'placeholder': 'Layers are not defined'
     },
+
     'flexberry-maplayer': {
     }
   }

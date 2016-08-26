@@ -16,7 +16,7 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
     @type String
     @default null
   */
-  caption: null,
+  label: null,
 
   /**
     Flag: indicates whether 'flexberry-ddau-checkbox' component is in 'readonly' mode or not.
@@ -65,10 +65,10 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
       bindedControllerPropertieName: 'model.flag'
     });
     componentSettingsMetadata.pushObject({
-      settingName: 'caption',
+      settingName: 'label',
       settingType: 'string',
       settingDefaultValue: null,
-      bindedControllerPropertieName: 'caption'
+      bindedControllerPropertieName: 'label'
     });
     componentSettingsMetadata.pushObject({
       settingName: 'readonly',
@@ -78,5 +78,11 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
     });
 
     return componentSettingsMetadata;
-  })
+  }),
+
+  actions: {
+    onChange(e) {
+      console.log('onChange: ', e);
+    }
+  }
 });

@@ -3,12 +3,11 @@
 */
 
 import Ember from 'ember';
+import SlotsMixin from 'ember-block-slots';
 import RequiredActionsMixin from '../mixins/required-actions';
 import DomActionsMixin from '../mixins/dom-actions';
-import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
-import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
-import DynamicComponentsMixin from '../mixins/dynamic-components';
+import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import layout from '../templates/components/flexberry-treenode';
 
 /**
@@ -17,10 +16,11 @@ import layout from '../templates/components/flexberry-treenode';
 
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-treenode').
-  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name (null because component hasn't wrapping <div>).
-  @property {String} flexberryClassNames.treeNodeExpandCollapseIcon Component's expand/collapse icon CSS-class name ('flexberry-treenode-expand-collapse-icon').
-  @property {String} flexberryClassNames.treeNodeHeader Component's header <div> CSS-class name ('flexberry-treenode-header').
-  @property {String} flexberryClassNames.treeNodeContent Component's content <div> CSS-class name ('flexberry-treenode-content').
+  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-treenode').
+  @property {String} flexberryClassNames.header Component's header <div> CSS-class name ('flexberry-treenode-header').
+  @property {String} flexberryClassNames.content Component's content <div> CSS-class name ('flexberry-treenode-content').
+  @property {String} flexberryClassNames.expandCollapseIcon Component's expand/collapse icon CSS-class name ('flexberry-treenode-expand-collapse-icon').
+  @property {String} flexberryClassNames.preventExpandCollapse Component's CSS-class name to prevent nodes expand/collapse animation ('flexberry-treenode-prevent-expand-collapse').
   @readonly
   @static
 
@@ -29,11 +29,11 @@ import layout from '../templates/components/flexberry-treenode';
 const flexberryClassNamesPrefix = 'flexberry-treenode';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: null,
-  treeNodePreventExpandCollapse: flexberryClassNamesPrefix + '-prevent-expand-collapse',
-  treeNodeExpandCollapseIcon: flexberryClassNamesPrefix + '-expand-collapse-icon',
-  treeNodeHeader: flexberryClassNamesPrefix + '-header',
-  treeNodeContent: flexberryClassNamesPrefix + '-content'
+  wrapper: flexberryClassNamesPrefix,
+  header: flexberryClassNamesPrefix + '-header',
+  content: flexberryClassNamesPrefix + '-content',
+  expandCollapseIcon: flexberryClassNamesPrefix + '-expand-collapse-icon',
+  preventExpandCollapse: flexberryClassNamesPrefix + '-prevent-expand-collapse'
 };
 
 /**
@@ -75,60 +75,46 @@ const flexberryClassNames = {
 
   @class FlexberryTreenodeComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
   @uses RequiredActionsMixin
   @uses DomActionsMixin
-  @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
-  @uses DynamicProxyActionsMixin
-  @uses DynamicComponentsMixin
+  @uses DynamicPropertiesMixin
 */
 let FlexberryTreenodeComponent = Ember.Component.extend(
+  SlotsMixin,
   RequiredActionsMixin,
   DomActionsMixin,
-  DynamicPropertiesMixin,
   DynamicActionsMixin,
-  DynamicProxyActionsMixin,
-  DynamicComponentsMixin, {
+  DynamicPropertiesMixin, {
 
   /**
-    Name of component that will be used to display child nodes subtree.
-
-    @property _subtreeComponentName
-    @type String
-    @default 'flexberry-tree'
-    @private
-  */
-  _subtreeComponentName: 'flexberry-tree',
-
-  /**
-    Name of component's property in which child nodes (defined as JSON objects) are stored.
-
-    @property _subtreeNodesPropertyName
-    @type String
-    @default 'nodes'
-    @private
-  */
-  _subtreeNodesPropertyName: 'nodes',
-
-  /**
-    Object containing dynamicProperties for child nodes subtree component.
-
-    @property _subtreeProperties
-    @type Object
-    @default null
-    @private
-  */
-  _subtreeProperties: null,
-
-  /**
-    Flag: indicates whether some {{#crossLink "FlexberryTreenodeComponent/nodes:property"}}child 'nodes'{{/childNodes}} are defined.
+    Flag: indicates whether some {{#crossLink "FlexberryTreenodeComponent/nodes:property"}}tree 'nodes'{{/childNodes}} are defined.
 
     @property _hasNodes
     @type boolean
-    @default null
+    @readOnly
     @private
   */
-  _hasNodes: null,
+  _hasNodes: Ember.computed('nodes.[]', function() {
+    let nodes = this.get('nodes');
+
+    return Ember.isArray(nodes) && nodes.length > 0;
+  }),
+
+  /**
+    Flag: indicates whether some nested content is defined
+    (some yield markup or {{#crossLink "FlexberryTreenodeComponent/nodes:property"}}'nodes'{{/childNodes}} are defined).
+
+    @property _hasContent
+    @type boolean
+    @readOnly
+    @private
+  */
+  _hasContent: Ember.computed('_slots.[]', '_hasNodes', function() {
+    // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
+    return this._isRegistered('content') || this.get('_hasNodes');
+  }),
 
   /**
     Reference to component's template.
@@ -142,14 +128,20 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
   flexberryClassNames,
 
   /**
-    Overridden ['tagName' property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
-    Is blank to disable component's wrapping <div>. 
+    Component's wrapping <div> CSS-classes names.
 
-    @property tagName
-    @type String
-    @default ''
+    Any other CSS-class names can be added through component's 'class' property.
+    ```handlebars
+    {{#flexberry-treenode class="styled"}}
+      Tree's content
+    {{/flexberry-treenode}}
+    ```
+
+    @property classNames
+    @type String[]
+    @default ['flexberry-treenode']
   */
-  tagName: '',
+  classNames: [flexberryClassNames.wrapper],
 
   /**
     Tree node's caption (will be displayed in node's header).
@@ -159,16 +151,6 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
     @default null
   */
   caption: null,
-
-  /**
-    Flag: indicates whether tree node is in readonly mode.
-    If true, tree node's data-related UI will be in readonly mode.
-
-    @property readonly
-    @type Boolean
-    @default false
-  */
-  readonly: false,
 
   /**
     Child nodes.
@@ -191,11 +173,10 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
       Invokes component's {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'beforeCollapse'{{/crossLink}} action.
 
       @method actions.onHeaderClick
-      @param {Boolean} nodeHasNestedContent Flag: indicates whether clicked node has some nested content or not.
       @param {Object} [jQuery event object](http://api.jquery.com/category/events/event-object/)
       which describes Inner header element's 'click' event.
     */
-    onHeaderClick(nodeHasNestedContent, e) {
+    onHeaderClick(e) {
       // Send 'headerClick' action anyway.
       this.sendAction('headerClick', {
         originalEvent: e
@@ -205,15 +186,15 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
       // (even some inner elements of dynamic components nested inside node),
       // that's why we should check for a special class-name in event-target itself & in it's parent elements.
       let $clickTarget = Ember.$(e.target);
-      let clickTargetShouldPreventExpandCollapse = $clickTarget.hasClass(flexberryClassNames.treeNodePreventExpandCollapse);
+      let clickTargetShouldPreventExpandCollapse = $clickTarget.hasClass(flexberryClassNames.preventExpandCollapse);
       if (!clickTargetShouldPreventExpandCollapse)  {
-        clickTargetShouldPreventExpandCollapse = $clickTarget.parents().hasClass(flexberryClassNames.treeNodePreventExpandCollapse);
+        clickTargetShouldPreventExpandCollapse = $clickTarget.parents().hasClass(flexberryClassNames.preventExpandCollapse);
       }
 
       // Prevent node header's click event from bubbling to disable expand/collapse animation in the following situations:
       // if click event-target is element containing special class-name preventing node from expanding/collapsing,
       // if node is leaf (node without nested content).
-      if (clickTargetShouldPreventExpandCollapse || !nodeHasNestedContent) {
+      if (clickTargetShouldPreventExpandCollapse || !this.get('_hasContent')) {
         e.stopPropagation();
 
         return;
@@ -233,56 +214,32 @@ let FlexberryTreenodeComponent = Ember.Component.extend(
   },
 
   /**
-    Observers changes in component's property with
-    {{#crossLink "FlexberyTreenodeComponent/_subtreeNodesPropertyName:property"}}specified name{{/crossLink}},
-    updates {{#crossLink "FlexberyTreenodeComponent/_hasNodes:property"}}'_hasNodes' property{{/crossLink}},
-    and {{#crossLink "FlexberyTreenodeComponent/_subtreeProperties:property"}}'_subtreeProperties' property{{/crossLink}}.
+    Observes changes in {{#crossLink "FlexberryTreenodeComponent/_hasNodes:property"}}'_hasContent' flag{{/crossLink}},
+    and collapses node if '_hasContent' became false.
 
-    @method _subtreeNodesDidChange
+    @method _hasContentDidChange
     @private
   */
-  _subtreeNodesDidChange: null,
+  _hasContentDidChange: Ember.observer('_hasContent', function() {
+    if (this.get('_hasContent')) {
+      return;
+    }
 
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
+    let $treeNode = this.$();
+    if (Ember.isNone($treeNode)) {
+      return;
+    }
 
-    // Name of property in which child nodes should be stored.
-    let subtreeNodesPropertyName = this.get('_subtreeNodesPropertyName');
-
-    // Initialize properties object, which will be passed to child nodes subtree component.
-    this.set('_subtreeProperties', {});
-
-    let subtreeNodesDidChange = () => {
-      let nodes = this.get(subtreeNodesPropertyName);
-
-      let subtreeProperties = this.get('_subtreeProperties');
-      if (Ember.get(subtreeProperties, subtreeNodesPropertyName) !== subtreeProperties) {
-        Ember.set(subtreeProperties, subtreeNodesPropertyName, nodes);
+    let collapse = function($element) {
+      let active = Ember.$.fn.accordion.settings.className.active;
+      if (!Ember.isNone($element) && $element.hasClass(active)) {
+        $element.removeClass(active);
       }
-
-      this.set('_hasNodes', Ember.isArray(nodes) && nodes.length > 0);
     };
-    subtreeNodesDidChange();
 
-    this.set('_subtreeNodesDidChange', subtreeNodesDidChange);
-    this.addObserver(`${subtreeNodesPropertyName}.[]`, subtreeNodesDidChange);
-  },
-
-  /**
-    Destroys component.
-  */
-  willDestroy() {
-    this._super(...arguments);
-
-    // Name of property in which child nodes should be stored.
-    let subtreeNodesPropertyName = this.get('_subtreeNodesPropertyName');
-
-    let subtreeNodesDidChange = this.get('_subtreeNodesDidChange');
-    this.removeObserver(`${subtreeNodesPropertyName}.[]`, subtreeNodesDidChange);
-  }
+    collapse($treeNode.children(`.${flexberryClassNames.header}`).first());
+    collapse($treeNode.children(`.${flexberryClassNames.content}`).first());
+  })
 
   /**
     Component's action invoking when tree node's header has been clicked.

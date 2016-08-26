@@ -47,8 +47,9 @@ export default {
         'caption': 'Отмена'
       }
     },
+
     'layers-dialogs': {
-      'remove-layer': {
+      'remove': {
         'caption': 'Удаление слоя',
         'content': 'Вы действительно хотите удалить слой \'{{layerName}}\'?',
         'approve-button': {
@@ -58,50 +59,83 @@ export default {
           'caption': 'Нет'
         }
       },
-      'edit-layer': {
+
+      'edit': {
         'caption': 'Редактирование слоя',
-        'layer-type': {
+        'approve-button': {
+          'caption': 'Ok'
+        },
+        'deny-button': {
+          'caption': 'Отмена'
+        },
+        'type-dropdown': {
           'caption': 'Тип слоя'
         },
-        'layer-name': {
+        'name-textbox': {
           'caption': 'Имя слоя'
         },
-        'layer-crs': {
+        'crs-textarea': {
           'caption': 'Система координат слоя (CRS)'
         }
       },
-      'add-layer': {
-        'caption': 'Добавление нового слоя'
-      },
-      'edit-tile-layer-content': {
-        'url': {
-          'caption': 'Url'
+
+      'add': {
+        'caption': 'Добавление нового слоя',
+        'approve-button': {
+          'caption': 'Ok'
+        },
+        'deny-button': {
+          'caption': 'Отмена'
+        },
+        'type-dropdown': {
+          'caption': 'Тип слоя'
+        },
+        'name-textbox': {
+          'caption': 'Имя слоя'
+        },
+        'crs-textarea': {
+          'caption': 'Система координат слоя (CRS)'
         }
       },
-      'edit-wms-layer-content': {
-        'url': {
-          'caption': 'Url'
+
+      'settings': {
+        'group': {
         },
-        'version': {
-          'caption': 'Версия WMS'
+
+        'tile': {
+          'url-textbox': {
+            'caption': 'Url'
+          }
         },
-        'layers': {
-          'caption': 'Слои'
-        },
-        'format': {
-          'caption': 'Формат изображений'
-        },
-        'transparent': {
-          'caption': 'Разрешить прозрачность на изображениях'
+
+        'wms': {
+          'url-textbox': {
+            'caption': 'Url'
+          },
+          'version-textbox': {
+            'caption': 'Версия WMS'
+          },
+          'layers-textbox': {
+            'caption': 'Слои'
+          },
+          'format-textbox': {
+            'caption': 'Формат изображений'
+          },
+          'transparent-checkbox': {
+            'caption': 'Разрешить прозрачность на изображениях'
+          }
         }
       }
     },
+
     'flexberry-tree': {
       'placeholder': 'Вершины дерева не заданы'
     },
+
     'flexberry-maplayers': {
       'placeholder': 'Слои не заданы'
     },
+
     'flexberry-maplayer': {
     }
   }

@@ -3,10 +3,15 @@
 */
 
 import Ember from 'ember';
-import FlexberryTreeComponent from './flexberry-tree';
+import FlexberryTreenodeComponent from '../components/flexberry-treenode';
 
-// Use base component's layout without changes.
-import layout from '../templates/components/flexberry-tree';
+import SlotsMixin from 'ember-block-slots';
+import RequiredActionsMixin from '../mixins/required-actions';
+import DomActionsMixin from '../mixins/dom-actions';
+import DynamicActionsMixin from '../mixins/dynamic-actions';
+import DynamicPropertiesMixin from '../mixins/dynamic-properties';
+
+import layout from '../templates/components/flexberry-maplayers';
 import { translationMacro as t } from 'ember-i18n';
 
 /**
@@ -14,25 +19,23 @@ import { translationMacro as t } from 'ember-i18n';
   JSON-object containing string constants with CSS-classes names related to component's hbs-markup elements.
 
   @property {Object} flexberryClassNames
-  @property {String} flexberryClassNames.flexberryMaplayers.prefix Component's CSS-class names prefix ('flexberry-maplayers').
-  @property {String} flexberryClassNames.flexberryMaplayers.wrapper Component's wrapping <div> CSS-class name (null).
-  @property {String} flexberryClassNames.flexberryMaplayers.addChildButton Component's 'add' button CSS-class name ('flexberry-maplayers-add-button').
+  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-maplayers').
+  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-maplayers').
+  @property {String} flexberryClassNames.wrapper Component's placeholder CSS-class name ('flexberry-maplayers-add-button').
   @readonly
   @static
 
   @for FlexberryMaplayersComponent
 */
 const flexberryClassNamesPrefix = 'flexberry-maplayers';
-const flexberryClassNames = FlexberryTreeComponent.flexberryClassNames;
-flexberryClassNames.flexberryMaplayers = {
+const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: null,
-  addChildButton: flexberryClassNamesPrefix + '-add-child-button',
-  addChildDialog: flexberryClassNamesPrefix + '-add-child-dialog'
+  wrapper: flexberryClassNamesPrefix,
+  addButton: flexberryClassNamesPrefix + '-add-button'
 };
 
 /**
-  Flexberry layers tree based on {{#crossLink "FlexberryTreeComponent"}}flexberry-tree component{{/crossLink}}.
+  Flexberry layers tree component.
   Component must be used in combination with
   {{#crossLink "FlexberryMaplayerComponent"}}flexberry-maplayer component{{/crossLink}},
   because it's only a wrapper for those layers, which are placed on the same tree level.
@@ -101,9 +104,20 @@ flexberryClassNames.flexberryMaplayers = {
   ```
 
   @class FlexberryMaplayersComponent
-  @extends FlexberryTreeComponent
+  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
+  @uses RequiredActionsMixin
+  @uses DomActionsMixin
+  @uses DynamicActionsMixin
+  @uses DynamicPropertiesMixin
 */
-let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
+let FlexberryMaplayersComponent = Ember.Component.extend(
+  SlotsMixin,
+  RequiredActionsMixin,
+  DomActionsMixin,
+  DynamicActionsMixin,
+  DynamicPropertiesMixin, {
+
   /**
     Component's required actions names.
     For actions enumerated in this array an assertion exceptions will be thrown,
@@ -111,62 +125,85 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
 
     @property _requiredActions
     @type String[]
-    @default ['addChild']
+    @default ['add']
   */
-  _requiredActionNames: ['addChild'],
+  _requiredActionNames: ['add'],
 
   /**
-    Name of component that will be used to display tree nodes.
+    Flag: indicates whether map layers tree is placed on root level (hasn't parent layers).
 
-    @property _treeNodeComponentName
-    @type String
-    @default 'flexberry-maplayer'
+    @property _isRoot
+    @type Boolean
+    @readonly
     @private
   */
-  _treeNodeComponentName: 'flexberry-maplayer',
+  _isRoot: Ember.computed('parentViewExcludingSlots', function() {
+    let parentView = this.get('parentViewExcludingSlots');
 
-  /**
-    Name of component's property in which tree nodes (defined as JSON objects) are stored.
-
-    @property _treeNodesPropertyName
-    @type String
-    @default '_existingLayers'
-    @private
-  */
-  _treeNodesPropertyName: '_existingLayers',
-
-  /**
-    Map's layers filtered by their existence.
-
-    @property _existingLayers
-    @type Object[]
-    @readOnly
-  */
-  _existingLayers: Ember.computed('layers.@each.isDeleted', function () {
-    let layers = this.get('layers');
-    Ember.assert(
-      `Wrong type of \`layers\` property: actual type is \`${Ember.typeOf(layers)}\`, ` +
-      `but \`Ember.NativeArray\` is expected`,
-      Ember.isNone(layers) || Ember.isArray(layers) && Ember.typeOf(layers.filter) === 'function');
-
-    if (!Ember.isArray(layers)) {
-      return Ember.A();
-    }
-
-    return Ember.A(layers.filter((layer) => {
-      return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
-    }).map((layer) => {
-      return {
-        name: Ember.get(layer, 'name'),
-        type: Ember.get(layer, 'type'),
-        visibility: Ember.get(layer, 'visibility'),
-        settings: Ember.get(layer, 'settings'),
-        coordinateReferenceSystem: Ember.get(layer, 'coordinateReferenceSystem'),
-        layers: Ember.get(layer, 'layers'),
-        dynamicActions: Ember.get(layer, 'dynamicActions')
-      };
-    }));
+    return !(parentView instanceof FlexberryTreenodeComponent);
   }),
+
+  /**
+    Flag: indicates whether some {{#crossLink "FlexberryMaplayersComponent/layers:property"}}layers{{/crossLink}} are defined.
+
+    @property _hasLayers
+    @type boolean
+    @readOnly
+    @private
+  */
+  _hasLayers: Ember.computed('layers.[]', 'layers.@each.isDeleted', function() {
+    let layers = this.get('layers');
+
+    return Ember.isArray(layers) && layers.filter((layer) => {
+      return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
+    }).length > 0;
+  }),
+
+  /**
+    Flag: indicates whether some nested content for header is defined
+    (some yield markup for 'header').
+
+    @property _hasHeader
+    @type boolean
+    @readOnly
+    @private
+  */
+  _hasHeader: Ember.computed('_slots.[]', '_isRoot', 'readonly', function() {
+    // Yielded {{block-slot "header"}} is defined and current tree is root.
+    return (this._isRegistered('header') || !this.get('readonly')) && this.get('_isRoot');
+  }),
+
+  /**
+    Flag: indicates whether some nested content is defined
+    (some yield markup or {{#crossLink "FlexberryMaplayersComponent/layers:property"}}'layers'{{/crossLink}} are defined).
+
+    @property _hasContent
+    @type boolean
+    @readOnly
+    @private
+  */
+  _hasContent: Ember.computed('_slots.[]', '_hasLayers', function() {
+    // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
+    return this._isRegistered('content') || this.get('_hasLayers');
+  }),
+
+  /**
+    Flag: indicates whether add dialog has been already requested by user or not.
+
+    @property _addDialogHasBeenRequested
+    @type boolean
+    @private
+  */ 
+  _addDialogHasBeenRequested: false,
+
+  /**
+    Flag: indicates whether add dialog is visible or not.
+
+    @property _addDialogIsVisible
+    @type boolean
+    @private
+  */  
+  _addDialogIsVisible: false,
 
   /**
     Reference to component's template.
@@ -180,23 +217,34 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
   flexberryClassNames,
 
   /**
-    Component's wrapping <div> CSS-classes names
-    (extra to the {{#crossLink "FlexberryTreeComponent/classNames:property"}}base ones{{/crossLink}}).
+    Overridden ['tagName' property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
+    Is blank to disable component's wrapping <div>. 
+
+    @property tagName
+    @type String
+    @default ''
+  */
+  tagName: '',
+
+  /**
+    Component's CSS-classes names.
+
     Any other CSS-class names can be added through component's 'class' property.
     ```handlebars
     {{#flexberry-maplayers class="styled"}}
-      Tree's content
+      Layers tree content
     {{/flexberry-maplayers}}
     ```
-    @property classNames
-    @type String[]
-    @default ['flexberry-maplayers']
+
+    @property class
+    @type String
+    @default ''
   */
-  classNames: [flexberryClassNames.flexberryMaplayers.wrapper],
+  class: '',
 
   /**
     Component's placeholder.
-    Will be displayed if tree nodes are not defined.
+    Will be displayed if nested layers are not defined.
 
     @property placeholder
     @type String
@@ -205,7 +253,45 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
   placeholder: t('components.flexberry-maplayers.placeholder'),
 
   /**
-    Map's layers.
+    Flag: indicates whether only one layer node can be expanded at the same time.
+    If true, all expanded layer nodes will be automatically collapsed, on some other node expand.
+
+    @property exclusive
+    @type Boolean
+    @default false
+  */
+  exclusive: false,
+
+  /**
+    Flag: indicates whether it is allowed for already expanded layer nodes to collapse.
+
+    @property collapsible
+    @type Boolean
+    @default true
+  */
+  collapsible: true,
+
+  /**
+    Flag: indicates whether nested layer nodes content opacity should be animated
+    (if true, it may cause performance issues with many nested child nodes).
+
+    @property animateChildren
+    @type Boolean
+    @default false
+  */
+  animateChildren: false,
+
+  /**
+    Layer nodes expand/collapse animation duration in milliseconds.
+
+    @property animationDuration
+    @type Number
+    @default 350
+  */
+  duration: 350,
+
+  /**
+    Nested layers hierarchy.
     This property is optional and must be used when there are too many child layers,
     and you don't want to define them explicitly in the hbs-markup,
     then you can define layers array somewhere in code & pass defined array to this component's property.
@@ -217,111 +303,53 @@ let FlexberryMaplayersComponent = FlexberryTreeComponent.extend({
   layers: null,
 
   /**
-    Observes & handles any changes in
-    {{#crossLink "FlexberryMaplayersComponent/readonly:property"}}'readonly' property{{/crossLink}},
-    then changes mode for 'add' operation button visibility in
-    {{#crossLink "FlexberryMaplayersComponent/_innerDynamicComponents:property"}}'_innerDynamicComponents'{{/crossLink}}.
+    Flag: indicates whether layers tree is in readonly mode.
+    If true, layers nodes data-related UI will be in readonly mode.
 
-    @method _readonlyDidChange
-    @private
+    @property readonly
+    @type Boolean
+    @default false
   */
-  _readonlyDidChange: Ember.on('init', Ember.observer('readonly', function () {
-    let readonly = this.get('readonly') === true;
-
-    // Show/hide flexberry-button for 'add' operation.
-    this.set('_innerDynamicComponents.0.visible', !readonly);
-  })),
+  readonly: false,
 
   actions: {
-    onAddChildButtonClick() {
-      let i18n = this.get('i18n');
+    /**
+      Handles add button's 'click' event.
+      Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
 
-      // Set dialog caption.
-      this.set(
-        '_innerDynamicComponents.1.componentProperties.caption',
-        i18n.t("components.layers-dialogs.add-layer.caption"));
+      @method actions.onAddButtonClick
+      @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+      which describes button's 'click' event.
+    */
+    onAddButtonClick(e) {
+      // Include dialog to markup.
+      this.set('_addDialogHasBeenRequested', true);
 
       // Show dialog.
-      this.set('_innerDynamicComponents.1.componentProperties.visible', true);
+      this.set('_addDialogIsVisible', true);
     },
 
-    onAddChildDialogHide() {
-      // Hide dialog.
-      this.set('_innerDynamicComponents.1.componentProperties.visible', false);
+    /**
+      Handles add dialog's 'approve' action.
+      Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
 
-      // Clean up dialog's content-related properties.
-      this.set(
-        '_innerDynamicComponents.1.componentProperties.type',
-        null);
-      this.set(
-        '_innerDynamicComponents.1.componentProperties.name',
-        null);
-      this.set(
-        '_innerDynamicComponents.1.componentProperties.coordinateReferenceSystem',
-        null);
-      this.set(
-        '_innerDynamicComponents.1.componentProperties.settings',
-        null);
-    },
-
-    onAddChildDialogApprove(...args) {
-      // Send outer 'addChild' action.
-      this.sendAction('addChild', ...args);
+      @method actions.onAddDialogApprove
+      @param {Object} e Action's event object.
+      @param {Object} e.layerProperties Object containing properties of new child layer.
+    */
+    onAddDialogApprove(...args) {
+      // Send outer 'add' action.
+      this.sendAction('add', ...args);
     }
-  },
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-
-    // Define additional child components as inner dynamic components (see dynamic-components mixin).
-    let innerDynamicComponents = Ember.A([{
-      to: 'startToolbarRight',
-      componentName: 'flexberry-button',
-      componentProperties: {
-        class: flexberryClassNames.flexberryMaplayers.addChildButton,
-        iconClass: 'plus icon',
-        dynamicActions: Ember.A([{
-          on: 'click',
-          actionContext: this,
-          actionName: 'onAddChildButtonClick'
-        }])
-      }
-    }, {
-        to: 'treeEnd',
-        componentName: 'layers-dialogs/edit-layer',
-        componentProperties: {
-          class: flexberryClassNames.flexberryMaplayers.addChildDialog,
-          name: null,
-          settings: null,
-          coordinateReferenceSystem: null,
-          typeIsReadonly: false,
-          visible: false,
-          caption: null,
-          dynamicActions: Ember.A([{
-            on: 'approve',
-            actionContext: this,
-            actionName: 'onAddChildDialogApprove'
-          }, {
-              on: 'hide',
-              actionContext: this,
-              actionName: 'onAddChildDialogHide'
-            }])
-        }
-      }]);
-
-    this.set('_innerDynamicComponents', innerDynamicComponents);
   }
 
   /**
-    Component's action invoking when user wants to add child layer into tree's root.
+    Component's action invoking when user wants to add child layer into layers tree root.
 
-    @method sendingActions.addChild
+    @method sendingActions.add
     @param {Object} e Action's event object.
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
-    which describes event that triggers this action.
+    which describes inner 'add' button's 'click' event.
   */
 });
 

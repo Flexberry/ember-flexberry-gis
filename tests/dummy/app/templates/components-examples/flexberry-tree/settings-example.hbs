@@ -2,86 +2,11 @@
 <form class="ui form flexberry-vertical-form" role="form">
   <div class="field">
     <div class="ui top attached tabular menu">
-      <a class="item active" data-tab="hbsTree">
-        {{t "forms.components-examples.flexberry-tree.settings-example.hbs-tree-tab-caption"}}
-      </a>
-      <a class="item" data-tab="jsonTree">
+      <a class="item active" data-tab="jsonTree">
         {{t "forms.components-examples.flexberry-tree.settings-example.json-tree-tab-caption"}}
       </a>
     </div>
-    <div class="ui bottom attached tab segment active" data-tab="hbsTree">
-      {{#settings-example
-        controllerProperties=this
-        componentSettingsMetadata=hbsTreeComponentSettingsMetadata
-        componentTemplateText=hbsTreeComponentTemplateText
-      }}
-        {{#flexberry-tree
-          class=hbsTreeClass
-          exclusive=hbsTreeExclusive
-          collapsible=hbsTreeCollapsible
-          animateChildren=hbsTreeAnimateChildren
-          duration=hbsTreeDuration
-        }}
-          {{#flexberry-treenode
-            caption=hbsTreeNodes.0.caption
-            headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0")
-            myButtonClick=(action "onMyButtonClick")
-          }}
-            {{#flexberry-tree}}
-              {{flexberry-treenode
-                caption=hbsTreeNodes.0.nodes.0.caption
-                headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.0")
-              }}
-              {{#flexberry-treenode
-                caption=hbsTreeNodes.0.nodes.1.caption
-                headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1")
-              }}
-                {{#flexberry-tree}}
-                  {{#flexberry-treenode
-                    caption=hbsTreeNodes.0.nodes.1.nodes.0.caption
-                    headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1.nodes.0")
-                  }}
-                    {{#flexberry-tree}}
-                      {{flexberry-treenode
-                        caption=hbsTreeNodes.0.nodes.1.nodes.0.nodes.0.caption
-                        headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1.nodes.0.nodes.0")
-                      }}
-                    {{/flexberry-tree}}
-                  {{/flexberry-treenode}}
-                  {{flexberry-treenode
-                    caption=hbsTreeNodes.0.nodes.1.nodes.1.caption
-                    headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.0.nodes.1.nodes.1")
-                  }}
-                {{/flexberry-tree}}
-              {{/flexberry-treenode}}
-            {{/flexberry-tree}}
-          {{/flexberry-treenode}}
-          {{flexberry-treenode
-            caption=hbsTreeNodes.1.caption
-            headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.1")
-          }}
-          {{#flexberry-treenode
-            caption=hbsTreeNodes.2.caption
-            headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.2")
-          }}
-            {{#flexberry-tree}}
-              {{flexberry-treenode
-                caption=hbsTreeNodes.2.nodes.0.caption
-                headerClick=(action "onTreenodeHeaderClick" "hbsTreeNodes.2.nodes.0")
-              }}
-            {{/flexberry-tree}}
-          {{/flexberry-treenode}}
-        {{/flexberry-tree}}
-      {{/settings-example}}
-      <br>
-      {{settings-example
-        controllerProperties=this
-        componentSettingsMetadata=hbsTreeLatestClickedNodeComponentSettingsMetadata
-        componentSettingsCaption=(t "forms.components-examples.flexberry-tree.settings-example.hbs-tree-latest-clicked-node-caption")
-        componentSettingsPlaceholder=(t "forms.components-examples.flexberry-tree.settings-example.hbs-tree-latest-clicked-node-placeholder")
-      }}
-    </div>
-    <div class="ui bottom attached tab segment" data-tab="jsonTree">
+    <div class="ui bottom attached tab segment active" data-tab="jsonTree">
       {{#settings-example
         controllerProperties=this
         componentSettingsMetadata=jsonTreeComponentSettingsMetadata
