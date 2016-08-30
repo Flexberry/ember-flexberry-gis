@@ -11,15 +11,22 @@ export default Ember.Component.extend({
 
   activeTool: null,
 
+  activeToolName: null,
+
   actions: {
 
     activateTool(toolname) {
+      if(toolname === this.get('activeToolName')) {
+        return;
+      }
+
       let tool = getOwner(this).lookup('maptool:' + toolname);
       let leafletMap = this.get('leafletMap');
       if (tool && leafletMap) {
-        let activeTool = this.get('activeTool') || draggingTool.create({ map: leafletMap });
-        if (activeTool === tool) {
-          return;
+        let activeTool = this.get('activeTool');
+        if(!activeTool && leafletMap.dragging.enabled())
+        {
+          activeTool = draggingTool.create({ map: leafletMap })
         }
 
         tool.set('map', leafletMap);
@@ -30,6 +37,7 @@ export default Ember.Component.extend({
 
         tool.enable();
         this.set('activeTool', tool);
+        this.set('activeToolName', toolname);
       }
     },
 

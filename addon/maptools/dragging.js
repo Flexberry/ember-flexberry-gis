@@ -1,4 +1,4 @@
-import MapTool from './maptool';
+import MapTool from 'ember-flexberry-gis/maptools/maptool';
 
 export default MapTool.extend({
   enable() {

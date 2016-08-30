@@ -1,13 +1,10 @@
-import MapTool from './maptool';
+import RectangleTool from 'ember-flexberry-gis/maptools/rectangletool';
 
-export default MapTool.extend({
+export default RectangleTool.extend({
   cursor: 'help',
 
-  enable() {
+  rectangleStarted({ layer }) {
     this._super(...arguments);
-  },
-
-  disable() {
-    this._super(...arguments);
+    this.get('map').fire('flexberry:identify', { layer });
   }
-})
+});
