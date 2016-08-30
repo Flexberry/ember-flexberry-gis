@@ -42,6 +42,24 @@ export default EditFormController.extend(FlexberryMaplayerActionsHandlerMixin, {
   },
 
   /**
+    Updates specified layer with given properties.
+    (overridden method from {{#crossLink "FlexberryMaplayerActionsHandlerMixin:_editLayer:method"}}
+    FlexberryMaplayerActionsHandlerMixin
+    {{/crossLink}}).
+
+    @method _editLayer
+    @param {Object} options Method options.
+    @param {String} options.layerPath Path to editing layer.
+    @param {String} options.layer Editing layer.
+    @param {Object} options.layerProperties Object containing edited layer properties.
+    @returns {Object} Edited layer.
+    @private
+  */
+  _editLayer(options) {
+    return this._super(...arguments);
+  },
+
+  /**
     Removes specified layer from layers hierarchy
     (overridden method from {{#crossLink "FlexberryMaplayerActionsHandlerMixin:/_removeLayer:method"}}
     FlexberryMaplayerActionsHandlerMixin

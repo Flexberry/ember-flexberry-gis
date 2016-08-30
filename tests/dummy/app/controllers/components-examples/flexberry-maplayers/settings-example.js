@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayer-actions-handler';
+import { availableLayerTypes } from 'ember-flexberry-gis/utils/layers';
 
 export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
   /**
@@ -127,31 +128,32 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
     '  readonly=jsonLayersReadonly<br>' +
     '  layers=(get-with-dynamic-actions this "jsonLayers"<br>' +
     '    hierarchyPropertyName="layers"<br>' +
+    '    pathKeyword="layerPath"<br>' +
     '    dynamicActions=(array<br>' +
     '      (hash<br>' +
     '        on="headerClick"<br>' +
     '        actionName="onMapLayerHeaderClick"<br>' +
-    '        actionArguments=(array "{% propertyPath %}")<br>' +
+    '        actionArguments=(array "{% layerPath %}")<br>' +
     '      )<br>' +
     '      (hash<br>' +
     '        on="addChild"<br>' +
     '        actionName="onMapLayerAddChild"<br>' +
-    '        actionArguments=(array "{% propertyPath %}")<br>' +
+    '        actionArguments=(array "{% layerPath %}")<br>' +
     '      )<br>' +
     '      (hash<br>' +
     '        on="edit"<br>' +
     '        actionName="onMapLayerEdit"<br>' +
-    '        actionArguments=(array "{% propertyPath %}")<br>' +
+    '        actionArguments=(array "{% layerPath %}")<br>' +
     '      )<br>' +
     '      (hash<br>' +
     '        on="remove"<br>' +
     '        actionName="onMapLayerRemove"<br>' +
-    '        actionArguments=(array "{% propertyPath %}")<br>' +
+    '        actionArguments=(array "{% layerPath %}")<br>' +
     '      )<br>' +
     '      (hash<br>' +
     '        on="changeVisibility"<br>' +
     '        actionName="onMapLayerChangeVisibility"<br>' +
-    '        actionArguments=(array "{% propertyPath %}.visibility")<br>' +
+    '        actionArguments=(array "{% layerPath %}.visibility")<br>' +
     '      )<br>' +
     '    )<br>' +
     '  )<br>' +
@@ -240,11 +242,7 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
     componentSettingsMetadata.pushObject({
       settingName: 'type',
       settingType: 'enumeration',
-      settingAvailableItems: [
-        'group',
-        'wms',
-        'tile'
-      ],
+      settingAvailableItems: availableLayerTypes(),
       settingDefaultValue: null,
       bindedControllerPropertieName: jsonLayersLatestClickedLayerPath + '.type'
     });

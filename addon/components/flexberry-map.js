@@ -106,15 +106,18 @@ export default Ember.Component.extend(
 
     didInsertElement() {
       this._super(...arguments);
+
       let map = L.map(this.get('element'), this.get('options'));
       this.set('_layer', map);
+
       this._addObservers();
       this._addEventListeners();
+
       this.sendAction('leafletMapDidInit', map);
     },
 
     willDestoryElement() {
-      var leafletMap = this.get('_layer');
+      let leafletMap = this.get('_layer');
       if (leafletMap) {
         leafletMap.remove();
         this.set('_layer', null);

@@ -7,7 +7,8 @@ import Ember from 'ember';
 /**
   Renders strings containing some templates inside.
 
-  @method renderString
+  @for Utils.Layers
+  @method render
   @param {String} stringWithTemplates String containing templates which need to be rendered
   @param {Object} [options] Render options.
   @param {Object} [options.context = {}] Rendering context containing properties which will be substituted into string
@@ -19,22 +20,22 @@ import Ember from 'ember';
   Usage:
   controllers/my-form.js
   ```javascript
-    import renderString from 'ember-flexberry-gis/utils/render-string'l
+    import { render } from 'ember-flexberry-gis/utils/string'l
 
     // It will return: 'I have 1 dollar in my wallet, 2 apples in my bag, and 3 hours of free time'.
-    renderString('I have {{ one }} dollar in my wallet, {{ two }} apples in my bag, and {{ three }} hours of free time', {
+    render('I have {{ one }} dollar in my wallet, {{ two }} apples in my bag, and {{ three }} hours of free time', {
       context: { one: 1, two: 2, three: 3 }
     });
 
     // It will return: 'I have 1 dollar in my wallet, 2 apples in my bag, and 3 hours of free time'.
-    renderString('I have {% one %} dollar in my wallet, {% two %} apples in my bag, and {% three %} hours of free time', {
+    render('I have {% one %} dollar in my wallet, {% two %} apples in my bag, and {% three %} hours of free time', {
       context: { one: 1, two: 2, three: 3 },
       delimiters: ['{%', '%}']
     });
 
   ```
 */
-export default function(stringWithTemplates, options) {
+let render = function(stringWithTemplates, options) {
   if (Ember.typeOf(stringWithTemplates) !== 'string') {
     return null;
   }
@@ -59,4 +60,6 @@ export default function(stringWithTemplates, options) {
   }
 
   return renderedString;
-}
+};
+
+export { render }; 

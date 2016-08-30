@@ -87,7 +87,9 @@ export default Ember.Component.extend(
       this._super(...arguments);
 
       let container = this.get('leafletContainer');
-      container.removeLayer(this.get('_layer'));
+      if (!Ember.isNone(container)) {
+        container.removeLayer(this.get('_layer'));
+      }
     },
 
     /**
@@ -96,7 +98,7 @@ export default Ember.Component.extend(
      */
     toggleVisible: Ember.observer('visibility', function () {
       let container = this.get('leafletContainer');
-      //Ember.assert('Try to change layer visibility without container', container);
+      
       if (this.get('visibility')) {
         container.addLayer(this.get('_layer'));
       }

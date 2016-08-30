@@ -17,26 +17,27 @@
       class="styled"
       layers=(get-with-dynamic-actions this "model.rootLayer.layers"
         hierarchyPropertyName="layers"
+        pathKeyword="layerPath"
         dynamicActions=(array
           (hash
             on="add"
             actionName="onMapLayerAdd"
-            actionArguments=(array "{% propertyPath %}")
+            actionArguments=(array "{% layerPath %}")
           )
           (hash
             on="edit"
             actionName="onMapLayerEdit"
-            actionArguments=(array "{% propertyPath %}")
+            actionArguments=(array "{% layerPath %}")
           )
           (hash
             on="remove"
             actionName="onMapLayerRemove"
-            actionArguments=(array "{% propertyPath %}")
+            actionArguments=(array "{% layerPath %}")
           )
           (hash
             on="changeVisibility"
             actionName="onMapLayerChangeVisibility"
-            actionArguments=(array "{% propertyPath %}.visibility")
+            actionArguments=(array "{% layerPath %}.visibility")
           )
         )
       )

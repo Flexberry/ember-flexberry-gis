@@ -113,11 +113,12 @@ export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
     '  duration=jsonTreeDuration<br>' +
     '  nodes=(get-with-dynamic-actions this "jsonTreeNodes"<br>' +
     '    hierarchyPropertyName="nodes"<br>' +
+    '    pathKeyword="nodePath"<br>' +
     '    dynamicActions=(array<br>' +
     '      (hash<br>' +
     '        on="headerClick"<br>' +
     '        actionName="onTreenodeHeaderClick"<br>' +
-    '        actionArguments=(array "{% propertyPath %}")<br>' +
+    '        actionArguments=(array "{% nodePath %}")<br>' +
     '      )<br>' +
     '    )<br>' +
     '  )<br>' +

@@ -20,11 +20,12 @@
           duration=jsonTreeDuration
           nodes=(get-with-dynamic-actions this "jsonTreeNodes"
             hierarchyPropertyName="nodes"
+            pathKeyword="nodePath"
             dynamicActions=(array
               (hash
                 on="headerClick"
                 actionName="onTreenodeHeaderClick"
-                actionArguments=(array "{% propertyPath %}")
+                actionArguments=(array "{% nodePath %}")
               )
             )
           )
