@@ -167,7 +167,7 @@ let FlexberryDialogComponent = Ember.Component.extend(
 
     @property duration
     @type Number
-    @default 300
+    @default 200
   */
   duration: 200,
 
