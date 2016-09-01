@@ -3,7 +3,7 @@ import EditFormController from 'ember-flexberry/controllers/edit-form';
 import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayer-actions-handler';
 
 export default EditFormController.extend(FlexberryMaplayerActionsHandlerMixin, {
- actions: {
+  actions: {
     updateCenter(e) {
       let center = e.target.getCenter();
       this.set('model.lat', center.lat);
@@ -30,7 +30,7 @@ export default EditFormController.extend(FlexberryMaplayerActionsHandlerMixin, {
     @private
   */
   _createLayer(options) {
-    options = options || {}; 
+    options = options || {};
     let parentLayer = Ember.get(options, 'parentLayer');
     let layerProperties = Ember.get(options, 'layerProperties');
 
@@ -75,7 +75,7 @@ export default EditFormController.extend(FlexberryMaplayerActionsHandlerMixin, {
   _removeLayer(options) {
     options = options || {};
     let layer = Ember.get(options, 'layer');
-    
+
     if (!Ember.isNone(layer)) {
       layer.deleteRecord();
     }

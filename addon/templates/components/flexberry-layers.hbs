@@ -1,13 +1,21 @@
 {{#if leafletContainer}}
   {{#each layers as |layer|}}
     {{#if (not layer.isDeleted)}}
+      {{#if (eq layer.type "group")}}
+        {{#layers/group-layer
+          leafletContainer=leafletContainer
+          index=layer.index
+          visibility=layer.visibility
+          dynamicProperties=layer.settingsAsObject as |group|}}
+          {{flexberry-layers leafletContainer=group layers=layer.layers}}
+        {{/layers/group-layer}}
+      {{else}}
       {{component (concat "layers/" layer.type "-layer")
         leafletContainer=leafletContainer
         index=layer.index
         visibility=layer.visibility
-        dynamicProperties=layer.settingsAsObject
-        layers=layer.layers
-      }}
+        dynamicProperties=layer.settingsAsObject}}
+      {{/if}}
     {{/if}}
   {{/each}}
 {{/if}}

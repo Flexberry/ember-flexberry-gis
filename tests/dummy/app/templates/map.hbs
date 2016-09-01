@@ -1,15 +1,38 @@
 <div class="ui grid">
   <div class="ten wide column">
-    {{flexberry-map
+    {{#flexberry-maptoolbar leafletMap=leafletMap as |toolbar|}}
+      <div class="ui icon buttons">
+        <button class="ui icon button" {{action "activateTool" "dragging" target=toolbar}}>
+          <i class="hand paper icon"></i>
+        </button>
+        <button class="ui icon button" {{action "activateTool" "zoom" target=toolbar}}>
+          <i class="zoom icon"></i>
+        </button>
+        <button class="ui icon button" {{action "activateTool" "zoomout" target=toolbar}}>
+          <i class="zoom out icon"></i>
+        </button>
+        <button class="ui icon button" {{action "callCommand" "fullextent" target=toolbar}}>
+          <i class="maximize icon"></i>
+        </button>
+      </div>
+      <div class="ui icon buttons">
+        <button class="ui icon button" {{action "activateTool" "identify" target=toolbar}}>
+          <i class="info circle icon"></i>
+        </button>
+      </div>
+    {{/flexberry-maptoolbar}}
+    {{#flexberry-map
       lat=model.lat
       lng=model.lng
       zoom=model.zoom
-      layers=model.rootLayer.layers
-      zoomControl=true
       onMoveend=(action "updateCenter")
-      leafletMapDidInit=(action "leafletMapDidInit")}}
+      leafletMapDidInit=(action "leafletMapDidInit") as |leafletMap|}}
+      {{flexberry-layers leafletContainer=leafletMap layers=model.rootLayer.layers}}
 
-    {{scale-control map=leafletMap imperial=false}}
+      {{scale-control map=leafletMap imperial=false}}
+    {{/flexberry-map}}
+
+
 
   </div>
   <div class="six wide column">

@@ -1,7 +1,26 @@
 @import './components/flexberry-tree';
 
 .leaflet-container {
+    font-family: inherit;
+    height: 700px;
+    width: 100%;
+
+    &.crosshair {
+      cursor: crosshair;
+    }
+
+    &.zoom-in {
+      cursor: zoom-in;
+    }
+
+    &.help {
+      cursor: help;
+    }
+}
+
+.leaflet-container {
   font-family: inherit;
   height: 700px;
   width: 100%;
 }
+

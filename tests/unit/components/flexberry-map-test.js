@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('flexberry-map', 'Unit | Component | flexberry map', {
@@ -13,7 +14,7 @@ test('it should create leaflet map on didInsertElement', function (assert) {
   assert.ok(component.get('_layer') instanceof L.Map);
 });
 
-test('should compute center from lat\lng', function (assert) {
+test('should compute center from lat/lng', function (assert) {
   let lat = 10;
   let lng = 10;
 
@@ -24,13 +25,14 @@ test('should compute center from lat\lng', function (assert) {
   assert.ok(center.equals([10, 10]));
 });
 
-test('should pass center\zoom from properties to leaflet map', function (assert) {
-  let
-    lat=10,
-    lng=10,
-    zoom=10;
+test('should pass center/zoom from properties to leaflet map', function (assert) {
+  assert.expect(4);
 
-  let component = this.subject({ lat, lng, zoom });
+  let component = this.subject({
+    lat: 10,
+    lng: 10,
+    zoom: 10
+  });
 
   this.render();
 
@@ -40,9 +42,20 @@ test('should pass center\zoom from properties to leaflet map', function (assert)
   assert.ok(leafletMap.getCenter().equals([10, 10]));
 
   component.set('zoom', 0);
-  component.set('lat', 0);
-  component.set('lng', 0);
-
   assert.equal(leafletMap.getZoom(), 0);
-  assert.ok(leafletMap.getCenter().equals([0, 0]));
+
+  // after update to leaflet-1.0.0 panTo not directly change center,
+  // it will changed after animation will trigger moveend
+  let promise = new Ember.Test.promise((resolve) => {
+    leafletMap.on('moveend', resolve);
+  });
+
+  component.setProperties({
+    'lat': 0,
+    'lng': 0
+  });
+
+  return promise.then(() => {
+    assert.ok(leafletMap.getCenter().equals([0, 0]));
+  });
 });

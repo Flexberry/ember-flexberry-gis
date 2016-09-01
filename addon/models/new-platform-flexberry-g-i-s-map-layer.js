@@ -8,6 +8,7 @@ let Model = BaseModel.extend({
   visibility: DS.attr('boolean'),
   settings: DS.attr('string'),
   coordinateReferenceSystem: DS.attr('string'),
+  index: DS.attr('number'),
   parent: DS.belongsTo('new-platform-flexberry-g-i-s-map-layer', { inverse: null, async: false }),
 
   layers: null,
@@ -30,6 +31,7 @@ Model.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map-layer', {
   visibility: Proj.attr('Visibility'),
   settings: Proj.attr('Settings'),
   coordinateReferenceSystem: Proj.attr('Coordinate reference system'),
+  index: Proj.attr('Index'),
   parent: Proj.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
 
   })
@@ -40,6 +42,7 @@ Model.defineProjection('MapLayerE', 'new-platform-flexberry-g-i-s-map-layer', {
   visibility: Proj.attr('Visibility'),
   settings: Proj.attr('Settings'),
   coordinateReferenceSystem: Proj.attr('Coordinate reference system'),
+  index: Proj.attr('Index'),
   parent: Proj.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
 
   })
