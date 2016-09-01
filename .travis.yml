@@ -31,7 +31,7 @@ install:
   - bower install
 
 script:
-  - ember try $EMBER_TRY_SCENARIO test
+  - ember try:one $EMBER_TRY_SCENARIO test
 
 after_success:
   - test $EMBER_TRY_SCENARIO == "default" && test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "develop" && ember build -prod && firebase deploy --project flexberry-ember-gis-dev --token "$FIREBASE_TOKEN" -m "Travis Build №$TRAVIS_BUILD_NUMBER."

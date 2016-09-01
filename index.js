@@ -23,6 +23,6 @@ module.exports = {
     // Import leaflet plugins
 
     // Leaflet.Editable
-    app.import(app.bowerDirectory + '/Leaflet.Editable/src/Leaflet.Editable.js');
+    app.import(app.bowerDirectory + '/leaflet.editable/src/Leaflet.Editable.js');
   }
 };
