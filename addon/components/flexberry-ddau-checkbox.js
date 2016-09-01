@@ -3,11 +3,10 @@
 */
 
 import Ember from 'ember';
+import RequiredActionsMixin from '../mixins/required-actions';
 import DomActionsMixin from '../mixins/dom-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import DynamicActionsMixin from '../mixins/dynamic-actions';
-import DynamicProxyActionsMixin from '../mixins/dynamic-proxy-actions';
-import DynamicComponentsMixin from '../mixins/dynamic-components';
 import layout from '../templates/components/flexberry-ddau-checkbox';
 
 /**
@@ -41,7 +40,10 @@ const flexberryClassNames = {
   Usage with manual 'change' action handling:
   templates/my-form.hbs
   ```handlebars
-  {{flexberry-ddau-checkbox value=model.flag change=(action "onModelFlagChange")}}
+  {{flexberry-ddau-checkbox
+    value=model.flag
+    change=(action "onModelFlagChange")
+  }}
   ```
 
   controllers/my-form.js
@@ -59,7 +61,10 @@ const flexberryClassNames = {
 
   Usage with {{#crossLink "FlexberryDdauCheckboxActionsHandlerMixin"}}flexberry-ddau-checkbox-actions-handler mixin{{/crossLink}}:
   ```handlebars
-  {{flexberry-ddau-checkbox value=model.flag change=(action "onCheckboxChange" "model.flag")}}
+  {{flexberry-ddau-checkbox
+    value=model.flag
+    change=(action "onCheckboxChange" "model.flag")
+  }}
   ```
 
   controllers/my-form.js
@@ -73,18 +78,27 @@ const flexberryClassNames = {
 
   @class FlexberryDdauCheckboxComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses RequiredActionsMixin
   @uses DomActionsMixin
-  @uses DynamicPropertiesMixin
   @uses DynamicActionsMixin
-  @uses DynamicProxyActionsMixin
-  @uses DynamicComponentsMixin
+  @uses DynamicPropertiesMixin
 */
 let FlexberryDdauCheckboxComponent = Ember.Component.extend(
+  RequiredActionsMixin,
   DomActionsMixin,
-  DynamicPropertiesMixin,
   DynamicActionsMixin,
-  DynamicProxyActionsMixin,
-  DynamicComponentsMixin, {
+  DynamicPropertiesMixin, {
+
+  /**
+    Component's required actions names.
+    For actions enumerated in this array an assertion exceptions will be thrown,
+    if actions handlers are not defined for them.
+
+    @property _requiredActions
+    @type String[]
+    @default ['change']
+  */
+  _requiredActionNames: ['change'],
 
   /**
     Reference to component's template.
@@ -150,9 +164,7 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
   actions: {
     /**
       Handles inner input's bubbled 'change' action.
-      Invokes component's {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'change'{{/crossLink}},
-      {{#crossLink "FlexberryDdauCheckbox/sendingActions.check:method"}}'check'{{/crossLink}},
-      {{#crossLink "FlexberryDdauCheckbox/sendingActions.uncheck:method"}}'uncheck'{{/crossLink}} actions.
+      Invokes component's {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'change'{{/crossLink}} action.
 
       @method actions.change
       @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
@@ -163,12 +175,6 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
 
       // Invoke component's custom 'change' action.
       this.sendAction('change', {
-        newValue: checked,
-        originalEvent: e
-      });
-
-      // Invoke state-related 'check' or 'uncheck' action.
-      this.sendAction(checked ? 'check' : 'uncheck', {
         newValue: checked,
         originalEvent: e
       });
@@ -197,7 +203,7 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
 
     // Destroys Semantic UI checkbox.
     this.$().checkbox('destroy');
-  }
+  },
 
   /**
     Component's action invoking when checkbox was clicked and it's 'checked' state changed.
@@ -205,26 +211,6 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
     @method sendingActions.change
     @param {Object} e Action's event object.
     @param {Boolean} e.newValue Component's new value.
-    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
-    which describes inner input's 'change' event.
-  */
-
-  /**
-    Component's action invoking when checkbox was clicked and it's 'checked' state changed to 'checked=true'.
-
-    @method sendingActions.check
-    @param {Object} e Action's event object.
-    @param {Boolean} e.newValue Component's new value (always true in this action handlers).
-    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
-    which describes inner input's 'change' event.
-  */
-
-  /**
-    Component's action invoking when checkbox was clicked and it's 'checked' state changed to 'checked=false'.
-
-    @method sendingActions.uncheck
-    @param {Object} e Action's event object.
-    @param {Boolean} e.newValue Component's new value (always false in this action handlers).
     @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
     which describes inner input's 'change' event.
   */

@@ -1,3 +1,5 @@
+@import './components/flexberry-tree';
+
 .leaflet-container {
     font-family: inherit;
     height: 700px;
@@ -16,19 +18,9 @@
     }
 }
 
-.left-aligned {
-  float: left;
-}
-
-.right-aligned {
-  float: right;
-}
-
-.clear-aligned {
-  clear: both;
-}
-
-.flexberry-tree .flexberry-tree {
-  margin: 0 !important;
+.leaflet-container {
+  font-family: inherit;
+  height: 700px;
+  width: 100%;
 }
 

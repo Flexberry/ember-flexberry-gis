@@ -1,5 +1,5 @@
 <div class="ui grid">
-  <div class="twelve wide column">
+  <div class="ten wide column">
     {{#flexberry-maptoolbar leafletMap=leafletMap as |toolbar|}}
       <div class="ui icon buttons">
         <button class="ui icon button" {{action "activateTool" "dragging" target=toolbar}}>
@@ -25,10 +25,9 @@
       lat=model.lat
       lng=model.lng
       zoom=model.zoom
-      zoomControl=true
       onMoveend=(action "updateCenter")
       leafletMapDidInit=(action "leafletMapDidInit") as |leafletMap|}}
-      {{flexberry-layers leafletContainer=leafletMap layers=model.layers}}
+      {{flexberry-layers leafletContainer=leafletMap layers=model.rootLayer.layers}}
 
       {{scale-control map=leafletMap imperial=false}}
     {{/flexberry-map}}
@@ -36,8 +35,38 @@
 
 
   </div>
-  <div class="four wide column">
-    {{layers-tree layers=model.layers}}<br>
+  <div class="six wide column">
+    {{flexberry-maplayers
+      class="styled"
+      layers=(get-with-dynamic-actions this "model.rootLayer.layers"
+        hierarchyPropertyName="layers"
+        pathKeyword="layerPath"
+        dynamicActions=(array
+          (hash
+            on="add"
+            actionName="onMapLayerAdd"
+            actionArguments=(array "{% layerPath %}")
+          )
+          (hash
+            on="edit"
+            actionName="onMapLayerEdit"
+            actionArguments=(array "{% layerPath %}")
+          )
+          (hash
+            on="remove"
+            actionName="onMapLayerRemove"
+            actionArguments=(array "{% layerPath %}")
+          )
+          (hash
+            on="changeVisibility"
+            actionName="onMapLayerChangeVisibility"
+            actionArguments=(array "{% layerPath %}.visibility")
+          )
+        )
+      )
+      add=(action "onMapLayerAdd" "model.rootLayer")
+    }}
+    <br>
     lat: {{flexberry-field value=model.lat}}
     lng: {{flexberry-field value=model.lng}}
     zoom: {{flexberry-field value=model.zoom}}

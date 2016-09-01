@@ -1,0 +1,99 @@
+{{!--
+  See https://github.com/ciena-blueplanet/ember-block-slots#usage
+  {{yield}} is required here to make yield-slots available.
+--}}
+{{yield}}
+
+{{#flexberry-treenode
+  _hasContent=_hasContent
+  headerClick=(action "onHeaderClick")
+  beforeExpand=(action "onBeforeExpand")
+  beforeCollapse=(action "onBeforeCollapse")
+}}
+  {{#block-slot "header"}}
+    {{flexberry-ddau-checkbox
+      class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+      value=visibility
+      change=(action "onVisibilityCheckboxChange")
+    }}
+    {{flexberry-icon
+      class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
+    }}
+    {{name}}
+    {{#if (not readonly)}}
+      {{flexberry-button
+        class=(concat flexberryClassNames.removeButton " right floated " flexberryClassNames.preventExpandCollapse)
+        iconClass="trash icon"
+        click=(action "onRemoveButtonClick")
+      }}
+      {{flexberry-button
+        class=(concat flexberryClassNames.editButton " right floated " flexberryClassNames.preventExpandCollapse)
+        iconClass="edit icon"
+        click=(action "onEditButtonClick")
+      }}
+      {{#if _isAddOperationIsPermitted}}
+        {{flexberry-button
+          class=(concat flexberryClassNames.addButton " right floated " flexberryClassNames.preventExpandCollapse)
+          iconClass="plus icon"
+          click=(action "onAddButtonClick")
+        }}
+      {{/if}}
+      <div style="clear: both;"></div>
+    {{/if}}
+
+    {{!--
+      Semantic UI modal dialogs takes long time to be initialized
+      so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+    --}}
+    {{#if _addDialogHasBeenRequested}}
+      {{component "layers-dialogs/add"
+        class=flexberryClassNames.addDialog
+        visible=_addDialogIsVisible
+        layer=null
+        approve=(action "onAddDialogApprove")
+      }}
+    {{/if}}
+    {{#if _editDialogHasBeenRequested}}
+      {{component "layers-dialogs/edit"
+        class=flexberryClassNames.editDialog
+        visible=_editDialogIsVisible
+        layer=(hash
+          type=type
+          name=name
+          coordinateReferenceSystem=coordinateReferenceSystem
+          settings=settings
+        )
+        approve=(action "onEditDialogApprove")
+      }}
+    {{/if}}
+    {{#if _removeDialogHasBeenRequested}}
+      {{component "layers-dialogs/remove"
+        class=flexberryClassNames.removeDialog
+        visible=_removeDialogIsVisible
+        layer=(hash
+          type=type
+          name=name
+          coordinateReferenceSystem=coordinateReferenceSystem
+          settings=settings
+        )
+        approve=(action "onRemoveDialogApprove")
+      }}
+    {{/if}}
+
+    {{#yield-slot "header"}}
+      {{yield}}
+    {{/yield-slot}}
+  {{/block-slot}}
+
+  {{#block-slot "content"}}
+    {{#if _hasLayers}}
+      {{flexberry-maplayers
+        layers=layers
+        readonly=readonly
+      }}
+    {{/if}}
+    {{#yield-slot "content"}}
+      {{yield}}
+    {{/yield-slot}}
+  {{/block-slot}}
+{{/flexberry-treenode}}

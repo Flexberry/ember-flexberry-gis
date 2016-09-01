@@ -136,9 +136,6 @@ Ember.$.extend(true, translations, {
       'flexberry-maplayers': {
         'settings-example': {
           'caption': 'Settings example for flexberry-maplayers',
-          'hbs-layers-tab-caption': 'Explicitly hbs-markup defined layers tree',
-          'hbs-layers-latest-clicked-layer-caption': 'Latest clicked layer settings',
-          'hbs-layers-latest-clicked-layer-placeholder': 'Click on any layer to display it\'s settings',
           'json-layers-tab-caption': 'JSON-object-defined layers tree',
           'json-layers-latest-clicked-layer-caption': 'Latest clicked layer settings',
           'json-layers-latest-clicked-layer-placeholder': 'Click on any layer to display it\'s settings'
@@ -147,9 +144,6 @@ Ember.$.extend(true, translations, {
       'flexberry-tree': {
         'settings-example': {
           'caption': 'Settings example for flexberry-tree',
-          'hbs-tree-tab-caption': 'Explicitly hbs-markup defined tree',
-          'hbs-tree-latest-clicked-node-caption': 'Latest clicked tree node settings',
-          'hbs-tree-latest-clicked-node-placeholder': 'Click on any tree node to display it\'s settings',
           'json-tree-tab-caption': 'JSON-object-defined tree',
           'json-tree-latest-clicked-node-caption': 'Latest clicked tree node settings',
           'json-tree-latest-clicked-node-placeholder': 'Click on any tree node to display it\'s settings'

@@ -1,52 +1,62 @@
 import Ember from 'ember';
 import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayer-actions-handler';
+import { availableLayerTypes } from 'ember-flexberry-gis/utils/layers';
 
 export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
   /**
     Component's wrapper CSS classes.
 
-    @property hbsLayersClass
+    @property jsonLayersClass
     @type String
   */
-  hbsLayersClass: '',
+  jsonLayersClass: '',
 
   /**
     Flag: indicates whether only one tree node can be expanded at the same time.
     If true, all expanded tree nodes will be automatically collapsed, on some other node expand.
 
-    @property hbsLayersExclusive
+    @property jsonLayersExclusive
     @type Boolean
     @default false
   */
-  hbsLayersExclusive: false,
+  jsonLayersExclusive: false,
 
   /**
     Flag: indicates whether it is allowed for already expanded tree nodes to collapse.
 
-    @property hbsLayersCollapsible
+    @property jsonLayersCollapsible
     @type Boolean
     @default true
   */
-  hbsLayersCollapsible: true,
+  jsonLayersCollapsible: true,
 
   /**
     Flag: indicates whether nested child nodes content opacity should be animated
     (if true, it may cause performance issues with many nested child nodes).
 
-    @property hbsLayersAnimateChildren
+    @property jsonLayersAnimateChildren
     @type Boolean
     @default false
   */
-  hbsLayersAnimateChildren: false,
+  jsonLayersAnimateChildren: false,
 
   /**
     Layers nodes expand/collapse animation duration in milliseconds.
 
-    @property hbsLayersDuration
+    @property jsonLayersDuration
     @type Number
     @default 350
   */
-  hbsLayersDuration: 350,
+  jsonLayersDuration: 350,
+
+  /**
+    Flag: indicates whether layers tree is in readonly mode or not.
+
+    @property jsonLayersReadonly
+    @type Boolean
+    @default false
+  */
+  jsonLayersReadonly: false,
 
   /**
     Layers hierarchy with their settings.
@@ -54,11 +64,11 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
     @property hbsTreeNodes
     @type Object[]
   */
-  hbsLayers: [{
+  jsonLayers: Ember.A([{
     name: 'Perm water (group layer)',
     type: 'group',
     visibility: true,
-    layers: [{
+    layers: Ember.A([{
       name: 'Perm water lines (wms layer)',
       type: 'wms',
       visibility: true,
@@ -78,12 +88,12 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
                 '"transparent":"true",' +
                 '"version":"1.3.0"}',
       coordinateReferenceSystem: null
-    }]
+    }])
   }, {
     name: 'Perm points of interest (group layer)',
     type: 'group',
     visibility: true,
-    layers: [{
+    layers: Ember.A([{
       name: 'Perm points of interest (group layer)',
       type: 'wms',
       visibility: true,
@@ -93,86 +103,70 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
                 '"transparent":"true",' +
                 '"version":"1.3.0"}',
       coordinateReferenceSystem: null
-    }]
+    }])
   }, {
     name: 'Open Street Map (tile layer)',
     type: 'tile',
     visibility: true,
     settings: '{"url": "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}',
     coordinateReferenceSystem: null
-  }],
+  }]),
 
   /**
     Component's template text.
 
-    @property hbsLayersComponentTemplateText
+    @property jsonLayersComponentTemplateText
     @type String
   */
-  hbsLayersComponentTemplateText: new Ember.Handlebars.SafeString(
-    '{{#flexberry-maplayers<br>' +
-    '  class=hbsLayersClass<br>' +
-    '  exclusive=hbsLayersExclusive<br>' +
-    '  collapsible=hbsLayersCollapsible<br>' +
-    '  animateChildren=hbsLayersAnimateChildren<br>' +
-    '  duration=hbsLayersDuration<br>' +
-    '}}<br>' +
-    '  {{#flexberry-maplayer<br>' +
-    '    name=hbsLayers.0.name<br>' +
-    '    type=hbsLayers.0.type<br>' +
-    '    visibility=hbsLayers.0.visibility<br>' +
-    '    headerClick=(action "onMapLayerHeaderClick" "hbsLayers.0")<br>' +
-    '    visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.0.visibility")<br>' +
-    '  }}<br>' +
-    '    {{#flexberry-maplayers}}<br>' +
-    '      {{flexberry-maplayer<br>' +
-    '        name=hbsLayers.0.layers.0.name<br>' +
-    '        type=hbsLayers.0.layers.0.type<br>' +
-    '        visibility=hbsLayers.0.layers.0.visibility<br>' +
-    '        headerClick=(action "onMapLayerHeaderClick" "hbsLayers.0.layers.0")<br>' +
-    '        visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.0.layers.0.visibility")<br>' +
-    '      }}<br>' +
-    '      {{flexberry-maplayer<br>' +
-    '        name=hbsLayers.0.layers.1.name<br>' +
-    '        type=hbsLayers.0.layers.1.type<br>' +
-    '        visibility=hbsLayers.0.layers.1.visibility<br>' +
-    '        headerClick=(action "onMapLayerHeaderClick" "hbsLayers.0.layers.1")<br>' +
-    '        visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.0.layers.1.visibility")<br>' +
-    '      }}<br>' +
-    '    {{/flexberry-maplayers}}<br>' +
-    '  {{/flexberry-maplayer}}<br>' +
-    '  {{#flexberry-maplayer<br>' +
-    '    name=hbsLayers.1.name<br>' +
-    '    type=hbsLayers.1.type<br>' +
-    '    visibility=hbsLayers.1.visibility<br>' +
-    '    headerClick=(action "onMapLayerHeaderClick" "hbsLayers.1")<br>' +
-    '    visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.1.visibility")<br>' +
-    '  }}<br>' +
-    '    {{#flexberry-maplayers}}<br>' +
-    '      {{flexberry-maplayer<br>' +
-    '        name=hbsLayers.1.layers.0.name<br>' +
-    '        type=hbsLayers.1.layers.0.type<br>' +
-    '        visibility=hbsLayers.1.layers.0.visibility<br>' +
-    '        headerClick=(action "onMapLayerHeaderClick" "hbsLayers.1.layers.0")<br>' +
-    '        visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.1.layers.0.visibility")<br>' +
-    '      }}<br>' +
-    '    {{/flexberry-maplayers}}<br>' +
-    '  {{/flexberry-maplayer}}<br>' +
-    '  {{flexberry-maplayer<br>' +
-    '    name=hbsLayers.2.name<br>' +
-    '    type=hbsLayers.2.type<br>' +
-    '    visibility=hbsLayers.2.visibility<br>' +
-    '    headerClick=(action "onMapLayerHeaderClick" "hbsLayers.2")<br>' +
-    '    visibilityChange=(action "onMapLayerVisibilityChange" "hbsLayers.2.visibility")<br>' +
-    '  }}<br>' +
-    '{{/flexberry-maplayers}}'),
+  jsonLayersComponentTemplateText: new Ember.Handlebars.SafeString(
+    '{{flexberry-maplayers<br>' +
+    '  class=jsonLayersClass<br>' +
+    '  exclusive=jsonLayersExclusive<br>' +
+    '  collapsible=jsonLayersCollapsible<br>' +
+    '  animateChildren=jsonLayersAnimateChildren<br>' +
+    '  duration=jsonLayersDuration<br>' +
+    '  readonly=jsonLayersReadonly<br>' +
+    '  layers=(get-with-dynamic-actions this "jsonLayers"<br>' +
+    '    hierarchyPropertyName="layers"<br>' +
+    '    pathKeyword="layerPath"<br>' +
+    '    dynamicActions=(array<br>' +
+    '      (hash<br>' +
+    '        on="headerClick"<br>' +
+    '        actionName="onMapLayerHeaderClick"<br>' +
+    '        actionArguments=(array "{% layerPath %}")<br>' +
+    '      )<br>' +
+    '      (hash<br>' +
+    '        on="addChild"<br>' +
+    '        actionName="onMapLayerAddChild"<br>' +
+    '        actionArguments=(array "{% layerPath %}")<br>' +
+    '      )<br>' +
+    '      (hash<br>' +
+    '        on="edit"<br>' +
+    '        actionName="onMapLayerEdit"<br>' +
+    '        actionArguments=(array "{% layerPath %}")<br>' +
+    '      )<br>' +
+    '      (hash<br>' +
+    '        on="remove"<br>' +
+    '        actionName="onMapLayerRemove"<br>' +
+    '        actionArguments=(array "{% layerPath %}")<br>' +
+    '      )<br>' +
+    '      (hash<br>' +
+    '        on="changeVisibility"<br>' +
+    '        actionName="onMapLayerChangeVisibility"<br>' +
+    '        actionArguments=(array "{% layerPath %}.visibility")<br>' +
+    '      )<br>' +
+    '    )<br>' +
+    '  )<br>' +
+    '  addChild=(action "onMapLayerAddChild" "jsonLayers")<br>' +
+    '}}'),
 
   /**
     Component settings metadata.
 
-    @property hbsLayersComponentSettingsMetadata
+    @property jsonLayersComponentSettingsMetadata
     @type Object[]
   */
-  hbsLayersComponentSettingsMetadata: Ember.computed(function() {
+  jsonLayersComponentSettingsMetadata: Ember.computed(function() {
     let componentSettingsMetadata = Ember.A();
 
     componentSettingsMetadata.pushObject({
@@ -180,31 +174,37 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
       settingType: 'css',
       settingDefaultValue: '',
       settingAvailableItems: ['styled', 'fluid'],
-      bindedControllerPropertieName: 'hbsLayersClass'
+      bindedControllerPropertieName: 'jsonLayersClass'
     });
     componentSettingsMetadata.pushObject({
       settingName: 'exclusive',
       settingType: 'boolean',
       settingDefaultValue: false,
-      bindedControllerPropertieName: 'hbsLayersExclusive'
+      bindedControllerPropertieName: 'jsonLayersExclusive'
     });
     componentSettingsMetadata.pushObject({
       settingName: 'collapsible',
       settingType: 'boolean',
       settingDefaultValue: true,
-      bindedControllerPropertieName: 'hbsLayersCollapsible'
+      bindedControllerPropertieName: 'jsonLayersCollapsible'
     });
     componentSettingsMetadata.pushObject({
       settingName: 'animateChildren',
       settingType: 'boolean',
       settingDefaultValue: false,
-      bindedControllerPropertieName: 'hbsLayersAnimateChildren'
+      bindedControllerPropertieName: 'jsonLayersAnimateChildren'
     });
     componentSettingsMetadata.pushObject({
       settingName: 'duration',
       settingType: 'number',
       settingDefaultValue: 350,
-      bindedControllerPropertieName: 'hbsLayersDuration'
+      bindedControllerPropertieName: 'jsonLayersDuration'
+    });
+    componentSettingsMetadata.pushObject({
+      settingName: 'readonly',
+      settingType: 'boolean',
+      settingDefaultValue: false,
+      bindedControllerPropertieName: 'jsonLayersReadonly'
     });
 
     return componentSettingsMetadata;
@@ -213,11 +213,11 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
   /**
     Path to controller's property representing latest clicked layer node.
 
-    @property hbsLayersLatestClickedLayerPath
+    @property jsonLayersLatestClickedLayerPath
     @type String
     @default null
   */
-  hbsLayersLatestClickedLayerPath: null,
+  jsonLayersLatestClickedLayerPath: null,
 
   /**
     Component settings metadata for latest clicked tree node.
@@ -225,11 +225,11 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
     @property hbsTreeComponentSettingsMetadata
     @type Object[]
   */
-  hbsLayersLatestClickedLayerComponentSettingsMetadata: Ember.computed('hbsLayersLatestClickedLayerPath', function() {
-    let hbsLayersLatestClickedLayerPath = this.get('hbsLayersLatestClickedLayerPath');
+  jsonLayersLatestClickedLayerComponentSettingsMetadata: Ember.computed('jsonLayersLatestClickedLayerPath', function() {
+    let jsonLayersLatestClickedLayerPath = this.get('jsonLayersLatestClickedLayerPath');
     let componentSettingsMetadata = Ember.A();
 
-    if (Ember.isBlank(hbsLayersLatestClickedLayerPath)) {
+    if (Ember.isBlank(jsonLayersLatestClickedLayerPath)) {
       return componentSettingsMetadata;
     }
 
@@ -237,24 +237,20 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
       settingName: 'name',
       settingType: 'string',
       settingDefaultValue: null,
-      bindedControllerPropertieName: hbsLayersLatestClickedLayerPath + '.name'
+      bindedControllerPropertieName: jsonLayersLatestClickedLayerPath + '.name'
     });
     componentSettingsMetadata.pushObject({
       settingName: 'type',
       settingType: 'enumeration',
-      settingAvailableItems: [
-        'group',
-        'wms',
-        'tile'
-      ],
+      settingAvailableItems: availableLayerTypes(),
       settingDefaultValue: null,
-      bindedControllerPropertieName: hbsLayersLatestClickedLayerPath + '.type'
+      bindedControllerPropertieName: jsonLayersLatestClickedLayerPath + '.type'
     });
     componentSettingsMetadata.pushObject({
       settingName: 'visibility',
       settingType: 'boolean',
       settingDefaultValue: null,
-      bindedControllerPropertieName: hbsLayersLatestClickedLayerPath + '.visibility'
+      bindedControllerPropertieName: jsonLayersLatestClickedLayerPath + '.visibility'
     });
 
     return componentSettingsMetadata;
@@ -280,5 +276,5 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
       // Remember latest clicked layer path to a tree-related controller's property.
       this.set(clickedLayerSettingsPrefix + 'LatestClickedLayerPath', clickedLayerPropertiesPath);
     }
-  }
+  },
 });
