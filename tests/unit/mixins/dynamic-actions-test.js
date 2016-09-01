@@ -27,7 +27,10 @@ test('Mixin throws assertion failed exception if specified \'dynamicActions\' is
   assert.expect(wrongDynamicActionsArray.length);
 
   wrongDynamicActionsArray.forEach((wrongDynamicActions) => {
-    let component = ComponentWithDynamicActionsMixin.create({ dynamicActions: wrongDynamicActions });
+    let component = ComponentWithDynamicActionsMixin.create({
+      attrs: {},
+      dynamicActions: wrongDynamicActions
+    });
 
     try {
       component.sendAction('someAction');
@@ -47,6 +50,7 @@ test('Mixin throws assertion failed exception if one of specified \'dynamicActio
 
   wrongOnPropertiesArray.forEach((wrongOnProperty) => {
     let component = ComponentWithDynamicActionsMixin.create({
+      attrs: {},
       dynamicActions: Ember.A([DynamicActionObject.create({
         on: wrongOnProperty,
         actionHandler: null,
@@ -75,6 +79,7 @@ test('Mixin throws assertion failed exception if one of specified \'dynamicActio
 
   wrongActionHandlersArray.forEach((wrongActionHandler) => {
     let component = ComponentWithDynamicActionsMixin.create({
+      attrs: {},
       dynamicActions: Ember.A([DynamicActionObject.create({
         on: 'someAction',
         actionHandler: wrongActionHandler,
@@ -103,6 +108,7 @@ test('Mixin throws assertion failed exception if one of specified \'dynamicActio
 
   wrongActionNamesArray.forEach((wrongActionName) => {
     let component = ComponentWithDynamicActionsMixin.create({
+      attrs: {},
       dynamicActions: Ember.A([DynamicActionObject.create({
         on: 'someAction',
         actionHandler: null,
@@ -134,6 +140,7 @@ test('Mixin throws assertion failed exception if one of specified \'dynamicActio
 
   wrongActionContextsArray.forEach((wrongActionContext) => {
     let component = ComponentWithDynamicActionsMixin.create({
+      attrs: {},
       dynamicActions: Ember.A([DynamicActionObject.create({
         on: 'someAction',
         actionHandler: null,
@@ -162,6 +169,7 @@ test('Mixin throws assertion failed exception if one of specified \'dynamicActio
 
   wrongActionArgumentsArray.forEach((wrongActionArguments) => {
     let component = ComponentWithDynamicActionsMixin.create({
+      attrs: {},
       dynamicActions: Ember.A([DynamicActionObject.create({
         on: 'someAction',
         actionHandler: null,
@@ -187,17 +195,18 @@ test('Mixin does\'t break it\'s owner\'s standard \'sendAction\' logic', functio
   assert.expect(1);
 
   let component = ComponentWithDynamicActionsMixin.create({
-      dynamicActions: Ember.A([DynamicActionObject.create({
-        on: 'someAction',
-        actionHandler: null,
-        actionName: null,
-        actionContext: null,
-        actionArguments: null
-      })])
-    });
+    attrs: {},
+    dynamicActions: Ember.A([DynamicActionObject.create({
+      on: 'someAction',
+      actionHandler: null,
+      actionName: null,
+      actionContext: null,
+      actionArguments: null
+    })])
+  });
 
   let someActionHandlerHasBeenCalled = false;
-  component.someAction = function() {
+  component.attrs.someAction = function() {
     someActionHandlerHasBeenCalled = true;
   };
 
@@ -217,6 +226,7 @@ test('Mixin triggers specified \'dynamicActions\' handlers (\'actionHandler\' ca
   let someActionAgainDynamicHandlerHasBeenCalled = false;
 
   let component = ComponentWithDynamicActionsMixin.create({
+    attrs: {},
     dynamicActions: Ember.A([DynamicActionObject.create({
       on: 'someAction',
       actionHandler: function() {
@@ -245,12 +255,12 @@ test('Mixin triggers specified \'dynamicActions\' handlers (\'actionHandler\' ca
   });
 
   let someActionHandlerHasBeenCalled = false;
-  component.someAction = function() {
+  component.attrs.someAction = function() {
     someActionHandlerHasBeenCalled = true;
   };
 
   let someAnotherActionHandlerHasBeenCalled = false;
-  component.someAnotherAction = function() {
+  component.attrs.someAnotherAction = function() {
     someAnotherActionHandlerHasBeenCalled = true;
   };
 
@@ -348,6 +358,7 @@ test('Mixin triggers all specified \'dynamicActions\' handlers (callbacks & norm
   let someActionAgainDynamicHandlerContext = null;
 
   let component = ComponentWithDynamicActionsMixin.create({
+    attrs: {},
     dynamicActions: Ember.A([DynamicActionObject.create({
       on: 'someAction',
       actionHandler: function() {
@@ -379,12 +390,12 @@ test('Mixin triggers all specified \'dynamicActions\' handlers (callbacks & norm
   });
 
   let someActionHandlerHasBeenCalled = false;
-  component.someAction = function() {
+  component.attrs.someAction = function() {
     someActionHandlerHasBeenCalled = true;
   };
 
   let someAnotherActionHandlerHasBeenCalled = false;
-  component.someAnotherAction = function() {
+  component.attrs.someAnotherAction = function() {
     someAnotherActionHandlerHasBeenCalled = true;
   };
 
@@ -512,6 +523,7 @@ test('Mixin works properly with \'dynamicActions\' added/removed after component
   // Define component without any dynamic actions.
   let dynamicActions = Ember.A();
   let component = ComponentWithDynamicActionsMixin.create({
+    attrs: {},
     dynamicActions: dynamicActions
   });
 
@@ -542,7 +554,7 @@ test('Mixin works properly with \'dynamicActions\' added/removed after component
   });
 
   let someActionHandlerHasBeenCalled = false;
-  component.someAction = function() {
+  component.attrs.someAction = function() {
     someActionHandlerHasBeenCalled = true;
   };
 
@@ -613,6 +625,7 @@ test('Mixin adds specified in \'dynamicActions\' \'actionArguments\' to the begi
   }).create();
 
   let component = ComponentWithDynamicActionsMixin.create({
+    attrs: {},
     dynamicActions: Ember.A([DynamicActionObject.create({
       on: 'someAction',
       actionHandler: function(...args) {
@@ -624,7 +637,7 @@ test('Mixin adds specified in \'dynamicActions\' \'actionArguments\' to the begi
     })])
   });  
 
-  component.someAction = function(...args) {
+  component.attrs.someAction = function(...args) {
     someActionHandlerArguments = Ember.A(args);
   };
 
@@ -650,4 +663,34 @@ test('Mixin adds specified in \'dynamicActions\' \'actionArguments\' to the begi
     someActionDynamicControllersHandlerArguments[3] === originalActionArguments[1],
     true,
     'Action handler with specified \'actionName\' contains additional \'actionArguments\' from \'dynamicActions\'');
+});
+
+test('Mixin doesn\'t trigger component\'s inner method if outer action handler is not defined', function (assert) {
+  assert.expect(2);
+
+  let component = ComponentWithDynamicActionsMixin.create({
+    attrs: {}
+  });
+
+  let innerSomeActionHasBeenCalled = false;
+  component.someAction = function() {
+    innerSomeActionHasBeenCalled = true;
+  };
+
+  component.sendAction('someAction');
+  assert.strictEqual(
+    innerSomeActionHasBeenCalled,
+    false,
+    'Component doesn\'t trigger inner \'someAction\' method');
+
+  let outerSomeActionHasBeenCalled = false;
+  component.attrs.someAction = function() {
+    outerSomeActionHasBeenCalled = true;
+  };
+
+  component.sendAction('someAction');
+  assert.strictEqual(
+    outerSomeActionHasBeenCalled && !innerSomeActionHasBeenCalled,
+    true,
+    'Component trigger\'s outer \'someAction\' handler');
 });

@@ -118,7 +118,7 @@ export default Ember.Mixin.create({
         {{flexberry-maplayers
           name="Tree node with checkbox"
           visibility=layer.visibility
-          visiblilityChange=(action "onMapLayerVisibilityChange" "layer.visibility")
+          changeVisiblility=(action "onMapLayerChangeVisibility" "layer.visibility")
         }}
       ```
 
@@ -131,7 +131,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerVisibilityChange(...args) {
+    onMapLayerChangeVisibility(...args) {
       let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
 
@@ -139,24 +139,20 @@ export default Ember.Mixin.create({
     },
 
     /**
-      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.becameVisible:method"}}flexberry-maplayers component's 'becameVisible' action{{/crossLink}}.
-      It mutates value of property with given name to true.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.addChild:method"}}flexberry-maplayers component's 'addChild' action{{/crossLink}}.
+      It adds new child layer.
 
-      @method actions.onMapLayerBecameVisible
-      @param {String} mutablePropertyPath Path to a property, which value must be mutated on action.
+      @method actions.onMapLayerAdd
+      @param {String} layerPath Path to a parent layers, to which new child layer must be added on action.
       @param {Object} e Action's event object.
-      @param {Object} e.newValue New value for a property, which value must be mutated on action (always true in this action handler).
-      @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
-      which describes checkbox input's 'change' event.
+      @param {Object} e.layerProperties Object containing properties of new child layer.
 
       @example
       templates/my-form.hbs
       ```handlebars
-        {{flexberry-maplayers
+        {{flexberry-maplayer
           name="Tree node with checkbox"
-          visibility=layer.visibility
-          becameVisible=(action "onMapLayerBecameVisible" "layer.visibility")
-          becameInvisible=(action "onMapLayerBecameInvisible" "layer.visibility")
+          add=(action "onMapLayerAdd" "layers.0")
         }}
       ```
 
@@ -169,32 +165,64 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerBecameVisible(...args) {
-      let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
-      let actionHandler = objectContainingActionHandler.get('actions.onCheckboxCheck');
+    onMapLayerAdd(...args) {
+      let parentLayerPath = args[0];
+      Ember.assert(
+        `Wrong type of \`parentLayerPath\` argument: actual type is \`${Ember.typeOf(parentLayerPath)}\`, ` +
+        `but \`string\` is expected`,
+        Ember.typeOf(parentLayerPath) === 'string');
 
-      actionHandler.apply(this, args);
+      let { layerProperties } = args[args.length - 1];
+      Ember.assert(
+        `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
+        `but \`object\` or  \`instance\` is expected`,
+        Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
+
+      let parentLayer = this.get(parentLayerPath);
+      Ember.assert(
+        `Wrong type of \`parentLayer\` property: actual type is \`${Ember.typeOf(parentLayer)}\`, ` +
+        `but \`array\` or \`object\` or  \`instance\` is expected`,
+        Ember.isArray(parentLayer) || Ember.typeOf(parentLayer) === 'object' || Ember.typeOf(parentLayer) === 'instance');
+
+      let childLayers = Ember.isArray(parentLayer) ? parentLayer : Ember.get(parentLayer, 'layers');
+      if (Ember.isNone(childLayers)) {
+        childLayers = Ember.A();
+        Ember.set(parentLayer, 'layers', childLayers);
+      }
+
+      Ember.assert(
+        `Wrong type of \`parentLayer.layers\` property: actual type is \`${Ember.typeOf(childLayers)}\`, ` +
+        `but \`Ember.NativeArray\` is expected`,
+        Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
+
+      let childLayer = this._createLayer({
+        parentLayerPath: parentLayerPath,
+        parentLayer: parentLayer,
+        layerProperties: layerProperties
+      });
+
+      if (Ember.get(childLayer, 'type') === 'group' && !Ember.isArray(Ember.get(childLayer, 'layers'))) {
+        Ember.set(childLayer, 'layers', Ember.A());
+      }
+
+      childLayers.pushObject(childLayer);
     },
 
     /**
-      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.becameInvisible:method"}}flexberry-maplayers component's 'becameInvisible' action{{/crossLink}}.
-      It mutates value of property with given name to false.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.edit:method"}}flexberry-maplayers component's 'edit' action{{/crossLink}}.
+      It edits existing layer.
 
-      @method actions.onMapLayerBecameInvisible
-      @param {String} mutablePropertyPath Path to a property, which value must be mutated on action.
+      @method actions.onMapLayerEdit
+      @param {String} layerPath Path to a layer, which must be edited on action.
       @param {Object} e Action's event object.
-      @param {Object} e.newValue New value for a property, which value must be mutated on action (always false in this action handler).
-      @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
-      which describes checkbox input's 'change' event.
+      @param {Object} e.layerProperties Object containing edited layer properties, which must be merged to layer on action.
 
       @example
       templates/my-form.hbs
       ```handlebars
-        {{flexberry-maplayers
+        {{flexberry-maplayer
           name="Tree node with checkbox"
-          visibility=layer.visibility
-          becameVisible=(action "onMapLayerBecameVisible" "layer.visibility")
-          becameInvisible=(action "onMapLayerBecameInvisible" "layer.visibility")
+          edit=(action "onMapLayerEdit" "layers.0")
         }}
       ```
 
@@ -207,11 +235,134 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerBecameInvisible(...args) {
-      let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
-      let actionHandler = objectContainingActionHandler.get('actions.onCheckboxUncheck');
+    onMapLayerEdit(...args) {
+      let layerPath = args[0];
+      Ember.assert(
+        `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
+        `but \`string\` is expected`,
+        Ember.typeOf(layerPath) === 'string');
 
-      actionHandler.apply(this, args);
+      let { layerProperties } = args[args.length - 1];
+      Ember.assert(
+        `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
+        `but \`object\` or  \`instance\` is expected`,
+        Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
+
+      let layer = this.get(layerPath);
+      Ember.assert(
+        `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
+        `but \`object\` or  \`instance\` is expected`,
+        Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
+
+      this._editLayer({
+        layerPath: layerPath,
+        layer: layer,
+        layerProperties: layerProperties
+      });
+    },
+
+    /**
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.remove:method"}}flexberry-maplayers component's 'remove' action{{/crossLink}}.
+      It removes specified layer.
+
+      @method actions.onMapLayerRemove
+      @param {String} layerPath Path to a layer, which must be removed on action.
+      @param {Object} e Action's event object.
+
+      @example
+      templates/my-form.hbs
+      ```handlebars
+        {{flexberry-maplayer
+          name="Tree node with checkbox"
+          remove=(action "onMapLayerRemove" "layers.0")
+        }}
+      ```
+
+      controllers/my-form.js
+      ```javascript
+        import Ember from 'ember';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
+
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
+        });
+      ```
+    */
+    onMapLayerRemove(...args) {
+      let layerPath = args[0];
+      Ember.assert(
+        `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
+        `but \`string\` is expected`,
+        Ember.typeOf(layerPath) === 'string');
+
+      let layer = this.get(layerPath);
+      Ember.assert(
+        `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
+        `but \`object\` or  \`instance\` is expected`,
+        Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
+
+      this._removeLayer({
+        layerPath: layerPath,
+        layer: layer
+      });
     }
+  },
+
+  /**
+    Creates new layer as specified layer's child.
+
+    @method _createLayer
+    @param {Object} options Method options.
+    @param {String} options.parentLayerPath Path to parent layer.
+    @param {String} options.parentLayer Parent layer.
+    @param {Object} options.layerProperties Object containing new layer properties.
+    @returns {Object} Created layer.
+    @private
+  */
+  _createLayer(options) {
+    options = options || {};
+    let layerProperties = Ember.get(options, 'layerProperties');
+
+    return layerProperties;
+  },
+
+  /**
+    Updates specified layer in hierarchy with given properties.
+
+    @method _editLayer
+    @param {Object} options Method options.
+    @param {String} options.layerPath Path to editing layer.
+    @param {String} options.layer Editing layer.
+    @param {Object} options.layerProperties Object containing edited layer properties.
+    @returns {Object} Edited layer.
+    @private
+  */
+  _editLayer(options) {
+    options = options || {};
+    let layerProperties = Ember.get(options, 'layerProperties');
+    let layer = Ember.get(options, 'layer');
+
+    Ember.set(layer, 'type', Ember.get(layerProperties, 'type'));
+    Ember.set(layer, 'name', Ember.get(layerProperties, 'name'));
+    Ember.set(layer, 'coordinateReferenceSystem', Ember.get(layerProperties, 'coordinateReferenceSystem'));
+    Ember.set(layer, 'settings', Ember.get(layerProperties, 'settings'));
+    return layer;
+  },
+
+  /**
+    Removes specified layer from layers hierarchy.
+
+    @method _removeLayer
+    @param {Object} options Method options.
+    @param {String} options.layerPath Path to removing layer.
+    @param {String} options.layer Removing layer itself.
+    @returns {Object} Removed layer.
+    @private
+  */
+  _removeLayer(options) {
+    options = options || {};
+    let layer = Ember.get(options, 'layer');
+    
+    Ember.set(layer, 'isDeleted', true);
+    return layer;
   }
 });

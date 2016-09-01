@@ -1,0 +1,47 @@
+{{#flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
+  caption=caption
+  approveButtonCaption=approveButtonCaption
+  denyButtonCaption=denyButtonCaption
+  visible=visible
+  approve=(action "onApprove")
+  deny=(action "onDeny")
+  beforeShow=(action "onBeforeShow")
+  beforeHide=(action "onBeforeHide")
+  show=(action "onShow")
+  hide=(action "onHide")
+}}
+<form class="ui form" role="form">
+  <div class="field">
+    <label>
+      {{typeDropdownCaption}}
+    </label>
+    {{flexberry-dropdown
+      class="fluid"
+      items=_availableTypes
+      value=_layer.type
+      readonly=_typeIsReadonly
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{nameTextboxCaption}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_layer.name
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{crsTextareaCaption}}
+    </label>
+    {{flexberry-textarea
+      class="fluid"
+      value=_layer.coordinateReferenceSystem
+    }}
+  </div>
+  {{#if _typeIsValid}}
+    {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings}}
+  {{/if}}
+</form>
+{{/flexberry-dialog}}

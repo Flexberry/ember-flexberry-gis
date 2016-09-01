@@ -14,8 +14,6 @@ let Model = BaseModel.extend({
   editor: DS.attr('string'),
   rootLayer: DS.belongsTo('new-platform-flexberry-g-i-s-map-layer', { inverse: null, async: false }),
 
-  layers: null,
-
   validations: {
     name: { presence: true },
     public: { presence: true },

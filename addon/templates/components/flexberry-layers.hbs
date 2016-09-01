@@ -1,10 +1,13 @@
 {{#if leafletContainer}}
   {{#each layers as |layer|}}
-    {{component (concat "layers/" layer.type "-layer")
-      leafletContainer=leafletContainer
-      index=layer.index
-      visibility=layer.visibility
-      dynamicProperties=layer.settingsAsObject
-      layers=layer.layers}}
+    {{#if (not layer.isDeleted)}}
+      {{component (concat "layers/" layer.type "-layer")
+        leafletContainer=leafletContainer
+        index=layer.index
+        visibility=layer.visibility
+        dynamicProperties=layer.settingsAsObject
+        layers=layer.layers
+      }}
+    {{/if}}
   {{/each}}
 {{/if}}

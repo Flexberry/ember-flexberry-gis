@@ -1,0 +1,72 @@
+{{!--
+  See https://github.com/ciena-blueplanet/ember-block-slots#usage
+  {{yield}} is required here to make yield-slots available.
+--}}
+{{yield}}
+
+{{#flexberry-tree
+  _isRoot=_isRoot
+  _hasHeader=_hasHeader
+  _hasContent=_hasContent
+  class=(concat flexberryClassNames.wrapper " " class)
+  placeholder=placeholder
+  exclusive=exclusive
+  collapsible=collapsible
+  animateChildren=animateChildren
+  duration=duration
+}}
+  {{#block-slot "header"}}
+    {{#if (not readonly)}}
+      {{flexberry-button
+        class=(concat flexberryClassNames.addButton " right floated")
+        iconClass="plus icon"
+        click=(action "onAddButtonClick")
+      }}
+      <div style="clear: both;"></div>
+    {{/if}}
+
+    {{!--
+      Semantic UI modal dialogs takes long time to be initialized
+      so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+    --}}
+    {{#if _addDialogHasBeenRequested}}
+      {{component "layers-dialogs/add"
+        class=flexberryClassNames.addDialog
+        visible=_addDialogIsVisible
+        layer=null
+        approve=(action "onAddDialogApprove")
+      }}
+    {{/if}}
+
+    {{#yield-slot "header"}}
+      {{yield}}
+    {{/yield-slot}}
+  {{/block-slot}}
+
+  {{#block-slot "content"}}
+    {{#each layers as |layer|}}
+      {{#if (not layer.isDeleted)}}
+        {{flexberry-maplayer
+          type=layer.type
+          name=layer.name
+          coordinateReferenceSystem=layer.coordinateReferenceSystem
+          settings=layer.settings
+          visibility=layer.visibility
+          layers=layer.layers
+          readonly=readonly
+          dynamicProperties=layer.dynamicProperties
+          dynamicActions=layer.dynamicActions
+        }}
+      {{/if}}
+    {{/each}}
+    {{#yield-slot "content"}}
+      {{yield}}
+    {{/yield-slot}}
+  {{/block-slot}}
+
+  {{#block-slot "footer"}}
+    {{#yield-slot "footer"}}
+      {{yield}}
+    {{/yield-slot}}
+  {{/block-slot}}
+{{/flexberry-tree}}

@@ -356,6 +356,11 @@ export default Ember.Mixin.create({
   willRender() {
     this._super(...arguments);
 
+    // DOM-events are not available for tagless components.
+    if (this.get('isTagless')) {
+      return;
+    }
+
     // Events names example: domEventName = 'dblclick', but componentActionName = 'doubleClick'.
     // See https://guides.emberjs.com/v2.4.0/components/handling-events/.
     let availableDomEvents = this.get('_availableDomEvents');
@@ -384,6 +389,11 @@ export default Ember.Mixin.create({
   */
   willDestroyElement() {
     this._super(...arguments);
+
+    // DOM-events are not available for tagless components.
+    if (this.get('isTagless')) {
+      return;
+    }
 
     this.detachAllEventHandlers();
   }
