@@ -26,7 +26,7 @@ export default Ember.Component.extend({
         let activeTool = this.get('activeTool');
         if(!activeTool && leafletMap.dragging.enabled())
         {
-          activeTool = draggingTool.create({ map: leafletMap })
+          activeTool = draggingTool.create({ map: leafletMap });
         }
 
         tool.set('map', leafletMap);
