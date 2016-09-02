@@ -5,10 +5,16 @@ export default MapTool.extend({
   _layer: null,
   _measure: null,
 
-  rectangleStarted({ layer }) {
-    layer.disableEdit();
-    layer.remove();
-    this._drawRectangle();
+  markerClose(e) {
+    this.markerLayer.disableEdit();
+    this.get('map').off('measure:created');
+    this.markerLayer.remove();
+  },
+
+  markerMeasured(e) {
+    this.markerLayer = e.layer;
+    e.layer.disableEdit();
+    this.get('map').off('measure:created');
   },
 
   enable() {
@@ -16,24 +22,17 @@ export default MapTool.extend({
     // there are problems if dragging is disabled
     var map = this.get('map');
     map.dragging.enable();
-//     map.editTools = new L.Editable(this.get('map'), { drawingCursor: this.get('cursor') });
     this._measure = L.measureBase(map);
     this._measure.markerBaseTool.startMeasure();
-
-//     let editTools = new L.Editable(this.get('map'), { drawingCursor: this.get('cursor') });
-//     this.set('_editTools', editTools);
-//     this.get('map').on('editable:drawing:end', this.rectangleStarted, this);
-//     this._drawRectangle();
+    this.get('map').on('measure:created', this.markerMeasured, this);
   },
 
   disable() {
     this._super(...arguments);
     this.get('map').dragging.disable();
-    this.get('map').off('editable:drawing:end', this.rectangleStarted, this);
+    this.markerClose();
+//     this.get('map').off('editable:drawing:end', this.markerStarted, this);
     this.get('_editTools').stopDrawing();
   },
 
-  _drawRectangle() {
-    this.get('_editTools').startRectangle();
-  }
 });
