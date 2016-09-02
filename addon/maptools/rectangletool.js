@@ -3,6 +3,7 @@ import MapTool from 'ember-flexberry-gis/maptools/maptool';
 export default MapTool.extend({
 
   _layer: null,
+  _measure: null,
 
   rectangleStarted({ layer }) {
     layer.disableEdit();
@@ -13,11 +14,16 @@ export default MapTool.extend({
   enable() {
     this._super(...arguments);
     // there are problems if dragging is disabled
-    this.get('map').dragging.enable();
-    let editTools = new L.Editable(this.get('map'), { drawingCursor: this.get('cursor') });
-    this.set('_editTools', editTools);
-    this.get('map').on('editable:drawing:end', this.rectangleStarted, this);
-    this._drawRectangle();
+    var map = this.get('map');
+    map.dragging.enable();
+//     map.editTools = new L.Editable(this.get('map'), { drawingCursor: this.get('cursor') });
+    this._measure = L.measureBase(map);
+    this._measure.rectangleBaseTool.startMeasure();
+
+//     let editTools = new L.Editable(this.get('map'), { drawingCursor: this.get('cursor') });
+//     this.set('_editTools', editTools);
+//     this.get('map').on('editable:drawing:end', this.rectangleStarted, this);
+//     this._drawRectangle();
   },
 
   disable() {
