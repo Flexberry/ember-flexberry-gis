@@ -5,10 +5,16 @@ export default MapTool.extend({
   _layer: null,
   _measure: null,
 
-  rectangleStarted({ layer }) {
-    layer.disableEdit();
-    layer.remove();
-    this._drawRectangle();
+  polylineClose(e) {
+    this.polylineLayer.disableEdit();
+    this.get('map').off('measure:created');
+    this.polylineLayer.remove();
+  },
+
+  polylineMeasured(e) {
+    this.polylineLayer = e.layer;
+    //     e.layer.disableEdit();
+    this.get('map').off('measure:created');
   },
 
   enable() {
@@ -16,24 +22,16 @@ export default MapTool.extend({
     // there are problems if dragging is disabled
     var map = this.get('map');
     map.dragging.enable();
-//     map.editTools = new L.Editable(this.get('map'), { drawingCursor: this.get('cursor') });
     this._measure = L.measureBase(map);
     this._measure.polylineBaseTool.startMeasure();
-
-//     let editTools = new L.Editable(this.get('map'), { drawingCursor: this.get('cursor') });
-//     this.set('_editTools', editTools);
-//     this.get('map').on('editable:drawing:end', this.rectangleStarted, this);
-//     this._drawRectangle();
+    this.get('map').on('measure:created', this.polylineMeasured, this);
   },
 
   disable() {
     this._super(...arguments);
-    this.get('map').dragging.disable();
-    this.get('map').off('editable:drawing:end', this.rectangleStarted, this);
-    this.get('_editTools').stopDrawing();
+    var map = this.get('map');
+    map.dragging.disable();
+    this.polylineClose();
+    map.editTools.stopDrawing();
   },
-
-  _drawRectangle() {
-    this.get('_editTools').startRectangle();
-  }
 });

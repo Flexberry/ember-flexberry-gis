@@ -13,7 +13,7 @@ export default MapTool.extend({
 
   markerMeasured(e) {
     this.markerLayer = e.layer;
-    e.layer.disableEdit();
+//     e.layer.disableEdit();
     this.get('map').off('measure:created');
   },
 
@@ -29,10 +29,10 @@ export default MapTool.extend({
 
   disable() {
     this._super(...arguments);
-    this.get('map').dragging.disable();
+    var map = this.get('map');
+    map.dragging.disable();
     this.markerClose();
-//     this.get('map').off('editable:drawing:end', this.markerStarted, this);
-    this.get('_editTools').stopDrawing();
+    map.editTools.stopDrawing();
   },
 
 });
