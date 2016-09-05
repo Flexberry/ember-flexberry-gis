@@ -24,5 +24,11 @@ module.exports = {
 
     // Leaflet.Editable
     app.import(app.bowerDirectory + '/leaflet.editable/src/Leaflet.Editable.js');
+
+    // Leaflet.Editable.Measure
+    app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_measure.js');
+    app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_measure.css');
+    app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_basemeasure.js');
+    app.import(app.bowerDirectory + '/leaflet.editable.measures/images/popupMarker.png', { destDir: appImagesDirectory });
   }
 };
