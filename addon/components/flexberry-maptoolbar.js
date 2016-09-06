@@ -21,7 +21,7 @@ export default Ember.Component.extend({
 
     activateTool(toolname) {
       let activeToolName = this.get('activeToolName');
-      if (toolname == '+' && this._isMeasureTool(activeToolName)) {
+      if (toolname === '+' && this._isMeasureTool(activeToolName)) {
         toolname = activeToolName;
       } else {
         if(!this._isMeasureTool(toolname) && toolname === activeToolName) {
