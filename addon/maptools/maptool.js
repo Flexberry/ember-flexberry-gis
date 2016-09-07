@@ -5,6 +5,10 @@ export default Ember.Object.extend({
 
   map: null,
 
+  isMultiTool() {
+    return false;
+  },
+
   enable() {
     let element = this.get('map')._container;
     let cursor = this.get('cursor');
@@ -20,4 +24,5 @@ export default Ember.Object.extend({
       L.DomUtil.removeClass(element, cursor);
     }
   }
+
 });

@@ -11,7 +11,7 @@ export default Ember.Component.extend({
 
   activeTool: null,
 
-  activeToolName: null,
+//   activeToolName: null,
 
   _isMeasureTool(toolname) {
     return toolname && toolname.substr(-11) ===  'measuretool';
@@ -20,33 +20,25 @@ export default Ember.Component.extend({
   actions: {
 
     activateTool(toolname) {
-      let activeToolName = this.get('activeToolName');
-      if (toolname === '+' && this._isMeasureTool(activeToolName)) {
-        toolname = activeToolName;
-      } else {
-        if(!this._isMeasureTool(toolname) && toolname === activeToolName) {
-          return;
-        }
-      }
-
-      let tool = getOwner(this).lookup('maptool:' + toolname);
       let leafletMap = this.get('leafletMap');
+      let tool = getOwner(this).lookup('maptool:' + toolname);
+      let activeTool = this.get('activeTool');
+      if (!tool.isMultiTool() && tool === activeTool) {
+        return;
+      }
       if (tool && leafletMap) {
-        let activeTool = this.get('activeTool');
         if(!activeTool && leafletMap.dragging.enabled())
         {
           activeTool = draggingTool.create({ map: leafletMap });
         }
 
         tool.set('map', leafletMap);
-
-        if (activeTool && !this._isMeasureTool(activeToolName)) {
+        if (activeTool && !activeTool.isMultiTool()) {
           activeTool.disable();
         }
 
         tool.enable();
         this.set('activeTool', tool);
-        this.set('activeToolName', toolname);
       }
     },
 

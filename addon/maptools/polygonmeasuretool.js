@@ -1,36 +1,10 @@
-import MapTool from 'ember-flexberry-gis/maptools/maptool';
+import MeasureTool from 'ember-flexberry-gis/maptools/measuretool';
 
-export default MapTool.extend({
-
-  _layer: null,
-  _measure: null,
-
-  polygonClose(e) {
-    this.polygonLayer.disableEdit();
-    this.get('map').off('measure:created');
-    this.polygonLayer.remove();
-  },
-
-  polygonMeasured(e) {
-    this.polygonLayer = e.layer;
-    this.get('map').off('measure:created');
-  },
+export default MeasureTool.extend({
 
   enable() {
     this._super(...arguments);
-    // there are problems if dragging is disabled
-    var map = this.get('map');
-    map.dragging.enable();
-    this._measure = map.MeasureTools ? map.MeasureTools : L.measureBase(map);
     this._measure.polygonBaseTool.startMeasure();
-    this.get('map').on('measure:created', this.polygonMeasured, this);
-  },
+  }
 
-  disable() {
-    this._super(...arguments);
-    var map = this.get('map');
-    map.dragging.disable();
-    this.polygonClose();
-    map.editTools.stopDrawing();
-  },
 });
