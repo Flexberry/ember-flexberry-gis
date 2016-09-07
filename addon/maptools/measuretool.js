@@ -34,6 +34,8 @@ export default MapTool.extend({
     map.dragging.disable();
     map.editTools.stopDrawing();
     this.measureClose();
+    this._layer = null;
+    this._measure = null;
   },
 
 });

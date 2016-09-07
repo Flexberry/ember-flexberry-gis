@@ -11,12 +11,6 @@ export default Ember.Component.extend({
 
   activeTool: null,
 
-//   activeToolName: null,
-
-  _isMeasureTool(toolname) {
-    return toolname && toolname.substr(-11) ===  'measuretool';
-  },
-
   actions: {
 
     activateTool(toolname) {
