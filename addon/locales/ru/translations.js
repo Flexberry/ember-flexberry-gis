@@ -140,11 +140,10 @@ export default {
     },
     'flexberry-maptoolbar': {
       'measureCaption': 'Измерить',
-      'mearkerMeasure': 'Маркер',
-      'circleMeasure': 'Круг',
-      'rectangleMeasure': 'Прямоугольник',
-      'polylineMeasure': 'Ломаная',
-      'polygonMeasure': 'Многоугольник'
+      'mearkerMeasure': 'Координаты',
+      'circleMeasure': 'Радиус',
+      'polylineMeasure': 'Расстояние',
+      'polygonMeasure': 'Площадь'
     },
     'flexberry-measuretool': {
       'circle': {

@@ -17,7 +17,7 @@ export default Ember.Component.extend({
       let leafletMap = this.get('leafletMap');
       let tool = getOwner(this).lookup('maptool:' + toolname);
       let activeTool = this.get('activeTool');
-      if (!tool.isMultiTool() && tool === activeTool) {
+      if (!tool.multitool && tool === activeTool) {
         return;
       }
       if (tool && leafletMap) {
@@ -27,7 +27,7 @@ export default Ember.Component.extend({
         }
 
         tool.set('map', leafletMap);
-        if (activeTool && !activeTool.isMultiTool()) {
+        if (activeTool && !activeTool.multitool) {
           activeTool.disable();
         }
 

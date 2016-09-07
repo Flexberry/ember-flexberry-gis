@@ -24,11 +24,10 @@
         <div class='ui simple dropdown item'  style='background-color:rgb(224, 225, 226);color: rgba(0, 0, 0, 0.6);font-weight: bold;padding:8px;height:36px'>
           <i class='wizard icon'></i>{{t "components.flexberry-maptoolbar.measureCaption"}}
           <div class='menu'   style='z-index:2000 !important'>
-            <a class='item' {{action "activateTool" "markermeasuretool" target=toolbar}}><i class='marker icon'></i>{{t "components.flexberry-maptoolbar.mearkerMeasure"}}</a>
-            <a class='item' {{action "activateTool" "circlemeasuretool" target=toolbar}}><i class='circle icon'></i>{{t "components.flexberry-maptoolbar.circleMeasure"}}</a>
-            <a class='item' {{action "activateTool" "rectanglemeasuretool" target=toolbar}}><i class='square icon'></i>{{t "components.flexberry-maptoolbar.rectangleMeasure"}}</a>
-            <a class='item' {{action "activateTool" "polylinemeasuretool" target=toolbar}}><i class='empty star icon'></i>{{t "components.flexberry-maptoolbar.polylineMeasure"}}</a>
-            <a class='item' {{action "activateTool" "polygonmeasuretool" target=toolbar}}><i class='star icon'></i>{{t "components.flexberry-maptoolbar.polygonMeasure"}}</a>
+            <a class='item' {{action "activateTool" "coordinatemeasuretool" target=toolbar}}><i class='marker icon'></i>{{t "components.flexberry-maptoolbar.mearkerMeasure"}}</a>
+            <a class='item' {{action "activateTool" "radiusmeasuretool" target=toolbar}}><i class='circle icon'></i>{{t "components.flexberry-maptoolbar.circleMeasure"}}</a>
+            <a class='item' {{action "activateTool" "distancemeasuretool" target=toolbar}}><i class='empty star icon'></i>{{t "components.flexberry-maptoolbar.polylineMeasure"}}</a>
+            <a class='item' {{action "activateTool" "areameasuretool" target=toolbar}}><i class='star icon'></i>{{t "components.flexberry-maptoolbar.polygonMeasure"}}</a>
           </div>
         </div>
       </div>
