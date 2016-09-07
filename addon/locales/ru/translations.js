@@ -145,6 +145,18 @@ export default {
       'rectangleMeasure': 'Прямоугольник',
       'polylineMeasure': 'Ломаная',
       'polygonMeasure': 'Многоугольник'
+    },
+    'flexberry-measuretool': {
+      'circle': {
+        'move': 'Зажмите кнопку мыши и перемеcтите курсор, чтобы нарисовать круг',
+        'drag': 'Отпустите кнопку мыши, чтобы зафиксировать круг.',
+        'labelPrefix': '<b>Радиус:&nbsp;',
+        'labelPostfix': '</b>',
+      },
+      'distanceMeasureUnit': {
+        'meter':'&nbsp;м.',
+        'kilometer':'&nbsp;км.',
+      }
     }
   }
 };

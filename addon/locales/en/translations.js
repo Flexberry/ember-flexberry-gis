@@ -145,6 +145,18 @@ export default {
       'rectangleMeasure': 'Rectangle',
       'polylineMeasure': 'Polyline',
       'polygonMeasure': 'Polygon'
+    },
+    'flexberry-measuretool': {
+      'circle': {
+        'move': 'Hold the mouse button and drag the cursor to draw a circle',
+        'drag': 'Release the mouse button to fix the circle.'',
+        'labelPrefix': '<b>Radius:&nbsp;'',
+        'labelPostfix': '</b>',
+      },
+      'distanceMeasureUnit': {
+        'meter':'&nbsp;m.',
+        'kilometer':'&nbsp;km.',
+      }
     }
   }
 };
