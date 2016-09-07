@@ -137,6 +137,14 @@ export default {
     },
 
     'flexberry-maplayer': {
+    },
+    'flexberry-maptoolbar': {
+      'measureCaption': 'Измерить',
+      'mearkerMeasure': 'Маркер',
+      'circleMeasure': 'Круг',
+      'rectangleMeasure': 'Прямоугольник',
+      'polylineMeasure': 'Ломаная',
+      'polygonMeasure': 'Многоугольник'
     }
   }
 };

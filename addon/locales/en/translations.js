@@ -137,6 +137,14 @@ export default {
     },
 
     'flexberry-maplayer': {
+    },
+    'flexberry-maptoolbar': {
+      'measureCaption': 'Measure',
+      'mearkerMeasure': 'Marker',
+      'circleMeasure': 'Circle',
+      'rectangleMeasure': 'Rectangle',
+      'polylineMeasure': 'Polyline',
+      'polygonMeasure': 'Polygon'
     }
   }
 };
