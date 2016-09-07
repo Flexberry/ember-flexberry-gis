@@ -8,7 +8,7 @@ export default MapTool.extend({
     return true;
   },
 
-  measureClose(e) {
+  measureClose() {
     this._layer.disableEdit();
     this.get('map').off('measure:created');
     this._layer.remove();
