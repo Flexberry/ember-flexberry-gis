@@ -3,10 +3,7 @@ import MapTool from 'ember-flexberry-gis/maptools/maptool';
 export default MapTool.extend({
   _layer: null,
   _measure: null,
-
-  isMultiTool() {
-    return true;
-  },
+  multitool: true,
 
   measureClose() {
     this._layer.disableEdit();

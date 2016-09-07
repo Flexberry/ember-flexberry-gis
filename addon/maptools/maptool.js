@@ -5,9 +5,7 @@ export default Ember.Object.extend({
 
   map: null,
 
-  isMultiTool() {
-    return false;
-  },
+  multitool: false,
 
   enable() {
     let element = this.get('map')._container;
