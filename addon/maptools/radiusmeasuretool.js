@@ -1,4 +1,4 @@
-import { translationMacro as t } from 'ember-i18n';
+import Ember from 'ember';
 import MeasureTool from 'ember-flexberry-gis/maptools/measuretool';
 
 export default MeasureTool.extend({
@@ -6,7 +6,7 @@ export default MeasureTool.extend({
 
   enable() {
     this._super(...arguments);
-    let i18n = this.get('i18n');;
+    let i18n = this.get('i18n');
     this._measure.circleBaseTool.popupText.move = i18n.t('components.flexberry-measuretool.circle.move').toString();
     this._measure.circleBaseTool.popupText.drag = i18n.t('components.flexberry-measuretool.circle.drag').toString();
     this._measure.circleBaseTool.basePopupText.labelPrefix = i18n.t('components.flexberry-measuretool.circle.labelPrefix').toString();

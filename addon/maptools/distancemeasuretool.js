@@ -6,7 +6,7 @@ export default MeasureTool.extend({
 
   enable() {
     this._super(...arguments);
-    let i18n = this.get('i18n');;
+    let i18n = this.get('i18n');
     this._measure.polylineBaseTool.popupText.move = i18n.t('components.flexberry-measuretool.polyline.move').toString();
     this._measure.polylineBaseTool.popupText.add = i18n.t('components.flexberry-measuretool.polyline.add').toString();
     this._measure.polylineBaseTool.popupText.commit = i18n.t('components.flexberry-measuretool.polyline.commit').toString();

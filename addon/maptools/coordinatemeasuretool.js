@@ -6,7 +6,7 @@ export default MeasureTool.extend({
 
   enable() {
     this._super(...arguments);
-    let i18n = this.get('i18n');;
+    let i18n = this.get('i18n');
     this._measure.markerBaseTool.popupText.move = i18n.t('components.flexberry-measuretool.marker.move').toString();
     this._measure.markerBaseTool.popupText.drag = i18n.t('components.flexberry-measuretool.marker.drag').toString();
     this._measure.markerBaseTool.basePopupText.labelPrefix = i18n.t('components.flexberry-measuretool.marker.labelPrefix').toString();
