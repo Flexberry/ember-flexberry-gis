@@ -165,8 +165,8 @@ export default {
       'polygon': {
         'move': 'Click on the map to add the initial vertex.',
         'add': 'Click on the map to add a new vertex.',
-        'commit': 'Click on the current vertex to fix polygon',
-        'drag': 'Release the mouse to fix the polygon',
+        'commit': 'Click on the current vertex to fix area',
+        'drag': 'Release the mouse to fix the area',
         'labelPrefix': '<b> Area:&nbsp;',
         'labelPostfix': '</ b>',
       },
