@@ -2,17 +2,17 @@ import { translationMacro as t } from 'ember-i18n';
 import MeasureTool from 'ember-flexberry-gis/maptools/measuretool';
 
 export default MeasureTool.extend({
-  popupTextMove: t('components.flexberry-measuretool.circle.move'),
-  popupTextDrag: t('components.flexberry-measuretool.circle.move'),
+  i18n: Ember.inject.service(),
 
   enable() {
     this._super(...arguments);
-    this._measure.circleBaseTool.popupText.move = this.popupTextMove;
-    this._measure.circleBaseTool.popupText.drag = this.popupTextDrag;
-    this._measure.circleBaseTool.basePopupText.labelPrefix = t('components.flexberry-measuretool.circle.labelPrefix');
-    this._measure.circleBaseTool.basePopupText.labelPostfix = t('components.flexberry-measuretool.circle.labelPostfix');
-    this._measure.circleBaseTool.distanceMeasureUnit.kilometer =t('components.flexberry-measuretool.distanceMeasureUnit.kilometer');
-    this._measure.circleBaseTool.distanceMeasureUnit.meter = t('components.flexberry-measuretool.distanceMeasureUnit.meter');
+    let i18n = this.get('i18n');;
+    this._measure.circleBaseTool.popupText.move = i18n.t('components.flexberry-measuretool.circle.move').toString();
+    this._measure.circleBaseTool.popupText.drag = i18n.t('components.flexberry-measuretool.circle.drag').toString();
+    this._measure.circleBaseTool.basePopupText.labelPrefix = i18n.t('components.flexberry-measuretool.circle.labelPrefix').toString();
+    this._measure.circleBaseTool.basePopupText.labelPostfix = i18n.t('components.flexberry-measuretool.circle.labelPostfix').toString();
+    this._measure.circleBaseTool.distanceMeasureUnit.kilometer =i18n.t('components.flexberry-measuretool.distanceMeasureUnit.kilometer').toString();
+    this._measure.circleBaseTool.distanceMeasureUnit.meter = i18n.t('components.flexberry-measuretool.distanceMeasureUnit.meter').toString();
     this._measure.circleBaseTool.startMeasure();
   }
 
