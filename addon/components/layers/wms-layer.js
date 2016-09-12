@@ -20,15 +20,11 @@ export default TileLayer.extend({
   ],
 
   /**
-    Creates leaflet layer related to layer type.
+    Performs 'getFeatureInfo' request to WMS-service related to layer.
 
-    @method createLayer
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} latlng Identification point coordinates.
   */
-  createLayer() {
-    return L.tileLayer.wms(this.get('url'), this.get('options'));
-  },
-
-  getFeatureInfo(latlng) {
+  _getFeatureInfo(latlng) {
     let layer = this.get('_layer');
     let leafletMap = this.get('leafletMap');
 
@@ -79,6 +75,15 @@ export default TileLayer.extend({
   },
 
   /**
+    Creates leaflet layer related to layer type.
+
+    @method createLayer
+  */
+  createLayer() {
+    return L.tileLayer.wms(this.get('url'), this.get('options'));
+  },
+
+  /**
     Handles 'map:identify' event of leaflet map.
 
     @method identify
@@ -94,7 +99,7 @@ export default TileLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let featuresPromise = this.getFeatureInfo(e.latlng);
+    let featuresPromise = this._getFeatureInfo(e.latlng);
     e.results.push({
       layer: this.get('layer'),
       features: featuresPromise
