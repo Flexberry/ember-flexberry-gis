@@ -21,7 +21,7 @@ export default MapTool.extend({
     // there are problems if dragging is disabled
     var map = this.get('map');
     map.dragging.enable();
-    this._measure = map.MeasureTools ? map.MeasureTools : L.measureBase(map);
+    this._measure = map.measureTools ? map.measureTools : L.measureBase(map);
     map.on('measure:created', this.measured, this);
   },
 
