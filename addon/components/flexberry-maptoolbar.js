@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-maptoolbar';
-import draggingTool from 'ember-flexberry-gis/maptools/dragging';
+import DragMaptool from '../maptools/drag';
 
 const { getOwner } = Ember;
 
@@ -14,8 +14,7 @@ export default Ember.Component.extend({
   activeToolName: null,
 
   actions: {
-
-    activateTool(toolname) {
+    activateTool(toolname, ...args) {
       if(toolname === this.get('activeToolName')) {
         return;
       }
@@ -26,7 +25,7 @@ export default Ember.Component.extend({
         let activeTool = this.get('activeTool');
         if(!activeTool && leafletMap.dragging.enabled())
         {
-          activeTool = draggingTool.create({ map: leafletMap });
+          activeTool = DragMaptool.create({ map: leafletMap });
         }
 
         tool.set('map', leafletMap);
@@ -35,17 +34,17 @@ export default Ember.Component.extend({
           activeTool.disable();
         }
 
-        tool.enable();
+        tool.enable(...args);
         this.set('activeTool', tool);
         this.set('activeToolName', toolname);
       }
     },
 
-    callCommand(commandName) {
+    callCommand(commandName, ...args) {
       let command = getOwner(this).lookup('mapcommand:' + commandName);
       let leafletMap = this.get('leafletMap');
       if (command && leafletMap) {
-        command.execute(leafletMap);
+        command.execute(leafletMap, ...args);
       }
     }
   }

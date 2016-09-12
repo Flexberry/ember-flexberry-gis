@@ -138,5 +138,11 @@ export default {
 
     'flexberry-maplayer': {
     }
+  },
+
+  'maptools': {
+    'identify': {
+      'error-message': 'Идентификация по слою \'{{layerName}}\' завершилась ошибкой: '
+    }
   }
 };

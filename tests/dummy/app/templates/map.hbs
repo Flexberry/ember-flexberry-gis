@@ -2,23 +2,51 @@
   <div class="ten wide column">
     {{#flexberry-maptoolbar leafletMap=leafletMap as |toolbar|}}
       <div class="ui icon buttons">
-        <button class="ui icon button" {{action "activateTool" "dragging" target=toolbar}}>
+        <button class="ui icon button" {{action "activateTool" "drag" target=toolbar}}>
           <i class="hand paper icon"></i>
         </button>
-        <button class="ui icon button" {{action "activateTool" "zoom" target=toolbar}}>
+        <button class="ui icon button" {{action "activateTool" "zoom-in" target=toolbar}}>
           <i class="zoom icon"></i>
         </button>
-        <button class="ui icon button" {{action "activateTool" "zoomout" target=toolbar}}>
+        <button class="ui icon button" {{action "activateTool" "zoom-out" target=toolbar}}>
           <i class="zoom out icon"></i>
         </button>
         <button class="ui icon button" {{action "callCommand" "fullextent" target=toolbar}}>
           <i class="maximize icon"></i>
         </button>
       </div>
-      <div class="ui icon buttons">
-        <button class="ui icon button" {{action "activateTool" "identify" target=toolbar}}>
-          <i class="info circle icon"></i>
-        </button>
+      <div class="ui compact menu" style="border-width:0px;border-image-width:0px;box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px inset; hight:36px;">
+        <div class="ui simple dropdown item" style="background-color:rgb(224, 225, 226);color: rgba(0, 0, 0, 0.6);font-weight: bold;padding:8px;height:36px">
+        <i class="circle info icon"></i>Идентифицировать
+          <i class="dropdown icon"></i>
+          <div class="menu" style="z-index:2000 !important">
+            <a class="item" {{action "activateTool" "identify-all" model.rootLayer.layers target=toolbar}}>
+              <i class="marker icon"></i>
+              Все слои
+            </a>
+            <a class="item" {{action "activateTool" "identify-all-visible" model.rootLayer.layers target=toolbar}}>
+              <i class="circle icon"></i>
+              Все видимые слои
+            </a>
+            <a class="item" {{action "activateTool" "identify-top-visible" model.rootLayer.layers target=toolbar}}>
+              <i class="square icon"></i>
+              Верхний видимый слой
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class='ui compact menu' style='border-width:0px;border-image-width:0px;box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px inset; hight:36px;'>
+        <div class='ui simple dropdown item'  style='background-color:rgb(224, 225, 226);color: rgba(0, 0, 0, 0.6);font-weight: bold;padding:8px;height:36px'>
+        <i class='wizard icon'></i>Измерить
+          <i class='dropdown icon'></i>
+          <div class='menu'   style='z-index:2000 !important'>
+            <a class='item' {{action "activateTool" "markermeasuretool" target=toolbar}}><i class='marker icon'></i>Маркер</a>
+            <a class='item' {{action "activateTool" "circlemeasuretool" target=toolbar}}><i class='circle icon'></i>Круг</a>
+            <a class='item' {{action "activateTool" "rectanglemeasuretool" target=toolbar}}><i class='square icon'></i>Прямоугольник</a>
+            <a class='item' {{action "activateTool" "polylinemeasuretool" target=toolbar}}><i class='empty star icon'></i>Ломаная</a>
+            <a class='item' {{action "activateTool" "polygonmeasuretool" target=toolbar}}><i class='star icon'></i>Многоугольник</a>
+          </div>
+        </div>
       </div>
     {{/flexberry-maptoolbar}}
     {{#flexberry-map
@@ -26,14 +54,18 @@
       lng=model.lng
       zoom=model.zoom
       onMoveend=(action "updateCenter")
-      leafletMapDidInit=(action "leafletMapDidInit") as |leafletMap|}}
-      {{flexberry-layers leafletContainer=leafletMap layers=model.rootLayer.layers}}
-
-      {{scale-control map=leafletMap imperial=false}}
+      leafletMapDidInit=(action "leafletMapDidInit") as |leafletMap|
+    }}
+      {{flexberry-layers
+        leafletMap=leafletMap
+        leafletContainer=leafletMap
+        layers=model.rootLayer.layers
+      }}
+      {{scale-control
+        map=leafletMap
+        imperial=false
+      }}
     {{/flexberry-map}}
-
-
-
   </div>
   <div class="six wide column">
     {{flexberry-maplayers

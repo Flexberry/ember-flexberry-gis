@@ -31,7 +31,7 @@
         iconClass="edit icon"
         click=(action "onEditButtonClick")
       }}
-      {{#if _isAddOperationIsPermitted}}
+      {{#if _addOperationIsAvailable}}
         {{flexberry-button
           class=(concat flexberryClassNames.addButton " right floated " flexberryClassNames.preventExpandCollapse)
           iconClass="plus icon"

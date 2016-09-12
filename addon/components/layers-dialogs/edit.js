@@ -8,7 +8,7 @@ import DynamicActionsMixin from '../../mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 import layout from '../../templates/components/layers-dialogs/edit';
 import { translationMacro as t } from 'ember-i18n';
-import { availableLayerTypes, isAvailableLayerType } from '../../utils/layers';
+import LayersUtil from '../../utils/layers';
 
 /**
   Component's CSS-classes names.
@@ -63,7 +63,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
   _typeIsValid: Ember.computed('_layer.type', function() {
     let type = this.get('_layer.type');
 
-    return isAvailableLayerType(type);
+    return LayersUtil.layerIsAvailable(type);
   }),
 
   /**
@@ -364,7 +364,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     this._super(...arguments);
 
     // Property is needed for type dropdown.
-    this.set('_availableTypes', availableLayerTypes());
+    this.set('_availableTypes', Object.keys(LayersUtil.getAvailableLayers));
   }
 
   /**

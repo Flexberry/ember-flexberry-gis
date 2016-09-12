@@ -3,23 +3,28 @@
 */
 
 import Ember from 'ember';
-import { _setAvailableLayerTypes } from '../utils/layers';
+import LayersUtil from '../utils/layers';
 
 /**
-  Initializes available layers types in {{#crossLink "Utils.Layers/_availableLayerTypes:property"}}'utils/layers'{{/crossLink}}.
+  Initializes available layers in {{#crossLink "Utils.Layers/_availableLayers:property"}}'utils/layers'{{/crossLink}}.
 
   @for ApplicationInstanceInitializer
   @method layers.initialize
   @param {<a href="http://emberjs.com/api/classes/Ember.ApplicationInstance.html">Ember.ApplicationInstance</a>} applicationInstance Ember application instance.
 */
 export function initialize(applicationInstance) {
+  let availablelayers = {};
+
   let resolver = applicationInstance.application.__registry__.resolver;
   let knownLayers = Object.keys(resolver.knownForType('layer'));
-  let availablelayerTypes = Ember.A(knownLayers).map((knownLayer) => {
-    return knownLayer.split(':')[1];
+  Ember.A(knownLayers).forEach((knownLayer) => {
+    let layerType = knownLayer.split(':')[1];
+    let layerTypeClass = applicationInstance._lookupFactory(knownLayer);
+
+    availablelayers[layerType] = layerTypeClass;
   });
 
-  _setAvailableLayerTypes(availablelayerTypes);
+  LayersUtil._setAvailableLayers(availablelayers);
 }
 
 export default {

@@ -12,7 +12,7 @@ import DynamicActionsMixin from '../mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 
 import layout from '../templates/components/flexberry-maplayer';
-import { availableLayerTypes, isAvailableLayerType } from '../utils/layers';
+import LayersUtils from '../utils/layers';
 
 /**
   Component's CSS-classes names.
@@ -180,29 +180,21 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     @private
   */
   _typeIconClass: Ember.computed('type', function() {
-    let type = this.get('type');
-    Ember.assert(
-      `Wrong value of \`flexberry-maplayer\` \`type\` property: \`${type}\`. ` +
-      `Allowed values are: [\`${availableLayerTypes().join(`\`, \``)}\`].`,
-      isAvailableLayerType(type));
+    let layer = LayersUtils.getLayer(this.get('type'));
 
-    let layer = Ember.getOwner(this)._lookupFactory(`layer:${type}`);
     return Ember.get(layer, 'iconClass');
   }),
 
   /**
     Flag: indicates whether add operation is allowed for layer.
 
-    @property _isAddOperationIsPermitted
+    @property _addOperationIsAvailable
     @type boolean
     @readOnly
     @private
   */
-  _isAddOperationIsPermitted: Ember.computed('type', function() {
-    let layerType = this.get('type');
-    let layerTypeMetadata = Ember.getOwner(this)._lookupFactory(`layer:${layerType}`);
-
-    return Ember.A(Ember.get(layerTypeMetadata, 'operations') || []).contains('add');
+  _addOperationIsAvailable: Ember.computed('type', function() {
+    return LayersUtils.layerOperationIsAvailable(this.get('type'), 'add');
   }),
 
   /**

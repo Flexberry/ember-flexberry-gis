@@ -1,7 +1,8 @@
 /**
   @module ember-flexberry-gis
- */
+*/
 
+import Ember from 'ember';
 import TileLayer from 'ember-flexberry-gis/components/layers/tile-layer';
 
 /**
@@ -10,7 +11,6 @@ import TileLayer from 'ember-flexberry-gis/components/layers/tile-layer';
   @extend TileLayerComponent
  */
 export default TileLayer.extend({
-
   leafletOptions: [
     'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
     'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
@@ -19,7 +19,85 @@ export default TileLayer.extend({
     'layers', 'styles', 'format', 'transparent', 'version', 'crs'
   ],
 
+  /**
+    Creates leaflet layer related to layer type.
+
+    @method createLayer
+  */
   createLayer() {
     return L.tileLayer.wms(this.get('url'), this.get('options'));
+  },
+
+  getFeatureInfo(latlng) {
+    let layer = this.get('_layer');
+    let leafletMap = this.get('leafletMap');
+
+    let point = leafletMap.latLngToContainerPoint(latlng, leafletMap.getZoom());
+    let size = leafletMap.getSize();
+    let crs = layer.options.crs || leafletMap.options.crs;
+
+    let mapBounds = leafletMap.getBounds();
+    let sw = crs.project(mapBounds.getSouthWest());
+    let ne = crs.project(mapBounds.getNorthEast());
+
+    let params = {
+      request: 'GetFeatureInfo',
+      service: 'WMS',
+
+      // Code of used CRS
+      srs: crs.code,
+      styles: layer.wmsParams.styles,
+      transparent: layer.wmsParams.transparent,
+      version: layer.wmsParams.version,
+      format: layer.wmsParams.format,
+
+      // Bounding box defined by SouthWest and NorthEast coordinates.
+      bbox: sw.x + ',' + sw.y + ',' + ne.x + ',' + ne.y,
+      height: size.y,
+      width: size.x,
+      layers: layer.wmsParams.layers,
+      query_layers: layer.wmsParams.layers,
+      info_format: 'application/json'
+    };
+
+    params[params.version === '1.3.0' ? 'i' : 'x'] = point.x;
+    params[params.version === '1.3.0' ? 'j' : 'y'] = point.y;
+
+    let requestUrl = layer._url + L.Util.getParamString(params, layer._url, true);
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      Ember.$.ajax({
+        url: requestUrl
+      }).then((result) => {
+        result = result || {};
+
+        let features = Ember.A(Ember.get(result, 'features') || []);
+        resolve(features);
+      }, (reason) => {
+        reject(reason);
+      });
+    });
+  },
+
+  /**
+    Handles 'map:identify' event of leaflet map.
+
+    @method identify
+    @param {Object} e Event object.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.boundingBox Leaflet layer
+    representing bounding box within which layer's objects must be identified.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
+    @param {Object[]} layers Objects describing those layers which must be identified.
+    @param {Object[]} results Objects describing identification results.
+    Every result-object has the following structure: { layer: ..., features: [...] },
+    where 'layer' is metadata of layer related to identification result, features is array
+    containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+    or a promise returning such array.
+  */
+  identify(e) {
+    let featuresPromise = this.getFeatureInfo(e.latlng);
+    e.results.push({
+      layer: this.get('layer'),
+      features: featuresPromise
+    });
   }
 });

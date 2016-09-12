@@ -2,16 +2,28 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
-import TileLayer from './tile';
-
-let WmsLayer = {};
-Ember.$.extend(true, WmsLayer, TileLayer);
-
 /**
-  Class describing WMS layer metadata.
+  Class describing tile layer metadata.
 
-  @class WmsLayer
-  @extends TileLayer
+  @class TileLayer
+  @extends BaseLayer
 */
-export default WmsLayer;
+export default {
+  /**
+    Icon class related to layer type.
+
+    @property iconClass
+    @type String
+    @default 'image icon'
+  */
+  iconClass: 'image icon',
+
+  /**
+    Permitted operations related to layer type.
+
+    @property operations
+    @type String[]
+    @default ['edit', 'remove', 'identify']
+  */
+  operations: ['edit', 'remove', 'identify']
+};
