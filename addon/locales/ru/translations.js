@@ -137,6 +137,13 @@ export default {
     },
 
     'flexberry-maplayer': {
+    },
+    'flexberry-maptoolbar': {
+      'measureCaption': 'Измерить',
+      'mearkerMeasure': 'Координаты',
+      'circleMeasure': 'Радиус',
+      'polylineMeasure': 'Расстояние',
+      'polygonMeasure': 'Площадь'
     }
   }
 };
