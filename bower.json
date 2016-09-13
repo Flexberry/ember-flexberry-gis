@@ -11,7 +11,7 @@
     "devicejs": "0.2.7",
     "semantic-ui": "^2.1.8",
     "leaflet": "^1.0.0-rc.3",
-    "leaflet.editable": "Leaflet/Leaflet.Editable#gh-pages",
+    "leaflet.editable": "Leaflet/Leaflet.Editable#0c8004345f40ff06e742990a970d73d3be352abf",
     "leaflet.editable.measures": "Flexberry/Leaflet.Editable.Measures#gh-pages"
   }
 }
