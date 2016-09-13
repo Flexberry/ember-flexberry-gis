@@ -11,6 +11,10 @@
     "devicejs": "0.2.7",
     "semantic-ui": "^2.1.8",
     "leaflet": "^1.0.0-rc.3",
-    "leaflet.editable": "Leaflet/Leaflet.Editable#gh-pages"
+    "leaflet.editable": "Leaflet/Leaflet.Editable#gh-pages",
+    "Leaflet-WFST": "Flexberry/Leaflet-WFST#develop"
+  },
+  "resolutions": {
+    "leaflet": "^1.0.0-rc.3"
   }
 }

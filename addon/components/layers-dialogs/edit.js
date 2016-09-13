@@ -364,7 +364,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     this._super(...arguments);
 
     // Property is needed for type dropdown.
-    this.set('_availableTypes', Object.keys(LayersUtil.getAvailableLayers));
+    this.set('_availableTypes', Object.keys(LayersUtil.getAvailableLayers()));
   }
 
   /**

@@ -20,9 +20,11 @@ module.exports = {
     app.import(app.bowerDirectory + '/leaflet/dist/images/marker-icon.png', { destDir: appImagesDirectory });
     app.import(app.bowerDirectory + '/leaflet/dist/images/marker-shadow.png', { destDir: appImagesDirectory });
 
-    // Import leaflet plugins
-
-    // Leaflet.Editable
+    // Import leaflet plugins.
+    // Leaflet.Editable.
     app.import(app.bowerDirectory + '/leaflet.editable/src/Leaflet.Editable.js');
+
+    // Leaflet-WFST.
+    app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
   }
 };

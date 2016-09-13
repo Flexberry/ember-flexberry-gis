@@ -58,17 +58,9 @@ Ember.$.extend(true, translations, {
           'caption': 'Главная',
           'title': ''
         },
-        'gis-objects': {
-          'caption': 'ГИС объекты',
-          'title': '',
-          'new-platform-flexberry-g-i-s-map-l': {
-            'caption': 'Настройки карт',
-            'title': ''
-          },
-          'maps': {
-            'caption': 'Карты',
-            'title': ''
-          }
+        'maps': {
+          'caption': 'Карты',
+          'title': ''
         },
         'components-examples': {
           'caption': 'Примеры компонентов',
@@ -152,6 +144,10 @@ Ember.$.extend(true, translations, {
     },
 
     'integration-examples': {
+    },
+
+    'map': {
+      'caption': 'Карта'
     }
   },
 

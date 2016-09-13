@@ -203,7 +203,7 @@ let FlexberryDdauCheckboxComponent = Ember.Component.extend(
 
     // Destroys Semantic UI checkbox.
     this.$().checkbox('destroy');
-  },
+  }
 
   /**
     Component's action invoking when checkbox was clicked and it's 'checked' state changed.

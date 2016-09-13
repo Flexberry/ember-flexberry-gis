@@ -1,106 +1,168 @@
-<div class="ui grid">
-  <div class="ten wide column">
-    {{#flexberry-maptoolbar leafletMap=leafletMap as |toolbar|}}
-      <div class="ui icon buttons">
-        <button class="ui icon button" {{action "activateTool" "drag" target=toolbar}}>
-          <i class="hand paper icon"></i>
-        </button>
-        <button class="ui icon button" {{action "activateTool" "zoom-in" target=toolbar}}>
-          <i class="zoom icon"></i>
-        </button>
-        <button class="ui icon button" {{action "activateTool" "zoom-out" target=toolbar}}>
-          <i class="zoom out icon"></i>
-        </button>
-        <button class="ui icon button" {{action "callCommand" "fullextent" target=toolbar}}>
-          <i class="maximize icon"></i>
-        </button>
-      </div>
-      <div class="ui compact menu" style="border-width:0px;border-image-width:0px;box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px inset; hight:36px;">
-        <div class="ui simple dropdown item" style="background-color:rgb(224, 225, 226);color: rgba(0, 0, 0, 0.6);font-weight: bold;padding:8px;height:36px">
-        <i class="circle info icon"></i>Идентифицировать
-          <i class="dropdown icon"></i>
-          <div class="menu" style="z-index:2000 !important">
-            <a class="item" {{action "activateTool" "identify-all" model.rootLayer.layers target=toolbar}}>
-              <i class="marker icon"></i>
-              Все слои
-            </a>
-            <a class="item" {{action "activateTool" "identify-all-visible" model.rootLayer.layers target=toolbar}}>
-              <i class="circle icon"></i>
-              Все видимые слои
-            </a>
-            <a class="item" {{action "activateTool" "identify-top-visible" model.rootLayer.layers target=toolbar}}>
-              <i class="square icon"></i>
-              Верхний видимый слой
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class='ui compact menu' style='border-width:0px;border-image-width:0px;box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px inset; hight:36px;'>
-        <div class='ui simple dropdown item'  style='background-color:rgb(224, 225, 226);color: rgba(0, 0, 0, 0.6);font-weight: bold;padding:8px;height:36px'>
-        <i class='wizard icon'></i>Измерить
-          <i class='dropdown icon'></i>
-          <div class='menu'   style='z-index:2000 !important'>
-            <a class='item' {{action "activateTool" "markermeasuretool" target=toolbar}}><i class='marker icon'></i>Маркер</a>
-            <a class='item' {{action "activateTool" "circlemeasuretool" target=toolbar}}><i class='circle icon'></i>Круг</a>
-            <a class='item' {{action "activateTool" "rectanglemeasuretool" target=toolbar}}><i class='square icon'></i>Прямоугольник</a>
-            <a class='item' {{action "activateTool" "polylinemeasuretool" target=toolbar}}><i class='empty star icon'></i>Ломаная</a>
-            <a class='item' {{action "activateTool" "polygonmeasuretool" target=toolbar}}><i class='star icon'></i>Многоугольник</a>
-          </div>
-        </div>
-      </div>
-    {{/flexberry-maptoolbar}}
-    {{#flexberry-map
-      lat=model.lat
-      lng=model.lng
-      zoom=model.zoom
-      onMoveend=(action "updateCenter")
-      leafletMapDidInit=(action "leafletMapDidInit") as |leafletMap|
-    }}
-      {{flexberry-layers
-        leafletMap=leafletMap
-        leafletContainer=leafletMap
-        layers=model.rootLayer.layers
-      }}
-      {{scale-control
-        map=leafletMap
-        imperial=false
-      }}
-    {{/flexberry-map}}
+<h3 class="ui header">{{t "forms.map.caption"}}</h3>
+<form class="ui {{formState}} form flexberry-vertical-form" role="form">
+  {{ui-message
+    type="success"
+    closeable=true
+    visible=showFormSuccessMessage
+    caption=formSuccessMessageCaption
+    message=formSuccessMessage
+    onShow=(action "onSuccessMessageShow")
+    onHide=(action "onSuccessMessageHide")
+  }}
+  {{ui-message
+    type="error"
+    closeable=true
+    visible=showFormErrorMessage
+    caption=formErrorMessageCaption
+    message=formErrorMessage
+    onShow=(action "onErrorMessageShow")
+    onHide=(action "onErrorMessageHide")
+  }}
+  <div class="field">
+    <div class="flexberry-edit-panel">
+      {{#unless readonly}}
+        {{#unless (and hasParentRoute (not saveBeforeRouteLeave))}}
+          <button type="submit" class="ui positive button" {{action "save"}}>
+            {{t "forms.edit-form.save-button-text"}}
+          </button>
+        {{/unless}}
+        {{#unless (and hasParentRoute (not saveBeforeRouteLeave))}}
+          <button type="submit" class="ui positive button" {{action "saveAndClose"}}>
+            {{t "forms.edit-form.saveAndClose-button-text"}}
+          </button>
+        {{/unless}}
+        {{#unless (and model.isNew (or (not hasParentRoute) (and hasParentRoute saveBeforeRouteLeave)))}}
+          <button type="submit" class="ui negative button" {{action "delete"}}>
+            {{t "forms.edit-form.delete-button-text"}}
+          </button>
+        {{/unless}}
+      {{/unless}}
+      <button type="submit" class="ui button" {{action "close"}}>{{t "forms.edit-form.close-button-text"}}</button>
+    </div>
   </div>
-  <div class="six wide column">
-    {{flexberry-maplayers
-      class="styled"
-      layers=(get-with-dynamic-actions this "model.rootLayer.layers"
-        hierarchyPropertyName="layers"
-        pathKeyword="layerPath"
-        dynamicActions=(array
-          (hash
-            on="add"
-            actionName="onMapLayerAdd"
-            actionArguments=(array "{% layerPath %}")
+  <div class="ui inernally celled grid">
+    <div class="row">
+      <div class="sixteen wide column">
+        {{#flexberry-maptoolbar leafletMap=leafletMap as |toolbar|}}
+          <div class="ui icon buttons">
+            <button class="ui icon button" {{action "activateTool" "drag" target=toolbar}}>
+              <i class="hand paper icon"></i>
+            </button>
+            <button class="ui icon button" {{action "activateTool" "zoom-in" target=toolbar}}>
+              <i class="zoom icon"></i>
+            </button>
+            <button class="ui icon button" {{action "activateTool" "zoom-out" target=toolbar}}>
+              <i class="zoom out icon"></i>
+            </button>
+            <button class="ui icon button" {{action "callCommand" "fullextent" target=toolbar}}>
+              <i class="maximize icon"></i>
+            </button>
+          </div>
+          <div class="ui compact menu" style="border-width:0px;border-image-width:0px;box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px inset; hight:36px;">
+            <div class="ui simple dropdown item" style="background-color:rgb(224, 225, 226);color: rgba(0, 0, 0, 0.6);font-weight: bold;padding:8px;height:36px">
+            <i class="circle info icon"></i>Идентифицировать
+              <i class="dropdown icon"></i>
+              <div class="menu" style="z-index:2000 !important">
+                <a class="item" {{action "activateTool" "identify-all" model.rootLayer.layers target=toolbar}}>
+                  <i class="marker icon"></i>
+                  Все слои
+                </a>
+                <a class="item" {{action "activateTool" "identify-all-visible" model.rootLayer.layers target=toolbar}}>
+                  <i class="circle icon"></i>
+                  Все видимые слои
+                </a>
+                <a class="item" {{action "activateTool" "identify-top-visible" model.rootLayer.layers target=toolbar}}>
+                  <i class="square icon"></i>
+                  Верхний видимый слой
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class='ui compact menu' style='border-width:0px;border-image-width:0px;box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px inset; hight:36px;'>
+            <div class='ui simple dropdown item'  style='background-color:rgb(224, 225, 226);color: rgba(0, 0, 0, 0.6);font-weight: bold;padding:8px;height:36px'>
+            <i class='wizard icon'></i>Измерить
+              <i class='dropdown icon'></i>
+              <div class='menu'   style='z-index:2000 !important'>
+                <a class='item' {{action "activateTool" "markermeasuretool" target=toolbar}}>
+                  <i class='marker icon'></i>
+                  Маркер
+                </a>
+                <a class='item' {{action "activateTool" "circlemeasuretool" target=toolbar}}>
+                  <i class='circle icon'></i>
+                  Круг
+                </a>
+                <a class='item' {{action "activateTool" "rectanglemeasuretool" target=toolbar}}>
+                  <i class='square icon'></i>
+                  Прямоугольник
+                </a>
+                <a class='item' {{action "activateTool" "polylinemeasuretool" target=toolbar}}>
+                  <i class='empty star icon'></i>
+                  Ломаная
+                </a>
+                <a class='item' {{action "activateTool" "polygonmeasuretool" target=toolbar}}>
+                  <i class='star icon'></i>
+                  Многоугольник
+                </a>
+              </div>
+            </div>
+          </div>
+        {{/flexberry-maptoolbar}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="ten wide column">
+        {{#flexberry-map
+          lat=model.lat
+          lng=model.lng
+          zoom=model.zoom
+          leafletInit=(action "onMapLeafletInit" "leafletMap")
+          leafletDestroy=(action "onMapLeafletDestroy" "leafletMap")
+          moveend=(action "onMapMoveend" "model.lat" "model.lng")
+          zoomend=(action "onMapZoomend" "model.zoom")
+        }}
+          {{flexberry-layers
+            leafletMap=leafletMap
+            leafletContainer=leafletMap
+            layers=model.rootLayer.layers
+          }}
+          {{scale-control
+            map=leafletMap
+            imperial=false
+          }}
+        {{/flexberry-map}}
+      </div>
+      <div class="six wide column">
+        {{flexberry-maplayers
+          class="styled"
+          layers=(get-with-dynamic-actions this "model.rootLayer.layers"
+            hierarchyPropertyName="layers"
+            pathKeyword="layerPath"
+            dynamicActions=(array
+              (hash
+                on="add"
+                actionName="onMapLayerAdd"
+                actionArguments=(array "{% layerPath %}")
+              )
+              (hash
+                on="edit"
+                actionName="onMapLayerEdit"
+                actionArguments=(array "{% layerPath %}")
+              )
+              (hash
+                on="remove"
+                actionName="onMapLayerRemove"
+                actionArguments=(array "{% layerPath %}")
+              )
+              (hash
+                on="changeVisibility"
+                actionName="onMapLayerChangeVisibility"
+                actionArguments=(array "{% layerPath %}.visibility")
+              )
+            )
           )
-          (hash
-            on="edit"
-            actionName="onMapLayerEdit"
-            actionArguments=(array "{% layerPath %}")
-          )
-          (hash
-            on="remove"
-            actionName="onMapLayerRemove"
-            actionArguments=(array "{% layerPath %}")
-          )
-          (hash
-            on="changeVisibility"
-            actionName="onMapLayerChangeVisibility"
-            actionArguments=(array "{% layerPath %}.visibility")
-          )
-        )
-      )
-      add=(action "onMapLayerAdd" "model.rootLayer")
-    }}
-    <br>
-    lat: {{flexberry-field value=model.lat}}
-    lng: {{flexberry-field value=model.lng}}
-    zoom: {{flexberry-field value=model.zoom}}
+          add=(action "onMapLayerAdd" "model.rootLayer")
+        }}
+      </div>
+    </div>
   </div>
-</div>
+</form>

@@ -16,17 +16,21 @@ export default IdentifyMaptool.extend({
     Returns flat array of layers satisfying to current identification mode.
 
     @method _getLayersToIdentify
+    @param {Object} options Method options.
+    @param {Object[]} options.excludedLayers Layers that must be excluded from identification.
     @returns {Object[]} Flat array of layers satisfying to current identification mode.
     @private
   */
-  _getLayersToIdentify() {
+  _getLayersToIdentify({ excludedLayers }) {
+    excludedLayers = Ember.A(excludedLayers || []);
+
     let getVisibleLayersToIdentify = (layers) => {
       let result = Ember.A();
 
       if (Ember.isArray(layers)) {
         layers.forEach((layer) => {
           let layerIsVisible = Ember.get(layer, 'visibility') === true;
-          if (this._layerCanBeIdentified(layer) && layerIsVisible) {
+          if (this._layerCanBeIdentified(layer) && layerIsVisible && !excludedLayers.contains(layer)) {
             result.pushObject(layer);
           }
           

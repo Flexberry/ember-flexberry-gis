@@ -195,7 +195,7 @@ export default Ember.Mixin.create({
         `but \`Ember.NativeArray\` is expected`,
         Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
 
-      let childLayer = this._createLayer({
+      let childLayer = this.createLayer({
         parentLayerPath: parentLayerPath,
         parentLayer: parentLayer,
         layerProperties: layerProperties
@@ -254,7 +254,7 @@ export default Ember.Mixin.create({
         `but \`object\` or  \`instance\` is expected`,
         Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
 
-      this._editLayer({
+      this.editLayer({
         layerPath: layerPath,
         layer: layer,
         layerProperties: layerProperties
@@ -300,7 +300,7 @@ export default Ember.Mixin.create({
         `but \`object\` or  \`instance\` is expected`,
         Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
 
-      this._removeLayer({
+      this.removeLayer({
         layerPath: layerPath,
         layer: layer
       });
@@ -310,7 +310,7 @@ export default Ember.Mixin.create({
   /**
     Creates new layer as specified layer's child.
 
-    @method _createLayer
+    @method createLayer
     @param {Object} options Method options.
     @param {String} options.parentLayerPath Path to parent layer.
     @param {String} options.parentLayer Parent layer.
@@ -318,7 +318,7 @@ export default Ember.Mixin.create({
     @returns {Object} Created layer.
     @private
   */
-  _createLayer(options) {
+  createLayer(options) {
     options = options || {};
     let layerProperties = Ember.get(options, 'layerProperties');
 
@@ -328,7 +328,7 @@ export default Ember.Mixin.create({
   /**
     Updates specified layer in hierarchy with given properties.
 
-    @method _editLayer
+    @method editLayer
     @param {Object} options Method options.
     @param {String} options.layerPath Path to editing layer.
     @param {String} options.layer Editing layer.
@@ -336,7 +336,7 @@ export default Ember.Mixin.create({
     @returns {Object} Edited layer.
     @private
   */
-  _editLayer(options) {
+  editLayer(options) {
     options = options || {};
     let layerProperties = Ember.get(options, 'layerProperties');
     let layer = Ember.get(options, 'layer');
@@ -351,14 +351,14 @@ export default Ember.Mixin.create({
   /**
     Removes specified layer from layers hierarchy.
 
-    @method _removeLayer
+    @method removeLayer
     @param {Object} options Method options.
     @param {String} options.layerPath Path to removing layer.
     @param {String} options.layer Removing layer itself.
     @returns {Object} Removed layer.
     @private
   */
-  _removeLayer(options) {
+  removeLayer(options) {
     options = options || {};
     let layer = Ember.get(options, 'layer');
     

@@ -46,10 +46,12 @@ export default RectangleMaptool.extend({
     Returns flat array of layers satisfying to current identification mode.
 
     @method _getLayersToIdentify
+    @param {Object} options Method options.
+    @param {Object[]} options.excludedLayers Layers that must be excluded from identification.
     @returns {Object[]} Flat array of layers satisfying to current identification mode.
     @private
   */
-  _getLayersToIdentify() {
+  _getLayersToIdentify({ excludedLayers }) {
     Ember.assert('Method \'_getLayersToIdentify\' must be overridden in some extended identify map tool.', false);
   },
 
@@ -60,13 +62,15 @@ export default RectangleMaptool.extend({
     @param {Object} options Method options.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} options.boundingBox Rectangle bounding identification area.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} options.latlng Center of the bounding box.
+    @param {Object[]} options.excludedLayers Layers excluded from identification.
     @private
   */
-  _startIdentification({ boundingBox, latlng }) {
+  _startIdentification({ boundingBox, latlng, excludedLayers }) {
     let e = {
       boundingBox: boundingBox,
       latlng: latlng,
-      layers: this._getLayersToIdentify(),
+      excludedLayers: Ember.A(excludedLayers || []),
+      layers: this._getLayersToIdentify({ excludedLayers }),
       results: Ember.A()
     };
 
@@ -126,6 +130,7 @@ export default RectangleMaptool.extend({
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.boundingBox Leaflet layer
     representing bounding box within which layer's objects is identified.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
+    @param {Object[]} excludedLayers Objects describing those layers which were excluded from identification.
     @param {Object[]} layers Objects describing those layers which are identified.
     @param {Object[]} results Objects describing identification results.
     Every result-object has the following structure: { layer: ..., features: [...] },

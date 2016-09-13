@@ -16,7 +16,7 @@ test('it works', function (assert) {
 test('usedLeafletEvents should return events with exists methods', function (assert) {
   let subject = MixinImplementation.create({
     leafletEvents: ['testEvent1', 'testEvent2'],
-    onTestEvent1: () => { }
+    testEvent1: () => { }
   });
 
   assert.deepEqual(subject.get('usedLeafletEvents'), ['testEvent1']);
