@@ -64,7 +64,6 @@ export default IdentifyAllVisibleMaptool.extend({
     // Try to identify next visible layer if possible (_finishIdentification will be called again).
     let includedLayers = this._getLayersToIdentify({ excludedLayers });
     if (features.length === 0 && includedLayers.length > 0) {
-      console.log('_startIdentification called again. excludedLayers are: ', excludedLayers);
       this._startIdentification({
         boundingBox: boundingBox,
         latlng: latlng,
