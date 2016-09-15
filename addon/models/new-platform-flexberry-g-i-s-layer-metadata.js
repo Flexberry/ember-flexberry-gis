@@ -1,49 +1,7 @@
-import Ember from 'ember';
-import DS from 'ember-data';
-import BaseModel from 'ember-flexberry/models/base';
-import Proj from 'ember-flexberry-data';
-let Model = BaseModel.extend({
-  name: DS.attr('string'),
-  type: DS.attr('string'),
-  coordinateReferenceSystem: DS.attr('string'),
-  settings: DS.attr('string'),
-  createTime: DS.attr('string'),
-  creator: DS.attr('string'),
-  editTime: DS.attr('string'),
-  editor: DS.attr('string'),
-  validations: {
-    name: { presence: true },
-    type: { presence: true }
-  },
+import { Model as LayerMetadataMixin, defineProjections } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-layer-metadata';
+import { Projection } from 'ember-flexberry-data';
+let Model = Projection.Model.extend(LayerMetadataMixin, {
 
-  settingsAsObject: Ember.computed('settings', function() {
-    let stringToDeserialize = this.get('settings');
-    if (stringToDeserialize) {
-      return JSON.parse(stringToDeserialize);
-    }
-    return {};
-  })
 });
-Model.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-layer-metadata', {
-  name: Proj.attr('Name'),
-  type: Proj.attr('Type'),
-  coordinateReferenceSystem: Proj.attr('Coordinate reference system'),
-  settings: Proj.attr('Settings')
-});
-Model.defineProjection('LayerMetadataE', 'new-platform-flexberry-g-i-s-layer-metadata', {
-  name: Proj.attr('Name'),
-  type: Proj.attr('Type'),
-  coordinateReferenceSystem: Proj.attr('Coordinate reference system'),
-  settings: Proj.attr('Settings')
-});
-Model.defineProjection('LayerMetadataL', 'new-platform-flexberry-g-i-s-layer-metadata', {
-  name: Proj.attr('Name'),
-  type: Proj.attr('Type'),
-  coordinateReferenceSystem: Proj.attr('Coordinate reference system'),
-  settings: Proj.attr('Settings'),
-  createTime: Proj.attr('Создание'),
-  creator: Proj.attr('Создатель'),
-  editTime: Proj.attr('Редактирование'),
-  editor: Proj.attr('Редактор')
-});
+defineProjections(Model);
 export default Model;

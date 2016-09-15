@@ -5,6 +5,7 @@ moduleForModel('new-platform-flexberry-g-i-s-map', 'Unit | Serializer | new-plat
   needs: [
     'serializer:new-platform-flexberry-g-i-s-map',
     'transform:file',
+    'transform:decimal',
 
     'model:new-platform-flexberry-g-i-s-layer-metadata',
     'model:new-platform-flexberry-g-i-s-map-layer',

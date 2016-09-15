@@ -5,6 +5,7 @@ moduleForModel('new-platform-flexberry-g-i-s-map-user-settings', 'Unit | Seriali
   needs: [
     'serializer:new-platform-flexberry-g-i-s-map-user-settings',
     'transform:file',
+    'transform:decimal',
 
     'model:new-platform-flexberry-g-i-s-layer-metadata',
     'model:new-platform-flexberry-g-i-s-map-layer',

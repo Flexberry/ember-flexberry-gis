@@ -2,6 +2,7 @@
   "propertyLookup": [],
   "caption": null,
   "name": "NewPlatformFlexberryGISLayerMetadataE",
+  "className": "LayerMetadataE",
   "attrs": [],
   "projections": [
     {
