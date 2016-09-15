@@ -11,6 +11,6 @@
     "devicejs": "0.2.7",
     "semantic-ui": "^2.2.4",
     "leaflet": "^1.0.0-rc.3",
-    "leaflet.editable": "Leaflet/Leaflet.Editable#master",
+    "leaflet.editable": "Leaflet/Leaflet.Editable#master"
   }
 }
