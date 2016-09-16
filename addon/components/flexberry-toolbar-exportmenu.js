@@ -20,7 +20,7 @@ export default Ember.Component.extend({
     x:10,
     y:100,
     zoomChecked: true,
-    attributionChecked: true,
+    attributionChecked: false,
     type: 'PNG',
     fileName: 'map.png'
   },
