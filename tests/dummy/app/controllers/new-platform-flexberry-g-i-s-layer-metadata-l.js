@@ -6,7 +6,7 @@ export default ListFormController.extend({
 
     @property editFormRoute
     @type String
-    @default 'new-platform-flexberry-g-i-s-map-e'
+    @default 'new-platform-flexberry-g-i-s-layer-metadata-e'
    */
-  editFormRoute: 'new-platform-flexberry-g-i-s-map-e'
+  editFormRoute: 'new-platform-flexberry-g-i-s-layer-metadata-e'
 });

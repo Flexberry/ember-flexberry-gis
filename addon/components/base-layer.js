@@ -98,11 +98,10 @@ export default Ember.Component.extend(
      */
     toggleVisible: Ember.observer('visibility', function () {
       let container = this.get('leafletContainer');
-      
+
       if (this.get('visibility')) {
         container.addLayer(this.get('_layer'));
-      }
-      else {
+      } else {
         container.removeLayer(this.get('_layer'));
       }
     }),

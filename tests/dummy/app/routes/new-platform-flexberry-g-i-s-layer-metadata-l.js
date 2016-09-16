@@ -6,18 +6,18 @@ export default ListFormRoute.extend({
 
     @property modelProjection
     @type String
-    @default 'MapL'
+    @default 'LayerMetadataL'
   */
-  modelProjection: 'MapL',
+  modelProjection: 'LayerMetadataL',
 
   /**
     Name of model to be used as list's records types.
 
     @property modelName
     @type String
-    @default 'new-platform-flexberry-g-i-s-map'
+    @default 'new-platform-flexberry-g-i-s-layer-metadata'
   */
-  modelName: 'new-platform-flexberry-g-i-s-map',
+  modelName: 'new-platform-flexberry-g-i-s-layer-metadata',
 
   /**
     Defined user settings developer.
@@ -42,5 +42,5 @@ export default ListFormRoute.extend({
     @type Object
     @default {}
   */
-  developerUserSettings: { NewPlatformFlexberryGISMapL: {} },
+  developerUserSettings: { NewPlatformFlexberryGISLayerMetadataL: {} },
 });

@@ -1,9 +1,14 @@
 import Ember from 'ember';
-import emberFlexberryTranslations from 'ember-flexberry/locales/ru/translations';
-import emberFlexberryGisTranslations from 'ember-flexberry-gis/locales/ru/translations';
+import EmberFlexberryTranslations from 'ember-flexberry/locales/ru/translations';
+import EmberFlexberryGisTranslations from 'ember-flexberry-gis/locales/ru/translations';
+
+import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
+import NewPlatformFlexberryGISMapLForm from './forms/new-platform-flexberry-g-i-s-map-l';
+import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
+import NewPlatformFlexberryGISMapEForm from './forms/new-platform-flexberry-g-i-s-map-e';
 
 const translations = {};
-Ember.$.extend(true, translations, emberFlexberryTranslations, emberFlexberryGisTranslations);
+Ember.$.extend(true, translations, EmberFlexberryTranslations, EmberFlexberryGisTranslations);
 
 Ember.$.extend(true, translations, {
   'application-name': 'Тестовый стенд ember-flexberry-gis',
@@ -152,7 +157,12 @@ Ember.$.extend(true, translations, {
     },
 
     'integration-examples': {
-    }
+    },
+
+    'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
+    'new-platform-flexberry-g-i-s-map-l': NewPlatformFlexberryGISMapLForm,
+    'new-platform-flexberry-g-i-s-layer-metadata-e': NewPlatformFlexberryGISLayerMetadataEForm,
+    'new-platform-flexberry-g-i-s-map-e': NewPlatformFlexberryGISMapEForm
   },
 
   'components': {
