@@ -61,7 +61,7 @@ export default RectangleMaptool.extend({
 
     @method _startIdentification
     @param {Object} options Method options.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} options.boundingBox Rectangle bounding identification area.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of identification area.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} options.latlng Center of the bounding box.
     @param {Object[]} options.excludedLayers Layers excluded from identification.
     @private
@@ -128,8 +128,7 @@ export default RectangleMaptool.extend({
 
     @method _finishIdentification
     @param {Object} e Event object.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.boundingBox Leaflet layer
-    representing bounding box within which layer's objects is identified.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} e.boundingBox Bounds of identification area.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
     @param {Object[]} excludedLayers Objects describing those layers which were excluded from identification.
     @param {Object[]} layers Objects describing those layers which are identified.
@@ -158,7 +157,7 @@ export default RectangleMaptool.extend({
     this._super(...arguments);
 
     this._startIdentification({
-      boundingBox: layer,
+      boundingBox: layer.getBounds(),
       latlng: latlng
     });
   },

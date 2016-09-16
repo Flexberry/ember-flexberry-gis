@@ -54,11 +54,23 @@ export default BaseLayer.extend({
   /**
     Performs 'getFeature' request to WFS-service related to layer.
 
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} boundingBox Identification area bounding box.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of identification area.
   */
   _getFeature(boundingBox) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      resolve(Ember.A());
+      let options = this.get('options');
+      let crs = Ember.get(options, 'crs');
+      let geometryField = Ember.get(options, 'geometryField');
+
+      let boundedLayer = this.createLayer({
+        filter: new L.Filter.BBox().append(boundingBox, geometryField, crs),
+        geometryField: geometryField,
+        showExisting: true
+      }).once('load', (data) => {
+        resolve(Ember.A(boundedLayer.toGeoJSON().features || []));
+      }).once('error', (errorData) => {
+        reject(errorData);
+      });
     });
   },
 
@@ -67,8 +79,11 @@ export default BaseLayer.extend({
 
     @method createLayer
   */
-  createLayer() {
-    return L.wfs(this.get('options'), this.get('featuresReadFormat'));
+  createLayer(options) {
+    options = Ember.$.extend(true, {}, this.get('options'), options);
+    let featuresReadFormat = this.get('featuresReadFormat');
+
+    return L.wfs(options, featuresReadFormat);
   },
 
   /**
@@ -76,8 +91,7 @@ export default BaseLayer.extend({
 
     @method identify
     @param {Object} e Event object.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.boundingBox Leaflet layer
-    representing bounding box within which layer's objects must be identified.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of identification area.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
     @param {Object[]} layers Objects describing those layers which must be identified.
     @param {Object[]} results Objects describing identification results.
