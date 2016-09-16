@@ -74,8 +74,14 @@ export default {
         'name-textbox': {
           'caption': 'Имя слоя'
         },
-        'crs-textarea': {
-          'caption': 'Система координат слоя (CRS)'
+        'crs': {
+          'caption': 'Система координат слоя (CRS)',
+          'code-textbox': {
+            'caption': 'Код'
+          },
+          'definition-textarea': {
+            'caption': 'Определение'
+          }
         }
       },
 
@@ -109,6 +115,9 @@ export default {
         },
 
         'wms': {
+          'info-format-dropdown': {
+            'caption': 'Формат ответов GetFeatureInfo'
+          },
           'url-textbox': {
             'caption': 'Url'
           },
@@ -123,6 +132,48 @@ export default {
           },
           'transparent-checkbox': {
             'caption': 'Разрешить прозрачность на изображениях'
+          }
+        },
+
+        'wfs': {
+          'format-dropdown': {
+            'caption': 'Формат'
+          },
+          'url-textbox': {
+            'caption': 'Url'
+          },
+          'version-textbox': {
+            'caption': 'Версия WFS'
+          },
+          'namespace-uri-textbox': {
+            'caption': 'URI пространства имен'
+          },
+          'type-ns-name-textbox': {
+            'caption': 'Имя пространства имен типа'
+          },
+          'type-ns-textbox': {
+            'caption': 'Пространство имен типа'
+          },
+          'type-name-textbox': {
+            'caption': 'Имя типа'
+          },
+          'geometry-field-textbox': {
+            'caption': 'Поле геометрии'
+          },
+          'max-features-textbox': {
+            'caption': 'Максимальное количество объектов'
+          },
+          'show-existing-checkbox': {
+            'caption': 'Отображать существующие объекты'
+          },
+          'style': {
+            'caption': 'Стиль отображения',
+            'color-textbox': {
+              'caption': 'Цвет заливки'
+            },
+            'weight-textbox': {
+              'caption': 'Толщина обводки'
+            }
           }
         }
       }

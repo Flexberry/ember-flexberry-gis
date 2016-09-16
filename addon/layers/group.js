@@ -6,7 +6,6 @@
   Class describing group layer metadata.
 
   @class GroupLayer
-  @extends BaseLayer
 */
 export default {
   /**
@@ -25,5 +24,15 @@ export default {
     @type String[]
     @default ['add', 'edit', 'remove']
   */
-  operations: ['add', 'edit', 'remove']
+  operations: ['add', 'edit', 'remove'],
+
+  /**
+    Creates new settings object (with settings related to layer-type).
+
+    @method createSettings
+    @returns {Object} New settings object (with settings related to layer-type).
+  */
+  createSettings() {
+    return {};
+  }
 };

@@ -60,8 +60,8 @@ export default IdentifyAllVisibleMaptool.extend({
       excludedLayers.pushObject(layer);
     }
 
-    // iIf there is no identification results by current layer.
-    // Try to identify next visible layer if possible (_finishIdentification will be called again).
+    // If there is no identification results by current layer,
+    // then try to identify next visible layer if possible.
     let includedLayers = this._getLayersToIdentify({ excludedLayers });
     if (features.length === 0 && includedLayers.length > 0) {
       this._startIdentification({
@@ -72,7 +72,6 @@ export default IdentifyAllVisibleMaptool.extend({
     } else {
       // Show results & stop identification.
       this._super(...arguments);
-      return;
     }
   }
 });

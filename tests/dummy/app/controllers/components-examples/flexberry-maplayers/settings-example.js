@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayer-actions-handler';
-import { availableLayerTypes } from 'ember-flexberry-gis/utils/layers';
 
 export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
   /**
@@ -242,7 +241,7 @@ export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
     componentSettingsMetadata.pushObject({
       settingName: 'type',
       settingType: 'enumeration',
-      settingAvailableItems: availableLayerTypes(),
+      settingAvailableItems: Ember.getOwner(this).knownNamesForType('layer'),
       settingDefaultValue: null,
       bindedControllerPropertieName: jsonLayersLatestClickedLayerPath + '.type'
     });

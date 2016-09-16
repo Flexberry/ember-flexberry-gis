@@ -6,7 +6,6 @@
   Class describing tile layer metadata.
 
   @class TileLayer
-  @extends BaseLayer
 */
 export default {
   /**
@@ -25,5 +24,17 @@ export default {
     @type String[]
     @default ['edit', 'remove']
   */
-  operations: ['edit', 'remove']
+  operations: ['edit', 'remove'],
+
+  /**
+    Creates new settings object (with settings related to layer-type).
+
+    @method createSettings
+    @returns {Object} New settings object (with settings related to layer-type).
+  */
+  createSettings() {
+    return {
+      url: undefined
+    };
+  }
 };

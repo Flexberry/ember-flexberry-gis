@@ -3,9 +3,9 @@
 */
 
 /**
-  Class describing WMS layer metadata.
+  Class describing WFS layer metadata.
 
-  @class WmsLayer
+  @class WfsLayer
 */
 export default {
   /**
@@ -34,12 +34,21 @@ export default {
   */
   createSettings() {
     return {
-      info_format: undefined,
+      crs: undefined,
+      showExisting: undefined,
+      geometryField: undefined,
       url: undefined,
       version: undefined,
-      layers: undefined,
+      typeNS: undefined,
+      typeName: undefined,
+      typeNSName: undefined,
+      maxFeatures: undefined,
       format: undefined,
-      transparent: undefined
+      style: {
+        color: undefined,
+        weight: undefined
+      },
+      namespaceUri: undefined
     };
   }
 };

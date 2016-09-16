@@ -14,10 +14,57 @@ let Model = BaseModel.extend({
 
   settingsAsObject: Ember.computed('settings', function () {
     let stringToDeserialize = this.get('settings');
-    if (stringToDeserialize) {
+    if (!Ember.isBlank(stringToDeserialize)) {
       return JSON.parse(stringToDeserialize);
     }
     return {};
+  }),
+
+  crs: Ember.computed('coordinateReferenceSystem', function () {
+    let coordinateReferenceSystem = this.get('coordinateReferenceSystem');
+    coordinateReferenceSystem = Ember.isBlank(coordinateReferenceSystem) ? null : JSON.parse(coordinateReferenceSystem);
+
+    if (Ember.isNone(coordinateReferenceSystem)) {
+      return null;
+    }
+
+    let code = Ember.get(coordinateReferenceSystem, 'code');
+    let definition = Ember.get(coordinateReferenceSystem, 'definition');
+    if (Ember.isBlank(code) && Ember.isBlank(definition)) {
+      return null;
+    }
+
+    let crs = null;
+    let owner = Ember.getOwner(this);
+    if (Ember.isBlank(definition)) {
+      // Only code is defined.
+      // Try to find existing CRS with the same code.
+      let availableCrsCodes =Ember.A();
+      let crsFactories = owner.knownForType('coordinate-reference-system');
+      owner.knownNamesForType('coordinate-reference-system').forEach((crsName) => { 
+        let crsFactory = Ember.get(crsFactories, crsName);
+        let crsFactoryCode = Ember.get(crsFactory, 'code');
+        availableCrsCodes.pushObject(crsFactoryCode);
+
+        // CRS code is the same.
+        // Create CRS from factory, remember it & break loop.
+        if (crsFactoryCode === code) {
+          crs = crsFactory.create(code, definition);
+          return false;
+        }
+      });
+
+      Ember.assert(
+        `Wrong value of \`coordinateReferenceSystem.code\` parameter: \`${code}\`. ` +
+        `Allowed values are: [\`${availableCrsCodes.join(`\`, \``)}\`].`,
+        !Ember.isNone(crs));
+    } else {
+      // CRS has definition.
+      // Try to create CRS from proj4.
+      crs = owner.knownForType('coordinate-reference-system', 'proj4').create(code, definition);
+    }
+
+    return crs;
   }),
 
   layers: null

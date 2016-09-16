@@ -12,7 +12,6 @@ import DynamicActionsMixin from '../mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 
 import layout from '../templates/components/flexberry-maplayer';
-import LayersUtils from '../utils/layers';
 
 /**
   Component's CSS-classes names.
@@ -172,6 +171,18 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
   }),
 
   /**
+    Layer class factory related to current layer type.
+
+    @property _layerClassFactory
+    @type Object
+    @readOnly
+    @private
+  */
+  _layerClassFactory: Ember.computed('type', function() {
+    return Ember.getOwner(this).knownForType('layer', this.get('type'));
+  }),
+
+  /**
     CSS-class name for layer type related icon.
 
     @property _typeIconClass
@@ -179,10 +190,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     @readOnly
     @private
   */
-  _typeIconClass: Ember.computed('type', function() {
-    let layer = LayersUtils.getLayer(this.get('type'));
+  _typeIconClass: Ember.computed('_layerClassFactory', function() {
+    let layerClassFactory = this.get('_layerClassFactory');
 
-    return Ember.get(layer, 'iconClass');
+    return Ember.get(layerClassFactory, 'iconClass');
   }),
 
   /**
@@ -193,8 +204,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     @readOnly
     @private
   */
-  _addOperationIsAvailable: Ember.computed('type', function() {
-    return LayersUtils.layerOperationIsAvailable(this.get('type'), 'add');
+  _addOperationIsAvailable: Ember.computed('_layerClassFactory', function() {
+    let layerClassFactory = this.get('_layerClassFactory');
+
+    return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('add');
   }),
 
   /**

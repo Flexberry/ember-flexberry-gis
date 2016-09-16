@@ -21,6 +21,10 @@ module.exports = {
     app.import(app.bowerDirectory + '/leaflet/dist/images/marker-shadow.png', { destDir: appImagesDirectory });
 
     // Import leaflet plugins.
+    // Proj4Leaflet.
+    app.import(app.bowerDirectory + '/Proj4Leaflet/lib/proj4.js');
+    app.import(app.bowerDirectory + '/Proj4Leaflet/src/proj4leaflet.js');
+
     // Leaflet.Editable.
     app.import(app.bowerDirectory + '/leaflet.editable/src/Leaflet.Editable.js');
 

@@ -8,7 +8,10 @@ import DynamicActionsMixin from '../../mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 import layout from '../../templates/components/layers-dialogs/edit';
 import { translationMacro as t } from 'ember-i18n';
-import LayersUtil from '../../utils/layers';
+
+// Proj4 CRS code.
+// Will be initialized in 'init' method.
+let proj4CrsCode = null;
 
 /**
   Component's CSS-classes names.
@@ -61,9 +64,9 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     @readOnly
   */
   _typeIsValid: Ember.computed('_layer.type', function() {
-    let type = this.get('_layer.type');
+    let className = this.get('_layer.type');
 
-    return LayersUtil.layerIsAvailable(type);
+    return Ember.getOwner(this).isKnownNameForType('layer', className);
   }),
 
   /**
@@ -94,6 +97,50 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     @private
   */
   _settings: null,
+
+  /**
+    Inner hash containing coordinate reference systems settings mapped by available codes.
+
+    @property _coordinateReferenceSystems
+    @type Object
+    @default null
+    @private
+  */
+  _coordinateReferenceSystems: null,
+
+  /**
+    User friendly coordinate reference system (CRS) code.
+    For example 'ESPG:4326'.
+
+    @property _coordinateReferenceSystemCode
+    @type String
+    @default null
+    @private
+  */
+  _coordinateReferenceSystemCode: null,
+
+  /**
+    Array containing user friendly coordinate reference systems (CRS) codes.
+    For example ['ESPG:4326', 'PROJ4'].
+
+    @property _availableCoordinateReferenceSystemsCodes
+    @type String[]
+    @default null
+    @private
+  */
+  _availableCoordinateReferenceSystemsCodes: null,
+
+  /**
+    Flag: indicates whether coordinate reference system (CRS) edit fields must be shown.
+
+    @property _availableCoordinateReferenceSystemsCodes
+    @type Boolean
+    @default false
+    @private
+  */
+  _showCoordinateReferenceSystemFields: Ember.computed('_coordinateReferenceSystemCode', function() {
+    return this.get('_coordinateReferenceSystemCode') === proj4CrsCode;
+  }),
 
   /**
     Reference to component's template.
@@ -171,13 +218,31 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
   nameTextboxCaption: t('components.layers-dialogs.edit.name-textbox.caption'),
 
   /**
-    Dialog's 'CRS' textarea caption.
+    Dialog's 'CRS' segment caption.
 
-    @property crsTextareaCaption
+    @property crsCaption
     @type String
-    @default t('components.layers-dialogs.edit.crs-textarea.caption')
+    @default t('components.layers-dialogs.edit.crs.caption')
   */
-  crsTextareaCaption: t('components.layers-dialogs.edit.crs-textarea.caption'),
+  crsCaption: t('components.layers-dialogs.edit.crs.caption'),
+
+  /**
+    Dialog's 'CRS' segment's code textbox caption.
+
+    @property crsCodeTextboxCaption
+    @type String
+    @default t('components.layers-dialogs.edit.crs.code-textbox.caption')
+  */
+  crsCodeTextboxCaption: t('components.layers-dialogs.edit.crs.code-textbox.caption'),
+
+  /**
+    Dialog's 'CRS' segment's definition textarea caption.
+
+    @property crsDefinitionTextareaCaption
+    @type String
+    @default t('components.layers-dialogs.edit.crs.definition-textarea.caption')
+  */
+  crsDefinitionTextareaCaption: t('components.layers-dialogs.edit.crs.definition-textarea.caption'),
 
   /**
     Flag: indicates whether dialog is visible or not.
@@ -207,8 +272,12 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     */
     onApprove() {
       let layer = this.get('_layer');
+
+      let coordinateReferenceSystem = Ember.get(layer, 'coordinateReferenceSystem');
+      coordinateReferenceSystem = Ember.$.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);
+      Ember.set(layer, 'coordinateReferenceSystem', coordinateReferenceSystem);
+
       let settings = Ember.get(layer, 'settings');
-      
       settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
       Ember.set(layer, 'settings', settings);
 
@@ -269,7 +338,25 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
   },
 
   /**
-    Creates inner hash containing layer settings.
+    Creates inner hash containing layer CRS settings for different CRS codes.
+
+    @method _createInnerCoordinateReferenceSystems
+    @private
+  */
+  _createInnerCoordinateReferenceSystems() {
+    let coordinateReferenceSystems = {};
+    Ember.A(this.get('_availableCoordinateReferenceSystemsCodes') || []).forEach((code) => {
+      coordinateReferenceSystems[code] = {
+        code: code === proj4CrsCode ? null : code,
+        definition: null
+      };
+    });
+
+    this.set('_coordinateReferenceSystems', coordinateReferenceSystems);
+  },
+
+  /**
+    Creates inner hash containing layer settings for different layer types.
 
     @method _createInnerSettings
     @private
@@ -277,7 +364,8 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
   _createInnerSettings() {
     let settings = {};
     Ember.A(this.get('_availableTypes') || []).forEach((type) => {
-      settings[type] = {};
+      let layerClassFactory = Ember.getOwner(this).knownForType('layer', type);
+      settings[type] = layerClassFactory.createSettings();
     });
 
     this.set('_settings', settings);
@@ -302,9 +390,22 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
   _createInnerLayer() {
     let type = this.get('layer.type');
     let name = this.get('layer.name');
-    let coordinateReferenceSystem = this.get('layer.coordinateReferenceSystem');
+
+    let crs = this.get('layer.coordinateReferenceSystem');
+    crs = Ember.isNone(crs) ? {} : JSON.parse(crs);
+    
+    let crsCode = Ember.get(crs, 'code');
+    if (!Ember.isBlank(crsCode) && !this.get('_availableCoordinateReferenceSystemsCodes').contains(crsCode)) {
+      // Unknown CRS code means that proj4 is used.
+      crsCode = proj4CrsCode;
+    }
+    this.set('_coordinateReferenceSystemCode', crsCode);
+
+    this._createInnerCoordinateReferenceSystems();
+    this.set(`_coordinateReferenceSystems.${crsCode}`, crs);
+
     let settings = this.get('layer.settings');
-    settings = Ember.isNone(settings) ? {} : JSON.parse(settings);
+    settings = Ember.isNone(settings) ? Ember.getOwner(this).knownForType('layer', type).createSettings() : JSON.parse(settings);
 
     this._createInnerSettings();
     this.set(`_settings.${type}`, settings);
@@ -312,7 +413,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     this.set('_layer', {
       type: type,
       name: name,
-      coordinateReferenceSystem: coordinateReferenceSystem,
+      coordinateReferenceSystem: crs,
       settings: settings,
     });
   },
@@ -358,13 +459,41 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
   }),
 
   /**
+    Observes _coordinateReferenceSystemCode changes & changes link to object containing code-related CRS settings.
+
+    @method _coordinateReferenceSystemCodeDidChange
+    @private
+  */
+  _coordinateReferenceSystemCodeDidChange: Ember.observer('_coordinateReferenceSystemCode', function() {
+    if (Ember.isNone(this.get('_layer'))) {
+      return;
+    }
+
+    let code = this.get('_coordinateReferenceSystemCode');
+    this.set('_layer.coordinateReferenceSystem', this.get(`_coordinateReferenceSystems.${code}`));
+  }),
+
+  /**
     Initializes component.
   */
   init() {
     this._super(...arguments);
 
-    // Property is needed for type dropdown.
-    this.set('_availableTypes', Object.keys(LayersUtil.getAvailableLayers()));
+    // Retrieve & remember constant (proj4 CRS code).
+    let proj4CrsFactory = Ember.getOwner(this).knownForType('coordinate-reference-system', 'proj4');
+    proj4CrsCode = Ember.get(proj4CrsFactory, 'code');
+
+    // Available layers types for related dropdown.
+    let owner = Ember.getOwner(this);
+    this.set('_availableTypes', owner.knownNamesForType('layer'));
+
+    // Available CRS codes for related dropdown.
+    let crsFactories = owner.knownForType('coordinate-reference-system');
+    let crsFactoriesNames = owner.knownNamesForType('coordinate-reference-system');
+    this.set('_availableCoordinateReferenceSystemsCodes', Ember.A(crsFactoriesNames.map((crsFactoryName) => { 
+      let crsFactory = Ember.get(crsFactories, crsFactoryName);     
+      return Ember.get(crsFactory, 'code');
+    })));
   }
 
   /**

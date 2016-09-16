@@ -31,15 +31,39 @@
       value=_layer.name
     }}
   </div>
-  <div class="field">
-    <label>
-      {{crsTextareaCaption}}
-    </label>
-    {{flexberry-textarea
-      class="fluid"
-      value=_layer.coordinateReferenceSystem
-    }}
+  <div class="ui segment">
+    <h5 class="ui header">
+      {{crsCaption}}
+    </h5>
+    <div class="field">
+      {{flexberry-dropdown
+        class="fluid"
+        items=_availableCoordinateReferenceSystemsCodes
+        value=_coordinateReferenceSystemCode
+      }}
+    </div>
+    {{#if _showCoordinateReferenceSystemFields}}
+      <div class="field">
+        <label>
+          {{crsCodeTextboxCaption}}
+        </label>
+        {{flexberry-textbox
+          class="fluid"
+          value=_layer.coordinateReferenceSystem.code
+        }}
+      </div>
+      <div class="field">
+        <label>
+          {{crsDefinitionTextareaCaption}}
+        </label>
+        {{flexberry-textarea
+          class="fluid"
+          value=_layer.coordinateReferenceSystem.definition
+        }}
+      </div>
+    {{/if}}
   </div>
+
   {{#if _typeIsValid}}
     {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings}}
   {{/if}}

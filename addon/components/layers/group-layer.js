@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import BaseLayer from 'ember-flexberry-gis/components/base-layer';
+import BaseLayer from '../base-layer';
 import layout from '../../templates/components/layers/group-layer';
 
 /**

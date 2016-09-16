@@ -4,7 +4,6 @@
 
 import Ember from 'ember';
 import RectangleMaptool from './rectangle';
-import LayersUtil from '../utils/layers';
 
 /**
   Identify map tool.
@@ -39,7 +38,9 @@ export default RectangleMaptool.extend({
     @private
   */
   _layerCanBeIdentified(layer) {
-    return LayersUtil.layerOperationIsAvailable(Ember.get(layer, 'type'), 'identify');
+    let layerClassFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
+
+    return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('identify');
   },
 
   /**
@@ -115,7 +116,7 @@ export default RectangleMaptool.extend({
       });
     });
 
-    // Wait for all promises to be settled & call _finish identification hook.
+    // Wait for all promises to be settled & call '_finishIdentification' hook.
     Ember.RSVP.allSettled(promises).then(() => {
       e.results = results;
       this._finishIdentification(e);
@@ -138,7 +139,6 @@ export default RectangleMaptool.extend({
     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
     @private
   */
-
   _finishIdentification(e) {
     let leafletMap = this.get('map');
     leafletMap.openPopup('Identification finished. Results count: ' + e.results.length, e.latlng);

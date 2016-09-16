@@ -92,6 +92,22 @@ export default Ember.Component.extend(
   visibility: null,
 
   /**
+    Layer's coordinate reference system (CRS).
+
+    @property crs
+    @type <a href="http://leafletjs.com/reference-1.0.0.html#crs">L.CRS</a>
+    @readOnly
+  */
+  crs: Ember.computed('layer.crs', 'leafletMap.options.crs', function() {
+    let crs = this.get('layer.crs');
+    if (Ember.isNone(crs)) {
+      crs = this.get('leafletMap.options.crs');
+    }
+
+    return crs;
+  }),
+
+  /**
     Handles 'map:identify' event of leaflet map.
 
     @method _identify

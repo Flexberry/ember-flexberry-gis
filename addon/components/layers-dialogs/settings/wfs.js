@@ -3,23 +3,23 @@
 */
 
 import Ember from 'ember';
-import layout from '../../../templates/components/layers-dialogs/settings/wms';
+import layout from '../../../templates/components/layers-dialogs/settings/wfs';
 
 /**
-  Flexberry remove layer modal dialog with [Semantic UI modal](http://semantic-ui.com/modules/modal.html) style.
+  Flexberry settings-part of WFS-layer modal dialog.
 
   @class FlexberryWmsLayerSettingsComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 export default Ember.Component.extend({
   /**
-    Array containing available info formats.
+    Array containing available formats.
 
-    @property _availableInfoFormats
+    @property _availableFormats
     @type String[]
     @private
   */
-  _availableInfoFormats: null,
+  _availableFormats: null,
 
   /**
     Reference to component's template.
@@ -51,14 +51,11 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
 
-    // Initialize available info formats.
-    this.set('_availableInfoFormats', Ember.A([
-      'application/json',
-      'application/vnd.ogc.gml',
-      'application/vnd.ogc.gml/3.1.1',
-      'application/vnd.ogc.wms_xml',
-      'text/plain',
-      'text/html'
-    ]));
+    // Initialize available formats.
+    let availableFormats = Ember.A(Object.keys(L.Format) || []).filter((format) => {
+      format = format.toLowerCase();
+      return format !== 'base' && format !== 'scheme';
+    });
+    this.set('_availableFormats', Ember.A(availableFormats));
   }
 });

@@ -74,8 +74,14 @@ export default {
         'name-textbox': {
           'caption': 'Layer name'
         },
-        'crs-textarea': {
-          'caption': 'Layer coordinate reference system (CRS)'
+        'crs': {
+          'caption': 'Layer coordinate reference system (CRS)',
+          'code-textbox': {
+            'caption': 'Code'
+          },
+          'definition-textare': {
+            'caption': 'Definition'
+          }
         }
       },
 
@@ -109,6 +115,9 @@ export default {
         },
 
         'wms': {
+          'info-format-dropdown': {
+            'caption': 'GetFeatureInfo-responses format'
+          },
           'url-textbox': {
             'caption': 'Url'
           },
@@ -123,6 +132,48 @@ export default {
           },
           'transparent-checkbox': {
             'caption': 'Allow images transparency'
+          }
+        },
+
+        'wfs': {
+          'format-dropdown': {
+            'caption': 'Format'
+          },
+          'url-textbox': {
+            'caption': 'Url'
+          },
+          'version-textbox': {
+            'caption': 'WFS version'
+          },
+          'namespace-uri-textbox': {
+            'caption': 'Namespace URI'
+          },
+          'type-ns-name-textbox': {
+            'caption': 'Type namespace name'
+          },
+          'type-ns-textbox': {
+            'caption': 'Type namespace'
+          },
+          'type-name-textbox': {
+            'caption': 'Type name'
+          },
+          'geometry-field-textbox': {
+            'caption': 'Geometry field'
+          },
+          'max-features-textbox': {
+            'caption': 'Max features'
+          },
+          'show-existing-checkbox': {
+            'caption': 'Show existing'
+          },
+          'style': {
+            'caption': 'Style',
+            'color-textbox': {
+              'caption': 'Color'
+            },
+            'weight-textbox': {
+              'caption': 'Weight'
+            }
           }
         }
       }

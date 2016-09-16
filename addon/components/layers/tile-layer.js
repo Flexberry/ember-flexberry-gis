@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import BaseLayer from 'ember-flexberry-gis/components/base-layer';
+import BaseLayer from '../base-layer';
 
 /**
   TileLayerComponent for leaflet map.

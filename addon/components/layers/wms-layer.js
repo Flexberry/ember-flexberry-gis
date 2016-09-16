@@ -3,7 +3,7 @@
 */
 
 import Ember from 'ember';
-import TileLayer from 'ember-flexberry-gis/components/layers/tile-layer';
+import TileLayer from './tile-layer';
 
 /**
   WMSLayerComponent for leaflet map.
@@ -16,7 +16,7 @@ export default TileLayer.extend({
     'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
     'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
     'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds',
-    'layers', 'styles', 'format', 'transparent', 'version', 'crs'
+    'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format'
   ],
 
   /**
@@ -30,7 +30,7 @@ export default TileLayer.extend({
 
     let point = leafletMap.latLngToContainerPoint(latlng, leafletMap.getZoom());
     let size = leafletMap.getSize();
-    let crs = layer.options.crs || leafletMap.options.crs;
+    let crs = layer.options.crs;
 
     let mapBounds = leafletMap.getBounds();
     let sw = crs.project(mapBounds.getSouthWest());
@@ -39,21 +39,17 @@ export default TileLayer.extend({
     let params = {
       request: 'GetFeatureInfo',
       service: 'WMS',
-
-      // Code of used CRS
       srs: crs.code,
       styles: layer.wmsParams.styles,
       transparent: layer.wmsParams.transparent,
       version: layer.wmsParams.version,
       format: layer.wmsParams.format,
-
-      // Bounding box defined by SouthWest and NorthEast coordinates.
       bbox: sw.x + ',' + sw.y + ',' + ne.x + ',' + ne.y,
       height: size.y,
       width: size.x,
       layers: layer.wmsParams.layers,
       query_layers: layer.wmsParams.layers,
-      info_format: 'application/json'
+      info_format: layer.wmsParams.info_format
     };
 
     params[params.version === '1.3.0' ? 'i' : 'x'] = point.x;
