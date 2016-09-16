@@ -137,6 +137,27 @@ export default {
     },
 
     'flexberry-maplayer': {
+    },
+    'flexberry-export': {
+      'export': 'Экспорт',
+      'download': 'Экспорт в изображение',
+      'print': 'Печать',
+      'wrongBeginSelector': 'Селектор JQuery нечинается не с начальной круглой скобки (',
+      'wrongEndSelector': 'Селектор JQuery не заканчивается круглой скобкой )',
+      'jqueryNotAvailable': 'В опциях используется JQuery селектор, но JQuery не подключен.Подключите JQuery или используйте DOM-селекторы: .class, #id или DOM-элементы',
+      'popupWindowBlocked': 'Окно печати было заблокировано браузером. Пожалуйста разрешите всплывающие окна на этой странице',
+      'emptyFilename': 'Не указано имя файла для выгрузки',
+      'downloadCaption': 'Задайте параметры экcпорта в изображение',
+      'printCaption': 'Задайте параметры для печати',
+      'caption': 'Заголовок карты',
+      'nocaption': 'Без заголовка',
+      'font': 'Фонт',
+      'fillStyle': 'Цвет',
+      'except': 'Исключить',
+      'zoom': 'Зум',
+      'attributes': 'Копирайт',
+      'type': 'Тип',
+      'fileName': 'Имя файла'
     }
   }
 };

@@ -24,5 +24,9 @@ module.exports = {
 
     // Leaflet.Editable
     app.import(app.bowerDirectory + '/leaflet.editable/src/Leaflet.Editable.js');
+
+    // Leaflet.Export
+    app.import(app.bowerDirectory + '/html2canvas/dist/html2canvas.js');
+    app.import(app.bowerDirectory + '/leaflet.export/leaflet_export.js');
   }
 };
