@@ -59,13 +59,14 @@ export default TileLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.$.ajax({
         url: requestUrl
-      }).then((result) => {
-        result = result || {};
+      }).then((featureCollection) => {
+        featureCollection = featureCollection || {};
 
-        let features = Ember.A(Ember.get(result, 'features') || []);
+        let features = Ember.A(Ember.get(featureCollection, 'features') || []);
         resolve(features);
       }, (reason) => {
-        reject(reason);
+        reason = reason || {};
+        reject(reason.error || reason);
       });
     });
   },

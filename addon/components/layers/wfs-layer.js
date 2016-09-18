@@ -62,15 +62,36 @@ export default BaseLayer.extend({
       let crs = Ember.get(options, 'crs');
       let geometryField = Ember.get(options, 'geometryField');
 
-      let boundedLayer = this.createLayer({
+      let layer = null;
+      let destroyLayer = () => {
+        if (Ember.isNone(layer)) {
+          return;
+        }
+
+        layer.clearLayers();
+        layer.off('load', onLayerLoad);
+        layer.off('error', onLayerError);
+        layer = null;
+      };
+      let onLayerLoad = (e) => {
+        let featureCollection = e.target.toGeoJSON();
+        resolve(Ember.A(Ember.get(featureCollection, 'features') || []));
+
+        destroyLayer();
+      };
+      let onLayerError = (e) => {
+        reject(e.error || e);
+
+        destroyLayer();
+      };
+
+      layer = this.createLayer({
         filter: new L.Filter.BBox().append(boundingBox, geometryField, crs),
         geometryField: geometryField,
         showExisting: true
-      }).once('load', (data) => {
-        resolve(Ember.A(boundedLayer.toGeoJSON().features || []));
-      }).once('error', (errorData) => {
-        reject(errorData);
-      });
+      })
+      .once('load', onLayerLoad)
+      .once('error', onLayerError);
     });
   },
 

@@ -112,7 +112,7 @@ export default RectangleMaptool.extend({
         let errorMessage = i18n.t('maptools.identify.error-message', {
           layerName: Ember.get(layer, 'name')
         });
-        Ember.Logger.error(`${errorMessage} : `, reason);
+        Ember.Logger.error(`${errorMessage}: `, reason);
       });
     });
 
