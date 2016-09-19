@@ -29,12 +29,8 @@
       onMoveend=(action "updateCenter")
       leafletMapDidInit=(action "leafletMapDidInit") as |leafletMap|}}
       {{flexberry-layers leafletContainer=leafletMap layers=model.rootLayer.layers}}
-
       {{scale-control map=leafletMap imperial=false}}
     {{/flexberry-map}}
-
-
-
   </div>
   <div class="six wide column">
     {{flexberry-maplayers
