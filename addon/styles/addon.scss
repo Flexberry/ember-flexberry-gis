@@ -24,3 +24,21 @@
   width: 100%;
 }
 
+.toolbar-menu {
+  border-width:0px;
+  border-image-width:0px;
+  box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px inset;
+  hight:36px;
+}
+
+.toolbar-dropdown {
+  background-color:rgb(224, 225, 226) !important;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: bold;
+  padding:8px;
+  height:36px
+}
+
+.abovemap {
+  z-index:2000 !important
+}
