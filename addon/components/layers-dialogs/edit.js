@@ -405,10 +405,16 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     this.set(`_coordinateReferenceSystems.${crsCode}`, crs);
 
     let settings = this.get('layer.settings');
-    settings = Ember.isNone(settings) ? Ember.getOwner(this).knownForType('layer', type).createSettings() : JSON.parse(settings);
+    if (!Ember.isNone(settings)) {
+      settings = JSON.parse(settings);
+    } else if (!Ember.isNone(type)) {
+      settings = Ember.getOwner(this).knownForType('layer', type).createSettings();
+    }
 
     this._createInnerSettings();
-    this.set(`_settings.${type}`, settings);
+    if (!Ember.isNone(settings)) {
+      this.set(`_settings.${type}`, settings);
+    }
 
     this.set('_layer', {
       type: type,

@@ -5,7 +5,8 @@
 import BaseLayer from '../base-layer';
 
 /**
-  TileLayerComponent for leaflet map.
+  Tile layer component for leaflet map.
+
   @class TileLayerComponent
   @extend BaseLayerComponent
  */

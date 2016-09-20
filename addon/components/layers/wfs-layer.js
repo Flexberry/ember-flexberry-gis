@@ -6,7 +6,7 @@ import Ember from 'ember';
 import BaseLayer from '../base-layer';
 
 /**
-  WFS layer component.
+  WFS layer component for leaflet map.
 
   @class WfsLayerComponent
   @extend BaseLayerComponent
@@ -85,6 +85,19 @@ export default BaseLayer.extend({
         destroyLayer();
       };
 
+      if (boundingBox.getSouthWest().equals(boundingBox.getNorthEast())) {
+        // Bounding box is point.
+        // WFS-service could return an error,
+        // so extend bounding box a little.
+        let leafletMap = this.get('leafletMap');
+        let y = leafletMap.getSize().y / 2;
+        let a = leafletMap.containerPointToLatLng([0, y]);
+        let b = leafletMap.containerPointToLatLng([100, y]);
+        let maxMeters = leafletMap.distance(a,b);
+
+        // Bounding box around south west point with radius of current scale * 0.05.
+        boundingBox = boundingBox.getSouthWest().toBounds(maxMeters * 0.05);
+      }
       layer = this.createLayer({
         filter: new L.Filter.BBox().append(boundingBox, geometryField, crs),
         geometryField: geometryField,
