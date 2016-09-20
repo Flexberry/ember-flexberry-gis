@@ -20,6 +20,17 @@
           <i class="info circle icon"></i>
         </button>
       </div>
+      <div class='ui compact menu toolbar-menu'>
+        <div class='ui simple dropdown item toolbar-dropdown'>
+          <i class='wizard icon'></i>{{t "components.flexberry-maptoolbar.measureCaption"}}
+          <div class='menu abovemap'>
+            <a class='item' {{action "activateTool" "coordinatemeasuretool" target=toolbar}}><i class='marker icon'></i>{{t "components.flexberry-maptoolbar.mearkerMeasure"}}</a>
+            <a class='item' {{action "activateTool" "radiusmeasuretool" target=toolbar}}><i class='circle icon'></i>{{t "components.flexberry-maptoolbar.circleMeasure"}}</a>
+            <a class='item' {{action "activateTool" "distancemeasuretool" target=toolbar}}><i class='empty star icon'></i>{{t "components.flexberry-maptoolbar.polylineMeasure"}}</a>
+            <a class='item' {{action "activateTool" "areameasuretool" target=toolbar}}><i class='star icon'></i>{{t "components.flexberry-maptoolbar.polygonMeasure"}}</a>
+          </div>
+        </div>
+      </div>
       {{#flexberry-toolbar-exportmenu map=leafletMap tagName='span'}}... {{/flexberry-toolbar-exportmenu}}
     {{/flexberry-maptoolbar}}
     {{#flexberry-map
@@ -29,8 +40,12 @@
       onMoveend=(action "updateCenter")
       leafletMapDidInit=(action "leafletMapDidInit") as |leafletMap|}}
       {{flexberry-layers leafletContainer=leafletMap layers=model.rootLayer.layers}}
+
       {{scale-control map=leafletMap imperial=false}}
     {{/flexberry-map}}
+
+
+
   </div>
   <div class="six wide column">
     {{flexberry-maplayers

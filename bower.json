@@ -12,6 +12,7 @@
     "semantic-ui": "^2.1.8",
     "leaflet": "^1.0.0-rc.3",
     "leaflet.editable": "Leaflet/Leaflet.Editable#master",
+    "leaflet.editable.measures": "Flexberry/Leaflet.Editable.Measures#gh-pages",
     "leaflet.export": "Flexberry/Leaflet.Export#master",
     "html2canvas": "niklasvh/html2canvas#master"
     }
