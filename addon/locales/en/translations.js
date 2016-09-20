@@ -184,6 +184,27 @@ export default {
         'meter':'&nbsp;m',
         'kilometer':'&nbsp;km',
       }
+    },
+    'flexberry-export': {
+      'export': 'Export',
+      'download': 'Export to image',
+      'print': 'Print',
+      'wrongBeginSelector': 'JQuery selector does not begin with an initial parenthesis (',
+      'wrongEndSelector': 'JQuery selector does not end parenthesis )',
+      'jqueryNotAvailable': 'In the options used JQuery selector, but JQuery is not included. Include JQuery or use  DOM-selectors: .class, #id or DOM-elements',
+      'popupWindowBlocked': 'Print window has been blocked by your browser. Please enable pop-up windows on this page',
+      'emptyFilename': 'No file name specified for downloading',
+      'downloadCaption': 'Set the export options in the image',
+      'printCaption': 'Set the options for printing',
+      'caption': 'Map title',
+      'nocaption': 'No title',
+      'font': 'Font',
+      'fillStyle': 'Color',
+      'except': 'Exclude',
+      'zoom': 'Zoom',
+      'attributes': 'Copyright',
+      'type': 'Type',
+      'fileName': 'File name'
     }
   }
 };

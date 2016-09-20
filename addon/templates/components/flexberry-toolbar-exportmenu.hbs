@@ -1,0 +1,63 @@
+<div class='ui compact menu toolbar-menu'>
+  <div class='ui simple dropdown item toolbar-dropdown'>
+  <i class='file image outline icon'></i>{{t "components.flexberry-export.export"}}
+    <div class='menu abovemap'>
+    <a class='item' {{action "configureExport" "downloadtool"}}><i class='download icon'></i>{{t "components.flexberry-export.download"}}</a>
+    <a class='item' {{action "configureExport" "printtool"}}><i class='print icon'></i>{{t "components.flexberry-export.print"}}</a>
+    </div>
+  </div>
+</div>
+{{#if _showExportDialog}}
+{{#flexberry-dialog caption=_header
+  visible=_showExportDialog
+  approve=(action "onApprove")
+}}
+<form class="ui {{_loading}}  form" role="form">
+  <div class='five fields'>
+    <div class='seven wide field' id='flexberry-toolbar-exportmenu-caption'>
+    <label>{{t "components.flexberry-export.caption"}}</label>
+      {{input type="text" placeholder=(t "components.flexberry-export.nocaption") class="fluid" value=_options.caption focus-out=(action "captionFocusOut") }}
+    </div>
+    <div class='field three wide disabled'>
+    <label>{{t "components.flexberry-export.font"}}&nbsp;</label>
+      {{flexberry-textbox class="fluid" value=_options.font}}
+    </div>
+    <div class='field three wide disabled'>
+      <label>{{t "components.flexberry-export.fillStyle"}}</label>
+      {{flexberry-textbox class="fluid" value=_options.fillStyle }}
+    </div>
+    <div class='field two wide disabled'>
+      <label>X</label>
+      {{flexberry-textbox class="fluid" value=_options.x }}
+    </div>
+    <div class='field  two wide disabled'>
+      <label>Y</label>
+      {{flexberry-textbox class="fluid" value=_options.y }}
+    </div>
+  </div>
+  <div class='field'>
+    <label>{{t "components.flexberry-export.except"}}</label>
+    <div class='ui checkbox'>
+      {{flexberry-checkbox label=(t "components.flexberry-export.zoom") value=_options.zoomChecked}}
+    </div>
+    <div class='ui checkbox'>
+      {{flexberry-checkbox label=(t "components.flexberry-export.attributes") value=_options.attributionChecked}}
+    </div>
+  </div>
+  {{#if _showDownloadOptions}}
+  <div class="field five wide">
+    <label>{{t "components.flexberry-export.type"}}</label>
+    {{flexberry-dropdown
+      class="fluid"
+      items=_availableImageTypes
+      value=_options.type
+    }}
+  </div>
+  <div class='seven wide field'>
+    <label>{{t "components.flexberry-export.fileName"}}</label>
+    {{flexberry-textbox class="fluid" value=_options.fileName}}
+  </div>
+  {{/if}}
+</form>
+{{/flexberry-dialog}}
+{{/if}}
