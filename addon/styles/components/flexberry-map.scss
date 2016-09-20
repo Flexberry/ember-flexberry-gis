@@ -1,0 +1,31 @@
+.flexberry-map {
+  font-family: inherit;
+  height: 500px;
+  width: 100%;
+
+  &.crosshair {
+    cursor: crosshair;
+  }
+
+  &.zoom-in {
+    cursor: zoom-in;
+  }
+
+  &.zoom-out {
+    cursor: zoom-out;
+  }
+
+  &.help {
+    cursor: help;
+  }
+}
+
+.flexberry-map .identify-popup .list .item {
+  cursor: pointer;
+}
+
+.flexberry-map .identify-popup .list .item.active {
+  background: #aecff7;
+  border: 1px solid gray;
+  border-radius: 2px;
+}

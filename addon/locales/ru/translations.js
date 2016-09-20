@@ -193,7 +193,29 @@ export default {
 
   'maptools': {
     'identify': {
-      'error-message': 'Идентификация по слою \'{{layerName}}\' завершилась ошибкой: '
+      'error-message': 'Идентификация по слою \'{{layerName}}\' завершилась ошибкой: ',
+      'identify-popup': {
+        'properties-table': {
+          'property-name-column': {
+            'caption': 'Имя свойства'
+          },
+          'property-value-column': {
+            'caption': 'Значение'
+          },
+          'layer-name-property': {
+            'caption': 'Название слоя'
+          },
+          'layers-count-property': {
+            'caption': 'Количество слоев'
+          },
+          'features-count-property': {
+            'caption': 'Количество объектов'
+          },
+          'error-property': {
+            'caption': 'Ошибка'
+          }
+        }
+      }
     }
   }
 };

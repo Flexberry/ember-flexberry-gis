@@ -194,6 +194,28 @@ export default {
   'maptools': {
     'identify': {
       'error-message': 'Identification by \'{{layerName}}\' layer finished with error',
+      'identify-popup': {
+        'properties-table': {
+          'property-name-column': {
+            'caption': 'Property name'
+          },
+          'property-value-column': {
+            'caption': 'Value'
+          },
+          'layer-name-property': {
+            'caption': 'Layer name'
+          },
+          'layers-count-property': {
+            'caption': 'Layers count'
+          },
+          'features-count-property': {
+            'caption': 'Features count'
+          },
+          'error-property': {
+            'caption': 'Error'
+          }
+        }
+      }
     }
   }
 };
