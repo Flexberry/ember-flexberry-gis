@@ -39,6 +39,15 @@ export default Ember.Object.extend({
   map: null,
 
   /**
+    Flag: indicates whether tool is multitool.
+
+    @property multitool
+    @type Boolean
+    @default false
+  */
+  multitool: false,
+
+  /**
     Enables tool.
 
     @method enable

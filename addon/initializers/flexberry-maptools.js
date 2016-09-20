@@ -1,5 +1,5 @@
 export function initialize( application ) {
-  application.registerOptionsForType('maptool', { singleton: false });
+  application.registerOptionsForType('maptool', { singleton: true });
 }
 
 export default {

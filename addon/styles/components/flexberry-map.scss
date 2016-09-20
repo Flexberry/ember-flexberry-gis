@@ -20,6 +20,11 @@
   }
 }
 
+.flexberry-map .identify-popup .left-segment,
+.flexberry-map .identify-popup .right-segment {
+  overflow: auto;
+}
+
 .flexberry-map .identify-popup .list .item {
   cursor: pointer;
 }
