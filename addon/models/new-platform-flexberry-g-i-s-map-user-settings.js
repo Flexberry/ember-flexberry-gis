@@ -1,7 +1,17 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import DS from 'ember-data';
 import BaseModel from 'ember-flexberry/models/base';
 import Proj from 'ember-flexberry-data';
 
+/**
+  Map user settings model.
+
+  @class NewPlatformFlexberryGISMapUserSettings
+  @extends BaseModel
+*/
 let Model = BaseModel.extend({
   center: DS.attr('string'),
   zoom: DS.attr('number'),

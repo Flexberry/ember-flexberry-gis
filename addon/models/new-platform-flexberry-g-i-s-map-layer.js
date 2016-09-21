@@ -1,9 +1,21 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 import DS from 'ember-data';
 import BaseModel from 'ember-flexberry/models/base';
 import Proj from 'ember-flexberry-data';
+import LeafletCrsMixin from '../mixins/leaflet-crs';
 
-let Model = BaseModel.extend({
+/**
+  Map layer model.
+
+  @class NewPlatformFlexberryGISMapLayer
+  @extends BaseModel
+  @uses LeafletCrsMixin
+*/
+let Model = BaseModel.extend(LeafletCrsMixin, {
   name: DS.attr('string'),
   type: DS.attr('string'),
   visibility: DS.attr('boolean'),
@@ -18,53 +30,6 @@ let Model = BaseModel.extend({
       return JSON.parse(stringToDeserialize);
     }
     return {};
-  }),
-
-  crs: Ember.computed('coordinateReferenceSystem', function () {
-    let coordinateReferenceSystem = this.get('coordinateReferenceSystem');
-    coordinateReferenceSystem = Ember.isBlank(coordinateReferenceSystem) ? null : JSON.parse(coordinateReferenceSystem);
-
-    if (Ember.isNone(coordinateReferenceSystem)) {
-      return null;
-    }
-
-    let code = Ember.get(coordinateReferenceSystem, 'code');
-    let definition = Ember.get(coordinateReferenceSystem, 'definition');
-    if (Ember.isBlank(code) && Ember.isBlank(definition)) {
-      return null;
-    }
-
-    let crs = null;
-    let owner = Ember.getOwner(this);
-    if (Ember.isBlank(definition)) {
-      // Only code is defined.
-      // Try to find existing CRS with the same code.
-      let availableCrsCodes =Ember.A();
-      let crsFactories = owner.knownForType('coordinate-reference-system');
-      owner.knownNamesForType('coordinate-reference-system').forEach((crsName) => { 
-        let crsFactory = Ember.get(crsFactories, crsName);
-        let crsFactoryCode = Ember.get(crsFactory, 'code');
-        availableCrsCodes.pushObject(crsFactoryCode);
-
-        // CRS code is the same.
-        // Create CRS from factory, remember it & break loop.
-        if (crsFactoryCode === code) {
-          crs = crsFactory.create(code, definition);
-          return false;
-        }
-      });
-
-      Ember.assert(
-        `Wrong value of \`coordinateReferenceSystem.code\` parameter: \`${code}\`. ` +
-        `Allowed values are: [\`${availableCrsCodes.join(`\`, \``)}\`].`,
-        !Ember.isNone(crs));
-    } else {
-      // CRS has definition.
-      // Try to create CRS from proj4.
-      crs = owner.knownForType('coordinate-reference-system', 'proj4').create(code, definition);
-    }
-
-    return crs;
   }),
 
   layers: null
