@@ -34,5 +34,12 @@ module.exports = {
     // Leaflet.Export
     app.import(app.bowerDirectory + '/html2canvas/dist/html2canvas.js');
     app.import(app.bowerDirectory + '/leaflet.export/leaflet_export.js');
+
+    // Proj4Leaflet.
+    app.import(app.bowerDirectory + '/Proj4Leaflet/lib/proj4.js');
+    app.import(app.bowerDirectory + '/Proj4Leaflet/src/proj4leaflet.js');
+
+    // Leaflet-WFST.
+    app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
   }
 };

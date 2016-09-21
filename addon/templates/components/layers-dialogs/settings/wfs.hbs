@@ -1,0 +1,113 @@
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.format-dropdown.caption"}}
+  </label>
+  {{flexberry-dropdown
+    class="fluid"
+    items=_availableFormats
+    value=settings.format
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.url-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.url
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.version-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.version
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.namespace-uri-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.namespaceUri
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.type-ns-name-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.typeNSName
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.type-ns-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.typeNS
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.type-name-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.typeName
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.geometry-field-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.geometryField
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.max-features-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.maxFeatures
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.show-existing-checkbox.caption"}}
+  </label>
+  {{flexberry-checkbox
+    value=settings.showExisting
+  }}
+</div>
+<div class="ui segment">
+  <h5 class="ui header">
+    {{t "components.layers-dialogs.settings.wfs.style.caption"}}
+  </h5>
+  <div class="field">
+    <label>
+      {{t "components.layers-dialogs.settings.wfs.style.color-textbox.caption"}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=settings.style.color
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{t "components.layers-dialogs.settings.wfs.style.weight-textbox.caption"}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=settings.style.weight
+    }}
+  </div>
+</div>

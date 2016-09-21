@@ -74,8 +74,14 @@ export default {
         'name-textbox': {
           'caption': 'Layer name'
         },
-        'crs-textarea': {
-          'caption': 'Layer coordinate reference system (CRS)'
+        'crs': {
+          'caption': 'Layer coordinate reference system (CRS)',
+          'code-textbox': {
+            'caption': 'Code'
+          },
+          'definition-textare': {
+            'caption': 'Definition'
+          }
         }
       },
 
@@ -109,6 +115,9 @@ export default {
         },
 
         'wms': {
+          'info-format-dropdown': {
+            'caption': 'GetFeatureInfo-responses format'
+          },
           'url-textbox': {
             'caption': 'Url'
           },
@@ -123,6 +132,48 @@ export default {
           },
           'transparent-checkbox': {
             'caption': 'Allow images transparency'
+          }
+        },
+
+        'wfs': {
+          'format-dropdown': {
+            'caption': 'Format'
+          },
+          'url-textbox': {
+            'caption': 'Url'
+          },
+          'version-textbox': {
+            'caption': 'WFS version'
+          },
+          'namespace-uri-textbox': {
+            'caption': 'Namespace URI'
+          },
+          'type-ns-name-textbox': {
+            'caption': 'Type namespace name'
+          },
+          'type-ns-textbox': {
+            'caption': 'Type namespace'
+          },
+          'type-name-textbox': {
+            'caption': 'Type name'
+          },
+          'geometry-field-textbox': {
+            'caption': 'Geometry field'
+          },
+          'max-features-textbox': {
+            'caption': 'Max features'
+          },
+          'show-existing-checkbox': {
+            'caption': 'Show existing'
+          },
+          'style': {
+            'caption': 'Style',
+            'color-textbox': {
+              'caption': 'Color'
+            },
+            'weight-textbox': {
+              'caption': 'Weight'
+            }
           }
         }
       }
@@ -205,6 +256,46 @@ export default {
       'attributes': 'Copyright',
       'type': 'Type',
       'fileName': 'File name'
+    }
+  },
+
+  'maptools': {
+    'identify': {
+      'caption': 'Identify',
+      'modes': {
+        'all' : {
+          'caption': 'All layers'
+        },
+        'all-visible': {
+          'caption': 'All visible layers'
+        },
+        'top-visible': {
+          'caption': 'Top visible layer' 
+        }
+      },
+      'error-message': 'Identification by \'{{layerName}}\' layer finished with error',
+      'identify-popup': {
+        'properties-table': {
+          'property-name-column': {
+            'caption': 'Property name'
+          },
+          'property-value-column': {
+            'caption': 'Value'
+          },
+          'layer-name-property': {
+            'caption': 'Layer name'
+          },
+          'layers-count-property': {
+            'caption': 'Layers count'
+          },
+          'features-count-property': {
+            'caption': 'Features count'
+          },
+          'error-property': {
+            'caption': 'Error'
+          }
+        }
+      }
     }
   }
 };

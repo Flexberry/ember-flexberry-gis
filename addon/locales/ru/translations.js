@@ -74,8 +74,14 @@ export default {
         'name-textbox': {
           'caption': 'Имя слоя'
         },
-        'crs-textarea': {
-          'caption': 'Система координат слоя (CRS)'
+        'crs': {
+          'caption': 'Система координат слоя (CRS)',
+          'code-textbox': {
+            'caption': 'Код'
+          },
+          'definition-textarea': {
+            'caption': 'Определение'
+          }
         }
       },
 
@@ -109,6 +115,9 @@ export default {
         },
 
         'wms': {
+          'info-format-dropdown': {
+            'caption': 'Формат ответов GetFeatureInfo'
+          },
           'url-textbox': {
             'caption': 'Url'
           },
@@ -123,6 +132,48 @@ export default {
           },
           'transparent-checkbox': {
             'caption': 'Разрешить прозрачность на изображениях'
+          }
+        },
+
+        'wfs': {
+          'format-dropdown': {
+            'caption': 'Формат'
+          },
+          'url-textbox': {
+            'caption': 'Url'
+          },
+          'version-textbox': {
+            'caption': 'Версия WFS'
+          },
+          'namespace-uri-textbox': {
+            'caption': 'URI пространства имен'
+          },
+          'type-ns-name-textbox': {
+            'caption': 'Имя пространства имен типа'
+          },
+          'type-ns-textbox': {
+            'caption': 'Пространство имен типа'
+          },
+          'type-name-textbox': {
+            'caption': 'Имя типа'
+          },
+          'geometry-field-textbox': {
+            'caption': 'Поле геометрии'
+          },
+          'max-features-textbox': {
+            'caption': 'Максимальное количество объектов'
+          },
+          'show-existing-checkbox': {
+            'caption': 'Отображать существующие объекты'
+          },
+          'style': {
+            'caption': 'Стиль отображения',
+            'color-textbox': {
+              'caption': 'Цвет заливки'
+            },
+            'weight-textbox': {
+              'caption': 'Толщина обводки'
+            }
           }
         }
       }
@@ -186,9 +237,9 @@ export default {
       }
     },
     'flexberry-export': {
-      'export': 'Экспорт',
-      'download': 'Экспорт в изображение',
-      'print': 'Печать',
+      'export': 'Экспортировать',
+      'download': 'Экспортировать в изображение',
+      'print': 'Напечатать',
       'wrongBeginSelector': 'Селектор JQuery нечинается не с начальной круглой скобки (',
       'wrongEndSelector': 'Селектор JQuery не заканчивается круглой скобкой )',
       'jqueryNotAvailable': 'В опциях используется JQuery селектор, но JQuery не подключен.Подключите JQuery или используйте DOM-селекторы: .class, #id или DOM-элементы',
@@ -205,6 +256,46 @@ export default {
       'attributes': 'Копирайт',
       'type': 'Тип',
       'fileName': 'Имя файла'
+    }
+  },
+
+  'maptools': {
+    'identify': {
+      'caption': 'Идентифицировать',
+      'modes': {
+        'all' : {
+          'caption': 'Все слои'
+        },
+        'all-visible': {
+          'caption': 'Все видимые слои'
+        },
+        'top-visible': {
+          'caption': 'Верхний видимый слой' 
+        }
+      },
+      'error-message': 'Идентификация по слою \'{{layerName}}\' завершилась ошибкой: ',
+      'identify-popup': {
+        'properties-table': {
+          'property-name-column': {
+            'caption': 'Имя свойства'
+          },
+          'property-value-column': {
+            'caption': 'Значение'
+          },
+          'layer-name-property': {
+            'caption': 'Название слоя'
+          },
+          'layers-count-property': {
+            'caption': 'Количество слоев'
+          },
+          'features-count-property': {
+            'caption': 'Количество объектов'
+          },
+          'error-property': {
+            'caption': 'Ошибка'
+          }
+        }
+      }
     }
   }
 };

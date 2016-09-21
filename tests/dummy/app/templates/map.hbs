@@ -1,86 +1,165 @@
-<div class="ui grid">
-  <div class="ten wide column">
-    {{#flexberry-maptoolbar leafletMap=leafletMap as |toolbar|}}
-      <div class="ui icon buttons">
-        <button class="ui icon button" {{action "activateTool" "dragging" target=toolbar}}>
-          <i class="hand paper icon"></i>
-        </button>
-        <button class="ui icon button" {{action "activateTool" "zoom" target=toolbar}}>
-          <i class="zoom icon"></i>
-        </button>
-        <button class="ui icon button" {{action "activateTool" "zoomout" target=toolbar}}>
-          <i class="zoom out icon"></i>
-        </button>
-        <button class="ui icon button" {{action "callCommand" "fullextent" target=toolbar}}>
-          <i class="maximize icon"></i>
-        </button>
-      </div>
-      <div class="ui icon buttons">
-        <button class="ui icon button" {{action "activateTool" "identify" target=toolbar}}>
-          <i class="info circle icon"></i>
-        </button>
-      </div>
-      <div class='ui compact menu toolbar-menu'>
-        <div class='ui simple dropdown item toolbar-dropdown'>
-          <i class='wizard icon'></i>{{t "components.flexberry-maptoolbar.measureCaption"}}
-          <div class='menu abovemap'>
-            <a class='item' {{action "activateTool" "coordinatemeasuretool" target=toolbar}}><i class='marker icon'></i>{{t "components.flexberry-maptoolbar.mearkerMeasure"}}</a>
-            <a class='item' {{action "activateTool" "radiusmeasuretool" target=toolbar}}><i class='circle icon'></i>{{t "components.flexberry-maptoolbar.circleMeasure"}}</a>
-            <a class='item' {{action "activateTool" "distancemeasuretool" target=toolbar}}><i class='empty star icon'></i>{{t "components.flexberry-maptoolbar.polylineMeasure"}}</a>
-            <a class='item' {{action "activateTool" "areameasuretool" target=toolbar}}><i class='star icon'></i>{{t "components.flexberry-maptoolbar.polygonMeasure"}}</a>
+<h3 class="ui header">{{t "forms.map.caption"}}</h3>
+<form class="ui {{formState}} form flexberry-vertical-form" role="form">
+  {{ui-message
+    type="success"
+    closeable=true
+    visible=showFormSuccessMessage
+    caption=formSuccessMessageCaption
+    message=formSuccessMessage
+    onShow=(action "onSuccessMessageShow")
+    onHide=(action "onSuccessMessageHide")
+  }}
+  {{ui-message
+    type="error"
+    closeable=true
+    visible=showFormErrorMessage
+    caption=formErrorMessageCaption
+    message=formErrorMessage
+    onShow=(action "onErrorMessageShow")
+    onHide=(action "onErrorMessageHide")
+  }}
+  <div class="field">
+    <div class="flexberry-edit-panel">
+      {{#unless readonly}}
+        {{#unless (and hasParentRoute (not saveBeforeRouteLeave))}}
+          <button type="submit" class="ui positive button" {{action "save"}}>
+            {{t "forms.edit-form.save-button-text"}}
+          </button>
+        {{/unless}}
+        {{#unless (and hasParentRoute (not saveBeforeRouteLeave))}}
+          <button type="submit" class="ui positive button" {{action "saveAndClose"}}>
+            {{t "forms.edit-form.saveAndClose-button-text"}}
+          </button>
+        {{/unless}}
+        {{#unless (and model.isNew (or (not hasParentRoute) (and hasParentRoute saveBeforeRouteLeave)))}}
+          <button type="submit" class="ui negative button" {{action "delete"}}>
+            {{t "forms.edit-form.delete-button-text"}}
+          </button>
+        {{/unless}}
+      {{/unless}}
+      <button type="submit" class="ui button" {{action "close"}}>{{t "forms.edit-form.close-button-text"}}</button>
+    </div>
+  </div>
+  <div class="ui inernally celled grid">
+    <div class="row">
+      <div class="sixteen wide column">
+        {{#flexberry-maptoolbar leafletMap=leafletMap as |toolbar|}}
+          <div class="ui large icon buttons">
+            <button class="ui icon button" {{action "activateTool" "drag" target=toolbar}}>
+              <i class="hand paper icon"></i>
+            </button>
+            <button class="ui icon button" {{action "activateTool" "zoom-in" target=toolbar}}>
+              <i class="zoom icon"></i>
+            </button>
+            <button class="ui icon button" {{action "activateTool" "zoom-out" target=toolbar}}>
+              <i class="zoom out icon"></i>
+            </button>
+            <button class="ui icon button" {{action "callCommand" "fullextent" target=toolbar}}>
+              <i class="maximize icon"></i>
+            </button>
           </div>
-        </div>
+          <div class="ui compact menu toolbar-menu">
+            <div class="ui simple dropdown item toolbar-dropdown">
+              <i class="circle info icon"></i>{{t "maptools.identify.caption"}}
+              <i class="dropdown icon"></i>
+              <div class="menu abovemap">
+                <a class="item" {{action "activateTool" "identify-all" model.rootLayer.layers target=toolbar}}>
+                  <i class="marker icon"></i>
+                  {{t "maptools.identify.modes.all.caption"}}
+                </a>
+                <a class="item" {{action "activateTool" "identify-all-visible" model.rootLayer.layers target=toolbar}}>
+                  <i class="circle icon"></i>
+                  {{t "maptools.identify.modes.all-visible.caption"}}
+                </a>
+                <a class="item" {{action "activateTool" "identify-top-visible" model.rootLayer.layers target=toolbar}}>
+                  <i class="square icon"></i>
+                  {{t "maptools.identify.modes.top-visible.caption"}}
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="ui compact menu toolbar-menu">
+            <div class="ui simple dropdown item toolbar-dropdown">
+              <i class="wizard icon"></i>{{t "components.flexberry-maptoolbar.measureCaption"}}
+              <i class="dropdown icon"></i>
+              <div class="menu abovemap">
+                <a class="item" {{action "activateTool" "measure-coordinates" target=toolbar}}>
+                  <i class="marker icon"></i>
+                  {{t "components.flexberry-maptoolbar.mearkerMeasure"}}
+                </a>
+                <a class="item" {{action "activateTool" "measure-radius" target=toolbar}}>
+                  <i class="circle icon"></i>
+                  {{t "components.flexberry-maptoolbar.circleMeasure"}}
+                </a>
+                <a class="item" {{action "activateTool" "measure-distance" target=toolbar}}>
+                  <i class="empty star icon"></i>
+                  {{t "components.flexberry-maptoolbar.polylineMeasure"}}
+                </a>
+                <a class="item" {{action "activateTool" "measure-area" target=toolbar}}>
+                  <i class="star icon"></i>
+                  {{t "components.flexberry-maptoolbar.polygonMeasure"}}
+                </a>
+              </div>
+            </div>
+          </div>
+          {{#flexberry-toolbar-exportmenu map=leafletMap tagName='span'}}... {{/flexberry-toolbar-exportmenu}}
+        {{/flexberry-maptoolbar}}
       </div>
-      {{#flexberry-toolbar-exportmenu map=leafletMap tagName='span'}}... {{/flexberry-toolbar-exportmenu}}
-    {{/flexberry-maptoolbar}}
-    {{#flexberry-map
-      lat=model.lat
-      lng=model.lng
-      zoom=model.zoom
-      onMoveend=(action "updateCenter")
-      leafletMapDidInit=(action "leafletMapDidInit") as |leafletMap|}}
-      {{flexberry-layers leafletContainer=leafletMap layers=model.rootLayer.layers}}
-
-      {{scale-control map=leafletMap imperial=false}}
-    {{/flexberry-map}}
-
-
-
+    </div>
+    <div class="row">
+      <div class="ten wide column">
+        {{#flexberry-map
+          lat=model.lat
+          lng=model.lng
+          zoom=model.zoom
+          leafletInit=(action "onMapLeafletInit" "leafletMap")
+          leafletDestroy=(action "onMapLeafletDestroy" "leafletMap")
+          moveend=(action "onMapMoveend" "model.lat" "model.lng")
+          zoomend=(action "onMapZoomend" "model.zoom")
+        }}
+          {{flexberry-layers
+            leafletMap=leafletMap
+            leafletContainer=leafletMap
+            layers=model.rootLayer.layers
+          }}
+          {{scale-control
+            map=leafletMap
+            imperial=false
+          }}
+        {{/flexberry-map}}
+      </div>
+      <div class="six wide column">
+        {{flexberry-maplayers
+          class="styled"
+          layers=(get-with-dynamic-actions this "model.rootLayer.layers"
+            hierarchyPropertyName="layers"
+            pathKeyword="layerPath"
+            dynamicActions=(array
+              (hash
+                on="add"
+                actionName="onMapLayerAdd"
+                actionArguments=(array "{% layerPath %}")
+              )
+              (hash
+                on="edit"
+                actionName="onMapLayerEdit"
+                actionArguments=(array "{% layerPath %}")
+              )
+              (hash
+                on="remove"
+                actionName="onMapLayerRemove"
+                actionArguments=(array "{% layerPath %}")
+              )
+              (hash
+                on="changeVisibility"
+                actionName="onMapLayerChangeVisibility"
+                actionArguments=(array "{% layerPath %}.visibility")
+              )
+            )
+          )
+          add=(action "onMapLayerAdd" "model.rootLayer")
+        }}
+      </div>
+    </div>
   </div>
-  <div class="six wide column">
-    {{flexberry-maplayers
-      class="styled"
-      layers=(get-with-dynamic-actions this "model.rootLayer.layers"
-        hierarchyPropertyName="layers"
-        pathKeyword="layerPath"
-        dynamicActions=(array
-          (hash
-            on="add"
-            actionName="onMapLayerAdd"
-            actionArguments=(array "{% layerPath %}")
-          )
-          (hash
-            on="edit"
-            actionName="onMapLayerEdit"
-            actionArguments=(array "{% layerPath %}")
-          )
-          (hash
-            on="remove"
-            actionName="onMapLayerRemove"
-            actionArguments=(array "{% layerPath %}")
-          )
-          (hash
-            on="changeVisibility"
-            actionName="onMapLayerChangeVisibility"
-            actionArguments=(array "{% layerPath %}.visibility")
-          )
-        )
-      )
-      add=(action "onMapLayerAdd" "model.rootLayer")
-    }}
-    <br>
-    lat: {{flexberry-field value=model.lat}}
-    lng: {{flexberry-field value=model.lng}}
-    zoom: {{flexberry-field value=model.zoom}}
-  </div>
-</div>
+</form>

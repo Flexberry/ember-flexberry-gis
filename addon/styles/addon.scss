@@ -1,42 +1,32 @@
 @import './components/flexberry-tree';
+@import './components/flexberry-map';
 
-.leaflet-container {
-    font-family: inherit;
-    height: 700px;
-    width: 100%;
-
-    &.crosshair {
-      cursor: crosshair;
-    }
-
-    &.zoom-in {
-      cursor: zoom-in;
-    }
-
-    &.help {
-      cursor: help;
-    }
+/**
+  Increased 'loading' form z-index to hide leaflet map placed on form.
+*/
+.ui.loading.form:before {
+  z-index: 1000000 !important;
 }
 
-.leaflet-container {
-  font-family: inherit;
-  height: 700px;
-  width: 100%;
+/**
+  Increased 'loading' form spinner z-index to make it visible above leaflet map & form.
+*/
+.ui.loading.form:after {
+  z-index: 1000001 !important;
 }
 
 .toolbar-menu {
-  border-width:0px;
-  border-image-width:0px;
-  box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 1px inset;
-  hight:36px;
 }
 
 .toolbar-dropdown {
-  background-color:rgb(224, 225, 226) !important;
-  color: rgba(0, 0, 0, 0.6);
-  font-weight: bold;
-  padding:8px;
-  height:36px
+  background-color: #e0e1e1 !important;
+  color: #5b5b5b !important;
+  font-weight: bold !important;
+}
+
+.toolbar-dropdown:hover {
+  background-color: #cacbcd !important;
+  color: #000000 !important;
 }
 
 .abovemap {
