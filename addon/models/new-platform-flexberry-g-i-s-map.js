@@ -1,8 +1,20 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import DS from 'ember-data';
 import BaseModel from 'ember-flexberry/models/base';
 import Proj from 'ember-flexberry-data';
+import LeafletCrsMixin from '../mixins/leaflet-crs';
 
-let Model = BaseModel.extend({
+/**
+  Map model.
+
+  @class NewPlatformFlexberryGISMap
+  @extends BaseModel
+  @uses LeafletCrsMixin
+*/
+let Model = BaseModel.extend(LeafletCrsMixin, {
   name: DS.attr('string'),
   lat: DS.attr('number'),
   lng: DS.attr('number'),

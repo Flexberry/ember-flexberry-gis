@@ -1,8 +1,18 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 import DS from 'ember-data';
 import BaseModel from 'ember-flexberry/models/base';
 import Proj from 'ember-flexberry-data';
 
+/**
+  Map layer metadata model.
+
+  @class NewPlatformFlexberryGISLayerMetadata
+  @extends BaseModel
+*/
 let Model = BaseModel.extend({
   name: DS.attr('string'),
   type: DS.attr('string'),
@@ -30,4 +40,5 @@ Model.defineProjection('LayerMetadataL', 'new-platform-flexberry-g-i-s-layer-met
   type: Proj.attr('Type'),
   coordinateReferenceSystem: Proj.attr('CRS')
 });
+
 export default Model;
