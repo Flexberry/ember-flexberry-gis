@@ -6,7 +6,8 @@ import Ember from 'ember';
 import TileLayer from './tile-layer';
 
 /**
-  WMSLayerComponent for leaflet map.
+  WMS layer component for leaflet map.
+
   @class WMSLayerComponent
   @extend TileLayerComponent
  */

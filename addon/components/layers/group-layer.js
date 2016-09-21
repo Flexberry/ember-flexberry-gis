@@ -6,7 +6,8 @@ import BaseLayer from '../base-layer';
 import layout from '../../templates/components/layers/group-layer';
 
 /**
-  GroupLayerComponent for leaflet map.
+  Group layer component for leaflet map.
+
   @class GroupLayerComponent
   @extend BaseLayerComponent
 */

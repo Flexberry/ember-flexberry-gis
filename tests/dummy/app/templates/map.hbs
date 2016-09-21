@@ -64,15 +64,18 @@
               <i class="dropdown icon"></i>
               <div class="menu abovemap">
                 <a class="item" {{action "activateTool" "identify-all" model.rootLayer.layers target=toolbar}}>
-                  <i class="marker icon"></i>
+                  <i class="square outline icon"></i>
+                  <i class="checkmark box icon"></i>
                   {{t "maptools.identify.modes.all.caption"}}
                 </a>
                 <a class="item" {{action "activateTool" "identify-all-visible" model.rootLayer.layers target=toolbar}}>
-                  <i class="circle icon"></i>
+                  <i class="checkmark box icon"></i>
+                  <i class="checkmark box icon"></i>
                   {{t "maptools.identify.modes.all-visible.caption"}}
                 </a>
                 <a class="item" {{action "activateTool" "identify-top-visible" model.rootLayer.layers target=toolbar}}>
-                  <i class="square icon"></i>
+                  <i class="chevron up icon"></i>
+                  <i class="checkmark box icon"></i>
                   {{t "maptools.identify.modes.top-visible.caption"}}
                 </a>
               </div>
