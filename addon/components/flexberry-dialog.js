@@ -236,7 +236,10 @@ let FlexberryDialogComponent = Ember.Component.extend(
         return this.sendAction('hide');
       },
       onApprove: () => {
-        return this.sendAction('approve');
+        let dialog = this.get('_dialog');
+        let attrs = { closeDialog: true, dialog: dialog};
+        this.sendAction('approve', attrs);
+        return attrs.closeDialog;
       },
       onDeny: () => {
         return this.send('deny');

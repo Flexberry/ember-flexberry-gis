@@ -24,5 +24,22 @@ module.exports = {
 
     // Leaflet.Editable
     app.import(app.bowerDirectory + '/leaflet.editable/src/Leaflet.Editable.js');
+
+    // Leaflet.Editable.Measure
+    app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_measure.js');
+    app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_measure.css');
+    app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_basemeasure.js');
+    app.import(app.bowerDirectory + '/leaflet.editable.measures/images/popupMarker.png', { destDir: appImagesDirectory });
+
+    // Leaflet.Export
+    app.import(app.bowerDirectory + '/html2canvas/dist/html2canvas.js');
+    app.import(app.bowerDirectory + '/leaflet.export/leaflet_export.js');
+
+    // Proj4Leaflet.
+    app.import(app.bowerDirectory + '/Proj4Leaflet/lib/proj4.js');
+    app.import(app.bowerDirectory + '/Proj4Leaflet/src/proj4leaflet.js');
+
+    // Leaflet-WFST.
+    app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
   }
 };

@@ -12,7 +12,6 @@ import DynamicActionsMixin from '../mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 
 import layout from '../templates/components/flexberry-maplayer';
-import { availableLayerTypes, isAvailableLayerType } from '../utils/layers';
 
 /**
   Component's CSS-classes names.
@@ -172,6 +171,18 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
   }),
 
   /**
+    Layer class factory related to current layer type.
+
+    @property _layerClassFactory
+    @type Object
+    @readOnly
+    @private
+  */
+  _layerClassFactory: Ember.computed('type', function() {
+    return Ember.getOwner(this).knownForType('layer', this.get('type'));
+  }),
+
+  /**
     CSS-class name for layer type related icon.
 
     @property _typeIconClass
@@ -179,30 +190,24 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     @readOnly
     @private
   */
-  _typeIconClass: Ember.computed('type', function() {
-    let type = this.get('type');
-    Ember.assert(
-      `Wrong value of \`flexberry-maplayer\` \`type\` property: \`${type}\`. ` +
-      `Allowed values are: [\`${availableLayerTypes().join(`\`, \``)}\`].`,
-      isAvailableLayerType(type));
+  _typeIconClass: Ember.computed('_layerClassFactory', function() {
+    let layerClassFactory = this.get('_layerClassFactory');
 
-    let layer = Ember.getOwner(this)._lookupFactory(`layer:${type}`);
-    return Ember.get(layer, 'iconClass');
+    return Ember.get(layerClassFactory, 'iconClass');
   }),
 
   /**
     Flag: indicates whether add operation is allowed for layer.
 
-    @property _isAddOperationIsPermitted
+    @property _addOperationIsAvailable
     @type boolean
     @readOnly
     @private
   */
-  _isAddOperationIsPermitted: Ember.computed('type', function() {
-    let layerType = this.get('type');
-    let layerTypeMetadata = Ember.getOwner(this)._lookupFactory(`layer:${layerType}`);
+  _addOperationIsAvailable: Ember.computed('_layerClassFactory', function() {
+    let layerClassFactory = this.get('_layerClassFactory');
 
-    return Ember.A(Ember.get(layerTypeMetadata, 'operations') || []).contains('add');
+    return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('add');
   }),
 
   /**

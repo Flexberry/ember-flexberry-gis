@@ -6,9 +6,9 @@ import Ember from 'ember';
 import layout from '../../../templates/components/layers-dialogs/settings/group';
 
 /**
-  Flexberry remove layer modal dialog with [Semantic UI modal](http://semantic-ui.com/modules/modal.html) style.
+  Settings-part of Group layer modal dialog.
 
-  @class FlexberryGroupLayerSettingsComponent
+  @class GroupLayerSettingsComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 export default Ember.Component.extend({

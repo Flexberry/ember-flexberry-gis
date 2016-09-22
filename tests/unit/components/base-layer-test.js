@@ -28,29 +28,29 @@ test('it should call layer.setZIndex on setZIndex', function (assert) {
   assert.ok(setZIndex.called);
 });
 
-test('should throw exception if toggleVisible without container', function (assert) {
+test('should throw exception if visibilityDidChange without container', function (assert) {
   let component = this.subject({
     createLayer
   });
 
   assert.throws(() => {
-    component.toggleVisible();
+    component.visibilityDidChange();
   });
 });
 
-test('should call toggleVisible and setZIndex on render', function(assert) {
-  let toggleVisible = sinon.spy();
+test('should call visibilityDidChange and setZIndex on render', function(assert) {
+  let visibilityDidChange = sinon.spy();
   let setZIndex = sinon.spy();
 
   this.subject({
     createLayer,
-    toggleVisible,
+    visibilityDidChange,
     setZIndex
   });
 
   this.render();
 
-  assert.ok(toggleVisible.called, 'should call toggleVisible');
+  assert.ok(visibilityDidChange.called, 'should call visibilityDidChange');
   assert.ok(setZIndex.called, 'should call setZIndex');
 });
 

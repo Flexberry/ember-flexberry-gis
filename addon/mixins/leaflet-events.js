@@ -1,6 +1,6 @@
 /**
   @module ember-flexberry-gis
- */
+*/
 
 
 import Ember from 'ember';
@@ -38,7 +38,7 @@ export default Ember.Mixin.create({
   usedLeafletEvents: computed('leafletEvents', function () {
     return (this.get('leafletEvents') || []).filter(eventName => {
       let methodName = '_' + eventName;
-      let actionName = 'on' + Ember.String.classify(eventName);
+      let actionName = eventName;
       return this.get(methodName) !== undefined || this.get(actionName) !== undefined;
     });
   }),
@@ -51,7 +51,7 @@ export default Ember.Mixin.create({
     let eventHandlers = {};
     this.get('usedLeafletEvents').forEach(eventName => {
 
-      let actionName = 'on' + Ember.String.classify(eventName);
+      let actionName = eventName;
       let methodName = '_' + eventName;
       // create an event handler that runs the function inside an event loop.
       eventHandlers[eventName] = function (e) {
@@ -90,5 +90,4 @@ export default Ember.Mixin.create({
     this._super(...arguments);
     this._removeEventListeners();
   }
-
 });
