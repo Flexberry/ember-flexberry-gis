@@ -39,9 +39,9 @@ export default Ember.Mixin.create({
     if (Ember.isBlank(definition)) {
       // Only code is defined.
       // Try to find existing CRS with the same code.
-      let availableCrsCodes =Ember.A();
+      let availableCrsCodes = Ember.A();
       let crsFactories = owner.knownForType('coordinate-reference-system');
-      owner.knownNamesForType('coordinate-reference-system').forEach((crsName) => { 
+      owner.knownNamesForType('coordinate-reference-system').forEach((crsName) => {
         let crsFactory = Ember.get(crsFactories, crsName);
         let crsFactoryCode = Ember.get(crsFactory, 'code');
         availableCrsCodes.pushObject(crsFactoryCode);

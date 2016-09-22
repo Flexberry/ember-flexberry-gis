@@ -1,4 +1,15 @@
+/**
+  @module ember-flexberry-gis-dummy
+*/
+
 import Ember from 'ember';
 import ModalApplicationRouteMixin from 'ember-flexberry/mixins/modal-application-route';
 
-export default Ember.Route.extend(ModalApplicationRouteMixin, {});
+/**
+  Application route.
+
+  @class ApplicationRoute
+  @extends ApplicationRoute
+*/
+export default Ember.Route.extend(ModalApplicationRouteMixin, {
+});

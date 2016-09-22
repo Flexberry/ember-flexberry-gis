@@ -1,41 +1,15 @@
+import NewPlatformFlexberryGISMapModel from './models/new-platform-flexberry-g-i-s-map';
+import NewPlatformFlexberryGISMapLayerModel from './models/new-platform-flexberry-g-i-s-map-layer';
+import NewPlatformFlexberryGISLayerMetadataModel from './models/new-platform-flexberry-g-i-s-layer-metadata';
+
 export default {
+  'models': {
+    'new-platform-flexberry-g-i-s-map': NewPlatformFlexberryGISMapModel,
+    'new-platform-flexberry-g-i-s-map-layer': NewPlatformFlexberryGISMapLayerModel,
+    'new-platform-flexberry-g-i-s-layer-metadata': NewPlatformFlexberryGISLayerMetadataModel
+  },
+
   'forms': {
-    'new-platform-flexberry-g-i-s-map-layer-tile': {
-      'url': 'Url',
-      'minZoom': 'Минимальное увеличение',
-      'maxZoom': 'Максимальное увеличение',
-      'maxNativeZoom': 'Max native zoom',
-      'tileSize': 'Размер тайла',
-      'subdomains': 'Поддомены',
-      'errorTileUrl': 'Url тайла с ошибкой',
-      'attribution': 'Атрибуция',
-      'tms': 'Tms',
-      'continuousWorld': 'Continuous world',
-      'noWrap': 'No wrap',
-      'zoomOffset': 'Смещение увеличения',
-      'zoomReverse': 'Реверсирование увеличения',
-      'opacity': 'Замутнение',
-      'zIndex': 'ZIndex',
-      'unloadInvisibleTiles': 'Выгрузка невидимых тайлов',
-      'updateWhenIdle': 'Обновление при простое',
-      'detectRetina': 'Detect retina',
-      'reuseTiles': 'Переиспользование тайлов',
-      'bounds': 'Границы'
-    },
-
-    'new-platform-flexberry-g-i-s-map-layer-wms': {
-      'url': 'Url',
-      'layers': 'Слои',
-      'styles': 'Стили',
-      'format': 'Формат',
-      'transparent': 'Прозрачность',
-      'version': 'Версия',
-      'crs': 'Crs'
-    },
-
-    'new-platform-flexberry-g-i-s-map-layer-unknown': {
-      'unknown-layer': 'Неизвестный тип слоя'
-    }
   },
 
   'components': {
@@ -232,8 +206,8 @@ export default {
         'incLabelPostfix': '</i>'
       },
       'distanceMeasureUnit': {
-        'meter':'&nbsp;м',
-        'kilometer':'&nbsp;км',
+        'meter': '&nbsp;м',
+        'kilometer': '&nbsp;км',
       }
     },
     'flexberry-export': {
@@ -242,7 +216,8 @@ export default {
       'print': 'Напечатать',
       'wrongBeginSelector': 'Селектор JQuery нечинается не с начальной круглой скобки (',
       'wrongEndSelector': 'Селектор JQuery не заканчивается круглой скобкой )',
-      'jqueryNotAvailable': 'В опциях используется JQuery селектор, но JQuery не подключен.Подключите JQuery или используйте DOM-селекторы: .class, #id или DOM-элементы',
+      'jqueryNotAvailable': 'В опциях используется JQuery селектор, но JQuery не подключен. ' +
+        'Подключите JQuery или используйте DOM-селекторы: .class, #id или DOM-элементы',
       'popupWindowBlocked': 'Окно печати было заблокировано браузером. Пожалуйста разрешите всплывающие окна на этой странице',
       'emptyFilename': 'Не указано имя файла для выгрузки',
       'downloadCaption': 'Задайте параметры экcпорта в изображение',
@@ -263,14 +238,14 @@ export default {
     'identify': {
       'caption': 'Идентифицировать',
       'modes': {
-        'all' : {
+        'all': {
           'caption': 'Все слои'
         },
         'all-visible': {
           'caption': 'Все видимые слои'
         },
         'top-visible': {
-          'caption': 'Верхний видимый слой' 
+          'caption': 'Верхний видимый слой'
         }
       },
       'error-message': 'Идентификация по слою \'{{layerName}}\' завершилась ошибкой: ',

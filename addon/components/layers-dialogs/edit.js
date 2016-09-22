@@ -393,12 +393,13 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
 
     let crs = this.get('layer.coordinateReferenceSystem');
     crs = Ember.isNone(crs) ? {} : JSON.parse(crs);
-    
+
     let crsCode = Ember.get(crs, 'code');
     if (!Ember.isBlank(crsCode) && !this.get('_availableCoordinateReferenceSystemsCodes').contains(crsCode)) {
       // Unknown CRS code means that proj4 is used.
       crsCode = proj4CrsCode;
     }
+
     this.set('_coordinateReferenceSystemCode', crsCode);
 
     this._createInnerCoordinateReferenceSystems();
@@ -496,8 +497,8 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     // Available CRS codes for related dropdown.
     let crsFactories = owner.knownForType('coordinate-reference-system');
     let crsFactoriesNames = owner.knownNamesForType('coordinate-reference-system');
-    this.set('_availableCoordinateReferenceSystemsCodes', Ember.A(crsFactoriesNames.map((crsFactoryName) => { 
-      let crsFactory = Ember.get(crsFactories, crsFactoryName);     
+    this.set('_availableCoordinateReferenceSystemsCodes', Ember.A(crsFactoriesNames.map((crsFactoryName) => {
+      let crsFactory = Ember.get(crsFactories, crsFactoryName);
       return Ember.get(crsFactory, 'code');
     })));
   }

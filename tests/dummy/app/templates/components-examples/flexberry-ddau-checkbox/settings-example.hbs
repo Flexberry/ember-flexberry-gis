@@ -6,12 +6,12 @@
       componentSettingsMetadata=componentSettingsMetadata
       componentTemplateText=componentTemplateText
     }}
-      {{flexberry-new-checkbox
+      {{flexberry-ddau-checkbox
         class=class
         value=model.flag
-        label=label
+        caption=caption
         readonly=readonly
-        onChange=(action "onChange")
+        change=(action "onCheckboxChange" "model.flag")
       }}
     {{/settings-example}}
   </div>

@@ -1,49 +1,26 @@
 export default {
   projections: {
-    AuditView: {
-      name: {
-        caption: 'name'
-      },
-      type: {
-        caption: 'type'
-      },
-      visibility: {
-        caption: 'visibility'
-      },
-      settings: {
-        caption: 'settings'
-      },
-      coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
-      },
-      index: {
-        caption: 'index'
-      },
-      parent: {
-        caption: 'parent'
-      }
-    },
     MapLayerE: {
       name: {
-        caption: 'name'
+        caption: 'Name'
       },
       type: {
-        caption: 'type'
+        caption: 'Type'
       },
       visibility: {
-        caption: 'visibility'
-      },
-      settings: {
-        caption: 'settings'
-      },
-      coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
+        caption: 'Visibility'
       },
       index: {
-        caption: 'index'
+        caption: 'Index'
+      },
+      coordinateReferenceSystem: {
+        caption: 'CRS'
+      },
+      settings: {
+        caption: 'Settings'
       },
       parent: {
-        caption: 'parent'
+        caption: 'Parent'
       }
     }
   }

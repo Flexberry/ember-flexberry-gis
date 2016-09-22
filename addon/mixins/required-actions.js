@@ -28,7 +28,7 @@ export default Ember.Mixin.create({
 
     @method _actionHandlerIsDefined
     @param {Object} options Method options
-    @param {String} options.actionName Name of component's action for which handler's existence this method should check. 
+    @param {String} options.actionName Name of component's action for which handler's existence this method should check.
     @returns {Boolean} Flag, indicating whether action handler is defined, for action with the specified name, or not.
     @private
   */
@@ -69,7 +69,7 @@ export default Ember.Mixin.create({
       if (originalSendActionIsOverridden || outerActionHandlerIsDefined) {
         originalSendAction.apply(this, args);
       }
-      
+
       let requiredActionNames = this.get('_requiredActionNames');
       Ember.assert(
         `Wrong type of parent component\`s \`_requiredActionNames\` propery: ` +
@@ -85,7 +85,7 @@ export default Ember.Mixin.create({
       Ember.assert(
         `Handler for required \`${actionName}\` action is not defined in ${this}`,
         !Ember.A(requiredActionNames).contains(actionName) || this._actionHandlerIsDefined({ actionName: actionName }));
-        
+
     };
   }
 });

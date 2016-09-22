@@ -361,7 +361,7 @@ export default Ember.Mixin.create({
   removeLayer(options) {
     options = options || {};
     let layer = Ember.get(options, 'layer');
-    
+
     Ember.set(layer, 'isDeleted', true);
     return layer;
   }

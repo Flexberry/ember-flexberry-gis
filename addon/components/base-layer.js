@@ -187,8 +187,7 @@ export default Ember.Component.extend(
 
       if (this.get('visibility')) {
         container.addLayer(this.get('_layer'));
-      }
-      else {
+      } else {
         container.removeLayer(this.get('_layer'));
       }
     }),
@@ -220,4 +219,5 @@ export default Ember.Component.extend(
     identify(e) {
       assert('BaseLayer\'s \'identify\' method should be overridden.');
     }
-  });
+  }
+);

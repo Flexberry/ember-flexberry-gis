@@ -23,10 +23,10 @@ export default BaseMaptool.extend({
     // Remove drawn rectangle.
     layer.disableEdit();
     layer.remove();
-    
+
     // Give to user ability to draw new rectangle.
     let editTools = this.get('_editTools');
-    if (!Ember.isNone(editTools)){
+    if (!Ember.isNone(editTools)) {
       editTools.startRectangle();
     }
   },

@@ -23,164 +23,172 @@ export default Ember.Component.extend(
   LeafletOptionsMixin,
   LeafletPropertiesMixin,
   LeafletEventsMixin, {
-  /**
-    Leaflet map.
+    /**
+      Leaflet map.
 
-    @property _layer
-    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
-    @default null
-    @private
-  */
-  _layer: null,
+      @property _layer
+      @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+      @default null
+      @private
+    */
+    _layer: null,
 
-  /**
-    Reference to component's template.
-  */
-  layout,
+    /**
+      Reference to component's template.
+    */
+    layout,
 
-  /**
-    Component's wrapping <div> CSS-classes names.
+    /**
+      Component's wrapping <div> CSS-classes names.
 
-    Any other CSS-class names can be added through component's 'class' property.
-    ```handlebars
-    {{#flexberry-map class="my-class"}}
-      Map's content
-    {{/flexberry-map}}
-    ```
+      Any other CSS-class names can be added through component's 'class' property.
+      ```handlebars
+      {{#flexberry-map class="my-class"}}
+        Map's content
+      {{/flexberry-map}}
+      ```
 
-    @property classNames
-    @type String[]
-    @default ['flexberry-map']
-  */
-  classNames: ['flexberry-map'],
+      @property classNames
+      @type String[]
+      @default ['flexberry-map']
+    */
+    classNames: ['flexberry-map'],
 
-  /**
-    List of leaflet map events which will be sended outside as component's actions.
-  */
-  leafletEvents: [
-    'click', 'dblclick', 'mousedown', 'mouseup', 'mouseover', 'mouseout',
-    'mousemove', 'contextmenu', 'focus', 'blur', 'preclick', 'load',
-    'unload', 'viewreset', 'movestart', 'move', 'moveend', 'dragstart',
-    'drag', 'dragend', 'zoomstart', 'zoomend', 'zoomlevelschange',
-    'resize', 'autopanstart', 'layeradd', 'layerremove',
-    'baselayerchange', 'overlayadd', 'overlayremove', 'locationfound',
-    'locationerror', 'popupopen', 'popupclose'
-  ],
+    /**
+      List of leaflet map events which will be sended outside as component's actions.
+    */
+    leafletEvents: [
+      'click', 'dblclick', 'mousedown', 'mouseup', 'mouseover', 'mouseout',
+      'mousemove', 'contextmenu', 'focus', 'blur', 'preclick', 'load',
+      'unload', 'viewreset', 'movestart', 'move', 'moveend', 'dragstart',
+      'drag', 'dragend', 'zoomstart', 'zoomend', 'zoomlevelschange',
+      'resize', 'autopanstart', 'layeradd', 'layerremove',
+      'baselayerchange', 'overlayadd', 'overlayremove', 'locationfound',
+      'locationerror', 'popupopen', 'popupclose'
+    ],
 
-  /**
-    List of leaflet map options which will be passed into leaflet map.
-  */
-  leafletOptions: [
-    // Map state options
-    'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'crs',
-    // Interaction options
-    'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
-    'tap', 'tapTolerance', 'trackResize', 'worldCopyJump', 'closePopupOnClick',
-    'bounceAtZoomLimits',
-    // Keyboard navigation options
-    'keyboard', 'keyboardPanOffset', 'keyboardZoomOffset',
-    // Panning Inertia Options
-    'inertia', 'inertiaDeceleration', 'inertiaMaxSpeed', 'inertiaThreshold',
-    // Control options
-    'zoomControl', 'attributionControl',
-    // Animation options
-    'fadeAnimation', 'zoomAnimation', 'zoomAnimationThreshold', 'markerZoomAnimation'
-  ],
+    /**
+      List of leaflet map options which will be passed into leaflet map.
+    */
+    leafletOptions: [
 
-  /**
-    List of leaflet map properties bindings.
-  */
-  leafletProperties: ['zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions'],
+      // Map state options.
+      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'crs',
 
-  /**
-    Map center latitude.
+      // Interaction options.
+      'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
+      'tap', 'tapTolerance', 'trackResize', 'worldCopyJump', 'closePopupOnClick',
+      'bounceAtZoomLimits',
 
-    @property lat
-    @type Number
-    @default null
-  */
-  lat: null,
+      // Keyboard navigation options.
+      'keyboard', 'keyboardPanOffset', 'keyboardZoomOffset',
 
-  /**
-    Map center longitude.
+      // Panning Inertia Options.
+      'inertia', 'inertiaDeceleration', 'inertiaMaxSpeed', 'inertiaThreshold',
 
-    @property lng
-    @type Number
-    @default null
-  */
-  lng: null,
+      // Control options.
+      'zoomControl', 'attributionControl',
 
-  /**
-    Map center.
+      // Animation options.
+      'fadeAnimation', 'zoomAnimation', 'zoomAnimationThreshold', 'markerZoomAnimation'
+    ],
 
-    @property center
-    @type <a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>
-    @default [0, 0]
-    @readOnly
-  */
-  center: Ember.computed('lat', 'lng', function () {
-    return L.latLng(this.get('lat') || 0, this.get('lng') || 0);
-  }),
+    /**
+      List of leaflet map properties bindings.
+    */
+    leafletProperties: ['zoom:setZoom', 'center:panTo:zoomPanOptions', 'maxBounds:setMaxBounds', 'bounds:fitBounds:fitBoundsOptions'],
 
-  /**
-    Map zoom.
+    /**
+      Map center latitude.
 
-    @property zoom
-    @type Number
-    @default null
-  */
-  zoom: null,
+      @property lat
+      @type Number
+      @default null
+    */
+    lat: null,
 
-  /**
-    Array of map layers
-    @property layers
-    @type Array of NewPlatformFlexberryGISMapLayer
-  */
-  layers: null,
+    /**
+      Map center longitude.
 
-  /**
-    Initializes DOM-related component's properties.
-  */
-  didInsertElement() {
-    this._super(...arguments);
+      @property lng
+      @type Number
+      @default null
+    */
+    lng: null,
 
-    let leafletMap = L.map(this.$()[0], this.get('options'));
-    this.set('_layer', leafletMap);
+    /**
+      Map center.
 
-    this._addObservers();
-    this._addEventListeners();
+      @property center
+      @type <a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>
+      @default [0, 0]
+      @readOnly
+    */
+    center: Ember.computed('lat', 'lng', function () {
+      return L.latLng(this.get('lat') || 0, this.get('lng') || 0);
+    }),
 
-    this.sendAction('leafletInit', {
-      map: leafletMap
-    });
-  },
+    /**
+      Map zoom.
 
-  /**
-    Destroys DOM-related component's properties.
-  */
-  willDestroyElement() {
-    this._super(...arguments);
+      @property zoom
+      @type Number
+      @default null
+    */
+    zoom: null,
 
-    let leafletMap = this.get('_layer');
-    if (!Ember.isNone(leafletMap)) {
-      leafletMap.remove();
-      this.set('_layer', null);
+    /**
+      Array of map layers.
 
-      this.sendAction('leafletDestroy');
+      @property layers
+      @type Array of NewPlatformFlexberryGISMapLayer
+    */
+    layers: null,
+
+    /**
+      Initializes DOM-related component's properties.
+    */
+    didInsertElement() {
+      this._super(...arguments);
+
+      let leafletMap = L.map(this.$()[0], this.get('options'));
+      this.set('_layer', leafletMap);
+
+      this._addObservers();
+      this._addEventListeners();
+
+      this.sendAction('leafletInit', {
+        map: leafletMap
+      });
+    },
+
+    /**
+      Destroys DOM-related component's properties.
+    */
+    willDestroyElement() {
+      this._super(...arguments);
+
+      let leafletMap = this.get('_layer');
+      if (!Ember.isNone(leafletMap)) {
+        leafletMap.remove();
+        this.set('_layer', null);
+
+        this.sendAction('leafletDestroy');
+      }
     }
+
+    /**
+      Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) initialized.
+
+      @method sendingActions.leafletInit
+      @param {Object} e Action's event object.
+      @param {Boolean} e.map Initialized leaflet map.
+    */
+
+    /**
+      Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) destroyed.
+
+      @method sendingActions.leafletDestroy
+    */
   }
-
-  /**
-    Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) initialized.
-
-    @method sendingActions.leafletInit
-    @param {Object} e Action's event object.
-    @param {Boolean} e.map Initialized leaflet map.
-  */
-
-  /**
-    Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) destroyed.
-
-    @method sendingActions.leafletDestroy
-  */
-});
+);

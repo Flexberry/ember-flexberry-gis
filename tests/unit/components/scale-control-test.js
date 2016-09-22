@@ -8,7 +8,8 @@ moduleForComponent('scale-control', 'Unit | Component | scale control', {
 
 test('it should return L.Control.Scale from createControl', function(assert) {
   let component = this.subject();
-  // Renders the component to the page
+
+  // Renders the component to the page.
   let control = component.createControl();
 
   assert.ok(control instanceof L.Control.Scale);

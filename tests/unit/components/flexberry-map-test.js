@@ -4,7 +4,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 moduleForComponent('flexberry-map', 'Unit | Component | flexberry map', {
   unit: true,
   needs: [
-    "component:flexberry-layers"
+    'component:flexberry-layers'
   ]
 });
 

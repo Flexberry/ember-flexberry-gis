@@ -176,7 +176,8 @@ let FlexberryButtonComponent = Ember.Component.extend(
       @default false
     */
     readonly: false
-  });
+  }
+);
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.

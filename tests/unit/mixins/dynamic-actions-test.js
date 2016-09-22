@@ -21,7 +21,7 @@ test('Mixin throws assertion failed exception if it\'s owner hasn\'t \'sendActio
   }
 });
 
-test('Mixin throws assertion failed exception if specified \'dynamicActions\' is not array \'instance\' (while \'sendAction\' executes)', function (assert) {
+test('Mixin throws assertion failed exception if specified \'dynamicActions\' is not array', function (assert) {
   let wrongDynamicActionsArray = Ember.A([1, true, false, 'some string', {}, function() {}, new Date(), new RegExp()]);
 
   assert.expect(wrongDynamicActionsArray.length);
@@ -38,158 +38,175 @@ test('Mixin throws assertion failed exception if specified \'dynamicActions\' is
       assert.strictEqual(
         (/wrong\s*type\s*of\s*.*dynamicActions.*/gi).test(ex.message),
         true,
-        'Throws assertion failed exception if specified \'dynamicActions\' property is \'' + Ember.typeOf(wrongDynamicActions) + '\'');
+        'Throws assertion failed exception if specified \'dynamicActions\' property is \'' +
+        Ember.typeOf(wrongDynamicActions) +
+        '\'');
     }
   });
 });
 
-test('Mixin throws assertion failed exception if one of specified \'dynamicActions\' has wrong \'on\' property', function (assert) {
-  let wrongOnPropertiesArray = Ember.A([1, true, false, {}, [], function() {}, new Date(), new RegExp()]);
+test(
+  'Mixin throws assertion failed exception if one of specified \'dynamicActions\' has wrong \'on\' property',
+  function (assert) {
+    let wrongOnPropertiesArray = Ember.A([1, true, false, {}, [], function() {}, new Date(), new RegExp()]);
 
-  assert.expect(wrongOnPropertiesArray.length);
+    assert.expect(wrongOnPropertiesArray.length);
 
-  wrongOnPropertiesArray.forEach((wrongOnProperty) => {
-    let component = ComponentWithDynamicActionsMixin.create({
-      attrs: {},
-      dynamicActions: Ember.A([DynamicActionObject.create({
-        on: wrongOnProperty,
-        actionHandler: null,
-        actionName: null,
-        actionContext: null,
-        actionArguments: null
-      })])
+    wrongOnPropertiesArray.forEach((wrongOnProperty) => {
+      let component = ComponentWithDynamicActionsMixin.create({
+        attrs: {},
+        dynamicActions: Ember.A([DynamicActionObject.create({
+          on: wrongOnProperty,
+          actionHandler: null,
+          actionName: null,
+          actionContext: null,
+          actionArguments: null
+        })])
+      });
+
+      try {
+        component.sendAction('someAction');
+      } catch (ex) {
+        assert.strictEqual(
+          (/wrong\s*type\s*of\s*.*on.*/gi).test(ex.message),
+          true,
+          'Throws assertion failed exception if one of specified \'dynamicActions\' has \'on\' property of wrong type \'' +
+          Ember.typeOf(wrongOnProperty) + '\'');
+      }
     });
+  }
+);
 
-    try {
-      component.sendAction('someAction');
-    } catch (ex) {
-      assert.strictEqual(
-        (/wrong\s*type\s*of\s*.*on.*/gi).test(ex.message),
-        true,
-        'Throws assertion failed exception if one of specified \'dynamicActions\' has \'on\' property of wrong type \'' +
-        Ember.typeOf(wrongOnProperty) + '\'');
-    }
-  });
-});
+test(
+  'Mixin throws assertion failed exception if one of specified \'dynamicActions\' has wrong \'actionHandler\' property',
+  function (assert) {
+    let wrongActionHandlersArray = Ember.A([1, true, false, 'some string', {}, [], new Date(), new RegExp()]);
 
-test('Mixin throws assertion failed exception if one of specified \'dynamicActions\' has wrong \'actionHandler\' property', function (assert) {
-  let wrongActionHandlersArray = Ember.A([1, true, false, 'some string', {}, [], new Date(), new RegExp()]);
+    assert.expect(wrongActionHandlersArray.length);
 
-  assert.expect(wrongActionHandlersArray.length);
+    wrongActionHandlersArray.forEach((wrongActionHandler) => {
+      let component = ComponentWithDynamicActionsMixin.create({
+        attrs: {},
+        dynamicActions: Ember.A([DynamicActionObject.create({
+          on: 'someAction',
+          actionHandler: wrongActionHandler,
+          actionName: null,
+          actionContext: null,
+          actionArguments: null
+        })])
+      });
 
-  wrongActionHandlersArray.forEach((wrongActionHandler) => {
-    let component = ComponentWithDynamicActionsMixin.create({
-      attrs: {},
-      dynamicActions: Ember.A([DynamicActionObject.create({
-        on: 'someAction',
-        actionHandler: wrongActionHandler,
-        actionName: null,
-        actionContext: null,
-        actionArguments: null
-      })])
+      try {
+        component.sendAction('someAction');
+      } catch (ex) {
+        assert.strictEqual(
+          (/wrong\s*type\s*of\s*.*actionHandler.*/gi).test(ex.message),
+          true,
+          'Throws assertion failed exception if one of specified \'dynamicActions\' has \'actionHandler\' property of wrong type \'' +
+          Ember.typeOf(wrongActionHandler) + '\'');
+      }
     });
+  }
+);
 
-    try {
-      component.sendAction('someAction');
-    } catch (ex) {
-      assert.strictEqual(
-        (/wrong\s*type\s*of\s*.*actionHandler.*/gi).test(ex.message),
-        true,
-        'Throws assertion failed exception if one of specified \'dynamicActions\' has \'actionHandler\' property of wrong type \'' +
-        Ember.typeOf(wrongActionHandler) + '\'');
-    }
-  });
-});
+test(
+  'Mixin throws assertion failed exception if one of specified \'dynamicActions\' has wrong \'actionName\' property',
+  function (assert) {
+    let wrongActionNamesArray = Ember.A([1, true, false, {}, [], function() {}, new Date(), new RegExp()]);
 
-test('Mixin throws assertion failed exception if one of specified \'dynamicActions\' has wrong \'actionName\' property', function (assert) {
-  let wrongActionNamesArray = Ember.A([1, true, false, {}, [], function() {}, new Date(), new RegExp()]);
+    assert.expect(wrongActionNamesArray.length);
 
-  assert.expect(wrongActionNamesArray.length);
+    wrongActionNamesArray.forEach((wrongActionName) => {
+      let component = ComponentWithDynamicActionsMixin.create({
+        attrs: {},
+        dynamicActions: Ember.A([DynamicActionObject.create({
+          on: 'someAction',
+          actionHandler: null,
+          actionName: wrongActionName,
+          actionContext: null,
+          actionArguments: null
+        })])
+      });
 
-  wrongActionNamesArray.forEach((wrongActionName) => {
-    let component = ComponentWithDynamicActionsMixin.create({
-      attrs: {},
-      dynamicActions: Ember.A([DynamicActionObject.create({
-        on: 'someAction',
-        actionHandler: null,
-        actionName: wrongActionName,
-        actionContext: null,
-        actionArguments: null
-      })])
+      try {
+        component.sendAction('someAction');
+      } catch (ex) {
+        assert.strictEqual(
+          (/wrong\s*type\s*of\s*.*actionName.*/gi).test(ex.message),
+          true,
+          'Throws assertion failed exception if one of specified \'dynamicActions\' has \'actionName\' property of wrong type \'' +
+          Ember.typeOf(wrongActionName) + '\'');
+      }
     });
+  }
+);
 
-    try {
-      component.sendAction('someAction');
-    } catch (ex) {
-      assert.strictEqual(
-        (/wrong\s*type\s*of\s*.*actionName.*/gi).test(ex.message),
-        true,
-        'Throws assertion failed exception if one of specified \'dynamicActions\' has \'actionName\' property of wrong type \'' +
-        Ember.typeOf(wrongActionName) + '\'');
-    }
-  });
-});
+test(
+  'Mixin throws assertion failed exception if one of specified \'dynamicActions\' has defined \'actionName\', but' +
+  ' wrong \'actionContext\' property (without \'send\' method)',
+  function (assert) {
+    let wrongActionContextsArray = Ember.A([null, 1, true, false, {}, [], function() {}, new Date(), new RegExp(), { send: function() {} }]);
 
-test('Mixin throws assertion failed exception if one of specified \'dynamicActions\' has defined \'actionName\', but' +
-  ' wrong \'actionContext\' property (without \'send\' method)', function (assert) {
-  let wrongActionContextsArray = Ember.A([null, 1, true, false, {}, [], function() {}, new Date(), new RegExp(), { send: function() {} }]);
+    // Assertion shouldn't be send for last object containing 'send' method,
+    // that's why length - 1.
+    assert.expect(wrongActionContextsArray.length - 1);
 
-  // Assertion shouldn't be send for last object containing 'send' method,
-  // that's why length - 1.
-  assert.expect(wrongActionContextsArray.length - 1);
+    wrongActionContextsArray.forEach((wrongActionContext) => {
+      let component = ComponentWithDynamicActionsMixin.create({
+        attrs: {},
+        dynamicActions: Ember.A([DynamicActionObject.create({
+          on: 'someAction',
+          actionHandler: null,
+          actionName: 'onSomeAction',
+          actionContext: wrongActionContext,
+          actionArguments: null
+        })])
+      });
 
-  wrongActionContextsArray.forEach((wrongActionContext) => {
-    let component = ComponentWithDynamicActionsMixin.create({
-      attrs: {},
-      dynamicActions: Ember.A([DynamicActionObject.create({
-        on: 'someAction',
-        actionHandler: null,
-        actionName: 'onSomeAction',
-        actionContext: wrongActionContext,
-        actionArguments: null
-      })])
+      try {
+        component.sendAction('someAction');
+      } catch (ex) {
+        assert.strictEqual(
+          (/method\s*.*send.*\s*.*actionContext.*/gi).test(ex.message),
+          true,
+          'Throws assertion failed exception if one of specified \'dynamicActions\' has defined \'actionName\', ' +
+          'but wrong \'actionContext\' property (without \'send\' method)');
+      }
     });
+  }
+);
 
-    try {
-      component.sendAction('someAction');
-    } catch (ex) {
-      assert.strictEqual(
-        (/method\s*.*send.*\s*.*actionContext.*/gi).test(ex.message),
-        true,
-        'Throws assertion failed exception if one of specified \'dynamicActions\' has defined \'actionName\', ' +
-        'but wrong \'actionContext\' property (without \'send\' method)');
-    }
-  });
-});
+test(
+  'Mixin throws assertion failed exception if one of specified \'dynamicActions\' has wrong \'actionArguments\' property',
+  function (assert) {
+    let wrongActionArgumentsArray = Ember.A([1, true, false, 'some string', {}, function() {}, new Date(), new RegExp()]);
 
-test('Mixin throws assertion failed exception if one of specified \'dynamicActions\' has wrong \'actionArguments\' property', function (assert) {
-  let wrongActionArgumentsArray = Ember.A([1, true, false, 'some string', {}, function() {}, new Date(), new RegExp()]);
+    assert.expect(wrongActionArgumentsArray.length);
 
-  assert.expect(wrongActionArgumentsArray.length);
+    wrongActionArgumentsArray.forEach((wrongActionArguments) => {
+      let component = ComponentWithDynamicActionsMixin.create({
+        attrs: {},
+        dynamicActions: Ember.A([DynamicActionObject.create({
+          on: 'someAction',
+          actionHandler: null,
+          actionName: null,
+          actionContext: null,
+          actionArguments: wrongActionArguments
+        })])
+      });
 
-  wrongActionArgumentsArray.forEach((wrongActionArguments) => {
-    let component = ComponentWithDynamicActionsMixin.create({
-      attrs: {},
-      dynamicActions: Ember.A([DynamicActionObject.create({
-        on: 'someAction',
-        actionHandler: null,
-        actionName: null,
-        actionContext: null,
-        actionArguments: wrongActionArguments
-      })])
+      try {
+        component.sendAction('someAction');
+      } catch (ex) {
+        assert.strictEqual(
+          (/wrong\s*type\s*of\s*.*actionArguments.*/gi).test(ex.message),
+          true,
+          'Throws assertion failed exception if one of specified \'dynamicActions\' has \'actionArguments\' property of wrong type \'' +
+          Ember.typeOf(wrongActionArguments) + '\'');
+      }
     });
-
-    try {
-      component.sendAction('someAction');
-    } catch (ex) {
-      assert.strictEqual(
-        (/wrong\s*type\s*of\s*.*actionArguments.*/gi).test(ex.message),
-        true,
-        'Throws assertion failed exception if one of specified \'dynamicActions\' has \'actionArguments\' property of wrong type \'' +
-        Ember.typeOf(wrongActionArguments) + '\'');
-    }
-  });
-});
+  }
+);
 
 test('Mixin does\'t break it\'s owner\'s standard \'sendAction\' logic', function (assert) {
   assert.expect(1);
@@ -218,304 +235,327 @@ test('Mixin does\'t break it\'s owner\'s standard \'sendAction\' logic', functio
     'Component still normally triggers proper action handlers (binded explicitly with ember API, not with dynamic actions)');
 });
 
-test('Mixin triggers specified \'dynamicActions\' handlers (\'actionHandler\' callbacks only) if \'actionContext\' isn\'t specified', function (assert) {
-  assert.expect(10);
+test(
+  'Mixin triggers specified \'dynamicActions\' handlers (\'actionHandler\' callbacks only) ' +
+  'if \'actionContext\' isn\'t specified',
+  function (assert) {
+    assert.expect(10);
 
-  let someActionDynamicHandlerHasBeenCalled = false;
-  let someAnotherActionDynamicHandlerHasBeenCalled = false;
-  let someActionAgainDynamicHandlerHasBeenCalled = false;
+    let someActionDynamicHandlerHasBeenCalled = false;
+    let someAnotherActionDynamicHandlerHasBeenCalled = false;
+    let someActionAgainDynamicHandlerHasBeenCalled = false;
 
-  let component = ComponentWithDynamicActionsMixin.create({
-    attrs: {},
-    dynamicActions: Ember.A([DynamicActionObject.create({
-      on: 'someAction',
-      actionHandler: function() {
-        someActionDynamicHandlerHasBeenCalled = true;
-      },
-      actionName: null,
-      actionContext: null,
-      actionArguments: null
-    }), DynamicActionObject.create({
-      on: 'someAnotherAction',
-      actionHandler: function() {
-        someAnotherActionDynamicHandlerHasBeenCalled = true;
-      },
-      actionName: null,
-      actionContext: null,
-      actionArguments: null
-    }), DynamicActionObject.create({
-      on: 'someAction',
-      actionHandler: function() {
-        someActionAgainDynamicHandlerHasBeenCalled = true;
-      },
-      actionName: null,
-      actionContext: null,
-      actionArguments: null
-    })])
-  });
+    let component = ComponentWithDynamicActionsMixin.create({
+      attrs: {},
+      dynamicActions: Ember.A([DynamicActionObject.create({
+        on: 'someAction',
+        actionHandler: function() {
+          someActionDynamicHandlerHasBeenCalled = true;
+        },
+        actionName: null,
+        actionContext: null,
+        actionArguments: null
+      }), DynamicActionObject.create({
+        on: 'someAnotherAction',
+        actionHandler: function() {
+          someAnotherActionDynamicHandlerHasBeenCalled = true;
+        },
+        actionName: null,
+        actionContext: null,
+        actionArguments: null
+      }), DynamicActionObject.create({
+        on: 'someAction',
+        actionHandler: function() {
+          someActionAgainDynamicHandlerHasBeenCalled = true;
+        },
+        actionName: null,
+        actionContext: null,
+        actionArguments: null
+      })])
+    });
 
-  let someActionHandlerHasBeenCalled = false;
-  component.attrs.someAction = function() {
-    someActionHandlerHasBeenCalled = true;
-  };
+    let someActionHandlerHasBeenCalled = false;
+    component.attrs.someAction = function() {
+      someActionHandlerHasBeenCalled = true;
+    };
 
-  let someAnotherActionHandlerHasBeenCalled = false;
-  component.attrs.someAnotherAction = function() {
-    someAnotherActionHandlerHasBeenCalled = true;
-  };
+    let someAnotherActionHandlerHasBeenCalled = false;
+    component.attrs.someAnotherAction = function() {
+      someAnotherActionHandlerHasBeenCalled = true;
+    };
 
-  component.sendAction('someAction');
-  assert.strictEqual(
-    someActionHandlerHasBeenCalled,
-    true,
-    'Component still normally triggers proper action handlers (binded explicitly with ember API, not with dynamic actions)');
-  assert.strictEqual(
-    someAnotherActionHandlerHasBeenCalled,
-    false,
-    'Component still normally doesn\'t trigger proper action handlers (binded explicitly with ember API, not with dynamic actions) for yet unsended actions');
+    component.sendAction('someAction');
+    assert.strictEqual(
+      someActionHandlerHasBeenCalled,
+      true,
+      'Component still normally triggers proper action handlers (binded explicitly with ember API, not with dynamic actions)');
+    assert.strictEqual(
+      someAnotherActionHandlerHasBeenCalled,
+      false,
+      'Component still normally doesn\'t trigger proper action handlers ' +
+      '(binded explicitly with ember API, not with dynamic actions) for yet unsended actions');
 
-  assert.strictEqual(
-    someActionDynamicHandlerHasBeenCalled,
-    true,
-    'Component triggers specified in dynamic action \'actionHandler\' for component\'s \'someAction\'');
-  assert.strictEqual(
-    someAnotherActionDynamicHandlerHasBeenCalled,
-    false,
-    'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAnotherAction\'');
-  assert.strictEqual(
-    someActionAgainDynamicHandlerHasBeenCalled,
-    true,
-    'Component triggers specified in dynamic action another \'actionHandler\' for component\'s \'someAction\'');
+    assert.strictEqual(
+      someActionDynamicHandlerHasBeenCalled,
+      true,
+      'Component triggers specified in dynamic action \'actionHandler\' for component\'s \'someAction\'');
+    assert.strictEqual(
+      someAnotherActionDynamicHandlerHasBeenCalled,
+      false,
+      'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAnotherAction\'');
+    assert.strictEqual(
+      someActionAgainDynamicHandlerHasBeenCalled,
+      true,
+      'Component triggers specified in dynamic action another \'actionHandler\' for component\'s \'someAction\'');
 
-  someActionHandlerHasBeenCalled = false;
-  someAnotherActionHandlerHasBeenCalled = false;
-  someAnotherActionDynamicHandlerHasBeenCalled = false;
-  someActionDynamicHandlerHasBeenCalled = false;
-  someActionAgainDynamicHandlerHasBeenCalled = false;
+    someActionHandlerHasBeenCalled = false;
+    someAnotherActionHandlerHasBeenCalled = false;
+    someAnotherActionDynamicHandlerHasBeenCalled = false;
+    someActionDynamicHandlerHasBeenCalled = false;
+    someActionAgainDynamicHandlerHasBeenCalled = false;
 
-  component.sendAction('someAnotherAction');
-  assert.strictEqual(
-    someActionHandlerHasBeenCalled,
-    false,
-    'Component still normally doesn\'t trigger proper action handlers (binded explicitly with ember API, not with dynamic actions) for yet unsended actions');
-  assert.strictEqual(
-    someAnotherActionHandlerHasBeenCalled,
-    true,
-    'Component still normally triggers proper action handlers (binded explicitly with ember API, not with dynamic actions)');
+    component.sendAction('someAnotherAction');
+    assert.strictEqual(
+      someActionHandlerHasBeenCalled,
+      false,
+      'Component still normally doesn\'t trigger proper action handlers ' +
+      '(binded explicitly with ember API, not with dynamic actions) for yet unsended actions');
+    assert.strictEqual(
+      someAnotherActionHandlerHasBeenCalled,
+      true,
+      'Component still normally triggers proper action handlers (binded explicitly with ember API, not with dynamic actions)');
 
-  assert.strictEqual(
-    someActionDynamicHandlerHasBeenCalled,
-    false,
-    'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAction\'');
-  assert.strictEqual(
-    someAnotherActionDynamicHandlerHasBeenCalled,
-    true,
-    'Component triggers specified in dynamic action \'actionHandler\' for component\'s \'anotherAction\'');
-  assert.strictEqual(
-    someActionAgainDynamicHandlerHasBeenCalled,
-    false,
-    'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAction\'');
-});
+    assert.strictEqual(
+      someActionDynamicHandlerHasBeenCalled,
+      false,
+      'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAction\'');
+    assert.strictEqual(
+      someAnotherActionDynamicHandlerHasBeenCalled,
+      true,
+      'Component triggers specified in dynamic action \'actionHandler\' for component\'s \'anotherAction\'');
+    assert.strictEqual(
+      someActionAgainDynamicHandlerHasBeenCalled,
+      false,
+      'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAction\'');
+  }
+);
 
-test('Mixin triggers all specified \'dynamicActions\' handlers (callbacks & normal actions) on given context', function (assert) {
-  assert.expect(22);
+test(
+  'Mixin triggers all specified \'dynamicActions\' handlers (callbacks & normal actions) on given context',
+  function (assert) {
+    assert.expect(22);
 
-  let someActionControllersHandlerHasBeenCalled = false;
-  let someActionControllersHandlerContext = null;
+    let someActionControllersHandlerHasBeenCalled = false;
+    let someActionControllersHandlerContext = null;
 
-  let someAnoterActionControllersHandlerHasBeenCalled = false;
-  let someAnotherActionControllersHandlerContext = null;
+    let someAnoterActionControllersHandlerHasBeenCalled = false;
+    let someAnotherActionControllersHandlerContext = null;
 
-  let someActionAgainControllersHandlerHasBeenCalled = false;
-  let someActionAgainControllersHandlerContext = null;
+    let someActionAgainControllersHandlerHasBeenCalled = false;
+    let someActionAgainControllersHandlerContext = null;
 
-  let controller = Ember.Controller.extend({
-    actions: {
-      onSomeAction: function() {
-        someActionControllersHandlerHasBeenCalled = true;
-        someActionControllersHandlerContext = this;
-      },
+    let controller = Ember.Controller.extend({
+      actions: {
+        onSomeAction: function() {
+          someActionControllersHandlerHasBeenCalled = true;
+          someActionControllersHandlerContext = this;
+        },
 
-      onSomeAnotherAction: function() {
-        someAnoterActionControllersHandlerHasBeenCalled = true;
-        someAnotherActionControllersHandlerContext = this;
-      },
+        onSomeAnotherAction: function() {
+          someAnoterActionControllersHandlerHasBeenCalled = true;
+          someAnotherActionControllersHandlerContext = this;
+        },
 
-      onSomeActionAgain: function() {
-        someActionAgainControllersHandlerHasBeenCalled = true;
-        someActionAgainControllersHandlerContext = this;
+        onSomeActionAgain: function() {
+          someActionAgainControllersHandlerHasBeenCalled = true;
+          someActionAgainControllersHandlerContext = this;
+        }
       }
-    }
-  }).create();
+    }).create();
 
-  let someActionDynamicHandlerHasBeenCalled = false;
-  let someActionDynamicHandlerContext = null;
+    let someActionDynamicHandlerHasBeenCalled = false;
+    let someActionDynamicHandlerContext = null;
 
-  let someAnotherActionDynamicHandlerHasBeenCalled = false;
-  let someAnotherActionDynamicHandlerContext = null;
+    let someAnotherActionDynamicHandlerHasBeenCalled = false;
+    let someAnotherActionDynamicHandlerContext = null;
 
-  let someActionAgainDynamicHandlerHasBeenCalled = false;
-  let someActionAgainDynamicHandlerContext = null;
+    let someActionAgainDynamicHandlerHasBeenCalled = false;
+    let someActionAgainDynamicHandlerContext = null;
 
-  let component = ComponentWithDynamicActionsMixin.create({
-    attrs: {},
-    dynamicActions: Ember.A([DynamicActionObject.create({
-      on: 'someAction',
-      actionHandler: function() {
-        someActionDynamicHandlerHasBeenCalled = true;
-        someActionDynamicHandlerContext = this;
-      },
-      actionName: 'onSomeAction',
-      actionContext: controller,
-      actionArguments: null
-    }), DynamicActionObject.create({
-      on: 'someAnotherAction',
-      actionHandler: function() {
-        someAnotherActionDynamicHandlerHasBeenCalled = true;
-        someAnotherActionDynamicHandlerContext = this;
-      },
-      actionName: 'onSomeAnotherAction',
-      actionContext: controller,
-      actionArguments: null
-    }), DynamicActionObject.create({
-      on: 'someAction',
-      actionHandler: function() {
-        someActionAgainDynamicHandlerHasBeenCalled = true;
-        someActionAgainDynamicHandlerContext = this;
-      },
-      actionName: 'onSomeActionAgain',
-      actionContext: controller,
-      actionArguments: null
-    })])
-  });
+    let component = ComponentWithDynamicActionsMixin.create({
+      attrs: {},
+      dynamicActions: Ember.A([DynamicActionObject.create({
+        on: 'someAction',
+        actionHandler: function() {
+          someActionDynamicHandlerHasBeenCalled = true;
+          someActionDynamicHandlerContext = this;
+        },
+        actionName: 'onSomeAction',
+        actionContext: controller,
+        actionArguments: null
+      }), DynamicActionObject.create({
+        on: 'someAnotherAction',
+        actionHandler: function() {
+          someAnotherActionDynamicHandlerHasBeenCalled = true;
+          someAnotherActionDynamicHandlerContext = this;
+        },
+        actionName: 'onSomeAnotherAction',
+        actionContext: controller,
+        actionArguments: null
+      }), DynamicActionObject.create({
+        on: 'someAction',
+        actionHandler: function() {
+          someActionAgainDynamicHandlerHasBeenCalled = true;
+          someActionAgainDynamicHandlerContext = this;
+        },
+        actionName: 'onSomeActionAgain',
+        actionContext: controller,
+        actionArguments: null
+      })])
+    });
 
-  let someActionHandlerHasBeenCalled = false;
-  component.attrs.someAction = function() {
-    someActionHandlerHasBeenCalled = true;
-  };
+    let someActionHandlerHasBeenCalled = false;
+    component.attrs.someAction = function() {
+      someActionHandlerHasBeenCalled = true;
+    };
 
-  let someAnotherActionHandlerHasBeenCalled = false;
-  component.attrs.someAnotherAction = function() {
-    someAnotherActionHandlerHasBeenCalled = true;
-  };
+    let someAnotherActionHandlerHasBeenCalled = false;
+    component.attrs.someAnotherAction = function() {
+      someAnotherActionHandlerHasBeenCalled = true;
+    };
 
-  component.sendAction('someAction');
-  assert.strictEqual(
-    someActionHandlerHasBeenCalled,
-    true,
-    'Component still normally triggers proper action handlers (binded explicitly with ember API, not with dynamic actions)');
-  assert.strictEqual(
-    someAnotherActionHandlerHasBeenCalled,
-    false,
-    'Component still normally doesn\'t trigger proper action handlers (binded explicitly with ember API, not with dynamic actions) for yet unsended actions');
+    component.sendAction('someAction');
+    assert.strictEqual(
+      someActionHandlerHasBeenCalled,
+      true,
+      'Component still normally triggers proper action handlers (binded explicitly with ember API, not with dynamic actions)');
+    assert.strictEqual(
+      someAnotherActionHandlerHasBeenCalled,
+      false,
+      'Component still normally doesn\'t trigger proper action handlers ' +
+      '(binded explicitly with ember API, not with dynamic actions) for yet unsended actions');
 
-  assert.strictEqual(
-    someActionDynamicHandlerHasBeenCalled,
-    true,
-    'Component triggers specified in dynamic action \'actionHandler\' for component\'s \'someAction\'');
-  assert.strictEqual(
-    someActionDynamicHandlerContext,
-    controller,
-    'Component triggers specified in dynamic action \'actionHandler\' for component\'s \'someAction\' with specified \'actionContext\'');
-  assert.strictEqual(
-    someAnotherActionDynamicHandlerHasBeenCalled,
-    false,
-    'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAnotherAction\'');
-  assert.strictEqual(
-    someActionAgainDynamicHandlerHasBeenCalled,
-    true,
-    'Component triggers specified in dynamic action another \'actionHandler\' for component\'s \'someAction\'');
-  assert.strictEqual(
-    someActionAgainDynamicHandlerContext,
-    controller,
-    'Component triggers specified in dynamic action \'actionHandler\' for component\'s \'someAction\' with specified \'actionContext\'');
+    assert.strictEqual(
+      someActionDynamicHandlerHasBeenCalled,
+      true,
+      'Component triggers specified in dynamic action \'actionHandler\' for component\'s \'someAction\'');
+    assert.strictEqual(
+      someActionDynamicHandlerContext,
+      controller,
+      'Component triggers specified in dynamic action \'actionHandler\' for ' +
+      'component\'s \'someAction\' with specified \'actionContext\'');
+    assert.strictEqual(
+      someAnotherActionDynamicHandlerHasBeenCalled,
+      false,
+      'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to ' +
+      'yet unsended \'someAnotherAction\'');
+    assert.strictEqual(
+      someActionAgainDynamicHandlerHasBeenCalled,
+      true,
+      'Component triggers specified in dynamic action another \'actionHandler\' for component\'s \'someAction\'');
+    assert.strictEqual(
+      someActionAgainDynamicHandlerContext,
+      controller,
+      'Component triggers specified in dynamic action \'actionHandler\' for ' +
+      'component\'s \'someAction\' with specified \'actionContext\'');
 
-  assert.strictEqual(
-    someActionControllersHandlerHasBeenCalled,
-    true,
-    'Component triggers on given \'actionContext\' action with specified \'actionName\' for component\'s \'someAction\'');
-  assert.strictEqual(
-    someActionControllersHandlerContext,
-    controller,
-    'Component triggers on given \'actionContext\' action with specified \'actionName\' for component\'s \'someAction\' with specified \'actionContext\'');
-  assert.strictEqual(
-    someAnotherActionDynamicHandlerHasBeenCalled,
-    false,
-    'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAnotherAction\'');
-  assert.strictEqual(
-    someActionAgainControllersHandlerHasBeenCalled,
-    true,
-    'Component triggers on given \'actionContext\' action with specified \'actionName\' for component\'s \'someAction\'');
-  assert.strictEqual(
-    someActionAgainControllersHandlerContext,
-    controller,
-    'Component triggers on given \'actionContext\' action with specified \'actionName\' for component\'s \'someAction\' with specified \'actionContext\'');
+    assert.strictEqual(
+      someActionControllersHandlerHasBeenCalled,
+      true,
+      'Component triggers on given \'actionContext\' action with specified \'actionName\' for component\'s \'someAction\'');
+    assert.strictEqual(
+      someActionControllersHandlerContext,
+      controller,
+      'Component triggers on given \'actionContext\' action with specified \'actionName\' for ' +
+      'component\'s \'someAction\' with specified \'actionContext\'');
+    assert.strictEqual(
+      someAnotherActionDynamicHandlerHasBeenCalled,
+      false,
+      'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAnotherAction\'');
+    assert.strictEqual(
+      someActionAgainControllersHandlerHasBeenCalled,
+      true,
+      'Component triggers on given \'actionContext\' action with specified \'actionName\' for component\'s \'someAction\'');
+    assert.strictEqual(
+      someActionAgainControllersHandlerContext,
+      controller,
+      'Component triggers on given \'actionContext\' action with specified \'actionName\' for ' +
+      'component\'s \'someAction\' with specified \'actionContext\'');
 
-  someActionHandlerHasBeenCalled = false;
-  someAnotherActionHandlerHasBeenCalled = false;
+    someActionHandlerHasBeenCalled = false;
+    someAnotherActionHandlerHasBeenCalled = false;
 
-  someActionDynamicHandlerHasBeenCalled = false;
-  someActionDynamicHandlerContext = null;
+    someActionDynamicHandlerHasBeenCalled = false;
+    someActionDynamicHandlerContext = null;
 
-  someAnotherActionDynamicHandlerHasBeenCalled = false;
-  someAnotherActionDynamicHandlerContext = null;
+    someAnotherActionDynamicHandlerHasBeenCalled = false;
+    someAnotherActionDynamicHandlerContext = null;
 
-  someActionAgainDynamicHandlerHasBeenCalled = false;
-  someActionAgainDynamicHandlerContext = null;
+    someActionAgainDynamicHandlerHasBeenCalled = false;
+    someActionAgainDynamicHandlerContext = null;
 
-  someActionControllersHandlerHasBeenCalled = false;
-  someActionControllersHandlerContext = null;
+    someActionControllersHandlerHasBeenCalled = false;
+    someActionControllersHandlerContext = null;
 
-  someAnoterActionControllersHandlerHasBeenCalled = false;
-  someAnotherActionControllersHandlerContext = null;
+    someAnoterActionControllersHandlerHasBeenCalled = false;
+    someAnotherActionControllersHandlerContext = null;
 
-  someActionAgainControllersHandlerHasBeenCalled = false;
-  someActionAgainControllersHandlerContext = null;
+    someActionAgainControllersHandlerHasBeenCalled = false;
+    someActionAgainControllersHandlerContext = null;
 
-  component.sendAction('someAnotherAction');
-  assert.strictEqual(
-    someActionHandlerHasBeenCalled,
-    false,
-    'Component still normally doesn\'t trigger proper action handlers (binded explicitly with ember API, not with dynamic actions) for yet unsended actions');
-  assert.strictEqual(
-    someAnotherActionHandlerHasBeenCalled,
-    true,
-    'Component still normally triggers proper action handlers (binded explicitly with ember API, not with dynamic actions)');
+    component.sendAction('someAnotherAction');
+    assert.strictEqual(
+      someActionHandlerHasBeenCalled,
+      false,
+      'Component still normally doesn\'t trigger proper action handlers ' +
+      '(binded explicitly with ember API, not with dynamic actions) for yet unsended actions');
+    assert.strictEqual(
+      someAnotherActionHandlerHasBeenCalled,
+      true,
+      'Component still normally triggers proper action handlers ' +
+      '(binded explicitly with ember API, not with dynamic actions)');
 
-  assert.strictEqual(
-    someActionDynamicHandlerHasBeenCalled,
-    false,
-    'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAction\'');
-  assert.strictEqual(
-    someAnotherActionDynamicHandlerHasBeenCalled,
-    true,
-    'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAnotherAction\'');
-  assert.strictEqual(
-    someAnotherActionDynamicHandlerContext,
-    controller,
-    'Component triggers specified in dynamic action \'actionHandler\' for component\'s \'someAnotherAction\' with specified \'actionContext\'');
-  assert.strictEqual(
-    someActionAgainDynamicHandlerHasBeenCalled,
-    false,
-    'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAction\'');
+    assert.strictEqual(
+      someActionDynamicHandlerHasBeenCalled,
+      false,
+      'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAction\'');
+    assert.strictEqual(
+      someAnotherActionDynamicHandlerHasBeenCalled,
+      true,
+      'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded to yet unsended \'someAnotherAction\'');
+    assert.strictEqual(
+      someAnotherActionDynamicHandlerContext,
+      controller,
+      'Component triggers specified in dynamic action \'actionHandler\' for ' +
+      'component\'s \'someAnotherAction\' with specified \'actionContext\'');
+    assert.strictEqual(
+      someActionAgainDynamicHandlerHasBeenCalled,
+      false,
+      'Component doesn\'t trigger specified in dynamic action \'actionHandler\' binded ' +
+      'to yet unsended \'someAction\'');
 
-  assert.strictEqual(
-    someActionControllersHandlerHasBeenCalled,
-    false,
-    'Component doesn\'t trigger on given \'actionContext\' action with specified \'actionName\' binded to yet unsended \'someAction\'');
-  assert.strictEqual(
-    someAnoterActionControllersHandlerHasBeenCalled,
-    true,
-    'Component triggers on given \'actionContext\' action with specified \'actionName\' for component\'s \'someAnotherAction\'');
-  assert.strictEqual(
-    someAnotherActionControllersHandlerContext,
-    controller,
-    'Component triggers on given \'actionContext\' action with specified \'actionName\' for component\'s \'someAnotherAction\' with specified \'actionContext\'');
-  assert.strictEqual(
-    someActionAgainControllersHandlerHasBeenCalled,
-    false,
-    'Component doesn\'t trigger on given \'actionContext\' action with specified \'actionName\' binded to yet unsended \'someAction\'');
-});
+    assert.strictEqual(
+      someActionControllersHandlerHasBeenCalled,
+      false,
+      'Component doesn\'t trigger on given \'actionContext\' action with specified \'actionName\' binded ' +
+      'to yet unsended \'someAction\'');
+    assert.strictEqual(
+      someAnoterActionControllersHandlerHasBeenCalled,
+      true,
+      'Component triggers on given \'actionContext\' action with specified \'actionName\' for ' +
+      'component\'s \'someAnotherAction\'');
+    assert.strictEqual(
+      someAnotherActionControllersHandlerContext,
+      controller,
+      'Component triggers on given \'actionContext\' action with specified \'actionName\' for ' +
+      'component\'s \'someAnotherAction\' with specified \'actionContext\'');
+    assert.strictEqual(
+      someActionAgainControllersHandlerHasBeenCalled,
+      false,
+      'Component doesn\'t trigger on given \'actionContext\' action with specified \'actionName\' binded to ' +
+      'yet unsended \'someAction\'');
+  }
+);
 
 test('Mixin works properly with \'dynamicActions\' added/removed after component initialization', function (assert) {
   assert.expect(8);
@@ -574,15 +614,18 @@ test('Mixin works properly with \'dynamicActions\' added/removed after component
   assert.strictEqual(
     someActionDynamicHandlerContext,
     controller,
-    'Component triggers specified in added dynamic action \'actionHandler\' for component\'s \'someAction\' with specified \'actionContext\'');
+    'Component triggers specified in added dynamic action \'actionHandler\' for ' +
+    'component\'s \'someAction\' with specified \'actionContext\'');
   assert.strictEqual(
     someActionControllersHandlerHasBeenCalled,
     true,
-    'Component triggers on added dynamic action\'s \'actionContext\' action with specified \'actionName\' for component\'s \'someAction\'');
+    'Component triggers on added dynamic action\'s \'actionContext\' action with specified \'actionName\' for ' +
+    'component\'s \'someAction\'');
   assert.strictEqual(
     someActionControllersHandlerContext,
     controller,
-    'Component triggers on added dynamic action\'s \'actionContext\' action with specified \'actionName\' for component\'s \'someAction\' with specified \'actionContext\'');
+    'Component triggers on added dynamic action\'s \'actionContext\' action with specified \'actionName\' for ' +
+    'component\'s \'someAction\' with specified \'actionContext\'');
 
   someActionHandlerHasBeenCalled = false;
   someActionDynamicHandlerHasBeenCalled = false;
@@ -604,66 +647,70 @@ test('Mixin works properly with \'dynamicActions\' added/removed after component
   assert.strictEqual(
     someActionControllersHandlerHasBeenCalled,
     false,
-    'Component doesn\'t trigger on removed dynamic action\'s \'actionContext\' action with specified \'actionName\' for component\'s \'someAction\'');
+    'Component doesn\'t trigger on removed dynamic action\'s \'actionContext\' action with specified \'actionName\' for ' +
+    'component\'s \'someAction\'');
 });
 
-test('Mixin adds specified in \'dynamicActions\' \'actionArguments\' to the beginning of handler\'s arguments array', function (assert) {
-  assert.expect(3);
+test(
+  'Mixin adds specified in \'dynamicActions\' \'actionArguments\' to the beginning of handler\'s arguments array',
+  function (assert) {
+    assert.expect(3);
 
-  let dynamicActionArguments = Ember.A(['firstDynamicArgument', 'secondDynamicArgument']);
+    let dynamicActionArguments = Ember.A(['firstDynamicArgument', 'secondDynamicArgument']);
 
-  let someActionHandlerArguments = null;
-  let someActionDynamicHandlerArguments = null;
-  let someActionDynamicControllersHandlerArguments = null;
+    let someActionHandlerArguments = null;
+    let someActionDynamicHandlerArguments = null;
+    let someActionDynamicControllersHandlerArguments = null;
 
-  let controller = Ember.Controller.extend({
-    actions: {
-      onSomeAction: function(...args) {
-        someActionDynamicControllersHandlerArguments = Ember.A(args);
+    let controller = Ember.Controller.extend({
+      actions: {
+        onSomeAction: function(...args) {
+          someActionDynamicControllersHandlerArguments = Ember.A(args);
+        }
       }
-    }
-  }).create();
+    }).create();
 
-  let component = ComponentWithDynamicActionsMixin.create({
-    attrs: {},
-    dynamicActions: Ember.A([DynamicActionObject.create({
-      on: 'someAction',
-      actionHandler: function(...args) {
-        someActionDynamicHandlerArguments = Ember.A(args);
-      },
-      actionName: 'onSomeAction',
-      actionContext: controller,
-      actionArguments: dynamicActionArguments
-    })])
-  });  
+    let component = ComponentWithDynamicActionsMixin.create({
+      attrs: {},
+      dynamicActions: Ember.A([DynamicActionObject.create({
+        on: 'someAction',
+        actionHandler: function(...args) {
+          someActionDynamicHandlerArguments = Ember.A(args);
+        },
+        actionName: 'onSomeAction',
+        actionContext: controller,
+        actionArguments: dynamicActionArguments
+      })])
+    });
 
-  component.attrs.someAction = function(...args) {
-    someActionHandlerArguments = Ember.A(args);
-  };
+    component.attrs.someAction = function(...args) {
+      someActionHandlerArguments = Ember.A(args);
+    };
 
-  // Check that all handlers were called with expected arguments.
-  let originalActionArguments = Ember.A(['firstOriginalArgument', 'secondOriginalArgument']);
-  component.sendAction('someAction', ...originalActionArguments);
-  assert.strictEqual(
-    someActionHandlerArguments[0] === originalActionArguments[0] &&
-    someActionHandlerArguments[1] === originalActionArguments[1],
-    true,
-    'Component\'s original action handler doesn\'t contain additional \'actionArguments\' from \'dynamicActions\' (only original arguments)');
-  assert.strictEqual(
-    someActionDynamicHandlerArguments[0] === dynamicActionArguments[0] &&
-    someActionDynamicHandlerArguments[1] === dynamicActionArguments[1] &&
-    someActionDynamicHandlerArguments[2] === originalActionArguments[0] &&
-    someActionDynamicHandlerArguments[3] === originalActionArguments[1],
-    true,
-    'Component\'s dynamic action handler contains additional \'actionArguments\' from \'dynamicActions\'');
-  assert.strictEqual(
-    someActionDynamicControllersHandlerArguments[0] === dynamicActionArguments[0] &&
-    someActionDynamicControllersHandlerArguments[1] === dynamicActionArguments[1] &&
-    someActionDynamicControllersHandlerArguments[2] === originalActionArguments[0] &&
-    someActionDynamicControllersHandlerArguments[3] === originalActionArguments[1],
-    true,
-    'Action handler with specified \'actionName\' contains additional \'actionArguments\' from \'dynamicActions\'');
-});
+    // Check that all handlers were called with expected arguments.
+    let originalActionArguments = Ember.A(['firstOriginalArgument', 'secondOriginalArgument']);
+    component.sendAction('someAction', ...originalActionArguments);
+    assert.strictEqual(
+      someActionHandlerArguments[0] === originalActionArguments[0] &&
+      someActionHandlerArguments[1] === originalActionArguments[1],
+      true,
+      'Component\'s original action handler doesn\'t contain additional \'actionArguments\' from \'dynamicActions\' (only original arguments)');
+    assert.strictEqual(
+      someActionDynamicHandlerArguments[0] === dynamicActionArguments[0] &&
+      someActionDynamicHandlerArguments[1] === dynamicActionArguments[1] &&
+      someActionDynamicHandlerArguments[2] === originalActionArguments[0] &&
+      someActionDynamicHandlerArguments[3] === originalActionArguments[1],
+      true,
+      'Component\'s dynamic action handler contains additional \'actionArguments\' from \'dynamicActions\'');
+    assert.strictEqual(
+      someActionDynamicControllersHandlerArguments[0] === dynamicActionArguments[0] &&
+      someActionDynamicControllersHandlerArguments[1] === dynamicActionArguments[1] &&
+      someActionDynamicControllersHandlerArguments[2] === originalActionArguments[0] &&
+      someActionDynamicControllersHandlerArguments[3] === originalActionArguments[1],
+      true,
+      'Action handler with specified \'actionName\' contains additional \'actionArguments\' from \'dynamicActions\'');
+  }
+);
 
 test('Mixin doesn\'t trigger component\'s inner method if outer action handler is not defined', function (assert) {
   assert.expect(2);

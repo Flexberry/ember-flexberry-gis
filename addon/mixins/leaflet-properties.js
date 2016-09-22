@@ -48,6 +48,7 @@ export default Ember.Mixin.create({
 
       let [property, leafletProperty, ...params] = propExp.split(':');
       if (!leafletProperty) { leafletProperty = 'set' + Ember.String.classify(property); }
+
       let objectProperty = property.replace(/\.\[]/, ''); //allow usage of .[] to observe array changes
 
       this._observers[property] = function () {

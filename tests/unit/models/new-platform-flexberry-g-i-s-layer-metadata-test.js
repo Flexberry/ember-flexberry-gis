@@ -5,7 +5,6 @@ moduleForModel('new-platform-flexberry-g-i-s-layer-metadata', 'Unit | Model | ne
   needs: [
     'model:new-platform-flexberry-g-i-s-layer-metadata',
     'model:new-platform-flexberry-g-i-s-map-layer',
-    'model:new-platform-flexberry-g-i-s-map-user-settings',
     'model:new-platform-flexberry-g-i-s-map'
   ]
 });

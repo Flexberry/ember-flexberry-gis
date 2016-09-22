@@ -8,11 +8,11 @@ import Ember from 'ember';
 */
 export default Ember.Controller.extend({
   actions: {
-  	/**
-      Hides application sitemap's side bar.
+    /**
+       Hides application sitemap's side bar.
 
-      @method actions.hideSidebar
-    */
+       @method actions.hideSidebar
+     */
     hideSidebar: function() {
       Ember.$('.ui.sidebar').sidebar('hide');
     }

@@ -55,7 +55,7 @@ export default Ember.Object.extend({
   enable() {
     let element = this.get('map')._container;
     let cursor = this.get('cursor');
-    if(element && cursor && !L.DomUtil.hasClass(element, cursor)) {
+    if (element && cursor && !L.DomUtil.hasClass(element, cursor)) {
       L.DomUtil.addClass(element, cursor);
     }
   },
@@ -68,7 +68,7 @@ export default Ember.Object.extend({
   disable() {
     let element = this.get('map')._container;
     let cursor = this.get('cursor');
-    if(element && cursor && L.DomUtil.hasClass(element, cursor)) {
+    if (element && cursor && L.DomUtil.hasClass(element, cursor)) {
       L.DomUtil.removeClass(element, cursor);
     }
   }

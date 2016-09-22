@@ -32,7 +32,7 @@ export default IdentifyMaptool.extend({
           if (this._layerCanBeIdentified(layer) && !excludedLayers.contains(layer)) {
             result.pushObject(layer);
           }
-          
+
           let childLayers = Ember.get(layer, 'layers');
           result.pushObjects(getLayersToIdentify(childLayers));
         });

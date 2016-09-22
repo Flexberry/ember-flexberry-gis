@@ -1,4 +1,4 @@
-export function initialize( application ) {
+export function initialize(application) {
   application.registerOptionsForType('mapcommand', { instantiate: false });
 }
 

@@ -29,7 +29,7 @@ export default RectangleMaptool.extend({
   */
   rectangleDrawingDidEnd({ layer }) {
     this._super(...arguments);
-    
+
     let leafletMap = this.get('map');
     let mapSize = leafletMap.getBounds();
     let zoomSize = layer.getBounds();

@@ -1,41 +1,15 @@
+import NewPlatformFlexberryGISMapModel from './models/new-platform-flexberry-g-i-s-map';
+import NewPlatformFlexberryGISMapLayerModel from './models/new-platform-flexberry-g-i-s-map-layer';
+import NewPlatformFlexberryGISLayerMetadataModel from './models/new-platform-flexberry-g-i-s-layer-metadata';
+
 export default {
+  'models': {
+    'new-platform-flexberry-g-i-s-map': NewPlatformFlexberryGISMapModel,
+    'new-platform-flexberry-g-i-s-map-layer': NewPlatformFlexberryGISMapLayerModel,
+    'new-platform-flexberry-g-i-s-layer-metadata': NewPlatformFlexberryGISLayerMetadataModel
+  },
+
   'forms': {
-    'new-platform-flexberry-g-i-s-map-layer-tile': {
-      'url': 'Url',
-      'minZoom': 'Min zoom',
-      'maxZoom': 'Max zoom',
-      'maxNativeZoom': 'Max native zoom',
-      'tileSize': 'Tile size',
-      'subdomains': 'Subdomains',
-      'errorTileUrl': 'Error tile url',
-      'attribution': 'Attribution',
-      'tms': 'Tms',
-      'continuousWorld': 'Continuous world',
-      'noWrap': 'No wrap',
-      'zoomOffset': 'Zoom offset',
-      'zoomReverse': 'Zoom reverse',
-      'opacity': 'Opacity',
-      'zIndex': 'ZIndex',
-      'unloadInvisibleTiles': 'Unload invisible tiles',
-      'updateWhenIdle': 'Update when idle',
-      'detectRetina': 'Detect retina',
-      'reuseTiles': 'Reuse tiles',
-      'bounds': 'Bounds'
-    },
-
-    'new-platform-flexberry-g-i-s-map-layer-wms': {
-      'url': 'Url',
-      'layers': 'Layers',
-      'styles': 'Styles',
-      'format': 'Format',
-      'transparent': 'Transparent',
-      'version': 'Version',
-      'crs': 'Crs'
-    },
-
-    'new-platform-flexberry-g-i-s-map-layer-unknown': {
-      'unknown-layer': 'Unknown layer type'
-    }
   },
 
   'components': {
@@ -232,8 +206,8 @@ export default {
         'incLabelPostfix': '</i>'
       },
       'distanceMeasureUnit': {
-        'meter':'&nbsp;m',
-        'kilometer':'&nbsp;km',
+        'meter': '&nbsp;m',
+        'kilometer': '&nbsp;km',
       }
     },
     'flexberry-export': {
@@ -242,7 +216,8 @@ export default {
       'print': 'Print',
       'wrongBeginSelector': 'JQuery selector does not begin with an initial parenthesis (',
       'wrongEndSelector': 'JQuery selector does not end parenthesis )',
-      'jqueryNotAvailable': 'In the options used JQuery selector, but JQuery is not included. Include JQuery or use  DOM-selectors: .class, #id or DOM-elements',
+      'jqueryNotAvailable': 'In the options used JQuery selector, but JQuery is not included.' +
+        'Include JQuery or use  DOM-selectors: .class, #id or DOM-elements',
       'popupWindowBlocked': 'Print window has been blocked by your browser. Please enable pop-up windows on this page',
       'emptyFilename': 'No file name specified for downloading',
       'downloadCaption': 'Set the export options in the image',
@@ -263,14 +238,14 @@ export default {
     'identify': {
       'caption': 'Identify',
       'modes': {
-        'all' : {
+        'all': {
           'caption': 'All layers'
         },
         'all-visible': {
           'caption': 'All visible layers'
         },
         'top-visible': {
-          'caption': 'Top visible layer' 
+          'caption': 'Top visible layer'
         }
       },
       'error-message': 'Identification by \'{{layerName}}\' layer finished with error',

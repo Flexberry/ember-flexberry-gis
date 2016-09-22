@@ -58,6 +58,7 @@ module.exports = function (environment) {
       root: backendUrl,
       api: backendUrl + '/odata'
     };
+
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
@@ -70,7 +71,7 @@ module.exports = function (environment) {
     ENV.baseURL = '/';
     ENV.locationType = 'none';
 
-    // keep test console output quieter
+    // Keep test console output quieter.
     ENV.APP.LOG_ACTIVE_GENERATION = false;
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
@@ -78,7 +79,7 @@ module.exports = function (environment) {
   }
 
   if (environment === 'production') {
-
+    // Configure production version settings here.
   }
 
   // Read more about CSP:

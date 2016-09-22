@@ -1,72 +1,43 @@
 export default {
   projections: {
-    AuditView: {
-      name: {
-        caption: 'name'
-      },
-      zoom: {
-        caption: 'zoom'
-      },
-      public: {
-        caption: 'public'
-      },
-      coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
-      },
-      lat: {
-        caption: 'lat'
-      },
-      lng: {
-        caption: 'lng'
-      },
-      rootLayer: {
-        caption: 'rootLayer'
-      }
-    },
     MapE: {
       name: {
-        caption: 'name'
+        caption: 'Name'
       },
       lat: {
-        caption: 'lat'
+        caption: 'Lat'
       },
       lng: {
-        caption: 'lng'
+        caption: 'Lng'
       },
       zoom: {
-        caption: 'zoom'
+        caption: 'Zoom'
       },
       public: {
-        caption: 'public'
+        caption: 'Public'
       },
       coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
+        caption: 'CRS'
       },
       rootLayer: {
-        caption: 'rootLayer'
+        caption: 'Root layer'
       }
     },
     MapL: {
       name: {
-        caption: 'name'
+        caption: 'Name'
+      },
+      lat: {
+        caption: 'Lat'
+      },
+      lng: {
+        caption: 'Lng'
+      },
+      zoom: {
+        caption: 'Zoom'
       },
       public: {
-        caption: 'public'
-      },
-      coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
-      },
-      createTime: {
-        caption: 'createTime'
-      },
-      creator: {
-        caption: 'creator'
-      },
-      editTime: {
-        caption: 'editTime'
-      },
-      editor: {
-        caption: 'editor'
+        caption: 'Public'
       }
     }
   }

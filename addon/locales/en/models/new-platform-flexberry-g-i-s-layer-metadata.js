@@ -1,57 +1,25 @@
 export default {
   projections: {
-    AuditView: {
-      name: {
-        caption: 'name'
-      },
-      type: {
-        caption: 'type'
-      },
-      coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
-      },
-      settings: {
-        caption: 'settings'
-      }
-    },
     LayerMetadataE: {
       name: {
-        caption: 'name'
+        caption: 'Name'
       },
       type: {
-        caption: 'type'
+        caption: 'Type'
       },
       coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
+        caption: 'CRS'
       },
       settings: {
-        caption: 'settings'
+        caption: 'Settings'
       }
     },
     LayerMetadataL: {
       name: {
-        caption: 'name'
+        caption: 'Name'
       },
       type: {
-        caption: 'type'
-      },
-      coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
-      },
-      settings: {
-        caption: 'settings'
-      },
-      createTime: {
-        caption: 'createTime'
-      },
-      creator: {
-        caption: 'creator'
-      },
-      editTime: {
-        caption: 'editTime'
-      },
-      editor: {
-        caption: 'editor'
+        caption: 'Type'
       }
     }
   }

@@ -1,5 +1,15 @@
+/**
+  @module ember-flexberry-gis-dummy
+*/
+
 import ListFormRoute from 'ember-flexberry/routes/list-form';
 
+/**
+  Maps layers metadata list route.
+
+  @class NewPlatformFlexberryGISLayerMetadataLRoute
+  @extends ListMapRoute
+*/
 export default ListFormRoute.extend({
   /**
     Name of model projection to be used as record's properties limitation.
@@ -42,5 +52,5 @@ export default ListFormRoute.extend({
     @type Object
     @default {}
   */
-  developerUserSettings: { NewPlatformFlexberryGISLayerMetadataL: {} },
+  developerUserSettings: { NewPlatformFlexberryGISLayerMetadataL: {} }
 });

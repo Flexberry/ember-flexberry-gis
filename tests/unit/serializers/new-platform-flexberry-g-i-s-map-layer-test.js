@@ -4,12 +4,9 @@ moduleForModel('new-platform-flexberry-g-i-s-map-layer', 'Unit | Serializer | ne
   // Specify the other units that are required for this test.
   needs: [
     'serializer:new-platform-flexberry-g-i-s-map-layer',
-    'transform:file',
-    'transform:decimal',
 
     'model:new-platform-flexberry-g-i-s-layer-metadata',
     'model:new-platform-flexberry-g-i-s-map-layer',
-    'model:new-platform-flexberry-g-i-s-map-user-settings',
     'model:new-platform-flexberry-g-i-s-map'
   ]
 });

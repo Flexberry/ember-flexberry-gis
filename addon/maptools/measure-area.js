@@ -26,7 +26,7 @@ export default MeasureMaptool.extend({
     this._measure.polygonBaseTool.popupText.drag = i18n.t('components.flexberry-measuretool.polygon.move').toString();
     this._measure.polygonBaseTool.basePopupText.labelPrefix = i18n.t('components.flexberry-measuretool.polygon.labelPrefix').toString();
     this._measure.polygonBaseTool.basePopupText.labelPostfix = i18n.t('components.flexberry-measuretool.polygon.labelPostfix').toString();
-    this._measure.polygonBaseTool.distanceMeasureUnit.kilometer =i18n.t('components.flexberry-measuretool.distanceMeasureUnit.kilometer').toString();
+    this._measure.polygonBaseTool.distanceMeasureUnit.kilometer = i18n.t('components.flexberry-measuretool.distanceMeasureUnit.kilometer').toString();
     this._measure.polygonBaseTool.distanceMeasureUnit.meter = i18n.t('components.flexberry-measuretool.distanceMeasureUnit.meter').toString();
 
     this._measure.polygonBaseTool.startMeasure();

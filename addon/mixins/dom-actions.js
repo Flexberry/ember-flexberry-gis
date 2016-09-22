@@ -275,7 +275,7 @@ export default Ember.Mixin.create({
       let target = this.get('target');
       if (!Ember.isNone(target)) {
         Ember.assert(
-          'The \'target\' (${target}) for ${this} does not have a \'send\' method',
+          `The \`target\` (${target}) for ${this} doesn\`t have a \`send\` method`,
           Ember.typeOf(this.get('target.send')) === 'function');
 
         target.send(...arguments);
@@ -285,7 +285,7 @@ export default Ember.Mixin.create({
     // It is the only one 'send'-logic modification:
     // 'send' method now returns value returned by founded inner action.
     // It is necessary when DOM-events are handling like inner & outer actions,
-    // to break outer action sending, if inner action handler returned 'false'. 
+    // to break outer action sending, if inner action handler returned 'false'.
     return actionHandlerResult;
   },
 

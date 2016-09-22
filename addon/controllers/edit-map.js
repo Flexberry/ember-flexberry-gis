@@ -162,7 +162,8 @@ export default EditFormController.extend(
           resolve();
         } else {
           Ember.assert(
-            `Wrong type of \`layer.destroyRecord\` property, actual is \`${Ember.typeOf(layer.destroyRecord)}\` but \`function\` is expected.`,
+            `Wrong type of \`layer.destroyRecord\` property, actual is \`${Ember.typeOf(layer.destroyRecord)}\`, ` +
+            `but \`function\` is expected.`,
             Ember.typeOf(layer.destroyRecord) === 'function');
 
           // Delete child layers first.
@@ -185,7 +186,7 @@ export default EditFormController.extend(
           })
           .catch((reason) => {
             reject(reason);
-          });          
+          });
         }
       });
     };

@@ -3,11 +3,9 @@ import layout from '../templates/components/flexberry-toolbar-exportmenu';
 import { translationMacro as t } from 'ember-i18n';
 
 export default Ember.Component.extend({
-  i18n: Ember.inject.service(),
-
   layout,
 
-  _toolname:null,
+  _toolname: null,
 
   _loading: '',
 
@@ -17,8 +15,8 @@ export default Ember.Component.extend({
     caption: '',
     font: '30px Arial',
     fillStyle: 'black',
-    x:10,
-    y:100,
+    x: 10,
+    y: 100,
     zoomChecked: true,
     attributionChecked: false,
     type: 'PNG',
@@ -37,10 +35,9 @@ export default Ember.Component.extend({
 
   _availableImageTypes: [],
 
-  _mimeTypes: { },
+  _mimeTypes: {},
 
   actions: {
-
     configureExport(toolname) {
       let map = this.get('map');
       let i18n = this.get('i18n');
@@ -53,6 +50,7 @@ export default Ember.Component.extend({
       for (let type in this._mimeTypes) {
         this._availableImageTypes.push(type);
       }
+
       this.set('_toolname', toolname);
       this.set('_loading', '');
       this.set('_header', toolname === 'downloadtool' ? this._downloadCaption : this._printCaption);
@@ -65,27 +63,31 @@ export default Ember.Component.extend({
       this._dialog = attr.dialog;
       this.set('_loading', 'loading');
       let map = this.get('map');
-      let exportOptions = { caption: {}, exclude:[]};
+      let exportOptions = { caption: {}, exclude: [] };
       if (this._options.caption.trim().length > 0) {
         exportOptions.caption = {
           text: this._options.caption,
           font: this._options.font,
           fillStyle: this._options.fillStyle,
-          position: [ this._options.x,  this._options.y ]
+          position: [this._options.x,  this._options.y]
         };
       }
+
       if (this._options.zoomChecked) {
         exportOptions.exclude.push('.leaflet-control-zoom');
       }
+
       if (this._options.attributionChecked) {
         exportOptions.exclude.push('.leaflet-control-attribution');
       }
+
       let _this = this;
-      let closeDialogFunction = function(result){
-        _this.set('_showExportDialog',false);
+      let closeDialogFunction = function(result) {
+        _this.set('_showExportDialog', false);
         _this._dialog.modal('hide');  //_showExportDialog does.nt work in promise thread, use direct function to hide
         return result;
       };
+
       exportOptions.afterExport = closeDialogFunction;
 
       if (this._toolname === 'downloadtool') {
@@ -93,14 +95,15 @@ export default Ember.Component.extend({
         exportOptions.format = this._mimeTypes[this._options.type];
         let dataPromise = map.downloadExport(exportOptions);
         dataPromise.then(
-          data => {_this.set('_showExportDialog',false);}
+          data => {_this.set('_showExportDialog', false);}
         );
       } else {
         let dataPromise = map.printExport(exportOptions);
         dataPromise.then(
-          data => {_this.set('_showExportDialog',false);}
+          data => {_this.set('_showExportDialog', false);}
         );
       }
+
       return false;
     },
 
@@ -110,8 +113,6 @@ export default Ember.Component.extend({
       } else {
         Ember.$('#flexberry-toolbar-exportmenu-caption').nextAll('.field').addClass('disabled');
       }
-
     }
-
   }
 });

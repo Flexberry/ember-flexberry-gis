@@ -7,7 +7,7 @@ moduleForComponent('base-control', 'Unit | Component | base control', {
 
 test('it should call map.addControl method on initControl', function(assert) {
   let addControl = sinon.spy();
-  let component = this.subject({ map: { addControl }});
+  let component = this.subject({ map: { addControl } });
 
   component.initControl();
 

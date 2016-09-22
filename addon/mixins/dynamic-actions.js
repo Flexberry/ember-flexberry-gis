@@ -35,7 +35,7 @@ let validateDynamicActionProperties = function(dynamicAction, dynamicActionIndex
   Ember.assert(
     `Method \`send\` must be defined in given dynamicActions[${dynamicActionIndex}].actionContext ` +
     `in order to trigger dynamic action with defined ` +
-    `dynamicActions[` + dynamicActionIndex + `].actionName (\`${actionName}\`).`,
+    `dynamicActions[${dynamicActionIndex}].actionName (\`${actionName}\`).`,
     Ember.isNone(actionName) ||
     (Ember.typeOf(actionName) === 'string' && !Ember.isNone(actionContext) && Ember.typeOf(actionContext.send) === 'function'));
 
@@ -122,7 +122,7 @@ export default Ember.Mixin.create({
 
     @method _actionHandlerIsDefined
     @param {Object} options Method options
-    @param {String} options.actionName Name of component's action for which handler's existence this method should check. 
+    @param {String} options.actionName Name of component's action for which handler's existence this method should check.
     @returns {Boolean} Flag, indicating whether action handler is defined, for action with the specified name, or not.
     @private
   */

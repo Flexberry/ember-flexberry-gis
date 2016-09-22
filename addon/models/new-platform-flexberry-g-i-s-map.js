@@ -1,7 +1,11 @@
 /**
   @module ember-flexberry-gis
- */
-import { Model as MapMixin, defineProjections } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map';
+*/
+
+import {
+  Model as NewPlatformFlexberyGISMapModelMixin,
+  defineProjections
+} from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map';
 import { Projection } from 'ember-flexberry-data';
 import LeafletCrsMixin from '../mixins/leaflet-crs';
 
@@ -10,10 +14,10 @@ import LeafletCrsMixin from '../mixins/leaflet-crs';
 
   @class NewPlatformFlexberryGISMap
   @extends BaseModel
+  @uses NewPlatformFlexberyGISMapModelMixin
   @uses LeafletCrsMixin
- */
-let Model = Projection.Model.extend(MapMixin, LeafletCrsMixin, {
-
+*/
+let Model = Projection.Model.extend(NewPlatformFlexberyGISMapModelMixin, LeafletCrsMixin, {
 });
 
 defineProjections(Model);

@@ -50,7 +50,7 @@ let render = function(stringWithTemplates, options) {
 
   let renderedString = Ember.copy(stringWithTemplates);
   let keyWords = Object.keys(context);
-  for(let i = 0, len = keyWords.length; i < len; i++) {
+  for (let i = 0, len = keyWords.length; i < len; i++) {
     let keyWord = keyWords[i];
     let replacement = Ember.get(context, keyWord);
 
@@ -62,4 +62,4 @@ let render = function(stringWithTemplates, options) {
   return renderedString;
 };
 
-export { render }; 
+export { render };

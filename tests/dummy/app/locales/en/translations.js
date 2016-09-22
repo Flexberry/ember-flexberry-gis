@@ -7,7 +7,6 @@ import NewPlatformFlexberryGISMapLForm from './forms/new-platform-flexberry-g-i-
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
 import NewPlatformFlexberryGISMapEForm from './forms/new-platform-flexberry-g-i-s-map-e';
 
-
 const translations = {};
 Ember.$.extend(true, translations, EmberFlexberryTranslations, EmberFlexberryGisTranslations);
 
