@@ -1,4 +1,4 @@
-<h3 class="ui header">{{title}}</h3>
+<h3 class="ui header">{{t 'forms.new-platform-flexberry-g-i-s-map-e.caption'}}</h3>
 
 {{#if errorMessages}}
   {{#each errorMessages as |currentError|}}
@@ -12,6 +12,11 @@
   {{/each}}
 {{/if}}
 <form class="ui form flexberry-vertical-form" role="form">
+  <div class="field">
+    <div class="sixteen wide">
+      {{flexberry-validationsummary errors=model.errors}}
+    </div>
+  </div>
   <div class="field">
     <div class="flexberry-edit-panel">
       {{#unless readonly}}
@@ -30,111 +35,94 @@
     </div>
   </div>
   <div class="field">
-  {{#if model.errors.name}}
-  <span style="color:red">
-    {{model.errors.name}}
-  </span>
-  {{/if}}
   {{
-  flexberry-field
-  placeholder='(no value)'
-  readonly=readonly
-  required=true
-  value=model.name
-  class=(if model.errors.name 'error' '')
-  label='Name'
-  }}
-</div>
-
-<div class="field">
-  {{#if model.errors.lat}}
-  <span style="color:red">
-    {{model.errors.lat}}
-  </span>
-  {{/if}}
-  {{
-  flexberry-field
-  placeholder='(no value)'
-  readonly=readonly
-  required=true
-  value=model.lat
-  class=(if model.errors.lat 'error' '')
-  label='Lat'
-  }}
-</div>
-
-<div class="field">
-  {{#if model.errors.lng}}
-  <span style="color:red">
-    {{model.errors.lng}}
-  </span>
-  {{/if}}
-  {{
-  flexberry-field
-  placeholder='(no value)'
-  readonly=readonly
-  required=true
-  value=model.lng
-  class=(if model.errors.lng 'error' '')
-  label='Lng'
-  }}
-</div>
-
-<div class="field">
-  {{#if model.errors.zoom}}
-  <span style="color:red">
-    {{model.errors.zoom}}
-  </span>
-  {{/if}}
-  {{
-  flexberry-field
-  placeholder='(no value)'
-  readonly=readonly
-  required=true
-  value=model.zoom
-  class=(if model.errors.zoom 'error' '')
-  label='Zoom'
-  }}
-</div>
-
-<div class="field">
-  <label>Public</label>
-  {{#if model.errors.public}}
-  <span style="color:red">{{model.errors.public}}</span>
-  {{/if}}
-  {{flexberry-checkbox readonly=readonly checked=model.public}}
-</div>
-
-<div class="field">
-  {{#if model.errors.coordinateReferenceSystem}}
-  <span style="color:red">
-    {{model.errors.coordinateReferenceSystem}}
-  </span>
-  {{/if}}
-  {{
-  flexberry-field
-  placeholder='(no value)'
-  readonly=readonly
-  required=true
-  value=model.coordinateReferenceSystem
-  class=(if model.errors.coordinateReferenceSystem 'error' '')
-  label='Coordinate reference system'
-  }}
-</div>
-
-<div class="field">
-  <label>Layers</label>
-  {{#if model.errors.layers}}
-    <span style="color:red">{{model.errors.layers}}</span>
-  {{/if}}
-  {{flexberry-groupedit
-    componentName="layersGroupEdit"
-    modelProjection=modelProjection.attributes.layers
-    content=model.layers
+    flexberry-field
+    placeholder=(t 'components.flexberry-field.placeholder')
     readonly=readonly
-    orderable=false
-    class=(if model.errors.layers 'error' '')
+    required=true
+    value=model.name
+    class=(if model.errors.name 'error' '')
+    label=(t 'forms.new-platform-flexberry-g-i-s-map-e.name-caption')
   }}
+  {{flexberry-validationmessage error=model.errors.name pointing="pointing"}}
+</div>
+
+<div class="field">
+  {{
+    flexberry-field
+    placeholder=(t 'components.flexberry-field.placeholder')
+    readonly=readonly
+    required=true
+    value=model.lat
+    class=(if model.errors.lat 'error' '')
+    label=(t 'forms.new-platform-flexberry-g-i-s-map-e.lat-caption')
+  }}
+  {{flexberry-validationmessage error=model.errors.lat pointing="pointing"}}
+</div>
+
+<div class="field">
+  {{
+    flexberry-field
+    placeholder=(t 'components.flexberry-field.placeholder')
+    readonly=readonly
+    required=true
+    value=model.lng
+    class=(if model.errors.lng 'error' '')
+    label=(t 'forms.new-platform-flexberry-g-i-s-map-e.lng-caption')
+  }}
+  {{flexberry-validationmessage error=model.errors.lng pointing="pointing"}}
+</div>
+
+<div class="field">
+  {{
+    flexberry-field
+    placeholder=(t 'components.flexberry-field.placeholder')
+    readonly=readonly
+    required=true
+    value=model.zoom
+    class=(if model.errors.zoom 'error' '')
+    label=(t 'forms.new-platform-flexberry-g-i-s-map-e.zoom-caption')
+  }}
+  {{flexberry-validationmessage error=model.errors.zoom pointing="pointing"}}
+</div>
+
+<div class="field">
+  <label>{{t 'forms.new-platform-flexberry-g-i-s-map-e.public-caption'}}</label>
+  {{
+    flexberry-checkbox 
+    readonly=readonly 
+    value=model.public
+  }}
+  {{flexberry-validationmessage error=model.errors.public pointing="pointing"}}
+</div>
+
+<div class="field">
+  {{
+    flexberry-field
+    placeholder=(t 'components.flexberry-field.placeholder')
+    readonly=readonly
+    required=true
+    value=model.coordinateReferenceSystem
+    class=(if model.errors.coordinateReferenceSystem 'error' '')
+    label=(t 'forms.new-platform-flexberry-g-i-s-map-e.coordinateReferenceSystem-caption')
+  }}
+  {{flexberry-validationmessage error=model.errors.coordinateReferenceSystem pointing="pointing"}}
+</div>
+
+<div class="field">
+  <label>{{t 'forms.new-platform-flexberry-g-i-s-map-e.rootLayer-caption'}}</label>
+  {{
+    flexberry-lookup
+    choose='showLookupDialog'
+    remove='removeLookupValue'
+    value=model.rootLayer
+    
+    relationName='rootLayer'
+    projection=''
+    title=(t 'forms.new-platform-flexberry-g-i-s-map-e.rootLayer-caption')
+    readonly=readonly
+  }}
+  {{flexberry-validationmessage error=model.errors.rootLayer pointing="pointing"}}
 </div>
 
 </form>

@@ -20,6 +20,6 @@ export default EditMapController.extend(
     @property parentRoute
     @type String
     @default 'maps'
-   */
+  */
   parentRoute: 'maps'
 });

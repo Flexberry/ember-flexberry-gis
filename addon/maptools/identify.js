@@ -149,7 +149,6 @@ export default RectangleMaptool.extend({
     let featuresCountProperty = i18n.t('maptools.identify.identify-popup.properties-table.features-count-property.caption');
     let errorProperty = i18n.t('maptools.identify.identify-popup.properties-table.error-property.caption');
 
-
     let createList = () => {
       return Ember.$('<div />').addClass('ui list');
     };
@@ -161,7 +160,7 @@ export default RectangleMaptool.extend({
       if (Ember.isArray(icon)) {
         $itemIcon = Ember.$('<i />');
         $itemIcon.addClass('icons');
-        
+
         Ember.A(icon).forEach((i) => {
           let $itemIconPart = Ember.$('<i />');
           $itemIconPart.addClass(i);
@@ -172,7 +171,7 @@ export default RectangleMaptool.extend({
         $itemIcon = Ember.$('<i />');
         $itemIcon.addClass(icon);
       }
-      
+
       if (!Ember.isNone($itemIcon)) {
         $item.append($itemIcon);
       }
@@ -211,10 +210,10 @@ export default RectangleMaptool.extend({
       let $tableHeadRow = Ember.$('<tr />');
       $tableHead.append($tableHeadRow);
 
-      let $tableHeaderPropertyNameCell = Ember.$('<th />').text(propertyNameColumnCaption); 
+      let $tableHeaderPropertyNameCell = Ember.$('<th />').text(propertyNameColumnCaption);
       $tableHeadRow.append($tableHeaderPropertyNameCell);
 
-      let $tableHeaderPropertyValueCell = Ember.$('<th />').text(propertyValueColumnCaption); 
+      let $tableHeaderPropertyValueCell = Ember.$('<th />').text(propertyValueColumnCaption);
       $tableHeadRow.append($tableHeaderPropertyValueCell);
 
       let $tableBody = Ember.$('<tbody />');
@@ -227,10 +226,10 @@ export default RectangleMaptool.extend({
         let $tableRow = Ember.$('<tr />');
         $tableBody.append($tableRow);
 
-        let $tablePropertyNameCell = Ember.$('<td />').text(propertyName); 
+        let $tablePropertyNameCell = Ember.$('<td />').text(propertyName);
         $tableRow.append($tablePropertyNameCell);
 
-        let $tablePropertyValueCell = Ember.$('<td />').text(propertyValue); 
+        let $tablePropertyValueCell = Ember.$('<td />').text(propertyValue);
         $tableRow.append($tablePropertyValueCell);
       });
 
@@ -263,7 +262,7 @@ export default RectangleMaptool.extend({
       let layerFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
       let layerIcon = Ember.get(layerFactory, 'iconClass');
       let layerName = Ember.get(layer, 'name');
-      
+
       let layerProperties = {};
       layerProperties[layerNameProperty] = layerName;
       layerProperties[featuresCountProperty] = features.length;
@@ -288,7 +287,7 @@ export default RectangleMaptool.extend({
       });
       let $layerListItemContent = Ember.$('.content', $layerListItem);
       $list.append($layerListItem);
-      
+
       if (features.length === 0) {
         return;
       }

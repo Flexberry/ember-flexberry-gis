@@ -32,7 +32,7 @@ export default BaseLayer.extend({
 
     @method createLayer
   */
-  createLayer () {
+  createLayer() {
     return L.tileLayer(this.get('url'), this.get('options'));
   },
 

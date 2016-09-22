@@ -88,7 +88,7 @@ test('Component invokes actions', function(assert) {
   this.set('actions.onFlagChange', e => {
     latestEventObjects.change = e;
   });
-  this.render(hbs`{{flexberry-ddau-checkbox change=(action \"onFlagChange\")}}`);
+  this.render(hbs`{{flexberry-ddau-checkbox change=(action "onFlagChange")}}`);
 
   // Retrieve component.
   let $component = this.$().children();
@@ -157,21 +157,21 @@ test('Component changes binded value (with \'change\' action handler)', function
   assert.expect(7);
 
   this.set('flag', false);
-  
+
   // Bind component's 'change' action handler.
   this.set('actions.onFlagChange', e => {
     assert.strictEqual(e.originalEvent.target.id, this.$('input')[0].id);
     this.set('flag', e.newValue);
   });
 
-  this.render(hbs`{{flexberry-ddau-checkbox value=flag change=(action \"onFlagChange\")}}`);
+  this.render(hbs`{{flexberry-ddau-checkbox value=flag change=(action "onFlagChange")}}`);
 
   // Retrieve component & it's inner <input>.
   let $component = this.$().children();
   let $checkboxInput = $component.children('input');
 
   // Check component's initial state.
-  assert.strictEqual($checkboxInput.prop('checked'), false, 'Component\'s inner checkbox <input> isn\'t checked before click');  
+  assert.strictEqual($checkboxInput.prop('checked'), false, 'Component\'s inner checkbox <input> isn\'t checked before click');
 
   // Make component checked.
   $component.click();
@@ -204,14 +204,14 @@ test('Component changes binded value (with \'change\' action handler from specia
   // Bind component's 'change' action handler from specialized mixin.
   this.set('actions.onCheckboxChange', FlexberryDdauCheckboxActionsHandlerMixin.mixins[0].properties.actions.onCheckboxChange);
 
-  this.render(hbs`{{flexberry-ddau-checkbox value=flag change=(action \"onCheckboxChange\" \"flag\")}}`);
+  this.render(hbs`{{flexberry-ddau-checkbox value=flag change=(action "onCheckboxChange" "flag")}}`);
 
   // Retrieve component & it's inner <input>.
   let $component = this.$().children();
   let $checkboxInput = $component.children('input');
 
   // Check component's initial state.
-  assert.strictEqual($checkboxInput.prop('checked'), false, 'Component\'s inner checkbox <input> isn\'t checked before click');  
+  assert.strictEqual($checkboxInput.prop('checked'), false, 'Component\'s inner checkbox <input> isn\'t checked before click');
 
   // Make component checked.
   $component.click();
@@ -239,7 +239,7 @@ test('Component changes binded value (with \'change\' action handler from specia
 test('Component works properly in readonly mode', function(assert) {
   assert.expect(9);
 
- let latestEventObjects = {
+  let latestEventObjects = {
     change: null
   };
 
@@ -251,7 +251,7 @@ test('Component works properly in readonly mode', function(assert) {
   // Render component in readonly mode.
   this.set('flag', false);
   this.set('readonly', true);
-  this.render(hbs`{{flexberry-ddau-checkbox value=flag readonly=readonly change=(action \"onFlagChange\")}}`);
+  this.render(hbs`{{flexberry-ddau-checkbox value=flag readonly=readonly change=(action "onFlagChange")}}`);
 
   // Retrieve component & it's inner <input>.
   let $component = this.$().children();

@@ -129,420 +129,421 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
 
-  /**
-    Component's required actions names.
-    For actions enumerated in this array an assertion exceptions will be thrown,
-    if actions handlers are not defined for them.
-
-    @property _requiredActions
-    @type String[]
-    @default ['changeVisibility', 'add', 'edit', 'remove']
-  */
-  _requiredActionNames: ['changeVisibility', 'add', 'edit', 'remove'],
-
-  /**
-    Flag: indicates whether some {{#crossLink "FlexberryMaplayerComponent/layers:property"}}'layers'{{/childNodes}} are defined.
-
-    @property _hasLayers
-    @type boolean
-    @readOnly
-    @private
-  */
-  _hasLayers: Ember.computed('layers.[]', 'layers.@each.isDeleted', function() {
-    let layers = this.get('layers');
-
-    return Ember.isArray(layers) && layers.filter((layer) => {
-      return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
-    }).length > 0;
-  }),
-
-  /**
-    Flag: indicates whether some nested content is defined
-    (some yield markup or {{#crossLink "FlexberryMaplayersComponent/layers:property"}}'layers'{{/crossLink}} are defined).
-
-    @property _hasContent
-    @type boolean
-    @readOnly
-    @private
-  */
-  _hasContent: Ember.computed('_slots.[]', '_hasLayers', function() {
-    // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
-    return this._isRegistered('content') || this.get('_hasLayers');
-  }),
-
-  /**
-    Layer class factory related to current layer type.
-
-    @property _layerClassFactory
-    @type Object
-    @readOnly
-    @private
-  */
-  _layerClassFactory: Ember.computed('type', function() {
-    return Ember.getOwner(this).knownForType('layer', this.get('type'));
-  }),
-
-  /**
-    CSS-class name for layer type related icon.
-
-    @property _typeIconClass
-    @type String
-    @readOnly
-    @private
-  */
-  _typeIconClass: Ember.computed('_layerClassFactory', function() {
-    let layerClassFactory = this.get('_layerClassFactory');
-
-    return Ember.get(layerClassFactory, 'iconClass');
-  }),
-
-  /**
-    Flag: indicates whether add operation is allowed for layer.
-
-    @property _addOperationIsAvailable
-    @type boolean
-    @readOnly
-    @private
-  */
-  _addOperationIsAvailable: Ember.computed('_layerClassFactory', function() {
-    let layerClassFactory = this.get('_layerClassFactory');
-
-    return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('add');
-  }),
-
-  /**
-    Flag: indicates whether add dialog has been already requested by user or not.
-
-    @property _addDialogHasBeenRequested
-    @type boolean
-    @private
-  */ 
-  _addDialogHasBeenRequested: false,
-
-  /**
-    Flag: indicates whether edit dialog has been already requested by user or not.
-
-    @property _editDialogHasBeenRequested
-    @type boolean
-    @private
-  */ 
-  _editDialogHasBeenRequested: false,
-
-  /**
-    Flag: indicates whether remove dialog has been already requested by user or not.
-
-    @property _removeDialogHasBeenRequested
-    @type boolean
-    @private
-  */ 
-  _removeDialogHasBeenRequested: false,
-
-  /**
-    Flag: indicates whether add dialog is visible or not.
-
-    @property _addDialogIsVisible
-    @type boolean
-    @private
-  */  
-  _addDialogIsVisible: false,
-
-  /**
-    Flag: indicates whether edit dialog is visible or not.
-
-    @property _editDialogIsVisible
-    @type boolean
-    @private
-  */  
-  _editDialogIsVisible: false,
-
-  /**
-    Flag: indicates whether remove dialog is visible or not.
-
-    @property _removeDialogIsVisible
-    @type boolean
-    @private
-  */  
-  _removeDialogIsVisible: false,
-
-  /**
-    Reference to component's template.
-  */
-  layout,
-
-  /**
-    Reference to component's CSS-classes names.
-    Must be also a component's instance property to be available from component's hbs-markup.
-  */
-  flexberryClassNames,
-
-  /**
-    Overridden ['tagName' property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
-    Is blank to disable component's wrapping <div>. 
-
-    @property tagName
-    @type String
-    @default ''
-  */
-  tagName: '',
-
-  /**
-    Layer's type (depending on it icon mark is selected).
-
-    @property type
-    @type String
-    @default null
-  */
-  type: null,
-
-  /**
-    Layer's name (will be displayed near node).
-
-    @property name
-    @type String
-    @default null
-  */
-  name: null,
-
-  /**
-    Layer's CRS (coordinate reference system).
-
-    @property coordinateReferenceSystem
-    @type String
-    @default null
-  */
-  coordinateReferenceSystem: null,
-
-  /**
-    Layer's serialized type-related settings.
-
-    @property type
-    @type String
-    @default null
-  */
-  settings: null,
-
-  /**
-    Layer's visibility.
-
-    @property visibility
-    @type Boolean
-    @default false
-  */
-  visibility: false,
-
-  /**
-    Child layers.
-    This property is optional and must be used when there are too many child layers,
-    and you don't want to define them explicitly in the .hbs markup,
-    then you can define layers array somewhere in code & pass defined array to this component's property.
-
-    @property layers
-    @type NewPlatformFlexberryGISMapLayerModel[]
-    @default null
-  */
-  layers: null,
-
-  /**
-    Flag: indicates whether layer node is in readonly mode.
-    If true, layer node's data-related UI will be in readonly mode.
-
-    @property readonly
-    @type Boolean
-    @default false
-  */
-  readonly: false,
-
-  actions: {
     /**
-      Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
-      Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.headerClick:method"}}'headerClick' action{{/crossLink}}.
+      Component's required actions names.
+      For actions enumerated in this array an assertion exceptions will be thrown,
+      if actions handlers are not defined for them.
 
-      @method actions.onHeaderClick
+      @property _requiredActions
+      @type String[]
+      @default ['changeVisibility', 'add', 'edit', 'remove']
+    */
+    _requiredActionNames: ['changeVisibility', 'add', 'edit', 'remove'],
+
+    /**
+      Flag: indicates whether some {{#crossLink "FlexberryMaplayerComponent/layers:property"}}'layers'{{/childNodes}} are defined.
+
+      @property _hasLayers
+      @type boolean
+      @readOnly
+      @private
+    */
+    _hasLayers: Ember.computed('layers.[]', 'layers.@each.isDeleted', function() {
+      let layers = this.get('layers');
+
+      return Ember.isArray(layers) && layers.filter((layer) => {
+        return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
+      }).length > 0;
+    }),
+
+    /**
+      Flag: indicates whether some nested content is defined
+      (some yield markup or {{#crossLink "FlexberryMaplayersComponent/layers:property"}}'layers'{{/crossLink}} are defined).
+
+      @property _hasContent
+      @type boolean
+      @readOnly
+      @private
+    */
+    _hasContent: Ember.computed('_slots.[]', '_hasLayers', function() {
+      // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
+      return this._isRegistered('content') || this.get('_hasLayers');
+    }),
+
+    /**
+      Layer class factory related to current layer type.
+
+      @property _layerClassFactory
+      @type Object
+      @readOnly
+      @private
+    */
+    _layerClassFactory: Ember.computed('type', function() {
+      return Ember.getOwner(this).knownForType('layer', this.get('type'));
+    }),
+
+    /**
+      CSS-class name for layer type related icon.
+
+      @property _typeIconClass
+      @type String
+      @readOnly
+      @private
+    */
+    _typeIconClass: Ember.computed('_layerClassFactory', function() {
+      let layerClassFactory = this.get('_layerClassFactory');
+
+      return Ember.get(layerClassFactory, 'iconClass');
+    }),
+
+    /**
+      Flag: indicates whether add operation is allowed for layer.
+
+      @property _addOperationIsAvailable
+      @type boolean
+      @readOnly
+      @private
+    */
+    _addOperationIsAvailable: Ember.computed('_layerClassFactory', function() {
+      let layerClassFactory = this.get('_layerClassFactory');
+
+      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('add');
+    }),
+
+    /**
+      Flag: indicates whether add dialog has been already requested by user or not.
+
+      @property _addDialogHasBeenRequested
+      @type boolean
+      @private
+    */
+    _addDialogHasBeenRequested: false,
+
+    /**
+      Flag: indicates whether edit dialog has been already requested by user or not.
+
+      @property _editDialogHasBeenRequested
+      @type boolean
+      @private
+    */
+    _editDialogHasBeenRequested: false,
+
+    /**
+      Flag: indicates whether remove dialog has been already requested by user or not.
+
+      @property _removeDialogHasBeenRequested
+      @type boolean
+      @private
+    */
+    _removeDialogHasBeenRequested: false,
+
+    /**
+      Flag: indicates whether add dialog is visible or not.
+
+      @property _addDialogIsVisible
+      @type boolean
+      @private
+    */
+    _addDialogIsVisible: false,
+
+    /**
+      Flag: indicates whether edit dialog is visible or not.
+
+      @property _editDialogIsVisible
+      @type boolean
+      @private
+    */
+    _editDialogIsVisible: false,
+
+    /**
+      Flag: indicates whether remove dialog is visible or not.
+
+      @property _removeDialogIsVisible
+      @type boolean
+      @private
+    */
+    _removeDialogIsVisible: false,
+
+    /**
+      Reference to component's template.
+    */
+    layout,
+
+    /**
+      Reference to component's CSS-classes names.
+      Must be also a component's instance property to be available from component's hbs-markup.
+    */
+    flexberryClassNames,
+
+    /**
+      Overridden ['tagName' property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).
+      Is blank to disable component's wrapping <div>.
+
+      @property tagName
+      @type String
+      @default ''
+    */
+    tagName: '',
+
+    /**
+      Layer's type (depending on it icon mark is selected).
+
+      @property type
+      @type String
+      @default null
+    */
+    type: null,
+
+    /**
+      Layer's name (will be displayed near node).
+
+      @property name
+      @type String
+      @default null
+    */
+    name: null,
+
+    /**
+      Layer's CRS (coordinate reference system).
+
+      @property coordinateReferenceSystem
+      @type String
+      @default null
+    */
+    coordinateReferenceSystem: null,
+
+    /**
+      Layer's serialized type-related settings.
+
+      @property type
+      @type String
+      @default null
+    */
+    settings: null,
+
+    /**
+      Layer's visibility.
+
+      @property visibility
+      @type Boolean
+      @default false
+    */
+    visibility: false,
+
+    /**
+      Child layers.
+      This property is optional and must be used when there are too many child layers,
+      and you don't want to define them explicitly in the .hbs markup,
+      then you can define layers array somewhere in code & pass defined array to this component's property.
+
+      @property layers
+      @type NewPlatformFlexberryGISMapLayerModel[]
+      @default null
+    */
+    layers: null,
+
+    /**
+      Flag: indicates whether layer node is in readonly mode.
+      If true, layer node's data-related UI will be in readonly mode.
+
+      @property readonly
+      @type Boolean
+      @default false
+    */
+    readonly: false,
+
+    actions: {
+      /**
+        Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.headerClick:method"}}'headerClick' action{{/crossLink}}.
+
+        @method actions.onHeaderClick
+        @param {Object} e Event object from
+        {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
+      */
+      onHeaderClick(...args) {
+        this.sendAction('headerClick', ...args);
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}'beforeExpand' action{{/crossLink}}.
+
+        @method actions.onHeaderClick
+        @param {Object} e Event object from
+        {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
+      */
+      onBeforeExpand(...args) {
+        this.sendAction('beforeExpand', ...args);
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeCollapse:method"}}'beforeCollapse' action{{/crossLink}}.
+
+        @method actions.onHeaderClick
+        @param {Object} e Event object from
+        {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.
+      */
+      onBeforeCollapse(...args) {
+        this.sendAction('beforeCollapse', ...args);
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeVisibility:method"}}'changeVisibility'action{{/crossLink}}.
+
+        @method actions.onVisibilityCheckboxChange
+        @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
+      */
+      onVisibilityCheckboxChange(...args) {
+        this.sendAction('changeVisibility', ...args);
+      },
+
+      /**
+        Handles add button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
+
+        @method actions.onAddButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onAddButtonClick(e) {
+        // Include dialog to markup.
+        this.set('_addDialogHasBeenRequested', true);
+
+        // Show dialog.
+        this.set('_addDialogIsVisible', true);
+      },
+
+      /**
+        Handles add dialog's 'approve' action.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
+
+        @method actions.onAddDialogApprove
+        @param {Object} e Action's event object.
+        @param {Object} e.layerProperties Object containing properties of new child layer.
+      */
+      onAddDialogApprove(...args) {
+        // Send outer 'add' action.
+        this.sendAction('add', ...args);
+      },
+
+      /**
+        Handles edit button's 'click' event.
+        Shows component's edit dialog.
+
+        @method actions.onEditButtonClick
+        @param {Object} [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onEditButtonClick() {
+        // Include dialog to markup.
+        this.set('_editDialogHasBeenRequested', true);
+
+        // Show dialog.
+        this.set('_editDialogIsVisible', true);
+      },
+
+      /**
+        Handles edit dialog's 'approve' action.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.add:method"}}'edit'{{/crossLink}} action.
+
+        @method actions.onEditDialogApprove
+        @param {Object} e Action's event object.
+        @param {Object} e.layerProperties Object containing edited layer properties, which must be merged to layer on action.
+      */
+      onEditDialogApprove(...args) {
+        // Send outer 'edit' action.
+        this.sendAction('edit', ...args);
+      },
+
+      /**
+        Handles remove button's 'click' event.
+        Shows component's remove dialog.
+
+        @method actions.onRemoveButtonClick
+        @param {Object} [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onRemoveButtonClick() {
+        // Include dialog to markup.
+        this.set('_removeDialogHasBeenRequested', true);
+
+        // Show dialog.
+        this.set('_removeDialogIsVisible', true);
+      },
+
+      /**
+        Handles remove dialog's 'approve' action.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.remove:method"}}'remove'{{/crossLink}} action.
+
+        @method actions.onRemoveDialogApprove
+      */
+      onRemoveDialogApprove(...args) {
+        // Send outer 'remove' action.
+        this.sendAction('remove', ...args);
+      }
+    }
+
+    /**
+      Component's action invoking when layer node's header has been clicked.
+
+      @method sendingActions.headerClick
       @param {Object} e Event object from
       {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
     */
-    onHeaderClick(...args) {
-      this.sendAction('headerClick', ...args);
-    },
 
     /**
-      Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
-      Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}'beforeExpand' action{{/crossLink}}.
+      Component's action invoking before layer node will be expanded.
+      Layer node can be prevented from being expanded with call to action event object's 'originalEvent.stopPropagation()'.
 
-      @method actions.onHeaderClick
+      @method sendingActions.beforeExpand
       @param {Object} e Event object from
       {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
     */
-    onBeforeExpand(...args) {
-      this.sendAction('beforeExpand', ...args);
-    },
 
     /**
-      Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.
-      Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeCollapse:method"}}'beforeCollapse' action{{/crossLink}}.
+      Component's action invoking before layer node will be collapsed.
+      Layer node can be prevented from being collapsed with call to action event object's 'originalEvent.stopPropagation()'.
 
-      @method actions.onHeaderClick
+      @method sendingActions.beforeCollapse
       @param {Object} e Event object from
-      {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollapse:method"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.
+      {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollpse:method"}}'flexberry-treenode' component's 'beforeCollpse' action{{/crossLink}}.
     */
-    onBeforeCollapse(...args) {
-      this.sendAction('beforeCollapse', ...args);
-    },
 
     /**
-      Handles {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
-      Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeVisibility:method"}}'changeVisibility'action{{/crossLink}}.
+      Component's action invoking when layer node's 'visibility' state changed.
 
-      @method actions.onVisibilityCheckboxChange
-      @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
+      @method sendingActions.changeVisibility
+      @param {Object} e Event object from
+      {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
     */
-    onVisibilityCheckboxChange(...args) {
-      this.sendAction('changeVisibility', ...args);
-    },
 
     /**
-      Handles add button's 'click' event.
-      Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
+      Component's action invoking when user wants to add child layer into current.
 
-      @method actions.onAddButtonClick
-      @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
-      which describes button's 'click' event.
-    */
-    onAddButtonClick(e) {
-      // Include dialog to markup.
-      this.set('_addDialogHasBeenRequested', true);
-
-      // Show dialog.
-      this.set('_addDialogIsVisible', true);
-    },
-
-    /**
-      Handles add dialog's 'approve' action.
-      Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
-
-      @method actions.onAddDialogApprove
+      @method sendingActions.add
       @param {Object} e Action's event object.
       @param {Object} e.layerProperties Object containing properties of new child layer.
     */
-    onAddDialogApprove(...args) {
-      // Send outer 'add' action.
-      this.sendAction('add', ...args);
-    },
 
     /**
-      Handles edit button's 'click' event.
-      Shows component's edit dialog.
+      Component's action invoking when user wants to edit current layer.
 
-      @method actions.onEditButtonClick
-      @param {Object} [jQuery event object](http://api.jquery.com/category/events/event-object/)
-      which describes button's 'click' event.
-    */
-    onEditButtonClick() {
-      // Include dialog to markup.
-      this.set('_editDialogHasBeenRequested', true);
-
-      // Show dialog.
-      this.set('_editDialogIsVisible', true);
-    },
-
-    /**
-      Handles edit dialog's 'approve' action.
-      Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.add:method"}}'edit'{{/crossLink}} action.
-
-      @method actions.onEditDialogApprove
+      @method sendingActions.edit
       @param {Object} e Action's event object.
       @param {Object} e.layerProperties Object containing edited layer properties, which must be merged to layer on action.
     */
-    onEditDialogApprove(...args) {
-      // Send outer 'edit' action.
-      this.sendAction('edit', ...args);
-    },
 
     /**
-      Handles remove button's 'click' event.
-      Shows component's remove dialog.
+      Component's action invoking when user wants to remove current layer.
 
-      @method actions.onRemoveButtonClick
-      @param {Object} [jQuery event object](http://api.jquery.com/category/events/event-object/)
-      which describes button's 'click' event.
+      @method sendingActions.remove
+      @param {Object} e Action's event object.
     */
-    onRemoveButtonClick() {
-      // Include dialog to markup.
-      this.set('_removeDialogHasBeenRequested', true);
-
-      // Show dialog.
-      this.set('_removeDialogIsVisible', true);
-    },
-
-    /**
-      Handles remove dialog's 'approve' action.
-      Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.remove:method"}}'remove'{{/crossLink}} action.
-
-      @method actions.onRemoveDialogApprove
-    */
-    onRemoveDialogApprove(...args) {
-      // Send outer 'remove' action.
-      this.sendAction('remove', ...args);
-    }
   }
-
-  /**
-    Component's action invoking when layer node's header has been clicked.
-
-    @method sendingActions.headerClick
-    @param {Object} e Event object from
-    {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
-  */
-
-  /**
-    Component's action invoking before layer node will be expanded.
-    Layer node can be prevented from being expanded with call to action event object's 'originalEvent.stopPropagation()'.
-
-    @method sendingActions.beforeExpand
-    @param {Object} e Event object from
-    {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeExpand:method"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.
-  */
-
-  /**
-    Component's action invoking before layer node will be collapsed.
-    Layer node can be prevented from being collapsed with call to action event object's 'originalEvent.stopPropagation()'.
-
-    @method sendingActions.beforeCollapse
-    @param {Object} e Event object from
-    {{#crossLink "FlexberryTreenodeComponent/sendingActions.beforeCollpse:method"}}'flexberry-treenode' component's 'beforeCollpse' action{{/crossLink}}.
-  */
-
-  /**
-    Component's action invoking when layer node's 'visibility' state changed.
-
-    @method sendingActions.changeVisibility
-    @param {Object} e Event object from
-    {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
-  */
-
-  /**
-    Component's action invoking when user wants to add child layer into current.
-
-    @method sendingActions.add
-    @param {Object} e Action's event object.
-    @param {Object} e.layerProperties Object containing properties of new child layer.
-  */
-
-  /**
-    Component's action invoking when user wants to edit current layer.
-
-    @method sendingActions.edit
-    @param {Object} e Action's event object.
-    @param {Object} e.layerProperties Object containing edited layer properties, which must be merged to layer on action.
-  */
-
-  /**
-    Component's action invoking when user wants to remove current layer.
-
-    @method sendingActions.remove
-    @param {Object} e Action's event object.
-  */
-});
+);
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.

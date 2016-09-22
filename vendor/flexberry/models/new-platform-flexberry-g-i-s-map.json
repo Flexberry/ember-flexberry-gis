@@ -1,5 +1,7 @@
 ﻿{
+  "name": "NewPlatformFlexberryGISMap",
   "modelName": "new-platform-flexberry-g-i-s-map",
+  "className": "Map",
   "parentModelName": null,
   "parentClassName": null,
   "attrs": [
@@ -47,7 +49,7 @@
     },
     {
       "name": "createTime",
-      "type": "string",
+      "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
       "defaultValue": ""
@@ -61,7 +63,7 @@
     },
     {
       "name": "editTime",
-      "type": "string",
+      "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
       "defaultValue": ""

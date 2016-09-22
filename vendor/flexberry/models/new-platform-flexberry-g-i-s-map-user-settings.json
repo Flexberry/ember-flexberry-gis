@@ -1,5 +1,7 @@
 ﻿{
+  "name": "NewPlatformFlexberryGISMapUserSettings",
   "modelName": "new-platform-flexberry-g-i-s-map-user-settings",
+  "className": "MapUserSettings",
   "parentModelName": null,
   "parentClassName": null,
   "attrs": [

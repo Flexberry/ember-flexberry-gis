@@ -1,5 +1,7 @@
 ﻿{
+  "name": "NewPlatformFlexberryGISMapLayer",
   "modelName": "new-platform-flexberry-g-i-s-map-layer",
+  "className": "MapLayer",
   "parentModelName": null,
   "parentClassName": null,
   "attrs": [
@@ -27,7 +29,7 @@
     {
       "name": "settings",
       "type": "string",
-      "flexberryType": "string",
+      "flexberryType": "stringMax",
       "notNull": false,
       "defaultValue": ""
     },
@@ -35,6 +37,13 @@
       "name": "coordinateReferenceSystem",
       "type": "string",
       "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "index",
+      "type": "number",
+      "flexberryType": "int",
       "notNull": false,
       "defaultValue": ""
     }
@@ -83,6 +92,12 @@
           "caption": "Coordinate reference system",
           "hidden": false,
           "index": 4
+        },
+        {
+          "name": "index",
+          "caption": "Index",
+          "hidden": false,
+          "index": 6
         }
       ],
       "belongsTo": [
@@ -135,6 +150,12 @@
           "caption": "Coordinate reference system",
           "hidden": false,
           "index": 4
+        },
+        {
+          "name": "index",
+          "caption": "Index",
+          "hidden": false,
+          "index": 6
         }
       ],
       "belongsTo": [

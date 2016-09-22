@@ -6,7 +6,7 @@ import EditMapRoute from 'ember-flexberry-gis/routes/edit-map';
 import EditFormRouteOperationsIndicationMixin from '../mixins/edit-form-route-operations-indication';
 
 /**
-  Map route.
+  Map edit route.
 
   @class MapRoute
   @extends EditMapRoute

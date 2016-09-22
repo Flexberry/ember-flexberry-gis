@@ -1,11 +1,18 @@
-import __ApplicationSerializer from './application';
+/**
+  @module ember-flexberry-gis
+*/
 
-export default __ApplicationSerializer.extend({
-  attrs: {
+import FlexberryData from 'ember-flexberry-data';
+import {
+  Serializer as NewPlatformFlexberyGISLayerMetadataSerializerMixin
+} from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-layer-metadata';
 
-  },
-  /**
-  * Field name where object identifier is kept.
-  */
-  primaryKey: '__PrimaryKey'
+/**
+  Map layer metadata model serializer.
+
+  @class NewPlatformFlexberryGISMap
+  @extends OdataSerializer
+  @uses NewPlatformFlexberyGISLayerMetadataSerializerMixin
+*/
+export default FlexberryData.Serializer.Odata.extend(NewPlatformFlexberyGISLayerMetadataSerializerMixin, {
 });

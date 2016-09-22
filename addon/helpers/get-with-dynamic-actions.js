@@ -15,25 +15,25 @@ let validateHelperProperties = function(args, hash) {
 
   let propertyOwner = args[0];
   Ember.assert(
-    `Wrong type of \`get-with-dynamic-actions\` helper's first argument: ` +
+    `Wrong type of \`get-with-dynamic-actions\` helper\`s first argument: ` +
     `actual type is \`${Ember.typeOf(propertyOwner)}\`, but \`object\` or \`instance\` is expected.`,
     Ember.typeOf(propertyOwner) === 'object' || Ember.typeOf(propertyOwner) === 'instance');
 
   let propertyName = args[1];
   Ember.assert(
-    `Wrong type of \`get-with-dynamic-actions\` helper's second argument: ` +
+    `Wrong type of \`get-with-dynamic-actions\` helper\`s second argument: ` +
     `actual type is \`${Ember.typeOf(propertyName)}\`, but \`string\` is expected.`,
     Ember.typeOf(propertyName) === 'string');
 
   let hierarchyPropertyName = Ember.get(hash, 'hierarchyPropertyName');
   Ember.assert(
-    `Wrong type of \`get-with-dynamic-actions\` helper's \`hierarchyPropertyName\` property: ` +
+    `Wrong type of \`get-with-dynamic-actions\` helper\`s \`hierarchyPropertyName\` property: ` +
     `actual type is \`${Ember.typeOf(hierarchyPropertyName)}\`, but \`string\` is expected.`,
     Ember.isNone(hierarchyPropertyName) || Ember.typeOf(hierarchyPropertyName) === 'string');
 
   let dynamicActions = Ember.get(hash, 'dynamicActions');
   Ember.assert(
-    `Wrong type of \`get-with-dynamic-actions\` helper's \`dynamicActions\` property: ` +
+    `Wrong type of \`get-with-dynamic-actions\` helper\`s \`dynamicActions\` property: ` +
     `actual type is \`${Ember.typeOf(dynamicActions)}\`, but \`array\` is expected.`,
     Ember.isNone(dynamicActions) || Ember.isArray(dynamicActions));
 };
@@ -165,7 +165,7 @@ let getRenderedDynamicActionArguments = function(actionArguments, renderingConte
         let treeNodeCheckboxValuePath = args[0];
         let treeNodeCheckboxChangeActionEventObject = args[args.length - 1];
 
-        // Change tree node's 'checkboxValue' property. 
+        // Change tree node's 'checkboxValue' property.
         this.set(treeNodeCheckboxValuePath, treeNodeCheckboxChangeActionEventObject.newValue);
       }
     }
@@ -255,7 +255,7 @@ export default Ember.Helper.extend({
     let arrayObserver = {
       arrayWillChange: (arr, start, removeCount, addCount) => {
         // Remove observers from removing properties (while properties still exists).
-        for (let i=start; removeCount > 0 && i<start+removeCount; i++) {
+        for (let i = start; removeCount > 0 && i < start + removeCount; i++) {
           let removingPropertyPath = `${propertyPath}.${i}`;
 
           this._removeHierarchyPropertiesObservers({
@@ -267,7 +267,7 @@ export default Ember.Helper.extend({
       arrayDidChange: (arr, start, removeCount, addCount) => {
         // Bind dynamic actions for added property, and rebind for following ones (till the end of array), or
         // rebind dynamic actions for properties following after removed ones (till the end of array).
-        for (let i=start, len = arr.length; i<len; i++) {
+        for (let i = start, len = arr.length; i < len; i++) {
           let addedOrMovedPropertyPath = `${propertyPath}.${i}`;
           let addedOrMovedPropertyValue = this.get(`_rootPropertyOwner.${addedOrMovedPropertyPath}`);
 
@@ -337,7 +337,7 @@ export default Ember.Helper.extend({
     let rootPropertyOwner = this.get('_rootPropertyOwner');
     let hierarchyPropertiesObservers = this.get('_hierarchyPropertiesObservers');
     let len = hierarchyPropertiesObservers.length;
-    while(--len >= 0) {
+    while (--len >= 0) {
       let observer = hierarchyPropertiesObservers[len];
       if (!observerCanBeRemoved(observer)) {
         break;
@@ -392,7 +392,7 @@ export default Ember.Helper.extend({
 
     // If property is array, then attach dynamic actions for each object in array.
     if (Ember.isArray(propertyValue)) {
-      for(let i = 0, len = propertyValue.length; i < len; i++) {
+      for (let i = 0, len = propertyValue.length; i < len; i++) {
         this._bindDynamicActions({
           propertyValue: propertyValue[i],
           propertyPath: `${propertyPath}.${i}`,
@@ -408,7 +408,7 @@ export default Ember.Helper.extend({
 
     // Here 'propertyValue' is strict an object or an instance.
     Ember.assert(
-      `Wrong type of \`${propertyPath}\` property retrieved through \`get-with-action-bindings\` helper: ` +
+      `Wrong type of \`${propertyPath}\` property retrieved through \`get-with-dynamic-actions\` helper: ` +
       `actual type is \`${Ember.typeOf(propertyValue)}\`, but \`object\` or \`instance\` is expected.`,
       Ember.typeOf(propertyValue) === 'object' || Ember.typeOf(propertyValue) === 'instance');
 
@@ -416,7 +416,7 @@ export default Ember.Helper.extend({
     if (Ember.isArray(dynamicActions)) {
       let preparedDynamicActions = Ember.A();
 
-      for(let i = 0, len = dynamicActions.length; i < len; i++) {
+      for (let i = 0, len = dynamicActions.length; i < len; i++) {
         let dynamicAction = dynamicActions[i];
 
         let argumentsRenderingContext = {};
@@ -439,7 +439,7 @@ export default Ember.Helper.extend({
 
         preparedDynamicActions.pushObject(preparedDynamicAction);
       }
-      
+
       Ember.set(propertyValue, 'dynamicActions', preparedDynamicActions);
     }
 
@@ -490,7 +490,7 @@ export default Ember.Helper.extend({
     let propertyValue = Ember.get(propertyOwner, propertyName);
     this._bindDynamicActions({
       propertyValue: propertyValue,
-      propertyPath: propertyName,      
+      propertyPath: propertyName,
     });
 
     return propertyValue;

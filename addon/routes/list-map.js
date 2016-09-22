@@ -27,5 +27,7 @@ export default ListFormRoute.extend({
     @type String
     @default 'new-platform-flexberry-g-i-s-map'
   */
-  modelName: 'new-platform-flexberry-g-i-s-map'
+  modelName: 'new-platform-flexberry-g-i-s-map',
+
+  developerUserSettings: { NewPlatformFlexerryGISMapL: {} }
 });

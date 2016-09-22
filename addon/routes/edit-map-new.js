@@ -32,7 +32,7 @@ export default EditMapRoute.extend({
   */
   model() {
     let mapProject = this.store.createRecord(this.get('modelName'));
-    
+
     let rootLayer = this.store.createRecord(this.get('layerModelName'));
     rootLayer.set('layers', Ember.A());
 

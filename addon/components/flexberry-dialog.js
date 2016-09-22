@@ -56,261 +56,262 @@ let FlexberryDialogComponent = Ember.Component.extend(
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
 
-  /**
-    Selected from DOM dialog block.
+    /**
+      Selected from DOM dialog block.
 
-    @property _dialog
-    @type <a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>
-    @private
-  */
-  _dialog: null,
+      @property _dialog
+      @type <a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>
+      @private
+    */
+    _dialog: null,
 
-  /**
-    Reference to component's template.
-  */
-  layout,
+    /**
+      Reference to component's template.
+    */
+    layout,
 
-  /**
-    Reference to component's CSS-classes names.
-    Must be also a component's instance property to be available from component's .hbs template.
-  */
-  flexberryClassNames,
+    /**
+      Reference to component's CSS-classes names.
+      Must be also a component's instance property to be available from component's .hbs template.
+    */
+    flexberryClassNames,
 
-  /**
-    Component's wrapping <div> CSS-classes names.
+    /**
+      Component's wrapping <div> CSS-classes names.
 
-    Any other CSS-classes can be added through component's 'class' property.
-    ```handlebars
-    {{flexberry-dialog class="large" approve=(action "onDialogApprove")}}
-    ```
+      Any other CSS-classes can be added through component's 'class' property.
+      ```handlebars
+      {{flexberry-dialog class="large" approve=(action "onDialogApprove")}}
+      ```
 
-    @property classNames
-    @type String[]
-    @default ['flexberry-dialog', 'ui', 'modal']
-  */
-  classNames: [flexberryClassNames.wrapper, 'ui', 'modal'],
+      @property classNames
+      @type String[]
+      @default ['flexberry-dialog', 'ui', 'modal']
+    */
+    classNames: [flexberryClassNames.wrapper, 'ui', 'modal'],
 
-  /**
-    Component's caption.
+    /**
+      Component's caption.
 
-    @property caption
-    @type String
-    @default null
-  */
-  caption: null,
+      @property caption
+      @type String
+      @default null
+    */
+    caption: null,
 
-  /**
-    Component's content.
+    /**
+      Component's content.
 
-    @property content
-    @type String
-    @default null
-  */
-  content: null,
+      @property content
+      @type String
+      @default null
+    */
+    content: null,
 
-  /**
-    Component's approve button caption.
+    /**
+      Component's approve button caption.
 
-    @property approveButtonCaption
-    @type String
-    @default t('components.flexberry-dialog.approve-button.caption')
-  */
-  approveButtonCaption: t('components.flexberry-dialog.approve-button.caption'),
+      @property approveButtonCaption
+      @type String
+      @default t('components.flexberry-dialog.approve-button.caption')
+    */
+    approveButtonCaption: t('components.flexberry-dialog.approve-button.caption'),
 
-  /**
-    Component's deny button caption.
+    /**
+      Component's deny button caption.
 
-    @property denyButtonCaption
-    @type String
-    @default t('components.flexberry-dialog.deny-button.caption')
-  */
-  denyButtonCaption: t('components.flexberry-dialog.deny-button.caption'),
+      @property denyButtonCaption
+      @type String
+      @default t('components.flexberry-dialog.deny-button.caption')
+    */
+    denyButtonCaption: t('components.flexberry-dialog.deny-button.caption'),
 
-  /**
-    Component's vertical offset to allow for content outside of dialog, for example a close button, to be centered.
+    /**
+      Component's vertical offset to allow for content outside of dialog, for example a close button, to be centered.
 
-    @property offset
-    @type Number
-    @default 0
-  */
-  offset: 0,
+      @property offset
+      @type Number
+      @default 0
+    */
+    offset: 0,
 
-  /**
-    Flag: indicates whether multiple dialogs are allowed at the same time.
+    /**
+      Flag: indicates whether multiple dialogs are allowed at the same time.
 
-    @property allowMultiple
-    @type Boolean
-    @default false
-  */
-  allowMultiple: false,
+      @property allowMultiple
+      @type Boolean
+      @default false
+    */
+    allowMultiple: false,
 
-  /**
-    Flag: indicates whether dialog is closable (can be closed on it's dimmer click).
+    /**
+      Flag: indicates whether dialog is closable (can be closed on it's dimmer click).
 
-    @property allowMultiple
-    @type Boolean
-    @default false
-  */
-  closable: false,
+      @property allowMultiple
+      @type Boolean
+      @default false
+    */
+    closable: false,
 
-  /**
-    Component's transition animation name.
+    /**
+      Component's transition animation name.
 
-    @property duration
-    @type String
-    @default 'scale'
-  */
-  transition:'scale',
+      @property duration
+      @type String
+      @default 'scale'
+    */
+    transition: 'scale',
 
-  /**
-    Component's animation duration (in milliseconds).
+    /**
+      Component's animation duration (in milliseconds).
 
-    @property duration
-    @type Number
-    @default 200
-  */
-  duration: 200,
+      @property duration
+      @type Number
+      @default 200
+    */
+    duration: 200,
 
-  /**
-    Flag: indicates whether dialog is visible or not.
-    If true, then dialog will be shown, otherwise dialog will be closed.
+    /**
+      Flag: indicates whether dialog is visible or not.
+      If true, then dialog will be shown, otherwise dialog will be closed.
 
-    @property visible
-    @type Boolean
-    @default false
-  */
-  visible: false,
+      @property visible
+      @type Boolean
+      @default false
+    */
+    visible: false,
 
-  /**
-    Observes {{#crossLink "FlexberryDialogComponent/visible:property"}}'visible' property{{/crossLink}}.
-    Shows dialog if property is true, otherwise hides dialog.
+    /**
+      Observes {{#crossLink "FlexberryDialogComponent/visible:property"}}'visible' property{{/crossLink}}.
+      Shows dialog if property is true, otherwise hides dialog.
 
-    @method _visibleDidChange
-    @private
-  */
-  _visibleDidChange: Ember.observer('visible', function() {
-    let $dialog = this.get('_dialog');
-    if (Ember.isNone($dialog)) {
-      return;
-    }
-
-    if (this.get('visible')) {
-      $dialog.modal('show');
-    } else {
-      $dialog.modal('hide');
-    }
-  }),
-
-  /**
-    Initializes DOM-related component's properties.
-  */
-  didInsertElement() {
-    this._super(...arguments);
-
-    // Initialize Semantic UI modal.
-    let $dialog = this.$().modal({
-      detachable: true,
-      observeChanges: false,
-      offset: this.get('offset'),
-      allowMultiple: this.get('allowMultiple'),
-      closable: this.get('closable'),
-      transition: this.get('transition'),
-      duration: this.get('duration'),
-      onShow: () => {
-        return this.sendAction('beforeShow');
-      },
-      onHide: () => {
-        if (this.get('isDestroying') || this.get('isDestroyed')) {
-          // Prevent hide animation on destroyed component to avoid animation exceptions.
-          return false;
-        }
-
-        return this.sendAction('beforeHide');
-      },
-      onVisible: () => {
-        this.set('visible', true);
-        return this.sendAction('show');
-      },
-      onHidden: () => {
-        this.set('visible', false);
-        return this.sendAction('hide');
-      },
-      onApprove: () => {
-        let dialog = this.get('_dialog');
-        let attrs = { closeDialog: true, dialog: dialog};
-        this.sendAction('approve', attrs);
-        return attrs.closeDialog;
-      },
-      onDeny: () => {
-        return this.send('deny');
+      @method _visibleDidChange
+      @private
+    */
+    _visibleDidChange: Ember.observer('visible', function() {
+      let $dialog = this.get('_dialog');
+      if (Ember.isNone($dialog)) {
+        return;
       }
-    });
 
-    // Show dialog if necessary.
-    if (this.get('visible') && !Ember.isNone($dialog)) {
-      $dialog.modal('show');
-    }
+      if (this.get('visible')) {
+        $dialog.modal('show');
+      } else {
+        $dialog.modal('hide');
+      }
+    }),
 
-    this.set('_dialog', $dialog);
-  },
+    /**
+      Initializes DOM-related component's properties.
+    */
+    didInsertElement() {
+      this._super(...arguments);
 
-  /**
-    Destroys DOM-related component's properties.
-  */
-  willDestroyElement() {
-    this._super(...arguments);
+      // Initialize Semantic UI modal.
+      let $dialog = this.$().modal({
+        detachable: true,
+        observeChanges: false,
+        offset: this.get('offset'),
+        allowMultiple: this.get('allowMultiple'),
+        closable: this.get('closable'),
+        transition: this.get('transition'),
+        duration: this.get('duration'),
+        onShow: () => {
+          return this.sendAction('beforeShow');
+        },
+        onHide: () => {
+          if (this.get('isDestroying') || this.get('isDestroyed')) {
+            // Prevent hide animation on destroyed component to avoid animation exceptions.
+            return false;
+          }
 
-    let $dialog = this.get('_dialog');
-    if (Ember.isNone($dialog)) {
-      return;
-    }
+          return this.sendAction('beforeHide');
+        },
+        onVisible: () => {
+          this.set('visible', true);
+          return this.sendAction('show');
+        },
+        onHidden: () => {
+          this.set('visible', false);
+          return this.sendAction('hide');
+        },
+        onApprove: () => {
+          let dialog = this.get('_dialog');
+          let attrs = { closeDialog: true, dialog: dialog };
+          this.sendAction('approve', attrs);
+          return attrs.closeDialog;
+        },
+        onDeny: () => {
+          return this.send('deny');
+        }
+      });
 
-    // Remove dialog from DOM (from its dimmer).
-    $dialog.remove();
+      // Show dialog if necessary.
+      if (this.get('visible') && !Ember.isNone($dialog)) {
+        $dialog.modal('show');
+      }
 
-    // Hide dialog's dimmer.
-    $dialog.modal('hideDimmer');
+      this.set('_dialog', $dialog);
+    },
 
-    // Destroy dialog.
-    $dialog.modal('destroy');
-  },
+    /**
+      Destroys DOM-related component's properties.
+    */
+    willDestroyElement() {
+      this._super(...arguments);
 
-  /**
-    Component's action invoking when dialog starts to show.
+      let $dialog = this.get('_dialog');
+      if (Ember.isNone($dialog)) {
+        return;
+      }
 
-    @method sendingActions.beforeShow
-  */
+      // Remove dialog from DOM (from its dimmer).
+      $dialog.remove();
 
-  /**
-    Component's action invoking when dialog starts to hide.
+      // Hide dialog's dimmer.
+      $dialog.modal('hideDimmer');
 
-    @method sendingActions.beforeHide
-  */
+      // Destroy dialog.
+      $dialog.modal('destroy');
+    },
 
-  /**
-    Component's action invoking when dialog is shown.
+    /**
+      Component's action invoking when dialog starts to show.
 
-    @method sendingActions.show
-  */
+      @method sendingActions.beforeShow
+    */
 
-  /**
-    Component's action invoking when dialog is hidden.
+    /**
+      Component's action invoking when dialog starts to hide.
 
-    @method sendingActions.hide
-  */
+      @method sendingActions.beforeHide
+    */
 
-  /**
-    Component's action invoking when dialog is approved.
+    /**
+      Component's action invoking when dialog is shown.
 
-    @method sendingActions.approve
-  */
+      @method sendingActions.show
+    */
 
-  /**
-    Component's action invoking when dialog is denied.
+    /**
+      Component's action invoking when dialog is hidden.
 
-    @method sendingActions.deny
-  */
-});
+      @method sendingActions.hide
+    */
+
+    /**
+      Component's action invoking when dialog is approved.
+
+      @method sendingActions.approve
+    */
+
+    /**
+      Component's action invoking when dialog is denied.
+
+      @method sendingActions.deny
+    */
+  }
+);
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.

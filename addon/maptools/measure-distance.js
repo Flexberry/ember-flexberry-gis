@@ -28,7 +28,7 @@ export default MeasureMaptool.extend({
     this._measure.polylineBaseTool.basePopupText.distanceLabelPostfix = i18n.t('components.flexberry-measuretool.polyline.distanceLabelPostfix').toString();
     this._measure.polylineBaseTool.basePopupText.incLabelPrefix = i18n.t('components.flexberry-measuretool.polyline.incLabelPrefix').toString();
     this._measure.polylineBaseTool.basePopupText.incLabelPostfix = i18n.t('components.flexberry-measuretool.polyline.incLabelPostfix').toString();
-    this._measure.polylineBaseTool.distanceMeasureUnit.kilometer =i18n.t('components.flexberry-measuretool.distanceMeasureUnit.kilometer').toString();
+    this._measure.polylineBaseTool.distanceMeasureUnit.kilometer = i18n.t('components.flexberry-measuretool.distanceMeasureUnit.kilometer').toString();
     this._measure.polylineBaseTool.distanceMeasureUnit.meter = i18n.t('components.flexberry-measuretool.distanceMeasureUnit.meter').toString();
 
     this._measure.polylineBaseTool.startMeasure();

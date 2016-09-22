@@ -3,6 +3,7 @@
   "editForm": "new-platform-flexberry-g-i-s-map-e",
   "caption": null,
   "name": "NewPlatformFlexberryGISMapL",
+  "className": "MapL",
   "attrs": [],
   "projections": [
     {

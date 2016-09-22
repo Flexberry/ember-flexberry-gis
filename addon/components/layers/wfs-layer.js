@@ -41,7 +41,7 @@ export default BaseLayer.extend({
     });
     availableFormats = Ember.A(availableFormats);
     Ember.assert(
-      `Wrong value of \`format\` property: \`${format}\`. ` +
+      `Wrong value of \`format\` property: ${format}. ` +
       `Allowed values are: [\`${availableFormats.join(`\`, \``)}\`].`,
       availableFormats.contains(format));
 
@@ -73,12 +73,14 @@ export default BaseLayer.extend({
         layer.off('error', onLayerError);
         layer = null;
       };
+
       let onLayerLoad = (e) => {
         let featureCollection = e.target.toGeoJSON();
         resolve(Ember.A(Ember.get(featureCollection, 'features') || []));
 
         destroyLayer();
       };
+
       let onLayerError = (e) => {
         reject(e.error || e);
 
@@ -93,11 +95,12 @@ export default BaseLayer.extend({
         let y = leafletMap.getSize().y / 2;
         let a = leafletMap.containerPointToLatLng([0, y]);
         let b = leafletMap.containerPointToLatLng([100, y]);
-        let maxMeters = leafletMap.distance(a,b);
+        let maxMeters = leafletMap.distance(a, b);
 
         // Bounding box around south west point with radius of current scale * 0.05.
         boundingBox = boundingBox.getSouthWest().toBounds(maxMeters * 0.05);
       }
+
       layer = this.createLayer({
         filter: new L.Filter.BBox().append(boundingBox, geometryField, crs),
         geometryField: geometryField,

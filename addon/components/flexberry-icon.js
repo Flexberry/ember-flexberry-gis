@@ -51,43 +51,44 @@ let FlexberryIconComponent = Ember.Component.extend(
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
 
-  /**
-    Reference to component's template.
-  */
-  layout,
+    /**
+      Reference to component's template.
+    */
+    layout,
 
-  /**
-    Reference to component's CSS-classes names.
-    Must be also a component's instance property to be available from component's .hbs template.
-  */
-  flexberryClassNames,
+    /**
+      Reference to component's CSS-classes names.
+      Must be also a component's instance property to be available from component's .hbs template.
+    */
+    flexberryClassNames,
 
-  /**
-    Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
-    to force <i> to be a component's wrapping element.
+    /**
+      Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
+      to force <i> to be a component's wrapping element.
 
-    @property tagName
-    @type String
-    @default 'i'
-  */
-  tagName: 'i',
+      @property tagName
+      @type String
+      @default 'i'
+    */
+    tagName: 'i',
 
-  /**
-    Component's wrapping <div> CSS-classes names.
+    /**
+      Component's wrapping <div> CSS-classes names.
 
-    Any other CSS-classes can be added through component's 'class' property.
-    ```handlebars
-    {{flexberry-icon
-      class="map icon"
-    }}
-    ```
+      Any other CSS-classes can be added through component's 'class' property.
+      ```handlebars
+      {{flexberry-icon
+        class="map icon"
+      }}
+      ```
 
-    @property classNames
-    @type String[]
-    @default ['flexberry-icon']
-  */
-  classNames: [flexberryClassNames.wrapper]
-});
+      @property classNames
+      @type String[]
+      @default ['flexberry-icon']
+    */
+    classNames: [flexberryClassNames.wrapper]
+  }
+);
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.

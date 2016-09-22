@@ -33,7 +33,7 @@ export default IdentifyMaptool.extend({
           if (this._layerCanBeIdentified(layer) && layerIsVisible && !excludedLayers.contains(layer)) {
             result.pushObject(layer);
           }
-          
+
           // If parent layer is invisible then all child layers are invisible too,
           // so there is no need to check them.
           if (!layerIsVisible) {

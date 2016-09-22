@@ -2,9 +2,11 @@
   @module ember-flexberry-gis
 */
 
-import DS from 'ember-data';
-import BaseModel from 'ember-flexberry/models/base';
-import Proj from 'ember-flexberry-data';
+import {
+  Model as NewPlatformFlexberyGISMapModelMixin,
+  defineProjections
+} from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map';
+import { Projection } from 'ember-flexberry-data';
 import LeafletCrsMixin from '../mixins/leaflet-crs';
 
 /**
@@ -12,40 +14,12 @@ import LeafletCrsMixin from '../mixins/leaflet-crs';
 
   @class NewPlatformFlexberryGISMap
   @extends BaseModel
+  @uses NewPlatformFlexberyGISMapModelMixin
   @uses LeafletCrsMixin
 */
-let Model = BaseModel.extend(LeafletCrsMixin, {
-  name: DS.attr('string'),
-  lat: DS.attr('number'),
-  lng: DS.attr('number'),
-  zoom: DS.attr('number'),
-  public: DS.attr('boolean'),
-  coordinateReferenceSystem: DS.attr('string'),
-  rootLayer: DS.belongsTo('new-platform-flexberry-g-i-s-map-layer', { inverse: null, async: false })
+let Model = Projection.Model.extend(NewPlatformFlexberyGISMapModelMixin, LeafletCrsMixin, {
 });
 
-Model.defineProjection('MapE', 'new-platform-flexberry-g-i-s-map', {
-  name: Proj.attr('Name'),
-  lat: Proj.attr('Lat'),
-  lng: Proj.attr('Lng'),
-  zoom: Proj.attr('Zoom'),
-  public: Proj.attr('Public'),
-  coordinateReferenceSystem: Proj.attr('CRS'),
-  rootLayer: Proj.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Root layer', {
-    name: Proj.attr('Name', {
-      hidden: true
-    })
-  }, {
-    displayMemberPath: 'name'
-  })
-});
-
-Model.defineProjection('MapL', 'new-platform-flexberry-g-i-s-map', {
-  name: Proj.attr('Name'),
-  lat: Proj.attr('Lat'),
-  lng: Proj.attr('Lng'),
-  zoom: Proj.attr('Zoom'),
-  public: Proj.attr('Public')
-});
+defineProjections(Model);
 
 export default Model;

@@ -9,7 +9,7 @@
     "blueimp-file-upload": "9.11.2",
     "jquery-file-download": "1.4.4",
     "devicejs": "0.2.7",
-    "semantic-ui": "^2.1.8",
+    "semantic-ui": "^2.2.4",
     "leaflet": "^1.0.0-rc.3",
     "leaflet.editable": "Leaflet/Leaflet.Editable#master",
     "leaflet.editable.measures": "Flexberry/Leaflet.Editable.Measures#gh-pages",
@@ -17,8 +17,8 @@
     "html2canvas": "niklasvh/html2canvas#master",
     "Leaflet-WFST": "Flexberry/Leaflet-WFST#develop",
     "Proj4Leaflet": "kartena/Proj4Leaflet#leaflet-proj-refactor"
-    },
-    "resolutions": {
-      "leaflet": "^1.0.0-rc.3"
-    }
+  },
+  "resolutions": {
+    "leaflet": "^1.0.0-rc.3"
+  }
 }

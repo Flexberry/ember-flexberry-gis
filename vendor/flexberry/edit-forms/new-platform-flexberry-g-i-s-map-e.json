@@ -1,7 +1,17 @@
 ﻿{
-  "propertyLookup": [],
+  "propertyLookup": [
+    {
+      "master": null,
+      "displayAttributeName": null,
+      "required": false,
+      "relationName": "RootLayer",
+      "projection": "",
+      "detailModelName": null
+    }
+  ],
   "caption": null,
   "name": "NewPlatformFlexberryGISMapE",
+  "className": "MapE",
   "attrs": [],
   "projections": [
     {

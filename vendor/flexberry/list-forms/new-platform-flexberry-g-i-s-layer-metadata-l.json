@@ -3,6 +3,7 @@
   "editForm": "new-platform-flexberry-g-i-s-layer-metadata-e",
   "caption": null,
   "name": "NewPlatformFlexberryGISLayerMetadataL",
+  "className": "LayerMetadataL",
   "attrs": [],
   "projections": [
     {

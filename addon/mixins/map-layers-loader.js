@@ -38,8 +38,7 @@ export default Ember.Mixin.create({
           .then(layers => layer.set('layers', Ember.A(layers)))
           .then(() => resolve(layer))
           .catch(reason => reject(reason));
-      }
-      else {
+      } else {
         resolve(layer);
       }
     });

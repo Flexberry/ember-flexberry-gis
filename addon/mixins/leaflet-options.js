@@ -2,7 +2,6 @@
   @module ember-flexberry-gis
  */
 
-
 import Ember from 'ember';
 
 const { computed } = Ember;

@@ -23,7 +23,7 @@ export function initialize(applicationInstance) {
       };
 
       let parent = getParent(this);
-      while(!Ember.isNone(parent) && (parent instanceof BlockSlotComponent || parent instanceof YieldSlotComponent)) {
+      while (!Ember.isNone(parent) && (parent instanceof BlockSlotComponent || parent instanceof YieldSlotComponent)) {
         parent = getParent(parent);
       }
 

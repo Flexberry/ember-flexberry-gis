@@ -2,39 +2,43 @@
   @module ember-flexberry-gis
 */
 
-
 import Ember from 'ember';
 
 const { computed, run } = Ember;
 
 /**
-  Mixin for create actions in components for leaflet objects.
+  Leaflet events mixin.
+  Listens to leaflet events & send related actions.
+
   @class LeafletEventsMixin
   @uses <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
- */
+*/
 export default Ember.Mixin.create({
   /**
-    Array of leaflet object events on which component should raise action
+    Array of leaflet object events on which component should raise action.
+
     @property leafletEvents
     @type Array
     @default null
-   */
+  */
   leafletEvents: null,
 
   /**
-    Array of handlers for used leaflet object events
+    Array of handlers for used leaflet object events.
+
     @property _eventHandlers
     @type Array
-    @defaul null
+    @default null
     @private
-   */
+  */
   _eventHandlers: null,
 
   /**
-    Array of event names for which is present action or methodName
+    Array of event names for which is present action or methodName.
+
     @property usedLeafletEvents
-    @type Array
-   */
+    @type String[]
+  */
   usedLeafletEvents: computed('leafletEvents', function () {
     return (this.get('leafletEvents') || []).filter(eventName => {
       let methodName = '_' + eventName;
@@ -44,21 +48,23 @@ export default Ember.Mixin.create({
   }),
 
   /**
-    Add subscribe to leaflet object for all specified and used events
+    Add subscribe to leaflet object for all specified and used events.
+
     @method _addEventListeners
-   */
+  */
   _addEventListeners() {
     let eventHandlers = {};
     this.get('usedLeafletEvents').forEach(eventName => {
 
       let actionName = eventName;
       let methodName = '_' + eventName;
-      // create an event handler that runs the function inside an event loop.
+
+      // Create an event handler that runs the function inside an event loop.
       eventHandlers[eventName] = function (e) {
         run.schedule('actions', this, function () {
-          //try to invoke/send an action for this event
           this.sendAction(actionName, e);
-          //allow classes to add custom logic on events as well
+
+          // Allow classes to add custom logic on events as well.
           if (typeof this[methodName] === 'function') {
             Ember.run(this, this[methodName], e);
           }
@@ -72,9 +78,10 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Remove all event listeners from leaflet object
+    Remove all event listeners from leaflet object.
+
     @method _removeEventListeners
-   */
+  */
   _removeEventListeners() {
     let eventHandlers = this.get('_eventHandlers');
     if (eventHandlers) {
@@ -86,6 +93,9 @@ export default Ember.Mixin.create({
     }
   },
 
+  /**
+    Removes attached event listeners on destroy.
+  */
   willDestroyElement() {
     this._super(...arguments);
     this._removeEventListeners();
