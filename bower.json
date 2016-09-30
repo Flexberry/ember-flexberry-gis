@@ -10,7 +10,7 @@
     "jquery-file-download": "1.4.4",
     "devicejs": "0.2.7",
     "semantic-ui": "^2.2.4",
-    "leaflet": "^1.0.0",
+    "leaflet": "1.0.1",
     "leaflet.editable": "Leaflet/Leaflet.Editable#master",
     "leaflet.editable.measures": "Flexberry/Leaflet.Editable.Measures#gh-pages",
     "leaflet.export": "Flexberry/Leaflet.Export#master",
@@ -19,6 +19,6 @@
     "Proj4Leaflet": "kartena/Proj4Leaflet#leaflet-proj-refactor"
   },
   "resolutions": {
-    "leaflet": "^1.0.0"
+    "leaflet": "1.0.1"
   }
 }
