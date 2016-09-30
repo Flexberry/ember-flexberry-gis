@@ -1,0 +1,130 @@
+{{#flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
+  caption=(if showDownloadOptions caption printCaption)
+  approveButtonCaption=approveButtonCaption
+  denyButtonCaption=denyButtonCaption
+  visible=visible
+  approve=(action "onApprove")
+  deny=(action "onDeny")
+  beforeShow=(action "onBeforeShow")
+  beforeHide=(action "onBeforeHide")
+  show=(action "onShow")
+  hide=(action "onHide")
+}}
+{{ui-message
+  type="error"
+  closeable=true
+  visible=showErrorMessage
+  caption=errorMessageCaption
+  message=errorMessage
+  onShow=(action "onErrorMessageShow")
+  onHide=(action "onErrorMessageHide")
+}}
+<form class="ui {{if isBusy "loading"}} form" role="form">
+  <div class="ui segment">
+    <h5 class="ui header">
+      {{captionSegmentCaption}}
+    </h5>
+    <div class="field">
+      <label>
+        {{captionTextboxCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_options.caption
+      }}
+    </div>
+    <div class="{{if (not _hasCaption) "disabled"}} field">
+      <label>
+        {{captionFontNameTextboxCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_options.captionFontName
+      }}
+    </div>
+    <div class="{{if (not _hasCaption) "disabled"}} field">
+      <label>
+        {{captionFontSizeTextboxCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_options.captionFontSize
+      }}
+    </div>
+    <div class="{{if (not _hasCaption) "disabled"}} field">
+      <label>
+        {{captionFontColorTextboxCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_options.captionFontColor
+      }}
+    </div>
+    <div class="{{if (not _hasCaption) "disabled"}} field">
+      <label>
+        {{captionXCoordinateTextboxCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_options.captionXCoordinate
+      }}
+    </div>
+    <div class="{{if (not _hasCaption) "disabled"}} field">
+      <label>
+        {{captionYCoordinateTextboxCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_options.captionYCoordinate
+      }}
+    </div>
+  </div>
+  <div class="ui segment">
+    <h5 class="ui header">
+      {{excludeSegmentCaption}}
+    </h5>
+    <div class="field">
+      <label>
+        {{excludeZoomCheckboxCaption}}
+      </label>
+      {{flexberry-checkbox
+        value=_options.excludeZoom
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{excludeContributingCheckboxCaption}}
+      </label>
+      {{flexberry-checkbox
+        value=_options.excludeContributing
+      }}
+    </div>
+  </div>
+  {{#if showDownloadOptions}}
+    <div class="ui segment">
+      <h5 class="ui header">
+        {{downloadSegmentCaption}}
+      </h5>
+      <div class="field">
+        <label>
+          {{fileTypeDropdownCaption}}
+        </label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableFileTypes
+          value=_options.fileType
+        }}
+      </div>
+      <div class="field">
+        <label>
+          {{fileNameTextboxCaption}}
+        </label>
+        {{flexberry-textbox
+          class="fluid"
+          value=_options.fileName
+        }}
+      </div>
+    </div>
+  {{/if}}
+</form>
+{{/flexberry-dialog}}

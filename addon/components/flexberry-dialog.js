@@ -217,7 +217,10 @@ let FlexberryDialogComponent = Ember.Component.extend(
         transition: this.get('transition'),
         duration: this.get('duration'),
         onShow: () => {
-          return this.sendAction('beforeShow');
+          let e = { showDialog: true, target: this.get('_dialog') };
+          this.sendAction('beforeShow', e);
+
+          return e.showDialog;
         },
         onHide: () => {
           if (this.get('isDestroying') || this.get('isDestroyed')) {
@@ -225,24 +228,34 @@ let FlexberryDialogComponent = Ember.Component.extend(
             return false;
           }
 
-          return this.sendAction('beforeHide');
+          let e = { closeDialog: true, target: this.get('_dialog') };
+          this.sendAction('beforeHide', e);
+
+          return e.closeDialog;
         },
         onVisible: () => {
           this.set('visible', true);
-          return this.sendAction('show');
+
+          let e = { target: this.get('_dialog') };
+          this.sendAction('show', e);
         },
         onHidden: () => {
           this.set('visible', false);
-          return this.sendAction('hide');
+
+          let e = { target: this.get('_dialog') };
+          this.sendAction('hide', e);
         },
         onApprove: () => {
-          let dialog = this.get('_dialog');
-          let attrs = { closeDialog: true, dialog: dialog };
-          this.sendAction('approve', attrs);
-          return attrs.closeDialog;
+          let e = { closeDialog: true, target: this.get('_dialog') };
+          this.sendAction('approve', e);
+
+          return e.closeDialog;
         },
         onDeny: () => {
-          return this.send('deny');
+          let e = { closeDialog: true, target: this.get('_dialog') };
+          this.sendAction('deny', e);
+
+          return e.closeDialog;
         }
       });
 

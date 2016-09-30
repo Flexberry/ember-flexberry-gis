@@ -1,0 +1,37 @@
+{{#map-commands/base
+  class=(concat flexberryClassNames.wrapper " " class)
+  name="export"
+  caption=caption
+  iconClass=iconClass
+}}
+  {{#block-slot "submenu"}}
+    {{map-commands/base
+      class=(concat flexberryClassNames.exportDownload " " exportDownloadClass)
+      name="export-download"
+      caption=exportDownloadCaption
+      iconClass=exportDownloadIconClass
+      execute=(action "onExportDownloadMapCommandExecute")
+    }}
+    {{map-commands/base
+      class=(concat flexberryClassNames.exportPrint " " exportPrintClass)
+      name="export-print"
+      caption=exportPrintCaption
+      iconClass=exportPrintIconClass
+      execute=(action "onExportPrintMapCommandExecute")
+    }}
+  {{/block-slot}}
+{{/map-commands/base}}
+
+{{#if _exportDialogHasBeenRequested}}
+  {{component "map-commands-dialogs/export"
+    class=flexberryClassNames.exportDialog
+    visible=_exportDialogIsVisible
+    isBusy=_exportIsInProgress
+    showDownloadOptions=_showDownloadOptions
+    showErrorMessage=_showExportErrorMessage
+    errorMessage=_exportErrorMessage
+    approve=(action "onExportDialogApprove")
+    deny=(action "onExportDialogDeny")
+    hide=(action "onExportDialogHide")
+  }}
+{{/if}}

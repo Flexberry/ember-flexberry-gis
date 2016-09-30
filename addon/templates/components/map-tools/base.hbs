@@ -1,0 +1,18 @@
+{{!--
+  See https://github.com/ciena-blueplanet/ember-block-slots#usage
+  {{yield}} is required here to make yield-slots available.
+--}}
+{{yield}}
+
+{{#if _hasIcon}}
+  <i class="{{flexberryClassNames.icon}} {{iconClass}}"></i>
+{{/if}}
+{{#if _hasCaption}}
+  {{caption}}
+{{/if}}
+{{#yield-slot "submenu"}}
+  <i class="{{flexberryClassNames.submenuIcon}} dropdown icon"></i>
+  <div class="{{flexberryClassNames.submenu}} menu">
+    {{yield}}
+  </div>
+{{/yield-slot}}

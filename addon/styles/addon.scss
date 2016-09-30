@@ -1,5 +1,7 @@
 @import './components/flexberry-tree';
 @import './components/flexberry-map';
+@import './components/flexberry-map-tool';
+@import './components/flexberry-map-command';
 
 /**
   Increased 'loading' form z-index to hide leaflet map placed on form.
@@ -13,22 +15,4 @@
 */
 .ui.loading.form:after {
   z-index: 1000001 !important;
-}
-
-.toolbar-menu {
-}
-
-.toolbar-dropdown {
-  background-color: #e0e1e1 !important;
-  color: #5b5b5b !important;
-  font-weight: bold !important;
-}
-
-.toolbar-dropdown:hover {
-  background-color: #cacbcd !important;
-  color: #000000 !important;
-}
-
-.abovemap {
-  z-index:2000 !important
 }
