@@ -203,6 +203,26 @@ export default {
             'caption': 'Тип файла'
           }
         }
+      },
+
+      'go-to': {
+        'caption': 'Перейти к заданной точке',
+        'error-message': {
+          'caption': 'Ошибка перехода',
+          'content': 'Заданы ошибочные координаты, они не могут быть преобразованы в числа'
+        },
+        'approve-button': {
+          'caption': 'Ок'
+        },
+        'deny-button': {
+          'caption': 'Отмена'
+        },
+        'lat-textbox': {
+          'caption': 'Широта'
+        },
+        'lng-textbox': {
+          'caption': 'Долгота'
+        },
       }
     },
 
@@ -290,11 +310,14 @@ export default {
       'export': {
         'caption': 'Экспортировать',
         'export-download': {
-          'caption': 'Скачать'
+          'caption': 'В изображение'
         },
         'export-print': {
           'caption': 'Напечатать'
         }
+      },
+      'go-to': {
+        'caption': ''
       }
     }
   },
@@ -377,6 +400,13 @@ export default {
         'meter': '&nbsp;м',
         'kilometer': '&nbsp;км'
       }
+    }
+  },
+
+  'map-commands': {
+    'go-to': {
+      'lat-caption': 'Широта',
+      'lng-caption': 'Долгота'
     }
   }
 };

@@ -304,7 +304,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
     actions: {
       /**
-        Handler for error 'ui-message. component 'onShow' action.
+        Handler for error 'ui-message' component 'onShow' action.
 
         @method actions.onErrorMessageShow
       */

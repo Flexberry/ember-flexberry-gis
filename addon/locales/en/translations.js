@@ -203,6 +203,26 @@ export default {
             'caption': 'File type'
           }
         }
+      },
+
+      'go-to': {
+        'caption': 'Go to specified point',
+        'error-message': {
+          'caption': 'Go to error',
+          'content': 'Specified coordinates are wrong & can\'t be successfully converted into numbers'
+        },
+        'approve-button': {
+          'caption': 'Ok'
+        },
+        'deny-button': {
+          'caption': 'Cancel'
+        },
+        'lat-textbox': {
+          'caption': 'Latitude'
+        },
+        'lng-textbox': {
+          'caption': 'Longitude'
+        },
       }
     },
 
@@ -290,11 +310,14 @@ export default {
       'export': {
         'caption': 'Export',
         'export-download': {
-          'caption': 'Download'
+          'caption': 'Into image'
         },
         'export-print': {
           'caption': 'Print'
         }
+      },
+      'go-to': {
+        'caption': ''
       }
     }
   },
@@ -377,6 +400,13 @@ export default {
         'meter': '&nbsp;m',
         'kilometer': '&nbsp;km'
       }
+    }
+  },
+
+  'map-commands': {
+    'go-to': {
+      'lat-caption': 'Latitude',
+      'lng-caption': 'Longitude'
     }
   }
 };
