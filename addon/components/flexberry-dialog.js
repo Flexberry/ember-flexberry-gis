@@ -209,6 +209,7 @@ let FlexberryDialogComponent = Ember.Component.extend(
 
       // Initialize Semantic UI modal.
       let $dialog = this.$().modal({
+        autofocus: false,
         detachable: true,
         observeChanges: false,
         offset: this.get('offset'),
