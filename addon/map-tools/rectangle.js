@@ -35,10 +35,7 @@ export default BaseMapTool.extend({
     layer.remove();
 
     // Give to user ability to draw new rectangle.
-    let editTools = this.get('_editTools');
-    if (!Ember.isNone(editTools)) {
-      editTools.startRectangle();
-    }
+    this.get('_editTools').startRectangle();
   },
 
   /**

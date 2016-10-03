@@ -44,7 +44,7 @@ export default RectangleMapTool.extend({
     @private
   */
   _getLayersToIdentify({ excludedLayers }) {
-    Ember.assert('Method \'_getLayersToIdentify\' must be overridden in some extended identify map tool.', false);
+    Ember.assert('Method \'_getLayersToIdentify\' must be overridden in some extended identify map-tool.', false);
   },
 
   /**

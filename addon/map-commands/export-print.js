@@ -21,14 +21,14 @@ export default ExportMapCommand.extend({
   _execute(options) {
     this._super(...arguments);
 
-    let leafletMap = this.get('leafletMap');
-
     // Return RSVP.Promise to make base map-command wait.
     return new Ember.RSVP.Promise((resolve, reject) => {
-      leafletMap.printExport(options).then((value) => {
-        resolve(value);
-      }).catch((reason) => {
-        reject(reason);
+      Ember.run(() => {
+        this.get('leafletMap').printExport(options).then((value) => {
+          resolve(value);
+        }).catch((reason) => {
+          reject(reason);
+        });
       });
     });
   }

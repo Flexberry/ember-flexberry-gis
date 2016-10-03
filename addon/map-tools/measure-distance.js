@@ -2,7 +2,6 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
 import MeasureMapTool from './measure';
 
 /**
@@ -20,12 +19,6 @@ export default MeasureMapTool.extend({
   */
   _enable() {
     this._super(...arguments);
-
-    let measureTools = this.get('_measureTools');
-    if (Ember.isNone(measureTools)) {
-      return;
-    }
-
-    measureTools.polylineBaseTool.startMeasure();
+    this.get('_measureTools').polylineBaseTool.startMeasure();
   }
 });
