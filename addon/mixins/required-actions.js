@@ -37,8 +37,7 @@ export default Ember.Mixin.create({
     let actionName = Ember.get(options, 'actionName');
 
     return Ember.typeOf(this.get(`attrs.${actionName}`)) === 'function' ||
-      Ember.typeOf(this.get(`attrs.${actionName}`)) === 'string' ||
-      this._super(...arguments);
+      Ember.typeOf(this.get(`attrs.${actionName}`)) === 'string';
   },
 
   /**

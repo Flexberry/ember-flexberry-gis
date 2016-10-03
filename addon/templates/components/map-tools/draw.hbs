@@ -1,0 +1,57 @@
+{{#map-tools/base
+  class=(concat flexberryClassNames.wrapper " " class)
+  name="draw"
+  caption=caption
+  iconClass=iconClass
+}}
+  {{#block-slot "submenu"}}
+    {{map-tools/base
+      class=(concat flexberryClassNames.drawMarker " " drawMarkerClass)
+      name="draw-marker"
+      caption=drawMarkerCaption
+      iconClass=drawMarkerIconClass
+      mapToolProperties=_drawToolProperties
+      activate=(action "onMapToolActivate")
+    }}
+    {{map-tools/base
+      class=(concat flexberryClassNames.drawPolyline " " drawPolylineClass)
+      name="draw-polyline"
+      caption=drawPolylineCaption
+      iconClass=drawPolylineIconClass
+      mapToolProperties=_drawToolProperties
+      activate=(action "onMapToolActivate")
+    }}
+    {{map-tools/base
+      class=(concat flexberryClassNames.drawCircle " " drawCircleClass)
+      name="draw-circle"
+      caption=drawCircleCaption
+      iconClass=drawCircleIconClass
+      mapToolProperties=_drawToolProperties
+      activate=(action "onMapToolActivate")
+    }}
+    {{map-tools/base
+      class=(concat flexberryClassNames.drawRectangle " " drawRectangleClass)
+      name="draw-rectangle"
+      caption=drawRectangleCaption
+      iconClass=drawRectangleIconClass
+      mapToolProperties=_drawToolProperties
+      activate=(action "onMapToolActivate")
+    }}
+    {{map-tools/base
+      class=(concat flexberryClassNames.drawPolygon " " drawPolygonClass)
+      name="draw-polygon"
+      caption=drawPolygonCaption
+      iconClass=drawPolygonIconClass
+      mapToolProperties=_drawToolProperties
+      activate=(action "onMapToolActivate")
+    }}
+    {{map-tools/base
+      class=(concat flexberryClassNames.drawClear " " drawClearClass)
+      name="draw-clear"
+      caption=drawClearCaption
+      iconClass=drawClearIconClass
+      mapToolProperties=_drawToolProperties
+      activate=(action "onMapToolActivate")
+    }}
+  {{/block-slot}}
+{{/map-tools/base}}

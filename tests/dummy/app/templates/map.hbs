@@ -1,23 +1,23 @@
 <h3 class="ui header">{{t "forms.map.caption"}}</h3>
+{{ui-message
+  type="success"
+  closeable=true
+  visible=showFormSuccessMessage
+  caption=formSuccessMessageCaption
+  message=formSuccessMessage
+  onShow=(action "onSuccessMessageShow")
+  onHide=(action "onSuccessMessageHide")
+}}
+{{ui-message
+  type="error"
+  closeable=true
+  visible=showFormErrorMessage
+  caption=formErrorMessageCaption
+  message=formErrorMessage
+  onShow=(action "onErrorMessageShow")
+  onHide=(action "onErrorMessageHide")
+}}
 <form class="ui {{formState}} form flexberry-vertical-form" role="form">
-  {{ui-message
-    type="success"
-    closeable=true
-    visible=showFormSuccessMessage
-    caption=formSuccessMessageCaption
-    message=formSuccessMessage
-    onShow=(action "onSuccessMessageShow")
-    onHide=(action "onSuccessMessageHide")
-  }}
-  {{ui-message
-    type="error"
-    closeable=true
-    visible=showFormErrorMessage
-    caption=formErrorMessageCaption
-    message=formErrorMessage
-    onShow=(action "onErrorMessageShow")
-    onHide=(action "onErrorMessageHide")
-  }}
   <div class="field">
     <div class="flexberry-edit-panel">
       {{#unless readonly}}
@@ -43,69 +43,18 @@
   <div class="ui inernally celled grid">
     <div class="row">
       <div class="sixteen wide column">
-        {{#flexberry-maptoolbar leafletMap=leafletMap as |toolbar|}}
-          <div class="ui large icon buttons">
-            <button class="ui icon button" {{action "activateTool" "drag" target=toolbar}}>
-              <i class="hand paper icon"></i>
-            </button>
-            <button class="ui icon button" {{action "activateTool" "zoom-in" target=toolbar}}>
-              <i class="zoom icon"></i>
-            </button>
-            <button class="ui icon button" {{action "activateTool" "zoom-out" target=toolbar}}>
-              <i class="zoom out icon"></i>
-            </button>
-            <button class="ui icon button" {{action "callCommand" "fullextent" target=toolbar}}>
-              <i class="maximize icon"></i>
-            </button>
-          </div>
-          <div class="ui compact menu toolbar-menu">
-            <div class="ui simple dropdown item toolbar-dropdown">
-              <i class="circle info icon"></i>{{t "maptools.identify.caption"}}
-              <i class="dropdown icon"></i>
-              <div class="menu abovemap">
-                <a class="item" {{action "activateTool" "identify-all" model.rootLayer.layers target=toolbar}}>
-                  <i class="square outline icon"></i>
-                  <i class="checkmark box icon"></i>
-                  {{t "maptools.identify.modes.all.caption"}}
-                </a>
-                <a class="item" {{action "activateTool" "identify-all-visible" model.rootLayer.layers target=toolbar}}>
-                  <i class="checkmark box icon"></i>
-                  <i class="checkmark box icon"></i>
-                  {{t "maptools.identify.modes.all-visible.caption"}}
-                </a>
-                <a class="item" {{action "activateTool" "identify-top-visible" model.rootLayer.layers target=toolbar}}>
-                  <i class="chevron up icon"></i>
-                  <i class="checkmark box icon"></i>
-                  {{t "maptools.identify.modes.top-visible.caption"}}
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="ui compact menu toolbar-menu">
-            <div class="ui simple dropdown item toolbar-dropdown">
-              <i class="wizard icon"></i>{{t "components.flexberry-maptoolbar.measureCaption"}}
-              <i class="dropdown icon"></i>
-              <div class="menu abovemap">
-                <a class="item" {{action "activateTool" "measure-coordinates" target=toolbar}}>
-                  <i class="marker icon"></i>
-                  {{t "components.flexberry-maptoolbar.mearkerMeasure"}}
-                </a>
-                <a class="item" {{action "activateTool" "measure-radius" target=toolbar}}>
-                  <i class="circle icon"></i>
-                  {{t "components.flexberry-maptoolbar.circleMeasure"}}
-                </a>
-                <a class="item" {{action "activateTool" "measure-distance" target=toolbar}}>
-                  <i class="empty star icon"></i>
-                  {{t "components.flexberry-maptoolbar.polylineMeasure"}}
-                </a>
-                <a class="item" {{action "activateTool" "measure-area" target=toolbar}}>
-                  <i class="star icon"></i>
-                  {{t "components.flexberry-maptoolbar.polygonMeasure"}}
-                </a>
-              </div>
-            </div>
-          </div>
-          {{#flexberry-toolbar-exportmenu map=leafletMap tagName='span'}}... {{/flexberry-toolbar-exportmenu}}
+        {{#flexberry-maptoolbar
+          leafletMap=leafletMap
+          layers=model.rootLayer.layers as |mapToolbar|
+        }}
+          {{map-tools/drag activate=(action "onMapToolActivate" target=mapToolbar)}}
+          {{map-tools/zoom-in activate=(action "onMapToolActivate" target=mapToolbar)}}
+          {{map-tools/zoom-out activate=(action "onMapToolActivate" target=mapToolbar)}}
+          {{map-commands/full-extent execute=(action "onMapCommandExecute" target=mapToolbar)}}
+          {{map-tools/identify activate=(action "onMapToolActivate" target=mapToolbar)}}
+          {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
+          {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
+          {{map-commands/export execute=(action "onMapCommandExecute" target=mapToolbar)}}
         {{/flexberry-maptoolbar}}
       </div>
     </div>

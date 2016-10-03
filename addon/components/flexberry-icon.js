@@ -19,7 +19,7 @@ import layout from '../templates/components/flexberry-icon';
   @readonly
   @static
 
-  @for FlexberryDdauCheckboxComponent
+  @for FlexberryIconComponent
 */
 const flexberryClassNamesPrefix = 'flexberry-icon';
 const flexberryClassNames = {

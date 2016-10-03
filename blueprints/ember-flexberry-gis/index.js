@@ -4,7 +4,7 @@ module.exports = {
     var _this = this;
     return this.addBowerPackagesToProject([
       // Leaflet.
-      { name: 'leaflet', target: '1.0.0-rc.3' },
+      { name: 'leaflet', target: '1.0.1' },
 
       // Leaflet.Proj4.
       'https://github.com/kartena/Proj4Leaflet#leaflet-proj-refactor',
