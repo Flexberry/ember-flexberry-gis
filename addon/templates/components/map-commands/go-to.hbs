@@ -1,0 +1,15 @@
+{{map-commands/base
+  class=(concat flexberryClassNames.wrapper " " class)
+  name="go-to"
+  caption=caption
+  iconClass=iconClass
+  execute=(action "onMapCommandExecute")
+}}
+
+{{#if _gotoDialogHasBeenRequested}}
+  {{component "map-commands-dialogs/go-to"
+    class=flexberryClassNames.gotoDialog
+    visible=_gotoDialogIsVisible
+    approve=(action "onGoToDialogApprove")
+  }}
+{{/if}}
