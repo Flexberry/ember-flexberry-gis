@@ -22,7 +22,7 @@ export default WmsLayerComponent.extend({
   _wfsLayer: null,
 
   /**
-    Handles 'map:identify' event of leaflet map.
+    Handles 'flexberry-map:identify' event of leaflet map.
 
     @method identify
     @param {Object} e Event object.
@@ -39,6 +39,27 @@ export default WmsLayerComponent.extend({
     let innerWfsLayer = this.get('_wfsLayer');
     if (!Ember.isNone(innerWfsLayer)) {
       innerWfsLayer.identify.apply(innerWfsLayer, arguments);
+    }
+  },
+
+  /**
+    Handles 'flexberry-map:search' event of leaflet map.
+
+    @method search
+    @param {Object} e Event object.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of search area.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
+    @param {Object[]} layers Objects describing those layers which must be searched.
+    @param {Object[]} results Objects describing search results.
+    Every result-object has the following structure: { layer: ..., features: [...] },
+    where 'layer' is metadata of layer related to search result, features is array
+    containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+    or a promise returning such array.
+  */
+  search(e) {
+    let innerWfsLayer = this.get('_wfsLayer');
+    if (!Ember.isNone(innerWfsLayer)) {
+      innerWfsLayer.search.apply(innerWfsLayer, arguments);
     }
   },
 

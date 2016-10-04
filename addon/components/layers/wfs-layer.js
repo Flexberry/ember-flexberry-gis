@@ -87,20 +87,6 @@ export default BaseLayer.extend({
         destroyLayer();
       };
 
-      if (boundingBox.getSouthWest().equals(boundingBox.getNorthEast())) {
-        // Bounding box is point.
-        // WFS-service could return an error,
-        // so extend bounding box a little.
-        let leafletMap = this.get('leafletMap');
-        let y = leafletMap.getSize().y / 2;
-        let a = leafletMap.containerPointToLatLng([0, y]);
-        let b = leafletMap.containerPointToLatLng([100, y]);
-        let maxMeters = leafletMap.distance(a, b);
-
-        // Bounding box around south west point with radius of current scale * 0.05.
-        boundingBox = boundingBox.getSouthWest().toBounds(maxMeters * 0.05);
-      }
-
       layer = this.createLayer({
         filter: new L.Filter.BBox().append(boundingBox, geometryField, crs),
         geometryField: geometryField,
@@ -124,7 +110,7 @@ export default BaseLayer.extend({
   },
 
   /**
-    Handles 'map:identify' event of leaflet map.
+    Handles 'flexberry-map:identify' event of leaflet map.
 
     @method identify
     @param {Object} e Event object.
@@ -143,5 +129,23 @@ export default BaseLayer.extend({
       layer: this.get('layer'),
       features: featuresPromise
     });
+  },
+
+  /**
+    Handles 'flexberry-map:search' event of leaflet map.
+
+    @method search
+    @param {Object} e Event object.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of search area.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
+    @param {Object[]} layers Objects describing those layers which must be searched.
+    @param {Object[]} results Objects describing search results.
+    Every result-object has the following structure: { layer: ..., features: [...] },
+    where 'layer' is metadata of layer related to search result, features is array
+    containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+    or a promise returning such array.
+  */
+  search(e) {
+    // TODO: implement search logic.
   }
 });

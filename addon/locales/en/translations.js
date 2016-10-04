@@ -149,6 +149,12 @@ export default {
               'caption': 'Weight'
             }
           }
+        },
+
+        'geocoder-osm-overpass': {
+          'url-textbox': {
+            'caption': 'Url'
+          }
         }
       }
     },
@@ -313,6 +319,7 @@ export default {
           'caption': 'Top visible layer'
         }
       },
+      'loader-message': 'Identification...',
       'error-message': 'Identification by \'{{layerName}}\' layer finished with error',
       'identify-popup': {
         'properties-table': {

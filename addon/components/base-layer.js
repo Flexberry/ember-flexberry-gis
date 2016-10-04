@@ -108,7 +108,7 @@ export default Ember.Component.extend(
     }),
 
     /**
-      Handles 'map:identify' event of leaflet map.
+      Handles 'flexberry-map:identify' event of leaflet map.
 
       @method _identify
       @param {Object} e Event object.
@@ -134,6 +134,30 @@ export default Ember.Component.extend(
     },
 
     /**
+      Handles 'flexberry-map:search' event of leaflet map.
+
+      @method search
+      @param {Object} e Event object.
+      @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of search area.
+      @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
+      @param {Object[]} layers Objects describing those layers which must be searched.
+      @param {Object[]} results Objects describing search results.
+      Every result-object has the following structure: { layer: ..., features: [...] },
+      where 'layer' is metadata of layer related to search result, features is array
+      containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+      or a promise returning such array.
+    */
+    _search(e) {
+      let shouldSearch = Ember.A(e.layers || []).contains(this.get('layer'));
+      if (!shouldSearch) {
+        return;
+      }
+
+      // Call public search method, if layer should be searched.
+      this.search(e);
+    },
+
+    /**
       Initializes component.
     */
     init() {
@@ -155,6 +179,7 @@ export default Ember.Component.extend(
       if (!Ember.isNone(leafletMap)) {
         // Attach custom event-handler.
         leafletMap.on('flexberry-map:identify', this._identify, this);
+        leafletMap.on('flexberry-map:search', this._search, this);
       }
     },
 
@@ -168,6 +193,7 @@ export default Ember.Component.extend(
       if (!Ember.isNone(leafletMap)) {
         // Detach custom event-handler.
         leafletMap.off('flexberry-map:identify', this._identify, this);
+        leafletMap.off('flexberry-map:search', this._search, this);
       }
 
       let leafletContainer = this.get('leafletContainer');
@@ -218,6 +244,24 @@ export default Ember.Component.extend(
     */
     identify(e) {
       assert('BaseLayer\'s \'identify\' method should be overridden.');
+    },
+
+    /**
+      Handles 'flexberry-map:search' event of leaflet map.
+
+      @method search
+      @param {Object} e Event object.
+      @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of search area.
+      @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
+      @param {Object[]} layers Objects describing those layers which must be searched.
+      @param {Object[]} results Objects describing search results.
+      Every result-object has the following structure: { layer: ..., features: [...] },
+      where 'layer' is metadata of layer related to search result, features is array
+      containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+      or a promise returning such array.
+    */
+    search(e) {
+      assert('BaseLayer\'s \'search\' method should be overridden.');
     }
   }
 );

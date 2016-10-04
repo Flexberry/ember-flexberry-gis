@@ -41,5 +41,8 @@ module.exports = {
 
     // Leaflet-WFST.
     app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
+
+    // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
+    app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
   }
 };

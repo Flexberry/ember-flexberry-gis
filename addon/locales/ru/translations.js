@@ -149,6 +149,12 @@ export default {
               'caption': 'Толщина обводки'
             }
           }
+        },
+
+        'geocoder-osm-overpass': {
+          'url-textbox': {
+            'caption': 'Url'
+          }
         }
       }
     },
@@ -313,6 +319,7 @@ export default {
           'caption': 'Верхний видимый слой'
         }
       },
+      'loader-message': 'Идентификация...',
       'error-message': 'Идентификация по слою \'{{layerName}}\' завершилась ошибкой: ',
       'identify-popup': {
         'properties-table': {
