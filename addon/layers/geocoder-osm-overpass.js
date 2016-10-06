@@ -37,5 +37,15 @@ export default {
     return {
       url: undefined
     };
+  },
+
+  /**
+    Creates new search settings object (with search settings related to layer-type).
+
+    @method createSearchSettings
+    @returns {Object} New search settings object (with search settings related to layer-type).
+  */
+  createSearchSettings() {
+    return {};
   }
 };

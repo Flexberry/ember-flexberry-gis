@@ -47,13 +47,11 @@ export default WmsLayerComponent.extend({
 
     @method search
     @param {Object} e Event object.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of search area.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
-    @param {Object[]} layers Objects describing those layers which must be searched.
-    @param {Object[]} results Objects describing search results.
-    Every result-object has the following structure: { layer: ..., features: [...] },
-    where 'layer' is metadata of layer related to search result, features is array
-    containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
+    @param {Object[]} layer Object describing layer that must be searched.
+    @param {Object} searchOptions Search options related to layer type.
+    @param {Object} results Hash containing search results.
+    @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
   search(e) {

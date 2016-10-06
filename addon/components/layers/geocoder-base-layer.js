@@ -71,9 +71,12 @@ export default BaseLayer.extend({
     Executes geocoding with options related to layer's current properties.
 
     @method executeGeocoding
+    @param {Object} options Geocoding options.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} options.latlng Center of the search area.
+    @param {Object} options.searchOptions Search options related to layer type.
     @returns {String|Object} Received geocoding results.
   */
-  executeGeocoding() {
+  executeGeocoding(options) {
     Ember.assert('GeocoderBaseLayer\'s \'executeGeocoding\' method should be overridden.');
   },
 
@@ -95,10 +98,10 @@ export default BaseLayer.extend({
 
     @method identify
     @param {Object} e Event object.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of identification area.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} e.boundingBox Bounds of identification area.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
-    @param {Object[]} layers Objects describing those layers which must be identified.
-    @param {Object[]} results Objects describing identification results.
+    @param {Object[]} e.layers Objects describing those layers which must be identified.
+    @param {Object[]} e.results Objects describing identification results.
     Every result-object has the following structure: { layer: ..., features: [...] },
     where 'layer' is metadata of layer related to identification result, features is array
     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
@@ -131,17 +134,15 @@ export default BaseLayer.extend({
 
     @method search
     @param {Object} e Event object.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of search area.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
-    @param {Object[]} layers Objects describing those layers which must be searched.
-    @param {Object[]} results Objects describing search results.
-    Every result-object has the following structure: { layer: ..., features: [...] },
-    where 'layer' is metadata of layer related to search result, features is array
-    containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
+    @param {Object[]} layer Object describing layer that must be searched.
+    @param {Object} searchOptions Search options related to layer type.
+    @param {Object} results Hash containing search results.
+    @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
     or a promise returning such array.
   */
   search(e) {
-    let geocodingResults = this.executeGeocoding();
+    let geocodingResults = this.executeGeocoding(e);
 
     if (!(geocodingResults instanceof Ember.RSVP.Promise)) {
       geocodingResults = new Ember.RSVP.Promise((resolve, reject) => {
@@ -154,9 +155,7 @@ export default BaseLayer.extend({
       return Ember.isArray(features) ? features : Ember.A();
     });
 
-    e.results.push({
-      layer: this.get('layer'),
-      features: featuresPromise
-    });
+    let results = Ember.get(e, 'results');
+    Ember.set(results, 'features', featuresPromise);
   }
 });

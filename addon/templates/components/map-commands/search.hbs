@@ -1,0 +1,22 @@
+{{map-commands/base
+  class=(concat flexberryClassNames.wrapper " " class)
+  name="search"
+  caption=caption
+  iconClass=iconClass
+  execute=(action "onMapCommandExecute")
+}}
+
+{{#if _searchDialogHasBeenRequested}}
+  {{component "map-commands-dialogs/search"
+    class=flexberryClassNames.searchDialog
+    visible=_searchDialogIsVisible
+    isBusy=_searchIsInProgress
+    showErrorMessage=_showSearchErrorMessage
+    errorMessage=_searchErrorMessage
+    layers=_executeActionEventObject.mapCommand.layers
+    foundedFeatures=_foundedFeatures
+    approve=(action "onSearchDialogApprove")
+    deny=(action "onSearchDialogDeny")
+    hide=(action "onSearchDialogHide")
+  }}
+{{/if}}

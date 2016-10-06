@@ -227,7 +227,7 @@ let FlexberryMapComponent = Ember.Component.extend(
         });
       };
 
-      // Prevents DOM events from being propagated while map loader is shown.
+      // Prevents DOM events from being triggered while map loader is shown.
       // Call to L.DOMEvent.StopPropagation doesn't take an effect, so override map's '_fireDOMEvent' method.
       let originalFireDOMEvent = leafletMap._fireDOMEvent;
       leafletMap._fireDOMEvent = (...args) => {

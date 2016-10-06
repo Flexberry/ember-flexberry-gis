@@ -1,0 +1,66 @@
+{{#flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
+  caption=caption
+  approveButtonCaption=approveButtonCaption
+  denyButtonCaption=denyButtonCaption
+  visible=visible
+  approve=(action "onApprove")
+  deny=(action "onDeny")
+  beforeShow=(action "onBeforeShow")
+  beforeHide=(action "onBeforeHide")
+  show=(action "onShow")
+  hide=(action "onHide")
+}}
+{{ui-message
+  type="error"
+  closeable=true
+  visible=showErrorMessage
+  caption=errorMessageCaption
+  message=errorMessage
+  onShow=(action "onErrorMessageShow")
+  onHide=(action "onErrorMessageHide")
+}}
+<form class="ui {{if isBusy "loading"}} form" role="form">
+  <div class="ui two column celled grid">
+    <div class="column">
+      <div class="field">
+        <label>
+          {{layersDropdownCaption}}
+        </label>
+        {{flexberry-layers-dropdown
+          class="fluid"
+          operations=(array "search")
+          layers=layers
+          value=_selectedLayer
+          layerChange=(action "onLayersDropdownLayerChange")
+          availableLayersChange=(action "onLayersDropdownAvailableLayersChange")
+        }}
+      </div>
+      {{#if _selectedLayerTypeIsValid}}
+        {{component (concat "map-commands-dialogs/search-settings/" _selectedLayer.type) settings=_options}}
+      {{/if}}
+    </div>
+    <div class="column">
+      <div class="field">
+        <label>
+          {{foundedFeaturesSegmentCaption}}
+        </label>
+        {{#if _hasFoundedFeatures}}
+          {{#if (eq foundedFeatures.length 0)}}
+            {{foundedFeaturesSegmentNothingFoundMessage}}
+          {{else}}
+            <ul>
+            {{#each foundedFeatures as |feature|}}
+              <li>
+              {{#each-in feature.properties as |propertyName propertyValue|}}
+                {{propertyName}}: {{propertyValue}}<br>
+              {{/each-in}}
+              </li>
+            {{/each}}
+            </ul>
+          {{/if}}
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</form>
+{{/flexberry-dialog}}

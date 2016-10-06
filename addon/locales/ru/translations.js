@@ -155,6 +155,12 @@ export default {
           'url-textbox': {
             'caption': 'Url'
           }
+        },
+
+        'geocoder-osm-ru': {
+          'url-textbox': {
+            'caption': 'Url'
+          }
         }
       }
     },
@@ -207,6 +213,42 @@ export default {
           },
           'file-type-dropdown': {
             'caption': 'Тип файла'
+          }
+        }
+      },
+      'search': {
+        'caption': 'Поиск по слою',
+        'error-message-caption': 'Ошибка поиска по слою',
+        'error-message-empty-selected-layer': 'Не выбран слой для поиска',
+        'approve-button': {
+          'caption': 'Ок'
+        },
+        'deny-button': {
+          'caption': 'Отмена'
+        },
+        'layers-dropdown': {
+          'caption': 'Слой для поиска'
+        },
+        'founded-features-segment': {
+          'caption': 'Результаты поиска',
+          'nothing-found-message': 'По вашему запросу ничего не найдено'
+        }
+      },
+      'search-settings': {
+        'geocoder-osm-ru': {
+          'query-string-textbox': {
+            'caption': 'Строка запроса'
+          },
+          'search-type-dropdown': {
+            'caption': 'Тип поиска'
+          },
+          'max-results-count-textbox': {
+            'caption': 'Максимальное количество результатов'
+          }
+        },
+        'wfs': {
+          'query-string-textbox': {
+            'caption': 'Строка запроса'
           }
         }
       }
@@ -301,6 +343,9 @@ export default {
         'export-print': {
           'caption': 'Напечатать'
         }
+      },
+      'search': {
+        'caption': 'Найти'
       }
     }
   },

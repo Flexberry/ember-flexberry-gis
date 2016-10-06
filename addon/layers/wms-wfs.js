@@ -24,9 +24,9 @@ export default {
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify']
+    @default ['edit', 'remove', 'identify', 'search']
   */
-  operations: ['edit', 'remove', 'identify'],
+  operations: ['edit', 'remove', 'identify', 'search'],
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -44,5 +44,15 @@ export default {
       transparent: undefined,
       wfs: WfsLayer.createSettings()
     };
+  },
+
+  /**
+    Creates new search settings object (with search settings related to layer-type).
+
+    @method createSearchSettings
+    @returns {Object} New search settings object (with search settings related to layer-type).
+  */
+  createSearchSettings() {
+    return WfsLayer.createSearchSettings();
   }
 };

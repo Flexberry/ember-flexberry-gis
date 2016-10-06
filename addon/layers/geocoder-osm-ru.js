@@ -3,9 +3,10 @@
 */
 
 /**
-  Class describing tile layer metadata.
+  Class describing metadata for OpenStreetMap.ru geocoder-layer
+  that uses API of [OpenStreetMap.ru/api/search](https://github.com/ErshKUS/OpenStreetMap.ru/blob/master/api/search).
 
-  @class TileLayer
+  @class GeocoderOsmRuLayer
 */
 export default {
   /**
@@ -13,18 +14,18 @@ export default {
 
     @property iconClass
     @type String
-    @default 'image icon'
+    @default 'info circle icon'
   */
-  iconClass: 'image icon',
+  iconClass: 'info circle icon',
 
   /**
     Permitted operations related to layer type.
 
     @property operations
     @type String[]
-    @default ['edit', 'remove']
+    @default ['edit', 'remove', 'search']
   */
-  operations: ['edit', 'remove'],
+  operations: ['edit', 'remove', 'search'],
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -45,6 +46,12 @@ export default {
     @returns {Object} New search settings object (with search settings related to layer-type).
   */
   createSearchSettings() {
-    return {};
+    return {
+      queryString: '',
+      searchType: 'all',
+      maxResultsCount: 12,
+      lat: null,
+      lon: null
+    };
   }
 };

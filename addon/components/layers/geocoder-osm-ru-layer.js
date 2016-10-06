@@ -7,14 +7,14 @@ import GeocoderBaseLayer from './geocoder-base-layer';
 
 /**
   Geocoder layer component for leaflet map.
-  Uses [Overpass API](http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide) to perform straight & reverse geocoding).
+  uses API of [OpenStreetMap.ru/api/search](https://github.com/ErshKUS/OpenStreetMap.ru/blob/master/api/search).
 
-  @class GeocoderOsmOverpassLayerComponent
+  @class GeocoderOsmRuLayerComponent
   @extend GeocoderBaseLayer
 */
 export default GeocoderBaseLayer.extend({
   /**
-    Overpass API service base url.
+    OSM.ru service base url.
 
     @property url
     @type String
@@ -31,7 +31,20 @@ export default GeocoderBaseLayer.extend({
     @returns {Object[]} Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
   */
   parseGeocodingResults(results) {
-    // Overpass layer doesn't implement straight geocoding.
+    let matches = Ember.get(results || { matches: [] }, 'matches');
+
+    let features = Ember.A(matches).map((match) => {
+      return {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [Ember.get(match, 'lat'), Ember.get(match, 'lon')]
+        },
+        properties: match
+      };
+    });
+
+    return features;
   },
 
   /**
@@ -43,8 +56,7 @@ export default GeocoderBaseLayer.extend({
     @returns {Object[]} Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
   */
   parseReverseGeocodingResults(results) {
-    let featuresCollection = window.osmtogeojson(results, { flatProperties: true });
-    return Ember.get(featuresCollection, 'features');
+    // OSM.ru layer doesn't implement reverse geocoding.
   },
 
   /**
@@ -56,8 +68,42 @@ export default GeocoderBaseLayer.extend({
     @param {Object} options.searchOptions Search options related to layer type.
     @returns {String|Object} Received geocoding results.
   */
-  executeGeocoding() {
-    // Overpass layer doesn't implement straight geocoding.
+  executeGeocoding(options) {
+    options = options || {};
+    let queryString = Ember.get(options, 'searchOptions.queryString');
+    let searchType = Ember.get(options, 'searchOptions.searchType');
+    let maxResultsCount = Ember.get(options, 'searchOptions.maxResultsCount');
+    let latlng = Ember.get(options, 'latlng');
+
+    let osmRuBaseUrl = this.get('url');
+    let requestUrl = `${osmRuBaseUrl}?q=${queryString}&` +
+      `st=${searchType}&` +
+      `cnt=${maxResultsCount}&` +
+      `lat=${latlng.lat}&lon=${latlng.lng}`;
+
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      Ember.run(() => {
+        Ember.$.ajax(requestUrl, { dataType: 'text' }).done((data, textStatus, jqXHR) => {
+          // For some reason jQuery fails when parsing OSM.ru response text into JSON,
+          // even when request where successful.
+          // So we use dataType 'text' & parse response manually.
+          let results = {};
+          try {
+            results = JSON.parse(jqXHR.responseText);
+          } catch (parseError) {
+            reject(parseError);
+          }
+
+          if (!Ember.isBlank(results.error)) {
+            reject(results.error);
+          }
+
+          resolve(results);
+        }).fail((jqXHR, textStatus, errorThrown) => {
+          reject(errorThrown);
+        });
+      });
+    });
   },
 
   /**
@@ -70,26 +116,6 @@ export default GeocoderBaseLayer.extend({
     @returns {String|Object} Received reverse geocoding results.
   */
   executeReverseGeocoding(options) {
-    options = options || {};
-    let boundingBox = Ember.get(options, 'boundingBox');
-    let sw = boundingBox.getSouthWest();
-    let ne = boundingBox.getNorthEast();
-
-    let overpassBaseUrl = this.get('url');
-    let overpassBoundingBox = `${[sw.lat, sw.lng, ne.lat, ne.lng].join(',')}`;
-    let overpassNode = `node(${overpassBoundingBox})`;
-
-    // Url to get all nodes within specified bounding box.
-    let overpassRequestUrl = `${overpassBaseUrl}?data=[out:json];(${overpassNode};<;);out;`;
-
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.run(() => {
-        Ember.$.ajax(overpassRequestUrl).done((data, textStatus, jqXHR) => {
-          resolve(data);
-        }).fail((jqXHR, textStatus, errorThrown) => {
-          reject(errorThrown);
-        });
-      });
-    });
+    // OSM.ru layer doesn't implement reverse geocoding.
   }
 });

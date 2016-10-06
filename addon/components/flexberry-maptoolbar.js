@@ -128,6 +128,20 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
         `but 'map-tool' is expected in flexberry-maptoolbar (${this.toString()}).`,
         mapTool instanceof BaseMapTool);
 
+      if (Ember.isNone(Ember.get(mapTool, 'leafletMap'))) {
+        Ember.set(mapTool, 'leafletMap', this.get('leafletMap'));
+      }
+
+      if (Ember.isNone(Ember.get(mapTool, 'layers'))) {
+        Ember.set(mapTool, 'layers', this.get('layers'));
+      }
+
+      if (Ember.get(e, 'activate') === false) {
+        // Tool needs only 'leafletMap' & 'layers' properties to be initialized.
+        // Activation is delayed.
+        return;
+      }
+
       let activeMapTool = this.get('_activeMapTool');
       if (mapTool === activeMapTool) {
         return;
@@ -137,14 +151,6 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
         activeMapTool.off('disable', this, this._activateDefaultMapTool);
         activeMapTool.disable();
         this.set('_activeMapTool', null);
-      }
-
-      if (Ember.isNone(Ember.get(mapTool, 'leafletMap'))) {
-        Ember.set(mapTool, 'leafletMap', this.get('leafletMap'));
-      }
-
-      if (Ember.isNone(Ember.get(mapTool, 'layers'))) {
-        Ember.set(mapTool, 'layers', this.get('layers'));
       }
 
       // Order is necessary (enable operation can finish very fast).
@@ -182,6 +188,12 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
 
       if (Ember.isNone(Ember.get(mapCommand, 'layers'))) {
         Ember.set(mapCommand, 'layers', this.get('layers'));
+      }
+
+      if (Ember.get(e, 'execute') === false) {
+        // Command needs only 'leafletMap' & 'layers' properties to be initialized.
+        // Execution is delayed.
+        return;
       }
 
       mapCommand.execute(...args);

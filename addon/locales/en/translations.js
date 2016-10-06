@@ -155,6 +155,12 @@ export default {
           'url-textbox': {
             'caption': 'Url'
           }
+        },
+
+        'geocoder-osm-ru': {
+          'url-textbox': {
+            'caption': 'Url'
+          }
         }
       }
     },
@@ -207,6 +213,42 @@ export default {
           },
           'file-type-dropdown': {
             'caption': 'File type'
+          }
+        }
+      },
+      'search': {
+        'caption': 'Search by layer',
+        'error-message-caption': 'Search by layer error',
+        'error-message-empty-selected-layer': 'Search layer isn\'t selected',
+        'approve-button': {
+          'caption': 'Ok'
+        },
+        'deny-button': {
+          'caption': 'Cancel'
+        },
+        'layers-dropdown': {
+          'caption': 'Search layer'
+        },
+        'founded-features-segment': {
+          'caption': 'Search results',
+          'nothing-found-message': 'On your request nothing has been found'
+        }
+      },
+      'search-settings': {
+        'geocoder-osm-ru': {
+          'query-string-textbox': {
+            'caption': 'Query string'
+          },
+          'search-type-dropdown': {
+            'caption': 'Search type'
+          },
+          'max-results-count-textbox': {
+            'caption': 'Max results count'
+          }
+        },
+        'wfs': {
+          'query-string-textbox': {
+            'caption': 'Query string'
           }
         }
       }
@@ -301,6 +343,9 @@ export default {
         'export-print': {
           'caption': 'Print'
         }
+      },
+      'search': {
+        'caption': 'Search'
       }
     }
   },

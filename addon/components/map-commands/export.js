@@ -24,7 +24,7 @@ const flexberryClassNames = {
   wrapper: flexberryClassNamesPrefix,
   exportDownload: 'flexberry-export-download-map-command',
   exportPrint: 'flexberry-export-print-map-command',
-  exportDialog: 'flexberry-export-print-map-command-dialog'
+  exportDialog: 'flexberry-export-map-command-dialog'
 };
 
 /**
