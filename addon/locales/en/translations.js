@@ -22,6 +22,10 @@ export default {
       }
     },
 
+    'flexberry-search': {
+      'placeholder': 'Search...'
+    },
+
     'layers-dialogs': {
       'remove': {
         'caption': 'Remove layer',
@@ -160,6 +164,9 @@ export default {
         'geocoder-osm-ru': {
           'url-textbox': {
             'caption': 'Url'
+          },
+          'autocomplete-url-textbox': {
+            'caption': 'Autocomplete Url'
           }
         }
       }

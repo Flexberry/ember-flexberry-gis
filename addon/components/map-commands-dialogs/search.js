@@ -255,6 +255,15 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     layers: null,
 
     /**
+      Leaflet map.
+
+      @property leafletMap
+      @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+      @default null
+    */
+    leafletMap: null,
+
+    /**
       Search results.
       Features array containing founded (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
 

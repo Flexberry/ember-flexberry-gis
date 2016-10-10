@@ -2,8 +2,16 @@
   <label>
     {{t "components.map-commands-dialogs.search-settings.geocoder-osm-ru.query-string-textbox.caption"}}
   </label>
-  {{flexberry-textbox
+  {{flexberry-search
     class="fluid"
+    minCharacters=3
+    apiSettings=(hash
+      url=_autocompleteUrl
+    )
+    fields=(hash
+      results='matches'
+      title='display_name'
+    )
     value=settings.queryString
   }}
 </div>

@@ -35,7 +35,8 @@ export default {
   */
   createSettings() {
     return {
-      url: undefined
+      url: undefined,
+      autocompleteUrl: undefined
     };
   },
 

@@ -36,7 +36,12 @@
         }}
       </div>
       {{#if _selectedLayerTypeIsValid}}
-        {{component (concat "map-commands-dialogs/search-settings/" _selectedLayer.type) settings=_options}}
+        {{component (concat "map-commands-dialogs/search-settings/" _selectedLayer.type)
+          settings=_options
+          layer=_selectedLayer
+          layers=layers
+          leafletMap=leafletMap
+        }}
       {{/if}}
     </div>
     <div class="column">

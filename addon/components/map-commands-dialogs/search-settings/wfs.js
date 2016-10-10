@@ -35,5 +35,32 @@ export default Ember.Component.extend({
     @type Object
     @default null
   */
-  settings: null
+  settings: null,
+
+  /**
+    Map layer within which search must be executed.
+
+    @property layer
+    @type Object
+    @default null
+  */
+  layer: null,
+
+  /**
+    Map layers hierarchy.
+
+    @property layers
+    @type Object[]
+    @default null
+  */
+  layers: null,
+
+  /**
+    Leaflet map.
+
+    @property leafletMap
+    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+    @default null
+  */
+  leafletMap: null
 });
