@@ -1,0 +1,94 @@
+﻿{
+  "name": "NewPlatformFlexberryGISLinkParameter",
+  "modelName": "new-platform-flexberry-g-i-s-link-parameter",
+  "className": "LinkParameter",
+  "parentModelName": null,
+  "parentClassName": null,
+  "attrs": [
+    {
+      "name": "objectField",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "layerField",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "expression",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "queryKey",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "linkField",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": false,
+      "defaultValue": "false"
+    }
+  ],
+  "belongsTo": [
+    {
+      "polymorphic": false,
+      "presence": true,
+      "name": "layerLink",
+      "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
+      "inverse": "linkParameter"
+    }
+  ],
+  "hasMany": [],
+  "projections": [
+    {
+      "name": "LinkParameter",
+      "modelName": "new-platform-flexberry-g-i-s-link-parameter",
+      "attrs": [
+        {
+          "name": "objectField",
+          "caption": "",
+          "hidden": true,
+          "index": 0
+        },
+        {
+          "name": "layerField",
+          "caption": "",
+          "hidden": true,
+          "index": 0
+        },
+        {
+          "name": "expression",
+          "caption": "",
+          "hidden": true,
+          "index": 0
+        },
+        {
+          "name": "queryKey",
+          "caption": "",
+          "hidden": true,
+          "index": 0
+        },
+        {
+          "name": "linkField",
+          "caption": "",
+          "hidden": true,
+          "index": 0
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
+    }
+  ]
+}

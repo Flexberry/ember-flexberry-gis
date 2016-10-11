@@ -1,0 +1,55 @@
+﻿{
+  "name": "NewPlatformFlexberryGISLayerLink",
+  "modelName": "new-platform-flexberry-g-i-s-layer-link",
+  "className": "LayerLink",
+  "parentModelName": null,
+  "parentClassName": null,
+  "attrs": [
+    {
+      "name": "linkSettings",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    }
+  ],
+  "belongsTo": [
+    {
+      "polymorphic": false,
+      "presence": true,
+      "name": "layer",
+      "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
+      "inverse": null
+    },
+    {
+      "polymorphic": false,
+      "presence": true,
+      "name": "mapObjectSetting",
+      "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
+      "inverse": null
+    }
+  ],
+  "hasMany": [
+    {
+      "name": "linkParameter",
+      "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
+      "inverse": "layerLink"
+    }
+  ],
+  "projections": [
+    {
+      "name": "LayerLink",
+      "modelName": "new-platform-flexberry-g-i-s-layer-link",
+      "attrs": [
+        {
+          "name": "linkSettings",
+          "caption": "",
+          "hidden": true,
+          "index": 0
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
+    }
+  ]
+}
