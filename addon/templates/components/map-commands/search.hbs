@@ -1,10 +1,28 @@
-{{map-commands/base
+{{#map-commands/base
   class=(concat flexberryClassNames.wrapper " " class)
   name="search"
   caption=caption
   iconClass=iconClass
-  execute=(action "onMapCommandExecute")
 }}
+  {{#block-slot "submenu"}}
+    {{map-commands/base
+      class=(concat flexberryClassNames.searchAttributes " " searchAttributesClass)
+      name="search-attributes"
+      caption=searchAttributesCaption
+      iconClass=searchAttributesIconClass
+      mapCommandProperties=_searchCommandProperties
+      execute=(action "onSearchAttributesMapCommandExecute")
+    }}
+    {{map-commands/base
+      class=(concat flexberryClassNames.searchClear " " searchClearClass)
+      name="search-clear"
+      caption=searchClearCaption
+      iconClass=searchClearIconClass
+      mapCommandProperties=_searchCommandProperties
+      execute=(action "onSearchClearMapCommandExecute")
+    }}
+  {{/block-slot}}
+{{/map-commands/base}}
 
 {{#if _searchDialogHasBeenRequested}}
   {{component "map-commands-dialogs/search"
@@ -13,11 +31,12 @@
     isBusy=_searchIsInProgress
     showErrorMessage=_showSearchErrorMessage
     errorMessage=_searchErrorMessage
-    layers=_executeActionEventObject.mapCommand.layers
-    leafletMap=_executeActionEventObject.mapCommand.leafletMap
+    layers=_searchAttributesExecuteActionEventObject.mapCommand.layers
+    leafletMap=_searchAttributesExecuteActionEventObject.mapCommand.leafletMap
     foundedFeatures=_foundedFeatures
     approve=(action "onSearchDialogApprove")
     deny=(action "onSearchDialogDeny")
     hide=(action "onSearchDialogHide")
+    showFoundedFeatures=(action "onSearchDialogShowFoundedFeatures")
   }}
 {{/if}}

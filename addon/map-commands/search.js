@@ -7,12 +7,20 @@ import BaseMapCommand from './base';
 
 /**
   Search map-command.
-  Performs search by attributes within available map layers.
 
   @class SearchMapCommand
   @extends BaseMapCommand
 */
 export default BaseMapCommand.extend({
+  /**
+    Layer group for founded features.
+
+    @property featuresLayer
+    @type <a href="http://leafletjs.com/reference-1.0.0.html#layergroup">L.LayerGroup</a>
+    @default null
+  */
+  featuresLayer: null,
+
   /**
     Executes map-command.
 
@@ -20,40 +28,31 @@ export default BaseMapCommand.extend({
   */
   _execute(options) {
     this._super(...arguments);
-    options = options || {};
-
-    // Layer that must be searched.
-    let layer = Ember.get(options, 'layer');
-    Ember.assert(
-      `Wrong type of \`options.layer\` property: ` +
-      `actual type is \`${Ember.typeOf(layer)}\`, but \`object\` or \`instance\` is expected.`,
-      !Ember.isNone(layer));
-
-    // Search options related to layer type.
-    let searchOptions = Ember.get(options, 'searchOptions');
-    Ember.assert(
-      `Wrong type of \`options.searchOptions\` property: ` +
-      `actual type is \`${Ember.typeOf(searchOptions)}\`, but \`object\` or \`instance\` is expected.`,
-      !Ember.isNone(searchOptions));
 
     let leafletMap = this.get('leafletMap');
-    let e = {
-      latlng: leafletMap.getCenter(),
-      layer: layer,
-      searchOptions: searchOptions,
+    let featuresLayer = this.get('featuresLayer');
+    Ember.assert(
+      `Wrong type of \`featuresLayer\` property:` +
+      ` actual is \`${Ember.typeOf(featuresLayer)}\` but L.LayerGroup is expected`,
+      featuresLayer instanceof L.LayerGroup);
 
-      // We need a wrapper-object (that wraps 'features') here, because leaflet
-      // will create a new event-object and features reference will be missed.
-      results: {
-        features: null
-      }
-    };
+    if (!leafletMap.hasLayer(featuresLayer)) {
+      featuresLayer.addTo(leafletMap);
+    }
+  },
 
-    // Fire custom event on leaflet map.
-    // Layer component must handle this event & store search result in e.features.
-    leafletMap.fire('flexberry-map:search', e);
+  /**
+    Destroys map-command.
+  */
+  willDestroy() {
+    this._super(...arguments);
 
-    // Return received features or features promise.
-    return Ember.get(e, 'results.features');
+    let featuresLayer = this.get('featuresLayer');
+    if (!Ember.isNone(featuresLayer)) {
+      featuresLayer.clearLayers();
+      featuresLayer.remove();
+    }
+
+    this.set('featuresLayer', null);
   }
 });

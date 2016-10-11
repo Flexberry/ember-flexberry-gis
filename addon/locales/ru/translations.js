@@ -23,7 +23,11 @@ export default {
     },
 
     'flexberry-search': {
-      'placeholder': 'Найти...'
+      'placeholder': 'Найти...',
+      'no-results': {
+        'caption': 'Нет результатов',
+        'description': 'Ваш поиск не дал результатов'
+      }
     },
 
     'layers-dialogs': {
@@ -228,7 +232,7 @@ export default {
         'error-message-caption': 'Ошибка поиска по слою',
         'error-message-empty-selected-layer': 'Не выбран слой для поиска',
         'approve-button': {
-          'caption': 'Ок'
+          'caption': 'Найти'
         },
         'deny-button': {
           'caption': 'Отмена'
@@ -352,7 +356,16 @@ export default {
         }
       },
       'search': {
-        'caption': 'Найти'
+        'caption': 'Найти',
+        'search-attributes': {
+          'caption': 'По атрибутам слоев'
+        },
+        'search-show': {
+          'caption': 'Отобразить на карте'
+        },
+        'search-clear': {
+          'caption': 'Очистить'
+        }
       }
     }
   },

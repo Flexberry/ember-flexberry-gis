@@ -23,7 +23,11 @@ export default {
     },
 
     'flexberry-search': {
-      'placeholder': 'Search...'
+      'placeholder': 'Search...',
+      'no-results': {
+        'caption': 'No results',
+        'description': 'Your search returned no results'
+      }
     },
 
     'layers-dialogs': {
@@ -228,7 +232,7 @@ export default {
         'error-message-caption': 'Search by layer error',
         'error-message-empty-selected-layer': 'Search layer isn\'t selected',
         'approve-button': {
-          'caption': 'Ok'
+          'caption': 'Search'
         },
         'deny-button': {
           'caption': 'Cancel'
@@ -352,7 +356,16 @@ export default {
         }
       },
       'search': {
-        'caption': 'Search'
+        'caption': 'Search',
+        'search-attributes': {
+          'caption': 'By layers attributes'
+        },
+        'search-show': {
+          'caption': 'Show on map'
+        },
+        'search-clear': {
+          'caption': 'Clear'
+        }
       }
     }
   },

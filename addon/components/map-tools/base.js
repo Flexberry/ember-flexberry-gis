@@ -263,6 +263,10 @@ let BaseMapToolComponent = Ember.Component.extend(
     */
     createMapTool() {
       let mapToolName = this.get('name');
+      if (Ember.isBlank(mapToolName)) {
+        return;
+      }
+
       let mapTool = Ember.getOwner(this).lookup(`map-tool:${mapToolName}`);
       Ember.assert(
         `Can't lookup \`map-tool:${mapToolName}\` such map-tool doesn\`t exist`,

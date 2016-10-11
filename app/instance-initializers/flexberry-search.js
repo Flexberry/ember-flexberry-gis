@@ -1,0 +1,1 @@
+export { default, initialize } from 'ember-flexberry-gis/instance-initializers/flexberry-search';

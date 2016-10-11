@@ -21,7 +21,9 @@ import { translationMacro as t } from 'ember-i18n';
 const flexberryClassNamesPrefix = 'flexberry-search-map-command-dialog';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: null
+  wrapper: null,
+  settings: flexberryClassNamesPrefix + '-settings',
+  results: flexberryClassNamesPrefix + '-results'
 };
 
 /**
@@ -112,6 +114,25 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     */
     _hasFoundedFeatures: Ember.computed('foundedFeatures', function() {
       return Ember.isArray(this.get('foundedFeatures'));
+    }),
+
+    /**
+      Flag: indicates whether all founded features contains '_selected' flag setted to 'true'.
+
+      @property _allFoundedFeaturesAreSelected
+      @type Boolean
+      @default false
+      @private
+    */
+    _allFoundedFeaturesAreSelected: Ember.computed('foundedFeatures.@each._selected', function() {
+      let foundedFeatures = this.get('foundedFeatures');
+      if (!Ember.isArray(foundedFeatures)) {
+        return false;
+      }
+
+      return foundedFeatures.every((feature) => {
+        return Ember.get(feature, '_selected') === true;
+      });
     }),
 
     /**
@@ -302,6 +323,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
         availableLayers.forEach((availableLayer) => {
           let alreadyExistingOptions = null;
           let alreadyExistingFoundedFeatures = null;
+
           availableLayersOptions.forEach(({ layer, options, foundedFeatures }) => {
             if (layer === availableLayer) {
               alreadyExistingOptions = options;
@@ -416,6 +438,81 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
       */
       onHide(e) {
         this.sendAction('hide', e);
+      },
+
+      /**
+        Handles 'select-all-features' checkboxes 'change' action.
+        Selects/deselects all founded features & checkboxes related to them.
+
+        @method actions.onSelectAllFeaturesCheckboxChange
+        @param {Object} e Actions event-object.
+        @param {Boolean} e.newValue Checkboxes new value.
+      */
+      onSelectAllFeaturesCheckboxChange(e) {
+        let foundedFeatures = this.get('foundedFeatures');
+        if (!Ember.isArray(foundedFeatures)) {
+          return;
+        }
+
+        // Select all founded features.
+        foundedFeatures.forEach((feature) => {
+          Ember.set(feature, '_selected', e.newValue);
+        });
+      },
+
+      /**
+        Handles 'select-feature' checkbox 'change' action.
+        Selects/deselects founded feature related to checkbox.
+
+        @method actions.onSelectFeatureCheckboxChange
+        @param {Number} featureIndex Index of selected/deselected feature in 'foundedFeatures' array.
+        @param {Object} e Actions event-object.
+        @param {Boolean} e.newValue Checkboxes new value.
+      */
+      onSelectFeatureCheckboxChange(featureIndex, e) {
+        let foundedFeatures = this.get('foundedFeatures');
+        if (!Ember.isArray(foundedFeatures)) {
+          return;
+        }
+
+        Ember.set(foundedFeatures[featureIndex], '_selected', e.newValue);
+      },
+
+      /**
+        Handles 'show-all-selected-features' button's 'click' action.
+        Shows selected features on map.
+
+        @method actions.onShowAllFeaturesButtonClick
+      */
+      onShowAllFeaturesButtonClick() {
+        let foundedFeatures = this.get('foundedFeatures');
+        if (!Ember.isArray(foundedFeatures)) {
+          return;
+        }
+
+        // Show all selected features.
+        let features = foundedFeatures.filter((feature) => {
+          return Ember.get(feature, '_selected') === true;
+        });
+
+        this._showFoundedFeatures(features);
+      },
+
+      /**
+        Handles 'show-selected-feature' button's 'click' action.
+        Shows feature with the specified index.
+
+        @method actions.onShowFeatureButtonClick
+        @param {Number} featureIndex Index of the specified feature in 'foundedFeatures' array.
+      */
+      onShowFeatureButtonClick(featureIndex) {
+        let foundedFeatures = this.get('foundedFeatures');
+        if (!Ember.isArray(foundedFeatures)) {
+          return;
+        }
+
+        let features = [foundedFeatures[featureIndex]];
+        this._showFoundedFeatures(features);
       }
     },
 
@@ -469,6 +566,26 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     }),
 
     /**
+      Shows specified features on map.
+
+      @method _showFoundedFeatures
+      @param {Object[]} features Specified features that must be shown on map.
+      @private
+    */
+    _showFoundedFeatures(features) {
+      if (!Ember.isArray(features) || Ember.get(features, 'length') === 0) {
+        return;
+      }
+
+      this.sendAction('showFoundedFeatures', {
+        features: features
+      });
+
+      // Hide dialog.
+      this.set('visible', false);
+    },
+
+    /**
       Initializes component.
     */
     init() {
@@ -511,6 +628,14 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
       Component's action invoking when dialog is denied.
 
       @method sendingActions.deny
+    */
+
+    /**
+      Component's action invoking when dialog wants to show founded features on map.
+
+      @method sendingActions.showFoundedFeatures
+      @param {Object} e Action's event-object.
+      @param {Object[]} e.features Founded features to show.
     */
   }
 );

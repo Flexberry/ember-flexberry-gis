@@ -21,7 +21,7 @@
 }}
 <form class="ui {{if isBusy "loading"}} form" role="form">
   <div class="ui two column celled grid">
-    <div class="column">
+    <div class="{{flexberryClassNames.settings}} column">
       <div class="field">
         <label>
           {{layersDropdownCaption}}
@@ -44,7 +44,7 @@
         }}
       {{/if}}
     </div>
-    <div class="column">
+    <div class="{{flexberryClassNames.results}} column">
       <div class="field">
         <label>
           {{foundedFeaturesSegmentCaption}}
@@ -53,15 +53,48 @@
           {{#if (eq foundedFeatures.length 0)}}
             {{foundedFeaturesSegmentNothingFoundMessage}}
           {{else}}
-            <ul>
-            {{#each foundedFeatures as |feature|}}
-              <li>
-              {{#each-in feature.properties as |propertyName propertyValue|}}
-                {{propertyName}}: {{propertyValue}}<br>
-              {{/each-in}}
-              </li>
-            {{/each}}
-            </ul>
+            <table class="ui celled table">
+              <thead>
+                <tr>
+                  <th class="collapsing">
+                    {{flexberry-ddau-checkbox
+                      value=_allFoundedFeaturesAreSelected
+                      change=(action "onSelectAllFeaturesCheckboxChange")
+                    }}
+                    {{flexberry-button
+                      iconClass="map icon"
+                      click=(action "onShowAllFeaturesButtonClick")
+                    }}
+                  </th>
+                  {{#each-in foundedFeatures.0.properties as |propertyName propertyValue|}}
+                    <th>
+                      {{propertyName}}
+                    </th>
+                  {{/each-in}}
+                </tr>
+              </thead>
+              <tbody>
+                {{#each foundedFeatures as |feature featureIndex|}}
+                  <tr>
+                  <td class="collapsing">
+                    {{flexberry-ddau-checkbox
+                      value=feature._selected
+                      change=(action "onSelectFeatureCheckboxChange" featureIndex)
+                    }}
+                    {{flexberry-button
+                      iconClass="map icon"
+                      click=(action "onShowFeatureButtonClick" featureIndex)
+                    }}
+                  </td>
+                    {{#each-in feature.properties as |propertyName propertyValue|}}
+                      <td>
+                        {{propertyValue}}
+                      </td>
+                    {{/each-in}}
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
           {{/if}}
         {{/if}}
       </div>

@@ -152,7 +152,7 @@ export default BaseLayer.extend({
 
     let featuresPromise = geocodingResults.then((results) => {
       let features = this.parseGeocodingResults(results);
-      return Ember.isArray(features) ? features : Ember.A();
+      return Ember.isArray(features) ? Ember.A(features) : Ember.A();
     });
 
     let results = Ember.get(e, 'results');

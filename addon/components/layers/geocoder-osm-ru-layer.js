@@ -38,7 +38,12 @@ export default GeocoderBaseLayer.extend({
         type: 'Feature',
         geometry: {
           type: 'Point',
-          coordinates: [Ember.get(match, 'lat'), Ember.get(match, 'lon')]
+
+          // TODO: Use lat, lon ordering but return "FeatureCollection" GeoJSON object with defined CRS.
+          // Then features will be shown on map through proj4 extension of GeoJSON layer (L.Proj.GeoJSON)
+          // like here https://github.com/kartena/Proj4Leaflet/blob/master/examples/geojson-crs/script.js.
+          // Same todo for identification results.
+          coordinates: [Ember.get(match, 'lon'), Ember.get(match, 'lat')]
         },
         properties: match
       };
