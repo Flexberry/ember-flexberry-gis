@@ -34,3 +34,12 @@
   border: 1px solid gray;
   border-radius: 2px;
 }
+
+.flexberry-map .flexberry-map-loader-dimmer {
+  z-index: 10000 !important;
+}
+
+.flexberry-map .flexberry-map-loader {
+  z-index: 10001 !important;
+  color: #ffffff !important;
+}

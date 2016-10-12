@@ -82,7 +82,7 @@ export default TileLayer.extend({
   },
 
   /**
-    Handles 'map:identify' event of leaflet map.
+    Handles 'flexberry-map:identify' event of leaflet map.
 
     @method identify
     @param {Object} e Event object.
@@ -101,5 +101,21 @@ export default TileLayer.extend({
       layer: this.get('layer'),
       features: featuresPromise
     });
+  },
+
+  /**
+    Handles 'flexberry-map:search' event of leaflet map.
+
+    @method search
+    @param {Object} e Event object.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
+    @param {Object[]} layer Object describing layer that must be searched.
+    @param {Object} searchOptions Search options related to layer type.
+    @param {Object} results Hash containing search results.
+    @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+    or a promise returning such array.
+  */
+  search(e) {
+    // Wms-layers hasn't any search logic.
   }
 });

@@ -87,20 +87,6 @@ export default BaseLayer.extend({
         destroyLayer();
       };
 
-      if (boundingBox.getSouthWest().equals(boundingBox.getNorthEast())) {
-        // Bounding box is point.
-        // WFS-service could return an error,
-        // so extend bounding box a little.
-        let leafletMap = this.get('leafletMap');
-        let y = leafletMap.getSize().y / 2;
-        let a = leafletMap.containerPointToLatLng([0, y]);
-        let b = leafletMap.containerPointToLatLng([100, y]);
-        let maxMeters = leafletMap.distance(a, b);
-
-        // Bounding box around south west point with radius of current scale * 0.05.
-        boundingBox = boundingBox.getSouthWest().toBounds(maxMeters * 0.05);
-      }
-
       layer = this.createLayer({
         filter: new L.Filter.BBox().append(boundingBox, geometryField, crs),
         geometryField: geometryField,
@@ -124,7 +110,7 @@ export default BaseLayer.extend({
   },
 
   /**
-    Handles 'map:identify' event of leaflet map.
+    Handles 'flexberry-map:identify' event of leaflet map.
 
     @method identify
     @param {Object} e Event object.
@@ -142,6 +128,25 @@ export default BaseLayer.extend({
     e.results.push({
       layer: this.get('layer'),
       features: featuresPromise
+    });
+  },
+
+  /**
+    Handles 'flexberry-map:search' event of leaflet map.
+
+    @method search
+    @param {Object} e Event object.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
+    @param {Object[]} layer Object describing layer that must be searched.
+    @param {Object} searchOptions Search options related to layer type.
+    @param {Object} results Hash containing search results.
+    @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+    or a promise returning such array.
+  */
+  search(e) {
+    // TODO: implement search logic.
+    e.results.features = new Ember.RSVP.Promise((resolve, reject) => {
+      resolve(Ember.A());
     });
   }
 });

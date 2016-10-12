@@ -115,7 +115,14 @@ let BaseMapCommandComponent = BaseMapToolComponent.extend({
     */
     createMapTool() {
       let mapCommandName = this.get('name');
+      if (Ember.isBlank(mapCommandName)) {
+        return;
+      }
+
       let mapCommand = Ember.getOwner(this).lookup(`map-command:${mapCommandName}`);
+      Ember.assert(
+        `Can't lookup \`map-command:${mapCommandName}\` such map-command doesn\`t exist`,
+        !Ember.isNone(mapCommand));
 
       let mapCommandProperties = this.get('mapCommandProperties');
       if (!Ember.isNone(mapCommandProperties)) {

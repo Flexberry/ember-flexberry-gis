@@ -58,6 +58,13 @@ export default RectangleMapTool.extend({
     @private
   */
   _startIdentification({ boundingBox, latlng, excludedLayers }) {
+    let i18n = this.get('i18n');
+    let leafletMap = this.get('leafletMap');
+
+    // Show map loader.
+    leafletMap.setLoaderContent(i18n.t('map-tools.identify.loader-message'));
+    leafletMap.showLoader();
+
     let e = {
       boundingBox: boundingBox,
       latlng: latlng,
@@ -68,7 +75,7 @@ export default RectangleMapTool.extend({
 
     // Fire custom event on leaflet map (if there is layers to identify).
     if (e.layers.length > 0) {
-      this.get('leafletMap').fire('flexberry-map:identify', e);
+      leafletMap.fire('flexberry-map:identify', e);
     }
 
     // Promises array could be totally changed in 'flexberry-map:identify' event handlers, we should prevent possible errors.
@@ -111,6 +118,10 @@ export default RectangleMapTool.extend({
     Ember.RSVP.allSettled(promises).then(() => {
       e.results = results;
       this._finishIdentification(e);
+
+      // Hide map loader.
+      leafletMap.setLoaderContent('');
+      leafletMap.hideLoader();
     });
   },
 
@@ -325,8 +336,8 @@ export default RectangleMapTool.extend({
 
     let leafletMap = this.get('leafletMap');
     let mapSize = leafletMap.getSize();
-    let popupMaxWidth = mapSize.x * 0.8;
-    let popupMaxHeight = mapSize.y * 0.8;
+    let popupMaxWidth = mapSize.x * 0.6;
+    let popupMaxHeight = mapSize.y * 0.6;
 
     let popup = L.popup({
       className: 'identify-popup',
@@ -361,13 +372,31 @@ export default RectangleMapTool.extend({
     @private
   */
   _rectangleDrawingDidEnd({ layer }) {
-    // Get center before layer will be removed from map in super-method.
+    // Get center & bbox before layer will be removed from map in super-method.
     let latlng = layer.getCenter();
+    let boundingBox = layer.getBounds();
+    if (boundingBox.getSouthWest().equals(boundingBox.getNorthEast())) {
+      // Bounding box is point.
+      // Identification can be incorrect or even failed in such situation,
+      // so extend bounding box a little (around specified point).
+      let leafletMap = this.get('leafletMap');
+      let y = leafletMap.getSize().y / 2;
+      let a = leafletMap.containerPointToLatLng([0, y]);
+      let b = leafletMap.containerPointToLatLng([100, y]);
 
+      // Current scale (related to current zoom level).
+      let maxMeters = leafletMap.distance(a, b);
+
+      // Bounding box around south west point with radius of current scale * 0.05.
+      boundingBox = boundingBox.getSouthWest().toBounds(maxMeters * 0.05);
+    }
+
+    // Call super method to remove drawn rectangle & start a new one.
     this._super(...arguments);
 
+    // Start identification.
     this._startIdentification({
-      boundingBox: layer.getBounds(),
+      boundingBox: boundingBox,
       latlng: latlng
     });
   },
