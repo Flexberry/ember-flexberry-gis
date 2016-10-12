@@ -2,11 +2,7 @@ import { moduleForModel, test } from 'ember-qunit';
 
 moduleForModel('new-platform-flexberry-g-i-s-layer-metadata', 'Unit | Model | new-platform-flexberry-g-i-s-layer-metadata', {
   // Specify the other units that are required for this test.
-  needs: [
-    'model:new-platform-flexberry-g-i-s-layer-metadata',
-    'model:new-platform-flexberry-g-i-s-map-layer',
-    'model:new-platform-flexberry-g-i-s-map'
-  ]
+  needs: []
 });
 
 test('it exists', function(assert) {

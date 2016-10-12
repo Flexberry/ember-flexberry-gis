@@ -3,11 +3,7 @@ import { moduleForModel, test } from 'ember-qunit';
 moduleForModel('new-platform-flexberry-g-i-s-layer-metadata', 'Unit | Serializer | new-platform-flexberry-g-i-s-layer-metadata', {
   // Specify the other units that are required for this test.
   needs: [
-    'serializer:new-platform-flexberry-g-i-s-layer-metadata',
-
-    'model:new-platform-flexberry-g-i-s-layer-metadata',
-    'model:new-platform-flexberry-g-i-s-map-layer',
-    'model:new-platform-flexberry-g-i-s-map'
+    'model:new-platform-flexberry-g-i-s-layer-metadata'
   ]
 });
 
