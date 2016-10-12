@@ -22,6 +22,14 @@ export default {
       }
     },
 
+    'flexberry-search': {
+      'placeholder': 'Search...',
+      'no-results': {
+        'caption': 'No results',
+        'description': 'Your search returned no results'
+      }
+    },
+
     'layers-dialogs': {
       'remove': {
         'caption': 'Remove layer',
@@ -149,11 +157,45 @@ export default {
               'caption': 'Weight'
             }
           }
+        },
+
+        'geocoder-osm-overpass': {
+          'url-textbox': {
+            'caption': 'Url'
+          }
+        },
+
+        'geocoder-osm-ru': {
+          'url-textbox': {
+            'caption': 'Url'
+          },
+          'autocomplete-url-textbox': {
+            'caption': 'Autocomplete Url'
+          }
         }
       }
     },
 
     'map-commands-dialogs': {
+      'go-to': {
+        'caption': 'Go to specified point',
+        'error-message': {
+          'caption': 'Go to error',
+          'content': 'Specified coordinates are wrong & can\'t be successfully converted into numbers'
+        },
+        'approve-button': {
+          'caption': 'Go'
+        },
+        'deny-button': {
+          'caption': 'Cancel'
+        },
+        'lat-textbox': {
+          'caption': 'Latitude'
+        },
+        'lng-textbox': {
+          'caption': 'Longitude'
+        }
+      },
       'export': {
         'caption': 'Export map',
         'print-caption': 'Print map',
@@ -204,25 +246,41 @@ export default {
           }
         }
       },
-
-      'go-to': {
-        'caption': 'Go to specified point',
-        'error-message': {
-          'caption': 'Go to error',
-          'content': 'Specified coordinates are wrong & can\'t be successfully converted into numbers'
-        },
+      'search': {
+        'caption': 'Search by layer',
+        'error-message-caption': 'Search by layer error',
+        'error-message-empty-selected-layer': 'Search layer isn\'t selected',
         'approve-button': {
-          'caption': 'Ok'
+          'caption': 'Search'
         },
         'deny-button': {
           'caption': 'Cancel'
         },
-        'lat-textbox': {
-          'caption': 'Latitude'
+        'layers-dropdown': {
+          'caption': 'Search layer'
         },
-        'lng-textbox': {
-          'caption': 'Longitude'
+        'founded-features-segment': {
+          'caption': 'Search results',
+          'nothing-found-message': 'On your request nothing has been found'
+        }
+      },
+      'search-settings': {
+        'geocoder-osm-ru': {
+          'query-string-textbox': {
+            'caption': 'Query string'
+          },
+          'search-type-dropdown': {
+            'caption': 'Search type'
+          },
+          'max-results-count-textbox': {
+            'caption': 'Max results count'
+          }
         },
+        'wfs': {
+          'query-string-textbox': {
+            'caption': 'Query string'
+          }
+        }
       }
     },
 
@@ -304,6 +362,9 @@ export default {
     },
 
     'map-commands': {
+      'go-to': {
+        'caption': ''
+      },
       'full-extent': {
         'caption': ''
       },
@@ -316,8 +377,17 @@ export default {
           'caption': 'Print'
         }
       },
-      'go-to': {
-        'caption': ''
+      'search': {
+        'caption': 'Search',
+        'search-attributes': {
+          'caption': 'By layers attributes'
+        },
+        'search-show': {
+          'caption': 'Show on map'
+        },
+        'search-clear': {
+          'caption': 'Clear'
+        }
       }
     }
   },
@@ -336,6 +406,7 @@ export default {
           'caption': 'Top visible layer'
         }
       },
+      'loader-message': 'Identification...',
       'error-message': 'Identification by \'{{layerName}}\' layer finished with error',
       'identify-popup': {
         'properties-table': {

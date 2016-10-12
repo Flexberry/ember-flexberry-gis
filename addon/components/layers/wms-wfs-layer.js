@@ -22,7 +22,7 @@ export default WmsLayerComponent.extend({
   _wfsLayer: null,
 
   /**
-    Handles 'map:identify' event of leaflet map.
+    Handles 'flexberry-map:identify' event of leaflet map.
 
     @method identify
     @param {Object} e Event object.
@@ -39,6 +39,25 @@ export default WmsLayerComponent.extend({
     let innerWfsLayer = this.get('_wfsLayer');
     if (!Ember.isNone(innerWfsLayer)) {
       innerWfsLayer.identify.apply(innerWfsLayer, arguments);
+    }
+  },
+
+  /**
+    Handles 'flexberry-map:search' event of leaflet map.
+
+    @method search
+    @param {Object} e Event object.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
+    @param {Object[]} layer Object describing layer that must be searched.
+    @param {Object} searchOptions Search options related to layer type.
+    @param {Object} results Hash containing search results.
+    @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+    or a promise returning such array.
+  */
+  search(e) {
+    let innerWfsLayer = this.get('_wfsLayer');
+    if (!Ember.isNone(innerWfsLayer)) {
+      innerWfsLayer.search.apply(innerWfsLayer, arguments);
     }
   },
 

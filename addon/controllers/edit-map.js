@@ -95,7 +95,7 @@ export default EditFormController.extend(
     let layers = Ember.get(layer, 'layers');
     if (Ember.isArray(layers)) {
       layers.forEach((childLayer) => {
-        this._removeLayer({
+        this.removeLayer({
           layer: childLayer
         });
       });

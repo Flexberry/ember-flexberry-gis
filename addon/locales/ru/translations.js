@@ -22,6 +22,14 @@ export default {
       }
     },
 
+    'flexberry-search': {
+      'placeholder': 'Найти...',
+      'no-results': {
+        'caption': 'Нет результатов',
+        'description': 'Ваш поиск не дал результатов'
+      }
+    },
+
     'layers-dialogs': {
       'remove': {
         'caption': 'Удаление слоя',
@@ -149,11 +157,45 @@ export default {
               'caption': 'Толщина обводки'
             }
           }
+        },
+
+        'geocoder-osm-overpass': {
+          'url-textbox': {
+            'caption': 'Url'
+          }
+        },
+
+        'geocoder-osm-ru': {
+          'url-textbox': {
+            'caption': 'Url'
+          },
+          'autocomplete-url-textbox': {
+            'caption': 'Url для автокомплита'
+          }
         }
       }
     },
 
     'map-commands-dialogs': {
+      'go-to': {
+        'caption': 'Перейти к заданной точке',
+        'error-message': {
+          'caption': 'Ошибка перехода',
+          'content': 'Заданы ошибочные координаты, они не могут быть преобразованы в числа'
+        },
+        'approve-button': {
+          'caption': 'Перейти'
+        },
+        'deny-button': {
+          'caption': 'Отмена'
+        },
+        'lat-textbox': {
+          'caption': 'Широта'
+        },
+        'lng-textbox': {
+          'caption': 'Долгота'
+        }
+      },
       'export': {
         'caption': 'Экспорт карты',
         'print-caption': 'Печать карты',
@@ -204,25 +246,41 @@ export default {
           }
         }
       },
-
-      'go-to': {
-        'caption': 'Перейти к заданной точке',
-        'error-message': {
-          'caption': 'Ошибка перехода',
-          'content': 'Заданы ошибочные координаты, они не могут быть преобразованы в числа'
-        },
+      'search': {
+        'caption': 'Поиск по слою',
+        'error-message-caption': 'Ошибка поиска по слою',
+        'error-message-empty-selected-layer': 'Не выбран слой для поиска',
         'approve-button': {
-          'caption': 'Ок'
+          'caption': 'Найти'
         },
         'deny-button': {
           'caption': 'Отмена'
         },
-        'lat-textbox': {
-          'caption': 'Широта'
+        'layers-dropdown': {
+          'caption': 'Слой для поиска'
         },
-        'lng-textbox': {
-          'caption': 'Долгота'
+        'founded-features-segment': {
+          'caption': 'Результаты поиска',
+          'nothing-found-message': 'По вашему запросу ничего не найдено'
+        }
+      },
+      'search-settings': {
+        'geocoder-osm-ru': {
+          'query-string-textbox': {
+            'caption': 'Строка запроса'
+          },
+          'search-type-dropdown': {
+            'caption': 'Тип поиска'
+          },
+          'max-results-count-textbox': {
+            'caption': 'Максимальное количество результатов'
+          }
         },
+        'wfs': {
+          'query-string-textbox': {
+            'caption': 'Строка запроса'
+          }
+        }
       }
     },
 
@@ -304,6 +362,9 @@ export default {
     },
 
     'map-commands': {
+      'go-to': {
+        'caption': ''
+      },
       'full-extent': {
         'caption': ''
       },
@@ -316,8 +377,17 @@ export default {
           'caption': 'Напечатать'
         }
       },
-      'go-to': {
-        'caption': ''
+      'search': {
+        'caption': 'Найти',
+        'search-attributes': {
+          'caption': 'По атрибутам слоев'
+        },
+        'search-show': {
+          'caption': 'Отобразить на карте'
+        },
+        'search-clear': {
+          'caption': 'Очистить'
+        }
       }
     }
   },
@@ -336,6 +406,7 @@ export default {
           'caption': 'Верхний видимый слой'
         }
       },
+      'loader-message': 'Идентификация...',
       'error-message': 'Идентификация по слою \'{{layerName}}\' завершилась ошибкой: ',
       'identify-popup': {
         'properties-table': {

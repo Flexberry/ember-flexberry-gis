@@ -10,6 +10,28 @@ import LeafletEventsMixin from '../mixins/leaflet-events';
 import layout from '../templates/components/flexberry-map';
 
 /**
+  Component's CSS-classes names.
+  JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
+
+  @property {Object} flexberryClassNames
+  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-map').
+  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-map').
+  @property {String} flexberryClassNames.loader Component's loader CSS-class name ('flexberry-map-loader').
+  @property {String} flexberryClassNames.loaderDimmer Component's loader's dimmer CSS-class name ('flexberry-map-loader-dimmer').
+  @readonly
+  @static
+
+  @for FlexberryMapComponent
+*/
+const flexberryClassNamesPrefix = 'flexberry-map';
+const flexberryClassNames = {
+  prefix: flexberryClassNamesPrefix,
+  wrapper: flexberryClassNamesPrefix,
+  loader: flexberryClassNamesPrefix + '-loader',
+  loaderDimmer: flexberryClassNamesPrefix + '-loader-dimmer'
+};
+
+/**
   Flexberry map component.
   Wraps [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) into ember component.
 
@@ -19,7 +41,7 @@ import layout from '../templates/components/flexberry-map';
   @uses LeafletPropertiesMixin
   @uses LeafletEventsMixin
  */
-export default Ember.Component.extend(
+let FlexberryMapComponent = Ember.Component.extend(
   LeafletOptionsMixin,
   LeafletPropertiesMixin,
   LeafletEventsMixin, {
@@ -34,9 +56,26 @@ export default Ember.Component.extend(
     _layer: null,
 
     /**
+      Flag: indicates whether map loader is shown or not.
+      Use leaflet map's 'showLoader', 'hideLoader' methods to set this property value.
+
+      @property _isLoaderShown
+      @type Boolean
+      @default false
+      @private
+    */
+    _isLoaderShown: false,
+
+    /**
       Reference to component's template.
     */
     layout,
+
+    /**
+      Reference to component's CSS-classes names.
+      Must be also a component's instance property to be available from component's .hbs template.
+    */
+    flexberryClassNames,
 
     /**
       Component's wrapping <div> CSS-classes names.
@@ -146,12 +185,84 @@ export default Ember.Component.extend(
     layers: null,
 
     /**
+      Injects additional methods into initialized leaflet map.
+
+      @method _injectMapLoaderMethods
+      @param {<a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>} leafletMap initialized leaflet map.
+      @private
+    */
+    _injectMapLoaderMethods(leafletMap) {
+      let $mapLoader = this.$(`.${flexberryClassNames.loader}`);
+
+      // Sets map loader's content.
+      leafletMap.setLoaderContent = (content) => {
+        $mapLoader.text(content);
+      };
+
+      // Shows map loader.
+      leafletMap.showLoader = () => {
+        // Remember current handlers states & disable them,
+        // to disable dragging, zoom, keyboard events handling, etc.
+        leafletMap._handlers.forEach((handler) => {
+          handler._beforeLoaderState = handler.enabled();
+
+          if (handler._beforeLoaderState === true) {
+            handler.disable();
+          }
+        });
+
+        this.set('_isLoaderShown', true);
+      };
+
+      // Hides map loader.
+      leafletMap.hideLoader = () => {
+        this.set('_isLoaderShown', false);
+
+        // Restore handlers states,
+        // to restore dragging, zoom, keyboard events handling, etc.
+        leafletMap._handlers.forEach((handler) => {
+          if (handler._beforeLoaderState === true) {
+            handler.enable();
+          }
+        });
+      };
+
+      // Prevents DOM events from being triggered while map loader is shown.
+      // Call to L.DOMEvent.StopPropagation doesn't take an effect, so override map's '_fireDOMEvent' method.
+      let originalFireDOMEvent = leafletMap._fireDOMEvent;
+      leafletMap._fireDOMEvent = (...args) => {
+        if (this.get('_isLoaderShown')) {
+          return;
+        }
+
+        originalFireDOMEvent.apply(leafletMap, args);
+      };
+    },
+
+    /**
+      Removes injected additional methods from initialized leaflet map.
+
+      @method _removeMapLoaderMethods
+      @param {<a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>} leafletMap initialized leaflet map.
+      @private
+    */
+    _removeMapLoaderMethods(leafletMap) {
+      delete leafletMap.setLoaderContent;
+      delete leafletMap.showLoader;
+      delete leafletMap.hideLoader;
+      delete leafletMap._fireDOMEvent;
+    },
+
+    /**
       Initializes DOM-related component's properties.
     */
     didInsertElement() {
       this._super(...arguments);
 
+      // Initialize leaflet map.
       let leafletMap = L.map(this.$()[0], this.get('options'));
+      this._injectMapLoaderMethods(leafletMap);
+
       this.set('_layer', leafletMap);
 
       this._addObservers();
@@ -170,6 +281,8 @@ export default Ember.Component.extend(
 
       let leafletMap = this.get('_layer');
       if (!Ember.isNone(leafletMap)) {
+        // Destroy leaflet map.
+        this._removeMapLoaderMethods(leafletMap);
         leafletMap.remove();
         this.set('_layer', null);
 
@@ -192,3 +305,11 @@ export default Ember.Component.extend(
     */
   }
 );
+
+// Add component's CSS-class names as component's class static constants
+// to make them available outside of the component instance.
+FlexberryMapComponent.reopenClass({
+  flexberryClassNames
+});
+
+export default FlexberryMapComponent;
