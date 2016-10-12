@@ -23,6 +23,15 @@ export default Ember.Object.extend(Ember.Evented, {
   _executing: false,
 
   /**
+    Reference to i18n service.
+
+    @property i18n
+    @type <a href="https://github.com/jamesarosen/ember-i18n">I18nService</a>
+    @default Ember.inject.service('i18n')
+  */
+  i18n: Ember.inject.service('i18n'),
+
+  /**
     Leaflet map related to command.
 
     @property leafletMap

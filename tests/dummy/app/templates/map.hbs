@@ -50,6 +50,7 @@
           {{map-tools/drag activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/zoom-in activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/zoom-out activate=(action "onMapToolActivate" target=mapToolbar)}}
+          {{map-commands/go-to execute=(action "onMapCommandExecute" target=mapToolbar)}}
           {{map-commands/full-extent execute=(action "onMapCommandExecute" target=mapToolbar)}}
           {{map-commands/search execute=(action "onMapCommandExecute" target=mapToolbar)}}
           {{map-tools/identify activate=(action "onMapToolActivate" target=mapToolbar)}}

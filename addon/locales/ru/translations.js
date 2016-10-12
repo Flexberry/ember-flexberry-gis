@@ -177,6 +177,25 @@ export default {
     },
 
     'map-commands-dialogs': {
+      'go-to': {
+        'caption': 'Перейти к заданной точке',
+        'error-message': {
+          'caption': 'Ошибка перехода',
+          'content': 'Заданы ошибочные координаты, они не могут быть преобразованы в числа'
+        },
+        'approve-button': {
+          'caption': 'Перейти'
+        },
+        'deny-button': {
+          'caption': 'Отмена'
+        },
+        'lat-textbox': {
+          'caption': 'Широта'
+        },
+        'lng-textbox': {
+          'caption': 'Долгота'
+        }
+      },
       'export': {
         'caption': 'Экспорт карты',
         'print-caption': 'Печать карты',
@@ -343,13 +362,16 @@ export default {
     },
 
     'map-commands': {
+      'go-to': {
+        'caption': ''
+      },
       'full-extent': {
         'caption': ''
       },
       'export': {
         'caption': 'Экспортировать',
         'export-download': {
-          'caption': 'Скачать'
+          'caption': 'В изображение'
         },
         'export-print': {
           'caption': 'Напечатать'
@@ -449,6 +471,13 @@ export default {
         'meter': '&nbsp;м',
         'kilometer': '&nbsp;км'
       }
+    }
+  },
+
+  'map-commands': {
+    'go-to': {
+      'lat-caption': 'Широта',
+      'lng-caption': 'Долгота'
     }
   }
 };
