@@ -22,6 +22,15 @@ export default RectangleMapTool.extend({
   cursor: 'help',
 
   /**
+    Flag: indicates whether to hide rectangle on drawing end or not.
+
+    @property hideRectangleOnDrawingEnd
+    @type Boolean
+    @default true
+  */
+  hideRectangleOnDrawingEnd: false,
+
+  /**
     Checks whether given layer can be identified.
 
     @method _layerCanBeIdentified
@@ -52,12 +61,13 @@ export default RectangleMapTool.extend({
 
     @method _startIdentification
     @param {Object} options Method options.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of identification area.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} options.latlng Center of the bounding box.
+    @param {<a href="http://leafletjs.com/reference.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of identification area.
+    @param {<a href="http://leafletjs.com/reference.html#latlng">L.LatLng</a>} options.latlng Center of the bounding box.
+    @param {<a href="http://leafletjs.com/reference.html#rectangle">L.Rectangle</a>} options.boundingBoxLayer Rectangle layer related to bounding box.
     @param {Object[]} options.excludedLayers Layers excluded from identification.
     @private
   */
-  _startIdentification({ boundingBox, latlng, excludedLayers }) {
+  _startIdentification({ boundingBox, latlng, boundingBoxLayer, excludedLayers }) {
     let i18n = this.get('i18n');
     let leafletMap = this.get('leafletMap');
 
@@ -68,6 +78,7 @@ export default RectangleMapTool.extend({
     let e = {
       boundingBox: boundingBox,
       latlng: latlng,
+      boundingBoxLayer: boundingBoxLayer,
       excludedLayers: Ember.A(excludedLayers || []),
       layers: this._getLayersToIdentify({ excludedLayers }),
       results: Ember.A()
@@ -132,15 +143,21 @@ export default RectangleMapTool.extend({
     @param {Object} e Event object.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} e.boundingBox Bounds of identification area.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
+    @param {<a href="http://leafletjs.com/reference.html#rectangle">L.Rectangle</a>} options.boundingBoxLayer Rectangle layer related to bounding box.
     @param {Object[]} excludedLayers Objects describing those layers which were excluded from identification.
     @param {Object[]} layers Objects describing those layers which are identified.
     @param {Object[]} results Objects describing identification results.
     Every result-object has the following structure: { layer: ..., features: [...] },
     where 'layer' is metadata of layer related to identification result, features is array
     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
+    @return {<a href="http://leafletjs.com/reference.html#popup">L.Popup</a>} Popup containing identification results.
     @private
   */
   _finishIdentification(e) {
+    let leafletMap = this.get('leafletMap');
+    let featuresLayer = L.layerGroup().addTo(leafletMap);
+    let boundingBoxLayer = Ember.get(e, 'boundingBoxLayer');
+
     let i18n = this.get('i18n');
 
     // Get i18n captions & properties names.
@@ -150,6 +167,50 @@ export default RectangleMapTool.extend({
     let layersCountProperty = i18n.t('map-tools.identify.identify-popup.properties-table.layers-count-property.caption');
     let featuresCountProperty = i18n.t('map-tools.identify.identify-popup.properties-table.features-count-property.caption');
     let errorProperty = i18n.t('map-tools.identify.identify-popup.properties-table.error-property.caption');
+
+    let createLayersAccordion = () => {
+      return Ember.$('<div />').addClass('ui accordion').accordion({
+        exclusive: false
+      });
+    };
+
+    let createLayersAccordionItem = ({ icon, caption }) => {
+      let $item = Ember.$('<div />');
+
+      let $itemTitle = Ember.$('<div />').addClass('title');
+
+      let $dropdownIcon = Ember.$('<i />').addClass('dropdown icon');
+      $itemTitle.append($dropdownIcon);
+
+      let $itemIcon = null;
+      if (Ember.isArray(icon)) {
+        $itemIcon = Ember.$('<i />');
+        $itemIcon.addClass('icons');
+
+        Ember.A(icon).forEach((i) => {
+          let $itemIconPart = Ember.$('<i />');
+          $itemIconPart.addClass(i);
+
+          $itemIcon.append($itemIconPart);
+        });
+      } else {
+        $itemIcon = Ember.$('<i />');
+        $itemIcon.addClass(icon);
+      }
+
+      if (!Ember.isNone($itemIcon)) {
+        $itemTitle.append($itemIcon);
+      }
+
+      $itemTitle.append(caption);
+
+      let $itemContent = Ember.$('<div />').addClass('content');
+
+      $item.append($itemTitle);
+      $item.append($itemContent);
+
+      return $item;
+    };
 
     let createList = () => {
       return Ember.$('<div />').addClass('ui list');
@@ -187,9 +248,9 @@ export default RectangleMapTool.extend({
       return $item;
     };
 
-    let makeListItemActive = ({ item, list, metadataContainer, metadataTable }) => {
+    let makeListItemActive = ({ item, parent, metadataContainer, metadataTable, callback }) => {
       // Remove 'active' class from previously clicked item;
-      Ember.$('.item.active', list).removeClass('active');
+      Ember.$('.item.active', parent).removeClass('active');
 
       // Make clicked item 'active'.
       item.addClass('active');
@@ -198,6 +259,10 @@ export default RectangleMapTool.extend({
       metadataContainer.empty();
       if (!Ember.isEmpty(metadataTable)) {
         metadataContainer.append(metadataTable);
+      }
+
+      if (Ember.typeOf(callback) === 'function') {
+        callback();
       }
     };
 
@@ -238,26 +303,41 @@ export default RectangleMapTool.extend({
       return $table;
     };
 
-    let $popupContent = Ember.$('<div />').addClass('ui horizontal segments');
+    let showFeaturesOnMap = function({ features }) {
+      // Clear previous features.
+      featuresLayer.clearLayers();
 
-    let $popupContentLeft = Ember.$('<div />').addClass('ui segment left-segment');
-    $popupContent.append($popupContentLeft);
+      // Show new features.
+      L.geoJSON(features, {
+        style: function (feature) {
+          return { color: 'salmon' };
+        }
+      }).addTo(featuresLayer);
 
-    let $popupContentRight = Ember.$('<div />').addClass('ui segment right-segment');
-    $popupContent.append($popupContentRight);
+      //leafletMap.fitBounds(featuresGeoJsonLayer.getBounds());
+    };
 
-    let $list = createList();
-    $popupContentLeft.append($list);
+    let $popupContentLeft = Ember.$('<div />').addClass('column');
+    let $popupContentRight = Ember.$('<div />').addClass('column');
+
+    let $layersAccordion = createLayersAccordion();
+    $popupContentLeft.append($layersAccordion);
 
     let totalProperties = {};
-    totalProperties[layersCountProperty] = e.results.length;
+    totalProperties[layersCountProperty] = 0;
     totalProperties[featuresCountProperty] = 0;
 
     e.results.forEach((identificationResult) => {
       // Possible layer's identification error.
       let error = Ember.get(identificationResult, 'error');
       let features = Ember.A(Ember.get(identificationResult, 'features') || []);
-      totalProperties[featuresCountProperty] += features.length;
+      let featuresCount = Ember.get(features, 'length');
+      if (featuresCount === 0) {
+        return;
+      }
+
+      totalProperties[layersCountProperty] += 1;
+      totalProperties[featuresCountProperty] += featuresCount;
 
       // Add layer to list.
       let layer = Ember.get(identificationResult, 'layer');
@@ -273,22 +353,27 @@ export default RectangleMapTool.extend({
       }
 
       let $layerMetadataTable = createTable(layerProperties);
-      let $layerListItem = createListItem({
+      let $layersAccordionItem = createLayersAccordionItem({
         icon: Ember.isNone(error) ? layerIcon : 'red dont icon',
         caption: layerName
       })
-      .addClass('layer-item')
-      .on('click', function(e) {
+      .addClass('item layer-item');
+
+      Ember.$('.title', $layersAccordionItem)
+      .on('click', () => {
         makeListItemActive({
-          item: Ember.$(this),
-          list: $list,
+          item: $layersAccordionItem,
+          parent: $layersAccordion,
           metadataContainer: $popupContentRight,
-          metadataTable: $layerMetadataTable
+          metadataTable: $layerMetadataTable,
+          callback: () => {
+            showFeaturesOnMap({ features: features });
+          }
         });
-        e.stopPropagation();
       });
-      let $layerListItemContent = Ember.$('.content', $layerListItem);
-      $list.append($layerListItem);
+
+      let $layersAccordionItemContent = Ember.$('.content', $layersAccordionItem);
+      $layersAccordion.append($layersAccordionItem);
 
       if (features.length === 0) {
         return;
@@ -296,7 +381,7 @@ export default RectangleMapTool.extend({
 
       // Add founded features to sub-list.
       let $featuresList = createList();
-      $layerListItemContent.append($featuresList);
+      $layersAccordionItemContent.append($featuresList);
       features.forEach((feature) => {
         let featureIcon = null;
         switch (Ember.get(feature, 'geometry.type')) {
@@ -320,47 +405,69 @@ export default RectangleMapTool.extend({
           caption: featureCaption
         })
         .addClass('feature-item')
-        .on('click', function(e) {
+        .on('click', () => {
           makeListItemActive({
-            item: Ember.$(this),
-            list: $list,
+            item: $featureListItem,
+            parent: $layersAccordion,
             metadataContainer: $popupContentRight,
-            metadataTable: $featureMetadataTable
+            metadataTable: $featureMetadataTable,
+            callback: () => {
+              showFeaturesOnMap({ features: Ember.A([feature]) });
+            }
           });
-          e.stopPropagation();
         });
         $featuresList.append($featureListItem);
       });
     });
     $popupContentRight.append(createTable(totalProperties));
 
-    let leafletMap = this.get('leafletMap');
     let mapSize = leafletMap.getSize();
-    let popupMaxWidth = mapSize.x * 0.6;
-    let popupMaxHeight = mapSize.y * 0.6;
+    let popupLatLng = L.latLng(e.boundingBox.getNorthEast().lat, e.boundingBox.getCenter().lng);
+    let popupMaxWidth = mapSize.x * 0.8;
+    let popupMinWidth = popupMaxWidth;
+    let popupMaxHeight = mapSize.y * 0.5;
 
     let popup = L.popup({
       className: 'identify-popup',
       maxWidth: popupMaxWidth,
-      maxHeight: popupMaxHeight
+      minWidth: popupMinWidth,
+      maxHeight: popupMaxHeight,
+      autoPan: false
     })
-    .setLatLng(e.latlng)
-    .setContent($popupContent[0])
+    .setLatLng(popupLatLng)
     .openOn(leafletMap);
 
     // Prevent map 'click' on popup content 'click'.
     L.DomEvent.disableClickPropagation(popup._container);
 
-    // Set static content size size.
-    $popupContentLeft.width($popupContentLeft.width());
-    $popupContentLeft.height($popupContentLeft.height());
-
-    $popupContentRight.width($popupContentRight.width());
-    $popupContentRight.height($popupContentRight.height());
-
     let $leafletPopupContent = Ember.$('.leaflet-popup-content', Ember.$(popup._container));
-    $leafletPopupContent.width($leafletPopupContent.width());
-    $leafletPopupContent.height($leafletPopupContent.height());
+    $leafletPopupContent.addClass('ui two column celled grid');
+
+    // Add content to popup & update.
+    $leafletPopupContent.append($popupContentLeft);
+    $leafletPopupContent.append($popupContentRight);
+    popup.update();
+
+    // Popup hasn't minHeight property, so we need to fix it manually.
+    $leafletPopupContent.height(popupMaxHeight);
+
+    // Auto pan executes in opening moment (before we manually fix height).
+    // So we need to pan popup manually.
+    popup.options.autoPan = true;
+    popup._adjustPan();
+
+    leafletMap.once('popupclose', (e) => {
+      if (e.popup !== popup) {
+        return;
+      }
+
+      featuresLayer.clearLayers();
+      featuresLayer.remove();
+
+      boundingBoxLayer.remove();
+    });
+
+    return popup;
   },
 
   /**
@@ -396,6 +503,7 @@ export default RectangleMapTool.extend({
 
     // Start identification.
     this._startIdentification({
+      boundingBoxLayer: layer,
       boundingBox: boundingBox,
       latlng: latlng
     });
