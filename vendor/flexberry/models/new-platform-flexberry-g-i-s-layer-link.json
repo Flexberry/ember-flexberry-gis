@@ -4,15 +4,7 @@
   "className": "LayerLink",
   "parentModelName": null,
   "parentClassName": null,
-  "attrs": [
-    {
-      "name": "linkSettings",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": false,
-      "defaultValue": ""
-    }
-  ],
+  "attrs": [],
   "belongsTo": [
     {
       "polymorphic": false,
@@ -26,7 +18,7 @@
       "presence": true,
       "name": "mapObjectSetting",
       "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
-      "inverse": null
+      "inverse": "layerLink"
     }
   ],
   "hasMany": [
@@ -38,18 +30,88 @@
   ],
   "projections": [
     {
-      "name": "LayerLink",
+      "name": "LayerLinkD",
       "modelName": "new-platform-flexberry-g-i-s-layer-link",
-      "attrs": [
+      "attrs": [],
+      "belongsTo": [
         {
-          "name": "linkSettings",
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "Layer",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 0,
           "caption": "",
-          "hidden": true,
-          "index": 0
+          "name": "layer",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
+          "inverse": null
         }
       ],
-      "belongsTo": [],
-      "hasMany": []
+      "hasMany": [
+        {
+          "projectionName": "LinkParameterD",
+          "caption": "",
+          "name": "linkParameter",
+          "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
+          "inverse": null
+        }
+      ]
+    },
+    {
+      "name": "LayerLinkI",
+      "modelName": "new-platform-flexberry-g-i-s-layer-link",
+      "attrs": [],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "Layer",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 0,
+          "caption": "",
+          "name": "layer",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
+          "inverse": null
+        },
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "MapObjectSetting",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [
+            {
+              "name": "listForm",
+              "caption": "",
+              "hidden": false,
+              "index": 1
+            },
+            {
+              "name": "editForm",
+              "caption": "",
+              "hidden": false,
+              "index": 2
+            }
+          ],
+          "index": -1,
+          "caption": "",
+          "name": "mapObjectSetting",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
+          "inverse": null
+        }
+      ],
+      "hasMany": [
+        {
+          "projectionName": "LinkParameterD",
+          "caption": "",
+          "name": "linkParameter",
+          "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
+          "inverse": null
+        }
+      ]
     }
   ]
 }

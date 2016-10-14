@@ -36,7 +36,13 @@
       "inverse": null
     }
   ],
-  "hasMany": [],
+  "hasMany": [
+    {
+      "name": "layerLink",
+      "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
+      "inverse": "mapObjectSetting"
+    }
+  ],
   "projections": [
     {
       "name": "MapObjectSetting",
@@ -61,8 +67,30 @@
           "index": 0
         }
       ],
-      "belongsTo": [],
-      "hasMany": []
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "DefaultMap",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 1,
+          "caption": "",
+          "name": "defaultMap",
+          "relatedTo": "new-platform-flexberry-g-i-s-map",
+          "inverse": null
+        }
+      ],
+      "hasMany": [
+        {
+          "projectionName": "LayerLinkD",
+          "caption": "",
+          "name": "layerLink",
+          "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
+          "inverse": null
+        }
+      ]
     }
   ]
 }

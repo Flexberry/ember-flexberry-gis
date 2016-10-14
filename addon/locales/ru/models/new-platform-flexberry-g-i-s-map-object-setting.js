@@ -9,6 +9,33 @@ export default {
       },
       editForm: {
         caption: ''
+      },
+      defaultMap: {
+        caption: ''
+      },
+      layerLink: {
+        caption: '',
+        layer: {
+          caption: ''
+        },
+        linkParameter: {
+          caption: '',
+          objectField: {
+          caption: ''
+        },
+          layerField: {
+          caption: ''
+        },
+          expression: {
+          caption: ''
+        },
+          queryKey: {
+          caption: ''
+        },
+          linkField: {
+          caption: ''
+        }
+        }
       }
     }
   }

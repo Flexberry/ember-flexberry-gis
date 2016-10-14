@@ -59,32 +59,84 @@
         {
           "name": "objectField",
           "caption": "",
-          "hidden": true,
+          "hidden": false,
           "index": 0
         },
         {
           "name": "layerField",
           "caption": "",
-          "hidden": true,
-          "index": 0
+          "hidden": false,
+          "index": 1
         },
         {
           "name": "expression",
           "caption": "",
-          "hidden": true,
-          "index": 0
+          "hidden": false,
+          "index": 2
         },
         {
           "name": "queryKey",
           "caption": "",
-          "hidden": true,
-          "index": 0
+          "hidden": false,
+          "index": 3
         },
         {
           "name": "linkField",
           "caption": "",
-          "hidden": true,
+          "hidden": false,
+          "index": 4
+        }
+      ],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "LayerLink",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 5,
+          "caption": "",
+          "name": "layerLink",
+          "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
+          "inverse": null
+        }
+      ],
+      "hasMany": []
+    },
+    {
+      "name": "LinkParameterD",
+      "modelName": "new-platform-flexberry-g-i-s-link-parameter",
+      "attrs": [
+        {
+          "name": "objectField",
+          "caption": "",
+          "hidden": false,
           "index": 0
+        },
+        {
+          "name": "layerField",
+          "caption": "",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "expression",
+          "caption": "",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "queryKey",
+          "caption": "",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "linkField",
+          "caption": "",
+          "hidden": false,
+          "index": 4
         }
       ],
       "belongsTo": [],

@@ -15,6 +15,26 @@ export default {
       },
       linkField: {
         caption: ''
+      },
+      layerLink: {
+        caption: ''
+      }
+    },
+    LinkParameterD: {
+      objectField: {
+        caption: ''
+      },
+      layerField: {
+        caption: ''
+      },
+      expression: {
+        caption: ''
+      },
+      queryKey: {
+        caption: ''
+      },
+      linkField: {
+        caption: ''
       }
     }
   }

@@ -2,9 +2,8 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import { Projection } from 'ember-flexberry-data';
 export let Model = Ember.Mixin.create({
-  linkSettings: DS.attr('string'),
   layer: DS.belongsTo('new-platform-flexberry-g-i-s-map-layer', { inverse: null, async: false }),
-  mapObjectSetting: DS.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', { inverse: null, async: false }),
+  mapObjectSetting: DS.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', { inverse: 'layerLink', async: false }),
   linkParameter: DS.hasMany('new-platform-flexberry-g-i-s-link-parameter', { inverse: 'layerLink', async: false }),
   getValidations: function () {
     let parentValidations = this._super();
@@ -20,7 +19,32 @@ export let Model = Ember.Mixin.create({
   }
 });
 export let defineProjections = function (model) {
-  model.defineProjection('LayerLink', 'new-platform-flexberry-g-i-s-layer-link', {
-    linkSettings: Projection.attr('', { hidden: true })
+  model.defineProjection('LayerLinkD', 'new-platform-flexberry-g-i-s-layer-link', {
+    layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
+
+    }),
+    linkParameter: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', '', {
+      objectField: Projection.attr(''),
+      layerField: Projection.attr(''),
+      expression: Projection.attr(''),
+      queryKey: Projection.attr(''),
+      linkField: Projection.attr('')
+    })
+  });
+  model.defineProjection('LayerLinkI', 'new-platform-flexberry-g-i-s-layer-link', {
+    mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
+      listForm: Projection.attr(''),
+      editForm: Projection.attr('')
+    }, { hidden: true }),
+    layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
+
+    }),
+    linkParameter: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', '', {
+      objectField: Projection.attr(''),
+      layerField: Projection.attr(''),
+      expression: Projection.attr(''),
+      queryKey: Projection.attr(''),
+      linkField: Projection.attr('')
+    })
   });
 };
