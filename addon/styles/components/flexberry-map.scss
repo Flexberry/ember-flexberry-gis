@@ -20,19 +20,27 @@
   }
 }
 
-.flexberry-map .identify-popup .left-segment,
-.flexberry-map .identify-popup .right-segment {
-  overflow: auto;
+.flexberry-map .identify-popup .leaflet-popup-content .column {
+  overflow: auto !important;
 }
 
-.flexberry-map .identify-popup .list .item {
-  cursor: pointer;
+.flexberry-map .identify-popup .leaflet-popup-content {
+  margin: 1.5em 1.5em !important;
 }
 
-.flexberry-map .identify-popup .list .item.active {
+.flexberry-map .identify-popup .ui.accordion .item .title,
+.flexberry-map .identify-popup .ui.list .item {
+  cursor: pointer !important;
+}
+
+.flexberry-map .identify-popup .item.active {
   background: #aecff7;
   border: 1px solid gray;
   border-radius: 2px;
+}
+
+.flexberry-map .identify-popup .ui.accordion .content .ui.list {
+  margin-left: 2em !important;
 }
 
 .flexberry-map .flexberry-map-loader-dimmer {
