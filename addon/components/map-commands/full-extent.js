@@ -88,7 +88,7 @@ let FullExtentMapCommandComponent = Ember.Component.extend({
       @type String
       @default 'maximize icon'
     */
-    iconClass: 'maximize icon',
+    iconClass: 'globe icon',
 
     actions: {
       /**
