@@ -23,6 +23,15 @@ export default BaseMapTool.extend({
   _editTools: null,
 
   /**
+    Flag: indicates whether to hide rectangle on drawing end or not.
+
+    @property hideRectangleOnDrawingEnd
+    @type Boolean
+    @default true
+  */
+  hideRectangleOnDrawingEnd: true,
+
+  /**
     Handles map's 'editable:drawing:end' event.
 
     @method rectangleDrawingDidEnd
@@ -32,7 +41,10 @@ export default BaseMapTool.extend({
   _rectangleDrawingDidEnd({ layer }) {
     // Remove drawn rectangle.
     layer.disableEdit();
-    layer.remove();
+
+    if (this.get('hideRectangleOnDrawingEnd')) {
+      layer.remove();
+    }
 
     // Give to user ability to draw new rectangle.
     this.get('_editTools').startRectangle();

@@ -77,7 +77,11 @@ export default Ember.Object.extend(Ember.Evented, {
     let executionResult = this._execute(...arguments);
 
     // Trigger 'execute' event.
-    this.trigger('execute', { mapCommand: this, executionResult: executionResult });
+    this.trigger('execute', {
+      mapCommand: this,
+      executionResult: executionResult,
+      arguments: arguments
+    });
 
     if (executionResult instanceof Ember.RSVP.Promise) {
       // Command is asynchronous & executing is in progress.

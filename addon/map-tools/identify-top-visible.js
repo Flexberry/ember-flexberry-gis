@@ -37,16 +37,18 @@ export default IdentifyAllVisibleMapTool.extend({
 
     @method _finishIdentification
     @param {Object} e Event object.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of identification area.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} e.boundingBox Bounds of identification area.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
+    @param {<a href="http://leafletjs.com/reference.html#rectangle">L.Rectangle</a>} options.boundingBoxLayer Rectangle layer related to bounding box.
+    @param {Object[]} excludedLayers Objects describing those layers which were excluded from identification.
     @param {Object[]} layers Objects describing those layers which are identified.
     @param {Object[]} results Objects describing identification results.
     Every result-object has the following structure: { layer: ..., features: [...] },
     where 'layer' is metadata of layer related to identification result, features is array
     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
+    @return {<a href="http://leafletjs.com/reference.html#popup">L.Popup</a>} Popup containing identification results.
     @private
   */
-
   _finishIdentification(e) {
     let boundingBox = Ember.get(e, 'boundingBox');
     let latlng = Ember.get(e, 'latlng');
@@ -70,7 +72,7 @@ export default IdentifyAllVisibleMapTool.extend({
       });
     } else {
       // Show results & stop identification.
-      this._super(...arguments);
+      return this._super(...arguments);
     }
   }
 });

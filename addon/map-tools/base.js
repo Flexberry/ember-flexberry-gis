@@ -128,7 +128,10 @@ export default Ember.Object.extend(Ember.Evented, {
     this._enable(...arguments);
 
     // Trigger 'enable' event.
-    this.trigger('enable', { mapTool: this });
+    this.trigger('enable', {
+      mapTool: this,
+      arguments: arguments
+    });
   },
 
   /**
@@ -145,7 +148,10 @@ export default Ember.Object.extend(Ember.Evented, {
     this._disable(...arguments);
 
     // Trigger 'disable' event.
-    this.trigger('disable', { mapTool: this });
+    this.trigger('disable', {
+      mapTool: this,
+      arguments: arguments
+    });
   },
 
   /**
