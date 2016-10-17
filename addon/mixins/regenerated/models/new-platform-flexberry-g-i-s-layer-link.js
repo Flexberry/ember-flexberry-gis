@@ -47,4 +47,19 @@ export let defineProjections = function (model) {
       linkField: Projection.attr('')
     })
   });
+  model.defineProjection('LayerLinkQ', 'new-platform-flexberry-g-i-s-layer-link', {
+    mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
+
+    }),
+    layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
+
+    }),
+    linkParameter: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', '', {
+      objectField: Projection.attr(''),
+      layerField: Projection.attr(''),
+      expression: Projection.attr(''),
+      queryKey: Projection.attr(''),
+      linkField: Projection.attr('')
+    })
+  });
 };
