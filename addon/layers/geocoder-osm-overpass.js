@@ -2,13 +2,17 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
+import BaseLayer from './-private/base';
+
 /**
   Class describing metadata for OpenStreetMap geocoder-layer
   that uses [Overpass API](Uses [Overpass API](http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide) to perform straight & reverse geocoding).
 
   @class GeocoderOsmRuLayer
+  @extends BaseLayer
 */
-export default {
+export default BaseLayer.extend({
   /**
     Icon class related to layer type.
 
@@ -34,18 +38,11 @@ export default {
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    return {
+    let settings = this._super(...arguments);
+    Ember.$.extend(true, settings, {
       url: undefined
-    };
-  },
+    });
 
-  /**
-    Creates new search settings object (with search settings related to layer-type).
-
-    @method createSearchSettings
-    @returns {Object} New search settings object (with search settings related to layer-type).
-  */
-  createSearchSettings() {
-    return {};
+    return settings;
   }
-};
+});

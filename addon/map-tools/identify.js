@@ -39,8 +39,10 @@ export default RectangleMapTool.extend({
   */
   _layerCanBeIdentified(layer) {
     let layerClassFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
+    let identifyOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('identify');
+    let identifyOperationIsAvailableForLayerInstance = Ember.get(layer, 'settingsAsObject.identifySettings.canBeIdentified') !== false;
 
-    return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('identify');
+    return identifyOperationIsAvailableForLayerClass && identifyOperationIsAvailableForLayerInstance;
   },
 
   /**
@@ -344,6 +346,8 @@ export default RectangleMapTool.extend({
       let layerFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
       let layerIcon = Ember.get(layerFactory, 'iconClass');
       let layerName = Ember.get(layer, 'name');
+      let layerIdentifySettings = Ember.get(layer, 'settingsAsObject.identifySettings') || {};
+      let displayPropertyName = Ember.get(layerIdentifySettings, 'displayPropertyName');
 
       let layerProperties = {};
       layerProperties[layerNameProperty] = layerName;
@@ -397,7 +401,7 @@ export default RectangleMapTool.extend({
             featureIcon = 'marker icon';
         }
         let featureProperties = Ember.get(feature, 'properties');
-        let featureCaptionProperty = Object.keys(featureProperties)[0];
+        let featureCaptionProperty = displayPropertyName || Object.keys(featureProperties)[0];
         let featureCaption = Ember.isBlank(featureCaptionProperty) ? '' : featureProperties[featureCaptionProperty];
         let $featureMetadataTable = createTable(featureProperties);
         let $featureListItem = createListItem({

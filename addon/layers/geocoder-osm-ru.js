@@ -2,13 +2,17 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
+import BaseLayer from './-private/base';
+
 /**
   Class describing metadata for OpenStreetMap.ru geocoder-layer
   that uses API of [OpenStreetMap.ru/api/search](https://github.com/ErshKUS/OpenStreetMap.ru/blob/master/api/search).
 
   @class GeocoderOsmRuLayer
+  @extends BaseLayer
 */
-export default {
+export default BaseLayer.extend({
   /**
     Icon class related to layer type.
 
@@ -34,10 +38,13 @@ export default {
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    return {
+    let settings = this._super(...arguments);
+    Ember.$.extend(true, settings, {
       url: undefined,
-      autocompleteUrl: undefined
-    };
+      autocompleteUrl: undefined,
+    });
+
+    return settings;
   },
 
   /**
@@ -47,12 +54,15 @@ export default {
     @returns {Object} New search settings object (with search settings related to layer-type).
   */
   createSearchSettings() {
-    return {
+    let settings = this._super(...arguments);
+    Ember.$.extend(true, settings, {
       queryString: '',
       searchType: 'all',
       maxResultsCount: 12,
       lat: null,
       lon: null
-    };
+    });
+
+    return settings;
   }
-};
+});

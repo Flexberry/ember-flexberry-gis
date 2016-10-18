@@ -30,6 +30,13 @@ export default {
       }
     },
 
+    'flexberry-jsonarea': {
+      'placeholder': '(Введите JSON-строку)',
+      'parse-error': {
+        'caption': 'Ошибка парсинга введенной JSON-строки'
+      }
+    },
+
     'layers-dialogs': {
       'remove': {
         'caption': 'Удаление слоя',
@@ -64,6 +71,15 @@ export default {
           'definition-textarea': {
             'caption': 'Определение'
           }
+        },
+        'settings-section': {
+          'caption': 'Настройки специфичные для выбранного типа слоя'
+        },
+        'identify-settings-section': {
+          'caption': 'Настройки идентификации по слою'
+        },
+        'search-settings-section': {
+          'caption': 'Настройки поиска по слою'
         }
       },
 
@@ -81,8 +97,23 @@ export default {
         'name-textbox': {
           'caption': 'Имя слоя'
         },
-        'crs-textarea': {
-          'caption': 'Система координат слоя (CRS)'
+        'crs': {
+          'caption': 'Система координат слоя (CRS)',
+          'code-textbox': {
+            'caption': 'Код'
+          },
+          'definition-textarea': {
+            'caption': 'Определение'
+          }
+        },
+        'settings-section': {
+          'caption': 'Настройки специфичные для выбранного типа слоя'
+        },
+        'identify-settings-section': {
+          'caption': 'Настройки идентификации по слою'
+        },
+        'search-settings-section': {
+          'caption': 'Настройки поиска по слою'
         }
       },
 

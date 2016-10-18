@@ -2,21 +2,16 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
+import TileLayer from './tile';
+
 /**
   Class describing WMS layer metadata.
 
   @class WmsLayer
+  @extends TileLayer
 */
-export default {
-  /**
-    Icon class related to layer type.
-
-    @property iconClass
-    @type String
-    @default 'image icon'
-  */
-  iconClass: 'image icon',
-
+export default TileLayer.extend({
   /**
     Permitted operations related to layer type.
 
@@ -33,23 +28,16 @@ export default {
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    return {
+    let settings = this._super(...arguments);
+    Ember.$.extend(true, settings, {
       info_format: undefined,
       url: undefined,
       version: undefined,
       layers: undefined,
       format: undefined,
       transparent: undefined
-    };
-  },
+    });
 
-  /**
-    Creates new search settings object (with search settings related to layer-type).
-
-    @method createSearchSettings
-    @returns {Object} New search settings object (with search settings related to layer-type).
-  */
-  createSearchSettings() {
-    return {};
+    return settings;
   }
-};
+});

@@ -2,14 +2,17 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
+import WmsLayer from './wms';
 import WfsLayer from './wfs';
 
 /**
   Class describing WMS layer metadata.
 
   @class WmsLayer
+  @extends WmsLayer
 */
-export default {
+export default WmsLayer.extend({
   /**
     Icon class related to layer type.
 
@@ -35,15 +38,18 @@ export default {
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    return {
-      info_format: undefined,
-      url: undefined,
-      version: undefined,
-      layers: undefined,
-      format: undefined,
-      transparent: undefined,
-      wfs: WfsLayer.createSettings()
-    };
+    let settings = this._super(...arguments);
+    let wfsSettings = WfsLayer.create().createSettings();
+
+    Ember.set(settings, 'identifySettings', wfsSettings.identifySettings);
+    delete wfsSettings.identifySettings;
+
+    Ember.set(settings, 'searchSettings', wfsSettings.searchSettings);
+    delete wfsSettings.searchSettings;
+
+    Ember.set(settings, 'wfs', wfsSettings);
+
+    return settings;
   },
 
   /**
@@ -53,6 +59,6 @@ export default {
     @returns {Object} New search settings object (with search settings related to layer-type).
   */
   createSearchSettings() {
-    return WfsLayer.createSearchSettings();
+    return WfsLayer.create().createSearchSettings();
   }
-};
+});

@@ -70,6 +70,36 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether 'identify' operation is available for the selected layer type.
+
+      @property _identifyIsAvailableForType
+      @type Boolean
+      @private
+      @readOnly
+    */
+    _identifyIsAvailableForType: Ember.computed('_layer.type', function() {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      return Ember.A(Ember.get(layerClass, 'operations') || []).contains('identify');
+    }),
+
+    /**
+      Flag: indicates whether 'search' operation is available for the selected layer type.
+
+      @property _searchIsAvailableForType
+      @type Boolean
+      @private
+      @readOnly
+    */
+    _searchIsAvailableForType: Ember.computed('_layer.type', function() {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      return Ember.A(Ember.get(layerClass, 'operations') || []).contains('search');
+    }),
+
+    /**
       Flag: indicates whether layer type is in readonly mode.
 
       @property _typeIsReadonly
@@ -243,6 +273,33 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @default t('components.layers-dialogs.edit.crs.definition-textarea.caption')
     */
     crsDefinitionTextareaCaption: t('components.layers-dialogs.edit.crs.definition-textarea.caption'),
+
+    /**
+      Dialog's settings section caption.
+
+      @property settingsSectionCaption
+      @type String
+      @default t('components.layers-dialogs.edit.settings-section.caption')
+    */
+    settingsSectionCaption: t('components.layers-dialogs.edit.settings-section.caption'),
+
+    /**
+      Dialog's settings section caption.
+
+      @property identifySettingsSectionCaption
+      @type String
+      @default t('components.layers-dialogs.edit.identify-settings-section.caption')
+    */
+    identifySettingsSectionCaption: t('components.layers-dialogs.edit.identify-settings-section.caption'),
+
+    /**
+      Dialog's settings section caption.
+
+      @property searchSettingsSectionCaption
+      @type String
+      @default t('components.layers-dialogs.edit.search-settings-section.caption')
+    */
+    searchSettingsSectionCaption: t('components.layers-dialogs.edit.search-settings-section.caption'),
 
     /**
       Flag: indicates whether dialog is visible or not.
