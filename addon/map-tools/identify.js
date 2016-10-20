@@ -308,6 +308,10 @@ export default RectangleMapTool.extend({
     };
 
     let showFeaturesOnMap = function({ features }) {
+      if (!Ember.isArray(features) && Ember.get(features, 'length') === 0) {
+        return;
+      }
+
       // Clear previous features.
       featuresLayer.clearLayers();
 
@@ -336,7 +340,7 @@ export default RectangleMapTool.extend({
       let error = Ember.get(identificationResult, 'error');
       let features = Ember.A(Ember.get(identificationResult, 'features') || []);
       let featuresCount = Ember.get(features, 'length');
-      if (featuresCount === 0) {
+      if (featuresCount === 0 && Ember.isNone(error)) {
         return;
       }
 
@@ -402,7 +406,7 @@ export default RectangleMapTool.extend({
       .addClass('item layer-item');
 
       Ember.$('.title', $layersAccordionItem)
-      .on('click', () => {
+      .on('click', (clickEventObject) => {
         makeListItemActive({
           item: $layersAccordionItem,
           parent: $layersAccordion,
@@ -412,6 +416,11 @@ export default RectangleMapTool.extend({
             showFeaturesOnMap({ features: features });
           }
         });
+
+        if (featuresCount === 0) {
+          // Prevent empty item from being expanded on click.
+          clickEventObject.stopPropagation();
+        }
       });
 
       let $layersAccordionItemContent = Ember.$('.content', $layersAccordionItem);
