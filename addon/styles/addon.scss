@@ -17,3 +17,21 @@
 .ui.loading.form:after {
   z-index: 1000001 !important;
 }
+
+/**
+  Prevent ui messages from being hided inside <form>.
+*/
+.ui.form .success.message,
+.ui.form .warning.message,
+.ui.form .error.message {
+    display: block !important;
+}
+
+/**
+  Hide hidden ui messages inside <form>.
+*/
+.ui.form .success.message.hidden,
+.ui.form .warning.message.hidden,
+.ui.form .error.message.hidden {
+    display: none !important;
+}

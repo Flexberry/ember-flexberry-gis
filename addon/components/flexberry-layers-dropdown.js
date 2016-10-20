@@ -31,7 +31,7 @@ const flexberryClassNames = {
   ```handlebars
   {{flexberry-layers-dropdown
     class="fluid"
-    operations=(array "search")
+    filter=(action filterLayers)
     layers=model.rootLayer.layers
     value=selectedLayer
     layerChange=(action "onLayersDropdownLayerChange")
@@ -54,9 +54,9 @@ let FlexberryLayersDropdownComponent = Ember.Component.extend({
     _observableProperties: null,
 
     /**
-      Flat layers array containing layers retrieved for hierarchy & filtered by operations.
+      Flat layers array containing layers retrieved for hierarchy & filtered.
 
-      @property _layersFilteredByOperations
+      @property _layers
       @type Object[]
       @default null
       @private
@@ -172,13 +172,13 @@ let FlexberryLayersDropdownComponent = Ember.Component.extend({
     value: null,
 
     /**
-      Operations filters for layers.
+      Filter function for layers.
 
-      @property operations
-      @type String[]
+      @property filter
+      @type Function
       @default null
     */
-    operations: null,
+    filter: null,
 
     actions: {
       onChange(selectedLayerName) {
@@ -209,7 +209,7 @@ let FlexberryLayersDropdownComponent = Ember.Component.extend({
       }
 
       observableProperties.pushObject(propertyPath);
-      Ember.addObserver(this, propertyPath, this._layersOrOperationsDidChange);
+      Ember.addObserver(this, propertyPath, this._layersOrFilterDidChange);
     },
 
     /**
@@ -224,7 +224,7 @@ let FlexberryLayersDropdownComponent = Ember.Component.extend({
       }
 
       observableProperties.forEach((propertyPath) => {
-        Ember.removeObserver(this, propertyPath, this._layersOrOperationsDidChange);
+        Ember.removeObserver(this, propertyPath, this._layersOrFilterDidChange);
       });
 
       observableProperties.clear();
@@ -233,17 +233,17 @@ let FlexberryLayersDropdownComponent = Ember.Component.extend({
 
     /**
       Observers changes in layers hierarchy & builds inner flat layers array,
-      where layers are filtered by operations.
+      where layers are filtered.
 
-      @method _layersOrOperationsDidChange
+      @method _layersOrFilterDidChange
       @private
     */
-    _layersOrOperationsDidChange: Ember.observer('layers.[]', 'operations.[]', function() {
+    _layersOrFilterDidChange: Ember.observer('layers.[]', 'filter', function() {
       Ember.run.once(this, '_buildInnerLayers');
     }),
 
     /**
-      Builds inner flat layers array, where layers are filtered by operations.
+      Builds inner flat layers array, where layers are filtered.
 
       @method _buildInnerLayers
       @private
@@ -252,40 +252,35 @@ let FlexberryLayersDropdownComponent = Ember.Component.extend({
       // Remove all previously added observers.
       this._removeHierarchyObservers();
 
-      let knownLayers = Ember.getOwner(this).knownForType('layer');
       let layers = Ember.A(this.get('layers') || []);
-      let operations = Ember.A(this.get('operations') || []);
+      let filter = this.get('filter') || function(layer) { return true; };
 
-      let getFilteredLayers = (layers, operations, path) => {
+      let getFilteredLayers = (layers, filter, path) => {
         let result = Ember.A();
 
         if (Ember.isArray(layers)) {
           layers.forEach((layer, i) => {
-            let layerType = Ember.get(knownLayers, Ember.get(layer, 'type'));
-            let availableOperations = Ember.A(Ember.get(layerType, 'operations'));
-            let layerSatisfiesOperetionsFilter = !Ember.get(layer, 'isDeleted') &&
-              (!Ember.isArray(operations) || operations.every((operation) => {
-                return availableOperations.contains(operation);
-              }));
+            let layerSatisfiesFilter = filter(layer) === true;
 
-            if (layerSatisfiesOperetionsFilter) {
+            if (layerSatisfiesFilter) {
               result.pushObject(layer);
             }
 
             let childLayers = Ember.get(layer, 'layers');
             let childLayersPath = `${path}.${i}.layers`;
 
-            result.pushObjects(getFilteredLayers(childLayers, operations, childLayersPath));
+            result.pushObjects(getFilteredLayers(childLayers, filter, childLayersPath));
 
             this._addHierarchyObserver(`${childLayersPath}.[]`);
             this._addHierarchyObserver(`${childLayersPath}.@each.isDeleted`);
+            this._addHierarchyObserver(`${childLayersPath}.@each.settings`);
           });
         }
 
         return result;
       };
 
-      let availableLayers = getFilteredLayers(layers, operations, 'layers');
+      let availableLayers = getFilteredLayers(layers, filter, 'layers');
       this.set('_layers', availableLayers);
 
       this.sendAction('availableLayersChange', availableLayers);
@@ -303,7 +298,7 @@ let FlexberryLayersDropdownComponent = Ember.Component.extend({
     init() {
       this._super(...arguments);
 
-      this._layersOrOperationsDidChange();
+      this._layersOrFilterDidChange();
     },
 
     /**

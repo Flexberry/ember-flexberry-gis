@@ -28,7 +28,7 @@
         </label>
         {{flexberry-layers-dropdown
           class="fluid"
-          operations=(array "search")
+          filter=(action _layerCanBeSearched)
           layers=layers
           value=_selectedLayer
           layerChange=(action "onLayersDropdownLayerChange")
@@ -67,9 +67,15 @@
                     }}
                   </th>
                   {{#each-in foundedFeatures.0.properties as |propertyName propertyValue|}}
-                    <th>
-                      {{propertyName}}
-                    </th>
+                    {{#if (not (array-contains _selectedLayerFeaturesExcludedProperties propertyName))}}
+                      <th>
+                        {{#if (get _selectedLayerFeaturesLocalizedProperties propertyName)}}
+                          {{get _selectedLayerFeaturesLocalizedProperties propertyName}}
+                        {{else}}
+                          {{propertyName}}
+                        {{/if}}
+                      </th>
+                    {{/if}}
                   {{/each-in}}
                 </tr>
               </thead>
@@ -87,9 +93,11 @@
                     }}
                   </td>
                     {{#each-in feature.properties as |propertyName propertyValue|}}
-                      <td>
-                        {{propertyValue}}
-                      </td>
+                      {{#if (not (array-contains _selectedLayerFeaturesExcludedProperties propertyName))}}
+                        <td>
+                          {{propertyValue}}
+                        </td>
+                      {{/if}}
                     {{/each-in}}
                   </tr>
                 {{/each}}

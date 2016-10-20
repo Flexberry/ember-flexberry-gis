@@ -2,12 +2,15 @@
   @module ember-flexberry-gis
 */
 
+import BaseLayer from './-private/base';
+
 /**
   Class describing group layer metadata.
 
   @class GroupLayer
+  @extends BaseLayer
 */
-export default {
+export default BaseLayer.extend({
   /**
     Icon class related to layer type.
 
@@ -33,16 +36,6 @@ export default {
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    return {};
-  },
-
-  /**
-    Creates new search settings object (with search settings related to layer-type).
-
-    @method createSearchSettings
-    @returns {Object} New search settings object (with search settings related to layer-type).
-  */
-  createSearchSettings() {
-    return {};
+    return this._super(...arguments);
   }
-};
+});

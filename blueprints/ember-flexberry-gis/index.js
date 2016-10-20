@@ -23,7 +23,10 @@ module.exports = {
       'https://github.com/Flexberry/Leaflet.Export#master',
 
       // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
-      { name: 'osmtogeojson', target: '2.2.12' }
+      { name: 'osmtogeojson', target: '2.2.12' },
+
+      // JS-code beautifier to format strings containing JS-code & represent in in user-friendly view.
+      { name: 'js-beautify', target: '1.6.4' }
     ]).then(function() {
       return _this.addAddonsToProject({
         packages: [

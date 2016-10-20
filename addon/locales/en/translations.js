@@ -36,6 +36,13 @@ export default {
       }
     },
 
+    'flexberry-jsonarea': {
+      'placeholder': '(Enter JSON-string)',
+      'parse-error': {
+        'caption': 'Error while parsing entered JSON-string'
+      }
+    },
+
     'layers-dialogs': {
       'remove': {
         'caption': 'Remove layer',
@@ -70,6 +77,15 @@ export default {
           'definition-textare': {
             'caption': 'Definition'
           }
+        },
+        'settings-section': {
+          'caption': 'Settings specific to the selected layer'
+        },
+        'identify-settings-section': {
+          'caption': 'Settings of layer identification'
+        },
+        'search-settings-section': {
+          'caption': 'Settings of layer search'
         }
       },
 
@@ -87,8 +103,23 @@ export default {
         'name-textbox': {
           'caption': 'Layer name'
         },
-        'crs-textarea': {
-          'caption': 'Layer coordinate reference system (CRS)'
+        'crs': {
+          'caption': 'Layer coordinate reference system (CRS)',
+          'code-textbox': {
+            'caption': 'Code'
+          },
+          'definition-textare': {
+            'caption': 'Definition'
+          }
+        },
+        'settings-section': {
+          'caption': 'Settings specific to the selected layer'
+        },
+        'identify-settings-section': {
+          'caption': 'Settings of layer identification'
+        },
+        'search-settings-section': {
+          'caption': 'Settings of layer search'
         }
       },
 

@@ -44,5 +44,8 @@ module.exports = {
 
     // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
+
+    // JS-code beautifier to format strings containing JS-code & represent in in user-friendly view.
+    app.import(app.bowerDirectory + '/js-beautify/js/lib/beautify.js');
   }
 };

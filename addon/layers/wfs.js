@@ -2,21 +2,16 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
+import BaseLayer from './-private/base';
+
 /**
   Class describing WFS layer metadata.
 
   @class WfsLayer
+  @extends BaseLayer
 */
-export default {
-  /**
-    Icon class related to layer type.
-
-    @property iconClass
-    @type String
-    @default 'image icon'
-  */
-  iconClass: 'image icon',
-
+export default BaseLayer.extend({
   /**
     Permitted operations related to layer type.
 
@@ -33,7 +28,8 @@ export default {
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    return {
+    let settings = this._super(...arguments);
+    Ember.$.extend(true, settings, {
       crs: undefined,
       showExisting: undefined,
       geometryField: undefined,
@@ -49,7 +45,9 @@ export default {
         weight: undefined
       },
       namespaceUri: undefined
-    };
+    });
+
+    return settings;
   },
 
   /**
@@ -59,8 +57,11 @@ export default {
     @returns {Object} New search settings object (with search settings related to layer-type).
   */
   createSearchSettings() {
-    return {
+    let settings = this._super(...arguments);
+    Ember.$.extend(true, settings, {
       queryString: ''
-    };
+    });
+
+    return settings;
   }
-};
+});

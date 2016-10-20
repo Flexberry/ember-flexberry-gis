@@ -38,9 +38,15 @@ export default RectangleMapTool.extend({
     @private
   */
   _layerCanBeIdentified(layer) {
-    let layerClassFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
+    if (Ember.get(layer, 'isDeleted')) {
+      return false;
+    }
 
-    return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('identify');
+    let layerClassFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
+    let identifyOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('identify');
+    let identifyOperationIsAvailableForLayerInstance = Ember.get(layer, 'settingsAsObject.identifySettings.canBeIdentified') !== false;
+
+    return identifyOperationIsAvailableForLayerClass && identifyOperationIsAvailableForLayerInstance;
   },
 
   /**
@@ -257,8 +263,10 @@ export default RectangleMapTool.extend({
       }
     };
 
-    let createTable = (properties) => {
+    let createTable = (properties, excludedPropertiesNames, localizedProperties) => {
       properties = properties || {};
+      excludedPropertiesNames = Ember.A(excludedPropertiesNames || []);
+      localizedProperties = localizedProperties || {};
 
       let $table = Ember.$('<table />').addClass('ui compact celled table');
 
@@ -279,12 +287,17 @@ export default RectangleMapTool.extend({
 
       let propertiesNames = Ember.A(Object.keys(properties) || []);
       propertiesNames.forEach((propertyName) => {
+        if (excludedPropertiesNames.contains(propertyName)) {
+          return;
+        }
+
         let propertyValue = properties[propertyName];
+        let localizedPropertyName = localizedProperties[propertyName] || propertyName;
 
         let $tableRow = Ember.$('<tr />');
         $tableBody.append($tableRow);
 
-        let $tablePropertyNameCell = Ember.$('<td />').text(propertyName);
+        let $tablePropertyNameCell = Ember.$('<td />').text(localizedPropertyName);
         $tableRow.append($tablePropertyNameCell);
 
         let $tablePropertyValueCell = Ember.$('<td />').text(propertyValue);
@@ -336,6 +349,44 @@ export default RectangleMapTool.extend({
       let layerIcon = Ember.get(layerFactory, 'iconClass');
       let layerName = Ember.get(layer, 'name');
 
+      let layerIdentifySettings = Ember.get(layer, 'settingsAsObject.identifySettings') || {};
+      let featuresPropertiesSettings = Ember.get(layerIdentifySettings, 'featuresPropertiesSettings') || {};
+      let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback');
+      let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
+      let excludedProperties = Ember.A(Ember.get(featuresPropertiesSettings, 'excludedProperties') || []);
+      let localizedProperties = Ember.A(Ember.get(featuresPropertiesSettings, 'localizedProperties') || {});
+      localizedProperties = Ember.get(localizedProperties, i18n.get('locale')) || {};
+
+      let getFeatureFirstAvailableProperty = function(feature) {
+        let featureProperties = Ember.get(feature, 'properties') || {};
+        let displayPropertyName = Object.keys(featureProperties)[0];
+        return featureProperties[displayPropertyName] || '';
+      };
+
+      let getFeatureCaption = function(feature) {
+        if (Ember.typeOf(displayProperty) !== 'string') {
+          // Retrieve first available property.
+          return getFeatureFirstAvailableProperty(feature);
+        }
+
+        if (!displayPropertyIsCallback) {
+          // Return defined property (or first available if defined property doesn't exist).
+          let featureProperties = Ember.get(feature, 'properties') || {};
+          return featureProperties.hasOwnProperty(displayProperty) ?
+            featureProperties[displayProperty] :
+            getFeatureFirstAvailableProperty(feature);
+        }
+
+        // Defined displayProperty is a serialized java script function, which can calculate display property.
+        let calculateDisplayProperty = eval(`(${displayProperty})`);
+        Ember.assert(
+          'Property \'settings.identifySettings.featuresPropertiesSettings.displayProperty\' ' +
+          'in layer \'' + layerName + '\' is not a valid java script function',
+          Ember.typeOf(calculateDisplayProperty) === 'function');
+
+        return calculateDisplayProperty(feature);
+      };
+
       let layerProperties = {};
       layerProperties[layerNameProperty] = layerName;
       layerProperties[featuresCountProperty] = features.length;
@@ -344,14 +395,6 @@ export default RectangleMapTool.extend({
       }
 
       let $layerMetadataTable = createTable(layerProperties);
-
-      // Call hook giving ability to add some additional markup.
-      this._popupLayerPropertiesElementCreated({
-        element: $layerMetadataTable,
-        identificationResult: identificationResult,
-        layer: layer
-      });
-
       let $layersAccordionItem = createLayersAccordionItem({
         icon: Ember.isNone(error) ? layerIcon : 'red dont icon',
         caption: layerName
@@ -377,6 +420,7 @@ export default RectangleMapTool.extend({
       // Call hook giving ability to add some additional markup.
       this._popupLayerElementCreated({
         element: $layersAccordionItem,
+        propertiesElement: $layerMetadataTable,
         identificationResult: identificationResult,
         layer: layer
       });
@@ -402,18 +446,9 @@ export default RectangleMapTool.extend({
           default:
             featureIcon = 'marker icon';
         }
-        let featureProperties = Ember.get(feature, 'properties');
-        let featureCaptionProperty = Object.keys(featureProperties)[0];
-        let featureCaption = Ember.isBlank(featureCaptionProperty) ? '' : featureProperties[featureCaptionProperty];
-        let $featureMetadataTable = createTable(featureProperties);
 
-        // Call hook giving ability to add some additional markup.
-        this._popupFeaturePropertiesElementCreated({
-          element: $featureMetadataTable,
-          identificationResult: identificationResult,
-          feature: feature
-        });
-
+        let featureCaption = getFeatureCaption(feature);
+        let $featureMetadataTable = createTable(Ember.get(feature, 'properties'), excludedProperties, localizedProperties);
         let $featureListItem = createListItem({
           icon: featureIcon,
           caption: featureCaption
@@ -435,6 +470,7 @@ export default RectangleMapTool.extend({
         // Call hook giving ability to add some additional markup.
         this._popupFeatureElementCreated({
           element: $featureListItem,
+          propertiesElement: $featureMetadataTable,
           identificationResult: identificationResult,
           feature: feature
         });
@@ -502,24 +538,13 @@ export default RectangleMapTool.extend({
     @method _popupLayerElementCreated
     @param {Object} options method options.
     @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
+    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.propertiesElement Created jQuery properties element.
     @param {Object[]} options.identificationResults Identification results related to layer.
     @param {Object} options.layer Layer itself.
     @private
   */
   _popupLayerElementCreated(options) {
-  },
-
-  /**
-    Handles identification popup layer properties element creation.
-
-    @method _popupLayerTreeItemElementCreated
-    @param {Object} options method options.
-    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
-    @param {Object[]} options.identificationResults Identification results related to layer.
-    @param {Object} options.layer Layer itself.
-    @private
-  */
-  _popupLayerPropertiesElementCreated(options) {
+    console.log('_popupLayerElementCreated: ', options);
   },
 
   /**
@@ -528,24 +553,13 @@ export default RectangleMapTool.extend({
     @method _popupLayerTreeItemElementCreated
     @param {Object} options method options.
     @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
+    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.propertiesElement Created jQuery properties element.
     @param {Object[]} options.identificationResults Identification results related to feature's layer.
     @param {Object} options.feature Feature itself.
     @private
   */
   _popupFeatureElementCreated(options) {
-  },
-
-  /**
-    Handles identification popup feature properties element creation.
-
-    @method _popupLayerTreeItemElementCreated
-    @param {Object} options method options.
-    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
-    @param {Object[]} options.identificationResults Identification results related to feature's layer.
-    @param {Object} options.feature Feature itself.
-    @private
-  */
-  _popupFeaturePropertiesElementCreated(options) {
+    console.log('_popupFeatureElementCreated: ', options);
   },
 
   /**

@@ -31,11 +31,15 @@
       value=_layer.name
     }}
   </div>
-  <div class="ui segment">
-    <h5 class="ui header">
-      {{crsCaption}}
-    </h5>
+
+  {{#flexberry-toggler
+    class="styled"
+    caption=crsCaption
+  }}
     <div class="field">
+      <label>
+        {{crsCaption}}
+      </label>
       {{flexberry-dropdown
         class="fluid"
         items=_availableCoordinateReferenceSystemsCodes
@@ -62,10 +66,33 @@
         }}
       </div>
     {{/if}}
-  </div>
+  {{/flexberry-toggler}}
 
-  {{#if _typeIsValid}}
-    {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings}}
+  {{#flexberry-toggler
+    class="styled"
+    caption=settingsSectionCaption
+  }}
+    {{#if _typeIsValid}}
+      {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings}}
+    {{/if}}
+  {{/flexberry-toggler}}
+
+  {{#if _identifyIsAvailableForType}}
+    {{#flexberry-toggler
+      class="styled"
+      caption=identifySettingsSectionCaption
+    }}
+      {{flexberry-jsonarea value=_layer.settings.identifySettings}}
+    {{/flexberry-toggler}}
+  {{/if}}
+
+  {{#if _searchIsAvailableForType}}
+    {{#flexberry-toggler
+      class="styled"
+      caption=searchSettingsSectionCaption
+    }}
+      {{flexberry-jsonarea value=_layer.settings.searchSettings}}
+    {{/flexberry-toggler}}
   {{/if}}
 </form>
 {{/flexberry-dialog}}
