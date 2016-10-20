@@ -50,9 +50,12 @@ export default IdentifyAllVisibleMapTool.extend({
     @private
   */
   _finishIdentification(e) {
-    let boundingBox = Ember.get(e, 'boundingBox');
-    let latlng = Ember.get(e, 'latlng');
-    let excludedLayers = Ember.A(Ember.get(e, 'excludedLayers') || []);
+    let excludedLayers = Ember.get(e, 'excludedLayers');
+    if (!Ember.isArray(excludedLayers)) {
+      excludedLayers = Ember.A();
+      Ember.set(e, 'excludedLayers', excludedLayers);
+    }
+
     let result = Ember.get(e, 'results.0') || {};
     let layer = Ember.get(result, 'layer') || {};
     let features = Ember.get(result, 'features') || [];
@@ -65,11 +68,7 @@ export default IdentifyAllVisibleMapTool.extend({
     // then try to identify next visible layer if possible.
     let includedLayers = this._getLayersToIdentify({ excludedLayers });
     if (features.length === 0 && includedLayers.length > 0) {
-      this._startIdentification({
-        boundingBox: boundingBox,
-        latlng: latlng,
-        excludedLayers: excludedLayers
-      });
+      this._startIdentification(e);
     } else {
       // Show results & stop identification.
       return this._super(...arguments);

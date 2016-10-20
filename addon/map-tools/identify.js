@@ -68,12 +68,7 @@ export default RectangleMapTool.extend({
     @private
   */
   _startIdentification({ boundingBox, latlng, boundingBoxLayer, excludedLayers }) {
-    let i18n = this.get('i18n');
     let leafletMap = this.get('leafletMap');
-
-    // Show map loader.
-    leafletMap.setLoaderContent(i18n.t('map-tools.identify.loader-message'));
-    leafletMap.showLoader();
 
     let e = {
       boundingBox: boundingBox,
@@ -129,10 +124,6 @@ export default RectangleMapTool.extend({
     Ember.RSVP.allSettled(promises).then(() => {
       e.results = results;
       this._finishIdentification(e);
-
-      // Hide map loader.
-      leafletMap.setLoaderContent('');
-      leafletMap.hideLoader();
     });
   },
 
@@ -427,6 +418,11 @@ export default RectangleMapTool.extend({
     let popupMinWidth = popupMaxWidth;
     let popupMaxHeight = mapSize.y * 0.5;
 
+    // Hide map loader.
+    leafletMap.setLoaderContent('');
+    leafletMap.hideLoader();
+
+    // Finally show popup.
     let popup = L.popup({
       className: 'identify-popup',
       maxWidth: popupMaxWidth,
@@ -500,6 +496,12 @@ export default RectangleMapTool.extend({
 
     // Call super method to remove drawn rectangle & start a new one.
     this._super(...arguments);
+
+    // Show map loader.
+    let i18n = this.get('i18n');
+    let leafletMap = this.get('leafletMap');
+    leafletMap.setLoaderContent(i18n.t('map-tools.identify.loader-message'));
+    leafletMap.showLoader();
 
     // Start identification.
     this._startIdentification({
