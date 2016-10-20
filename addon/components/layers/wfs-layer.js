@@ -76,7 +76,10 @@ export default BaseLayer.extend({
 
       let onLayerLoad = (e) => {
         let featureCollection = e.target.toGeoJSON();
-        resolve(Ember.A(Ember.get(featureCollection, 'features') || []));
+        this.injectLeafletLayersIntoGeoJSON(featureCollection);
+
+        let features = Ember.A(Ember.get(featureCollection, 'features') || []);
+        resolve(features);
 
         destroyLayer();
       };

@@ -316,13 +316,14 @@ export default RectangleMapTool.extend({
       featuresLayer.clearLayers();
 
       // Show new features.
-      L.geoJSON(features, {
-        style: function (feature) {
-          return { color: 'salmon' };
+      features.forEach((feature) => {
+        let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+        if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+          leafletLayer.setStyle({ color: 'salmon' });
         }
-      }).addTo(featuresLayer);
 
-      //leafletMap.fitBounds(featuresGeoJsonLayer.getBounds());
+        leafletLayer.addTo(featuresLayer);
+      });
     };
 
     let $popupContentLeft = Ember.$('<div />').addClass('column');

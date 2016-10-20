@@ -120,7 +120,13 @@ export default BaseLayer.extend({
 
     let featuresPromise = reverseGeocodingResults.then((results) => {
       let features = this.parseReverseGeocodingResults(results);
-      return Ember.isArray(features) ? features : Ember.A();
+      if (!Ember.isArray(features)) {
+        features = Ember.A();
+      }
+
+      this.injectLeafletLayersIntoGeoJSON(features);
+
+      return features;
     });
 
     e.results.push({
@@ -152,7 +158,13 @@ export default BaseLayer.extend({
 
     let featuresPromise = geocodingResults.then((results) => {
       let features = this.parseGeocodingResults(results);
-      return Ember.isArray(features) ? Ember.A(features) : Ember.A();
+      if (!Ember.isArray(features)) {
+        features = Ember.A();
+      }
+
+      this.injectLeafletLayersIntoGeoJSON(features);
+
+      return features;
     });
 
     let results = Ember.get(e, 'results');

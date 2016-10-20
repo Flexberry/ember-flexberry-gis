@@ -258,6 +258,64 @@ export default Ember.Component.extend(
     */
     search(e) {
       assert('BaseLayer\'s \'search\' method should be overridden.');
+    },
+
+    /**
+      Injects (leafelt GeoJSON layers)[http://leafletjs.com/reference-1.0.0.html#geojson] according to current CRS
+      into specified (GeoJSON)[http://geojson.org/geojson-spec] feature, features, or featureCollection
+
+      @method injectLeafletLayersIntoGeoJSON
+      @param {Object} geojson (GeoJSON)[http://geojson.org/geojson-spec] feature, features, or featureCollection.
+      @param {Object} [options] Options of (leafelt GeoJSON layer)[http://leafletjs.com/reference-1.0.0.html#geojson].
+      @return (leafelt GeoJSON layer)[http://leafletjs.com/reference-1.0.0.html#geojson].
+    */
+    injectLeafletLayersIntoGeoJSON(geojson, options) {
+      geojson = geojson || {};
+      options = options || {};
+
+      let featureCollection = {
+        type: 'FeatureCollection',
+        features: [],
+        crs: null
+      };
+
+      if (Ember.isArray(geojson)) {
+        Ember.set(featureCollection, 'features', geojson);
+      } else if (Ember.get(geojson, 'type') === 'Feature') {
+        Ember.set(featureCollection, 'features', [geojson]);
+      } else if (Ember.get(geojson, 'type') === 'FeatureCollection') {
+        featureCollection = geojson;
+      }
+
+      let features = Ember.A(Ember.get(featureCollection, 'features') || []);
+      if (Ember.get(features, 'length') === 0) {
+        return null;
+      }
+
+      // Define CRS for feature collection.
+      if (Ember.isNone(Ember.get(featureCollection, 'crs'))) {
+        Ember.set(featureCollection, 'crs', {
+          type: 'name',
+          properties: {
+            name: this.get('crs.code')
+          }
+        });
+      }
+
+      // Define callback method on each feature.
+      let originalOnEachFeature = Ember.get(options, 'onEachFeature');
+      Ember.set(options, 'onEachFeature', function(feature, leafletLayer) {
+        // Remember layer inside feature object.
+        Ember.set(feature, 'leafletLayer', leafletLayer);
+
+        // Call user-defined 'onEachFeature' callback.
+        if (Ember.typeOf(originalOnEachFeature) === 'function') {
+          originalOnEachFeature(feature, leafletLayer);
+        }
+      });
+
+      // Perform conversion & injection.
+      return new L.Proj.GeoJSON(featureCollection, options);
     }
   }
 );

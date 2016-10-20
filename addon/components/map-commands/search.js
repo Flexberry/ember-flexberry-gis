@@ -415,7 +415,7 @@ let SearchMapCommandComponent = Ember.Component.extend({
       this._super(...arguments);
 
       this.set('_searchCommandProperties', {
-        featuresLayer: new L.LayerGroup()
+        featuresLayer: new L.FeatureGroup()
       });
     },
 

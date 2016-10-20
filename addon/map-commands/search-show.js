@@ -65,15 +65,22 @@ export default SearchMapCommand.extend({
     featuresLayer.clearLayers();
 
     // Show new features.
-    let featuresGeoJsonLayer = L.geoJSON(features, {
-      style: function (feature) {
-        return { color: 'yellow' };
+    features.forEach((feature) => {
+      let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+      if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+        leafletLayer.setStyle({ color: 'yellow' });
       }
-    }).bindPopup(function (layer) {
-      return '' + getFeatureDisplayProperty(layer.feature, featuresPropertiesSettings);
-    }).addTo(featuresLayer);
+
+      if (Ember.typeOf(leafletLayer.bindPopup) === 'function') {
+        leafletLayer.bindPopup(() => {
+          return '' + getFeatureDisplayProperty(feature, featuresPropertiesSettings);
+        });
+      }
+
+      leafletLayer.addTo(featuresLayer);
+    });
 
     let leafletMap = this.get('leafletMap');
-    leafletMap.fitBounds(featuresGeoJsonLayer.getBounds());
+    leafletMap.fitBounds(featuresLayer.getBounds());
   }
 });

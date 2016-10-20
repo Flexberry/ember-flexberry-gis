@@ -60,14 +60,14 @@ export default TileLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.$.ajax({
         url: requestUrl
-      }).then((featureCollection) => {
+      }).done((featureCollection, textStatus, jqXHR) => {
         featureCollection = featureCollection || {};
+        this.injectLeafletLayersIntoGeoJSON(featureCollection);
 
         let features = Ember.A(Ember.get(featureCollection, 'features') || []);
         resolve(features);
-      }, (reason) => {
-        reason = reason || {};
-        reject(reason.error || reason);
+      }).fail((jqXHR, textStatus, errorThrown) => {
+        reject(errorThrown);
       });
     });
   },
