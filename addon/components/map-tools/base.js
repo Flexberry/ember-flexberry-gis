@@ -183,6 +183,15 @@ let BaseMapToolComponent = Ember.Component.extend(
     classNameBindings: ['_hasSubmenu:ui', '_hasSubmenu:dropdown', '_hasIconOnly:icon',  '_isActive:active', 'readonly:disabled'],
 
     /**
+      Map tool's attributes bindings.
+
+      @property attributeBindings
+      @type String[]
+      @default ['tooltip:title']
+    */
+    attributeBindings: ['tooltip:title'],
+
+    /**
       Map tool's caption.
 
       @property caption
@@ -190,6 +199,15 @@ let BaseMapToolComponent = Ember.Component.extend(
       @default null
     */
     caption: null,
+
+    /**
+      Map tool's tooltip text.
+      Will be added as wrapper's element 'title' attribute.
+
+      @property tooltip
+      @default null
+    */
+    tooltip: null,
 
     /**
       Map tool's icon CSS-class names.
