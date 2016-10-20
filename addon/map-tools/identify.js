@@ -553,7 +553,6 @@ export default RectangleMapTool.extend({
     @private
   */
   _popupLayerElementCreated(options) {
-    console.log('_popupLayerElementCreated: ', options);
   },
 
   /**
@@ -568,7 +567,6 @@ export default RectangleMapTool.extend({
     @private
   */
   _popupFeatureElementCreated(options) {
-    console.log('_popupFeatureElementCreated: ', options);
   },
 
   /**
