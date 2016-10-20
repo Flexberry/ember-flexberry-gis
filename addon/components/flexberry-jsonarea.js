@@ -168,7 +168,11 @@ let FlexberryJsonareaComponent = Ember.Component.extend({
   */
   _valueDidChange: Ember.on('init', Ember.observer('value', function() {
     let value = this.get('value');
-    this.set('_jsonText', JSON.stringify(value));
+    this.set('_jsonText', window.js_beautify(
+      JSON.stringify(value)), {
+        indent_size: 2
+      }
+    );
   }))
 });
 

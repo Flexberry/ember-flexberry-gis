@@ -85,6 +85,43 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     }),
 
     /**
+      Selected layer features properties excluded from being displayed in search results table.
+
+      @property _selectedLayerFeaturesExcludedProperties
+      @type String[]
+      @readOnly
+      @private
+    */
+    _selectedLayerFeaturesExcludedProperties: Ember.computed(
+      '_selectedLayer.settingsAsObject.searchSettings.featuresPropertiesSettings.excludedProperties',
+      function() {
+        let excludedProperties = Ember.A(
+          this.get('_selectedLayer.settingsAsObject.searchSettings.featuresPropertiesSettings.excludedProperties') || []);
+        return excludedProperties;
+      }
+    ),
+
+    /**
+      Selected layer features localized properties to being displayed in search results table.
+
+      @property _selectedLayerFeaturesLocalizedProperties
+      @type String[]
+      @readOnly
+      @private
+    */
+    _selectedLayerFeaturesLocalizedProperties: Ember.computed(
+      '_selectedLayer.settingsAsObject.searchSettings.featuresPropertiesSettings.localizedProperties',
+      'i18n.locale',
+      function() {
+        let currentLocale = this.get('i18n.locale');
+        let localizedProperties = this.get(
+          `_selectedLayer.settingsAsObject.searchSettings.` +
+          `featuresPropertiesSettings.localizedProperties.${currentLocale}`) || {};
+        return localizedProperties;
+      }
+    ),
+
+    /**
       Array containing available layers & cached search options related to them.
 
       @property _availableLayersOptions
@@ -495,7 +532,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
           return Ember.get(feature, '_selected') === true;
         });
 
-        this._showFoundedFeatures(features);
+        this._showFoundedFeatures(features, this.get('_selectedLayer'));
       },
 
       /**
@@ -512,7 +549,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
         }
 
         let features = [foundedFeatures[featureIndex]];
-        this._showFoundedFeatures(features);
+        this._showFoundedFeatures(features, this.get('_selectedLayer'));
       }
     },
 
@@ -572,17 +609,38 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
       @param {Object[]} features Specified features that must be shown on map.
       @private
     */
-    _showFoundedFeatures(features) {
+    _showFoundedFeatures(features, layer) {
       if (!Ember.isArray(features) || Ember.get(features, 'length') === 0) {
         return;
       }
 
       this.sendAction('showFoundedFeatures', {
-        features: features
+        features: features,
+        layer: layer
       });
 
       // Hide dialog.
       this.set('visible', false);
+    },
+
+    /**
+      Filter method for available layers.
+
+      @method _layerCanBeSearched
+      @param {Object} layer Layer which must be checked for 'search' operation availability for it.
+      @return {Boolean} Flag: indicates whether 'search' operation is available for the specified layer.
+      @private
+    */
+    _layerCanBeSearched(layer) {
+      if (Ember.get(layer, 'isDeleted')) {
+        return false;
+      }
+
+      let layerClassFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
+      let searchOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('search');
+      let searchOperationIsAvailableForLayerInstance = Ember.get(layer, 'settingsAsObject.searchSettings.canBeSearched') !== false;
+
+      return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
     },
 
     /**

@@ -23,6 +23,42 @@ export default SearchMapCommand.extend({
 
     options = options || {};
     let features = Ember.get(options, 'features');
+    let layer = Ember.get(options, 'layer') || {};
+    let layerName = Ember.get(layer, 'name');
+    let featuresPropertiesSettings = Ember.get(layer, 'settingsAsObject.searchSettings.featuresPropertiesSettings') || {};
+
+    let getFeatureFirstAvailableProperty = function(feature) {
+      let featureProperties = Ember.get(feature, 'properties') || {};
+      let displayPropertyName = Object.keys(featureProperties)[0];
+      return featureProperties[displayPropertyName];
+    };
+
+    let getFeatureDisplayProperty = function(feature, featuresPropertiesSettings) {
+      let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
+      let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
+
+      if (Ember.typeOf(displayProperty) !== 'string') {
+        // Retrieve first available property.
+        return getFeatureFirstAvailableProperty(feature);
+      }
+
+      if (!displayPropertyIsCallback) {
+        // Return defined property (or first available if defined property doesn't exist).
+        let featureProperties = Ember.get(feature, 'properties') || {};
+        return featureProperties.hasOwnProperty(displayProperty) ?
+          featureProperties[displayProperty] :
+          getFeatureFirstAvailableProperty(feature);
+      }
+
+      // Defined displayProperty is a serialized java script function, which can calculate display property.
+      let calculateDisplayProperty = eval(`(${displayProperty})`);
+      Ember.assert(
+        'Property \'settings.searchSettings.featuresPropertiesSettings.displayProperty\' ' +
+        'in layer \'' + layerName + '\' is not a valid java script function',
+        Ember.typeOf(calculateDisplayProperty) === 'function');
+
+      return calculateDisplayProperty(feature);
+    };
 
     // Clear previous features.
     let featuresLayer = this.get('featuresLayer');
@@ -34,8 +70,7 @@ export default SearchMapCommand.extend({
         return { color: 'yellow' };
       }
     }).bindPopup(function (layer) {
-      // TODO: Use layer-related search settings to retrieve property to display.
-      return '' + layer.feature.properties[Object.keys(layer.feature.properties)[0]];
+      return '' + getFeatureDisplayProperty(layer.feature, featuresPropertiesSettings);
     }).addTo(featuresLayer);
 
     let leafletMap = this.get('leafletMap');

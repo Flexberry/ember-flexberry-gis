@@ -4,6 +4,34 @@
 
 import Ember from 'ember';
 
+const createFeaturesPropertiesSettings = function() {
+  return {
+    displayPropertyIsCallback: false,
+    displayProperty: null,
+    excludedProperties: [],
+    localizedProperties: {
+      ru: {
+      },
+      en: {
+      }
+    }
+  };
+};
+
+const createCommonSearchSettings = function() {
+  return {
+    canBeSearched: true,
+    featuresPropertiesSettings: createFeaturesPropertiesSettings()
+  };
+};
+
+const createCommonIdenifySettings = function() {
+  return {
+    canBeIdentified: true,
+    featuresPropertiesSettings: createFeaturesPropertiesSettings()
+  };
+};
+
 /**
   Class describing base layer metadata.
 
@@ -30,34 +58,6 @@ export default Ember.Object.extend({
   operations: null,
 
   /**
-    Creates common identify settings object that will be injected as 'searchSettings' property into result of
-    call to {{#crossLink "BaseLayer/createSettings:method"}}'createSettings' method{{/crossLink}}.
-
-    @method createCommonSearchSettings
-    @return Object Created search settings.
-  */
-  createCommonSearchSettings() {
-    return {
-      canBeSearched: true,
-      displayPropertyName: undefined
-    };
-  },
-
-  /**
-    Creates common identify settings object that will be injected as 'identifySettings' property into result of
-    call to {{#crossLink "BaseLayer/createSettings:method"}}'createSettings' method{{/crossLink}}.
-
-    @method createCommonIdentifySettings
-    @return Object Created identify settings.
-  */
-  createCommonIdentifySettings() {
-    return {
-      canBeIdentified: true,
-      displayPropertyName: undefined
-    };
-  },
-
-  /**
     Creates new settings object (with settings related to layer-type).
 
     @method createSettings
@@ -70,11 +70,11 @@ export default Ember.Object.extend({
     let availableOperations = Ember.A(this.get('operations') || []);
 
     if (availableOperations.contains('search')) {
-      Ember.set(settings, 'searchSettings', this.createCommonSearchSettings());
+      Ember.set(settings, 'searchSettings', createCommonSearchSettings());
     }
 
     if (availableOperations.contains('identify')) {
-      Ember.set(settings, 'identifySettings', this.createCommonIdentifySettings());
+      Ember.set(settings, 'identifySettings', createCommonIdenifySettings());
     }
 
     return settings;

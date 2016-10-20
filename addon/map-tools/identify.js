@@ -38,6 +38,10 @@ export default RectangleMapTool.extend({
     @private
   */
   _layerCanBeIdentified(layer) {
+    if (Ember.get(layer, 'isDeleted')) {
+      return false;
+    }
+
     let layerClassFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
     let identifyOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('identify');
     let identifyOperationIsAvailableForLayerInstance = Ember.get(layer, 'settingsAsObject.identifySettings.canBeIdentified') !== false;
@@ -268,8 +272,10 @@ export default RectangleMapTool.extend({
       }
     };
 
-    let createTable = (properties) => {
+    let createTable = (properties, excludedPropertiesNames, localizedProperties) => {
       properties = properties || {};
+      excludedPropertiesNames = Ember.A(excludedPropertiesNames || []);
+      localizedProperties = localizedProperties || {};
 
       let $table = Ember.$('<table />').addClass('ui compact celled table');
 
@@ -290,12 +296,17 @@ export default RectangleMapTool.extend({
 
       let propertiesNames = Ember.A(Object.keys(properties) || []);
       propertiesNames.forEach((propertyName) => {
+        if (excludedPropertiesNames.contains(propertyName)) {
+          return;
+        }
+
         let propertyValue = properties[propertyName];
+        let localizedPropertyName = localizedProperties[propertyName] || propertyName;
 
         let $tableRow = Ember.$('<tr />');
         $tableBody.append($tableRow);
 
-        let $tablePropertyNameCell = Ember.$('<td />').text(propertyName);
+        let $tablePropertyNameCell = Ember.$('<td />').text(localizedPropertyName);
         $tableRow.append($tablePropertyNameCell);
 
         let $tablePropertyValueCell = Ember.$('<td />').text(propertyValue);
@@ -346,8 +357,44 @@ export default RectangleMapTool.extend({
       let layerFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
       let layerIcon = Ember.get(layerFactory, 'iconClass');
       let layerName = Ember.get(layer, 'name');
+
       let layerIdentifySettings = Ember.get(layer, 'settingsAsObject.identifySettings') || {};
-      let displayPropertyName = Ember.get(layerIdentifySettings, 'displayPropertyName');
+      let featuresPropertiesSettings = Ember.get(layerIdentifySettings, 'featuresPropertiesSettings') || {};
+      let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback');
+      let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
+      let excludedProperties = Ember.A(Ember.get(featuresPropertiesSettings, 'excludedProperties') || []);
+      let localizedProperties = Ember.A(Ember.get(featuresPropertiesSettings, 'localizedProperties') || {});
+      localizedProperties = Ember.get(localizedProperties, i18n.get('locale')) || {};
+
+      let getFeatureFirstAvailableProperty = function(feature) {
+        let featureProperties = Ember.get(feature, 'properties') || {};
+        let displayPropertyName = Object.keys(featureProperties)[0];
+        return featureProperties[displayPropertyName] || '';
+      };
+
+      let getFeatureCaption = function(feature) {
+        if (Ember.typeOf(displayProperty) !== 'string') {
+          // Retrieve first available property.
+          return getFeatureFirstAvailableProperty(feature);
+        }
+
+        if (!displayPropertyIsCallback) {
+          // Return defined property (or first available if defined property doesn't exist).
+          let featureProperties = Ember.get(feature, 'properties') || {};
+          return featureProperties.hasOwnProperty(displayProperty) ?
+            featureProperties[displayProperty] :
+            getFeatureFirstAvailableProperty(feature);
+        }
+
+        // Defined displayProperty is a serialized java script function, which can calculate display property.
+        let calculateDisplayProperty = eval(`(${displayProperty})`);
+        Ember.assert(
+          'Property \'settings.identifySettings.featuresPropertiesSettings.displayProperty\' ' +
+          'in layer \'' + layerName + '\' is not a valid java script function',
+          Ember.typeOf(calculateDisplayProperty) === 'function');
+
+        return calculateDisplayProperty(feature);
+      };
 
       let layerProperties = {};
       layerProperties[layerNameProperty] = layerName;
@@ -400,10 +447,9 @@ export default RectangleMapTool.extend({
           default:
             featureIcon = 'marker icon';
         }
-        let featureProperties = Ember.get(feature, 'properties');
-        let featureCaptionProperty = displayPropertyName || Object.keys(featureProperties)[0];
-        let featureCaption = Ember.isBlank(featureCaptionProperty) ? '' : featureProperties[featureCaptionProperty];
-        let $featureMetadataTable = createTable(featureProperties);
+
+        let featureCaption = getFeatureCaption(feature);
+        let $featureMetadataTable = createTable(Ember.get(feature, 'properties'), excludedProperties, localizedProperties);
         let $featureListItem = createListItem({
           icon: featureIcon,
           caption: featureCaption
