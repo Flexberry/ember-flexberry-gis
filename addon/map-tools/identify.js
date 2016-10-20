@@ -344,6 +344,14 @@ export default RectangleMapTool.extend({
       }
 
       let $layerMetadataTable = createTable(layerProperties);
+
+      // Call hook giving ability to add some additional markup.
+      this._popupLayerPropertiesElementCreated({
+        element: $layerMetadataTable,
+        identificationResult: identificationResult,
+        layer: layer
+      });
+
       let $layersAccordionItem = createLayersAccordionItem({
         icon: Ember.isNone(error) ? layerIcon : 'red dont icon',
         caption: layerName
@@ -365,6 +373,13 @@ export default RectangleMapTool.extend({
 
       let $layersAccordionItemContent = Ember.$('.content', $layersAccordionItem);
       $layersAccordion.append($layersAccordionItem);
+
+      // Call hook giving ability to add some additional markup.
+      this._popupLayerElementCreated({
+        element: $layersAccordionItem,
+        identificationResult: identificationResult,
+        layer: layer
+      });
 
       if (features.length === 0) {
         return;
@@ -391,6 +406,14 @@ export default RectangleMapTool.extend({
         let featureCaptionProperty = Object.keys(featureProperties)[0];
         let featureCaption = Ember.isBlank(featureCaptionProperty) ? '' : featureProperties[featureCaptionProperty];
         let $featureMetadataTable = createTable(featureProperties);
+
+        // Call hook giving ability to add some additional markup.
+        this._popupFeaturePropertiesElementCreated({
+          element: $featureMetadataTable,
+          identificationResult: identificationResult,
+          feature: feature
+        });
+
         let $featureListItem = createListItem({
           icon: featureIcon,
           caption: featureCaption
@@ -408,6 +431,13 @@ export default RectangleMapTool.extend({
           });
         });
         $featuresList.append($featureListItem);
+
+        // Call hook giving ability to add some additional markup.
+        this._popupFeatureElementCreated({
+          element: $featureListItem,
+          identificationResult: identificationResult,
+          feature: feature
+        });
       });
     });
     $popupContentRight.append(createTable(totalProperties));
@@ -464,6 +494,58 @@ export default RectangleMapTool.extend({
     });
 
     return popup;
+  },
+
+  /**
+    Handles identification popup layer element creation.
+
+    @method _popupLayerElementCreated
+    @param {Object} options method options.
+    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
+    @param {Object[]} options.identificationResults Identification results related to layer.
+    @param {Object} options.layer Layer itself.
+    @private
+  */
+  _popupLayerElementCreated(options) {
+  },
+
+  /**
+    Handles identification popup layer properties element creation.
+
+    @method _popupLayerTreeItemElementCreated
+    @param {Object} options method options.
+    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
+    @param {Object[]} options.identificationResults Identification results related to layer.
+    @param {Object} options.layer Layer itself.
+    @private
+  */
+  _popupLayerPropertiesElementCreated(options) {
+  },
+
+  /**
+    Handles identification popup feature element creation.
+
+    @method _popupLayerTreeItemElementCreated
+    @param {Object} options method options.
+    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
+    @param {Object[]} options.identificationResults Identification results related to feature's layer.
+    @param {Object} options.feature Feature itself.
+    @private
+  */
+  _popupFeatureElementCreated(options) {
+  },
+
+  /**
+    Handles identification popup feature properties element creation.
+
+    @method _popupLayerTreeItemElementCreated
+    @param {Object} options method options.
+    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
+    @param {Object[]} options.identificationResults Identification results related to feature's layer.
+    @param {Object} options.feature Feature itself.
+    @private
+  */
+  _popupFeaturePropertiesElementCreated(options) {
   },
 
   /**
