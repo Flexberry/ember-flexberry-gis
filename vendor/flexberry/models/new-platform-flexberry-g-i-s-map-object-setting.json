@@ -1,0 +1,96 @@
+﻿{
+  "name": "NewPlatformFlexberryGISMapObjectSetting",
+  "modelName": "new-platform-flexberry-g-i-s-map-object-setting",
+  "className": "MapObjectSetting",
+  "parentModelName": null,
+  "parentClassName": null,
+  "attrs": [
+    {
+      "name": "typeName",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "listForm",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    },
+    {
+      "name": "editForm",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": ""
+    }
+  ],
+  "belongsTo": [
+    {
+      "polymorphic": false,
+      "presence": false,
+      "name": "defaultMap",
+      "relatedTo": "new-platform-flexberry-g-i-s-map",
+      "inverse": null
+    }
+  ],
+  "hasMany": [
+    {
+      "name": "layerLink",
+      "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
+      "inverse": "mapObjectSetting"
+    }
+  ],
+  "projections": [
+    {
+      "name": "MapObjectSetting",
+      "modelName": "new-platform-flexberry-g-i-s-map-object-setting",
+      "attrs": [
+        {
+          "name": "typeName",
+          "caption": "",
+          "hidden": true,
+          "index": 0
+        },
+        {
+          "name": "listForm",
+          "caption": "",
+          "hidden": true,
+          "index": 0
+        },
+        {
+          "name": "editForm",
+          "caption": "",
+          "hidden": true,
+          "index": 0
+        }
+      ],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "DefaultMap",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 1,
+          "caption": "",
+          "name": "defaultMap",
+          "relatedTo": "new-platform-flexberry-g-i-s-map",
+          "inverse": null
+        }
+      ],
+      "hasMany": [
+        {
+          "projectionName": "LayerLinkD",
+          "caption": "",
+          "name": "layerLink",
+          "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
+          "inverse": null
+        }
+      ]
+    }
+  ]
+}

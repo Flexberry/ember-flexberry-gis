@@ -98,51 +98,31 @@
           "index": 0
         },
         {
-          "name": "zoom",
-          "caption": "Zoom",
+          "name": "creator",
+          "caption": "Creator",
           "hidden": false,
           "index": 1
         },
         {
-          "name": "public",
-          "caption": "Public",
+          "name": "createTime",
+          "caption": "Create time",
           "hidden": false,
           "index": 2
         },
         {
-          "name": "coordinateReferenceSystem",
-          "caption": "Coordinate reference system",
+          "name": "editor",
+          "caption": "Editor",
           "hidden": false,
           "index": 3
         },
         {
-          "name": "lat",
-          "caption": "",
+          "name": "editTime",
+          "caption": "Edit time",
           "hidden": false,
           "index": 4
-        },
-        {
-          "name": "lng",
-          "caption": "",
-          "hidden": false,
-          "index": 5
         }
       ],
-      "belongsTo": [
-        {
-          "lookupValue": null,
-          "lookupValueField": null,
-          "relationName": "RootLayer",
-          "belongsTo": [],
-          "hidden": false,
-          "attrs": [],
-          "index": 6,
-          "caption": "",
-          "name": "rootLayer",
-          "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
-          "inverse": null
-        }
-      ],
+      "belongsTo": [],
       "hasMany": []
     },
     {
@@ -181,21 +161,21 @@
         },
         {
           "name": "coordinateReferenceSystem",
-          "caption": "Coordinate reference system",
+          "caption": "CRS",
           "hidden": false,
           "index": 5
         }
       ],
       "belongsTo": [
         {
-          "lookupValue": null,
-          "lookupValueField": null,
+          "lookupValue": "Name",
+          "lookupValueField": "name",
           "relationName": "RootLayer",
           "belongsTo": [],
           "hidden": false,
           "attrs": [],
           "index": 6,
-          "caption": "",
+          "caption": "Root layer",
           "name": "rootLayer",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
           "inverse": null
@@ -214,40 +194,28 @@
           "index": 0
         },
         {
-          "name": "public",
-          "caption": "Public",
+          "name": "lat",
+          "caption": "Lat",
           "hidden": false,
           "index": 1
         },
         {
-          "name": "coordinateReferenceSystem",
-          "caption": "Coordinate reference system",
+          "name": "lng",
+          "caption": "Lng",
           "hidden": false,
           "index": 2
         },
         {
-          "name": "createTime",
-          "caption": "Создание",
+          "name": "zoom",
+          "caption": "Zoom",
           "hidden": false,
           "index": 3
         },
         {
-          "name": "creator",
-          "caption": "Создатель",
+          "name": "public",
+          "caption": "Public",
           "hidden": false,
           "index": 4
-        },
-        {
-          "name": "editTime",
-          "caption": "Редактирование",
-          "hidden": false,
-          "index": 5
-        },
-        {
-          "name": "editor",
-          "caption": "Редактор",
-          "hidden": false,
-          "index": 6
         }
       ],
       "belongsTo": [],

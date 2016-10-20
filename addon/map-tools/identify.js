@@ -74,12 +74,7 @@ export default RectangleMapTool.extend({
     @private
   */
   _startIdentification({ boundingBox, latlng, boundingBoxLayer, excludedLayers }) {
-    let i18n = this.get('i18n');
     let leafletMap = this.get('leafletMap');
-
-    // Show map loader.
-    leafletMap.setLoaderContent(i18n.t('map-tools.identify.loader-message'));
-    leafletMap.showLoader();
 
     let e = {
       boundingBox: boundingBox,
@@ -135,10 +130,6 @@ export default RectangleMapTool.extend({
     Ember.RSVP.allSettled(promises).then(() => {
       e.results = results;
       this._finishIdentification(e);
-
-      // Hide map loader.
-      leafletMap.setLoaderContent('');
-      leafletMap.hideLoader();
     });
   },
 
@@ -404,6 +395,14 @@ export default RectangleMapTool.extend({
       }
 
       let $layerMetadataTable = createTable(layerProperties);
+
+      // Call hook giving ability to add some additional markup.
+      this._popupLayerPropertiesElementCreated({
+        element: $layerMetadataTable,
+        identificationResult: identificationResult,
+        layer: layer
+      });
+
       let $layersAccordionItem = createLayersAccordionItem({
         icon: Ember.isNone(error) ? layerIcon : 'red dont icon',
         caption: layerName
@@ -425,6 +424,13 @@ export default RectangleMapTool.extend({
 
       let $layersAccordionItemContent = Ember.$('.content', $layersAccordionItem);
       $layersAccordion.append($layersAccordionItem);
+
+      // Call hook giving ability to add some additional markup.
+      this._popupLayerElementCreated({
+        element: $layersAccordionItem,
+        identificationResult: identificationResult,
+        layer: layer
+      });
 
       if (features.length === 0) {
         return;
@@ -450,6 +456,16 @@ export default RectangleMapTool.extend({
 
         let featureCaption = getFeatureCaption(feature);
         let $featureMetadataTable = createTable(Ember.get(feature, 'properties'), excludedProperties, localizedProperties);
+
+        let $featureMetadataTable = createTable(featureProperties);
+
+        // Call hook giving ability to add some additional markup.
+        this._popupFeaturePropertiesElementCreated({
+          element: $featureMetadataTable,
+          identificationResult: identificationResult,
+          feature: feature
+        });
+
         let $featureListItem = createListItem({
           icon: featureIcon,
           caption: featureCaption
@@ -467,6 +483,13 @@ export default RectangleMapTool.extend({
           });
         });
         $featuresList.append($featureListItem);
+
+        // Call hook giving ability to add some additional markup.
+        this._popupFeatureElementCreated({
+          element: $featureListItem,
+          identificationResult: identificationResult,
+          feature: feature
+        });
       });
     });
     $popupContentRight.append(createTable(totalProperties));
@@ -477,6 +500,11 @@ export default RectangleMapTool.extend({
     let popupMinWidth = popupMaxWidth;
     let popupMaxHeight = mapSize.y * 0.5;
 
+    // Hide map loader.
+    leafletMap.setLoaderContent('');
+    leafletMap.hideLoader();
+
+    // Finally show popup.
     let popup = L.popup({
       className: 'identify-popup',
       maxWidth: popupMaxWidth,
@@ -521,6 +549,58 @@ export default RectangleMapTool.extend({
   },
 
   /**
+    Handles identification popup layer element creation.
+
+    @method _popupLayerElementCreated
+    @param {Object} options method options.
+    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
+    @param {Object[]} options.identificationResults Identification results related to layer.
+    @param {Object} options.layer Layer itself.
+    @private
+  */
+  _popupLayerElementCreated(options) {
+  },
+
+  /**
+    Handles identification popup layer properties element creation.
+
+    @method _popupLayerTreeItemElementCreated
+    @param {Object} options method options.
+    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
+    @param {Object[]} options.identificationResults Identification results related to layer.
+    @param {Object} options.layer Layer itself.
+    @private
+  */
+  _popupLayerPropertiesElementCreated(options) {
+  },
+
+  /**
+    Handles identification popup feature element creation.
+
+    @method _popupLayerTreeItemElementCreated
+    @param {Object} options method options.
+    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
+    @param {Object[]} options.identificationResults Identification results related to feature's layer.
+    @param {Object} options.feature Feature itself.
+    @private
+  */
+  _popupFeatureElementCreated(options) {
+  },
+
+  /**
+    Handles identification popup feature properties element creation.
+
+    @method _popupLayerTreeItemElementCreated
+    @param {Object} options method options.
+    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
+    @param {Object[]} options.identificationResults Identification results related to feature's layer.
+    @param {Object} options.feature Feature itself.
+    @private
+  */
+  _popupFeaturePropertiesElementCreated(options) {
+  },
+
+  /**
     Handles map's 'editable:drawing:end' event.
 
     @method _rectangleDrawingDidEnd
@@ -550,6 +630,12 @@ export default RectangleMapTool.extend({
 
     // Call super method to remove drawn rectangle & start a new one.
     this._super(...arguments);
+
+    // Show map loader.
+    let i18n = this.get('i18n');
+    let leafletMap = this.get('leafletMap');
+    leafletMap.setLoaderContent(i18n.t('map-tools.identify.loader-message'));
+    leafletMap.showLoader();
 
     // Start identification.
     this._startIdentification({

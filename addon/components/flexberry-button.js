@@ -151,6 +151,15 @@ let FlexberryButtonComponent = Ember.Component.extend(
     classNameBindings: ['readonly:disabled', '_hasIconOnly:icon'],
 
     /**
+      Components attributes bindings.
+
+      @property attributeBindings
+      @type String[]
+      @default ['tooltip:title']
+    */
+    attributeBindings: ['tooltip:title'],
+
+    /**
       Component's caption.
 
       @property caption
@@ -158,6 +167,15 @@ let FlexberryButtonComponent = Ember.Component.extend(
       @default null
     */
     caption: null,
+
+    /**
+      Component's tooltip text.
+      Will be added as wrapper's element 'title' attribute.
+
+      @property tooltip
+      @default null
+    */
+    tooltip: null,
 
     /**
       Component's icon CSS-class names.

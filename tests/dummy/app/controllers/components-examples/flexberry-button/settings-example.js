@@ -29,6 +29,15 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
   caption: null,
 
   /**
+    Component's tooltip text.
+    Will be added as wrapper's element 'title' attribute.
+
+    @property tooltip
+    @default null
+  */
+  tooltip: null,
+
+  /**
     Flag: indicates whether 'flexberry-button' component is in 'readonly' mode or not.
 
     @property readonly
@@ -47,6 +56,7 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
     '  class=class<br>' +
     '  iconClass=class<br>' +
     '  caption=caption<br>' +
+    '  tooltip=tooltip<br>' +
     '  readonly=readonly<br>' +
     '  click=(action \"onButtonClick\")<br>' +
     '}}'),
@@ -96,6 +106,12 @@ export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin,
       settingType: 'string',
       settingDefaultValue: null,
       bindedControllerPropertieName: 'caption'
+    });
+    componentSettingsMetadata.pushObject({
+      settingName: 'tooltip',
+      settingType: 'string',
+      settingDefaultValue: null,
+      bindedControllerPropertieName: 'tooltip'
     });
     componentSettingsMetadata.pushObject({
       settingName: 'readonly',
