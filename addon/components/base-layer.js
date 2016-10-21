@@ -275,8 +275,7 @@ export default Ember.Component.extend(
 
       let featureCollection = {
         type: 'FeatureCollection',
-        features: [],
-        crs: null
+        features: []
       };
 
       if (Ember.isArray(geojson)) {
@@ -292,15 +291,16 @@ export default Ember.Component.extend(
         return null;
       }
 
-      // Define CRS for feature collection.
-      if (Ember.isNone(Ember.get(featureCollection, 'crs'))) {
-        Ember.set(featureCollection, 'crs', {
-          type: 'name',
-          properties: {
-            name: this.get('crs.code')
-          }
-        });
-      }
+      let crs = this.get('crs');
+      Ember.set(options, 'coordsToLatLng', function (coords) {
+        let point = new L.Point(coords[0], coords[1]);
+        let latlng = crs.projection.unproject(point);
+        if (!Ember.isNone(coords[2])) {
+          latlng.alt = coords[2];
+        }
+
+        return latlng;
+      });
 
       // Define callback method on each feature.
       let originalOnEachFeature = Ember.get(options, 'onEachFeature');
@@ -315,7 +315,7 @@ export default Ember.Component.extend(
       });
 
       // Perform conversion & injection.
-      return new L.Proj.GeoJSON(featureCollection, options);
+      return new L.GeoJSON(featureCollection, options);
     }
   }
 );
