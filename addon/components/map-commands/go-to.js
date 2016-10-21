@@ -128,6 +128,10 @@ let GoToMapCommandComponent = Ember.Component.extend({
         @param {Object} e Base map-command's 'execute' action event-object.
       */
       onMapCommandExecute(e) {
+        // Delay execution, but send action to initialize map-command.
+        Ember.set(e, 'execute', false);
+        this.sendAction('execute', e);
+
         // Remember event object.
         this.set('_executeActionEventObject', e);
 
@@ -146,7 +150,10 @@ let GoToMapCommandComponent = Ember.Component.extend({
         @param {Object} e Action's event object.
       */
       onGoToDialogApprove(e) {
-        this.sendAction('execute', Ember.get(e, 'gotoOptions'), this.get('_executeActionEventObject'));
+        let executeActionEventObject = this.get('_executeActionEventObject');
+        Ember.set(executeActionEventObject, 'execute', true);
+
+        this.sendAction('execute', Ember.get(e, 'gotoOptions'), executeActionEventObject);
       }
     },
 

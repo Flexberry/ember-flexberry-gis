@@ -32,6 +32,54 @@ const flexberryClassNames = {
 */
 let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
     /**
+      Available command modes.
+
+      @property _availableModes
+      @type String[]
+      @default null
+      @private
+    */
+    _availableModes: null,
+
+    /**
+      Selected command mode.
+
+      @property _selectedMode
+      @type String
+      @default null
+      @private
+    */
+    _selectedMode: null,
+
+    /**
+      Flag: indicates whether latLngCrs mode is selected now.
+
+      @property _latlngCrsModeIsSelected
+      @type Boolean
+      @readOnly
+      @private
+    */
+    _latlngCrsModeIsSelected: Ember.computed('_selectedMode', 'i18n.locale', function() {
+      let i18n = this.get('i18n');
+      let latlngCrsMode = i18n.t('components.map-commands-dialogs.go-to.latlng-crs-mode.caption');
+      let selectedMode = this.get('_selectedMode');
+
+      return selectedMode.toString() === latlngCrsMode.toString();
+    }),
+
+    /**
+      Coordinate reference system related to the command's selected mode.
+
+      @property _selectedCrs
+      @type
+      @readOnly
+      @private
+    */
+    _selectedCrs: Ember.computed('_latlngCrsModeIsSelected', 'leafletMap.options.crs', function() {
+      return this.get('_latlngCrsModeIsSelected') ? L.CRS.EPSG4326 : this.get('leafletMap.options.crs');
+    }),
+
+    /**
       Hash containing go-to options.
 
       @property _options
@@ -126,6 +174,15 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
     denyButtonCaption: t('components.map-commands-dialogs.go-to.deny-button.caption'),
 
     /**
+      Dialog's mode dropdown caption.
+
+      @property modeDropdownCaption
+      @type String
+      @default t('components.map-commands-dialogs.mode-dropdown.caption')
+    */
+    modeDropdownCaption: t('components.map-commands-dialogs.go-to.mode-dropdown.caption'),
+
+    /**
       Dialog's 'lat' textbox caption.
 
       @property latTextboxCaption
@@ -144,6 +201,24 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
     lngTextboxCaption: t('components.map-commands-dialogs.go-to.lng-textbox.caption'),
 
     /**
+      Dialog's 'x' textbox caption.
+
+      @property xTextboxCaption
+      @type String
+      @default t('components.map-commands-dialogs.go-to.x-textbox.caption')
+    */
+    xTextboxCaption: t('components.map-commands-dialogs.go-to.x-textbox.caption'),
+
+    /**
+      Dialog's 'y' textbox caption.
+
+      @property yTextboxCaption
+      @type String
+      @default t('components.map-commands-dialogs.go-to.y-textbox.caption')
+    */
+    yTextboxCaption: t('components.map-commands-dialogs.go-to.y-textbox.caption'),
+
+    /**
       Flag: indicates whether dialog is visible or not.
       If true, then dialog will be shown, otherwise dialog will be closed.
 
@@ -152,6 +227,15 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
       @default false
     */
     visible: false,
+
+    /**
+      Leaflet map.
+
+      @property leafletMap
+      @type <a href="">L.Map</a>
+      @default null
+    */
+    leafletMap: null,
 
     actions: {
       /**
@@ -257,15 +341,32 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
       let gotoOptions = {};
       let innerOptions = this.get('_options');
 
-      let lat = parseFloat(Ember.get(innerOptions, 'lat').replace(',', '.'));
-      let lng = parseFloat(Ember.get(innerOptions, 'lng').replace(',', '.'));
-      if (isNaN(lat) || isNaN(lng)) {
+      let x = parseFloat(Ember.get(innerOptions, 'x').replace(',', '.'));
+      let y = parseFloat(Ember.get(innerOptions, 'y').replace(',', '.'));
+      if (isNaN(x) || isNaN(y)) {
         return null;
       }
 
-      Ember.set(gotoOptions, 'latlng', new L.LatLng(lat, lng));
+      Ember.set(gotoOptions, 'point', new L.Point(x, y));
+      Ember.set(gotoOptions, 'crs', this.get('_selectedCrs'));
       return gotoOptions;
     },
+
+    /**
+      Observes changes in current locale.
+      Changes available command's modes.
+
+      @method _localeDidChange
+      @private
+    */
+    _localeDidChange: Ember.on('init', Ember.observer('i18n.locale', function() {
+      let i18n = this.get('i18n');
+      this.set('_availableModes', Ember.A([
+        i18n.t('components.map-commands-dialogs.go-to.latlng-crs-mode.caption'),
+        i18n.t('components.map-commands-dialogs.go-to.map-crs-mode.caption')
+      ]));
+      this.set('_selectedMode', i18n.t('components.map-commands-dialogs.go-to.latlng-crs-mode.caption'));
+    })),
 
     /**
       Initializes component.
@@ -274,8 +375,8 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
       this._super(...arguments);
 
       this.set('_options', {
-        lat: '',
-        lng: ''
+        x: '',
+        y: ''
       });
     }
 

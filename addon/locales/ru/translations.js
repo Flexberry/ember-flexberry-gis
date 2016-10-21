@@ -226,6 +226,21 @@ export default {
         'deny-button': {
           'caption': 'Отмена'
         },
+        'mode-dropdown': {
+          'caption': 'Режим обработки координат',
+        },
+        'latlng-crs-mode': {
+          'caption': 'Широта и Долгота'
+        },
+        'map-crs-mode': {
+          'caption': 'В системе коодинат карты'
+        },
+        'x-textbox': {
+          'caption': 'X'
+        },
+        'y-textbox': {
+          'caption': 'Y'
+        },
         'lat-textbox': {
           'caption': 'Широта'
         },
@@ -514,7 +529,9 @@ export default {
   'map-commands': {
     'go-to': {
       'lat-caption': 'Широта',
-      'lng-caption': 'Долгота'
+      'lng-caption': 'Долгота',
+      'x-caption': 'X',
+      'y-caption': 'Y'
     }
   }
 };

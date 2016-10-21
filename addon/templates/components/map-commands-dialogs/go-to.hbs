@@ -22,20 +22,38 @@
 <form class="ui form" role="form">
   <div class="field">
     <label>
-      {{latTextboxCaption}}
+      {{modeDropdownCaption}}
     </label>
-    {{flexberry-textbox
+    {{flexberry-dropdown
       class="fluid"
-      value=_options.lat
+      items=_availableModes
+      value=_selectedMode
     }}
   </div>
   <div class="field">
     <label>
-      {{lngTextboxCaption}}
+      {{#if _latlngCrsModeIsSelected}}
+        {{latTextboxCaption}}
+      {{else}}
+        {{xTextboxCaption}}
+      {{/if}}
     </label>
     {{flexberry-textbox
       class="fluid"
-      value=_options.lng
+      value=_options.x
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{#if _latlngCrsModeIsSelected}}
+        {{lngTextboxCaption}}
+      {{else}}
+        {{yTextboxCaption}}
+      {{/if}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_options.y
     }}
   </div>
 </form>

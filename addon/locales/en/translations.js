@@ -226,6 +226,21 @@ export default {
         'deny-button': {
           'caption': 'Cancel'
         },
+        'mode-dropdown': {
+          'caption': 'Coordinates handling mode',
+        },
+        'latlng-crs-mode': {
+          'caption': 'Latitude & Longitude'
+        },
+        'map-crs-mode': {
+          'caption': 'In map\'s coordinate system'
+        },
+        'x-textbox': {
+          'caption': 'X'
+        },
+        'y-textbox': {
+          'caption': 'Y'
+        },
         'lat-textbox': {
           'caption': 'Latitude'
         },
@@ -514,7 +529,9 @@ export default {
   'map-commands': {
     'go-to': {
       'lat-caption': 'Latitude',
-      'lng-caption': 'Longitude'
+      'lng-caption': 'Longitude',
+      'x-caption': 'X',
+      'y-caption': 'Y'
     }
   }
 };

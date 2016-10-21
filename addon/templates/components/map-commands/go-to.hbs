@@ -10,6 +10,7 @@
   {{component "map-commands-dialogs/go-to"
     class=flexberryClassNames.gotoDialog
     visible=_gotoDialogIsVisible
+    leafletMap=_executeActionEventObject.mapCommand.leafletMap
     approve=(action "onGoToDialogApprove")
   }}
 {{/if}}
