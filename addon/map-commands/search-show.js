@@ -62,25 +62,33 @@ export default SearchMapCommand.extend({
 
     // Clear previous features.
     let featuresLayer = this.get('featuresLayer');
-    featuresLayer.clearLayers();
 
-    // Show new features.
-    features.forEach((feature) => {
-      let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
-      if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
-        leafletLayer.setStyle({ color: 'yellow' });
-      }
+    // Clear previous features & add new.
+    // Leaflet clear's layers with some delay, add if we add again some cleared layer (immediately after clear),
+    // it will be removed after delay (by layer's id),
+    // so we will use timeout until better solution will be found.
+    Ember.run(() => {
+      featuresLayer.clearLayers();
+      setTimeout(() => {
+        // Show new features.
+        features.forEach((feature) => {
+          let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+          if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+            leafletLayer.setStyle({ color: 'yellow' });
+          }
 
-      if (Ember.typeOf(leafletLayer.bindPopup) === 'function') {
-        leafletLayer.bindPopup(() => {
-          return '' + getFeatureDisplayProperty(feature, featuresPropertiesSettings);
+          if (Ember.typeOf(leafletLayer.bindPopup) === 'function') {
+            leafletLayer.bindPopup(() => {
+              return '' + getFeatureDisplayProperty(feature, featuresPropertiesSettings);
+            });
+          }
+
+          leafletLayer.addTo(featuresLayer);
         });
-      }
 
-      leafletLayer.addTo(featuresLayer);
+        let leafletMap = this.get('leafletMap');
+        leafletMap.fitBounds(featuresLayer.getBounds());
+      }, 10);
     });
-
-    let leafletMap = this.get('leafletMap');
-    leafletMap.fitBounds(featuresLayer.getBounds());
   }
 });

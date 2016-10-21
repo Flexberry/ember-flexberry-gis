@@ -152,7 +152,7 @@ export default RectangleMapTool.extend({
   */
   _finishIdentification(e) {
     let leafletMap = this.get('leafletMap');
-    let featuresLayer = L.layerGroup().addTo(leafletMap);
+    let featuresLayer = L.featureGroup().addTo(leafletMap);
     let boundingBoxLayer = Ember.get(e, 'boundingBoxLayer');
 
     let i18n = this.get('i18n');
@@ -245,7 +245,12 @@ export default RectangleMapTool.extend({
       return $item;
     };
 
+    let activeListItem = null;
     let makeListItemActive = ({ item, parent, metadataContainer, metadataTable, callback }) => {
+      if (activeListItem === item) {
+        return;
+      }
+
       // Remove 'active' class from previously clicked item;
       Ember.$('.item.active', parent).removeClass('active');
 
@@ -261,6 +266,8 @@ export default RectangleMapTool.extend({
       if (Ember.typeOf(callback) === 'function') {
         callback();
       }
+
+      activeListItem = item;
     };
 
     let createTable = (properties, excludedPropertiesNames, localizedProperties) => {
@@ -312,17 +319,23 @@ export default RectangleMapTool.extend({
         return;
       }
 
-      // Clear previous features.
-      featuresLayer.clearLayers();
+      // Clear previous features & add new.
+      // Leaflet clear's layers with some delay, add if we add again some cleared layer (immediately after clear),
+      // it will be removed after delay (by layer's id),
+      // so we will use timeout until better solution will be found.
+      Ember.run(() => {
+        featuresLayer.clearLayers();
+        setTimeout(() => {
+          // Show new features.
+          features.forEach((feature) => {
+            let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+            if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+              leafletLayer.setStyle({ color: 'salmon' });
+            }
 
-      // Show new features.
-      features.forEach((feature) => {
-        let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
-        if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
-          leafletLayer.setStyle({ color: 'salmon' });
-        }
-
-        leafletLayer.addTo(featuresLayer);
+            leafletLayer.addTo(featuresLayer);
+          });
+        }, 10);
       });
     };
 

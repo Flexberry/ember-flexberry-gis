@@ -378,7 +378,7 @@ let SearchMapCommandComponent = Ember.Component.extend({
           this.set('_searchShowExecuteActionEventObject', executeActionEventObject);
         }
 
-        Ember.$.extend(true, executeActionEventObject, e);
+        Ember.$.extend(executeActionEventObject, e);
         this.sendAction('execute', executeActionEventObject);
       }
     },
