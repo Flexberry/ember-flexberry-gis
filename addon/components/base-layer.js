@@ -156,6 +156,28 @@ export default Ember.Component.extend(
     },
 
     /**
+      Handles 'flexberry-map:query' event of leaflet map.
+
+      @method _query
+      @param {Object} e Event object.
+      @param {Object} layerLinks Array contains layer links model, use for filter searched layers
+      @param {Object} queryFilter Object with query filter paramteres
+      @param {Object[]} results.features Array containing leaflet layers objects
+      or a promise returning such array.
+    */
+    _query(e) {
+      let layerId = this.get('layer.id').toString();
+      let layerLinks = e.layerLinks.filter(link => link.get('layer.id').toString() === layerId);
+
+      if (!layerLinks.length) {
+        return;
+      }
+
+      // Call public query method
+      this.query(e);
+    },
+
+    /**
       Initializes component.
     */
     init() {
@@ -178,6 +200,7 @@ export default Ember.Component.extend(
         // Attach custom event-handler.
         leafletMap.on('flexberry-map:identify', this._identify, this);
         leafletMap.on('flexberry-map:search', this._search, this);
+        leafletMap.on('flexberry-map:query', this._query, this);
       }
     },
 
@@ -261,6 +284,20 @@ export default Ember.Component.extend(
     },
 
     /**
+      Handles 'flexberry-map:query' event of leaflet map.
+
+      @method _query
+      @param {Object} e Event object.
+      @param {Object} layerLinks Array contains layer links model, use for filter searched layers
+      @param {Object} queryFilter Object with query filter paramteres
+      @param {Object[]} results.features Array containing leaflet layers objects
+      or a promise returning such array.
+    */
+    query(e) {
+      assert('BaseLayer\'s \'query\' method should be overridden.');
+    },
+
+    /**
       Injects (leafelt GeoJSON layers)[http://leafletjs.com/reference-1.0.0.html#geojson] according to current CRS
       into specified (GeoJSON)[http://geojson.org/geojson-spec] feature, features, or featureCollection
 
@@ -304,7 +341,7 @@ export default Ember.Component.extend(
 
       // Define callback method on each feature.
       let originalOnEachFeature = Ember.get(options, 'onEachFeature');
-      Ember.set(options, 'onEachFeature', function(feature, leafletLayer) {
+      Ember.set(options, 'onEachFeature', function (feature, leafletLayer) {
         // Remember layer inside feature object.
         Ember.set(feature, 'leafletLayer', leafletLayer);
 

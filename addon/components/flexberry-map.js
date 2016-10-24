@@ -185,6 +185,24 @@ let FlexberryMapComponent = Ember.Component.extend(
     layers: null,
 
     /**
+      Layer links object thats use for query data on map load
+
+      @property layerLinks
+      @type Ember.Array
+      @default null
+    */
+    layerLinks: null,
+
+    /**
+      JSON object with query parameters
+
+      @property queryFilter
+      @type object
+      @default null
+     */
+    queryFilter: null,
+
+    /**
       Injects additional methods into initialized leaflet map.
 
       @method _injectMapLoaderMethods
@@ -271,6 +289,48 @@ let FlexberryMapComponent = Ember.Component.extend(
       this.sendAction('leafletInit', {
         map: leafletMap
       });
+
+      let serviceLayer = L.featureGroup();
+      leafletMap.addLayer(serviceLayer);
+      this.set('serviceLayer', serviceLayer);
+
+      let layerLinks = this.get('layerLinks');
+      let queryFilter = this.get('queryFilter');
+
+      if (!Ember.isNone(layerLinks) && !Ember.isNone(queryFilter)) {
+        Ember.run.scheduleOnce('afterRender', this, function () {
+          let e = {
+            layerLinks,
+            queryFilter,
+            results: Ember.A()
+          };
+
+          // Show map loader
+          leafletMap.setLoaderContent(this.get('i18n').t('components.flexberry-map.queryText'));
+          leafletMap.showLoader();
+
+          leafletMap.fire('flexberry-map:query', e);
+
+          Ember.RSVP.all(e.results).then(results => {
+            results.forEach(result => {
+              serviceLayer.addLayer(result);
+            });
+
+            let queryBounds = serviceLayer.getBounds();
+            if (queryBounds.isValid()) {
+              leafletMap.fitBounds(queryBounds);
+            } else {
+
+              // Should alert user about not found objects
+              Ember.Logger.warn('Object not found for query', layerLinks, queryFilter);
+            }
+
+            // Hide map loader.
+            leafletMap.setLoaderContent('');
+            leafletMap.hideLoader();
+          });
+        });
+      }
     },
 
     /**
