@@ -18,6 +18,7 @@
     "Leaflet-WFST": "Flexberry/Leaflet-WFST#develop",
     "Proj4Leaflet": "kartena/Proj4Leaflet#leaflet-proj-refactor",
     "osmtogeojson": "2.2.12",
+    "ows.js": "0.1.5",
     "js-beautify": "1.6.4"
   },
   "resolutions": {

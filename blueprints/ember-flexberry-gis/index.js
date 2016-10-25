@@ -25,6 +25,9 @@ module.exports = {
       // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
       { name: 'osmtogeojson', target: '2.2.12' },
 
+      // OSGeo ows.js library (implementing JS API for CSW services).
+      { name: 'ows.js', target: '0.1.5' },
+
       // JS-code beautifier to format strings containing JS-code & represent in in user-friendly view.
       { name: 'js-beautify', target: '1.6.4' }
     ]).then(function() {
