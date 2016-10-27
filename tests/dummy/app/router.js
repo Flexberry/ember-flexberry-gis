@@ -10,6 +10,9 @@ Router.map(function() {
   this.route('maps');
   this.route('map', { path: 'maps/:id' });
   this.route('map.new', { path: 'maps/new' });
+  this.route('new-platform-flexberry-g-i-s-csw-connection-l', { path: 'csw-connections' });
+  this.route('new-platform-flexberry-g-i-s-csw-connection-e', { path: 'csw-connections/:id' });
+  this.route('new-platform-flexberry-g-i-s-csw-connection-e.new', { path: 'csw-connections/new' });
 
   // Components examples routes (sorted by component's names).
   this.route('components-examples/flexberry-button/settings-example');

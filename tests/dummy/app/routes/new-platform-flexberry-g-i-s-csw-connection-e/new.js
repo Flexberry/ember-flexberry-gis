@@ -8,7 +8,7 @@ import EditFormRouteOperationsIndicationMixin from '../../mixins/edit-form-route
 /**
   New map edit route.
 
-  @class NewNewPlatformFlexberryGISLayerMetadataERoute
+  @class NewNewPlatformFlexberryGISCswConnectionNewERoute
   @extends EditFormNewRoute
   @uses EditFormRouteOperationsIndicationMixin
 */
@@ -18,25 +18,25 @@ export default EditFormNewRoute.extend(EditFormRouteOperationsIndicationMixin, {
 
     @property modelProjection
     @type String
-    @default 'LayerMetadataE'
+    @default 'CswConnectionE'
   */
-  modelProjection: 'LayerMetadataE',
+  modelProjection: 'CswConnectionE',
 
   /**
     Name of model to be used as record type.
 
     @property modelName
     @type String
-    @default 'new-platform-flexberry-g-i-s-layer-metadata'
+    @default 'new-platform-flexberry-g-i-s-csw-connection'
   */
-  modelName: 'new-platform-flexberry-g-i-s-layer-metadata',
+  modelName: 'new-platform-flexberry-g-i-s-csw-connection',
 
   /**
     Name of template to be rendered.
 
     @property templateName
     @type String
-    @default 'new-platform-flexberry-g-i-s-layer-metadata-e'
+    @default 'new-platform-flexberry-g-i-s-csw-connection-e'
   */
-  templateName: 'new-platform-flexberry-g-i-s-layer-metadata-e'
+  templateName: 'new-platform-flexberry-g-i-s-csw-connection-e'
 });
