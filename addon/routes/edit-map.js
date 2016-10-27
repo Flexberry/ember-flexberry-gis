@@ -2,9 +2,9 @@
   @module ember-flexberry-gis
 */
 
-import { Query } from 'ember-flexberry-data';
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
 import MapLayersLoaderMixin from '../mixins/map-layers-loader';
+import { Query } from 'ember-flexberry-data';
 
 /**
   Edit map route.
@@ -21,10 +21,10 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
       replace: false,
       as: 'setting'
     },
-    filter: {
+    geofilter: {
       refreshModel: false,
       replace: false,
-      as: 'filter'
+      as: 'geofilter'
     }
   },
 
@@ -57,15 +57,62 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
   modelName: 'new-platform-flexberry-g-i-s-map',
 
   /**
+    Name of CSW connection model projection to be used as record's properties limitation.
+
+    @property cswConnectionProjection
+    @type String
+    @default 'MapE'
+  */
+  cswConnectionProjection: 'CswConnectionE',
+
+  /**
+    Name of CSW connection model to be used as form's record type.
+
+    @property modelName
+    @type String
+    @default 'new-platform-flexberry-g-i-s-csw-connection'
+  */
+  cswConnectionModelName: 'new-platform-flexberry-g-i-s-csw-connection',
+
+  /**
+    Loaded CSW connections.
+
+    @property cswConnections
+    @type Object[]
+    @default null
+  */
+  cswConnections: null,
+
+  /**
+    Loads available CSW connections.
+
+    @method loadCswConnections
+    @return {<a href="http://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>}
+    Promise which will return available CSW connections after it will be resolved.
+  */
+  loadCswConnections() {
+    let store = this.get('store');
+    let modelName = this.get('cswConnectionModelName');
+    let query = new Query.Builder(store)
+      .from(modelName)
+      .selectByProjection(this.get('cswConnectionProjection'));
+
+    return store.query(modelName, query.build()).then((cswConnections) => {
+      this.set('cswConnections', cswConnections.toArray());
+    });
+  },
+
+  /**
     [Model hook](http://emberjs.com/api/classes/Ember.Route.html#method_model) that returns a map project for current route.
 
     @method model
     @param {Object} params
     @param {Object} transition
-    @return {*} Model of map project for current route.
+    @return {<a href="http://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>}
+    Promise which will return map project related to current route & it's layers hierarchy.
   */
   model(params) {
-    let mapPromise = this._super(...arguments);
+    let mapPromise = this.loadMapLayers(this._super(...arguments));
 
     let layerLinkModelName = this.get('layerLinkModelName');
     let query =
@@ -78,8 +125,10 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
       .query(layerLinkModelName, query.build())
       .then(layerLinks => {
         this.set('layerLinks', layerLinks);
-        return;
       }).then(() => {
+        this.loadCswConnections();
+      })
+      .then(() => {
         return this.loadMapLayers(mapPromise);
       });
   },
@@ -87,5 +136,6 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
   setupController(controller) {
     this._super(...arguments);
     controller.set('layerLinks', this.get('layerLinks'));
+    controller.set('cswConnections', this.get('cswConnections'));
   }
 });
