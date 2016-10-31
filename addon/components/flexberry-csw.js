@@ -274,6 +274,36 @@ let FlexberryCswComponent = Ember.Component.extend({
   _selectedRecord: null,
 
   /**
+    Search settings.
+
+    @property _searchSettings
+    @type Object
+    @default null
+    @private
+  */
+  _searchSettings: null,
+
+  /**
+    Available bounding box modes.
+
+    @property _availableBoundingBoxModes
+    @type String[]
+    @default null
+    @private
+  */
+  _availableBoundingBoxModes: null,
+
+  /**
+    Flag: indicates whether 'no-bounding-box' search mode is selected.
+
+    @property _noBoundingBox
+    @type Boolean
+    @default true
+    @private
+  */
+  _noBoundingBox: true,
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -382,7 +412,7 @@ let FlexberryCswComponent = Ember.Component.extend({
       this.set('_selectedRecord', record);
     },
 
-    onGetRecordsButtonClick(start, e) {
+    onGetRecordsButtonClick(start, overrwritePreviousResults, e) {
       start = Ember.typeOf(start) === 'number' ? start : 1;
       let count = maxRecordsOnPage;
 
@@ -393,6 +423,10 @@ let FlexberryCswComponent = Ember.Component.extend({
       let selectedConnection = this.get('selectedConnection');
       if (Ember.isNone(selectedConnection)) {
         return;
+      }
+
+      if (overrwritePreviousResults) {
+        this.set('_recordsCache', {});
       }
 
       let recordsCache = this.get('_recordsCache');
@@ -418,7 +452,33 @@ let FlexberryCswComponent = Ember.Component.extend({
       }
 
       this.set('_getRecordsIsInProgress', true);
-      this.get('_selectedConnectionCsw').GetRecords(start, count).then((records) => {
+
+      let keywordsFilter;
+
+      let keywords = this.get('_searchSettings.keywords');
+      if (!Ember.isBlank(keywords)) {
+        keywordsFilter = new window.Ows4js.Filter().PropertyName('dc:subject').isLike('%' + keywords + '%');
+      }
+
+      let bboxFilter;
+      let noBoundingBox = this.get('_noBoundingBox');
+      if (!noBoundingBox) {
+        let crsCode = this.get('leafletMap.options.crs.code');
+        let minX = this.get('_searchSettings.boundingBoxMinX');
+        let minY = this.get('_searchSettings.boundingBoxMinY');
+        let maxX = this.get('_searchSettings.boundingBoxMaxX');
+        let maxY = this.get('_searchSettings.boundingBoxMaxY');
+        bboxFilter = new window.Ows4js.Filter().BBOX(minX, minY, maxX, maxY, crsCode);
+      }
+
+      let filter;
+      if (!Ember.isNone(keywordsFilter) && !Ember.isNone(bboxFilter)) {
+        filter = keywordsFilter.and(bboxFilter);
+      } else {
+        filter = keywordsFilter || bboxFilter;
+      }
+
+      this.get('_selectedConnectionCsw').GetRecords(start, count, filter).then((records) => {
         let parsedRecords = this._parseRecords(records);
         let pagesCount = Math.ceil(parsedRecords.matchedRecordsCount / count);
         let pages = Ember.A();
@@ -488,6 +548,33 @@ let FlexberryCswComponent = Ember.Component.extend({
         this.sendAction('recordSelected', record);
       } else {
         this.sendAction('recordUnselected', record);
+      }
+    },
+
+    onBoundingBoxModeChange(boundingBoxMode) {
+      let i18n = this.get('i18n');
+      let mapBoundingBoxMode = i18n.t('components.flexberry-csw.search-settings.bounding-box.modes.map-bounding-box.caption');
+      if (mapBoundingBoxMode.toString() === boundingBoxMode.toString()) {
+        let leafletMap = this.get('leafletMap');
+        let mapBounds = leafletMap.getBounds();
+        let crs = leafletMap.options.crs;
+
+        let sw = crs.project(mapBounds.getSouthWest());
+        let ne = crs.project(mapBounds.getNorthEast());
+
+        this.set('_searchSettings.boundingBoxMinX', sw.x);
+        this.set('_searchSettings.boundingBoxMaxX', ne.x);
+        this.set('_searchSettings.boundingBoxMinY', sw.y);
+        this.set('_searchSettings.boundingBoxMaxY', ne.y);
+
+        this.set('_noBoundingBox', false);
+      } else {
+        this.set('_searchSettings.boundingBoxMinX', null);
+        this.set('_searchSettings.boundingBoxMaxX', null);
+        this.set('_searchSettings.boundingBoxMinY', null);
+        this.set('_searchSettings.boundingBoxMaxY', null);
+
+        this.set('_noBoundingBox', true);
       }
     }
   },
@@ -600,6 +687,22 @@ let FlexberryCswComponent = Ember.Component.extend({
   },
 
   /**
+    Observes changes in current locale.
+    Changes available modes.
+
+    @method _localeDidChange
+    @private
+  */
+  _localeDidChange: Ember.on('init', Ember.observer('i18n.locale', function() {
+    let i18n = this.get('i18n');
+    this.set('_availableBoundingBoxModes', Ember.A([
+      i18n.t('components.flexberry-csw.search-settings.bounding-box.modes.no-bounding-box.caption'),
+      i18n.t('components.flexberry-csw.search-settings.bounding-box.modes.map-bounding-box.caption'),
+    ]));
+    this.set('_searchSettings.boundingBoxMode', i18n.t('components.flexberry-csw.search-settings.bounding-box.modes.no-bounding-box.caption'));
+  })),
+
+  /**
     initializes component.
   */
   init() {
@@ -613,6 +716,7 @@ let FlexberryCswComponent = Ember.Component.extend({
     }
 
     this.set('_recordsCache', {});
+    this.set('_searchSettings', {});
   }
 });
 

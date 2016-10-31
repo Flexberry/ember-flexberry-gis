@@ -352,6 +352,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     cswConnections: null,
 
     /**
+      Leaflet map.
+
+      @property leafletMap
+      @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+      @default null
+    */
+    leafletMap: null,
+
+    /**
       Flag: indicates whether layer node is in readonly mode.
       If true, layer node's data-related UI will be in readonly mode.
 
