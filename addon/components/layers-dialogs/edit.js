@@ -44,6 +44,83 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
+    /**
+      Available modes.
+
+      @property _availableModes
+      @type String[]
+      @default null
+      @private
+    */
+    _availableModes: null,
+
+    /**
+      Selected mode.
+
+      @property _selectedMode
+      @type String
+      @default null
+      @private
+    */
+    _selectedMode: null,
+
+    /**
+      Flag: indicates whether modes are available.
+
+      @property _modesAreAvailable
+      @type Boolean
+      @default false
+      @private
+    */
+    _modesAreAvailable: false,
+
+    /**
+      Flag: indicates whether new layer mode is selected now.
+
+      @property _newLayerModeIsSelected
+      @type Boolean
+      @readOnly
+      @private
+    */
+    _newLayerModeIsSelected: Ember.computed('_selectedMode', 'i18n.locale', function() {
+      let i18n = this.get('i18n');
+      let newLayerMode = i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.new-layer');
+      let selectedMode = this.get('_selectedMode');
+
+      return selectedMode.toString() === newLayerMode.toString();
+    }),
+
+    /**
+      Flag: indicates whether new layer mode is selected now.
+
+      @property _cswBasedLayerModeIsSelected
+      @type Boolean
+      @readOnly
+      @private
+    */
+    _cswBasedLayerModeIsSelected: Ember.computed('_selectedMode', 'i18n.locale', function() {
+      let i18n = this.get('i18n');
+      let cswBasedLayerMode = i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.csw-based-layer');
+      let selectedMode = this.get('_selectedMode');
+
+      return selectedMode.toString() === cswBasedLayerMode.toString();
+    }),
+
+    /**
+      Flag: indicates whether new layer mode is selected now.
+
+      @property _metadataBasedLayerModeIsSelected
+      @type Boolean
+      @readOnly
+      @private
+    */
+    _metadataBasedLayerModeIsSelected: Ember.computed('_selectedMode', 'i18n.locale', function() {
+      let i18n = this.get('i18n');
+      let metadataBasedLayerMode = i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.metadata-based-layer');
+      let selectedMode = this.get('_selectedMode');
+
+      return selectedMode.toString() === metadataBasedLayerMode.toString();
+    }),
 
     /**
       Array containing available layers types.
@@ -173,6 +250,16 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     }),
 
     /**
+      Tabular menu containing tabs items.
+
+      @property _tabularMenu
+      @type Object
+      @default null
+      @private
+    */
+    _tabularMenu: null,
+
+    /**
       Reference to component's template.
     */
     layout,
@@ -257,6 +344,15 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     crsCaption: t('components.layers-dialogs.edit.crs.caption'),
 
     /**
+      Dialog's 'CRS' segment's name textbox caption.
+
+      @property crsNameTextboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.crs.name-textbox.caption')
+    */
+    crsNameTextboxCaption: t('components.layers-dialogs.edit.crs.name-textbox.caption'),
+
+    /**
       Dialog's 'CRS' segment's code textbox caption.
 
       @property crsCodeTextboxCaption
@@ -273,33 +369,6 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @default t('components.layers-dialogs.edit.crs.definition-textarea.caption')
     */
     crsDefinitionTextareaCaption: t('components.layers-dialogs.edit.crs.definition-textarea.caption'),
-
-    /**
-      Dialog's settings section caption.
-
-      @property settingsSectionCaption
-      @type String
-      @default t('components.layers-dialogs.edit.settings-section.caption')
-    */
-    settingsSectionCaption: t('components.layers-dialogs.edit.settings-section.caption'),
-
-    /**
-      Dialog's settings section caption.
-
-      @property identifySettingsSectionCaption
-      @type String
-      @default t('components.layers-dialogs.edit.identify-settings-section.caption')
-    */
-    identifySettingsSectionCaption: t('components.layers-dialogs.edit.identify-settings-section.caption'),
-
-    /**
-      Dialog's settings section caption.
-
-      @property searchSettingsSectionCaption
-      @type String
-      @default t('components.layers-dialogs.edit.search-settings-section.caption')
-    */
-    searchSettingsSectionCaption: t('components.layers-dialogs.edit.search-settings-section.caption'),
 
     /**
       Flag: indicates whether dialog is visible or not.
@@ -391,6 +460,33 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       */
       onHide() {
         this.sendAction('hide');
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryCswComponent/sendingActions.recordSelected:method"}}'flexberry-csw' component's 'recordSelectd' action{{/crossLink}}.
+
+        @method actions.onCswRecordSelected
+        @param {Object} record Selected record
+      */
+      onCswRecordSelected(record) {
+        let layerClass = Ember.getOwner(this).knownForType('layer', Ember.get(record, 'type'));
+        let settings = layerClass.createSetingsFromCsw(record);
+
+        this.set('_layer.type', Ember.get(record, 'type'));
+        this.set('_layer.name', Ember.get(record, 'title'));
+        this.set('_layer.settings', settings);
+
+        this.set('_coordinateReferenceSystemCode', Ember.get(record, 'crs'));
+        this.set('_layer.coordinateReferenceSystem.code', Ember.get(record, 'crs'));
+        this.set('_layer.coordinateReferenceSystem.definition', null);
+      },
+
+      onTabClick(dataTab) {
+        /*this.$('.tabular.menu .item').removeClass('active');
+        this.$('.tab.segment').removeClass('active');
+
+        this.$('.tabular.menu .item[data-tab=\'' + dataTab + '\']').addClass('active');
+        this.$('.tab.segment[data-tab=\'' + dataTab + '\']').addClass('active');*/
       }
     },
 
@@ -539,6 +635,23 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     }),
 
     /**
+      Observes changes in current locale.
+      Changes available modes.
+
+      @method _localeDidChange
+      @private
+    */
+    _localeDidChange: Ember.on('init', Ember.observer('i18n.locale', function() {
+      let i18n = this.get('i18n');
+      this.set('_availableModes', Ember.A([
+        i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.new-layer'),
+        i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.csw-based-layer')/*,
+        i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.metadata-based-layer'),*/
+      ]));
+      this.set('_selectedMode', i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.new-layer'));
+    })),
+
+    /**
       Initializes component.
     */
     init() {
@@ -559,6 +672,44 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         let crsFactory = Ember.get(crsFactories, crsFactoryName);
         return Ember.get(crsFactory, 'code');
       })));
+    },
+
+    /**
+      Initializes component's DOM-related properties.
+    */
+    didInsertElement() {
+      this._super(...arguments);
+
+      let $tabularMenu = this.get('childViews')[0].$('.tabular.menu');
+      Ember.$('.tab.item', $tabularMenu).tab();
+
+      this.set('_tabularMenu', $tabularMenu);
+    },
+
+    /**
+      Handles DOM-related component's properties after each render.
+    */
+    didRender() {
+      this._super(...arguments);
+
+      let $tabularMenu = this.get('_tabularMenu');
+      if (!Ember.isNone($tabularMenu)) {
+        // Initialize possibly added new tabs.
+        Ember.$('.tab.item', $tabularMenu).tab();
+      }
+    },
+
+    /**
+      Deinitializes component's DOM-related properties.
+    */
+    willDestroyElement() {
+      this._super(...arguments);
+
+      let $tabularMenu = this.get('_tabularMenu');
+      if (!Ember.isNone($tabularMenu)) {
+        Ember.$('.tab.item', $tabularMenu).tab('destroy');
+        this.set('_tabularMenu', null);
+      }
     }
 
     /**

@@ -45,6 +45,35 @@ export default {
       }
     },
 
+    'flexberry-csw': {
+      'error-message': {
+        'caption': 'Error'
+      },
+      'connection-dropdown': {
+        'caption': 'Services catalog connection'
+      },
+      'records-table': {
+        'caption': 'Records',
+        'headers': {
+          'id': {
+            'caption': 'Id'
+          },
+          'title': {
+            'caption': 'Title'
+          },
+          'type': {
+            'caption': 'Type'
+          },
+          'crs': {
+            'caption': 'Coordinate system'
+          }
+        },
+        'no-records': {
+          'caption': 'No records'
+        },
+      }
+    },
+
     'layers-dialogs': {
       'remove': {
         'caption': 'Remove layer',
@@ -65,6 +94,14 @@ export default {
         'deny-button': {
           'caption': 'Cancel'
         },
+        'mode-dropdown': {
+          'caption': 'Adding mode',
+          'modes': {
+            'new-layer': 'New layer',
+            'csw-based-layer': 'Based on existing record from services catalog',
+            'metadata-based-layer': 'Based on existing layer metadata'
+          }
+        },
         'type-dropdown': {
           'caption': 'Layer type'
         },
@@ -80,14 +117,22 @@ export default {
             'caption': 'Definition'
           }
         },
-        'settings-section': {
-          'caption': 'Settings specific to the selected layer'
-        },
-        'identify-settings-section': {
-          'caption': 'Settings of layer identification'
-        },
-        'search-settings-section': {
-          'caption': 'Settings of layer search'
+        'tabular-menu': {
+          'main-tab': {
+            'caption': 'Main'
+          },
+          'crs-tab': {
+            'caption': 'Coordinate system'
+          },
+          'settings-tab': {
+            'caption': 'Layer settings'
+          },
+          'identify-settings-tab': {
+            'caption': 'Identification settings'
+          },
+          'search-settings-tab': {
+            'caption': 'Search settings'
+          }
         }
       },
 

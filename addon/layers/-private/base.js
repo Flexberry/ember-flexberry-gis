@@ -81,6 +81,17 @@ export default Ember.Object.extend({
   },
 
   /**
+    Creates new settings object (with settings related to layer-type) from the specified CSW record.
+
+    @method createSetingsFromCsw
+    @param {Object} Specified CSW record.
+    @returns {Object} New settings object (with settings related to layer-type).
+  */
+  createSetingsFromCsw(record) {
+    return this.createSettings();
+  },
+
+  /**
     Creates new search settings object (with search settings related to layer-type).
 
     @method createSearchSettings

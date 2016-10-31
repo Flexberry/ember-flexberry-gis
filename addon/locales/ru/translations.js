@@ -45,6 +45,35 @@ export default {
       }
     },
 
+    'flexberry-csw': {
+      'error-message': {
+        'caption': 'Ошибка'
+      },
+      'connection-dropdown': {
+        'caption': 'Соединение с каталогом сервисов'
+      },
+      'records-table': {
+        'caption': 'Записи',
+        'headers': {
+          'id': {
+            'caption': 'Идентификатор'
+          },
+          'title': {
+            'caption': 'Название'
+          },
+          'type': {
+            'caption': 'Тип'
+          },
+          'crs': {
+            'caption': 'Система координат'
+          }
+        },
+        'no-records': {
+          'caption': 'Нет записей'
+        },
+      }
+    },
+
     'layers-dialogs': {
       'remove': {
         'caption': 'Удаление слоя',
@@ -65,6 +94,14 @@ export default {
         'deny-button': {
           'caption': 'Отмена'
         },
+        'mode-dropdown': {
+          'caption': 'Режим добавления',
+          'modes': {
+            'new-layer': 'Новый слой',
+            'csw-based-layer': 'На основе существующей записи из каталога сервисов',
+            'metadata-based-layer': 'На основе существующих метаданных слоя'
+          }
+        },
         'type-dropdown': {
           'caption': 'Тип слоя'
         },
@@ -80,14 +117,22 @@ export default {
             'caption': 'Определение'
           }
         },
-        'settings-section': {
-          'caption': 'Настройки специфичные для выбранного типа слоя'
-        },
-        'identify-settings-section': {
-          'caption': 'Настройки идентификации по слою'
-        },
-        'search-settings-section': {
-          'caption': 'Настройки поиска по слою'
+        'tabular-menu': {
+          'main-tab': {
+            'caption': 'Основное'
+          },
+          'crs-tab': {
+            'caption': 'Система координат'
+          },
+          'settings-tab': {
+            'caption': 'Настройки слоя'
+          },
+          'identify-settings-tab': {
+            'caption': 'Настройки идентификации'
+          },
+          'search-settings-tab': {
+            'caption': 'Настройки поиска'
+          }
         }
       },
 

@@ -50,6 +50,7 @@
         class=flexberryClassNames.addDialog
         visible=_addDialogIsVisible
         layer=null
+        cswConnections=cswConnections
         approve=(action "onAddDialogApprove")
       }}
     {{/if}}
@@ -63,6 +64,7 @@
           coordinateReferenceSystem=coordinateReferenceSystem
           settings=settings
         )
+        cswConnections=cswConnections
         approve=(action "onEditDialogApprove")
       }}
     {{/if}}
@@ -89,6 +91,7 @@
     {{#if _hasLayers}}
       {{flexberry-maplayers
         layers=layers
+        cswConnections=cswConnections
         readonly=readonly
       }}
     {{/if}}

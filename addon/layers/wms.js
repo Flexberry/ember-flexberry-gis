@@ -39,5 +39,25 @@ export default TileLayer.extend({
     });
 
     return settings;
+  },
+
+  /**
+    Creates new settings object (with settings related to layer-type) from the specified CSW record.
+
+    @method createSetingsFromCsw
+    @param {Object} Specified CSW record.
+    @returns {Object} New settings object (with settings related to layer-type).
+  */
+  createSetingsFromCsw(record) {
+    let settings = this._super(...arguments);
+
+    settings.info_format = 'application/json';
+    settings.url = record.url.split('?')[0];
+    settings.version = '1.3.0';
+    settings.layers = record.id;
+    settings.format = 'image/png';
+    settings.transparent = true;
+
+    return settings;
   }
 });

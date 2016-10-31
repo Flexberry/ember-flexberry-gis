@@ -87,6 +87,7 @@
       <div class="six wide column">
         {{flexberry-maplayers
           class="styled"
+          cswConnections=cswConnections
           layers=(get-with-dynamic-actions this "model.rootLayer.layers"
             hierarchyPropertyName="layers"
             pathKeyword="layerPath"

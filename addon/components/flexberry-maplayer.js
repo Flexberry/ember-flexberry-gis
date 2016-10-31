@@ -343,6 +343,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     layers: null,
 
     /**
+      Available CSW connections.
+
+      @property cswConnections
+      @type Object[]
+      @default null
+    */
+    cswConnections: null,
+
+    /**
       Flag: indicates whether layer node is in readonly mode.
       If true, layer node's data-related UI will be in readonly mode.
 
