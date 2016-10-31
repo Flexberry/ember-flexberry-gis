@@ -121,6 +121,15 @@ let FlexberryJsonareaComponent = Ember.Component.extend({
   placeholder: t('components.flexberry-jsonarea.placeholder'),
 
   /**
+    Flag: indicates whether component is in readonly mode or not.
+
+    @property readonly
+    @type Boolean
+    @default false
+  */
+  readonly: false,
+
+  /**
     Component's value.
 
     @property value
@@ -131,6 +140,10 @@ let FlexberryJsonareaComponent = Ember.Component.extend({
 
   actions: {
     onEditButtonClick() {
+      if (this.get('readonly')) {
+        return true;
+      }
+
       let jsonMustBeSaved = this.get('_isEditing');
       if (jsonMustBeSaved) {
         try {
@@ -168,6 +181,11 @@ let FlexberryJsonareaComponent = Ember.Component.extend({
   */
   _valueDidChange: Ember.on('init', Ember.observer('value', function() {
     let value = this.get('value');
+    if (Ember.isNone(value)) {
+      this.set('_jsonText', '');
+      return;
+    }
+
     this.set('_jsonText', window.js_beautify(
       JSON.stringify(value)), {
         indent_size: 2

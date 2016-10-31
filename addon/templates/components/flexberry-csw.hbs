@@ -1,0 +1,111 @@
+{{#if _showErrorMessage}}
+  <div class="ui segment">
+    {{ui-message
+      type="error"
+      closeable=true
+      visible=_showErrorMessage
+      caption=(t "components.flexberry-csw.error-message.caption")
+      message=_errorMessage
+      onHide=(action "onErrorMessageHide")
+    }}
+  </div>
+{{/if}}
+<div class="ui segment">
+  <div class="field">
+    <label>
+      {{t "components.flexberry-csw.connection-dropdown.caption"}}
+    </label>
+    {{flexberry-dropdown
+      class="fluid"
+      readonly=_getRecordsIsInProgress
+      items=_availableConnectionsNames
+      value=(get this "_selectedConnectionName")
+      onChange=(action "onConnectionsDropdownChange")
+    }}
+  </div>
+</div>
+<div class="ui segment">
+  <div class="field">
+    <label>
+      {{t "components.flexberry-csw.records-table.caption"}}
+    </label>
+    {{#if dropdownMode}}
+      <table class="ui top attached unstackable table">
+        <tbody>
+          <tr>
+            <td>
+              {{flexberry-dropdown
+                class="attached fluid"
+                readonly=_getRecordsIsInProgress
+                items=_availableRecordsNames
+                value=(get this "_selectedRecordName")
+                placeholder=(concat "(" (t "components.flexberry-csw.records-table.no-records.caption") ")")
+                onChange=(action "onRecordsDropdownChange")
+              }}
+            </td>
+              <td class="right aligned collapsing">
+                {{flexberry-button
+                  class=(if _getRecordsIsInProgress " loading" "")
+                  iconClass="search icon"
+                  click=(action "onGetRecordsButtonClick" _recordsPages.currentPageStart)
+                }}
+              </td>
+          </tr>
+        </tbody>
+      </table>
+    {{else}}
+      {{flexberry-button
+        class=(concat "top attached fluid" (if _getRecordsIsInProgress " loading"))
+        iconClass="search icon"
+        click=(action "onGetRecordsButtonClick" _recordsPages.currentPageStart)
+      }}
+      <table class="ui selectable celled attached table">
+        <thead>
+          <tr>
+            <th class="collapsing"></th>
+            <th>{{t "components.flexberry-csw.records-table.headers.id.caption"}}</th>
+            <th>{{t "components.flexberry-csw.records-table.headers.title.caption"}}</th>
+            <th>{{t "components.flexberry-csw.records-table.headers.type.caption"}}</th>
+            <th>{{t "components.flexberry-csw.records-table.headers.crs.caption"}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each _records.records as |record|}}
+            <tr>
+              <td>{{flexberry-checkbox value=record._checked onChange=(action "onRecordCheckedStateChange" record)}}</td>
+              <td>{{record.id}}</td>
+              <td>{{record.title}}</td>
+              <td>{{record.type}}</td>
+              <td>{{record.crs}}</td>
+            </tr>
+          {{else}}
+            <tr>
+              <td colspan="5" style="text-align: center;">
+                {{t "components.flexberry-csw.records-table.no-records.caption"}}
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{/if}}
+    <div class="ui bottom attached secondary menu">
+      <div class="ui basic buttons">
+        <button
+          class="ui {{unless _recordsPages.hasPreviousPage "disabled"}} button"
+          {{action "onGetRecordsButtonClick" _recordsPages.previousPageStart on="click"}}>
+          &laquo;
+        </button>
+        {{#each _recordsPages as |page|}}
+          <button class="ui {{if page.isCurrent "active"}} button" {{action "onGetRecordsButtonClick" page.start on="click"}}>
+            {{page.number}}
+          </button>
+        {{/each}}
+        <button
+          class="ui {{unless _recordsPages.hasNextPage "disabled"}} button"
+          {{action "onGetRecordsButtonClick" _recordsPages.nextPageStart on="click"}}>
+          &raquo;
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
