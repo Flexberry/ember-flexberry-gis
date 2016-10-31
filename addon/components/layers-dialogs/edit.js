@@ -389,6 +389,15 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     */
     layer: null,
 
+    /**
+      Leaflet map.
+
+      @property leafletMap
+      @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+      @default null
+    */
+    leafletMap: null,
+
     actions: {
       /**
         Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.

@@ -27,6 +27,76 @@
 <div class="ui segment">
   <div class="field">
     <label>
+      {{t "components.flexberry-csw.search-settings.caption"}}
+    </label>
+    <div class="field">
+      <label>
+        {{t "components.flexberry-csw.search-settings.keywords-textbox.caption"}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_searchSettings.keywords
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{t "components.flexberry-csw.search-settings.bounding-box.caption"}}
+      </label>
+      <div class="field">
+        <label>
+          {{t "components.flexberry-csw.search-settings.bounding-box.mode-dropdown.caption"}}
+        </label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableBoundingBoxModes
+          value=_searchSettings.boundingBoxMode
+          onChange=(action "onBoundingBoxModeChange")
+        }}
+      </div>
+      {{#if (not _noBoundingBox)}}
+        <div class="field">
+          <label>
+            {{t "components.flexberry-csw.search-settings.bounding-box.min-x-textbox.caption"}}
+          </label>
+          {{flexberry-textbox
+            class="fluid"
+            value=_searchSettings.boundingBoxMinX
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{t "components.flexberry-csw.search-settings.bounding-box.max-x-textbox.caption"}}
+          </label>
+          {{flexberry-textbox
+            class="fluid"
+            value=_searchSettings.boundingBoxMaxX
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{t "components.flexberry-csw.search-settings.bounding-box.min-y-textbox.caption"}}
+          </label>
+          {{flexberry-textbox
+            class="fluid"
+            value=_searchSettings.boundingBoxMinY
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{t "components.flexberry-csw.search-settings.bounding-box.max-y-textbox.caption"}}
+          </label>
+          {{flexberry-textbox
+            class="fluid"
+            value=_searchSettings.boundingBoxMaxY
+          }}
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</div>
+<div class="ui segment">
+  <div class="field">
+    <label>
       {{t "components.flexberry-csw.records-table.caption"}}
     </label>
     {{#if dropdownMode}}
@@ -47,7 +117,7 @@
                 {{flexberry-button
                   class=(if _getRecordsIsInProgress " loading" "")
                   iconClass="search icon"
-                  click=(action "onGetRecordsButtonClick" _recordsPages.currentPageStart)
+                  click=(action "onGetRecordsButtonClick" _recordsPages.currentPageStart true)
                 }}
               </td>
           </tr>
@@ -57,7 +127,7 @@
       {{flexberry-button
         class=(concat "top attached fluid" (if _getRecordsIsInProgress " loading"))
         iconClass="search icon"
-        click=(action "onGetRecordsButtonClick" _recordsPages.currentPageStart)
+        click=(action "onGetRecordsButtonClick" _recordsPages.currentPageStart true)
       }}
       <table class="ui selectable celled attached table">
         <thead>

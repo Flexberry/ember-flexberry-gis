@@ -50,6 +50,7 @@
     {{#if _cswBasedLayerModeIsSelected}}
       {{flexberry-csw
         connections=cswConnections
+        leafletMap=leafletMap
         dropdownMode=true
         recordSelected=(action "onCswRecordSelected")
       }}
