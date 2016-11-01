@@ -6,9 +6,9 @@ import EditFormController from 'ember-flexberry/controllers/edit-form';
 import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-controller-operations-indication';
 
 /**
-  Maps layers metadata edit controller.
+  CSW-connections edit controller.
 
-  @class NewPlatformFlexberrtGISLayerMetadataEController
+  @class NewPlatformFlexberrtGISCswConnectionEController
   @extends EditFormController
   @uses EditFormControllerOperationsIndicationMixin
 */
@@ -18,7 +18,7 @@ export default EditFormController.extend(EditFormControllerOperationsIndicationM
 
     @property parentRoute
     @type String
-    @default 'new-platform-flexberry-g-i-s-layer-metadata-l'
+    @default 'new-platform-flexberry-g-i-s-csw-connection-l'
   */
-  parentRoute: 'new-platform-flexberry-g-i-s-layer-metadata-l',
+  parentRoute: 'new-platform-flexberry-g-i-s-csw-connection-l',
 });

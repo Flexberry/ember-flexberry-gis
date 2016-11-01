@@ -1,3 +1,4 @@
+import NewPlatformFlexberryGISMapCswConnectionModel from './models/new-platform-flexberry-g-i-s-csw-connection';
 import NewPlatformFlexberryGISLayerLinkModel from './models/new-platform-flexberry-g-i-s-layer-link';
 import NewPlatformFlexberryGISLayerMetadataModel from './models/new-platform-flexberry-g-i-s-layer-metadata';
 import NewPlatformFlexberryGISLinkParameterModel from './models/new-platform-flexberry-g-i-s-link-parameter';
@@ -7,6 +8,7 @@ import NewPlatformFlexberryGISMapObjectSettingModel from './models/new-platform-
 
 export default {
   'models': {
+    'new-platform-flexberry-g-i-s-csw-connection': NewPlatformFlexberryGISMapCswConnectionModel,
     'new-platform-flexberry-g-i-s-layer-link': NewPlatformFlexberryGISLayerLinkModel,
     'new-platform-flexberry-g-i-s-layer-metadata': NewPlatformFlexberryGISLayerMetadataModel,
     'new-platform-flexberry-g-i-s-link-parameter': NewPlatformFlexberryGISLinkParameterModel,
@@ -43,6 +45,67 @@ export default {
       }
     },
 
+    'flexberry-csw': {
+      'error-message': {
+        'caption': 'Error'
+      },
+      'connection-dropdown': {
+        'caption': 'Services catalog connection'
+      },
+      'search-settings': {
+        'caption': 'Search settings',
+        'keywords-textbox': {
+          'caption': 'Keywords'
+        },
+        'bounding-box': {
+          'caption': 'Bounding box',
+          'modes': {
+            'no-bounding-box': {
+              'caption': 'Without bounding box'
+            },
+            'map-bounding-box': {
+              'caption': 'Map\'s current bounding box'
+            }
+          },
+          'mode-dropdown': {
+            'caption': 'Mode'
+          },
+          'min-x-textbox': {
+            'caption': 'Min X'
+          },
+          'max-x-textbox': {
+            'caption': 'Max X'
+          },
+          'min-y-textbox': {
+            'caption': 'Min Y'
+          },
+          'max-y-textbox': {
+            'caption': 'Max Y'
+          }
+        }
+      },
+      'records-table': {
+        'caption': 'Records',
+        'headers': {
+          'id': {
+            'caption': 'Id'
+          },
+          'title': {
+            'caption': 'Title'
+          },
+          'type': {
+            'caption': 'Type'
+          },
+          'crs': {
+            'caption': 'Coordinate system'
+          }
+        },
+        'no-records': {
+          'caption': 'No records'
+        },
+      }
+    },
+
     'layers-dialogs': {
       'remove': {
         'caption': 'Remove layer',
@@ -63,6 +126,14 @@ export default {
         'deny-button': {
           'caption': 'Cancel'
         },
+        'mode-dropdown': {
+          'caption': 'Adding mode',
+          'modes': {
+            'new-layer': 'New layer',
+            'csw-based-layer': 'Based on existing record from services catalog',
+            'metadata-based-layer': 'Based on existing layer metadata'
+          }
+        },
         'type-dropdown': {
           'caption': 'Layer type'
         },
@@ -78,14 +149,22 @@ export default {
             'caption': 'Definition'
           }
         },
-        'settings-section': {
-          'caption': 'Settings specific to the selected layer'
-        },
-        'identify-settings-section': {
-          'caption': 'Settings of layer identification'
-        },
-        'search-settings-section': {
-          'caption': 'Settings of layer search'
+        'tabular-menu': {
+          'main-tab': {
+            'caption': 'Main'
+          },
+          'crs-tab': {
+            'caption': 'Coordinate system'
+          },
+          'settings-tab': {
+            'caption': 'Layer settings'
+          },
+          'identify-settings-tab': {
+            'caption': 'Identification settings'
+          },
+          'search-settings-tab': {
+            'caption': 'Search settings'
+          }
         }
       },
 

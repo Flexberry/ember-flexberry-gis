@@ -34,6 +34,8 @@
         class=flexberryClassNames.addDialog
         visible=_addDialogIsVisible
         layer=null
+        cswConnections=cswConnections
+        leafletMap=leafletMap
         approve=(action "onAddDialogApprove")
       }}
     {{/if}}
@@ -53,6 +55,8 @@
           settings=layer.settings
           visibility=layer.visibility
           layers=layer.layers
+          cswConnections=cswConnections
+          leafletMap=leafletMap
           readonly=readonly
           dynamicProperties=layer.dynamicProperties
           dynamicActions=layer.dynamicActions

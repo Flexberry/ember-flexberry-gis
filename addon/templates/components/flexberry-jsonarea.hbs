@@ -14,15 +14,17 @@
   </div>
 {{/if}}
 
-<div class="row">
-  <div class="sexteen wide column">
-    {{flexberry-button
-      class=(concat flexberryClassNames.editButton " fluid" (if _isEditing " positive"))
-      iconClass=(if _isEditing "checkmark icon" "edit icon")
-      click=(action "onEditButtonClick")
-    }}
+{{#if (not readonly)}}
+  <div class="row">
+    <div class="sexteen wide column">
+      {{flexberry-button
+        class=(concat flexberryClassNames.editButton " fluid" (if _isEditing " positive"))
+        iconClass=(if _isEditing "checkmark icon" "edit icon")
+        click=(action "onEditButtonClick")
+      }}
+    </div>
   </div>
-</div>
+{{/if}}
 
 <div class="row">
   <div class="sexteen wide column">

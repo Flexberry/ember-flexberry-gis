@@ -11,31 +11,72 @@
   hide=(action "onHide")
 }}
 <form class="ui form" role="form">
-  <div class="field">
-    <label>
-      {{typeDropdownCaption}}
-    </label>
-    {{flexberry-dropdown
-      class="fluid"
-      items=_availableTypes
-      value=_layer.type
-      readonly=_typeIsReadonly
-    }}
+  <div class="ui top attached tabular menu">
+    <a class="active tab item" data-tab="main" {{action "onTabClick" "main" on="click"}}>
+      {{t "components.layers-dialogs.edit.tabular-menu.main-tab.caption"}}
+    </a>
+    <a class="tab item" data-tab="crs" {{action "onTabClick" on="click"}}>
+      {{t "components.layers-dialogs.edit.tabular-menu.crs-tab.caption"}}
+    </a>
+    {{#if _typeIsValid}}
+      <a class="tab item" data-tab="settings" {{action "onTabClick" "settings" on="click"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.settings-tab.caption"}}
+      </a>
+    {{/if}}
+    {{#if _identifyIsAvailableForType}}
+      <a class="tab item" data-tab="identifySettings" {{action "onTabClick" "identifySettings" on="click"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.identify-settings-tab.caption"}}
+      </a>
+    {{/if}}
+    {{#if _searchIsAvailableForType}}
+      <a class="tab item" data-tab="searchSettings" {{action "onTabClick" "serachSettings" on="click"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.search-settings-tab.caption"}}
+      </a>
+    {{/if}}
   </div>
-  <div class="field">
-    <label>
-      {{nameTextboxCaption}}
-    </label>
-    {{flexberry-textbox
-      class="fluid"
-      value=_layer.name
-    }}
+  <div class="ui bottom attached active tab segment" data-tab="main">
+    {{#if _modesAreAvailable}}
+      <div class="field">
+        <label>
+          {{t "components.layers-dialogs.edit.mode-dropdown.caption"}}
+        </label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableModes
+          value=_selectedMode
+        }}
+      </div>
+    {{/if}}
+    {{#if _cswBasedLayerModeIsSelected}}
+      {{flexberry-csw
+        connections=cswConnections
+        leafletMap=leafletMap
+        dropdownMode=true
+        recordSelected=(action "onCswRecordSelected")
+      }}
+    {{/if}}
+    <div class="field">
+      <label>
+        {{typeDropdownCaption}}
+      </label>
+      {{flexberry-dropdown
+        class="fluid"
+        items=_availableTypes
+        value=_layer.type
+        readonly=_typeIsReadonly
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{nameTextboxCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_layer.name
+      }}
+    </div>
   </div>
-
-  {{#flexberry-toggler
-    class="styled"
-    caption=crsCaption
-  }}
+  <div class="ui bottom attached tab segment" data-tab="crs">
     <div class="field">
       <label>
         {{crsCaption}}
@@ -47,6 +88,15 @@
       }}
     </div>
     {{#if _showCoordinateReferenceSystemFields}}
+      <div class="field">
+        <label>
+          {{crsNameTextboxCaption}}
+        </label>
+        {{flexberry-textbox
+          class="fluid"
+          value=_layer.coordinateReferenceSystem.name
+        }}
+      </div>
       <div class="field">
         <label>
           {{crsCodeTextboxCaption}}
@@ -66,33 +116,22 @@
         }}
       </div>
     {{/if}}
-  {{/flexberry-toggler}}
-
-  {{#flexberry-toggler
-    class="styled"
-    caption=settingsSectionCaption
-  }}
-    {{#if _typeIsValid}}
+  </div>
+  {{#if _typeIsValid}}
+    <div class="ui bottom attached tab segment" data-tab="settings">
       {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings}}
-    {{/if}}
-  {{/flexberry-toggler}}
-
+    </div>
+  {{/if}}
   {{#if _identifyIsAvailableForType}}
-    {{#flexberry-toggler
-      class="styled"
-      caption=identifySettingsSectionCaption
-    }}
+    <div class="ui bottom attached tab segment" data-tab="identifySettings">
       {{flexberry-jsonarea value=_layer.settings.identifySettings}}
-    {{/flexberry-toggler}}
+    </div>
   {{/if}}
 
   {{#if _searchIsAvailableForType}}
-    {{#flexberry-toggler
-      class="styled"
-      caption=searchSettingsSectionCaption
-    }}
+    <div class="ui bottom attached tab segment" data-tab="searchSettings">
       {{flexberry-jsonarea value=_layer.settings.searchSettings}}
-    {{/flexberry-toggler}}
+    </div>
   {{/if}}
 </form>
 {{/flexberry-dialog}}

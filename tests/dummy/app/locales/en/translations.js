@@ -3,8 +3,10 @@ import EmberFlexberryTranslations from 'ember-flexberry/locales/en/translations'
 import EmberFlexberryGisTranslations from 'ember-flexberry-gis/locales/en/translations';
 
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
+import NewPlatformFlexberryGISCswConnectionLForm from './forms/new-platform-flexberry-g-i-s-csw-connection-l';
 import NewPlatformFlexberryGISMapLForm from './forms/new-platform-flexberry-g-i-s-map-l';
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
+import NewPlatformFlexberryGISCswConnectionEForm from './forms/new-platform-flexberry-g-i-s-csw-connection-e';
 import NewPlatformFlexberryGISMapEForm from './forms/new-platform-flexberry-g-i-s-map-e';
 
 const translations = {};
@@ -63,9 +65,17 @@ Ember.$.extend(true, translations, {
           'caption': 'Home',
           'title': ''
         },
-        'maps': {
-          'caption': 'Maps',
-          'title': ''
+        'gis': {
+          'caption': 'GIS',
+          'title': '',
+          'maps': {
+            'caption': 'Maps',
+            'title': ''
+          },
+          'csw-connections': {
+            'caption': 'CSW connections',
+            'title': ''
+          }
         },
         'components-examples': {
           'caption': 'Components examples',
@@ -151,8 +161,10 @@ Ember.$.extend(true, translations, {
     'integration-examples': {
     },
     'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
+    'new-platform-flexberry-g-i-s-csw-connection-l': NewPlatformFlexberryGISCswConnectionLForm,
     'new-platform-flexberry-g-i-s-map-l': NewPlatformFlexberryGISMapLForm,
     'new-platform-flexberry-g-i-s-layer-metadata-e': NewPlatformFlexberryGISLayerMetadataEForm,
+    'new-platform-flexberry-g-i-s-csw-connection-e': NewPlatformFlexberryGISCswConnectionEForm,
     'new-platform-flexberry-g-i-s-map-e': NewPlatformFlexberryGISMapEForm,
     'map': {
       'caption': 'Map'
