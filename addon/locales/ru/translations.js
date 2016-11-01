@@ -209,6 +209,15 @@ export default {
           'autocomplete-url-textbox': {
             'caption': 'Url для автокомплита'
           }
+        },
+
+        'geocoder-yandex': {
+          'url-textbox': {
+            'caption': 'Url'
+          },
+          'autocomplete-url-textbox': {
+            'caption': 'Url для автокомплита'
+          }
         }
       }
     },
