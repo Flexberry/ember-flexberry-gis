@@ -288,6 +288,15 @@ export default {
           'autocomplete-url-textbox': {
             'caption': 'Url для автокомплита'
           }
+        },
+
+        'geocoder-yandex': {
+          'url-textbox': {
+            'caption': 'Url'
+          },
+          'autocomplete-url-textbox': {
+            'caption': 'Url для автокомплита'
+          }
         }
       }
     },
@@ -405,6 +414,17 @@ export default {
           },
           'max-results-count-textbox': {
             'caption': 'Максимальное количество результатов'
+          }
+        },
+        'geocoder-yandex': {
+          'query-string-textbox': {
+            'caption': 'Строка запроса'
+          },
+          'max-results-count-textbox': {
+            'caption': 'Максимальное количество результатов'
+          },
+          'skip-results-count-textbox': {
+            'caption': 'Пропускаемое количество результатов'
           }
         },
         'wfs': {

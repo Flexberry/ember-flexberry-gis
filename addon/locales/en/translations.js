@@ -288,6 +288,15 @@ export default {
           'autocomplete-url-textbox': {
             'caption': 'Autocomplete Url'
           }
+        },
+
+        'geocoder-yandex': {
+          'url-textbox': {
+            'caption': 'Url'
+          },
+          'autocomplete-url-textbox': {
+            'caption': 'Autocomplete Url'
+          }
         }
       }
     },
@@ -405,6 +414,17 @@ export default {
           },
           'max-results-count-textbox': {
             'caption': 'Max results count'
+          }
+        },
+        'geocoder-yandex': {
+          'query-string-textbox': {
+            'caption': 'Query string'
+          },
+          'max-results-count-textbox': {
+            'caption': 'Max results count'
+          },
+          'skip-results-count-textbox': {
+            'caption': 'Skip results count'
           }
         },
         'wfs': {
