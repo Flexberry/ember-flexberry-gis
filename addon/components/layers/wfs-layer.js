@@ -75,10 +75,17 @@ export default BaseLayer.extend({
       };
 
       let onLayerLoad = (e) => {
-        let featureCollection = e.target.toGeoJSON();
-        this.injectLeafletLayersIntoGeoJSON(featureCollection);
+        let features = Ember.A();
 
-        let features = Ember.A(Ember.get(featureCollection, 'features') || []);
+        // Instead of injectLeafletLayersIntoGeoJSON to avoid duplicate repropjection,
+        // retrieve features from already projected layers & inject layers into retrieved features.
+        layer.eachLayer((layer) => {
+          let feature = layer.feature;
+          feature.leafletLayer = layer;
+
+          features.pushObject(feature);
+        });
+
         resolve(features);
 
         destroyLayer();
