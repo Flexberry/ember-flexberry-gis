@@ -31,7 +31,34 @@ export default GeocoderBaseLayer.extend({
     @returns {Object[]} Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
   */
   parseGeocodingResults(results) {
-    return Ember.A();
+    results = results || {};
+    let features = Ember.A(Ember.get(results, 'response.GeoObjectCollection.featureMember') || []).map((featureMember) => {
+      let geoObject = Ember.get(featureMember, 'GeoObject');
+      let geocoderMetadata = Ember.get(geoObject, 'metaDataProperty.GeocoderMetaData');
+      let addressDetails = Ember.get(geocoderMetadata, 'AddressDetails');
+      let pointCoordinates = (Ember.get(geoObject, 'Point.pos') || '').split(' ');
+
+      return {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: pointCoordinates,
+        },
+        properties: {
+          name: Ember.get(geoObject, 'name'),
+          description: Ember.get(geoObject, 'description'),
+          text: Ember.get(geocoderMetadata, 'text'),
+          address: Ember.get(addressDetails, 'Country.AddressLine'),
+          country: Ember.get(addressDetails, 'Country.CountryName'),
+          administrativeArea: Ember.get(addressDetails, 'Country.AdministrativeArea.AdministrativeAreaName'),
+          subAdministrativeArea: Ember.get(addressDetails, 'Country.AdministrativeArea.SubAdministrativeArea.SubAdministrativeAreaName'),
+          locality: Ember.get(addressDetails, 'Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName'),
+          premise: Ember.get(addressDetails, 'Country.AdministrativeArea.SubAdministrativeArea.Locality.Premise.PremiseName'),
+        }
+      };
+    });
+
+    return Ember.A(features);
   },
 
   /**

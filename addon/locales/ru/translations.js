@@ -416,6 +416,17 @@ export default {
             'caption': 'Максимальное количество результатов'
           }
         },
+        'geocoder-yandex': {
+          'query-string-textbox': {
+            'caption': 'Строка запроса'
+          },
+          'max-results-count-textbox': {
+            'caption': 'Максимальное количество результатов'
+          },
+          'skip-results-count-textbox': {
+            'caption': 'Пропускаемое количество результатов'
+          }
+        },
         'wfs': {
           'query-string-textbox': {
             'caption': 'Строка запроса'
