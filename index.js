@@ -46,7 +46,7 @@ module.exports = {
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
 
     // OSGeo ows.js library (implementing JS API for CSW services) & it's dependencies.
-    app.import(app.bowerDirectory + '/jsonix/dist/jsonix-all.js');
+    app.import(app.bowerDirectory + '/jsonix/dist/Jsonix-all.js');
     app.import('vendor/jsonix/jsonix.definitionFix.js');
     app.import(app.bowerDirectory + '/ogc-schemas/scripts/lib/OWS_1_0_0.js');
     app.import(app.bowerDirectory + '/ogc-schemas/scripts/lib/DC_1_1.js');
