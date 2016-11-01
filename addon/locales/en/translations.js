@@ -288,6 +288,15 @@ export default {
           'autocomplete-url-textbox': {
             'caption': 'Autocomplete Url'
           }
+        },
+
+        'geocoder-yandex': {
+          'url-textbox': {
+            'caption': 'Url'
+          },
+          'autocomplete-url-textbox': {
+            'caption': 'Autocomplete Url'
+          }
         }
       }
     },
