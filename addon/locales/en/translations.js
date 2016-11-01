@@ -416,6 +416,17 @@ export default {
             'caption': 'Max results count'
           }
         },
+        'geocoder-yandex': {
+          'query-string-textbox': {
+            'caption': 'Query string'
+          },
+          'max-results-count-textbox': {
+            'caption': 'Max results count'
+          },
+          'skip-results-count-textbox': {
+            'caption': 'Skip results count'
+          }
+        },
         'wfs': {
           'query-string-textbox': {
             'caption': 'Query string'
