@@ -32,6 +32,16 @@ const flexberryClassNames = {
 */
 let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend({
   /**
+    Flag: indicates whether modes are available.
+
+    @property _modesAreAvailable
+    @type Boolean
+    @default true
+    @private
+  */
+  _modesAreAvailable: true,
+
+  /**
     Flag: indicates whether layer type is in readonly mode.
 
     @property _typeIsReadonly
