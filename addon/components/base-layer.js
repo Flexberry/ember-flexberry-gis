@@ -291,7 +291,7 @@ export default Ember.Component.extend(
         return null;
       }
 
-      /*let crs = this.get('crs');
+      let crs = this.get('crs');
       Ember.set(options, 'coordsToLatLng', function (coords) {
         let point = new L.Point(coords[0], coords[1]);
         let latlng = crs.projection.unproject(point);
@@ -300,7 +300,7 @@ export default Ember.Component.extend(
         }
 
         return latlng;
-      });*/
+      });
 
       // Define callback method on each feature.
       let originalOnEachFeature = Ember.get(options, 'onEachFeature');
