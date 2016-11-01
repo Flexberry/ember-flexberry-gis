@@ -42,6 +42,13 @@ export default WmsLayerComponent.extend({
     }
   },
 
+  query(e) {
+    let innerWfsLayer = this.get('_wfsLayer');
+    if (!Ember.isNone(innerWfsLayer)) {
+      innerWfsLayer.query.apply(innerWfsLayer, arguments);
+    }
+  },
+
   /**
     Handles 'flexberry-map:search' event of leaflet map.
 

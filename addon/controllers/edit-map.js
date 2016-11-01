@@ -36,7 +36,7 @@ export default EditFormController.extend(
    */
   layerLinks: null,
 
-  queryParams: ['filter'],
+  queryParams: ['geofilter'],
 
   /**
     Query parameter, contains json serialized object with property names and values
@@ -44,7 +44,7 @@ export default EditFormController.extend(
     @type String
     @default null
    */
-  filter: null,
+  geofilter: null,
 
   /**
     Deserialized valued of filter property
@@ -52,8 +52,8 @@ export default EditFormController.extend(
     @type object
     @computed
    */
-  queryFilter: Ember.computed('filter', function () {
-    let filter = this.get('filter');
+  queryFilter: Ember.computed('geofilter', function () {
+    let filter = this.get('geofilter');
     if (!Ember.isNone(filter)) {
       try {
         return JSON.parse(filter);

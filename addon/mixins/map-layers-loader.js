@@ -3,8 +3,7 @@
 */
 
 import Ember from 'ember';
-import QueryBuilder from 'ember-flexberry-data/query/builder';
-import FilterOperator from 'ember-flexberry-data/query/filter-operator';
+import { Query } from 'ember-flexberry-data';
 
 /**
   Mixin containing logic that loads map layers hierarchy.
@@ -40,6 +39,22 @@ export default Ember.Mixin.create({
           .catch(reason => reject(reason));
       } else {
         resolve(layer);
+
+        // load LayerLinks
+        let layerLinkModelName = 'new-platform-flexberry-g-i-s-layer-link';
+        let layerLinkProjection = 'LayerLinkI';
+
+        let query =
+          new Query.Builder(this.store)
+            .from(layerLinkModelName)
+            .selectByProjection(layerLinkProjection)
+            .where('layer', Query.FilterOperator.Eq, layer.get('id'));
+
+        return this.store
+          .query(layerLinkModelName, query.build())
+          .then(layerLinks => {
+            layer.set('layerLinks', layerLinks);
+          });
       }
     });
   },
@@ -57,10 +72,10 @@ export default Ember.Mixin.create({
     let layerModelName = this.get('layerModelName');
 
     let query =
-      new QueryBuilder(this.store)
+      new Query.Builder(this.store)
         .from(layerModelName)
         .selectByProjection('MapLayerE')
-        .where('parent', FilterOperator.Eq, layer.id);
+        .where('parent', Query.FilterOperator.Eq, layer.id);
 
     return this.store
       .query(layerModelName, query.build())

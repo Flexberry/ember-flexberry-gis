@@ -314,6 +314,12 @@ export default RectangleMapTool.extend({
       return $table;
     };
 
+    let createWrapper = function(element) {
+      let wrapper = Ember.$('<div>');
+      wrapper.append(element);
+      return wrapper;
+    };
+
     let showFeaturesOnMap = function({ features }) {
       if (!Ember.isArray(features) && Ember.get(features, 'length') === 0) {
         return;
@@ -471,7 +477,7 @@ export default RectangleMapTool.extend({
         }
 
         let featureCaption = getFeatureCaption(feature);
-        let $featureMetadataTable = createTable(Ember.get(feature, 'properties'), excludedProperties, localizedProperties);
+        let $featureMetadataTable = createWrapper(createTable(Ember.get(feature, 'properties'), excludedProperties, localizedProperties));
         let $featureListItem = createListItem({
           icon: featureIcon,
           caption: featureCaption
