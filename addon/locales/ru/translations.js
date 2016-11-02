@@ -275,6 +275,12 @@ export default {
           }
         },
 
+        'tile-yandex': {
+          'map-type-dropdown': {
+            'caption': 'Тип карты'
+          }
+        },
+
         'geocoder-osm-overpass': {
           'url-textbox': {
             'caption': 'Url'
