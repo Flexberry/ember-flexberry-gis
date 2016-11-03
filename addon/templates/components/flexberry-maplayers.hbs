@@ -4,6 +4,10 @@
 --}}
 {{yield}}
 
+{{#yield-slot "above-tree" (block-params this)}}
+  {{yield}}
+{{/yield-slot}}
+
 {{#flexberry-tree
   _isRoot=_isRoot
   _hasHeader=_hasHeader
@@ -25,22 +29,7 @@
       <div style="clear: both;"></div>
     {{/if}}
 
-    {{!--
-      Semantic UI modal dialogs takes long time to be initialized
-      so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
-    --}}
-    {{#if _addDialogHasBeenRequested}}
-      {{component "layers-dialogs/add"
-        class=flexberryClassNames.addDialog
-        visible=_addDialogIsVisible
-        layer=null
-        cswConnections=cswConnections
-        leafletMap=leafletMap
-        approve=(action "onAddDialogApprove")
-      }}
-    {{/if}}
-
-    {{#yield-slot "header"}}
+    {{#yield-slot "header" (block-params this)}}
       {{yield}}
     {{/yield-slot}}
   {{/block-slot}}
@@ -63,14 +52,33 @@
         }}
       {{/if}}
     {{/each}}
-    {{#yield-slot "content"}}
+    {{#yield-slot "content" (block-params this)}}
       {{yield}}
     {{/yield-slot}}
   {{/block-slot}}
 
   {{#block-slot "footer"}}
-    {{#yield-slot "footer"}}
+    {{#yield-slot "footer" (block-params this)}}
       {{yield}}
     {{/yield-slot}}
   {{/block-slot}}
 {{/flexberry-tree}}
+
+{{#yield-slot "under-tree" (block-params this)}}
+  {{yield}}
+{{/yield-slot}}
+
+{{!--
+  Semantic UI modal dialogs takes long time to be initialized
+  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+--}}
+{{#if _addDialogHasBeenRequested}}
+  {{component "layers-dialogs/add"
+    class=flexberryClassNames.addDialog
+    visible=_addDialogIsVisible
+    layer=null
+    cswConnections=cswConnections
+    leafletMap=leafletMap
+    approve=(action "onAddDialogApprove")
+  }}
+{{/if}}

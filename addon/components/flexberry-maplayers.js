@@ -168,9 +168,9 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasHeader: Ember.computed('_slots.[]', '_isRoot', 'readonly', function() {
+    _hasHeader: Ember.computed('_slots.[]', '_isRoot', 'readonly', 'showHeader', function() {
       // Yielded {{block-slot "header"}} is defined and current tree is root.
-      return (this._isRegistered('header') || !this.get('readonly')) && this.get('_isRoot');
+      return (this._isRegistered('header') || !this.get('readonly')) && this.get('_isRoot') && this.get('showHeader');
     }),
 
     /**
@@ -185,6 +185,20 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     _hasContent: Ember.computed('_slots.[]', '_hasLayers', function() {
       // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
       return this._isRegistered('content') || this.get('_hasLayers');
+    }),
+
+    /**
+      Flag: indicates whether some nested content for footer is defined
+      (some yield markup for 'footer').
+
+      @property _hasFooter
+      @type boolean
+      @readOnly
+      @private
+    */
+    _hasFooter: Ember.computed('_slots.[]', '_isRoot', 'showFooter', function() {
+      // Yielded {{block-slot "header"}} is defined and current tree is root.
+      return this._isRegistered('footer') && this.get('_isRoot') && this.get('showFooter');
     }),
 
     /**
@@ -329,6 +343,24 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       @default false
     */
     readonly: false,
+
+    /**
+      Flag: indicates whether "header" block-slot can be shown or not.
+
+      @property showHeader
+      @type Boolean
+      @default true
+    */
+    showHeader: true,
+
+    /**
+      Flag: indicates whether "footer" block-slot can be shown or not.
+
+      @property showFooter
+      @type Boolean
+      @default true
+    */
+    showFooter: true,
 
     actions: {
       /**
