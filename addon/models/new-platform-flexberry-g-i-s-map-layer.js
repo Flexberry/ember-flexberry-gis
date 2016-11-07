@@ -26,7 +26,7 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
         return JSON.parse(stringToDeserialize);
       }
       catch (e) {
-        console.log('Error on read layer properties on layer '+ this.get('name'), e);
+        console.log('Error on read layer properties on layer ' + this.get('name'), e);
         throw e;
       }
     }
