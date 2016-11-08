@@ -54,7 +54,8 @@ export default BaseLayer.extend({
   /**
     Performs 'getFeature' request to WFS-service related to layer.
 
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of identification area.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} boundingBox
+    Bounds of identification area.
   */
   _getFeature(boundingBox) {
     return new Ember.RSVP.Promise((resolve, reject) => {
@@ -98,7 +99,7 @@ export default BaseLayer.extend({
       };
 
       layer = this.createLayer({
-        filter: new L.Filter.BBox().append(boundingBox, geometryField, crs),
+        filter: new L.Filter.Intersects().append(L.rectangle(boundingBox), geometryField, crs),
         geometryField: geometryField,
         showExisting: true
       })
