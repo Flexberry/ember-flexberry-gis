@@ -33,7 +33,7 @@ export default BaseLayer.extend({
     @property featuresReadFormat
     @type {Object}
   */
-  featuresReadFormat: Ember.computed('format', 'options.crs', 'options.geometryField', function() {
+  featuresReadFormat: Ember.computed('format', 'options.crs', 'options.geometryField', function () {
     let format = this.get('format');
     let availableFormats = Ember.A(Object.keys(L.Format) || []).filter((format) => {
       format = format.toLowerCase();
@@ -103,8 +103,8 @@ export default BaseLayer.extend({
         geometryField: geometryField,
         showExisting: true
       })
-      .once('load', onLayerLoad)
-      .once('error', onLayerError);
+        .once('load', onLayerLoad)
+        .once('error', onLayerError);
     });
   },
 
@@ -159,5 +159,56 @@ export default BaseLayer.extend({
     e.results.features = new Ember.RSVP.Promise((resolve, reject) => {
       resolve(Ember.A());
     });
+  },
+
+  /**
+    Handles 'flexberry-map:query' event of leaflet map.
+
+    @method _query
+    @param {Object} e Event object.
+    @param {Object} layerLinks Array contains layer links model, use for filter searched layers
+    @param {Object} queryFilter Object with query filter paramteres
+    @param {Object[]} results.features Array containing leaflet layers objects
+    or a promise returning such array.
+  */
+  query(e) {
+    e.results.push(new Ember.RSVP.Promise((resolve, reject) => {
+      let layer = null;
+      let destroyLayer = () => {
+        if (Ember.isNone(layer)) {
+          return;
+        }
+
+        layer.off('load', onLayerLoad);
+        layer.off('error', onLayerError);
+        layer = null;
+      };
+
+      let onLayerLoad = (e) => {
+        resolve(e.target);
+
+        destroyLayer();
+      };
+
+      let onLayerError = (e) => {
+        reject(e.error || e);
+
+        destroyLayer();
+      };
+
+      let filter = new L.Filter.EQ();
+
+      for (var property in e.queryFilter) {
+        if (e.queryFilter.hasOwnProperty(property)) {
+          filter.append(property, e.queryFilter[property]);
+        }
+      }
+
+      layer = this.createLayer({
+        filter,
+        showExisting: true
+      }).once('load', onLayerLoad)
+        .once('error', onLayerError);
+    }));
   }
 });

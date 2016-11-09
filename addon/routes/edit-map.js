@@ -15,6 +15,29 @@ import { Query } from 'ember-flexberry-data';
   @uses MapLayersLoaderMixin
 */
 export default EditFormRoute.extend(MapLayersLoaderMixin, {
+  queryParams: {
+    setting: {
+      refreshModel: false,
+      replace: false,
+      as: 'setting'
+    },
+    geofilter: {
+      refreshModel: false,
+      replace: false,
+      as: 'geofilter'
+    }
+  },
+
+  /**
+    Name of model to be used for load LayerLinks by setting query parameters
+   */
+  layerLinkModelName: 'new-platform-flexberry-g-i-s-layer-link',
+
+  /**
+    Name of model projection to be used for load LayerLinks by setting query parameters
+   */
+  layerLinkProjection: 'LayerLinkD',
+
   /**
     Name of model projection to be used as record's properties limitation.
 
@@ -91,22 +114,28 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
   model(params) {
     let mapPromise = this.loadMapLayers(this._super(...arguments));
 
-    return this.loadCswConnections().then(() => {
-      return mapPromise;
-    });
+    let layerLinkModelName = this.get('layerLinkModelName');
+    let query =
+      new Query.Builder(this.store)
+        .from(layerLinkModelName)
+        .selectByProjection(this.get('layerLinkProjection'))
+        .where('mapObjectSetting', Query.FilterOperator.Eq, params.setting || null);
+
+    return this.store
+      .query(layerLinkModelName, query.build())
+      .then(layerLinks => {
+        this.set('layerLinks', layerLinks);
+      }).then(() => {
+        this.loadCswConnections();
+      })
+      .then(() => {
+        return this.loadMapLayers(mapPromise);
+      });
   },
 
-  /**
-    Setups controller for the current route.
-    [More info](http://emberjs.com/api/classes/Ember.Route.html#method_setupController).
-
-    @method setupController
-    @param {Ember.Controller} controller
-    @param {Object} model
-  */
-  setupController(controller, model) {
+  setupController(controller) {
     this._super(...arguments);
-
+    controller.set('layerLinks', this.get('layerLinks'));
     controller.set('cswConnections', this.get('cswConnections'));
   }
 });

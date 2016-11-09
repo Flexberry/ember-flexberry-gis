@@ -445,6 +445,10 @@ export default {
       'placeholder': 'Вершины дерева не заданы'
     },
 
+    'flexberry-map': {
+      'queryText': 'Поиск объектов'
+    },
+
     'flexberry-maplayers': {
       'placeholder': 'Слои не заданы'
     },

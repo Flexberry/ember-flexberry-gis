@@ -28,6 +28,44 @@ export default EditFormController.extend(
   leafletMap: null,
 
   /**
+    Layer links object thats use for query data on map load
+
+    @property layerLinks
+    @type Ember.Array
+    @default null
+   */
+  layerLinks: null,
+
+  queryParams: ['geofilter'],
+
+  /**
+    Query parameter, contains json serialized object with property names and values
+    @property filter
+    @type String
+    @default null
+   */
+  geofilter: null,
+
+  /**
+    Deserialized valued of filter property
+    @property queryFilter
+    @type object
+    @computed
+   */
+  queryFilter: Ember.computed('geofilter', function () {
+    let filter = this.get('geofilter');
+    if (!Ember.isNone(filter)) {
+      try {
+        return JSON.parse(filter);
+      } catch (e) {
+        console.log('Wrong JSON query filter string: ' + filter);
+      }
+    }
+
+    return {};
+  }),
+
+  /**
     Creates new layer as specified layer's child
     (overridden method from {{#crossLink "FlexberryMaplayerActionsHandlerMixin:createLayer:method"}}
     FlexberryMaplayerActionsHandlerMixin

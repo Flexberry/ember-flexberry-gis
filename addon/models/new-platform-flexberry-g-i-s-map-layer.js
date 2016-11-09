@@ -22,7 +22,13 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
   settingsAsObject: Ember.computed('settings', function () {
     let stringToDeserialize = this.get('settings');
     if (!Ember.isBlank(stringToDeserialize)) {
-      return JSON.parse(stringToDeserialize);
+      try {
+        return JSON.parse(stringToDeserialize);
+      }
+      catch (e) {
+        console.log('Error on read layer properties on layer ' + this.get('name'), e);
+        throw e;
+      }
     }
 
     return {};

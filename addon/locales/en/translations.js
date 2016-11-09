@@ -445,6 +445,10 @@ export default {
       'placeholder': 'Tree nodes are not defined'
     },
 
+    'flexberry-map': {
+      'queryText': 'Search objects'
+    },
+
     'flexberry-maplayers': {
       'placeholder': 'Layers are not defined'
     },
