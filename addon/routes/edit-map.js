@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
 import MapLayersLoaderMixin from '../mixins/map-layers-loader';
 import { Query } from 'ember-flexberry-data';
@@ -29,32 +30,31 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
   },
 
   /**
-    Name of model to be used for load LayerLinks by setting query parameters
-   */
+    Name of model to be used as layer link defined by query parameters.
+
+    @property layerLinkModelName
+    @type String
+    @default 'new-platform-flexberry-g-i-s-layer-link'
+  */
   layerLinkModelName: 'new-platform-flexberry-g-i-s-layer-link',
 
   /**
-    Name of model projection to be used for load LayerLinks by setting query parameters
-   */
+    Name of model projection to be used with layer link defined by query parameters.
+
+    @property layerLinkProjection
+    @type String
+    @default 'LayerLinkD'
+  */
   layerLinkProjection: 'LayerLinkD',
 
   /**
-    Name of model projection to be used as record's properties limitation.
+    Loaded layer links.
 
-    @property modelProjection
-    @type String
-    @default 'MapE'
+    @property layerLinks
+    @type Object[]
+    @default null
   */
-  modelProjection: 'MapE',
-
-  /**
-    Name of model to be used as form's record type.
-
-    @property modelName
-    @type String
-    @default 'new-platform-flexberry-g-i-s-map'
-  */
-  modelName: 'new-platform-flexberry-g-i-s-map',
+  layerLinks: null,
 
   /**
     Name of CSW connection model projection to be used as record's properties limitation.
@@ -84,13 +84,62 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
   cswConnections: null,
 
   /**
+    Name of model projection to be used as record's properties limitation.
+
+    @property modelProjection
+    @type String
+    @default 'MapE'
+  */
+  modelProjection: 'MapE',
+
+  /**
+    Name of model to be used as form's record type.
+
+    @property modelName
+    @type String
+    @default 'new-platform-flexberry-g-i-s-map'
+  */
+  modelName: 'new-platform-flexberry-g-i-s-map',
+
+  /**
+    Loads layer links defined in query params.
+
+    @method loadLayerLinks
+    @param {Object} params Query parameters.
+    @return {<a href="http://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>}
+    Promise which will return available layer links after it will be resolved.
+  */
+  loadLayerLinks(params) {
+    params = params || {};
+
+    // Don't send request if layer links are not defined in query params.
+    if (Ember.isBlank(params.setting)) {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        resolve(null);
+      });
+    }
+
+    let store = this.get('store');
+    let modelName = this.get('layerLinkModelName');
+    let query = new Query.Builder(store)
+      .from(modelName)
+      .selectByProjection(this.get('layerLinkProjection'))
+      .where('mapObjectSetting', Query.FilterOperator.Eq, params.setting);
+
+    return store.query(modelName, query.build()).then(layerLinks => {
+      this.set('layerLinks', layerLinks.toArray());
+    });
+  },
+
+  /**
     Loads available CSW connections.
 
     @method loadCswConnections
+    @param {Object} params Query parameters.
     @return {<a href="http://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>}
     Promise which will return available CSW connections after it will be resolved.
   */
-  loadCswConnections() {
+  loadCswConnections(params) {
     let store = this.get('store');
     let modelName = this.get('cswConnectionModelName');
     let query = new Query.Builder(store)
@@ -114,27 +163,24 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
   model(params) {
     let mapPromise = this.loadMapLayers(this._super(...arguments));
 
-    let layerLinkModelName = this.get('layerLinkModelName');
-    let query =
-      new Query.Builder(this.store)
-        .from(layerLinkModelName)
-        .selectByProjection(this.get('layerLinkProjection'))
-        .where('mapObjectSetting', Query.FilterOperator.Eq, params.setting || null);
-
-    return this.store
-      .query(layerLinkModelName, query.build())
-      .then(layerLinks => {
-        this.set('layerLinks', layerLinks);
-      }).then(() => {
-        this.loadCswConnections();
-      })
-      .then(() => {
-        return this.loadMapLayers(mapPromise);
-      });
+    return this.loadLayerLinks(params).then(() => {
+      this.loadCswConnections(params);
+    }).then(() => {
+      return this.loadMapLayers(mapPromise);
+    });
   },
 
-  setupController(controller) {
+  /**
+    Setups controller for the current route.
+    [More info](http://emberjs.com/api/classes/Ember.Route.html#method_setupController).
+
+    @method setupController
+    @param {Ember.Controller} controller
+    @param {Object} model
+  */
+  setupController(controller, model) {
     this._super(...arguments);
+
     controller.set('layerLinks', this.get('layerLinks'));
     controller.set('cswConnections', this.get('cswConnections'));
   }
