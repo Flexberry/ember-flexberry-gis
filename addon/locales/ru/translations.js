@@ -275,12 +275,6 @@ export default {
           }
         },
 
-        'tile-yandex': {
-          'map-type-dropdown': {
-            'caption': 'Тип карты'
-          }
-        },
-
         'geocoder-osm-overpass': {
           'url-textbox': {
             'caption': 'Url'
@@ -288,15 +282,6 @@ export default {
         },
 
         'geocoder-osm-ru': {
-          'url-textbox': {
-            'caption': 'Url'
-          },
-          'autocomplete-url-textbox': {
-            'caption': 'Url для автокомплита'
-          }
-        },
-
-        'geocoder-yandex': {
           'url-textbox': {
             'caption': 'Url'
           },
@@ -420,17 +405,6 @@ export default {
           },
           'max-results-count-textbox': {
             'caption': 'Максимальное количество результатов'
-          }
-        },
-        'geocoder-yandex': {
-          'query-string-textbox': {
-            'caption': 'Строка запроса'
-          },
-          'max-results-count-textbox': {
-            'caption': 'Максимальное количество результатов'
-          },
-          'skip-results-count-textbox': {
-            'caption': 'Пропускаемое количество результатов'
           }
         },
         'wfs': {

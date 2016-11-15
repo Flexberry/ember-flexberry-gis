@@ -275,12 +275,6 @@ export default {
           }
         },
 
-        'tile-yandex': {
-          'map-type-dropdown': {
-            'caption': 'Map type'
-          }
-        },
-
         'geocoder-osm-overpass': {
           'url-textbox': {
             'caption': 'Url'
@@ -288,15 +282,6 @@ export default {
         },
 
         'geocoder-osm-ru': {
-          'url-textbox': {
-            'caption': 'Url'
-          },
-          'autocomplete-url-textbox': {
-            'caption': 'Autocomplete Url'
-          }
-        },
-
-        'geocoder-yandex': {
           'url-textbox': {
             'caption': 'Url'
           },
@@ -420,17 +405,6 @@ export default {
           },
           'max-results-count-textbox': {
             'caption': 'Max results count'
-          }
-        },
-        'geocoder-yandex': {
-          'query-string-textbox': {
-            'caption': 'Query string'
-          },
-          'max-results-count-textbox': {
-            'caption': 'Max results count'
-          },
-          'skip-results-count-textbox': {
-            'caption': 'Skip results count'
           }
         },
         'wfs': {

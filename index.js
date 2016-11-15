@@ -42,10 +42,6 @@ module.exports = {
     // Leaflet-WFST.
     app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
 
-    // Leaflet-Yandex.
-    app.import('vendor/yandex/yandex.maps.api.js');
-    app.import(app.bowerDirectory + '/leaflet-plugins/layer/tile/Yandex.js');
-
     // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
 
