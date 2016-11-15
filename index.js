@@ -11,9 +11,13 @@ module.exports = {
     app.import('vendor/jquery/jquery.hasClass.extensions.js');
 
     // Import Leaflet library & it's resources.
+    // Leaflet must be prepended (imported with prepend: true option),
+    // because ember-addons depending on ember-flexberry-gis
+    // (for example ember-flexberry-gis-yandex see https://github.com/Flexberry/ember-flexberry-gis-yandex),
+    // will append their vendor dependencies earlier in the vendor.js file, but some of them needs leaflet to be already imported.
     var appImagesDirectory = '/assets/images';
-    app.import(app.bowerDirectory + '/leaflet/dist/leaflet-src.js');
-    app.import(app.bowerDirectory + '/leaflet/dist/leaflet.css');
+    app.import(app.bowerDirectory + '/leaflet/dist/leaflet-src.js', { type: 'vendor', prepend: true });
+    app.import(app.bowerDirectory + '/leaflet/dist/leaflet.css', { type: 'vendor', prepend: true });
     app.import(app.bowerDirectory + '/leaflet/dist/images/layers-2x.png', { destDir: appImagesDirectory });
     app.import(app.bowerDirectory + '/leaflet/dist/images/layers.png', { destDir: appImagesDirectory });
     app.import(app.bowerDirectory + '/leaflet/dist/images/marker-icon-2x.png', { destDir: appImagesDirectory });
