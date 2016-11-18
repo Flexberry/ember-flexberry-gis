@@ -53,6 +53,7 @@ export default Ember.Component.extend({
 
     // Initialize available info formats.
     this.set('_availableInfoFormats', Ember.A([
+      'application/geojson',
       'application/json',
       'application/vnd.ogc.gml',
       'application/vnd.ogc.gml/3.1.1',

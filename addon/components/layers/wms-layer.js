@@ -58,10 +58,19 @@ export default TileLayer.extend({
 
     let requestUrl = layer._url + L.Util.getParamString(params, layer._url, true);
     return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.$.ajax({
-        url: requestUrl
-      }).done((featureCollection, textStatus, jqXHR) => {
-        featureCollection = featureCollection || {};
+      Ember.$.ajax(requestUrl, { dataType: 'text' }).done((data, textStatus, jqXHR) => {
+        let supportedInfoFormats = ['application/geojson', 'application/json'];
+        if (supportedInfoFormats.indexOf(layer.wmsParams.info_format) < 0) {
+          reject(new Error('Format \'' + layer.wmsParams.info_format + '\' isn\'t supported'));
+        }
+
+        let featureCollection = {};
+        try {
+          featureCollection = JSON.parse(jqXHR.responseText);
+        } catch (parseError) {
+          reject(parseError);
+        }
+
         this.injectLeafletLayersIntoGeoJSON(featureCollection);
 
         let features = Ember.A(Ember.get(featureCollection, 'features') || []);
