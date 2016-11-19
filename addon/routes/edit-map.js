@@ -180,8 +180,26 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
   */
   setupController(controller, model) {
     this._super(...arguments);
+    let layers = model.get('rootLayer.layers');
+    if (layers) {
+      model.set('rootLayer.layers', this.sortLayersByIndex(layers));
+    }
 
     controller.set('layerLinks', this.get('layerLinks'));
     controller.set('cswConnections', this.get('cswConnections'));
+  },
+
+  sortLayersByIndex(layers) {
+    let result = layers;
+    if (result) {
+      result = result.sortBy('index');
+      result.forEach((item) => {
+        if (item.get('type') === 'group') {
+          item.set('layers', this.sortLayersByIndex(item.get('layers')));
+        }
+      }, this);
+    }
+
+    return result;
   }
 });
