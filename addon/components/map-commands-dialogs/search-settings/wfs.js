@@ -8,10 +8,20 @@ import layout from '../../../templates/components/map-commands-dialogs/search-se
 /**
   Search settings part of WFS layer modal dialog.
 
-  @class GeocoderOsmRuSearchSettingsComponent
+  @class WFSSearchSettingsComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 export default Ember.Component.extend({
+  actions: {
+    onChange(selectedText) {
+      let searchProperties = this.get('searchProperties');
+      for (var property in searchProperties) {
+        if (searchProperties[property] === selectedText) {
+          this.set('settings.propertyName', property);
+        }
+      }
+    }
+  },
 
   /**
     Reference to component's template.
@@ -62,5 +72,7 @@ export default Ember.Component.extend({
     @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
     @default null
   */
-  leafletMap: null
+  leafletMap: null,
+
+  searchProperties: null
 });

@@ -57,12 +57,8 @@ export default BaseLayer.extend({
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} boundingBox
     Bounds of identification area.
   */
-  _getFeature(boundingBox) {
+  _getFeature(filter) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let options = this.get('options');
-      let crs = Ember.get(options, 'crs');
-      let geometryField = Ember.get(options, 'geometryField');
-
       let layer = null;
       let destroyLayer = () => {
         if (Ember.isNone(layer)) {
@@ -99,8 +95,7 @@ export default BaseLayer.extend({
       };
 
       layer = this.createLayer({
-        filter: new L.Filter.Intersects().append(L.rectangle(boundingBox), geometryField, crs),
-        geometryField: geometryField,
+        filter,
         showExisting: true
       })
         .once('load', onLayerLoad)
@@ -135,7 +130,10 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let featuresPromise = this._getFeature(e.boundingBox);
+
+    let filter = new L.Filter.Intersects().append(L.rectangle(e.boundingBox), this.get('geometryField'), this.get('crs'));
+
+    let featuresPromise = this._getFeature(filter);
     e.results.push({
       layer: this.get('layer'),
       features: featuresPromise
@@ -156,9 +154,8 @@ export default BaseLayer.extend({
   */
   search(e) {
     // TODO: implement search logic.
-    e.results.features = new Ember.RSVP.Promise((resolve, reject) => {
-      resolve(Ember.A());
-    });
+    let filter = new L.Filter.Like().append(e.searchOptions.propertyName, '*' + e.searchOptions.queryString + '*');
+    e.results.features = this._getFeature(filter);
   },
 
   /**
