@@ -76,8 +76,7 @@ export default BaseLayer.extend({
 
         if (single) {
           resolve(e.target);
-        }
-        else {
+        } else {
           let features = Ember.A();
 
           // Instead of injectLeafletLayersIntoGeoJSON to avoid duplicate repropjection,
