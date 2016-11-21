@@ -206,6 +206,8 @@ export default Ember.Mixin.create({
       }
 
       childLayers.pushObject(childLayer);
+
+      this.updateIndexes(childLayer);
     },
 
     /**
@@ -364,5 +366,85 @@ export default Ember.Mixin.create({
 
     Ember.set(layer, 'isDeleted', true);
     return layer;
+  },
+
+  /**
+    Sets indexes for layers hierarchy.
+
+    @method setIndexes
+    @param {Array} layers Array of layers to set indexes.
+    @param {Int} index First index.
+    @returns {Int} Last index.
+  */
+  setIndexes(layers, index) {
+    if (layers) {
+      layers.forEach((layer) => {
+        layer.set('index', index);
+        index++;
+        if (layer.get('type') === 'group') {
+          index = this.setIndexes(layer.get('layers'), index);
+        }
+      }, this);
+    }
+
+    return index;
+  },
+
+  /**
+    Finds maximum index of a layer and his child layers.
+
+    @method findLastIndex
+    @param {Object} layer Layer to find index for.
+    @returns {Int} Maximum index.
+  */
+  findLastIndex(layer) {
+    let layers = layer.get('layers');
+    if (layer.get('type') === 'group' && layers && layers.length > 0) {
+      return this.findLastIndex(layers.objectAt(layers.length - 1));
+    } else {
+      return layer.get('index');
+    }
+  },
+
+  /**
+    Updates indexes for layer and layers next in hierarchy.
+
+    @method updateIndexes
+    @param {Object} layer First layer to update.
+    @param {Int} ind First index.
+    @returns {Int} Last index.
+  */
+  updateIndexes(layer, ind) {
+    let index = ind;
+    let parent = layer.get('parent');
+    let layers = parent ? parent.get('layers') : undefined;
+    let changedLayers = Ember.A();
+    for (let i = layers.indexOf(layer) + 1; i < layers.length; i++) {
+      changedLayers.push(layers.objectAt(i));
+    }
+
+    // If it's new layer without index, then set index for it.
+    if (Ember.isNone(layer.get('index'))) {
+      let position = layers.indexOf(layer);
+      if (position === 0) {
+        if (Ember.isNone(parent.get('parent'))) {
+          index =  1;
+        } else {
+          index =  parent.get('index') + 1;
+        }
+      } else {
+        index =  this.findLastIndex(layers.objectAt(position - 1)) + 1;
+      }
+
+      layer.set('index', index);
+      index++;
+    }
+
+    index = this.setIndexes(changedLayers, index);
+    if (parent.get('parent')) {
+      return this.updateIndexes(parent, index);
+    } else {
+      return index;
+    }
   }
 });
