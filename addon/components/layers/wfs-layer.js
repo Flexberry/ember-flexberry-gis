@@ -54,40 +54,41 @@ export default BaseLayer.extend({
   /**
     Performs 'getFeature' request to WFS-service related to layer.
 
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} boundingBox
-    Bounds of identification area.
+    @param {<a href="https://github.com/Flexberry/Leaflet-WFST#initialization-options">L.WFS initialization options</a>} options
+    Options of WFS plugin layer
+    @param bool single
+    Result should be single layer
   */
-  _getFeature(boundingBox) {
+  _getFeature(options, single=false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let options = this.get('options');
-      let crs = Ember.get(options, 'crs');
-      let geometryField = Ember.get(options, 'geometryField');
-
       let layer = null;
       let destroyLayer = () => {
         if (Ember.isNone(layer)) {
           return;
         }
 
-        layer.clearLayers();
         layer.off('load', onLayerLoad);
         layer.off('error', onLayerError);
         layer = null;
       };
 
       let onLayerLoad = (e) => {
-        let features = Ember.A();
 
-        // Instead of injectLeafletLayersIntoGeoJSON to avoid duplicate repropjection,
-        // retrieve features from already projected layers & inject layers into retrieved features.
-        layer.eachLayer((layer) => {
-          let feature = layer.feature;
-          feature.leafletLayer = layer;
+        if (single) {
+          resolve(e.target);
+        } else {
+          let features = Ember.A();
 
-          features.pushObject(feature);
-        });
+          // Instead of injectLeafletLayersIntoGeoJSON to avoid duplicate repropjection,
+          // retrieve features from already projected layers & inject layers into retrieved features.
+          e.target.eachLayer((layer) => {
+            let feature = layer.feature;
+            feature.leafletLayer = layer;
+            features.pushObject(feature);
+          });
 
-        resolve(features);
+          resolve(features);
+        }
 
         destroyLayer();
       };
@@ -98,11 +99,9 @@ export default BaseLayer.extend({
         destroyLayer();
       };
 
-      layer = this.createLayer({
-        filter: new L.Filter.Intersects().append(L.rectangle(boundingBox), geometryField, crs),
-        geometryField: geometryField,
-        showExisting: true
-      })
+      options = Ember.$.extend(options || {}, { showExisting: true });
+
+      layer = this.createLayer(options)
         .once('load', onLayerLoad)
         .once('error', onLayerError);
     });
@@ -135,7 +134,10 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let featuresPromise = this._getFeature(e.boundingBox);
+
+    let filter = new L.Filter.Intersects().append(L.rectangle(e.boundingBox), this.get('geometryField'), this.get('crs'));
+
+    let featuresPromise = this._getFeature({ filter });
     e.results.push({
       layer: this.get('layer'),
       features: featuresPromise
@@ -155,10 +157,8 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    // TODO: implement search logic.
-    e.results.features = new Ember.RSVP.Promise((resolve, reject) => {
-      resolve(Ember.A());
-    });
+    let filter = new L.Filter.Like().append(e.searchOptions.propertyName, '*' + e.searchOptions.queryString + '*');
+    e.results.features = this._getFeature({ filter, maxFeatures: e.searchOptions.maxResultsCount });
   },
 
   /**
@@ -172,43 +172,15 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   query(e) {
-    e.results.push(new Ember.RSVP.Promise((resolve, reject) => {
-      let layer = null;
-      let destroyLayer = () => {
-        if (Ember.isNone(layer)) {
-          return;
-        }
 
-        layer.off('load', onLayerLoad);
-        layer.off('error', onLayerError);
-        layer = null;
-      };
+    let filter = new L.Filter.EQ();
 
-      let onLayerLoad = (e) => {
-        resolve(e.target);
-
-        destroyLayer();
-      };
-
-      let onLayerError = (e) => {
-        reject(e.error || e);
-
-        destroyLayer();
-      };
-
-      let filter = new L.Filter.EQ();
-
-      for (var property in e.queryFilter) {
-        if (e.queryFilter.hasOwnProperty(property)) {
-          filter.append(property, e.queryFilter[property]);
-        }
+    for (var property in e.queryFilter) {
+      if (e.queryFilter.hasOwnProperty(property)) {
+        filter.append(property, e.queryFilter[property]);
       }
+    }
 
-      layer = this.createLayer({
-        filter,
-        showExisting: true
-      }).once('load', onLayerLoad)
-        .once('error', onLayerError);
-    }));
+    e.results.push(this._getFeature({ filter }, true));
   }
 });

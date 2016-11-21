@@ -1,9 +1,29 @@
 <div class="field">
   <label>
+    {{t "components.map-commands-dialogs.search-settings.wfs.search-properties.caption"}}
+  </label>
+  {{flexberry-dropdown
+    class="fluid"
+    items=searchProperties
+    onChange=(action "onChange")
+    value=settings.localizedValue
+  }}
+</div>
+<div class="field">
+  <label>
     {{t "components.map-commands-dialogs.search-settings.wfs.query-string-textbox.caption"}}
   </label>
   {{flexberry-textbox
     class="fluid"
     value=settings.queryString
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.map-commands-dialogs.search-settings.wfs.max-results-count-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.maxResultsCount
   }}
 </div>
