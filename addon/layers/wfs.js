@@ -59,7 +59,8 @@ export default BaseLayer.extend({
   createSearchSettings() {
     let settings = this._super(...arguments);
     Ember.$.extend(true, settings, {
-      queryString: ''
+      queryString: '',
+      maxResultsCount: 10
     });
 
     return settings;
