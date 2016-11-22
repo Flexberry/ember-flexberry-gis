@@ -1,15 +1,19 @@
 export default {
   'drag': {
-    'caption': ''
+    'caption': '',
+    'tooltip': 'Переместить'
   },
   'zoom-in': {
-    'caption': ''
+    'caption': '',
+    'tooltip': 'Увеличить'
   },
   'zoom-out': {
-    'caption': ''
+    'caption': '',
+    'tooltip': 'Уменьшить'
   },
   'identify': {
     'caption': 'Идентифицировать',
+    'tooltip': 'Идентифицировать',
     'identify-all': {
       'caption': 'Все слои'
     },
@@ -22,6 +26,7 @@ export default {
   },
   'measure': {
     'caption': 'Измерить',
+    'tooltip': 'Измерить',
     'measure-coordinates': {
       'caption': 'Координаты'
     },
@@ -40,6 +45,7 @@ export default {
   },
   'draw': {
     'caption': 'Нарисовать',
+    'tooltip': 'Нарисовать',
     'draw-marker': {
       'caption': 'Маркер'
     },

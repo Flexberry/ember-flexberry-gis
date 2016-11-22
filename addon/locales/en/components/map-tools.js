@@ -1,15 +1,19 @@
 export default {
   'drag': {
-    'caption': ''
+    'caption': '',
+    'tooltip': 'Drag'
   },
   'zoom-in': {
-    'caption': ''
+    'caption': '',
+    'tooltip': 'Zoom In'
   },
   'zoom-out': {
-    'caption': ''
+    'caption': '',
+    'tooltip': 'Zoom Out'
   },
   'identify': {
-    'caption': 'Identify',
+    'caption': 'Measure',
+    'tooltip': 'Measure',
     'identify-all': {
       'caption': 'All layers'
     },
@@ -22,6 +26,7 @@ export default {
   },
   'measure': {
     'caption': 'Measure',
+    'tooltip': 'Measure',
     'measure-coordinates': {
       'caption': 'Coordinates'
     },
@@ -40,6 +45,7 @@ export default {
   },
   'draw': {
     'caption': 'Draw',
+    'tooltip': 'Draw',
     'draw-marker': {
       'caption': 'Marker'
     },

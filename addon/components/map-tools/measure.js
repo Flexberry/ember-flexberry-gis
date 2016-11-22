@@ -99,6 +99,15 @@ let MeasureMapToolComponent = Ember.Component.extend({
     caption: t('components.map-tools.measure.caption'),
 
     /**
+      Map tool's tooltip text.
+      Will be added as wrapper's element 'title' attribute.
+
+      @property tooltip
+      @default t('components.map-tools.measure.tooltip')
+    */
+    tooltip: t('components.map-tools.measure.tooltip'),
+
+    /**
       Map tool's icon CSS-class names.
 
       @property iconClass

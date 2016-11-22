@@ -1,12 +1,15 @@
 export default {
   'go-to': {
-    'caption': ''
+    'caption': '',
+    'tooltip': 'Go to coordinates'
   },
   'full-extent': {
-    'caption': ''
+    'caption': '',
+    'tooltip': 'Full extent'
   },
   'export': {
     'caption': 'Export',
+    'tooltip': 'Export',
     'export-download': {
       'caption': 'Into image'
     },
@@ -16,6 +19,7 @@ export default {
   },
   'search': {
     'caption': 'Search',
+    'tooltip': 'Search',
     'search-attributes': {
       'caption': 'By layers attributes'
     },

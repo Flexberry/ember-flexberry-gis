@@ -82,6 +82,15 @@ let ZoomOutMapToolComponent = Ember.Component.extend({
     caption: t('components.map-tools.zoom-out.caption'),
 
     /**
+      Map tool's tooltip text.
+      Will be added as wrapper's element 'title' attribute.
+
+      @property tooltip
+      @default t('components.map-tools.zoom-out.tooltip')
+    */
+    tooltip: t('components.map-tools.zoom-out.tooltip'),
+
+    /**
       Map tool's icon CSS-class names.
 
       @property iconClass

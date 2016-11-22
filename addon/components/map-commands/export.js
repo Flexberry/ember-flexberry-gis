@@ -153,6 +153,15 @@ let ExportMapCommandComponent = Ember.Component.extend({
     caption: t('components.map-commands.export.caption'),
 
     /**
+      Map command's tooltip text.
+      Will be added as wrapper's element 'title' attribute.
+
+      @property tooltip
+      @default t('components.map-commands.export.tooltip')
+    */
+    tooltip: t('components.map-commands.export.tooltip'),
+
+    /**
       Map command's icon CSS-class names.
 
       @property iconClass

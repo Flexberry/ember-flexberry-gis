@@ -82,6 +82,15 @@ let FullExtentMapCommandComponent = Ember.Component.extend({
     caption: t('components.map-commands.full-extent.caption'),
 
     /**
+      Map command's tooltip text.
+      Will be added as wrapper's element 'title' attribute.
+
+      @property tooltip
+      @default t('components.map-commands.full-extent.tooltip')
+    */
+    tooltip: t('components.map-commands.full-extent.tooltip'),
+
+    /**
       Map command's icon CSS-class names.
 
       @property iconClass

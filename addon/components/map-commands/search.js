@@ -174,6 +174,15 @@ let SearchMapCommandComponent = Ember.Component.extend({
     caption: t('components.map-commands.search.caption'),
 
     /**
+      Map command's tooltip text.
+      Will be added as wrapper's element 'title' attribute.
+
+      @property tooltip
+      @default t('components.map-commands.search.tooltip')
+    */
+    tooltip: t('components.map-commands.search.tooltip'),
+
+    /**
       Map command's icon CSS-class names.
 
       @property iconClass
