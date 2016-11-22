@@ -206,6 +206,9 @@ export default Ember.Mixin.create({
       }
 
       childLayers.pushObject(childLayer);
+
+      let options = this.getIndexesOptions(childLayer);
+      this.setIndexes(options.layers, options.firstIndex + 1);
     },
 
     /**
@@ -364,5 +367,47 @@ export default Ember.Mixin.create({
 
     Ember.set(layer, 'isDeleted', true);
     return layer;
-  }
+  },
+
+  /**
+   Gets options for setIndexes method.
+
+    @method getIndexesOptions
+    @param {Object} layer Layer to get options for.
+    @returns {Object} First index and layers (options.firstIndex and options.layers).
+  */
+  getIndexesOptions(layer) {
+    let options = {};
+    let parent = layer.get('parent');
+    if (Ember.isNone(parent.get('parent'))) {
+      let firstLayer = parent.get('layers').objectAt(0);
+      options.layers = parent.get('layers');
+      options.firstIndex = firstLayer.get('index');
+      return options;
+    } else {
+      return this.getIndexesOptions(parent);
+    }
+  },
+
+  /**
+   Sets indexes for layers hierarchy.
+
+    @method setIndexes
+    @param {Array} layers Array of layers to set indexes.
+    @param {Int} index First index.
+    @returns {Int} Last index.
+  */
+  setIndexes(layers, index) {
+    if (layers) {
+      layers.forEach((layer) => {
+        layer.set('index', index);
+        index--;
+        if (layer.get('type') === 'group') {
+          index = this.setIndexes(layer.get('layers'), index);
+        }
+      }, this);
+    }
+
+    return index;
+  },
 });
