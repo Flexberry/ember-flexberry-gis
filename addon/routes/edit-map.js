@@ -192,7 +192,7 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
   sortLayersByIndex(layers) {
     let result = layers;
     if (result) {
-      result = result.sortBy('index');
+      result = result.sortBy('index').reverse();
       result.forEach((item) => {
         if (item.get('type') === 'group') {
           item.set('layers', this.sortLayersByIndex(item.get('layers')));
