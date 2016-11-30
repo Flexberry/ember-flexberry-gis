@@ -207,8 +207,8 @@ export default Ember.Mixin.create({
 
       childLayers.pushObject(childLayer);
 
-      let options = this.getIndexesOptions(childLayer);
-      this.setIndexes(options.layers, options.firstIndex + 1);
+      let rootLayer = this.get('model.rootLayer');
+      this.setIndexes(rootLayer, true);
     },
 
     /**
@@ -307,6 +307,9 @@ export default Ember.Mixin.create({
         layerPath: layerPath,
         layer: layer
       });
+
+      let rootLayer = this.get('model.rootLayer');
+      this.setIndexes(rootLayer, false);
     }
   },
 
@@ -370,40 +373,29 @@ export default Ember.Mixin.create({
   },
 
   /**
-   Gets options for setIndexes method.
-
-    @method getIndexesOptions
-    @param {Object} layer Layer to get options for.
-    @returns {Object} First index and layers (options.firstIndex and options.layers).
-  */
-  getIndexesOptions(layer) {
-    let options = {};
-    let parent = layer.get('parent');
-    if (Ember.isNone(parent.get('parent'))) {
-      let firstLayer = parent.get('layers').objectAt(0);
-      options.layers = parent.get('layers');
-      options.firstIndex = firstLayer.get('index');
-      return options;
-    } else {
-      return this.getIndexesOptions(parent);
-    }
-  },
-
-  /**
    Sets indexes for layers hierarchy.
 
     @method setIndexes
-    @param {Array} layers Array of layers to set indexes.
+    @param {Object} rootLayer Root layer of the tree.
+    @param {Boolean} isAdded True when layer is added.
     @param {Int} index First index.
     @returns {Int} Last index.
   */
-  setIndexes(layers, index) {
-    if (layers) {
+  setIndexes(rootLayer, isAdded, index) {
+    let layers = rootLayer.get('layers');
+    if (Ember.isArray(layers)) {
+      if (Ember.isNone(index)) {
+        index = layers.objectAt(0).get('index') || 0;
+        index = isAdded ? index + 1 : index - 1;
+      }
+
       layers.forEach((layer) => {
-        layer.set('index', index);
-        index--;
-        if (layer.get('type') === 'group') {
-          index = this.setIndexes(layer.get('layers'), index);
+        if (!layer.get('isDeleted')) {
+          layer.set('index', index);
+          index--;
+          if (layer.get('type') === 'group') {
+            index = this.setIndexes(layer, isAdded, index);
+          }
         }
       }, this);
     }
