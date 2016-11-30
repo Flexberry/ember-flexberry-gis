@@ -84,15 +84,6 @@ let GoToMapCommandComponent = Ember.Component.extend({
     flexberryClassNames,
 
     /**
-      Map tool's tooltip text.
-      Will be added as wrapper's element 'title' attribute.
-
-      @property tooltip
-      @default null
-    */
-    tooltip: null,
-
-    /**
       Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
       to disable a component's wrapping element.
 
@@ -119,6 +110,15 @@ let GoToMapCommandComponent = Ember.Component.extend({
       @default t('components.map-commands.go-to.caption')
     */
     caption: t('components.map-commands.go-to.caption'),
+
+    /**
+      Map command's tooltip text.
+      Will be added as wrapper's element 'title' attribute.
+
+      @property tooltip
+      @default t('components.map-commands.go-to.tooltip')
+    */
+    tooltip: t('components.map-commands.go-to.tooltip'),
 
     /**
       Map command's icon CSS-class names.

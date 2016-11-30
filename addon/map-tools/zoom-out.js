@@ -35,12 +35,18 @@ export default RectangleMaptool.extend({
     let mapSize = leafletMap.getBounds();
     let zoomSize = layer.getBounds();
 
-    let dx = (mapSize.getEast() - mapSize.getWest()) / (zoomSize.getEast() - zoomSize.getWest());
-    let dy = (mapSize.getNorth() - mapSize.getSouth()) / (zoomSize.getNorth() - zoomSize.getSouth());
-    let maxD = dx > dy ? dx : dy;
+    if (zoomSize.getNorthEast().equals(zoomSize.getSouthWest())) {
+      let zoom = Math.max(leafletMap.getZoom() - 1, leafletMap.getMinZoom());
+      leafletMap.setView(zoomSize.getNorthEast(), zoom);
+    } else {
 
-    let zoom = leafletMap.getScaleZoom(1 / maxD, leafletMap.getZoom());
-    leafletMap.panTo(zoomSize.getCenter());
-    leafletMap.setZoom(Math.floor(zoom));
+      let dx = (mapSize.getEast() - mapSize.getWest()) / (zoomSize.getEast() - zoomSize.getWest());
+      let dy = (mapSize.getNorth() - mapSize.getSouth()) / (zoomSize.getNorth() - zoomSize.getSouth());
+      let maxD = dx > dy ? dx : dy;
+
+      let zoom = leafletMap.getScaleZoom(1 / maxD, leafletMap.getZoom());
+      leafletMap.panTo(zoomSize.getCenter());
+      leafletMap.setZoom(Math.floor(zoom));
+    }
   }
 });

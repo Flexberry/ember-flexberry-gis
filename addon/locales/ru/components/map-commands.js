@@ -1,12 +1,15 @@
 export default {
   'go-to': {
-    'caption': ''
+    'caption': '',
+    'tooltip': 'Перейти к координатам'
   },
   'full-extent': {
-    'caption': ''
+    'caption': '',
+    'tooltip': 'Полный охват'
   },
   'export': {
     'caption': 'Экспортировать',
+    'tooltip': 'Экспортировать',
     'export-download': {
       'caption': 'В изображение'
     },
@@ -16,6 +19,7 @@ export default {
   },
   'search': {
     'caption': 'Найти',
+    'tooltip': 'Найти',
     'search-attributes': {
       'caption': 'По атрибутам слоев'
     },
