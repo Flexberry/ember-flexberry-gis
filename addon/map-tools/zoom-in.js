@@ -30,8 +30,13 @@ export default RectangleMapTool.extend({
   */
   _rectangleDrawingDidEnd({ layer }) {
     this._super(...arguments);
-
+    let bounds = layer.getBounds();
     let leafletMap = this.get('leafletMap');
-    leafletMap.fitBounds(layer.getBounds());
+    if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
+      let zoom = leafletMap.getZoom() + 1;
+      leafletMap.setView(bounds.getNorthEast(), zoom);
+    } else {
+      leafletMap.fitBounds(layer.getBounds());
+    }
   }
 });
