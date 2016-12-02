@@ -17,7 +17,7 @@ export default TileLayer.extend({
     'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
     'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
     'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds',
-    'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format'
+    'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format', 'tiled'
   ],
 
   /**
