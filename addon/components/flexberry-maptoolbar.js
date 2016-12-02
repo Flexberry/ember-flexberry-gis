@@ -240,7 +240,7 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
     @method _leafletMapDidChange
     @private
   */
-  _leafletMapDidChange: Ember.on('init', Ember.observer('leafletMap', function() {
+  _leafletMapDidChange: Ember.on('didInsertElement', Ember.observer('leafletMap', function() {
     if (Ember.isNone(this.get('leafletMap'))) {
       return;
     }
