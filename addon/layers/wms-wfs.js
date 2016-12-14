@@ -9,7 +9,7 @@ import WfsLayer from './wfs';
 /**
   Class describing WMS layer metadata.
 
-  @class WmsLayer
+  @class WmsWfsLayer
   @extends WmsLayer
 */
 export default WmsLayer.extend({
