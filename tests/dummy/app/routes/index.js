@@ -7,8 +7,8 @@ import Ember from 'ember';
 /**
   Index route.
 
-  @class DummyIndexRoute
-  @extends IndexRoute
+  @class IndexRoute
+  @extends <a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Route</a>
 */
 export default Ember.Route.extend({
 });

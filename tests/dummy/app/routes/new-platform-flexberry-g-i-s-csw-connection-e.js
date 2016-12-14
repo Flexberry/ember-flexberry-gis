@@ -9,7 +9,7 @@ import EditFormRouteOperationsIndicationMixin from '../mixins/edit-form-route-op
   CSW connection edit route.
 
   @class NewPlatformFlexberryGISCswConnectionERoute
-  @extends EditMapRoute
+  @extends EditFormRoute
   @uses EditFormRouteOperationsIndicationMixin
 */
 export default EditFormRoute.extend(EditFormRouteOperationsIndicationMixin, {

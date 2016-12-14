@@ -8,7 +8,7 @@ import ListFormRoute from 'ember-flexberry/routes/list-form';
   CSW connections list route.
 
   @class NewPlatformFlexberryGISCswConnectionLRoute
-  @extends ListMapRoute
+  @extends ListFormRoute
 */
 export default ListFormRoute.extend({
   /**
