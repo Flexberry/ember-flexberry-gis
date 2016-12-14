@@ -9,7 +9,7 @@ import ModalApplicationRouteMixin from 'ember-flexberry/mixins/modal-application
   Application route.
 
   @class ApplicationRoute
-  @extends ApplicationRoute
+  @extends <a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Route</a>
 */
 export default Ember.Route.extend(ModalApplicationRouteMixin, {
 });

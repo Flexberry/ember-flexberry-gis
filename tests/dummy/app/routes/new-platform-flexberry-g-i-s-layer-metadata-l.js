@@ -8,7 +8,7 @@ import ListFormRoute from 'ember-flexberry/routes/list-form';
   Maps layers metadata list route.
 
   @class NewPlatformFlexberryGISLayerMetadataLRoute
-  @extends ListMapRoute
+  @extends ListFormRoute
 */
 export default ListFormRoute.extend({
   /**
