@@ -16,11 +16,12 @@ export default Ember.Component.extend({
   _searchPropertiesArray: Ember.computed('searchProperties', function () {
     let props = [];
     let searchProperties = this.get('searchProperties');
-    for(var property in searchProperties) {
-      if(searchProperties.hasOwnProperty(property)) {
+    for (var property in searchProperties) {
+      if (searchProperties.hasOwnProperty(property)) {
         props.push(searchProperties[property]);
       }
     }
+
     return props;
   }),
 
@@ -94,6 +95,4 @@ export default Ember.Component.extend({
     @default null
    */
   searchProperties: null
-
-
 });
