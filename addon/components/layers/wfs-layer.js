@@ -59,7 +59,7 @@ export default BaseLayer.extend({
     @param bool single
     Result should be single layer
   */
-  _getFeature(options, single=false) {
+  _getFeature(options, single = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let layer = null;
       let destroyLayer = () => {
@@ -157,7 +157,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    let filter = new L.Filter.Like().append(e.searchOptions.propertyName, '*' + e.searchOptions.queryString + '*');
+    let filter = new L.Filter.Like().append(e.searchOptions.propertyName, '*' + e.searchOptions.queryString + '*', { matchCase: false });
     e.results.features = this._getFeature({ filter, maxFeatures: e.searchOptions.maxResultsCount });
   },
 
