@@ -14,12 +14,28 @@ import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-con
 */
 export default EditMapController.extend(
   EditFormControllerOperationsIndicationMixin, {
-  /**
-    Parent route.
 
-    @property parentRoute
-    @type String
-    @default 'maps'
-  */
-  parentRoute: 'maps'
-});
+    actions: {
+      toggleTree() {
+        Ember.$('.ui.sidebar.treeview')
+          .sidebar({
+            context: Ember.$('.mappanel'),
+            dimPage: false,
+            closable: false
+          })
+          .sidebar('setting', 'transition', 'overlay')
+          .sidebar('toggle');
+      }
+    },
+
+    /**
+      Parent route.
+
+      @property parentRoute
+      @type String
+      @default 'maps'
+    */
+    parentRoute: 'maps'
+
+
+  });
