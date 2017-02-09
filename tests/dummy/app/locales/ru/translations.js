@@ -167,7 +167,8 @@ Ember.$.extend(true, translations, {
     'new-platform-flexberry-g-i-s-csw-connection-e': NewPlatformFlexberryGISCswConnectionEForm,
     'new-platform-flexberry-g-i-s-map-e': NewPlatformFlexberryGISMapEForm,
     'map': {
-      'caption': 'Карта'
+      'caption': 'Карта',
+      'treeviewbuttontooltip': 'Показать дерево слоёв'
     },
     'csw': {
       'caption': 'CSW соединения'

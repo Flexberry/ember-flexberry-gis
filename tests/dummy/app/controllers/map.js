@@ -2,6 +2,7 @@
   @module ember-flexberry-gis-dummy
 */
 
+import Ember from 'ember';
 import EditMapController from 'ember-flexberry-gis/controllers/edit-map';
 import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-controller-operations-indication';
 
@@ -36,6 +37,5 @@ export default EditMapController.extend(
       @default 'maps'
     */
     parentRoute: 'maps'
-
 
   });
