@@ -82,9 +82,14 @@
             map=leafletMap
             imperial=false
           }}
-          {{mini-map
-            map=leafletMap
+          {{#minimap-control
+            map=leafletMap as |groupLayers|
           }}
+            {{flexberry-layers
+              leafletContainer=groupLayers
+              layers=model.rootLayer.layers
+            }}
+          {{/minimap-control}}
         {{/flexberry-map}}
       </div>
       <div class="six wide column">

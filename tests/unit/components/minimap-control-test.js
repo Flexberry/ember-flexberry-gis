@@ -1,8 +1,6 @@
 import { moduleForComponent, test } from 'ember-qunit';
 
-moduleForComponent('mini-map', 'Unit | Component | mini map', {
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar'],
+moduleForComponent('minimap-control', 'Unit | Component | minimap control', {
   unit: true
 });
 
