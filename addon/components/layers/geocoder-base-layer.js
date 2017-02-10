@@ -167,7 +167,6 @@ export default BaseLayer.extend({
       return features;
     });
 
-    let results = Ember.get(e, 'results');
-    Ember.set(results, 'features', featuresPromise);
+    e.results.push(featuresPromise);
   }
 });

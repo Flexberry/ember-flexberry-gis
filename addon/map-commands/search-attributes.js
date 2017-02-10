@@ -41,12 +41,7 @@ export default SearchMapCommand.extend({
       latlng: leafletMap.getCenter(),
       layer: layer,
       searchOptions: searchOptions,
-
-      // We need a wrapper-object (that wraps 'features') here, because leaflet
-      // will create a new event-object and features reference will be missed.
-      results: {
-        features: null
-      }
+      results: Ember.A()
     };
 
     // Fire custom event on leaflet map.
@@ -54,6 +49,6 @@ export default SearchMapCommand.extend({
     leafletMap.fire('flexberry-map:search', e);
 
     // Return received features or features promise.
-    return Ember.get(e, 'results.features');
+    return e.results;
   }
 });

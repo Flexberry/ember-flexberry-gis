@@ -325,7 +325,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
       Search results.
       Features array containing founded (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
 
-      @property _foundedFeatures
+      @property foundedFeatures
       @type Object[]
       @default null
       @private

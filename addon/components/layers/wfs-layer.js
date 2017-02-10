@@ -158,7 +158,7 @@ export default BaseLayer.extend({
   */
   search(e) {
     let filter = new L.Filter.Like().append(e.searchOptions.propertyName, '*' + e.searchOptions.queryString + '*', { matchCase: false });
-    e.results.features = this._getFeature({ filter, maxFeatures: e.searchOptions.maxResultsCount });
+    e.results.push(this._getFeature({ filter, maxFeatures: e.searchOptions.maxResultsCount }));
   },
 
   /**

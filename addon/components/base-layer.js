@@ -215,6 +215,7 @@ export default Ember.Component.extend(
         // Detach custom event-handler.
         leafletMap.off('flexberry-map:identify', this._identify, this);
         leafletMap.off('flexberry-map:search', this._search, this);
+        leafletMap.off('flexberry-map:query', this._query, this);
       }
 
       let leafletContainer = this.get('leafletContainer');
