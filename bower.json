@@ -16,10 +16,11 @@
     "leaflet.export": "Flexberry/Leaflet.Export#master",
     "html2canvas": "niklasvh/html2canvas#master",
     "Leaflet-WFST": "Flexberry/Leaflet-WFST#develop",
-    "Proj4Leaflet": "kartena/Proj4Leaflet#leaflet-proj-refactor",
+    "Proj4Leaflet": "1.0.0",
     "osmtogeojson": "2.2.12",
     "ows.js": "0.1.5",
-    "js-beautify": "1.6.4"
+    "js-beautify": "1.6.4",
+    "Leaflet-MiniMap": "Norkart/Leaflet-MiniMap#3.4.0"
   },
   "resolutions": {
     "leaflet": "1.0.1"
