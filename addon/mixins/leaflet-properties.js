@@ -42,7 +42,7 @@ export default Ember.Mixin.create({
    */
   _addObservers() {
     this._observers = {};
-    let layer = this.get('_layer');
+    let layer = this.get('_leafletObject');
     let properties = this.get('leafletProperties') || [];
     properties.forEach(propExp => {
 

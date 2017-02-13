@@ -25,12 +25,12 @@ export default Ember.Component.extend(
     /**
       Leaflet layer object init by settings from model.
 
-      @property _layer
+      @property _leafletObject
       @type L.Layer
       @default null
       @private
      */
-    _layer: undefined,
+    _leafletObject: undefined,
 
     /**
       Overload wrapper tag name for disabling wrapper.
@@ -77,7 +77,7 @@ export default Ember.Component.extend(
       @method setZIndex
      */
     setZIndex: Ember.observer('index', function () {
-      let layer = this.get('_layer');
+      let layer = this.get('_leafletObject');
       if (layer && layer.setZIndex) {
         layer.setZIndex(this.get('index'));
       }
@@ -183,7 +183,7 @@ export default Ember.Component.extend(
     init() {
       this._super(...arguments);
 
-      this.set('_layer', this.createLayer());
+      this.set('_leafletObject', this.createLayer());
       this._addObservers();
     },
 
@@ -220,7 +220,7 @@ export default Ember.Component.extend(
 
       let leafletContainer = this.get('leafletContainer');
       if (!Ember.isNone(leafletContainer)) {
-        leafletContainer.removeLayer(this.get('_layer'));
+        leafletContainer.removeLayer(this.get('_leafletObject'));
       }
     },
 
@@ -234,9 +234,9 @@ export default Ember.Component.extend(
       let container = this.get('leafletContainer');
 
       if (this.get('visibility')) {
-        container.addLayer(this.get('_layer'));
+        container.addLayer(this.get('_leafletObject'));
       } else {
-        container.removeLayer(this.get('_layer'));
+        container.removeLayer(this.get('_leafletObject'));
       }
     }),
 
