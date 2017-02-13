@@ -53,6 +53,25 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
     return identifyOperationIsAvailableForLayerClass && identifyOperationIsAvailableForLayerInstance;
   }),
 
+  /**
+    Checks whether layer can be searched.
+
+    @property canBeSearched
+    @return {Boolean} Flag: indicates whether 'search' operation is available for this layer.
+    @readOnly
+  */
+  canBeSearched: Ember.computed('isDeleted', 'type', 'settingsAsObject.identifySettings.canBeSearched', function () {
+    if (this.get('isDeleted')) {
+      return false;
+    }
+
+    let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
+    let searchOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('search');
+    let searchOperationIsAvailableForLayerInstance = this.get('settingsAsObject.searchSettings.canBeSearched') !== false;
+
+    return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
+  }),
+
   layers: null
 });
 

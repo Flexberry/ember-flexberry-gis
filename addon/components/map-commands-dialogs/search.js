@@ -632,15 +632,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
       @private
     */
     _layerCanBeSearched(layer) {
-      if (Ember.get(layer, 'isDeleted')) {
-        return false;
-      }
-
-      let layerClassFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
-      let searchOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('search');
-      let searchOperationIsAvailableForLayerInstance = Ember.get(layer, 'settingsAsObject.searchSettings.canBeSearched') !== false;
-
-      return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
+      return Ember.get(layer, 'canBeSearched');
     },
 
     /**
