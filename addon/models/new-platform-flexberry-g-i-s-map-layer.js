@@ -34,6 +34,25 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
     return {};
   }),
 
+  /**
+    Checks whether layer can be identified.
+
+    @property canBeIdentified
+    @type {Boolean} Flag: indicates whether layer can be identified.
+    @readOnly
+  */
+  canBeIdentified: Ember.computed('isDeleted', 'type', 'settingsAsObject.identifySettings.canBeIdentified', function () {
+    if (this.get('isDeleted')) {
+      return false;
+    }
+
+    let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
+    let identifyOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('identify');
+    let identifyOperationIsAvailableForLayerInstance = this.get('settingsAsObject.identifySettings.canBeIdentified') !== false;
+
+    return identifyOperationIsAvailableForLayerClass && identifyOperationIsAvailableForLayerInstance;
+  }),
+
   layers: null
 });
 

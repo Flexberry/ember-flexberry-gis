@@ -30,7 +30,7 @@ export default IdentifyMapTool.extend({
       if (Ember.isArray(layers)) {
         layers.forEach((layer) => {
           let layerIsVisible = Ember.get(layer, 'visibility') === true;
-          if (this._layerCanBeIdentified(layer) && layerIsVisible && !excludedLayers.contains(layer)) {
+          if (Ember.get(layer, 'canBeIdentified') && layerIsVisible && !excludedLayers.contains(layer)) {
             result.pushObject(layer);
           }
 
