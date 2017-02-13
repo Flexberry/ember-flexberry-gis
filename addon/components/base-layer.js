@@ -58,11 +58,11 @@ export default Ember.Component.extend(
     /**
       Layer metadata.
 
-      @property layer
+      @property layerModel
       @type Object
       @default null
     */
-    layer: null,
+    layerModel: null,
 
     /**
       This layer index, used for layer ordering in Map.
@@ -98,8 +98,8 @@ export default Ember.Component.extend(
       @type <a href="http://leafletjs.com/reference-1.0.0.html#crs">L.CRS</a>
       @readOnly
     */
-    crs: Ember.computed('layer.crs', 'leafletMap.options.crs', function () {
-      let crs = this.get('layer.crs');
+    crs: Ember.computed('layerModel.crs', 'leafletMap.options.crs', function () {
+      let crs = this.get('layerModel.crs');
       if (Ember.isNone(crs)) {
         crs = this.get('leafletMap.options.crs');
       }
@@ -124,7 +124,7 @@ export default Ember.Component.extend(
       @private
     */
     _identify(e) {
-      let shouldIdentify = Ember.A(e.layers || []).contains(this.get('layer'));
+      let shouldIdentify = Ember.A(e.layers || []).contains(this.get('layerModel'));
       if (!shouldIdentify) {
         return;
       }
@@ -139,14 +139,14 @@ export default Ember.Component.extend(
       @method search
       @param {Object} e Event object.
       @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
-      @param {Object[]} layer Object describing layer that must be searched.
+      @param {Object[]} layerModel Object describing layer that must be searched.
       @param {Object} searchOptions Search options related to layer type.
       @param {Object} results Hash containing search results.
       @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
       or a promise returning such array.
     */
     _search(e) {
-      let shouldSearch = e.layer === this.get('layer');
+      let shouldSearch = e.layer === this.get('layerModel');
       if (!shouldSearch) {
         return;
       }
@@ -166,8 +166,8 @@ export default Ember.Component.extend(
       or a promise returning such array.
     */
     _query(e) {
-      let layerId = this.get('layer.id').toString();
-      let layerLinks = e.layerLinks.filter(link => link.get('layer.id').toString() === layerId);
+      let layerId = this.get('layerModel.id').toString();
+      let layerLinks = e.layerLinks.filter(link => link.get('layerModel.id').toString() === layerId);
 
       if (!layerLinks.length) {
         return;

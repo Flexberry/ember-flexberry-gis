@@ -107,7 +107,7 @@ export default TileLayer.extend({
   identify(e) {
     let featuresPromise = this._getFeatureInfo(e.latlng);
     e.results.push({
-      layer: this.get('layer'),
+      layer: this.get('layerModel'),
       features: featuresPromise
     });
   },

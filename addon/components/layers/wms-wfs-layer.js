@@ -77,7 +77,7 @@ export default WmsLayerComponent.extend({
     let innerWfsLayerProperties = {
       leafletMap: this.get('leafletMap'),
       leafletContainer: this.get('leafletContainer'),
-      layer: this.get('layer'),
+      layerModel: this.get('layerModel'),
       index: this.get('index'),
       visibility: false,
       dynamicProperties: this.get('wfs')

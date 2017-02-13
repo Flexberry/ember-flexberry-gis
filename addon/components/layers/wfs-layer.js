@@ -139,7 +139,7 @@ export default BaseLayer.extend({
 
     let featuresPromise = this._getFeature({ filter });
     e.results.push({
-      layer: this.get('layer'),
+      layer: this.get('layerModel'),
       features: featuresPromise
     });
   },
