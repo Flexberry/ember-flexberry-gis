@@ -146,13 +146,16 @@ export default Ember.Component.extend(
       or a promise returning such array.
     */
     _search(e) {
-      let shouldSearch = e.layer === this.get('layerModel');
+      let shouldSearch = typeof(e.filter) === 'function' && e.filter(this);
       if (!shouldSearch) {
         return;
       }
 
       // Call public search method, if layer should be searched.
-      this.search(e);
+      e.results.push({
+        layerModel: this.get('layerModel'),
+        features: this.search(e)
+      });
     },
 
     /**

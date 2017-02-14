@@ -303,7 +303,7 @@ let SearchMapCommandComponent = Ember.Component.extend({
         this.set('_searchIsInProgress', true);
 
         // here we have only one search results
-        e.executionResult.get('firstObject').then((features) => {
+        e.executionResult.get('firstObject.features').then((features) => {
 
           this.set('_foundedFeatures', features);
 

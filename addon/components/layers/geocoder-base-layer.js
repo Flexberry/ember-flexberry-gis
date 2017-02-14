@@ -167,6 +167,6 @@ export default BaseLayer.extend({
       return features;
     });
 
-    e.results.push(featuresPromise);
+    return featuresPromise;
   }
 });

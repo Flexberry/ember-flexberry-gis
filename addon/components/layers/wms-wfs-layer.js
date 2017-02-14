@@ -64,7 +64,7 @@ export default WmsLayerComponent.extend({
   search(e) {
     let innerWfsLayer = this.get('_wfsLayer');
     if (!Ember.isNone(innerWfsLayer)) {
-      innerWfsLayer.search.apply(innerWfsLayer, arguments);
+      return innerWfsLayer.search.apply(innerWfsLayer, arguments);
     }
   },
 
