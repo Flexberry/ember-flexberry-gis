@@ -12,8 +12,8 @@ export default {
     'tooltip': 'Zoom Out'
   },
   'identify': {
-    'caption': 'Measure',
-    'tooltip': 'Measure',
+    'caption': 'Identify',
+    'tooltip': 'Identify',
     'identify-all': {
       'caption': 'All layers'
     },

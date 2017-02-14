@@ -26,6 +26,11 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
   */
   tagName: '',
 
+  /**
+    Leaflet control object
+   */
+  control: null,
+
   didInsertElement() {
     this._super(...arguments);
     this.initControl();
