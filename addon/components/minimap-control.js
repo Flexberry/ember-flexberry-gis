@@ -18,9 +18,9 @@ export default BaseControl.extend({
 
   toggleDisplay: true,
 
-  collapsedWidth:18,
+  collapsedWidth: 18,
 
-  collapsedHeight:18,
+  collapsedHeight: 18,
 
   layout,
 
