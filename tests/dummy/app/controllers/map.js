@@ -17,10 +17,10 @@ export default EditMapController.extend(
   EditFormControllerOperationsIndicationMixin, {
 
     actions: {
-      toggleTree() {
-        Ember.$('.ui.sidebar.treeview')
+      toggleSidebar(sidebar, context) {
+        Ember.$(sidebar)
           .sidebar({
-            context: Ember.$('.mappanel'),
+            context: Ember.$(context),
             dimPage: false,
             closable: false
           })
