@@ -2,6 +2,9 @@
   <div class="ui list transition">
     {{#each features as |feature|}}
       <div class="item {{if (eq feature selectedFeature) 'active'}}" >
+        <a class="icon item" title="Show info" {{action "showInfo" feature}}>
+            <i class="caret {{if expanded 'down' 'right'}} icon"></i>
+        </a>
         <a class="icon item" title="Zoom to" {{action "zoomTo" feature}}>
             <i class="marker icon"></i>
         </a>

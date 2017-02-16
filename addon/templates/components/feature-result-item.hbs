@@ -1,0 +1,38 @@
+<div class="item {{if (eq feature selectedFeature) 'active'}}">
+  <a class="icon item" title="Show info" {{action "showInfo"}}>
+    <i class="caret {{if infoExpanded 'down' 'right'}} icon"></i>
+  </a>
+  <a class="icon item" title="Zoom to" {{action "zoomTo"}}>
+    <i class="marker icon"></i>
+  </a>
+  <a class="icon item" title="Pan to" {{action "panTo"}}>
+    <i class="hand paper icon"></i>
+  </a>
+  <span {{action "selectFeature" on="click" }} {{action "zoomTo" on="doubleClick" }}>
+      {{get feature.properties displayField}}
+  </span>
+  {{#if infoExpanded}}
+    <table class="ui compact celled table">
+      <tr>
+        <th>Property Name</th>
+        <th>Value</th>
+      </tr>
+      {{#each-in feature.properties as |propertyName propertyValue|}}
+        {{#if (not (array-contains excludedProperties propertyName))}}
+          <tr>
+            <td>
+              {{#if (get localizedProperties propertyName)}}
+                {{get localizedProperties propertyName}}
+              {{else}}
+                {{propertyName}}
+              {{/if}}
+            </td>
+            <td>
+              {{propertyValue}}
+            </td>
+          </tr>
+        {{/if}}
+      {{/each-in}}
+    </table>
+  {{/if}}
+</div>
