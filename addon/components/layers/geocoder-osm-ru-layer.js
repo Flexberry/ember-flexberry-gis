@@ -74,7 +74,7 @@ export default GeocoderBaseLayer.extend({
   executeGeocoding(options) {
     options = options || {};
     let queryString = Ember.get(options, 'searchOptions.queryString');
-    let searchType = Ember.get(options, 'searchOptions.searchType');
+    let searchType = Ember.get(options, 'searchOptions.searchType') || 'all';
     let maxResultsCount = Ember.get(options, 'searchOptions.maxResultsCount');
     let latlng = Ember.get(options, 'latlng');
 

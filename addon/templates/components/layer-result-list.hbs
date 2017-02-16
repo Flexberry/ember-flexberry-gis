@@ -1,0 +1,12 @@
+{{#each results as |result|}}
+ {{#if (await result.features)}}
+  {{layer-result-item
+    features=(await result.features)
+    layerModel=result.layerModel
+    selectedFeature=selectedFeature
+    selectFeature=(action "selectFeature")
+    panTo=(action "panTo")
+    zoomTo=(action "zoomTo")
+  }}
+  {{/if}}
+{{/each}}

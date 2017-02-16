@@ -26,8 +26,30 @@ export default EditMapController.extend(
           })
           .sidebar('setting', 'transition', 'overlay')
           .sidebar('toggle');
+      },
+
+      doSearch() {
+        let queryString = this.get('queryString');
+        let leafletMap = this.get('leafletMap');
+        let e = {
+          latlng: leafletMap.getCenter(),
+          searchOptions: {
+            queryString,
+            maxResultsCount: 10
+          },
+          filter(layerComponent) {
+            return layerComponent.get('layerModel.canBeSearched') && layerComponent.get('layerModel.visibility');
+          },
+          results: Ember.A()
+        };
+
+        leafletMap.fire('flexberry-map:search', e);
+
+        this.set('searchResults', e.results);
       }
     },
+
+    queryString: '',
 
     /**
       Parent route.

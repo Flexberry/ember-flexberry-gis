@@ -294,6 +294,8 @@ let FlexberryMapComponent = Ember.Component.extend(
       leafletMap.addLayer(serviceLayer);
       this.set('serviceLayer', serviceLayer);
 
+      this.sendAction('serviceLayerInit', serviceLayer);
+
       let layerLinks = this.get('layerLinks');
       let queryFilter = this.get('queryFilter');
 
