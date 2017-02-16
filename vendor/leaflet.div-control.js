@@ -1,5 +1,5 @@
 L.Control.Div = L.Control.extend({
-  initialize(element, options) {
+  initialize: function(element, options) {
     L.Control.prototype.initialize.call(this, options);
     this._container = element || L.DomUtil.create('div', '');
 
@@ -16,7 +16,7 @@ L.Control.Div = L.Control.extend({
     return this._container;
   },
 
-  appendContent(domElement) {
+  appendContent: function(domElement) {
     this._container.appendChild(domElement);
   }
 });
