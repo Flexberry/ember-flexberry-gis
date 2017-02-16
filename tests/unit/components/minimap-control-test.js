@@ -12,3 +12,11 @@ test('it should return L.Control.MiniMap from createControl', function(assert) {
 
   assert.ok(control instanceof L.Control.MiniMap);
 });
+
+test('it should return L.LayerGroup from layerGroup', function(assert) {
+  let component = this.subject();
+
+  let lGroup = component.get('layerGroup');
+
+  assert.ok(lGroup instanceof L.LayerGroup);
+});
