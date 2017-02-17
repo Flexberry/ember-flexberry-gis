@@ -1,11 +1,11 @@
 <div class="item {{if (eq feature selectedFeature) 'active'}}">
-  <a class="icon item" title="Show info" {{action "showInfo"}}>
+  <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo"}}>
     <i class="caret {{if infoExpanded 'down' 'right'}} icon"></i>
   </a>
-  <a class="icon item" title="Zoom to" {{action "zoomTo"}}>
+  <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo"}}>
     <i class="marker icon"></i>
   </a>
-  <a class="icon item" title="Pan to" {{action "panTo"}}>
+  <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo"}}>
     <i class="hand paper icon"></i>
   </a>
   <span {{action "selectFeature" on="click" }} {{action "zoomTo" on="doubleClick" }}>
@@ -14,8 +14,8 @@
   {{#if infoExpanded}}
     <table class="ui compact celled table">
       <tr>
-        <th>Property Name</th>
-        <th>Value</th>
+        <th>{{t "components.feature-result-item.feature-table-property-name"}}</th>
+        <th>{{t "components.feature-result-item.feature-table-property-value"}}</th>
       </tr>
       {{#each-in feature.properties as |propertyName propertyValue|}}
         {{#if (not (array-contains excludedProperties propertyName))}}
