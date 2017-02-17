@@ -9,10 +9,10 @@ import NewPlatformFlexberryGISMapObjectSettingModel from './models/new-platform-
 import FeatureResultItemComponent from './components/feature-result-item';
 import FlexberryCSWComponent from './components/flexberry-csw';
 import LayersDialogsComponents from './components/layers-dialogs';
+import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
-
 
 export default {
   'models': {
@@ -58,6 +58,8 @@ export default {
     'flexberry-csw': FlexberryCSWComponent,
 
     'layers-dialogs': LayersDialogsComponents,
+
+    'layer-result-list': LayerResultListComponent,
 
     'map-commands-dialogs': MapCommandsDialogsComponents,
 

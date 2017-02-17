@@ -28,8 +28,7 @@ export default EditMapController.extend(
           .sidebar('toggle');
       },
 
-      doSearch() {
-        let queryString = this.get('queryString');
+      querySearch(queryString) {
         let leafletMap = this.get('leafletMap');
         let e = {
           latlng: leafletMap.getCenter(),
@@ -46,10 +45,12 @@ export default EditMapController.extend(
         leafletMap.fire('flexberry-map:search', e);
 
         this.set('searchResults', e.results);
+      },
+
+      clearSearch() {
+        this.set('searchResults', null);
       }
     },
-
-    queryString: '',
 
     /**
       Parent route.

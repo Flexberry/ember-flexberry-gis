@@ -76,11 +76,17 @@
       }}
     </div>
     <div class="ui very wide right sidebar search pushable">
-      {{input value=queryString placeholder="search text" enter=(action 'doSearch')}}
+      {{flexberry-search-panel
+          querySearch=(action "querySearch")
+          clearSearch=(action "clearSearch")
+          searchInProcess=searchInProcess
+          searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+          }}
       {{layer-result-list
         results=searchResults
         serviceLayer=serviceLayer
         leafletMap=leafletMap
+        searchInProcess=searchInProcess
         }}
     </div>
     <div class="row">

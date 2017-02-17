@@ -1,6 +1,11 @@
+{{#if showLoader}}
+  <div class="ui active  inline loader"></div>{{t "components.layer-result-list.processing"}}
+{{else if (not hasData)}}
+  {{t "components.layer-result-list.nodata"}}
+{{/if}}
 {{#each results as |result|}}
  {{#if (await result.features)}}
-   {{#flexberry-toggler caption=result.layerModel.name}}
+   {{#flexberry-toggler caption=result.layerModel.name expanded=true}}
      <div class="ui list transition">
       {{#each (await result.features) as |feature|}}
         {{feature-result-item
