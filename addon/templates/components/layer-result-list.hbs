@@ -1,9 +1,9 @@
-{{#if showLoader}}
+{{#if _showLoader}}
   <div class="ui active  inline loader"></div>{{t "components.layer-result-list.processing"}}
-{{else if (not hasData)}}
+{{else if (not _hasData)}}
   {{t "components.layer-result-list.nodata"}}
 {{/if}}
-{{#if hasError}}
+{{#if _hasError}}
   {{t "components.layer-result-list.error"}}
 {{/if}}
 {{#each results as |result|}}
@@ -14,7 +14,7 @@
         {{feature-result-item
           feature=feature
           layerModel=result.layerModel
-          selectedFeature=selectedFeature
+          selectedFeature=_selectedFeature
           selectFeature=(action "selectFeature")
           panTo=(action "panTo")
           zoomTo=(action "zoomTo")
