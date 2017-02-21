@@ -76,18 +76,28 @@ export default Ember.Component.extend({
 
   hasData: false,
 
+  hasError: false,
+
   resultObserver: Ember.observer('results', function () {
     this.send('selectFeature', null);
     this.set('showLoader', true);
+    this.set('hasError', false);
 
     let results = this.get('results') || [];
 
     let promises = results.map((result) => { return result.features; });
 
-    Ember.RSVP.all(promises).then((features) => {
+    Ember.RSVP.all(promises).then(
+      (features) => {
+        let featuresCount = features.reduce((sum, feature) => { return sum + feature.length; }, 0);
+        this.set('hasData', featuresCount > 0);
+      },
+      (error) => {
+        this.set('hasData', true);
+        this.set('hasError', true);
+      }
+    ).finally(() => {
       this.set('showLoader', false);
-      let featuresCount = features.reduce((sum, feature) => { return sum + feature.length; }, 0);
-      this.set('hasData', featuresCount > 0);
     });
   })
 });

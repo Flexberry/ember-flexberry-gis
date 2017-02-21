@@ -3,6 +3,9 @@
 {{else if (not hasData)}}
   {{t "components.layer-result-list.nodata"}}
 {{/if}}
+{{#if hasError}}
+  {{t "components.layer-result-list.error"}}
+{{/if}}
 {{#each results as |result|}}
  {{#if (await result.features)}}
    {{#flexberry-toggler caption=result.layerModel.name expanded=true}}

@@ -2,6 +2,8 @@ import Ember from 'ember';
 import layout from '../templates/components/flexberry-search-panel';
 
 export default Ember.Component.extend({
+  classNames: ['flexberry-search-panel'],
+
   actions: {
     querySearch() {
       this.sendAction('querySearch', this.get('queryString'));
