@@ -43,6 +43,7 @@ const flexberryClassNames = {
 
   @class FlexberrySearchComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses DynamicPropertiesMixin
 */
 let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
   /**
@@ -59,6 +60,12 @@ let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
   }),
 
   actions: {
+
+    /**
+      Action called when user press enter in search input
+      Invokes {{#crossLink "FlexberrySearchComponent/sendingActions.enter:method"}}'enter' action{{/crossLink}}.
+      @method actions.enter
+    */
     enter() {
       this.sendAction('enter');
     }
@@ -85,6 +92,11 @@ let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
   */
   observableProperties: ['apiSettings', 'apiSettings.url'],
 
+  /**
+    Names of component's properties used for init semantic search module
+    @property semanticProperties
+    @type String[]
+   */
   semanticProperties: [
     'apiSettings',
     'type',
@@ -256,6 +268,11 @@ let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
       });
     }
   }
+
+  /**
+    Component's action invoking when user press enter in search box
+    @method sendingActions.enter
+   */
 });
 
 // Add component's CSS-class names as component's class static constants
