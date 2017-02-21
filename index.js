@@ -53,6 +53,7 @@ module.exports = {
     // Leaflet-MiniMap.
     app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/Control.MiniMap.min.js');
     app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/Control.MiniMap.min.css');
+    app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/images/toggle.svg', { destDir: appImagesDirectory });
 
     // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');

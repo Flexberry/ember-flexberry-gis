@@ -24,18 +24,27 @@ export default BaseControl.extend({
 
   /**
     Sets whether the minimap should have a button to minimise it.
+    @property toggleDisplay
+    @type boolean
+    @default true
    */
   toggleDisplay: true,
 
   /**
     The width of the toggle marker and the minimap when collapsed, in pixels
+    @property collapsedWidth
+    @type number
+    @default 26
    */
-  collapsedWidth: 18,
+  collapsedWidth: 26,
 
   /**
     The height of the toggle marker and the minimap when collapsed, in pixels.
+    @property collapsedHeight
+    @type number
+    @default 26
    */
-  collapsedHeight: 18,
+  collapsedHeight: 26,
 
   /**
     Reference to component's template.
