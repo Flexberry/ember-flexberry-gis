@@ -9,20 +9,20 @@
     <i class="hand paper icon"></i>
   </a>
   <span {{action "selectFeature" on="click" }} {{action "zoomTo" on="doubleClick" }}>
-      {{get feature.properties displayField}}
+      {{get feature.properties _displayProperty}}
   </span>
-  {{#if infoExpanded}}
+  {{#if _infoExpanded}}
     <table class="ui compact celled table">
       <tr>
         <th>{{t "components.feature-result-item.feature-table-property-name"}}</th>
         <th>{{t "components.feature-result-item.feature-table-property-value"}}</th>
       </tr>
       {{#each-in feature.properties as |propertyName propertyValue|}}
-        {{#if (not (array-contains excludedProperties propertyName))}}
+        {{#if (not (array-contains _excludedProperties propertyName))}}
           <tr>
             <td>
-              {{#if (get localizedProperties propertyName)}}
-                {{get localizedProperties propertyName}}
+              {{#if (get _localizedProperties propertyName)}}
+                {{get _localizedProperties propertyName}}
               {{else}}
                 {{propertyName}}
               {{/if}}

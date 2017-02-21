@@ -13,7 +13,7 @@
       {{#each (await result.features) as |feature|}}
         {{feature-result-item
           feature=feature
-          layerModel=result.layerModel
+          displaySettings=result.layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings
           selectedFeature=_selectedFeature
           selectFeature=(action "selectFeature")
           panTo=(action "panTo")
