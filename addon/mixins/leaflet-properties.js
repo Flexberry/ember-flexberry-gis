@@ -51,12 +51,12 @@ export default Ember.Mixin.create({
 
       let objectProperty = property.replace(/\.\[]/, ''); //allow usage of .[] to observe array changes
 
-      this._observers[property] = function () {
+      this._observers[property] = Ember.run.once(this, function () {
         let value = this.get(objectProperty);
         Ember.assert(this.constructor + ' must have a ' + leafletProperty + ' function.', !!layer[leafletProperty]);
         let propertyParams = params.map(p => this.get(p));
         layer[leafletProperty].call(layer, value, ...propertyParams);
-      };
+      });
 
       this.addObserver(property, this, this._observers[property]);
     });
