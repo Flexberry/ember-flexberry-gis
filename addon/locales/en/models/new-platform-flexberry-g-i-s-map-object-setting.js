@@ -12,30 +12,34 @@ export default {
       },
       defaultMap: {
         caption: 'defaultMap'
+      }
+    },
+    MapObjectSettingE: {
+      typeName: {
+        caption: 'typeName'
       },
-      layerLink: {
-        caption: 'layerLink',
-        layer: {
-          caption: 'layer'
-        },
-        linkParameter: {
-          caption: 'linkParameter',
-          objectField: {
-          caption: 'objectField'
-        },
-          layerField: {
-          caption: 'layerField'
-        },
-          expression: {
-          caption: 'expression'
-        },
-          queryKey: {
-          caption: 'queryKey'
-        },
-          linkField: {
-          caption: 'linkField'
+      listForm: {
+        caption: 'listForm'
+      },
+      editForm: {
+        caption: 'editForm'
+      },
+      defaultMap: {
+        caption: 'defaultMap',
+        name: {
+          caption: 'name'
         }
-        }
+      }
+    },
+    MapObjectSettingL: {
+      typeName: {
+        caption: 'typeName'
+      },
+      listForm: {
+        caption: 'listForm'
+      },
+      editForm: {
+        caption: 'editForm'
       }
     }
   }

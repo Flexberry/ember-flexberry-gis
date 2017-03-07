@@ -36,13 +36,7 @@
       "inverse": null
     }
   ],
-  "hasMany": [
-    {
-      "name": "layerLink",
-      "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
-      "inverse": "mapObjectSetting"
-    }
-  ],
+
   "projections": [
     {
       "name": "MapObjectSetting",
@@ -82,15 +76,80 @@
           "inverse": null
         }
       ],
-      "hasMany": [
+      "hasMany": []
+    },
+    {
+      "name": "MapObjectSettingE",
+      "modelName": "new-platform-flexberry-g-i-s-map-object-setting",
+      "attrs": [
         {
-          "projectionName": "LayerLinkD",
-          "caption": "",
-          "name": "layerLink",
-          "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
+          "name": "typeName",
+          "caption": "Тип",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "listForm",
+          "caption": "Списковая форма",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "editForm",
+          "caption": "Форма редактирования",
+          "hidden": false,
+          "index": 2
+        }
+      ],
+      "belongsTo": [
+        {
+          "lookupValue": "Name",
+          "lookupValueField": "name",
+          "relationName": "DefaultMap",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [
+            {
+              "name": "name",
+              "caption": "",
+              "hidden": true,
+              "index": 4
+            }
+          ],
+          "index": 3,
+          "caption": "Карта по умолчанию",
+          "name": "defaultMap",
+          "relatedTo": "new-platform-flexberry-g-i-s-map",
           "inverse": null
         }
-      ]
+      ],
+      "hasMany": []
+    },
+    {
+      "name": "MapObjectSettingL",
+      "modelName": "new-platform-flexberry-g-i-s-map-object-setting",
+      "attrs": [
+        {
+          "name": "typeName",
+          "caption": "Тип",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "listForm",
+          "caption": "Списковая форма",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "editForm",
+          "caption": "Форма редактирования",
+          "hidden": false,
+          "index": 2
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
     }
   ]
 }
