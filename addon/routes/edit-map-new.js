@@ -7,7 +7,7 @@ import EditMapRoute from './edit-map';
 
 /**
   Edit new map route.
-  Creates map project & root layer of related layers hierarchy.
+  Creates map project & layers of related layers hierarchy.
 
   @class EditMapNewRoute
   @extends EditMapRoute
@@ -33,10 +33,7 @@ export default EditMapRoute.extend({
   model() {
     let mapProject = this.store.createRecord(this.get('modelName'));
 
-    let rootLayer = this.store.createRecord(this.get('layerModelName'));
-    rootLayer.set('layers', Ember.A());
-
-    mapProject.set('rootLayer', rootLayer);
+    mapProject.set('mapLayers', Ember.A());
 
     return mapProject;
   },

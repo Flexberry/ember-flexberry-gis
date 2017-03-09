@@ -3,7 +3,9 @@
 */
 
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
-import { Query } from 'ember-flexberry-data';
+import {
+  Query
+} from 'ember-flexberry-data';
 
 /**
   Edit map route.
@@ -11,7 +13,6 @@ import { Query } from 'ember-flexberry-data';
 
   @class MapRoute
   @extends EditFormRoute
-  @uses MapLayersLoaderMixin
 */
 export default EditFormRoute.extend({
   queryParams: {
@@ -83,6 +84,7 @@ export default EditFormRoute.extend({
   loadCswConnections(params) {
     let store = this.get('store');
     let modelName = this.get('cswConnectionModelName');
+
     let query = new Query.Builder(store)
       .from(modelName)
       .selectByProjection(this.get('cswConnectionProjection'));
@@ -99,10 +101,11 @@ export default EditFormRoute.extend({
     @param {Object} params
     @param {Object} transition
     @return {<a href="http://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>}
-    Promise which will return map project related to current route & it's layers hierarchy.
+    Promise which will return map project related to current route
   */
   model(params) {
-    return this.loadCswConnections(params);
+    this.loadCswConnections(params);
+    return this._super(...arguments);
   },
 
   /**
@@ -115,6 +118,12 @@ export default EditFormRoute.extend({
   */
   setupController(controller, model) {
     this._super(...arguments);
+    let layers = model.get('mapLayer');
+
+    if (layers) {
+      model.set('mapLayer', this.sortLayersByIndex(layers));
+    }
+
     controller.set('cswConnections', this.get('cswConnections'));
   },
 

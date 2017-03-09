@@ -27,15 +27,6 @@ export default EditFormController.extend(
   */
   leafletMap: null,
 
-  /**
-    Layer links object thats use for query data on map load
-
-    @property layerLinks
-    @type Ember.Array
-    @default null
-   */
-  layerLinks: null,
-
   queryParams: ['geofilter'],
 
   /**
@@ -183,7 +174,13 @@ export default EditFormController.extend(
       });
     };
 
-    return saveLayer(this.get('model.rootLayer'));
+    let result = this.get('model.mapLayer').filter(layer => Ember.IsBlank(layer.parent));
+
+    result.forEach((item) => {
+        saveLayer(item);
+      }, this);
+
+    return result;
   },
 
   /**
@@ -229,7 +226,13 @@ export default EditFormController.extend(
       });
     };
 
-    return deleteLayer(this.get('model.rootLayer'));
+    let result = this.get('model.mapLayer').filter(layer => Ember.IsBlank(layer.parent));
+
+    result.forEach((item) => {
+        deleteLayer(item);
+      }, this);
+
+    return result;
   },
 
   /**
