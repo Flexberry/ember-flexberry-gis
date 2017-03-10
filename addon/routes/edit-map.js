@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember'
+import Ember from 'ember';
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
 import {
   Query
