@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember'
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
 import {
   Query
@@ -118,7 +119,7 @@ export default EditFormRoute.extend({
   */
   setupController(controller, model) {
     this._super(...arguments);
-    let layers = model.get('mapLayer');
+    let layers = model.get('mapLayer').filter(layer => Ember.isEmpty(layer.get('parent')));
 
     if (layers) {
       model.set('mapLayer', this.sortLayersByIndex(layers));
@@ -132,7 +133,7 @@ export default EditFormRoute.extend({
     if (result) {
       result = result.sortBy('index').reverse();
       result.forEach((item) => {
-        if (item.get('type') === 'group') {
+        if (Ember.isArray(item.get('layers'))) {
           item.set('layers', this.sortLayersByIndex(item.get('layers')));
         }
       }, this);

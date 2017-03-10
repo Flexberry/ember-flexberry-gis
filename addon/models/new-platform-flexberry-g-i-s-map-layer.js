@@ -36,13 +36,12 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
   }),
 
   layers: Ember.computed('map', 'map.mapLayer', function () {
-    try {
-      let _map = this.get('map');
-      let _layers = Ember.A(_map.get('mapLayer')).filterBy('parent', this.get('id'));
+    try {      
+      let result = this.get('map.mapLayer').filterBy('parent.id', this.get('id'));
 
-      return _layers;
+      return result;
     } catch (e) {
-      console.log('Error on read layer children on layer ' + this.get('name'), e);
+      console.log('Error on read children of layer ' + this.get('name'), e);
       throw e;
     }
 
