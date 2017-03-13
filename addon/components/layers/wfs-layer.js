@@ -166,7 +166,6 @@ export default BaseLayer.extend({
 
     @method _query
     @param {Object} e Event object.
-    @param {Object} layerLinks Array contains layer links model, use for filter searched layers
     @param {Object} queryFilter Object with query filter paramteres
     @param {Object[]} results.features Array containing leaflet layers objects
     or a promise returning such array.
