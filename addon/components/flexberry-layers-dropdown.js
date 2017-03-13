@@ -32,7 +32,7 @@ const flexberryClassNames = {
   {{flexberry-layers-dropdown
     class="fluid"
     filter=(action filterLayers)
-    layers=model.rootLayer.layers
+    layers=model.mapLayer
     value=selectedLayer
     layerChange=(action "onLayersDropdownLayerChange")
     availableLayersChange=(action "onLayersDropdownAvailableLayersChange")
