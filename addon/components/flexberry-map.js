@@ -5,7 +5,6 @@
 import Ember from 'ember';
 import LeafletOptionsMixin from '../mixins/leaflet-options';
 import LeafletPropertiesMixin from '../mixins/leaflet-properties';
-import LeafletEventsMixin from '../mixins/leaflet-events';
 
 import layout from '../templates/components/flexberry-map';
 
@@ -43,8 +42,7 @@ const flexberryClassNames = {
  */
 let FlexberryMapComponent = Ember.Component.extend(
   LeafletOptionsMixin,
-  LeafletPropertiesMixin,
-  LeafletEventsMixin, {
+  LeafletPropertiesMixin, {
     /**
       Leaflet map.
 
@@ -92,19 +90,6 @@ let FlexberryMapComponent = Ember.Component.extend(
       @default ['flexberry-map']
     */
     classNames: ['flexberry-map'],
-
-    /**
-      List of leaflet map events which will be sended outside as component's actions.
-    */
-    leafletEvents: [
-      'click', 'dblclick', 'mousedown', 'mouseup', 'mouseover', 'mouseout',
-      'mousemove', 'contextmenu', 'focus', 'blur', 'preclick', 'load',
-      'unload', 'viewreset', 'movestart', 'move', 'moveend', 'dragstart',
-      'drag', 'dragend', 'zoomstart', 'zoomend', 'zoomlevelschange',
-      'resize', 'autopanstart', 'layeradd', 'layerremove',
-      'baselayerchange', 'overlayadd', 'overlayremove', 'locationfound',
-      'locationerror', 'popupopen', 'popupclose'
-    ],
 
     /**
       List of leaflet map options which will be passed into leaflet map.
@@ -282,9 +267,6 @@ let FlexberryMapComponent = Ember.Component.extend(
       this._injectMapLoaderMethods(leafletMap);
 
       this.set('_layer', leafletMap);
-
-      this._addObservers();
-      this._addEventListeners();
 
       this.sendAction('leafletInit', {
         map: leafletMap
