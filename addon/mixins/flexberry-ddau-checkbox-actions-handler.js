@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import { setRecord } from '../utils/extended-set';
 
 /**
   Mixin containing handlers for
@@ -54,7 +55,7 @@ export default Ember.Mixin.create({
         `but \`string\` is expected`,
         mutablePropertyPathType === 'string');
 
-      this.set(mutablePropertyPath, e.newValue);
+      setRecord(this, mutablePropertyPath, e.newValue);
     }
   }
 });

@@ -394,7 +394,7 @@ export default Ember.Helper.extend({
     if (Ember.isArray(propertyValue)) {
       for (let i = 0, len = propertyValue.length; i < len; i++) {
         this._bindDynamicActions({
-          propertyValue: propertyValue[i],
+          propertyValue: propertyValue.objectAt(i),
           propertyPath: `${propertyPath}.${i}`,
 
           // Don't observe properties containing inside arrays,
