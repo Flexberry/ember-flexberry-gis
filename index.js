@@ -50,6 +50,11 @@ module.exports = {
     // Leaflet-WFST.
     app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
 
+    // Leaflet-MiniMap.
+    app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/Control.MiniMap.min.js');
+    app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/Control.MiniMap.min.css');
+    app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/images/toggle.svg', { destDir: appImagesDirectory });
+
     // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
 
