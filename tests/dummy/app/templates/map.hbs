@@ -120,6 +120,14 @@
           map=leafletMap
           imperial=false
         }}
+        {{#minimap-control
+            map=leafletMap as |groupLayers|
+        }}
+          {{flexberry-layers
+            leafletContainer=groupLayers
+            layers=model.hierarchy
+          }}
+        {{/minimap-control}}
       {{/flexberry-map}}
     </div>
   </div>
