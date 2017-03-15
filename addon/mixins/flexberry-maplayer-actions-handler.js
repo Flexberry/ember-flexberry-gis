@@ -362,6 +362,17 @@ export default Ember.Mixin.create({
     options = options || {};
     let layer = Ember.get(options, 'layer');
 
+    let childLayers = Ember.get(layer, 'layers');
+
+    if (Ember.isArray(childLayers))
+    {
+      childLayers.forEach((item) => {
+        this.removeLayer({
+          layer: item
+        });
+      }, this);
+    }
+
     Ember.set(layer, 'isDeleted', true);
     return layer;
   }
