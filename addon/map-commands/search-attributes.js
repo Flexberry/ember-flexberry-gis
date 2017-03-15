@@ -40,8 +40,8 @@ export default SearchMapCommand.extend({
     let e = {
       latlng: leafletMap.getCenter(),
       searchOptions: searchOptions,
-      filter(layerComponent) {
-        return layerComponent.get('layerModel') === layer;
+      filter(layerModel) {
+        return layerModel === layer;
       },
       results: Ember.A()
     };

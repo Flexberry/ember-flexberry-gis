@@ -146,7 +146,7 @@ export default Ember.Component.extend(
       or a promise returning such array.
     */
     _search(e) {
-      let shouldSearch = typeof (e.filter) === 'function' && e.filter(this);
+      let shouldSearch = typeof (e.filter) === 'function' && e.filter(this.get('layerModel'));
       if (!shouldSearch) {
         return;
       }

@@ -36,8 +36,8 @@ export default EditMapController.extend(
             queryString,
             maxResultsCount: 10
           },
-          filter(layerComponent) {
-            return layerComponent.get('layerModel.canBeSearched') && layerComponent.get('layerModel.visibility');
+          filter(layerModel) {
+            return layerModel.get('canBeSearched') && layerModel.get('visibility');
           },
           results: Ember.A()
         };
