@@ -24,6 +24,7 @@ import Ember from 'ember';
 let getRecord = function (source, keyName) {
   // array of keys
   let keys = keyName.split('.');
+
   // first object from path
   let result = source.get(keys[0] || keyName);
 
