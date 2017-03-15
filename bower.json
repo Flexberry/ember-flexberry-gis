@@ -19,7 +19,8 @@
     "Proj4Leaflet": "kartena/Proj4Leaflet#1.0.1",
     "osmtogeojson": "2.2.12",
     "ows.js": "0.1.5",
-    "js-beautify": "1.6.4"
+    "js-beautify": "1.6.4",
+    "Leaflet-MiniMap": "Norkart/Leaflet-MiniMap#3.4.0"
   },
   "resolutions": {
     "leaflet": "1.0.1"
