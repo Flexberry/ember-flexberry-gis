@@ -167,6 +167,7 @@ export default Ember.Mixin.create({
       ```
     */
     onMapLayerAdd(...args) {
+      let rootPath = 'model.mapLayer';
       let parentLayerPath = args[0];
       Ember.assert(
         `Wrong type of \`parentLayerPath\` argument: actual type is \`${Ember.typeOf(parentLayerPath)}\`, ` +
@@ -185,19 +186,7 @@ export default Ember.Mixin.create({
         `but \`array\` or \`object\` or  \`instance\` is expected`,
         Ember.isArray(parentLayer) || Ember.typeOf(parentLayer) === 'object' || Ember.typeOf(parentLayer) === 'instance');
 
-      let childLayers = Ember.isArray(parentLayer) ? parentLayer : Ember.get(parentLayer, 'layers');
-      if (Ember.isNone(childLayers)) {
-        childLayers = Ember.A();
-        Ember.set(parentLayer, 'layers', childLayers);
-      }
-
-      Ember.assert(
-        `Wrong type of \`parentLayer.layers\` property: actual type is \`${Ember.typeOf(childLayers)}\`, ` +
-        `but \`Ember.NativeArray\` is expected`,
-        Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
-
       let childLayer = this.createLayer({
-        parentLayerPath: parentLayerPath,
         parentLayer: parentLayer,
         layerProperties: layerProperties
       });
@@ -205,8 +194,9 @@ export default Ember.Mixin.create({
       if (Ember.get(childLayer, 'type') === 'group' && !Ember.isArray(Ember.get(childLayer, 'layers'))) {
         Ember.set(childLayer, 'layers', Ember.A());
       }
-
-      childLayers.pushObject(childLayer);
+      
+      let rootArray = Ember.get(this, rootPath);
+      rootArray.pushObject(childLayer);
     },
 
     /**
@@ -256,7 +246,6 @@ export default Ember.Mixin.create({
         Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
 
       this.editLayer({
-        layerPath: layerPath,
         layer: layer,
         layerProperties: layerProperties
       });
@@ -302,7 +291,6 @@ export default Ember.Mixin.create({
         Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
 
       this.removeLayer({
-        layerPath: layerPath,
         layer: layer
       });
     }
@@ -313,7 +301,6 @@ export default Ember.Mixin.create({
 
     @method createLayer
     @param {Object} options Method options.
-    @param {String} options.parentLayerPath Path to parent layer.
     @param {String} options.parentLayer Parent layer.
     @param {Object} options.layerProperties Object containing new layer properties.
     @returns {Object} Created layer.
@@ -331,7 +318,6 @@ export default Ember.Mixin.create({
 
     @method editLayer
     @param {Object} options Method options.
-    @param {String} options.layerPath Path to editing layer.
     @param {String} options.layer Editing layer.
     @param {Object} options.layerProperties Object containing edited layer properties.
     @returns {Object} Edited layer.
@@ -354,7 +340,6 @@ export default Ember.Mixin.create({
 
     @method removeLayer
     @param {Object} options Method options.
-    @param {String} options.layerPath Path to removing layer.
     @param {String} options.layer Removing layer itself.
     @returns {Object} Removed layer.
     @private

@@ -23,18 +23,25 @@ import Ember from 'ember';
   ```
 */
 let setRecord = function (source, keyName, value) {
+  // array of keys
   let keys = keyName.split('.');
 
   if (keys.length > 1) {
+    // first object of path
     let result = source.get(keys[0]);
+
     for (let i = 1, len = keys.length; i < len; i++) {
+      // needed for recognition if key is index
+      let keyValue = parseInt(keys[i]);
+
       if (i === (len - 1)) {
-        if (Ember.isArray(result)) {
+        // if previous object is array and key is index
+        if (Ember.isArray(result) && !isNaN(keyValue)) {
           return Ember.assign(result.objectAt(keys[i]), value);
         } else {
           return Ember.set(result, keys[i], value);
         }
-      } else if (Ember.isArray(result)) {
+      } else if (Ember.isArray(result) && !isNaN(keyValue)) {
         result = result.objectAt(keys[i]);
       } else {
         result = result.get(keys[i]);
@@ -42,6 +49,7 @@ let setRecord = function (source, keyName, value) {
     }
   }
 
+  // if key is lonely - directly set value for this property
   return Ember.set(source, keys[0] || keyName, value);
 };
 

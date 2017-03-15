@@ -22,12 +22,18 @@ import Ember from 'ember';
   ```
 */
 let getRecord = function (source, keyName) {
+  // array of keys
   let keys = keyName.split('.');
+  // first object from path
   let result = source.get(keys[0] || keyName);
 
   if (keys.length > 1) {
     for (let i = 1, len = keys.length; i < len; i++) {
-      if (Ember.isArray(result)) {
+      // needed for recognition if key is index
+      let keyValue = parseInt(keys[i]);
+
+      // if previous object is array and key is index
+      if (Ember.isArray(result) && !isNaN(keyValue)) {
         result = result.objectAt(keys[i]);
       } else {
         result = result.get(keys[i]);
