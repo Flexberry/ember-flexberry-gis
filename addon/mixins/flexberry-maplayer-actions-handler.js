@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import FlexberryDdauCheckboxActionsHandlerMixin from './flexberry-ddau-checkbox-actions-handler';
+import { getRecord } from '../utils/extended-get';
 
 /**
   Mixin containing handlers for
@@ -178,7 +179,7 @@ export default Ember.Mixin.create({
         `but \`object\` or  \`instance\` is expected`,
         Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
 
-      let parentLayer = this.get(parentLayerPath);
+      let parentLayer = getRecord(this, parentLayerPath);
       Ember.assert(
         `Wrong type of \`parentLayer\` property: actual type is \`${Ember.typeOf(parentLayer)}\`, ` +
         `but \`array\` or \`object\` or  \`instance\` is expected`,
@@ -248,7 +249,7 @@ export default Ember.Mixin.create({
         `but \`object\` or  \`instance\` is expected`,
         Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
 
-      let layer = this.get(layerPath);
+      let layer = getRecord(this, layerPath);
       Ember.assert(
         `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
         `but \`object\` or  \`instance\` is expected`,
@@ -294,7 +295,7 @@ export default Ember.Mixin.create({
         `but \`string\` is expected`,
         Ember.typeOf(layerPath) === 'string');
 
-      let layer = this.get(layerPath);
+      let layer = getRecord(this, layerPath);
       Ember.assert(
         `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
         `but \`object\` or  \`instance\` is expected`,
