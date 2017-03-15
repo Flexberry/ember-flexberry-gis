@@ -17,6 +17,7 @@ import Ember from 'ember';
   controllers/my-form.js
   ```javascript
     import { getRecord } from 'ember-flexberry-gis/utils/extended-get'l
+    let layer = getRecord(this, 'map.mapLayer.0.layers.1')
 
   ```
 */

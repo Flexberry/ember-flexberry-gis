@@ -18,7 +18,8 @@ import Ember from 'ember';
   controllers/my-form.js
   ```javascript
     import { setRecord } from 'ember-flexberry-gis/utils/setRecord'l
-    
+    setRecord(this, 'map.mapLayer.1.visibility', false)
+
   ```
 */
 let setRecord = function (source, keyName, value) {
