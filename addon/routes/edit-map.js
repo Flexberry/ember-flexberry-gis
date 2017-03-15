@@ -122,7 +122,7 @@ export default EditFormRoute.extend({
     let layers = model.get('mapLayer').filter(layer => Ember.isEmpty(layer.get('parent')));
 
     if (layers) {
-      model.set('mapLayer', this.sortLayersByIndex(layers));
+      model.set('hierarchy', this.sortLayersByIndex(layers));
     }
 
     controller.set('cswConnections', this.get('cswConnections'));

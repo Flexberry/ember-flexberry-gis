@@ -168,6 +168,7 @@ export default Ember.Mixin.create({
     */
     onMapLayerAdd(...args) {
       let rootPath = 'model.mapLayer';
+
       let parentLayerPath = args[0];
       Ember.assert(
         `Wrong type of \`parentLayerPath\` argument: actual type is \`${Ember.typeOf(parentLayerPath)}\`, ` +
@@ -186,6 +187,17 @@ export default Ember.Mixin.create({
         `but \`array\` or \`object\` or  \`instance\` is expected`,
         Ember.isArray(parentLayer) || Ember.typeOf(parentLayer) === 'object' || Ember.typeOf(parentLayer) === 'instance');
 
+      let childLayers = Ember.isArray(parentLayer) ? parentLayer : Ember.get(parentLayer, 'layers');
+      if (Ember.isNone(childLayers)) {
+        childLayers = Ember.A();
+        Ember.set(parentLayer, 'layers', childLayers);
+      }
+
+      Ember.assert(
+        `Wrong type of \`parentLayer.layers\` property: actual type is \`${Ember.typeOf(childLayers)}\`, ` +
+        `but \`Ember.NativeArray\` is expected`,
+        Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
+
       let childLayer = this.createLayer({
         parentLayer: parentLayer,
         layerProperties: layerProperties
@@ -194,7 +206,9 @@ export default Ember.Mixin.create({
       if (Ember.get(childLayer, 'type') === 'group' && !Ember.isArray(Ember.get(childLayer, 'layers'))) {
         Ember.set(childLayer, 'layers', Ember.A());
       }
-      
+
+      childLayers.pushObject(childLayer);
+
       let rootArray = Ember.get(this, rootPath);
       rootArray.pushObject(childLayer);
     },

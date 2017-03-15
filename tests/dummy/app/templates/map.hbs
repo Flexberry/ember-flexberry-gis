@@ -46,7 +46,7 @@
           class="styled"
           cswConnections=cswConnections
           leafletMap=leafletMap
-          layers=(get-with-dynamic-actions this "model.mapLayer"
+          layers=(get-with-dynamic-actions this "model.hierarchy"
             hierarchyPropertyName="layers"
             pathKeyword="layerPath"
             dynamicActions=(array
@@ -72,14 +72,14 @@
               )
             )
           )
-          add=(action "onMapLayerAdd" "model.mapLayer")
+          add=(action "onMapLayerAdd" "model.hierarchy")
         }}
       </div>
     <div class="row">
       <div class="sixteen wide column">
         {{#flexberry-maptoolbar
           leafletMap=leafletMap
-          layers=model.mapLayer as |mapToolbar|
+          layers=model.hierarchy as |mapToolbar|
         }}
           {{map-tools/drag activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/zoom-in activate=(action "onMapToolActivate" target=mapToolbar)}}
@@ -114,7 +114,7 @@
         {{flexberry-layers
           leafletMap=leafletMap
           leafletContainer=leafletMap
-          layers=model.mapLayer
+          layers=model.hierarchy
         }}
         {{scale-control
           map=leafletMap
