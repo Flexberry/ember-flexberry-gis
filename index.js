@@ -50,6 +50,9 @@ module.exports = {
     // Leaflet-WFST.
     app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
 
+    // Leaflet.WMS.
+    app.import(app.bowerDirectory + '/leaflet.wms/dist/leaflet.wms.js');
+
     // Leaflet-MiniMap.
     app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/Control.MiniMap.min.js');
     app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/Control.MiniMap.min.css');

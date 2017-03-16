@@ -20,7 +20,8 @@
     "osmtogeojson": "2.2.12",
     "ows.js": "0.1.5",
     "js-beautify": "1.6.4",
-    "Leaflet-MiniMap": "Norkart/Leaflet-MiniMap#3.4.0"
+    "Leaflet-MiniMap": "Norkart/Leaflet-MiniMap#3.4.0",
+    "leaflet.wms": "Flexberry/leaflet.wms#gh-pages"
   },
   "resolutions": {
     "leaflet": "1.0.1"
