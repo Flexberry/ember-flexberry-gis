@@ -29,7 +29,7 @@ export default IdentifyMapTool.extend({
 
       if (Ember.isArray(layers)) {
         layers.forEach((layer) => {
-          if (this._layerCanBeIdentified(layer) && !excludedLayers.contains(layer)) {
+          if (Ember.get(layer, 'canBeIdentified') && !excludedLayers.contains(layer)) {
             result.pushObject(layer);
           }
 
