@@ -11,7 +11,7 @@ moduleForComponent('flexberry-map', 'Unit | Component | flexberry map', {
 test('it should create leaflet map on didInsertElement', function (assert) {
   let component = this.subject();
   this.render();
-  assert.ok(component.get('_layer') instanceof L.Map);
+  assert.ok(component.get('_leafletObject') instanceof L.Map);
 });
 
 test('should compute center from lat/lng', function (assert) {
@@ -36,7 +36,7 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
 
   this.render();
 
-  let leafletMap = component.get('_layer');
+  let leafletMap = component.get('_leafletObject');
 
   assert.equal(leafletMap.getZoom(), 10);
   assert.ok(leafletMap.getCenter().equals([10, 10]));

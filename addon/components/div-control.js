@@ -15,7 +15,7 @@ export default BaseControl.extend({
 
   tagName: 'div',
 
-  classNames: ['ui test'],
+  classNames: ['ui'],
 
   leafletOptions: ['position', 'disableClickPropagation', 'disableScrollPropagation'],
 

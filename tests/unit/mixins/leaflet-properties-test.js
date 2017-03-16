@@ -31,7 +31,7 @@ test('after addObserver property changed should fire specified layer function', 
 
   let subject = MixinImplementation.create({
     leafletProperties: ['testProperty:callTestProperty'],
-    _layer: { callTestProperty }
+    _leafletObject: { callTestProperty }
   });
 
   subject._addObservers();
@@ -47,7 +47,7 @@ test('after addObserver property changed should fire default setter for property
 
   let subject = MixinImplementation.create({
     leafletProperties: ['testProperty'],
-    _layer: { setTestProperty }
+    _leafletObject: { setTestProperty }
   });
 
   subject._addObservers();
@@ -61,7 +61,7 @@ test('after addObserver property changed should fire default setter for property
 test('after addObserver property changed should throws if layer property setter is missing', function (assert) {
   let subject = MixinImplementation.create({
     leafletProperties: ['testProperty'],
-    _layer: {}
+    _leafletObject: {}
   });
 
   subject._addObservers();

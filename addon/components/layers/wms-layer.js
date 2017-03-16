@@ -26,7 +26,7 @@ export default TileLayer.extend({
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} latlng Identification point coordinates.
   */
   _getFeatureInfo(latlng) {
-    let layer = this.get('_layer');
+    let layer = this.get('_leafletObject');
     let leafletMap = this.get('leafletMap');
 
     let point = leafletMap.latLngToContainerPoint(latlng, leafletMap.getZoom());
@@ -107,7 +107,7 @@ export default TileLayer.extend({
   identify(e) {
     let featuresPromise = this._getFeatureInfo(e.latlng);
     e.results.push({
-      layer: this.get('layer'),
+      layer: this.get('layerModel'),
       features: featuresPromise
     });
   },

@@ -130,7 +130,7 @@ export default BaseLayer.extend({
     });
 
     e.results.push({
-      layer: this.get('layer'),
+      layer: this.get('layerModel'),
       features: featuresPromise
     });
   },
@@ -167,7 +167,6 @@ export default BaseLayer.extend({
       return features;
     });
 
-    let results = Ember.get(e, 'results');
-    Ember.set(results, 'features', featuresPromise);
+    return featuresPromise;
   }
 });

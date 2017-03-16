@@ -1,0 +1,38 @@
+<div class="item {{if (eq feature selectedFeature) 'active'}}">
+  <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo"}}>
+    <i class="caret {{if infoExpanded 'down' 'right'}} icon"></i>
+  </a>
+  <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo"}}>
+    <i class="marker icon"></i>
+  </a>
+  <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo"}}>
+    <i class="hand paper icon"></i>
+  </a>
+  <span {{action "selectFeature" on="click" }} {{action "zoomTo" on="doubleClick" }}>
+      {{get feature.properties _displayProperty}}
+  </span>
+  {{#if _infoExpanded}}
+    <table class="ui compact celled table">
+      <tr>
+        <th>{{t "components.feature-result-item.feature-table-property-name"}}</th>
+        <th>{{t "components.feature-result-item.feature-table-property-value"}}</th>
+      </tr>
+      {{#each-in feature.properties as |propertyName propertyValue|}}
+        {{#if (not (array-contains _excludedProperties propertyName))}}
+          <tr>
+            <td>
+              {{#if (get _localizedProperties propertyName)}}
+                {{get _localizedProperties propertyName}}
+              {{else}}
+                {{propertyName}}
+              {{/if}}
+            </td>
+            <td>
+              {{propertyValue}}
+            </td>
+          </tr>
+        {{/if}}
+      {{/each-in}}
+    </table>
+  {{/if}}
+</div>

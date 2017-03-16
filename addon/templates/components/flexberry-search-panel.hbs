@@ -1,0 +1,13 @@
+{{#flexberry-search
+    class="fluid action input"
+    dynamicProperties=searchSettings
+    value=queryString
+    enter=(action "querySearch")
+}}
+  <button class="ui icon button" {{action "querySearch"}}>
+    <i class="search icon"></i>
+  </button>
+  <button class="ui icon button" {{action "clearSearch"}}>
+    <i class="remove icon"></i>
+  </button>
+{{/flexberry-search}}

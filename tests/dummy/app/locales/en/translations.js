@@ -168,7 +168,8 @@ Ember.$.extend(true, translations, {
     'new-platform-flexberry-g-i-s-map-e': NewPlatformFlexberryGISMapEForm,
     'map': {
       'caption': 'Map',
-      'treeviewbuttontooltip': 'Show tree view'
+      'treeviewbuttontooltip': 'Show tree view',
+      'searchbuttontooltip': 'Show search'
     }
   },
 

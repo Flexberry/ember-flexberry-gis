@@ -31,25 +31,6 @@ export default RectangleMapTool.extend({
   hideRectangleOnDrawingEnd: false,
 
   /**
-    Checks whether given layer can be identified.
-
-    @method _layerCanBeIdentified
-    @returns {Boolean} Flag: indicates whether given layer can be identified.
-    @private
-  */
-  _layerCanBeIdentified(layer) {
-    if (Ember.get(layer, 'isDeleted')) {
-      return false;
-    }
-
-    let layerClassFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
-    let identifyOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('identify');
-    let identifyOperationIsAvailableForLayerInstance = Ember.get(layer, 'settingsAsObject.identifySettings.canBeIdentified') !== false;
-
-    return identifyOperationIsAvailableForLayerClass && identifyOperationIsAvailableForLayerInstance;
-  },
-
-  /**
     Returns flat array of layers satisfying to current identification mode.
 
     @method _getLayersToIdentify

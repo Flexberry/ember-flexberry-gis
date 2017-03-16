@@ -6,8 +6,10 @@ import NewPlatformFlexberryGISMapModel from './models/new-platform-flexberry-g-i
 import NewPlatformFlexberryGISMapLayerModel from './models/new-platform-flexberry-g-i-s-map-layer';
 import NewPlatformFlexberryGISMapObjectSettingModel from './models/new-platform-flexberry-g-i-s-map-object-setting';
 
+import FeatureResultItemComponent from './components/feature-result-item';
 import FlexberryCSWComponent from './components/flexberry-csw';
 import LayersDialogsComponents from './components/layers-dialogs';
+import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
@@ -27,6 +29,8 @@ export default {
   },
 
   'components': {
+    'feature-result-item': FeatureResultItemComponent,
+
     'flexberry-dialog': {
       'approve-button': {
         'caption': 'Ok'
@@ -54,6 +58,8 @@ export default {
     'flexberry-csw': FlexberryCSWComponent,
 
     'layers-dialogs': LayersDialogsComponents,
+
+    'layer-result-list': LayerResultListComponent,
 
     'map-commands-dialogs': MapCommandsDialogsComponents,
 
