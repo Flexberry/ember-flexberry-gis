@@ -3,7 +3,6 @@
 */
 
 import WmsLayerComponent from './wms-layer';
-import WMS from 'leaflet.wms';
 
 /**
   WMS single tile layer component for leaflet map.
@@ -19,6 +18,6 @@ export default WmsLayerComponent.extend({
     @method createLayer
   */
   createLayer() {
-    return WMS.source(this.get('url'), this.get('options'));
+    return L.WMS.source(this.get('url'), this.get('options'));
   },
 });
