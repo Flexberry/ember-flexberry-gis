@@ -170,7 +170,7 @@ export default Ember.Component.extend(
     _query(e) {
       let layerLinks = this.get('layer.layerLink');
 
-      if (!layerLinks.length) {
+      if (!Ember.isArray(layerLinks)) {
         return;
       }
 
