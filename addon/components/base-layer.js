@@ -25,12 +25,12 @@ export default Ember.Component.extend(
     /**
       Leaflet layer object init by settings from model.
 
-      @property _layer
+      @property _leafletObject
       @type L.Layer
       @default null
       @private
      */
-    _layer: undefined,
+    _leafletObject: undefined,
 
     /**
       Overload wrapper tag name for disabling wrapper.
@@ -58,11 +58,11 @@ export default Ember.Component.extend(
     /**
       Layer metadata.
 
-      @property layer
+      @property layerModel
       @type Object
       @default null
     */
-    layer: null,
+    layerModel: null,
 
     /**
       This layer index, used for layer ordering in Map.
@@ -77,7 +77,7 @@ export default Ember.Component.extend(
       @method setZIndex
      */
     setZIndex: Ember.observer('index', function () {
-      let layer = this.get('_layer');
+      let layer = this.get('_leafletObject');
       if (layer && layer.setZIndex) {
         layer.setZIndex(this.get('index'));
       }
@@ -98,8 +98,8 @@ export default Ember.Component.extend(
       @type <a href="http://leafletjs.com/reference-1.0.0.html#crs">L.CRS</a>
       @readOnly
     */
-    crs: Ember.computed('layer.crs', 'leafletMap.options.crs', function () {
-      let crs = this.get('layer.crs');
+    crs: Ember.computed('layerModel.crs', 'leafletMap.options.crs', function () {
+      let crs = this.get('layerModel.crs');
       if (Ember.isNone(crs)) {
         crs = this.get('leafletMap.options.crs');
       }
@@ -124,7 +124,7 @@ export default Ember.Component.extend(
       @private
     */
     _identify(e) {
-      let shouldIdentify = Ember.A(e.layers || []).contains(this.get('layer'));
+      let shouldIdentify = Ember.A(e.layers || []).contains(this.get('layerModel'));
       if (!shouldIdentify) {
         return;
       }
@@ -139,20 +139,23 @@ export default Ember.Component.extend(
       @method search
       @param {Object} e Event object.
       @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
-      @param {Object[]} layer Object describing layer that must be searched.
+      @param {Object[]} layerModel Object describing layer that must be searched.
       @param {Object} searchOptions Search options related to layer type.
       @param {Object} results Hash containing search results.
       @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
       or a promise returning such array.
     */
     _search(e) {
-      let shouldSearch = e.layer === this.get('layer');
+      let shouldSearch = typeof (e.filter) === 'function' && e.filter(this.get('layerModel'));
       if (!shouldSearch) {
         return;
       }
 
       // Call public search method, if layer should be searched.
-      this.search(e);
+      e.results.push({
+        layerModel: this.get('layerModel'),
+        features: this.search(e)
+      });
     },
 
     /**
@@ -180,7 +183,7 @@ export default Ember.Component.extend(
     */
     init() {
       this._super(...arguments);
-      this.set('_layer', this.createLayer());
+      this.set('_leafletObject', this.createLayer());
     },
 
     /**
@@ -211,11 +214,12 @@ export default Ember.Component.extend(
         // Detach custom event-handler.
         leafletMap.off('flexberry-map:identify', this._identify, this);
         leafletMap.off('flexberry-map:search', this._search, this);
+        leafletMap.off('flexberry-map:query', this._query, this);
       }
 
       let leafletContainer = this.get('leafletContainer');
       if (!Ember.isNone(leafletContainer)) {
-        leafletContainer.removeLayer(this.get('_layer'));
+        leafletContainer.removeLayer(this.get('_leafletObject'));
       }
     },
 
@@ -229,9 +233,9 @@ export default Ember.Component.extend(
       let container = this.get('leafletContainer');
 
       if (this.get('visibility')) {
-        container.addLayer(this.get('_layer'));
+        container.addLayer(this.get('_leafletObject'));
       } else {
-        container.removeLayer(this.get('_layer'));
+        container.removeLayer(this.get('_leafletObject'));
       }
     }),
 

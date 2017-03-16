@@ -302,7 +302,9 @@ let SearchMapCommandComponent = Ember.Component.extend({
         // Show delay indicator.
         this.set('_searchIsInProgress', true);
 
-        e.executionResult.then((features) => {
+        // here we have only one search results
+        e.executionResult.get('firstObject.features').then((features) => {
+
           this.set('_foundedFeatures', features);
 
           // Search successfully completed.

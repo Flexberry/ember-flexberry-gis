@@ -17,7 +17,7 @@
   onShow=(action "onErrorMessageShow")
   onHide=(action "onErrorMessageHide")
 }}
-<form class="ui {{formState}} form flexberry-vertical-form" role="form">
+<div class="ui {{formState}} form flexberry-vertical-form">
   <div class="field">
     <div class="flexberry-edit-panel">
       {{#unless readonly}}
@@ -72,9 +72,22 @@
               )
             )
           )
-          add=(action "onMapLayerAdd" "model.hierarchy")
+        add=(action "onMapLayerAdd" "model.hierarchy")
+      }}
+    </div>
+    <div class="ui very wide right sidebar search pushable">
+      {{flexberry-search-panel
+          querySearch=(action "querySearch")
+          clearSearch=(action "clearSearch")
+          searchInProcess=searchInProcess
+          searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+          }}
+      {{layer-result-list
+        results=searchResults
+        serviceLayer=serviceLayer
+        leafletMap=leafletMap
         }}
-      </div>
+    </div>
     <div class="row">
       <div class="sixteen wide column">
         {{#flexberry-maptoolbar
@@ -91,10 +104,15 @@
           {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-commands/export execute=(action "onMapCommandExecute" target=mapToolbar)}}
-          <a {{action 'toggleTree'}}
+          <a {{action 'toggleSidebar' '.ui.sidebar.treeview' '.mappanel'}}
               class="icon item"
               title={{t "forms.map.treeviewbuttontooltip"}}>
             <i class="list icon"></i>
+          </a>
+          <a {{action 'toggleSidebar' '.ui.sidebar.search' '.mappanel'}}
+              class="icon item"
+              title={{t "forms.map.searchbuttontooltip"}}>
+            <i class="search icon"></i>
           </a>
         {{/flexberry-maptoolbar}}
       </div>
@@ -106,6 +124,7 @@
         zoom=model.zoom
         queryFilter=queryFilter
         leafletInit=(action "onMapLeafletInit" "leafletMap")
+        serviceLayerInit=(action "onServiceLayerInit" "serviceLayer")
         leafletDestroy=(action "onMapLeafletDestroy" "leafletMap")
         moveend=(action "onMapMoveend" "model.lat" "model.lng")
         zoomend=(action "onMapZoomend" "model.zoom")
@@ -131,4 +150,4 @@
       {{/flexberry-map}}
     </div>
   </div>
-</form>
+</div>

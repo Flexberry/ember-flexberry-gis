@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-search';
+import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
 
 /**
   Component's CSS-classes names.
@@ -42,8 +43,9 @@ const flexberryClassNames = {
 
   @class FlexberrySearchComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses DynamicPropertiesMixin
 */
-let FlexberrySearchComponent = Ember.Component.extend({
+let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
   /**
     Flag: indicates whether search type is 'category' or not.
 
@@ -52,10 +54,22 @@ let FlexberrySearchComponent = Ember.Component.extend({
     @readOnly
     @private
   */
-  _isCategory: Ember.computed('type', function() {
+  _isCategory: Ember.computed('type', function () {
     let type = this.get('type');
     return Ember.typeOf(type) === 'string' && type.toLowerCase() === 'category';
   }),
+
+  actions: {
+
+    /**
+      Action called when user press enter in search input
+      Invokes {{#crossLink "FlexberrySearchComponent/sendingActions.enter:method"}}'enter' action{{/crossLink}}.
+      @method actions.enter
+    */
+    enter() {
+      this.sendAction('enter');
+    }
+  },
 
   /**
     Reference to component's template.
@@ -77,6 +91,20 @@ let FlexberrySearchComponent = Ember.Component.extend({
     @default ['apiSettings', 'apiSettings.url']
   */
   observableProperties: ['apiSettings', 'apiSettings.url'],
+
+  /**
+    Names of component's properties used for init semantic search module
+    @property semanticProperties
+    @type String[]
+   */
+  semanticProperties: [
+    'apiSettings',
+    'type',
+    'minCharacters',
+    'fields',
+    'showNoResults',
+    'onResults'
+  ],
 
   /**
     Component's wrapping <div> CSS-classes names.
@@ -149,6 +177,8 @@ let FlexberrySearchComponent = Ember.Component.extend({
   */
   value: null,
 
+  showNoResults: false,
+
   /**
     Initializes Semantic UI search module.
 
@@ -161,12 +191,20 @@ let FlexberrySearchComponent = Ember.Component.extend({
       return;
     }
 
-    $component.search({
-      type: this.get('type'),
-      minCharacters: this.get('minCharacters'),
-      apiSettings: this.get('apiSettings'),
-      fields: this.get('fields')
+    if (Ember.isNone(this.get('apiSettings'))) {
+      return;
+    }
+
+    let semanticProperties = {};
+
+    this.get('semanticProperties').forEach((propertyName) => {
+      var propertyValue = this.get(propertyName);
+      if (!Ember.isNone(propertyValue)) {
+        semanticProperties[propertyName] = propertyValue;
+      }
     });
+
+    $component.search(semanticProperties);
   },
 
   /**
@@ -230,6 +268,11 @@ let FlexberrySearchComponent = Ember.Component.extend({
       });
     }
   }
+
+  /**
+    Component's action invoking when user press enter in search box
+    @method sendingActions.enter
+   */
 });
 
 // Add component's CSS-class names as component's class static constants

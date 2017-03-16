@@ -46,12 +46,12 @@ let FlexberryMapComponent = Ember.Component.extend(
     /**
       Leaflet map.
 
-      @property _layer
+      @property _leafletObject
       @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
       @default null
       @private
     */
-    _layer: null,
+    _leafletObject: null,
 
     /**
       Flag: indicates whether map loader is shown or not.
@@ -257,7 +257,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       let leafletMap = L.map(this.$()[0], this.get('options'));
       this._injectMapLoaderMethods(leafletMap);
 
-      this.set('_layer', leafletMap);
+      this.set('_leafletObject', leafletMap);
 
       this.sendAction('leafletInit', {
         map: leafletMap
@@ -310,12 +310,12 @@ let FlexberryMapComponent = Ember.Component.extend(
     willDestroyElement() {
       this._super(...arguments);
 
-      let leafletMap = this.get('_layer');
+      let leafletMap = this.get('_leafletObject');
       if (!Ember.isNone(leafletMap)) {
         // Destroy leaflet map.
         this._removeMapLoaderMethods(leafletMap);
         leafletMap.remove();
-        this.set('_layer', null);
+        this.set('_leafletObject', null);
 
         this.sendAction('leafletDestroy');
       }

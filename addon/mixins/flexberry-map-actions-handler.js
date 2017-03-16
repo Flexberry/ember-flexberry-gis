@@ -58,6 +58,10 @@ export default Ember.Mixin.create({
       this.set(leafletMapPropertyPath, e.map);
     },
 
+    onServiceLayerInit(property, serviceLayer) {
+      this.set(property, serviceLayer);
+    },
+
     /**
       Handles {{#crossLink "FlexberryMapComponent/sendingActions.leafletDestroy:method"}}flexberry-map component's 'leafletDestroy' action{{/crossLink}}.
       It cleans up previously stored leaflet map.

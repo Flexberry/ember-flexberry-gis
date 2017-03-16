@@ -139,7 +139,7 @@ export default BaseLayer.extend({
 
     let featuresPromise = this._getFeature({ filter });
     e.results.push({
-      layer: this.get('layer'),
+      layer: this.get('layerModel'),
       features: featuresPromise
     });
   },
@@ -157,8 +157,22 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    let filter = new L.Filter.Like().append(e.searchOptions.propertyName, '*' + e.searchOptions.queryString + '*', { matchCase: false });
-    e.results.features = this._getFeature({ filter, maxFeatures: e.searchOptions.maxResultsCount });
+    let propertyName = e.searchOptions.propertyName;
+
+    if (Ember.isNone(propertyName)) {
+      propertyName = this.get('layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings.displayProperty');
+    }
+
+    if (Ember.isNone(propertyName)) {
+      return;
+    }
+
+    let filter = new L.Filter.Like().append(propertyName, '*' + e.searchOptions.queryString + '*', { matchCase: false });
+    return this._getFeature({
+      filter,
+      maxFeatures: e.searchOptions.maxResultsCount,
+      style: { color: 'yellow' }
+    });
   },
 
   /**

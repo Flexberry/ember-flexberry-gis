@@ -4,14 +4,7 @@
   </label>
   {{flexberry-search
     class="fluid"
-    minCharacters=3
-    apiSettings=(hash
-      url=_autocompleteUrl
-    )
-    fields=(hash
-      results='matches'
-      title='display_name'
-    )
+    dynamicProperties=(flexberry-search-properties-osm-ru _autocompleteUrl)
     value=settings.queryString
   }}
 </div>

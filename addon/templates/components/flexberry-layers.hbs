@@ -1,29 +1,29 @@
 {{#if leafletContainer}}
-  {{#each layers as |layer|}}
-    {{#if (not layer.isDeleted)}}
-      {{#if (eq layer.type "group")}}
+  {{#each layers as |layerModel|}}
+    {{#if (not layerModel.isDeleted)}}
+      {{#if (eq layerModel.type "group")}}
         {{#layers/group-layer
           leafletMap=leafletMap
           leafletContainer=leafletContainer
-          layer=layer
-          index=layer.index
-          visibility=layer.visibility
-          dynamicProperties=layer.settingsAsObject as |leafletLayerGroup|
+          layerModel=layerModel
+          index=layerModel.index
+          visibility=layerModel.visibility
+          dynamicProperties=layerModel.settingsAsObject as |leafletLayerGroup|
         }}
-        {{flexberry-layers
-          leafletMap=leafletMap
-          leafletContainer=leafletLayerGroup
-          layers=layer.layers
-        }}
+          {{flexberry-layers
+            leafletMap=leafletMap
+            leafletContainer=leafletLayerGroup
+            layers=layerModel.layers
+          }}
         {{/layers/group-layer}}
       {{else}}
-        {{component (concat "layers/" layer.type "-layer")
+        {{component (concat "layers/" layerModel.type "-layer")
           leafletMap=leafletMap
           leafletContainer=leafletContainer
-          layer=layer
-          index=layer.index
-          visibility=layer.visibility
-          dynamicProperties=layer.settingsAsObject
+          layerModel=layerModel
+          index=layerModel.index
+          visibility=layerModel.visibility
+          dynamicProperties=layerModel.settingsAsObject
         }}
       {{/if}}
     {{/if}}
