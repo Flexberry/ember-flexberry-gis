@@ -168,7 +168,7 @@ export default Ember.Component.extend(
       or a promise returning such array.
     */
     _query(e) {
-      let layerLinks = this.get('layer.layerLink');
+      let layerLinks = this.get('layerModel.layerLink');
 
       if (!Ember.isArray(layerLinks)) {
         return;
