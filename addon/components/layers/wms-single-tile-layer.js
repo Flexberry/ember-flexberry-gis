@@ -18,11 +18,17 @@ export default WmsLayerComponent.extend({
     @method createLayer
   */
   createLayer() {
-    let layersList = this.get('layerModel.settingsAsObject.layers').split(',');
+    let layersString = this.get('layerModel.settingsAsObject.layers');
+    let layers = [];
+
+    if(layersString)
+    {
+      layers = layersString.split('.');
+    }
 
     let source = L.WMS.source(this.get('url'), this.get('options'));
 
-    layersList.forEach((layer) => source.addSubLayer(layer));
+    layers.forEach((layer) => source.addSubLayer(layer));
 
     return source;
   },

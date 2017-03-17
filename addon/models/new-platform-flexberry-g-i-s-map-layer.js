@@ -82,9 +82,7 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
     try {
       let layers = this.get('map.mapLayer');
       if (layers) {
-        let result = layers.filterBy('parent.id', this.get('id'));
-
-        return result;
+        return layers.filterBy('parent.id', this.get('id'));
       }
     } catch (e) {
       console.log('Error on read children of layer ' + this.get('name'), e);
