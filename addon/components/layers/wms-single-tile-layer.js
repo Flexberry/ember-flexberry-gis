@@ -21,8 +21,7 @@ export default WmsLayerComponent.extend({
     let layersString = this.get('layerModel.settingsAsObject.layers');
     let layers = [];
 
-    if(layersString)
-    {
+    if (layersString) {
       layers = layersString.split('.');
     }
 
