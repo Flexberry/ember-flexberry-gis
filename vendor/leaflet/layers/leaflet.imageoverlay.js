@@ -1,4 +1,4 @@
-var setZIndexMixin = {
+L.ImageOverlay.Extended = L.ImageOverlay.extend({
   options: {
     zIndex: 1
   },
@@ -18,6 +18,8 @@ var setZIndexMixin = {
       this._image.style.zIndex = this.options.zIndex;
     }
   }
-};
+});
 
-L.ImageOverlay.include(setZIndexMixin);
+L.imageOverlayExtended = function(url, options) {
+    return new L.ImageOverlay.Extended(url, options);
+};

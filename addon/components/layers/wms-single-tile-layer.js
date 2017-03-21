@@ -18,6 +18,6 @@ export default WmsLayerComponent.extend({
     @method createLayer
   */
   createLayer() {
-    return L.WMS.overlay(this.get('url'), this.get('options'));
+    return L.WMS.overlayExtended(this.get('url'), this.get('options'));
   },
 });

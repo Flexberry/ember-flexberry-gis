@@ -13,7 +13,7 @@ module.exports = {
       { name: 'Leaflet-WFST', source: 'https://github.com/Flexberry/Leaflet-WFST.git', target: 'develop' },
 
       // Leaflet.WMS.
-      { name: 'leaflet.wms', source: 'https://github.com/Flexberry/leaflet.wms.git', target: 'gh-pages' },
+      { name: 'leaflet.wms', source: 'https://github.com/heigeo/leaflet.wms.git', target: 'gh-pages' },
 
       // Leaflet.Editable.
       { name: 'leaflet.editable', source: 'https://github.com/Leaflet/Leaflet.Editable.git', target: 'master' },
