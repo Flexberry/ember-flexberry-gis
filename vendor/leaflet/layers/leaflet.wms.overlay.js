@@ -2,7 +2,7 @@ L.WMS.Overlay.Extended = L.WMS.Overlay.extend({
   options: {
     zIndex: 1
   },
-  update() {
+  update: function () {
     if (!this._map) {
       return;
     }
@@ -52,7 +52,7 @@ L.WMS.Overlay.Extended = L.WMS.Overlay.extend({
       this._map.removeLayer(overlay);
     }
   },
-  setZIndex(zIndex) {
+  setZIndex: function (zIndex) {
     this.options.zIndex = zIndex;
     if (this._currentOverlay) {
       this._currentOverlay.setZIndex(zIndex);
@@ -60,6 +60,6 @@ L.WMS.Overlay.Extended = L.WMS.Overlay.extend({
   }
 });
 
-L.WMS.overlayExtended = function(url, options) {
-    return new L.WMS.Overlay.Extended(url, options);
+L.WMS.overlayExtended = function (url, options) {
+  return new L.WMS.Overlay.Extended(url, options);
 };
