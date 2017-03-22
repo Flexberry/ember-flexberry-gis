@@ -83,9 +83,22 @@
       "name": "parent",
       "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
       "inverse": null
+    },
+    {
+      "polymorphic": false,
+      "presence": true,
+      "name": "map",
+      "relatedTo": "new-platform-flexberry-g-i-s-map",
+      "inverse": "mapLayer"
     }
   ],
-  "hasMany": [],
+  "hasMany": [
+    {
+      "name": "layerLink",
+      "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
+      "inverse": "layer"
+    }
+  ],
   "projections": [
     {
       "name": "AuditView",
@@ -124,6 +137,85 @@
       ],
       "belongsTo": [],
       "hasMany": []
+    },
+    {
+      "name": "MapLayerD",
+      "modelName": "new-platform-flexberry-g-i-s-map-layer",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Name",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "type",
+          "caption": "Type",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "visibility",
+          "caption": "Visibility",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "index",
+          "caption": "Index",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "CRS",
+          "hidden": false,
+          "index": 4
+        },
+        {
+          "name": "settings",
+          "caption": "Settings",
+          "hidden": false,
+          "index": 5
+        }
+      ],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "Parent",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 6,
+          "caption": "Parent",
+          "name": "parent",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
+          "inverse": null
+        },
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "Map",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 7,
+          "caption": "Map",
+          "name": "map",
+          "relatedTo": "new-platform-flexberry-g-i-s-map",
+          "inverse": null
+        }
+      ],
+      "hasMany": [
+        {
+          "projectionName": "LayerLinkD",
+          "caption": "",
+          "name": "layerLink",
+          "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
+          "inverse": null
+        }
+      ]
     },
     {
       "name": "MapLayerE",
@@ -176,6 +268,92 @@
           "attrs": [],
           "index": 6,
           "caption": "Parent",
+          "name": "parent",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
+          "inverse": null
+        },
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "Map",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 7,
+          "caption": "Map",
+          "name": "map",
+          "relatedTo": "new-platform-flexberry-g-i-s-map",
+          "inverse": null
+        }
+      ],
+      "hasMany": [
+        {
+          "projectionName": "LayerLinkD",
+          "caption": "",
+          "name": "layerLink",
+          "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
+          "inverse": null
+        }
+      ]
+    },
+    {
+      "name": "MapLayerL",
+      "modelName": "new-platform-flexberry-g-i-s-map-layer",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Наименование",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "type",
+          "caption": "Тип",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "visibility",
+          "caption": "Видимость",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "index",
+          "caption": "Индекс",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "CRS",
+          "hidden": false,
+          "index": 4
+        },
+        {
+          "name": "settings",
+          "caption": "Настройки",
+          "hidden": false,
+          "index": 5
+        }
+      ],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "Parent",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [
+            {
+              "name": "name",
+              "caption": "Родительский слой",
+              "hidden": false,
+              "index": 6
+            }
+          ],
+          "index": 7,
+          "caption": "Родительский слой",
           "name": "parent",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
           "inverse": null

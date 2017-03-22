@@ -42,37 +42,37 @@
   </div>
   <div class="ui inernally celled grid">
     <div class="ui very wide right sidebar treeview pushable">
-      {{flexberry-maplayers
-        class="styled"
-        cswConnections=cswConnections
-        leafletMap=leafletMap
-        layers=(get-with-dynamic-actions this "model.rootLayer.layers"
-          hierarchyPropertyName="layers"
-          pathKeyword="layerPath"
-          dynamicActions=(array
-            (hash
-              on="add"
-              actionName="onMapLayerAdd"
-              actionArguments=(array "{% layerPath %}")
-            )
-            (hash
-              on="edit"
-              actionName="onMapLayerEdit"
-              actionArguments=(array "{% layerPath %}")
-            )
-            (hash
-              on="remove"
-              actionName="onMapLayerRemove"
-              actionArguments=(array "{% layerPath %}")
-            )
-            (hash
-              on="changeVisibility"
-              actionName="onMapLayerChangeVisibility"
-              actionArguments=(array "{% layerPath %}.visibility")
+        {{flexberry-maplayers
+          class="styled"
+          cswConnections=cswConnections
+          leafletMap=leafletMap
+          layers=(get-with-dynamic-actions this "model.hierarchy"
+            hierarchyPropertyName="layers"
+            pathKeyword="layerPath"
+            dynamicActions=(array
+              (hash
+                on="add"
+                actionName="onMapLayerAdd"
+                actionArguments=(array "{% layerPath %}")
+              )
+              (hash
+                on="edit"
+                actionName="onMapLayerEdit"
+                actionArguments=(array "{% layerPath %}")
+              )
+              (hash
+                on="remove"
+                actionName="onMapLayerRemove"
+                actionArguments=(array "{% layerPath %}")
+              )
+              (hash
+                on="changeVisibility"
+                actionName="onMapLayerChangeVisibility"
+                actionArguments=(array "{% layerPath %}.visibility")
+              )
             )
           )
-        )
-        add=(action "onMapLayerAdd" "model.rootLayer")
+        add=(action "onMapLayerAdd" "model.hierarchy")
       }}
     </div>
     <div class="ui very wide right sidebar search pushable">
@@ -92,7 +92,7 @@
       <div class="sixteen wide column">
         {{#flexberry-maptoolbar
           leafletMap=leafletMap
-          layers=model.rootLayer.layers as |mapToolbar|
+          layers=model.hierarchy as |mapToolbar|
         }}
           {{map-tools/drag activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/zoom-in activate=(action "onMapToolActivate" target=mapToolbar)}}
@@ -122,7 +122,6 @@
         lat=model.lat
         lng=model.lng
         zoom=model.zoom
-        layerLinks=layerLinks
         queryFilter=queryFilter
         leafletInit=(action "onMapLeafletInit" "leafletMap")
         serviceLayerInit=(action "onServiceLayerInit" "serviceLayer")
@@ -134,7 +133,7 @@
         {{flexberry-layers
           leafletMap=leafletMap
           leafletContainer=leafletMap
-          layers=model.rootLayer.layers
+          layers=model.hierarchy
         }}
         {{scale-control
           map=leafletMap
@@ -145,7 +144,7 @@
         }}
           {{flexberry-layers
             leafletContainer=groupLayers
-            layers=model.rootLayer.layers
+            layers=model.hierarchy
           }}
         {{/minimap-control}}
       {{/flexberry-map}}

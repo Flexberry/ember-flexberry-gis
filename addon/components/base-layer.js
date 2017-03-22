@@ -163,16 +163,14 @@ export default Ember.Component.extend(
 
       @method _query
       @param {Object} e Event object.
-      @param {Object} layerLinks Array contains layer links model, use for filter searched layers
       @param {Object} queryFilter Object with query filter paramteres
       @param {Object[]} results.features Array containing leaflet layers objects
       or a promise returning such array.
     */
     _query(e) {
-      let layerId = this.get('layerModel.id').toString();
-      let layerLinks = e.layerLinks.filter(link => link.get('layerModel.id').toString() === layerId);
+      let layerLinks = this.get('layerModel.layerLink');
 
-      if (!layerLinks.length) {
+      if (!Ember.isArray(layerLinks)) {
         return;
       }
 
@@ -290,7 +288,6 @@ export default Ember.Component.extend(
 
       @method _query
       @param {Object} e Event object.
-      @param {Object} layerLinks Array contains layer links model, use for filter searched layers
       @param {Object} queryFilter Object with query filter paramteres
       @param {Object[]} results.features Array containing leaflet layers objects
       or a promise returning such array.

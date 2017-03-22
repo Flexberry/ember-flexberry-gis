@@ -7,7 +7,9 @@ import {
   Model as NewPlatformFlexberyGISMapLayerModelMixin,
   defineProjections
 } from '../mixins/regenerated/models/new-platform-flexberry-g-i-s-map-layer';
-import { Projection } from 'ember-flexberry-data';
+import {
+  Projection
+} from 'ember-flexberry-data';
 import LeafletCrsMixin from '../mixins/leaflet-crs';
 
 /**
@@ -24,8 +26,7 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
     if (!Ember.isBlank(stringToDeserialize)) {
       try {
         return JSON.parse(stringToDeserialize);
-      }
-      catch (e) {
+      } catch (e) {
         console.log('Error on read layer properties on layer ' + this.get('name'), e);
         throw e;
       }
@@ -72,7 +73,27 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
     return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
   }),
 
-  layers: null
+  /**
+   * contains collection of nested layers
+   * @property layers
+   * @return {Array} collection of child layers
+   */
+  layers: Ember.computed('map', 'map.mapLayer', function () {
+    try {
+      let layers = this.get('map.mapLayer');
+      if (layers) {
+        let id = this.get('id');
+        if (!Ember.isBlank(id)) {
+          return layers.filterBy('parent.id', id);
+        }
+      }
+    } catch (e) {
+      console.log('Error on read children of layer ' + this.get('name'), e);
+      throw e;
+    }
+
+    return Ember.A();
+  })
 });
 
 defineProjections(Model);

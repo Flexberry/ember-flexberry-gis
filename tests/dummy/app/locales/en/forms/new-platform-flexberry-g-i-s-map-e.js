@@ -5,6 +5,5 @@ export default {
   'lng-caption': 'lng',
   'zoom-caption': 'zoom',
   'public-caption': 'public',
-  'coordinateReferenceSystem-caption': 'coordinateReferenceSystem',
-  'rootLayer-caption': 'rootLayer'
+  'coordinateReferenceSystem-caption': 'coordinateReferenceSystem'
 };

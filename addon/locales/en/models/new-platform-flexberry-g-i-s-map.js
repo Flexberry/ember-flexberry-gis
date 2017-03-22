@@ -1,43 +1,96 @@
 export default {
   projections: {
+    AuditView: {
+      name: {
+        caption: 'name'
+      },
+      creator: {
+        caption: 'creator'
+      },
+      createTime: {
+        caption: 'createTime'
+      },
+      editor: {
+        caption: 'editor'
+      },
+      editTime: {
+        caption: 'editTime'
+      }
+    },
     MapE: {
       name: {
-        caption: 'Name'
+        caption: 'name'
       },
       lat: {
-        caption: 'Lat'
+        caption: 'lat'
       },
       lng: {
-        caption: 'Lng'
+        caption: 'lng'
       },
       zoom: {
-        caption: 'Zoom'
+        caption: 'zoom'
       },
       public: {
-        caption: 'Public'
+        caption: 'public'
       },
       coordinateReferenceSystem: {
-        caption: 'CRS'
+        caption: 'coordinateReferenceSystem'
       },
-      rootLayer: {
-        caption: 'Root layer'
+      mapLayer: {
+        caption: 'mapLayer',
+        name: {
+          caption: 'name'
+        },
+        type: {
+          caption: 'type'
+        },
+        visibility: {
+          caption: 'visibility'
+        },
+        index: {
+          caption: 'index'
+        },
+        coordinateReferenceSystem: {
+          caption: 'coordinateReferenceSystem'
+        },
+        settings: {
+          caption: 'settings'
+        },
+        parent: {
+          caption: 'parent'
+        },
+        map: {
+          caption: 'map'
+        },
+        layerLink: {
+          caption: 'layerLink',
+          layer: {
+            caption: 'layer',
+            name: {
+              caption: 'name'
+            }
+          },
+          mapObjectSetting: {
+            caption: 'mapObjectSetting'
+          }
+        }
       }
     },
     MapL: {
       name: {
-        caption: 'Name'
+        caption: 'name'
       },
       lat: {
-        caption: 'Lat'
+        caption: 'lat'
       },
       lng: {
-        caption: 'Lng'
+        caption: 'lng'
       },
       zoom: {
-        caption: 'Zoom'
+        caption: 'zoom'
       },
       public: {
-        caption: 'Public'
+        caption: 'public'
       }
     }
   }

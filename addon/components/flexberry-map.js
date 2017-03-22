@@ -170,15 +170,6 @@ let FlexberryMapComponent = Ember.Component.extend(
     layers: null,
 
     /**
-      Layer links object thats use for query data on map load
-
-      @property layerLinks
-      @type Ember.Array
-      @default null
-    */
-    layerLinks: null,
-
-    /**
       JSON object with query parameters
 
       @property queryFilter
@@ -276,15 +267,11 @@ let FlexberryMapComponent = Ember.Component.extend(
       leafletMap.addLayer(serviceLayer);
       this.set('serviceLayer', serviceLayer);
 
-      this.sendAction('serviceLayerInit', serviceLayer);
-
-      let layerLinks = this.get('layerLinks');
       let queryFilter = this.get('queryFilter');
 
-      if (!Ember.isNone(layerLinks) && !Ember.isNone(queryFilter)) {
+      if (!Ember.isNone(queryFilter)) {
         Ember.run.scheduleOnce('afterRender', this, function () {
           let e = {
-            layerLinks,
             queryFilter,
             results: Ember.A()
           };
@@ -306,7 +293,7 @@ let FlexberryMapComponent = Ember.Component.extend(
             } else {
 
               // Should alert user about not found objects
-              Ember.Logger.warn('Object not found for query', layerLinks, queryFilter);
+              Ember.Logger.warn('Object not found for query', queryFilter);
             }
 
             // Hide map loader.

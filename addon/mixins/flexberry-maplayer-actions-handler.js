@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import FlexberryDdauCheckboxActionsHandlerMixin from './flexberry-ddau-checkbox-actions-handler';
+import { getRecord } from '../utils/extended-get';
 
 /**
   Mixin containing handlers for
@@ -166,6 +167,8 @@ export default Ember.Mixin.create({
       ```
     */
     onMapLayerAdd(...args) {
+      let rootPath = 'model.mapLayer';
+
       let parentLayerPath = args[0];
       Ember.assert(
         `Wrong type of \`parentLayerPath\` argument: actual type is \`${Ember.typeOf(parentLayerPath)}\`, ` +
@@ -178,7 +181,7 @@ export default Ember.Mixin.create({
         `but \`object\` or  \`instance\` is expected`,
         Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
 
-      let parentLayer = this.get(parentLayerPath);
+      let parentLayer = getRecord(this, parentLayerPath);
       Ember.assert(
         `Wrong type of \`parentLayer\` property: actual type is \`${Ember.typeOf(parentLayer)}\`, ` +
         `but \`array\` or \`object\` or  \`instance\` is expected`,
@@ -196,7 +199,6 @@ export default Ember.Mixin.create({
         Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
 
       let childLayer = this.createLayer({
-        parentLayerPath: parentLayerPath,
         parentLayer: parentLayer,
         layerProperties: layerProperties
       });
@@ -206,6 +208,9 @@ export default Ember.Mixin.create({
       }
 
       childLayers.pushObject(childLayer);
+
+      let rootArray = Ember.get(this, rootPath);
+      rootArray.pushObject(childLayer);
     },
 
     /**
@@ -248,14 +253,13 @@ export default Ember.Mixin.create({
         `but \`object\` or  \`instance\` is expected`,
         Ember.typeOf(layerProperties) === 'object' || Ember.typeOf(layerProperties) === 'instance');
 
-      let layer = this.get(layerPath);
+      let layer = getRecord(this, layerPath);
       Ember.assert(
         `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
         `but \`object\` or  \`instance\` is expected`,
         Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
 
       this.editLayer({
-        layerPath: layerPath,
         layer: layer,
         layerProperties: layerProperties
       });
@@ -294,14 +298,13 @@ export default Ember.Mixin.create({
         `but \`string\` is expected`,
         Ember.typeOf(layerPath) === 'string');
 
-      let layer = this.get(layerPath);
+      let layer = getRecord(this, layerPath);
       Ember.assert(
         `Wrong type of \`layer\` property: actual type is \`${Ember.typeOf(layer)}\`, ` +
         `but \`object\` or  \`instance\` is expected`,
         Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
 
       this.removeLayer({
-        layerPath: layerPath,
         layer: layer
       });
     }
@@ -312,7 +315,6 @@ export default Ember.Mixin.create({
 
     @method createLayer
     @param {Object} options Method options.
-    @param {String} options.parentLayerPath Path to parent layer.
     @param {String} options.parentLayer Parent layer.
     @param {Object} options.layerProperties Object containing new layer properties.
     @returns {Object} Created layer.
@@ -330,7 +332,6 @@ export default Ember.Mixin.create({
 
     @method editLayer
     @param {Object} options Method options.
-    @param {String} options.layerPath Path to editing layer.
     @param {String} options.layer Editing layer.
     @param {Object} options.layerProperties Object containing edited layer properties.
     @returns {Object} Edited layer.
@@ -353,7 +354,6 @@ export default Ember.Mixin.create({
 
     @method removeLayer
     @param {Object} options Method options.
-    @param {String} options.layerPath Path to removing layer.
     @param {String} options.layer Removing layer itself.
     @returns {Object} Removed layer.
     @private
@@ -361,6 +361,17 @@ export default Ember.Mixin.create({
   removeLayer(options) {
     options = options || {};
     let layer = Ember.get(options, 'layer');
+
+    let childLayers = Ember.get(layer, 'layers');
+
+    if (Ember.isArray(childLayers))
+    {
+      childLayers.forEach((item) => {
+        this.removeLayer({
+          layer: item
+        });
+      }, this);
+    }
 
     Ember.set(layer, 'isDeleted', true);
     return layer;

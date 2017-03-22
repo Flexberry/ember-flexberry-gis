@@ -4,8 +4,9 @@
 
 import Ember from 'ember';
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
-import MapLayersLoaderMixin from '../mixins/map-layers-loader';
-import { Query } from 'ember-flexberry-data';
+import {
+  Query
+} from 'ember-flexberry-data';
 
 /**
   Edit map route.
@@ -13,9 +14,8 @@ import { Query } from 'ember-flexberry-data';
 
   @class MapRoute
   @extends EditFormRoute
-  @uses MapLayersLoaderMixin
 */
-export default EditFormRoute.extend(MapLayersLoaderMixin, {
+export default EditFormRoute.extend({
   queryParams: {
     setting: {
       refreshModel: false,
@@ -28,33 +28,6 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
       as: 'geofilter'
     }
   },
-
-  /**
-    Name of model to be used as layer link defined by query parameters.
-
-    @property layerLinkModelName
-    @type String
-    @default 'new-platform-flexberry-g-i-s-layer-link'
-  */
-  layerLinkModelName: 'new-platform-flexberry-g-i-s-layer-link',
-
-  /**
-    Name of model projection to be used with layer link defined by query parameters.
-
-    @property layerLinkProjection
-    @type String
-    @default 'LayerLinkD'
-  */
-  layerLinkProjection: 'LayerLinkD',
-
-  /**
-    Loaded layer links.
-
-    @property layerLinks
-    @type Object[]
-    @default null
-  */
-  layerLinks: null,
 
   /**
     Name of CSW connection model projection to be used as record's properties limitation.
@@ -102,36 +75,6 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
   modelName: 'new-platform-flexberry-g-i-s-map',
 
   /**
-    Loads layer links defined in query params.
-
-    @method loadLayerLinks
-    @param {Object} params Query parameters.
-    @return {<a href="http://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>}
-    Promise which will return available layer links after it will be resolved.
-  */
-  loadLayerLinks(params) {
-    params = params || {};
-
-    // Don't send request if layer links are not defined in query params.
-    if (Ember.isBlank(params.setting)) {
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        resolve(null);
-      });
-    }
-
-    let store = this.get('store');
-    let modelName = this.get('layerLinkModelName');
-    let query = new Query.Builder(store)
-      .from(modelName)
-      .selectByProjection(this.get('layerLinkProjection'))
-      .where('mapObjectSetting', Query.FilterOperator.Eq, params.setting);
-
-    return store.query(modelName, query.build()).then(layerLinks => {
-      this.set('layerLinks', layerLinks.toArray());
-    });
-  },
-
-  /**
     Loads available CSW connections.
 
     @method loadCswConnections
@@ -142,6 +85,7 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
   loadCswConnections(params) {
     let store = this.get('store');
     let modelName = this.get('cswConnectionModelName');
+
     let query = new Query.Builder(store)
       .from(modelName)
       .selectByProjection(this.get('cswConnectionProjection'));
@@ -158,16 +102,11 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
     @param {Object} params
     @param {Object} transition
     @return {<a href="http://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>}
-    Promise which will return map project related to current route & it's layers hierarchy.
+    Promise which will return map project related to current route
   */
   model(params) {
-    let mapPromise = this.loadMapLayers(this._super(...arguments));
-
-    return this.loadLayerLinks(params).then(() => {
-      this.loadCswConnections(params);
-    }).then(() => {
-      return this.loadMapLayers(mapPromise);
-    });
+    this.loadCswConnections(params);
+    return this._super(...arguments);
   },
 
   /**
@@ -180,12 +119,12 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
   */
   setupController(controller, model) {
     this._super(...arguments);
-    let layers = model.get('rootLayer.layers');
+    let layers = model.get('mapLayer').filter(layer => Ember.isEmpty(layer.get('parent')));
+
     if (layers) {
-      model.set('rootLayer.layers', this.sortLayersByIndex(layers));
+      model.set('hierarchy', this.sortLayersByIndex(layers));
     }
 
-    controller.set('layerLinks', this.get('layerLinks'));
     controller.set('cswConnections', this.get('cswConnections'));
   },
 
@@ -194,7 +133,7 @@ export default EditFormRoute.extend(MapLayersLoaderMixin, {
     if (result) {
       result = result.sortBy('index').reverse();
       result.forEach((item) => {
-        if (item.get('type') === 'group') {
+        if (Ember.isArray(item.get('layers'))) {
           item.set('layers', this.sortLayersByIndex(item.get('layers')));
         }
       }, this);
