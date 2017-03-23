@@ -1,0 +1,43 @@
+<div>
+    {{flexberry-button
+        tooltip="Добавить в закладки"
+        iconClass="add icon"
+        class="icon item"
+        click=(action "showAddBlock")
+    }}
+</div>
+
+{{#if _addBookmarkInProcess}}
+    <div class="bmrk-add-block">
+        {{flexberry-textbox
+            value=_addBookmarkName
+            class=''        
+        }}
+        {{flexberry-button
+            tooltip="Добавить"
+            iconClass="checkmark icon"
+            class="icon item"
+            click=(action "addBookmark")
+        }}
+        {{flexberry-button
+            tooltip="Отмена"
+            iconClass="remove icon"
+            class="icon item"
+            click=(action "resetBookmark")
+        }}
+    </div>
+{{/if}}
+
+<div>
+   {{#each bookmarks as |bkmrk|}}
+        <div>
+            <span>{{bkmrk.name}}</span>
+            <button class="ui button icon mini" {{action "zoomMap" bkmrk}}>
+                <i class="zoom in icon"></i>
+            </button>
+            <button class="ui button icon mini" {{action "delBookmark" bkmrk}}>
+                <i class="minus icon"></i>
+            </button>
+        </div>
+    {{/each}}
+</div>
