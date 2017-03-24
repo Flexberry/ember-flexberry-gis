@@ -1,21 +1,28 @@
 import Ember from 'ember';
 import layout from '../templates/components/spatial-bookmark';
+import Mixin from 'ember-validations';
 import { translationMacro as t } from 'ember-i18n';
 
-let SpaceBookmarkCommandComponent = Ember.Component.extend({
-    
-    layout,
+let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
+    validations: {
+      '_addBookmarkName': {
+          presence: true,
+          length: { minimum: 1, maximum: 200 }
+        }
+    },
 
+    layout,
+    mapid: null,
     bookmarks: Ember.A(),
     
     _addBookmarkInProcess: false,
     _addBookmarkName: '',
 
-    didUpdateAttrs() {
-        this._super(...arguments);
-
-        let _this = this;
-        //_this.set('bookmarks', _this.get('storage-service').get(_this.get('model.id')));
+    init() { 
+      this._super(...arguments); 
+      
+      let _this = this;
+      _this.set('bookmarks', _this.get('storage-service').getFromStorage(_this.get('mapid'))); 
     },
 
     actions: {
@@ -26,28 +33,37 @@ let SpaceBookmarkCommandComponent = Ember.Component.extend({
 
       addBookmark() {
         let _this = this;
+        if (!_this.get('isValid')){
+          return;
+        }
+      
+        let map = _this.get('leafletMap');
         let bookmark = {
           name: _this.get('_addBookmarkName'),
-          bounds: _this.get('leafletMap').getBounds()
+          center: map.getCenter(),
+          zoom: map.getZoom()
         };
         _this.get('bookmarks').pushObject(bookmark);
-        //_this.get('storage-service').add(_this.get('model.id'), bookmark);
+        _this.get('storage-service').setToStorage(_this.get('mapid'), _this.get('bookmarks'));
+
+        this.set('_addBookmarkInProcess', false);
+        this.set('_addBookmarkName', '');
       },
 
       resetBookmark() {
         this.set('_addBookmarkInProcess', false);
+        this.set('_addBookmarkName', '');
       },
 
       zoomMap(bookmark) {
-        let _this = this;
-        let map = _this.get('leafletMap');
-        map.fitBounds(Ember.get(bookmark, 'bounds'));
+        let map = this.get('leafletMap');
+        map.setView([bookmark.center.lat, bookmark.center.lng], bookmark.zoom);
       },
 
       delBookmark(bookmark) {
         let _this = this;
         _this.get('bookmarks').removeObject(bookmark);
-        //_this.get('storage-service').remove(_this.get('model.id'), bookmark);
+        _this.get('storage-service').setToStorage(_this.get('mapid'), _this.get('bookmarks'));
       }      
     },
 

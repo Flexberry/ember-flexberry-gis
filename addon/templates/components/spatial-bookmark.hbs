@@ -1,43 +1,50 @@
-<div>
-    {{flexberry-button
-        tooltip="Добавить в закладки"
-        iconClass="add icon"
-        class="icon item"
-        click=(action "showAddBlock")
-    }}
-</div>
-
-{{#if _addBookmarkInProcess}}
-    <div class="bmrk-add-block">
-        {{flexberry-textbox
-            value=_addBookmarkName
-            class=''        
-        }}
+<div class="bookmark-block">
+    <div>
         {{flexberry-button
-            tooltip="Добавить"
-            iconClass="checkmark icon"
+            tooltip=(t "components.spatial-bookmarks.add-bookmark")
+            caption=(t "components.spatial-bookmarks.add-bookmark")
+            iconClass="add icon"
             class="icon item"
-            click=(action "addBookmark")
-        }}
-        {{flexberry-button
-            tooltip="Отмена"
-            iconClass="remove icon"
-            class="icon item"
-            click=(action "resetBookmark")
+            click=(action "showAddBlock")
         }}
     </div>
-{{/if}}
 
-<div>
-   {{#each bookmarks as |bkmrk|}}
-        <div>
-            <span>{{bkmrk.name}}</span>
-            <button class="ui button icon mini" {{action "zoomMap" bkmrk}}>
-                <i class="zoom in icon"></i>
-            </button>
-            <button class="ui button icon mini" {{action "delBookmark" bkmrk}}>
-                <i class="minus icon"></i>
-            </button>
+    {{#if _addBookmarkInProcess}}
+        <div class="bmrk-add-block">
+            {{flexberry-textbox
+                value=_addBookmarkName
+                class=(if errors._addBookmarkName 'error' '')
+            }}            
+            <div class="bmrk-add-block-buttons">
+                {{flexberry-button
+                    tooltip=(t "components.spatial-bookmarks.create-bookmark")
+                    iconClass="checkmark icon"
+                    class="icon item"
+                    click=(action "addBookmark")
+                }}
+                {{flexberry-button
+                    tooltip=(t "components.spatial-bookmarks.cancel")
+                    iconClass="remove icon"
+                    class="icon item"
+                    click=(action "resetBookmark")
+                }}
+            </div>
         </div>
-    {{/each}}
+    {{/if}}
+    <hr />
+    <div class="bookmarks">
+    {{#each bookmarks as |bkmrk|}}
+            <div class="bookmark-item">
+                <div class="bookmark-item-title">{{bkmrk.name}}</div>
+                <div class="bookmark-item-buttons">
+                    <button class="ui button icon" title="{{ t "components.spatial-bookmarks.go-to-bookmark" }}" {{action "zoomMap" bkmrk}}>
+                        <i class="zoom in icon"></i>
+                    </button>
+                    <button class="ui button icon" title="{{ t "components.spatial-bookmarks.remove-bookmark" }}" {{action "delBookmark" bkmrk}}>
+                        <i class="minus icon"></i>
+                    </button>
+                </div>
+            </div>
+        {{/each}}
+    </div>
 </div>

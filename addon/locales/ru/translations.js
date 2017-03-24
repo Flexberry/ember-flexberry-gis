@@ -26,10 +26,21 @@ export default {
   },
 
   'forms': {
+    'map': {
+      'bookmarksbuttontooltip': 'Пространственные закладки'
+    }
   },
 
   'components': {
     'feature-result-item': FeatureResultItemComponent,
+
+    'spatial-bookmarks': {
+      'add-bookmark': 'Добавить в закладки',
+      'create-bookmark': 'Добавить',
+      'cancel': 'Отмена',
+      'go-to-bookmark': 'Перейти к закладке',
+      'remove-bookmark': 'Удалить закладку',
+    },
 
     'flexberry-dialog': {
       'approve-button': {
