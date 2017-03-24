@@ -2,18 +2,18 @@ import Ember from 'ember';
 
 export default Ember.Service.extend({
   available: false,
-  
+
   getAvailable() {
     try {
-        return window['localStorage'] !== null;
+      return window.localStorage !== null;
     } catch (e) {
-        return false;
+      return false;
     }
   },
 
   init() {
     this._super(...arguments);
-    
+
     let _this = this;
     _this.set('available', _this.getAvailable());
   },
@@ -23,13 +23,13 @@ export default Ember.Service.extend({
     if (this.get('available')) {
       try {
         var inStore = JSON.parse(localStorage.getItem('bookmarks' + map));
-        if (inStore){
-            inStore.forEach(function(element) {
-                bookmarks.pushObject(element);
-            });
+        if (inStore) {
+          inStore.forEach(function (element) {
+            bookmarks.pushObject(element);
+          });
         }
       }
-      catch(e){ 
+      catch (e) {
       }
     }
 
