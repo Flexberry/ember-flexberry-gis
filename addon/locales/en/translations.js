@@ -25,12 +25,6 @@ export default {
     'new-platform-flexberry-g-i-s-map-object-setting': NewPlatformFlexberryGISMapObjectSettingModel
   },
 
-  'forms': {
-    'map': {
-      'bookmarksbuttontooltip': 'Spatial bookmarks'
-    }
-  },
-
   'components': {
     'feature-result-item': FeatureResultItemComponent,
 

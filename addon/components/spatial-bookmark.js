@@ -1,19 +1,63 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 import layout from '../templates/components/spatial-bookmark';
 import Mixin from 'ember-validations';
 
 let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
+  /**
+    Validation settings
+  */
   validations: {
     '_addBookmarkName': {
       presence: true,
       length: { minimum: 1, maximum: 200 }
     }
   },
+
+  /**
+    Reference to component's template.
+  */
   layout,
+
+  /**
+    Map's id (primarykey). Key for store bookmarks
+
+    @property mapid
+    @type string
+    @public
+  */
   mapid: null,
+
+  /**
+    Bookmarks array
+
+    @property bookmarks
+    @type array
+    @private
+  */
   bookmarks: Ember.A(),
+
+  /**
+    Flag: indicates whether "add bookmark" block is visible
+
+    @property _addBookmarkInProcess
+    @type boolean
+    @private
+  */
   _addBookmarkInProcess: false,
+
+  /**
+    New bookmark's name
+
+    @property _addBookmarkName
+    @type string
+    @private
+  */
   _addBookmarkName: '',
+
   init() {
     this._super(...arguments);
 
@@ -22,11 +66,22 @@ let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
   },
 
   actions: {
+    /**
+      Show "add bookmark" block
 
+      @method showAddBlock
+      @private
+    */
     showAddBlock() {
       this.set('_addBookmarkInProcess', true);
     },
 
+    /**
+      Create and save new bookmark
+
+      @method addBookmark
+      @private
+    */
     addBookmark() {
       let _this = this;
       if (!_this.get('isValid')) {
@@ -46,32 +101,41 @@ let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
       _this.set('_addBookmarkName', '');
     },
 
+    /**
+      Hide "add bookmark" block
+
+      @method resetBookmark
+      @private
+    */
     resetBookmark() {
       this.set('_addBookmarkInProcess', false);
       this.set('_addBookmarkName', '');
     },
 
+    /**
+      Go to selected bookmark
+
+      @method zoomMap
+      @private
+    */
     zoomMap(bookmark) {
       let map = this.get('leafletMap');
       map.setView([bookmark.center.lat, bookmark.center.lng], bookmark.zoom);
     },
 
+    /**
+      Remove selected bookmark
+
+      @method delBookmark
+      @private
+    */
     delBookmark(bookmark) {
       let _this = this;
       _this.get('bookmarks').removeObject(bookmark);
       _this.get('storage-service').setToStorage(_this.get('mapid'), _this.get('bookmarks'));
     }
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-  },
-
-  willDestroy() {
-    this._super(...arguments);
   }
-}
-);
+});
 
 SpaceBookmarkCommandComponent.reopenClass({
 });
