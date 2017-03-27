@@ -4,6 +4,9 @@
 
 import Ember from 'ember';
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
+import {
+  Query
+} from 'ember-flexberry-data';
 
 /**
   Edit map route.
@@ -27,15 +30,6 @@ export default EditFormRoute.extend({
   },
 
   /**
-    Name of model projection to be used as record's properties limitation.
-
-    @property modelProjection
-    @type String
-    @default 'MapE'
-  */
-  modelProjection: 'MapE',
-
-  /**
     Name of model to be used as form's record type.
 
     @property modelName
@@ -43,6 +37,51 @@ export default EditFormRoute.extend({
     @default 'new-platform-flexberry-g-i-s-map'
   */
   modelName: 'new-platform-flexberry-g-i-s-map',
+
+  /**
+    Name of model projection to be used as record's properties limitation.
+
+    @property modelProjection
+    @type String
+    @default 'Map'
+  */
+  modelProjection: 'Map',
+
+  /**
+    Name of model to be used for layer loading.
+
+    @property layerModelName
+    @type String
+    @default 'new-platform-flexberry-g-i-s-map-layer'
+  */
+  layerModelName: 'new-platform-flexberry-g-i-s-map-layer',
+
+  /**
+    Name of model projection to be used as layers's properties limitation.
+
+    @property layerModelProjection
+    @type String
+    @default 'MapLayer'
+  */
+  layerModelProjection: 'MapLayer',
+
+  model() {
+    let model = this._super(...arguments);
+    return model.then((map) => {
+      let store = this.get('store');
+      let layerModelName = this.get('layerModelName');
+
+      let query = new Query.Builder(store)
+        .from(layerModelName)
+        .selectByProjection(this.get('layerModelProjection'))
+        .where('map', Query.FilterOperator.Eq, map.get('id'));
+
+      return store.query(layerModelName, query.build()).then((layers) => {
+        map.set('mapLayer', layers);
+        return model;
+      });
+    })
+  },
 
   /**
     Setups controller for the current route.
