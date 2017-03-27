@@ -6,6 +6,12 @@ import Ember from 'ember';
 import layout from '../templates/components/spatial-bookmark';
 import Mixin from 'ember-validations';
 
+/**
+  Flexberry component for display and add/remove spatial bookmarks
+
+  @class SpaceBookmarkCommandComponent
+  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+*/
 let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
   /**
     Validation settings
@@ -61,8 +67,7 @@ let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
   init() {
     this._super(...arguments);
 
-    let _this = this;
-    _this.set('bookmarks', _this.get('storage-service').getFromStorage(_this.get('mapid')));
+    this.set('bookmarks', this.get('storage-service').getFromStorage(this.get('mapid')));
   },
 
   actions: {
@@ -83,22 +88,21 @@ let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
       @private
     */
     addBookmark() {
-      let _this = this;
-      if (!_this.get('isValid')) {
+      if (!this.get('isValid')) {
         return;
       }
 
-      let map = _this.get('leafletMap');
+      let map = this.get('leafletMap');
       let bookmark = {
-        name: _this.get('_addBookmarkName'),
+        name: this.get('_addBookmarkName'),
         center: map.getCenter(),
         zoom: map.getZoom()
       };
-      _this.get('bookmarks').pushObject(bookmark);
-      _this.get('storage-service').setToStorage(_this.get('mapid'), _this.get('bookmarks'));
+      this.get('bookmarks').pushObject(bookmark);
+      this.get('storage-service').setToStorage(this.get('mapid'), this.get('bookmarks'));
 
-      _this.set('_addBookmarkInProcess', false);
-      _this.set('_addBookmarkName', '');
+      this.set('_addBookmarkInProcess', false);
+      this.set('_addBookmarkName', '');
     },
 
     /**
@@ -130,9 +134,8 @@ let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
       @private
     */
     delBookmark(bookmark) {
-      let _this = this;
-      _this.get('bookmarks').removeObject(bookmark);
-      _this.get('storage-service').setToStorage(_this.get('mapid'), _this.get('bookmarks'));
+      this.get('bookmarks').removeObject(bookmark);
+      this.get('storage-service').setToStorage(this.get('mapid'), this.get('bookmarks'));
     }
   }
 });
