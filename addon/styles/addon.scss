@@ -7,34 +7,49 @@
 @import './components/layer-result-list';
 @import './components/map-commands-dialogs/search';
 @import './icons';
-/**
-  Increased 'loading' form z-index to hide leaflet map placed on form.
-*/
-.ui.loading.form:before {
-  z-index: 1000000 !important;
+.ui.loading.form {
+  /**
+    Increased 'loading' form z-index to hide leaflet map placed on form.
+  */
+  &:before {
+    z-index: 1000000 !important;
+  }
+  /**
+    Increased 'loading' form spinner z-index to make it visible above leaflet map & form.
+  */
+  &:after {
+    z-index: 1000001 !important;
+  }
 }
 
-/**
-  Increased 'loading' form spinner z-index to make it visible above leaflet map & form.
-*/
-.ui.loading.form:after {
-  z-index: 1000001 !important;
-}
-
-/**
-  Prevent ui messages from being hided inside <form>.
-*/
-.ui.form .success.message,
-.ui.form .warning.message,
-.ui.form .error.message {
+.ui.form {
+  /**
+    Prevent ui messages from being hided inside <form>.
+  */
+  .success.message,
+  .warning.message,
+  .error.message {
     display: block !important;
+    /**
+      Hide hidden ui messages inside <form>.
+    */
+    &.hidden {
+      display: none !important;
+    }
+  }
 }
 
-/**
-  Hide hidden ui messages inside <form>.
+
+/** 
+    Fix disappearing checkboxes while scrolling
 */
-.ui.form .success.message.hidden,
-.ui.form .warning.message.hidden,
-.ui.form .error.message.hidden {
-    display: none !important;
+
+.ui.checkbox {
+  .box:before,
+  label:before,
+  input:checked~.box:after,
+  input:checked~label:after {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
 }
