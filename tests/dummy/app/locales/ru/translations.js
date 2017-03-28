@@ -169,7 +169,8 @@ Ember.$.extend(true, translations, {
     'map': {
       'caption': 'Карта',
       'treeviewbuttontooltip': 'Показать дерево слоёв',
-      'searchbuttontooltip': 'Показать поиск'
+      'searchbuttontooltip': 'Показать поиск',
+      'bookmarksbuttontooltip': 'Пространственные закладки'
     },
     'csw': {
       'caption': 'CSW соединения'

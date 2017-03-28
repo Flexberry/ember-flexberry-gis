@@ -1,3 +1,7 @@
 .flexberry-map-tool-submenu {
   z-index: 1000000 !important;
 }
+
+.flexberry-maptoolbar.ui.menu {
+  flex-wrap: wrap;
+}

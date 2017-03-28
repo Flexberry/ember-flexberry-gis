@@ -88,6 +88,12 @@
         leafletMap=leafletMap
         }}
     </div>
+    <div class="ui very wide right sidebar bookmarks pushable">
+      {{spatial-bookmark        
+        leafletMap=leafletMap
+        mapid=model.id
+      }}
+    </div>
     <div class="row">
       <div class="sixteen wide column">
         {{#flexberry-maptoolbar
@@ -104,6 +110,11 @@
           {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-commands/export execute=(action "onMapCommandExecute" target=mapToolbar)}}
+          <a {{action 'toggleSidebar' '.ui.sidebar.bookmarks' '.mappanel'}}
+              class="icon item"
+              title={{t "forms.map.bookmarksbuttontooltip"}}>
+            <i class="bookmark icon"></i>
+          </a>
           <a {{action 'toggleSidebar' '.ui.sidebar.treeview' '.mappanel'}}
               class="icon item"
               title={{t "forms.map.treeviewbuttontooltip"}}>
