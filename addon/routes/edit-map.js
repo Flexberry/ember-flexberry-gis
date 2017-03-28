@@ -65,6 +65,15 @@ export default EditFormRoute.extend({
   */
   layerModelProjection: 'MapLayer',
 
+  /**
+    [Model hook](http://emberjs.com/api/classes/Ember.Route.html#method_model) that returns a map project for current route.
+
+    @method model
+    @param {Object} params
+    @param {Object} transition
+    @return {<a href="http://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>}
+    Promise which will return map project related to current route
+  */
   model() {
     let model = this._super(...arguments);
     return model.then((map) => {
