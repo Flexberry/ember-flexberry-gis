@@ -80,7 +80,7 @@ export default EditFormRoute.extend({
         map.set('mapLayer', layers);
         return model;
       });
-    })
+    });
   },
 
   /**
