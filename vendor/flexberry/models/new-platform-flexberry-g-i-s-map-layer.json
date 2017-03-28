@@ -161,16 +161,22 @@
           "index": 2
         },
         {
-          "name": "coordinateReferenceSystem",
+          "name": "index",
           "caption": "",
           "hidden": false,
           "index": 3
         },
         {
-          "name": "settings",
+          "name": "coordinateReferenceSystem",
           "caption": "",
           "hidden": false,
           "index": 4
+        },
+        {
+          "name": "settings",
+          "caption": "",
+          "hidden": false,
+          "index": 5
         }
       ],
       "belongsTo": [
@@ -181,7 +187,7 @@
           "belongsTo": [],
           "hidden": false,
           "attrs": [],
-          "index": 5,
+          "index": 6,
           "caption": "",
           "name": "parent",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
@@ -243,19 +249,6 @@
           "caption": "Parent",
           "name": "parent",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
-          "inverse": null
-        },
-        {
-          "lookupValue": null,
-          "lookupValueField": null,
-          "relationName": "Map",
-          "belongsTo": [],
-          "hidden": false,
-          "attrs": [],
-          "index": 7,
-          "caption": "Map",
-          "name": "map",
-          "relatedTo": "new-platform-flexberry-g-i-s-map",
           "inverse": null
         }
       ],
