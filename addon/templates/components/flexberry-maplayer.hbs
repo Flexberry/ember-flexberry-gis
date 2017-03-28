@@ -19,7 +19,9 @@
     {{flexberry-icon
       class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
     }}
-    {{name}}
+    <label class={{flexberryClassNames.caption}}>
+      {{name}}
+    </label>
     {{#if (not readonly)}}
       {{flexberry-button
         class=(concat flexberryClassNames.removeButton " right floated " flexberryClassNames.preventExpandCollapse)

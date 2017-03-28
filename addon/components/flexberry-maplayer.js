@@ -25,6 +25,7 @@ import layout from '../templates/components/flexberry-maplayer';
   @property {String} flexberryClassNames.addButton Component's 'add' button CSS-class name ('flexberry-maplayer-add-button').
   @property {String} flexberryClassNames.editButton Component's 'edit' button CSS-class name ('flexberry-maplayer-edit-button').
   @property {String} flexberryClassNames.removeButton Component's 'remove' button CSS-class name ('flexberry-maplayer-remove-button').
+  @property {String} flexberryClassNames.caption Component's 'name' label CSS-class name ('flexberry-maplayer-caption-label').
   @property {String} flexberryClassNames.preventExpandCollapse Component's CSS-class name to prevent nodes expand/collapse animation ('flexberry-treenode-prevent-expand-collapse').
   @readonly
   @static
@@ -40,6 +41,7 @@ const flexberryClassNames = {
   addButton: flexberryClassNamesPrefix + '-add-button',
   editButton: flexberryClassNamesPrefix + '-edit-button',
   removeButton: flexberryClassNamesPrefix + '-remove-button',
+  caption: flexberryClassNamesPrefix + '-caption-label',
   preventExpandCollapse: FlexberryTreenodeComponent.flexberryClassNames.preventExpandCollapse,
 };
 
