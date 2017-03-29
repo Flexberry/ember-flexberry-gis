@@ -43,7 +43,7 @@ const flexberryClassNames = {
 
   templates/my-map-form.hbs
   ```handlebars
-      {{map-commands/go-to 
+      {{map-commands/go-to
         availableCRS=availableCRS
         execute=(action "onMapCommandExecute" target=mapToolbar)}}
   ```

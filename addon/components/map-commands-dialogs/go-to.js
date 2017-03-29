@@ -49,7 +49,7 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
       @private
     */
     _availableCaptions: Ember.computed('_availableModes.[]', function() {
-      let availableModes = this.get('_availableModes'); 
+      let availableModes = this.get('_availableModes');
       let captions = Ember.A();
       availableModes.forEach(function(item) {
         captions.push(item.name);
@@ -77,7 +77,7 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
     */
     _selectedCrs: Ember.computed('_selectedMode', function() {
       let selectedMode = this.get('_selectedMode');
-      let availableModes = this.get('_availableModes'); 
+      let availableModes = this.get('_availableModes');
       let current = null;
 
       availableModes.forEach(function(item) {
