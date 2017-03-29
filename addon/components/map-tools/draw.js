@@ -283,6 +283,7 @@ let DrawMapToolComponent = Ember.Component.extend({
       Flag: is map tool 'draw-marker' enable
 
       @property drawMarker
+      @default true
       @type Boolean
     */
     drawMarker: true,
@@ -290,7 +291,8 @@ let DrawMapToolComponent = Ember.Component.extend({
     /**
       Flag: is map tool 'draw-polyline' enable
 
-      @property drawMarker
+      @property drawPolyline
+      @default true
       @type Boolean
     */
     drawPolyline: true,
@@ -298,7 +300,8 @@ let DrawMapToolComponent = Ember.Component.extend({
     /**
       Flag: is map tool 'draw-circle' enable
 
-      @property drawMarker
+      @property drawCircle
+      @default true
       @type Boolean
     */
     drawCircle: true,
@@ -306,7 +309,8 @@ let DrawMapToolComponent = Ember.Component.extend({
     /**
       Flag: is map tool 'draw-rectangle' enable
 
-      @property drawMarker
+      @property drawRectangle
+      @default true
       @type Boolean
     */
     drawRectangle: true,
@@ -314,7 +318,8 @@ let DrawMapToolComponent = Ember.Component.extend({
     /**
       Flag: is map tool 'draw-polygon' enable
 
-      @property drawMarker
+      @property drawPolygon
+      @default true
       @type Boolean
     */
     drawPolygon: true,
@@ -322,7 +327,8 @@ let DrawMapToolComponent = Ember.Component.extend({
     /**
       Flag: is map tool 'draw-clear' enable
 
-      @property drawMarker
+      @property drawClear
+      @default true
       @type Boolean
     */
     drawClear: true,

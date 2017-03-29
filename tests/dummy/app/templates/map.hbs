@@ -106,7 +106,9 @@
           {{map-commands/go-to execute=(action "onMapCommandExecute" target=mapToolbar)}}
           {{map-commands/full-extent execute=(action "onMapCommandExecute" target=mapToolbar)}}
           {{map-commands/search execute=(action "onMapCommandExecute" target=mapToolbar)}}
-          {{map-tools/identify activate=(action "onMapToolActivate" target=mapToolbar)}}
+          {{map-tools/identify
+            identifyAll=false
+            activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/measure
             measureCoordinates=false
             activate=(action "onMapToolActivate" target=mapToolbar)}}
