@@ -86,6 +86,11 @@
 
     {{#yield-slot "header"}}
       {{yield}}
+
+      {{#if (eq layer.type "wms")}}
+        {{component (concat "legends/" layer.type "-legend") layer=layer}}
+      {{/if}}
+
     {{/yield-slot}}
   {{/block-slot}}
 

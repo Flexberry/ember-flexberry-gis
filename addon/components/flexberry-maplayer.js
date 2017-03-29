@@ -304,6 +304,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     name: null,
 
     /**
+      Layer.
+
+      @property layer
+      @type Object
+      @default null
+    */
+    layer: null,
+
+    /**
       Layer's CRS (coordinate reference system).
 
       @property coordinateReferenceSystem
