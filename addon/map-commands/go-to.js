@@ -23,24 +23,16 @@ export default BaseMapCommand.extend({
 
     let point = Ember.get(options, 'point');
     let crs = Ember.get(options, 'crs');
+    let xCaption = Ember.get(options, 'xCaption');
+    let yCaption = Ember.get(options, 'yCaption');
 
     let latlng = null;
-    if (crs === L.CRS.EPSG4326) {
-      // X & Y already defined as latitude & longitude.
-      latlng = new L.LatLng(point.x, point.y);
-    } else {
-      latlng = crs.unproject(point);
-    }
+    latlng = crs.unproject(point);
 
     let leafletMap = this.get('leafletMap');
     leafletMap.panTo(latlng);
 
-    let i18n = this.get('i18n');
-    let popupContent = crs === L.CRS.EPSG4326 ?
-      `${i18n.t('map-commands.go-to.lat-caption')}: ${latlng.lat}; ` +
-      `${i18n.t('map-commands.go-to.lng-caption')}: ${latlng.lng}` :
-      `${i18n.t('map-commands.go-to.x-caption')}: ${point.x}; ` +
-      `${i18n.t('map-commands.go-to.y-caption')}: ${point.y}`;
+    let popupContent = `${xCaption}: ${latlng.lng}; ${yCaption}: ${latlng.lat}` ;
 
     leafletMap.openPopup(popupContent, latlng);
   }
