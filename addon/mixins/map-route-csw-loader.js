@@ -1,8 +1,18 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 import {
   Query
 } from 'ember-flexberry-data';
 
+/**
+  Mixin thats load data for use in add layers dialog by CSW settings.
+
+  @class MapRouteCswLoaderMixin
+  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+*/
 export default Ember.Mixin.create({
   /**
   Name of CSW connection model projection to be used as record's properties limitation.
