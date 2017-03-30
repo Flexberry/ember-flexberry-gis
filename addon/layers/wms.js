@@ -19,7 +19,7 @@ export default TileLayer.extend({
     @type String[]
     @default ['edit', 'remove', 'identify']
   */
-  operations: ['edit', 'remove', 'identify'],
+  operations: ['edit', 'remove', 'identify', 'legend'],
 
   /**
     Creates new settings object (with settings related to layer-type).

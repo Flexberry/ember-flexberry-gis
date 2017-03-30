@@ -87,7 +87,7 @@
     {{#yield-slot "header"}}
       {{yield}}
 
-      {{#if (eq layer.type "wms")}}
+      {{#if layer.hasLegend}}
         {{component (concat "legends/" layer.type "-legend") layer=layer}}
       {{/if}}
 
