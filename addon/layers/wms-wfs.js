@@ -27,7 +27,7 @@ export default WmsLayer.extend({
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'search']
+    @default ['edit', 'remove', 'identify', 'search', 'legend']
   */
   operations: ['edit', 'remove', 'identify', 'search', 'legend'],
 

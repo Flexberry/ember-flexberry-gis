@@ -17,7 +17,7 @@ export default TileLayer.extend({
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify']
+    @default ['edit', 'remove', 'identify', 'legend']
   */
   operations: ['edit', 'remove', 'identify', 'legend'],
 
