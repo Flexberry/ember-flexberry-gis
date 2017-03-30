@@ -40,8 +40,13 @@
           click=(action "onAddButtonClick")
         }}
       {{/if}}
-      <div style="clear: both;"></div>
     {{/if}}
+    {{flexberry-ddau-slider
+      class=(concat flexberryClassNames.opacitySlider " " flexberryClassNames.preventExpandCollapse)
+      value=opacity
+      multiplier=100
+      change=(action "onOpacitySliderChange")
+    }}
 
     {{!--
       Semantic UI modal dialogs takes long time to be initialized

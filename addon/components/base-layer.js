@@ -84,12 +84,48 @@ export default Ember.Component.extend(
     }),
 
     /**
+      This layer's opacity
+      @property opacity
+      @type Float
+      @default null
+     */
+    opacity: null,
+
+    /**
+      Call leaflet layer setOpacity if it presents.
+      @method setOpacity
+     */
+    setOpacity: Ember.observer('opacity', function () {
+      let layer = this.get('_leafletObject');
+      let _opacity = this.get('opacity');
+      if (layer && layer.setOpacity && _opacity) {
+        layer.setOpacity(this.get('opacity'));
+      }
+    }),
+
+    /**
       Flag, indicates visible or not current layer on map.
       @property visibility
       @type Boolean
       @default null
      */
     visibility: null,
+
+    /**
+      Handles changes in {{#crossLink "BaseLayerComponent/visibility:property"}}'visibility' property{{/crossLink}}.
+      Switches layer's visibility.
+
+      @method visibilityDidChange
+     */
+    visibilityDidChange: Ember.observer('visibility', function () {
+      let container = this.get('leafletContainer');
+
+      if (this.get('visibility')) {
+        container.addLayer(this.get('_leafletObject'));
+      } else {
+        container.removeLayer(this.get('_leafletObject'));
+      }
+    }),
 
     /**
       Layer's coordinate reference system (CRS).
@@ -193,6 +229,7 @@ export default Ember.Component.extend(
       this._super(...arguments);
       this.visibilityDidChange();
       this.setZIndex();
+      this.setOpacity();
 
       let leafletMap = this.get('leafletMap');
       if (!Ember.isNone(leafletMap)) {
@@ -222,22 +259,6 @@ export default Ember.Component.extend(
         leafletContainer.removeLayer(this.get('_leafletObject'));
       }
     },
-
-    /**
-      Handles changes in {{#crossLink "BaseLayerComponent/visibility:property"}}'visibility' property{{/crossLink}}.
-      Switches layer's visibility.
-
-      @method visibilityDidChange
-     */
-    visibilityDidChange: Ember.observer('visibility', function () {
-      let container = this.get('leafletContainer');
-
-      if (this.get('visibility')) {
-        container.addLayer(this.get('_leafletObject'));
-      } else {
-        container.removeLayer(this.get('_leafletObject'));
-      }
-    }),
 
     /**
       Creates leaflet layer related to layer type.

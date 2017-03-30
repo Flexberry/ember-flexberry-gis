@@ -37,6 +37,7 @@ const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
   visibilityCheckbox: flexberryClassNamesPrefix + '-visibility-checkbox',
+  opacitySlider: flexberryClassNamesPrefix + '-opacity-slider',
   typeIcon: flexberryClassNamesPrefix + '-type-icon',
   addButton: flexberryClassNamesPrefix + '-add-button',
   editButton: flexberryClassNamesPrefix + '-edit-button',
@@ -150,7 +151,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasLayers: Ember.computed('layers.[]', 'layers.@each.isDeleted', function() {
+    _hasLayers: Ember.computed('layers.[]', 'layers.@each.isDeleted', function () {
       let layers = this.get('layers');
 
       return Ember.isArray(layers) && layers.filter((layer) => {
@@ -167,7 +168,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasContent: Ember.computed('_slots.[]', '_hasLayers', function() {
+    _hasContent: Ember.computed('_slots.[]', '_hasLayers', function () {
       // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
       return this._isRegistered('content') || this.get('_hasLayers');
     }),
@@ -180,7 +181,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _layerClassFactory: Ember.computed('type', function() {
+    _layerClassFactory: Ember.computed('type', function () {
       return Ember.getOwner(this).knownForType('layer', this.get('type'));
     }),
 
@@ -192,7 +193,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _typeIconClass: Ember.computed('_layerClassFactory', function() {
+    _typeIconClass: Ember.computed('_layerClassFactory', function () {
       let layerClassFactory = this.get('_layerClassFactory');
 
       return Ember.get(layerClassFactory, 'iconClass');
@@ -206,7 +207,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _addOperationIsAvailable: Ember.computed('_layerClassFactory', function() {
+    _addOperationIsAvailable: Ember.computed('_layerClassFactory', function () {
       let layerClassFactory = this.get('_layerClassFactory');
 
       return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('add');
@@ -333,6 +334,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     visibility: false,
 
     /**
+      Layer's opacity.
+
+      @property visibility
+      @type Int
+      @default 100
+    */
+    opacity: 100,
+
+    /**
       Child layers.
       This property is optional and must be used when there are too many child layers,
       and you don't want to define them explicitly in the .hbs markup,
@@ -418,6 +428,17 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onVisibilityCheckboxChange(...args) {
         this.sendAction('changeVisibility', ...args);
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryDdauSliderComponent/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeVisibility:method"}}'changeOpacity'action{{/crossLink}}.
+
+        @method actions.onOpacitySliderChange
+        @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauSlider/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
+      */
+      onOpacitySliderChange(...args) {
+        this.sendAction('changeOpacity', ...args);
       },
 
       /**

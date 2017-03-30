@@ -70,6 +70,11 @@
                 actionName="onMapLayerChangeVisibility"
                 actionArguments=(array "{% layerPath %}.visibility")
               )
+              (hash
+                on="changeOpacity"
+                actionName="onMapLayerChangeOpacity"
+                actionArguments=(array "{% layerPath %}.settingsAsObject.opacity")
+              )
             )
           )
         add=(action "onMapLayerAdd" "model.hierarchy")

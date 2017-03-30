@@ -12,7 +12,7 @@
 .ui.styled.accordion .title,
 .ui.styled.accordion .accordion .title {
   line-height: 2em;
-  & > * {
+  &>* {
     display: inline-block;
     vertical-align: middle;
     line-height: 1em;
@@ -25,5 +25,22 @@
   }
   .flexberry-button {
     padding: .5em;
+  }
+  .flexberry-slider {
+    width: 100%;
+    height: 10px;
+    .ui-slider {
+      .slider.slider-horizontal {
+        height: 10px;
+        .slider-track {
+          height: 5px;
+        }
+      }
+      .slider-handle {
+        width: 12px;
+        height: 12px;
+        margin-top: -3px;
+      }
+    }
   }
 }

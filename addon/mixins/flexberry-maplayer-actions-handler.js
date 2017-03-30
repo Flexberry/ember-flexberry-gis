@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import FlexberryDdauCheckboxActionsHandlerMixin from './flexberry-ddau-checkbox-actions-handler';
+import FlexberryDdauSliderActionsHandlerMixin from './flexberry-ddau-slider-actions-handler';
 import { getRecord } from '../utils/extended-get';
 
 /**
@@ -135,6 +136,43 @@ export default Ember.Mixin.create({
     onMapLayerChangeVisibility(...args) {
       let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauCheckboxActionsHandlerMixin).create();
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
+
+      actionHandler.apply(this, args);
+    },
+
+    /**
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeOpacity:method"}}flexberry-maplayers component's 'changeOpacity' action{{/crossLink}}.
+      It mutates value of property with given name to value of action's event object 'newValue' property.
+
+      @method actions.onMapLayerChangeOpacity
+      @param {String} mutablePropertyPath Path to a property, which value must be mutated on action.
+      @param {Object} e Action's event object.
+      @param {Object} e.newValue New value for a property, which value must be mutated on action.
+      @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
+      which describes checkbox input's 'change' event.
+
+      @example
+      templates/my-form.hbs
+      ```handlebars
+        {{flexberry-maplayers
+          name="Tree node with slider"
+          opacity=layer.options.opacity
+          changeOpacity=(action "onMapLayerChangeOpacity" "layer.options.opacity")
+        }}
+      ```
+
+      controllers/my-form.js
+      ```javascript
+        import Ember from 'ember';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
+
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
+        });
+      ```
+    */
+    onMapLayerChangeOpacity(...args) {
+      let objectContainingActionHandler = Ember.Object.extend(FlexberryDdauSliderActionsHandlerMixin).create();
+      let actionHandler = objectContainingActionHandler.get('actions.onSliderChange');
 
       actionHandler.apply(this, args);
     },

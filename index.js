@@ -84,6 +84,10 @@ module.exports = {
     // JS-code beautifier to format strings containing JS-code & represent in in user-friendly view.
     app.import(app.bowerDirectory + '/js-beautify/js/lib/beautify.js');
 
+
+    // UI-slider control
+    app.import(app.bowerDirectory + '/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js');
+
     // Leaflet Div Control
     app.import('vendor/leaflet.div-control.js');
   }
