@@ -251,6 +251,51 @@ let MeasureMapToolComponent = Ember.Component.extend({
     */
     measureClearIconClass: 'trash icon',
 
+    /**
+      Flag: is map tool 'measure-coordinates' enable
+
+      @property measureCoordinates
+      @default true
+      @type Boolean
+    */
+    measureCoordinates: true,
+
+    /**
+      Flag: is map tool 'measure-radius' enable
+
+      @property measureRadius
+      @default true
+      @type Boolean
+    */
+    measureRadius: true,
+
+    /**
+      Flag: is map tool 'measure-distance' enable
+
+      @property measureDistance
+      @default true
+      @type Boolean
+    */
+    measureDistance: true,
+
+    /**
+      Flag: is map tool 'measure-area' enable
+
+      @property measureArea
+      @default true
+      @type Boolean
+    */
+    measureArea:true,
+
+    /**
+      Flag: is map tool 'measure-clear' enable
+
+      @property measureClear
+      @default true
+      @type Boolean
+    */
+    measureClear:true,
+
     actions: {
       /**
         Handles {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.

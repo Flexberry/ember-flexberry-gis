@@ -6,45 +6,55 @@
   iconClass=iconClass
 }}
   {{#block-slot "submenu"}}
-    {{map-tools/base
-      class=(concat flexberryClassNames.measureCoordinates " " measureCoordinatesClass)
-      name="measure-coordinates"
-      caption=measureCoordinatesCaption
-      iconClass=measureCoordinatesIconClass
-      mapToolProperties=_measureToolProperties
-      activate=(action "onMapToolActivate")
-    }}
-    {{map-tools/base
-      class=(concat flexberryClassNames.measureRadius " " measureRadiusClass)
-      name="measure-radius"
-      caption=measureRadiusCaption
-      iconClass=measureRadiusIconClass
-      mapToolProperties=_measureToolProperties
-      activate=(action "onMapToolActivate")
-    }}
-    {{map-tools/base
-      class=(concat flexberryClassNames.measureDistance " " measureDistanceClass)
-      name="measure-distance"
-      caption=measureDistanceCaption
-      iconClass=measureDistanceIconClass
-      mapToolProperties=_measureToolProperties
-      activate=(action "onMapToolActivate")
-    }}
-    {{map-tools/base
-      class=(concat flexberryClassNames.measureArea " " measureAreaClass)
-      name="measure-area"
-      caption=measureAreaCaption
-      iconClass=measureAreaIconClass
-      mapToolProperties=_measureToolProperties
-      activate=(action "onMapToolActivate")
-    }}
-    {{map-tools/base
-      class=(concat flexberryClassNames.measureClear " " measureClearClass)
-      name="measure-clear"
-      caption=measureClearCaption
-      iconClass=measureClearIconClass
-      mapToolProperties=_measureToolProperties
-      activate=(action "onMapToolActivate")
-    }}
+    {{#if measureCoordinates}}
+      {{map-tools/base
+        class=(concat flexberryClassNames.measureCoordinates " " measureCoordinatesClass)
+        name="measure-coordinates"
+        caption=measureCoordinatesCaption
+        iconClass=measureCoordinatesIconClass
+        mapToolProperties=_measureToolProperties
+        activate=(action "onMapToolActivate")
+      }}
+    {{/if}}
+    {{#if measureRadius}}
+      {{map-tools/base
+        class=(concat flexberryClassNames.measureRadius " " measureRadiusClass)
+        name="measure-radius"
+        caption=measureRadiusCaption
+        iconClass=measureRadiusIconClass
+        mapToolProperties=_measureToolProperties
+        activate=(action "onMapToolActivate")
+      }}
+    {{/if}}
+    {{#if measureDistance}}
+      {{map-tools/base
+        class=(concat flexberryClassNames.measureDistance " " measureDistanceClass)
+        name="measure-distance"
+        caption=measureDistanceCaption
+        iconClass=measureDistanceIconClass
+        mapToolProperties=_measureToolProperties
+        activate=(action "onMapToolActivate")
+      }}
+    {{/if}}
+    {{#if measureArea}}
+      {{map-tools/base
+        class=(concat flexberryClassNames.measureArea " " measureAreaClass)
+        name="measure-area"
+        caption=measureAreaCaption
+        iconClass=measureAreaIconClass
+        mapToolProperties=_measureToolProperties
+        activate=(action "onMapToolActivate")
+      }}
+    {{/if}}
+    {{#if measureClear}}
+      {{map-tools/base
+        class=(concat flexberryClassNames.measureClear " " measureClearClass)
+        name="measure-clear"
+        caption=measureClearCaption
+        iconClass=measureClearIconClass
+        mapToolProperties=_measureToolProperties
+        activate=(action "onMapToolActivate")
+      }}
+    {{/if}}
   {{/block-slot}}
 {{/map-tools/base}}
