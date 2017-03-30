@@ -64,25 +64,24 @@ export default Ember.Component.extend({
       @readOnly
     */
   legendImages: Ember.computed('layer', function() {
+    let legendsImageMas = [];
+    let layersArr = this.get('layer.settingsAsObject.layers').split(',');
+    let layerURL = this.get('layer.settingsAsObject.url');
+    const service = 'WMS';
+    const request = 'GetLegendGraphic';
+    layersArr.forEach((item) => {
+      let parameters = {
+        service,
+        request,
+        format: this.get('imageFormat'),
+        version: this.get('version'),
+        layer: item
+      };
 
-      let legendsImageMas = [];
-      let layersArr = this.get('layer.settingsAsObject.layers').split(',');
-      let layerURL = this.get('layer.settingsAsObject.url');
-      const service = 'WMS';
-      const request = 'GetLegendGraphic';
-      layersArr.forEach((item) => {
-        let parameters = {
-          service,
-          request,
-          format: this.get('imageFormat'),
-          version: this.get('version'),
-          layer: item
-        };
+      let legendsImage = layerURL + L.Util.getParamString(parameters);
+      legendsImageMas.push(legendsImage);
+    });
 
-        let legendsImage = layerURL + L.Util.getParamString(parameters);
-        legendsImageMas.push(legendsImage);
-      });
-
-      return legendsImageMas;
-    })
+    return legendsImageMas;
+  })
 });
