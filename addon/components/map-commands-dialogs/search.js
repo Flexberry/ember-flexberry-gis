@@ -404,7 +404,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
       onErrorMessageHide() {
         this.set('showErrorMessage', false);
       },
-      
+
       /**
         Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
         Invokes {{#crossLink "FlexberryExportMapCommandDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
