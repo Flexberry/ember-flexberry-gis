@@ -30,8 +30,8 @@ export default BaseMapCommand.extend({
     latlng = crs.unproject(point);
 
     let leafletMap = this.get('leafletMap');
-    let popupContent = `${xCaption}: ${latlng.lng}; ${yCaption}: ${latlng.lat}`;
-
+    let popupContent = `${xCaption}: ${point.x}; ${yCaption}: ${point.y}`;
+    
     leafletMap.openPopup(popupContent, latlng);
     leafletMap.panTo(latlng);
   }
