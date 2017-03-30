@@ -16,6 +16,25 @@ import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-con
 export default EditMapController.extend(
   EditFormControllerOperationsIndicationMixin, {
 
+    availableCRS: Ember.computed(function() {
+      let availableModes = Ember.A();
+      let i18n = this.get('i18n');
+      availableModes.push({
+        crs: this.get('model.crs'),
+        name: i18n.t('forms.crs.current.name').toString(),
+        xCaption: i18n.t('forms.crs.current.xCaption').toString(),
+        yCaption: i18n.t('forms.crs.current.yCaption').toString()
+      });
+      availableModes.push({
+        crs: L.CRS.EPSG4326,
+        name: i18n.t('forms.crs.latlng.name').toString(),
+        xCaption: i18n.t('forms.crs.latlng.xCaption').toString(),
+        yCaption: i18n.t('forms.crs.latlng.yCaption').toString()
+      });
+
+      return availableModes;
+    }),
+
     actions: {
       toggleSidebar(sidebar, context) {
         Ember.$(sidebar)
