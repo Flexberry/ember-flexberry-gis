@@ -80,12 +80,12 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
     @type {Boolean} Flag: indicates whether layer has legend.
     @readOnly
   */
-  hasLegend: Ember.computed('settingsAsObject.hasLegend','type',function () {
-      let settingHasLegend = this.get('settingsAsObject.hasLegend');
-      let className = this.get('type');
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+  hasLegend: Ember.computed('settingsAsObject.hasLegend', 'type', function () {
+    let settingHasLegend = this.get('settingsAsObject.hasLegend');
+    let className = this.get('type');
+    let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
-      return Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend') && settingHasLegend;
+    return Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend') && settingHasLegend;
   }),
 
   /**
