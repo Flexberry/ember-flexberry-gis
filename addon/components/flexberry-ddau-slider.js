@@ -245,6 +245,7 @@ let FlexberryDdauSliderComponent = Ember.Component.extend(
       */
       change(e) {
         let value = e.value.newValue;
+
         // Invoke component's custom 'change' action.
         this.sendAction('change', {
           newValue: value,
