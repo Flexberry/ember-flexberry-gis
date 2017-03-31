@@ -106,7 +106,11 @@
           {{map-commands/go-to
             availableCRS=availableCRS
             execute=(action "onMapCommandExecute" target=mapToolbar)}}
-          {{map-commands/full-extent execute=(action "onMapCommandExecute" target=mapToolbar)}}
+          {{map-commands/full-extent
+            execute=(action "onMapCommandExecute" target=mapToolbar)
+            lat=model.lat
+            lng=model.lng
+            zoom=model.zoom}}
           {{map-commands/search execute=(action "onMapCommandExecute" target=mapToolbar)}}
           {{map-tools/identify activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
