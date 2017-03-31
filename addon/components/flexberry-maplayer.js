@@ -181,6 +181,18 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
+    _canChangeOpacity: Ember.computed('type', function () {
+      return this.get('type') !== 'group';
+    }),
+
+    /**
+      Layer class factory related to current layer type.
+
+      @property _layerClassFactory
+      @type Object
+      @readOnly
+      @private
+    */
     _layerClassFactory: Ember.computed('type', function () {
       return Ember.getOwner(this).knownForType('layer', this.get('type'));
     }),

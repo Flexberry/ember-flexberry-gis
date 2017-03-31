@@ -22,6 +22,14 @@
     <label class={{flexberryClassNames.caption}}>
       {{name}}
     </label>
+    {{#if _canChangeOpacity}}
+      {{flexberry-ddau-slider
+        class=(concat flexberryClassNames.opacitySlider " " flexberryClassNames.preventExpandCollapse)
+        value=opacity
+        multiplier=100
+        change=(action "onOpacitySliderChange")
+      }}
+    {{/if}}
     {{#if (not readonly)}}
       {{flexberry-button
         class=(concat flexberryClassNames.removeButton " right floated " flexberryClassNames.preventExpandCollapse)
@@ -41,12 +49,6 @@
         }}
       {{/if}}
     {{/if}}
-    {{flexberry-ddau-slider
-      class=(concat flexberryClassNames.opacitySlider " " flexberryClassNames.preventExpandCollapse)
-      value=opacity
-      multiplier=100
-      change=(action "onOpacitySliderChange")
-    }}
 
     {{!--
       Semantic UI modal dialogs takes long time to be initialized

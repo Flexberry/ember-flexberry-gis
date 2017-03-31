@@ -27,7 +27,7 @@ const flexberryClassNamesPrefix = 'flexberry-slider';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  button: flexberryClassNamesPrefix + '-button',
+  button: flexberryClassNamesPrefix + '-label',
   popup: flexberryClassNamesPrefix + '-popup'
 };
 

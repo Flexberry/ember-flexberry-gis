@@ -19,6 +19,7 @@
   }
   .flexberry-maplayer-caption-label {
     max-width: 200px;
+    min-width: 200px;
     text-overflow: ellipsis;
     word-break: normal;
     word-wrap: break-word;
@@ -26,19 +27,39 @@
   .flexberry-button {
     padding: .5em;
   }
+  .flexberry-slider-label {
+    font-size: .8em;
+    text-align: center;
+    padding-left: .2em;
+    color: rgba(0, 0, 0, 0.6);
+  }
+  .flexberry-slider-popup {
+    max-width: 30px;
+    text-align: center;
+    padding: 0 .2em;
+    margin-top: 5px;
+  }
   .flexberry-slider {
-    width: 100%;
-    height: 10px;
+    background: #E0E1E2 none;
+    border-radius: 0.28571429rem;
+    max-width: 30px;
+    min-width: 30px;
+    max-height: 28px;
+    margin-left: 3.45em; 
     .ui-slider {
       .slider.slider-horizontal {
         height: 10px;
+        max-width: 30px;
+        width: 100%;
         .slider-track {
           height: 5px;
+          width: 100%;
+          max-width: 30px;
         }
       }
       .slider-handle {
-        width: 12px;
-        height: 12px;
+        width: 10px;
+        height: 10px;
         margin-top: -3px;
       }
     }
