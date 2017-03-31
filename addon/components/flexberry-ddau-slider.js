@@ -211,7 +211,6 @@ let FlexberryDdauSliderComponent = Ember.Component.extend(
 
       @property displaValue
       @type int
-      @default null
     */
     displayValue: Ember.computed('value', 'multiplier', function () {
       let _value = this.get('value') || 0;
@@ -263,17 +262,6 @@ let FlexberryDdauSliderComponent = Ember.Component.extend(
     */
     didInsertElement() {
       this._super(...arguments);
-
-      this.$('.' + flexberryClassNames.button)
-        .popup({
-          inline: true,
-          hoverable: true,
-          position: 'bottom left',
-          delay: {
-            show: 100,
-            hide: 300
-          }
-        });
     },
 
     /**
@@ -281,11 +269,10 @@ let FlexberryDdauSliderComponent = Ember.Component.extend(
     */
     willDestroyElement() {
       this._super(...arguments);
-      this.$('.' + flexberryClassNames.button).popup('destroy');
     }
 
     /**
-      Component's action invoking when slider was clicked and it's 'checked' state changed.
+      Component's action invoking when slider was moved and it's 'value' state changed.
 
       @method sendingActions.change
       @param {Object} e Action's event object.
