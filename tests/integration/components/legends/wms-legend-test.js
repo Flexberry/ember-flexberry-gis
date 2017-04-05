@@ -12,7 +12,7 @@ test('it renders', function(assert) {
     }
   });
 
-  this.render(hbs`{{legends/wms-legend layer=testLayer}}`);
+  this.render(hbs`{{legends/wms-legend layerModel=testLayer}}`);
 
   assert.equal(this.$('div img').size(), 3, 'render all <img> in <div> blocks');
 
