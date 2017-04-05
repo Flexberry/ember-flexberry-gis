@@ -86,11 +86,6 @@
 
     {{#yield-slot "header"}}
       {{yield}}
-
-      {{#if layer.hasLegend}}
-        {{component (concat "legends/" layer.type "-legend") layer=layer}}
-      {{/if}}
-
     {{/yield-slot}}
   {{/block-slot}}
 
@@ -105,6 +100,9 @@
     {{/if}}
     {{#yield-slot "content"}}
       {{yield}}
+      {{#if layer.hasLegend}}
+        {{component (concat "legends/" layer.type "-legend") layerModel=layer}}
+      {{/if}}
     {{/yield-slot}}
   {{/block-slot}}
 {{/flexberry-treenode}}

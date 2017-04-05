@@ -32,11 +32,11 @@ export default Ember.Component.extend({
   /**
       Layer.
 
-      @property layer
+      @property layerModel
       @type Object
       @default null
     */
-  layer: null,
+  layerModel: null,
 
   /**
       Image's format for legend's symbols.
@@ -63,10 +63,10 @@ export default Ember.Component.extend({
       @type String[]
       @readOnly
     */
-  legendImages: Ember.computed('layer', function() {
+  legendImages: Ember.computed('layerModel', function() {
     let legendsImageMas = [];
-    let layersArr = this.get('layer.settingsAsObject.layers').split(',');
-    let layerURL = this.get('layer.settingsAsObject.url');
+    let layersArr = this.get('layerModel.settingsAsObject.layers').split(',');
+    let layerURL = this.get('layerModel.settingsAsObject.url');
     const service = 'WMS';
     const request = 'GetLegendGraphic';
     layersArr.forEach((item) => {
