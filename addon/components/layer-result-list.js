@@ -158,7 +158,10 @@ export default Ember.Component.extend({
 
     let displayResults = Ember.A();
     results.forEach((result) => {
-      let r = { name: Ember.get(result, 'layerModel.name'), settings: Ember.get(result, 'layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings') };
+      let r = { 
+        name: Ember.get(result, 'layerModel.name'), 
+        settings: Ember.get(result, 'layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings') 
+      };
       result.features.then(
         (features) => {
           if (features.length > 0) {
