@@ -14,15 +14,15 @@ import layout from '../templates/components/layer-result-list';
 export default Ember.Component.extend({
 
   /**
-    Flag: indicates when one or more results contains more than 0 features
-    @property _hasData
+    Flag: indicates when results contains no data
+    @property _noData
     @type boolean
     @default false
    */
-  _hasData: false,
+  _noData: false,
 
   /**
-    Flag: inciates when one or more results.features promises rejected
+    Flag: indicates when one or more results.features promises rejected
     @property _hasError
     @type boolean
     @default false
@@ -58,6 +58,15 @@ export default Ember.Component.extend({
   leafletMap: null,
 
   /**
+    Ready results for display without promise
+
+    @property _displayResults
+    @type Ember.A()
+    @default null
+  */
+  _displayResults: null,
+
+  /**
     Array of results for display, each result contains object with following properties
     layerModel - MapLayer model
     features - promise for array of GeoJSON features
@@ -75,13 +84,16 @@ export default Ember.Component.extend({
     selectFeature(feature) {
       let selectedFeature = this.get('_selectedFeature');
       let serviceLayer = this.get('serviceLayer');
-      if (selectedFeature !== feature) {
-        if (!Ember.isNone(selectedFeature)) {
-          serviceLayer.removeLayer(selectedFeature.leafletLayer);
-        }
 
-        if (!Ember.isNone(feature)) {
-          serviceLayer.addLayer(feature.leafletLayer);
+      if (selectedFeature !== feature) {
+        if (!Ember.isNone(serviceLayer)) {
+          if (!Ember.isNone(selectedFeature)) {
+            serviceLayer.removeLayer(selectedFeature.leafletLayer);
+          }
+
+          if (!Ember.isNone(feature)) {
+            serviceLayer.addLayer(feature.leafletLayer);
+          }
         }
 
         this.set('_selectedFeature', feature);
@@ -132,23 +144,43 @@ export default Ember.Component.extend({
    */
   _resultObserver: Ember.observer('results', function () {
     this.send('selectFeature', null);
-    this.set('_showLoader', true);
     this.set('_hasError', false);
+    this.set('_noData', false);
+    this.set('_displayResults', null);
 
+    // если это не поиск, а очистка результатов
+    if (!this.get('results')) {
+      return;
+    }
+
+    this.set('_showLoader', true);
     let results = this.get('results') || [];
 
-    let promises = results.map((result) => { return result.features; });
+    let displayResults = Ember.A();
+    results.forEach((result) => {
+      let r = { name: Ember.get(result, 'layerModel.name'), settings: Ember.get(result, 'layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings') };
+      result.features.then(
+        (features) => {
+          if (features.length > 0) {
+            r.features = features;
+            displayResults.pushObject(r);
+          }
+        }
+      );
+    });
 
-    Ember.RSVP.all(promises).then(
-      (features) => {
-        let featuresCount = features.reduce((sum, feature) => { return sum + feature.length; }, 0);
-        this.set('_hasData', featuresCount > 0);
-      },
-      (error) => {
-        this.set('_hasData', true);
-        this.set('_hasError', true);
-      }
-    ).finally(() => {
+    let promises = results.map((result) => { return result.features; });
+    Ember.RSVP.allSettled(promises).finally(() => {
+      let order = 1;
+      displayResults.forEach((result) => {
+        result.order = order;
+        result.first = result.order === 1;
+        result.last = result.order === displayResults.length;
+        order += 1;
+      });
+
+      this.set('_displayResults', displayResults);
+      this.set('_noData', displayResults.length === 0);
       this.set('_showLoader', false);
     });
   })

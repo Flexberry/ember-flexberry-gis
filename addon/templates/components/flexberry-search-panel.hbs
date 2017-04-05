@@ -2,9 +2,10 @@
     class="fluid action input"
     dynamicProperties=searchSettings
     value=queryString
-    enter=(action "querySearch")
+    enter=(action "querySearch" false)
+    select=(action "querySearch" true)
 }}
-  <button class="ui icon button" {{action "querySearch"}}>
+  <button class="ui icon button" {{action "querySearch" false}}>
     <i class="search icon"></i>
   </button>
   <button class="ui icon button" {{action "clearSearch"}}>

@@ -1,19 +1,15 @@
 {{#if _showLoader}}
   <div class="ui active  inline loader"></div>{{t "components.layer-result-list.processing"}}
-{{else if (not _hasData)}}
+{{else if _noData}}
   {{t "components.layer-result-list.nodata"}}
 {{/if}}
-{{#if _hasError}}
-  {{t "components.layer-result-list.error"}}
-{{/if}}
-{{#each results as |result|}}
- {{#if (await result.features)}}
-   {{#flexberry-toggler caption=result.layerModel.name expanded=true}}
+{{#each _displayResults as |result|}}
+   {{#flexberry-toggler caption=result.name expanded=result.first}}    
      <div class="ui list transition">
-      {{#each (await result.features) as |feature|}}
+      {{#each result.features as |feature|}}
         {{feature-result-item
           feature=feature
-          displaySettings=result.layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings
+          displaySettings=result.settings
           selectedFeature=_selectedFeature
           selectFeature=(action "selectFeature")
           panTo=(action "panTo")
@@ -22,5 +18,4 @@
       {{/each}}
      </div>
     {{/flexberry-toggler}}
-  {{/if}}
 {{/each}}
