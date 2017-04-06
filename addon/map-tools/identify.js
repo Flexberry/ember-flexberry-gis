@@ -1,5 +1,5 @@
 /**
-  @module ember-flexberry-gis
+   @module ember-flexberry-gis
 */
 
 import Ember from 'ember';
@@ -29,6 +29,14 @@ export default RectangleMapTool.extend({
     @default true
   */
   hideRectangleOnDrawingEnd: false,
+
+  /**
+    Method to prepare identify result if need
+
+    @method prepareIdentifyResult
+    @default null
+  */
+  prepareIdentifyResult: null,
 
   /**
     Returns flat array of layers satisfying to current identification mode.
@@ -443,6 +451,10 @@ export default RectangleMapTool.extend({
       let $featuresList = createList();
       $layersAccordionItemContent.append($featuresList);
       features.forEach((feature) => {
+
+        let prepareIdentifyResult = this.get('prepareIdentifyResult');
+        feature = typeof (prepareIdentifyResult) === 'function' ? prepareIdentifyResult(feature) : feature;
+
         let featureIcon = null;
         switch (Ember.get(feature, 'geometry.type')) {
           case 'LineString':
