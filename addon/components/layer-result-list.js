@@ -80,7 +80,7 @@ export default Ember.Component.extend({
     /**
       Set selected feature and add its layer to serviceLayer on map
       @method actions.selectFeature
-     */
+    */
     selectFeature(feature) {
       let selectedFeature = this.get('_selectedFeature');
       let serviceLayer = this.get('serviceLayer');
@@ -105,7 +105,10 @@ export default Ember.Component.extend({
       @method actions.zoomTo
      */
     zoomTo(feature) {
-      this.send('selectFeature', feature);
+      let serviceLayer = this.get('serviceLayer');
+      if (!Ember.isNone(serviceLayer)) {
+        serviceLayer.clearLayers();
+      }
 
       let bounds;
       if (typeof (feature.leafletLayer.getBounds) === 'function') {
@@ -117,6 +120,7 @@ export default Ember.Component.extend({
 
       // TODO: pass action with zoomTo bounds outside
       this.get('leafletMap').fitBounds(bounds.pad(1));
+      this.send('selectFeature', feature);
     },
 
     /**
@@ -124,7 +128,10 @@ export default Ember.Component.extend({
       @method actions.panTo
      */
     panTo(feature) {
-      this.send('selectFeature', feature);
+      let serviceLayer = this.get('serviceLayer');
+      if (!Ember.isNone(serviceLayer)) {
+        serviceLayer.clearLayers();
+      }
 
       let latLng;
       if (typeof (feature.leafletLayer.getBounds) === 'function') {
@@ -135,6 +142,7 @@ export default Ember.Component.extend({
 
       // TODO: pass action with panTo latLng outside
       this.get('leafletMap').panTo(latLng);
+      this.send('selectFeature', feature);
     }
   },
 
@@ -159,9 +167,11 @@ export default Ember.Component.extend({
     let displayResults = Ember.A();
     results.forEach((result) => {
       let r = {
-        name: Ember.get(result, 'layerModel.name'),
-        settings: Ember.get(result, 'layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings')
+        name: Ember.get(result, 'layerModel.name') ? Ember.get(result, 'layerModel.name') : '',
+        settings: Ember.get(result, 'layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings'),
+        sortField: Ember.get(result, 'layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings.displayProperty')
       };
+
       result.features.then(
         (features) => {
           if (features.length > 0) {
@@ -180,6 +190,21 @@ export default Ember.Component.extend({
         result.first = result.order === 1;
         result.last = result.order === displayResults.length;
         order += 1;
+
+        if (!Ember.isNone(result.sortField) && result.sortField) {
+          var sort = 'properties.' + result.sortField;
+          result.features = result.features.sort(function (a, b) {
+            if (Ember.get(a, sort) > Ember.get(b, sort)) {
+              return 1;
+            }
+
+            if (Ember.get(a, sort) < Ember.get(b, sort)) {
+              return -1;
+            }
+
+            return 0;
+          });
+        }
       });
 
       this.set('_displayResults', displayResults);
