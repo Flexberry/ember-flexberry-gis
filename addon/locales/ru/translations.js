@@ -25,11 +25,16 @@ export default {
     'new-platform-flexberry-g-i-s-map-object-setting': NewPlatformFlexberryGISMapObjectSettingModel
   },
 
-  'forms': {
-  },
-
   'components': {
     'feature-result-item': FeatureResultItemComponent,
+
+    'spatial-bookmarks': {
+      'add-bookmark': 'Добавить в закладки',
+      'create-bookmark': 'Добавить',
+      'cancel': 'Отмена',
+      'go-to-bookmark': 'Перейти к закладке',
+      'remove-bookmark': 'Удалить закладку',
+    },
 
     'flexberry-dialog': {
       'approve-button': {

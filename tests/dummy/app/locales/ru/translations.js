@@ -169,10 +169,23 @@ Ember.$.extend(true, translations, {
     'map': {
       'caption': 'Карта',
       'treeviewbuttontooltip': 'Показать дерево слоёв',
-      'searchbuttontooltip': 'Показать поиск'
+      'searchbuttontooltip': 'Показать поиск',
+      'bookmarksbuttontooltip': 'Пространственные закладки'
     },
     'csw': {
       'caption': 'CSW соединения'
+    },
+    'crs': {
+      'current': {
+        'name': 'Система координат карты',
+        'xCaption': 'X',
+        'yCaption': 'Y'
+      },
+      'latlng': {
+        'name': 'Широта/долгота',
+        'xCaption': 'Широта',
+        'yCaption': 'Долгота'
+      }
     }
   },
 

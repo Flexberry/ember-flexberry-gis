@@ -169,7 +169,20 @@ Ember.$.extend(true, translations, {
     'map': {
       'caption': 'Map',
       'treeviewbuttontooltip': 'Show tree view',
-      'searchbuttontooltip': 'Show search'
+      'searchbuttontooltip': 'Show search',
+      'bookmarksbuttontooltip': 'Spatial bookmarks'
+    },
+    'crs': {
+      'current': {
+        'name': 'Current CRS',
+        'xCaption': 'X',
+        'yCaption': 'Y'
+      },
+      'latlng': {
+        'name': 'LatLng',
+        'xCaption': 'lat',
+        'yCaption': 'lng'
+      }
     }
   },
 
