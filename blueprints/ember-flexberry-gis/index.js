@@ -16,7 +16,7 @@ module.exports = {
       { name: 'leaflet.editable', source: 'https://github.com/Leaflet/Leaflet.Editable.git', target: 'master' },
 
       // Leaflet history.
-      { name: 'leaflet-history', source: 'https://github.com/cscott530/leaflet-history.git', target: 'master' },
+      { name: 'leaflet-history', source: 'https://github.com/Flexberry/leaflet-history.git', target: 'master' },
 
       // Leaflet.Editable.Measures.
       { name: 'leaflet.editable.measures', source: 'https://github.com/Flexberry/Leaflet.Editable.Measures.git', target: 'gh-pages' },

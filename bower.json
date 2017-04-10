@@ -21,7 +21,7 @@
     "ows.js": "0.1.5",
     "js-beautify": "1.6.4",
     "Leaflet-MiniMap": "Norkart/Leaflet-MiniMap#3.4.0",
-    "leaflet-history": "*"
+    "leaflet-history": "Flexberry/leaflet-history#master"
   },
   "resolutions": {
     "leaflet": "1.0.1"
