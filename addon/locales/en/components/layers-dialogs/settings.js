@@ -13,6 +13,8 @@ export default {
 
   'wms': WMS,
 
+  'wms-single-tile': WMS,
+
   'wfs': WFS,
 
   'geocoder-osm-overpass': {
