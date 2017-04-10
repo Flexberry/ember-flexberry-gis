@@ -1,0 +1,54 @@
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wms-single-tile.info-format-dropdown.caption"}}
+  </label>
+  {{flexberry-dropdown
+    class="fluid"
+    items=_availableInfoFormats
+    value=settings.info_format
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wms-single-tile.url-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.url
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wms-single-tile.version-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.version
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wms-single-tile.layers-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.layers
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wms-single-tile.format-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.format
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wms-single-tile.transparent-checkbox.caption"}}
+  </label>
+  {{flexberry-checkbox
+    value=settings.transparent
+  }}
+</div>

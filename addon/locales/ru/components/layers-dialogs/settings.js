@@ -15,6 +15,8 @@ export default {
 
   'wfs': WFS,
 
+  'wms-single-tile': WMS,
+
   'geocoder-osm-overpass': {
     'url-textbox': {
       'caption': 'Url'

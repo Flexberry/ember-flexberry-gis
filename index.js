@@ -50,6 +50,9 @@ module.exports = {
     // Leaflet-WFST.
     app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
 
+    // Leaflet.WMS.
+    app.import(app.bowerDirectory + '/leaflet.wms/dist/leaflet.wms.js');
+
     // Leaflet-MiniMap.
     app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/Control.MiniMap.min.js');
     app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/Control.MiniMap.min.css');
@@ -85,6 +88,12 @@ module.exports = {
     app.import(app.bowerDirectory + '/js-beautify/js/lib/beautify.js');
 
     // Leaflet Div Control
-    app.import('vendor/leaflet.div-control.js');
+    app.import('vendor/leaflet/controls/leaflet.div-control.js');
+
+    // Leaflet ImageOverlay Extensions
+    app.import('vendor/leaflet/layers/leaflet.imageoverlay.js');
+
+    // Leaflet.WMS Overlay Extensions
+    app.import('vendor/leaflet/layers/leaflet.wms.overlay.js');
   }
 };
