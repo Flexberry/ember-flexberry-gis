@@ -33,6 +33,10 @@ module.exports = {
     // Leaflet.Editable
     app.import(app.bowerDirectory + '/leaflet.editable/src/Leaflet.Editable.js');
 
+    // Leaflet history
+    app.import(app.bowerDirectory + '/leaflet-history/dist/leaflet-history.css');
+    app.import(app.bowerDirectory + '/leaflet-history/dist/leaflet-history.js');
+
     // Leaflet.Editable.Measure
     app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_measure.js');
     app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_measure.css');
