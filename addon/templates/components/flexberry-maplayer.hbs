@@ -109,6 +109,9 @@
     {{/if}}
     {{#yield-slot "content"}}
       {{yield}}
+      {{#if layer.hasLegend}}
+        {{component (concat "legends/" layer.type "-legend") layerModel=layer}}
+      {{/if}}
     {{/yield-slot}}
   {{/block-slot}}
 {{/flexberry-treenode}}

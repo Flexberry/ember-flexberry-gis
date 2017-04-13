@@ -31,13 +31,22 @@ const flexberryClassNames = {
   as a wrapper.
 
   Usage:
+  controller/my-map-form.js
+  ```handlebars
+  availableCRS: Ember.computed(function() {
+    let availableModes = Ember.A();
+    availableModes.push({ crs: this.get('model.crs'), name: t('crs.current.name'), xCaption: t('crs.current.xCaption'), yCaption: t('crs.current.yCaption') });
+    availableModes.push({ crs: L.CRS.EPSG4326, name: t('crs.latlng.name'), xCaption: t('crs.latlng.xCaption'), yCaption: t('crs.latlng.yCaption') });
+
+    return availableModes;
+  }),
+
   templates/my-map-form.hbs
   ```handlebars
-  {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-commands/go-to execute=(action "onMapCommandExecute" target=maptoolbar)}}
-  {{/flexberry-maptoolbar}}
+      {{map-commands/go-to
+        availableCRS=availableCRS
+        execute=(action "onMapCommandExecute" target=mapToolbar)}}
   ```
-
   @class GoToMapCommandComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
@@ -128,6 +137,22 @@ let GoToMapCommandComponent = Ember.Component.extend({
       @default 'location arrow icon''
     */
     iconClass: 'location arrow icon',
+
+    /**
+      Array of available CRS with name and X/Y captions
+
+     availableCRS: Ember.computed(function() {
+        let availableModes = Ember.A();
+        availableModes.push({crs: this.get('model.crs'), name: t('crs.current.name'), xCaption: t('crs.current.xCaption'), yCaption: t('crs.current.yCaption')});
+        availableModes.push({crs: L.CRS.EPSG4326, name: t('crs.latlng.name'), xCaption: t('crs.latlng.xCaption'), yCaption: t('crs.latlng.yCaption')});
+
+        return availableModes;
+      }),
+
+      @property availableCRS
+      @type Array
+    */
+    availableCRS: null,
 
     actions: {
       /**

@@ -168,9 +168,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasContent: Ember.computed('_slots.[]', '_hasLayers', function () {
+
+    _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'layer.hasLegend', function () {
       // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
-      return this._isRegistered('content') || this.get('_hasLayers');
+      return this._isRegistered('content') || this.get('_hasLayers') || this.get('layer.hasLegend');
     }),
 
     /**
@@ -317,6 +318,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @default null
     */
     name: null,
+
+    /**
+      Layer.
+
+      @property layer
+      @type Object
+      @default null
+    */
+    layer: null,
 
     /**
       Layer's CRS (coordinate reference system).

@@ -49,7 +49,7 @@ export default Ember.Object.extend({
 
   /**
     Permitted operations related to layer type.
-    Possible values are 'add', 'edit', 'remove', 'search', 'identify'.
+    Possible values are 'add', 'edit', 'remove', 'search', 'identify', 'legend'.
 
     @property operations
     @type String[]
