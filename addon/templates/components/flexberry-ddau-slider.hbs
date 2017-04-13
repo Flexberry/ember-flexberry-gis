@@ -3,10 +3,7 @@
   It makes value immutable within component, what is major rule of "Data Down Actions Up (DDAU)" pattern:
   component should display data, but not mutate it by its own.
 --}}
-<label class="{{flexberryClassNames.button}}">
-  {{displayValue}}
-</label>
-<div class="{{flexberryClassNames.popup}}">
+<div class="{{flexberryClassNames.popup}}" title="{{t "components.flexberry-ddau-slider.slider-caption"}}">
     {{ui-slider
       value=(get this "value")
       defaultValue=defaultValue

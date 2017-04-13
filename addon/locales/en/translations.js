@@ -8,6 +8,7 @@ import NewPlatformFlexberryGISMapObjectSettingModel from './models/new-platform-
 
 import FeatureResultItemComponent from './components/feature-result-item';
 import FlexberryCSWComponent from './components/flexberry-csw';
+import FlexberryDdauSliderComponent from './components/flexberry-ddau-slider';
 import LayersDialogsComponents from './components/layers-dialogs';
 import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
@@ -27,6 +28,7 @@ export default {
 
   'components': {
     'feature-result-item': FeatureResultItemComponent,
+    'flexberry-ddau-slider': FlexberryDdauSliderComponent,
 
     'spatial-bookmarks': {
       'add-bookmark': 'Add new bookmark`',

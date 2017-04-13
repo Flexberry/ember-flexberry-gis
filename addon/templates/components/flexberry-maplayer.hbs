@@ -22,14 +22,6 @@
     <label class={{flexberryClassNames.caption}}>
       {{name}}
     </label>
-    {{#if _canChangeOpacity}}
-      {{flexberry-ddau-slider
-        class=(concat flexberryClassNames.opacitySlider " " flexberryClassNames.preventExpandCollapse)
-        value=opacity
-        multiplier=100
-        change=(action "onOpacitySliderChange")
-      }}
-    {{/if}}
     {{#if (not readonly)}}
       {{flexberry-button
         class=(concat flexberryClassNames.removeButton " right floated " flexberryClassNames.preventExpandCollapse)
@@ -48,6 +40,11 @@
           click=(action "onAddButtonClick")
         }}
       {{/if}}
+    {{/if}}
+    {{#if _canChangeOpacity}}
+      <label class="{{flexberryClassNames.opacityLabel}}">
+        {{_opacityDisplayValue}}
+      </label>
     {{/if}}
 
     {{!--
@@ -99,19 +96,30 @@
   {{/block-slot}}
 
   {{#block-slot "content"}}
+  {{#unless _hasLayers}}
+    <div class="ui segment">
+      {{#if _canChangeOpacity}}
+        {{flexberry-ddau-slider
+          class=(concat flexberryClassNames.opacitySlider " " flexberryClassNames.preventExpandCollapse)
+          value=opacity
+          change=(action "onOpacitySliderChange")
+        }}
+        {{/if}}
+        {{#if layer.hasLegend}}
+          {{#yield-slot "content"}}
+            {{yield}}
+              {{component (concat "legends/" layer.type "-legend") layerModel=layer}}
+          {{/yield-slot}}
+        {{/if}}
+      </div>
+    {{/unless}}
     {{#if _hasLayers}}
-      {{flexberry-maplayers
-        layers=layers
-        cswConnections=cswConnections
-        leafletMap=leafletMap
-        readonly=readonly
-      }}
-    {{/if}}
-    {{#yield-slot "content"}}
-      {{yield}}
-      {{#if layer.hasLegend}}
-        {{component (concat "legends/" layer.type "-legend") layerModel=layer}}
+        {{flexberry-maplayers
+          layers=layers
+          cswConnections=cswConnections
+          leafletMap=leafletMap
+          readonly=readonly
+        }}
       {{/if}}
-    {{/yield-slot}}
   {{/block-slot}}
 {{/flexberry-treenode}}

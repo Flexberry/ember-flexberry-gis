@@ -38,11 +38,13 @@ const flexberryClassNames = {
   wrapper: null,
   visibilityCheckbox: flexberryClassNamesPrefix + '-visibility-checkbox',
   opacitySlider: flexberryClassNamesPrefix + '-opacity-slider',
+  opacityLabel: flexberryClassNamesPrefix + '-opacity-label',
   typeIcon: flexberryClassNamesPrefix + '-type-icon',
   addButton: flexberryClassNamesPrefix + '-add-button',
   editButton: flexberryClassNamesPrefix + '-edit-button',
   removeButton: flexberryClassNamesPrefix + '-remove-button',
   caption: flexberryClassNamesPrefix + '-caption-label',
+  legendToggler: flexberryClassNamesPrefix + '-legend-toggler',
   preventExpandCollapse: FlexberryTreenodeComponent.flexberryClassNames.preventExpandCollapse,
 };
 
@@ -169,21 +171,36 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @private
     */
 
-    _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'layer.hasLegend', function () {
+    _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'layer.hasLegend', '_canChangeOpacity', function () {
       // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
-      return this._isRegistered('content') || this.get('_hasLayers') || this.get('layer.hasLegend');
+      return this._isRegistered('content') || this.get('_hasLayers') || this.get('layer.hasLegend') || this.get('_canChangeOpacity');
+    }),
+
+    /**
+      Flag: displays whether layer's opacity can be changed
+
+      @property _canChangeOpacity
+      @type bool
+      @readOnly
+      @private
+    */
+    _canChangeOpacity: Ember.computed('type', function () {
+      return this.get('type') !== 'group';
     }),
 
     /**
       Layer class factory related to current layer type.
 
       @property _layerClassFactory
-      @type Object
+      @type string
       @readOnly
       @private
     */
-    _canChangeOpacity: Ember.computed('type', function () {
-      return this.get('type') !== 'group';
+    _opacityDisplayValue: Ember.computed('opacity', function () {
+      let opacity = this.get('opacity');
+
+      let result = opacity !== 0 && opacity > 0.01 ? Math.round(opacity * 100) : 0;
+      return result.toString() + '%';
     }),
 
     /**

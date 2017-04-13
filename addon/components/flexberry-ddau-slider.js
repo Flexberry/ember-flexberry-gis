@@ -26,9 +26,7 @@ import layout from '../templates/components/flexberry-ddau-slider';
 const flexberryClassNamesPrefix = 'flexberry-slider';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix,
-  button: flexberryClassNamesPrefix + '-label',
-  popup: flexberryClassNamesPrefix + '-popup'
+  wrapper: flexberryClassNamesPrefix
 };
 
 /**
@@ -169,16 +167,6 @@ let FlexberryDdauSliderComponent = Ember.Component.extend(
       @default null
     */
     value: null,
-
-    /**
-      Component's multiplier from value to display value.
-
-      @property multiplier
-      @type float
-      @default 100
-    */
-    multiplier: 100,
-
     /**
       Component's range step.
 
@@ -187,42 +175,6 @@ let FlexberryDdauSliderComponent = Ember.Component.extend(
       @default 1
     */
     step: 0.01,
-
-    /**
-      Component's measure unit
-
-      @property unit
-      @type string
-      @default '%'
-    */
-    unit: '%',
-
-    /**
-      Flag: whether to round display value or not
-
-      @property round
-      @type bool
-      @default true
-    */
-    round: true,
-
-    /**
-      Component's display value.
-
-      @property displaValue
-      @type int
-    */
-    displayValue: Ember.computed('value', 'multiplier', function () {
-      let _value = this.get('value') || 0;
-      let _multiplier = this.get('multiplier') || 1;
-      let _unit = this.get('unit');
-
-      if (this.get('round')) {
-        return Math.round(_value * _multiplier) + _unit;
-      } else {
-        return _value * _multiplier + _unit;
-      }
-    }),
 
     /**
       Flag: indicates whether component is in readonly mode.
