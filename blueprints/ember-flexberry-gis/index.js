@@ -7,16 +7,16 @@ module.exports = {
       { name: 'leaflet', target: '1.0.1' },
 
       // Leaflet.Proj4.
-      { name:'Proj4Leaflet', source: 'https://github.com/kartena/Proj4Leaflet.git', target: '1.0.1' },
+      { name:'proj4leaflet', target: '1.0.1' },
 
       // Leaflet.WFST.
-      { name: 'Leaflet-WFST', source: 'https://github.com/Flexberry/Leaflet-WFST.git', target: 'develop' },
+      { name: 'Leaflet-WFST', target: 'develop' },
 
       // Leaflet.WMS.
-      { name: 'leaflet.wms', source: 'https://github.com/heigeo/leaflet.wms.git', target: 'gh-pages' },
+      { name: 'leaflet.wms', target: 'gh-pages' },
 
       // Leaflet.Editable.
-      { name: 'leaflet.editable', source: 'https://github.com/Leaflet/Leaflet.Editable.git', target: 'master' },
+      { name: 'leaflet.editable', target: 'master' },
 
       // Leaflet history.
       { name: 'leaflet-history', source: 'https://github.com/Flexberry/leaflet-history.git', target: 'master' },
@@ -25,11 +25,11 @@ module.exports = {
       { name: 'leaflet.editable.measures', source: 'https://github.com/Flexberry/Leaflet.Editable.Measures.git', target: 'gh-pages' },
 
       // Leaflet.Export & dependencies.
-      { name: 'html2canvas', source: 'https://github.com/niklasvh/html2canvas.git', target: 'master'},
-      { name: 'leaflet.export', source: 'https://github.com/Flexberry/Leaflet.Export.git', target: 'master'},
+      { name: 'html2canvas', target: 'master'},
+      { name: 'leaflet.export', target: 'master'},
 
       // Leaflet-MiniMap
-      { name: 'Leaflet-MiniMap', source: 'https://github.com/Norkart/Leaflet-MiniMap.git', target: '3.4.0'},
+      { name: 'leaflet-minimap', target: '3.4.0'},
 
       // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
       { name: 'osmtogeojson', target: '2.2.12' },

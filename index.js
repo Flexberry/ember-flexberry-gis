@@ -49,7 +49,7 @@ module.exports = {
 
     // Proj4Leaflet.
     app.import(app.bowerDirectory + '/proj4/dist/proj4-src.js');
-    app.import(app.bowerDirectory + '/Proj4Leaflet/src/proj4leaflet.js');
+    app.import(app.bowerDirectory + '/proj4leaflet/src/proj4leaflet.js');
 
     // Leaflet-WFST.
     app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
@@ -58,9 +58,9 @@ module.exports = {
     app.import(app.bowerDirectory + '/leaflet.wms/dist/leaflet.wms.js');
 
     // Leaflet-MiniMap.
-    app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/Control.MiniMap.min.js');
-    app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/Control.MiniMap.min.css');
-    app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/images/toggle.svg', { destDir: appImagesDirectory });
+    app.import(app.bowerDirectory + '/leaflet-minimap/dist/Control.MiniMap.min.js');
+    app.import(app.bowerDirectory + '/leaflet-minimap/dist/Control.MiniMap.min.css');
+    app.import(app.bowerDirectory + '/leaflet-minimap/dist/images/toggle.svg', { destDir: appImagesDirectory });
 
     // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
