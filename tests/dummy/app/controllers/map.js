@@ -16,7 +16,7 @@ import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-con
 export default EditMapController.extend(
   EditFormControllerOperationsIndicationMixin, {
 
-    availableCRS: Ember.computed(function() {
+    availableCRS: Ember.computed(function () {
       let availableModes = Ember.A();
       let i18n = this.get('i18n');
       availableModes.push({
@@ -37,6 +37,17 @@ export default EditMapController.extend(
 
     actions: {
       toggleSidebar(sidebar, context) {
+        Ember.$(sidebar)
+          .sidebar({
+            context: Ember.$(context),
+            dimPage: false,
+            closable: false
+          })
+          .sidebar('setting', 'transition', 'overlay')
+          .sidebar('toggle');
+      },
+
+      onTabChange(sidebar, context) {
         Ember.$(sidebar)
           .sidebar({
             context: Ember.$(context),
@@ -78,6 +89,24 @@ export default EditMapController.extend(
       @type String
       @default 'maps'
     */
-    parentRoute: 'maps'
+    parentRoute: 'maps',
+
+    /**
+     * items
+     */
+    sidebarItems: [{
+        selector: 'treeview',
+        caption: 'Дерево',
+        active: true
+      },
+      {
+        selector: 'search',
+        caption: 'Поиск'
+      },
+      {
+        selector: 'bookmarks',
+        caption: 'Закладки'
+      }
+    ]
 
   });

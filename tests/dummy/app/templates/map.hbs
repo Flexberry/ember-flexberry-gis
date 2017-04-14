@@ -41,58 +41,65 @@
     </div>
   </div>
   <div class="ui inernally celled grid">
-    <div class="ui very wide right sidebar treeview pushable">
-        {{flexberry-maplayers
-          class="styled"
-          cswConnections=cswConnections
-          leafletMap=leafletMap
-          layers=(get-with-dynamic-actions this "model.hierarchy"
-            hierarchyPropertyName="layers"
-            pathKeyword="layerPath"
-            dynamicActions=(array
-              (hash
-                on="add"
-                actionName="onMapLayerAdd"
-                actionArguments=(array "{% layerPath %}")
-              )
-              (hash
-                on="edit"
-                actionName="onMapLayerEdit"
-                actionArguments=(array "{% layerPath %}")
-              )
-              (hash
-                on="remove"
-                actionName="onMapLayerRemove"
-                actionArguments=(array "{% layerPath %}")
-              )
-              (hash
-                on="changeVisibility"
-                actionName="onMapLayerChangeVisibility"
-                actionArguments=(array "{% layerPath %}.visibility")
+    {{flexberry-tab-bar
+      onTabClick=(action "onTabChange")
+      items=sidebarItems
+      target="ui.very.wide.right.sidebar.pushable"
+      uicontext='.mappanel'}}
+    <div class="ui very wide right sidebar pushable">
+      <div data-tab="treeview" class="ui tab treeview">
+          {{flexberry-maplayers
+            class="styled"
+            cswConnections=cswConnections
+            leafletMap=leafletMap
+            layers=(get-with-dynamic-actions this "model.hierarchy"
+              hierarchyPropertyName="layers"
+              pathKeyword="layerPath"
+              dynamicActions=(array
+                (hash
+                  on="add"
+                  actionName="onMapLayerAdd"
+                  actionArguments=(array "{% layerPath %}")
+                )
+                (hash
+                  on="edit"
+                  actionName="onMapLayerEdit"
+                  actionArguments=(array "{% layerPath %}")
+                )
+                (hash
+                  on="remove"
+                  actionName="onMapLayerRemove"
+                  actionArguments=(array "{% layerPath %}")
+                )
+                (hash
+                  on="changeVisibility"
+                  actionName="onMapLayerChangeVisibility"
+                  actionArguments=(array "{% layerPath %}.visibility")
+                )
               )
             )
-          )
-        add=(action "onMapLayerAdd" "model.hierarchy")
-      }}
-    </div>
-    <div class="ui very wide right sidebar search pushable">
-      {{flexberry-search-panel
-          querySearch=(action "querySearch")
-          clearSearch=(action "clearSearch")
-          searchInProcess=searchInProcess
-          searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
-          }}
-      {{layer-result-list
-        results=searchResults
-        serviceLayer=serviceLayer
-        leafletMap=leafletMap
+          add=(action "onMapLayerAdd" "model.hierarchy")
         }}
-    </div>
-    <div class="ui very wide right sidebar bookmarks pushable">
-      {{spatial-bookmark        
-        leafletMap=leafletMap
-        mapid=model.id
-      }}
+      </div>
+      <div data-tab="search" class="ui tab search">
+        {{flexberry-search-panel
+            querySearch=(action "querySearch")
+            clearSearch=(action "clearSearch")
+            searchInProcess=searchInProcess
+            searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+            }}
+        {{layer-result-list
+          results=searchResults
+          serviceLayer=serviceLayer
+          leafletMap=leafletMap
+          }}
+      </div>
+      <div data-tab="bookmarks" class="ui tab bookmarks">
+        {{spatial-bookmark        
+          leafletMap=leafletMap
+          mapid=model.id
+        }}
+      </div>
     </div>
     <div class="row">
       <div class="sixteen wide column">
@@ -116,22 +123,13 @@
           {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-commands/export execute=(action "onMapCommandExecute" target=mapToolbar)}}
-          <a {{action 'toggleSidebar' '.ui.sidebar.bookmarks' '.mappanel'}}
-              class="icon item"
-              title={{t "forms.map.bookmarksbuttontooltip"}}>
-            <i class="bookmark icon"></i>
-          </a>
-          <a {{action 'toggleSidebar' '.ui.sidebar.treeview' '.mappanel'}}
+          
+          <a {{action 'toggleSidebar' '.ui.sidebar.right' '.mappanel'}}
               class="icon item"
               title={{t "forms.map.treeviewbuttontooltip"}}>
             <i class="list icon"></i>
-          </a>
-          <a {{action 'toggleSidebar' '.ui.sidebar.search' '.mappanel'}}
-              class="icon item"
-              title={{t "forms.map.searchbuttontooltip"}}>
-            <i class="search icon"></i>
-          </a>
-        {{/flexberry-maptoolbar}}
+          </a>        
+          {{/flexberry-maptoolbar}}
       </div>
     </div>
     <div class="row mappanel">

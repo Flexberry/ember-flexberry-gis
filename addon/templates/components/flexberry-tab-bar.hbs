@@ -1,0 +1,7 @@
+<div class="ui top attached tabular menu">
+  {{#each tabs as |item|}}
+    <a class="{{concat "tab" " " "item" " " item.class}}" data-tab="{{item.selector}}" {{action "onTabClick" item.selector on="click"}}>
+      {{item.caption}}
+    </a>
+  {{/each}}
+</div>
