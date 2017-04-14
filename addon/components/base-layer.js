@@ -11,6 +11,7 @@ const { assert } = Ember;
 
 /**
   BaseLayer component for other flexberry-gis layers.
+
   @class BaseLayerComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses DynamicPropertiesMixin
@@ -56,6 +57,15 @@ export default Ember.Component.extend(
     leafletContainer: null,
 
     /**
+      Promise returning Leaflet layer.
+
+      @property leafletLayerPromise
+      @type <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+      @default null
+    */
+    leafletLayerPromise: null,
+
+    /**
       Layer metadata.
 
       @property layerModel
@@ -66,6 +76,7 @@ export default Ember.Component.extend(
 
     /**
       This layer index, used for layer ordering in Map.
+
       @property index
       @type Int
       @default null
@@ -74,17 +85,21 @@ export default Ember.Component.extend(
 
     /**
       Call leaflet layer setZIndex if it presents.
+
       @method setZIndex
      */
     setZIndex: Ember.observer('index', function () {
-      let layer = this.get('_leafletObject');
-      if (layer && layer.setZIndex) {
-        layer.setZIndex(this.get('index'));
+      let leafletLayer = this.get('_leafletObject');
+      if (Ember.isNone(leafletLayer) || Ember.typeOf(leafletLayer.setZIndex) !== 'function') {
+        return;
       }
+
+      leafletLayer.setZIndex(this.get('index'));
     }),
 
     /**
       Flag, indicates visible or not current layer on map.
+
       @property visibility
       @type Boolean
       @default null
@@ -174,7 +189,7 @@ export default Ember.Component.extend(
         return;
       }
 
-      // Call public query method
+      // Call public query method.
       this.query(e);
     },
 
@@ -183,7 +198,18 @@ export default Ember.Component.extend(
     */
     init() {
       this._super(...arguments);
-      this.set('_leafletObject', this.createLayer());
+
+      // Call to createLayer could potentially return a promise,
+      // wraping this call into Ember.RSVP.hash helps us to handle straight/promise results universally.
+      this.set('leafletLayerPromise', Ember.RSVP.hash({
+        leafletLayer: this.createLayer()
+      }).then(({ leafletLayer }) => {
+        this.set('_leafletObject', leafletLayer);
+
+        return leafletLayer;
+      }).catch((errorMessage) => {
+        Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
+      }));
     },
 
     /**
@@ -191,8 +217,11 @@ export default Ember.Component.extend(
     */
     didInsertElement() {
       this._super(...arguments);
-      this.visibilityDidChange();
-      this.setZIndex();
+
+      this.get('leafletLayerPromise').then((leafletLayer) => {
+        this.visibilityDidChange();
+        this.setZIndex();
+      });
 
       let leafletMap = this.get('leafletMap');
       if (!Ember.isNone(leafletMap)) {
@@ -218,9 +247,12 @@ export default Ember.Component.extend(
       }
 
       let leafletContainer = this.get('leafletContainer');
-      if (!Ember.isNone(leafletContainer)) {
-        leafletContainer.removeLayer(this.get('_leafletObject'));
+      let leafletLayer = this.get('_leafletObject');
+      if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) && leafletContainer.hasLayer(leafletLayer)) {
+        return;
       }
+
+      leafletContainer.removeLayer(leafletLayer);
     },
 
     /**
@@ -230,12 +262,16 @@ export default Ember.Component.extend(
       @method visibilityDidChange
      */
     visibilityDidChange: Ember.observer('visibility', function () {
-      let container = this.get('leafletContainer');
+      let leafletContainer = this.get('leafletContainer');
+      let leafletLayer = this.get('_leafletObject');
+      if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer)) {
+        return;
+      }
 
       if (this.get('visibility')) {
-        container.addLayer(this.get('_leafletObject'));
+        leafletContainer.addLayer(leafletLayer);
       } else {
-        container.removeLayer(this.get('_leafletObject'));
+        leafletContainer.removeLayer(leafletLayer);
       }
     }),
 
