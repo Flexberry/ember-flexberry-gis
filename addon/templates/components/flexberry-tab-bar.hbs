@@ -1,7 +1,12 @@
-<div class="ui top attached tabular menu">
+<div class="ui tabular menu">
   {{#each tabs as |item|}}
-    <a class="{{concat "tab" " " "item" " " item.class}}" data-tab="{{item.selector}}" {{action "onTabClick" item.selector on="click"}}>
-      {{item.caption}}
+    <a class="{{concat flexberryClassNames.tab " " "tab" " " "item" " " item.class}}" title="{{item.caption}}" data-tab="{{item.selector}}" {{action "onTabClick" item.selector on="click"}}>
+      {{#if item.iconClass}}
+        <i class="{{concat flexberryClassNames.tabIcon " " item.iconClass}}"></i>
+      {{/if}}
+      {{#if (not item.iconClass)}}
+        {{item.caption}}
+      {{/if}}
     </a>
   {{/each}}
 </div>

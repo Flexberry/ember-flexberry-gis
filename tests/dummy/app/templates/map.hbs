@@ -41,12 +41,7 @@
     </div>
   </div>
   <div class="ui inernally celled grid">
-    {{flexberry-tab-bar
-      onTabClick=(action "onTabChange")
-      items=sidebarItems
-      target="ui.very.wide.right.sidebar.pushable"
-      uicontext='.mappanel'}}
-    <div class="ui very wide right sidebar pushable">
+    <div class="ui very wide right sidebar pushable tabbar">
       <div data-tab="treeview" class="ui tab treeview">
           {{flexberry-maplayers
             class="styled"
@@ -123,13 +118,11 @@
           {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-commands/export execute=(action "onMapCommandExecute" target=mapToolbar)}}
-          
-          <a {{action 'toggleSidebar' '.ui.sidebar.right' '.mappanel'}}
-              class="icon item"
-              title={{t "forms.map.treeviewbuttontooltip"}}>
-            <i class="list icon"></i>
-          </a>        
-          {{/flexberry-maptoolbar}}
+        {{/flexberry-maptoolbar}}
+        {{flexberry-tab-bar
+          onTabClick=(action 'toggleSidebar' '.ui.sidebar.right' '.mappanel')
+          items=sidebarItems
+        }}
       </div>
     </div>
     <div class="row mappanel">

@@ -46,18 +46,6 @@ export default EditMapController.extend(
           .sidebar('setting', 'transition', 'overlay')
           .sidebar('toggle');
       },
-
-      onTabChange(sidebar, context) {
-        Ember.$(sidebar)
-          .sidebar({
-            context: Ember.$(context),
-            dimPage: false,
-            closable: false
-          })
-          .sidebar('setting', 'transition', 'overlay')
-          .sidebar('toggle');
-      },
-
       querySearch(queryString) {
         let leafletMap = this.get('leafletMap');
         let e = {
@@ -97,15 +85,17 @@ export default EditMapController.extend(
     sidebarItems: [{
         selector: 'treeview',
         caption: 'Дерево',
-        active: true
+        iconClass: 'list icon'
       },
       {
         selector: 'search',
-        caption: 'Поиск'
+        caption: 'Поиск',
+        iconClass: 'search icon'
       },
       {
         selector: 'bookmarks',
-        caption: 'Закладки'
+        caption: 'Закладки',
+        iconClass: 'bookmark icon'
       }
     ]
 
