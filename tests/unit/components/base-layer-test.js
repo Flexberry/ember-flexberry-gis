@@ -16,6 +16,8 @@ test('it should throw at init', function (assert) {
 });
 
 test('it should call layer.setZIndex on setZIndex', function (assert) {
+  assert.expect(1);
+
   let setZIndex = sinon.spy();
   let component = this.subject({
     createLayer() {
@@ -23,26 +25,39 @@ test('it should call layer.setZIndex on setZIndex', function (assert) {
     }
   });
 
-  component.setZIndex();
-
-  assert.ok(setZIndex.called);
+  let leafletLayerPromiseResolved = assert.async();
+  component.get('leafletLayerPromise').then((leafletLayer) => {
+    component.setZIndex();
+    assert.ok(setZIndex.called);
+  }).finally(() => {
+    leafletLayerPromiseResolved();
+  });
 });
 
 test('should throw exception if visibilityDidChange without container', function (assert) {
+  assert.expect(1);
+
   let component = this.subject({
     createLayer
   });
 
-  assert.throws(() => {
-    component.visibilityDidChange();
+  let leafletLayerPromiseResolved = assert.async();
+  component.get('leafletLayerPromise').then((leafletLayer) => {
+    assert.throws(() => {
+      component.visibilityDidChange();
+    });
+  }).finally(() => {
+    leafletLayerPromiseResolved();
   });
 });
 
 test('should call visibilityDidChange and setZIndex on render', function(assert) {
+  assert.expect(2);
+
   let visibilityDidChange = sinon.spy();
   let setZIndex = sinon.spy();
 
-  this.subject({
+  let component = this.subject({
     createLayer,
     visibilityDidChange,
     setZIndex
@@ -50,8 +65,13 @@ test('should call visibilityDidChange and setZIndex on render', function(assert)
 
   this.render();
 
-  assert.ok(visibilityDidChange.called, 'should call visibilityDidChange');
-  assert.ok(setZIndex.called, 'should call setZIndex');
+  let leafletLayerPromiseResolved = assert.async();
+  component.get('leafletLayerPromise').then((leafletLayer) => {
+    assert.ok(visibilityDidChange.called, 'should call visibilityDidChange');
+    assert.ok(setZIndex.called, 'should call setZIndex');
+  }).finally(() => {
+    leafletLayerPromiseResolved();
+  });
 });
 
 test('should call container addLayer/removeLayer based on visibility property', function(assert) {
@@ -69,13 +89,18 @@ test('should call container addLayer/removeLayer based on visibility property', 
     }
   });
 
-  component.set('visibility', true);
+  let leafletLayerPromiseResolved = assert.async();
+  component.get('leafletLayerPromise').then((leafletLayer) => {
+    component.set('visibility', true);
 
-  assert.ok(addLayer.calledOnce, 'addLayer should be called once');
-  assert.ok(addLayer.calledWith(layer), 'addLayer should be called with layer instance');
+    assert.ok(addLayer.calledOnce, 'addLayer should be called once');
+    assert.ok(addLayer.calledWith(layer), 'addLayer should be called with layer instance');
 
-  component.set('visibility', false);
+    component.set('visibility', false);
 
-  assert.ok(removeLayer.calledOnce, 'removeLayer should be called once');
-  assert.ok(removeLayer.calledWith(layer), 'removeLayer should be called with layer instance');
+    assert.ok(removeLayer.calledOnce, 'removeLayer should be called once');
+    assert.ok(removeLayer.calledWith(layer), 'removeLayer should be called with layer instance');
+  }).finally(() => {
+    leafletLayerPromiseResolved();
+  });
 });
