@@ -78,16 +78,16 @@
       </div>
       <div data-tab="search" class="ui tab search">
         {{flexberry-search-panel
-            querySearch=(action "querySearch")
-            clearSearch=(action "clearSearch")
-            searchInProcess=searchInProcess
-            searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
-            }}
+          querySearch=(action "querySearch")
+          clearSearch=(action "clearSearch")
+          searchInProcess=searchInProcess
+          searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+        }}
         {{layer-result-list
           results=searchResults
           serviceLayer=serviceLayer
           leafletMap=leafletMap
-          }}
+        }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
         {{spatial-bookmark        

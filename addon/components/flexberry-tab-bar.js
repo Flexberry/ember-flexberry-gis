@@ -68,7 +68,7 @@ export default Ember.Component.extend({
           let itemClass = Ember.get(item, 'class') || '';
 
           active = true;
-          itemClass += itemClass + 'active';
+          itemClass += itemClass + ' active';
           Ember.set(item, 'class', itemClass);
         }
       }

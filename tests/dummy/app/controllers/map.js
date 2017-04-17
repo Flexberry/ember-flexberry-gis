@@ -82,21 +82,24 @@ export default EditMapController.extend(
     /**
      * items
      */
-    sidebarItems: [{
-        selector: 'treeview',
-        caption: 'Дерево',
-        iconClass: 'list icon'
-      },
-      {
-        selector: 'search',
-        caption: 'Поиск',
-        iconClass: 'search icon'
-      },
-      {
-        selector: 'bookmarks',
-        caption: 'Закладки',
-        iconClass: 'bookmark icon'
-      }
-    ]
+    sidebarItems: Ember.computed(function () {
+      let i18n = this.get('i18n');
 
+      return [{
+          selector: 'treeview',
+          caption: i18n.t('forms.map.treeviewbuttontooltip').toString(),
+          iconClass: 'list icon'
+        },
+        {
+          selector: 'search',
+          caption: i18n.t('forms.map.searchbuttontooltip').toString(),
+          iconClass: 'search icon'
+        },
+        {
+          selector: 'bookmarks',
+          caption: i18n.t('forms.map.bookmarksbuttontooltip').toString(),
+          iconClass: 'bookmark icon'
+        }
+      ];
+    })
   });
