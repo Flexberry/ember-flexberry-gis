@@ -40,7 +40,7 @@ export default Ember.Component.extend({
   flexberryClassNames,
 
   /**
-   * Contains items to display in tab bar 
+   * Contains items to display in tab bar
    * @property items
    * @type {Array}
    * @default []
@@ -72,6 +72,7 @@ export default Ember.Component.extend({
           Ember.set(item, 'class', itemClass);
         }
       }
+
       result.push(item);
     });
 
