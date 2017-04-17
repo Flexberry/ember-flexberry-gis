@@ -262,12 +262,12 @@ export default Ember.Component.extend(
       @method visibilityDidChange
      */
     visibilityDidChange: Ember.observer('visibility', function () {
-      let leafletContainer = this.get('leafletContainer');
       let leafletLayer = this.get('_leafletObject');
-      if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer)) {
+      if (Ember.isNone(leafletLayer)) {
         return;
       }
 
+      let leafletContainer = this.get('leafletContainer');
       if (this.get('visibility')) {
         leafletContainer.addLayer(leafletLayer);
       } else {
