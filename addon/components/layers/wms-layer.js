@@ -27,8 +27,13 @@ export default TileLayer.extend({
   */
   _getFeatureInfo(latlng) {
     let layer = this.get('_leafletObject');
-    let leafletMap = this.get('leafletMap');
+    if (Ember.isNone(layer)) {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        reject(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`);
+      });
+    }
 
+    let leafletMap = this.get('leafletMap');
     let point = leafletMap.latLngToContainerPoint(latlng, leafletMap.getZoom());
     let size = leafletMap.getSize();
     let crs = layer.options.crs;
