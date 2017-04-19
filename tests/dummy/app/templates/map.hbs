@@ -120,7 +120,7 @@
           {{map-commands/export execute=(action "onMapCommandExecute" target=mapToolbar)}}
         {{/flexberry-maptoolbar}}
         {{flexberry-tab-bar
-          onTabClick=(action 'toggleSidebar' '.ui.sidebar.right' '.mappanel')
+          change=(action 'toggleSidebar' '.ui.sidebar.right' '.mappanel')
           items=sidebarItems
         }}
       </div>

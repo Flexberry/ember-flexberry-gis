@@ -29,7 +29,7 @@ const flexberryClassNames = {
  * @extends Ember.Component
  */
 export default Ember.Component.extend({
-  classNames: ['flexberry-tab-bar'],
+  classNames: ['ui', 'tabular', 'menu', flexberryClassNamesPrefix],
 
   layout,
 
@@ -40,23 +40,24 @@ export default Ember.Component.extend({
   flexberryClassNames,
 
   /**
-   * Contains items to display in tab bar
+   * Contains items to be displayed in tab bar
    * @property items
    * @type {Array}
-   * @default []
+   * @default null
    * @example items: [{selector: 'tab1', caption: 'Tab one', active: true }, {selector: 'tab2', caption: 'Tab two'}]
    * @desc the first item with active=true will be set as active, others ignored
    */
-  items: [],
+  items: null,
 
   /**
+   * Contains items that will be displayed in tab bar
    * @property tabs
    * @type {Array}
    */
-  tabs: Ember.computed('items', 'items.[]', function () {
+  tabs: Ember.computed('items.[]', function () {
     let active = false;
-    let items = this.get('items') || [];
-    let result = [];
+    let items = this.get('items') || Ember.A();
+    let result = Ember.A();
 
     items.forEach((item) => {
       let itemIsActive = Ember.get(item, 'active');
@@ -73,7 +74,13 @@ export default Ember.Component.extend({
         }
       }
 
-      result.push(item);
+      if (Ember.get(item, 'iconClass')) {
+        Ember.set(item, '_hasIcon', true);
+      } else {
+        Ember.set(item, '_hasIcon', false);
+      }
+
+      result.pushObject(item);
     });
 
     return result;
@@ -86,7 +93,12 @@ export default Ember.Component.extend({
   prevTab: undefined,
 
   actions: {
-    onTabClick(currentTab) {
+    /**
+        Handles tab 'click' action.
+        @method actions.change
+        @param {String} currentTab describes currently clicked tab
+    */
+    change(currentTab) {
       let prevTab = this.get('prevTab');
       let changed = false;
 
@@ -95,19 +107,27 @@ export default Ember.Component.extend({
         changed = true;
       }
 
-      // if data-tab stays the same
+      // if data-tab stays the same - disable it
       if (!changed) {
         this.set('prevTab', undefined);
-        this.$('.tabular.menu .item.active').removeClass('active');
-        this.sendAction('onTabClick');
+        this.$('.item.active').removeClass('active');
       }
 
       //if data-tab changed but there was not prev one
       else if (changed && !prevTab) {
-        this.sendAction('onTabClick');
+        changed = false;
       }
+
+      let e = {
+        tabName: currentTab,
+        changed: changed,
+        originalEvent: event
+      };
+
+      this.sendAction('change', e);
     }
   },
+
   /**
       Initializes component's DOM-related properties.
     */
@@ -115,7 +135,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     // initialize semantic ui tabs
-    this.$('.tabular.menu .item').tab();
+    this.$('.item').tab();
   },
 
   /**
@@ -125,7 +145,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     // Initialize possibly added new tabs.
-    this.$('.tabular.menu .item').tab();
+    this.$('.item').tab();
   },
 
   /**
@@ -135,6 +155,16 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     // destroy semantic ui tabs
-    this.$('.tabular.menu .item').tab('destroy');
+    this.$('.item').tab('destroy');
   }
+
+  /**
+    Component's action invoking when tab was clicked and it's 'active' state changed.
+    @method sendingActions.change
+    @param {Object} e Action's event object.
+    @param {String} e.tabName Name of clicked tab
+    @param {Boolean} e.changed Flag: whether tab was changed. True if yes, False if not, Null if there is no active tab
+    @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
+    which describes inner input's 'change' event.
+  */
 });

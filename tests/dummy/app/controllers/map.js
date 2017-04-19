@@ -36,16 +36,19 @@ export default EditMapController.extend(
     }),
 
     actions: {
-      toggleSidebar(sidebar, context) {
-        Ember.$(sidebar)
-          .sidebar({
-            context: Ember.$(context),
-            dimPage: false,
-            closable: false
-          })
-          .sidebar('setting', 'transition', 'overlay')
-          .sidebar('toggle');
+      toggleSidebar(sidebar, context, e) {
+        if (!e.changed) {
+          Ember.$(sidebar)
+            .sidebar({
+              context: Ember.$(context),
+              dimPage: false,
+              closable: false
+            })
+            .sidebar('setting', 'transition', 'overlay')
+            .sidebar('toggle');
+        }
       },
+
       querySearch(queryString) {
         let leafletMap = this.get('leafletMap');
         let e = {
