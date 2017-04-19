@@ -212,8 +212,7 @@ export default Ember.Mixin.create({
       let rootArray = Ember.get(this, rootPath);
       rootArray.pushObject(childLayer);
 
-      let rootLayer = this.get('model.rootLayer');
-      this.setIndexes(rootLayer, true);
+      this._setIndexes(Ember.isArray(parentLayer) ? parentLayer : this._findRootLayers(parentLayerPath), rootArray.length);
     },
 
     /**
@@ -295,6 +294,7 @@ export default Ember.Mixin.create({
       ```
     */
     onMapLayerRemove(...args) {
+      let rootPath = 'model.mapLayer';
       let layerPath = args[0];
       Ember.assert(
         `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
@@ -307,12 +307,13 @@ export default Ember.Mixin.create({
         `but \`object\` or  \`instance\` is expected`,
         Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
 
+      let rootLayers = this._findRootLayers(layerPath);
       this.removeLayer({
         layer: layer
       });
 
-      let rootLayer = this.get('model.rootLayer');
-      this.setIndexes(rootLayer, false);
+      let rootArray = Ember.get(this, rootPath);
+      this._setIndexes(rootLayers, rootArray.length);
     }
   },
 
@@ -384,33 +385,59 @@ export default Ember.Mixin.create({
   },
 
   /**
-   Sets indexes for layers hierarchy.
+    Sets indexes for layers hierarchy.
 
-    @method setIndexes
-    @param {Object} rootLayer Root layer of the tree.
-    @param {Boolean} isAdded True when layer is added.
+    @method _setIndexes
+    @param {Array} layers Array of layers to set indexes.
     @param {Int} index First index.
     @returns {Int} Last index.
+    @private
   */
-  setIndexes(rootLayer, isAdded, index) {
-    let layers = rootLayer.get('layers');
-    if (Ember.isArray(layers)) {
-      if (Ember.isNone(index)) {
-        index = layers.objectAt(0).get('index') || 0;
-        index = isAdded ? index + 1 : index - 1;
-      }
-
+  _setIndexes(layers, index) {
+    if (Ember.isArray(layers) && index > 0) {
       layers.forEach((layer) => {
         if (!layer.get('isDeleted')) {
           layer.set('index', index);
           index--;
-          if (layer.get('type') === 'group') {
-            index = this.setIndexes(layer, isAdded, index);
+          if (Ember.isArray(layer.get('layers'))) {
+            index = this._setIndexes(layer.get('layers'), index);
           }
         }
       }, this);
     }
 
     return index;
+  },
+
+  /**
+    Finds root layers.
+
+    @method _findRootLayers
+    @param {String} layerPath LayerPath to child layer.
+    @returns {Array} Root layers.
+    @private
+  */
+  _findRootLayers(layerPath) {
+    let layer = getRecord(this, layerPath);
+    let nextInPath = function(path) {
+      let index = path.lastIndexOf('.');
+      if (index > -1) {
+        path = path.slice(0, index);
+      }
+
+      return path;
+    };
+
+    // Get layerPath for layers on same hierarchy level.
+    layerPath = nextInPath(layerPath);
+
+    if (Ember.isNone(layer.get('parent'))) {
+      return getRecord(this, layerPath);
+    }
+
+    // Get layerPath for parent layer.
+    layerPath = nextInPath(layerPath);
+
+    return this._findRootLayers(layerPath);
   },
 });
