@@ -12,30 +12,34 @@ export default {
       },
       defaultMap: {
         caption: ''
+      }
+    },
+    MapObjectSettingE: {
+      typeName: {
+        caption: 'Тип'
       },
-      layerLink: {
-        caption: '',
-        layer: {
-          caption: ''
-        },
-        linkParameter: {
-          caption: '',
-          objectField: {
-          caption: ''
-        },
-          layerField: {
-          caption: ''
-        },
-          expression: {
-          caption: ''
-        },
-          queryKey: {
-          caption: ''
-        },
-          linkField: {
+      listForm: {
+        caption: 'Списковая форма'
+      },
+      editForm: {
+        caption: 'Форма редактирования'
+      },
+      defaultMap: {
+        caption: 'Карта по умолчанию',
+        name: {
           caption: ''
         }
-        }
+      }
+    },
+    MapObjectSettingL: {
+      typeName: {
+        caption: 'Тип'
+      },
+      listForm: {
+        caption: 'Списковая форма'
+      },
+      editForm: {
+        caption: 'Форма редактирования'
       }
     }
   }

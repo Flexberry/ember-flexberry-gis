@@ -2,52 +2,44 @@
   font-family: inherit;
   height: 500px;
   width: 100%;
-
   &.crosshair {
     cursor: crosshair;
   }
-
   &.zoom-in {
     cursor: zoom-in;
   }
-
   &.zoom-out {
     cursor: zoom-out;
   }
-
   &.help {
     cursor: help;
   }
-}
-
-.flexberry-map .identify-popup .leaflet-popup-content .column {
-  overflow: auto !important;
-}
-
-.flexberry-map .identify-popup .leaflet-popup-content {
-  margin: 1.5em 1.5em !important;
-}
-
-.flexberry-map .identify-popup .ui.accordion .item .title,
-.flexberry-map .identify-popup .ui.list .item {
-  cursor: pointer !important;
-}
-
-.flexberry-map .identify-popup .item.active {
-  background: #aecff7;
-  border: 1px solid gray;
-  border-radius: 2px;
-}
-
-.flexberry-map .identify-popup .ui.accordion .content .ui.list {
-  margin-left: 2em !important;
-}
-
-.flexberry-map .flexberry-map-loader-dimmer {
-  z-index: 10000 !important;
-}
-
-.flexberry-map .flexberry-map-loader {
-  z-index: 10001 !important;
-  color: #ffffff !important;
+  &-loader {
+    z-index: 10001 !important;
+    color: #ffffff !important;
+    &-dimmer {
+      z-index: 10000 !important;
+    }
+  }
+  .identify-popup {
+    .ui.accordion .item .title,
+    .ui.list .item {
+      cursor: pointer;
+    }
+    .item.active {
+      background: #aecff7;
+      border: 1px solid gray;
+      border-radius: 2px;
+    }
+    .leaflet-popup-content {
+      margin: 1.5em 1.5em;
+      .column {
+        overflow: auto;
+        max-height: 100%;
+      }
+    }
+    .ui.accordion .content .ui.list {
+      margin-left: 2em !important;
+    }
+  }
 }

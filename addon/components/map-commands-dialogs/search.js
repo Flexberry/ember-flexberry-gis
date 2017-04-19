@@ -325,7 +325,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
       Search results.
       Features array containing founded (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
 
-      @property _foundedFeatures
+      @property foundedFeatures
       @type Object[]
       @default null
       @private
@@ -413,6 +413,10 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
       */
       onApprove(e) {
         let selectedLayer = this.get('_selectedLayer');
+        if (Ember.isNone(e)) {
+          e = {};
+        }
+
         if (Ember.isNone(selectedLayer)) {
           this.set('errorMessage', this.get('i18n').t('components.map-commands-dialogs.search.error-message-empty-selected-layer'));
           this.set('showErrorMessage', true);
@@ -632,15 +636,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
       @private
     */
     _layerCanBeSearched(layer) {
-      if (Ember.get(layer, 'isDeleted')) {
-        return false;
-      }
-
-      let layerClassFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
-      let searchOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('search');
-      let searchOperationIsAvailableForLayerInstance = Ember.get(layer, 'settingsAsObject.searchSettings.canBeSearched') !== false;
-
-      return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
+      return Ember.get(layer, 'canBeSearched');
     },
 
     /**

@@ -1,19 +1,10 @@
-.flexberry-tree .flexberry-tree {
-  margin: 0 !important;
-}
-
-.flexberry-tree-placeholder {
-  text-align: center !important;
-}
-
-.flexberry-tree-root.styled .flexberry-treenode > .flexberry-treenode-header {
-  border-top: 1px solid rgba(34, 36, 38, 0.15) !important;
-}
-
-.flexberry-tree-root.styled .flexberry-treenode:first-child > .flexberry-treenode-header {
-  border-top: none !important;
-}
-
-.flexberry-tree-root.styled .flexberry-tree-header, .flexberry-tree-root.styled .flexberry-tree-footer, {
-  padding: 0.75em 1em;
+.flexberry-tree {
+  margin: 0;
+  &-placeholder {
+    text-align: center !important;
+  }
+  &-header,
+  &-footer {
+    padding: 0.75em 1em;
+  }
 }

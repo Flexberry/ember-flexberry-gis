@@ -1,9 +1,10 @@
 /**
   @module ember-flexberry-gis
-*/
+ */
 
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-search';
+import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
 
 /**
   Component's CSS-classes names.
@@ -42,8 +43,9 @@ const flexberryClassNames = {
 
   @class FlexberrySearchComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses DynamicPropertiesMixin
 */
-let FlexberrySearchComponent = Ember.Component.extend({
+let FlexberrySearchComponent = Ember.Component.extend(DynamicPropertiesMixin, {
   /**
     Flag: indicates whether search type is 'category' or not.
 
@@ -52,10 +54,43 @@ let FlexberrySearchComponent = Ember.Component.extend({
     @readOnly
     @private
   */
-  _isCategory: Ember.computed('type', function() {
+  _isCategory: Ember.computed('type', function () {
     let type = this.get('type');
     return Ember.typeOf(type) === 'string' && type.toLowerCase() === 'category';
   }),
+
+  actions: {
+
+    /**
+      Action called when user press enter in search input
+      Invokes {{#crossLink "FlexberrySearchComponent/sendingActions.enter:method"}}'enter' action{{/crossLink}}.
+      @method actions.enter
+    */
+    enter() {
+      if (this.get('_lastAction') && this.get('_lastAction') === 'select') {
+        this.set('_lastAction', null);
+        return;
+      }
+
+      let $component = this.$();
+      if (Ember.isNone($component)) {
+        return;
+      }
+
+      if (Ember.isNone(this.get('apiSettings'))) {
+        return;
+      }
+
+      $component.search('cancel query');
+      $component.search('hide results');
+
+      if (this.get('_valueWasSelected')) {
+        this.sendAction('select');
+      } else {
+        this.sendAction('enter');
+      }
+    }
+  },
 
   /**
     Reference to component's template.
@@ -77,6 +112,21 @@ let FlexberrySearchComponent = Ember.Component.extend({
     @default ['apiSettings', 'apiSettings.url']
   */
   observableProperties: ['apiSettings', 'apiSettings.url'],
+
+  /**
+    Names of component's properties used for init semantic search module
+    @property semanticProperties
+    @type String[]
+   */
+  semanticProperties: [
+    'apiSettings',
+    'type',
+    'minCharacters',
+    'fields',
+    'showNoResults',
+    'onResults',
+    'maxResults'
+  ],
 
   /**
     Component's wrapping <div> CSS-classes names.
@@ -122,6 +172,15 @@ let FlexberrySearchComponent = Ember.Component.extend({
   minCharacters: 3,
 
   /**
+    Maximum results to display when using local and simple search, maximum category count for category search
+
+    @property maxResults
+    @type Number
+    @default 10
+  */
+  maxResults: 10,
+
+  /**
     Search API settings.
     See [Semantic UI examples](http://semantic-ui.com/modules/search.html#using-api-settings).
 
@@ -149,6 +208,37 @@ let FlexberrySearchComponent = Ember.Component.extend({
   */
   value: null,
 
+  showNoResults: false,
+
+  /**
+    "Select" or something else
+    Need to prevent "enter" action after "onSelect" event
+
+    @property _lastAction
+    @type String
+    @default null
+  */
+  _lastAction: null,
+
+  /**
+    Flag: is value typed or selected
+
+    @property _valueWasSelected
+    @type Boolean
+    @default false
+  */
+  _valueWasSelected: false,
+
+  /**
+    Clean _lastAction if user change value
+
+    @method _valueChange
+  */
+  _valueChange:  Ember.observer('value',  function () {
+    this.set('_lastAction', null);
+    this.set('_valueWasSelected', false);
+    }),
+
   /**
     Initializes Semantic UI search module.
 
@@ -161,12 +251,39 @@ let FlexberrySearchComponent = Ember.Component.extend({
       return;
     }
 
-    $component.search({
-      type: this.get('type'),
-      minCharacters: this.get('minCharacters'),
-      apiSettings: this.get('apiSettings'),
-      fields: this.get('fields')
+    if (Ember.isNone(this.get('apiSettings'))) {
+      return;
+    }
+
+    let semanticProperties = {};
+
+    this.get('semanticProperties').forEach((propertyName) => {
+      var propertyValue = this.get(propertyName);
+      if (!Ember.isNone(propertyValue)) {
+        semanticProperties[propertyName] = propertyValue;
+      }
     });
+
+    let _this = this;
+    let onSelect = function (element) {
+      var field = semanticProperties.fields && semanticProperties.fields.title ? semanticProperties.fields.title : null;
+      if (field) {
+        _this.set('value', element[field]);
+        _this.set('_lastAction', 'select');
+        _this.set('_valueWasSelected', true);
+        _this.sendAction('select', element);
+      }
+    };
+
+    semanticProperties.onSelect = onSelect;
+
+    let onSearchQuery = function (query) {
+      _this.set('_lastAction', null);
+    };
+
+    semanticProperties.onSearchQuery = onSearchQuery;
+
+    $component.search(semanticProperties);
   },
 
   /**
@@ -230,6 +347,11 @@ let FlexberrySearchComponent = Ember.Component.extend({
       });
     }
   }
+
+  /**
+    Component's action invoking when user press enter in search box
+    @method sendingActions.enter
+   */
 });
 
 // Add component's CSS-class names as component's class static constants

@@ -19,7 +19,7 @@
   onShow=(action "onErrorMessageShow")
   onHide=(action "onErrorMessageHide")
 }}
-<form class="ui {{if isBusy "loading"}} form" role="form">
+<form class="ui {{if isBusy "loading"}} form" role="form" {{action "onApprove" on="submit"}}>
   <div class="ui two column celled grid">
     <div class="{{flexberryClassNames.settings}} column">
       <div class="field">

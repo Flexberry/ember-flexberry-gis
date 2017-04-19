@@ -5,7 +5,6 @@
 import Ember from 'ember';
 import LeafletOptionsMixin from '../mixins/leaflet-options';
 import LeafletPropertiesMixin from '../mixins/leaflet-properties';
-import LeafletEventsMixin from '../mixins/leaflet-events';
 
 import layout from '../templates/components/flexberry-map';
 
@@ -43,17 +42,16 @@ const flexberryClassNames = {
  */
 let FlexberryMapComponent = Ember.Component.extend(
   LeafletOptionsMixin,
-  LeafletPropertiesMixin,
-  LeafletEventsMixin, {
+  LeafletPropertiesMixin, {
     /**
       Leaflet map.
 
-      @property _layer
+      @property _leafletObject
       @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
       @default null
       @private
     */
-    _layer: null,
+    _leafletObject: null,
 
     /**
       Flag: indicates whether map loader is shown or not.
@@ -92,19 +90,6 @@ let FlexberryMapComponent = Ember.Component.extend(
       @default ['flexberry-map']
     */
     classNames: ['flexberry-map'],
-
-    /**
-      List of leaflet map events which will be sended outside as component's actions.
-    */
-    leafletEvents: [
-      'click', 'dblclick', 'mousedown', 'mouseup', 'mouseover', 'mouseout',
-      'mousemove', 'contextmenu', 'focus', 'blur', 'preclick', 'load',
-      'unload', 'viewreset', 'movestart', 'move', 'moveend', 'dragstart',
-      'drag', 'dragend', 'zoomstart', 'zoomend', 'zoomlevelschange',
-      'resize', 'autopanstart', 'layeradd', 'layerremove',
-      'baselayerchange', 'overlayadd', 'overlayremove', 'locationfound',
-      'locationerror', 'popupopen', 'popupclose'
-    ],
 
     /**
       List of leaflet map options which will be passed into leaflet map.
@@ -183,15 +168,6 @@ let FlexberryMapComponent = Ember.Component.extend(
       @type Array of NewPlatformFlexberryGISMapLayer
     */
     layers: null,
-
-    /**
-      Layer links object thats use for query data on map load
-
-      @property layerLinks
-      @type Ember.Array
-      @default null
-    */
-    layerLinks: null,
 
     /**
       JSON object with query parameters
@@ -281,10 +257,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       let leafletMap = L.map(this.$()[0], this.get('options'));
       this._injectMapLoaderMethods(leafletMap);
 
-      this.set('_layer', leafletMap);
-
-      this._addObservers();
-      this._addEventListeners();
+      this.set('_leafletObject', leafletMap);
 
       this.sendAction('leafletInit', {
         map: leafletMap
@@ -294,13 +267,11 @@ let FlexberryMapComponent = Ember.Component.extend(
       leafletMap.addLayer(serviceLayer);
       this.set('serviceLayer', serviceLayer);
 
-      let layerLinks = this.get('layerLinks');
       let queryFilter = this.get('queryFilter');
 
-      if (!Ember.isNone(layerLinks) && !Ember.isNone(queryFilter)) {
+      if (!Ember.isNone(queryFilter)) {
         Ember.run.scheduleOnce('afterRender', this, function () {
           let e = {
-            layerLinks,
             queryFilter,
             results: Ember.A()
           };
@@ -322,7 +293,7 @@ let FlexberryMapComponent = Ember.Component.extend(
             } else {
 
               // Should alert user about not found objects
-              Ember.Logger.warn('Object not found for query', layerLinks, queryFilter);
+              Ember.Logger.warn('Object not found for query', queryFilter);
             }
 
             // Hide map loader.
@@ -339,12 +310,12 @@ let FlexberryMapComponent = Ember.Component.extend(
     willDestroyElement() {
       this._super(...arguments);
 
-      let leafletMap = this.get('_layer');
+      let leafletMap = this.get('_leafletObject');
       if (!Ember.isNone(leafletMap)) {
         // Destroy leaflet map.
         this._removeMapLoaderMethods(leafletMap);
         leafletMap.remove();
-        this.set('_layer', null);
+        this.set('_leafletObject', null);
 
         this.sendAction('leafletDestroy');
       }

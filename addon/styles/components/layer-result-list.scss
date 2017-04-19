@@ -1,0 +1,10 @@
+.layer-result-list {
+  .item {
+    cursor: pointer;
+    &.active {
+      background: #aecff7;
+      border: 1px solid gray;
+      border-radius: 2px;
+    }
+  }
+}

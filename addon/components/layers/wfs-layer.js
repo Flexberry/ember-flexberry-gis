@@ -59,7 +59,7 @@ export default BaseLayer.extend({
     @param bool single
     Result should be single layer
   */
-  _getFeature(options, single=false) {
+  _getFeature(options, single = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let layer = null;
       let destroyLayer = () => {
@@ -139,7 +139,7 @@ export default BaseLayer.extend({
 
     let featuresPromise = this._getFeature({ filter });
     e.results.push({
-      layer: this.get('layer'),
+      layer: this.get('layerModel'),
       features: featuresPromise
     });
   },
@@ -157,8 +157,22 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    let filter = new L.Filter.Like().append(e.searchOptions.propertyName, '*' + e.searchOptions.queryString + '*');
-    e.results.features = this._getFeature({ filter, maxFeatures: e.searchOptions.maxResultsCount });
+    let propertyName = e.searchOptions.propertyName;
+
+    if (Ember.isNone(propertyName)) {
+      propertyName = this.get('layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings.displayProperty');
+    }
+
+    if (Ember.isNone(propertyName)) {
+      return;
+    }
+
+    let filter = new L.Filter.Like().append(propertyName, '*' + e.searchOptions.queryString + '*', { matchCase: false });
+    return this._getFeature({
+      filter,
+      maxFeatures: e.searchOptions.maxResultsCount,
+      style: { color: 'yellow' }
+    });
   },
 
   /**
@@ -166,7 +180,6 @@ export default BaseLayer.extend({
 
     @method _query
     @param {Object} e Event object.
-    @param {Object} layerLinks Array contains layer links model, use for filter searched layers
     @param {Object} queryFilter Object with query filter paramteres
     @param {Object[]} results.features Array containing leaflet layers objects
     or a promise returning such array.

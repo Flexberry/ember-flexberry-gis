@@ -17,7 +17,7 @@
   onShow=(action "onErrorMessageShow")
   onHide=(action "onErrorMessageHide")
 }}
-<form class="ui {{formState}} form flexberry-vertical-form" role="form">
+<div class="ui {{formState}} form flexberry-vertical-form">
   <div class="field">
     <div class="flexberry-edit-panel">
       {{#unless readonly}}
@@ -41,83 +41,124 @@
     </div>
   </div>
   <div class="ui inernally celled grid">
+    <div class="ui very wide right sidebar pushable tabbar">
+      <div data-tab="treeview" class="ui tab treeview">
+          {{flexberry-maplayers
+            class="styled"
+            cswConnections=cswConnections
+            leafletMap=leafletMap
+            layers=(get-with-dynamic-actions this "model.hierarchy"
+              hierarchyPropertyName="layers"
+              pathKeyword="layerPath"
+              dynamicActions=(array
+                (hash
+                  on="add"
+                  actionName="onMapLayerAdd"
+                  actionArguments=(array "{% layerPath %}")
+                )
+                (hash
+                  on="edit"
+                  actionName="onMapLayerEdit"
+                  actionArguments=(array "{% layerPath %}")
+                )
+                (hash
+                  on="remove"
+                  actionName="onMapLayerRemove"
+                  actionArguments=(array "{% layerPath %}")
+                )
+                (hash
+                  on="changeVisibility"
+                  actionName="onMapLayerChangeVisibility"
+                  actionArguments=(array "{% layerPath %}.visibility")
+                )
+              )
+            )
+          add=(action "onMapLayerAdd" "model.hierarchy")
+        }}
+      </div>
+      <div data-tab="search" class="ui tab search">
+        {{flexberry-search-panel
+          querySearch=(action "querySearch")
+          clearSearch=(action "clearSearch")
+          searchInProcess=searchInProcess
+          searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+        }}
+        {{layer-result-list
+          results=searchResults
+          serviceLayer=serviceLayer
+          leafletMap=leafletMap
+        }}
+      </div>
+      <div data-tab="bookmarks" class="ui tab bookmarks">
+        {{spatial-bookmark        
+          leafletMap=leafletMap
+          mapid=model.id
+        }}
+      </div>
+    </div>
     <div class="row">
       <div class="sixteen wide column">
         {{#flexberry-maptoolbar
           leafletMap=leafletMap
-          layers=model.rootLayer.layers as |mapToolbar|
+          layers=model.hierarchy as |mapToolbar|
         }}
           {{map-tools/drag activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/zoom-in activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/zoom-out activate=(action "onMapToolActivate" target=mapToolbar)}}
-          {{map-commands/go-to execute=(action "onMapCommandExecute" target=mapToolbar)}}
-          {{map-commands/full-extent execute=(action "onMapCommandExecute" target=mapToolbar)}}
+          {{map-commands/go-to
+            availableCRS=availableCRS
+            execute=(action "onMapCommandExecute" target=mapToolbar)}}
+          {{map-commands/full-extent
+            execute=(action "onMapCommandExecute" target=mapToolbar)
+            lat=model.lat
+            lng=model.lng
+            zoom=model.zoom}}
           {{map-commands/search execute=(action "onMapCommandExecute" target=mapToolbar)}}
           {{map-tools/identify activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-commands/export execute=(action "onMapCommandExecute" target=mapToolbar)}}
         {{/flexberry-maptoolbar}}
+        {{flexberry-tab-bar
+          change=(action 'toggleSidebar' '.ui.sidebar.right' '.mappanel')
+          items=sidebarItems
+        }}
       </div>
     </div>
-    <div class="row">
-      <div class="ten wide column">
-        {{#flexberry-map
-          lat=model.lat
-          lng=model.lng
-          zoom=model.zoom
-          layerLinks=layerLinks
-          queryFilter=queryFilter
-          leafletInit=(action "onMapLeafletInit" "leafletMap")
-          leafletDestroy=(action "onMapLeafletDestroy" "leafletMap")
-          moveend=(action "onMapMoveend" "model.lat" "model.lng")
-          zoomend=(action "onMapZoomend" "model.zoom")
+    <div class="row mappanel">
+      {{#flexberry-map
+        lat=model.lat
+        lng=model.lng
+        zoom=model.zoom
+        queryFilter=queryFilter
+        leafletInit=(action "onMapLeafletInit" "leafletMap")
+        serviceLayerInit=(action "onServiceLayerInit" "serviceLayer")
+        leafletDestroy=(action "onMapLeafletDestroy" "leafletMap")
+        moveend=(action "onMapMoveend" "model.lat" "model.lng")
+        zoomend=(action "onMapZoomend" "model.zoom")
+        class="pusher"
+      }}
+        {{flexberry-layers
+          leafletMap=leafletMap
+          leafletContainer=leafletMap
+          layers=model.hierarchy
+        }}
+        {{scale-control
+          map=leafletMap
+          imperial=false
+        }}
+        {{history-control
+          map=leafletMap
+        }}
+        {{#minimap-control
+            map=leafletMap as |groupLayers|
         }}
           {{flexberry-layers
-            leafletMap=leafletMap
-            leafletContainer=leafletMap
-            layers=model.rootLayer.layers
+            leafletContainer=groupLayers
+            layers=model.hierarchy
           }}
-          {{scale-control
-            map=leafletMap
-            imperial=false
-          }}
-        {{/flexberry-map}}
-      </div>
-      <div class="six wide column">
-        {{flexberry-maplayers
-          class="styled"
-          cswConnections=cswConnections
-          leafletMap=leafletMap
-          layers=(get-with-dynamic-actions this "model.rootLayer.layers"
-            hierarchyPropertyName="layers"
-            pathKeyword="layerPath"
-            dynamicActions=(array
-              (hash
-                on="add"
-                actionName="onMapLayerAdd"
-                actionArguments=(array "{% layerPath %}")
-              )
-              (hash
-                on="edit"
-                actionName="onMapLayerEdit"
-                actionArguments=(array "{% layerPath %}")
-              )
-              (hash
-                on="remove"
-                actionName="onMapLayerRemove"
-                actionArguments=(array "{% layerPath %}")
-              )
-              (hash
-                on="changeVisibility"
-                actionName="onMapLayerChangeVisibility"
-                actionArguments=(array "{% layerPath %}.visibility")
-              )
-            )
-          )
-          add=(action "onMapLayerAdd" "model.rootLayer")
-        }}
-      </div>
+        {{/minimap-control}}
+      {{/flexberry-map}}
     </div>
   </div>
-</form>
+</div>

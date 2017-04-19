@@ -26,35 +26,34 @@
     </label>
     {{flexberry-dropdown
       class="fluid"
-      items=_availableModes
+      items=_availableCaptions
       value=_selectedMode
     }}
   </div>
-  <div class="field">
-    <label>
-      {{#if _latlngCrsModeIsSelected}}
-        {{latTextboxCaption}}
-      {{else}}
-        {{xTextboxCaption}}
-      {{/if}}
-    </label>
-    {{flexberry-textbox
-      class="fluid"
-      value=_options.x
+  <div class="goto point">
+    <div class="field">
+      <label>
+        {{_selectedCrs.xCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_options.x
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{_selectedCrs.yCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_options.y
+      }}
+    </div>
+    {{flexberry-button
+      iconClass="resize vertical icon"
+      class="switch"      
+      click=(action "switchXY")
     }}
-  </div>
-  <div class="field">
-    <label>
-      {{#if _latlngCrsModeIsSelected}}
-        {{lngTextboxCaption}}
-      {{else}}
-        {{yTextboxCaption}}
-      {{/if}}
-    </label>
-    {{flexberry-textbox
-      class="fluid"
-      value=_options.y
-    }}
-  </div>
+  </div>  
 </form>
 {{/flexberry-dialog}}

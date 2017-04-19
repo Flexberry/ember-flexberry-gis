@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import DynamicActionObject from '../objects/dynamic-action';
 import { render } from '../utils/string';
+import { getRecord } from '../utils/extended-get';
 
 // Validates helper's properties.
 // Not a helper member, so yuidoc-comments are unnecessary.
@@ -269,7 +270,7 @@ export default Ember.Helper.extend({
         // rebind dynamic actions for properties following after removed ones (till the end of array).
         for (let i = start, len = arr.length; i < len; i++) {
           let addedOrMovedPropertyPath = `${propertyPath}.${i}`;
-          let addedOrMovedPropertyValue = this.get(`_rootPropertyOwner.${addedOrMovedPropertyPath}`);
+          let addedOrMovedPropertyValue = getRecord(this, `_rootPropertyOwner.${addedOrMovedPropertyPath}`);
 
           this._bindDynamicActions({
             propertyPath: addedOrMovedPropertyPath,
@@ -281,7 +282,7 @@ export default Ember.Helper.extend({
 
     let referenceObserver = () => {
       let rootPropertyOwner = this.get('_rootPropertyOwner');
-      let propertyValue = Ember.get(rootPropertyOwner, propertyPath);
+      let propertyValue = getRecord(rootPropertyOwner, propertyPath);
 
       // Property-object reference changed.
       // Remove old observers.
@@ -298,7 +299,7 @@ export default Ember.Helper.extend({
     };
 
     let rootPropertyOwner = this.get('_rootPropertyOwner');
-    let propertyValue = Ember.get(rootPropertyOwner, propertyPath);
+    let propertyValue = getRecord(rootPropertyOwner, propertyPath);
 
     // Observe property reference.
     if (Ember.isNone(Ember.get(observer, 'referenceObserver'))) {
@@ -344,7 +345,7 @@ export default Ember.Helper.extend({
       }
 
       let observerPropertyPath = Ember.get(observer, 'propertyPath');
-      let observerPropertyValue = Ember.get(rootPropertyOwner, observerPropertyPath);
+      let observerPropertyValue = getRecord(rootPropertyOwner, observerPropertyPath);
 
       let referenceObserver = Ember.get(observer, 'referenceObserver');
       Ember.removeObserver(rootPropertyOwner, observerPropertyPath, referenceObserver);
@@ -394,7 +395,7 @@ export default Ember.Helper.extend({
     if (Ember.isArray(propertyValue)) {
       for (let i = 0, len = propertyValue.length; i < len; i++) {
         this._bindDynamicActions({
-          propertyValue: propertyValue[i],
+          propertyValue: propertyValue.objectAt(i),
           propertyPath: `${propertyPath}.${i}`,
 
           // Don't observe properties containing inside arrays,

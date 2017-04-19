@@ -6,7 +6,6 @@ export let Model = Ember.Mixin.create({
   listForm: DS.attr('string'),
   editForm: DS.attr('string'),
   defaultMap: DS.belongsTo('new-platform-flexberry-g-i-s-map', { inverse: null, async: false }),
-  layerLink: DS.hasMany('new-platform-flexberry-g-i-s-layer-link', { inverse: 'mapObjectSetting', async: false }),
   getValidations: function () {
     let parentValidations = this._super();
     let thisValidations = {
@@ -25,18 +24,19 @@ export let defineProjections = function (model) {
     editForm: Projection.attr('', { hidden: true }),
     defaultMap: Projection.belongsTo('new-platform-flexberry-g-i-s-map', '', {
 
-    }),
-    layerLink: Projection.hasMany('new-platform-flexberry-g-i-s-layer-link', '', {
-      layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
-
-      }),
-      linkParameter: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', '', {
-        objectField: Projection.attr(''),
-        layerField: Projection.attr(''),
-        expression: Projection.attr(''),
-        queryKey: Projection.attr(''),
-        linkField: Projection.attr('')
-      })
     })
+  });
+  model.defineProjection('MapObjectSettingE', 'new-platform-flexberry-g-i-s-map-object-setting', {
+    typeName: Projection.attr('Тип'),
+    listForm: Projection.attr('Списковая форма'),
+    editForm: Projection.attr('Форма редактирования'),
+    defaultMap: Projection.belongsTo('new-platform-flexberry-g-i-s-map', 'Карта по умолчанию', {
+      name: Projection.attr('', { hidden: true })
+    }, { displayMemberPath: 'name' })
+  });
+  model.defineProjection('MapObjectSettingL', 'new-platform-flexberry-g-i-s-map-object-setting', {
+    typeName: Projection.attr('Тип'),
+    listForm: Projection.attr('Списковая форма'),
+    editForm: Projection.attr('Форма редактирования')
   });
 };

@@ -3,7 +3,8 @@ import { moduleForModel, test } from 'ember-qunit';
 moduleForModel('new-platform-flexberry-g-i-s-map', 'Unit | Model | new-platform-flexberry-g-i-s-map', {
   // Specify the other units that are required for this test.
   needs: [
-    'model:new-platform-flexberry-g-i-s-map'
+    'model:new-platform-flexberry-g-i-s-map',
+    'model:new-platform-flexberry-g-i-s-map-layer'
   ]
 });
 

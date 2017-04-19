@@ -28,7 +28,7 @@ test('_addEventListeners should create eventHandles for used events', function (
 
   let subject = MixinImplementation.create({
     usedLeafletEvents: ['testEvent1', 'testEvent2'],
-    _layer: { addEventListener }
+    _leafletObject: { addEventListener }
   });
 
   subject._addEventListeners();
@@ -47,7 +47,7 @@ test('_removeEventListener shoud remove all used eventHandles', function (assert
       testEvent1: '',
       testEvent2: ''
     },
-    _layer: { removeEventListener }
+    _leafletObject: { removeEventListener }
   });
 
   subject._removeEventListeners();

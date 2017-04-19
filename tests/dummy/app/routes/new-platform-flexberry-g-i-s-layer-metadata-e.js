@@ -9,7 +9,7 @@ import EditFormRouteOperationsIndicationMixin from '../mixins/edit-form-route-op
   Maps layers metadata edit route.
 
   @class NewPlatformFlexberryGISLayerMetadataERoute
-  @extends EditMapRoute
+  @extends EditFormRoute
   @uses EditFormRouteOperationsIndicationMixin
 */
 export default EditFormRoute.extend(EditFormRouteOperationsIndicationMixin, {

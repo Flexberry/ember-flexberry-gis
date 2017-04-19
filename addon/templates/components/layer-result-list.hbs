@@ -1,0 +1,21 @@
+{{#if _showLoader}}
+  <div class="ui active  inline loader"></div>{{t "components.layer-result-list.processing"}}
+{{else if _noData}}
+  {{t "components.layer-result-list.nodata"}}
+{{/if}}
+{{#each _displayResults as |result|}}
+   {{#flexberry-toggler caption=result.name expanded=result.first}}    
+     <div class="ui list transition">
+      {{#each result.features as |feature|}}
+        {{feature-result-item
+          feature=feature
+          displaySettings=result.settings
+          selectedFeature=_selectedFeature
+          selectFeature=(action "selectFeature")
+          panTo=(action "panTo")
+          zoomTo=(action "zoomTo")
+        }}
+      {{/each}}
+     </div>
+    {{/flexberry-toggler}}
+{{/each}}

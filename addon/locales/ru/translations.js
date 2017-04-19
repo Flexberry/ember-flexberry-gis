@@ -6,8 +6,10 @@ import NewPlatformFlexberryGISMapModel from './models/new-platform-flexberry-g-i
 import NewPlatformFlexberryGISMapLayerModel from './models/new-platform-flexberry-g-i-s-map-layer';
 import NewPlatformFlexberryGISMapObjectSettingModel from './models/new-platform-flexberry-g-i-s-map-object-setting';
 
+import FeatureResultItemComponent from './components/feature-result-item';
 import FlexberryCSWComponent from './components/flexberry-csw';
 import LayersDialogsComponents from './components/layers-dialogs';
+import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
@@ -23,10 +25,17 @@ export default {
     'new-platform-flexberry-g-i-s-map-object-setting': NewPlatformFlexberryGISMapObjectSettingModel
   },
 
-  'forms': {
-  },
-
   'components': {
+    'feature-result-item': FeatureResultItemComponent,
+
+    'spatial-bookmarks': {
+      'add-bookmark': 'Добавить в закладки',
+      'create-bookmark': 'Добавить',
+      'cancel': 'Отмена',
+      'go-to-bookmark': 'Перейти к закладке',
+      'remove-bookmark': 'Удалить закладку',
+    },
+
     'flexberry-dialog': {
       'approve-button': {
         'caption': 'Ок'
@@ -54,6 +63,8 @@ export default {
     'flexberry-csw': FlexberryCSWComponent,
 
     'layers-dialogs': LayersDialogsComponents,
+
+    'layer-result-list': LayerResultListComponent,
 
     'map-commands-dialogs': MapCommandsDialogsComponents,
 

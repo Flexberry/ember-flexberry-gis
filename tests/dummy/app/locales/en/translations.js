@@ -167,7 +167,22 @@ Ember.$.extend(true, translations, {
     'new-platform-flexberry-g-i-s-csw-connection-e': NewPlatformFlexberryGISCswConnectionEForm,
     'new-platform-flexberry-g-i-s-map-e': NewPlatformFlexberryGISMapEForm,
     'map': {
-      'caption': 'Map'
+      'caption': 'Map',
+      'treeviewbuttontooltip': 'Show tree view',
+      'searchbuttontooltip': 'Show search',
+      'bookmarksbuttontooltip': 'Spatial bookmarks'
+    },
+    'crs': {
+      'current': {
+        'name': 'Current CRS',
+        'xCaption': 'X',
+        'yCaption': 'Y'
+      },
+      'latlng': {
+        'name': 'LatLng',
+        'xCaption': 'lat',
+        'yCaption': 'lng'
+      }
     }
   },
 

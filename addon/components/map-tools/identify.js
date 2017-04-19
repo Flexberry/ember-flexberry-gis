@@ -49,6 +49,15 @@ const flexberryClassNames = {
 */
 let IdentifyMapToolComponent = Ember.Component.extend({
     /**
+      Properties which will be passed to the map-tool when it will be instantiated.
+
+      @property _identifyToolProperties
+      @type Object
+      @default null
+    */
+    _identifyToolProperties: null,
+
+    /**
       Reference to component's template.
     */
     layout,
@@ -185,6 +194,33 @@ let IdentifyMapToolComponent = Ember.Component.extend({
       @default 'square outline icon'
     */
     identifyTopVisibleIconClass: 'chevron up icon',
+
+    /**
+      Flag: is map tool 'identify all layers' enable
+
+      @property identifyAll
+      @default true
+      @type Boolean
+    */
+    identifyAll: true,
+
+    /**
+      Flag: is map tool 'identify all visible layers' enable
+
+      @property identifyAllVisible
+      @default true
+      @type Boolean
+    */
+    identifyAllVisible: true,
+
+    /**
+      Flag: is map tool 'identify top layer' enable
+
+      @property identifyTop
+      @default true
+      @type Boolean
+    */
+    identifyTop: true,
 
     actions: {
       /**

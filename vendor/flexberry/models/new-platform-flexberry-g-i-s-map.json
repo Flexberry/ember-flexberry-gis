@@ -76,16 +76,14 @@
       "defaultValue": ""
     }
   ],
-  "belongsTo": [
+  "belongsTo": [],
+  "hasMany": [
     {
-      "polymorphic": false,
-      "presence": true,
-      "name": "rootLayer",
+      "name": "mapLayer",
       "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
-      "inverse": null
+      "inverse": "map"
     }
   ],
-  "hasMany": [],
   "projections": [
     {
       "name": "AuditView",
@@ -166,22 +164,16 @@
           "index": 5
         }
       ],
-      "belongsTo": [
+      "belongsTo": [],
+      "hasMany": [
         {
-          "lookupValue": "Name",
-          "lookupValueField": "name",
-          "relationName": "RootLayer",
-          "belongsTo": [],
-          "hidden": false,
-          "attrs": [],
-          "index": 6,
-          "caption": "Root layer",
-          "name": "rootLayer",
+          "projectionName": "MapLayerD",
+          "caption": "",
+          "name": "mapLayer",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
           "inverse": null
         }
-      ],
-      "hasMany": []
+      ]
     },
     {
       "name": "MapL",
@@ -189,7 +181,7 @@
       "attrs": [
         {
           "name": "name",
-          "caption": "Name",
+          "caption": "Наименование",
           "hidden": false,
           "index": 0
         },
@@ -207,13 +199,13 @@
         },
         {
           "name": "zoom",
-          "caption": "Zoom",
+          "caption": "Масштаб",
           "hidden": false,
           "index": 3
         },
         {
           "name": "public",
-          "caption": "Public",
+          "caption": "Общая",
           "hidden": false,
           "index": 4
         }

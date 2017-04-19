@@ -11,6 +11,7 @@ const { assert } = Ember;
 
 /**
   BaseLayer component for other flexberry-gis layers.
+
   @class BaseLayerComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses DynamicPropertiesMixin
@@ -25,12 +26,12 @@ export default Ember.Component.extend(
     /**
       Leaflet layer object init by settings from model.
 
-      @property _layer
+      @property _leafletObject
       @type L.Layer
       @default null
       @private
      */
-    _layer: undefined,
+    _leafletObject: undefined,
 
     /**
       Overload wrapper tag name for disabling wrapper.
@@ -56,16 +57,26 @@ export default Ember.Component.extend(
     leafletContainer: null,
 
     /**
+      Promise returning Leaflet layer.
+
+      @property leafletLayerPromise
+      @type <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+      @default null
+    */
+    leafletLayerPromise: null,
+
+    /**
       Layer metadata.
 
-      @property layer
+      @property layerModel
       @type Object
       @default null
     */
-    layer: null,
+    layerModel: null,
 
     /**
       This layer index, used for layer ordering in Map.
+
       @property index
       @type Int
       @default null
@@ -74,17 +85,21 @@ export default Ember.Component.extend(
 
     /**
       Call leaflet layer setZIndex if it presents.
+
       @method setZIndex
      */
     setZIndex: Ember.observer('index', function () {
-      let layer = this.get('_layer');
-      if (layer && layer.setZIndex) {
-        layer.setZIndex(this.get('index'));
+      let leafletLayer = this.get('_leafletObject');
+      if (Ember.isNone(leafletLayer) || Ember.typeOf(leafletLayer.setZIndex) !== 'function') {
+        return;
       }
+
+      leafletLayer.setZIndex(this.get('index'));
     }),
 
     /**
       Flag, indicates visible or not current layer on map.
+
       @property visibility
       @type Boolean
       @default null
@@ -98,8 +113,8 @@ export default Ember.Component.extend(
       @type <a href="http://leafletjs.com/reference-1.0.0.html#crs">L.CRS</a>
       @readOnly
     */
-    crs: Ember.computed('layer.crs', 'leafletMap.options.crs', function () {
-      let crs = this.get('layer.crs');
+    crs: Ember.computed('layerModel.crs', 'leafletMap.options.crs', function () {
+      let crs = this.get('layerModel.crs');
       if (Ember.isNone(crs)) {
         crs = this.get('leafletMap.options.crs');
       }
@@ -124,7 +139,7 @@ export default Ember.Component.extend(
       @private
     */
     _identify(e) {
-      let shouldIdentify = Ember.A(e.layers || []).contains(this.get('layer'));
+      let shouldIdentify = Ember.A(e.layers || []).contains(this.get('layerModel'));
       if (!shouldIdentify) {
         return;
       }
@@ -139,20 +154,23 @@ export default Ember.Component.extend(
       @method search
       @param {Object} e Event object.
       @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
-      @param {Object[]} layer Object describing layer that must be searched.
+      @param {Object[]} layerModel Object describing layer that must be searched.
       @param {Object} searchOptions Search options related to layer type.
       @param {Object} results Hash containing search results.
       @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
       or a promise returning such array.
     */
     _search(e) {
-      let shouldSearch = e.layer === this.get('layer');
+      let shouldSearch = typeof (e.filter) === 'function' && e.filter(this.get('layerModel'));
       if (!shouldSearch) {
         return;
       }
 
       // Call public search method, if layer should be searched.
-      this.search(e);
+      e.results.push({
+        layerModel: this.get('layerModel'),
+        features: this.search(e)
+      });
     },
 
     /**
@@ -160,20 +178,18 @@ export default Ember.Component.extend(
 
       @method _query
       @param {Object} e Event object.
-      @param {Object} layerLinks Array contains layer links model, use for filter searched layers
       @param {Object} queryFilter Object with query filter paramteres
       @param {Object[]} results.features Array containing leaflet layers objects
       or a promise returning such array.
     */
     _query(e) {
-      let layerId = this.get('layer.id').toString();
-      let layerLinks = e.layerLinks.filter(link => link.get('layer.id').toString() === layerId);
+      let layerLinks = this.get('layerModel.layerLink');
 
-      if (!layerLinks.length) {
+      if (!Ember.isArray(layerLinks)) {
         return;
       }
 
-      // Call public query method
+      // Call public query method.
       this.query(e);
     },
 
@@ -183,8 +199,17 @@ export default Ember.Component.extend(
     init() {
       this._super(...arguments);
 
-      this.set('_layer', this.createLayer());
-      this._addObservers();
+      // Call to createLayer could potentially return a promise,
+      // wraping this call into Ember.RSVP.hash helps us to handle straight/promise results universally.
+      this.set('leafletLayerPromise', Ember.RSVP.hash({
+        leafletLayer: this.createLayer()
+      }).then(({ leafletLayer }) => {
+        this.set('_leafletObject', leafletLayer);
+
+        return leafletLayer;
+      }).catch((errorMessage) => {
+        Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
+      }));
     },
 
     /**
@@ -192,8 +217,11 @@ export default Ember.Component.extend(
     */
     didInsertElement() {
       this._super(...arguments);
-      this.visibilityDidChange();
-      this.setZIndex();
+
+      this.get('leafletLayerPromise').then((leafletLayer) => {
+        this.visibilityDidChange();
+        this.setZIndex();
+      });
 
       let leafletMap = this.get('leafletMap');
       if (!Ember.isNone(leafletMap)) {
@@ -215,12 +243,16 @@ export default Ember.Component.extend(
         // Detach custom event-handler.
         leafletMap.off('flexberry-map:identify', this._identify, this);
         leafletMap.off('flexberry-map:search', this._search, this);
+        leafletMap.off('flexberry-map:query', this._query, this);
       }
 
       let leafletContainer = this.get('leafletContainer');
-      if (!Ember.isNone(leafletContainer)) {
-        leafletContainer.removeLayer(this.get('_layer'));
+      let leafletLayer = this.get('_leafletObject');
+      if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) && leafletContainer.hasLayer(leafletLayer)) {
+        return;
       }
+
+      leafletContainer.removeLayer(leafletLayer);
     },
 
     /**
@@ -230,12 +262,16 @@ export default Ember.Component.extend(
       @method visibilityDidChange
      */
     visibilityDidChange: Ember.observer('visibility', function () {
-      let container = this.get('leafletContainer');
+      let leafletLayer = this.get('_leafletObject');
+      if (Ember.isNone(leafletLayer)) {
+        return;
+      }
 
+      let leafletContainer = this.get('leafletContainer');
       if (this.get('visibility')) {
-        container.addLayer(this.get('_layer'));
+        leafletContainer.addLayer(leafletLayer);
       } else {
-        container.removeLayer(this.get('_layer'));
+        leafletContainer.removeLayer(leafletLayer);
       }
     }),
 
@@ -288,7 +324,6 @@ export default Ember.Component.extend(
 
       @method _query
       @param {Object} e Event object.
-      @param {Object} layerLinks Array contains layer links model, use for filter searched layers
       @param {Object} queryFilter Object with query filter paramteres
       @param {Object[]} results.features Array containing leaflet layers objects
       or a promise returning such array.

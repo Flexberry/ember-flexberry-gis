@@ -2,6 +2,38 @@ export default {
   projections: {
     LayerLinkD: {
       layer: {
+        caption: '',
+        name: {
+          caption: 'Слой'
+        }
+      },
+      mapObjectSetting: {
+        caption: ''
+      },
+      linkParameter: {
+        caption: '',
+        objectField: {
+          caption: ''
+        },
+        layerField: {
+          caption: ''
+        },
+        expression: {
+          caption: ''
+        },
+        queryKey: {
+          caption: ''
+        },
+        linkField: {
+          caption: ''
+        }
+      }
+    },
+    LayerLinkE: {
+      layer: {
+        caption: 'Слой карты'
+      },
+      mapObjectSetting: {
         caption: ''
       },
       linkParameter: {
@@ -34,6 +66,32 @@ export default {
         }
       },
       layer: {
+        caption: ''
+      },
+      linkParameter: {
+        caption: '',
+        objectField: {
+          caption: ''
+        },
+        layerField: {
+          caption: ''
+        },
+        expression: {
+          caption: ''
+        },
+        queryKey: {
+          caption: ''
+        },
+        linkField: {
+          caption: ''
+        }
+      }
+    },
+    LayerLinkQ: {
+      layer: {
+        caption: ''
+      },
+      mapObjectSetting: {
         caption: ''
       },
       linkParameter: {

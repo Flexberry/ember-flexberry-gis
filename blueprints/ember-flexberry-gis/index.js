@@ -7,20 +7,29 @@ module.exports = {
       { name: 'leaflet', target: '1.0.1' },
 
       // Leaflet.Proj4.
-      'https://github.com/kartena/Proj4Leaflet#leaflet-proj-refactor',
+      { name:'proj4leaflet', target: '1.0.1' },
 
       // Leaflet.WFST.
-      'https://github.com/Flexberry/Leaflet-WFST.git#develop',
+      { name: 'Leaflet-WFST', target: 'develop' },
+
+      // Leaflet.WMS.
+      { name: 'leaflet.wms', target: 'gh-pages' },
 
       // Leaflet.Editable.
-      'https://github.com/Leaflet/Leaflet.Editable.git#master',
+      { name: 'leaflet.editable', target: 'master' },
+
+      // Leaflet history.
+      { name: 'leaflet-history', source: 'https://github.com/Flexberry/leaflet-history.git', target: 'master' },
 
       // Leaflet.Editable.Measures.
-      'https://github.com/Flexberry/Leaflet.Editable.Measures#gh-pages',
+      { name: 'leaflet.editable.measures', source: 'https://github.com/Flexberry/Leaflet.Editable.Measures.git', target: 'gh-pages' },
 
       // Leaflet.Export & dependencies.
-      'https://github.com/niklasvh/html2canvas#master',
-      'https://github.com/Flexberry/Leaflet.Export#master',
+      { name: 'html2canvas', target: 'master'},
+      { name: 'leaflet.export', target: 'master'},
+
+      // Leaflet-MiniMap
+      { name: 'leaflet-minimap', target: '3.4.0'},
 
       // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
       { name: 'osmtogeojson', target: '2.2.12' },

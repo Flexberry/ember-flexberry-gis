@@ -4,7 +4,9 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/map-commands/full-extent';
-import { translationMacro as t } from 'ember-i18n';
+import {
+  translationMacro as t
+} from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -42,85 +44,117 @@ const flexberryClassNames = {
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
 let FullExtentMapCommandComponent = Ember.Component.extend({
+  /**
+    Reference to component's template.
+  */
+  layout,
+
+  /**
+    Reference to component's CSS-classes names.
+    Must be also a component's instance property to be available from component's .hbs template.
+  */
+  flexberryClassNames,
+
+  /**
+    Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
+    to disable a component's wrapping element.
+
+    @property tagName
+    @type String
+    @default ''
+  */
+  tagName: '',
+
+  /**
+    Map command's additional CSS-class.
+
+    @property class
+    @type String
+    @default null
+  */
+  class: null,
+
+  /**
+    Map command's caption.
+
+    @property caption
+    @type String
+    @default t('components.map-commands.full-extent.caption')
+  */
+  caption: t('components.map-commands.full-extent.caption'),
+
+  /**
+    Map command's tooltip text.
+    Will be added as wrapper's element 'title' attribute.
+
+    @property tooltip
+    @default t('components.map-commands.full-extent.tooltip')
+  */
+  tooltip: t('components.map-commands.full-extent.tooltip'),
+
+  /**
+    Map command's icon CSS-class names.
+
+    @property iconClass
+    @type String
+    @default 'globe icon'
+  */
+  iconClass: 'globe icon',
+
+  /**
+    Map command's default X position
+
+    @property lat
+    @type float
+    @default 0
+  */
+  lat: 0,
+
+  /**
+    Map command's default Y position
+
+    @property lng
+    @type float
+    @default 0
+  */
+  lng: 0,
+
+  /**
+    Map command's default zoom
+
+    @property zoom
+    @type float
+    @default 0
+  */
+  zoom: 0,
+
+  actions: {
     /**
-      Reference to component's template.
+      Handles {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
+      Invokes own {{#crossLink "FullExtentMapCommandComponent/sendingActions.execute:method"}}'execute' action{{/crossLink}}.
+
+      @method actions.onMapCommandExecute
+      @param {Object} e Base map-command's 'execute' action event-object.
     */
-    layout,
+    onMapCommandExecute(e) {
+      let latLng = L.latLng(this.get('lat'), this.get('lng'));
+      Ember.set(e, 'latLng', latLng);
 
-    /**
-      Reference to component's CSS-classes names.
-      Must be also a component's instance property to be available from component's .hbs template.
-    */
-    flexberryClassNames,
+      let zoom = this.get('zoom');
+      Ember.set(e, 'zoom', zoom);
 
-    /**
-      Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
-      to disable a component's wrapping element.
+      this.sendAction('execute', e);
+    }
+  },
 
-      @property tagName
-      @type String
-      @default ''
-    */
-    tagName: '',
+  /**
+    Component's action invoking when map-command must be executed.
 
-    /**
-      Map command's additional CSS-class.
-
-      @property class
-      @type String
-      @default null
-    */
-    class: null,
-
-    /**
-      Map command's caption.
-
-      @property caption
-      @type String
-      @default t('components.map-commands.full-extent.caption')
-    */
-    caption: t('components.map-commands.full-extent.caption'),
-
-    /**
-      Map command's tooltip text.
-      Will be added as wrapper's element 'title' attribute.
-
-      @property tooltip
-      @default t('components.map-commands.full-extent.tooltip')
-    */
-    tooltip: t('components.map-commands.full-extent.tooltip'),
-
-    /**
-      Map command's icon CSS-class names.
-
-      @property iconClass
-      @type String
-      @default 'globe icon'
-    */
-    iconClass: 'globe icon',
-
-    actions: {
-      /**
-        Handles {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
-        Invokes own {{#crossLink "FullExtentMapCommandComponent/sendingActions.execute:method"}}'execute' action{{/crossLink}}.
-
-        @method actions.onMapCommandExecute
-        @param {Object} e Base map-command's 'execute' action event-object.
-      */
-      onMapCommandExecute(...args) {
-        this.sendAction('execute', ...args);
-      }
-    },
-
-    /**
-      Component's action invoking when map-command must be executed.
-
-      @method sendingActions.execute
-      @param {Object} e Action's event object from
-      {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
-    */
-  }
-);
+    @method sendingActions.execute
+    @param {Object} e Action's event object from
+    {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
+  */
+});
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.

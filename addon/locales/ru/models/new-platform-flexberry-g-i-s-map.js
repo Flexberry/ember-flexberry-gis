@@ -1,43 +1,96 @@
 export default {
   projections: {
+    AuditView: {
+      name: {
+        caption: 'Name'
+      },
+      creator: {
+        caption: 'Creator'
+      },
+      createTime: {
+        caption: 'Create time'
+      },
+      editor: {
+        caption: 'Editor'
+      },
+      editTime: {
+        caption: 'Edit time'
+      }
+    },
     MapE: {
       name: {
-        caption: 'Имя'
+        caption: 'Name'
       },
       lat: {
-        caption: 'Широта'
+        caption: 'Lat'
       },
       lng: {
-        caption: 'Долгота'
+        caption: 'Lng'
       },
       zoom: {
-        caption: 'Увеличение'
+        caption: 'Zoom'
       },
       public: {
-        caption: 'Публичность'
+        caption: 'Public'
       },
       coordinateReferenceSystem: {
         caption: 'CRS'
       },
-      rootLayer: {
-        caption: 'Корневой слой'
+      mapLayer: {
+        caption: '',
+        name: {
+          caption: 'Name'
+        },
+        type: {
+          caption: 'Type'
+        },
+        visibility: {
+          caption: 'Visibility'
+        },
+        index: {
+          caption: 'Index'
+        },
+        coordinateReferenceSystem: {
+          caption: 'CRS'
+        },
+        settings: {
+          caption: 'Settings'
+        },
+        parent: {
+          caption: 'Parent'
+        },
+        map: {
+          caption: 'Map'
+        },
+        layerLink: {
+          caption: '',
+          layer: {
+            caption: '',
+            name: {
+              caption: 'Слой'
+            }
+          },
+          mapObjectSetting: {
+            caption: ''
+          }
+        }
       }
     },
     MapL: {
       name: {
-        caption: 'Имя'
+        caption: 'Наименование'
       },
       lat: {
-        caption: 'Широта'
+        caption: 'Lat'
       },
       lng: {
-        caption: 'Долгота'
+        caption: 'Lng'
       },
       zoom: {
-        caption: 'Увеличение'
+        caption: 'Масштаб'
       },
       public: {
-        caption: 'Публичность'
+        caption: 'Общая'
       }
     }
   }

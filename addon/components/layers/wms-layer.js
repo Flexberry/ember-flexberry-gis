@@ -17,7 +17,7 @@ export default TileLayer.extend({
     'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
     'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
     'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds',
-    'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format'
+    'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format', 'tiled'
   ],
 
   /**
@@ -26,9 +26,14 @@ export default TileLayer.extend({
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} latlng Identification point coordinates.
   */
   _getFeatureInfo(latlng) {
-    let layer = this.get('_layer');
-    let leafletMap = this.get('leafletMap');
+    let layer = this.get('_leafletObject');
+    if (Ember.isNone(layer)) {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        reject(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`);
+      });
+    }
 
+    let leafletMap = this.get('leafletMap');
     let point = leafletMap.latLngToContainerPoint(latlng, leafletMap.getZoom());
     let size = leafletMap.getSize();
     let crs = layer.options.crs;
@@ -107,7 +112,7 @@ export default TileLayer.extend({
   identify(e) {
     let featuresPromise = this._getFeatureInfo(e.latlng);
     e.results.push({
-      layer: this.get('layer'),
+      layer: this.get('layerModel'),
       features: featuresPromise
     });
   },

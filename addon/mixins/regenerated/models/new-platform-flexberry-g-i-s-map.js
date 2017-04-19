@@ -19,22 +19,32 @@ export let Model = Ember.Mixin.create({
   zoom: DS.attr('number'),
   public: DS.attr('boolean'),
   coordinateReferenceSystem: DS.attr('string'),
-  rootLayer: DS.belongsTo('new-platform-flexberry-g-i-s-map-layer', { inverse: null, async: false }),
-
-  getValidations() {
+  createTime: DS.attr('date'),
+  creator: DS.attr('string'),
+  editTime: DS.attr('date'),
+  editor: DS.attr('string'),
+  mapLayer: DS.hasMany('new-platform-flexberry-g-i-s-map-layer', { inverse: 'map', async: false }),
+  getValidations: function () {
     let parentValidations = this._super();
     let thisValidations = {
+      name: { presence: true },
+      public: { presence: true }
     };
     return Ember.$.extend(true, {}, parentValidations, thisValidations);
   },
-
-  init() {
+  init: function () {
     this.set('validations', this.getValidations());
     this._super.apply(this, arguments);
   }
 });
-
 export let defineProjections = function (model) {
+  model.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map', {
+    name: Projection.attr('Name'),
+    creator: Projection.attr('Creator'),
+    createTime: Projection.attr('Create time'),
+    editor: Projection.attr('Editor'),
+    editTime: Projection.attr('Edit time')
+  });
   model.defineProjection('MapE', 'new-platform-flexberry-g-i-s-map', {
     name: Projection.attr('Name'),
     lat: Projection.attr('Lat'),
@@ -42,20 +52,34 @@ export let defineProjections = function (model) {
     zoom: Projection.attr('Zoom'),
     public: Projection.attr('Public'),
     coordinateReferenceSystem: Projection.attr('CRS'),
-    rootLayer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Root layer', {
-      name: Projection.attr('Name', {
-        hidden: true
+    mapLayer: Projection.hasMany('new-platform-flexberry-g-i-s-map-layer', '', {
+      name: Projection.attr('Name'),
+      type: Projection.attr('Type'),
+      visibility: Projection.attr('Visibility'),
+      index: Projection.attr('Index'),
+      coordinateReferenceSystem: Projection.attr('CRS'),
+      settings: Projection.attr('Settings'),
+      parent: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Parent', {
+
+      }),
+      map: Projection.belongsTo('new-platform-flexberry-g-i-s-map', 'Map', {
+
+      }),
+      layerLink: Projection.hasMany('new-platform-flexberry-g-i-s-layer-link', '', {
+        layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
+          name: Projection.attr('Слой')
+        }, { hidden: true }),
+        mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
+
+        }, { hidden: true })
       })
-    }, {
-      displayMemberPath: 'name'
     })
   });
-
   model.defineProjection('MapL', 'new-platform-flexberry-g-i-s-map', {
-    name: Projection.attr('Name'),
+    name: Projection.attr('Наименование'),
     lat: Projection.attr('Lat'),
     lng: Projection.attr('Lng'),
-    zoom: Projection.attr('Zoom'),
-    public: Projection.attr('Public')
+    zoom: Projection.attr('Масштаб'),
+    public: Projection.attr('Общая')
   });
 };
