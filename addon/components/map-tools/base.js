@@ -81,7 +81,7 @@ let BaseMapToolComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasSubmenu: Ember.computed('_slots.[]', function() {
+    _hasSubmenu: Ember.computed('_slots.[]', function () {
       // Yielded {{block-slot "submenu"}} is defined or 'nodes' are defined.
       return this._isRegistered('submenu');
     }),
@@ -132,7 +132,7 @@ let BaseMapToolComponent = Ember.Component.extend(
       @type Boolean
       @readOnly
     */
-    _isActive: Ember.computed('_mapTool._enabled', function() {
+    _isActive: Ember.computed('_mapTool._enabled', function () {
       return this.get('_mapTool._enabled') === true;
     }),
 
@@ -180,7 +180,7 @@ let BaseMapToolComponent = Ember.Component.extend(
       @type String[]
       @default ['_hasSubmenu:ui', '_hasSubmenu:dropdown', '_hasIconOnly:icon',  '_isActive:active', 'readonly:disabled'],
     */
-    classNameBindings: ['_hasSubmenu:ui', '_hasSubmenu:dropdown', '_hasIconOnly:icon',  '_isActive:active', 'readonly:disabled'],
+    classNameBindings: ['_hasSubmenu:ui', '_hasSubmenu:dropdown', '_hasIconOnly:icon', '_isActive:active', 'readonly:disabled'],
 
     /**
       Map tool's attributes bindings.
@@ -287,15 +287,16 @@ let BaseMapToolComponent = Ember.Component.extend(
 
       let mapTool = Ember.getOwner(this).lookup(`map-tool:${mapToolName}`);
       Ember.assert(
-        `Can't lookup \`map-tool:${mapToolName}\` such map-tool doesn\`t exist`,
-        !Ember.isNone(mapTool));
+        `Can't lookup \`map-tool:${mapToolName}\` such map-tool doesn\`t exist`, !Ember.isNone(mapTool));
 
       let mapToolProperties = this.get('mapToolProperties');
       if (!Ember.isNone(mapToolProperties)) {
         Ember.A(Object.keys(mapToolProperties)).forEach((propertyName) => {
-          Ember.set(mapTool, propertyName,  Ember.get(mapToolProperties, propertyName));
+          Ember.set(mapTool, propertyName, Ember.get(mapToolProperties, propertyName));
         });
       }
+
+      Ember.set(mapTool, 'name', mapToolName);
 
       this.set('_mapTool', mapTool);
     },
@@ -347,7 +348,10 @@ let BaseMapToolComponent = Ember.Component.extend(
             return;
           }
         });
-        classObserver.observe($item[0], { attributes: true, attributeFilter: ['class'] });
+        classObserver.observe($item[0], {
+          attributes: true,
+          attributeFilter: ['class']
+        });
         this.set('_classObserver', classObserver);
       }
     },

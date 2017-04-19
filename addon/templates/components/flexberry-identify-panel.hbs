@@ -1,0 +1,54 @@
+<div class="{{concat "ui two column celled grid" " " flexberryClassNames.wrapper}}">
+    <div class="{{concat "ui column" " " flexberryClassNames.layersOptions}}">
+        {{#if all}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifyAll " " allClass)
+                iconClass=allIconClass
+                tooltip=allCaption
+                click=(action "onLayerOptionChange" "all")
+            }}
+        {{/if}}
+        {{#if visible}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifyAllVisible " " visibleClass)
+                iconClass=visibleIconClass
+                tooltip=visibleCaption
+                click=(action "onLayerOptionChange" "visible")
+            }}
+        {{/if}}
+        {{#if top}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifyTopVisible " " topClass)
+                iconClass=topIconClass
+                tooltip=topCaption
+                click=(action "onLayerOptionChange" "top")
+            }}
+        {{/if}}
+    </div>
+    <div class="{{concat "ui column" " " flexberryClassNames.toolsOptions}}">
+        {{#if arrow}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifyArrow " " arrowClass)
+                iconClass=arrowIconClass
+                tooltip=arrowCaption
+                click=(action "onToolOptionChange" "arrow")
+            }}
+        {{/if}}
+        {{#if square}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifySquare " " squareClass)
+                iconClass=squareIconClass
+                tooltip=squareCaption
+                click=(action "onToolOptionChange" "square")
+            }}
+        {{/if}}
+        {{#if polygon}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifyPolygon " " polygonClass)
+                iconClass=polygonIconClass
+                tooltip=polygonCaption
+                click=(action "onToolOptionChange" "polygon")
+            }}
+        {{/if}}
+    </div>
+</div>

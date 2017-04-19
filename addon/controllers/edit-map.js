@@ -26,6 +26,22 @@ export default EditFormController.extend(
       @default null
     */
     leafletMap: null,
+    
+    /**
+      Parameter contains current map identification layer option (all, visible, top etc.)
+      @property identifyLayersOption
+      @type String
+      @default 'visible'
+     */
+    identifyLayersOption: 'visible',
+
+    /**
+      Parameter contains current map identification tool option (arrow, square, polygon etc.)
+      @property identifyToolOption
+      @type String
+      @default 'square'
+     */
+    identifyToolOption: 'square',
 
     queryParams: ['geofilter'],
 

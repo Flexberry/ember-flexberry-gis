@@ -77,16 +77,27 @@
     </div>
     <div class="ui very wide right sidebar search pushable">
       {{flexberry-search-panel
-          querySearch=(action "querySearch")
-          clearSearch=(action "clearSearch")
-          searchInProcess=searchInProcess
-          searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
-          }}
+        querySearch=(action "querySearch")
+        clearSearch=(action "clearSearch")
+        searchInProcess=searchInProcess
+        searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+      }}
       {{layer-result-list
         results=searchResults
         serviceLayer=serviceLayer
         leafletMap=leafletMap
-        }}
+      }}
+    </div>
+    <div class="ui very wide right sidebar identify pushable">
+      {{flexberry-identify-panel
+        layerMode=identifyLayersOption
+        toolMode=identifyToolOption
+      }}
+      {{layer-result-list
+        results=searchResults
+        serviceLayer=serviceLayer
+        leafletMap=leafletMap
+      }}
     </div>
     <div class="ui very wide right sidebar bookmarks pushable">
       {{spatial-bookmark        
@@ -103,6 +114,12 @@
           {{map-tools/drag activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/zoom-in activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/zoom-out activate=(action "onMapToolActivate" target=mapToolbar)}}
+          {{map-tools/identify
+            activate=(action "onMapToolActivate"
+            target=mapToolbar)
+            layerMode=identifyLayersOption
+            toolMode=identifyToolOption
+          }}
           {{map-commands/go-to
             availableCRS=availableCRS
             execute=(action "onMapCommandExecute" target=mapToolbar)}}
@@ -112,7 +129,6 @@
             lng=model.lng
             zoom=model.zoom}}
           {{map-commands/search execute=(action "onMapCommandExecute" target=mapToolbar)}}
-          {{map-tools/identify activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-commands/export execute=(action "onMapCommandExecute" target=mapToolbar)}}
@@ -130,6 +146,11 @@
               class="icon item"
               title={{t "forms.map.searchbuttontooltip"}}>
             <i class="search icon"></i>
+          </a>
+          <a {{action 'toggleSidebar' '.ui.sidebar.identify' '.mappanel'}}
+              class="icon item"
+              title={{t "forms.map.searchbuttontooltip"}}>
+            <i class="info circle icon"></i>
           </a>
         {{/flexberry-maptoolbar}}
       </div>

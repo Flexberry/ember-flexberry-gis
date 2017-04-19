@@ -13,9 +13,6 @@ import { translationMacro as t } from 'ember-i18n';
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-identify-map-tool').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-identify-map-tool').
-  @property {String} flexberryClassNames.idenifyAll Component's identify-all mode's CSS-class name ('flexberry-identify-all-map-tool').
-  @property {String} flexberryClassNames.idenifyAllVisible Component's identify-all-visible mode's CSS-class name ('flexberry-identify-all-visible-map-tool').
-  @property {String} flexberryClassNames.idenifyTopVisible Component's identify-top-visible mode's CSS-class name ('flexberry-identify-top-visible-map-tool').
   @readonly
   @static
 
@@ -24,10 +21,7 @@ import { translationMacro as t } from 'ember-i18n';
 const flexberryClassNamesPrefix = 'flexberry-identify-map-tool';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix,
-  idenifyAll: 'flexberry-identify-all-map-tool',
-  idenifyAllVisible: 'flexberry-identify-all-visible-map-tool',
-  idenifyTopVisible: 'flexberry-identify-top-visible-map-tool'
+  wrapper: flexberryClassNamesPrefix
 };
 
 /**
@@ -92,9 +86,9 @@ let IdentifyMapToolComponent = Ember.Component.extend({
 
       @property caption
       @type String
-      @default t('components.map-tools.identify.caption')
+      @default null
     */
-    caption: t('components.map-tools.identify.caption'),
+    caption: null,
 
     /**
       Map tool's tooltip text.
@@ -115,112 +109,18 @@ let IdentifyMapToolComponent = Ember.Component.extend({
     iconClass: 'info circle icon',
 
     /**
-      Map tool's 'idenify-all' mode's additional CSS-class.
-
-      @property identifyAllClass
-      @type String
-      @default null
+      @property layerMode
+      @default 'all'
+      @type {String}
     */
-    identifyAllClass: null,
+    layerMode: 'all',
 
     /**
-      Map tool's 'idenify-all' mode's caption.
-
-      @property identifyAllCaption
-      @type String
-      @default t('components.map-tools.identify.identify-all.caption')
+      @property toolMode
+      @default 'square'
+      @type {String}
     */
-    identifyAllCaption: t('components.map-tools.identify.identify-all.caption'),
-
-    /**
-      Map tool's 'idenify-all' mode's icon CSS-class names.
-
-      @property identifyAllIconClass
-      @type String
-      @default 'square outline icon'
-    */
-    identifyAllIconClass: 'square outline icon',
-
-    /**
-      Map tool's 'idenify-all-visible' mode's additional CSS-class.
-
-      @property identifyAllVisibleClass
-      @type String
-      @default null
-    */
-    identifyAllVisibleClass: null,
-
-    /**
-      Map tool's 'idenify-all-visible' mode's caption.
-
-      @property identifyAllVisibleCaption
-      @type String
-      @default t('components.map-tools.idenify.identify-all-visible.caption')
-    */
-    identifyAllVisibleCaption: t('components.map-tools.identify.identify-all-visible.caption'),
-
-    /**
-      Map tool's 'idenify-all-visible' mode's icon CSS-class names.
-
-      @property identifyAllVisibleIconClass
-      @type String
-      @default 'square outline icon'
-    */
-    identifyAllVisibleIconClass: 'checkmark box icon',
-
-    /**
-      Map tool's 'idenify-top-visible' mode's additional CSS-class.
-
-      @property identifyTopVisibleClass
-      @type String
-      @default null
-    */
-    identifyTopVisibleClass: null,
-
-    /**
-      Map tool's 'idenify-top-visible' mode's caption.
-
-      @property identifyTopVisibleCaption
-      @type String
-      @default t('components.map-tools.idenify.identify-top-visible.caption')
-    */
-    identifyTopVisibleCaption: t('components.map-tools.identify.identify-top-visible.caption'),
-
-    /**
-      Map tool's 'idenify-top-visible' mode's icon CSS-class names.
-
-      @property identifyTopVisibleIconClass
-      @type String
-      @default 'square outline icon'
-    */
-    identifyTopVisibleIconClass: 'chevron up icon',
-
-    /**
-      Flag: is map tool 'identify all layers' enable
-
-      @property identifyAll
-      @default true
-      @type Boolean
-    */
-    identifyAll: true,
-
-    /**
-      Flag: is map tool 'identify all visible layers' enable
-
-      @property identifyAllVisible
-      @default true
-      @type Boolean
-    */
-    identifyAllVisible: true,
-
-    /**
-      Flag: is map tool 'identify top layer' enable
-
-      @property identifyTop
-      @default true
-      @type Boolean
-    */
-    identifyTop: true,
+    toolMode: 'square',
 
     actions: {
       /**
