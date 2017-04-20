@@ -51,7 +51,7 @@ module.exports = function (environment) {
   };
 
   if (environment === 'development') {
-    backendUrl = 'http://localhost:63138';
+    backendUrl = 'http://localhost:8082';
 
     ENV.APP.backendUrl = backendUrl;
     ENV.APP.backendUrls = {

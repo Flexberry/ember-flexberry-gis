@@ -5,7 +5,7 @@
 import Ember from 'ember';
 import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
 import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
-import LeafletPropertiesMixin from 'ember-flexberry-gis/mixins/leaflet-properties';
+/*import LeafletPropertiesMixin from 'ember-flexberry-gis/mixins/leaflet-properties';*/
 
 const { assert } = Ember;
 
@@ -20,8 +20,7 @@ const { assert } = Ember;
  */
 export default Ember.Component.extend(
   DynamicPropertiesMixin,
-  LeafletOptionsMixin,
-  LeafletPropertiesMixin, {
+  LeafletOptionsMixin,{
 
     /**
       Leaflet layer object init by settings from model.
@@ -72,7 +71,44 @@ export default Ember.Component.extend(
       @type Object
       @default null
     */
-    layerModel: null,
+     layerModel: null,
+
+     /*changeLayers () {
+        this._super(...arguments);
+
+      // Call to createLayer could potentially return a promise,
+      // wraping this call into Ember.RSVP.hash helps us to handle straight/promise results universally.
+       this.set('leafletLayerPromise', Ember.RSVP.hash({
+        leafletLayer: this.createLayer()
+      }).then(({ leafletLayer }) => {
+        this.set('_leafletObject', leafletLayer);
+
+        return leafletLayer;
+      }).catch((errorMessage) => {
+        Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
+      }));
+     },*/
+
+     /* Observer re-creates the layer with the new settings and add it to the map */
+
+     settings: Ember.observer('layerModel.settings', function () {
+        this._super(...arguments);
+        let newOptions = JSON.parse(this.get('layerModel.settings'));
+            leafletLayer: this.willDestroyElement();
+        this.set('leafletLayerPromise', Ember.RSVP.hash({
+            leafletLayer: this.createLayer(newOptions)
+      }).then(({ leafletLayer }) => {
+        this.set('_leafletObject', leafletLayer);
+
+        return leafletLayer;
+      }).catch((errorMessage) => {
+        Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
+      }));
+        this.get('leafletLayerPromise').then((leafletLayer) => {
+        this.visibilityDidChange();
+        this.setZIndex();
+      });
+    }),
 
     /**
       This layer index, used for layer ordering in Map.
