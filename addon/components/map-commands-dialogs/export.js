@@ -148,6 +148,15 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     captionTextboxCaption: t('components.map-commands-dialogs.export.caption-segment.caption-textbox.caption'),
 
     /**
+      Dialog's 'caption-font-settings' textbox caption.
+
+      @property captionFontSettingsToggleCaption
+      @type String
+      @default t('components.map-commands-dialogs.export.caption-segment.font-settings-toggle.caption')
+    */
+    captionFontSettingsToggleCaption: t('components.map-commands-dialogs.export.caption-segment.font-settings-toggle.caption'),
+
+    /**
       Dialog's 'caption-font-name' textbox caption.
 
       @property captionFontNameTextboxCaption
@@ -218,6 +227,51 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       @default t('components.map-commands-dialogs.export.exclude-segment.exclude-contributing-checkbox.caption')
     */
     excludeContributingCheckboxCaption: t('components.map-commands-dialogs.export.exclude-segment.exclude-contributing-checkbox.caption'),
+
+    /**
+      Dialog's 'exclude-legend' checkbox caption.
+
+      @property excludeLegendCheckboxCaption
+      @type String
+      @default t('components.map-commands-dialogs.export.exclude-segment.exclude-legend-checkbox.caption')
+    */
+    excludeLegendCheckboxCaption: t('components.map-commands-dialogs.export.exclude-segment.exclude-legend-checkbox.caption'),
+
+    /**
+      Dialog's 'caption' textbox caption.
+
+      @property PrintModeDropdownCaption
+      @type String
+      @default t('components.map-commands-dialogs.search.printmode-dropdown.caption')
+    */
+    PrintModeDropdownCaption: t('components.map-commands-dialogs.export.dropdown-segment.printmode-dropdown.caption'),
+
+    /**
+      Dialog's 'caption' textbox caption.
+
+      @property PapaerSizeDropdownCaption
+      @type String
+      @default t('components.map-commands-dialogs.search.papaersize-dropdown.caption')
+    */
+    PapaerSizeDropdownCaption: t('components.map-commands-dialogs.export.dropdown-segment.papaersize-dropdown.caption'),
+
+    /**
+      Dialog's 'caption' textbox caption.
+
+      @property OrientationDropdownCaption
+      @type String
+      @default t('components.map-commands-dialogs.search.orientation-dropdown.caption')
+    */
+    OrientationDropdownCaption: t('components.map-commands-dialogs.export.dropdown-segment.orientation-dropdown.caption'),
+
+    /**
+      Dialog's 'exclude-drawing-scale' checkbox caption.
+
+      @property excludeDrawingScaleCheckboxCaption
+      @type String
+      @default t('components.map-commands-dialogs.export.exclude-segment.exclude-drawing-scale-checkbox.caption')
+    */
+    excludeDrawingScaleCheckboxCaption: t('components.map-commands-dialogs.export.exclude-segment.exclude-drawing-scale-checkbox.caption'),
 
     /**
       Dialog's 'download-segment' caption.
@@ -434,6 +488,11 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       if (excludeZoom) {
         exclude.push('.leaflet-control-zoom');
       }
+
+      // let excludeLegend = Ember.get(innerOptions, 'excludeLegend');
+      // if (excludeLegend) {
+      //   exclude.push('.leaflet-control-zoom');
+      // }
 
       let excludeContributing = Ember.get(innerOptions, 'excludeContributing');
       if (excludeContributing) {

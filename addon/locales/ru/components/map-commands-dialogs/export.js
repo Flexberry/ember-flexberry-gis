@@ -13,6 +13,9 @@ export default {
     'caption-textbox': {
       'caption': 'Заголовок карты'
     },
+    'font-settings-toggle': {
+      'caption': 'Настройки шрифта'
+    },
     'font-name-textbox': {
       'caption': 'Имя шрифта'
     },
@@ -29,6 +32,17 @@ export default {
       'caption': 'Y-Координата (от левого верхнего края карты)'
     }
   },
+  'dropdown-segment': {
+    'printmode-dropdown': {
+      'caption': 'Режим печати'
+    },
+    'papaersize-dropdown': {
+      'caption': 'Размер бумаги'
+    },
+    'orientation-dropdown': {
+      'caption': 'Ориентация'
+    }
+  },
   'exclude-segment': {
     'caption': 'Исключить с экспортированной карты',
     'exclude-zoom-checkbox': {
@@ -36,6 +50,12 @@ export default {
     },
     'exclude-contributing-checkbox': {
       'caption': 'Копирайт'
+    },
+    'exclude-legend-checkbox': {
+      'caption': 'Легенда'
+    },
+    'exclude-drawing-scale-checkbox': {
+      'caption': 'Масштабная линейка'
     }
   },
   'download-segment': {
