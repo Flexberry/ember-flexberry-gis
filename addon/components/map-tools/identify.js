@@ -4,7 +4,9 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/map-tools/identify';
-import { translationMacro as t } from 'ember-i18n';
+import {
+  translationMacro as t
+} from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -42,108 +44,167 @@ const flexberryClassNames = {
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
 let IdentifyMapToolComponent = Ember.Component.extend({
+
+  /**
+    Reference to component's template.
+  */
+  layout,
+
+  /**
+    Reference to component's CSS-classes names.
+    Must be also a component's instance property to be available from component's .hbs template.
+  */
+  flexberryClassNames,
+
+  /**
+    Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
+    to disable a component's wrapping element.
+
+    @property tagName
+    @type String
+    @default ''
+  */
+  tagName: '',
+
+  /**
+    Map tool's additional CSS-class.
+
+    @property class
+    @type String
+    @default null
+  */
+  class: null,
+
+  /**
+    Map tool's caption.
+
+    @property caption
+    @type String
+    @default null
+  */
+  caption: null,
+
+  /**
+    Map tool's tooltip text.
+    Will be added as wrapper's element 'title' attribute.
+
+    @property tooltip
+    @default t('components.map-tools.identify.tooltip')
+  */
+  tooltip: t('components.map-tools.identify.tooltip'),
+
+  /**
+    Map tool's icon CSS-class names.
+
+    @property iconClass
+    @type String
+    @default 'hand paper icon'
+  */
+  iconClass: 'info circle icon',
+
+  /**
+    @property layerMode
+    @default ''
+    @type {String}
+  */
+  layerMode: '',
+
+  /**
+    @property toolMode
+    @default ''
+    @type {String}
+  */
+  toolMode: '',
+
+  /**
+    Flag: indicates whether map tool should be enabled after it's re-render
+    @property enableOnRerender
+    @default true
+    @type {Boolean}
+  */
+  enableOnRerender: true,
+
+  /**
+    Flag: indicates whether map tool should be enabled after it's re-render
+    @property _enableOnRerender
+    @default true
+    @type {Boolean}
+  */
+  _enableOnRerender: true,
+
+  /**
+    Contains formatted tool name with layers options
+    @property _toolName
+    @type {String}
+    @readonly
+    @returns 'identify'+ '-' + layerMode + '-' + toolMode
+  */
+  _toolName: Ember.computed('layerMode', 'toolMode', function () {
+    let layerMode = this.get('layerMode');
+    let toolMode = this.get('toolMode');
+
+    if (!(Ember.isBlank(layerMode) || Ember.isBlank(toolMode))) {
+      return 'identify-' + layerMode + '-' + toolMode;
+    } else {
+      return 'identify';
+    }
+  }),
+
+  _shouldRerenderObserver: Ember.observer('_toolName', 'enableOnRerender', function () {
+    let layerMode = this.get('layerMode');
+    let toolMode = this.get('toolMode');
+    this.set('_enableOnRerender', this.get('enableOnRerender') === true && !(Ember.isBlank(layerMode) || Ember.isBlank(toolMode)));
+  }),
+
+  actions: {
     /**
-      Properties which will be passed to the map-tool when it will be instantiated.
+      Handles {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
+      Invokes own {{#crossLink "IdentifyMapToolComponent/sendingActions.activate:method"}}'activate' action{{/crossLink}}.
 
-      @property _identifyToolProperties
-      @type Object
-      @default null
+      @method actions.onMapToolActivate
+      @param {Object} e Base map-tool's 'activate' action event-object.
     */
-    _identifyToolProperties: null,
+    onMapToolActivate(...args) {
+      this.sendAction('activate', ...args);
+    }
+  },
 
-    /**
-      Reference to component's template.
-    */
-    layout,
+  /**
+    Initializes DOM-related component's properties  & logic.
+  */
+  init() {
+    this._super(...arguments);
 
-    /**
-      Reference to component's CSS-classes names.
-      Must be also a component's instance property to be available from component's .hbs template.
-    */
-    flexberryClassNames,
+    let layerMode = this.get('layerMode');
+    let toolMode = this.get('toolMode');
 
-    /**
-      Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
-      to disable a component's wrapping element.
+    if (!layerMode) {
+      this.set('layerMode', 'all');
+    }
 
-      @property tagName
-      @type String
-      @default ''
-    */
-    tagName: '',
+    if (!toolMode) {
+      this.set('toolMode', 'rectangle');
+    }
+  },
 
-    /**
-      Map tool's additional CSS-class.
+  /**
+    Handles DOM-related component's properties after each render.
+  */
+  didRender() {
+    this._super(...arguments);
 
-      @property class
-      @type String
-      @default null
-    */
-    class: null,
+    // set this flag to false to force re-render next time with _shouldRerenderObserver
+    this.set('_enableOnRerender', false);
+  },
 
-    /**
-      Map tool's caption.
+  /**
+    Component's action invoking when map-tool must be activated.
 
-      @property caption
-      @type String
-      @default null
-    */
-    caption: null,
-
-    /**
-      Map tool's tooltip text.
-      Will be added as wrapper's element 'title' attribute.
-
-      @property tooltip
-      @default t('components.map-tools.identify.tooltip')
-    */
-    tooltip: t('components.map-tools.identify.tooltip'),
-
-    /**
-      Map tool's icon CSS-class names.
-
-      @property iconClass
-      @type String
-      @default 'hand paper icon'
-    */
-    iconClass: 'info circle icon',
-
-    /**
-      @property layerMode
-      @default 'all'
-      @type {String}
-    */
-    layerMode: 'all',
-
-    /**
-      @property toolMode
-      @default 'square'
-      @type {String}
-    */
-    toolMode: 'square',
-
-    actions: {
-      /**
-        Handles {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
-        Invokes own {{#crossLink "IdentifyMapToolComponent/sendingActions.activate:method"}}'activate' action{{/crossLink}}.
-
-        @method actions.onMapToolActivate
-        @param {Object} e Base map-tool's 'activate' action event-object.
-      */
-      onMapToolActivate(...args) {
-        this.sendAction('activate', ...args);
-      }
-    },
-
-    /**
-      Component's action invoking when map-tool must be activated.
-
-      @method sendingActions.activate
-      @param {Object} e Action's event object from
-      {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
-    */
-  }
-);
+    @method sendingActions.activate
+    @param {Object} e Action's event object from
+    {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
+  */
+});
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.

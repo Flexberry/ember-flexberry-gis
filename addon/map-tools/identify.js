@@ -26,9 +26,18 @@ export default RectangleMapTool.extend({
 
     @property hideRectangleOnDrawingEnd
     @type Boolean
-    @default true
+    @default false
   */
   hideRectangleOnDrawingEnd: false,
+
+  /**
+    Flag: indicates whether to hide previously drawn rectangle on drawing end or not.
+
+    @property hidePreviousRectangleOnDrawingEnd
+    @type Boolean
+    @default true
+  */
+  hidePreviousRectangleOnDrawingEnd: true,
 
   /**
     Method to prepare identify result if need
@@ -47,7 +56,9 @@ export default RectangleMapTool.extend({
     @returns {Object[]} Flat array of layers satisfying to current identification mode.
     @private
   */
-  _getLayersToIdentify({ excludedLayers }) {
+  _getLayersToIdentify({
+    excludedLayers
+  }) {
     Ember.assert('Method \'_getLayersToIdentify\' must be overridden in some extended identify map-tool.', false);
   },
 
@@ -62,7 +73,12 @@ export default RectangleMapTool.extend({
     @param {Object[]} options.excludedLayers Layers excluded from identification.
     @private
   */
-  _startIdentification({ boundingBox, latlng, boundingBoxLayer, excludedLayers }) {
+  _startIdentification({
+    boundingBox,
+    latlng,
+    boundingBoxLayer,
+    excludedLayers
+  }) {
     let leafletMap = this.get('leafletMap');
 
     let e = {
@@ -70,7 +86,9 @@ export default RectangleMapTool.extend({
       latlng: latlng,
       boundingBoxLayer: boundingBoxLayer,
       excludedLayers: Ember.A(excludedLayers || []),
-      layers: this._getLayersToIdentify({ excludedLayers }),
+      layers: this._getLayersToIdentify({
+        excludedLayers
+      }),
       results: Ember.A()
     };
 
@@ -81,7 +99,6 @@ export default RectangleMapTool.extend({
 
     // Promises array could be totally changed in 'flexberry-map:identify' event handlers, we should prevent possible errors.
     e.results = Ember.isArray(e.results) ? e.results : Ember.A();
-    let results = Ember.A();
     let promises = Ember.A();
 
     // Handle each result.
@@ -91,8 +108,6 @@ export default RectangleMapTool.extend({
         return;
       }
 
-      results.pushObject(result);
-      let layer = Ember.get(result, 'layer');
       let features = Ember.get(result, 'features');
 
       if (!(features instanceof Ember.RSVP.Promise)) {
@@ -100,24 +115,11 @@ export default RectangleMapTool.extend({
       }
 
       promises.pushObject(features);
-      features.then((receivedFeatures) => {
-        Ember.set(result, 'features', receivedFeatures);
-      }).catch((reason) => {
-        Ember.set(result, 'features', null);
-        Ember.set(result, 'error', reason || new Error('Unknown error'));
 
-        // Log error.
-        let i18n = this.get('i18n');
-        let errorMessage = i18n.t('map-tools.identify.error-message', {
-          layerName: Ember.get(layer, 'name')
-        });
-        Ember.Logger.error(`${errorMessage}: `, reason);
-      });
     });
 
     // Wait for all promises to be settled & call '_finishIdentification' hook.
     Ember.RSVP.allSettled(promises).then(() => {
-      e.results = results;
       this._finishIdentification(e);
     });
   },
@@ -140,446 +142,42 @@ export default RectangleMapTool.extend({
     @private
   */
   _finishIdentification(e) {
-    let leafletMap = this.get('leafletMap');
-    let featuresLayer = L.featureGroup().addTo(leafletMap);
-    let boundingBoxLayer = Ember.get(e, 'boundingBoxLayer');
-
-    let i18n = this.get('i18n');
-
-    // Get i18n captions & properties names.
-    let propertyNameColumnCaption = i18n.t('map-tools.identify.identify-popup.properties-table.property-name-column.caption');
-    let propertyValueColumnCaption = i18n.t('map-tools.identify.identify-popup.properties-table.property-value-column.caption');
-    let layerNameProperty = i18n.t('map-tools.identify.identify-popup.properties-table.layer-name-property.caption');
-    let layersCountProperty = i18n.t('map-tools.identify.identify-popup.properties-table.layers-count-property.caption');
-    let featuresCountProperty = i18n.t('map-tools.identify.identify-popup.properties-table.features-count-property.caption');
-    let errorProperty = i18n.t('map-tools.identify.identify-popup.properties-table.error-property.caption');
-
-    let createLayersAccordion = () => {
-      return Ember.$('<div />').addClass('ui accordion').accordion({
-        exclusive: false
-      });
-    };
-
-    let createLayersAccordionItem = ({ icon, caption }) => {
-      let $item = Ember.$('<div />');
-
-      let $itemTitle = Ember.$('<div />').addClass('title');
-
-      let $dropdownIcon = Ember.$('<i />').addClass('dropdown icon');
-      $itemTitle.append($dropdownIcon);
-
-      let $itemIcon = null;
-      if (Ember.isArray(icon)) {
-        $itemIcon = Ember.$('<i />');
-        $itemIcon.addClass('icons');
-
-        Ember.A(icon).forEach((i) => {
-          let $itemIconPart = Ember.$('<i />');
-          $itemIconPart.addClass(i);
-
-          $itemIcon.append($itemIconPart);
-        });
-      } else {
-        $itemIcon = Ember.$('<i />');
-        $itemIcon.addClass(icon);
-      }
-
-      if (!Ember.isNone($itemIcon)) {
-        $itemTitle.append($itemIcon);
-      }
-
-      $itemTitle.append(caption);
-
-      let $itemContent = Ember.$('<div />').addClass('content');
-
-      $item.append($itemTitle);
-      $item.append($itemContent);
-
-      return $item;
-    };
-
-    let createList = () => {
-      return Ember.$('<div />').addClass('ui list');
-    };
-
-    let createListItem = ({ icon, caption }) => {
-      let $item = Ember.$('<div />').addClass('item');
-
-      let $itemIcon = null;
-      if (Ember.isArray(icon)) {
-        $itemIcon = Ember.$('<i />');
-        $itemIcon.addClass('icons');
-
-        Ember.A(icon).forEach((i) => {
-          let $itemIconPart = Ember.$('<i />');
-          $itemIconPart.addClass(i);
-
-          $itemIcon.append($itemIconPart);
-        });
-      } else {
-        $itemIcon = Ember.$('<i />');
-        $itemIcon.addClass(icon);
-      }
-
-      if (!Ember.isNone($itemIcon)) {
-        $item.append($itemIcon);
-      }
-
-      let $itemContent = Ember.$('<div />').addClass('content');
-      $item.append($itemContent);
-
-      let $itemCaption = Ember.$('<div />').addClass('header').text(caption);
-      $itemContent.append($itemCaption);
-
-      return $item;
-    };
-
-    let activeListItem = null;
-    let makeListItemActive = ({ item, parent, metadataContainer, metadataTable, callback }) => {
-      if (activeListItem === item) {
-        return;
-      }
-
-      // Remove 'active' class from previously clicked item;
-      Ember.$('.item.active', parent).removeClass('active');
-
-      // Make clicked item 'active'.
-      item.addClass('active');
-
-      // Add metadata table to it's container.
-      metadataContainer.empty();
-      if (!Ember.isEmpty(metadataTable)) {
-        metadataContainer.append(metadataTable);
-      }
-
-      if (Ember.typeOf(callback) === 'function') {
-        callback();
-      }
-
-      activeListItem = item;
-    };
-
-    let createTable = (properties, excludedPropertiesNames, localizedProperties) => {
-      properties = properties || {};
-      excludedPropertiesNames = Ember.A(excludedPropertiesNames || []);
-      localizedProperties = localizedProperties || {};
-
-      let $table = Ember.$('<table />').addClass('ui compact celled table');
-
-      let $tableHead = Ember.$('<thead />');
-      $table.append($tableHead);
-
-      let $tableHeadRow = Ember.$('<tr />');
-      $tableHead.append($tableHeadRow);
-
-      let $tableHeaderPropertyNameCell = Ember.$('<th />').text(propertyNameColumnCaption);
-      $tableHeadRow.append($tableHeaderPropertyNameCell);
-
-      let $tableHeaderPropertyValueCell = Ember.$('<th />').text(propertyValueColumnCaption);
-      $tableHeadRow.append($tableHeaderPropertyValueCell);
-
-      let $tableBody = Ember.$('<tbody />');
-      $table.append($tableBody);
-
-      let propertiesNames = Ember.A(Object.keys(properties) || []);
-      propertiesNames.forEach((propertyName) => {
-        if (excludedPropertiesNames.contains(propertyName)) {
-          return;
-        }
-
-        let propertyValue = properties[propertyName];
-        let localizedPropertyName = localizedProperties[propertyName] || propertyName;
-
-        let $tableRow = Ember.$('<tr />');
-        $tableBody.append($tableRow);
-
-        let $tablePropertyNameCell = Ember.$('<td />').text(localizedPropertyName);
-        $tableRow.append($tablePropertyNameCell);
-
-        let $tablePropertyValueCell = Ember.$('<td />').text(propertyValue);
-        $tableRow.append($tablePropertyValueCell);
-      });
-
-      return $table;
-    };
-
-    let createWrapper = function(element) {
-      let wrapper = Ember.$('<div>');
-      wrapper.append(element);
-      return wrapper;
-    };
-
-    let showFeaturesOnMap = function({ features }) {
-      if (!Ember.isArray(features) && Ember.get(features, 'length') === 0) {
-        return;
-      }
-
-      // Clear previous features & add new.
-      // Leaflet clear's layers with some delay, add if we add again some cleared layer (immediately after clear),
-      // it will be removed after delay (by layer's id),
-      // so we will use timeout until better solution will be found.
-      Ember.run(() => {
-        featuresLayer.clearLayers();
-        setTimeout(() => {
-          // Show new features.
-          features.forEach((feature) => {
-            let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
-            if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
-              leafletLayer.setStyle({ color: 'salmon' });
-            }
-
-            leafletLayer.addTo(featuresLayer);
-          });
-        }, 10);
-      });
-    };
-
-    let $popupContentLeft = Ember.$('<div />').addClass('column');
-    let $popupContentRight = Ember.$('<div />').addClass('column');
-
-    let $layersAccordion = createLayersAccordion();
-    $popupContentLeft.append($layersAccordion);
-
-    let totalProperties = {};
-    totalProperties[layersCountProperty] = 0;
-    totalProperties[featuresCountProperty] = 0;
-
     e.results.forEach((identificationResult) => {
-      // Possible layer's identification error.
-      let error = Ember.get(identificationResult, 'error');
-      let features = Ember.A(Ember.get(identificationResult, 'features') || []);
-      let featuresCount = Ember.get(features, 'length');
-      if (featuresCount === 0 && Ember.isNone(error)) {
-        return;
-      }
-
-      totalProperties[layersCountProperty] += 1;
-      totalProperties[featuresCountProperty] += featuresCount;
-
-      // Add layer to list.
-      let layer = Ember.get(identificationResult, 'layer');
-      let layerFactory = Ember.getOwner(this).knownForType('layer', Ember.get(layer, 'type'));
-      let layerIcon = Ember.get(layerFactory, 'iconClass');
-      let layerName = Ember.get(layer, 'name');
-
-      let layerIdentifySettings = Ember.get(layer, 'settingsAsObject.identifySettings') || {};
-      let featuresPropertiesSettings = Ember.get(layerIdentifySettings, 'featuresPropertiesSettings') || {};
-      let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback');
-      let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
-      let excludedProperties = Ember.A(Ember.get(featuresPropertiesSettings, 'excludedProperties') || []);
-      let localizedProperties = Ember.A(Ember.get(featuresPropertiesSettings, 'localizedProperties') || {});
-      localizedProperties = Ember.get(localizedProperties, i18n.get('locale')) || {};
-
-      let getFeatureFirstAvailableProperty = function(feature) {
-        let featureProperties = Ember.get(feature, 'properties') || {};
-        let displayPropertyName = Object.keys(featureProperties)[0];
-        return featureProperties[displayPropertyName] || '';
-      };
-
-      let getFeatureCaption = function(feature) {
-        if (Ember.typeOf(displayProperty) !== 'string') {
-          // Retrieve first available property.
-          return getFeatureFirstAvailableProperty(feature);
-        }
-
-        if (!displayPropertyIsCallback) {
-          // Return defined property (or first available if defined property doesn't exist).
-          let featureProperties = Ember.get(feature, 'properties') || {};
-          return featureProperties.hasOwnProperty(displayProperty) ?
-            featureProperties[displayProperty] :
-            getFeatureFirstAvailableProperty(feature);
-        }
-
-        // Defined displayProperty is a serialized java script function, which can calculate display property.
-        let calculateDisplayProperty = eval(`(${displayProperty})`);
-        Ember.assert(
-          'Property \'settings.identifySettings.featuresPropertiesSettings.displayProperty\' ' +
-          'in layer \'' + layerName + '\' is not a valid java script function',
-          Ember.typeOf(calculateDisplayProperty) === 'function');
-
-        return calculateDisplayProperty(feature);
-      };
-
-      let layerProperties = {};
-      layerProperties[layerNameProperty] = layerName;
-      layerProperties[featuresCountProperty] = features.length;
-      if (!Ember.isNone(error)) {
-        layerProperties[errorProperty] = error.message || error;
-      }
-
-      let $layerMetadataTable = createTable(layerProperties);
-      let $layersAccordionItem = createLayersAccordionItem({
-        icon: Ember.isNone(error) ? layerIcon : 'red dont icon',
-        caption: layerName
-      })
-      .addClass('item layer-item');
-
-      Ember.$('.title', $layersAccordionItem)
-      .on('click', (clickEventObject) => {
-        makeListItemActive({
-          item: $layersAccordionItem,
-          parent: $layersAccordion,
-          metadataContainer: $popupContentRight,
-          metadataTable: $layerMetadataTable,
-          callback: () => {
-            showFeaturesOnMap({ features: features });
-          }
-        });
-
-        if (featuresCount === 0) {
-          // Prevent empty item from being expanded on click.
-          clickEventObject.stopPropagation();
-        }
-      });
-
-      let $layersAccordionItemContent = Ember.$('.content', $layersAccordionItem);
-      $layersAccordion.append($layersAccordionItem);
-
-      // Call hook giving ability to add some additional markup.
-      this._popupLayerElementCreated({
-        element: $layersAccordionItem,
-        propertiesElement: $layerMetadataTable,
-        identificationResult: identificationResult,
-        layer: layer
-      });
-
-      if (features.length === 0) {
-        return;
-      }
-
-      // Add founded features to sub-list.
-      let $featuresList = createList();
-      $layersAccordionItemContent.append($featuresList);
-      features.forEach((feature) => {
-
-        let prepareIdentifyResult = this.get('prepareIdentifyResult');
-        feature = typeof (prepareIdentifyResult) === 'function' ? prepareIdentifyResult(feature) : feature;
-
-        let featureIcon = null;
-        switch (Ember.get(feature, 'geometry.type')) {
-          case 'LineString':
-          case 'MultiLineString':
-            featureIcon = 'fork icon';
-            break;
-          case 'Polygon':
-          case 'MultiPolygon':
-            featureIcon = 'object ungroup icon';
-            break;
-          default:
-            featureIcon = 'marker icon';
-        }
-
-        let featureCaption = getFeatureCaption(feature);
-        let $featureMetadataTable = createWrapper(createTable(Ember.get(feature, 'properties'), excludedProperties, localizedProperties));
-        let $featureListItem = createListItem({
-          icon: featureIcon,
-          caption: featureCaption
-        })
-        .addClass('feature-item')
-        .on('click', () => {
-          makeListItemActive({
-            item: $featureListItem,
-            parent: $layersAccordion,
-            metadataContainer: $popupContentRight,
-            metadataTable: $featureMetadataTable,
-            callback: () => {
-              showFeaturesOnMap({ features: Ember.A([feature]) });
-            }
+      identificationResult.features.then(
+        (features) => {
+          // Clear previous features & add new.
+          // Leaflet clear's layers with some delay, add if we add again some cleared layer (immediately after clear),
+          // it will be removed after delay (by layer's id),
+          // so we will use timeout until better solution will be found.
+          Ember.run(() => {
+            setTimeout(() => {
+              // Show new features.
+              features.forEach((feature) => {
+                let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+                if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+                  leafletLayer.setStyle({
+                    color: 'salmon'
+                  });
+                }
+                Ember.set(feature, 'leafletLayer', leafletLayer);
+              });
+            }, 10);
           });
         });
-        $featuresList.append($featureListItem);
-
-        // Call hook giving ability to add some additional markup.
-        this._popupFeatureElementCreated({
-          element: $featureListItem,
-          propertiesElement: $featureMetadataTable,
-          identificationResult: identificationResult,
-          feature: feature
-        });
-      });
     });
-    $popupContentRight.append(createTable(totalProperties));
-
-    let mapSize = leafletMap.getSize();
-    let popupLatLng = L.latLng(e.boundingBox.getNorthEast().lat, e.boundingBox.getCenter().lng);
-    let popupMaxWidth = mapSize.x * 0.8;
-    let popupMinWidth = popupMaxWidth;
-    let popupMaxHeight = mapSize.y * 0.5;
 
     // Hide map loader.
+    let leafletMap = this.get('leafletMap');
     leafletMap.setLoaderContent('');
     leafletMap.hideLoader();
 
-    // Finally show popup.
-    let popup = L.popup({
-      className: 'identify-popup',
-      maxWidth: popupMaxWidth,
-      minWidth: popupMinWidth,
-      maxHeight: popupMaxHeight,
-      autoPan: false
-    })
-    .setLatLng(popupLatLng)
-    .openOn(leafletMap);
 
-    // Prevent map 'click' on popup content 'click'.
-    L.DomEvent.disableClickPropagation(popup._container);
+    // Assign current tool's boundingBoxLayer
+    let boundingBoxLayer = Ember.get(e, 'boundingBoxLayer');
+    this.set('boundingBoxLayer', boundingBoxLayer);
 
-    let $leafletPopupContent = Ember.$('.leaflet-popup-content', Ember.$(popup._container));
-    $leafletPopupContent.addClass('ui two column celled grid');
-
-    // Add content to popup & update.
-    $leafletPopupContent.append($popupContentLeft);
-    $leafletPopupContent.append($popupContentRight);
-    popup.update();
-
-    // Popup hasn't minHeight property, so we need to fix it manually.
-    $leafletPopupContent.height(popupMaxHeight);
-
-    // Auto pan executes in opening moment (before we manually fix height).
-    // So we need to pan popup manually.
-    popup.options.autoPan = true;
-    popup._adjustPan();
-
-    leafletMap.once('popupclose', (e) => {
-      if (e.popup !== popup) {
-        return;
-      }
-
-      featuresLayer.clearLayers();
-      featuresLayer.remove();
-
-      boundingBoxLayer.remove();
-    });
-
-    return popup;
-  },
-
-  /**
-    Handles identification popup layer element creation.
-
-    @method _popupLayerElementCreated
-    @param {Object} options method options.
-    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
-    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.propertiesElement Created jQuery properties element.
-    @param {Object[]} options.identificationResults Identification results related to layer.
-    @param {Object} options.layer Layer itself.
-    @private
-  */
-  _popupLayerElementCreated(options) {
-  },
-
-  /**
-    Handles identification popup feature element creation.
-
-    @method _popupLayerTreeItemElementCreated
-    @param {Object} options method options.
-    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.element Created jQuery element.
-    @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} options.propertiesElement Created jQuery properties element.
-    @param {Object[]} options.identificationResults Identification results related to feature's layer.
-    @param {Object} options.feature Feature itself.
-    @private
-  */
-  _popupFeatureElementCreated(options) {
+    // Fire custom event on leaflet map.
+    leafletMap.fire('flexberry-map:identificationFinished', e);
   },
 
   /**
@@ -590,7 +188,9 @@ export default RectangleMapTool.extend({
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.layer Drawn rectangle layer.
     @private
   */
-  _rectangleDrawingDidEnd({ layer }) {
+  _rectangleDrawingDidEnd({
+    layer
+  }) {
     // Get center & bbox before layer will be removed from map in super-method.
     let latlng = layer.getCenter();
     let boundingBox = layer.getBounds();
@@ -608,6 +208,11 @@ export default RectangleMapTool.extend({
 
       // Bounding box around south west point with radius of current scale * 0.05.
       boundingBox = boundingBox.getSouthWest().toBounds(maxMeters * 0.05);
+    }
+
+    // Remove previously drawn rectangle
+    if (this.get('hidePreviousRectangleOnDrawingEnd')) {
+      this._clearBoundingBox();
     }
 
     // Call super method to remove drawn rectangle & start a new one.
@@ -644,6 +249,22 @@ export default RectangleMapTool.extend({
     @private
   */
   _disable() {
+    this._clearBoundingBox();
     this._super(...arguments);
+  },
+
+  /**
+    Remove already drawn rectangle
+
+    @method _clearBoundingBox
+    @private
+  */
+  _clearBoundingBox() {
+    // Remove already drawn rectangle
+    let boundingBoxLayer = this.get('boundingBoxLayer');
+    if (boundingBoxLayer) {
+      boundingBoxLayer.disableEdit();
+      boundingBoxLayer.remove();
+    }
   }
 });

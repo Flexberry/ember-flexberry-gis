@@ -1,8 +1,9 @@
 {{map-tools/base
   class=(concat flexberryClassNames.wrapper " " class)
-  name=(concat "identify" "-" layerMode "-" toolMode)
+  name=_toolName
   caption=caption
   tooltip=tooltip
   iconClass=iconClass
   activate=(action "onMapToolActivate")
+  enableOnRerender=enableOnRerender
 }}

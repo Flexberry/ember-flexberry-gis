@@ -245,6 +245,15 @@ let BaseMapToolComponent = Ember.Component.extend(
     */
     mapToolProperties: null,
 
+    /**
+      Flag: indicates whether map tool has to be enabled on rerender.
+
+      @property enableOnRerender
+      @type Boolean
+      @default false
+    */
+    enableOnRerender: false,
+
     actions: {
       /**
         Handles map-tools click event.
@@ -353,6 +362,32 @@ let BaseMapToolComponent = Ember.Component.extend(
           attributeFilter: ['class']
         });
         this.set('_classObserver', classObserver);
+      }
+    },
+
+    /**
+      Handles DOM-related component's properties after each render.
+    */
+    didRender() {
+      this._super(...arguments);
+
+      let currentName = this.get('_mapTool.name');
+      let newName = this.get('name');
+
+
+      if (currentName === newName) {
+        return;
+      }
+
+      // if map tool name has changed - recreate it
+      this.destroyMapTool();
+      this.createMapTool();
+
+      let enabled = this.get('enableOnRerender');
+
+      // if map tool has to be enabled on rerender - activate it
+      if (enabled) {
+        this.activateMapTool();
       }
     },
 

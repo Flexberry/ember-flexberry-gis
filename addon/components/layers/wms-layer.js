@@ -63,7 +63,9 @@ export default TileLayer.extend({
 
     let requestUrl = layer._url + L.Util.getParamString(params, layer._url, true);
     return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.$.ajax(requestUrl, { dataType: 'text' }).done((data, textStatus, jqXHR) => {
+      Ember.$.ajax(requestUrl, {
+        dataType: 'text'
+      }).done((data, textStatus, jqXHR) => {
         let supportedInfoFormats = ['application/geojson', 'application/json'];
         if (supportedInfoFormats.indexOf(layer.wmsParams.info_format) < 0) {
           reject(new Error('Format \'' + layer.wmsParams.info_format + '\' isn\'t supported'));
@@ -112,7 +114,7 @@ export default TileLayer.extend({
   identify(e) {
     let featuresPromise = this._getFeatureInfo(e.latlng);
     e.results.push({
-      layer: this.get('layerModel'),
+      layerModel: this.get('layerModel'),
       features: featuresPromise
     });
   },

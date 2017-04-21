@@ -92,9 +92,10 @@
       {{flexberry-identify-panel
         layerMode=identifyLayersOption
         toolMode=identifyToolOption
+        clear=(action 'clearIdentification')
       }}
       {{layer-result-list
-        results=searchResults
+        results=identifyResults
         serviceLayer=serviceLayer
         leafletMap=leafletMap
       }}
@@ -109,14 +110,14 @@
       <div class="sixteen wide column">
         {{#flexberry-maptoolbar
           leafletMap=leafletMap
+          identificationFinished=(action 'onIdentificationFinished')
           layers=model.hierarchy as |mapToolbar|
         }}
           {{map-tools/drag activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/zoom-in activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/zoom-out activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/identify
-            activate=(action "onMapToolActivate"
-            target=mapToolbar)
+            activate=(action "onMapToolActivate" target=mapToolbar)
             layerMode=identifyLayersOption
             toolMode=identifyToolOption
           }}
@@ -149,7 +150,7 @@
           </a>
           <a {{action 'toggleSidebar' '.ui.sidebar.identify' '.mappanel'}}
               class="icon item"
-              title={{t "forms.map.searchbuttontooltip"}}>
+              title={{t "forms.map.identifybuttontooltip"}}>
             <i class="info circle icon"></i>
           </a>
         {{/flexberry-maptoolbar}}

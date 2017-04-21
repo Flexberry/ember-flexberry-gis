@@ -1,5 +1,5 @@
-<div class="{{concat "ui two column celled grid" " " flexberryClassNames.wrapper}}">
-    <div class="{{concat "ui column" " " flexberryClassNames.layersOptions}}">
+<div class="{{concat "ui celled grid" " " flexberryClassNames.wrapper}}">
+    <div class="{{concat "ui eight wide column" " " flexberryClassNames.layersOptions}}">
         {{#if all}}
             {{flexberry-button
                 class=(concat flexberryClassNames.identifyAll " " allClass)
@@ -25,21 +25,13 @@
             }}
         {{/if}}
     </div>
-    <div class="{{concat "ui column" " " flexberryClassNames.toolsOptions}}">
-        {{#if arrow}}
+    <div class="{{concat "ui four wide column" " " flexberryClassNames.toolsOptions}}">
+        {{#if rectangle}}
             {{flexberry-button
-                class=(concat flexberryClassNames.identifyArrow " " arrowClass)
-                iconClass=arrowIconClass
-                tooltip=arrowCaption
-                click=(action "onToolOptionChange" "arrow")
-            }}
-        {{/if}}
-        {{#if square}}
-            {{flexberry-button
-                class=(concat flexberryClassNames.identifySquare " " squareClass)
-                iconClass=squareIconClass
-                tooltip=squareCaption
-                click=(action "onToolOptionChange" "square")
+                class=(concat flexberryClassNames.identifyRectangle " " rectangleClass)
+                iconClass=rectangleIconClass
+                tooltip=rectangleCaption
+                click=(action "onToolOptionChange" "rectangle")
             }}
         {{/if}}
         {{#if polygon}}
@@ -50,5 +42,12 @@
                 click=(action "onToolOptionChange" "polygon")
             }}
         {{/if}}
+    </div>
+    <div class="{{concat "ui four wide column" flexberryClassName.otherOptions}}">
+        {{flexberry-button
+            class="ui icon button"
+            iconClass="remove icon"
+            click=(action "clear")
+        }}
     </div>
 </div>

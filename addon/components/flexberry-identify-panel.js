@@ -20,6 +20,9 @@ import {
   @property {String} flexberryClassNames.identifyAll Component's identify-all mode's CSS-class name ('flexberry-identify-panel-all-layers-option').
   @property {String} flexberryClassNames.identifyAllVisible Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-all-visible-layers-option').
   @property {String} flexberryClassNames.identifyTopVisible Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-top-visible-layers-option').
+  @property {String} flexberryClassNames.identifyRectangle Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-rectangle-tools-option').
+  @property {String} flexberryClassNames.identifyPolygon Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-polygon-tools-option').
+  @property {String} flexberryClassNames.otherOptions Component's options div CSS-class name ('flexberry-identify-panel-options').
   @readonly
   @static
 
@@ -34,9 +37,9 @@ const flexberryClassNames = {
   identifyAllVisible: flexberryClassNamesPrefix + '-all-visible-layers-option',
   identifyTopVisible: flexberryClassNamesPrefix + '-top-visible-layers-option',
   toolsOptions: flexberryClassNamesPrefix + '-tools-options',
-  identifyArrow: flexberryClassNamesPrefix + '-arrow-tools-option',
-  identifySquare: flexberryClassNamesPrefix + '-square-tools-option',
-  identifyPolygon: flexberryClassNamesPrefix + '-polygon-tools-option'
+  identifyRectangle: flexberryClassNamesPrefix + '-rectangle-tools-option',
+  identifyPolygon: flexberryClassNamesPrefix + '-polygon-tools-option',
+  otherOptions: flexberryClassNamesPrefix + '-options'
 };
 
 /**
@@ -52,15 +55,6 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 let FlexberryIdentifyPanelComponent = Ember.Component.extend({
-  /**
-    Properties which will be passed to the map-tool when it will be instantiated.
-
-    @property _identifyToolProperties
-    @type Object
-    @default null
-  */
-  _identifyToolProperties: null,
-
   /**
     Reference to component's template.
   */
@@ -207,58 +201,31 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   layerMode: 'visible',
 
   /**
-    tools option's 'arrow' mode CSS-class.
+    tools option's 'rectangle' mode CSS-class.
 
-    @property arrowClass
+    @property rectangleClass
     @type String
     @default null
   */
-  arrowClass: null,
+  rectangleClass: null,
 
   /**
-    tools option's 'arrow' mode's caption.
+    tools option's 'rectangle' mode's caption.
 
-    @property arrowCaption
+    @property rectangleCaption
     @type String
-    @default t('components.map-tools.identify.identify-all.caption')
+    @default t('components.map-tools.idenify.rectangle.caption')
   */
-  arrowCaption: t('components.map-tools.identify.identify-all.caption'),
+  rectangleCaption: t('components.map-tools.identify.rectangle.caption'),
 
   /**
-    tools option's 'arrow' mode's icon CSS-class names.
+    tools option's 'rectangle' mode's icon CSS-class names.
 
-    @property arrowIconClass
-    @type String
-    @default 'marker icon'
-  */
-  arrowIconClass: 'marker icon',
-
-  /**
-    tools option's 'square' mode CSS-class.
-
-    @property squareClass
-    @type String
-    @default null
-  */
-  squareClass: null,
-
-  /**
-    tools option's 'square' mode's caption.
-
-    @property squareCaption
-    @type String
-    @default t('components.map-tools.idenify.identify-all-visible.caption')
-  */
-  squareCaption: t('components.map-tools.identify.identify-all-visible.caption'),
-
-  /**
-    tools option's 'square' mode's icon CSS-class names.
-
-    @property squareIconClass
+    @property rectangleIconClass
     @type String
     @default 'square outline icon'
   */
-  squareIconClass: 'square outline icon',
+  rectangleIconClass: 'square outline icon',
 
   /**
     tools option's 'polygon' mode CSS-class.
@@ -274,9 +241,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @property polygonCaption
     @type String
-    @default t('components.map-tools.idenify.identify-top-visible.caption')
+    @default t('components.map-tools.idenify.polygon.caption')
   */
-  polygonCaption: t('components.map-tools.identify.identify-top-visible.caption'),
+  polygonCaption: t('components.map-tools.identify.polygon.caption'),
 
   /**
     tools option's 'polygon' mode's icon CSS-class names.
@@ -288,22 +255,13 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polygonIconClass: 'star icon',
 
   /**
-    Flag: is tools option 'arrow' enable
+    Flag: is tools option 'rectangle' enable
 
-    @property arrow
+    @property rectangle
     @default true
     @type Boolean
   */
-  arrow: true,
-
-  /**
-    Flag: is tools option 'square' enable
-
-    @property square
-    @default true
-    @type Boolean
-  */
-  square: true,
+  rectangle: true,
 
   /**
     Flag: is tools option 'polygon' enable
@@ -316,14 +274,26 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   /**
     @property toolMode
-    @default 'square'
+    @default 'rectangle'
     @type {String}
    */
-  toolMode: 'square',
+  toolMode: 'rectangle',
 
   /**
-      Initializes DOM-related component's properties.
-    */
+   @type Observer
+   
+   */
+  _switchObserver: Ember.observer('layerMode', 'toolMode', function () {
+    let selectedLayerOption = this.get('layerMode');
+    let selectedToolOption = this.get('toolMode');
+
+    this._switchActiveLayer(selectedLayerOption);
+    this._switchActiveTool(selectedToolOption);
+  }),
+
+  /**
+    Initializes DOM-related component's properties.
+  */
   didInsertElement() {
     this._super(...arguments);
     let selectedLayerOption = this.get('layerMode');
@@ -350,8 +320,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
    * @param {String} selectedToolOption
    */
   _switchActiveTool(selectedToolOption) {
-    this.set('arrowClass', null);
-    this.set('squareClass', null);
+    this.set('rectangleClass', null);
     this.set('polygonClass', null);
 
     this.set(selectedToolOption + 'Class', 'active');
@@ -359,32 +328,56 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   actions: {
     /**
-     @method actions.onLayerOptionChange
+      Handles inner layer option button's 'click' action.
+
+      @method actions.onLayerOptionChange
     */
     onLayerOptionChange(...args) {
       this.set('layerMode', args[0]);
-      this._switchActiveLayer(args[0]);
 
       this.sendAction('onLayerOptionChange', ...args);
     },
 
     /**
-     @method actions.onToolOptionChange
+      Handles inner tool option button's 'click' action.
+
+      @method actions.onToolOptionChange
     */
     onToolOptionChange(...args) {
       this.set('toolMode', args[0]);
-      this._switchActiveTool(args[0]);
 
       this.sendAction('onToolOptionChange', ...args);
+    },
+
+    /**
+      Handles inner clear button's 'click' action.
+
+      @method actions.clear
+    */
+    clear(...args) {
+      this.sendAction('clear', ...args);
     }
   },
 
   /**
+    Component's action invoking when layer option changed.
+
+    @method sendingActions.onLayerOptionChange
+    {{#crossLink "FlexberryIdentifyPanelComponent/sendingActions.onLayerOptionChange:method"}}identify panel's on layer option changed action{{/crossLink}}.
+  */
+
+  /**
+    Component's action invoking when tool option changed.
+
+    @method sendingActions.onToolOptionChange
+    {{#crossLink "FlexberryIdentifyPanelComponent/sendingActions.onToolOptionChange:method"}}identify panel's on tool option changed action{{/crossLink}}.
+  */
+
+  /**
     Component's action invoking when map-tool must be activated.
 
-    @method sendingActions.activate
-    @param {Object} e Action's event object from
-    {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
+    @method sendingActions.clear
+    {{#crossLink "FlexberryIdentifyPanelComponent/sendingActions.clear:method"}}identify panel's on clear button clicked action{{/crossLink}}.
   */
 });
 
