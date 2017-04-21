@@ -73,13 +73,21 @@ export default Ember.Component.extend(
     */
      layerModel: null,
 
-     /*changeLayers () {
-        this._super(...arguments);
+    /* General logic for Observer and Init */
 
-      // Call to createLayer could potentially return a promise,
-      // wraping this call into Ember.RSVP.hash helps us to handle straight/promise results universally.
+     changeLayer(options) {
+       if (Ember.isNone(options)) {
        this.set('leafletLayerPromise', Ember.RSVP.hash({
-        leafletLayer: this.createLayer()
+         leafletLayer: this.createLayer()
+      }).then(({ leafletLayer }) => {
+        this.set('_leafletObject', leafletLayer);
+
+        return leafletLayer;
+      }).catch((errorMessage) => {
+        Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
+      })); } else {
+        this.set('leafletLayerPromise', Ember.RSVP.hash({
+         leafletLayer: this.createLayer(options)
       }).then(({ leafletLayer }) => {
         this.set('_leafletObject', leafletLayer);
 
@@ -87,23 +95,16 @@ export default Ember.Component.extend(
       }).catch((errorMessage) => {
         Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
       }));
-     },*/
+      }
+     },
 
      /* Observer re-creates the layer with the new settings and add it to the map */
 
      settings: Ember.observer('layerModel.settings', function () {
         this._super(...arguments);
-        let newOptions = JSON.parse(this.get('layerModel.settings'));
-            leafletLayer: this.willDestroyElement();
-        this.set('leafletLayerPromise', Ember.RSVP.hash({
-            leafletLayer: this.createLayer(newOptions)
-      }).then(({ leafletLayer }) => {
-        this.set('_leafletObject', leafletLayer);
-
-        return leafletLayer;
-      }).catch((errorMessage) => {
-        Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
-      }));
+        let options = JSON.parse(this.get('layerModel.settings'));
+        this.willDestroyElement();
+        this.changeLayer(options);
         this.get('leafletLayerPromise').then((leafletLayer) => {
         this.visibilityDidChange();
         this.setZIndex();
@@ -237,15 +238,7 @@ export default Ember.Component.extend(
 
       // Call to createLayer could potentially return a promise,
       // wraping this call into Ember.RSVP.hash helps us to handle straight/promise results universally.
-      this.set('leafletLayerPromise', Ember.RSVP.hash({
-        leafletLayer: this.createLayer()
-      }).then(({ leafletLayer }) => {
-        this.set('_leafletObject', leafletLayer);
-
-        return leafletLayer;
-      }).catch((errorMessage) => {
-        Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
-      }));
+      this.changeLayer();
     },
 
     /**
