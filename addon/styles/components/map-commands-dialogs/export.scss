@@ -1,6 +1,34 @@
 .print-optios {
-  max-width: 25%;
+  width: 30% !important;
 }
 .map-preview {
-  max-width: 75%;
+  width: 70% !important;
+}
+.map-block{
+  background: green;
+  width: 100%;
+  height: 100%;
+  display: block;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+.map-only-mode {
+  .map-name, .conrols {
+    display: none;
+  }
+}
+.standart-mode {
+  background: white;
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
+  padding: 1em;
+  padding-bottom: 4em;
+  display: block;
+}
+.map-name {
+  font-size: 1.7em;
+  margin-bottom: 0.3em;
+  text-decoration: none;
+  text-align: center;
 }

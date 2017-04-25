@@ -356,6 +356,66 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     */
     errorMessage: null,
 
+    /**
+      Available printmode types.
+
+      @property _availablePrintmodeTypes
+      @type String[]
+      @default null
+      @private
+    */
+    _availablePrintmodeTypes: null,
+
+    /**
+      Selected printmode type.
+
+      @property _selectedPrintmodeType
+      @type String
+      @default null
+      @private
+    */
+    _selectedPrintmodeType: null,
+
+    /**
+      Available orientation types.
+
+      @property _availableOrientationTypes
+      @type String[]
+      @default null
+      @private
+    */
+    _availableOrientationTypes: null,
+
+    /**
+      Selected orientation type.
+
+      @property _selectedOrientationType
+      @type String
+      @default null
+      @private
+    */
+    _selectedOrientationType: null,
+
+    /**
+      Available paper types.
+
+      @property _availablePaperTypes
+      @type String[]
+      @default null
+      @private
+    */
+    _availablePaperTypes: null,
+
+    /**
+      Selected paper type.
+
+      @property _selectedPaperType
+      @type String
+      @default null
+      @private
+    */
+    _selectedPaperType: null,
+
     actions: {
       /**
         Handler for error 'ui-message' component 'onShow' action.
@@ -511,6 +571,12 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       this._super(...arguments);
 
       this.set('_availableFileTypes', Ember.A(['PNG', 'JPEG', 'JPG', 'GIF', 'BMP', 'TIFF', 'XICON', 'SVG', 'WEBP']));
+      this.set('_availablePrintmodeTypes', Ember.A(['Standard', 'Map-only']));
+      this.set('_selectedPrintmodeType', 'Standard');
+      this.set('_availableOrientationTypes', Ember.A(['Vertical', 'Horizontal']));
+      this.set('_selectedOrientationType', 'Vertical');
+      this.set('_availablePaperTypes', Ember.A(['A3', 'A4', 'A5', 'B4', 'B5']));
+      this.set('_selectedPaperType', 'A4');
       this.set('_options', {
         caption: '',
         captionFontName: 'Arial',

@@ -71,11 +71,9 @@
             {{PrintModeDropdownCaption}}
           </label>
           {{flexberry-dropdown
-            items=(flexberry-enum "components-examples/flexberry-dropdown/settings-example/enumeration")
-            value=model.enumeration
-            placeholder=placeholder
-            readonly=readonly
-            class=class
+            items=_availablePrintmodeTypes
+            value=_selectedPrintmodeType
+            class="fluid"
           }}
         </div>
         <div class="field">
@@ -83,11 +81,8 @@
             {{PapaerSizeDropdownCaption}}
           </label>
           {{flexberry-dropdown
-            items=(flexberry-enum "components-examples/flexberry-dropdown/settings-example/enumeration")
-            value=model.enumeration
-            placeholder=placeholder
-            readonly=readonly
-            class=class
+            items=_availablePaperTypes
+            value=_selectedPaperType
           }}
         </div>
         <div class="field">
@@ -95,11 +90,8 @@
             {{OrientationDropdownCaption}}
           </label>
           {{flexberry-dropdown
-            items=(flexberry-enum "components-examples/flexberry-dropdown/settings-example/enumeration")
-            value=model.enumeration
-            placeholder=placeholder
-            readonly=readonly
-            class=class
+            items=_availableOrientationTypes
+            value=_selectedOrientationType
           }}
         </div>
         <div class="field">
@@ -145,8 +137,14 @@
         </div>
       {{/if}}
   </div>
-  <div class="{{flexberryClassNames.settings}} column .map-preview">
-
+  <div class="{{flexberryClassNames.settings}} column map-preview">
+    <!-- <div class="map-only-mode"> -->
+    <div class="standart-mode">
+      <p class="map-name">
+        {{_options.caption}}
+      </p>
+      <div class="map-block"></div>
+    </div>
   </div>
 </div>
 </form>
