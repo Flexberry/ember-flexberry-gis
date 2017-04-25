@@ -27,8 +27,7 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
       try {
         return JSON.parse(stringToDeserialize);
       } catch (e) {
-        console.log('Error on read layer properties on layer ' + this.get('name'), e);
-        throw e;
+        Ember.Logger.error(`Computation of 'settingsAsObject' property for '${this.get('name')}' layer has been failed: ${e}`);
       }
     }
 
@@ -36,10 +35,10 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
   }),
 
   /**
-    Checks whether layer can be identified.
+    Flag: indicates whether layer can be identified.
 
     @property canBeIdentified
-    @type {Boolean} Flag: indicates whether layer can be identified.
+    @type Boolean
     @readOnly
   */
   canBeIdentified: Ember.computed('isDeleted', 'type', 'settingsAsObject.identifySettings.canBeIdentified', function () {
@@ -55,10 +54,10 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
   }),
 
   /**
-    Checks whether layer can be searched.
+    Flag: indicates whether 'search' operation is available for this layer.
 
     @property canBeSearched
-    @return {Boolean} Flag: indicates whether 'search' operation is available for this layer.
+    @type Boolean
     @readOnly
   */
   canBeSearched: Ember.computed('isDeleted', 'type', 'settingsAsObject.identifySettings.canBeSearched', function () {
@@ -74,25 +73,30 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
   }),
 
   /**
-    Checks whether layer has legend.
+    Flag: layer's whether layer's legend can be displayed.
 
     @property hasLegend
-    @type {Boolean} Flag: indicates whether layer has legend.
+    @type Boolean
     @readOnly
   */
-  hasLegend: Ember.computed('settingsAsObject.hasLegend', 'type', function () {
-    let settingHasLegend = this.get('settingsAsObject.hasLegend');
-    let className = this.get('type');
-    let layerClass = Ember.getOwner(this).knownForType('layer', className);
+  legendCanBeDisplayed: Ember.computed('isDeleted', 'type', 'settingsAsObject.legendSettings.legendCanBeDisplayed', function () {
+    if (this.get('isDeleted')) {
+      return false;
+    }
 
-    return Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend') && settingHasLegend;
+    let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
+    let legendIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('legend');
+    let legendIsAvailableForLayerInstance = this.get('settingsAsObject.legendSettings.legendCanBeDisplayed') !== false;
+
+    return legendIsAvailableForLayerClass && legendIsAvailableForLayerInstance;
   }),
 
   /**
-   * contains collection of nested layers
-   * @property layers
-   * @return {Array} collection of child layers
-   */
+    Child layers.
+    @property layers
+    @type Object[]
+    @readOnly
+  */
   layers: Ember.computed('map', 'map.mapLayer', function () {
     try {
       let layers = this.get('map.mapLayer');
@@ -103,8 +107,7 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
         }
       }
     } catch (e) {
-      console.log('Error on read children of layer ' + this.get('name'), e);
-      throw e;
+      Ember.Logger.error(`Computation of 'layers' property for '${this.get('name')}' layer has been failed: ${e}`);
     }
 
     return Ember.A();

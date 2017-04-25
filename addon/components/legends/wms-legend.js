@@ -1,87 +1,54 @@
 import Ember from 'ember';
-import layout from '../../templates/components/legends/wms-legend';
+import BaseLegendComponent from '../legends/base-legend';
 
 /**
-  Component's CSS-classes names.
-  JSON-object containing string constants with CSS-classes names related to component's hbs-markup elements.
+  Component representing map layer's legend for WMS-layers.
 
-  @property {Object} flexberryClassNames
-  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('leaflet-wlegend-div').
-  @property {String} flexberryClassNames.div Component's wrapping <div> CSS-class name ('leaflet-legend-image').
-  @property {String} flexberryClassNames.image Component's  <img> CSS-class name ('leaflet-legend-image').
-  @readonly
-  @static
-
-  @for wms-legend
+  @class WmsLegendComponent
+  @extends BaseLegendComponent
 */
-const flexberryClassNamesPrefix = 'leaflet-legend';
-const flexberryClassNames = {
-  prefix: flexberryClassNamesPrefix,
-  div: flexberryClassNamesPrefix + '-div',
-  image: flexberryClassNamesPrefix + '-image'
-};
-
-export default Ember.Component.extend({
-  layout,
+export default BaseLegendComponent.extend({
   /**
-      Reference to component's CSS-classes names.
-      Must be also a component's instance property to be available from component's .hbs template.
-    */
-  flexberryClassNames,
+    Array of legend's for layer.
+    Every legend is an object with following structure { src: ... },
+    where 'src' is legend's image source (url or base64-string).
 
-  /**
-      Layer.
+    @property _legends
+    @type Object[]
+    @private
+    @readOnly
+  */
+  _legends: Ember.computed(
+    'layerSettings.url',
+    'layerSettings.version',
+    'layerSettings.imageFormat',
+    'layerSettings.layers',
+    'layerSettings.legendSettings.url',
+    'layerSettings.legendSettings.version',
+    'layerSettings.legendSettings.format',
+    'layerSettings.legendSettings.layers', function() {
+    let legends = Ember.A();
 
-      @property layerModel
-      @type Object
-      @default null
-    */
-  layerModel: null,
+    let url = this.get('layerSettings.legendSettings.url') || this.get('layerSettings.url');
+    if (Ember.isBlank(url)) {
+      Ember.Logger.error(`Unable to compute legends for '${this.get('name')}' layer, because both required settings 'url' and 'legendSettings.url' are blank`);
+      return legends;
+    }
 
-  /**
-      Image's format for legend's symbols.
-
-      @property imageFormat
-      @type String
-      @default 'image/png'
-    */
-  imageFormat: 'image/png',
-
-  /**
-      Version for WMSRequest.
-
-      @property version
-      @type String
-      @default '1.1.0'
-    */
-  version: '1.1.0',
-
-  /**
-      Array of legend's images for layer.
-
-      @property legendImages
-      @type String[]
-      @readOnly
-    */
-  legendImages: Ember.computed('layerModel', function() {
-    let legendsImageMas = [];
-    let layersArr = this.get('layerModel.settingsAsObject.layers').split(',');
-    let layerURL = this.get('layerModel.settingsAsObject.url');
-    const service = 'WMS';
-    const request = 'GetLegendGraphic';
-    layersArr.forEach((item) => {
+    Ember.A((this.get('layerSettings.legendSettings.layers') || this.get('layerSettings.layers') || '').split(',')).forEach((layerName) => {
       let parameters = {
-        service,
-        request,
-        format: this.get('imageFormat'),
-        version: this.get('version'),
-        layer: item
+        service: 'WMS',
+        request: 'GetLegendGraphic',
+        version: this.get('layerSettings.legendSettings.version') || this.get('layerSettings.version') || '1.1.0',
+        format: this.get('layerSettings.legendSettings.format') || this.get('layerSettings.format') || 'image/png',
+        layer: layerName
       };
 
-      let legendsImage = layerURL + L.Util.getParamString(parameters);
-      legendsImageMas.push(legendsImage);
+      legends.pushObject({
+        src: `${url}${L.Util.getParamString(parameters)}`
+      });
     });
 
-    return legendsImageMas;
+    return legends;
   })
 });

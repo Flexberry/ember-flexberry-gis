@@ -1,4 +1,10 @@
-import WMSLegend from '../legends/wms-legend';
+import WmsLegendComponent from '../legends/wms-legend';
 
-export default WMSLegend.extend({
+/**
+  Component representing map layer's legend for WMS-WFS-layers.
+
+  @class WmsWfsLegendComponent
+  @extends WmsLegendComponent
+*/
+export default WmsLegendComponent.extend({
 });

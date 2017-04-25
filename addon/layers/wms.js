@@ -35,7 +35,13 @@ export default TileLayer.extend({
       version: undefined,
       layers: undefined,
       format: undefined,
-      transparent: undefined
+      transparent: undefined,
+      legendSettings: {
+        url: '',
+        version: '',
+        format: '',
+        layers: ''
+      }
     });
 
     return settings;

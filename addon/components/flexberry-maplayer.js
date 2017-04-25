@@ -165,9 +165,9 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'layer.hasLegend', function() {
+    _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'legendCanBeDisplayed', function() {
       // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
-      return this._isRegistered('content') || this.get('_hasLayers') || this.get('layer.hasLegend');
+      return this._isRegistered('content') || this.get('_hasLayers') || this.get('legendCanBeDisplayed');
     }),
 
     /**
@@ -304,15 +304,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     name: null,
 
     /**
-      Layer.
-
-      @property layer
-      @type Object
-      @default null
-    */
-    layer: null,
-
-    /**
       Layer's CRS (coordinate reference system).
 
       @property coordinateReferenceSystem
@@ -331,6 +322,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     settings: null,
 
     /**
+      Layer's settings as JSON-object.
+
+      @property settingsAsObject
+      @type String
+      @default null
+    */
+    settingsAsObject: null,
+
+    /**
       Layer's visibility.
 
       @property visibility
@@ -338,6 +338,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @default false
     */
     visibility: false,
+
+    /**
+      Flag: indicates whether layer's legend can be displayed.
+
+      @property legendCanBeDisplayed
+      @type Boolean
+      @default false
+    */
+    legendCanBeDisplayed: false,
 
     /**
       Child layers.
