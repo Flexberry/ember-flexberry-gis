@@ -44,6 +44,9 @@ export default {
     },
     'search-settings-tab': {
       'caption': 'Search settings'
+    },
+    'legend-settings-tab': {
+      'caption': 'Legend settings'
     }
   }
 };
