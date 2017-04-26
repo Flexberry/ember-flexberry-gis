@@ -31,8 +31,8 @@
     }
   }
   .flexberry-maplayer-caption-label {
-    max-width: 50%;
-    min-width: 50%;
+    max-width: calc(100% - 200px);
+    min-width: calc(100% - 200px);
     text-overflow: ellipsis;
     word-break: normal;
     word-wrap: break-word;
@@ -50,9 +50,11 @@
     .flexberry-slider {
       padding-right: .7em;
     }
-    div {
-      .leaflet-legend-div {
-        margin-top: 1em;
+    .layer-legend {
+      margin-top: 1em;
+      &-image-wrapper {
+        img {
+        }
       }
     }
   }
