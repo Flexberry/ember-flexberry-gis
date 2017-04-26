@@ -249,6 +249,8 @@ export default Ember.Mixin.create({
 
       let rootArray = Ember.get(this, rootPath);
       rootArray.pushObject(childLayer);
+
+      this._setIndexes(Ember.isArray(parentLayer) ? parentLayer : this._findRootLayers(parentLayerPath), rootArray.length);
     },
 
     /**
@@ -330,6 +332,7 @@ export default Ember.Mixin.create({
       ```
     */
     onMapLayerRemove(...args) {
+      let rootPath = 'model.mapLayer';
       let layerPath = args[0];
       Ember.assert(
         `Wrong type of \`layerPath\` argument: actual type is \`${Ember.typeOf(layerPath)}\`, ` +
@@ -342,9 +345,13 @@ export default Ember.Mixin.create({
         `but \`object\` or  \`instance\` is expected`,
         Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
 
+      let rootLayers = this._findRootLayers(layerPath);
       this.removeLayer({
         layer: layer
       });
+
+      let rootArray = Ember.get(this, rootPath);
+      this._setIndexes(rootLayers, rootArray.length);
     }
   },
 
@@ -413,5 +420,62 @@ export default Ember.Mixin.create({
 
     Ember.set(layer, 'isDeleted', true);
     return layer;
-  }
+  },
+
+  /**
+    Sets indexes for layers hierarchy.
+
+    @method _setIndexes
+    @param {Array} layers Array of layers to set indexes.
+    @param {Int} index First index.
+    @returns {Int} Last index.
+    @private
+  */
+  _setIndexes(layers, index) {
+    if (Ember.isArray(layers) && index > 0) {
+      layers.forEach((layer) => {
+        if (!layer.get('isDeleted')) {
+          layer.set('index', index);
+          index--;
+          if (Ember.isArray(layer.get('layers'))) {
+            index = this._setIndexes(layer.get('layers'), index);
+          }
+        }
+      }, this);
+    }
+
+    return index;
+  },
+
+  /**
+    Finds root layers.
+
+    @method _findRootLayers
+    @param {String} layerPath LayerPath to child layer.
+    @returns {Array} Root layers.
+    @private
+  */
+  _findRootLayers(layerPath) {
+    let layer = getRecord(this, layerPath);
+    let nextInPath = function(path) {
+      let index = path.lastIndexOf('.');
+      if (index > -1) {
+        path = path.slice(0, index);
+      }
+
+      return path;
+    };
+
+    // Get layerPath for layers on same hierarchy level.
+    layerPath = nextInPath(layerPath);
+
+    if (Ember.isBlank(layer.get('parent'))) {
+      return getRecord(this, layerPath);
+    }
+
+    // Get layerPath for parent layer.
+    layerPath = nextInPath(layerPath);
+
+    return this._findRootLayers(layerPath);
+  },
 });

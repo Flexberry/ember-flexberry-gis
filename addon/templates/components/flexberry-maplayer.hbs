@@ -40,7 +40,9 @@
           click=(action "onAddButtonClick")
         }}
       {{/if}}
+      <div style="clear: both;"></div>
     {{/if}}
+
     {{#if _canChangeOpacity}}
       <label class="{{flexberryClassNames.opacityLabel}}">
         {{_opacityDisplayValue}}
@@ -96,30 +98,26 @@
   {{/block-slot}}
 
   {{#block-slot "content"}}
-  {{#unless _hasLayers}}
-    <div class="ui segment">
+    {{#if _hasLayers}}
+      {{flexberry-maplayers
+        layers=layers
+        cswConnections=cswConnections
+        leafletMap=leafletMap
+        readonly=readonly
+      }}
+    {{/if}}
+    {{#yield-slot "content"}}
+      {{yield}}
       {{#if _canChangeOpacity}}
         {{flexberry-ddau-slider
           class=(concat flexberryClassNames.opacitySlider " " flexberryClassNames.preventExpandCollapse)
           value=opacity
           change=(action "onOpacitySliderChange")
         }}
-        {{/if}}
-        {{#if layer.hasLegend}}
-          {{#yield-slot "content"}}
-            {{yield}}
-              {{component (concat "legends/" layer.type "-legend") layerModel=layer}}
-          {{/yield-slot}}
-        {{/if}}
-      </div>
-    {{/unless}}
-    {{#if _hasLayers}}
-        {{flexberry-maplayers
-          layers=layers
-          cswConnections=cswConnections
-          leafletMap=leafletMap
-          readonly=readonly
-        }}
       {{/if}}
+      {{#if legendCanBeDisplayed}}
+        {{component (concat "legends/" type "-legend") layerName=name layerSettings=settingsAsObject}}
+      {{/if}}
+    {{/yield-slot}}
   {{/block-slot}}
 {{/flexberry-treenode}}

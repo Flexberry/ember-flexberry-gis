@@ -16,8 +16,6 @@ import layout from '../templates/components/flexberry-ddau-slider';
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-slider').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-slider').
-  @property {String} flexberryClassNames.button Component's inner button CSS-class name ('flexberry-slider-button').
-  @property {String} flexberryClassNames.popup Component's inner popup <div> CSS-class name ('flexberry-slider-popup').
   @readonly
   @static
 
@@ -30,7 +28,7 @@ const flexberryClassNames = {
 };
 
 /**
-  Flexberry slider component with [Ember UI Slider](https://ui-slider.firebaseapp.com/) style
+  Flexberry slider component with bootstrap-ui-slider through ui-ember-slider
   and ["Data Down Actions UP (DDAU)" pattern](https://emberway.io/ember-js-goodbye-mvc-part-1-21777ecfd708) one way binding.
   Component doesn't mutate passed value by its own, it only invokes 'change' action,
   which signalizes to the route, controller, or another component, that passed value should be mutated.
@@ -59,7 +57,7 @@ const flexberryClassNames = {
 
   Usage with {{#crossLink "FlexberryDdauSliderActionsHandlerMixin"}}flexberry-ddau-checkbox-actions-handler mixin{{/crossLink}}:
   ```handlebars
-  {{flexberry-ddau-checkbox
+  {{flexberry-ddau-slider
     value=model.value
     change=(action "onSliderChange" "model.value")
   }}

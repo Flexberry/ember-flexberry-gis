@@ -171,9 +171,9 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @private
     */
 
-    _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'layer.hasLegend', '_canChangeOpacity', function () {
+    _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'legendCanBeDisplayed', '_canChangeOpacity', function () {
       // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
-      return this._isRegistered('content') || this.get('_hasLayers') || this.get('layer.hasLegend') || this.get('_canChangeOpacity');
+      return this._isRegistered('content') || this.get('_hasLayers') || this.get('legendCanBeDisplayed') || this.get('_canChangeOpacity');
     }),
 
     /**
@@ -184,8 +184,8 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _canChangeOpacity: Ember.computed('type', function () {
-      return this.get('type') !== 'group';
+    _canChangeOpacity: Ember.computed('_hasLayers', 'type', function () {
+      return this.get('_hasLayers') !== true && this.get('type') !== 'group';
     }),
 
     /**
@@ -337,15 +337,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     name: null,
 
     /**
-      Layer.
-
-      @property layer
-      @type Object
-      @default null
-    */
-    layer: null,
-
-    /**
       Layer's CRS (coordinate reference system).
 
       @property coordinateReferenceSystem
@@ -364,6 +355,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     settings: null,
 
     /**
+      Layer's settings as JSON-object.
+
+      @property settingsAsObject
+      @type String
+      @default null
+    */
+    settingsAsObject: null,
+
+    /**
       Layer's visibility.
 
       @property visibility
@@ -380,6 +380,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @default 100
     */
     opacity: 100,
+
+    /**
+      Flag: indicates whether layer's legend can be displayed.
+
+      @property legendCanBeDisplayed
+      @type Boolean
+      @default false
+    */
+    legendCanBeDisplayed: false,
 
     /**
       Child layers.

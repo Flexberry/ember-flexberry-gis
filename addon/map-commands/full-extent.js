@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
 import BaseMapCommand from './base';
 
 /**
@@ -17,10 +18,12 @@ export default BaseMapCommand.extend({
 
     @method execute
   */
-  _execute() {
+  _execute(options) {
     this._super(...arguments);
+    let latLng = Ember.get(options, 'latLng');
+    let zoom = Ember.get(options, 'zoom');
 
     let leafletMap = this.get('leafletMap');
-    leafletMap.setZoom(leafletMap.getMinZoom());
+    leafletMap.setView(latLng, zoom);
   }
 });

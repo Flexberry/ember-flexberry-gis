@@ -1,31 +1,25 @@
-import WMSLegend from '../legends/wms-legend';
 import Ember from 'ember';
+import BaseLegendComponent from '../legends/base-legend';
 
-export default WMSLegend.extend({
+/**
+  Component representing map layer's legend for WFS-layers.
+
+  @class WfsLegendComponent
+  @extends BaseLegendComponent
+*/
+export default BaseLegendComponent.extend({
   /**
-      Array of legend's images for layer.
+    Array of legend's for layer.
+    Every legend is an object with following structure { src: ... },
+    where 'src' is legend's image source (url or base64-string).
 
-      @property legendImages
-      @type String[]
-      @readOnly
-    */
-  legendImages: Ember.computed('layer', function() {
-    let legendsImageMas = [];
-    let layerURL = this.get('layer.settingsAsObject.url');
-    let layer = this.get('layer.settingsAsObject.typeNS') + ':' + this.get('layer.settingsAsObject.typeName');
-    const service = 'WMS';
-    const request = 'GetLegendGraphic';
-    let parameters = {
-      service,
-      request,
-      format: this.get('imageFormat'),
-      version: this.get('version'),
-      layer: layer
-    };
-
-    let legendsImage = layerURL + L.Util.getParamString(parameters);
-    legendsImageMas.push(legendsImage);
-
-    return legendsImageMas;
+    @property _legends
+    @type Object[]
+    @private
+    @readOnly
+  */
+  _legends: Ember.computed(function() {
+    // TODO: Implement client-side legends rendering for WFS-layers & extend.
+    return Ember.A();
   })
 });

@@ -1,30 +1,60 @@
 {{#if leafletContainer}}
   {{#each layers as |layerModel|}}
     {{#if (not layerModel.isDeleted)}}
-      {{#if (eq layerModel.type "group")}}
-        {{#layers/group-layer
-          leafletMap=leafletMap
-          leafletContainer=leafletContainer
-          layerModel=layerModel
-          index=layerModel.index
-          visibility=layerModel.visibility
-          dynamicProperties=layerModel.settingsAsObject as |leafletLayerGroup|
-        }}
-          {{flexberry-layers
+      {{#if (not forMinimap)}}
+        {{#if (eq layerModel.type "group")}}
+          {{#layers/group-layer
             leafletMap=leafletMap
-            leafletContainer=leafletLayerGroup
-            layers=layerModel.layers
+            leafletContainer=leafletContainer
+            layerModel=layerModel
+            index=layerModel.index
+            visibility=layerModel.visibility
+            dynamicProperties=layerModel.settingsAsObject as |leafletLayerGroup|
           }}
-        {{/layers/group-layer}}
+            {{flexberry-layers
+              leafletMap=leafletMap
+              leafletContainer=leafletLayerGroup
+              layers=layerModel.layers
+            }}
+          {{/layers/group-layer}}
+        {{else}}
+          {{component (concat "layers/" layerModel.type "-layer")
+            leafletMap=leafletMap
+            leafletContainer=leafletContainer
+            layerModel=layerModel
+            index=layerModel.index
+            visibility=layerModel.visibility
+            dynamicProperties=layerModel.settingsAsObject
+          }}
+        {{/if}}
       {{else}}
-        {{component (concat "layers/" layerModel.type "-layer")
-          leafletMap=leafletMap
-          leafletContainer=leafletContainer
-          layerModel=layerModel
-          index=layerModel.index
-          visibility=layerModel.visibility
-          dynamicProperties=layerModel.settingsAsObject
-        }}
+        {{#if layerModel.showOnMinimap}}
+          {{#if (eq layerModel.type "group")}}
+            {{#layers/group-layer
+              leafletMap=leafletMap
+              leafletContainer=leafletContainer
+              layerModel=layerModel
+              index=layerModel.index
+              visibility=layerModel.visibility
+              dynamicProperties=layerModel.settingsAsObject as |leafletLayerGroup|
+            }}
+              {{flexberry-layers
+                leafletMap=leafletMap
+                leafletContainer=leafletLayerGroup
+                layers=layerModel.layers
+              }}
+            {{/layers/group-layer}}
+          {{else}}
+            {{component (concat "layers/" layerModel.type "-layer")
+              leafletMap=leafletMap
+              leafletContainer=leafletContainer
+              layerModel=layerModel
+              index=layerModel.index
+              visibility=layerModel.visibility
+              dynamicProperties=layerModel.settingsAsObject
+            }}
+          {{/if}}
+        {{/if}}
       {{/if}}
     {{/if}}
   {{/each}}
