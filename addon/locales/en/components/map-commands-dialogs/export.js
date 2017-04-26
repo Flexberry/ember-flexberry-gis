@@ -13,6 +13,9 @@ export default {
     'caption-textbox': {
       'caption': 'Map Caption'
     },
+    'font-settings-toggle': {
+      'caption': 'Font settings'
+    },
     'font-name-textbox': {
       'caption': 'Font name'
     },
@@ -29,6 +32,17 @@ export default {
       'caption': 'Y-Coordinate (from map\'s top left corner)'
     }
   },
+  'dropdown-segment': {
+    'printmode-dropdown': {
+      'caption': 'Print Mode'
+    },
+    'papaersize-dropdown': {
+      'caption': 'Papaer Size'
+    },
+    'orientation-dropdown': {
+      'caption': 'Orientation'
+    }
+  },
   'exclude-segment': {
     'caption': 'Exclude from exported map',
     'exclude-zoom-checkbox': {
@@ -36,6 +50,12 @@ export default {
     },
     'exclude-contributing-checkbox': {
       'caption': 'Copyright'
+    },
+    'exclude-legend-checkbox': {
+      'caption': 'Legend'
+    },
+    'exclude-drawing-scale-checkbox': {
+      'caption': 'Drawing scale'
     }
   },
   'download-segment': {

@@ -20,111 +20,134 @@
   onHide=(action "onErrorMessageHide")
 }}
 <form class="ui {{if isBusy "loading"}} form" role="form">
-  <div class="ui segment">
-    <h5 class="ui header">
-      {{captionSegmentCaption}}
-    </h5>
-    <div class="field">
-      <label>
-        {{captionTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_options.caption
-      }}
-    </div>
-    <div class="{{if (not _hasCaption) "disabled"}} field">
-      <label>
-        {{captionFontNameTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_options.captionFontName
-      }}
-    </div>
-    <div class="{{if (not _hasCaption) "disabled"}} field">
-      <label>
-        {{captionFontSizeTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_options.captionFontSize
-      }}
-    </div>
-    <div class="{{if (not _hasCaption) "disabled"}} field">
-      <label>
-        {{captionFontColorTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_options.captionFontColor
-      }}
-    </div>
-    <div class="{{if (not _hasCaption) "disabled"}} field">
-      <label>
-        {{captionXCoordinateTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_options.captionXCoordinate
-      }}
-    </div>
-    <div class="{{if (not _hasCaption) "disabled"}} field">
-      <label>
-        {{captionYCoordinateTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_options.captionYCoordinate
-      }}
-    </div>
+  <div class="ui two column celled grid">
+    <div class="{{flexberryClassNames.settings}} column print-optios">
+        <div class="field">
+          <label>
+            {{captionTextboxCaption}}
+          </label>
+          {{flexberry-textbox
+            class="fluid"
+            value=_options.caption
+          }}
+        </div>
+        <div class="field">
+          {{#flexberry-toggler
+            caption=captionFontSettingsToggleCaption
+            expanded=false
+            iconClass=iconClass
+          }}
+            <div class="{{if (not _hasCaption) "disabled"}} field">
+              <label>
+                {{captionFontNameTextboxCaption}}
+              </label>
+              {{flexberry-textbox
+                class="fluid"
+                value=_options.captionFontName
+              }}
+            </div>
+            <div class="{{if (not _hasCaption) "disabled"}} field">
+              <label>
+                {{captionFontSizeTextboxCaption}}
+              </label>
+              {{flexberry-textbox
+                class="fluid"
+                value=_options.captionFontSize
+              }}
+            </div>
+            <div class="{{if (not _hasCaption) "disabled"}} field">
+              <label>
+                {{captionFontColorTextboxCaption}}
+              </label>
+              {{flexberry-textbox
+                class="fluid"
+                value=_options.captionFontColor
+              }}
+            </div>
+          {{/flexberry-toggler}}
+        </div>
+        <div class="field">
+          <label>
+            {{PrintModeDropdownCaption}}
+          </label>
+          {{flexberry-dropdown
+            items=(flexberry-enum "components-examples/flexberry-dropdown/settings-example/enumeration")
+            value=model.enumeration
+            placeholder=placeholder
+            readonly=readonly
+            class=class
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{PapaerSizeDropdownCaption}}
+          </label>
+          {{flexberry-dropdown
+            items=(flexberry-enum "components-examples/flexberry-dropdown/settings-example/enumeration")
+            value=model.enumeration
+            placeholder=placeholder
+            readonly=readonly
+            class=class
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{OrientationDropdownCaption}}
+          </label>
+          {{flexberry-dropdown
+            items=(flexberry-enum "components-examples/flexberry-dropdown/settings-example/enumeration")
+            value=model.enumeration
+            placeholder=placeholder
+            readonly=readonly
+            class=class
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{excludeLegendCheckboxCaption}}
+          </label>
+          {{flexberry-checkbox
+            value=_options.excludeLegend
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{excludeDrawingScaleCheckboxCaption}}
+          </label>
+          {{flexberry-checkbox
+            value=_options.excludeDrawingScale
+          }}
+        </div>
+      {{#if showDownloadOptions}}
+        <div class="ui segment">
+          <h5 class="ui header">
+            {{downloadSegmentCaption}}
+          </h5>
+          <div class="field">
+            <label>
+              {{fileTypeDropdownCaption}}
+            </label>
+            {{flexberry-dropdown
+              class="fluid"
+              items=_availableFileTypes
+              value=_options.fileType
+            }}
+          </div>
+          <div class="field">
+            <label>
+              {{fileNameTextboxCaption}}
+            </label>
+            {{flexberry-textbox
+              class="fluid"
+              value=_options.fileName
+            }}
+          </div>
+        </div>
+      {{/if}}
   </div>
-  <div class="ui segment">
-    <h5 class="ui header">
-      {{excludeSegmentCaption}}
-    </h5>
-    <div class="field">
-      <label>
-        {{excludeZoomCheckboxCaption}}
-      </label>
-      {{flexberry-checkbox
-        value=_options.excludeZoom
-      }}
-    </div>
-    <div class="field">
-      <label>
-        {{excludeContributingCheckboxCaption}}
-      </label>
-      {{flexberry-checkbox
-        value=_options.excludeContributing
-      }}
-    </div>
+  <div class="{{flexberryClassNames.settings}} column .map-preview">
+
   </div>
-  {{#if showDownloadOptions}}
-    <div class="ui segment">
-      <h5 class="ui header">
-        {{downloadSegmentCaption}}
-      </h5>
-      <div class="field">
-        <label>
-          {{fileTypeDropdownCaption}}
-        </label>
-        {{flexberry-dropdown
-          class="fluid"
-          items=_availableFileTypes
-          value=_options.fileType
-        }}
-      </div>
-      <div class="field">
-        <label>
-          {{fileNameTextboxCaption}}
-        </label>
-        {{flexberry-textbox
-          class="fluid"
-          value=_options.fileName
-        }}
-      </div>
-    </div>
-  {{/if}}
+</div>
 </form>
 {{/flexberry-dialog}}
