@@ -17,9 +17,9 @@ export default TileLayer.extend({
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify']
+    @default ['edit', 'remove', 'identify', 'legend']
   */
-  operations: ['edit', 'remove', 'identify'],
+  operations: ['edit', 'remove', 'identify', 'legend'],
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -35,7 +35,13 @@ export default TileLayer.extend({
       version: undefined,
       layers: undefined,
       format: undefined,
-      transparent: undefined
+      transparent: undefined,
+      legendSettings: {
+        url: '',
+        version: '',
+        format: '',
+        layers: ''
+      }
     });
 
     return settings;
