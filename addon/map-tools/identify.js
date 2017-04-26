@@ -159,6 +159,7 @@ export default RectangleMapTool.extend({
                     color: 'salmon'
                   });
                 }
+
                 Ember.set(feature, 'leafletLayer', leafletLayer);
               });
             }, 10);
@@ -170,7 +171,6 @@ export default RectangleMapTool.extend({
     let leafletMap = this.get('leafletMap');
     leafletMap.setLoaderContent('');
     leafletMap.hideLoader();
-
 
     // Assign current tool's boundingBoxLayer
     let boundingBoxLayer = Ember.get(e, 'boundingBoxLayer');

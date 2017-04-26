@@ -54,25 +54,28 @@ export default Ember.Component.extend({
    * @property tabs
    * @type {Array}
    */
-  tabs: Ember.computed('items.[]', function () {
+  tabs: Ember.computed('items.[]', 'items.@each.active', function () {
     let active = false;
     let items = this.get('items') || Ember.A();
     let result = Ember.A();
 
     items.forEach((item) => {
       let itemIsActive = Ember.get(item, 'active');
-
       if (itemIsActive && itemIsActive === true) {
-        if (active) {
-          Ember.set(item, 'active', false);
-        } else {
-          let itemClass = Ember.get(item, 'class') || '';
-
+        if (!active) {
           active = true;
+          this.$('.item.active').removeClass('active');
+
+          let itemClass = Ember.get(item, 'class') || '';
           itemClass += itemClass + ' active';
           Ember.set(item, 'class', itemClass);
+
+          this.set('prevTab', item.selector);
+          this.$().tab('change tab', item.selector);
         }
       }
+
+      Ember.set(item, 'active', false);
 
       if (Ember.get(item, 'iconClass')) {
         Ember.set(item, '_hasIcon', true);

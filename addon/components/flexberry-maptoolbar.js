@@ -226,7 +226,8 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
 
     let defaultMapToolComponent = getDefaultMapToolComponent(this);
     Ember.assert(
-      `Map-tool component related to \`${defaultMapToolName}\` map-tool doesn\`t exist in flexberry-maptoolbar (${this.toString()})`, !Ember.isNone(defaultMapToolComponent));
+      `Map-tool component related to \`${defaultMapToolName}\` map-tool doesn\`t exist in flexberry-maptoolbar (${this.toString()})`,
+      !Ember.isNone(defaultMapToolComponent));
 
     defaultMapToolComponent.activateMapTool();
   },
@@ -250,7 +251,6 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
 
     this._activateDefaultMapTool();
   })),
-
 
   /**
     Handles 'flexberry-map:identificationFinished' event of leaflet map.

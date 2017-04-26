@@ -374,7 +374,6 @@ let BaseMapToolComponent = Ember.Component.extend(
       let currentName = this.get('_mapTool.name');
       let newName = this.get('name');
 
-
       if (currentName === newName) {
         return;
       }

@@ -281,7 +281,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   /**
    @type Observer
-   
    */
   _switchObserver: Ember.observer('layerMode', 'toolMode', function () {
     let selectedLayerOption = this.get('layerMode');
