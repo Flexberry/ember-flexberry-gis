@@ -73,6 +73,17 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
   }),
 
   /**
+   Checks whether layer should be shown on minimap.
+
+    @property showOnMinimap
+    @type {Boolean} Flag: indicates whether layer should be shown on minimap.
+    @readOnly
+  */
+  showOnMinimap: Ember.computed('settingsAsObject.showOnMinimap', function () {
+    return this.get('settingsAsObject.showOnMinimap');
+  }),
+
+  /**
     Flag: layer's whether layer's legend can be displayed.
 
     @property hasLegend
@@ -92,10 +103,9 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
   }),
 
   /**
-    Child layers.
-    @property layers
-    @type Object[]
-    @readOnly
+   * contains collection of nested layers
+   * @property layers
+   * @return {Array} collection of child layers
   */
   layers: Ember.computed('map', 'map.mapLayer', function () {
     try {
