@@ -195,6 +195,7 @@ export default EditMapController.extend(
         if (this.get('sidebar.2.active') !== true) {
           this.set('sidebar.2.active', true);
         }
+
         if (!Ember.$('.right.sidebar').hasClass('visible')) {
           this.send('toggleSidebar', '.right.sidebar', '.mappanel', {
             changed: false
