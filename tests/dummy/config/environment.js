@@ -1,7 +1,7 @@
 /* jshint node: true */
 
 module.exports = function (environment) {
-  var backendUrl = 'https://flexberry-ember-gis.azurewebsites.net/';
+  var backendUrl = 'https://flexberry-ember-gis.azurewebsites.net';
 
   var ENV = {
     modulePrefix: 'dummy',

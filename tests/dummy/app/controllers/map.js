@@ -49,6 +49,58 @@ export default EditMapController.extend(
 
     serviceLayer: null,
 
+    /**
+      Parent route.
+
+      @property parentRoute
+      @type String
+      @default 'maps'
+    */
+    parentRoute: 'maps',
+
+    sidebar: Ember.A([{
+        selector: 'treeview',
+        captionPath: 'forms.map.treeviewbuttontooltip',
+        iconClass: 'list icon'
+      },
+      {
+        selector: 'search',
+        captionPath: 'forms.map.searchbuttontooltip',
+        iconClass: 'search icon'
+      },
+      {
+        selector: 'identify',
+        captionPath: 'forms.map.identifybuttontooltip',
+        iconClass: 'info icon',
+        class: 'identify'
+      },
+      {
+        selector: 'bookmarks',
+        captionPath: 'forms.map.bookmarksbuttontooltip',
+        iconClass: 'bookmark icon'
+      }
+    ]),
+
+    /**
+     * items
+     */
+    sidebarItems: Ember.computed('sidebar.[]', 'sidebar.@each.active', 'i18n', function () {
+      let i18n = this.get('i18n');
+      let sidebar = this.get('sidebar');
+
+      let result = Ember.A(sidebar);
+      result.forEach((item) => {
+        let caption = Ember.get(item, 'caption');
+        let captionPath = Ember.get(item, 'captionPath');
+
+        if (!caption && captionPath) {
+          Ember.set(item, 'caption', i18n.t(captionPath));
+        }
+      });
+
+      return result;
+    }),
+
     availableCRS: Ember.computed(function () {
       let availableModes = Ember.A();
       let i18n = this.get('i18n');
@@ -69,23 +121,25 @@ export default EditMapController.extend(
     }),
 
     actions: {
-      toggleSidebar(sidebar, context) {
-        Ember.$(sidebar)
-          .sidebar({
-            context: Ember.$(context),
-            dimPage: false,
-            closable: false
-          })
-          .sidebar('setting', 'transition', 'overlay')
-          .sidebar('toggle');
+      toggleSidebar(sidebar, context, e) {
+        if (!e.changed) {
+          Ember.$(sidebar)
+            .sidebar({
+              context: Ember.$(context),
+              dimPage: false,
+              closable: false
+            })
+            .sidebar('setting', 'transition', 'overlay')
+            .sidebar('toggle');
 
-        if (sidebar === '.ui.sidebar.identify') {
-          if (Ember.isBlank(this.get('identifyLayersOption'))) {
-            this.set('identifyLayersOption', this.get('_defaultIdentifyLayersOption'));
-          }
+          if (e.tabName === 'identify') {
+            if (Ember.isBlank(this.get('identifyLayersOption'))) {
+              this.set('identifyLayersOption', this.get('_defaultIdentifyLayersOption'));
+            }
 
-          if (Ember.isBlank(this.get('identifyToolOption'))) {
-            this.set('identifyToolOption', this.get('_defaultIdentifyToolOption'));
+            if (Ember.isBlank(this.get('identifyToolOption'))) {
+              this.set('identifyToolOption', this.get('_defaultIdentifyToolOption'));
+            }
           }
         }
       },
@@ -137,19 +191,15 @@ export default EditMapController.extend(
 
         this.set('identifyResults', e.results);
 
-        if (!Ember.$('.ui.sidebar.identify').hasClass('visible')) {
-          this.send('toggleSidebar', '.ui.sidebar.identify', '.mappanel');
+        // below is kind of madness, but if you want sidebar to move on identification finish - do that
+        if (this.get('sidebar.2.active') !== true) {
+          this.set('sidebar.2.active', true);
+        }
+        if (!Ember.$('.right.sidebar').hasClass('visible')) {
+          this.send('toggleSidebar', '.right.sidebar', '.mappanel', {
+            changed: false
+          });
         }
       }
-    },
-
-    /**
-      Parent route.
-
-      @property parentRoute
-      @type String
-      @default 'maps'
-    */
-    parentRoute: 'maps'
-
+    }
   });
