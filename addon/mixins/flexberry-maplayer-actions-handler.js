@@ -431,7 +431,7 @@ export default Ember.Mixin.create({
     // Get layerPath for layers on same hierarchy level.
     layerPath = nextInPath(layerPath);
 
-    if (Ember.isNone(layer.get('parent'))) {
+    if (Ember.isBlank(layer.get('parent'))) {
       return getRecord(this, layerPath);
     }
 
