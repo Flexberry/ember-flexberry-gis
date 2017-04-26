@@ -33,6 +33,11 @@
         {{t "components.layers-dialogs.edit.tabular-menu.search-settings-tab.caption"}}
       </a>
     {{/if}}
+    {{#if _legendIsAvailableForType}}
+      <a class="tab item" data-tab="legendSettings" {{action "onTabClick" "legendSettings" on="click"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.legend-settings-tab.caption"}}
+      </a>
+    {{/if}}
   </div>
   <div class="ui bottom attached active tab segment" data-tab="main">
     {{#if _modesAreAvailable}}
@@ -131,6 +136,12 @@
   {{#if _searchIsAvailableForType}}
     <div class="ui bottom attached tab segment" data-tab="searchSettings">
       {{flexberry-jsonarea value=_layer.settings.searchSettings}}
+    </div>
+  {{/if}}
+
+  {{#if _legendIsAvailableForType}}
+    <div class="ui bottom attached tab segment" data-tab="legendSettings">
+      {{flexberry-jsonarea value=_layer.settings.legendSettings}}
     </div>
   {{/if}}
 </form>

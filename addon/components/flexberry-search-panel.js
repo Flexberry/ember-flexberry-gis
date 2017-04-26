@@ -5,8 +5,8 @@ export default Ember.Component.extend({
   classNames: ['flexberry-search-panel'],
 
   actions: {
-    querySearch() {
-      this.sendAction('querySearch', this.get('queryString'));
+    querySearch(selected, feature) {
+      this.sendAction('querySearch', this.get('queryString'), selected, feature);
     },
 
     clearSearch() {

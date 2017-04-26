@@ -16,7 +16,7 @@ import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-con
 export default EditMapController.extend(
   EditFormControllerOperationsIndicationMixin, {
 
-    availableCRS: Ember.computed(function() {
+    availableCRS: Ember.computed(function () {
       let availableModes = Ember.A();
       let i18n = this.get('i18n');
       availableModes.push({
@@ -36,15 +36,17 @@ export default EditMapController.extend(
     }),
 
     actions: {
-      toggleSidebar(sidebar, context) {
-        Ember.$(sidebar)
-          .sidebar({
-            context: Ember.$(context),
-            dimPage: false,
-            closable: false
-          })
-          .sidebar('setting', 'transition', 'overlay')
-          .sidebar('toggle');
+      toggleSidebar(sidebar, context, e) {
+        if (!e.changed) {
+          Ember.$(sidebar)
+            .sidebar({
+              context: Ember.$(context),
+              dimPage: false,
+              closable: false
+            })
+            .sidebar('setting', 'transition', 'overlay')
+            .sidebar('toggle');
+        }
       },
 
       querySearch(queryString) {
@@ -78,6 +80,29 @@ export default EditMapController.extend(
       @type String
       @default 'maps'
     */
-    parentRoute: 'maps'
+    parentRoute: 'maps',
 
+    /**
+     * items
+     */
+    sidebarItems: Ember.computed(function () {
+      let i18n = this.get('i18n');
+
+      return [{
+          selector: 'treeview',
+          caption: i18n.t('forms.map.treeviewbuttontooltip').toString(),
+          iconClass: 'list icon'
+        },
+        {
+          selector: 'search',
+          caption: i18n.t('forms.map.searchbuttontooltip').toString(),
+          iconClass: 'search icon'
+        },
+        {
+          selector: 'bookmarks',
+          caption: i18n.t('forms.map.bookmarksbuttontooltip').toString(),
+          iconClass: 'bookmark icon'
+        }
+      ];
+    })
   });

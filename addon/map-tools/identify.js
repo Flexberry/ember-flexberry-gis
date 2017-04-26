@@ -31,6 +31,14 @@ export default RectangleMapTool.extend({
   hideRectangleOnDrawingEnd: false,
 
   /**
+    Method to prepare identify result if need
+
+    @method prepareIdentifyResult
+    @default null
+  */
+  prepareIdentifyResult: null,
+
+  /**
     Returns flat array of layers satisfying to current identification mode.
 
     @method _getLayersToIdentify
@@ -443,6 +451,10 @@ export default RectangleMapTool.extend({
       let $featuresList = createList();
       $layersAccordionItemContent.append($featuresList);
       features.forEach((feature) => {
+
+        let prepareIdentifyResult = this.get('prepareIdentifyResult');
+        feature = typeof (prepareIdentifyResult) === 'function' ? prepareIdentifyResult(feature) : feature;
+
         let featureIcon = null;
         switch (Ember.get(feature, 'geometry.type')) {
           case 'LineString':

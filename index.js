@@ -33,6 +33,10 @@ module.exports = {
     // Leaflet.Editable
     app.import(app.bowerDirectory + '/leaflet.editable/src/Leaflet.Editable.js');
 
+    // Leaflet history
+    app.import(app.bowerDirectory + '/leaflet-history/dist/leaflet-history.css');
+    app.import(app.bowerDirectory + '/leaflet-history/dist/leaflet-history.js');
+
     // Leaflet.Editable.Measure
     app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_measure.js');
     app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_measure.css');
@@ -45,15 +49,18 @@ module.exports = {
 
     // Proj4Leaflet.
     app.import(app.bowerDirectory + '/proj4/dist/proj4-src.js');
-    app.import(app.bowerDirectory + '/Proj4Leaflet/src/proj4leaflet.js');
+    app.import(app.bowerDirectory + '/proj4leaflet/src/proj4leaflet.js');
 
     // Leaflet-WFST.
     app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
 
+    // Leaflet.WMS.
+    app.import(app.bowerDirectory + '/leaflet.wms/dist/leaflet.wms.js');
+
     // Leaflet-MiniMap.
-    app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/Control.MiniMap.min.js');
-    app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/Control.MiniMap.min.css');
-    app.import(app.bowerDirectory + '/Leaflet-MiniMap/dist/images/toggle.svg', { destDir: appImagesDirectory });
+    app.import(app.bowerDirectory + '/leaflet-minimap/dist/Control.MiniMap.min.js');
+    app.import(app.bowerDirectory + '/leaflet-minimap/dist/Control.MiniMap.min.css');
+    app.import(app.bowerDirectory + '/leaflet-minimap/dist/images/toggle.svg', { destDir: appImagesDirectory });
 
     // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
@@ -85,6 +92,12 @@ module.exports = {
     app.import(app.bowerDirectory + '/js-beautify/js/lib/beautify.js');
 
     // Leaflet Div Control
-    app.import('vendor/leaflet.div-control.js');
+    app.import('vendor/leaflet/controls/leaflet.div-control.js');
+
+    // Leaflet ImageOverlay Extensions
+    app.import('vendor/leaflet/layers/leaflet.imageoverlay.js');
+
+    // Leaflet.WMS Overlay Extensions
+    app.import('vendor/leaflet/layers/leaflet.wms.overlay.js');
   }
 };

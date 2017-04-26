@@ -177,6 +177,21 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether 'legend' operation is available for the selected layer type.
+
+      @property _legendIsAvailableForType
+      @type Boolean
+      @private
+      @readOnly
+    */
+    _legendIsAvailableForType: Ember.computed('_layer.type', function() {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      return Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
+    }),
+
+    /**
       Flag: indicates whether layer type is in readonly mode.
 
       @property _typeIsReadonly

@@ -49,6 +49,15 @@ const flexberryClassNames = {
 */
 let IdentifyMapToolComponent = Ember.Component.extend({
     /**
+      Properties which will be passed to the map-tool when it will be instantiated.
+
+      @property _identifyToolProperties
+      @type Object
+      @default null
+    */
+    _identifyToolProperties: null,
+
+    /**
       Reference to component's template.
     */
     layout,
