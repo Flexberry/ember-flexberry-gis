@@ -90,7 +90,7 @@
         }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
-        {{spatial-bookmark        
+        {{spatial-bookmark
           leafletMap=leafletMap
           mapid=model.id
         }}
@@ -130,6 +130,7 @@
         lat=model.lat
         lng=model.lng
         zoom=model.zoom
+        zoomControl=false
         queryFilter=queryFilter
         leafletInit=(action "onMapLeafletInit" "leafletMap")
         serviceLayerInit=(action "onServiceLayerInit" "serviceLayer")
@@ -146,6 +147,11 @@
         {{scale-control
           map=leafletMap
           imperial=false
+        }}
+        {{
+          zoomslider-control
+          map=leafletMap
+          stepHeight=2
         }}
         {{history-control
           map=leafletMap

@@ -22,7 +22,8 @@
     "js-beautify": "1.6.4",
     "leaflet-minimap": "3.4.0",
     "leaflet.wms": "gh-pages",
-    "leaflet-history": "Flexberry/leaflet-history#master"
+    "leaflet-history": "Flexberry/leaflet-history#master",
+    "leaflet.zoomslider": "Flexberry/Leaflet.zoomslider#leaflet-1.0.1"
   },
   "resolutions": {
     "leaflet": "1.0.1"
