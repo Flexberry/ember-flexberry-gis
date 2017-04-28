@@ -64,3 +64,17 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
     assert.ok(leafletMap.getCenter().equals([0, 0]));
   });
 });
+
+test('should pass zoomSnap/zoomDelta options to leaflet map', function (assert) {
+  let component = this.subject({
+    zoomSnap: 0.5,
+    zoomDelta: 0.1
+  });
+
+  this.render();
+
+  let leafletMap = component.get('_leafletObject');
+
+  assert.equal(leafletMap.options.zoomSnap, 0.5);
+  assert.equal(leafletMap.options.zoomDelta, 0.1);
+});
