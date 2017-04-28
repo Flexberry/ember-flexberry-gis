@@ -65,6 +65,17 @@ let FlexberryMapComponent = Ember.Component.extend(
     _isLoaderShown: false,
 
     /**
+      Map loader's content.
+      Use leaflet map's 'setLoaderContent' to set this property value.
+
+      @property _loaderContent
+      @type String
+      @default ''
+      @private
+    */
+    _loaderContent: '',
+
+    /**
       Reference to component's template.
     */
     layout,
@@ -186,11 +197,9 @@ let FlexberryMapComponent = Ember.Component.extend(
       @private
     */
     _injectMapLoaderMethods(leafletMap) {
-      let $mapLoader = this.$(`.${flexberryClassNames.loader}`);
-
       // Sets map loader's content.
       leafletMap.setLoaderContent = (content) => {
-        $mapLoader.text(content);
+        this.set('_loaderContent', content);
       };
 
       // Shows map loader.

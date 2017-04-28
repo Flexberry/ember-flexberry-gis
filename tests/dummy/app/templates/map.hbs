@@ -90,7 +90,7 @@
         }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
-        {{spatial-bookmark        
+        {{spatial-bookmark
           leafletMap=leafletMap
           mapid=model.id
         }}
@@ -117,7 +117,10 @@
           {{map-tools/identify activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
-          {{map-commands/export execute=(action "onMapCommandExecute" target=mapToolbar)}}
+          {{map-commands/export
+            execute=(action "onMapCommandExecute" target=mapToolbar)
+            defaultMapCaption=model.name
+          }}
         {{/flexberry-maptoolbar}}
         {{flexberry-tab-bar
           change=(action 'toggleSidebar' '.ui.sidebar.right' '.mappanel')
