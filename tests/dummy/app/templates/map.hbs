@@ -90,7 +90,7 @@
         }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
-        {{spatial-bookmark        
+        {{spatial-bookmark
           leafletMap=leafletMap
           mapid=model.id
         }}
@@ -146,6 +146,11 @@
         {{scale-control
           map=leafletMap
           imperial=false
+        }}
+        {{
+          switch-scale-control
+          map=leafletMap
+          updateWhenIdle=true
         }}
         {{history-control
           map=leafletMap
