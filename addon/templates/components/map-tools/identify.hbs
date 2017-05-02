@@ -1,40 +1,9 @@
-{{#map-tools/base
+{{map-tools/base
   class=(concat flexberryClassNames.wrapper " " class)
-  name="identify"
+  name=_toolName
   caption=caption
   tooltip=tooltip
   iconClass=iconClass
+  activate=(action "onMapToolActivate")
+  enableOnRerender=enableOnRerender
 }}
-  {{#block-slot "submenu"}}
-    {{#if identifyAll}}
-      {{map-tools/base
-        class=(concat flexberryClassNames.identifyAll " " identifyAllClass)
-        name="identify-all"
-        caption=identifyAllCaption
-        mapToolProperties=_identifyToolProperties
-        iconClass=identifyAllIconClass
-        activate=(action "onMapToolActivate")
-      }}
-    {{/if}}
-    {{#if identifyAllVisible}}
-      {{map-tools/base
-        class=(concat flexberryClassNames.identifyAllVisible " " identifyAllVisibleClass)
-        name="identify-all-visible"
-        caption=identifyAllVisibleCaption
-        mapToolProperties=_identifyToolProperties
-        iconClass=identifyAllVisibleIconClass
-        activate=(action "onMapToolActivate")
-      }}
-    {{/if}}
-    {{#if identifyTop}}
-      {{map-tools/base
-        class=(concat flexberryClassNames.identifyTopVisible " " identifyTopVisibleClass)
-        name="identify-top-visible"
-        caption=identifyTopVisibleCaption
-        mapToolProperties=_identifyToolProperties
-        iconClass=identifyTopVisibleIconClass
-        activate=(action "onMapToolActivate")
-      }}
-    {{/if}}
-  {{/block-slot}}
-{{/map-tools/base}}

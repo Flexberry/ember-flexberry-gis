@@ -131,5 +131,5 @@ export default EditFormController.extend(
       }
 
       return layer;
-    },
+    }
   });

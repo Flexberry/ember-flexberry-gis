@@ -22,6 +22,12 @@ export default {
     },
     'identify-top-visible': {
       'caption': 'Верхний видимый слой'
+    },
+    'rectangle': {
+      'caption': 'Прямоугольник'
+    },
+    'polygon': {
+      'caption': 'Полигон'
     }
   },
   'measure': {

@@ -130,7 +130,7 @@ export default BaseLayer.extend({
     });
 
     e.results.push({
-      layer: this.get('layerModel'),
+      layerModel: this.get('layerModel'),
       features: featuresPromise
     });
   },
