@@ -209,10 +209,9 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
   _activateDefaultMapTool() {
     let defaultMapToolName = this.get('defaultMapToolName');
     Ember.assert(
-      `Required \'defaultMapToolName\' property is not defined in flexberry-maptoolbar (${this.toString()})`,
-      !Ember.isBlank(defaultMapToolName));
+      `Required \'defaultMapToolName\' property is not defined in flexberry-maptoolbar (${this.toString()})`, !Ember.isBlank(defaultMapToolName));
 
-    let getDefaultMapToolComponent = function(root) {
+    let getDefaultMapToolComponent = function (root) {
       let defaultMapToolComponent = null;
       Ember.A(root.get('childViews') || []).forEach((child) => {
         let component = child instanceof BaseMapToolComponent ? child : getDefaultMapToolComponent(child);
@@ -235,18 +234,36 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
 
   /**
     Observes changes in {{#crossLink "FlexberryMaptoolbarComponent/leafletMap:propery"}}'leafletMap' property{{/crossLink}}.
-    Activates default map-tool when leafletMap initialized.
+    Activates default map-tool when leafletMap initialized and subscribes on flexberry-map:identificationFinished event.
 
     @method _leafletMapDidChange
     @private
   */
-  _leafletMapDidChange: Ember.on('didInsertElement', Ember.observer('leafletMap', function() {
-    if (Ember.isNone(this.get('leafletMap'))) {
+  _leafletMapDidChange: Ember.on('didInsertElement', Ember.observer('leafletMap', function () {
+
+    let leafletMap = this.get('leafletMap');
+    if (Ember.isNone(leafletMap)) {
       return;
     }
 
+    // Attach custom event-handler.
+    leafletMap.on('flexberry-map:identificationFinished', this.identificationFinished, this);
+
     this._activateDefaultMapTool();
   })),
+
+  /**
+    Handles 'flexberry-map:identificationFinished' event of leaflet map.
+
+    @method identificationFinished
+    @param {Object} e Event object.
+    @param {Object} results Hash containing search results.
+    @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+    or a promise returning such array.
+  */
+  identificationFinished(e) {
+    this.sendAction('onIdentificationFinished', e);
+  },
 
   /**
     Destroys component.
