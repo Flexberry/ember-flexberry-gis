@@ -7,11 +7,14 @@
 @import './components/flexberry-spatial-bookmarks';
 @import './components/flexberry-tree';
 @import './components/flexberry-tab-bar';
+@import './components/flexberry-colorpicker';
 @import './components/layer-result-list';
 @import './components/map-commands-dialogs/search';
 @import './components/map-commands-dialogs/go-to';
+@import './components/map-commands-dialogs/export';
 @import './components/zoomslider-control';
 @import './icons';
+
 .ui.loading.form {
   /**
     Increased 'loading' form z-index to hide leaflet map placed on form.
@@ -43,7 +46,6 @@
     }
   }
 }
-
 
 /**
     Fix disappearing checkboxes while scrolling

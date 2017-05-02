@@ -1,7 +1,8 @@
 export default {
-  'caption': 'Экспорт карты',
+  'export-caption': 'Экспорт карты в изображение',
+  'export-error-message-caption': 'Ошибка экспорта карты в изображение',
   'print-caption': 'Печать карты',
-  'error-message-caption': 'Ошибка экспорта карты',
+  'print-error-message-caption': 'Ошибка печати карты',
   'approve-button': {
     'caption': 'Ок'
   },
@@ -13,30 +14,15 @@ export default {
     'caption-textbox': {
       'caption': 'Заголовок карты'
     },
-    'font-name-textbox': {
-      'caption': 'Имя шрифта'
-    },
-    'font-size-textbox': {
-      'caption': 'Размер шрифта (в пикселях)'
-    },
-    'font-color-textbox': {
-      'caption': 'Цвет шрифта'
-    },
-    'x-coordinate-textbox': {
-      'caption': 'X-Координата (от левого верхнего края карты)'
-    },
-    'y-coordinate-textbox': {
-      'caption': 'Y-Координата (от левого верхнего края карты)'
+    'font-settings': {
+      'caption': 'Шрифт'
     }
   },
-  'exclude-segment': {
-    'caption': 'Исключить с экспортированной карты',
-    'exclude-zoom-checkbox': {
-      'caption': 'Зум-контрол'
-    },
-    'exclude-contributing-checkbox': {
-      'caption': 'Копирайт'
-    }
+  'mode-segment': {
+  },
+  'orientation-segment': {
+  },
+  'tools-segment': {
   },
   'download-segment': {
     'caption': 'Настройки скачиваемого файла',

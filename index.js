@@ -91,6 +91,11 @@ module.exports = {
     // JS-code beautifier to format strings containing JS-code & represent in in user-friendly view.
     app.import(app.bowerDirectory + '/js-beautify/js/lib/beautify.js');
 
+    // JQuery-minicolors plugin required for flexberry-colorpicker component.
+    app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.js');
+    app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.css');
+    app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.png', { destDir: appImagesDirectory });
+
     // Leaflet Div Control
     app.import('vendor/leaflet/controls/leaflet.div-control.js');
 
