@@ -133,6 +133,7 @@
         lat=model.lat
         lng=model.lng
         zoom=model.zoom
+        zoomControl=false
         queryFilter=queryFilter
         leafletInit=(action "onMapLeafletInit" "leafletMap")
         serviceLayerInit=(action "onServiceLayerInit" "serviceLayer")
@@ -150,6 +151,11 @@
           map=leafletMap
           imperial=false
         }}
+        {{
+          zoomslider-control
+          map=leafletMap
+          stepHeight=2
+        }}
         {{history-control
           map=leafletMap
         }}
@@ -159,6 +165,7 @@
           {{flexberry-layers
             leafletContainer=groupLayers
             layers=model.hierarchy
+            forMinimap=true
           }}
         {{/minimap-control}}
       {{/flexberry-map}}

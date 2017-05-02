@@ -52,5 +52,14 @@ export default Ember.Component.extend({
     @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>|<a href="http://leafletjs.com/reference-1.0.0.html#layergroup">L.LayerGroup</a>
     @default null
   */
-  leafletContainer: null
+  leafletContainer: null,
+
+  /**
+    Flag: indicates whether layers for minimap..
+
+    @property forMinimap
+    @type Boolean
+    @default false
+  */
+  forMinimap: false
 });
