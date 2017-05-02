@@ -23,7 +23,8 @@
     "leaflet-minimap": "3.4.0",
     "leaflet.wms": "gh-pages",
     "leaflet-history": "Flexberry/leaflet-history#master",
-    "leaflet-switch-scale-control": "Flexberry/leaflet-switch-scale-control#master"
+    "leaflet-switch-scale-control": "Flexberry/leaflet-switch-scale-control#master",
+    "leaflet.zoomslider": "Flexberry/Leaflet.zoomslider#leaflet-1.0.1"
   },
   "resolutions": {
     "leaflet": "1.0.1"

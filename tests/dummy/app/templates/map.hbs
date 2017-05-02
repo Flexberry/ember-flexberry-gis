@@ -130,6 +130,7 @@
         lat=model.lat
         lng=model.lng
         zoom=model.zoom
+        zoomControl=false
         queryFilter=queryFilter
         leafletInit=(action "onMapLeafletInit" "leafletMap")
         serviceLayerInit=(action "onServiceLayerInit" "serviceLayer")
@@ -151,6 +152,11 @@
           switch-scale-control
           map=leafletMap
           updateWhenIdle=true
+        }}
+        {{
+          zoomslider-control
+          map=leafletMap
+          stepHeight=2
         }}
         {{history-control
           map=leafletMap
