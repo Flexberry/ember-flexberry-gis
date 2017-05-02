@@ -117,7 +117,7 @@ let FlexberryColorpickerComponent = Ember.Component.extend(
 
       @property classNames
       @type String[]
-      @default ['flexberry-icon']
+      @default ['flexberry-colorpicker']
     */
     classNames: [flexberryClassNames.wrapper],
 

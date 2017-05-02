@@ -1,7 +1,7 @@
 export default {
   'export-caption': 'Export map into image',
   'export-error-message-caption': 'Export map into image failed',
-  'print-caption': 'Печать карты',
+  'print-caption': 'Print map',
   'print-error-message-caption': 'Print map failed',
   'approve-button': {
     'caption': 'Ok'

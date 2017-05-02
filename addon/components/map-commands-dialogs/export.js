@@ -275,9 +275,9 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
 
     @property defaultMapCaption
     @type String
-    @default ''
+    @default null
   */
-  defaultMapCaption: '',
+  defaultMapCaption: null,
 
   actions: {
     /**
@@ -506,8 +506,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     this.set('_availableFileTypes', Ember.A(['PNG', 'JPEG', 'JPG', 'GIF', 'BMP', 'TIFF', 'XICON', 'SVG', 'WEBP']));
 
     // Initialize print/export options.
+    let defaultMapCaption = this.get('defaultMapCaption');
     this.set('_options', Ember.$.extend(true, defaultOptions, {
-      caption: this.get('defaultMapCaption')
+      caption: defaultMapCaption,
+      fileName: defaultMapCaption
     }));
   },
 
