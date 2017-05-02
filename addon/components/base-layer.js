@@ -71,32 +71,32 @@ export default Ember.Component.extend(
       @type Object
       @default null
     */
-     layerModel: null,
+    layerModel: null,
 
     /* General logic for Observer and Init */
 
-     changeLayer(options) {
-       if (Ember.isNone(options)) {
-       this.set('leafletLayerPromise', Ember.RSVP.hash({
-         leafletLayer: this.createLayer()
-      }).then(({ leafletLayer }) => {
-        this.set('_leafletObject', leafletLayer);
-
-        return leafletLayer;
-      }).catch((errorMessage) => {
-        Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
-      })); } else {
+      changeLayer(options) {
+        if (Ember.isNone(options)) {
         this.set('leafletLayerPromise', Ember.RSVP.hash({
-         leafletLayer: this.createLayer(options)
+          leafletLayer: this.createLayer()
       }).then(({ leafletLayer }) => {
         this.set('_leafletObject', leafletLayer);
 
-        return leafletLayer;
-      }).catch((errorMessage) => {
-        Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
-      }));
-      }
-     },
+      return leafletLayer;
+    }).catch((errorMessage) => {
+      Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
+    })); } else {
+      this.set('leafletLayerPromise', Ember.RSVP.hash({
+        leafletLayer: this.createLayer(options)
+    }).then(({ leafletLayer }) => {
+      this.set('_leafletObject', leafletLayer);
+
+      return leafletLayer;
+    }).catch((errorMessage) => {
+      Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
+    }));
+    }
+    },
 
      /* Observer re-creates the layer with the new settings and add it to the map */
 
