@@ -20,7 +20,7 @@ const { assert } = Ember;
  */
 export default Ember.Component.extend(
   DynamicPropertiesMixin,
-  LeafletOptionsMixin,{
+  LeafletOptionsMixin, {
 
     /**
       Leaflet layer object init by settings from model.
@@ -100,7 +100,7 @@ export default Ember.Component.extend(
 
      /* Observer re-creates the layer with the new settings and add it to the map */
 
-     settings: Ember.observer('layerModel.settings', function () {
+     observerChangeSettings: Ember.observer('layerModel.settings', function () {
         this._super(...arguments);
         let options = JSON.parse(this.get('layerModel.settings'));
         this.willDestroyElement();
