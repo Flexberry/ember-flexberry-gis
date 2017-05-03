@@ -18,7 +18,7 @@ test('it not call _leafletObject.setZIndex on setZIndex', function(assert) {
 
   let component = this.subject();
   let leafletLayerPromiseResolved = assert.async();
-  component.get('leafletLayerPromise').then((leafletLayer) => {
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
     let layer = component.get('_leafletObject');
     let spy = sinon.spy(layer, 'setZIndex');
 
