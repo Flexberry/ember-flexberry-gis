@@ -134,7 +134,7 @@ let FlexberryDdauSliderComponent = Ember.Component.extend(
       Component's min value.
 
       @property min
-      @type float
+      @type Number
       @default 0.01
     */
     min: 0.01,
@@ -143,7 +143,7 @@ let FlexberryDdauSliderComponent = Ember.Component.extend(
       Component's max value.
 
       @property max
-      @type float
+      @type Number
       @default 100
     */
     max: 1,
@@ -152,7 +152,7 @@ let FlexberryDdauSliderComponent = Ember.Component.extend(
       Component's default value.
 
       @property defaultValue
-      @type float
+      @type Number
       @default 1
     */
     defaultValue: 1,
@@ -161,7 +161,7 @@ let FlexberryDdauSliderComponent = Ember.Component.extend(
       Component's value.
 
       @property value
-      @type float
+      @type Number
       @default null
     */
     value: null,
@@ -169,7 +169,7 @@ let FlexberryDdauSliderComponent = Ember.Component.extend(
       Component's range step.
 
       @property step
-      @type float
+      @type Number
       @default 1
     */
     step: 0.01,

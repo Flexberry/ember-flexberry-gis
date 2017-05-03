@@ -80,7 +80,7 @@ export default Ember.Component.extend(
       This layer index, used for layer ordering in Map.
 
       @property index
-      @type Int
+      @type Number
       @default null
      */
     index: null,
@@ -100,24 +100,21 @@ export default Ember.Component.extend(
     }),
 
     /**
-      This layer's opacity
-      @property opacity
-      @type Float
-      @default null
-     */
-    opacity: null,
-
-    /**
       Call leaflet layer setOpacity if it presents.
       @method setOpacity
      */
-    setOpacity: Ember.observer('opacity', function () {
+    setOpacity: Ember.observer('dynamicProperties.opacity', function () {
+      // Set layer's opacity by default to 1 (100%) if it is not presented
+      if (!this.get('dynamicProperties.opacity')) {
+        this.set('dynamicProperties.opacity', 1);
+      }
+
       let leafletLayer = this.get('_leafletObject');
       if (Ember.isNone(leafletLayer) || Ember.typeOf(leafletLayer.setOpacity) !== 'function') {
         return;
       }
 
-      leafletLayer.setOpacity(this.get('opacity'));
+      leafletLayer.setOpacity(this.get('dynamicProperties.opacity'));
     }),
 
     /**

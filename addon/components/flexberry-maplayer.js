@@ -376,10 +376,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       Layer's opacity.
 
       @property visibility
-      @type Int
-      @default 100
+      @type Number
+      @default 1
     */
-    opacity: 100,
+    opacity: 1,
 
     /**
       Flag: indicates whether layer's legend can be displayed.
