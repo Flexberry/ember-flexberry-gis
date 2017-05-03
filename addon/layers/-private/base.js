@@ -32,6 +32,12 @@ const createCommonIdenifySettings = function() {
   };
 };
 
+const createCommonLegendSettings = function() {
+  return {
+    legendCanBeDisplayed: true
+  };
+};
+
 /**
   Class describing base layer metadata.
 
@@ -49,7 +55,7 @@ export default Ember.Object.extend({
 
   /**
     Permitted operations related to layer type.
-    Possible values are 'add', 'edit', 'remove', 'search', 'identify'.
+    Possible values are 'add', 'edit', 'remove', 'search', 'identify', 'legend'.
 
     @property operations
     @type String[]
@@ -75,6 +81,10 @@ export default Ember.Object.extend({
 
     if (availableOperations.contains('identify')) {
       Ember.set(settings, 'identifySettings', createCommonIdenifySettings());
+    }
+
+    if (availableOperations.contains('legend')) {
+      Ember.set(settings, 'legendSettings', createCommonLegendSettings());
     }
 
     return settings;

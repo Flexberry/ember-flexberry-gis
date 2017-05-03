@@ -1,0 +1,53 @@
+<div class="{{concat "ui celled grid" " " flexberryClassNames.wrapper}}">
+    <div class="{{concat "ui eight wide column" " " flexberryClassNames.layersOptions}}">
+        {{#if all}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifyAll " " allClass)
+                iconClass=allIconClass
+                tooltip=allCaption
+                click=(action "onLayerOptionChange" "all")
+            }}
+        {{/if}}
+        {{#if visible}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifyAllVisible " " visibleClass)
+                iconClass=visibleIconClass
+                tooltip=visibleCaption
+                click=(action "onLayerOptionChange" "visible")
+            }}
+        {{/if}}
+        {{#if top}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifyTopVisible " " topClass)
+                iconClass=topIconClass
+                tooltip=topCaption
+                click=(action "onLayerOptionChange" "top")
+            }}
+        {{/if}}
+    </div>
+    <div class="{{concat "ui four wide column" " " flexberryClassNames.toolsOptions}}">
+        {{#if rectangle}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifyRectangle " " rectangleClass)
+                iconClass=rectangleIconClass
+                tooltip=rectangleCaption
+                click=(action "onToolOptionChange" "rectangle")
+            }}
+        {{/if}}
+        {{#if polygon}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifyPolygon " " polygonClass)
+                iconClass=polygonIconClass
+                tooltip=polygonCaption
+                click=(action "onToolOptionChange" "polygon")
+            }}
+        {{/if}}
+    </div>
+    <div class="{{concat "ui four wide column" flexberryClassName.otherOptions}}">
+        {{flexberry-button
+            class="ui icon button"
+            iconClass="remove icon"
+            click=(action "clear")
+        }}
+    </div>
+</div>

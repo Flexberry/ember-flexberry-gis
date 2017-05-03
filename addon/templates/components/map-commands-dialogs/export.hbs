@@ -1,7 +1,7 @@
 {{#flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
-  caption=(if showDownloadOptions caption printCaption)
-  approveButtonCaption=approveButtonCaption
-  denyButtonCaption=denyButtonCaption
+  caption=(if showDownloadOptions (t "components.map-commands-dialogs.export.export-caption") (t "components.map-commands-dialogs.export.print-caption"))
+  approveButtonCaption=(t "components.map-commands-dialogs.export.approve-button.caption")
+  denyButtonCaption=(t "components.map-commands-dialogs.export.deny-button.caption")
   visible=visible
   approve=(action "onApprove")
   deny=(action "onDeny")
@@ -14,117 +14,102 @@
   type="error"
   closeable=true
   visible=showErrorMessage
-  caption=errorMessageCaption
+  caption=(if showDownloadOptions (t "components.map-commands-dialogs.export.export-error-message-caption") (t "components.map-commands-dialogs.export.print-error-message-caption"))
   message=errorMessage
   onShow=(action "onErrorMessageShow")
   onHide=(action "onErrorMessageHide")
 }}
 <form class="ui {{if isBusy "loading"}} form" role="form">
-  <div class="ui segment">
-    <h5 class="ui header">
-      {{captionSegmentCaption}}
-    </h5>
-    <div class="field">
-      <label>
-        {{captionTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_options.caption
-      }}
-    </div>
-    <div class="{{if (not _hasCaption) "disabled"}} field">
-      <label>
-        {{captionFontNameTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_options.captionFontName
-      }}
-    </div>
-    <div class="{{if (not _hasCaption) "disabled"}} field">
-      <label>
-        {{captionFontSizeTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_options.captionFontSize
-      }}
-    </div>
-    <div class="{{if (not _hasCaption) "disabled"}} field">
-      <label>
-        {{captionFontColorTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_options.captionFontColor
-      }}
-    </div>
-    <div class="{{if (not _hasCaption) "disabled"}} field">
-      <label>
-        {{captionXCoordinateTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_options.captionXCoordinate
-      }}
-    </div>
-    <div class="{{if (not _hasCaption) "disabled"}} field">
-      <label>
-        {{captionYCoordinateTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_options.captionYCoordinate
-      }}
-    </div>
-  </div>
-  <div class="ui segment">
-    <h5 class="ui header">
-      {{excludeSegmentCaption}}
-    </h5>
-    <div class="field">
-      <label>
-        {{excludeZoomCheckboxCaption}}
-      </label>
-      {{flexberry-checkbox
-        value=_options.excludeZoom
-      }}
-    </div>
-    <div class="field">
-      <label>
-        {{excludeContributingCheckboxCaption}}
-      </label>
-      {{flexberry-checkbox
-        value=_options.excludeContributing
-      }}
-    </div>
-  </div>
-  {{#if showDownloadOptions}}
-    <div class="ui segment">
-      <h5 class="ui header">
-        {{downloadSegmentCaption}}
-      </h5>
+  <div class="ui celled grid">
+    <div class="five wide column {{flexberryClassNames.settingsColumn}}">
       <div class="field">
         <label>
-          {{fileTypeDropdownCaption}}
-        </label>
-        {{flexberry-dropdown
-          class="fluid"
-          items=_availableFileTypes
-          value=_options.fileType
-        }}
-      </div>
-      <div class="field">
-        <label>
-          {{fileNameTextboxCaption}}
+          {{t "components.map-commands-dialogs.export.caption-segment.caption-textbox.caption"}}
         </label>
         {{flexberry-textbox
           class="fluid"
-          value=_options.fileName
+          value=_options.caption
         }}
       </div>
+      <div class="field">
+        <label>
+          {{t "components.map-commands-dialogs.export.caption-segment.font-settings.caption"}}
+        </label>
+        <div class="ui grid">
+          <div class="row">
+            <div class="eleven wide column">
+              {{flexberry-dropdown
+                class="fluid"
+                items=_availableFontFamilies
+                value=_options.captionFontFamily
+              }}
+            </div>
+            <div class="five wide column">
+              {{flexberry-dropdown
+                class="fluid"
+                items=_availableFontSizes
+                value=_options.captionFontSize
+              }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="eleven wide column">
+              <div class="ui icon fluid buttons">
+                {{flexberry-button
+                  iconClass="bold icon"
+                  class=(if (eq _options.captionFontWeight "bold") "active" "")
+                  click=(action "onBoldFontButtonClick")
+                }}
+                {{flexberry-button
+                  iconClass="italic icon"
+                  class=(if (eq _options.captionFontStyle "italic") "active" "")
+                  click=(action "onItalicFontButtonClick")
+                }}
+                {{flexberry-button
+                  iconClass="underline icon"
+                  class=(if (eq _options.captionFontDecoration "underline") "active" "")
+                  click=(action "onUnderlineFontButtonClick")
+                }}
+                {{flexberry-button
+                  iconClass="strikethrough icon"
+                  class=(if (eq _options.captionFontDecoration "line-through") "active" "")
+                  click=(action "onLinethroughFontButtonClick")
+                }}
+              </div>
+            </div>
+            <div class="five wide column">
+              {{flexberry-colorpicker
+                value=_options.captionFontColor
+                change=(action "onCaptionFontColorChange")
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  {{/if}}
+    <div class="eleven wide column {{flexberryClassNames.previewColumn}}">
+      <div class="{{flexberryClassNames.sheetOfPaper}}">
+          <p class="{{flexberryClassNames.sheetOfPaperMapCaption}}" style={{_mapCaptionStyle}}>
+            {{_options.caption}}
+          </p>
+        <div class="{{flexberryClassNames.sheetOfPaperMap}}" style={{_mapStyle}}>
+          {{#if _isDialogAlreadyRendered}}
+            {{#flexberry-map
+              zoomControl=false
+              attributionControl=false
+              leafletInit=(action "onMapLeafletInit" "_previewLeafletMap")
+              leafletDestroy=(action "onMapLeafletDestroy" "_previewLeafletMap")
+            }}
+              {{flexberry-layers
+                layers=layers
+                leafletMap=_previewLeafletMap
+                leafletContainer=_previewLeafletMap
+              }}
+            {{/flexberry-map}}
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
 </form>
 {{/flexberry-dialog}}

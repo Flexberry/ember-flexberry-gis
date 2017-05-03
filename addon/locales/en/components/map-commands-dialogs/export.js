@@ -1,7 +1,8 @@
 export default {
-  'caption': 'Export map',
+  'export-caption': 'Export map into image',
+  'export-error-message-caption': 'Export map into image failed',
   'print-caption': 'Print map',
-  'error-message-caption': 'Export map error',
+  'print-error-message-caption': 'Print map failed',
   'approve-button': {
     'caption': 'Ok'
   },
@@ -11,35 +12,20 @@ export default {
   'caption-segment': {
     'caption': 'Map caption settings',
     'caption-textbox': {
-      'caption': 'Map Caption'
+      'caption': 'Map caption'
     },
-    'font-name-textbox': {
-      'caption': 'Font name'
-    },
-    'font-size-textbox': {
-      'caption': 'Font size (in pixels)'
-    },
-    'font-color-textbox': {
-      'caption': 'Font color'
-    },
-    'x-coordinate-textbox': {
-      'caption': 'X-Coordinate (from map\'s top left corner)'
-    },
-    'y-coordinate-textbox': {
-      'caption': 'Y-Coordinate (from map\'s top left corner)'
+    'font-settings': {
+      'caption': 'Font'
     }
   },
-  'exclude-segment': {
-    'caption': 'Exclude from exported map',
-    'exclude-zoom-checkbox': {
-      'caption': 'Zoom-control'
-    },
-    'exclude-contributing-checkbox': {
-      'caption': 'Copyright'
-    }
+  'mode-segment': {
+  },
+  'orientation-segment': {
+  },
+  'tools-segment': {
   },
   'download-segment': {
-    'caption': 'Download file settings',
+    'caption': 'Downloading file settings',
     'file-name-textbox': {
       'caption': 'File name'
     },

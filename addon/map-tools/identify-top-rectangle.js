@@ -3,7 +3,7 @@
 */
 
 import Ember from 'ember';
-import IdentifyAllVisibleMapTool from './identify-all-visible';
+import IdentifyAllVisibleMapTool from './identify-all-rectangle';
 
 /**
   Identify map-tool that identifies only top visible map layer.

@@ -100,6 +100,9 @@
     {{/if}}
     {{#yield-slot "content"}}
       {{yield}}
+      {{#if legendCanBeDisplayed}}
+        {{component (concat "legends/" type "-legend") layerName=name layerSettings=settingsAsObject}}
+      {{/if}}
     {{/yield-slot}}
   {{/block-slot}}
 {{/flexberry-treenode}}

@@ -224,6 +224,15 @@ let ExportMapCommandComponent = Ember.Component.extend({
     */
     exportPrintIconClass: 'print icon',
 
+    /**
+      Map caption that will be displayed on print/export preview by default.
+
+      @property defaultMapCaption
+      @type String
+      @default ''
+    */
+    defaultMapCaption: '',
+
     actions: {
       /**
         Handles {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
@@ -293,8 +302,12 @@ let ExportMapCommandComponent = Ember.Component.extend({
           });
         });
 
+        // Set 'execute' flag to true, to force map-comand to be executed (not just initialized).
+        let executeActionEventObject = this.get('_executeActionEventObject');
+        Ember.set(executeActionEventObject, 'execute', true);
+
         // Map toolbar will catch action, call to map-command's 'execute method', then 'execute' event will be triggered.
-        this.sendAction('execute', Ember.get(e, 'exportOptions'), this.get('_executeActionEventObject'));
+        this.sendAction('execute', Ember.get(e, 'exportOptions'), executeActionEventObject);
       },
 
       /**
@@ -333,10 +346,14 @@ let ExportMapCommandComponent = Ember.Component.extend({
       options = options || {};
 
       let isDownloadDialog = Ember.get(options, 'isDownloadDialog');
-      let executeActionEventObject = Ember.get(options, 'executeActionEventObject');
-
       this.set('_showDownloadOptions', isDownloadDialog);
 
+      // Delay execution, but send action to initialize map-command.
+      let executeActionEventObject = Ember.get(options, 'executeActionEventObject');
+      Ember.set(executeActionEventObject, 'execute', false);
+      this.sendAction('execute', executeActionEventObject);
+
+      // Remember event-object to execute command later (when dialog will be approved).
       this.set('_executeActionEventObject', executeActionEventObject);
 
       // Include dialog to markup.
@@ -349,7 +366,7 @@ let ExportMapCommandComponent = Ember.Component.extend({
     /**
       Hides export dialog.
 
-      @method _showExportDialog
+      @method _hideExportDialog
       @private
     */
     _hideExportDialog() {

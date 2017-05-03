@@ -38,7 +38,10 @@ module.exports = {
       { name: 'ows.js', target: '0.1.5' },
 
       // JS-code beautifier to format strings containing JS-code & represent in in user-friendly view.
-      { name: 'js-beautify', target: '1.6.4' }
+      { name: 'js-beautify', target: '1.6.4' },
+
+      // JQuery-plugin implementing color-picker.
+      { name: 'jquery-minicolors', target: '2.2.6' }
     ]).then(function() {
       return _this.addAddonsToProject({
         packages: [

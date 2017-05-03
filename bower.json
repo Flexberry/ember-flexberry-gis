@@ -20,9 +20,11 @@
     "osmtogeojson": "2.2.12",
     "ows.js": "0.1.5",
     "js-beautify": "1.6.4",
+    "jquery-minicolors": "2.2.6",
     "leaflet-minimap": "3.4.0",
     "leaflet.wms": "gh-pages",
-    "leaflet-history": "Flexberry/leaflet-history#master"
+    "leaflet-history": "Flexberry/leaflet-history#master",
+    "leaflet.zoomslider": "Flexberry/Leaflet.zoomslider#leaflet-1.0.1"
   },
   "resolutions": {
     "leaflet": "1.0.1"

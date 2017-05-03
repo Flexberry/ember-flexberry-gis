@@ -22,6 +22,12 @@ export default {
     },
     'identify-top-visible': {
       'caption': 'Top visible layer'
+    },
+    'rectangle': {
+      'caption': 'Rectangle'
+    },
+    'polygon': {
+      'caption': 'Polygon'
     }
   },
   'measure': {
