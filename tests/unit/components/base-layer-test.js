@@ -15,60 +15,45 @@ test('it should throw at init', function (assert) {
   });
 });
 
-test('it should call layer.setZIndex on setZIndex', function (assert) {
+test('it should call layer.setZIndex on _setLayerZIndex', function (assert) {
   assert.expect(1);
 
   let setZIndex = sinon.spy();
   let component = this.subject({
     createLayer() {
-      return { setZIndex };
+      return {
+        setZIndex
+      };
     }
   });
 
   let leafletLayerPromiseResolved = assert.async();
-  component.get('leafletLayerPromise').then((leafletLayer) => {
-    component.setZIndex();
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
+    component._setLayerZIndex();
     assert.ok(setZIndex.called);
   }).finally(() => {
     leafletLayerPromiseResolved();
   });
 });
 
-test('should throw exception if visibilityDidChange without container', function (assert) {
-  assert.expect(1);
-
-  let component = this.subject({
-    createLayer
-  });
-
-  let leafletLayerPromiseResolved = assert.async();
-  component.get('leafletLayerPromise').then((leafletLayer) => {
-    assert.throws(() => {
-      component.visibilityDidChange();
-    });
-  }).finally(() => {
-    leafletLayerPromiseResolved();
-  });
-});
-
-test('should call visibilityDidChange and setZIndex on render', function(assert) {
+test('should call _setLayerVisibility and _setLayerZIndex on render', function(assert) {
   assert.expect(2);
 
-  let visibilityDidChange = sinon.spy();
-  let setZIndex = sinon.spy();
+  let setLayerVisibility = sinon.spy();
+  let setLayerZIndex = sinon.spy();
 
   let component = this.subject({
-    createLayer,
-    visibilityDidChange,
-    setZIndex
+    createLayer: createLayer,
+    _setLayerVisibility: setLayerVisibility,
+    _setLayerZIndex: setLayerZIndex
   });
 
   this.render();
 
   let leafletLayerPromiseResolved = assert.async();
-  component.get('leafletLayerPromise').then((leafletLayer) => {
-    assert.ok(visibilityDidChange.called, 'should call visibilityDidChange');
-    assert.ok(setZIndex.called, 'should call setZIndex');
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
+    assert.ok(setLayerVisibility.called, 'should call visibilityDidChange');
+    assert.ok(setLayerZIndex.called, 'should call setZIndex');
   }).finally(() => {
     leafletLayerPromiseResolved();
   });
@@ -80,22 +65,29 @@ test('should call container addLayer/removeLayer based on visibility property', 
   let addLayer = sinon.spy();
   let removeLayer = sinon.spy();
 
+  let leafletContainerHasLayer = false;
+  let hasLayer = function() {
+    return leafletContainerHasLayer;
+  };
+
   let component = this.subject({
     createLayer,
 
     leafletContainer: {
       addLayer,
-      removeLayer
+      removeLayer,
+      hasLayer
     }
   });
 
   let leafletLayerPromiseResolved = assert.async();
-  component.get('leafletLayerPromise').then((leafletLayer) => {
+  component.get('_leafletLayerPromise').then((leafletLayer) => {
     component.set('visibility', true);
 
     assert.ok(addLayer.calledOnce, 'addLayer should be called once');
     assert.ok(addLayer.calledWith(layer), 'addLayer should be called with layer instance');
 
+    leafletContainerHasLayer = true;
     component.set('visibility', false);
 
     assert.ok(removeLayer.calledOnce, 'removeLayer should be called once');
