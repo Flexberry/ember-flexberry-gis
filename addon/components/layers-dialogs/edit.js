@@ -505,12 +505,13 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         this.set('_layer.coordinateReferenceSystem.definition', null);
       },
 
-      onTabClick(dataTab) {
-        /*this.$('.tabular.menu .item').removeClass('active');
-        this.$('.tab.segment').removeClass('active');
+      /**
+        Handles clicks on tabs.
 
-        this.$('.tabular.menu .item[data-tab=\'' + dataTab + '\']').addClass('active');
-        this.$('.tab.segment[data-tab=\'' + dataTab + '\']').addClass('active');*/
+        @method actions.onTabClick
+        @param {String} dataTab Name of clicked tab.
+      */
+      onTabClick(dataTab) {
       }
     },
 

@@ -95,7 +95,7 @@ export default Ember.Component.extend(
     /**
       This layer opacity.
 
-      @property index
+      @property opacity
       @type Number
       @default null
      */
@@ -200,11 +200,6 @@ export default Ember.Component.extend(
       @private
     */
     _setLayerOpacity() {
-      // Set layer's opacity by default to 1 (100%) if it is not presented
-      if (!this.get('opacity')) {
-        this.set('opacity', 1);
-      }
-
       let leafletLayer = this.get('_leafletObject');
       if (Ember.isNone(leafletLayer) || Ember.typeOf(leafletLayer.setOpacity) !== 'function') {
         return;
@@ -276,50 +271,6 @@ export default Ember.Component.extend(
     */
     _opacityDidChange: Ember.observer('opacity', function () {
       this._setLayerOpacity();
-    }),
-
-    /**
-      Observes and handles changes in layer's properties marked as leaflet options.
-      Performs layer's recreation with new options.
-
-      @method _optionsDidChange
-      @private
-    */
-    _optionsDidChange: Ember.observer('options', function () {
-      var options = this.get('options');
-      var oldOptions = this.get('_oldOptions');
-
-      let onlyOpacityDidChange = () => {
-        if (options && oldOptions) {
-          let optionsClone = Ember.copy(options);
-
-          optionsClone.opacity = null;
-          oldOptions.opacity = null;
-
-          if (JSON.stringify(optionsClone) === JSON.stringify(oldOptions)) {
-            return true;
-          }
-        }
-
-        return false;
-      };
-
-      this.set('_oldOptions', options);
-
-      let mustRecreate = !onlyOpacityDidChange();
-
-      if (mustRecreate) {
-        // Destroy previously created leaflet layer (created with old settings).
-        this._destroyLayer();
-
-        // Create new leaflet layer (with new settings).
-        this._createLayer();
-
-        // Wait for the layer creation to be finished and set it's state related to new settings.
-        this.get('_leafletLayerPromise').then((leafletLayer) => {
-          this._setLayerState();
-        });
-      }
     }),
 
     /**
@@ -498,6 +449,39 @@ export default Ember.Component.extend(
     */
     query(e) {
       assert('BaseLayer\'s \'query\' method should be overridden.');
+    },
+
+    /**
+      Observes and handles changes in layer's properties marked as leaflet options.
+      Performs layer's recreation with new options.
+      Note: it is overridden method from 'leaflet-options' mixin.
+
+      @method leafletOptionsDidChange
+      @param {String[]} changedOptions Array containing names of all changed options.
+    */
+    leafletOptionsDidChange({ changedOptions }) {
+      let optionsDidntChange = changedOptions.length === 0;
+      if (optionsDidntChange) {
+        // Prevent unnecessary leaflet layer's recreation.
+        return;
+      }
+
+      let onlyOpacityDidChange = changedOptions.length === 1 && changedOptions.contains('opacity');
+      if (onlyOpacityDidChange) {
+        // Prevent unnecessary leaflet layer's recreation.
+        return;
+      }
+
+      // Destroy previously created leaflet layer (created with old settings).
+      this._destroyLayer();
+
+      // Create new leaflet layer (with new settings).
+      this._createLayer();
+
+      // Wait for the layer creation to be finished and set it's state related to new settings.
+      this.get('_leafletLayerPromise').then((leafletLayer) => {
+        this._setLayerState();
+      });
     },
 
     /**
