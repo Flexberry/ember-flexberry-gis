@@ -25,6 +25,7 @@ import layout from '../templates/components/flexberry-maplayer';
   @property {String} flexberryClassNames.addButton Component's 'add' button CSS-class name ('flexberry-maplayer-add-button').
   @property {String} flexberryClassNames.editButton Component's 'edit' button CSS-class name ('flexberry-maplayer-edit-button').
   @property {String} flexberryClassNames.removeButton Component's 'remove' button CSS-class name ('flexberry-maplayer-remove-button').
+  @property {String} flexberryClassNames.caption Component's 'name' label CSS-class name ('flexberry-maplayer-caption-label').
   @property {String} flexberryClassNames.preventExpandCollapse Component's CSS-class name to prevent nodes expand/collapse animation ('flexberry-treenode-prevent-expand-collapse').
   @readonly
   @static
@@ -36,10 +37,14 @@ const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
   visibilityCheckbox: flexberryClassNamesPrefix + '-visibility-checkbox',
+  opacitySlider: flexberryClassNamesPrefix + '-opacity-slider',
+  opacityLabel: flexberryClassNamesPrefix + '-opacity-label',
   typeIcon: flexberryClassNamesPrefix + '-type-icon',
   addButton: flexberryClassNamesPrefix + '-add-button',
   editButton: flexberryClassNamesPrefix + '-edit-button',
   removeButton: flexberryClassNamesPrefix + '-remove-button',
+  caption: flexberryClassNamesPrefix + '-caption-label',
+  legendToggler: flexberryClassNamesPrefix + '-legend-toggler',
   preventExpandCollapse: FlexberryTreenodeComponent.flexberryClassNames.preventExpandCollapse,
 };
 
@@ -148,7 +153,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasLayers: Ember.computed('layers.[]', 'layers.@each.isDeleted', function() {
+    _hasLayers: Ember.computed('layers.[]', 'layers.@each.isDeleted', function () {
       let layers = this.get('layers');
 
       return Ember.isArray(layers) && layers.filter((layer) => {
@@ -165,9 +170,37 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'legendCanBeDisplayed', function() {
+
+    _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'legendCanBeDisplayed', '_canChangeOpacity', function () {
       // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
-      return this._isRegistered('content') || this.get('_hasLayers') || this.get('legendCanBeDisplayed');
+      return this._isRegistered('content') || this.get('_hasLayers') || this.get('legendCanBeDisplayed') || this.get('_canChangeOpacity');
+    }),
+
+    /**
+      Flag: displays whether layer's opacity can be changed
+
+      @property _canChangeOpacity
+      @type bool
+      @readOnly
+      @private
+    */
+    _canChangeOpacity: Ember.computed('_hasLayers', 'type', function () {
+      return this.get('_hasLayers') !== true && this.get('type') !== 'group';
+    }),
+
+    /**
+      Layer class factory related to current layer type.
+
+      @property _layerClassFactory
+      @type string
+      @readOnly
+      @private
+    */
+    _opacityDisplayValue: Ember.computed('opacity', function () {
+      let opacity = this.get('opacity');
+
+      let result = opacity !== 0 && opacity > 0.01 ? Math.round(opacity * 100) : 0;
+      return result.toString() + '%';
     }),
 
     /**
@@ -178,7 +211,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _layerClassFactory: Ember.computed('type', function() {
+    _layerClassFactory: Ember.computed('type', function () {
       return Ember.getOwner(this).knownForType('layer', this.get('type'));
     }),
 
@@ -190,7 +223,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _typeIconClass: Ember.computed('_layerClassFactory', function() {
+    _typeIconClass: Ember.computed('_layerClassFactory', function () {
       let layerClassFactory = this.get('_layerClassFactory');
 
       return Ember.get(layerClassFactory, 'iconClass');
@@ -204,7 +237,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _addOperationIsAvailable: Ember.computed('_layerClassFactory', function() {
+    _addOperationIsAvailable: Ember.computed('_layerClassFactory', function () {
       let layerClassFactory = this.get('_layerClassFactory');
 
       return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('add');
@@ -340,6 +373,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     visibility: false,
 
     /**
+      Layer's opacity.
+
+      @property opacity
+      @type Number
+      @default 1
+    */
+    opacity: 1,
+
+    /**
       Flag: indicates whether layer's legend can be displayed.
 
       @property legendCanBeDisplayed
@@ -434,6 +476,17 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onVisibilityCheckboxChange(...args) {
         this.sendAction('changeVisibility', ...args);
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryDdauSliderComponent/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.changeVisibility:method"}}'changeOpacity'action{{/crossLink}}.
+
+        @method actions.onOpacitySliderChange
+        @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauSlider/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
+      */
+      onOpacitySliderChange(...args) {
+        this.sendAction('changeOpacity', ...args);
       },
 
       /**

@@ -81,6 +81,7 @@ export default {
     },
 
     'flexberry-maplayer': {
+      'opacity': 'Opacity'
     },
 
     'flexberry-maptoolbar': {

@@ -57,7 +57,8 @@
     "inflection": "1.10.0",
     "loader.js": "^4.0.1",
     "node-uuid": "1.4.7",
-    "semantic-ui-ember": "0.9.3"
+    "semantic-ui-ember": "0.9.3",
+    "ui-ember-slider": "0.5.0"
   },
   "keywords": [
     "ember-addon"

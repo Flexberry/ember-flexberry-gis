@@ -6,7 +6,9 @@ import Ember from 'ember';
 import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
 import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
 
-const { assert } = Ember;
+const {
+  assert
+} = Ember;
 
 /**
   BaseLayer component for other flexberry-gis layers.
@@ -76,7 +78,7 @@ export default Ember.Component.extend(
       This layer index, used for layer ordering in Map.
 
       @property index
-      @type Int
+      @type Number
       @default null
      */
     index: null,
@@ -89,6 +91,15 @@ export default Ember.Component.extend(
       @default null
      */
     visibility: null,
+
+    /**
+      This layer opacity.
+
+      @property opacity
+      @type Number
+      @default null
+     */
+    opacity: null,
 
     /**
       Layer's coordinate reference system (CRS).
@@ -117,7 +128,9 @@ export default Ember.Component.extend(
       // wraping this call into Ember.RSVP.hash helps us to handle straight/promise results universally.
       this.set('_leafletLayerPromise', Ember.RSVP.hash({
         leafletLayer: this.createLayer()
-      }).then(({ leafletLayer }) => {
+      }).then(({
+        leafletLayer
+      }) => {
         this.set('_leafletObject', leafletLayer);
 
         return leafletLayer;
@@ -148,6 +161,7 @@ export default Ember.Component.extend(
     _setLayerState() {
       this._setLayerVisibility();
       this._setLayerZIndex();
+      this._setLayerOpacity();
     },
 
     /**
@@ -177,6 +191,21 @@ export default Ember.Component.extend(
       } else {
         this._removeLayerFromLeafletContainer();
       }
+    },
+
+    /**
+      Sets leaflet layer's visibility.
+
+      @method _setLayerOpacity
+      @private
+    */
+    _setLayerOpacity() {
+      let leafletLayer = this.get('_leafletObject');
+      if (Ember.isNone(leafletLayer) || Ember.typeOf(leafletLayer.setOpacity) !== 'function') {
+        return;
+      }
+
+      leafletLayer.setOpacity(this.get('opacity'));
     },
 
     /**
@@ -218,7 +247,7 @@ export default Ember.Component.extend(
       @method visibilityDidChange
       @private
     */
-    _indexDidChange: Ember.observer('index', function() {
+    _indexDidChange: Ember.observer('index', function () {
       this._setLayerZIndex();
     }),
 
@@ -234,23 +263,14 @@ export default Ember.Component.extend(
     }),
 
     /**
-      Observes and handles changes in layer's properties marked as leaflet options.
-      Performs layer's recreation with new options.
+      Observes and handles changes in {{#crossLink "BaseLayerComponent/opacity:property"}}'opacity' property{{/crossLink}}.
+      Changes layer's opacity.
 
-      @method _optionsDidChange
+      @method opacityDidChange
       @private
     */
-    _optionsDidChange: Ember.observer('options', function () {
-      // Destroy previously created leaflet layer (created with old settings).
-      this._destroyLayer();
-
-      // Create new leaflet layer (with new settings).
-      this._createLayer();
-
-      // Wait for the layer creation to be finished and set it's state related to new settings.
-      this.get('_leafletLayerPromise').then((leafletLayer) => {
-        this._setLayerState();
-      });
+    _opacityDidChange: Ember.observer('opacity', function () {
+      this._setLayerOpacity();
     }),
 
     /**
@@ -429,6 +449,39 @@ export default Ember.Component.extend(
     */
     query(e) {
       assert('BaseLayer\'s \'query\' method should be overridden.');
+    },
+
+    /**
+      Observes and handles changes in layer's properties marked as leaflet options.
+      Performs layer's recreation with new options.
+      Note: it is overridden method from 'leaflet-options' mixin.
+
+      @method leafletOptionsDidChange
+      @param {String[]} changedOptions Array containing names of all changed options.
+    */
+    leafletOptionsDidChange({ changedOptions }) {
+      let optionsDidntChange = changedOptions.length === 0;
+      if (optionsDidntChange) {
+        // Prevent unnecessary leaflet layer's recreation.
+        return;
+      }
+
+      let onlyOpacityDidChange = changedOptions.length === 1 && changedOptions.contains('opacity');
+      if (onlyOpacityDidChange) {
+        // Prevent unnecessary leaflet layer's recreation.
+        return;
+      }
+
+      // Destroy previously created leaflet layer (created with old settings).
+      this._destroyLayer();
+
+      // Create new leaflet layer (with new settings).
+      this._createLayer();
+
+      // Wait for the layer creation to be finished and set it's state related to new settings.
+      this.get('_leafletLayerPromise').then((leafletLayer) => {
+        this._setLayerState();
+      });
     },
 
     /**

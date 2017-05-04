@@ -1,62 +1,109 @@
 /* globals module */
 module.exports = {
-  afterInstall: function() {
+  afterInstall: function () {
     var _this = this;
     return this.addBowerPackagesToProject([
       // Leaflet.
-      { name: 'leaflet', target: '1.0.1' },
+      {
+        name: 'leaflet',
+        target: '1.0.1'
+      },
 
       // Leaflet.Proj4.
-      { name:'proj4leaflet', target: '1.0.1' },
+      {
+        name: 'proj4leaflet',
+        target: '1.0.1'
+      },
 
       // Leaflet.WFST.
-      { name: 'Leaflet-WFST', target: 'develop' },
+      {
+        name: 'Leaflet-WFST',
+        target: 'develop'
+      },
 
       // Leaflet.WMS.
-      { name: 'leaflet.wms', target: 'gh-pages' },
+      {
+        name: 'leaflet.wms',
+        target: 'gh-pages'
+      },
 
       // Leaflet.Editable.
-      { name: 'leaflet.editable', target: 'master' },
+      {
+        name: 'leaflet.editable',
+        target: 'master'
+      },
 
       // Leaflet history.
-      { name: 'leaflet-history', source: 'https://github.com/Flexberry/leaflet-history.git', target: 'master' },
+      {
+        name: 'leaflet-history',
+        source: 'https://github.com/Flexberry/leaflet-history.git',
+        target: 'master'
+      },
 
       // Leaflet.Editable.Measures.
-      { name: 'leaflet.editable.measures', source: 'https://github.com/Flexberry/Leaflet.Editable.Measures.git', target: 'gh-pages' },
+      {
+        name: 'leaflet.editable.measures',
+        source: 'https://github.com/Flexberry/Leaflet.Editable.Measures.git',
+        target: 'gh-pages'
+      },
 
       // Leaflet.Export & dependencies.
-      { name: 'html2canvas', target: 'master'},
-      { name: 'leaflet.export', target: 'master'},
+      {
+        name: 'html2canvas',
+        target: 'master'
+      },
+      {
+        name: 'leaflet.export',
+        target: 'master'
+      },
 
       // Leaflet-MiniMap
-      { name: 'leaflet-minimap', target: '3.4.0'},
+      {
+        name: 'leaflet-minimap',
+        target: '3.4.0'
+      },
 
       // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
-      { name: 'osmtogeojson', target: '2.2.12' },
+      {
+        name: 'osmtogeojson',
+        target: '2.2.12'
+      },
 
       // OSGeo ows.js library (implementing JS API for CSW services).
-      { name: 'ows.js', target: '0.1.5' },
+      {
+        name: 'ows.js',
+        target: '0.1.5'
+      },
 
-      // JS-code beautifier to format strings containing JS-code & represent in in user-friendly view.
-      { name: 'js-beautify', target: '1.6.4' },
+      // Bootstrap slider
+      {
+        name: 'seiyria-bootstrap-slider',
+        target: '~6.0.6'
+      },
+      {
+        name: 'js-beautify',
+        target: '1.6.4'
+      },
 
       // JQuery-plugin implementing color-picker.
-      { name: 'jquery-minicolors', target: '2.2.6' }
-    ]).then(function() {
+      {
+        name: 'jquery-minicolors',
+        target: '2.2.6'
+      }
+    ]).then(function () {
       return _this.addAddonsToProject({
-        packages: [
-          { name: 'ember-block-slots', target: '1.1.3' }
+        packages: [{
+            name: 'ember-block-slots',
+            target: '1.1.3'
+          },
+          {
+            name: 'ui-ember-slider',
+            target: '0.5.0'
+          }
         ]
       });
-    }).then(function () {
-      // Add any NPM-package like that:
-      //return _this.addPackagesToProject([{
-      //  name: 'some npm package',
-      //  target: 'package version'
-      //}]);
     });
   },
 
-  normalizeEntityName: function() {
-  }
+  normalizeEntityName: function () {}
 };

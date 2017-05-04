@@ -33,7 +33,7 @@ export default Ember.Mixin.create({
     @property leafletOptions
     @type Array
     @default null
-   */
+  */
   leafletOptions: null,
 
   /**
@@ -42,7 +42,7 @@ export default Ember.Mixin.create({
     @property options
     @type Object
     @default null
-   */
+  */
   options: null,
 
   /**
@@ -64,16 +64,45 @@ export default Ember.Mixin.create({
   */
   _leafletOptionsDidChange() {
     let options = {};
+    let previousOptions = this.get('options');
     let leafletOptions = Ember.A(this.get('leafletOptions') || []);
+    let changedOptions = Ember.A();
 
     leafletOptions.forEach((optionName) => {
       let optionValue = this.get(optionName);
-      if (optionValue !== undefined) {
-        options[optionName] = optionValue;
+      if (optionValue === undefined) {
+        return;
+      }
+
+      options[optionName] = optionValue;
+
+      if (Ember.isNone(previousOptions)) {
+        return;
+      }
+
+      let previousOptionValue = Ember.get(previousOptions, optionName);
+      if (JSON.stringify(optionValue) !== JSON.stringify(previousOptionValue)) {
+        changedOptions.pushObject(optionName);
       }
     });
 
     this.set('options', options);
+
+    if (Ember.typeOf(this.leafletOptionsDidChange) === 'function') {
+      this.leafletOptionsDidChange.call(this, {
+        changedOptions
+      });
+    }
+  },
+
+  /**
+    Handles changes in leaflet options.
+    Method will be called after changes in all options will be applied.
+
+    @method leafletOptionsDidChange
+    @param {String[]} changedOptions Array containing names of all changed options.
+  */
+  leafletOptionsDidChange() {
   },
 
   /**

@@ -70,7 +70,9 @@ export default Ember.Object.extend({
     @returns {Object} New settings object (with settings related to layer-type).
   */
   createSettings() {
-    let settings = {};
+    let settings = {
+      opacity: 1
+    };
 
     // Inject search & identify settings.
     let availableOperations = Ember.A(this.get('operations') || []);

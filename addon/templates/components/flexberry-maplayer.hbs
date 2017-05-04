@@ -19,7 +19,9 @@
     {{flexberry-icon
       class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
     }}
-    {{name}}
+    <label class={{flexberryClassNames.caption}}>
+      {{name}}
+    </label>
     {{#if (not readonly)}}
       {{flexberry-button
         class=(concat flexberryClassNames.removeButton " right floated " flexberryClassNames.preventExpandCollapse)
@@ -39,6 +41,12 @@
         }}
       {{/if}}
       <div style="clear: both;"></div>
+    {{/if}}
+
+    {{#if _canChangeOpacity}}
+      <label class="{{flexberryClassNames.opacityLabel}}" title="{{t "components.flexberry-maplayer.opacity" }}">
+        {{_opacityDisplayValue}}
+      </label>
     {{/if}}
 
     {{!--
@@ -100,6 +108,13 @@
     {{/if}}
     {{#yield-slot "content"}}
       {{yield}}
+      {{#if _canChangeOpacity}}
+        {{flexberry-ddau-slider
+          class=(concat flexberryClassNames.opacitySlider " " flexberryClassNames.preventExpandCollapse)
+          value=opacity
+          change=(action "onOpacitySliderChange")
+        }}
+      {{/if}}
       {{#if legendCanBeDisplayed}}
         {{component (concat "legends/" type "-legend") layerName=name layerSettings=settingsAsObject}}
       {{/if}}

@@ -25,7 +25,10 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
     let stringToDeserialize = this.get('settings');
     if (!Ember.isBlank(stringToDeserialize)) {
       try {
-        return JSON.parse(stringToDeserialize);
+        let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
+        let defaultSettings = layerClassFactory.createSettings();
+
+        return Ember.$.extend(true, defaultSettings, JSON.parse(stringToDeserialize));
       } catch (e) {
         Ember.Logger.error(`Computation of 'settingsAsObject' property for '${this.get('name')}' layer has been failed: ${e}`);
       }
@@ -103,9 +106,10 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
   }),
 
   /**
-   * contains collection of nested layers
-   * @property layers
-   * @return {Array} collection of child layers
+    Collection of nested layers.
+
+    @property layers
+    @return {Array} collection of child layers
   */
   layers: Ember.computed('map', 'map.mapLayer', function () {
     try {

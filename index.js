@@ -4,11 +4,11 @@
 module.exports = {
   name: 'ember-flexberry-gis',
 
-  isDevelopingAddon(){
+  isDevelopingAddon() {
     return true;
   },
 
-  included: function(app) {
+  included: function (app) {
     this._super.included.apply(this._super, arguments);
 
     // Import extensions for jQuery 'hasClass' method ($('...').hasClass(...)).
@@ -20,13 +20,29 @@ module.exports = {
     // (for example ember-flexberry-gis-yandex see https://github.com/Flexberry/ember-flexberry-gis-yandex),
     // will append their vendor dependencies earlier in the vendor.js file, but some of them needs leaflet to be already imported.
     var appImagesDirectory = '/assets/images';
-    app.import(app.bowerDirectory + '/leaflet/dist/leaflet-src.js', { type: 'vendor', prepend: true });
-    app.import(app.bowerDirectory + '/leaflet/dist/leaflet.css', { type: 'vendor', prepend: true });
-    app.import(app.bowerDirectory + '/leaflet/dist/images/layers-2x.png', { destDir: appImagesDirectory });
-    app.import(app.bowerDirectory + '/leaflet/dist/images/layers.png', { destDir: appImagesDirectory });
-    app.import(app.bowerDirectory + '/leaflet/dist/images/marker-icon-2x.png', { destDir: appImagesDirectory });
-    app.import(app.bowerDirectory + '/leaflet/dist/images/marker-icon.png', { destDir: appImagesDirectory });
-    app.import(app.bowerDirectory + '/leaflet/dist/images/marker-shadow.png', { destDir: appImagesDirectory });
+    app.import(app.bowerDirectory + '/leaflet/dist/leaflet-src.js', {
+      type: 'vendor',
+      prepend: true
+    });
+    app.import(app.bowerDirectory + '/leaflet/dist/leaflet.css', {
+      type: 'vendor',
+      prepend: true
+    });
+    app.import(app.bowerDirectory + '/leaflet/dist/images/layers-2x.png', {
+      destDir: appImagesDirectory
+    });
+    app.import(app.bowerDirectory + '/leaflet/dist/images/layers.png', {
+      destDir: appImagesDirectory
+    });
+    app.import(app.bowerDirectory + '/leaflet/dist/images/marker-icon-2x.png', {
+      destDir: appImagesDirectory
+    });
+    app.import(app.bowerDirectory + '/leaflet/dist/images/marker-icon.png', {
+      destDir: appImagesDirectory
+    });
+    app.import(app.bowerDirectory + '/leaflet/dist/images/marker-shadow.png', {
+      destDir: appImagesDirectory
+    });
 
     // Import leaflet plugins
 
@@ -41,7 +57,9 @@ module.exports = {
     app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_measure.js');
     app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_measure.css');
     app.import(app.bowerDirectory + '/leaflet.editable.measures/leaflet_basemeasure.js');
-    app.import(app.bowerDirectory + '/leaflet.editable.measures/images/popupMarker.png', { destDir: appImagesDirectory });
+    app.import(app.bowerDirectory + '/leaflet.editable.measures/images/popupMarker.png', {
+      destDir: appImagesDirectory
+    });
 
     // Leaflet.Export
     app.import(app.bowerDirectory + '/html2canvas/dist/html2canvas.js');
@@ -60,7 +78,9 @@ module.exports = {
     // Leaflet-MiniMap.
     app.import(app.bowerDirectory + '/leaflet-minimap/dist/Control.MiniMap.min.js');
     app.import(app.bowerDirectory + '/leaflet-minimap/dist/Control.MiniMap.min.css');
-    app.import(app.bowerDirectory + '/leaflet-minimap/dist/images/toggle.svg', { destDir: appImagesDirectory });
+    app.import(app.bowerDirectory + '/leaflet-minimap/dist/images/toggle.svg', {
+      destDir: appImagesDirectory
+    });
 
     // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
@@ -91,10 +111,15 @@ module.exports = {
     // JS-code beautifier to format strings containing JS-code & represent in in user-friendly view.
     app.import(app.bowerDirectory + '/js-beautify/js/lib/beautify.js');
 
+    // UI-slider control
+    app.import(app.bowerDirectory + '/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js');
+
     // JQuery-minicolors plugin required for flexberry-colorpicker component.
     app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.js');
     app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.css');
-    app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.png', { destDir: appImagesDirectory });
+    app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.png', {
+      destDir: appImagesDirectory
+    });
 
     // Leaflet Div Control
     app.import('vendor/leaflet/controls/leaflet.div-control.js');
