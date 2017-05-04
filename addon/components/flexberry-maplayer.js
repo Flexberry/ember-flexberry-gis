@@ -375,7 +375,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     /**
       Layer's opacity.
 
-      @property visibility
+      @property opacity
       @type Number
       @default 1
     */

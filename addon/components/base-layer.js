@@ -286,16 +286,40 @@ export default Ember.Component.extend(
       @private
     */
     _optionsDidChange: Ember.observer('options', function () {
-      // Destroy previously created leaflet layer (created with old settings).
-      this._destroyLayer();
+      var options = this.get('options');
+      var oldOptions = this.get('_oldOptions');
 
-      // Create new leaflet layer (with new settings).
-      this._createLayer();
+      let onlyOpacityDidChange = () => {
+        if (options && oldOptions) {
+          let optionsClone = Ember.copy(options);
 
-      // Wait for the layer creation to be finished and set it's state related to new settings.
-      this.get('_leafletLayerPromise').then((leafletLayer) => {
-        this._setLayerState();
-      });
+          optionsClone.opacity = null;
+          oldOptions.opacity = null;
+
+          if (JSON.stringify(optionsClone) === JSON.stringify(oldOptions)) {
+            return true;
+          }
+        }
+
+        return false;
+      };
+
+      this.set('_oldOptions', options);
+
+      let mustRecreate = !onlyOpacityDidChange();
+
+      if (mustRecreate) {
+        // Destroy previously created leaflet layer (created with old settings).
+        this._destroyLayer();
+
+        // Create new leaflet layer (with new settings).
+        this._createLayer();
+
+        // Wait for the layer creation to be finished and set it's state related to new settings.
+        this.get('_leafletLayerPromise').then((leafletLayer) => {
+          this._setLayerState();
+        });
+      }
     }),
 
     /**
