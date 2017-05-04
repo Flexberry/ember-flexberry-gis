@@ -104,6 +104,12 @@ export default {
         },
         'top-visible': {
           'caption': 'Top visible layer'
+        },
+        'rectangle': {
+          'caption': 'Rectangle'
+        },
+        'polygon': {
+          'caption': 'Polygon'
         }
       },
       'loader-message': 'Identification...',

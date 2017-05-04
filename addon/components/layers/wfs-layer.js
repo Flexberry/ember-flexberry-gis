@@ -48,7 +48,10 @@ export default BaseLayer.extend({
     let options = this.get('options');
     let crs = Ember.get(options, 'crs');
     let geometryField = Ember.get(options, 'geometryField');
-    return new L.Format[format]({ crs, geometryField });
+    return new L.Format[format]({
+      crs,
+      geometryField
+    });
   }),
 
   /**
@@ -99,7 +102,9 @@ export default BaseLayer.extend({
         destroyLayer();
       };
 
-      options = Ember.$.extend(options || {}, { showExisting: true });
+      options = Ember.$.extend(options || {}, {
+        showExisting: true
+      });
 
       layer = this.createLayer(options)
         .once('load', onLayerLoad)
@@ -111,6 +116,8 @@ export default BaseLayer.extend({
     Creates leaflet layer related to layer type.
 
     @method createLayer
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    Leaflet layer or promise returning such layer.
   */
   createLayer(options) {
     options = Ember.$.extend(true, {}, this.get('options'), options);
@@ -137,9 +144,12 @@ export default BaseLayer.extend({
 
     let filter = new L.Filter.Intersects().append(L.rectangle(e.boundingBox), this.get('geometryField'), this.get('crs'));
 
-    let featuresPromise = this._getFeature({ filter });
+    let featuresPromise = this._getFeature({
+      filter
+    });
+
     e.results.push({
-      layer: this.get('layerModel'),
+      layerModel: this.get('layerModel'),
       features: featuresPromise
     });
   },
@@ -167,11 +177,16 @@ export default BaseLayer.extend({
       return;
     }
 
-    let filter = new L.Filter.Like().append(propertyName, '*' + e.searchOptions.queryString + '*', { matchCase: false });
+    let filter = new L.Filter.Like().append(propertyName, '*' + e.searchOptions.queryString + '*', {
+      matchCase: false
+    });
+
     return this._getFeature({
       filter,
       maxFeatures: e.searchOptions.maxResultsCount,
-      style: { color: 'yellow' }
+      style: {
+        color: 'yellow'
+      }
     });
   },
 
@@ -194,6 +209,8 @@ export default BaseLayer.extend({
       }
     }
 
-    e.results.push(this._getFeature({ filter }, true));
+    e.results.push(this._getFeature({
+      filter
+    }, true));
   }
 });

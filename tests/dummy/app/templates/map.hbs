@@ -94,8 +94,20 @@
           leafletMap=leafletMap
         }}
       </div>
+      <div data-tab="identify" class="ui tab identify">
+        {{flexberry-identify-panel
+          layerMode=identifyLayersOption
+          toolMode=identifyToolOption
+          clear=(action 'clearIdentification')
+        }}
+        {{layer-result-list
+          results=identifyResults
+          serviceLayer=serviceLayer
+          leafletMap=leafletMap
+        }}
+      </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
-        {{spatial-bookmark        
+        {{spatial-bookmark
           leafletMap=leafletMap
           mapid=model.id
         }}
@@ -104,12 +116,18 @@
     <div class="row">
       <div class="sixteen wide column">
         {{#flexberry-maptoolbar
+          identificationFinished=(action 'onIdentificationFinished')
           leafletMap=leafletMap
           layers=model.hierarchy as |mapToolbar|
         }}
           {{map-tools/drag activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/zoom-in activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/zoom-out activate=(action "onMapToolActivate" target=mapToolbar)}}
+          {{map-tools/identify
+            activate=(action "onMapToolActivate" target=mapToolbar)
+            layerMode=identifyLayersOption
+            toolMode=identifyToolOption
+          }}
           {{map-commands/go-to
             availableCRS=availableCRS
             execute=(action "onMapCommandExecute" target=mapToolbar)}}
@@ -119,15 +137,17 @@
             lng=model.lng
             zoom=model.zoom}}
           {{map-commands/search execute=(action "onMapCommandExecute" target=mapToolbar)}}
-          {{map-tools/identify activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
           {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
-          {{map-commands/export execute=(action "onMapCommandExecute" target=mapToolbar)}}
+          {{map-commands/export
+            execute=(action "onMapCommandExecute" target=mapToolbar)
+            defaultMapCaption=model.name
+          }}
+          {{flexberry-tab-bar
+            change=(action 'toggleSidebar' '.ui.sidebar.right' '.mappanel')
+            items=sidebarItems
+          }}
         {{/flexberry-maptoolbar}}
-        {{flexberry-tab-bar
-          change=(action 'toggleSidebar' '.ui.sidebar.right' '.mappanel')
-          items=sidebarItems
-        }}
       </div>
     </div>
     <div class="row mappanel">
@@ -135,6 +155,7 @@
         lat=model.lat
         lng=model.lng
         zoom=model.zoom
+        zoomControl=false
         queryFilter=queryFilter
         leafletInit=(action "onMapLeafletInit" "leafletMap")
         serviceLayerInit=(action "onServiceLayerInit" "serviceLayer")
@@ -151,6 +172,11 @@
         {{scale-control
           map=leafletMap
           imperial=false
+        }}
+        {{
+          zoomslider-control
+          map=leafletMap
+          stepHeight=2
         }}
         {{history-control
           map=leafletMap

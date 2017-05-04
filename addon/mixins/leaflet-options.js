@@ -4,8 +4,6 @@
 
 import Ember from 'ember';
 
-const { computed } = Ember;
-
 /**
   Mixin for use in leaflet initialize objects with options.
   @example
@@ -39,20 +37,68 @@ export default Ember.Mixin.create({
   leafletOptions: null,
 
   /**
-    Object with copy of this object properties with specified in leafletOptions names
+    Object containing properties marked as leaflet options.
+
     @property options
     @type Object
-    @default {}
+    @default null
    */
-  options: computed(function () {
-    let leafletOptions = this.get('leafletOptions') || [];
+  options: null,
+
+  /**
+    Observes changes in each defined leaflet option and once call single '_leafletOptionsDidChange' handler
+
+    @method _leafletObjectptionDidChange
+    @private
+  */
+  _leafletOptionDidChange() {
+    Ember.run.once(this, '_leafletOptionsDidChange');
+  },
+
+  /**
+    Handles changes in leaflet options.
+    Method will be called after changes in all options will be applied.
+
+    @method _leafletOptionsDidChange
+    @private
+  */
+  _leafletOptionsDidChange() {
     let options = {};
-    leafletOptions.forEach(optionName => {
+    let leafletOptions = Ember.A(this.get('leafletOptions') || []);
+
+    leafletOptions.forEach((optionName) => {
       let optionValue = this.get(optionName);
       if (optionValue !== undefined) {
         options[optionName] = optionValue;
       }
     });
-    return options;
-  }),
+
+    this.set('options', options);
+  },
+
+  /**
+    Initializes mixin.
+  */
+  init() {
+    this._super(...arguments);
+
+    let leafletOptions = Ember.A(this.get('leafletOptions') || []);
+    leafletOptions.forEach((optionName) => {
+      this.addObserver(optionName, this._leafletOptionDidChange);
+    });
+
+    this._leafletOptionsDidChange();
+  },
+
+  /**
+    Destroys mixin.
+  */
+  willDestroy() {
+    this._super(...arguments);
+
+    let leafletOptions = Ember.A(this.get('leafletOptions') || []);
+    leafletOptions.forEach((optionName) => {
+      this.removeObserver(optionName, this._leafletOptionDidChange);
+    });
+  }
 });

@@ -1,0 +1,61 @@
+/**
+  Styles for print/export tool's dialog (see templates/components/map-commands-dialogs/export.hbs).
+*/
+
+.ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content {
+  // Stretch dialog's content to whole available dialog's size.
+  padding: 0;
+
+  > .ui.form > .ui.grid {
+    // Stretch nested grid to whole available content's size.
+    margin-top: 0;
+ 	  margin-bottom: 0;
+
+    // Same as dialog content's max-height in Semantic UI.
+    height: 400px;
+
+    .flexberry-export-map-command-dialog-settings-column {
+      max-height: 400px;
+
+      .flexberry-dropdown.ui.selection.dropdown .menu {
+        // About 4 items is enough.
+        // Without max height two scrolls will appear (one in settings column, another in dropdown menu).
+        max-height: 150px;
+      }
+    }
+
+    .flexberry-export-map-command-dialog-preview-column {
+      max-height: 400px;
+      overflow: hidden;
+    }
+
+    .flexberry-export-map-command-dialog-sheet-of-paper {
+      background: white;
+      border: 1px solid black;
+      width: 100%;
+      height: 100%;
+      padding: 14px;
+      display: block;
+
+      .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
+        // Distance between map & it's caption (same as padding inside sheet of paper).
+        margin-bottom: 14px;
+        text-align: center;
+      }
+
+      .flexberry-export-map-command-dialog-sheet-of-paper-map {
+        background: #f4f4f4;
+        border: 1px solid black;
+        width: 100%;
+        margin: 0 auto;
+        display: block;
+        box-sizing: border-box;
+
+        .flexberry-map {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+}

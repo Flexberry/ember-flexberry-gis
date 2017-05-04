@@ -1,0 +1,6 @@
+.flexberry-colorpicker {
+  .minicolors-sprite {
+    // Overide path to sprite's background image (see jquery-minicolors import in addon's index.js).
+    background-image: url('/assets/images/jquery.minicolors.png');
+  }
+}

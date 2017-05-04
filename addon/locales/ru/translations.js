@@ -104,6 +104,12 @@ export default {
         },
         'top-visible': {
           'caption': 'Верхний видимый слой'
+        },
+        'rectangle': {
+          'caption': 'Прямоугольник'
+        },
+        'polygon': {
+          'caption': 'Многоугольник'
         }
       },
       'loader-message': 'Идентификация...',
