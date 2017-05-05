@@ -12,7 +12,8 @@ import BaseControl from 'ember-flexberry-gis/components/base-control';
 export default BaseControl.extend({
 
   leafletOptions: ['position', 'dropdownDirection', 'className', 'ratio', 'updateWhenIdle', 'ratioPrefix', 'ratioCustomItemText',
-    'ratioMenu', 'pixelsInMeterWidth', 'getMapWidthForLanInMeters'],
+    'ratioMenu', 'pixelsInMeterWidth', 'getMapWidthForLanInMeters', 'customScaleTitle', 'recalcOnPositionChange',
+    'recalcOnZoomChange', 'scales', 'roundScales'],
 
   createControl() {
     return new L.Control.SwitchScaleControl(this.get('options'));
