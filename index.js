@@ -130,6 +130,10 @@ module.exports = {
     // Leaflet.WMS Overlay Extensions
     app.import('vendor/leaflet/layers/leaflet.wms.overlay.js');
 
+    // Leaflet switch scale control
+    app.import(app.bowerDirectory + '/leaflet-switch-scale-control/src/L.Control.SwitchScaleControl.js');
+    app.import(app.bowerDirectory + '/leaflet-switch-scale-control/src/L.Control.SwitchScaleControl.css');
+
     // Leaflet zoomslider control
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.js');
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.css');
