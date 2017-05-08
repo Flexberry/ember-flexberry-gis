@@ -51,6 +51,11 @@ const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
   settingsColumn: flexberryClassNamesPrefix + '-settings-column',
+  captionSettingsTab: flexberryClassNamesPrefix + '-caption-settings-tab',
+  displayModeSettingsTab: flexberryClassNamesPrefix + '-display-mode-settings-tab',
+  paperSettingsTab: flexberryClassNamesPrefix + '-paper-settings-tab',
+  mapControlsSettingsTab: flexberryClassNamesPrefix + '-map-controls-settings-tab',
+  downloadingFileSettingsTab: flexberryClassNamesPrefix + '-download-settings-tab',
   previewColumn: flexberryClassNamesPrefix + '-preview-column',
   sheetOfPaper: flexberryClassNamesPrefix + '-sheet-of-paper',
   sheetOfPaperMapCaption: flexberryClassNamesPrefix + '-sheet-of-paper-map-caption',
@@ -65,6 +70,26 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMapActionsHandlerMixin, {
+  /**
+    Tabular menu tabs items placed on dialog's settings block.
+
+    @property _$tabularMenuTabItems
+    @type <a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>
+    @default null
+    @private
+  */
+  _$tabularMenuTabItems: null,
+
+  /**
+    Tabular menu tabs placed on dialog's settings block.
+
+    @property _$tabularMenuTabs
+    @type <a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>
+    @default null
+    @private
+  */
+  _$tabularMenuTabs: null,
+
   /**
     Available font families.
 
@@ -244,13 +269,13 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
   isBusy: false,
 
   /**
-    Flag: indicates whether to show download options or not.
+    Flag: indicates whether to show downloading file settings or not.
 
-    @property showDownloadOptions
+    @property showDownloadingFileSettings
     @type Boolean
     @default false
   */
-  showDownloadOptions: false,
+  showDownloadingFileSettings: false,
 
   /**
     Flag: indicates whether to show error message or not.
@@ -280,6 +305,20 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
   defaultMapCaption: null,
 
   actions: {
+    /**
+      Handler for settings tabs 'click' action.
+
+      @method actions.onSettingsTabClick
+      @param {Object} e Click event-object.
+    */
+    onSettingsTabClick(e) {
+      let $clickedTab = Ember.$(e.currentTarget);
+      if ($clickedTab.hasClass('disabled')) {
+        // Prevent disabled tabs from being acivated.
+        e.stopImmediatePropagation();
+      }
+    },
+
     /**
       Handler for bold font button's 'click' action.
 
@@ -454,8 +493,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     let leafletExportOptions = {};
     let innerOptions = this.get('_options');
 
-    let showDownloadOptions = this.get('showDownloadOptions');
-    if (showDownloadOptions) {
+    let showDownloadingFileSettings = this.get('showDownloadingFileSettings');
+    if (showDownloadingFileSettings) {
       let fileName = Ember.get(innerOptions, 'fileName');
       if (Ember.isBlank(fileName)) {
         fileName = defaultOptions.fileName;
@@ -514,6 +553,27 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
   },
 
   /**
+    Initializes component's DOM-related properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+
+    let dialogComponent = this.get('childViews')[0];
+
+    let $tabularMenuTabItems = dialogComponent.$('.tabular.menu .tab.item');
+    this.set('_$tabularMenuTabItems', $tabularMenuTabItems);
+
+    let $tabularMenuTabs = dialogComponent.$('.tab.segment');
+    this.set('_$tabularMenuTabs', $tabularMenuTabs);
+
+    // Attach 'click' event handler for tabular menu tabs before Semantic UI tabular menu will be initialized.
+    $tabularMenuTabItems.on('click', this.get('actions.onSettingsTabClick'));
+
+    // Initialize Semantic UI tabular menu.
+    $tabularMenuTabItems.tab();
+  },
+
+  /**
     Called after a component has been rendered, both on initial render and in subsequent rerenders.
   */
   didRender() {
@@ -537,6 +597,17 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     leafletMap.off('zoomend', this._onLeafletMapViewChanged, this);
 
     this.set('leafletMap', null);
+
+    let $tabularMenuTabItems = this.get('_$tabularMenuTabItems');
+    if (!Ember.isNone($tabularMenuTabItems)) {
+      // Detach 'click' event handler for tabular menu tabs.
+      $tabularMenuTabItems.off('click', this.get('actions.onSettingsTabClick'));
+
+      // Deinitialize Semantic UI tabular menu.
+      $tabularMenuTabItems.tab('destroy');
+      this.set('_$tabularMenuTabItems', null);
+      this.set('_$tabularMenuTabs', null);
+    }
   }
 
   /**

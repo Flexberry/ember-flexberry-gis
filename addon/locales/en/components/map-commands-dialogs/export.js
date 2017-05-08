@@ -9,7 +9,7 @@ export default {
   'deny-button': {
     'caption': 'Cancel'
   },
-  'caption-segment': {
+  'caption-settings-tab': {
     'caption': 'Map caption settings',
     'caption-textbox': {
       'caption': 'Map caption'
@@ -18,13 +18,16 @@ export default {
       'caption': 'Font'
     }
   },
-  'mode-segment': {
+  'display-mode-settings-tab': {
+    'caption': 'Display mode settings'
   },
-  'orientation-segment': {
+  'paper-settings-tab': {
+    'caption': 'Paper settings'
   },
-  'tools-segment': {
+  'map-controls-settings-tab': {
+    'caption': 'Map controls settings'
   },
-  'download-segment': {
+  'downloading-file-settings-tab': {
     'caption': 'Downloading file settings',
     'file-name-textbox': {
       'caption': 'File name'

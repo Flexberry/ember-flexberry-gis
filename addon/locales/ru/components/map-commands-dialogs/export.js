@@ -9,7 +9,7 @@ export default {
   'deny-button': {
     'caption': 'Отмена'
   },
-  'caption-segment': {
+  'caption-settings-tab': {
     'caption': 'Настройки заголовка карты',
     'caption-textbox': {
       'caption': 'Заголовок карты'
@@ -18,13 +18,16 @@ export default {
       'caption': 'Шрифт'
     }
   },
-  'mode-segment': {
+  'display-mode-settings-tab': {
+    'caption': 'Настройки режима отображения'
   },
-  'orientation-segment': {
+  'paper-settings-tab': {
+    'caption': 'Настройки бумаги'
   },
-  'tools-segment': {
+  'map-controls-settings-tab': {
+    'caption': 'Настройки контролов карты'
   },
-  'download-segment': {
+  'downloading-file-settings-tab': {
     'caption': 'Настройки скачиваемого файла',
     'file-name-textbox': {
       'caption': 'Имя файла'
