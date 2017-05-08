@@ -51,11 +51,6 @@ const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
   settingsColumn: flexberryClassNamesPrefix + '-settings-column',
-  captionSettingsTab: flexberryClassNamesPrefix + '-caption-settings-tab',
-  displayModeSettingsTab: flexberryClassNamesPrefix + '-display-mode-settings-tab',
-  paperSettingsTab: flexberryClassNamesPrefix + '-paper-settings-tab',
-  mapControlsSettingsTab: flexberryClassNamesPrefix + '-map-controls-settings-tab',
-  downloadingFileSettingsTab: flexberryClassNamesPrefix + '-download-settings-tab',
   previewColumn: flexberryClassNamesPrefix + '-preview-column',
   sheetOfPaper: flexberryClassNamesPrefix + '-sheet-of-paper',
   sheetOfPaperMapCaption: flexberryClassNamesPrefix + '-sheet-of-paper-map-caption',
@@ -89,6 +84,33 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     @private
   */
   _$tabularMenuTabs: null,
+
+  /**
+    Tabular menu clicked tab.
+
+    @property _tabularMenuClickedTab
+    @type {String}
+    @default null
+    @private
+  */
+  _tabularMenuClickedTab: null,
+
+  /**
+    Tabular menu active tab.
+
+    @property _activeSettingsTab
+    @type {String}
+    @default 'caption'
+    @private
+  */
+  _tabularMenuActiveTab: Ember.computed('_tabularMenuClickedTab', 'showDownloadingFileSettings', function() {
+    let tabularMenuDefaultTab = 'caption';
+    let tabularMenuClickedTab = this.get('_tabularMenuClickedTab') || tabularMenuDefaultTab;
+    let showDownloadingFileSettings = this.get('showDownloadingFileSettings');
+
+    // Activate default tab if 'downloading-file' tab is active, but showDownloadingFileSettings is false.
+    return tabularMenuClickedTab === 'downloading-file' && !showDownloadingFileSettings ? tabularMenuDefaultTab : tabularMenuClickedTab;
+  }),
 
   /**
     Available font families.
@@ -314,9 +336,14 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     onSettingsTabClick(e) {
       let $clickedTab = Ember.$(e.currentTarget);
       if ($clickedTab.hasClass('disabled')) {
-        // Prevent disabled tabs from being acivated.
+        // Prevent disabled tabs from being activated.
         e.stopImmediatePropagation();
+
+        return;
       }
+
+      // Remember currently clicked tab.
+      this.set('_tabularMenuClickedTab', $clickedTab.attr('data-tab'));
     },
 
     /**
@@ -550,6 +577,9 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       caption: defaultMapCaption,
       fileName: defaultMapCaption
     }));
+
+    // Bind context to tabular menu tabs 'click' event handler.
+    this.set('actions.onSettingsTabClick', this.get('actions.onSettingsTabClick').bind(this));
   },
 
   /**

@@ -24,37 +24,39 @@
     <div class="five wide column {{flexberryClassNames.settingsColumn}}">
       <div class="ui top attached fluid tabular menu">
         <a
-          class="active tab item"
+          class="tab item {{if (eq _tabularMenuActiveTab "caption") "active"}}"
           data-tab="caption"
           title="{{t "components.map-commands-dialogs.export.caption-settings-tab.caption"}}">
           <i class="font icon"></i>
         </a>
         <a
-          class="tab item"
+          class="tab item {{if (eq _tabularMenuActiveTab "display-mode") "active"}}"
           data-tab="display-mode"
           title="{{t "components.map-commands-dialogs.export.display-mode-settings-tab.caption"}}">
           <i class="maximize icon"></i>
         </a>
         <a
-          class="tab item"
+          class="tab item {{if (eq _tabularMenuActiveTab "paper") "active"}}"
           data-tab="paper"
           title="{{t "components.map-commands-dialogs.export.paper-settings-tab.caption"}}">
-          <i class="file text outline icon"></i>
+          <i class="file outline icon"></i>
         </a>
         <a
-          class="tab item"
+          class="tab item {{if (eq _tabularMenuActiveTab "map-controls") "active"}}"
           data-tab="map-controls"
           title="{{t "components.map-commands-dialogs.export.map-controls-settings-tab.caption"}}">
-          <i class="configure icon"></i>
+          <i class="marker icon"></i>
         </a>
         <a
-          class="{{if (not showDownloadingFileSettings) "disabled"}} tab item"
+          class="tab item {{if (eq _tabularMenuActiveTab "downloading-file") "active"}} {{if (not showDownloadingFileSettings) "disabled"}}"
           data-tab="downloading-file"
           title="{{t "components.map-commands-dialogs.export.downloading-file-settings-tab.caption"}}">
           <i class="download icon"></i>
         </a>
       </div>
-      <div class="ui bottom attached active tab segment {{flexberryClassNames.captionSettingsTab}}" data-tab="caption">
+      <div
+        class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "caption") "active"}}"
+        data-tab="caption">
         <div class="field">
           <label>
             {{t "components.map-commands-dialogs.export.caption-settings-tab.caption-textbox.caption"}}
@@ -120,28 +122,36 @@
           </div>
         </div>
       </div>
-      <div class="ui bottom attached tab segment  {{flexberryClassNames.displayModeSettingsTab}}" data-tab="display-mode">
+      <div
+        class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "display-mode") "active"}}"
+        data-tab="display-mode">
         <div class="field">
           <label>
             {{t "components.map-commands-dialogs.export.display-mode-settings-tab.caption"}}
           </label>
         </div>
       </div>
-      <div class="ui bottom attached tab segment  {{flexberryClassNames.paperSettingsTab}}" data-tab="paper">
+      <div
+        class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "paper") "active"}}"
+        data-tab="paper">
         <div class="field">
           <label>
             {{t "components.map-commands-dialogs.export.paper-settings-tab.caption"}}
           </label>
         </div>
       </div>
-      <div class="ui bottom attached tab segment  {{flexberryClassNames.mapControlsSettingsTab}}" data-tab="map-controls">
+      <div
+        class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "map-controls") "active"}}"
+        data-tab="map-controls">
         <div class="field">
           <label>
             {{t "components.map-commands-dialogs.export.map-controls-settings-tab.caption"}}
           </label>
         </div>
       </div>
-      <div class="ui bottom attached tab segment {{flexberryClassNames.downloadingFileSettingsTab}} {{if (not showDownloadingFileSettings) "disabled"}}" data-tab="downloading-file">
+      <div
+        class="ui bottom attached tab segment  {{if (eq _tabularMenuActiveTab "downloading-file") "active"}} {{if (not showDownloadingFileSettings) "disabled"}}"
+        data-tab="downloading-file">
         <div class="field">
           <label>
             {{t "components.map-commands-dialogs.export.downloading-file-settings-tab.caption"}}

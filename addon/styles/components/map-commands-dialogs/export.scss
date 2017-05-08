@@ -25,14 +25,20 @@
       .ui.tabular.menu {
         &.fluid {
           width: 100% !important;
+
+          .item {
+            // Now there is only five items inside tabular menu (so 100% / 5 = 20%).
+            width: 20%;
+
+            &:last-child {
+              width: calc( 20% + 1px );
+            }
+          }
         }
 
        .item {
-          padding: 10px 15px;
-
-          &:last-child {
-            padding-right: 16px;
-          }
+          padding-top: 10px;
+          padding-bottom: 10px;
 
           i.icon {
             margin: 0em;
@@ -50,6 +56,7 @@
       .ui.tab.segment {
         // Height is 100% minus height of tabular menu items related to their paddings, borders and font size.
         height: calc( 100% - 24px - 1.3em );
+        border-radius: 0;
 
         .flexberry-dropdown.ui.selection.dropdown .menu {
           // About 4 items is enough.
@@ -82,7 +89,7 @@
 
       .flexberry-export-map-command-dialog-sheet-of-paper {
         background: white;
-        border: 1px solid black;
+        border: 1px solid #d4d4d5;
         width: 100%;
         height: 100%;
         padding: 14px;
@@ -96,7 +103,7 @@
 
         .flexberry-export-map-command-dialog-sheet-of-paper-map {
           background: #f4f4f4;
-          border: 1px solid black;
+          border: 1px solid #d4d4d5;
           width: 100%;
           margin: 0 auto;
           display: block;
