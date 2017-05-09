@@ -93,6 +93,7 @@
         width: 100%;
         height: 100%;
         padding: 14px;
+        margin: 0 auto;
         display: block;
 
         .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
@@ -127,6 +128,12 @@
             border: none;
             width: 100%;
             height: 100%;
+
+            .flexberry-map {
+              .leaflet-control-container {
+                display: none;
+              }
+            }
           }
         }
       }

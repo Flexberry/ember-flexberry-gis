@@ -34,7 +34,22 @@ export default {
     }
   },
   'paper-settings-tab': {
-    'caption': 'Paper settings'
+    'caption': 'Sheet of paper settings',
+    'paper-orientation-switcher': {
+      'caption': 'Sheet of paper orientation',
+      'landscape-orientation': {
+        'caption': 'Landscape'
+      },
+      'portrait-orientation': {
+        'caption': 'Portrait'
+      },
+      'orientations-divider': {
+        'caption': 'or'
+      }
+    },
+    'paper-format-dropdown': {
+      'caption': 'Sheet of paper format'
+    }
   },
   'map-controls-settings-tab': {
     'caption': 'Map controls settings'

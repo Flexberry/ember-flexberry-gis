@@ -150,8 +150,32 @@
         data-tab="paper">
         <div class="field">
           <label>
-            {{t "components.map-commands-dialogs.export.paper-settings-tab.caption"}}
+            {{t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.caption"}}
           </label>
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              class=(if (eq _options.paperOrientation "landscape") "active" "")
+              caption=(t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.landscape-orientation.caption")
+              click=(action "onPaperOrientationChange" "landscape")
+            }}
+            <div class="or" data-text="{{t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.orientations-divider.caption"}}">
+            </div>
+            {{flexberry-button
+              class=(if (eq _options.paperOrientation "portrait") "active" "")
+              caption=(t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.portrait-orientation.caption")
+              click=(action "onPaperOrientationChange" "portrait")
+            }}
+          </div>
+        </div>
+        <div class="field">
+          <label>
+            {{t "components.map-commands-dialogs.export.paper-settings-tab.paper-format-dropdown.caption"}}
+          </label>
+          {{flexberry-dropdown
+            class="fluid"
+            items=_availablePaperFormats
+            value=_options.paperFormat
+          }}
         </div>
       </div>
       <div
@@ -168,13 +192,27 @@
         data-tab="downloading-file">
         <div class="field">
           <label>
-            {{t "components.map-commands-dialogs.export.downloading-file-settings-tab.caption"}}
+            {{t "components.map-commands-dialogs.export.downloading-file-settings-tab.file-name-textbox.caption"}}
           </label>
+          {{flexberry-textbox
+            class="fluid"
+            value=_options.fileName
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{t "components.map-commands-dialogs.export.downloading-file-settings-tab.file-type-dropdown.caption"}}
+          </label>
+          {{flexberry-dropdown
+            class="fluid"
+            items=_availableFileTypes
+            value=_options.fileType
+          }}
         </div>
       </div>
     </div>
     <div class="eleven wide column {{flexberryClassNames.previewColumn}}">
-      <div class="{{flexberryClassNames.sheetOfPaper}} {{_options.displayMode}}">
+      <div class="{{flexberryClassNames.sheetOfPaper}} {{_options.displayMode}}" style={{_sheetOfPaperSyle}}>
           <p class="{{flexberryClassNames.sheetOfPaperMapCaption}}" style={{_mapCaptionStyle}}>
             {{_options.caption}}
           </p>

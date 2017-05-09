@@ -23,8 +23,10 @@ const defaultOptions = {
   captionFontStyle: 'normal',
   captionFontDecoration: 'none',
   displayMode: 'standard-mode',
-  fileType: 'PNG',
-  fileName: 'map'
+  paperOrientation: 'landscape',
+  paperFormat: 'A4',
+  fileName: 'map',
+  fileType: 'PNG'
 };
 
 /**
@@ -33,6 +35,32 @@ const defaultOptions = {
 const contentStyle = {
   height: 400,
   padding: 14
+};
+
+/**
+  Constant representing sizes (in millimeters) of available paper formats.
+*/
+const paperFormats = {
+  'A5': {
+    'portrait': { width: 148, height: 210 },
+    'landscape': { width: 210, height: 148 }
+  },
+  'A4': {
+    'portrait': { width: 210, height: 297 },
+    'landscape': { width: 297, height: 210 }
+  },
+  'A3': {
+    'portrait': { width: 297, height: 420 },
+    'landscape': { width: 420, height: 297 }
+  },
+  'B5': {
+    'portrait': { width: 176, height: 250 },
+    'landscape': { width: 250, height: 176 }
+  },
+  'B4': {
+    'portrait': { width: 250, height: 353 },
+    'landscape': { width: 353, height: 250 }
+  }
 };
 
 /**
@@ -66,6 +94,16 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMapActionsHandlerMixin, {
+  /**
+    Sheet of paper placed on dialog's preview block.
+
+    @property _$sheetOfPaper
+    @type <a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>
+    @default null
+    @private
+  */
+  _$sheetOfPaper: null,
+
   /**
     Tabular menu tabs items placed on dialog's settings block.
 
@@ -134,6 +172,16 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
   _availableFontSizes: null,
 
   /**
+    Available paper formats.
+
+    @property _availablePaperFormats
+    @type String[]
+    @default null
+    @private
+  */
+  _availablePaperFormats: null,
+
+  /**
     Available file types.
 
     @property _availableFileTypes
@@ -200,12 +248,56 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     @readOnly
   */
   _mapStyle: Ember.computed('_options.captionFontSize', '_options.displayMode', function() {
+    // Map height will be changed, so we need to refresh it after render, otherwise it may be displayed incorrectly.
+    Ember.run.scheduleOnce('afterRender', this, function () {
+      let previewLeafletMap = this.get('_previewLeafletMap');
+      if (!Ember.isNone(previewLeafletMap)) {
+        previewLeafletMap.invalidateSize(false);
+      }
+    });
+
     if (this.get('_options.displayMode') === 'map-only-mode') {
-      return ``;
+      return Ember.String.htmlSafe(`height: 100%;`);
     }
 
     return Ember.String.htmlSafe(`height: ${contentStyle.height - contentStyle.padding * 5 - this.get('_mapCaptionHeight')}px;`);
   }),
+
+  /**
+    Style related to user-defined sheet of paper settings.
+
+    @property _sheetOfPaperSyle
+    @type String
+    @private
+    @readOnly
+  */
+  _sheetOfPaperSyle: Ember.computed(
+    '_$sheetOfPaper',
+    '_options.paperFormat',
+    '_options.paperOrientation', function() {
+      let $sheetOfPaper = this.get('_$sheetOfPaper');
+      if (Ember.isNone($sheetOfPaper)) {
+        return Ember.String.htmlSafe(``);
+      }
+
+      // Map width will be changed, so we need to refresh it after render, otherwise it may be displayed incorrectly.
+      Ember.run.scheduleOnce('afterRender', this, function () {
+        let previewLeafletMap = this.get('_previewLeafletMap');
+        if (!Ember.isNone(previewLeafletMap)) {
+          previewLeafletMap.invalidateSize(false);
+        }
+      });
+
+      let paperFormat = this.get('_options.paperFormat');
+      let paperOrientation = this.get('_options.paperOrientation');
+      let paperFormatSize = paperFormats[paperFormat][paperOrientation];
+
+      let sheetOfPaperHeight = $sheetOfPaper.outerHeight();
+      let sheetOfPaperWidth = Math.round(paperFormatSize.width * sheetOfPaperHeight / paperFormatSize.height);
+
+      return Ember.String.htmlSafe(`width: ${sheetOfPaperWidth}px;`);
+    }
+  ),
 
   /**
     Flag: indicates whether print/export dialog is already rendered.
@@ -404,9 +496,20 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       Handler for display mode change.
 
       @method actions.onDisplayModeChange
+      @param {String} newDisplayMode New display mode.
     */
     onDisplayModeChange(newDisplayMode) {
       this.set('_options.displayMode', newDisplayMode);
+    },
+
+    /**
+      Handler for paper orientation change.
+
+      @method actions.onPaperOrientationChange
+      @param {String} newOrientation New paper orientation.
+    */
+    onPaperOrientationChange(newOrientation) {
+      this.set('_options.paperOrientation', newOrientation);
     },
 
     /**
@@ -591,6 +694,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     // Image formats supported by canvas.toDataURL method (see https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL).
     this.set('_availableFileTypes', Ember.A(['PNG', 'JPEG', 'JPG', 'GIF', 'BMP', 'TIFF', 'XICON', 'SVG', 'WEBP']));
 
+    this.set('_availablePaperFormats', Ember.A(Object.keys(paperFormats)));
+
     // Initialize print/export options.
     let defaultMapCaption = this.get('defaultMapCaption');
     this.set('_options', Ember.$.extend(true, defaultOptions, {
@@ -608,16 +713,19 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
   didInsertElement() {
     this._super(...arguments);
 
-    let dialogComponent = this.get('childViews')[0];
+    let dialogComponent = this.get(`childViews`)[0];
 
-    let $tabularMenuTabItems = dialogComponent.$('.tabular.menu .tab.item');
-    this.set('_$tabularMenuTabItems', $tabularMenuTabItems);
+    let $sheetOfPaper = dialogComponent.$(`.${flexberryClassNames.sheetOfPaper}`);
+    this.set(`_$sheetOfPaper`, $sheetOfPaper);
 
-    let $tabularMenuTabs = dialogComponent.$('.tab.segment');
-    this.set('_$tabularMenuTabs', $tabularMenuTabs);
+    let $tabularMenuTabItems = dialogComponent.$(`.tabular.menu .tab.item`);
+    this.set(`_$tabularMenuTabItems`, $tabularMenuTabItems);
+
+    let $tabularMenuTabs = dialogComponent.$(`.tab.segment`);
+    this.set(`_$tabularMenuTabs`, $tabularMenuTabs);
 
     // Attach 'click' event handler for tabular menu tabs before Semantic UI tabular menu will be initialized.
-    $tabularMenuTabItems.on('click', this.get('actions.onSettingsTabClick'));
+    $tabularMenuTabItems.on(`click`, this.get(`actions.onSettingsTabClick`));
 
     // Initialize Semantic UI tabular menu.
     $tabularMenuTabItems.tab();

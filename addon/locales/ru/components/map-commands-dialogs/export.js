@@ -23,7 +23,7 @@ export default {
     'display-mode-switcher': {
       'caption': 'Режим отображения',
       'standard-mode': {
-        'caption': 'Стандартный'
+        'caption': 'Стандарт'
       },
       'map-only-mode': {
         'caption': 'Только карта'
@@ -34,7 +34,22 @@ export default {
     }
   },
   'paper-settings-tab': {
-    'caption': 'Настройки бумаги'
+    'caption': 'Настройки листа бумаги',
+    'paper-orientation-switcher': {
+      'caption': 'Ориентация листа бумаги',
+      'landscape-orientation': {
+        'caption': 'Альбомная'
+      },
+      'portrait-orientation': {
+        'caption': 'Портретная'
+      },
+      'orientations-divider': {
+        'caption': 'или'
+      }
+    },
+    'paper-format-dropdown': {
+      'caption': 'Формат листа бумаги'
+    }
   },
   'map-controls-settings-tab': {
     'caption': 'Настройки контролов карты'
