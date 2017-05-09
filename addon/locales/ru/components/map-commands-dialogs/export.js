@@ -19,7 +19,19 @@ export default {
     }
   },
   'display-mode-settings-tab': {
-    'caption': 'Настройки режима отображения'
+    'caption': 'Настройки режима отображения',
+    'display-mode-switcher': {
+      'caption': 'Режим отображения',
+      'standard-mode': {
+        'caption': 'Стандартный'
+      },
+      'map-only-mode': {
+        'caption': 'Только карта'
+      },
+      'modes-divider': {
+        'caption': 'или'
+      }
+    }
   },
   'paper-settings-tab': {
     'caption': 'Настройки бумаги'

@@ -127,8 +127,22 @@
         data-tab="display-mode">
         <div class="field">
           <label>
-            {{t "components.map-commands-dialogs.export.display-mode-settings-tab.caption"}}
+            {{t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.caption"}}
           </label>
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              class=(if (eq _options.displayMode "standard-mode") "active" "")
+              caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.standard-mode.caption")
+              click=(action "onDisplayModeChange" "standard-mode")
+            }}
+            <div class="or" data-text="{{t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.modes-divider.caption"}}">
+            </div>
+            {{flexberry-button
+              class=(if (eq _options.displayMode "map-only-mode") "active" "")
+              caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.map-only-mode.caption")
+              click=(action "onDisplayModeChange" "map-only-mode")
+            }}
+          </div>
         </div>
       </div>
       <div
@@ -160,7 +174,7 @@
       </div>
     </div>
     <div class="eleven wide column {{flexberryClassNames.previewColumn}}">
-      <div class="{{flexberryClassNames.sheetOfPaper}}">
+      <div class="{{flexberryClassNames.sheetOfPaper}} {{_options.displayMode}}">
           <p class="{{flexberryClassNames.sheetOfPaperMapCaption}}" style={{_mapCaptionStyle}}>
             {{_options.caption}}
           </p>

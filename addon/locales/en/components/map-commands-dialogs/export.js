@@ -19,7 +19,19 @@ export default {
     }
   },
   'display-mode-settings-tab': {
-    'caption': 'Display mode settings'
+    'caption': 'Display mode settings',
+    'display-mode-switcher': {
+      'caption': 'Display mode',
+      'standard-mode': {
+        'caption': 'Standard'
+      },
+      'map-only-mode': {
+        'caption': 'Map only'
+      },
+      'modes-divider': {
+        'caption': 'or'
+      }
+    }
   },
   'paper-settings-tab': {
     'caption': 'Paper settings'

@@ -22,6 +22,7 @@ const defaultOptions = {
   captionFontWeight: 'normal',
   captionFontStyle: 'normal',
   captionFontDecoration: 'none',
+  displayMode: 'standard-mode',
   fileType: 'PNG',
   fileName: 'map'
 };
@@ -198,7 +199,11 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     @private
     @readOnly
   */
-  _mapStyle: Ember.computed('_options.captionFontSize', function() {
+  _mapStyle: Ember.computed('_options.captionFontSize', '_options.displayMode', function() {
+    if (this.get('_options.displayMode') === 'map-only-mode') {
+      return ``;
+    }
+
     return Ember.String.htmlSafe(`height: ${contentStyle.height - contentStyle.padding * 5 - this.get('_mapCaptionHeight')}px;`);
   }),
 
@@ -389,10 +394,19 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     /**
       Handler for font colorpicker's 'change' action.
 
-      @method actions.onLinethroughFontButtonClick
+      @method actions.onCaptionFontColorChange
     */
     onCaptionFontColorChange(e) {
       this.set('_options.captionFontColor', e.newValue);
+    },
+
+    /**
+      Handler for display mode change.
+
+      @method actions.onDisplayModeChange
+    */
+    onDisplayModeChange(newDisplayMode) {
+      this.set('_options.displayMode', newDisplayMode);
     },
 
     /**
