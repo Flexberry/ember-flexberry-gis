@@ -475,6 +475,12 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       @method actions.onShow
     */
     onShow(e) {
+      let previewLeafletMap = this.get('_previewLeafletMap');
+      if (!Ember.isNone(previewLeafletMap)) {
+        // Map was hidden before, so we need to refresh it, otherwise it may be displayed incorrectly.
+        previewLeafletMap.invalidateSize(false);
+      }
+
       this.sendAction('show', e);
     },
 
