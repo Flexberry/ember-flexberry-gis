@@ -183,8 +183,20 @@
         data-tab="map-controls">
         <div class="field">
           <label>
-            {{t "components.map-commands-dialogs.export.map-controls-settings-tab.caption"}}
+            {{t "components.map-commands-dialogs.export.map-controls-settings-tab.map-controls-panel.caption"}}
           </label>
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              class=(if _options.legendControl "active" "")
+              caption=(t "components.map-commands-dialogs.export.map-controls-settings-tab.map-controls-panel.legend-control.caption")
+              click=(action "onMapControlChange" "legendControl")
+            }}
+            {{flexberry-button
+              class=(if _options.scaleControl "active" "")
+              caption=(t "components.map-commands-dialogs.export.map-controls-settings-tab.map-controls-panel.scale-control.caption")
+              click=(action "onMapControlChange" "scaleControl")
+            }}
+          </div>
         </div>
       </div>
       <div
@@ -229,6 +241,13 @@
                 leafletMap=_previewLeafletMap
                 leafletContainer=_previewLeafletMap
               }}
+              {{#if _options.scaleControl}}
+                {{scale-control
+                  map=_previewLeafletMap
+                  imperial=false
+                  position="bottomright"
+                }}
+              {{/if}}
             {{/flexberry-map}}
           {{/if}}
         </div>

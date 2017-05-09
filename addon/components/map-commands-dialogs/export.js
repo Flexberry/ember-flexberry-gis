@@ -25,6 +25,8 @@ const defaultOptions = {
   displayMode: 'standard-mode',
   paperOrientation: 'landscape',
   paperFormat: 'A4',
+  legendControl: false,
+  scaleControl: false,
   fileName: 'map',
   fileType: 'PNG'
 };
@@ -510,6 +512,17 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     */
     onPaperOrientationChange(newOrientation) {
       this.set('_options.paperOrientation', newOrientation);
+    },
+
+    /**
+      Handler for map control change.
+
+      @method actions.onMapControlChange
+      @param {String} changedControl Changed control.
+    */
+    onMapControlChange(changedControl) {
+      let controlOptionPath = `_options.${changedControl}`;
+      this.set(controlOptionPath, !this.get(controlOptionPath));
     },
 
     /**

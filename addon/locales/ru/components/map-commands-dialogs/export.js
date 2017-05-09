@@ -52,7 +52,16 @@ export default {
     }
   },
   'map-controls-settings-tab': {
-    'caption': 'Настройки контролов карты'
+    'caption': 'Настройки контролов карты',
+    'map-controls-panel': {
+      'caption': 'Контролы карты',
+      'legend-control': {
+        'caption': 'Легенда'
+      },
+      'scale-control': {
+        'caption': 'Масштаб'
+      }
+    }
   },
   'downloading-file-settings-tab': {
     'caption': 'Настройки скачиваемого файла',

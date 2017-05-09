@@ -52,7 +52,16 @@ export default {
     }
   },
   'map-controls-settings-tab': {
-    'caption': 'Map controls settings'
+    'caption': 'Map controls settings',
+    'map-controls-panel': {
+      'caption': 'Map controls',
+      'legend-control': {
+        'caption': 'Legend'
+      },
+      'scale-control': {
+        'caption': 'Scale bar'
+      }
+    }
   },
   'downloading-file-settings-tab': {
     'caption': 'Downloading file settings',
