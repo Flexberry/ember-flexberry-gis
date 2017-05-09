@@ -42,7 +42,7 @@
 
           i.icon {
             margin: 0em;
-            font-size: 1.3em;
+            font-size: 1.2em;
           }
 
           &.disabled {
@@ -55,7 +55,7 @@
 
       .ui.tab.segment {
         // Height is 100% minus height of tabular menu items related to their paddings, borders and font size.
-        height: calc( 100% - 24px - 1.3em );
+        height: calc( 100% - 24px - 1.2em );
         border-radius: 0;
 
         .flexberry-dropdown.ui.selection.dropdown .menu {
