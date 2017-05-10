@@ -41,7 +41,7 @@ export default {
         'caption': 'Альбомная'
       },
       'portrait-orientation': {
-        'caption': 'Портретная'
+        'caption': 'Книжная'
       },
       'orientations-divider': {
         'caption': 'или'

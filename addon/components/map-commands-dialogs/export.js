@@ -672,7 +672,66 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       Ember.set(leafletExportOptions, 'type', fileType);
     }
 
-    Ember.set(leafletExportOptions, 'container', Ember.$(this.get('_previewLeafletMap._container')).closest(`.${flexberryClassNames.sheetOfPaper}`)[0]);
+    // Define custom export method.
+    Ember.set(leafletExportOptions, 'export', (exportOptions) => {
+      let $sheetOfPaper = this.get('_$sheetOfPaper');
+      let sheetOfPaperOriginalBorder = $sheetOfPaper.css('border');
+
+      let exportSheetOfPaper = () => {
+        // Disable border before export.
+        $sheetOfPaper.css('border', 'none');
+
+        return window.html2canvas($sheetOfPaper[0], {
+          useCORS: true
+        }).then((canvas) => {
+          // Restore border after export.
+          $sheetOfPaper.css('border', sheetOfPaperOriginalBorder);
+
+          let type = 'image/png';
+          return {
+            data: canvas.toDataURL(type),
+            width: canvas.width,
+            height: canvas.height,
+            type: type
+          };
+        });
+      };
+
+      // When dialog is in 'map-only-mode' export is easier we just export whole sheet of paper in a single step.
+      if (this.get('_options.displayMode') === 'map-only-mode') {
+        return exportSheetOfPaper();
+      }
+
+      // In 'standard-mode' export must be divided into several steps.
+      let $mapContainer = Ember.$(this.get('_previewLeafletMap._container'));
+      let $mapWrapper = $mapContainer.closest(`.${flexberryClassNames.sheetOfPaperMap}`);
+      let mapWrapperOriginalBackground = $mapWrapper.css(`background`);
+
+      // First we export only map.
+      return window.html2canvas($mapContainer[0], {
+        useCORS: true
+      }).then((canvas) => {
+        // Then we hide map container from the sheet of paper.
+        $mapContainer.hide();
+        $mapContainer.attr('data-html2canvas-ignore', 'true');
+
+        // And set exported map's DataURL as map wrapper's background image.
+        $mapWrapper.css(`background`, `url(${canvas.toDataURL('image/png')})`);
+
+        // Now we export whole sheet of paper (with caption and previously exported map).
+        return exportSheetOfPaper();
+      }).then((exportedSheetOfPaper) => {
+        // Restore map wrapper's original background.
+        $mapWrapper.css(`background`, mapWrapperOriginalBackground);
+
+        // Show hidden map container on the sheet of paper.
+        $mapContainer.removeAttr('data-html2canvas-ignore');
+        $mapContainer.show();
+
+        // Finally return a result.
+        return exportedSheetOfPaper;
+      });
+    });
 
     return leafletExportOptions;
   },
