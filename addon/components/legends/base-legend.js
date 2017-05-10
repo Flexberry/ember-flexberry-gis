@@ -53,6 +53,15 @@ export default Ember.Component.extend({
   classNames: [flexberryClassNames.wrapper],
 
   /**
+    Flag: indicates whether to show layer name or not.
+
+    @property showLayerName
+    @type Boolean
+    @default false
+  */
+  showLayerName: false,
+
+  /**
     Related layer's name.
 
     @property layerName

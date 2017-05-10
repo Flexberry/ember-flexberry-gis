@@ -241,6 +241,13 @@
                 leafletMap=_previewLeafletMap
                 leafletContainer=_previewLeafletMap
               }}
+              {{#if _options.legendControl}}
+                {{legend-control
+                  map=_previewLeafletMap
+                  position="bottomleft"
+                  layers=layers
+                }}
+              {{/if}}
               {{#if _options.scaleControl}}
                 {{scale-control
                   map=_previewLeafletMap

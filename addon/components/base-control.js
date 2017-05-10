@@ -66,7 +66,7 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
 
     @method createControl
     @return {L.Control} Returns new created control
-   */
+  */
   createControl() {
   },
 

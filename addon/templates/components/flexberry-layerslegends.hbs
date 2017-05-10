@@ -1,0 +1,17 @@
+{{#each layers as |layerModel|}}
+  {{#if (not layerModel.isDeleted)}}
+    {{#if (eq layerModel.type "group")}}
+      {{flexberry-layerslegends
+        layers=layerModel.layers
+      }}
+    {{else}}
+      {{#if layerModel.legendCanBeDisplayed}}
+        {{component (concat "legends/" layerModel.type "-legend")
+          layerName=layerModel.name
+          layerSettings=layerModel.settingsAsObject
+          showLayerName=true
+        }}
+      {{/if}}
+    {{/if}}
+  {{/if}}
+{{/each}}

@@ -1,5 +1,14 @@
-{{#each _legends as |legend|}}
+{{#if (gt _legends.length 0)}}
+  {{#each _legends as |legend|}}
+    <div class="{{flexberryClassNames.imageWrapper}}">
+      <img class="{{flexberryClassNames.image}}" src="{{legend.src}}">
+    </div>
+  {{/each}}
+{{else}}
   <div class="{{flexberryClassNames.imageWrapper}}">
-    <img class="{{flexberryClassNames.image}}" src="{{legend.src}}">
+    <i class="help icon"></i>
   </div>
-{{/each}}
+{{/if}}
+{{#if showLayerName}}
+  {{layerName}}
+{{/if}}
