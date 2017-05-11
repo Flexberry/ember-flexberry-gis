@@ -3,15 +3,25 @@
 */
 
 import Ember from 'ember';
-import RectangleMapTool from './rectangle';
+import BaseMapTool from './base';
 
 /**
   Identify map-tool.
 
   @class IdentifyMapTool
-  @extends RectangleMapTool
+  @extends BaseMapTool
 */
-export default RectangleMapTool.extend({
+export default BaseMapTool.extend({
+  /**
+    Leaflet.Editable drawing tools instance.
+
+    @property _editTools
+    @type <a href="http://leaflet.github.io/Leaflet.Editable/doc/api.html">L.Ediatble</a>
+    @default null
+    @private
+  */
+  _editTools: null,
+
   /**
     Tool's cursor CSS-class.
 
@@ -22,25 +32,25 @@ export default RectangleMapTool.extend({
   cursor: 'help',
 
   /**
-    Flag: indicates whether to hide rectangle on drawing end or not.
+    Flag: indicates whether to hide figure on drawing end or not.
 
-    @property hideRectangleOnDrawingEnd
+    @property hideOnDrawingEnd
     @type Boolean
     @default false
   */
-  hideRectangleOnDrawingEnd: false,
+  hideOnDrawingEnd: false,
 
   /**
-    Flag: indicates whether to hide previously drawn rectangle on drawing end or not.
+    Flag: indicates whether to hide previously drawn figure on drawing end or not.
 
-    @property hidePreviousRectangleOnDrawingEnd
+    @property hidePreviousOnDrawingEnd
     @type Boolean
     @default true
   */
-  hidePreviousRectangleOnDrawingEnd: true,
+  hidePreviousOnDrawingEnd: true,
 
   /**
-    Method to prepare identify result if need
+    Method to prepare identify result if need.
 
     @method prepareIdentifyResult
     @default null
@@ -63,28 +73,28 @@ export default RectangleMapTool.extend({
   },
 
   /**
-    Starts identification by array of satisfying layers inside given bounding box.
+    Starts identification by array of satisfying layers inside given polygon area.
 
     @method _startIdentification
     @param {Object} options Method options.
-    @param {<a href="http://leafletjs.com/reference.html#latlngbounds">L.LatLngBounds</a>} options.boundingBox Bounds of identification area.
-    @param {<a href="http://leafletjs.com/reference.html#latlng">L.LatLng</a>} options.latlng Center of the bounding box.
-    @param {<a href="http://leafletjs.com/reference.html#rectangle">L.Rectangle</a>} options.boundingBoxLayer Rectangle layer related to bounding box.
+    @param {Array} options.polygonVertices Polygon vertices of type <a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the polygon layer.
+    @param {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>} options.relatedLayer Polygon layer related to given vertices.
     @param {Object[]} options.excludedLayers Layers excluded from identification.
     @private
   */
   _startIdentification({
-    boundingBox,
+    polygonVertices,
     latlng,
-    boundingBoxLayer,
+    relatedLayer,
     excludedLayers
   }) {
     let leafletMap = this.get('leafletMap');
 
     let e = {
-      boundingBox: boundingBox,
+      polygonVertices: polygonVertices,
       latlng: latlng,
-      boundingBoxLayer: boundingBoxLayer,
+      relatedLayer: relatedLayer,
       excludedLayers: Ember.A(excludedLayers || []),
       layers: this._getLayersToIdentify({
         excludedLayers
@@ -129,9 +139,9 @@ export default RectangleMapTool.extend({
 
     @method _finishIdentification
     @param {Object} e Event object.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlngbounds">L.LatLngBounds</a>} e.boundingBox Bounds of identification area.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the bounding box.
-    @param {<a href="http://leafletjs.com/reference.html#rectangle">L.Rectangle</a>} options.boundingBoxLayer Rectangle layer related to bounding box.
+    @param {Array} options.polygonVertices Polygon vertices of type <a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the polygon layer.
+    @param {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>} options.relatedLayer Polygon layer related to given vertices.
     @param {Object[]} excludedLayers Objects describing those layers which were excluded from identification.
     @param {Object[]} layers Objects describing those layers which are identified.
     @param {Object[]} results Objects describing identification results.
@@ -173,7 +183,7 @@ export default RectangleMapTool.extend({
     leafletMap.hideLoader();
 
     // Assign current tool's boundingBoxLayer
-    let boundingBoxLayer = Ember.get(e, 'boundingBoxLayer');
+    let boundingBoxLayer = Ember.get(e, 'relatedLayer');
     this.set('boundingBoxLayer', boundingBoxLayer);
 
     // Fire custom event on leaflet map.
@@ -183,21 +193,21 @@ export default RectangleMapTool.extend({
   /**
     Handles map's 'editable:drawing:end' event.
 
-    @method _rectangleDrawingDidEnd
+    @method _drawingDidEnd
     @param {Object} e Event object.
-    @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.layer Drawn rectangle layer.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#polygon">L.Polygon</a>} e.layer Drawn polygon layer.
     @private
   */
-  _rectangleDrawingDidEnd({
+  _drawingDidEnd({
     layer
   }) {
-    // Get center & bbox before layer will be removed from map in super-method.
     let latlng = layer.getCenter();
+    let polygonVertices = layer._latlngs[0];
     let boundingBox = layer.getBounds();
     if (boundingBox.getSouthWest().equals(boundingBox.getNorthEast())) {
-      // Bounding box is point.
+      // Identification area is point.
       // Identification can be incorrect or even failed in such situation,
-      // so extend bounding box a little (around specified point).
+      // so extend identification area a little (around specified point).
       let leafletMap = this.get('leafletMap');
       let y = leafletMap.getSize().y / 2;
       let a = leafletMap.containerPointToLatLng([0, y]);
@@ -206,17 +216,15 @@ export default RectangleMapTool.extend({
       // Current scale (related to current zoom level).
       let maxMeters = leafletMap.distance(a, b);
 
-      // Bounding box around south west point with radius of current scale * 0.05.
+      // Bounding box around specified point with radius of current scale * 0.05.
       boundingBox = boundingBox.getSouthWest().toBounds(maxMeters * 0.05);
+      polygonVertices = [boundingBox.getNorthWest(), boundingBox.getNorthEast(), boundingBox.getSouthEast(), boundingBox.getSouthWest()];
     }
 
     // Remove previously drawn rectangle
-    if (this.get('hidePreviousRectangleOnDrawingEnd')) {
+    if (this.get('hidePreviousOnDrawingEnd')) {
       this._clearBoundingBox();
     }
-
-    // Call super method to remove drawn rectangle & start a new one.
-    this._super(...arguments);
 
     // Show map loader.
     let i18n = this.get('i18n');
@@ -226,8 +234,8 @@ export default RectangleMapTool.extend({
 
     // Start identification.
     this._startIdentification({
-      boundingBoxLayer: layer,
-      boundingBox: boundingBox,
+      relatedLayer: layer,
+      polygonVertices: polygonVertices,
       latlng: latlng
     });
   },
@@ -240,6 +248,16 @@ export default RectangleMapTool.extend({
   */
   _enable() {
     this._super(...arguments);
+    let leafletMap = this.get('leafletMap');
+    let editTools = this.get('_editTools');
+    if (Ember.isNone(editTools)) {
+      editTools = new L.Editable(leafletMap, {
+        drawingCursor: this.get('cursor')
+      });
+      this.set('_editTools', editTools);
+    }
+
+    editTools.on('editable:drawing:end', this._drawingDidEnd, this);
   },
 
   /**
@@ -251,16 +269,43 @@ export default RectangleMapTool.extend({
   _disable() {
     this._clearBoundingBox();
     this._super(...arguments);
+
+    let editTools = this.get('_editTools');
+    if (!Ember.isNone(editTools)) {
+      editTools.off('editable:drawing:end', this._drawingDidEnd, this);
+      editTools.stopDrawing();
+    }
   },
 
   /**
-    Remove already drawn rectangle
+    Destroys map-tool.
+  */
+  willDestroy() {
+    this._super(...arguments);
+
+    let editLayer = this.get('_editTools.editLayer');
+    if (!Ember.isNone(editLayer)) {
+      editLayer.clearLayers();
+      editLayer.remove();
+    }
+
+    let featuresLayer = this.get('_editTools.featuresLayer');
+    if (!Ember.isNone(featuresLayer)) {
+      featuresLayer.clearLayers();
+      featuresLayer.remove();
+    }
+
+    this.set('_editTools', null);
+  },
+
+  /**
+    Remove already drawn figure
 
     @method _clearBoundingBox
     @private
   */
   _clearBoundingBox() {
-    // Remove already drawn rectangle
+    // Remove already drawn figure
     let boundingBoxLayer = this.get('boundingBoxLayer');
     if (boundingBoxLayer) {
       boundingBoxLayer.disableEdit();

@@ -2,13 +2,13 @@
   @module ember-flexberry-gis
 */
 
-import IdentifyMapTool from './identify-rectangle';
+import IdentifyMapTool from './identify-polygon';
 import IdentifyVisibleMixin from '../mixins/map-tools/identify-visible';
 
 /**
   Identify map-tool that identifies all visible map layers.
 
-  @class IdentifyAllVisibleRectangleMapTool
+  @class IdentifyAllVisiblePolygonMapTool
   @extends IdentifyMapTool
 */
 export default IdentifyMapTool.extend(IdentifyVisibleMixin, {
