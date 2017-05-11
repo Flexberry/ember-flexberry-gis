@@ -1,5 +1,5 @@
 {{#flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
-  caption=(if showDownloadOptions (t "components.map-commands-dialogs.export.export-caption") (t "components.map-commands-dialogs.export.print-caption"))
+  caption=(if showDownloadingFileSettings (t "components.map-commands-dialogs.export.export-caption") (t "components.map-commands-dialogs.export.print-caption"))
   approveButtonCaption=(t "components.map-commands-dialogs.export.approve-button.caption")
   denyButtonCaption=(t "components.map-commands-dialogs.export.deny-button.caption")
   visible=visible
@@ -14,7 +14,7 @@
   type="error"
   closeable=true
   visible=showErrorMessage
-  caption=(if showDownloadOptions (t "components.map-commands-dialogs.export.export-error-message-caption") (t "components.map-commands-dialogs.export.print-error-message-caption"))
+  caption=(if showDownloadingFileSettings (t "components.map-commands-dialogs.export.export-error-message-caption") (t "components.map-commands-dialogs.export.print-error-message-caption"))
   message=errorMessage
   onShow=(action "onErrorMessageShow")
   onHide=(action "onErrorMessageHide")
@@ -22,73 +22,209 @@
 <form class="ui {{if isBusy "loading"}} form" role="form">
   <div class="ui celled grid">
     <div class="five wide column {{flexberryClassNames.settingsColumn}}">
-      <div class="field">
-        <label>
-          {{t "components.map-commands-dialogs.export.caption-segment.caption-textbox.caption"}}
-        </label>
-        {{flexberry-textbox
-          class="fluid"
-          value=_options.caption
-        }}
+      <div class="ui top attached fluid tabular menu">
+        <a
+          class="tab item {{if (eq _tabularMenuActiveTab "caption") "active"}}"
+          data-tab="caption"
+          title="{{t "components.map-commands-dialogs.export.caption-settings-tab.caption"}}">
+          <i class="font icon"></i>
+        </a>
+        <a
+          class="tab item {{if (eq _tabularMenuActiveTab "display-mode") "active"}}"
+          data-tab="display-mode"
+          title="{{t "components.map-commands-dialogs.export.display-mode-settings-tab.caption"}}">
+          <i class="maximize icon"></i>
+        </a>
+        <a
+          class="tab item {{if (eq _tabularMenuActiveTab "paper") "active"}}"
+          data-tab="paper"
+          title="{{t "components.map-commands-dialogs.export.paper-settings-tab.caption"}}">
+          <i class="file outline icon"></i>
+        </a>
+        <a
+          class="tab item {{if (eq _tabularMenuActiveTab "map-controls") "active"}}"
+          data-tab="map-controls"
+          title="{{t "components.map-commands-dialogs.export.map-controls-settings-tab.caption"}}">
+          <i class="marker icon"></i>
+        </a>
+        <a
+          class="tab item {{if (eq _tabularMenuActiveTab "downloading-file") "active"}} {{if (not showDownloadingFileSettings) "disabled"}}"
+          data-tab="downloading-file"
+          title="{{t "components.map-commands-dialogs.export.downloading-file-settings-tab.caption"}}">
+          <i class="download icon"></i>
+        </a>
       </div>
-      <div class="field">
-        <label>
-          {{t "components.map-commands-dialogs.export.caption-segment.font-settings.caption"}}
-        </label>
-        <div class="ui grid">
-          <div class="row">
-            <div class="eleven wide column">
-              {{flexberry-dropdown
-                class="fluid"
-                items=_availableFontFamilies
-                value=_options.captionFontFamily
-              }}
-            </div>
-            <div class="five wide column">
-              {{flexberry-dropdown
-                class="fluid"
-                items=_availableFontSizes
-                value=_options.captionFontSize
-              }}
-            </div>
-          </div>
-          <div class="row">
-            <div class="eleven wide column">
-              <div class="ui icon fluid buttons">
-                {{flexberry-button
-                  iconClass="bold icon"
-                  class=(if (eq _options.captionFontWeight "bold") "active" "")
-                  click=(action "onBoldFontButtonClick")
+      <div
+        class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "caption") "active"}}"
+        data-tab="caption">
+        <div class="field">
+          <label>
+            {{t "components.map-commands-dialogs.export.caption-settings-tab.caption-textbox.caption"}}
+          </label>
+          {{flexberry-textbox
+            class="fluid"
+            value=_options.caption
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{t "components.map-commands-dialogs.export.caption-settings-tab.font-settings.caption"}}
+          </label>
+          <div class="ui grid">
+            <div class="row">
+              <div class="eleven wide column">
+                {{flexberry-dropdown
+                  class="fluid"
+                  items=_availableFontFamilies
+                  value=_options.captionFontFamily
                 }}
-                {{flexberry-button
-                  iconClass="italic icon"
-                  class=(if (eq _options.captionFontStyle "italic") "active" "")
-                  click=(action "onItalicFontButtonClick")
-                }}
-                {{flexberry-button
-                  iconClass="underline icon"
-                  class=(if (eq _options.captionFontDecoration "underline") "active" "")
-                  click=(action "onUnderlineFontButtonClick")
-                }}
-                {{flexberry-button
-                  iconClass="strikethrough icon"
-                  class=(if (eq _options.captionFontDecoration "line-through") "active" "")
-                  click=(action "onLinethroughFontButtonClick")
+              </div>
+              <div class="five wide column">
+                {{flexberry-dropdown
+                  class="fluid"
+                  items=_availableFontSizes
+                  value=_options.captionFontSize
                 }}
               </div>
             </div>
-            <div class="five wide column">
-              {{flexberry-colorpicker
-                value=_options.captionFontColor
-                change=(action "onCaptionFontColorChange")
-              }}
+            <div class="row">
+              <div class="eleven wide column">
+                <div class="ui icon fluid buttons">
+                  {{flexberry-button
+                    iconClass="bold icon"
+                    class=(if (eq _options.captionFontWeight "bold") "active" "")
+                    click=(action "onBoldFontButtonClick")
+                  }}
+                  {{flexberry-button
+                    iconClass="italic icon"
+                    class=(if (eq _options.captionFontStyle "italic") "active" "")
+                    click=(action "onItalicFontButtonClick")
+                  }}
+                  {{flexberry-button
+                    iconClass="underline icon"
+                    class=(if (eq _options.captionFontDecoration "underline") "active" "")
+                    click=(action "onUnderlineFontButtonClick")
+                  }}
+                  {{flexberry-button
+                    iconClass="strikethrough icon"
+                    class=(if (eq _options.captionFontDecoration "line-through") "active" "")
+                    click=(action "onLinethroughFontButtonClick")
+                  }}
+                </div>
+              </div>
+              <div class="five wide column">
+                {{flexberry-colorpicker
+                  value=_options.captionFontColor
+                  change=(action "onCaptionFontColorChange")
+                }}
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <div
+        class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "display-mode") "active"}}"
+        data-tab="display-mode">
+        <div class="field">
+          <label>
+            {{t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.caption"}}
+          </label>
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              class=(if (eq _options.displayMode "standard-mode") "active" "")
+              caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.standard-mode.caption")
+              click=(action "onDisplayModeChange" "standard-mode")
+            }}
+            <div class="or" data-text="{{t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.modes-divider.caption"}}">
+            </div>
+            {{flexberry-button
+              class=(if (eq _options.displayMode "map-only-mode") "active" "")
+              caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.map-only-mode.caption")
+              click=(action "onDisplayModeChange" "map-only-mode")
+            }}
+          </div>
+        </div>
+      </div>
+      <div
+        class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "paper") "active"}}"
+        data-tab="paper">
+        <div class="field">
+          <label>
+            {{t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.caption"}}
+          </label>
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              class=(if (eq _options.paperOrientation "landscape") "active" "")
+              caption=(t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.landscape-orientation.caption")
+              click=(action "onPaperOrientationChange" "landscape")
+            }}
+            <div class="or" data-text="{{t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.orientations-divider.caption"}}">
+            </div>
+            {{flexberry-button
+              class=(if (eq _options.paperOrientation "portrait") "active" "")
+              caption=(t "components.map-commands-dialogs.export.paper-settings-tab.paper-orientation-switcher.portrait-orientation.caption")
+              click=(action "onPaperOrientationChange" "portrait")
+            }}
+          </div>
+        </div>
+        <div class="field">
+          <label>
+            {{t "components.map-commands-dialogs.export.paper-settings-tab.paper-format-dropdown.caption"}}
+          </label>
+          {{flexberry-dropdown
+            class="fluid"
+            items=_availablePaperFormats
+            value=_options.paperFormat
+          }}
+        </div>
+      </div>
+      <div
+        class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "map-controls") "active"}}"
+        data-tab="map-controls">
+        <div class="field">
+          <label>
+            {{t "components.map-commands-dialogs.export.map-controls-settings-tab.map-controls-panel.caption"}}
+          </label>
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              class=(if _options.legendControl "active" "")
+              caption=(t "components.map-commands-dialogs.export.map-controls-settings-tab.map-controls-panel.legend-control.caption")
+              click=(action "onMapControlChange" "legendControl")
+            }}
+            {{flexberry-button
+              class=(if _options.scaleControl "active" "")
+              caption=(t "components.map-commands-dialogs.export.map-controls-settings-tab.map-controls-panel.scale-control.caption")
+              click=(action "onMapControlChange" "scaleControl")
+            }}
+          </div>
+        </div>
+      </div>
+      <div
+        class="ui bottom attached tab segment  {{if (eq _tabularMenuActiveTab "downloading-file") "active"}} {{if (not showDownloadingFileSettings) "disabled"}}"
+        data-tab="downloading-file">
+        <div class="field">
+          <label>
+            {{t "components.map-commands-dialogs.export.downloading-file-settings-tab.file-name-textbox.caption"}}
+          </label>
+          {{flexberry-textbox
+            class="fluid"
+            value=_options.fileName
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{t "components.map-commands-dialogs.export.downloading-file-settings-tab.file-type-dropdown.caption"}}
+          </label>
+          {{flexberry-dropdown
+            class="fluid"
+            items=_availableFileTypes
+            value=_options.fileType
+          }}
+        </div>
+      </div>
     </div>
     <div class="eleven wide column {{flexberryClassNames.previewColumn}}">
-      <div class="{{flexberryClassNames.sheetOfPaper}}">
+      <div class="{{flexberryClassNames.sheetOfPaper}} {{_options.displayMode}}" style={{_sheetOfPaperSyle}}>
           <p class="{{flexberryClassNames.sheetOfPaperMapCaption}}" style={{_mapCaptionStyle}}>
             {{_options.caption}}
           </p>
@@ -105,6 +241,20 @@
                 leafletMap=_previewLeafletMap
                 leafletContainer=_previewLeafletMap
               }}
+              {{#if _options.legendControl}}
+                {{legend-control
+                  map=_previewLeafletMap
+                  position="bottomleft"
+                  layers=layers
+                }}
+              {{/if}}
+              {{#if _options.scaleControl}}
+                {{scale-control
+                  map=_previewLeafletMap
+                  imperial=false
+                  position="bottomright"
+                }}
+              {{/if}}
             {{/flexberry-map}}
           {{/if}}
         </div>

@@ -66,13 +66,13 @@ let ExportMapCommandComponent = Ember.Component.extend({
     _exportDialogIsVisible: false,
 
     /**
-      Flag: indicates whether to show download options or not.
+      Flag: indicates whether to show downloading file settings or not.
 
-      @property _showDownloadOptions
+      @property _showDownloadingFileSettings
       @type Boolean
       @default false
     */
-    _showDownloadOptions: false,
+    _showDownloadingFileSettings: false,
 
     /**
       Event object from latest 'execute' action for 'export-download' or 'export-print' mode.
@@ -346,7 +346,7 @@ let ExportMapCommandComponent = Ember.Component.extend({
       options = options || {};
 
       let isDownloadDialog = Ember.get(options, 'isDownloadDialog');
-      this.set('_showDownloadOptions', isDownloadDialog);
+      this.set('_showDownloadingFileSettings', isDownloadDialog);
 
       // Delay execution, but send action to initialize map-command.
       let executeActionEventObject = Ember.get(options, 'executeActionEventObject');

@@ -10,6 +10,7 @@ import layout from '../../templates/components/legends/base-legend';
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('layer-legend').
   @property {String} flexberryClassNames.imageWrapper Legend's image wrapping <div> CSS-class name ('layer-legend-image-wrapper').
   @property {String} flexberryClassNames.image Legend's image CSS-class name ('layer-legend-image').
+  @property {String} flexberryClassNames.defaultImage Legend's image CSS-class name ('layer-legend-default-image').
   @readonly
   @static
 
@@ -20,7 +21,8 @@ const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
   imageWrapper: flexberryClassNamesPrefix + '-image-wrapper',
-  image: flexberryClassNamesPrefix + '-image'
+  image: flexberryClassNamesPrefix + '-image',
+  defaultImage: flexberryClassNamesPrefix + '-default-image'
 };
 
 /**
@@ -51,6 +53,15 @@ export default Ember.Component.extend({
     @default ['layer-legend']
   */
   classNames: [flexberryClassNames.wrapper],
+
+  /**
+    Flag: indicates whether to show layer name or not.
+
+    @property showLayerName
+    @type Boolean
+    @default false
+  */
+  showLayerName: false,
 
   /**
     Related layer's name.

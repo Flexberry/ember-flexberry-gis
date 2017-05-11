@@ -9,7 +9,7 @@ export default {
   'deny-button': {
     'caption': 'Cancel'
   },
-  'caption-segment': {
+  'caption-settings-tab': {
     'caption': 'Map caption settings',
     'caption-textbox': {
       'caption': 'Map caption'
@@ -18,13 +18,52 @@ export default {
       'caption': 'Font'
     }
   },
-  'mode-segment': {
+  'display-mode-settings-tab': {
+    'caption': 'Display mode settings',
+    'display-mode-switcher': {
+      'caption': 'Display mode',
+      'standard-mode': {
+        'caption': 'Standard'
+      },
+      'map-only-mode': {
+        'caption': 'Map only'
+      },
+      'modes-divider': {
+        'caption': 'or'
+      }
+    }
   },
-  'orientation-segment': {
+  'paper-settings-tab': {
+    'caption': 'Sheet of paper settings',
+    'paper-orientation-switcher': {
+      'caption': 'Sheet of paper orientation',
+      'landscape-orientation': {
+        'caption': 'Landscape'
+      },
+      'portrait-orientation': {
+        'caption': 'Portrait'
+      },
+      'orientations-divider': {
+        'caption': 'or'
+      }
+    },
+    'paper-format-dropdown': {
+      'caption': 'Sheet of paper format'
+    }
   },
-  'tools-segment': {
+  'map-controls-settings-tab': {
+    'caption': 'Map controls settings',
+    'map-controls-panel': {
+      'caption': 'Map controls',
+      'legend-control': {
+        'caption': 'Legend'
+      },
+      'scale-control': {
+        'caption': 'Scale bar'
+      }
+    }
   },
-  'download-segment': {
+  'downloading-file-settings-tab': {
     'caption': 'Downloading file settings',
     'file-name-textbox': {
       'caption': 'File name'

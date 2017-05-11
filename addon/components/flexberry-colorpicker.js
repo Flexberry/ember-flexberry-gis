@@ -158,7 +158,9 @@ let FlexberryColorpickerComponent = Ember.Component.extend(
       this._super(...arguments);
 
       // Initialize jquery-minicolors (see more settings http://labs.abeautifulsite.net/jquery-minicolors/#settings).
-      this.$(`.${flexberryClassNames.input}`).minicolors();
+      this.$(`.${flexberryClassNames.input}`).minicolors({
+        theme: 'semanticui'
+      });
     },
 
     /**
