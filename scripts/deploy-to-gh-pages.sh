@@ -5,8 +5,8 @@ set -e
 
 # Clone project into 'repository' subfolder && move to it.
 echo "Prepare for deploy to gh-pages."
-echo "Clone ember-flexberry-gis-yandex repository & checkout latest version of gh-pages branch."
-git clone --recursive https://github.com/Flexberry/ember-flexberry-gis-yandex.git repository
+echo "Clone ember-flexberry-gis repository & checkout latest version of gh-pages branch."
+git clone --recursive https://github.com/Flexberry/ember-flexberry-gis.git repository
 cd repository
 
 # Checkout gh-pages brunch & pull it's latest version.
