@@ -30,7 +30,6 @@ echo "Commit & push changes."
 git add --all
 git commit -m "Update gh-pages for ${TRAVIS_BRANCH} branch"
 
-# Redirect any output to /dev/null to hide any sensitive credential data that might otherwise be exposed.
-git push --force --quiet "https://${GH_TOKEN}@github.com/Flexberry/ember-flexberry-gis-yandex.git" > /dev/null 2>&1
+git push --force --quiet "https://${GH_TOKEN}@github.com/Flexberry/ember-flexberry-gis-yandex.git"
 
 echo "Deploy to gh-pages finished."
