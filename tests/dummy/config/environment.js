@@ -4,6 +4,7 @@ module.exports = function (environment) {
   var backendUrl = 'https://flexberry-ember-gis.azurewebsites.net';
 
   var ENV = {
+    repositoryName: 'ember-flexberry-gis',
     modulePrefix: 'dummy',
     environment: environment,
     baseURL: '/',
