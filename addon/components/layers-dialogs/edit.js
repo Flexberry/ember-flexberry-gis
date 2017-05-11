@@ -133,6 +133,21 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     _availableTypes: null,
 
     /**
+      Flag: indicates whether crs is available for the selected layer type.
+
+      @property _crsIsValid
+      @type Boolean
+      @private
+      @readOnly
+    */
+    _crsIsValid: Ember.computed('_layer.type', function() {
+      let className = this.get('_layer.type');
+      if(className !== 'group') {
+        return Ember.getOwner(this).isKnownNameForType('layer', className);
+      }
+    }),
+
+    /**
       Flag: indicates whether inner layer type is valid.
 
       @property _typeIsValid
@@ -142,8 +157,9 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     */
     _typeIsValid: Ember.computed('_layer.type', function() {
       let className = this.get('_layer.type');
-
-      return Ember.getOwner(this).isKnownNameForType('layer', className);
+      if(className !== 'group') {
+        return Ember.getOwner(this).isKnownNameForType('layer', className);
+      }
     }),
 
     /**

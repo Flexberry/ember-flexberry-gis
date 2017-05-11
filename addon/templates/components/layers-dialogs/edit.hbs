@@ -15,9 +15,11 @@
     <a class="active tab item" data-tab="main" {{action "onTabClick" "main" on="click"}}>
       {{t "components.layers-dialogs.edit.tabular-menu.main-tab.caption"}}
     </a>
-    <a class="tab item" data-tab="crs" {{action "onTabClick" on="click"}}>
-      {{t "components.layers-dialogs.edit.tabular-menu.crs-tab.caption"}}
-    </a>
+    {{#if _crsIsValid}}
+      <a class="tab item" data-tab="crs" {{action "onTabClick" "crs" on="click"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.crs-tab.caption"}}
+      </a>
+    {{/if}}
     {{#if _typeIsValid}}
       <a class="tab item" data-tab="settings" {{action "onTabClick" "settings" on="click"}}>
         {{t "components.layers-dialogs.edit.tabular-menu.settings-tab.caption"}}
@@ -81,47 +83,49 @@
       }}
     </div>
   </div>
-  <div class="ui bottom attached tab segment" data-tab="crs">
-    <div class="field">
-      <label>
-        {{crsCaption}}
-      </label>
-      {{flexberry-dropdown
-        class="fluid"
-        items=_availableCoordinateReferenceSystemsCodes
-        value=_coordinateReferenceSystemCode
-      }}
+  {{#if _crsIsValid}}
+    <div class="ui bottom attached tab segment" data-tab="crs">
+      <div class="field">
+        <label>
+          {{crsCaption}}
+        </label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableCoordinateReferenceSystemsCodes
+          value=_coordinateReferenceSystemCode
+        }}
+      </div>
+      {{#if _showCoordinateReferenceSystemFields}}
+        <div class="field">
+          <label>
+            {{crsNameTextboxCaption}}
+          </label>
+          {{flexberry-textbox
+            class="fluid"
+            value=_layer.coordinateReferenceSystem.name
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{crsCodeTextboxCaption}}
+          </label>
+          {{flexberry-textbox
+            class="fluid"
+            value=_layer.coordinateReferenceSystem.code
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{crsDefinitionTextareaCaption}}
+          </label>
+          {{flexberry-textarea
+            class="fluid"
+            value=_layer.coordinateReferenceSystem.definition
+          }}
+        </div>
+      {{/if}}
     </div>
-    {{#if _showCoordinateReferenceSystemFields}}
-      <div class="field">
-        <label>
-          {{crsNameTextboxCaption}}
-        </label>
-        {{flexberry-textbox
-          class="fluid"
-          value=_layer.coordinateReferenceSystem.name
-        }}
-      </div>
-      <div class="field">
-        <label>
-          {{crsCodeTextboxCaption}}
-        </label>
-        {{flexberry-textbox
-          class="fluid"
-          value=_layer.coordinateReferenceSystem.code
-        }}
-      </div>
-      <div class="field">
-        <label>
-          {{crsDefinitionTextareaCaption}}
-        </label>
-        {{flexberry-textarea
-          class="fluid"
-          value=_layer.coordinateReferenceSystem.definition
-        }}
-      </div>
-    {{/if}}
-  </div>
+  {{/if}}
   {{#if _typeIsValid}}
     <div class="ui bottom attached tab segment" data-tab="settings">
       {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings}}
@@ -132,13 +136,11 @@
       {{flexberry-jsonarea value=_layer.settings.identifySettings}}
     </div>
   {{/if}}
-
   {{#if _searchIsAvailableForType}}
     <div class="ui bottom attached tab segment" data-tab="searchSettings">
       {{flexberry-jsonarea value=_layer.settings.searchSettings}}
     </div>
   {{/if}}
-
   {{#if _legendIsAvailableForType}}
     <div class="ui bottom attached tab segment" data-tab="legendSettings">
       {{flexberry-jsonarea value=_layer.settings.legendSettings}}
