@@ -3,6 +3,11 @@
 module.exports = function (environment) {
   var backendUrl = 'https://flexberry-ember-gis.azurewebsites.net';
 
+  if (environment === 'development-loc') {
+    // Use `ember sserver --environment=development-loc` command for local backend usage.
+    backendUrl = 'http://localhost:63138';
+  }
+
   var ENV = {
     repositoryName: 'ember-flexberry-gis',
     modulePrefix: 'dummy',
@@ -52,14 +57,6 @@ module.exports = function (environment) {
   };
 
   if (environment === 'development') {
-    backendUrl = 'http://localhost:63138';
-
-    ENV.APP.backendUrl = backendUrl;
-    ENV.APP.backendUrls = {
-      root: backendUrl,
-      api: backendUrl + '/odata'
-    };
-
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
