@@ -3,7 +3,13 @@
 module.exports = function (environment) {
   var backendUrl = 'https://flexberry-ember-gis.azurewebsites.net';
 
+  if (environment === 'development-loc') {
+    // Use `ember sserver --environment=development-loc` command for local backend usage.
+    backendUrl = 'http://localhost:63138';
+  }
+
   var ENV = {
+    repositoryName: 'ember-flexberry-gis',
     modulePrefix: 'dummy',
     environment: environment,
     baseURL: '/',
@@ -51,14 +57,6 @@ module.exports = function (environment) {
   };
 
   if (environment === 'development') {
-    backendUrl = 'http://localhost:63138';
-
-    ENV.APP.backendUrl = backendUrl;
-    ENV.APP.backendUrls = {
-      root: backendUrl,
-      api: backendUrl + '/odata'
-    };
-
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
@@ -91,6 +89,24 @@ module.exports = function (environment) {
     'font-src': "'self' data: https://fonts.gstatic.com",
     'connect-src': "'self' " + ENV.APP.backendUrls.root
   };
+
+  // Change paths to application assets if build has been started with the following parameters:
+  // ember build --gh-pages --brunch=<brunch-to-publish-on-gh-pages>.
+  if (process.argv.indexOf('--gh-pages') >= 0) {
+    var brunch;
+
+    // Retrieve brunch name from process arguments.
+    process.argv.forEach(function(value, index) {
+      if (value.indexOf('--brunch=') >=0) {
+        brunch=value.split('=')[1];
+        return;
+      }
+    });
+
+    // Change base URL to force paths to application assets be relative.
+    ENV.baseURL = '/' + ENV.repositoryName + '/' + brunch + '/';
+    ENV.locationType = 'none';
+  }
 
   return ENV;
 };
