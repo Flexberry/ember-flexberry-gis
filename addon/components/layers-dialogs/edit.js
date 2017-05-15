@@ -528,6 +528,8 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         @param {String} dataTab Name of clicked tab.
       */
       onTabClick(dataTab) {
+        Ember.$('.tab.segment').removeClass('active');
+        Ember.$('.tab.segment[data-tab=\'' + dataTab + '\']').addClass('active');
       }
     },
 
@@ -737,6 +739,8 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       if (!Ember.isNone($tabularMenu)) {
         // Initialize possibly added new tabs.
         Ember.$('.tab.item', $tabularMenu).tab();
+        Ember.$('.tabular.menu .item[data-tab = main]').addClass('active');
+        Ember.$('.tab.segment[data-tab = main]').addClass('active');
       }
     },
 
