@@ -291,6 +291,20 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     _tabularMenu: null,
 
     /**
+      The width of a single tab.
+
+      @property _tabWidth
+      @default null
+      @private
+    */
+    _tabWidth: Ember.computed('_tabularMenu', function() {
+      let tabularMenu = this.get('_tabularMenu');
+      let tabularMenuWidth = tabularMenu.width();
+      let tabCount = tabularMenu[0].childElementCount;
+      return Math.round(tabularMenuWidth / tabCount);
+    }),
+
+    /**
       Reference to component's template.
     */
     layout,
@@ -742,6 +756,9 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         Ember.$('.tabular.menu .item[data-tab = main]').addClass('active');
         Ember.$('.tab.segment[data-tab = main]').addClass('active');
       }
+      // Changes max width of tabs.
+      let $tabWidth = this.get('_tabWidth');
+      Ember.$('.tabular.menu .item').css("max-width", $tabWidth);
     },
 
     /**
