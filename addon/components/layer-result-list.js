@@ -98,6 +98,7 @@ export default Ember.Component.extend({
               serviceLayer.removeLayer(selectedFeature.leafletLayer);
             }
           }
+
           if (Ember.isArray(feature)) {
             feature.forEach((item) => this._selectFeature(item));
           } else {

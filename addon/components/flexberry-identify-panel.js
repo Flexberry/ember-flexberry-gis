@@ -382,7 +382,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     this.sendAction('onIdentificationFinished', e);
   },
 
-
   /**
     Initializes DOM-related component's properties.
   */
@@ -429,6 +428,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     if (_switchActiveLayer) {
       this._switchActiveLayer(layer);
     }
+
     if (_switchActiveLayer) {
       this._switchActiveTool(tool);
     }
@@ -439,7 +439,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     }
 
     let mapToolName = 'identify-' + layer + '-' + tool;
-    leafletMap.fire('flexberry-map:identificationOptionChanged', { mapToolName });
+    leafletMap.fire('flexberry-map:identificationOptionChanged', {
+      mapToolName
+    });
   },
 
   /**
