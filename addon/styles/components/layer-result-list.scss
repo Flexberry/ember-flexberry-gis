@@ -7,12 +7,26 @@
       border-radius: 2px;
     }
   }
-  .feature-result-item-group.icon.item {
-    position: absolute;
-    left: 1.2em;
-    margin-top: .5em;
+  .feature-result-item {
+    &-select.icon.item {
+      position: absolute;
+      left: 1.2em;
+      margin-top: .5em;
+    }
+    &-title {
+      &>* {
+        vertical-align: top;
+        display: inline-block;
+      }
+    }
+    &-caption {
+      text-overflow: ellipsis;
+      max-width: 80%;
+    }
   }
-  .flexberry-toggler .title .flexberry-toggler-caption {
-    margin-left: 1em;
+  &-toggler .title {
+    .flexberry-toggler-caption {
+      margin-left: 1em;
+    }
   }
 }

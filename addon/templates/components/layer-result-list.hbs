@@ -4,23 +4,25 @@
   {{t "components.layer-result-list.nodata"}}
 {{/if}}
 {{#each _displayResults as |result|}}
-  <a class="feature-result-item-group icon item"
-    title="{{t "components.feature-result-item.select-all-caption"}}"
-    {{action "selectFeature" result.features}}>
-    <i class="marker icon"></i>
-  </a>
-   {{#flexberry-toggler caption=result.name expanded=result.first}}    
-     <div class="ui list transition">
-      {{#each result.features as |feature|}}
-        {{feature-result-item
-          feature=feature
-          displaySettings=result.settings
-          selectedFeature=_selectedFeature
-          selectFeature=(action "selectFeature")
-          panTo=(action "panTo")
-          zoomTo=(action "zoomTo")
-        }}
-      {{/each}}
-     </div>
-    {{/flexberry-toggler}}
+  <div class="feature-result-item-group">
+    <a class="feature-result-item-select icon item"
+      title="{{t "components.feature-result-item.select-all-caption"}}"
+      {{action "selectFeature" result.features}}>
+      <i class="marker icon"></i>
+    </a>
+    {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}    
+      <div class="ui list transition">
+        {{#each result.features as |feature|}}
+          {{feature-result-item
+            feature=feature
+            displaySettings=result.settings
+            selectedFeature=_selectedFeature
+            selectFeature=(action "selectFeature")
+            panTo=(action "panTo")
+            zoomTo=(action "zoomTo")
+          }}
+        {{/each}}
+      </div>
+      {{/flexberry-toggler}}
+  </div>
 {{/each}}

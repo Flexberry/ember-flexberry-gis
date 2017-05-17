@@ -1,16 +1,20 @@
 <div class="item {{if (eq feature selectedFeature) 'active'}}">
-  <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo"}}>
-    <i class="caret {{if infoExpanded 'down' 'right'}} icon"></i>
-  </a>
-  <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo"}}>
-    <i class="marker icon"></i>
-  </a>
-  <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo"}}>
-    <i class="hand paper icon"></i>
-  </a>
-  <span {{action "selectFeature" on="click" }} {{action "zoomTo" on="doubleClick" }}>
-      {{get feature.properties _displayProperty}}
-  </span>
+  <div class="feature-result-item-title" {{action "showInfo"}}>
+    <div class="feature-result-item-toolbar">
+      <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}">
+        <i class="caret {{if _infoExpanded 'down' 'right'}} icon"></i>
+      </a>
+      <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo"}}>
+        <i class="marker icon"></i>
+      </a>
+      <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo"}}>
+        <i class="hand paper icon"></i>
+      </a>
+    </div>
+    <div class="feature-result-item-caption">
+        {{get feature.properties _displayProperty}}
+    </div>
+  </div>
   {{#if _infoExpanded}}
     <table class="ui compact celled table">
       <tr>
