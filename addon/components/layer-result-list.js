@@ -78,8 +78,12 @@ export default Ember.Component.extend({
 
   actions: {
     /**
-      Set selected feature and add its layer to serviceLayer on map
-      @method actions.selectFeature
+        Handles inner FeatureResultItem's bubbled 'selectFeature' action.
+        Invokes component's {{#crossLink "FeatureResultItem/sendingActions.selectFeature:method"}}'selectFeature'{{/crossLink}} action.
+
+        @method actions.selectFeature
+        @param {Object} feature
+        which describes inner FeatureResultItem's 'selectFeature' feature object.
     */
     selectFeature(feature) {
       let selectedFeature = this.get('_selectedFeature');
@@ -230,10 +234,5 @@ export default Ember.Component.extend({
       this.set('_noData', displayResults.length === 0);
       this.set('_showLoader', false);
     });
-  }),
-
-  didInsertElement() {
-    this._super(...arguments);
-    Ember.$('.layer-result-item').accordion();
-  }
+  })
 });

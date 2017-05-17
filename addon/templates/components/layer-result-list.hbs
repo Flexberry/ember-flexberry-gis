@@ -1,9 +1,14 @@
 {{#if _showLoader}}
-  <div class="ui active  inline loader"></div>{{t "components.layer-result-list.processing"}}
+  <div class="ui active inline loader"></div>{{t "components.layer-result-list.processing"}}
 {{else if _noData}}
   {{t "components.layer-result-list.nodata"}}
 {{/if}}
 {{#each _displayResults as |result|}}
+  <a class="feature-result-item-group icon item"
+    title="{{t "components.feature-result-item.select-all-caption"}}"
+    {{action "selectFeature" result.features}}>
+    <i class="marker icon"></i>
+  </a>
    {{#flexberry-toggler caption=result.name expanded=result.first}}    
      <div class="ui list transition">
       {{#each result.features as |feature|}}
