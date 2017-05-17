@@ -118,6 +118,7 @@ export default EditMapController.extend(
             .sidebar('setting', 'transition', 'overlay')
             .sidebar('toggle');
         }
+
         if (e.tabName === 'identify') {
           let leafletMap = this.get('leafletMap');
           if (Ember.isNone(leafletMap)) {
