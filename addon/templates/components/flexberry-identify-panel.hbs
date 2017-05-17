@@ -45,8 +45,9 @@
     </div>
     <div class="{{concat "ui four wide column" flexberryClassName.otherOptions}}">
         {{flexberry-button
-            class="ui icon button"
-            iconClass="remove icon"
+            class=(concat flexberryClassNames.clearButton " " clearClass)
+            iconClass=clearIconClass
+            tooltip=clearCaption
             click=(action "clear")
         }}
     </div>

@@ -255,6 +255,33 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polygonIconClass: 'star icon',
 
   /**
+    clear button's CSS-class.
+
+    @property clearClass
+    @type String
+    @default null
+  */
+  clearClass: null,
+
+  /**
+    clear button's caption.
+
+    @property clearCaption
+    @type String
+    @default t('components.map-tools.idenify.rectangle.caption')
+  */
+  clearCaption: t('components.map-tools.identify.clear.caption'),
+
+  /**
+    clear button's icon CSS-class names.
+
+    @property clearIconClass
+    @type String
+    @default 'remove icon'
+  */
+  clearIconClass: 'remove icon',
+
+  /**
     Flag: is tools option 'rectangle' enable
 
     @property rectangle
@@ -280,15 +307,81 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   toolMode: 'rectangle',
 
   /**
-   @type Observer
-   */
-  _switchObserver: Ember.observer('layerMode', 'toolMode', function () {
-    let selectedLayerOption = this.get('layerMode');
-    let selectedToolOption = this.get('toolMode');
+    Leaflet map.
 
-    this._switchActiveLayer(selectedLayerOption);
-    this._switchActiveTool(selectedToolOption);
-  }),
+    @property leafletMap
+    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+    @default null
+  */
+  leafletMap: null,
+
+  /**
+    Observes changes in {{#crossLink "FlexberryMaptoolbarComponent/leafletMap:propery"}}'leafletMap' property{{/crossLink}}.
+    Activates default map-tool when leafletMap initialized and subscribes on flexberry-map:identificationFinished event.
+
+    @method _leafletMapDidChange
+    @type Observer
+    @private
+  */
+  _leafletMapDidChange: Ember.on('didInsertElement', Ember.observer('leafletMap', function () {
+
+    let leafletMap = this.get('leafletMap');
+    if (Ember.isNone(leafletMap)) {
+      return;
+    }
+
+    // Attach custom event-handler.
+    leafletMap.on('flexberry-map:identificationFinished', this.identificationFinished, this);
+  })),
+
+  actions: {
+    /**
+      Handles inner layer option button's 'click' action.
+
+      @method actions.onLayerOptionChange
+    */
+    onLayerOptionChange(...args) {
+      this.set('layerMode', args[0]);
+      this._switch(true);
+
+      this.sendAction('onLayerOptionChange', ...args);
+    },
+
+    /**
+      Handles inner tool option button's 'click' action.
+
+      @method actions.onToolOptionChange
+    */
+    onToolOptionChange(...args) {
+      this.set('toolMode', args[0]);
+      this._switch(false, true);
+
+      this.sendAction('onToolOptionChange', ...args);
+    },
+
+    /**
+      Handles inner clear button's 'click' action.
+
+      @method actions.clear
+    */
+    clear(...args) {
+      this.sendAction('clear', ...args);
+    }
+  },
+
+  /**
+      Handles 'flexberry-map:identificationFinished' event of leaflet map.
+
+      @method identificationFinished
+      @param {Object} e Event object.
+      @param {Object} results Hash containing search results.
+      @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+      or a promise returning such array.
+    */
+  identificationFinished(e) {
+    this.sendAction('onIdentificationFinished', e);
+  },
+
 
   /**
     Initializes DOM-related component's properties.
@@ -325,37 +418,28 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     this.set(selectedToolOption + 'Class', 'active');
   },
 
-  actions: {
-    /**
-      Handles inner layer option button's 'click' action.
+  /**
+   * @method _switch
+   * @private
+   */
+  _switch(_switchActiveLayer, _switchActiveTool) {
+    let layer = this.get('layerMode');
+    let tool = this.get('toolMode');
 
-      @method actions.onLayerOptionChange
-    */
-    onLayerOptionChange(...args) {
-      this.set('layerMode', args[0]);
-
-      this.sendAction('onLayerOptionChange', ...args);
-    },
-
-    /**
-      Handles inner tool option button's 'click' action.
-
-      @method actions.onToolOptionChange
-    */
-    onToolOptionChange(...args) {
-      this.set('toolMode', args[0]);
-
-      this.sendAction('onToolOptionChange', ...args);
-    },
-
-    /**
-      Handles inner clear button's 'click' action.
-
-      @method actions.clear
-    */
-    clear(...args) {
-      this.sendAction('clear', ...args);
+    if (_switchActiveLayer) {
+      this._switchActiveLayer(layer);
     }
+    if (_switchActiveLayer) {
+      this._switchActiveTool(tool);
+    }
+
+    let leafletMap = this.get('leafletMap');
+    if (Ember.isNone(leafletMap)) {
+      return;
+    }
+
+    let mapToolName = 'identify-' + layer + '-' + tool;
+    leafletMap.fire('flexberry-map:identificationOptionChanged', { mapToolName });
   },
 
   /**

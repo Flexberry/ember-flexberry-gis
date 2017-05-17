@@ -28,6 +28,9 @@ export default {
     },
     'polygon': {
       'caption': 'Polygon'
+    },
+    'clear': {
+      'caption': 'Clear'
     }
   },
   'measure': {

@@ -96,8 +96,10 @@
       </div>
       <div data-tab="identify" class="ui tab identify">
         {{flexberry-identify-panel
+          leafletMap=leafletMap
           layerMode=identifyLayersOption
           toolMode=identifyToolOption
+          identificationFinished=(action 'onIdentificationFinished')
           clear=(action 'clearIdentification')
         }}
         {{layer-result-list
@@ -116,7 +118,6 @@
     <div class="row">
       <div class="sixteen wide column">
         {{#flexberry-maptoolbar
-          identificationFinished=(action 'onIdentificationFinished')
           leafletMap=leafletMap
           layers=model.hierarchy as |mapToolbar|
         }}
@@ -127,6 +128,7 @@
             activate=(action "onMapToolActivate" target=mapToolbar)
             layerMode=identifyLayersOption
             toolMode=identifyToolOption
+            leafletMap=leafletMap
           }}
           {{map-commands/go-to
             availableCRS=availableCRS
