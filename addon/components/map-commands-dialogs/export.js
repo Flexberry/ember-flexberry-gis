@@ -107,6 +107,16 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
   _$sheetOfPaper: null,
 
   /**
+    Sheet of paper clone which will be placed on dialog's preview block while export operation is executing.
+
+    @property _$sheetOfPaperClone
+    @type <a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>
+    @default null
+    @private
+  */
+  _$sheetOfPaperClone: null,
+
+  /**
     Tabular menu tabs items placed on dialog's settings block.
 
     @property _$tabularMenuTabItems
@@ -674,13 +684,11 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
 
     // Define custom export method.
     Ember.set(leafletExportOptions, 'export', (exportOptions) => {
+      // Sheet of paper with interactive map, which will be prepered for export and then exported.
       let $sheetOfPaper = this.get('_$sheetOfPaper');
       let sheetOfPaperOriginalBorder = $sheetOfPaper.css('border');
 
       let exportSheetOfPaper = () => {
-        // Disable border before export.
-        $sheetOfPaper.css('border', 'none');
-
         return window.html2canvas($sheetOfPaper[0], {
           useCORS: true
         }).then((canvas) => {
@@ -734,6 +742,95 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     });
 
     return leafletExportOptions;
+  },
+
+  /**
+    Prepares map for export.
+
+    @method beforeExport
+  */
+  beforeExport() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      try {
+        let previewLeafletMap = this.get('_previewLeafletMap');
+        let previewLeafletMapBounds = previewLeafletMap.getBounds();
+
+        // Sheet of paper with interactive map, which will be prepered for export and then exported.
+        let $sheetOfPaper = this.get('_$sheetOfPaper');
+        let $sheetOfPaperCaption = Ember.$(`.${flexberryClassNames.sheetOfPaperCaption}`, $sheetOfPaper);
+        let $sheetOfPaperMap = Ember.$(`.${flexberryClassNames.sheetOfPaperMap}`, $sheetOfPaper);
+
+        // Sheet of paper clone with static non-interactive map, which will be displayed in preview dialog while export is executing.
+        let $sheetOfPaperClone = $sheetOfPaper.clone();
+        let $sheetOfPaperCloneCaption = Ember.$(`.${flexberryClassNames.sheetOfPaperCaption}`, $sheetOfPaperClone);
+        let $sheetOfPaperCloneMap = Ember.$(`.${flexberryClassNames.sheetOfPaperMap}`, $sheetOfPaperClone);
+        this.set('_$sheetOfPaperClone', $sheetOfPaperClone);
+
+        let $sheetOfPaperParent = $sheetOfPaper.parent();
+        let $body = $sheetOfPaper.closest('body');
+
+        // Remove sheet of paper with interactive map from preview dialog and change it into static clone for a while.
+        $sheetOfPaper.remove();
+        $sheetOfPaperClone.appendTo($sheetOfPaperParent[0]);
+
+        // Insert sheet of paper with interactive map into invisible part of document body.
+        $sheetOfPaper.css('position', 'absolute');
+        $sheetOfPaper.css('left', `${$body.outerWidth() + 1}px`);
+        $sheetOfPaper.css('top', '0px');
+        $sheetOfPaper.appendTo($body[0]);
+
+        // Set sheet of paper size relative to selected paper format.
+        let paperFormat = this.get('_options.paperFormat');
+        let paperOrientation = this.get('_options.paperOrientation');
+        let paperFormatSize = paperFormats[paperFormat][paperOrientation];
+        $sheetOfPaper.css('width', `${paperFormatSize.width}mm`);
+        $sheetOfPaper.css('height', `${paperFormatSize.height}mm`);
+
+        // Set caption's size relative to sheet of paper new size (change only height, width is 100%).
+        $sheetOfPaperCaption.css(
+          'height',
+          `${Math.round($sheetOfPaperCloneCaption.outerHeight() * $sheetOfPaper.outerHeight() / $sheetOfPaperClone.outerHeight())}px`);
+
+        // Set interactive map's size relative to sheet of paper new size (change only height, width is 100%).
+        $sheetOfPaperMap.css(
+          'height',
+          `${Math.round($sheetOfPaperCloneMap.outerHeight() * $sheetOfPaper.outerHeight()  / $sheetOfPaperClone.outerHeight())}px`);
+
+        // Hide border of sheet of paper.
+        $sheetOfPaper.css('border', 'none');
+
+        // TODO: Chenge into hidden before pull-request will be sent.
+        $body.css('overflow', 'auto');
+
+        console.log('Map bounds is ' + previewLeafletMapBounds);
+        previewLeafletMap.once('resize', () => { console.log('After invalidateSize resize triggered'); });
+        previewLeafletMap.once('viewreset', () => { console.log('After invalidateSize viewreset triggered'); });
+        previewLeafletMap.once('zoomend', () => { console.log('After invalidateSize zoomend triggered'); });
+        previewLeafletMap.once('moveend', () => { console.log('After invalidateSize moveend triggered'); });
+        previewLeafletMap.invalidateSize(false);
+
+        //previewLeafletMap.fitBounds(previewLeafletMapBounds);
+        resolve();
+      } catch (ex) {
+        reject(ex.message || ex);
+      }
+    });
+  },
+
+  /**
+    Performs export.
+
+    @method export
+  */
+  export() {
+  },
+
+  /**
+    Performs after export clean ups.
+
+    @method afterExport
+  */
+  afterExport() {
   },
 
   /**
@@ -801,6 +898,11 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
 
     // Initialize Semantic UI tabular menu.
     $tabularMenuTabItems.tab();
+
+    // TODO: Remove it before pull request will be sent.
+    window.beforeExport = this.beforeExport.bind(this);
+    window.export = this.export.bind(this);
+    window.afterExport = this.afterExport.bind(this);
   },
 
   /**
@@ -827,6 +929,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     leafletMap.off('zoomend', this._onLeafletMapViewChanged, this);
 
     this.set('leafletMap', null);
+    this.set(`_$sheetOfPaper`, null);
+    this.set(`_$sheetOfPaperClone`, null);
 
     let $tabularMenuTabItems = this.get('_$tabularMenuTabItems');
     if (!Ember.isNone($tabularMenuTabItems)) {
