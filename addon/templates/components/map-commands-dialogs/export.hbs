@@ -224,11 +224,11 @@
       </div>
     </div>
     <div class="eleven wide column {{flexberryClassNames.previewColumn}}">
-      <div class="{{flexberryClassNames.sheetOfPaper}} {{_options.displayMode}}" style={{_sheetOfPaperSyle}}>
-        <p class="{{flexberryClassNames.sheetOfPaperMapCaption}}" style={{_mapCaptionStyle}}>
+      <div class="{{flexberryClassNames.sheetOfPaper}} {{_options.displayMode}}" style={{_sheetOfPaperPreviewStyle}}>
+        <p class="{{flexberryClassNames.sheetOfPaperMapCaption}}" style={{_mapCaptionPreviewStyle}}>
           {{_options.caption}}
         </p>
-        <div class="{{flexberryClassNames.sheetOfPaperMap}}" style={{_mapStyle}}>
+        <div class="{{flexberryClassNames.sheetOfPaperMap}}" style={{_mapPreviewStyle}}>
           {{#if _isDialogAlreadyRendered}}
             {{#flexberry-map
               zoomControl=false
