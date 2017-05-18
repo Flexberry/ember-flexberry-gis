@@ -3,15 +3,15 @@
 */
 
 import Ember from 'ember';
-import BaseMapTool from './base';
+import BaseNonclickableMapTool from './base-nonclickable';
 
 /**
   Identify map-tool.
 
   @class IdentifyMapTool
-  @extends BaseMapTool
+  @extends BaseNonclickableMapTool
 */
-export default BaseMapTool.extend({
+export default BaseNonclickableMapTool.extend({
   /**
     Leaflet.Editable drawing tools instance.
 
