@@ -419,6 +419,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   /**
    * @method _switch
+   * handles changes in layer and tools options and fires 'flexberry-map:identificationOptionChanged' event
    * @private
    */
   _switch(_switchActiveLayer, _switchActiveTool) {
@@ -429,7 +430,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       this._switchActiveLayer(layer);
     }
 
-    if (_switchActiveLayer) {
+    if (_switchActiveTool) {
       this._switchActiveTool(tool);
     }
 
