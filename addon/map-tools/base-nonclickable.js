@@ -3,6 +3,7 @@
 */
 
 import BaseMapTool from './base';
+import Ember from 'ember';
 
 /**
   BaseNonclickable map-tool.
@@ -49,8 +50,11 @@ export default BaseMapTool.extend({
     // enable zoom on double click while tool is disabled
     let leafletMap = this.get('leafletMap');
     if (leafletMap) {
-      // delayed activation because editable:drawing:end response is too late
-      setTimeout(() => leafletMap.doubleClickZoom.enable(), 300);
+      /*
+        delayed activation because editable:drawing:end response is too late
+        so doubleClick enables before drawing finished
+      */
+      Ember.run.later(() => leafletMap.doubleClickZoom.enable(), 200);
     }
   }
 });
