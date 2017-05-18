@@ -67,6 +67,15 @@ let IdentifyMapToolComponent = Ember.Component.extend({
   tagName: '',
 
   /**
+    Leaflet map.
+
+    @property leafletMap
+    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+    @default null
+  */
+  leafletMap: null,
+
+  /**
     Map tool's additional CSS-class.
 
     @property class
@@ -117,22 +126,6 @@ let IdentifyMapToolComponent = Ember.Component.extend({
   toolMode: '',
 
   /**
-    Flag: indicates whether map tool should be enabled after it's re-render
-    @property enableOnRerender
-    @default true
-    @type {Boolean}
-  */
-  enableOnRerender: true,
-
-  /**
-    Flag: indicates whether map tool should be enabled after it's re-render
-    @property _enableOnRerender
-    @default true
-    @type {Boolean}
-  */
-  _enableOnRerender: true,
-
-  /**
     Contains formatted tool name with layers options
     @property _toolName
     @type {String}
@@ -148,12 +141,6 @@ let IdentifyMapToolComponent = Ember.Component.extend({
     } else {
       return 'identify';
     }
-  }),
-
-  _shouldRerenderObserver: Ember.observer('_toolName', 'enableOnRerender', function () {
-    let layerMode = this.get('layerMode');
-    let toolMode = this.get('toolMode');
-    this.set('_enableOnRerender', this.get('enableOnRerender') === true && !(Ember.isBlank(layerMode) || Ember.isBlank(toolMode)));
   }),
 
   actions: {
@@ -185,16 +172,6 @@ let IdentifyMapToolComponent = Ember.Component.extend({
     if (!toolMode) {
       this.set('toolMode', 'rectangle');
     }
-  },
-
-  /**
-    Handles DOM-related component's properties after each render.
-  */
-  didRender() {
-    this._super(...arguments);
-
-    // set this flag to false to force re-render next time with _shouldRerenderObserver
-    this.set('_enableOnRerender', false);
   },
 
   /**

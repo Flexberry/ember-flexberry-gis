@@ -21,7 +21,7 @@ export default EditMapController.extend(
       @type String
       @default ''
      */
-    identifyLayersOption: '',
+    identifyLayersOption: 'visible',
 
     /**
       Parameter contains current map identification tool option (arrow, square, polygon etc.)
@@ -29,25 +29,11 @@ export default EditMapController.extend(
       @type String
       @default ''
      */
-    identifyToolOption: '',
-
-    /**
-      Parameter contains default map identification layer option (all, visible, top etc.)
-      @property _defaultIdentifyLayersOption
-      @type String
-      @default 'visible'
-     */
-    _defaultIdentifyLayersOption: 'visible',
-
-    /**
-      Parameter contains default map identification tool option (arrow, square, polygon etc.)
-      @property _defaultIdentifyToolOption
-      @type String
-      @default 'rectangle'
-     */
-    _defaultIdentifyToolOption: 'rectangle',
+    identifyToolOption: 'rectangle',
 
     serviceLayer: null,
+
+    boundingBoxLayer: null,
 
     /**
       Parent route.
@@ -131,16 +117,21 @@ export default EditMapController.extend(
             })
             .sidebar('setting', 'transition', 'overlay')
             .sidebar('toggle');
+        }
 
-          if (e.tabName === 'identify') {
-            if (Ember.isBlank(this.get('identifyLayersOption'))) {
-              this.set('identifyLayersOption', this.get('_defaultIdentifyLayersOption'));
-            }
-
-            if (Ember.isBlank(this.get('identifyToolOption'))) {
-              this.set('identifyToolOption', this.get('_defaultIdentifyToolOption'));
-            }
+        if (e.tabName === 'identify') {
+          let leafletMap = this.get('leafletMap');
+          if (Ember.isNone(leafletMap)) {
+            return;
           }
+
+          let layer = this.get('identifyLayersOption');
+          let tool = this.get('identifyToolOption');
+
+          let mapToolName = 'identify-' + layer + '-' + tool;
+          leafletMap.fire('flexberry-map:identificationOptionChanged', {
+            mapToolName
+          });
         }
       },
 
@@ -169,10 +160,21 @@ export default EditMapController.extend(
 
       clearIdentification() {
         this.set('identifyResults', null);
+
+        let serviceLayer = this.get('serviceLayer');
+        if (serviceLayer) {
+          serviceLayer.clearLayers();
+        }
+
+        let boundingBoxLayer = this.get('boundingBoxLayer');
+        if (boundingBoxLayer) {
+          boundingBoxLayer.disableEdit();
+          boundingBoxLayer.remove();
+        }
       },
 
       /**
-          Handles 'flexberry-maptoolbar:identificationFinished' event of leaflet map.
+          Handles 'flexberry-identify-panel:identificationFinished' event of leaflet map.
 
           @method identificationFinished
           @param {Object} e Event object.
@@ -189,6 +191,7 @@ export default EditMapController.extend(
           serviceLayer.clearLayers();
         }
 
+        this.set('boundingBoxLayer', e.relatedLayer);
         this.set('identifyResults', e.results);
 
         // below is kind of madness, but if you want sidebar to move on identification finish - do that

@@ -246,24 +246,8 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
       return;
     }
 
-    // Attach custom event-handler.
-    leafletMap.on('flexberry-map:identificationFinished', this.identificationFinished, this);
-
     this._activateDefaultMapTool();
   })),
-
-  /**
-    Handles 'flexberry-map:identificationFinished' event of leaflet map.
-
-    @method identificationFinished
-    @param {Object} e Event object.
-    @param {Object} results Hash containing search results.
-    @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
-    or a promise returning such array.
-  */
-  identificationFinished(e) {
-    this.sendAction('onIdentificationFinished', e);
-  },
 
   /**
     Destroys component.

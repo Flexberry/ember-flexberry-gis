@@ -5,8 +5,8 @@
 import Ember from 'ember';
 
 /**
-  Array contains helper.
-  Checks whether the specified item contains in the given array or not.
+  Regex tester helper.
+  Checks whether the specified item matching provided regex expression
 
   @class RegexTestHelper
   @extends <a href="http://emberjs.com/api/classes/Ember.Helper.html">Ember.Helper</a>
