@@ -315,6 +315,17 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
 
         this.set('_options.x', x);
         this.set('_options.y', y);
+      },
+
+      /**
+        Handles coordinate input textboxes keyPress events.
+
+        @method actions.coordsInputKeyPress
+      */
+      coordsInputKeyPress(e) {
+        if (e.charCode !== 45 && e.charCode !== 44 && e.charCode !== 46 && e.charCode && (e.charCode < 48 || e.charCode > 57)) {
+          return false;
+        }
       }
     },
 
@@ -329,16 +340,37 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
       let innerOptions = this.get('_options');
       let crs = this.get('_selectedCrs');
 
-      let x = parseFloat(Ember.get(innerOptions, 'x').replace(',', '.'));
-      let y = parseFloat(Ember.get(innerOptions, 'y').replace(',', '.'));
-      if (isNaN(x) || isNaN(y)) {
+      let x = Ember.get(innerOptions, 'x').replace(',', '.');
+      let y = Ember.get(innerOptions, 'y').replace(',', '.');
+      let regEx = /^(\-|\+)?([0-9]+(\.[0-9]+)?)$/;
+      if (!(regEx.test(x) && regEx.test(y))) {
+        this.set('errorMessageContent', t('components.map-commands-dialogs.go-to.error-message.content'));
+        return null;
+      }
+
+      x = parseFloat(x);
+      y = parseFloat(y);
+
+      let isLatlng = Ember.get(crs, 'isLatlng');
+      let usedCrs = Ember.get(crs, 'crs');
+      let leafletMap = this.get('leafletMap');
+      let maxBounds = Ember.get(leafletMap, 'options.maxBounds');
+      if (Ember.isBlank(maxBounds)) {
+        let maxPixelBounds = leafletMap.getPixelWorldBounds(0);
+        maxBounds = L.latLngBounds(leafletMap.unproject(maxPixelBounds.min, 0), leafletMap.unproject(maxPixelBounds.max, 0));
+      }
+
+      let latLng = isLatlng ? new L.LatLng(x, y) : usedCrs.unproject(new L.Point(x, y));
+      if (!maxBounds.contains(latLng)) {
+        this.set('errorMessageContent', t('components.map-commands-dialogs.go-to.error-message.large-coords'));
         return null;
       }
 
       Ember.set(gotoOptions, 'point', new L.Point(x, y));
-      Ember.set(gotoOptions, 'crs', Ember.get(crs, 'crs'));
+      Ember.set(gotoOptions, 'crs', usedCrs);
       Ember.set(gotoOptions, 'xCaption', Ember.get(crs, 'xCaption'));
       Ember.set(gotoOptions, 'yCaption', Ember.get(crs, 'yCaption'));
+      Ember.set(gotoOptions, 'isLatlng', isLatlng);
       return gotoOptions;
     },
 
