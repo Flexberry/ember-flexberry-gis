@@ -28,6 +28,9 @@ export default {
     },
     'polygon': {
       'caption': 'Полигон'
+    },
+    'clear': {
+      'caption': 'Очистить'
     }
   },
   'measure': {
