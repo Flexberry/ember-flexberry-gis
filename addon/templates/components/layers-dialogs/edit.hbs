@@ -15,7 +15,7 @@
     <a class="active tab item" data-tab="main" {{action "onTabClick" "main" on="click"}}>
       {{t "components.layers-dialogs.edit.tabular-menu.main-tab.caption"}}
     </a>
-    {{#if _crsIsValid}}
+    {{#if _crsIsAvailableForType}}
       <a class="tab item" data-tab="crs" {{action "onTabClick" "crs" on="click"}}>
         {{t "components.layers-dialogs.edit.tabular-menu.crs-tab.caption"}}
       </a>
@@ -83,7 +83,7 @@
       }}
     </div>
   </div>
-  {{#if _crsIsValid}}
+  {{#if _crsIsAvailableForType}}
     <div class="ui bottom attached tab segment" data-tab="crs">
       <div class="field">
         <label>

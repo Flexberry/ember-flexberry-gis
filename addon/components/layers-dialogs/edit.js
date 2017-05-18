@@ -135,16 +135,16 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     /**
       Flag: indicates whether crs is available for the selected layer type.
 
-      @property _crsIsValid
+      @property _crsIsAvailableForType
       @type Boolean
       @private
       @readOnly
     */
-    _crsIsValid: Ember.computed('_layer.type', function() {
+    _crsIsAvailableForType: Ember.computed('_layer.type', function() {
       let className = this.get('_layer.type');
-      if(className !== 'group') {
-        return Ember.getOwner(this).isKnownNameForType('layer', className);
-      }
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      return Ember.A(Ember.get(layerClass, 'operations') || []).contains('group');
     }),
 
     /**
@@ -157,9 +157,9 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     */
     _typeIsValid: Ember.computed('_layer.type', function() {
       let className = this.get('_layer.type');
-      if(className !== 'group') {
-        return Ember.getOwner(this).isKnownNameForType('layer', className);
-      }
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      return Ember.A(Ember.get(layerClass, 'operations') || []).contains('group');
     }),
 
     /**
@@ -545,7 +545,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       onTabClick(dataTab) {
         Ember.$('.tab.segment').removeClass('active');
         Ember.$('.tab.segment[data-tab=\'' + dataTab + '\']').addClass('active');
-      }
+      },
     },
 
     /**
@@ -757,9 +757,10 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         Ember.$('.tabular.menu .item[data-tab = main]').addClass('active');
         Ember.$('.tab.segment[data-tab = main]').addClass('active');
       }
+
       // Changes max width of tabs.
       let $tabWidth = this.get('_tabWidth');
-      Ember.$('.tabular.menu .item').css("max-width", $tabWidth);
+      Ember.$('.tabular.menu .item').css('max-width', $tabWidth);
     },
 
     /**
