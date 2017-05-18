@@ -294,6 +294,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       The width of a single tab.
 
       @property _tabWidth
+      @type String
       @default null
       @private
     */
