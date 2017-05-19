@@ -38,6 +38,7 @@
       {{flexberry-textbox
         class="fluid"
         value=_options.x
+        keyPress=(action "coordsInputKeyPress")
       }}
     </div>
     <div class="field">
@@ -47,13 +48,14 @@
       {{flexberry-textbox
         class="fluid"
         value=_options.y
+        keyPress=(action "coordsInputKeyPress")
       }}
     </div>
     {{flexberry-button
       iconClass="resize vertical icon"
-      class="switch"      
+      class="switch"
       click=(action "switchXY")
     }}
-  </div>  
+  </div>
 </form>
 {{/flexberry-dialog}}

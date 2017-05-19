@@ -175,14 +175,14 @@ Ember.$.extend(true, translations, {
     },
     'crs': {
       'current': {
-        'name': 'Current CRS',
+        'name': 'In map\'s coordinate system',
         'xCaption': 'X',
         'yCaption': 'Y'
       },
       'latlng': {
-        'name': 'LatLng',
-        'xCaption': 'lat',
-        'yCaption': 'lng'
+        'name': 'Latitude and Longitude',
+        'xCaption': 'Latitude',
+        'yCaption': 'Longitude'
       }
     }
   },
