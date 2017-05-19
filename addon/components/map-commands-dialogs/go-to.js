@@ -323,7 +323,7 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
         @method actions.coordsInputKeyPress
       */
       coordsInputKeyPress(e) {
-        if (e.charCode !== 45 && e.charCode !== 44 && e.charCode !== 46 && e.charCode && (e.charCode < 48 || e.charCode > 57)) {
+        if (e.which !== 45 && e.which !== 44 && e.which !== 46 && (e.which < 48 || e.which > 57)) {
           return false;
         }
       }
