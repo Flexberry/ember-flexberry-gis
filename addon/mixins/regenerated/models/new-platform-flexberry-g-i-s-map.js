@@ -45,6 +45,14 @@ export let defineProjections = function (model) {
     editor: Projection.attr('Editor'),
     editTime: Projection.attr('Edit time')
   });
+  model.defineProjection('Map', 'new-platform-flexberry-g-i-s-map', {
+    name: Projection.attr(''),
+    lat: Projection.attr(''),
+    lng: Projection.attr(''),
+    zoom: Projection.attr(''),
+    public: Projection.attr(''),
+    coordinateReferenceSystem: Projection.attr('')
+  });
   model.defineProjection('MapE', 'new-platform-flexberry-g-i-s-map', {
     name: Projection.attr('Name'),
     lat: Projection.attr('Lat'),
@@ -60,9 +68,6 @@ export let defineProjections = function (model) {
       coordinateReferenceSystem: Projection.attr('CRS'),
       settings: Projection.attr('Settings'),
       parent: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Parent', {
-
-      }),
-      map: Projection.belongsTo('new-platform-flexberry-g-i-s-map', 'Map', {
 
       }),
       layerLink: Projection.hasMany('new-platform-flexberry-g-i-s-layer-link', '', {
