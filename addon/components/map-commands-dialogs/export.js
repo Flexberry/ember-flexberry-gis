@@ -3,7 +3,6 @@
 */
 
 import Ember from 'ember';
-import FlexberyMapActionsHandlerMixin from '../../mixins/flexberry-map-actions-handler';
 import layout from '../../templates/components/map-commands-dialogs/export';
 
 /**
@@ -91,10 +90,9 @@ const flexberryClassNames = {
   Flexberry 'export' map-command modal dialog with [Semantic UI modal](http://semantic-ui.com/modules/modal.html) style.
 
   @class FlexberryExportMapCommandDialogComponent
-  @uses FlexberyMapActionsHandlerMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMapActionsHandlerMixin, {
+let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   /**
     Sheet of paper placed on dialog's preview block.
 
@@ -540,7 +538,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       }
 
       // Real map size has been changed, so we need to refresh it's size after render, otherwise it may be displayed incorrectly.
-      Ember.run.scheduleOnce('afterRender', this, '_invalidateMapPreviewSize');
+      Ember.run.scheduleOnce('afterRender', () => {
+        let leafletMap = this.get('leafletMap');
+        leafletMap.invalidateSize(false);
+      });
 
       if (this.get('_options.displayMode') === 'map-only-mode') {
         return Ember.String.htmlSafe(`height: 100%;`);
@@ -561,6 +562,16 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
   _isDialogAlreadyRendered: false,
 
   /**
+    Flag: indicates whether print/export dialog is shown.
+
+    @property _isDialogShown
+    @type Boolean
+    @default null
+    @private
+  */
+  _isDialogShown: false,
+
+  /**
     Flag: indicates whether map can be shown or not.
 
     @property _mapCanBeShown
@@ -568,19 +579,26 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     @private
     @readOnly
   */
-  _mapCanBeShown: Ember.computed('_isDialogAlreadyRendered', '_isDialogShown', function() {
-    return this.get('_isDialogAlreadyRendered') && this.get('_isDialogShown');
-  }),
+  _mapCanBeShown: false,
 
   /**
-    Preview leaflet map.
+    Leaflet map's initial bounds which must be restored after dialog will be closed.
 
-    @property _previewLeafletMap
-    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+    @property _leafletMapInitialBounds
+    @type <a href="http://leafletjs.com/reference-1.0.1.html#latlngbounds">L.LatLngBounds</a>
+    @private
+  */
+  _leafletMapInitialBounds: null,
+
+  /**
+    Leaflet map container's clone.
+
+    @property _$leafletMapClone
+    @type <a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>
     @default null
     @private
   */
-  _previewLeafletMap: null,
+  _$leafletMapClone: null,
 
   /**
     Main leaflet map.
@@ -842,6 +860,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       @method actions.onBeforeHide
     */
     onBeforeHide(e) {
+      this.set('_isDialogShown', false);
+
       this.sendAction('beforeHide', e);
     },
 
@@ -864,54 +884,114 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       @method actions.onHide
     */
     onHide(e) {
-      this.set('_isDialogShown', false);
-
       this.sendAction('hide', e);
     }
   },
 
   /**
-    Observes changes in reference to leaflet map.
-    Attaches map events handlers.
+    Observers changes in properties that affect the ability to show leaflet map.
 
-    @method _leafletMapDidChange
+    @method _mapCanBeShownDidChange
     @private
   */
-  _leafletMapDidChange: Ember.on('init', Ember.observer('leafletMap', '_previewLeafletMap', function() {
+  _mapCanBeShownDidChange: Ember.observer('_isDialogAlreadyRendered', '_isDialogShown', 'leafletMap', function() {
     let leafletMap = this.get('leafletMap');
-    let previewLeafletMap = this.get('_previewLeafletMap');
-    if (Ember.isNone(leafletMap) || Ember.isNone(previewLeafletMap)) {
+    let oldMapCanBeShown = this.get('_mapCanBeShown');
+    let newMapCanBeShown = this.get('_isDialogAlreadyRendered') && this.get('_isDialogShown') && !Ember.isNone(leafletMap);
+    if (oldMapCanBeShown === newMapCanBeShown) {
       return;
     }
 
-    previewLeafletMap.fitBounds(leafletMap.getBounds(), {
-      animate: false
-    });
+    this.set('_mapCanBeShown', newMapCanBeShown);
 
-    Ember.run.scheduleOnce('afterRender', this, '_invalidateMapPreviewSize');
-    Ember.run.scheduleOnce('afterRender', this, () => {
-      // Add client layers with map-tools work results.
-      leafletMap.eachLayer((layer) => {
-        if (layer.isFlexberryClientLayer) {
-          previewLeafletMap.addLayer(L.Util.CloneLayer(layer));
-        }
-      });
-    });
-  })),
+    if (newMapCanBeShown) {
+      this._showLeafletMap();
+    } else {
+      this._hideLeafletMap();
+    }
+  }),
 
   /**
-    Invalidates size of preview leaflet map.
+    Shows leaflet map.
 
-    @method _invalidateMapPreviewSize
+    @method _showLeafletMap
     @private
   */
-  _invalidateMapPreviewSize() {
-    let previewLeafletMap = this.get('_previewLeafletMap');
-    if (Ember.isNone(previewLeafletMap)) {
-      return;
-    }
+  _showLeafletMap() {
+    let leafletMap = this.get('leafletMap');
+    let leafletMapInitialBounds = leafletMap.getBounds();
+    this.set('_leafletMapInitialBounds', leafletMapInitialBounds);
 
-    previewLeafletMap.invalidateSize(false);
+    // Retrieve leaflet map wrapper.
+    let $leafletMap = Ember.$(leafletMap._container);
+    let $leafletMapWrapper = $leafletMap.parent();
+
+    // Retrieve preview map wrapper.
+    let $previewMapWrapper = Ember.$(`.${flexberryClassNames.sheetOfPaperMap}`, this.get('_$sheetOfPaper'));
+
+    // Move interactive map into export dialog and replace original intercative leaflet map with it's clone for a while.
+    let $leafletMapClone = $leafletMap.clone();
+    this.set('_$leafletMapClone', $leafletMapClone);
+    $leafletMap.appendTo($previewMapWrapper[0]);
+    $leafletMapClone.appendTo($leafletMapWrapper[0]);
+
+    // Hide map-controls.
+    let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
+    Ember.$('.leaflet-top.leaflet-left', $leafletMapControls).children().hide();
+    Ember.$('.leaflet-top.leaflet-right', $leafletMapControls).children().hide();
+    Ember.$('.leaflet-bottom.leaflet-left', $leafletMapControls).children().hide();
+    Ember.$('.leaflet-bottom.leaflet-right', $leafletMapControls).children().hide();
+
+    // Invalidate map size and fit it's bounds.
+    leafletMap.once('resize', () => {
+      leafletMap.fitBounds(leafletMapInitialBounds, {
+        animate: false
+      });
+    });
+    leafletMap.invalidateSize(false);
+  },
+
+  /**
+    Hides leaflet map.
+
+    @method _hideLeafletMap
+    @private
+  */
+  _hideLeafletMap() {
+    let leafletMap = this.get('leafletMap');
+    let $leafletMap = Ember.$(leafletMap._container);
+    let leafletMapInitialBounds = this.get('_leafletMapInitialBounds');
+
+    // Retrieve leaflet map wrapper.
+    let $leafletMapClone = this.get('_$leafletMapClone');
+    let $leafletMapWrapper = $leafletMapClone.parent();
+
+    // Restore interactive map in it's original place and remove it's clone.
+    $leafletMapClone.remove();
+    this.set('_$leafletMapClone', null);
+
+    // Show map-controls.
+    let $leafletMapControls = Ember.$('.leaflet-control-container', $leafletMap);
+    Ember.$('.leaflet-top.leaflet-left', $leafletMapControls).children().show();
+    Ember.$('.leaflet-top.leaflet-right', $leafletMapControls).children().show();
+    Ember.$('.leaflet-bottom.leaflet-left', $leafletMapControls).children().show();
+    Ember.$('.leaflet-bottom.leaflet-right', $leafletMapControls).children().show();
+
+    // Fit bounds to avoid visual jumps inside restored interactive map.
+    leafletMap.once('moveend', () => {
+      $leafletMap.appendTo($leafletMapWrapper[0]);
+
+      // Invalidate map size and fit it's bounds again.
+      leafletMap.once('resize', () => {
+        leafletMap.fitBounds(leafletMapInitialBounds, {
+          animate: false
+        });
+      });
+      leafletMap.invalidateSize(false);
+    });
+    leafletMap.fitBounds(leafletMapInitialBounds, {
+      animate: false
+    });
   },
 
   /**
@@ -984,13 +1064,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       return new Ember.RSVP.Promise((resolve, reject) => {
         Ember.run.later(() => {
           resolve();
-        }, 2000);
+        }, 5000);
       });
     }).then(() => {
       return this.export();
-    }).catch((ex) => {
-      ex = ex || 'Unknown error';
-      Ember.Logger.error(ex.message || ex);
     }).finally(() => {
       this.afterExport();
     });
@@ -1003,8 +1080,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
   */
   beforeExport() {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let previewLeafletMap = this.get('_previewLeafletMap');
-      let previewBounds = previewLeafletMap.getBounds();
+      let leafletMap = this.get('leafletMap');
+      let leafletMapBounds = leafletMap.getBounds();
 
       // Sheet of paper with interactive map, which will be prepered for export and then exported.
       let $sheetOfPaper = this.get('_$sheetOfPaper');
@@ -1032,21 +1109,21 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       // Set sheet of paper map style relative to real size of the selected paper format.
       $sheetOfPaperMap.attr('style', this.get('_mapRealStyle'));
 
-      // Remove sheet of paper with interactive map from preview dialog and change it into static clone for a while.
+      // Replace interactivva map inside dialog with it's static clone for a while.
       $sheetOfPaperClone.appendTo($sheetOfPaperParent[0]);
 
       // Call to map's 'invalidateSize' method & resolve resulting promise after map will be resized.
-      previewLeafletMap.once('resize', () => {
+      leafletMap.once('resize', () => {
         // Set defined map view and then resolve resulting promise.
-        previewLeafletMap.once('moveend', () => {
+        leafletMap.once('moveend', () => {
           resolve();
         });
 
-        previewLeafletMap.fitBounds(previewBounds, {
+        leafletMap.fitBounds(leafletMapBounds, {
           animate: false
         });
       });
-      previewLeafletMap.invalidateSize(false);
+      leafletMap.invalidateSize(false);
     });
   },
 
@@ -1071,31 +1148,32 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       });
     };
 
-    // In 'standard-mode' export must be divided into two steps.
-    let $mapContainer = Ember.$(this.get('_previewLeafletMap._container'));
-    let $mapWrapper = $mapContainer.closest(`.${flexberryClassNames.sheetOfPaperMap}`);
-    let mapWrapperBackground = $mapWrapper.css(`background`);
+    let leafletMap = this.get('leafletMap');
+    let $leafletMap = Ember.$(leafletMap._container);
+    let $leafletMapWrapper = $leafletMap.parent();
+    let leafletMapWrapperBackground = $leafletMapWrapper.css(`background`);
 
+    // To achieve the correct image export must be divided into two steps.
     // First we export only map.
-    return window.html2canvas($mapContainer[0], {
+    return window.html2canvas($leafletMap[0], {
       useCORS: true
     }).then((canvas) => {
       // Then we hide map container.
-      $mapContainer.hide();
-      $mapContainer.attr('data-html2canvas-ignore', 'true');
+      $leafletMap.hide();
+      $leafletMap.attr('data-html2canvas-ignore', 'true');
 
       // And set exported map's DataURL as map wrapper's background image.
-      $mapWrapper.css(`background`, `url(${canvas.toDataURL('image/png')})`);
+      $leafletMapWrapper.css(`background`, `url(${canvas.toDataURL('image/png')})`);
 
       // Now we export whole sheet of paper (with caption and already exported map).
       return exportSheetOfPaper();
     }).then((exportedSheetOfPaper) => {
       // Restore map wrapper's original background.
-      $mapWrapper.css(`background`, mapWrapperBackground);
+      $leafletMapWrapper.css(`background`, leafletMapWrapperBackground);
 
       // Show hidden map container.
-      $mapContainer.removeAttr('data-html2canvas-ignore');
-      $mapContainer.show();
+      $leafletMap.removeAttr('data-html2canvas-ignore');
+      $leafletMap.show();
 
       // Finally return a result.
       return exportedSheetOfPaper;
@@ -1109,7 +1187,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
   */
   afterExport() {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let previewLeafletMap = this.get('_previewLeafletMap');
+      let leafletMap = this.get('leafletMap');
+      let leafletMapBounds = leafletMap.getBounds();
 
       // Sheet of paper with interactive map, which will be prepered for export and then exported.
       let $sheetOfPaper = this.get('_$sheetOfPaper');
@@ -1127,9 +1206,6 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       // Set sheet of paper map style relative to preview size of the selected paper format.
       $sheetOfPaperMap.attr('style', this.get('_mapPreviewStyle'));
 
-      // Remove sheet of paper from document's body.
-      $sheetOfPaper.remove();
-
       // Remove sheet of paper clone.
       $sheetOfPaperClone.remove();
       this.set('_$sheetOfPaperClone', null);
@@ -1138,10 +1214,17 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       $sheetOfPaper.appendTo($sheetOfPaperParent[0]);
 
       // Call to map's 'invalidateSize' method & resolve resulting promise after map will be resized.
-      previewLeafletMap.once('resize', () => {
-        resolve();
+      leafletMap.once('resize', () => {
+        // Set defined map view and then resolve resulting promise.
+        leafletMap.once('moveend', () => {
+          resolve();
+        });
+
+        leafletMap.fitBounds(leafletMapBounds, {
+          animate: false
+        });
       });
-      previewLeafletMap.invalidateSize(false);
+      leafletMap.invalidateSize(false);
     });
   },
 
@@ -1239,6 +1322,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     this._super(...arguments);
 
     this.set('leafletMap', null);
+    this.set('_$leafletMapClone', null);
     this.set(`_$sheetOfPaper`, null);
     this.set(`_$sheetOfPaperClone`, null);
 

@@ -1,5 +1,5 @@
 /**
-  Clone layers util for leaflet (see https://github.com/jieter/leaflet-clonelayer).
+  Clone layer util for leaflet (see https://github.com/jieter/leaflet-clonelayer).
 */
 ;(function(L) {
   var cloneOptions = function(options) {
