@@ -33,7 +33,7 @@ export default EditMapController.extend(
 
     serviceLayer: null,
 
-    boundingBoxLayer: null,
+    polygonLayer: null,
 
     /**
       Parent route.
@@ -168,10 +168,10 @@ export default EditMapController.extend(
           serviceLayer.clearLayers();
         }
 
-        let boundingBoxLayer = this.get('boundingBoxLayer');
-        if (boundingBoxLayer) {
-          boundingBoxLayer.disableEdit();
-          boundingBoxLayer.remove();
+        let polygonLayer = this.get('polygonLayer');
+        if (polygonLayer) {
+          polygonLayer.disableEdit();
+          polygonLayer.remove();
         }
       },
 
@@ -193,7 +193,7 @@ export default EditMapController.extend(
           serviceLayer.clearLayers();
         }
 
-        this.set('boundingBoxLayer', e.relatedLayer);
+        this.set('polygonLayer', e.polygonLayer);
         this.set('identifyResults', e.results);
 
         // below is kind of madness, but if you want sidebar to move on identification finish - do that
