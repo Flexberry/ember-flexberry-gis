@@ -19,7 +19,8 @@ module.exports = {
     // because ember-addons depending on ember-flexberry-gis
     // (for example ember-flexberry-gis-yandex see https://github.com/Flexberry/ember-flexberry-gis-yandex),
     // will append their vendor dependencies earlier in the vendor.js file, but some of them needs leaflet to be already imported.
-    var appImagesDirectory = '/assets/images';
+    var appAssetsDirectory = '/assets';
+    var appImagesDirectory = appAssetsDirectory + '/images';
     app.import(app.bowerDirectory + '/leaflet/dist/leaflet-src.js', {
       type: 'vendor',
       prepend: true
@@ -118,17 +119,20 @@ module.exports = {
     app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.js');
     app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.css');
     app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.png', {
-      destDir: appImagesDirectory
+      destDir: appAssetsDirectory
     });
 
-    // Leaflet Div Control
+    // Leaflet Div Control.
     app.import('vendor/leaflet/controls/leaflet.div-control.js');
 
-    // Leaflet ImageOverlay Extensions
+    // Leaflet ImageOverlay Extensions.
     app.import('vendor/leaflet/layers/leaflet.imageoverlay.js');
 
-    // Leaflet.WMS Overlay Extensions
+    // Leaflet.WMS Overlay Extensions.
     app.import('vendor/leaflet/layers/leaflet.wms.overlay.js');
+
+    // Leaflet.Util.CloneLayer.
+    app.import('vendor/leaflet/utils/leaflet.util.cloneLayer.js');
 
     // Leaflet switch scale control
     app.import(app.bowerDirectory + '/leaflet-switch-scale-control/src/L.Control.SwitchScaleControl.js');

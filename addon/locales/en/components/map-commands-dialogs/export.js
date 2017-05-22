@@ -31,6 +31,15 @@ export default {
       'modes-divider': {
         'caption': 'or'
       }
+    },
+    'map-controls-panel': {
+      'caption': 'Visible map controls',
+      'legend-control': {
+        'caption': 'Legend'
+      },
+      'scale-control': {
+        'caption': 'Scale bar'
+      }
     }
   },
   'paper-settings-tab': {
@@ -49,18 +58,6 @@ export default {
     },
     'paper-format-dropdown': {
       'caption': 'Sheet of paper format'
-    }
-  },
-  'map-controls-settings-tab': {
-    'caption': 'Map controls settings',
-    'map-controls-panel': {
-      'caption': 'Map controls',
-      'legend-control': {
-        'caption': 'Legend'
-      },
-      'scale-control': {
-        'caption': 'Scale bar'
-      }
     }
   },
   'downloading-file-settings-tab': {

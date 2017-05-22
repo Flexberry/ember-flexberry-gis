@@ -352,9 +352,15 @@ let DrawMapToolComponent = Ember.Component.extend({
     init() {
       this._super(...arguments);
 
+      let editLayer = new L.LayerGroup();
+      editLayer.isFlexberryClientLayer = true;
+
+      let featuresLayer = new L.LayerGroup();
+      featuresLayer.isFlexberryClientLayer = true;
+
       this.set('_drawToolProperties', {
-        editLayer: new L.LayerGroup(),
-        featuresLayer: new L.LayerGroup()
+        editLayer: editLayer,
+        featuresLayer: featuresLayer
       });
     }
 

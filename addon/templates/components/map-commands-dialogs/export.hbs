@@ -1,4 +1,6 @@
-{{#flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
+{{#flexberry-dialog
+  class=(concat class " " flexberryClassNames.prefix)
+  contentClass=(if showErrorMessage "has error message" "")
   caption=(if showDownloadingFileSettings (t "components.map-commands-dialogs.export.export-caption") (t "components.map-commands-dialogs.export.print-caption"))
   approveButtonCaption=(t "components.map-commands-dialogs.export.approve-button.caption")
   denyButtonCaption=(t "components.map-commands-dialogs.export.deny-button.caption")
@@ -33,19 +35,13 @@
           class="tab item {{if (eq _tabularMenuActiveTab "display-mode") "active"}}"
           data-tab="display-mode"
           title="{{t "components.map-commands-dialogs.export.display-mode-settings-tab.caption"}}">
-          <i class="maximize icon"></i>
+          <i class="marker icon"></i>
         </a>
         <a
           class="tab item {{if (eq _tabularMenuActiveTab "paper") "active"}}"
           data-tab="paper"
           title="{{t "components.map-commands-dialogs.export.paper-settings-tab.caption"}}">
           <i class="file outline icon"></i>
-        </a>
-        <a
-          class="tab item {{if (eq _tabularMenuActiveTab "map-controls") "active"}}"
-          data-tab="map-controls"
-          title="{{t "components.map-commands-dialogs.export.map-controls-settings-tab.caption"}}">
-          <i class="marker icon"></i>
         </a>
         <a
           class="tab item {{if (eq _tabularMenuActiveTab "downloading-file") "active"}} {{if (not showDownloadingFileSettings) "disabled"}}"
@@ -144,6 +140,23 @@
             }}
           </div>
         </div>
+        <div class="field">
+          <label>
+            {{t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.caption"}}
+          </label>
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              class=(if _options.legendControl "active" "")
+              caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.legend-control.caption")
+              click=(action "onMapControlChange" "legendControl")
+            }}
+            {{flexberry-button
+              class=(if _options.scaleControl "active" "")
+              caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.scale-control.caption")
+              click=(action "onMapControlChange" "scaleControl")
+            }}
+          </div>
+        </div>
       </div>
       <div
         class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "paper") "active"}}"
@@ -179,27 +192,6 @@
         </div>
       </div>
       <div
-        class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "map-controls") "active"}}"
-        data-tab="map-controls">
-        <div class="field">
-          <label>
-            {{t "components.map-commands-dialogs.export.map-controls-settings-tab.map-controls-panel.caption"}}
-          </label>
-          <div class="ui small fluid buttons">
-            {{flexberry-button
-              class=(if _options.legendControl "active" "")
-              caption=(t "components.map-commands-dialogs.export.map-controls-settings-tab.map-controls-panel.legend-control.caption")
-              click=(action "onMapControlChange" "legendControl")
-            }}
-            {{flexberry-button
-              class=(if _options.scaleControl "active" "")
-              caption=(t "components.map-commands-dialogs.export.map-controls-settings-tab.map-controls-panel.scale-control.caption")
-              click=(action "onMapControlChange" "scaleControl")
-            }}
-          </div>
-        </div>
-      </div>
-      <div
         class="ui bottom attached tab segment  {{if (eq _tabularMenuActiveTab "downloading-file") "active"}} {{if (not showDownloadingFileSettings) "disabled"}}"
         data-tab="downloading-file">
         <div class="field">
@@ -229,7 +221,7 @@
           {{_options.caption}}
         </p>
         <div class="{{flexberryClassNames.sheetOfPaperMap}}" style={{_mapPreviewStyle}}>
-          {{#if _isDialogAlreadyRendered}}
+          {{#if _mapCanBeShown}}
             {{#flexberry-map
               zoomControl=false
               attributionControl=false

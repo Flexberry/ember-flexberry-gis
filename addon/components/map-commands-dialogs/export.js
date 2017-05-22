@@ -269,6 +269,25 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
   ),
 
   /**
+    Sheet of paper real style.
+
+    @property _sheetOfPaperRealStyle
+    @type String
+    @private
+    @readOnly
+  */
+  _sheetOfPaperRealStyle: Ember.computed(
+    '_sheetOfPaperRealHeight',
+    '_sheetOfPaperRealWidth',
+    function() {
+      return Ember.String.htmlSafe(
+        `height: ${this.get('_sheetOfPaperRealHeight')}px; ` +
+        `width: ${this.get('_sheetOfPaperRealWidth')}px;` +
+        `border: none`);
+    }
+  ),
+
+  /**
     Sheet of paper preview height.
     Initializes in 'didInsertElement' hook.
 
@@ -366,7 +385,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     '_options.captionLineHeight',
     '_options.captionFontSize',
     function() {
-      return  Math.floor(this.get('_options.captionLineHeight') * this.get('_options.captionFontSize'));
+      return Math.floor(this.get('_options.captionLineHeight') * this.get('_options.captionFontSize'));
     }
   ),
 
@@ -417,7 +436,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
         return null;
       }
 
-      return  Math.round(this.get('_mapCaptionRealHeight') * sheetOfPaperPreviewScaleFactor);
+      return Math.round(this.get('_mapCaptionRealHeight') * sheetOfPaperPreviewScaleFactor);
     }
   ),
 
@@ -438,7 +457,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
         return null;
       }
 
-      return  Math.round(mapCaptionPreviewHeight / this.get('_options.captionLineHeight'));
+      return Math.round(mapCaptionPreviewHeight / this.get('_options.captionLineHeight'));
     }
   ),
 
@@ -520,13 +539,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
         return Ember.String.htmlSafe(``);
       }
 
-      // Map height will be changed, so we need to refresh it after render, otherwise it may be displayed incorrectly.
-      Ember.run.scheduleOnce('afterRender', this, function () {
-        let previewLeafletMap = this.get('_previewLeafletMap');
-        if (!Ember.isNone(previewLeafletMap)) {
-          previewLeafletMap.invalidateSize(false);
-        }
-      });
+      // Real map size has been changed, so we need to refresh it's size after render, otherwise it may be displayed incorrectly.
+      Ember.run.scheduleOnce('afterRender', this, '_invalidateMapPreviewSize');
 
       if (this.get('_options.displayMode') === 'map-only-mode') {
         return Ember.String.htmlSafe(`height: 100%;`);
@@ -545,6 +559,18 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     @private
   */
   _isDialogAlreadyRendered: false,
+
+  /**
+    Flag: indicates whether map can be shown or not.
+
+    @property _mapCanBeShown
+    @type Boolean
+    @private
+    @readOnly
+  */
+  _mapCanBeShown: Ember.computed('_isDialogAlreadyRendered', '_isDialogShown', function() {
+    return this.get('_isDialogAlreadyRendered') && this.get('_isDialogShown');
+  }),
 
   /**
     Preview leaflet map.
@@ -826,11 +852,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       @method actions.onShow
     */
     onShow(e) {
-      let previewLeafletMap = this.get('_previewLeafletMap');
-      if (!Ember.isNone(previewLeafletMap)) {
-        // Map was hidden before, so we need to refresh it, otherwise it may be displayed incorrectly.
-        previewLeafletMap.invalidateSize(false);
-      }
+      this.set('_isDialogShown', true);
 
       this.sendAction('show', e);
     },
@@ -842,6 +864,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       @method actions.onHide
     */
     onHide(e) {
+      this.set('_isDialogShown', false);
+
       this.sendAction('hide', e);
     }
   },
@@ -860,25 +884,34 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
       return;
     }
 
-    leafletMap.on('moveend', this._onLeafletMapViewChanged, this);
-    leafletMap.on('zoomend', this._onLeafletMapViewChanged, this);
-    this._onLeafletMapViewChanged();
+    previewLeafletMap.fitBounds(leafletMap.getBounds(), {
+      animate: false
+    });
+
+    Ember.run.scheduleOnce('afterRender', this, '_invalidateMapPreviewSize');
+    Ember.run.scheduleOnce('afterRender', this, () => {
+      // Add client layers with map-tools work results.
+      leafletMap.eachLayer((layer) => {
+        if (layer.isFlexberryClientLayer) {
+          previewLeafletMap.addLayer(L.Util.CloneLayer(layer));
+        }
+      });
+    });
   })),
 
   /**
-    Handles changes in leaflet map's current view.
+    Invalidates size of preview leaflet map.
 
-    @method _onLeafletMapViewChanged
+    @method _invalidateMapPreviewSize
     @private
   */
-  _onLeafletMapViewChanged() {
-    let leafletMap = this.get('leafletMap');
+  _invalidateMapPreviewSize() {
     let previewLeafletMap = this.get('_previewLeafletMap');
-    if (Ember.isNone(leafletMap) || Ember.isNone(previewLeafletMap)) {
+    if (Ember.isNone(previewLeafletMap)) {
       return;
     }
 
-    previewLeafletMap.fitBounds(leafletMap.getBounds());
+    previewLeafletMap.invalidateSize(false);
   },
 
   /**
@@ -894,7 +927,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
     // It isn't possible to get real screen DPI with JavaScript code,
     // but some workarounds are possible (see http://stackoverflow.com/a/35941703).
     function findFirstPositive(b, a, i, c) {
-      c = (d,e) => e >= d ? (a = d + (e - d) / 2, 0 < b(a) && (a === d || 0 >= b(a-1)) ? a : 0 >= b(a) ? c(a + 1, e) :c(d, a - 1)) : -1;
+      c = (d, e) => e >= d ? (a = d + (e - d) / 2, 0 < b(a) && (a === d || 0 >= b(a - 1)) ? a : 0 >= b(a) ? c(a + 1, e) : c(d, a - 1)) : -1;
       for (i = 1; 0 >= b(i);) {
         i *= 2;
       }
@@ -933,75 +966,45 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
 
     // Define custom export method.
     Ember.set(leafletExportOptions, 'export', (exportOptions) => {
-      // Sheet of paper with interactive map, which will be prepered for export and then exported.
-      let $sheetOfPaper = this.get('_$sheetOfPaper');
-      let sheetOfPaperOriginalBorder = $sheetOfPaper.css('border');
-
-      let exportSheetOfPaper = () => {
-        return window.html2canvas($sheetOfPaper[0], {
-          useCORS: true
-        }).then((canvas) => {
-          // Restore border after export.
-          $sheetOfPaper.css('border', sheetOfPaperOriginalBorder);
-
-          let type = 'image/png';
-          return {
-            data: canvas.toDataURL(type),
-            width: canvas.width,
-            height: canvas.height,
-            type: type
-          };
-        });
-      };
-
-      // When dialog is in 'map-only-mode' export is easier we just export whole sheet of paper in a single step.
-      if (this.get('_options.displayMode') === 'map-only-mode') {
-        return exportSheetOfPaper();
-      }
-
-      // In 'standard-mode' export must be divided into several steps.
-      let $mapContainer = Ember.$(this.get('_previewLeafletMap._container'));
-      let $mapWrapper = $mapContainer.closest(`.${flexberryClassNames.sheetOfPaperMap}`);
-      let mapWrapperOriginalBackground = $mapWrapper.css(`background`);
-
-      // First we export only map.
-      return window.html2canvas($mapContainer[0], {
-        useCORS: true
-      }).then((canvas) => {
-        // Then we hide map container from the sheet of paper.
-        $mapContainer.hide();
-        $mapContainer.attr('data-html2canvas-ignore', 'true');
-
-        // And set exported map's DataURL as map wrapper's background image.
-        $mapWrapper.css(`background`, `url(${canvas.toDataURL('image/png')})`);
-
-        // Now we export whole sheet of paper (with caption and previously exported map).
-        return exportSheetOfPaper();
-      }).then((exportedSheetOfPaper) => {
-        // Restore map wrapper's original background.
-        $mapWrapper.css(`background`, mapWrapperOriginalBackground);
-
-        // Show hidden map container on the sheet of paper.
-        $mapContainer.removeAttr('data-html2canvas-ignore');
-        $mapContainer.show();
-
-        // Finally return a result.
-        return exportedSheetOfPaper;
-      });
+      return this._export();
     });
 
     return leafletExportOptions;
   },
 
   /**
-    Prepares map for export.
+    Export's map with respect to selected export options.
+
+    @method _export
+    @private
+  */
+  _export() {
+    return this.beforeExport().then(() => {
+      // Delay export for a while to allow map became fully loaded after resize in 'beforeExport' method.
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        Ember.run.later(() => {
+          resolve();
+        }, 2000);
+      });
+    }).then(() => {
+      return this.export();
+    }).catch((ex) => {
+      ex = ex || 'Unknown error';
+      Ember.Logger.error(ex.message || ex);
+    }).finally(() => {
+      this.afterExport();
+    });
+  },
+
+  /**
+    Prepares map for export with respect to selected export options.
 
     @method beforeExport
   */
   beforeExport() {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let previewLeafletMap = this.get('_previewLeafletMap');
-      let previewLeafletMapBounds = previewLeafletMap.getBounds();
+      let previewBounds = previewLeafletMap.getBounds();
 
       // Sheet of paper with interactive map, which will be prepered for export and then exported.
       let $sheetOfPaper = this.get('_$sheetOfPaper');
@@ -1010,72 +1013,136 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
 
       // Sheet of paper clone with static non-interactive map, which will be displayed in preview dialog while export is executing.
       let $sheetOfPaperClone = $sheetOfPaper.clone();
-      let $sheetOfPaperCloneMap = Ember.$(`.${flexberryClassNames.sheetOfPaperMap}`, $sheetOfPaperClone);
-      let $sheetOfPaperCloneMapCaption = Ember.$(`.${flexberryClassNames.sheetOfPaperMapCaption}`, $sheetOfPaperClone);
       this.set('_$sheetOfPaperClone', $sheetOfPaperClone);
 
       let $sheetOfPaperParent = $sheetOfPaper.parent();
       let $body = $sheetOfPaper.closest('body');
 
-      // Remove sheet of paper with interactive map from preview dialog and change it into static clone for a while.
-      $sheetOfPaper.remove();
-      $sheetOfPaperClone.appendTo($sheetOfPaperParent[0]);
-
-      // Insert sheet of paper with interactive map into invisible part of document body.
+      // Move sheet of paper with interactive map into invisible part of document body.
+      // And set sheet of paper style relative to real size of the selected paper format.
+      $sheetOfPaper.appendTo($body[0]);
+      $sheetOfPaper.attr('style', this.get('_sheetOfPaperRealStyle'));
       $sheetOfPaper.css('position', 'absolute');
       $sheetOfPaper.css('left', `${$body.outerWidth() + 1}px`);
       $sheetOfPaper.css('top', '0px');
-      $sheetOfPaper.appendTo($body[0]);
 
-      // Set sheet of paper size relative to selected paper format.
-      let paperFormat = this.get('_options.paperFormat');
-      let paperOrientation = this.get('_options.paperOrientation');
-      let paperFormatSize = paperFormatsInMillimeters[paperFormat][paperOrientation];
-      $sheetOfPaper.css('width', `${paperFormatSize.width}mm`);
-      $sheetOfPaper.css('height', `${paperFormatSize.height}mm`);
+      // Set sheet of paper map caption style relative to real size of the selected paper format.
+      $sheetOfPaperMapCaption.attr('style', this.get('_mapCaptionRealStyle'));
 
-      // Set caption's size relative to sheet of paper new size (change only height, width is 100%).
-      $sheetOfPaperMapCaption.css(
-        'height',
-        `${Math.round($sheetOfPaperCloneMapCaption.outerHeight() * $sheetOfPaper.outerHeight() / $sheetOfPaperClone.outerHeight())}px`);
+      // Set sheet of paper map style relative to real size of the selected paper format.
+      $sheetOfPaperMap.attr('style', this.get('_mapRealStyle'));
 
-      // Set interactive map's size relative to sheet of paper new size (change only height, width is 100%).
-      $sheetOfPaperMap.css(
-        'height',
-        `${Math.round($sheetOfPaperCloneMap.outerHeight() * $sheetOfPaper.outerHeight()  / $sheetOfPaperClone.outerHeight())}px`);
+      // Remove sheet of paper with interactive map from preview dialog and change it into static clone for a while.
+      $sheetOfPaperClone.appendTo($sheetOfPaperParent[0]);
 
-      // Hide border of sheet of paper.
-      $sheetOfPaper.css('border', 'none');
+      // Call to map's 'invalidateSize' method & resolve resulting promise after map will be resized.
+      previewLeafletMap.once('resize', () => {
+        // Set defined map view and then resolve resulting promise.
+        previewLeafletMap.once('moveend', () => {
+          resolve();
+        });
 
-      // TODO: Chenge into hidden before pull-request will be sent.
-      $body.css('overflow', 'auto');
-
-      console.log('Map bounds is ' + previewLeafletMapBounds);
-      previewLeafletMap.once('resize', () => { console.log('After invalidateSize resize triggered'); });
-      previewLeafletMap.once('viewreset', () => { console.log('After invalidateSize viewreset triggered'); });
-      previewLeafletMap.once('zoomend', () => { console.log('After invalidateSize zoomend triggered'); });
-      previewLeafletMap.once('moveend', () => { console.log('After invalidateSize moveend triggered'); });
+        previewLeafletMap.fitBounds(previewBounds, {
+          animate: false
+        });
+      });
       previewLeafletMap.invalidateSize(false);
-
-      //previewLeafletMap.fitBounds(previewLeafletMapBounds);
-      resolve();
     });
   },
 
   /**
-    Performs export.
+    Export's map with respect to selected export options.
 
     @method export
   */
   export() {
+    let $sheetOfPaper = this.get('_$sheetOfPaper');
+    let exportSheetOfPaper = () => {
+      return window.html2canvas($sheetOfPaper[0], {
+        useCORS: true
+      }).then((canvas) => {
+        let type = 'image/png';
+        return {
+          data: canvas.toDataURL(type),
+          width: canvas.width,
+          height: canvas.height,
+          type: type
+        };
+      });
+    };
+
+    // In 'standard-mode' export must be divided into two steps.
+    let $mapContainer = Ember.$(this.get('_previewLeafletMap._container'));
+    let $mapWrapper = $mapContainer.closest(`.${flexberryClassNames.sheetOfPaperMap}`);
+    let mapWrapperBackground = $mapWrapper.css(`background`);
+
+    // First we export only map.
+    return window.html2canvas($mapContainer[0], {
+      useCORS: true
+    }).then((canvas) => {
+      // Then we hide map container.
+      $mapContainer.hide();
+      $mapContainer.attr('data-html2canvas-ignore', 'true');
+
+      // And set exported map's DataURL as map wrapper's background image.
+      $mapWrapper.css(`background`, `url(${canvas.toDataURL('image/png')})`);
+
+      // Now we export whole sheet of paper (with caption and already exported map).
+      return exportSheetOfPaper();
+    }).then((exportedSheetOfPaper) => {
+      // Restore map wrapper's original background.
+      $mapWrapper.css(`background`, mapWrapperBackground);
+
+      // Show hidden map container.
+      $mapContainer.removeAttr('data-html2canvas-ignore');
+      $mapContainer.show();
+
+      // Finally return a result.
+      return exportedSheetOfPaper;
+    });
   },
 
   /**
-    Performs after export clean ups.
+    Performs after export clean up.
 
     @method afterExport
   */
   afterExport() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let previewLeafletMap = this.get('_previewLeafletMap');
+
+      // Sheet of paper with interactive map, which will be prepered for export and then exported.
+      let $sheetOfPaper = this.get('_$sheetOfPaper');
+      let $sheetOfPaperMap = Ember.$(`.${flexberryClassNames.sheetOfPaperMap}`, $sheetOfPaper);
+      let $sheetOfPaperMapCaption = Ember.$(`.${flexberryClassNames.sheetOfPaperMapCaption}`, $sheetOfPaper);
+      let $sheetOfPaperClone = this.get('_$sheetOfPaperClone');
+      let $sheetOfPaperParent = $sheetOfPaperClone.parent();
+
+      // Set sheet of paper style relative to preview size of the selected paper format.
+      $sheetOfPaper.attr('style', this.get('_sheetOfPaperPreviewStyle'));
+
+      // Set sheet of paper map caption style relative to preview size of the selected paper format.
+      $sheetOfPaperMapCaption.attr('style', this.get('_mapCaptionPreviewStyle'));
+
+      // Set sheet of paper map style relative to preview size of the selected paper format.
+      $sheetOfPaperMap.attr('style', this.get('_mapPreviewStyle'));
+
+      // Remove sheet of paper from document's body.
+      $sheetOfPaper.remove();
+
+      // Remove sheet of paper clone.
+      $sheetOfPaperClone.remove();
+      this.set('_$sheetOfPaperClone', null);
+
+      // Place sheet of papaer in the preview dialog again.
+      $sheetOfPaper.appendTo($sheetOfPaperParent[0]);
+
+      // Call to map's 'invalidateSize' method & resolve resulting promise after map will be resized.
+      previewLeafletMap.once('resize', () => {
+        resolve();
+      });
+      previewLeafletMap.invalidateSize(false);
+    });
   },
 
   /**
@@ -1154,11 +1221,6 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
 
     // Initialize Semantic UI tabular menu.
     $tabularMenuTabItems.tab();
-
-    // TODO: Remove it before pull request will be sent.
-    window.beforeExport = this.beforeExport.bind(this);
-    window.export = this.export.bind(this);
-    window.afterExport = this.afterExport.bind(this);
   },
 
   /**
@@ -1175,14 +1237,6 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend(FlexberyMa
   */
   willDestroyElement() {
     this._super(...arguments);
-
-    let leafletMap = this.get('leafletMap');
-    if (Ember.isNone(leafletMap)) {
-      return;
-    }
-
-    leafletMap.off('moveend', this._onLeafletMapViewChanged, this);
-    leafletMap.off('zoomend', this._onLeafletMapViewChanged, this);
 
     this.set('leafletMap', null);
     this.set(`_$sheetOfPaper`, null);
