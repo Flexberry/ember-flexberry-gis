@@ -178,12 +178,12 @@ Ember.$.extend(true, translations, {
     },
     'crs': {
       'current': {
-        'name': 'Система координат карты',
+        'name': 'В системе коодинат карты',
         'xCaption': 'X',
         'yCaption': 'Y'
       },
       'latlng': {
-        'name': 'Широта/долгота',
+        'name': 'Широта и Долгота',
         'xCaption': 'Широта',
         'yCaption': 'Долгота'
       }

@@ -35,8 +35,8 @@ const flexberryClassNames = {
   ```handlebars
   availableCRS: Ember.computed(function() {
     let availableModes = Ember.A();
-    availableModes.push({ crs: this.get('model.crs'), name: t('crs.current.name'), xCaption: t('crs.current.xCaption'), yCaption: t('crs.current.yCaption') });
-    availableModes.push({ crs: L.CRS.EPSG4326, name: t('crs.latlng.name'), xCaption: t('crs.latlng.xCaption'), yCaption: t('crs.latlng.yCaption') });
+    availableModes.push({ crs: this.get('model.crs'), name: t('crs.current.name'), xCaption: t('crs.current.xCaption'), yCaption: t('crs.current.yCaption'), isLatlng: false });
+    availableModes.push({ crs: L.CRS.EPSG4326, name: t('crs.latlng.name'), xCaption: t('crs.latlng.xCaption'), yCaption: t('crs.latlng.yCaption'), isLatlng: true });
 
     return availableModes;
   }),
@@ -143,8 +143,8 @@ let GoToMapCommandComponent = Ember.Component.extend({
 
      availableCRS: Ember.computed(function() {
         let availableModes = Ember.A();
-        availableModes.push({crs: this.get('model.crs'), name: t('crs.current.name'), xCaption: t('crs.current.xCaption'), yCaption: t('crs.current.yCaption')});
-        availableModes.push({crs: L.CRS.EPSG4326, name: t('crs.latlng.name'), xCaption: t('crs.latlng.xCaption'), yCaption: t('crs.latlng.yCaption')});
+        availableModes.push({crs: this.get('model.crs'), name: t('crs.current.name'), xCaption: t('crs.current.xCaption'), yCaption: t('crs.current.yCaption'), isLatlng: false});
+        availableModes.push({crs: L.CRS.EPSG4326, name: t('crs.latlng.name'), xCaption: t('crs.latlng.xCaption'), yCaption: t('crs.latlng.yCaption'), isLatlng: true});
 
         return availableModes;
       }),
@@ -153,6 +153,10 @@ let GoToMapCommandComponent = Ember.Component.extend({
       @type Array
     */
     availableCRS: null,
+
+    localeObserver: Ember.observer('i18n.locale', function() {
+      this.set('_gotoDialogHasBeenRequested', false);
+    }),
 
     actions: {
       /**

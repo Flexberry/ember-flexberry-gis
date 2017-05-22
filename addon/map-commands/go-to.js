@@ -25,12 +25,15 @@ export default BaseMapCommand.extend({
     let crs = Ember.get(options, 'crs');
     let xCaption = Ember.get(options, 'xCaption');
     let yCaption = Ember.get(options, 'yCaption');
+    let isLatlng = Ember.get(options, 'isLatlng');
 
-    let latlng = null;
-    latlng = crs.unproject(point);
-
+    let latlng = isLatlng ? new L.LatLng(point.x, point.y) : crs.unproject(point);
     let leafletMap = this.get('leafletMap');
-    let popupContent = `${xCaption}: ${point.x}; ${yCaption}: ${point.y}`;
+    let popupContent = isLatlng ?
+      `${xCaption}: ${latlng.lat}; ` +
+      `${yCaption}: ${latlng.lng}` :
+      `${xCaption}: ${point.x}; ` +
+      `${yCaption}: ${point.y}`;
 
     leafletMap.openPopup(popupContent, latlng);
     leafletMap.panTo(latlng);
