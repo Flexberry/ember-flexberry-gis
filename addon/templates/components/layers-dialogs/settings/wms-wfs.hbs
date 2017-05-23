@@ -1,12 +1,12 @@
-{{#flexberry-toggler
-  class="styled fluid"
-  caption="WMS Settings"
-}}
+<div class="ui segment">
+  <h5 class="ui header">
+    {{t "components.layers-dialogs.settings.wms-wfs.wms-segment.caption"}}
+  </h5>
   {{component "layers-dialogs/settings/wms" settings=settings}}
-{{/flexberry-toggler}}
-{{#flexberry-toggler
-  class="styled fluid"
-  caption="WFS Settings"
-}}
+</div>
+<div class="ui segment">
+  <h5 class="ui header">
+    {{t "components.layers-dialogs.settings.wms-wfs.wfs-segment.caption"}}
+  </h5>
   {{component "layers-dialogs/settings/wfs" settings=settings.wfs}}
-{{/flexberry-toggler}}
+</div>

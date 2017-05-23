@@ -1,5 +1,5 @@
 export default {
-  'caption': 'Edit layer',
+  'caption': 'Edit',
   'approve-button': {
     'caption': 'Ok'
   },

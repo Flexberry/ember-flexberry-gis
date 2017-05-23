@@ -1,5 +1,5 @@
 export default {
-  'caption': 'Редактирование слоя',
+  'caption': 'Редактирование',
   'approve-button': {
     'caption': 'Ok'
   },

@@ -133,62 +133,116 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     _availableTypes: null,
 
     /**
-      Flag: indicates whether inner layer type is valid.
+      Flag: indicates whether CRS is available for the selected layer type.
 
-      @property _typeIsValid
+      @property _crsSettingsAreAvailableForType
       @type Boolean
       @private
       @readOnly
     */
-    _typeIsValid: Ember.computed('_layer.type', function() {
+    _crsSettingsAreAvailableForType: Ember.computed('_layer.type', function() {
       let className = this.get('_layer.type');
 
-      return Ember.getOwner(this).isKnownNameForType('layer', className);
+      let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
+      if (!available && this.get('_tabularMenuActiveTab') === 'crs') {
+        this.set('_tabularMenuActiveTab', 'main');
+      }
+
+      // Reset tabular menu after tab has been added or removed.
+      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
+
+      return available;
     }),
 
     /**
-      Flag: indicates whether 'identify' operation is available for the selected layer type.
+      Flag: indicates whether type-related settings are available for the selected layer type.
 
-      @property _identifyIsAvailableForType
+      @property _layerSettingsAreAvailableForType
       @type Boolean
       @private
       @readOnly
     */
-    _identifyIsAvailableForType: Ember.computed('_layer.type', function() {
+    _layerSettingsAreAvailableForType: Ember.computed('_layer.type', function() {
       let className = this.get('_layer.type');
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
-      return Ember.A(Ember.get(layerClass, 'operations') || []).contains('identify');
+      let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
+      if (!available && this.get('_tabularMenuActiveTab') === 'settings') {
+        this.set('_tabularMenuActiveTab', 'main');
+      }
+
+      // Reset tabular menu after tab has been added or removed.
+      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
+
+      return available;
     }),
 
     /**
-      Flag: indicates whether 'search' operation is available for the selected layer type.
+      Flag: indicates whether 'identify' operation settings are available for the selected layer type.
 
-      @property _searchIsAvailableForType
+      @property _identifySettingsAreAvailableForType
       @type Boolean
       @private
       @readOnly
     */
-    _searchIsAvailableForType: Ember.computed('_layer.type', function() {
+    _identifySettingsAreAvailableForType: Ember.computed('_layer.type', function() {
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
-      return Ember.A(Ember.get(layerClass, 'operations') || []).contains('search');
+      let available = !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('identify');
+      if (!available && this.get('_tabularMenuActiveTab') === 'identifySettings') {
+        this.set('_tabularMenuActiveTab', 'main');
+      }
+
+      // Reset tabular menu after tab has been added or removed.
+      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
+
+      return available;
     }),
 
     /**
-      Flag: indicates whether 'legend' operation is available for the selected layer type.
+      Flag: indicates whether 'search' operation settings are available for the selected layer type.
 
-      @property _legendIsAvailableForType
+      @property _searchSettingsAreAvailableForType
       @type Boolean
       @private
       @readOnly
     */
-    _legendIsAvailableForType: Ember.computed('_layer.type', function() {
+    _searchSettingsAreAvailableForType: Ember.computed('_layer.type', function() {
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
-      return Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
+      let available = !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('search');
+      if (!available && this.get('_tabularMenuActiveTab') === 'searchSettings') {
+        this.set('_tabularMenuActiveTab', 'main');
+      }
+
+      // Reset tabular menu after tab has been added or removed.
+      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
+
+      return available;
+    }),
+
+    /**
+      Flag: indicates whether 'legend' operation settings are available for the selected layer type.
+
+      @property _legendSettingaAreAvailableForType
+      @type Boolean
+      @private
+      @readOnly
+    */
+    _legendSettingaAreAvailableForType: Ember.computed('_layer.type', function() {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      let available = !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
+      if (!available && this.get('_tabularMenuActiveTab') === 'legendSettings') {
+        this.set('_tabularMenuActiveTab', 'main');
+      }
+
+      // Reset tabular menu after tab has been added or removed.
+      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
+
+      return available;
     }),
 
     /**
@@ -267,12 +321,21 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     /**
       Tabular menu containing tabs items.
 
-      @property _tabularMenu
+      @property _$tabularMenu
       @type Object
       @default null
       @private
     */
-    _tabularMenu: null,
+    _$tabularMenu: null,
+
+    /**
+      Tabular menu active tab name.
+
+      @property _tabularMenuActiveTab
+      @type String
+      @private
+    */
+    _tabularMenuActiveTab: 'main',
 
     /**
       Reference to component's template.
@@ -509,10 +572,15 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         Handles clicks on tabs.
 
         @method actions.onTabClick
-        @param {String} dataTab Name of clicked tab.
+        @param {Object} e Click event object.
       */
-      onTabClick(dataTab) {
-      }
+      onTabClick(e) {
+        e = Ember.$.event.fix(e);
+
+        let $clickedTab = Ember.$(e.currentTarget);
+        let clickedTabName = $clickedTab.attr('data-tab');
+        this.set('_tabularMenuActiveTab', clickedTabName);
+      },
     },
 
     /**
@@ -616,6 +684,19 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     },
 
     /**
+      Resets tabuler menu.
+
+      @method _resetTabularMenu
+      @private
+    */
+    _resetTabularMenu() {
+      let $tabularMenu = this.get('_$tabularMenu');
+      if (!Ember.isNone($tabularMenu)) {
+        Ember.$('.tab.item', $tabularMenu).tab();
+      }
+    },
+
+    /**
       Observes visibility changes & creates/destroys inner hash containing layer copy.
 
       @method _visibleDidChange
@@ -706,22 +787,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       this._super(...arguments);
 
       let $tabularMenu = this.get('childViews')[0].$('.tabular.menu');
-      Ember.$('.tab.item', $tabularMenu).tab();
-
-      this.set('_tabularMenu', $tabularMenu);
-    },
-
-    /**
-      Handles DOM-related component's properties after each render.
-    */
-    didRender() {
-      this._super(...arguments);
-
-      let $tabularMenu = this.get('_tabularMenu');
-      if (!Ember.isNone($tabularMenu)) {
-        // Initialize possibly added new tabs.
-        Ember.$('.tab.item', $tabularMenu).tab();
-      }
+      this.set('_$tabularMenu', $tabularMenu);
     },
 
     /**
@@ -730,10 +796,10 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     willDestroyElement() {
       this._super(...arguments);
 
-      let $tabularMenu = this.get('_tabularMenu');
+      let $tabularMenu = this.get('_$tabularMenu');
       if (!Ember.isNone($tabularMenu)) {
         Ember.$('.tab.item', $tabularMenu).tab('destroy');
-        this.set('_tabularMenu', null);
+        this.set('_$tabularMenu', null);
       }
     }
 
