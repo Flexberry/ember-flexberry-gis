@@ -88,26 +88,21 @@
     value=settings.showExisting
   }}
 </div>
-<div class="ui segment">
-  <h5 class="ui header">
-    {{t "components.layers-dialogs.settings.wfs.style.caption"}}
-  </h5>
-  <div class="field">
-    <label>
-      {{t "components.layers-dialogs.settings.wfs.style.color-textbox.caption"}}
-    </label>
-    {{flexberry-textbox
-      class="fluid"
-      value=settings.style.color
-    }}
-  </div>
-  <div class="field">
-    <label>
-      {{t "components.layers-dialogs.settings.wfs.style.weight-textbox.caption"}}
-    </label>
-    {{flexberry-textbox
-      class="fluid"
-      value=settings.style.weight
-    }}
-  </div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.style.color-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.style.color
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.style.weight-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.style.weight
+  }}
 </div>

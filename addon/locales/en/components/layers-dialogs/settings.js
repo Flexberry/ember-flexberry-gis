@@ -1,5 +1,6 @@
-import WMS from './settings/wms';
-import WFS from './settings/wfs';
+import Wms from './settings/wms';
+import Wfs from './settings/wfs';
+import WmsWfs from './settings/wms-wfs';
 
 export default {
   'group': {
@@ -11,11 +12,13 @@ export default {
     }
   },
 
-  'wms': WMS,
+  'wms': Wms,
 
-  'wms-single-tile': WMS,
+  'wms-single-tile': Wms,
 
-  'wfs': WFS,
+  'wfs': Wfs,
+
+  'wms-wfs': WmsWfs,
 
   'geocoder-osm-overpass': {
     'url-textbox': {

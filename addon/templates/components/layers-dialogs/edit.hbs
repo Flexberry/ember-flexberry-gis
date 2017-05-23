@@ -11,37 +11,37 @@
   hide=(action "onHide")
 }}
 <form class="ui form" role="form">
-  <div class="ui top attached tabular menu">
-    <a class="active tab item" data-tab="main" {{action "onTabClick" "main" on="click"}}>
+  <div class="ui top attached fluid tabular menu">
+    <a class="tab item {{if (eq _tabularMenuActiveTab "main") "active"}}" data-tab="main" onclick={{action "onTabClick"}}>
       {{t "components.layers-dialogs.edit.tabular-menu.main-tab.caption"}}
     </a>
-    {{#if _crsIsAvailableForType}}
-      <a class="tab item" data-tab="crs" {{action "onTabClick" "crs" on="click"}}>
+    {{#if _crsSettingsAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "crs") "active"}}" data-tab="crs" onclick={{action "onTabClick"}}>
         {{t "components.layers-dialogs.edit.tabular-menu.crs-tab.caption"}}
       </a>
     {{/if}}
-    {{#if _typeIsValid}}
-      <a class="tab item" data-tab="settings" {{action "onTabClick" "settings" on="click"}}>
+    {{#if _layerSettingsAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "settings") "active"}}" data-tab="settings" onclick={{action "onTabClick"}}>
         {{t "components.layers-dialogs.edit.tabular-menu.settings-tab.caption"}}
       </a>
     {{/if}}
-    {{#if _identifyIsAvailableForType}}
-      <a class="tab item" data-tab="identifySettings" {{action "onTabClick" "identifySettings" on="click"}}>
+    {{#if _identifySettingsAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "identifySettings") "active"}}" data-tab="identifySettings" onclick={{action "onTabClick"}}>
         {{t "components.layers-dialogs.edit.tabular-menu.identify-settings-tab.caption"}}
       </a>
     {{/if}}
-    {{#if _searchIsAvailableForType}}
-      <a class="tab item" data-tab="searchSettings" {{action "onTabClick" "serachSettings" on="click"}}>
+    {{#if _searchSettingsAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "searchSettings") "active"}}" data-tab="searchSettings" onclick={{action "onTabClick"}}>
         {{t "components.layers-dialogs.edit.tabular-menu.search-settings-tab.caption"}}
       </a>
     {{/if}}
-    {{#if _legendIsAvailableForType}}
-      <a class="tab item" data-tab="legendSettings" {{action "onTabClick" "legendSettings" on="click"}}>
+    {{#if _legendSettingaAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "legendSettings") "active"}}" data-tab="legendSettings" onclick={{action "onTabClick"}}>
         {{t "components.layers-dialogs.edit.tabular-menu.legend-settings-tab.caption"}}
       </a>
     {{/if}}
   </div>
-  <div class="ui bottom attached active tab segment" data-tab="main">
+  <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "main") "active"}}" data-tab="main">
     {{#if _modesAreAvailable}}
       <div class="field">
         <label>
@@ -83,8 +83,8 @@
       }}
     </div>
   </div>
-  {{#if _crsIsAvailableForType}}
-    <div class="ui bottom attached tab segment" data-tab="crs">
+  {{#if _crsSettingsAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "crs") "active"}}" data-tab="crs">
       <div class="field">
         <label>
           {{crsCaption}}
@@ -126,23 +126,23 @@
       {{/if}}
     </div>
   {{/if}}
-  {{#if _typeIsValid}}
-    <div class="ui bottom attached tab segment" data-tab="settings">
+  {{#if _layerSettingsAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "settings") "active"}}" data-tab="settings">
       {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings}}
     </div>
   {{/if}}
-  {{#if _identifyIsAvailableForType}}
-    <div class="ui bottom attached tab segment" data-tab="identifySettings">
+  {{#if _identifySettingsAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "identifySettings") "active"}}" data-tab="identifySettings">
       {{flexberry-jsonarea value=_layer.settings.identifySettings}}
     </div>
   {{/if}}
-  {{#if _searchIsAvailableForType}}
-    <div class="ui bottom attached tab segment" data-tab="searchSettings">
+  {{#if _searchSettingsAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "searchSettings") "active"}}" data-tab="searchSettings">
       {{flexberry-jsonarea value=_layer.settings.searchSettings}}
     </div>
   {{/if}}
-  {{#if _legendIsAvailableForType}}
-    <div class="ui bottom attached tab segment" data-tab="legendSettings">
+  {{#if _legendSettingaAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "legendSettings") "active"}}" data-tab="legendSettings">
       {{flexberry-jsonarea value=_layer.settings.legendSettings}}
     </div>
   {{/if}}
