@@ -32,6 +32,15 @@ export default BaseNonclickableMapTool.extend({
   cursor: 'help',
 
   /**
+    Tool's polygon area layer.
+
+    @property polygonLayer
+    @type {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>}
+    @default null
+  */
+  polygonLayer: null,
+
+  /**
     Flag: indicates whether to hide figure on drawing end or not.
 
     @property hideOnDrawingEnd
@@ -77,24 +86,21 @@ export default BaseNonclickableMapTool.extend({
 
     @method _startIdentification
     @param {Object} options Method options.
-    @param {Array} options.polygonVertices Polygon vertices of type <a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the polygon layer.
-    @param {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>} options.relatedLayer Polygon layer related to given vertices.
+    @param {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>} options.polygonLayer Polygon layer related to given area.
     @param {Object[]} options.excludedLayers Layers excluded from identification.
     @private
   */
   _startIdentification({
-    polygonVertices,
+    polygonLayer,
     latlng,
-    relatedLayer,
     excludedLayers
   }) {
     let leafletMap = this.get('leafletMap');
 
     let e = {
-      polygonVertices: polygonVertices,
       latlng: latlng,
-      relatedLayer: relatedLayer,
+      polygonLayer: polygonLayer,
       excludedLayers: Ember.A(excludedLayers || []),
       layers: this._getLayersToIdentify({
         excludedLayers
@@ -139,9 +145,8 @@ export default BaseNonclickableMapTool.extend({
 
     @method _finishIdentification
     @param {Object} e Event object.
-    @param {Array} options.polygonVertices Polygon vertices of type <a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the polygon layer.
-    @param {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>} options.relatedLayer Polygon layer related to given vertices.
+    @param {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>} options.polygonLayer Polygon layer related to given vertices.
     @param {Object[]} excludedLayers Objects describing those layers which were excluded from identification.
     @param {Object[]} layers Objects describing those layers which are identified.
     @param {Object[]} results Objects describing identification results.
@@ -183,8 +188,8 @@ export default BaseNonclickableMapTool.extend({
     leafletMap.hideLoader();
 
     // Assign current tool's boundingBoxLayer
-    let boundingBoxLayer = Ember.get(e, 'relatedLayer');
-    this.set('boundingBoxLayer', boundingBoxLayer);
+    let polygonLayer = Ember.get(e, 'polygonLayer');
+    this.set('polygonLayer', polygonLayer);
 
     // Fire custom event on leaflet map.
     leafletMap.fire('flexberry-map:identificationFinished', e);
@@ -202,7 +207,6 @@ export default BaseNonclickableMapTool.extend({
     layer
   }) {
     let latlng = layer.getCenter();
-    let polygonVertices = layer._latlngs[0];
     let boundingBox = layer.getBounds();
     if (boundingBox.getSouthWest().equals(boundingBox.getNorthEast())) {
       // Identification area is point.
@@ -218,12 +222,12 @@ export default BaseNonclickableMapTool.extend({
 
       // Bounding box around specified point with radius of current scale * 0.05.
       boundingBox = boundingBox.getSouthWest().toBounds(maxMeters * 0.05);
-      polygonVertices = [boundingBox.getNorthWest(), boundingBox.getNorthEast(), boundingBox.getSouthEast(), boundingBox.getSouthWest()];
+      layer.setLatLngs([boundingBox.getNorthWest(), boundingBox.getNorthEast(), boundingBox.getSouthEast(), boundingBox.getSouthWest()]);
     }
 
     // Remove previously drawn rectangle
     if (this.get('hidePreviousOnDrawingEnd')) {
-      this._clearBoundingBox();
+      this._clearPolygonLayer();
     }
 
     // Show map loader.
@@ -234,8 +238,7 @@ export default BaseNonclickableMapTool.extend({
 
     // Start identification.
     this._startIdentification({
-      relatedLayer: layer,
-      polygonVertices: polygonVertices,
+      polygonLayer: layer,
       latlng: latlng
     });
   },
@@ -267,7 +270,7 @@ export default BaseNonclickableMapTool.extend({
     @private
   */
   _disable() {
-    this._clearBoundingBox();
+    this._clearPolygonLayer();
     this._super(...arguments);
 
     let editTools = this.get('_editTools');
@@ -301,15 +304,15 @@ export default BaseNonclickableMapTool.extend({
   /**
     Remove already drawn figure
 
-    @method _clearBoundingBox
+    @method _clearPolygonLayer
     @private
   */
-  _clearBoundingBox() {
+  _clearPolygonLayer() {
     // Remove already drawn figure
-    let boundingBoxLayer = this.get('boundingBoxLayer');
-    if (boundingBoxLayer) {
-      boundingBoxLayer.disableEdit();
-      boundingBoxLayer.remove();
+    let polygonLayer = this.get('polygonLayer');
+    if (polygonLayer) {
+      polygonLayer.disableEdit();
+      polygonLayer.remove();
     }
   }
 });

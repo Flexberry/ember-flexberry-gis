@@ -152,7 +152,7 @@ export default BaseLayer.extend({
 
     @method identify
     @param {Object} e Event object.
-    @param {Array} options.polygonVertices Polygon vertices of type <a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>.
+    @param {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>} polygonLayer Polygon layer related to given area.
     @param {Object[]} layers Objects describing those layers which must be identified.
     @param {Object[]} results Objects describing identification results.
     Every result-object has the following structure: { layer: ..., features: [...] },
@@ -161,8 +161,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-
-    let filter = new L.Filter.Intersects().append(L.polygon(e.polygonVertices), this.get('geometryField'), this.get('crs'));
+    let filter = new L.Filter.Intersects().append(e.polygonLayer, this.get('geometryField'), this.get('crs'));
 
     let featuresPromise = this._getFeature({
       filter
