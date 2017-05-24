@@ -539,8 +539,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
       // Real map size has been changed, so we need to refresh it's size after render, otherwise it may be displayed incorrectly.
       Ember.run.scheduleOnce('afterRender', () => {
-        let leafletMap = this.get('leafletMap');
-        leafletMap.invalidateSize(false);
+        this._invalidateSizeOfLeafletMap();
       });
 
       if (this.get('_options.displayMode') === 'map-only-mode') {
@@ -703,6 +702,15 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @default null
   */
   defaultMapCaption: null,
+
+  /**
+    Max timeout (in milliseconds) to wait for map's layers readiness before export.
+
+    @property timeout
+    @type Number
+    @default 30000
+  */
+  timeout: 30000,
 
   actions: {
     /**
@@ -912,6 +920,152 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   }),
 
   /**
+    Invalidates leaflet map's size.
+
+    @method _invalidateSizeOfLeafletMap
+    @returns <a htef="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    Promise which will be resolved when invalidation will be finished.
+  */
+  _invalidateSizeOfLeafletMap() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletMap = this.get('leafletMap');
+
+      leafletMap.once('resize', () => {
+        resolve();
+      });
+
+      leafletMap.invalidateSize(false);
+    });
+  },
+
+  /**
+    Fits specified leaflet map's bounds.
+
+    @method _fitBoundsOfLeafletMap
+    @param {<a href="http://leafletjs.com/reference-1.0.1.html#latlngbounds">L.LatLngBounds</a>} bounds Bounds to be fitted.
+    @returns <a htef="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    Promise which will be resolved when fitting will be finished.
+  */
+  _fitBoundsOfLeafletMap(bounds) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletMap = this.get('leafletMap');
+
+      leafletMap.once('moveend', () => {
+        resolve();
+      });
+
+      leafletMap.fitBounds(bounds, {
+        animate: false
+      });
+    });
+  },
+
+  /**
+    Waits for leaflet map tile layers to be ready.
+
+    @method _waitForLeafletMapTileLayersToBeReady
+    @returns <a htef="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    Promise which will be resolved when map's tile layers will be ready.
+  */
+  _waitForLeafletMapTileLayersToBeReady() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletMap = this.get('leafletMap');
+      let $leafletMapContainer = Ember.$(leafletMap._container);
+      let $tiles = Ember.$('.leaflet-tile-pane img', $leafletMapContainer);
+
+      if ($tiles.length === 0) {
+        // There is no tiles, resolve promise to continue the following operations.
+        resolve();
+        return;
+      }
+
+      let timeoutId = null;
+      let intervalId = null;
+
+      // Interval to check that tiles are ready.
+      intervalId = setInterval(() => {
+        let allTilesAreReady = true;
+        $tiles.each(function() {
+          let $tile = Ember.$(this);
+
+          // Call to $.fn.css('opacity') will return '1' if 'opacity' isn't defined, that's why element.style.opacity is preferred.
+          allTilesAreReady = allTilesAreReady && (parseFloat($tile[0].style.opacity) === 1);
+
+          // It will break 'each' loop if current tile isn't ready yet and flag became false.
+          return allTilesAreReady;
+        });
+
+        if (allTilesAreReady) {
+          // All tiles are ready, so both timeout and interval can be cleared and resulting promise can be resolved.
+          clearTimeout(timeoutId);
+          clearInterval(intervalId);
+          resolve();
+        }
+      }, 100);
+
+      // Timeout to avoid infinite checkings.
+      timeoutId = setTimeout(() => {
+        // Wait is timed out, so intarval can be cleared and resulting promise can be resolved.
+        clearInterval(intervalId);
+        resolve();
+      }, this.get('timeout'));
+    });
+  },
+
+  /**
+    Waits for leaflet map overlay layers to be ready.
+
+    @method _waitForLeafletMapOverlayLayersToBeReady
+    @returns <a htef="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    Promise which will be resolved when map's overlay layers will be ready.
+  */
+  _waitForLeafletMapOverlayLayersToBeReady() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletMap = this.get('leafletMap');
+      let $leafletMapContainer = Ember.$(leafletMap._container);
+      let $overlays = Ember.$('.leaflet-overlay-pane', $leafletMapContainer).children();
+
+      if ($overlays.length === 0) {
+        // There is no overlays, resolve promise to continue the following operations.
+        resolve();
+        return;
+      }
+
+      let timeoutId = null;
+      let intervalId = null;
+
+      // Interval to check that overlays are ready.
+      intervalId = setInterval(() => {
+        // Don't know how to check overlays readiness, so just clear timeout, interval, and resolve resulting promise.
+        clearTimeout(timeoutId);
+        clearInterval(intervalId);
+        resolve();
+      }, 100);
+
+      // Timeout to avoid infinite checkings.
+      timeoutId = setTimeout(() => {
+        // Wait is timed out, so intarval can be cleared and resulting promise can be resolved.
+        clearInterval(intervalId);
+        resolve();
+      }, this.get('timeout'));
+    });
+  },
+
+  /**
+    Waits for leaflet map layers to be ready.
+
+    @method _waitForLeafletMapLayersToBeReady
+    @returns <a htef="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    Promise which will be resolved when map's layers will be ready.
+  */
+  _waitForLeafletMapLayersToBeReady() {
+    return Ember.RSVP.hash({
+      tileLayers: this._waitForLeafletMapTileLayersToBeReady(),
+      overlayLayers: this._waitForLeafletMapOverlayLayersToBeReady(),
+    });
+  },
+
+  /**
     Shows leaflet map.
 
     @method _showLeafletMap
@@ -942,13 +1096,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     Ember.$('.leaflet-bottom.leaflet-left', $leafletMapControls).children().hide();
     Ember.$('.leaflet-bottom.leaflet-right', $leafletMapControls).children().hide();
 
-    // Invalidate map size and fit it's bounds.
-    leafletMap.once('resize', () => {
-      leafletMap.fitBounds(leafletMapInitialBounds, {
-        animate: false
-      });
+    // Invalidate map size and then fit it's bounds.
+    this._invalidateSizeOfLeafletMap().then(() => {
+      return this._fitBoundsOfLeafletMap(leafletMapInitialBounds);
     });
-    leafletMap.invalidateSize(false);
   },
 
   /**
@@ -978,19 +1129,13 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     Ember.$('.leaflet-bottom.leaflet-right', $leafletMapControls).children().show();
 
     // Fit bounds to avoid visual jumps inside restored interactive map.
-    leafletMap.once('moveend', () => {
+    this._fitBoundsOfLeafletMap(leafletMapInitialBounds).then(() => {
       $leafletMap.appendTo($leafletMapWrapper[0]);
 
-      // Invalidate map size and fit it's bounds again.
-      leafletMap.once('resize', () => {
-        leafletMap.fitBounds(leafletMapInitialBounds, {
-          animate: false
-        });
-      });
-      leafletMap.invalidateSize(false);
-    });
-    leafletMap.fitBounds(leafletMapInitialBounds, {
-      animate: false
+      // Invalidate map size and then fit it's bounds again.
+      return this._invalidateSizeOfLeafletMap();
+    }).then(() => {
+      return this._fitBoundsOfLeafletMap(leafletMapInitialBounds);
     });
   },
 
@@ -1060,12 +1205,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   */
   _export() {
     return this.beforeExport().then(() => {
-      // Delay export for a while to allow map became fully loaded after resize in 'beforeExport' method.
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        Ember.run.later(() => {
-          resolve();
-        }, 5000);
-      });
+      return this._waitForLeafletMapLayersToBeReady();
     }).then(() => {
       return this.export();
     }).finally(() => {
@@ -1112,18 +1252,12 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       // Replace interactivva map inside dialog with it's static clone for a while.
       $sheetOfPaperClone.appendTo($sheetOfPaperParent[0]);
 
-      // Call to map's 'invalidateSize' method & resolve resulting promise after map will be resized.
-      leafletMap.once('resize', () => {
-        // Set defined map view and then resolve resulting promise.
-        leafletMap.once('moveend', () => {
-          resolve();
-        });
-
-        leafletMap.fitBounds(leafletMapBounds, {
-          animate: false
-        });
+      // Invalidate map size, then fit it's bounds, and then resolve resulting promise.
+      this._invalidateSizeOfLeafletMap().then(() => {
+        return this._fitBoundsOfLeafletMap(leafletMapBounds);
+      }).then(() => {
+        resolve();
       });
-      leafletMap.invalidateSize(false);
     });
   },
 
@@ -1213,18 +1347,12 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       // Place sheet of papaer in the preview dialog again.
       $sheetOfPaper.appendTo($sheetOfPaperParent[0]);
 
-      // Call to map's 'invalidateSize' method & resolve resulting promise after map will be resized.
-      leafletMap.once('resize', () => {
-        // Set defined map view and then resolve resulting promise.
-        leafletMap.once('moveend', () => {
-          resolve();
-        });
-
-        leafletMap.fitBounds(leafletMapBounds, {
-          animate: false
-        });
+      // Invalidate map size, then fit it's bounds, and then resolve resulting promise.
+      this._invalidateSizeOfLeafletMap().then(() => {
+        return this._fitBoundsOfLeafletMap(leafletMapBounds);
+      }).then(() => {
+        resolve();
       });
-      leafletMap.invalidateSize(false);
     });
   },
 
