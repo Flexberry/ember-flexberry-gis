@@ -133,10 +133,7 @@ export default BaseLayer.extend({
       return features;
     });
 
-    e.results.push({
-      layerModel: this.get('layerModel'),
-      features: featuresPromise
-    });
+    return featuresPromise;
   },
 
   /**
