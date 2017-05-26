@@ -22,20 +22,20 @@ export let Model = Ember.Mixin.create({
 });
 export let defineProjections = function (model) {
   model.defineProjection('LinkParameter', 'new-platform-flexberry-g-i-s-link-parameter', {
-    objectField: Projection.attr(''),
-    layerField: Projection.attr(''),
-    expression: Projection.attr(''),
-    queryKey: Projection.attr(''),
-    linkField: Projection.attr(''),
+    objectField: Projection.attr('Поле объекта'),
+    layerField: Projection.attr('Поле слоя'),
+    expression: Projection.attr('Выражение'),
+    queryKey: Projection.attr('Параметр запроса'),
+    linkField: Projection.attr('Поле связи'),
     layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', '', {
 
     })
   });
   model.defineProjection('LinkParameterD', 'new-platform-flexberry-g-i-s-link-parameter', {
-    objectField: Projection.attr(''),
-    layerField: Projection.attr(''),
-    expression: Projection.attr(''),
-    queryKey: Projection.attr(''),
-    linkField: Projection.attr('')
+    objectField: Projection.attr('Поле объекта'),
+    layerField: Projection.attr('Поле слоя'),
+    expression: Projection.attr('Выражение'),
+    queryKey: Projection.attr('Параметр запроса'),
+    linkField: Projection.attr('Поле связи')
   });
 };
