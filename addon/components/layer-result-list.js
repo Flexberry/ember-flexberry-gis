@@ -124,6 +124,8 @@ export default Ember.Component.extend({
         }
 
         if (!Ember.isBlank(bounds)) {
+          // 'bound.pad(1)' bounds with zoom decreased by 1 point (padding).
+          //  That allows to make map's bounds slightly larger than serviceLayer's bounds to make better UI.
           this.get('leafletMap').fitBounds(bounds.pad(1));
         }
       }
