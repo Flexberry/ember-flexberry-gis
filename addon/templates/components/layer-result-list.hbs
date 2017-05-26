@@ -15,6 +15,7 @@
         {{#each result.features as |feature|}}
           {{feature-result-item
             feature=feature
+            displayProperty="displayValue"
             displaySettings=result.settings
             selectedFeature=_selectedFeature
             selectFeature=(action "selectFeature")

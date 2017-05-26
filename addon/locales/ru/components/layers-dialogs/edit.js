@@ -45,6 +45,9 @@ export default {
     'search-settings-tab': {
       'caption': 'Настройки поиска'
     },
+    'display-settings-tab': {
+      'caption': 'Настройки отображения'
+    },
     'legend-settings-tab': {
       'caption': 'Настройки легенды'
     }

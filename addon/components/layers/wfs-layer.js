@@ -187,11 +187,7 @@ export default BaseLayer.extend({
   */
   search(e) {
     let propertyName = e.searchOptions.propertyName;
-
-    if (Ember.isNone(propertyName)) {
-      propertyName = this.get('layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings.displayProperty');
-    }
-
+    
     if (Ember.isNone(propertyName)) {
       return;
     }

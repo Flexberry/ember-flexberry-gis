@@ -124,6 +124,7 @@ export default Ember.Component.extend({
 
       let e = {
         tabName: currentTab,
+        prevTab: prevTab,
         changed: changed,
         originalEvent: event
       };
