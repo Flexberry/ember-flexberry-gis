@@ -70,8 +70,15 @@ export let defineProjections = function (model) {
           name: Projection.attr('Слой')
         }, { hidden: true }),
         mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
-
-        }, { hidden: true })
+          editForm: Projection.attr('Форма'),
+        }, { hidden: true }),
+        linkParameter: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', '', {
+          objectField: Projection.attr(''),
+          layerField: Projection.attr(''),
+          expression: Projection.attr(''),
+          queryKey: Projection.attr(''),
+          linkField: Projection.attr('')
+        })
       })
     })
   });
