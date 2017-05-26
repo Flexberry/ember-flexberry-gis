@@ -336,7 +336,7 @@ export default Ember.Component.extend(
     _query(e) {
       let layerLinks = this.get('layerModel.layerLink');
 
-      if (!Ember.isArray(layerLinks)) {
+      if (!Ember.isArray(layerLinks) || Ember.isBlank(layerLinks)) {
         return;
       }
 
@@ -459,7 +459,9 @@ export default Ember.Component.extend(
       @method leafletOptionsDidChange
       @param {String[]} changedOptions Array containing names of all changed options.
     */
-    leafletOptionsDidChange({ changedOptions }) {
+    leafletOptionsDidChange({
+      changedOptions
+    }) {
       let optionsDidntChange = changedOptions.length === 0;
       if (optionsDidntChange) {
         // Prevent unnecessary leaflet layer's recreation.
