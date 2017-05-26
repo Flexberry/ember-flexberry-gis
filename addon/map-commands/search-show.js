@@ -37,8 +37,7 @@ export default SearchMapCommand.extend({
       let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
       let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
 
-      if ((Ember.typeOf(displayProperty) !== 'array' && !displayPropertyIsCallback)
-        || (Ember.typeOf(displayProperty) !== 'string' && displayPropertyIsCallback)) {
+      if ((Ember.typeOf(displayProperty) !== 'array' && !displayPropertyIsCallback) || (Ember.typeOf(displayProperty) !== 'string' && displayPropertyIsCallback)) {
         // Retrieve first available property.
         return getFeatureFirstAvailableProperty(feature);
       }
@@ -57,9 +56,7 @@ export default SearchMapCommand.extend({
           }
         });
 
-        return !Ember.isNone(displayValue)
-          ? displayValue
-          : getFeatureFirstAvailableProperty(feature);
+        return !Ember.isNone(displayValue) ? displayValue : getFeatureFirstAvailableProperty(feature);
       }
 
       // Defined displayProperty is a serialized java script function, which can calculate display property.

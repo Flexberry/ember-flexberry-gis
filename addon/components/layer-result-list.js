@@ -212,8 +212,7 @@ export default Ember.Component.extend({
       let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
       let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
 
-      if ((Ember.typeOf(displayProperty) !== 'array' && !displayPropertyIsCallback)
-        || (Ember.typeOf(displayProperty) !== 'string' && displayPropertyIsCallback)) {
+      if ((Ember.typeOf(displayProperty) !== 'array' && !displayPropertyIsCallback) || (Ember.typeOf(displayProperty) !== 'string' && displayPropertyIsCallback)) {
         return '';
       }
 
@@ -236,7 +235,7 @@ export default Ember.Component.extend({
       let calculateDisplayProperty = eval(`(${displayProperty})`);
       Ember.assert(
         'Property \'settings.displaySettings.featuresPropertiesSettings.displayProperty\' ' +
-        'in layer \'' + layerName + '\' is not a valid java script function',
+        'is not a valid java script function',
         Ember.typeOf(calculateDisplayProperty) === 'function');
 
       return calculateDisplayProperty(feature);
