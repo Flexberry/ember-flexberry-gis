@@ -9,6 +9,14 @@
   // Force color-picker's palette to be visible.
   overflow: visible;
 
+  &.has.error.message {
+    overflow: auto;
+  }
+
+  > .ui.error.message {
+    margin: 14px;
+  }
+
   > .ui.form > .ui.grid {
     // Stretch nested grid to whole available content's size.
     margin-top: 0;
@@ -17,9 +25,9 @@
 
     // Same as dialog content's max-height in Semantic UI.
     height: 400px;
+    max-height: 400px;
 
     .flexberry-export-map-command-dialog-settings-column {
-      max-height: 400px;
       padding-right: 0;
 
       .ui.tabular.menu {
@@ -27,11 +35,11 @@
           width: 100% !important;
 
           .item {
-            // Now there is only five items inside tabular menu (so 100% / 5 = 20%).
-            width: 20%;
+            // Now there is only four items inside tabular menu (so 100% / 4 = 25%).
+            width: 25%;
 
             &:last-child {
-              width: calc( 20% + 1px );
+              width: calc( 25% + 1px );
             }
           }
         }
@@ -41,7 +49,7 @@
           padding-bottom: 10px;
 
           i.icon {
-            margin: 0em;
+            margin: 0 auto;
             font-size: 1.2em;
           }
 
@@ -83,58 +91,58 @@
     }
 
     .flexberry-export-map-command-dialog-preview-column {
-      max-height: 400px;
-      overflow: hidden;
       box-shadow: none;
+    }
+  }
+}
 
-      .flexberry-export-map-command-dialog-sheet-of-paper {
-        background: white;
-        border: 1px solid #d4d4d5;
-        width: 100%;
-        height: 100%;
-        padding: 14px;
-        margin: 0 auto;
-        display: block;
+// While export is running sheet of paper is outside of export dialog (straight in the document's body),
+// so styles for it is outside of export dialog's styles too.
+.flexberry-export-map-command-dialog-sheet-of-paper {
+  background: white;
+  border: 1px solid #d4d4d5;
+  width: 100%;
+  height: 100%;
+  padding: 14px;
+  margin: 0 auto;
+  display: block;
 
-        .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
-          // Distance between map & it's caption (same as padding inside sheet of paper).
-          margin-bottom: 14px;
-          text-align: center;
-        }
+  .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
+    // Distance between map & it's caption (same as padding inside sheet of paper).
+    margin-bottom: 14px;
+    text-align: center;
+  }
 
-        .flexberry-export-map-command-dialog-sheet-of-paper-map {
-          background: #f4f4f4;
-          border: 1px solid #d4d4d5;
-          width: 100%;
-          margin: 0 auto;
-          display: block;
-          box-sizing: border-box;
+  .flexberry-export-map-command-dialog-sheet-of-paper-map {
+    background: #f4f4f4;
+    border: 1px solid #d4d4d5;
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    box-sizing: border-box;
 
-          .flexberry-map {
-            width: 100%;
-            height: 100%;
-          }
-        }
+    .flexberry-map {
+      width: 100%;
+      height: 100%;
+    }
+  }
 
-        &.map-only-mode {
-          padding: 0;
+  &.map-only-mode {
+    padding: 0;
 
-          .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
-            display: none;
-            margin-bottom: 0;
-          }
+    .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
+      display: none;
+      margin-bottom: 0;
+    }
 
-          .flexberry-export-map-command-dialog-sheet-of-paper-map {
-            border: none;
-            width: 100%;
-            height: 100%;
+    .flexberry-export-map-command-dialog-sheet-of-paper-map {
+      border: none;
+      width: 100%;
+      height: 100%;
 
-            .flexberry-map {
-              .leaflet-control-container {
-                display: none;
-              }
-            }
-          }
+      .flexberry-map {
+        .leaflet-control-container {
+          display: none;
         }
       }
     }

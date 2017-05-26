@@ -19,7 +19,7 @@ export default {
     }
   },
   'display-mode-settings-tab': {
-    'caption': 'Настройки режима отображения',
+    'caption': 'Настройки режима отображения карты',
     'display-mode-switcher': {
       'caption': 'Режим отображения',
       'standard-mode': {
@@ -30,6 +30,15 @@ export default {
       },
       'modes-divider': {
         'caption': 'или'
+      }
+    },
+    'map-controls-panel': {
+      'caption': 'Отображаемые контролы карты',
+      'legend-control': {
+        'caption': 'Легенда'
+      },
+      'scale-control': {
+        'caption': 'Масштаб'
       }
     }
   },
@@ -49,18 +58,6 @@ export default {
     },
     'paper-format-dropdown': {
       'caption': 'Формат листа бумаги'
-    }
-  },
-  'map-controls-settings-tab': {
-    'caption': 'Настройки контролов карты',
-    'map-controls-panel': {
-      'caption': 'Контролы карты',
-      'legend-control': {
-        'caption': 'Легенда'
-      },
-      'scale-control': {
-        'caption': 'Масштаб'
-      }
     }
   },
   'downloading-file-settings-tab': {

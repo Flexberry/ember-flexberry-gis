@@ -91,6 +91,15 @@ let FlexberryDialogComponent = Ember.Component.extend(
     classNames: [flexberryClassNames.wrapper, 'ui', 'modal'],
 
     /**
+      Component's content CSS-class.
+
+      @property contentClass
+      @type String
+      @default null
+    */
+    contentClass: null,
+
+    /**
       Component's caption.
 
       @property caption

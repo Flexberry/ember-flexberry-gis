@@ -34,8 +34,10 @@
     leafletMap=_executeActionEventObject.mapCommand.leafletMap
     layers=_executeActionEventObject.mapCommand.layers
     defaultMapCaption=defaultMapCaption
+    timeout=timeout
     approve=(action "onExportDialogApprove")
     deny=(action "onExportDialogDeny")
+    beforeHide=(action "onExportDialogBeforeHide")
     hide=(action "onExportDialogHide")
   }}
 {{/if}}
