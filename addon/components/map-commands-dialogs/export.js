@@ -551,6 +551,55 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   ),
 
   /**
+    Flag: indicates whether file name has been changed by user or not.
+
+    @property _fileNameHasBeenChanged
+    @type Boolean
+    @default false
+    @private
+  */
+  _fileNameHasBeenChanged: false,
+
+  /**
+    File name which will be applied to exported file.
+
+    @property _fileName
+    @type String
+    @private
+  */
+  _fileName: Ember.computed('_options.fileName', {
+    get(key) {
+      return this.get('_options.fileName');
+    },
+    set(key, value) {
+      this.set('_fileNameHasBeenChanged', true);
+      this.set('_options.fileName', value);
+      return value;
+    }
+  }),
+
+  /**
+    Map caption.
+
+    @property _caption
+    @type String
+    @private
+  */
+  _caption: Ember.computed('_options.caption', {
+    get(key) {
+      return this.get('_options.caption');
+    },
+    set(key, value) {
+      if (!this.get('_fileNameHasBeenChanged')) {
+        this.set('_options.fileName', value);
+      }
+
+      this.set('_options.caption', value);
+      return value;
+    }
+  }),
+
+  /**
     Flag: indicates whether print/export dialog is already rendered.
 
     @property _isDialogAlreadyRendered
@@ -1390,7 +1439,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
     // Initialize print/export options.
     let defaultMapCaption = this.get('defaultMapCaption');
-    this.set('_options', Ember.$.extend(true, defaultOptions, {
+    this.set('_options', Ember.$.extend(true, {}, defaultOptions, {
       caption: defaultMapCaption,
       fileName: defaultMapCaption
     }));
