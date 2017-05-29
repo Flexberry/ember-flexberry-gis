@@ -63,7 +63,7 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
     @type Boolean
     @readOnly
   */
-  canBeSearched: Ember.computed('isDeleted', 'type', 'settingsAsObject.identifySettings.canBeSearched', function () {
+  canBeSearched: Ember.computed('isDeleted', 'type', 'settingsAsObject.searchSettings.canBeSearched', function () {
     if (this.get('isDeleted')) {
       return false;
     }
@@ -71,6 +71,25 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
     let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
     let searchOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('search');
     let searchOperationIsAvailableForLayerInstance = this.get('settingsAsObject.searchSettings.canBeSearched') !== false;
+
+    return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
+  }),
+
+  /**
+    Flag: indicates whether 'context search' operation is available for this layer.
+
+    @property canBeContextSearched
+    @type Boolean
+    @readOnly
+  */
+  canBeContextSearched: Ember.computed('isDeleted', 'type', 'settingsAsObject.searchSettings.canBeContextSearched', function () {
+    if (this.get('isDeleted')) {
+      return false;
+    }
+
+    let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
+    let searchOperationIsAvailableForLayerClass = Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('search');
+    let searchOperationIsAvailableForLayerInstance = this.get('settingsAsObject.searchSettings.canBeContextSearched') !== false;
 
     return searchOperationIsAvailableForLayerClass && searchOperationIsAvailableForLayerInstance;
   }),

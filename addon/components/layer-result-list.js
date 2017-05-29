@@ -185,8 +185,8 @@ export default Ember.Component.extend({
     results.forEach((result) => {
       let r = {
         name: Ember.get(result, 'layerModel.name') ? Ember.get(result, 'layerModel.name') : '',
-        settings: Ember.get(result, 'layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings'),
-        sortField: Ember.get(result, 'layerModel.settingsAsObject.searchSettings.featuresPropertiesSettings.displayProperty')
+        settings: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings'),
+        displayProperties: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty')
       };
 
       result.features.then(
@@ -202,6 +202,44 @@ export default Ember.Component.extend({
     let promises = results.map((result) => {
       return result.features;
     });
+
+    let getFeatureDisplayProperty = function (feature, featuresPropertiesSettings) {
+      let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
+      let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
+
+      if ((Ember.typeOf(displayProperty) !== 'array' && !displayPropertyIsCallback)) {
+        return '';
+      }
+
+      if ((Ember.typeOf(displayProperty) !== 'string' && displayPropertyIsCallback)) {
+        return '';
+      }
+
+      if (!displayPropertyIsCallback) {
+        let featureProperties = Ember.get(feature, 'properties') || {};
+
+        let displayValue = Ember.none;
+        displayProperty.forEach((prop) => {
+          if (featureProperties.hasOwnProperty(prop)) {
+            let value = featureProperties[prop];
+            if (Ember.isNone(displayValue) && !Ember.isNone(value) && !Ember.isEmpty(value)) {
+              displayValue = value;
+            }
+          }
+        });
+
+        return !Ember.isNone(displayValue) ? displayValue : '';
+      }
+
+      let calculateDisplayProperty = eval(`(${displayProperty})`);
+      Ember.assert(
+        'Property \'settings.displaySettings.featuresPropertiesSettings.displayProperty\' ' +
+        'is not a valid java script function',
+        Ember.typeOf(calculateDisplayProperty) === 'function');
+
+      return calculateDisplayProperty(feature);
+    };
+
     Ember.RSVP.allSettled(promises).finally(() => {
       let order = 1;
       displayResults.forEach((result) => {
@@ -210,20 +248,21 @@ export default Ember.Component.extend({
         result.last = result.order === displayResults.length;
         order += 1;
 
-        if (!Ember.isNone(result.sortField) && result.sortField) {
-          var sort = 'properties.' + result.sortField;
-          result.features = result.features.sort(function (a, b) {
-            if (Ember.get(a, sort) > Ember.get(b, sort)) {
-              return 1;
-            }
+        result.features.forEach((feature) => {
+          feature.displayValue = getFeatureDisplayProperty(feature, result.settings);
+        });
 
-            if (Ember.get(a, sort) < Ember.get(b, sort)) {
-              return -1;
-            }
+        result.features = result.features.sort(function (a, b) {
+          if (a.displayValue > b.displayValue) {
+            return 1;
+          }
 
-            return 0;
-          });
-        }
+          if (a.displayValue < b.displayValue) {
+            return -1;
+          }
+
+          return 0;
+        });
       });
 
       this.set('_displayResults', displayResults);

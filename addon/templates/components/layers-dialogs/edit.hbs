@@ -35,6 +35,11 @@
         {{t "components.layers-dialogs.edit.tabular-menu.search-settings-tab.caption"}}
       </a>
     {{/if}}
+    {{#if _displaySettingsAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "displaySettings") "active"}}" data-tab="displaySettings" onclick={{action "onTabClick"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.display-settings-tab.caption"}}
+      </a>
+    {{/if}}
     {{#if _legendSettingaAreAvailableForType}}
       <a class="tab item {{if (eq _tabularMenuActiveTab "legendSettings") "active"}}" data-tab="legendSettings" onclick={{action "onTabClick"}}>
         {{t "components.layers-dialogs.edit.tabular-menu.legend-settings-tab.caption"}}
@@ -139,6 +144,11 @@
   {{#if _searchSettingsAreAvailableForType}}
     <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "searchSettings") "active"}}" data-tab="searchSettings">
       {{flexberry-jsonarea value=_layer.settings.searchSettings}}
+    </div>
+  {{/if}}
+  {{#if _displaySettingsAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "displaySettings") "active"}}" data-tab="displaySettings">
+      {{flexberry-jsonarea value=_layer.settings.displaySettings}}
     </div>
   {{/if}}
   {{#if _legendSettingaAreAvailableForType}}
