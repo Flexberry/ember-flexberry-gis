@@ -330,10 +330,9 @@ export default Ember.Component.extend(
     /**
      Handles 'flexberry-map:query' event of leaflet map.
 
-     @method identify
+     @method query
      @param {Object} e Event object.
-     @param {Object} e Event object.
-     @param {Object} queryFilter Object with query filter paramteres
+     @param {Object} queryFilter Object with query filter parameters
      @param {Object[]} results Objects describing query results.
      Every result-object has the following structure: { layer: ..., features: [...] },
      where 'layer' is metadata of layer related to query result, features is array
