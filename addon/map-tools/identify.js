@@ -160,24 +160,16 @@ export default BaseNonclickableMapTool.extend({
     e.results.forEach((identificationResult) => {
       identificationResult.features.then(
         (features) => {
-          // Clear previous features & add new.
-          // Leaflet clear's layers with some delay, add if we add again some cleared layer (immediately after clear),
-          // it will be removed after delay (by layer's id),
-          // so we will use timeout until better solution will be found.
-          Ember.run(() => {
-            setTimeout(() => {
-              // Show new features.
-              features.forEach((feature) => {
-                let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
-                if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
-                  leafletLayer.setStyle({
-                    color: 'salmon'
-                  });
-                }
-
-                Ember.set(feature, 'leafletLayer', leafletLayer);
+          // Show new features.
+          features.forEach((feature) => {
+            let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+            if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+              leafletLayer.setStyle({
+                color: 'salmon'
               });
-            }, 10);
+            }
+
+            Ember.set(feature, 'leafletLayer', leafletLayer);
           });
         });
     });

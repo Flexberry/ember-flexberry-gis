@@ -167,10 +167,7 @@ export default BaseLayer.extend({
       filter
     });
 
-    e.results.push({
-      layerModel: this.get('layerModel'),
-      features: featuresPromise
-    });
+    return featuresPromise;
   },
 
   /**
@@ -196,13 +193,15 @@ export default BaseLayer.extend({
       matchCase: false
     });
 
-    return this._getFeature({
+    let featuresPromise = this._getFeature({
       filter,
       maxFeatures: e.searchOptions.maxResultsCount,
       style: {
         color: 'yellow'
       }
     });
+
+    return featuresPromise;
   },
 
   /**
@@ -215,7 +214,6 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   query(e) {
-
     let filter = new L.Filter.EQ();
 
     for (var property in e.queryFilter) {
@@ -224,8 +222,8 @@ export default BaseLayer.extend({
       }
     }
 
-    e.results.push(this._getFeature({
-      filter
-    }, true));
+    let featuresPromise = this._getFeature({ filter }, true);
+
+    return featuresPromise;
   }
 });

@@ -296,7 +296,10 @@ export default Ember.Component.extend(
       }
 
       // Call public identify method, if layer should be identified.
-      this.identify(e);
+      e.results.push({
+        layerModel: this.get('layerModel'),
+        features: this.identify(e)
+      });
     },
 
     /**
@@ -325,14 +328,17 @@ export default Ember.Component.extend(
     },
 
     /**
-      Handles 'flexberry-map:query' event of leaflet map.
+     Handles 'flexberry-map:query' event of leaflet map.
 
-      @method _query
-      @param {Object} e Event object.
-      @param {Object} queryFilter Object with query filter paramteres
-      @param {Object[]} results.features Array containing leaflet layers objects
-      or a promise returning such array.
-    */
+     @method query
+     @param {Object} e Event object.
+     @param {Object} queryFilter Object with query filter parameters
+     @param {Object[]} results Objects describing query results.
+     Every result-object has the following structure: { layer: ..., features: [...] },
+     where 'layer' is metadata of layer related to query result, features is array
+     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+     or a promise returning such array.
+   */
     _query(e) {
       let layerLinks = this.get('layerModel.layerLink');
 
@@ -340,8 +346,11 @@ export default Ember.Component.extend(
         return;
       }
 
-      // Call public query method.
-      this.query(e);
+      // Call public query method, if layer has links.
+      e.results.push({
+        layerModel: this.get('layerModel'),
+        features: this.query(e)
+      });
     },
 
     /**
