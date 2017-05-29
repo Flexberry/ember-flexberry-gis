@@ -37,13 +37,15 @@ export default SearchMapCommand.extend({
       let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
       let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
 
-      if ((Ember.typeOf(displayProperty) !== 'array' && !displayPropertyIsCallback) || (Ember.typeOf(displayProperty) !== 'string' && displayPropertyIsCallback)) {
-        // Retrieve first available property.
+      if ((Ember.typeOf(displayProperty) !== 'array' && !displayPropertyIsCallback)) {
+        return getFeatureFirstAvailableProperty(feature);
+      }
+
+      if ((Ember.typeOf(displayProperty) !== 'string' && displayPropertyIsCallback)) {
         return getFeatureFirstAvailableProperty(feature);
       }
 
       if (!displayPropertyIsCallback) {
-        // Return defined property (or first available if defined property doesn't exist).
         let featureProperties = Ember.get(feature, 'properties') || {};
 
         let displayValue = Ember.none;

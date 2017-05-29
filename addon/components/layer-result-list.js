@@ -212,7 +212,11 @@ export default Ember.Component.extend({
       let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
       let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
 
-      if ((Ember.typeOf(displayProperty) !== 'array' && !displayPropertyIsCallback) || (Ember.typeOf(displayProperty) !== 'string' && displayPropertyIsCallback)) {
+      if ((Ember.typeOf(displayProperty) !== 'array' && !displayPropertyIsCallback)) {
+        return '';
+      }
+
+      if ((Ember.typeOf(displayProperty) !== 'string' && displayPropertyIsCallback)) {
         return '';
       }
 
