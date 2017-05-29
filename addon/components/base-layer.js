@@ -342,7 +342,8 @@ export default Ember.Component.extend(
    */
     _query(e) {
       let layerLinks = this.get('layerModel.layerLink');
-      if (!Ember.isArray(layerLinks) || layerLinks.length === 0) {
+
+      if (!Ember.isArray(layerLinks) || Ember.isBlank(layerLinks)) {
         return;
       }
 
