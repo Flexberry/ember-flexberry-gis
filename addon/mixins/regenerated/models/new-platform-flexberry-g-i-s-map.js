@@ -66,11 +66,14 @@ export let defineProjections = function (model) {
 
       }),
       layerLink: Projection.hasMany('new-platform-flexberry-g-i-s-layer-link', '', {
+        allowShow: Projection.attr('Показывать'),
         layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
           name: Projection.attr('Слой')
         }, { hidden: true }),
         mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
-
+          typeName: Projection.attr('Тип'),
+          listForm: Projection.attr('Списковая форма'),
+          editForm: Projection.attr('Форма редактирования')
         }, { hidden: true }),
         linkParameter: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', '', {
           objectField: Projection.attr('Поле объекта'),

@@ -4,9 +4,14 @@
   "className": "LayerLink",
   "parentModelName": null,
   "parentClassName": null,
-  "attrs": [],
-  "belongsTo": [
-    {
+  "attrs": [{
+    "name": "allowShow",
+    "type": "boolean",
+    "flexberryType": "bool",
+    "notNull": true,
+    "defaultValue": false
+  }],
+  "belongsTo": [{
       "polymorphic": false,
       "presence": true,
       "name": "mapObjectSetting",
@@ -21,27 +26,28 @@
       "inverse": "layerLink"
     }
   ],
-  "hasMany": [
-    {
-      "name": "linkParameter",
-      "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
-      "inverse": "layerLink"
-    }
-  ],
-  "projections": [
-    {
+  "hasMany": [{
+    "name": "linkParameter",
+    "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
+    "inverse": "layerLink"
+  }],
+  "projections": [{
       "name": "LayerLinkD",
       "modelName": "new-platform-flexberry-g-i-s-layer-link",
-      "attrs": [],
-      "belongsTo": [
-        {
+      "attrs": [{
+        "name": "allowShow",
+        "caption": "Показывать",
+        "hidden": false,
+        "index": 0
+      }],
+      "belongsTo": [{
           "lookupValue": null,
           "lookupValueField": null,
           "relationName": "MapObjectSetting",
           "belongsTo": [],
           "hidden": true,
           "attrs": [],
-          "index": 0,
+          "index": 1,
           "caption": "",
           "name": "mapObjectSetting",
           "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
@@ -53,44 +59,44 @@
           "relationName": "Layer",
           "belongsTo": [],
           "hidden": true,
-          "attrs": [
-            {
-              "name": "name",
-              "caption": "Слой",
-              "hidden": false,
-              "index": 2
-            }
-          ],
-          "index": 1,
+          "attrs": [{
+            "name": "name",
+            "caption": "Слой",
+            "hidden": false,
+            "index": 3
+          }],
+          "index": 2,
           "caption": "",
           "name": "layer",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
           "inverse": null
         }
       ],
-      "hasMany": [
-        {
-          "projectionName": "LinkParameterD",
-          "caption": "",
-          "name": "linkParameter",
-          "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
-          "inverse": null
-        }
-      ]
+      "hasMany": [{
+        "projectionName": "LinkParameterD",
+        "caption": "",
+        "name": "linkParameter",
+        "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
+        "inverse": null
+      }]
     },
     {
       "name": "LayerLinkE",
       "modelName": "new-platform-flexberry-g-i-s-layer-link",
-      "attrs": [],
-      "belongsTo": [
-        {
+      "attrs": [{
+        "name": "allowShow",
+        "caption": "Показывать",
+        "hidden": false,
+        "index": 0
+      }],
+      "belongsTo": [{
           "lookupValue": null,
           "lookupValueField": null,
           "relationName": "Layer",
           "belongsTo": [],
           "hidden": false,
           "attrs": [],
-          "index": 0,
+          "index": 1,
           "caption": "Слой карты",
           "name": "layer",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
@@ -103,36 +109,38 @@
           "belongsTo": [],
           "hidden": false,
           "attrs": [],
-          "index": 1,
+          "index": 2,
           "caption": "",
           "name": "mapObjectSetting",
           "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
           "inverse": null
         }
       ],
-      "hasMany": [
-        {
-          "projectionName": "LinkParameterD",
-          "caption": "",
-          "name": "linkParameter",
-          "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
-          "inverse": null
-        }
-      ]
+      "hasMany": [{
+        "projectionName": "LinkParameterD",
+        "caption": "",
+        "name": "linkParameter",
+        "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
+        "inverse": null
+      }]
     },
     {
       "name": "LayerLinkI",
       "modelName": "new-platform-flexberry-g-i-s-layer-link",
-      "attrs": [],
-      "belongsTo": [
-        {
+      "attrs": [{
+        "name": "allowShow",
+        "caption": "Показывать",
+        "hidden": false,
+        "index": 0
+      }],
+      "belongsTo": [{
           "lookupValue": null,
           "lookupValueField": null,
           "relationName": "Layer",
           "belongsTo": [],
           "hidden": false,
           "attrs": [],
-          "index": 0,
+          "index": 1,
           "caption": "",
           "name": "layer",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
@@ -144,18 +152,17 @@
           "relationName": "MapObjectSetting",
           "belongsTo": [],
           "hidden": false,
-          "attrs": [
-            {
+          "attrs": [{
               "name": "listForm",
               "caption": "",
               "hidden": false,
-              "index": 1
+              "index": 2
             },
             {
               "name": "editForm",
               "caption": "",
               "hidden": false,
-              "index": 2
+              "index": 3
             }
           ],
           "index": -1,
@@ -165,29 +172,31 @@
           "inverse": null
         }
       ],
-      "hasMany": [
-        {
-          "projectionName": "LinkParameterD",
-          "caption": "",
-          "name": "linkParameter",
-          "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
-          "inverse": null
-        }
-      ]
+      "hasMany": [{
+        "projectionName": "LinkParameterD",
+        "caption": "",
+        "name": "linkParameter",
+        "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
+        "inverse": null
+      }]
     },
     {
       "name": "LayerLinkQ",
       "modelName": "new-platform-flexberry-g-i-s-layer-link",
-      "attrs": [],
-      "belongsTo": [
-        {
+      "attrs": [{
+        "name": "allowShow",
+        "caption": "Показывать",
+        "hidden": false,
+        "index": 0
+      }],
+      "belongsTo": [{
           "lookupValue": null,
           "lookupValueField": null,
           "relationName": "Layer",
           "belongsTo": [],
           "hidden": false,
           "attrs": [],
-          "index": 0,
+          "index": 1,
           "caption": "",
           "name": "layer",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
@@ -200,22 +209,20 @@
           "belongsTo": [],
           "hidden": false,
           "attrs": [],
-          "index": 1,
+          "index": 2,
           "caption": "",
           "name": "mapObjectSetting",
           "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
           "inverse": null
         }
       ],
-      "hasMany": [
-        {
-          "projectionName": "LinkParameterD",
-          "caption": "",
-          "name": "linkParameter",
-          "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
-          "inverse": null
-        }
-      ]
+      "hasMany": [{
+        "projectionName": "LinkParameterD",
+        "caption": "",
+        "name": "linkParameter",
+        "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
+        "inverse": null
+      }]
     }
   ]
 }
