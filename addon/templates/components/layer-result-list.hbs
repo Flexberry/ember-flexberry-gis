@@ -16,6 +16,7 @@
           {{feature-result-item
             feature=feature
             _infoExpanded=(and (eq result.features.length 1) result.first)
+            displayProperty="displayValue"
             displaySettings=result.settings
             selectedFeature=_selectedFeature
             selectFeature=(action "selectFeature")

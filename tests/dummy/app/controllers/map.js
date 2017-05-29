@@ -146,7 +146,7 @@ export default EditMapController.extend(
             maxResultsCount: 10
           },
           filter(layerModel) {
-            return layerModel.get('canBeSearched') && layerModel.get('visibility');
+            return layerModel.get('canBeContextSearched') && layerModel.get('visibility');
           },
           results: Ember.A()
         };

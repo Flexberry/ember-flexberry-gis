@@ -22,14 +22,11 @@ export default Ember.Component.extend({
 
   /**
     Property for represent feature
-    @property _displayProperty
+    @property displayProperty
     @type string
-    @readOnly
     @private
    */
-  _displayProperty: Ember.computed('displaySettings', function () {
-    return this.get('displaySettings.displayProperty');
-  }),
+  displayProperty: null,
 
   /**
     Feature properties excluded from being displayed in info table

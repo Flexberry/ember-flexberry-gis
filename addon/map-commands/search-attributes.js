@@ -40,6 +40,7 @@ export default SearchMapCommand.extend({
     let e = {
       latlng: leafletMap.getCenter(),
       searchOptions: searchOptions,
+      context: false,
       filter(layerModel) {
         return layerModel === layer;
       },
