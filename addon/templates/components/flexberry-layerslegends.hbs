@@ -1,5 +1,5 @@
 {{#each layers as |layerModel|}}
-  {{#if (not layerModel.isDeleted)}}
+  {{#if (and layerModel.visibility (not layerModel.isDeleted))}}
     {{#if (eq layerModel.type "group")}}
       {{flexberry-layerslegends
         layers=layerModel.layers
