@@ -27,8 +27,8 @@ const createDisplaySettings = function () {
 
 const createCommonSearchSettings = function () {
   return {
-    canBeSearched: true,
-    canBeContextSearched: true,
+    canBeSearched: false,
+    canBeContextSearched: false,
     contextSearchFields: null,
     searchFields: null,
   };
