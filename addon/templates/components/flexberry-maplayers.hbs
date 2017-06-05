@@ -20,6 +20,10 @@
   duration=duration
 }}
   {{#block-slot "header"}}
+    {{#yield-slot "header" (block-params this)}}
+      {{yield}}
+    {{/yield-slot}}
+
     {{#if (not readonly)}}
       {{flexberry-button
         class=(concat flexberryClassNames.addButton " right floated")
@@ -28,10 +32,6 @@
       }}
       <div style="clear: both;"></div>
     {{/if}}
-
-    {{#yield-slot "header" (block-params this)}}
-      {{yield}}
-    {{/yield-slot}}
   {{/block-slot}}
 
   {{#block-slot "content"}}
