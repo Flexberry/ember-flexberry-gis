@@ -14,5 +14,11 @@ export default {
   'founded-features-segment': {
     'caption': 'Результаты поиска',
     'nothing-found-message': 'По вашему запросу ничего не найдено'
+  },
+  'show-selected': {
+    'caption': 'Показать выбранные'
+  },
+  'show': {
+    'caption': 'Показать на карте'
   }
 };

@@ -14,5 +14,11 @@ export default {
   'founded-features-segment': {
     'caption': 'Search results',
     'nothing-found-message': 'On your request nothing has been found'
+  },
+  'show-selected': {
+    'caption': 'Show selected objects'
+  },
+  'show': {
+    'caption': 'Show object on map'
   }
 };
