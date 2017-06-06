@@ -27,7 +27,7 @@ export default EditFormController.extend(
     */
     leafletMap: null,
 
-    queryParams: ['geofilter'],
+    queryParams: ['geofilter', 'setting'],
 
     /**
       Query parameter, contains json serialized object with property names and values
@@ -36,6 +36,14 @@ export default EditFormController.extend(
       @default null
      */
     geofilter: null,
+
+    /**
+      Query parameter, contains map object setting primary key
+      @property setting
+      @type String
+      @default null
+    */
+    setting: null,
 
     /**
       Deserialized valued of filter property

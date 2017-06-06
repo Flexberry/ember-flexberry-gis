@@ -340,9 +340,9 @@ export default Ember.Component.extend(
      or a promise returning such array.
    */
     _query(e) {
-      let layerLinks = this.get('layerModel.layerLink');
+      let layerLinks = this.get('layerModel.layerLink').filter(link => link.get('mapObjectSetting.id') === e.mapObjectSetting);
 
-      if (!Ember.isArray(layerLinks) || Ember.isBlank(layerLinks)) {
+      if (!Ember.isArray(layerLinks) || layerLinks.length === 0) {
         return;
       }
 
