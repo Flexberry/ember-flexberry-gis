@@ -54,6 +54,7 @@ module.exports = {
       },
       {
         name: 'leaflet.export',
+        source: 'https://github.com/Flexberry/Leaflet.Export.git',
         target: 'master'
       },
 
