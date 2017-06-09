@@ -64,6 +64,15 @@ export default Ember.Component.extend({
   showLayerName: false,
 
   /**
+    Flag: indicates whether legend was lazy loaded.
+
+    @property lazyLoaded
+    @type Boolean
+    @default true
+  */
+  lazyLoaded: true,
+
+  /**
     Related layer's name.
 
     @property layerName
@@ -91,7 +100,7 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _legends: Ember.computed('layerSettings.legendSettings', function() {
+  _legends: Ember.computed('layerSettings.legendSettings', function () {
     return Ember.A();
   })
 });
