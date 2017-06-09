@@ -58,6 +58,20 @@ module.exports = {
         target: 'master'
       },
 
+      // Leaflet-switch-scale-control.
+      {
+        name: 'leaflet-switch-scale-control',
+        source: 'https://github.com/Flexberry/leaflet-switch-scale-control.git',
+        target: 'master'
+      },
+
+      // Leaflet.zoomslider.
+      {
+        name: 'Leaflet.zoomslider',
+        source: 'https://github.com/Flexberry/Leaflet.zoomslider.git',
+        target: 'leaflet-1.0.1'
+      },
+
       // Leaflet-MiniMap
       {
         name: 'leaflet-minimap',
