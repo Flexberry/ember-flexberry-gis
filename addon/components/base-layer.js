@@ -333,6 +333,7 @@ export default Ember.Component.extend(
      @method query
      @param {Object} e Event object.
      @param {Object} queryFilter Object with query filter parameters
+     @param {Object} mapObjectSetting Object describing current query setting
      @param {Object[]} results Objects describing query results.
      Every result-object has the following structure: { layer: ..., features: [...] },
      where 'layer' is metadata of layer related to query result, features is array
@@ -340,7 +341,10 @@ export default Ember.Component.extend(
      or a promise returning such array.
    */
     _query(e) {
-      let layerLinks = this.get('layerModel.layerLink').filter(link => link.get('mapObjectSetting.id') === e.mapObjectSetting);
+      // Filter current layer links by setting.
+      let layerLinks =
+        this.get('layerModel.layerLink')
+        .filter(link => link.get('mapObjectSetting.id') === e.mapObjectSetting);
 
       if (!Ember.isArray(layerLinks) || layerLinks.length === 0) {
         return;
@@ -349,7 +353,7 @@ export default Ember.Component.extend(
       // Call public query method, if layer has links.
       e.results.push({
         layerModel: this.get('layerModel'),
-        features: this.query(e)
+        features: this.query(layerLinks, e)
       });
     },
 
@@ -451,12 +455,13 @@ export default Ember.Component.extend(
       Handles 'flexberry-map:query' event of leaflet map.
 
       @method _query
+      @param {Object[]} layerLinks Array containing metadata for query
       @param {Object} e Event object.
       @param {Object} queryFilter Object with query filter paramteres
       @param {Object[]} results.features Array containing leaflet layers objects
       or a promise returning such array.
     */
-    query(e) {
+    query(layerLinks, e) {
       assert('BaseLayer\'s \'query\' method should be overridden.');
     },
 
