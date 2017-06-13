@@ -247,10 +247,10 @@ export default Ember.Mixin.create({
 
       childLayers.pushObject(childLayer);
 
-      let rootArray = Ember.get(this, rootPath);
+      let rootArray = this.get(rootPath);
       rootArray.pushObject(childLayer);
 
-      this._setIndexes(Ember.isArray(parentLayer) ? parentLayer : this._findRootLayers(parentLayerPath), rootArray.length);
+      this.setIndexes(rootArray);
     },
 
     /**
@@ -345,13 +345,13 @@ export default Ember.Mixin.create({
         `but \`object\` or  \`instance\` is expected`,
         Ember.typeOf(layer) === 'object' || Ember.typeOf(layer) === 'instance');
 
-      let rootLayers = this._findRootLayers(layerPath);
       this.removeLayer({
         layer: layer
       });
 
-      let rootArray = Ember.get(this, rootPath);
-      this._setIndexes(rootLayers, rootArray.length);
+      let rootArray = this.get(rootPath);
+
+      this.setIndexes(rootArray);
     }
   },
 
@@ -409,8 +409,7 @@ export default Ember.Mixin.create({
 
     let childLayers = Ember.get(layer, 'layers');
 
-    if (Ember.isArray(childLayers))
-    {
+    if (Ember.isArray(childLayers)) {
       childLayers.forEach((item) => {
         this.removeLayer({
           layer: item
@@ -425,10 +424,25 @@ export default Ember.Mixin.create({
   /**
     Sets indexes for layers hierarchy.
 
+    @method setIndexes
+    @param {Array} rootArray Array of layers to set indexes.
+  */
+  setIndexes(rootArray) {
+    let hierarchy = this.get('model.hierarchy');
+
+    // Filter root array to avoid gaps in indexes.
+    let index = rootArray.filter(layer => layer.get('isDeleted') === false).length;
+
+    this._setIndexes(hierarchy, index);
+  },
+
+  /**
+    Sets indexes for layers hierarchy.
+
     @method _setIndexes
-    @param {Array} layers Array of layers to set indexes.
-    @param {Int} index First index.
-    @returns {Int} Last index.
+    @param {Array} layers Hierarchy of layers to set indexes.
+    @param {Int} index Max index.
+    @returns {Int} Min index.
     @private
   */
   _setIndexes(layers, index) {
@@ -445,37 +459,5 @@ export default Ember.Mixin.create({
     }
 
     return index;
-  },
-
-  /**
-    Finds root layers.
-
-    @method _findRootLayers
-    @param {String} layerPath LayerPath to child layer.
-    @returns {Array} Root layers.
-    @private
-  */
-  _findRootLayers(layerPath) {
-    let layer = getRecord(this, layerPath);
-    let nextInPath = function(path) {
-      let index = path.lastIndexOf('.');
-      if (index > -1) {
-        path = path.slice(0, index);
-      }
-
-      return path;
-    };
-
-    // Get layerPath for layers on same hierarchy level.
-    layerPath = nextInPath(layerPath);
-
-    if (Ember.isBlank(layer.get('parent'))) {
-      return getRecord(this, layerPath);
-    }
-
-    // Get layerPath for parent layer.
-    layerPath = nextInPath(layerPath);
-
-    return this._findRootLayers(layerPath);
-  },
+  }
 });
