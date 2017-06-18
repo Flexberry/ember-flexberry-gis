@@ -26,7 +26,7 @@ git pull
 # Itarate over 'gh-pages'-branch directories (except 'stylesheets' and 'images').
 shopt -s dotglob
 find * -prune -type d | while read directory; do
-  if [ "${directory}" != "stylesheets" ] && [ "${directory}" != "images" ];
+  if [ "${directory}" != "stylesheets" ] && [ "${directory}" != "images" ] && [ "${directory}" != ".git" ];
   then
     branch="${directory}"
 
