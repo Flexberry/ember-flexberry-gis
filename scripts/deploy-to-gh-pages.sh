@@ -16,7 +16,18 @@ cd repository
 existingRemoteBranches=()
 for branch in `git branch -r`;
 do
-  existingRemoteBranches=("${existingRemoteBranches[@]}" "${branch#origin/}")
+  branch="${branch#origin/}"
+
+  branchAlreadyAdded=false
+  if [ $(echo ${existingRemoteBranches[@]} | grep -o "${branch}" | wc -w) -ne 0 ];
+  then
+    branchAlreadyAdded=true
+  fi
+
+  if [ $branchAlreadyAdded = false ] && [ "${branch}" != "HEAD" ] && [ "${branch}" != "->" ];
+  then
+    existingRemoteBranches=("${existingRemoteBranches[@]}" "${branch}")
+  fi
 done
 
 # Checkout gh-pages brunch & pull it's latest version.
