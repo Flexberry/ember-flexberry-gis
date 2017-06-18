@@ -16,17 +16,10 @@ cd repository
 existingRemoteBranches=()
 for branch in `git branch -r`;
 do
-  branch="${branch#origin/}"
-
-  branchAlreadyAdded=false
-  if [ $(echo ${existingRemoteBranches[@]} | grep -o "${branch}" | wc -w) -ne 0 ];
+  if [ "${branch}" != "origin/HEAD" ] && [ "${branch}" != "origin/gh-pages" ];
   then
-    branchAlreadyAdded=true
-  fi
-
-  if [ $branchAlreadyAdded = false ] && [ "${branch}" != "HEAD" ] && [ "${branch}" != "->" ];
-  then
-    existingRemoteBranches=("${existingRemoteBranches[@]}" "${branch}")
+    echo "Add remote branch ${branch} into existing branches array"
+    existingRemoteBranches=("${existingRemoteBranches[@]}" "${branch#origin/}")
   fi
 done
 
