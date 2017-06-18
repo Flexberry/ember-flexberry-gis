@@ -16,12 +16,13 @@ cd repository
 existingRemoteBranches=()
 for branch in `git branch -r`;
 do
-  if [ "${branch}" != "origin/HEAD" ] && [ "${branch}" != "origin/gh-pages" ];
+  if [ "${branch}" != "origin/HEAD" ] && [ "${branch}" != "origin/gh-pages" ] && [ "${branch}" != "->" ];
   then
     echo "Add remote branch ${branch} into existing branches array"
     existingRemoteBranches=("${existingRemoteBranches[@]}" "${branch#origin/}")
   fi
 done
+existingRemoteBranches=($(echo "${existingRemoteBranches[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
 
 # Checkout gh-pages brunch & pull it's latest version.
 git checkout gh-pages
