@@ -30,13 +30,13 @@ export default Ember.Mixin.create({
 
     let code = Ember.get(coordinateReferenceSystem, 'code');
     let definition = Ember.get(coordinateReferenceSystem, 'definition');
-    if (Ember.isBlank(code) && Ember.isBlank(definition) && Ember.isBlank(name)) {
+    if (Ember.isBlank(code) && Ember.isBlank(definition)) {
       return null;
     }
 
     let crs = null;
     let owner = Ember.getOwner(this);
-    if (Ember.isBlank(definition) && Ember.isBlank(name)) {
+    if (Ember.isBlank(definition)) {
       // Only code is defined.
       // Try to find existing CRS with the same code.
       let availableCrsCodes = Ember.A();
@@ -61,7 +61,8 @@ export default Ember.Mixin.create({
     } else if (!Ember.isBlank(definition)) {
       // CRS has definition.
       // Try to create CRS from proj4.
-      crs = owner.knownForType('coordinate-reference-system', 'proj4').create(code, definition);
+      let options = Ember.get(coordinateReferenceSystem, 'options');
+      crs = owner.knownForType('coordinate-reference-system', 'proj4').create(code, definition, options);
     }
 
     return crs;
