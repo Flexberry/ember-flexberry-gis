@@ -1,7 +1,7 @@
 {{#if (gt _legends.length 0)}}
   {{#each _legends as |legend|}}
     <div class="{{flexberryClassNames.imageWrapper}}">
-      <img class="{{flexberryClassNames.image}}" src="{{legend.src}}">
+      <img class="{{flexberryClassNames.image}}" src="{{legend.src}}" onerror='this.style.display = "none"'>
     </div>
   {{/each}}
 {{else}}

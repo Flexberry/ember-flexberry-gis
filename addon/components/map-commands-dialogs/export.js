@@ -83,7 +83,8 @@ const flexberryClassNames = {
   previewColumn: flexberryClassNamesPrefix + '-preview-column',
   sheetOfPaper: flexberryClassNamesPrefix + '-sheet-of-paper',
   sheetOfPaperMapCaption: flexberryClassNamesPrefix + '-sheet-of-paper-map-caption',
-  sheetOfPaperMap: flexberryClassNamesPrefix + '-sheet-of-paper-map'
+  sheetOfPaperMap: flexberryClassNamesPrefix + '-sheet-of-paper-map',
+  legendControlMap: flexberryClassNamesPrefix + '-legend-control-map'
 };
 
 /**
@@ -496,6 +497,86 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   ),
 
   /**
+    Get map layers info.
+
+    @type Array
+    @private
+  */
+  _getLayersInfo: function(layers) {
+    var res = new Array();
+    
+    for (var i = 0; i < layers.length; i++) {
+      if (layers[i].get('type') === "group") {
+        res = res.concat(this._getLayersInfo(layers[i].layers));
+      }
+      else if (layers[i].get('legendCanBeDisplayed') && layers[i].get('visibility')) {
+        res.push(layers[i].get('name'));
+      }
+    }
+    
+    return res;
+  },
+  
+  /**
+    Get text width.
+
+    @type Number
+    @private
+  */
+  _getTextWidth: function (txt, font) {
+    var element = document.createElement('canvas');
+    var context = element.getContext("2d");
+    context.font = font;
+
+    return context.measureText(txt).width;
+  },
+
+  /**
+    Map legend lines.
+
+    @property _mapLegendLines
+    @type Number
+    @private
+    @readOnly
+  */
+  _mapLegendLines: Ember.computed(
+    '_sheetOfPaperPreviewWidth',
+    '_options.captionFontFamily',
+    '_options.captionFontWeight',
+    '_options.captionFontStyle',
+    '_options.captionFontDecoration',
+    '_mapCaptionPreviewFontSize',
+    '_mapCaptionPreviewHeight',
+    '_options.legendControl',
+    function() {
+      var lineCount = 1;
+      
+      var layers = this.get('layers');
+      var legendsInfo = this._getLayersInfo(layers);
+      
+      var legendWidth = this.get('_sheetOfPaperPreviewWidth') - 30; // padding 14, border 1.
+      
+      var cutWidth = legendWidth;
+      
+      for (var i = 0; i < legendsInfo.length; i++) {
+        var font = `${this.get('_options.captionFontStyle')} ${this.get('_options.captionFontWeight')} ${this.get('_mapCaptionPreviewFontSize')}px ${this.get('_options.captionFontFamily')}`;
+        var textWidth = this._getTextWidth(legendsInfo[i], font);
+        
+        textWidth += this.get('_mapCaptionPreviewHeight') + 10; //icon size and padding-right: 10.
+        
+        if (textWidth <= cutWidth) {
+          cutWidth -= textWidth;
+        } else {
+          lineCount++;
+          cutWidth = legendWidth - textWidth;
+        }
+      }
+      
+      return lineCount;
+    }
+  ),
+
+  /**
     Map real style.
 
     @property _mapRealStyle
@@ -505,6 +586,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   */
   _mapRealStyle: Ember.computed(
     '_options.displayMode',
+    '_options.legendControl',
+    '_mapLegendLines',
     '_sheetOfPaperRealHeight',
     '_mapCaptionRealHeight',
     '_mapHeightDelta',
@@ -512,8 +595,15 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       if (this.get('_options.displayMode') === 'map-only-mode') {
         return Ember.String.htmlSafe(`height: 100%;`);
       }
+      
+      var legendHeight = this.get('_mapCaptionRealHeight');
+      var legendLines = this.get('_mapLegendLines');
+      
+      if (!this.get('_options.legendControl')) {
+        legendHeight = 0;
+      }
 
-      return Ember.String.htmlSafe(`height: ${this.get('_sheetOfPaperRealHeight') - this.get('_mapCaptionRealHeight') - this.get('_mapHeightDelta')}px;`);
+      return Ember.String.htmlSafe(`height: ${this.get('_sheetOfPaperRealHeight') - this.get('_mapCaptionRealHeight') - legendHeight*legendLines - this.get('_mapHeightDelta')}px;`);
     }
   ),
 
@@ -527,6 +617,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   */
   _mapPreviewStyle: Ember.computed(
     '_options.displayMode',
+    '_options.legendControl',
+    '_mapLegendLines',
     '_sheetOfPaperPreviewHeight',
     '_mapCaptionPreviewHeight',
     '_mapHeightDelta',
@@ -545,8 +637,15 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       if (this.get('_options.displayMode') === 'map-only-mode') {
         return Ember.String.htmlSafe(`height: 100%;`);
       }
+      
+      var legendHeight = mapCaptionPreviewHeight;
+      var legendLines = this.get('_mapLegendLines');
+      
+      if (!this.get('_options.legendControl')) {
+        legendHeight = 0;
+      }
 
-      return Ember.String.htmlSafe(`height: ${sheetOfPaperPreviewHeight - mapCaptionPreviewHeight - this.get('_mapHeightDelta')}px;`);
+      return Ember.String.htmlSafe(`height: ${sheetOfPaperPreviewHeight - mapCaptionPreviewHeight - legendHeight*legendLines - this.get('_mapHeightDelta')}px;`);
     }
   ),
 
