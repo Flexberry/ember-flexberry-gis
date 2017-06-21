@@ -43,6 +43,7 @@ module.exports = {
       // Leaflet.Editable.Measures.
       {
         name: 'leaflet.editable.measures',
+        source: 'https://github.com/Flexberry/Leaflet.Editable.Measures.git',
         target: '0.1.0'
       },
 
@@ -54,7 +55,7 @@ module.exports = {
       {
         name: 'leaflet.export',
         source: 'https://github.com/Flexberry/Leaflet.Export.git',
-        target: 'master'
+        target: '0.1.0'
       },
 
       // Leaflet-switch-scale-control.
