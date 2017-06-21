@@ -602,10 +602,12 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         legendHeight = 0;
       }
 
-      return Ember.String.htmlSafe(`height: ${this.get('_sheetOfPaperRealHeight')
-        - this.get('_mapCaptionRealHeight')
-        - legendHeight * legendLines
-        - this.get('_mapHeightDelta')}px;`);
+      let pxHeightValue = this.get('_sheetOfPaperRealHeight') -
+        this.get('_mapCaptionRealHeight') -
+        legendHeight * legendLines -
+        this.get('_mapHeightDelta');
+
+      return Ember.String.htmlSafe(`height: ${pxHeightValue}px;`);
     }
   ),
 
@@ -647,10 +649,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         legendHeight = 0;
       }
 
-      return Ember.String.htmlSafe(`height: ${sheetOfPaperPreviewHeight
-        - mapCaptionPreviewHeight
-        - legendHeight * legendLines
-        - this.get('_mapHeightDelta')}px;`);
+      let pxHeightValue = sheetOfPaperPreviewHeight - mapCaptionPreviewHeight -
+        legendHeight * legendLines - this.get('_mapHeightDelta');
+
+      return Ember.String.htmlSafe(`height: ${pxHeightValue}px;`);
     }
   ),
 
