@@ -37,7 +37,7 @@ module.exports = {
       {
         name: 'leaflet-history',
         source: 'https://github.com/Flexberry/leaflet-history.git',
-        target: 'master'
+        target: 'd67e852ae405a0ca2f6cd069d2f0ff048d7a5ce8'
       },
 
       // Leaflet.Editable.Measures.
