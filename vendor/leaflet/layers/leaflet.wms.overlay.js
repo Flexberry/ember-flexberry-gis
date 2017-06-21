@@ -25,6 +25,7 @@ L.WMS.Overlay.Extended = L.WMS.Overlay.extend({
 
     function _swap() {
       if (!this._map) {
+        overlay.remove();
         return;
       }
       if (overlay._url != this._currentUrl) {
