@@ -503,20 +503,19 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @private
   */
   _getLayersInfo: function(layers) {
-    var res = new Array();
-    
+    var res = [];
+
     for (var i = 0; i < layers.length; i++) {
-      if (layers[i].get('type') === "group") {
+      if (layers[i].get('type') === 'group') {
         res = res.concat(this._getLayersInfo(layers[i].layers));
-      }
-      else if (layers[i].get('legendCanBeDisplayed') && layers[i].get('visibility')) {
+      } else if (layers[i].get('legendCanBeDisplayed') && layers[i].get('visibility')) {
         res.push(layers[i].get('name'));
       }
     }
-    
+
     return res;
   },
-  
+
   /**
     Get text width.
 
@@ -525,7 +524,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   */
   _getTextWidth: function (txt, font) {
     var element = document.createElement('canvas');
-    var context = element.getContext("2d");
+    var context = element.getContext('2d');
     context.font = font;
 
     return context.measureText(txt).width;
@@ -549,21 +548,21 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     '_mapCaptionPreviewHeight',
     '_options.legendControl',
     function() {
-      var lineCount = 1;
-      
-      var layers = this.get('layers');
-      var legendsInfo = this._getLayersInfo(layers);
-      
-      var legendWidth = this.get('_sheetOfPaperPreviewWidth') - 30; // padding 14, border 1.
-      
-      var cutWidth = legendWidth;
-      
-      for (var i = 0; i < legendsInfo.length; i++) {
-        var font = `${this.get('_options.captionFontStyle')} ${this.get('_options.captionFontWeight')} ${this.get('_mapCaptionPreviewFontSize')}px ${this.get('_options.captionFontFamily')}`;
-        var textWidth = this._getTextWidth(legendsInfo[i], font);
-        
+      let lineCount = 1;
+      let layers = this.get('layers');
+      let legendsInfo = this._getLayersInfo(layers);
+      let legendWidth = this.get('_sheetOfPaperPreviewWidth') - 30; // padding 14, border 1.
+      let cutWidth = legendWidth;
+
+      for (let i = 0; i < legendsInfo.length; i++) {
+        let font = `${this.get('_options.captionFontStyle')} ` +
+          `${this.get('_options.captionFontWeight')} ` +
+          `${this.get('_mapCaptionPreviewFontSize')}px ` +
+          `${this.get('_options.captionFontFamily')}`;
+        let textWidth = this._getTextWidth(legendsInfo[i], font);
+
         textWidth += this.get('_mapCaptionPreviewHeight') + 10; //icon size and padding-right: 10.
-        
+
         if (textWidth <= cutWidth) {
           cutWidth -= textWidth;
         } else {
@@ -571,7 +570,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
           cutWidth = legendWidth - textWidth;
         }
       }
-      
+
       return lineCount;
     }
   ),
@@ -595,15 +594,18 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       if (this.get('_options.displayMode') === 'map-only-mode') {
         return Ember.String.htmlSafe(`height: 100%;`);
       }
-      
-      var legendHeight = this.get('_mapCaptionRealHeight');
-      var legendLines = this.get('_mapLegendLines');
-      
+
+      let legendHeight = this.get('_mapCaptionRealHeight');
+      let legendLines = this.get('_mapLegendLines');
+
       if (!this.get('_options.legendControl')) {
         legendHeight = 0;
       }
 
-      return Ember.String.htmlSafe(`height: ${this.get('_sheetOfPaperRealHeight') - this.get('_mapCaptionRealHeight') - legendHeight*legendLines - this.get('_mapHeightDelta')}px;`);
+      return Ember.String.htmlSafe(`height: ${this.get('_sheetOfPaperRealHeight')
+        - this.get('_mapCaptionRealHeight')
+        - legendHeight * legendLines
+        - this.get('_mapHeightDelta')}px;`);
     }
   ),
 
@@ -637,15 +639,18 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       if (this.get('_options.displayMode') === 'map-only-mode') {
         return Ember.String.htmlSafe(`height: 100%;`);
       }
-      
+
       var legendHeight = mapCaptionPreviewHeight;
       var legendLines = this.get('_mapLegendLines');
-      
+
       if (!this.get('_options.legendControl')) {
         legendHeight = 0;
       }
 
-      return Ember.String.htmlSafe(`height: ${sheetOfPaperPreviewHeight - mapCaptionPreviewHeight - legendHeight*legendLines - this.get('_mapHeightDelta')}px;`);
+      return Ember.String.htmlSafe(`height: ${sheetOfPaperPreviewHeight
+        - mapCaptionPreviewHeight
+        - legendHeight * legendLines
+        - this.get('_mapHeightDelta')}px;`);
     }
   ),
 
