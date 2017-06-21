@@ -12,8 +12,8 @@
     "semantic-ui": "^2.2.4",
     "leaflet": "1.0.1",
     "leaflet.editable": "master",
-    "leaflet.editable.measures": "0.1.0",
-    "leaflet.export": "0.1.0",
+    "leaflet-editable-measures": "0.1.0",
+    "leaflet-export": "0.1.0",
     "html2canvas": "master",
     "Leaflet-WFST": "develop",
     "proj4leaflet": "1.0.1",
@@ -25,7 +25,7 @@
     "leaflet-minimap": "3.4.0",
     "leaflet.wms": "gh-pages",
     "leaflet-history": "Flexberry/leaflet-history#master",
-    "leaflet-switch-scale-control": "Flexberry/leaflet-switch-scale-control#master",
+    "leaflet-switch-scale-control": "0.1.0",
     "leaflet.zoomslider": "Flexberry/Leaflet.zoomslider#leaflet-1.0.1"
   },
   "resolutions": {

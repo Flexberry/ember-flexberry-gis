@@ -55,15 +55,15 @@ module.exports = {
     app.import(app.bowerDirectory + '/leaflet-history/dist/leaflet-history.js');
 
     // Leaflet.Editable.Measure
-    app.import(app.bowerDirectory + '/leaflet.editable.measures/src/leaflet_measure.js');
-    app.import(app.bowerDirectory + '/leaflet.editable.measures/src/leaflet_measure.css');
-    app.import(app.bowerDirectory + '/leaflet.editable.measures/images/popupMarker.png', {
+    app.import(app.bowerDirectory + '/leaflet-editable-measures/src/leaflet_measure.js');
+    app.import(app.bowerDirectory + '/leaflet-editable-measures/src/leaflet_measure.css');
+    app.import(app.bowerDirectory + '/leaflet-editable-measures/images/popupMarker.png', {
       destDir: appImagesDirectory
     });
 
     // Leaflet.Export
     app.import(app.bowerDirectory + '/html2canvas/dist/html2canvas.js');
-    app.import(app.bowerDirectory + '/leaflet.export/leaflet_export.js');
+    app.import(app.bowerDirectory + '/leaflet-export/leaflet_export.js');
 
     // Proj4Leaflet.
     app.import(app.bowerDirectory + '/proj4/dist/proj4-src.js');
