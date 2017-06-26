@@ -1,3 +1,3 @@
-      export default {
-        'new': 'Новый слой'
-      }
+export default {
+  'new': 'Новый слой'
+};

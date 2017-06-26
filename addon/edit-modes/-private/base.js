@@ -2,6 +2,8 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
+
 /**
   Base edit mode object.
 
@@ -24,4 +26,4 @@ export default {
 
     return true;
   }
-}
+};
