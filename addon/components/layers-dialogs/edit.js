@@ -7,7 +7,9 @@ import RequiredActionsMixin from '../../mixins/required-actions';
 import DynamicActionsMixin from '../../mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 import layout from '../../templates/components/layers-dialogs/edit';
-import { translationMacro as t } from 'ember-i18n';
+import {
+  translationMacro as t
+} from 'ember-i18n';
 
 // Proj4 CRS code.
 // Will be initialized in 'init' method.
@@ -48,78 +50,78 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       Available modes.
 
       @property _availableModes
-      @type String[]
+      @type Object[]
       @default null
       @private
     */
     _availableModes: null,
 
     /**
+      Available modes captions.
+
+      @property _availableModesCaptions
+      @type String[]
+      @readonly
+    */
+    _availableModesCaptions: Ember.computed('_availableModes', 'i18n', function () {
+      let _availableModes = this.get('_availableModes');
+
+      let modes = Ember.A();
+      if (Ember.isArray(_availableModes) && _availableModes.length !== 0) {
+        let i18n = this.get('i18n');
+
+        modes.pushObject(i18n.t('components.layers-dialogs.edit-modes.new'));
+
+        modes.pushObjects(_availableModes.map((editMode) => {
+          return i18n.t('components.layers-dialogs.edit-modes.' + editMode.name);
+        }));
+      }
+
+      return modes;
+    }),
+
+    /**
       Selected mode.
 
       @property _selectedMode
+      @type Object
+      @readonly
+    */
+    _selectedMode: Ember.computed('_selectedModeCaption', function () {
+      let _availableModes = this.get('_availableModes');
+      let _availableModesCaptions = this.get('_availableModesCaptions');
+      let _selectedModeCaption = this.get('_selectedModeCaption');
+
+      if (!Ember.isArray(_availableModes) || !Ember.isArray(_availableModesCaptions) || Ember.isBlank(_selectedModeCaption)) {
+        return null;
+      }
+
+      let modeIndex = _availableModesCaptions.findIndex(item => item.string === _selectedModeCaption) - 1;
+
+      return modeIndex > -1 ? _availableModes.objectAt(modeIndex) : null;
+    }),
+
+    /**
+      Selected mode.
+
+      @property _selectedModeCaption
       @type String
       @default null
       @private
     */
-    _selectedMode: null,
+    _selectedModeCaption: null,
 
     /**
       Flag: indicates whether modes are available.
 
       @property _modesAreAvailable
       @type Boolean
-      @default false
-      @private
+      @readonly
     */
-    _modesAreAvailable: false,
+    _modesAreAvailable: Ember.computed('_availableModes', function () {
+      let _availableModes = this.get('_availableModes');
 
-    /**
-      Flag: indicates whether new layer mode is selected now.
-
-      @property _newLayerModeIsSelected
-      @type Boolean
-      @readOnly
-      @private
-    */
-    _newLayerModeIsSelected: Ember.computed('_selectedMode', 'i18n.locale', function() {
-      let i18n = this.get('i18n');
-      let newLayerMode = i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.new-layer');
-      let selectedMode = this.get('_selectedMode');
-
-      return selectedMode.toString() === newLayerMode.toString();
-    }),
-
-    /**
-      Flag: indicates whether new layer mode is selected now.
-
-      @property _cswBasedLayerModeIsSelected
-      @type Boolean
-      @readOnly
-      @private
-    */
-    _cswBasedLayerModeIsSelected: Ember.computed('_selectedMode', 'i18n.locale', function() {
-      let i18n = this.get('i18n');
-      let cswBasedLayerMode = i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.csw-based-layer');
-      let selectedMode = this.get('_selectedMode');
-
-      return selectedMode.toString() === cswBasedLayerMode.toString();
-    }),
-
-    /**
-      Flag: indicates whether new layer mode is selected now.
-
-      @property _metadataBasedLayerModeIsSelected
-      @type Boolean
-      @readOnly
-      @private
-    */
-    _metadataBasedLayerModeIsSelected: Ember.computed('_selectedMode', 'i18n.locale', function() {
-      let i18n = this.get('i18n');
-      let metadataBasedLayerMode = i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.metadata-based-layer');
-      let selectedMode = this.get('_selectedMode');
-
-      return selectedMode.toString() === metadataBasedLayerMode.toString();
+      return Ember.isArray(_availableModes) && !Ember.isBlank(_availableModes);
     }),
 
     /**
@@ -138,9 +140,9 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @property _crsSettingsAreAvailableForType
       @type Boolean
       @private
-      @readOnly
+      @readonly
     */
-    _crsSettingsAreAvailableForType: Ember.computed('_layer.type', function() {
+    _crsSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
 
       let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
@@ -160,9 +162,9 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @property _layerSettingsAreAvailableForType
       @type Boolean
       @private
-      @readOnly
+      @readonly
     */
-    _layerSettingsAreAvailableForType: Ember.computed('_layer.type', function() {
+    _layerSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
 
       let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
@@ -182,9 +184,9 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @property _identifySettingsAreAvailableForType
       @type Boolean
       @private
-      @readOnly
+      @readonly
     */
-    _identifySettingsAreAvailableForType: Ember.computed('_layer.type', function() {
+    _identifySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
@@ -205,9 +207,9 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @property _searchSettingsAreAvailableForType
       @type Boolean
       @private
-      @readOnly
+      @readonly
     */
-    _searchSettingsAreAvailableForType: Ember.computed('_layer.type', function() {
+    _searchSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
@@ -228,9 +230,9 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @property _displaySettingsAreAvailableForType
       @type Boolean
       @private
-      @readOnly
+      @readonly
     */
-    _displaySettingsAreAvailableForType: Ember.computed('_layer.type', function() {
+    _displaySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       return true;
     }),
 
@@ -240,9 +242,9 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @property _legendSettingaAreAvailableForType
       @type Boolean
       @private
-      @readOnly
+      @readonly
     */
-    _legendSettingaAreAvailableForType: Ember.computed('_layer.type', function() {
+    _legendSettingaAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
@@ -323,10 +325,9 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
 
       @property _availableCoordinateReferenceSystemsCodes
       @type Boolean
-      @default false
-      @private
+      @readonly
     */
-    _showCoordinateReferenceSystemFields: Ember.computed('_coordinateReferenceSystemCode', function() {
+    _showCoordinateReferenceSystemFields: Ember.computed('_coordinateReferenceSystemCode', function () {
       return this.get('_coordinateReferenceSystemCode') === proj4CrsCode;
     }),
 
@@ -562,22 +563,21 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       },
 
       /**
-        Handles {{#crossLink "FlexberryCswComponent/sendingActions.recordSelected:method"}}'flexberry-csw' component's 'recordSelectd' action{{/crossLink}}.
+        Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-edit-mode' components 'editingFinished' action {{/crossLink}}.
 
-        @method actions.onCswRecordSelected
-        @param {Object} record Selected record
+        @method actions.onEditingFinished
+        @param {Object} layer Modified layer model
       */
-      onCswRecordSelected(record) {
-        let layerClass = Ember.getOwner(this).knownForType('layer', Ember.get(record, 'type'));
-        let settings = layerClass.createSetingsFromCsw(record);
+      onEditingFinished(layer) {
+        let _layerHash = this.get('_layer');
 
-        this.set('_layer.type', Ember.get(record, 'type'));
-        this.set('_layer.name', Ember.get(record, 'title'));
-        this.set('_layer.settings', settings);
+        for (var propertyName in layer) {
+          if (layer.hasOwnProperty(propertyName) && _layerHash.hasOwnProperty(propertyName)) {
+            Ember.set(_layerHash, propertyName, Ember.get(layer, propertyName));
+          }
+        }
 
-        this.set('_coordinateReferenceSystemCode', Ember.get(record, 'crs'));
-        this.set('_layer.coordinateReferenceSystem.code', Ember.get(record, 'crs'));
-        this.set('_layer.coordinateReferenceSystem.definition', null);
+        this.set('_layer', _layerHash);
       },
 
       /**
@@ -714,7 +714,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @method _visibleDidChange
       @private
     */
-    _visibleDidChange: Ember.on('init', Ember.observer('visible', function() {
+    _visibleDidChange: Ember.on('init', Ember.observer('visible', function () {
       if (this.get('visible')) {
         this._createInnerLayer();
       } else {
@@ -728,7 +728,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @method _innerLayerTypeDidChange
       @private
     */
-    _innerLayerTypeDidChange: Ember.observer('_layer.type', function() {
+    _innerLayerTypeDidChange: Ember.observer('_layer.type', function () {
       if (Ember.isNone(this.get('_layer'))) {
         return;
       }
@@ -743,7 +743,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @method _coordinateReferenceSystemCodeDidChange
       @private
     */
-    _coordinateReferenceSystemCodeDidChange: Ember.observer('_coordinateReferenceSystemCode', function() {
+    _coordinateReferenceSystemCodeDidChange: Ember.observer('_coordinateReferenceSystemCode', function () {
       if (Ember.isNone(this.get('_layer'))) {
         return;
       }
@@ -751,23 +751,6 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       let code = this.get('_coordinateReferenceSystemCode');
       this.set('_layer.coordinateReferenceSystem', this.get(`_coordinateReferenceSystems.${code}`));
     }),
-
-    /**
-      Observes changes in current locale.
-      Changes available modes.
-
-      @method _localeDidChange
-      @private
-    */
-    _localeDidChange: Ember.on('init', Ember.observer('i18n.locale', function() {
-      let i18n = this.get('i18n');
-      this.set('_availableModes', Ember.A([
-        i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.new-layer'),
-        i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.csw-based-layer')/*,
-        i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.metadata-based-layer'),*/
-      ]));
-      this.set('_selectedMode', i18n.t('components.layers-dialogs.edit.mode-dropdown.modes.new-layer'));
-    })),
 
     /**
       Initializes component.
@@ -790,6 +773,19 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         let crsFactory = Ember.get(crsFactories, crsFactoryName);
         return Ember.get(crsFactory, 'code');
       })));
+
+      let availableEditModes = Ember.A();
+
+      let editModesNames = owner.knownNamesForType('edit-mode');
+      editModesNames.forEach((modeName) => {
+        let editModeFactory = owner.knownForType('edit-mode', modeName);
+        let isAvailable = editModeFactory.componentCanBeInserted(this);
+        if (isAvailable) {
+          availableEditModes.pushObject(editModeFactory);
+        }
+      });
+
+      this.set('_availableModes', availableEditModes);
     },
 
     /**

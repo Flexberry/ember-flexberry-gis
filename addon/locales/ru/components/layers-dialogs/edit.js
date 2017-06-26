@@ -8,11 +8,6 @@ export default {
   },
   'mode-dropdown': {
     'caption': 'Режим добавления',
-    'modes': {
-      'new-layer': 'Новый слой',
-      'csw-based-layer': 'На основе существующей записи из каталога сервисов',
-      'metadata-based-layer': 'На основе существующих метаданных слоя'
-    }
   },
   'type-dropdown': {
     'caption': 'Тип слоя'
