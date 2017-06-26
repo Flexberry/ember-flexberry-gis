@@ -578,6 +578,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         }
 
         this.set('_layer', _layerHash);
+        this.set('_coordinateReferenceSystemCode', Ember.get(_layerHash, 'coordinateReferenceSystem.code'));
       },
 
       /**
