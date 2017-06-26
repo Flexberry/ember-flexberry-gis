@@ -21,7 +21,7 @@ export default Ember.Mixin.create({
     @private
   */
   _getLayersToIdentify({ excludedLayers }) {
-    let allVisibleLayersToIdentify = Ember.A(this._super(...arguments) || []);
+    let allVisibleLayersToIdentify = Ember.A(this._super(...arguments) || []).filter(layer => layer.get('visibility') === true);
 
     let topVisibleLayerToIdenify = Ember.A();
     if (allVisibleLayersToIdentify.length > 0) {
