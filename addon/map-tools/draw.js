@@ -77,6 +77,7 @@ export default BaseNonclickableMapTool.extend({
         featuresLayer: featuresLayer
       });
       this.set('_editTools', editTools);
+      Ember.set(leafletMap, 'drawTools', editTools);
     }
 
     editTools.on('editable:drawing:end', this.disable, this);
