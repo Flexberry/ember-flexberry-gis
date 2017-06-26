@@ -39,7 +39,7 @@ export default Ember.Component.extend({
 
   /**
     Component's action invoking when inner editing process is finished.
-    
+
     @method sendingActions.editingFinished
     @param {Object} layer Editable object.
   */
