@@ -37,7 +37,6 @@ export default Ember.Component.extend({
     }, this);
   }
 
-
   /**
     Component's action invoking when inner editing process is finished.
     
