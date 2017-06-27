@@ -2,7 +2,7 @@
   @module ember-flexberry-gis
 */
 
-import IdentifyAllVisibleMapTool from './identify-all-polygon';
+import IdentifyAllVisibleMapTool from './identify-visible-polygon';
 import IdentifyTopMixin from '../mixins/map-tools/identify-top';
 
 /**
