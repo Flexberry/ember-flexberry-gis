@@ -225,6 +225,33 @@ let ExportMapCommandComponent = Ember.Component.extend({
     exportPrintIconClass: 'print icon',
 
     /**
+      Current export page number.
+
+      @property exportPageNumber
+      @type Number
+      @default 0
+    */
+    exportPageNumber: 0,
+
+    /**
+      Total count of export pages.
+
+      @property exportPagesCount
+      @type Number
+      @default 0
+    */
+    exportPagesCount: 0,
+
+    /**
+      Export options.
+
+      @property exportOptions
+      @type Array
+      @default null
+    */
+    exportOptions: null,
+
+    /**
       Map caption that will be displayed on print/export preview by default.
 
       @property defaultMapCaption
@@ -241,6 +268,17 @@ let ExportMapCommandComponent = Ember.Component.extend({
       @default 30000
     */
     timeout: 30000,
+
+    exportImagesObserver: Ember.observer('exportPageNumber', function() {
+      let pageNumber = this.get('exportPageNumber');
+      let options = this.get('exportOptions');
+      let executeActionEventObject = this.get('_executeActionEventObject');
+
+      Ember.set(executeActionEventObject, 'execute', true);
+
+      // Map toolbar will catch action, call to map-command's 'execute method', then 'execute' event will be triggered.
+      this.sendAction('execute', options[pageNumber], executeActionEventObject);
+    }),
 
     actions: {
       /**
@@ -271,6 +309,11 @@ let ExportMapCommandComponent = Ember.Component.extend({
         @param {Object} e Action's event object.
       */
       onExportDialogApprove(e) {
+        let options = Ember.get(e, 'exportOptions');
+
+        this.set('exportOptions', options);
+        this.set('exportPagesCount', options.length);
+
         if (this.get('_exportIsInProgress')) {
           // Prevent new export until already executing export will be completed.
           e.closeDialog = false;
@@ -282,11 +325,8 @@ let ExportMapCommandComponent = Ember.Component.extend({
           return;
         }
 
-        // Prevent export dialog from hiding until export will be completed.
-        e.closeDialog = false;
-
         // Listen to map-command's 'execute' event & handle it.
-        mapCommand.one('execute', (e) => {
+        mapCommand.on('execute', (e) => {
           // Hide possibly shown error message.
           this.set('_showExportErrorMessage', false);
 
@@ -294,12 +334,21 @@ let ExportMapCommandComponent = Ember.Component.extend({
           this.set('_exportIsInProgress', true);
 
           e.executionResult.then(() => {
-            // Export successfully completed.
-            // Hide delay indicator.
-            this.set('_exportIsInProgress', false);
+            let completeCount = this.get('exportPageNumber');
+            let pagesCount = this.get('exportPagesCount');
 
-            // Hide dialog.
-            this._hideExportDialog();
+            completeCount++;
+
+            if (completeCount === pagesCount) {
+              // Export successfully completed.
+              // Hide delay indicator.
+              this.set('_exportIsInProgress', false);
+
+              // Hide dialog.
+              this._hideExportDialog();
+            } else {
+              this.set('exportPageNumber', completeCount);
+            }
           }).catch((reason) => {
             // Export failed, so don't hide dialog.
             // Hide delay indicator.
@@ -311,12 +360,14 @@ let ExportMapCommandComponent = Ember.Component.extend({
           });
         });
 
+        // Prevent export dialog from hiding until export will be completed.
+        e.closeDialog = false;
+
         // Set 'execute' flag to true, to force map-comand to be executed (not just initialized).
         let executeActionEventObject = this.get('_executeActionEventObject');
         Ember.set(executeActionEventObject, 'execute', true);
 
-        // Map toolbar will catch action, call to map-command's 'execute method', then 'execute' event will be triggered.
-        this.sendAction('execute', Ember.get(e, 'exportOptions'), executeActionEventObject);
+        this.sendAction('execute', options[0], executeActionEventObject);
       },
 
       /**
