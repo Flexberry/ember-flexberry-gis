@@ -1,4 +1,3 @@
-import NewPlatformFlexberryGISMapCswConnectionModel from './models/new-platform-flexberry-g-i-s-csw-connection';
 import NewPlatformFlexberryGISLayerLinkModel from './models/new-platform-flexberry-g-i-s-layer-link';
 import NewPlatformFlexberryGISLayerMetadataModel from './models/new-platform-flexberry-g-i-s-layer-metadata';
 import NewPlatformFlexberryGISLinkParameterModel from './models/new-platform-flexberry-g-i-s-link-parameter';
@@ -7,7 +6,6 @@ import NewPlatformFlexberryGISMapLayerModel from './models/new-platform-flexberr
 import NewPlatformFlexberryGISMapObjectSettingModel from './models/new-platform-flexberry-g-i-s-map-object-setting';
 
 import FeatureResultItemComponent from './components/feature-result-item';
-import FlexberryCSWComponent from './components/flexberry-csw';
 import LayersDialogsComponents from './components/layers-dialogs';
 import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
@@ -16,7 +14,6 @@ import MapCommandsComponents from './components/map-commands';
 
 export default {
   'models': {
-    'new-platform-flexberry-g-i-s-csw-connection': NewPlatformFlexberryGISMapCswConnectionModel,
     'new-platform-flexberry-g-i-s-layer-link': NewPlatformFlexberryGISLayerLinkModel,
     'new-platform-flexberry-g-i-s-layer-metadata': NewPlatformFlexberryGISLayerMetadataModel,
     'new-platform-flexberry-g-i-s-link-parameter': NewPlatformFlexberryGISLinkParameterModel,
@@ -59,8 +56,6 @@ export default {
         'caption': 'Error while parsing entered JSON-string'
       }
     },
-
-    'flexberry-csw': FlexberryCSWComponent,
 
     'layers-dialogs': LayersDialogsComponents,
 

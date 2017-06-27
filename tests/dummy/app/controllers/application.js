@@ -35,7 +35,7 @@ export default Ember.Controller.extend({
     @property addonVersionHref
     @type String
   */
-  addonVersionHref: Ember.computed('addonVersion', function() {
+  addonVersionHref: Ember.computed('addonVersion', function () {
     let addonVersion = this.get('addonVersion');
     let commitSha = addonVersion.split('+')[1];
 
@@ -48,7 +48,7 @@ export default Ember.Controller.extend({
     @property browserIsInternetExplorer
     @type Boolean
   */
-  browserIsInternetExplorer: Ember.computed(function() {
+  browserIsInternetExplorer: Ember.computed(function () {
     let userAgent = window.navigator.userAgent;
 
     return userAgent.indexOf('MSIE ') > 0 || userAgent.indexOf('Trident/') > 0 || userAgent.indexOf('Edge/') > 0;
@@ -94,7 +94,7 @@ export default Ember.Controller.extend({
     @property sitemap
     @type Object
   */
-  sitemap: Ember.computed('i18n.locale', function() {
+  sitemap: Ember.computed('i18n.locale', function () {
     let i18n = this.get('i18n');
 
     return {
@@ -111,11 +111,6 @@ export default Ember.Controller.extend({
           link: 'maps',
           caption: i18n.t('forms.application.sitemap.gis.maps.caption'),
           title: i18n.t('forms.application.sitemap.gis.maps.title'),
-          children: null
-        }, {
-          link: 'new-platform-flexberry-g-i-s-csw-connection-l',
-          caption: i18n.t('forms.application.sitemap.gis.csw-connections.caption'),
-          title: i18n.t('forms.application.sitemap.gis.csw-connections.title'),
           children: null
         }]
       }, {

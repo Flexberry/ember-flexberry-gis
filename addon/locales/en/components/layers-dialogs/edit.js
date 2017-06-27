@@ -7,12 +7,7 @@ export default {
     'caption': 'Cancel'
   },
   'mode-dropdown': {
-    'caption': 'Adding mode',
-    'modes': {
-      'new-layer': 'New layer',
-      'csw-based-layer': 'Based on existing record from services catalog',
-      'metadata-based-layer': 'Based on existing layer metadata'
-    }
+    'caption': 'Adding mode'
   },
   'type-dropdown': {
     'caption': 'Layer type'

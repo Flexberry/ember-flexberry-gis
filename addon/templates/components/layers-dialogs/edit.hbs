@@ -54,18 +54,13 @@
         </label>
         {{flexberry-dropdown
           class="fluid"
-          items=_availableModes
-          value=_selectedMode
+          items=_availableModesCaptions
+          value=_selectedModeCaption
         }}
       </div>
     {{/if}}
-    {{#if _cswBasedLayerModeIsSelected}}
-      {{flexberry-csw
-        connections=cswConnections
-        leafletMap=leafletMap
-        dropdownMode=true
-        recordSelected=(action "onCswRecordSelected")
-      }}
+    {{#if _selectedMode}}
+      {{component (concat "layers-dialogs/edit-modes/" _selectedMode.name) editingFinished=(action "onEditingFinished")}}
     {{/if}}
     <div class="field">
       <label>
