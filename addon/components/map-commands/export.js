@@ -225,33 +225,6 @@ let ExportMapCommandComponent = Ember.Component.extend({
     exportPrintIconClass: 'print icon',
 
     /**
-      Current export page number.
-
-      @property exportPageNumber
-      @type Number
-      @default 0
-    */
-    exportPageNumber: 0,
-
-    /**
-      Total count of export pages.
-
-      @property exportPagesCount
-      @type Number
-      @default 0
-    */
-    exportPagesCount: 0,
-
-    /**
-      Export options.
-
-      @property exportOptions
-      @type Array
-      @default null
-    */
-    exportOptions: null,
-
-    /**
       Map caption that will be displayed on print/export preview by default.
 
       @property defaultMapCaption
@@ -268,17 +241,6 @@ let ExportMapCommandComponent = Ember.Component.extend({
       @default 30000
     */
     timeout: 30000,
-
-    exportImagesObserver: Ember.observer('exportPageNumber', function() {
-      let pageNumber = this.get('exportPageNumber');
-      let options = this.get('exportOptions');
-      let executeActionEventObject = this.get('_executeActionEventObject');
-
-      Ember.set(executeActionEventObject, 'execute', true);
-
-      // Map toolbar will catch action, call to map-command's 'execute method', then 'execute' event will be triggered.
-      this.sendAction('execute', options[pageNumber], executeActionEventObject);
-    }),
 
     actions: {
       /**
@@ -311,9 +273,6 @@ let ExportMapCommandComponent = Ember.Component.extend({
       onExportDialogApprove(e) {
         let options = Ember.get(e, 'exportOptions');
 
-        this.set('exportOptions', options);
-        this.set('exportPagesCount', options.length);
-
         if (this.get('_exportIsInProgress')) {
           // Prevent new export until already executing export will be completed.
           e.closeDialog = false;
@@ -326,7 +285,7 @@ let ExportMapCommandComponent = Ember.Component.extend({
         }
 
         // Listen to map-command's 'execute' event & handle it.
-        mapCommand.on('execute', (e) => {
+        mapCommand.one('execute', (e) => {
           // Hide possibly shown error message.
           this.set('_showExportErrorMessage', false);
 
@@ -334,21 +293,12 @@ let ExportMapCommandComponent = Ember.Component.extend({
           this.set('_exportIsInProgress', true);
 
           e.executionResult.then(() => {
-            let completeCount = this.get('exportPageNumber');
-            let pagesCount = this.get('exportPagesCount');
+            // Export successfully completed.
+            // Hide delay indicator.
+            this.set('_exportIsInProgress', false);
 
-            completeCount++;
-
-            if (completeCount === pagesCount) {
-              // Export successfully completed.
-              // Hide delay indicator.
-              this.set('_exportIsInProgress', false);
-
-              // Hide dialog.
-              this._hideExportDialog();
-            } else {
-              this.set('exportPageNumber', completeCount);
-            }
+            // Hide dialog.
+            this._hideExportDialog();
           }).catch((reason) => {
             // Export failed, so don't hide dialog.
             // Hide delay indicator.
@@ -367,7 +317,7 @@ let ExportMapCommandComponent = Ember.Component.extend({
         let executeActionEventObject = this.get('_executeActionEventObject');
         Ember.set(executeActionEventObject, 'execute', true);
 
-        this.sendAction('execute', options[0], executeActionEventObject);
+        this.sendAction('execute', options, executeActionEventObject);
       },
 
       /**

@@ -1463,12 +1463,12 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @private
   */
   _export(pageNumber) {
-    return this.beforeExport().then(() => {
+    return this.beforeExport(pageNumber).then(() => {
       return this._waitForLeafletMapLayersToBeReady();
     }).then(() => {
       return this.export(pageNumber);
     }).finally(() => {
-      this.afterExport();
+      this.afterExport(pageNumber);
     });
   },
 
@@ -1477,56 +1477,59 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
     @method beforeExport
   */
-  beforeExport() {
+  beforeExport(pageNumber) {
     this.set('_options.pageNumber', '1');
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let leafletMap = this.get('leafletMap');
-      let leafletMapBounds = leafletMap.getBounds();
-
       // Sheet of paper with interactive map, which will be prepered for export and then exported.
       let $sheetOfPaper = this.get('_$sheetOfPaper');
-      let $sheetOfPaperMap = Ember.$(`.${flexberryClassNames.sheetOfPaperMap}`, $sheetOfPaper);
-      let $sheetOfPaperMapCaption = Ember.$(`.${flexberryClassNames.sheetOfPaperMapCaption}`, $sheetOfPaper);
 
-      // Sheet of paper clone with static non-interactive map, which will be displayed in preview dialog while export is executing.
-      let $sheetOfPaperClone = $sheetOfPaper.clone();
-      this.set('_$sheetOfPaperClone', $sheetOfPaperClone);
-
-      let $sheetOfPaperParent = $sheetOfPaper.parent();
-      let $body = $sheetOfPaper.closest('body');
-
-      // Move sheet of paper with interactive map into invisible part of document body.
-      // And set sheet of paper style relative to real size of the selected paper format.
-      $sheetOfPaper.appendTo($body[0]);
-      $sheetOfPaper.attr('style', this.get('_sheetOfPaperRealStyle'));
-      $sheetOfPaper.css('position', 'absolute');
-      $sheetOfPaper.css('left', `${$body.outerWidth() + 1}px`);
-      $sheetOfPaper.css('top', '0px');
-
-      // Necessary to display legend under map.
-      if (this.get('_options.legendSecondPage') && !this.get('showDownloadingFileSettings')) {
+      if (pageNumber === '2') {
+        // Necessary to display legend under map.
         let $legend = Ember.$(`.${flexberryClassNames.legendControlMap}`, $sheetOfPaper);
 
         $legend.removeClass('hidden');
         $legend.css('padding-top', '20px');
-      }
 
-      // Set sheet of paper map caption style relative to real size of the selected paper format.
-      $sheetOfPaperMapCaption.attr('style', this.get('_mapCaptionRealStyle'));
-
-      // Set sheet of paper map style relative to real size of the selected paper format.
-      $sheetOfPaperMap.attr('style', this.get('_mapRealStyle'));
-
-      // Replace interactivva map inside dialog with it's static clone for a while.
-      $sheetOfPaperClone.appendTo($sheetOfPaperParent[0]);
-
-      // Invalidate map size, then fit it's bounds, and then resolve resulting promise.
-      this._invalidateSizeOfLeafletMap().then(() => {
-        return this._fitBoundsOfLeafletMap(leafletMapBounds);
-      }).then(() => {
         resolve();
-      });
+      } else {
+        let leafletMap = this.get('leafletMap');
+        let leafletMapBounds = leafletMap.getBounds();
+
+        let $sheetOfPaperMap = Ember.$(`.${flexberryClassNames.sheetOfPaperMap}`, $sheetOfPaper);
+        let $sheetOfPaperMapCaption = Ember.$(`.${flexberryClassNames.sheetOfPaperMapCaption}`, $sheetOfPaper);
+
+        // Sheet of paper clone with static non-interactive map, which will be displayed in preview dialog while export is executing.
+        let $sheetOfPaperClone = $sheetOfPaper.clone();
+        this.set('_$sheetOfPaperClone', $sheetOfPaperClone);
+
+        let $sheetOfPaperParent = $sheetOfPaper.parent();
+        let $body = $sheetOfPaper.closest('body');
+
+        // Move sheet of paper with interactive map into invisible part of document body.
+        // And set sheet of paper style relative to real size of the selected paper format.
+        $sheetOfPaper.appendTo($body[0]);
+        $sheetOfPaper.attr('style', this.get('_sheetOfPaperRealStyle'));
+        $sheetOfPaper.css('position', 'absolute');
+        $sheetOfPaper.css('left', `${$body.outerWidth() + 1}px`);
+        $sheetOfPaper.css('top', '0px');
+
+        // Set sheet of paper map caption style relative to real size of the selected paper format.
+        $sheetOfPaperMapCaption.attr('style', this.get('_mapCaptionRealStyle'));
+
+        // Set sheet of paper map style relative to real size of the selected paper format.
+        $sheetOfPaperMap.attr('style', this.get('_mapRealStyle'));
+
+        // Replace interactivva map inside dialog with it's static clone for a while.
+        $sheetOfPaperClone.appendTo($sheetOfPaperParent[0]);
+
+        // Invalidate map size, then fit it's bounds, and then resolve resulting promise.
+        this._invalidateSizeOfLeafletMap().then(() => {
+          return this._fitBoundsOfLeafletMap(leafletMapBounds);
+        }).then(() => {
+          resolve();
+        });
+      }
     });
   },
 
@@ -1572,12 +1575,15 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       });
     };
 
+    // Print second page.
+    if (pageNumber === '2') {
+      return exportSheetOfLegend();
+    }
+
     let leafletMap = this.get('leafletMap');
     let $leafletMap = Ember.$(leafletMap._container);
     let $leafletMapWrapper = $leafletMap.parent();
     let leafletMapWrapperBackground = $leafletMapWrapper.css(`background`);
-
-    if (pageNumber === '2') return exportSheetOfLegend();
 
     // To achieve the correct image export must be divided into two steps.
     // First we export only map.
@@ -1611,48 +1617,51 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
     @method afterExport
   */
-  afterExport() {
+  afterExport(pageNumber) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let leafletMap = this.get('leafletMap');
-      let leafletMapBounds = leafletMap.getBounds();
-
       // Sheet of paper with interactive map, which will be prepered for export and then exported.
       let $sheetOfPaper = this.get('_$sheetOfPaper');
-      let $sheetOfPaperMap = Ember.$(`.${flexberryClassNames.sheetOfPaperMap}`, $sheetOfPaper);
-      let $sheetOfPaperMapCaption = Ember.$(`.${flexberryClassNames.sheetOfPaperMapCaption}`, $sheetOfPaper);
-      let $sheetOfPaperClone = this.get('_$sheetOfPaperClone');
-      let $sheetOfPaperParent = $sheetOfPaperClone.parent();
 
-      // Set sheet of paper style relative to preview size of the selected paper format.
-      $sheetOfPaper.attr('style', this.get('_sheetOfPaperPreviewStyle'));
-
-      // Set sheet of paper map caption style relative to preview size of the selected paper format.
-      $sheetOfPaperMapCaption.attr('style', this.get('_mapCaptionPreviewStyle'));
-
-      // Set sheet of paper map style relative to preview size of the selected paper format.
-      $sheetOfPaperMap.attr('style', this.get('_mapPreviewStyle'));
-
-      // Remove sheet of paper clone.
-      $sheetOfPaperClone.remove();
-      this.set('_$sheetOfPaperClone', null);
-
-      // Place sheet of papaer in the preview dialog again.
-      $sheetOfPaper.appendTo($sheetOfPaperParent[0]);
-
-      // Need to hide back legend under map.
-      if (this.get('_options.legendSecondPage') && !this.get('showDownloadingFileSettings')) {
+      if (pageNumber === '2') {
+        // Need to hide back legend under map.
         let $legend = Ember.$(`.${flexberryClassNames.legendControlMap}`, $sheetOfPaper);
 
         $legend.addClass('hidden');
         $legend.css('padding-top', '');
-      }
 
-      // Invalidate map size, then fit it's bounds, and then resolve resulting promise.
-      this._invalidateSizeOfLeafletMap().then(() => {
-        return this._fitBoundsOfLeafletMap(leafletMapBounds);
-      }).then(() => {
         resolve();
-      });
+      } else {
+        let leafletMap = this.get('leafletMap');
+        let leafletMapBounds = leafletMap.getBounds();
+
+        let $sheetOfPaperMap = Ember.$(`.${flexberryClassNames.sheetOfPaperMap}`, $sheetOfPaper);
+        let $sheetOfPaperMapCaption = Ember.$(`.${flexberryClassNames.sheetOfPaperMapCaption}`, $sheetOfPaper);
+        let $sheetOfPaperClone = this.get('_$sheetOfPaperClone');
+        let $sheetOfPaperParent = $sheetOfPaperClone.parent();
+
+        // Set sheet of paper style relative to preview size of the selected paper format.
+        $sheetOfPaper.attr('style', this.get('_sheetOfPaperPreviewStyle'));
+
+        // Set sheet of paper map caption style relative to preview size of the selected paper format.
+        $sheetOfPaperMapCaption.attr('style', this.get('_mapCaptionPreviewStyle'));
+
+        // Set sheet of paper map style relative to preview size of the selected paper format.
+        $sheetOfPaperMap.attr('style', this.get('_mapPreviewStyle'));
+
+        // Remove sheet of paper clone.
+        $sheetOfPaperClone.remove();
+        this.set('_$sheetOfPaperClone', null);
+
+        // Place sheet of papaer in the preview dialog again.
+        $sheetOfPaper.appendTo($sheetOfPaperParent[0]);
+
+        // Invalidate map size, then fit it's bounds, and then resolve resulting promise.
+        this._invalidateSizeOfLeafletMap().then(() => {
+          return this._fitBoundsOfLeafletMap(leafletMapBounds);
+        }).then(() => {
+          resolve();
+        });
+      }
     });
   },
 
