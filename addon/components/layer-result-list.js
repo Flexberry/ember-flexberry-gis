@@ -76,6 +76,129 @@ export default Ember.Component.extend({
    */
   results: null,
 
+  /**
+    Observer for passed results
+    @method _resultObserver
+   */
+  _resultObserver: Ember.observer('results', function () {
+    this.send('selectFeature', null);
+    this.set('_hasError', false);
+    this.set('_noData', false);
+    this.set('_displayResults', null);
+
+    // If results had been cleared.
+    if (!this.get('results')) {
+      return;
+    }
+
+    this.set('_showLoader', true);
+    let results = this.get('results') || [];
+
+    let displayResults = Ember.A();
+    results.forEach((result) => {
+      let r = {
+        name: Ember.get(result, 'layerModel.name') ? Ember.get(result, 'layerModel.name') : '',
+        settings: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings'),
+        displayProperties: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
+        layerModel: Ember.get(result, 'layerModel')
+      };
+
+      result.features.then(
+        (features) => {
+          if (features.length > 0) {
+            r.features = features;
+            displayResults.pushObject(r);
+          }
+        }
+      );
+    });
+
+    let promises = results.map((result) => {
+      return result.features;
+    });
+
+    let getFeatureDisplayProperty = function (feature, featuresPropertiesSettings) {
+      let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
+      let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
+
+      if ((Ember.typeOf(displayProperty) !== 'array' && !displayPropertyIsCallback)) {
+        return '';
+      }
+
+      if ((Ember.typeOf(displayProperty) !== 'string' && displayPropertyIsCallback)) {
+        return '';
+      }
+
+      if (!displayPropertyIsCallback) {
+        let featureProperties = Ember.get(feature, 'properties') || {};
+
+        let displayValue = Ember.none;
+        displayProperty.forEach((prop) => {
+          if (featureProperties.hasOwnProperty(prop)) {
+            let value = featureProperties[prop];
+            if (Ember.isNone(displayValue) && !Ember.isNone(value) && !Ember.isEmpty(value) && value !== 'Null') {
+              displayValue = value;
+            }
+          }
+        });
+
+        return !Ember.isNone(displayValue) ? displayValue : '';
+      }
+
+      let calculateDisplayProperty = eval(`(${displayProperty})`);
+      Ember.assert(
+        'Property \'settings.displaySettings.featuresPropertiesSettings.displayProperty\' ' +
+        'is not a valid java script function',
+        Ember.typeOf(calculateDisplayProperty) === 'function');
+
+      return calculateDisplayProperty(feature);
+    };
+
+    Ember.RSVP.allSettled(promises).finally(() => {
+      let order = 1;
+      displayResults.forEach((result) => {
+        result.order = order;
+        result.first = result.order === 1;
+        result.last = result.order === displayResults.length;
+        order += 1;
+
+        result.features.forEach((feature) => {
+          feature.displayValue = getFeatureDisplayProperty(feature, result.settings);
+          feature.layerModel = Ember.get(result, 'layerModel');
+        });
+
+        result.features = result.features.sort(function (a, b) {
+          // If displayValue is empty, it should be on the bottom.
+          if (Ember.isBlank(a.displayValue)) {
+            return 1;
+          }
+
+          if (Ember.isBlank(b.displayValue)) {
+            return -1;
+          }
+
+          if (a.displayValue > b.displayValue) {
+            return 1;
+          }
+
+          if (a.displayValue < b.displayValue) {
+            return -1;
+          }
+
+          return 0;
+        });
+      });
+
+      this.set('_displayResults', displayResults);
+      this.set('_noData', displayResults.length === 0);
+      this.set('_showLoader', false);
+
+      if (displayResults.length === 1) {
+        this.send('zoomTo', displayResults.objectAt(0).features);
+      }
+    });
+  }),
+
   actions: {
     /**
         Handles inner FeatureResultItem's bubbled 'selectFeature' action.
@@ -101,6 +224,9 @@ export default Ember.Component.extend({
 
         this.set('_selectedFeature', feature);
       }
+
+      // Send action despite of the fact feature changed or not. User can disable layer anytime.
+      this.sendAction('featureSelected', feature);
     },
 
     /**
@@ -161,117 +287,12 @@ export default Ember.Component.extend({
     if (!Ember.isNone(feature)) {
       serviceLayer.addLayer(feature.leafletLayer);
     }
-  },
+  }
 
   /**
-    Observer for passed results
-    @method _resultObserver
-   */
-  _resultObserver: Ember.observer('results', function () {
-    this.send('selectFeature', null);
-    this.set('_hasError', false);
-    this.set('_noData', false);
-    this.set('_displayResults', null);
+    Component's action invoking when feature item was selected.
 
-    // если это не поиск, а очистка результатов
-    if (!this.get('results')) {
-      return;
-    }
-
-    this.set('_showLoader', true);
-    let results = this.get('results') || [];
-
-    let displayResults = Ember.A();
-    results.forEach((result) => {
-      let r = {
-        name: Ember.get(result, 'layerModel.name') ? Ember.get(result, 'layerModel.name') : '',
-        settings: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings'),
-        displayProperties: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty')
-      };
-
-      result.features.then(
-        (features) => {
-          if (features.length > 0) {
-            r.features = features;
-            displayResults.pushObject(r);
-          }
-        }
-      );
-    });
-
-    let promises = results.map((result) => {
-      return result.features;
-    });
-
-    let getFeatureDisplayProperty = function (feature, featuresPropertiesSettings) {
-      let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
-      let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
-
-      if ((Ember.typeOf(displayProperty) !== 'array' && !displayPropertyIsCallback)) {
-        return '';
-      }
-
-      if ((Ember.typeOf(displayProperty) !== 'string' && displayPropertyIsCallback)) {
-        return '';
-      }
-
-      if (!displayPropertyIsCallback) {
-        let featureProperties = Ember.get(feature, 'properties') || {};
-
-        let displayValue = Ember.none;
-        displayProperty.forEach((prop) => {
-          if (featureProperties.hasOwnProperty(prop)) {
-            let value = featureProperties[prop];
-            if (Ember.isNone(displayValue) && !Ember.isNone(value) && !Ember.isEmpty(value)) {
-              displayValue = value;
-            }
-          }
-        });
-
-        return !Ember.isNone(displayValue) ? displayValue : '';
-      }
-
-      let calculateDisplayProperty = eval(`(${displayProperty})`);
-      Ember.assert(
-        'Property \'settings.displaySettings.featuresPropertiesSettings.displayProperty\' ' +
-        'is not a valid java script function',
-        Ember.typeOf(calculateDisplayProperty) === 'function');
-
-      return calculateDisplayProperty(feature);
-    };
-
-    Ember.RSVP.allSettled(promises).finally(() => {
-      let order = 1;
-      displayResults.forEach((result) => {
-        result.order = order;
-        result.first = result.order === 1;
-        result.last = result.order === displayResults.length;
-        order += 1;
-
-        result.features.forEach((feature) => {
-          feature.displayValue = getFeatureDisplayProperty(feature, result.settings);
-        });
-
-        result.features = result.features.sort(function (a, b) {
-          if (a.displayValue > b.displayValue) {
-            return 1;
-          }
-
-          if (a.displayValue < b.displayValue) {
-            return -1;
-          }
-
-          return 0;
-        });
-      });
-
-      this.set('_displayResults', displayResults);
-      this.set('_noData', displayResults.length === 0);
-      this.set('_showLoader', false);
-
-      if (displayResults.length === 1) {
-        this.send('zoomTo', displayResults.objectAt(0).features);
-      }
-    });
-  })
+    @method sendingActions.featureSelected
+    @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
+  */
 });
