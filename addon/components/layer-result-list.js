@@ -76,7 +76,6 @@ export default Ember.Component.extend({
    */
   results: null,
 
-
   /**
     Observer for passed results
     @method _resultObserver
@@ -137,7 +136,7 @@ export default Ember.Component.extend({
         displayProperty.forEach((prop) => {
           if (featureProperties.hasOwnProperty(prop)) {
             let value = featureProperties[prop];
-            if (Ember.isNone(displayValue) && !Ember.isNone(value) && !Ember.isEmpty(value) && value !== "Null") {
+            if (Ember.isNone(displayValue) && !Ember.isNone(value) && !Ember.isEmpty(value) && value !== 'Null') {
               displayValue = value;
             }
           }
