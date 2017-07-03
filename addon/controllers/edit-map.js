@@ -6,6 +6,7 @@ import Ember from 'ember';
 import EditFormController from 'ember-flexberry/controllers/edit-form';
 import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-handler';
 import FlexberryMaplayerActionsHandlerMixin from '../mixins/flexberry-maplayer-actions-handler';
+import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-actions-handler';
 
 /**
   Edit map controller.
@@ -14,10 +15,12 @@ import FlexberryMaplayerActionsHandlerMixin from '../mixins/flexberry-maplayer-a
   @extends EditFormController
   @uses FlexberryMapActionsHandlerMixin
   @uses FlexberryMaplayerActionsHandlerMixin
+  @uses LayerResultListActionsHandlerMixin
 */
 export default EditFormController.extend(
   FlexberryMapActionsHandlerMixin,
-  FlexberryMaplayerActionsHandlerMixin, {
+  FlexberryMaplayerActionsHandlerMixin,
+  LayerResultListActionsHandlerMixin, {
     /**
       Leaflet map.
 
