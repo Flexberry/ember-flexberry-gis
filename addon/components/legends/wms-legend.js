@@ -9,6 +9,15 @@ import BaseLegendComponent from '../legends/base-legend';
 */
 export default BaseLegendComponent.extend({
   /**
+    Sublayer name for display.
+
+    @property subLayerName
+    @type String
+    @default null
+  */
+  subLayerName: null,
+
+  /**
     Array of legend's for layer.
     Every legend is an object with following structure { src: ... },
     where 'src' is legend's image source (url or base64-string).
@@ -35,21 +44,45 @@ export default BaseLegendComponent.extend({
       return legends;
     }
 
-    Ember.A((this.get('layerSettings.legendSettings.layers') || this.get('layerSettings.layers') || '').split(',')).forEach((layerName) => {
+    let subLayerName = this.get('subLayerName');
+
+    if (!Ember.isEmpty(subLayerName)) {
       let parameters = {
         service: 'WMS',
         request: 'GetLegendGraphic',
         version: this.get('layerSettings.legendSettings.version') || this.get('layerSettings.version') || '1.1.0',
         format: this.get('layerSettings.legendSettings.format') || this.get('layerSettings.format') || 'image/png',
-        layer: layerName
+        layer: subLayerName
       };
 
       legends.pushObject({
         src: `${url}${L.Util.getParamString(parameters)}`,
-        layerName: layerName
+        layerName: subLayerName
       });
-    });
+    } else {
+      Ember.A((this.get('layerSettings.legendSettings.layers') || this.get('layerSettings.layers') || '').split(',')).forEach((layerName) => {
+        let parameters = {
+          service: 'WMS',
+          request: 'GetLegendGraphic',
+          version: this.get('layerSettings.legendSettings.version') || this.get('layerSettings.version') || '1.1.0',
+          format: this.get('layerSettings.legendSettings.format') || this.get('layerSettings.format') || 'image/png',
+          layer: layerName
+        };
+
+        legends.pushObject({
+          src: `${url}${L.Util.getParamString(parameters)}`,
+          layerName: layerName
+        });
+      });
+    }
 
     return legends;
-  })
+  }),
+/*
+  init: function() {
+    this._super(...arguments);
+
+    this.set('showLayerName', false);
+  }
+  */
 });

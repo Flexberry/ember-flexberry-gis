@@ -551,7 +551,15 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       if (layers[i].get('type') === 'group') {
         res = res.concat(this._getLayersInfo(layers[i].layers));
       } else if (layers[i].get('legendCanBeDisplayed') && layers[i].get('visibility')) {
-        res.push(layers[i].get('name'));
+        if (layers[i].get('type') === 'wms-single-tile' || layers[i].get('type') === 'wms') {
+          var wmsSettings = layers[i].get('settingsAsObject');
+          // Concat all sub-layers for WMS-layer.
+          if (!Ember.isEmpty(wmsSettings)) {
+            res = res.concat(wmsSettings.layers.split(','));
+          }
+        } else {
+          res.push(layers[i].get('name'));
+        }
       }
     }
 

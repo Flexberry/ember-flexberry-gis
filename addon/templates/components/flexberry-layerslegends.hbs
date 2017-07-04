@@ -1,4 +1,4 @@
-{{#each layers as |layerModel|}}
+{{#each layersExtend as |layerModel|}}
   {{#if (and layerModel.visibility (not layerModel.isDeleted))}}
     {{#if (eq layerModel.type "group")}}
       {{flexberry-layerslegends
@@ -6,12 +6,24 @@
       }}
     {{else}}
       {{#if layerModel.legendCanBeDisplayed}}
-        {{component (concat "legends/" layerModel.type "-legend")
-          layerName=layerModel.name
-          layerSettings=layerModel.settingsAsObject
-          showLayerName=true
-          lazyLoaded=false
-        }}
+        {{#if layerModel.haveSubLayers}}
+          {{#each layerModel.subLayers as |subLayer|}}
+            {{component (concat "legends/" layerModel.type "-legend")
+              layerName=layerModel.name
+              layerSettings=layerModel.settingsAsObject
+              showLayerName=false
+              lazyLoaded=false
+              subLayerName=subLayer
+            }}
+          {{/each}}
+        {{else}}
+          {{component (concat "legends/" layerModel.type "-legend")
+            layerName=layerModel.name
+            layerSettings=layerModel.settingsAsObject
+            showLayerName=true
+            lazyLoaded=false
+          }}
+        {{/if}}
       {{/if}}
     {{/if}}
   {{/if}}
