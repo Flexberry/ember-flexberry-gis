@@ -27,63 +27,25 @@ export default TileLayer.extend({
   */
   _getFeatureInfo(latlng) {
     let layer = this.get('_leafletObject');
+
     if (Ember.isNone(layer)) {
       return new Ember.RSVP.Promise((resolve, reject) => {
         reject(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`);
       });
     }
 
-    let leafletMap = this.get('leafletMap');
-    let point = leafletMap.latLngToContainerPoint(latlng, leafletMap.getZoom());
-    let size = leafletMap.getSize();
-    let crs = layer.options.crs;
-
-    let mapBounds = leafletMap.getBounds();
-    let sw = crs.project(mapBounds.getSouthWest());
-    let ne = crs.project(mapBounds.getNorthEast());
-
-    let params = {
-      request: 'GetFeatureInfo',
-      service: 'WMS',
-      srs: crs.code,
-      styles: layer.wmsParams.styles,
-      transparent: layer.wmsParams.transparent,
-      version: layer.wmsParams.version,
-      format: layer.wmsParams.format,
-      bbox: sw.x + ',' + sw.y + ',' + ne.x + ',' + ne.y,
-      height: size.y,
-      width: size.x,
-      layers: layer.wmsParams.layers,
-      query_layers: layer.wmsParams.layers,
-      info_format: layer.wmsParams.info_format
-    };
-
-    params[params.version === '1.3.0' ? 'i' : 'x'] = point.x;
-    params[params.version === '1.3.0' ? 'j' : 'y'] = point.y;
-
-    let requestUrl = layer._url + L.Util.getParamString(params, layer._url, true);
     return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.$.ajax(requestUrl, {
-        dataType: 'text'
-      }).done((data, textStatus, jqXHR) => {
-        let supportedInfoFormats = ['application/geojson', 'application/json'];
-        if (supportedInfoFormats.indexOf(layer.wmsParams.info_format) < 0) {
-          reject(new Error('Format \'' + layer.wmsParams.info_format + '\' isn\'t supported'));
+      layer.getFeatureInfo({
+        latlng: latlng,
+        done: function(featuresCollection, xhr) {
+          let features = Ember.A(Ember.get(featuresCollection, 'features') || []);
+          resolve(features);
+        },
+        fail: function(errorThrown, xhr) {
+          reject(errorThrown);
+        },
+        always: function() {
         }
-
-        let featureCollection = {};
-        try {
-          featureCollection = JSON.parse(jqXHR.responseText);
-        } catch (parseError) {
-          reject(parseError);
-        }
-
-        this.injectLeafletLayersIntoGeoJSON(featureCollection);
-
-        let features = Ember.A(Ember.get(featureCollection, 'features') || []);
-        resolve(features);
-      }).fail((jqXHR, textStatus, errorThrown) => {
-        reject(errorThrown);
       });
     });
   },
@@ -96,7 +58,7 @@ export default TileLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
-    return L.tileLayer.wms(this.get('url'), this.get('options'));
+    return new L.TileLayer.WMS(this.get('url'), this.get('options'));
   },
 
   /**
