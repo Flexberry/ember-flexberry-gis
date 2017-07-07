@@ -45,13 +45,16 @@ export default Ember.Component.extend({
   */
   layersExtend: Ember.computed('layers', function() {
     let layers = this.get('layers');
+    let extendLayers = Ember.A();
 
     for (var i = 0; i < layers.length; i++) {
       let layer = layers[i];
+      let extendLayer = {
+        layer: layer,
+        haveSubLayers: false,
+        subLayers: Ember.A()
+      };
       let layerType = layer.get('type');
-
-      Ember.set(layer, 'haveSubLayers', false);
-      Ember.set(layer, 'subLayers', Ember.A());
 
       if (layerType === 'wms-single-tile' || layerType === 'wms') {
         let wmsSettings = layer.get('settingsAsObject');
@@ -60,14 +63,15 @@ export default Ember.Component.extend({
           var subLayers = wmsSettings.layers.split(',');
 
           if (subLayers.length > 1) {
-            Ember.set(layer, 'haveSubLayers', true);
-            Ember.set(layer, 'subLayers', subLayers);
+            Ember.set(extendLayer, 'haveSubLayers', true);
+            Ember.set(extendLayer, 'subLayers', subLayers);
           }
         }
       }
 
+      extendLayers.pushObject(extendLayer);
     }
 
-    return layers;
+    return extendLayers;
   })
 });
