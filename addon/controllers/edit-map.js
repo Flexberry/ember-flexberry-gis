@@ -103,20 +103,14 @@ export default EditFormController.extend(
     onSaveActionStarted() {
       this._super(...arguments);
       let model = this.get('model');
-      let zoom = this.get('zoom');
-      let lat = this.get('lat');
-      let lng = this.get('lng');
-      if (zoom) {
-        model.set('zoom', zoom);
-      }
-
-      if (lat) {
-        model.set('lat', lat);
-      }
-
-      if (lng) {
-        model.set('lng', lng);
-      }
+      let urlParams = ['zoom', 'lat', 'lng'];
+      let currentParam;
+      urlParams.forEach((param) => {
+        currentParam = this.get(param);
+        if (!Ember.isBlank(currentParam)) {
+          model.set(param, currentParam);
+        }
+      }, this);
     },
 
     /**
