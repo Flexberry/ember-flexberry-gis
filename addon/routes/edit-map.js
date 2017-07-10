@@ -23,6 +23,21 @@ export default EditFormRoute.extend({
       refreshModel: false,
       replace: false,
       as: 'geofilter'
+    },
+    zoom: {
+      refreshModel: false,
+      replace: false,
+      as: 'zoom'
+    },
+    lat: {
+      refreshModel: false,
+      replace: false,
+      as: 'lat'
+    },
+    lng: {
+      refreshModel: false,
+      replace: false,
+      as: 'lng'
     }
   },
 
@@ -58,6 +73,36 @@ export default EditFormRoute.extend({
 
     if (layers) {
       model.set('hierarchy', this.sortLayersByIndex(layers));
+    }
+
+    let urlParams = ['zoom', 'lat', 'lng'];
+    let currentParams = {};
+    urlParams.forEach((param) => {
+      currentParams[param] = controller.get(param);
+      if (!Ember.isBlank(currentParams[param])) {
+        model.set(param, currentParams[param]);
+      } else {
+        currentParams[param] = model.get(param);
+      }
+    });
+
+    this.transitionTo({ queryParams: currentParams });
+  },
+
+  /**
+    A hook you can use to reset controller values either when the model changes or the route is exiting.
+    [More info](http://emberjs.com/api/classes/Ember.Route.html#method_resetController).
+
+    @method resetController
+    @param {Ember.Controller} controller
+    @param {Boolean} isExisting
+   */
+  resetController(controller, isExiting) {
+    this._super(...arguments);
+    if (isExiting) {
+      controller.set('zoom', null);
+      controller.set('lat', null);
+      controller.set('lng', null);
     }
   },
 
