@@ -551,23 +551,23 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @private
   */
   _getLayersInfo: function(layers) {
-    var res = [];
+    let res = Ember.A();
 
-    for (var i = 0; i < layers.length; i++) {
-      if (layers[i].get('type') === 'group') {
-        res = res.concat(this._getLayersInfo(layers[i].layers));
-      } else if (layers[i].get('legendCanBeDisplayed') && layers[i].get('visibility')) {
-        if (layers[i].get('type') === 'wms-single-tile' || layers[i].get('type') === 'wms') {
-          var wmsSettings = layers[i].get('settingsAsObject');
+    layers.forEach(function(layer) {
+      if (layer.get('type') === 'group') {
+        res = res.concat(this._getLayersInfo(layer.layers));
+      } else if (layer.get('legendCanBeDisplayed') && layer.get('visibility')) {
+        if (layer.get('type') === 'wms-single-tile' || layer.get('type') === 'wms') {
+          var wmsSettings = layer.get('settingsAsObject');
           // Concat all sub-layers for WMS-layer.
           if (!Ember.isEmpty(wmsSettings)) {
             res = res.concat(wmsSettings.layers.split(','));
           }
         } else {
-          res.push(layers[i].get('name'));
+          res.push(layer.get('name'));
         }
       }
-    }
+    }, this);
 
     return res;
   },
