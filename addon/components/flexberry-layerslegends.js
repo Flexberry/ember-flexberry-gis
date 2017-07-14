@@ -60,7 +60,7 @@ export default Ember.Component.extend({
         let wmsSettings = layer.get('settingsAsObject');
 
         if (!Ember.isEmpty(wmsSettings)) {
-          var subLayers = wmsSettings.layers.split(',');
+          let subLayers = wmsSettings.layers.split(',');
 
           if (subLayers.length > 1) {
             Ember.set(extendLayer, 'haveSubLayers', true);

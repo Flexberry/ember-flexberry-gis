@@ -94,6 +94,12 @@ const flexberryClassNames = {
   pagingColumn: flexberryClassNamesPrefix + '-paging-column',
 };
 
+const legendStyleConstants = {
+  heightMargin: 10,
+  widthPadding: 15,
+  iconSize: 10,
+};
+
 /**
   Flexberry 'export' map-command modal dialog with [Semantic UI modal](http://semantic-ui.com/modules/modal.html) style.
 
@@ -601,7 +607,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       let lineCount = 1;
       let layers = this.get('layers');
       let legendsInfo = this._getLayersInfo(layers);
-      let legendWidth = this.get('_sheetOfPaperPreviewWidth') - 30; // padding 14, border 1.
+      let legendWidth = this.get('_sheetOfPaperPreviewWidth') - legendStyleConstants.widthPadding * 2; // padding 14, border 1.
       let cutWidth = legendWidth;
 
       for (let i = 0; i < legendsInfo.length; i++) {
@@ -611,7 +617,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
           `${this.get('_options.captionFontFamily')}`;
         let textWidth = this._getTextWidth(legendsInfo[i], font);
 
-        textWidth += this.get('_mapCaptionPreviewHeight') + 10; //icon size and padding-right: 10.
+        textWidth += this.get('_mapCaptionPreviewHeight') + legendStyleConstants.iconSize;
 
         if (textWidth <= cutWidth) {
           cutWidth -= textWidth;
@@ -648,7 +654,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       let legendHeight = this.get('_mapCaptionRealHeight');
       let legendLines = this.get('_mapLegendLines');
 
-      legendHeight = legendHeight * legendLines + 10; // margin
+      legendHeight = legendHeight * legendLines + legendStyleConstants.heightMargin;
 
       if (!this.get('_options.legendUnderMap')) {
         legendHeight = 0;
@@ -697,7 +703,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       var legendHeight = mapCaptionPreviewHeight;
       var legendLines = this.get('_mapLegendLines');
 
-      legendHeight = legendHeight * legendLines + 10; // margin
+      legendHeight = legendHeight * legendLines + legendStyleConstants.heightMargin; // margin
 
       if (!this.get('_options.legendUnderMap')) {
         legendHeight = 0;
