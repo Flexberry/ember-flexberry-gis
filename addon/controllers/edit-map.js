@@ -6,6 +6,7 @@ import Ember from 'ember';
 import EditFormController from 'ember-flexberry/controllers/edit-form';
 import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-handler';
 import FlexberryMaplayerActionsHandlerMixin from '../mixins/flexberry-maplayer-actions-handler';
+import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-actions-handler';
 
 /**
   Edit map controller.
@@ -14,10 +15,12 @@ import FlexberryMaplayerActionsHandlerMixin from '../mixins/flexberry-maplayer-a
   @extends EditFormController
   @uses FlexberryMapActionsHandlerMixin
   @uses FlexberryMaplayerActionsHandlerMixin
+  @uses LayerResultListActionsHandlerMixin
 */
 export default EditFormController.extend(
   FlexberryMapActionsHandlerMixin,
-  FlexberryMaplayerActionsHandlerMixin, {
+  FlexberryMaplayerActionsHandlerMixin,
+  LayerResultListActionsHandlerMixin, {
     /**
       Leaflet map.
 
@@ -27,7 +30,7 @@ export default EditFormController.extend(
     */
     leafletMap: null,
 
-    queryParams: ['geofilter', 'setting'],
+    queryParams: ['geofilter', 'setting', 'zoom', 'lat', 'lng'],
 
     /**
       Query parameter, contains json serialized object with property names and values
@@ -44,6 +47,30 @@ export default EditFormController.extend(
       @default null
     */
     setting: null,
+
+    /**
+      Query parameter, contains current map zoom
+      @property zoom
+      @type String
+      @default null
+    */
+    zoom: null,
+
+    /**
+      Query parameter, contains current map latitude
+      @property lat
+      @type String
+      @default null
+    */
+    lat: null,
+
+    /**
+      Query parameter, contains current map longitude
+      @property lng
+      @type String
+      @default null
+    */
+    lng: null,
 
     /**
       Deserialized valued of filter property
@@ -63,6 +90,31 @@ export default EditFormController.extend(
 
       return null;
     }),
+
+    /**
+      This method will be invoked before save operation will be called.
+      Override this method to add some custom logic on save operation start.
+
+      @example
+        ```javascript
+        onSaveActionStarted() {
+          alert('Save operation started!');
+        }
+        ```
+      @method onSaveActionStarted.
+    */
+    onSaveActionStarted() {
+      this._super(...arguments);
+      let model = this.get('model');
+      let urlParams = ['zoom', 'lat', 'lng'];
+      let currentParam;
+      urlParams.forEach((param) => {
+        currentParam = this.get(param);
+        if (!Ember.isBlank(currentParam)) {
+          model.set(param, currentParam);
+        }
+      }, this);
+    },
 
     /**
       Creates new layer as specified layer's child

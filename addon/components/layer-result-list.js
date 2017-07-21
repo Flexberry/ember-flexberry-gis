@@ -18,7 +18,7 @@ export default Ember.Component.extend({
     @property _noData
     @type boolean
     @default false
-   */
+  */
   _noData: false,
 
   /**
@@ -26,7 +26,7 @@ export default Ember.Component.extend({
     @property _hasError
     @type boolean
     @default false
-   */
+  */
   _hasError: false,
 
   /**
@@ -34,7 +34,7 @@ export default Ember.Component.extend({
     @property _selectedFeature
     @type GeoJSON feature
     @default null
-   */
+  */
   _selectedFeature: null,
 
   classNames: ['layer-result-list'],
@@ -46,7 +46,7 @@ export default Ember.Component.extend({
     @property serviceLayer
     @type L.FeatureGroup
     @default null
-   */
+  */
   serviceLayer: null,
 
   /**
@@ -54,7 +54,7 @@ export default Ember.Component.extend({
     @property leafletMap
     @type L.Map
     @default null
-   */
+  */
   leafletMap: null,
 
   /**
@@ -73,7 +73,7 @@ export default Ember.Component.extend({
     @property results
     @type Ember.A()
     @default null
-   */
+  */
   results: null,
 
   actions: {
@@ -101,13 +101,16 @@ export default Ember.Component.extend({
 
         this.set('_selectedFeature', feature);
       }
+
+      // Send action despite of the fact feature changed or not. User can disable layer anytime.
+      this.sendAction('featureSelected', feature);
     },
 
     /**
       Select passed feature and zoom map to its layer bounds
       @method actions.zoomTo
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
-     */
+    */
     zoomTo(feature) {
       let serviceLayer = this.get('serviceLayer');
       if (!Ember.isNone(serviceLayer)) {
@@ -135,7 +138,7 @@ export default Ember.Component.extend({
       Select passed feature and pan map to its layer centroid
       @method actions.panTo
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
-     */
+    */
     panTo(feature) {
       let latLng;
       if (typeof (feature.leafletLayer.getBounds) === 'function') {
@@ -155,7 +158,7 @@ export default Ember.Component.extend({
     @method _selectFeature
     @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     @private
-   */
+  */
   _selectFeature(feature) {
     let serviceLayer = this.get('serviceLayer');
     if (!Ember.isNone(feature)) {
@@ -166,14 +169,14 @@ export default Ember.Component.extend({
   /**
     Observer for passed results
     @method _resultObserver
-   */
+  */
   _resultObserver: Ember.observer('results', function () {
     this.send('selectFeature', null);
     this.set('_hasError', false);
     this.set('_noData', false);
     this.set('_displayResults', null);
 
-    // если это не поиск, а очистка результатов
+    // If results had been cleared.
     if (!this.get('results')) {
       return;
     }
@@ -186,7 +189,8 @@ export default Ember.Component.extend({
       let r = {
         name: Ember.get(result, 'layerModel.name') ? Ember.get(result, 'layerModel.name') : '',
         settings: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings'),
-        displayProperties: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty')
+        displayProperties: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
+        layerModel: Ember.get(result, 'layerModel')
       };
 
       result.features.then(
@@ -222,7 +226,7 @@ export default Ember.Component.extend({
         displayProperty.forEach((prop) => {
           if (featureProperties.hasOwnProperty(prop)) {
             let value = featureProperties[prop];
-            if (Ember.isNone(displayValue) && !Ember.isNone(value) && !Ember.isEmpty(value)) {
+            if (Ember.isNone(displayValue) && !Ember.isNone(value) && !Ember.isEmpty(value) && value !== 'Null') {
               displayValue = value;
             }
           }
@@ -250,9 +254,19 @@ export default Ember.Component.extend({
 
         result.features.forEach((feature) => {
           feature.displayValue = getFeatureDisplayProperty(feature, result.settings);
+          feature.layerModel = Ember.get(result, 'layerModel');
         });
 
         result.features = result.features.sort(function (a, b) {
+          // If displayValue is empty, it should be on the bottom.
+          if (Ember.isBlank(a.displayValue)) {
+            return 1;
+          }
+
+          if (Ember.isBlank(b.displayValue)) {
+            return -1;
+          }
+
           if (a.displayValue > b.displayValue) {
             return 1;
           }
@@ -274,4 +288,11 @@ export default Ember.Component.extend({
       }
     });
   })
+
+  /**
+    Component's action invoking when feature item was selected.
+
+    @method sendingActions.featureSelected
+    @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
+  */
 });
