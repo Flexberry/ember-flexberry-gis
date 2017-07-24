@@ -208,21 +208,32 @@ export default BaseLayer.extend({
     Handles 'flexberry-map:query' event of leaflet map.
 
     @method _query
+    @param {Object[]} layerLinks Array containing metadata for query
     @param {Object} e Event object.
     @param {Object} queryFilter Object with query filter paramteres
     @param {Object[]} results.features Array containing leaflet layers objects
     or a promise returning such array.
   */
-  query(e) {
+  query(layerLinks, e) {
     let filter = new L.Filter.EQ();
+    let queryFilter = e.queryFilter;
 
-    for (var property in e.queryFilter) {
-      if (e.queryFilter.hasOwnProperty(property)) {
-        filter.append(property, e.queryFilter[property]);
+    layerLinks.forEach((link) => {
+      let linkParameters = link.get('linkParameter');
+
+      if (Ember.isArray(linkParameters) && linkParameters.length > 0) {
+        linkParameters.forEach(linkParam => {
+          let property = linkParam.get('layerField');
+          let propertyValue = queryFilter[linkParam.get('queryKey')];
+
+          filter.append(property, propertyValue);
+        });
       }
-    }
+    });
 
-    let featuresPromise = this._getFeature({ filter }, true);
+    let featuresPromise = this._getFeature({
+      filter
+    });
 
     return featuresPromise;
   }
