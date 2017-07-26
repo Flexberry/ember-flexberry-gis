@@ -37,14 +37,12 @@ export default TileLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       layer.getFeatureInfo({
         latlng: latlng,
-        done: function(featuresCollection, xhr) {
+        done(featuresCollection, xhr) {
           let features = Ember.A(Ember.get(featuresCollection, 'features') || []);
           resolve(features);
         },
-        fail: function(errorThrown, xhr) {
+        fail(errorThrown, xhr) {
           reject(errorThrown);
-        },
-        always: function() {
         }
       });
     });
@@ -58,7 +56,7 @@ export default TileLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
-    return new L.TileLayer.WMS(this.get('url'), this.get('options'));
+    return L.tileLayer.wms(this.get('url'), this.get('options'));
   },
 
   /**

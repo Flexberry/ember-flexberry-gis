@@ -52,14 +52,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     // Initialize available info formats.
-    this.set('_availableInfoFormats', Ember.A([
-      'application/geojson',
-      'application/json',
-      'application/vnd.ogc.gml',
-      'application/vnd.ogc.gml/3.1.1',
-      'application/vnd.ogc.wms_xml',
-      'text/plain',
-      'text/html'
-    ]));
+    let availableFormats = L.TileLayer.WMS.Format.getExisting();
+    this.set('_availableInfoFormats', Ember.A(availableFormats));
   }
 });

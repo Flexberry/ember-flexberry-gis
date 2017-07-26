@@ -5,6 +5,8 @@
 import Ember from 'ember';
 import layout from '../../../templates/components/layers-dialogs/settings/wms';
 
+let urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
+
 /**
   Settings-part of WMS layer modal dialog.
 
@@ -20,6 +22,11 @@ export default Ember.Component.extend({
     @private
   */
   _availableInfoFormats: null,
+
+  /**
+    Reference to component's url regex.
+  */
+  urlRegex,
 
   /**
     Reference to component's template.
@@ -45,6 +52,27 @@ export default Ember.Component.extend({
   */
   settings: null,
 
+  _urlDidChange: Ember.observer('settings.url', function () {
+    let url = this.get('settings.url');
+    let regEx = new RegExp(urlRegex);
+
+    if (!Ember.isBlank(url.toString().match(regEx))) {
+      let _this = this;
+      new Ember.RSVP.Promise((resolve, reject) => {
+        L.TileLayer.WMS.Format.getAvailable({
+          url: url,
+          done(capableFormats, xhr) {
+            _this.set('_availableInfoFormats', Ember.A(capableFormats));
+            resolve();
+          },
+          fail(errorThrown, xhr) {
+            reject(errorThrown);
+          }
+        });
+      });
+    }
+  }),
+
   /**
     Initializes component.
   */
@@ -52,14 +80,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     // Initialize available info formats.
-    this.set('_availableInfoFormats', Ember.A([
-      'application/geojson',
-      'application/json',
-      'application/vnd.ogc.gml',
-      'application/vnd.ogc.gml/3.1.1',
-      'application/vnd.ogc.wms_xml',
-      'text/plain',
-      'text/html'
-    ]));
+    let availableFormats = L.TileLayer.WMS.Format.getExisting();
+    this.set('_availableInfoFormats', Ember.A(availableFormats));
   }
 });
