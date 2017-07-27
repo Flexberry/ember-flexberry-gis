@@ -90,6 +90,7 @@
         }}
         {{layer-result-list
           results=searchResults
+          featureSelected=(action 'onLayerFeatureSelected')
           serviceLayer=serviceLayer
           leafletMap=leafletMap
         }}
@@ -105,6 +106,7 @@
         {{layer-result-list
           results=identifyResults
           serviceLayer=serviceLayer
+          featureSelected=(action 'onLayerFeatureSelected')
           leafletMap=leafletMap
         }}
       </div>
