@@ -2,39 +2,28 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
+import WmsLayerSettingsComponent from './wms';
 import layout from '../../../templates/components/layers-dialogs/settings/wms-single-tile';
+
+// Regular expression used to derive whether settings' url is correct.
+let urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
 
 /**
   Settings-part of WMS single tile layer modal dialog.
 
   @class WmsSingleTileLayerSettingsComponent
-  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @extends WmsLayerSettingsComponent
 */
-export default Ember.Component.extend({
+export default WmsLayerSettingsComponent.extend({
   /**
-    Array containing available info formats.
-
-    @property _availableInfoFormats
-    @type String[]
-    @private
+    Reference to component's url regex.
   */
-  _availableInfoFormats: null,
+  urlRegex,
 
   /**
     Reference to component's template.
   */
   layout,
-
-  /**
-    Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
-    is empty to disable component's wrapping <div>.
-
-    @property tagName
-    @type String
-    @default ''
-  */
-  tagName: '',
 
   /**
     Editing layer deserialized type-related settings.
@@ -43,16 +32,5 @@ export default Ember.Component.extend({
     @type Object
     @default null
   */
-  settings: null,
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-
-    // Initialize available info formats.
-    let availableFormats = L.TileLayer.WMS.Format.getExisting();
-    this.set('_availableInfoFormats', Ember.A(availableFormats));
-  }
+  settings: null
 });

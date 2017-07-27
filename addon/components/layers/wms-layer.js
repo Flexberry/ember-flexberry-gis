@@ -37,6 +37,10 @@ export default TileLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       layer.getFeatureInfo({
         latlng: latlng,
+        infoFormat: this.get('info_format'),
+        map: this.get('leafletMap'),
+        crs: this.get('crs'),
+        featureCount: this.get('feature_count'),
         done(featuresCollection, xhr) {
           let features = Ember.A(Ember.get(featuresCollection, 'features') || []);
           resolve(features);

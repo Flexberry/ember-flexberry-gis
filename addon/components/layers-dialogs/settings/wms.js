@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import layout from '../../../templates/components/layers-dialogs/settings/wms';
 
+// Regular expression used to derive whether settings' url is correct.
 let urlRegex = '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?';
 
 /**
@@ -52,25 +53,44 @@ export default Ember.Component.extend({
   */
   settings: null,
 
+  /**
+    Observes changes in settings.url property and checks whether it is correct url.
+    If url syntax is correct, requests available info formats from service.
+
+    @method _urlDidChange
+    @private
+  */
   _urlDidChange: Ember.observer('settings.url', function () {
     let url = this.get('settings.url');
     let regEx = new RegExp(urlRegex);
 
-    if (!Ember.isBlank(url.toString().match(regEx))) {
-      let _this = this;
-      new Ember.RSVP.Promise((resolve, reject) => {
-        L.TileLayer.WMS.Format.getAvailable({
-          url: url,
-          done(capableFormats, xhr) {
-            _this.set('_availableInfoFormats', Ember.A(capableFormats));
-            resolve();
-          },
-          fail(errorThrown, xhr) {
-            reject(errorThrown);
-          }
-        });
-      });
+    if (!url || Ember.isBlank(url.toString().match(regEx))) {
+      return;
     }
+
+    let _this = this;
+    new Ember.RSVP.Promise((resolve, reject) => {
+      L.TileLayer.WMS.Format.getAvailable({
+        url: url,
+        done(capableFormats, xhr) {
+          if (!Ember.isArray(capableFormats) || capableFormats.length === 0) {
+            reject(`Service ${url} had not returned any available formats`);
+          }
+
+          // Change current info format to available one.
+          let currentInfoFormat = _this.get('settings.info_format');
+          if (capableFormats.indexOf(currentInfoFormat) < 0) {
+            _this.set('settings.info_format', capableFormats[0]);
+          }
+
+          _this.set('_availableInfoFormats', Ember.A(capableFormats));
+          resolve();
+        },
+        fail(errorThrown, xhr) {
+          reject(errorThrown);
+        }
+      });
+    });
   }),
 
   /**
