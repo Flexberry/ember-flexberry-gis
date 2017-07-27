@@ -1,5 +1,6 @@
 {
-  "name": "efg",
+  "name": "ember-flexberry-gis",
+  "version": "0.1.0",
   "dependencies": {
     "ember": "~2.4.3",
     "ember-cli-shims": "0.1.1",
