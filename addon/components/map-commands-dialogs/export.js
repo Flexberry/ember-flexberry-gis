@@ -559,6 +559,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       } else if (layer.get('legendCanBeDisplayed') && layer.get('visibility')) {
         if (layer.get('type') === 'wms-single-tile' || layer.get('type') === 'wms') {
           let wmsSettings = layer.get('settingsAsObject');
+
           // Concat all sub-layers for WMS-layer.
           if (!Ember.isEmpty(wmsSettings)) {
             res = res.concat(wmsSettings.layers.split(','));

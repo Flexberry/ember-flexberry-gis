@@ -77,12 +77,5 @@ export default BaseLegendComponent.extend({
     }
 
     return legends;
-  }),
-/*
-  init: function() {
-    this._super(...arguments);
-
-    this.set('showLayerName', false);
-  }
-  */
+  })
 });
