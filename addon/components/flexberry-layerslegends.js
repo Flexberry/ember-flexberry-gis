@@ -52,7 +52,8 @@ export default Ember.Component.extend({
       let extendLayer = {
         layer: layer,
         haveSubLayers: false,
-        subLayers: Ember.A()
+        subLayers: Ember.A(),
+        showLayerName: true
       };
       let layerType = layer.get('type');
 
@@ -65,8 +66,41 @@ export default Ember.Component.extend({
           if (subLayers.length > 1) {
             Ember.set(extendLayer, 'haveSubLayers', true);
             Ember.set(extendLayer, 'subLayers', subLayers);
+            Ember.set(extendLayer, 'showLayerName', false);
           }
         }
+      } else if (layerType === 'wms-esri') {
+        let wmsSettings = layer.get('settingsAsObject');
+        let restLegendUrl = wmsSettings.restUrl + '/legend?f=json';
+
+        Ember.$.ajax({
+          url: restLegendUrl,
+          async: false,
+          success: function(data) {
+            let result = {};
+            try {
+              result = JSON.parse(data);
+
+              if (result.error) {
+                console.log(result.error);
+              } else {
+                if (!Ember.isNone(result.layers) && result.layers.length !== 0) {
+                  let subLayers = Ember.A();
+
+                  result.layers.forEach((layer) => {
+                    subLayers.push(layer.layerName);
+                  });
+
+                  Ember.set(extendLayer, 'haveSubLayers', true);
+                  Ember.set(extendLayer, 'subLayers', subLayers);
+                  Ember.set(extendLayer, 'showLayerName', true);
+                }
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
       }
 
       extendLayers.pushObject(extendLayer);

@@ -11,7 +11,7 @@
             {{component (concat "legends/" layerModel.layer.type "-legend")
               layerName=layerModel.layer.name
               layerSettings=layerModel.layer.settingsAsObject
-              showLayerName=false
+              showLayerName=layerModel.showLayerName
               lazyLoaded=false
               subLayerName=subLayer
             }}
@@ -20,7 +20,7 @@
           {{component (concat "legends/" layerModel.layer.type "-legend")
             layerName=layerModel.layer.name
             layerSettings=layerModel.layer.settingsAsObject
-            showLayerName=true
+            showLayerName=layerModel.showLayerName
             lazyLoaded=false
           }}
         {{/if}}

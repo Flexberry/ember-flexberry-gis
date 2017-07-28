@@ -558,11 +558,37 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         res = res.concat(this._getLayersInfo(layer.layers));
       } else if (layer.get('legendCanBeDisplayed') && layer.get('visibility')) {
         if (layer.get('type') === 'wms-single-tile' || layer.get('type') === 'wms') {
-          var wmsSettings = layer.get('settingsAsObject');
+          let wmsSettings = layer.get('settingsAsObject');
           // Concat all sub-layers for WMS-layer.
           if (!Ember.isEmpty(wmsSettings)) {
             res = res.concat(wmsSettings.layers.split(','));
           }
+        } else if (layer.get('type') === 'wms-esri') {
+          let wmsSettings = layer.get('settingsAsObject');
+          let restLegendUrl = wmsSettings.restUrl + '/legend?f=json';
+
+          Ember.$.ajax({
+            url: restLegendUrl,
+            async: false,
+            success: function(data) {
+              let result = {};
+              try {
+                result = JSON.parse(data);
+
+                if (result.error) {
+                  console.log(result.error);
+                } else {
+                  if (!Ember.isNone(result.layers) && result.layers.length !== 0) {
+                    result.layers.forEach((layer) => {
+                      res.push(layer.layerName);
+                    });
+                  }
+                }
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          });
         } else {
           res.push(layer.get('name'));
         }
