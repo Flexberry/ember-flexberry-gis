@@ -4,5 +4,6 @@ export default {
   'pan-to-caption': 'Pan to',
   'select-all-caption': 'Select all',
   'feature-table-property-name': 'Property name',
-  'feature-table-property-value': 'Value'
+  'feature-table-property-value': 'Value',
+  'select-object-caption': 'Go to object'
 };

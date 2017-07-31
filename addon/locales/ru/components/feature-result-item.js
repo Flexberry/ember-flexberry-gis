@@ -4,5 +4,6 @@ export default {
   'pan-to-caption': 'Центрировать',
   'select-all-caption': 'Выбрать все',
   'feature-table-property-name': 'Поле',
-  'feature-table-property-value': 'Значение'
+  'feature-table-property-value': 'Значение',
+  'select-object-caption': 'К объекту'
 };

@@ -12,13 +12,26 @@ import layout from '../templates/components/feature-result-item';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
 export default Ember.Component.extend({
+
+  classNames: ['item', 'feature-result-item'],
+
+  classNameBindings: ['isActive:active'],
+
   /**
-    Flag: indicates where display detailed feature info
+    Flag: indicates whether to display detailed feature info.
     @property _infoExpanded
     @type boolean
     @default false
    */
   _infoExpanded: false,
+
+  /**
+    Flag: indicates whether to display links list (if present).
+    @property _linksExpanded
+    @type boolean
+    @default false
+   */
+  _linksExpanded: false,
 
   /**
     Property for represent feature
@@ -53,6 +66,26 @@ export default Ember.Component.extend({
     return localizedProperties;
   }),
 
+  /**
+    Flag: indicates whether to display detailed feature info.
+    @property expanded
+    @type boolean
+    @readonly
+   */
+  expanded: Ember.computed('infoExpanded', '_infoExpanded', function () {
+    return this.get('infoExpanded') || this.get('_infoExpanded');
+  }),
+
+  /**
+    Flag: indicates whether component is active
+    @property isActive
+    @type boolean
+    @readonly
+   */
+  isActive: Ember.computed('selectedFeature', 'feature', function () {
+    return this.get('selectedFeature') === this.get('feature');
+  }),
+
   layout,
 
   /**
@@ -60,21 +93,21 @@ export default Ember.Component.extend({
    @property displaySettings
    @type object
    @default null
-   */
+  */
   displaySettings: null,
 
   /**
     feature for display
     @property feature
     @type GeoJSON feature object
-   */
+  */
   feature: null,
 
   /**
     Current selected feature
     @property feature
     @type GeoJSON feature object
-   */
+  */
   selectedFeature: null,
 
   actions: {
@@ -109,6 +142,15 @@ export default Ember.Component.extend({
      */
     showInfo() {
       this.set('_infoExpanded', !this.get('_infoExpanded'));
+      this.set('_linksExpanded', false);
+    },
+
+    /**
+      Show\hide links list (if present).
+      @method actions.toggleLinks
+     */
+    toggleLinks() {
+      this.set('_linksExpanded', !this.get('_linksExpanded'));
     }
   }
 
