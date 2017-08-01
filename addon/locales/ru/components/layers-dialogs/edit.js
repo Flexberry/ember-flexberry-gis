@@ -15,6 +15,21 @@ export default {
   'name-textbox': {
     'caption': 'Имя слоя'
   },
+  'bounds-segment': {
+    'caption': 'Охват',
+    'west-lon-textbox': {
+      'caption': 'з.д.'
+    },
+    'east-lon-textbox': {
+      'caption': 'в.д.'
+    },
+    'south-lat-textbox': {
+      'caption': 'ю.ш.'
+    },
+    'north-lat-textbox': {
+      'caption': 'с.ш.'
+    }
+  },
   'crs': {
     'caption': 'Система координат слоя (CRS)',
     'code-textbox': {

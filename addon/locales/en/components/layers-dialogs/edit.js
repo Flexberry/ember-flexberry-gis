@@ -15,6 +15,21 @@ export default {
   'name-textbox': {
     'caption': 'Layer name'
   },
+  'bounds-segment': {
+    'caption': 'Bounding box',
+    'west-lon-textbox': {
+      'caption': 'W'
+    },
+    'east-lon-textbox': {
+      'caption': 'E'
+    },
+    'south-lat-textbox': {
+      'caption': 'S'
+    },
+    'north-lat-textbox': {
+      'caption': 'N'
+    }
+  },
   'crs': {
     'caption': 'Layer coordinate reference system (CRS)',
     'code-textbox': {

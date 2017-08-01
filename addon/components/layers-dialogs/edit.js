@@ -426,6 +426,15 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     nameTextboxCaption: t('components.layers-dialogs.edit.name-textbox.caption'),
 
     /**
+      Dialog's 'Bounds' segment's caption.
+
+      @property boundsSegmentCaption
+      @type String
+      @default t('components.layers-dialogs.edit.bounds-segment.caption')
+    */
+    boundsSegmentCaption: t('components.layers-dialogs.edit.bounds-segment.caption'),
+
+    /**
       Dialog's 'CRS' segment caption.
 
       @property crsCaption

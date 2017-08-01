@@ -5,7 +5,9 @@
 import Ember from 'ember';
 import FlexberryDdauCheckboxActionsHandlerMixin from './flexberry-ddau-checkbox-actions-handler';
 import FlexberryDdauSliderActionsHandlerMixin from './flexberry-ddau-slider-actions-handler';
-import { getRecord } from '../utils/extended-get';
+import {
+  getRecord
+} from '../utils/extended-get';
 
 /**
   Mixin containing handlers for
@@ -42,8 +44,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerHeaderClick(...args) {
-    },
+    onMapLayerHeaderClick(...args) {},
 
     /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}flexberry-maplayers component's 'beforeExpand' action{{/crossLink}}.
@@ -71,8 +72,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerBeforeExpand(...args) {
-    },
+    onMapLayerBeforeExpand(...args) {},
 
     /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}flexberry-maplayers component's 'beforeCollapse' action{{/crossLink}}.
@@ -100,8 +100,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerBeforeCollapse(...args) {
-    },
+    onMapLayerBeforeCollapse(...args) {},
 
     /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.visiblilityChange:method"}}flexberry-maplayers component's 'visiblilityChange' action{{/crossLink}}.
@@ -178,6 +177,46 @@ export default Ember.Mixin.create({
     },
 
     /**
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.fitBounds:method"}}flexberry-maplayers component's 'fitBounds' action{{/crossLink}}.
+      Fits leaflet map to bounds of selected maplayer.
+
+      @method actions.onMapLayerFitBounds
+      @param {String} boundsPropertyPath Path to a property, which value must be used within action.
+      @param {Object} e Action's event object.
+      @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
+      which describes button's 'click' event.
+
+      @example
+      templates/my-form.hbs
+      ```handlebars
+        {{flexberry-maplayers
+          name="Tree node fit bounds button"
+          opacity=layer.options.opacity
+          fitBounds=(action "onMapLayerFitBounds" "layer.options.bounds")
+        }}
+      ```
+
+      controllers/my-form.js
+      ```javascript
+        import Ember from 'ember';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
+
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
+        });
+      ```
+    */
+    onMapLayerFitBounds(...args) {
+      let boundsPropertyPath = args[0];
+      let bounds = getRecord(this, boundsPropertyPath);
+
+      let leafletMap = this.get('leafletMap');
+
+      if (leafletMap) {
+        leafletMap.fitBounds(bounds);
+      }
+    },
+
+    /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.addChild:method"}}flexberry-maplayers component's 'addChild' action{{/crossLink}}.
       It adds new child layer.
 
@@ -213,7 +252,9 @@ export default Ember.Mixin.create({
         `but \`string\` is expected`,
         Ember.typeOf(parentLayerPath) === 'string');
 
-      let { layerProperties } = args[args.length - 1];
+      let {
+        layerProperties
+      } = args[args.length - 1];
       Ember.assert(
         `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
         `but \`object\` or  \`instance\` is expected`,
@@ -287,7 +328,9 @@ export default Ember.Mixin.create({
         `but \`string\` is expected`,
         Ember.typeOf(layerPath) === 'string');
 
-      let { layerProperties } = args[args.length - 1];
+      let {
+        layerProperties
+      } = args[args.length - 1];
       Ember.assert(
         `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
         `but \`object\` or  \`instance\` is expected`,

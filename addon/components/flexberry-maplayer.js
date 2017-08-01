@@ -162,7 +162,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
-      Flag: indicates whether some nested content is defined
+      Flag: indicates whether some nested content is defined.
       (some yield markup or {{#crossLink "FlexberryMaplayersComponent/layers:property"}}'layers'{{/crossLink}} are defined).
 
       @property _hasContent
@@ -174,6 +174,21 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'legendCanBeDisplayed', '_canChangeOpacity', function () {
       // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
       return this._isRegistered('content') || this.get('_hasLayers') || this.get('legendCanBeDisplayed') || this.get('_canChangeOpacity');
+    }),
+
+    /**
+      Flag: indicates whether componments' bounds are valid.
+
+      @property _hasBounds
+      @type boolean
+      @readonly
+      @private
+    */
+    _hasBounds: Ember.computed('bounds', function () {
+      let bounds = this.get('bounds');
+      let latLngBounds = L.latLngBounds(bounds);
+
+      return latLngBounds.isValid();
     }),
 
     /**
@@ -189,9 +204,9 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
-      Layer class factory related to current layer type.
+      Formatted layer's opacity display value.
 
-      @property _layerClassFactory
+      @property _opacityDisplayValue
       @type string
       @readOnly
       @private
@@ -382,6 +397,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     opacity: 1,
 
     /**
+      Layer's latLngBounds.
+
+      @property bounds
+      @type Array
+      @default null
+    */
+    bounds: null,
+
+    /**
       Flag: indicates whether layer's legend can be displayed.
 
       @property legendCanBeDisplayed
@@ -505,6 +529,17 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       },
 
       /**
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.fitBounds:method"}}'fitBounds' action{{/crossLink}}.
+
+        @method actions.onBoundsButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onBoundsButtonClick(...args) {
+        this.sendAction('fitBounds', ...args);
+      },
+
+      /**
         Handles add button's 'click' event.
         Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
 
@@ -622,6 +657,22 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @method sendingActions.changeVisibility
       @param {Object} e Event object from
       {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
+    */
+
+    /**
+      Component's action invoking when layer node's 'opacity' value changed.
+
+      @method sendingActions.changeOpacity
+      @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauSlider/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
+      {{#crossLink "FlexberryDdauSliderComponent/sendingActions.change:method"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.
+    */
+
+    /**
+      Component's action invoking when layer node's 'extent' button clicked.
+
+      @method sendingActions.fitBounds
+      @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+      which describes button's 'click' event.
     */
 
     /**
