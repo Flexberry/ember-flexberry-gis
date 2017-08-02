@@ -16,12 +16,28 @@ const isMapLimitKey = 'GISLinked';
  */
 export default Ember.Component.extend({
 
+  /**
+    Component's wrapping <div> CSS-classes names.
+
+    Any other CSS-class names can be added through component's 'class' property.
+    ```handlebars
+    {{layer-result-list class="my-class"}}
+    ```
+
+    @property classNames
+    @type String[]
+    @default ['layer-result-list']
+  */
   classNames: ['layer-result-list'],
 
+  /**
+    Reference to component's template.
+  */
   layout,
 
   /**
-    FeatureGroup for place layer from selectedFeature
+    FeatureGroup to display layer from selectedFeature.
+
     @property serviceLayer
     @type L.FeatureGroup
     @default null
@@ -29,7 +45,8 @@ export default Ember.Component.extend({
   serviceLayer: null,
 
   /**
-    Leaflet map object for zoom and pan
+    Leaflet map object for zoom and pan.
+
     @property leafletMap
     @type L.Map
     @default null
@@ -40,6 +57,7 @@ export default Ember.Component.extend({
     Array of results for display, each result contains object with following properties
     layerModel - MapLayer model
     features - promise for array of GeoJSON features
+
     @property results
     @type Ember.A()
     @default null
@@ -47,7 +65,7 @@ export default Ember.Component.extend({
   results: null,
 
   /**
-    Ready results for display without promise
+    Ready results for display without promise.
 
     @property _displayResults
     @type Ember.A()
@@ -56,7 +74,8 @@ export default Ember.Component.extend({
   _displayResults: null,
 
   /**
-    Flag: indicates when results contains no data
+    Flag: indicates when results contains no data.
+
     @property _noData
     @type boolean
     @default false
@@ -64,7 +83,8 @@ export default Ember.Component.extend({
   _noData: false,
 
   /**
-    Flag: indicates when one or more results.features promises rejected
+    Flag: indicates when one or more results.features promises rejected.
+
     @property _hasError
     @type boolean
     @default false
@@ -72,7 +92,8 @@ export default Ember.Component.extend({
   _hasError: false,
 
   /**
-    Current selected feature
+    Current selected feature.
+
     @property _selectedFeature
     @type GeoJSON feature
     @default null
@@ -81,6 +102,7 @@ export default Ember.Component.extend({
 
   /**
     Flag: indicates whether to display links list (if present).
+
     @property _linksExpanded
     @type boolean
     @default false
@@ -289,7 +311,7 @@ export default Ember.Component.extend({
         displayProperty.forEach((prop) => {
           if (featureProperties.hasOwnProperty(prop)) {
             let value = featureProperties[prop];
-            if (Ember.isNone(displayValue) && !Ember.isNone(value) && !Ember.isEmpty(value) && value !== 'Null') {
+            if (Ember.isNone(displayValue) && !Ember.isNone(value) && !Ember.isEmpty(value) && value.toString().toLowerCase() !== 'null') {
               displayValue = value;
             }
           }
@@ -352,62 +374,69 @@ export default Ember.Component.extend({
             feature.layerModel = Ember.get(result, 'layerModel');
             feature.editForms = Ember.A();
 
-            if (editForms.length > 0) {
-              editForms.forEach((editForm) => {
-                let url = editForm.url;
-                let layerField = editForm.layerField;
-                let queryKey = editForm.queryKey;
-                let typeName = editForm.typeName;
+            if (editForms.length === 0) {
+              return;
+            }
 
-                if (!(Ember.isBlank(url) || Ember.isBlank(layerField) || Ember.isBlank(queryKey))) {
-                  let properties = feature.properties;
-                  let queryValue;
+            editForms.forEach((editForm) => {
+              let url = editForm.url;
+              let layerField = editForm.layerField;
+              let queryKey = editForm.queryKey;
+              let typeName = editForm.typeName;
 
-                  if (Ember.isBlank(ownLayerField)) {
-                    for (var p in properties) {
-                      if (properties.hasOwnProperty(p) && layerField.toLowerCase() === (p + '').toLowerCase()) {
-                        ownLayerField = p;
-                        break;
-                      }
-                    }
-                  }
+              if (Ember.isBlank(url) || Ember.isBlank(layerField) || Ember.isBlank(queryKey)) {
+                return;
+              }
 
-                  if (!Ember.isBlank(ownLayerField)) {
-                    queryValue = properties[ownLayerField];
-                  }
+              let properties = feature.properties;
+              let queryValue;
 
-                  if (!Ember.isBlank(queryValue)) {
-                    let params = {};
-                    Ember.set(params, queryKey, queryValue);
-                    Ember.set(params, isMapLimitKey, true);
-
-                    feature.editForms.pushObject({
-                      url: url + L.Util.getParamString(params, url),
-                      typeName: typeName
-                    });
-
-                    objectList.pushObject(queryValue);
+              if (Ember.isBlank(ownLayerField)) {
+                for (var p in properties) {
+                  if (properties.hasOwnProperty(p) && layerField.toLowerCase() === (p + '').toLowerCase()) {
+                    ownLayerField = p;
+                    break;
                   }
                 }
+              }
+
+              if (!Ember.isBlank(ownLayerField)) {
+                queryValue = properties[ownLayerField];
+              }
+
+              if (Ember.isBlank(queryValue)) {
+                return;
+              }
+
+              let params = {};
+              Ember.set(params, queryKey, queryValue);
+              Ember.set(params, isMapLimitKey, true);
+
+              feature.editForms.pushObject({
+                url: url + L.Util.getParamString(params, url),
+                typeName: typeName
               });
-            }
+
+              objectList.pushObject(queryValue);
+            });
           });
 
           let forms = Ember.A();
-          if (objectList.length > 0 && listForms.length > 0) {
-
-            listForms.forEach((listForm) => {
-              let params = {};
-
-              Ember.set(params, isMapLimitKey, true);
-              Ember.set(params, listForm.queryKey, objectList.join(','));
-
-              forms.pushObject({
-                url: listForm.url + L.Util.getParamString(params, listForm.url),
-                typeName: listForm.typeName
-              });
-            });
+          if (objectList.length === 0 || listForms.length === 0) {
+            return;
           }
+
+          listForms.forEach((listForm) => {
+            let params = {};
+
+            Ember.set(params, isMapLimitKey, true);
+            Ember.set(params, listForm.queryKey, objectList.join(','));
+
+            forms.pushObject({
+              url: listForm.url + L.Util.getParamString(params, listForm.url),
+              typeName: listForm.typeName
+            });
+          });
 
           result.listForms = forms;
         }
