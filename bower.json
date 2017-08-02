@@ -23,6 +23,7 @@
     "seiyria-bootstrap-slider": "~6.0.6",
     "jquery-minicolors": "2.2.6",
     "leaflet-minimap": "3.4.0",
+    "leaflet-wms": "1.0.0",
     "leaflet.wms": "gh-pages",
     "leaflet-history": "Flexberry/leaflet-history#d67e852ae405a0ca2f6cd069d2f0ff048d7a5ce8",
     "leaflet-switch-scale-control": "0.1.0",
