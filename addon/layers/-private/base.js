@@ -79,8 +79,8 @@ export default Ember.Object.extend({
     let settings = {
       opacity: 1,
       bounds: [
-        [-180, -180],
-        [180, 180]
+        [-90, -180],
+        [90, 180]
       ],
     };
 

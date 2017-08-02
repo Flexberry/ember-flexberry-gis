@@ -186,9 +186,14 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     */
     _hasBounds: Ember.computed('bounds', function () {
       let bounds = this.get('bounds');
-      let latLngBounds = L.latLngBounds(bounds);
 
-      return latLngBounds.isValid();
+      let layerBounds = L.latLngBounds(bounds);
+      let earthBounds = L.latLngBounds([
+        [-90, -180],
+        [90, 180]
+      ]);
+
+      return layerBounds.isValid() && !layerBounds.equals(earthBounds);
     }),
 
     /**
