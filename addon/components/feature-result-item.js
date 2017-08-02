@@ -12,8 +12,33 @@ import layout from '../templates/components/feature-result-item';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
 export default Ember.Component.extend({
+
   /**
-    Flag: indicates where display detailed feature info
+    Component's wrapping <div> CSS-classes names.
+
+    Any other CSS-class names can be added through component's 'class' property.
+    ```handlebars
+    {{feature-result-item class="my-class"}}
+    ```
+
+    @property classNames
+    @type String[]
+    @default ['item', 'feature-result-item']
+  */
+  classNames: ['item', 'feature-result-item'],
+
+  /**
+    Components class names bindings.
+
+    @property classNameBindings
+    @type String[]
+    @default ['isActive:active']
+  */
+  classNameBindings: ['isActive:active'],
+
+  /**
+    Flag: indicates whether to display detailed feature info.
+
     @property _infoExpanded
     @type boolean
     @default false
@@ -21,7 +46,17 @@ export default Ember.Component.extend({
   _infoExpanded: false,
 
   /**
-    Property for represent feature
+    Flag: indicates whether to display links list (if present).
+
+    @property _linksExpanded
+    @type boolean
+    @default false
+   */
+  _linksExpanded: false,
+
+  /**
+    Property to represent feature.
+
     @property displayProperty
     @type string
     @private
@@ -29,7 +64,8 @@ export default Ember.Component.extend({
   displayProperty: null,
 
   /**
-    Feature properties excluded from being displayed in info table
+    Feature properties excluded from being displayed in info table.
+
     @property _excludedProperties
     @type String[]
     @readOnly
@@ -53,28 +89,56 @@ export default Ember.Component.extend({
     return localizedProperties;
   }),
 
+  /**
+    Flag: indicates whether to display detailed feature info.
+
+    @property expanded
+    @type boolean
+    @readonly
+   */
+  expanded: Ember.computed('infoExpanded', '_infoExpanded', function () {
+    return this.get('infoExpanded') || this.get('_infoExpanded');
+  }),
+
+  /**
+    Flag: indicates whether component is active.
+
+    @property isActive
+    @type boolean
+    @readonly
+   */
+  isActive: Ember.computed('selectedFeature', 'feature', function () {
+    return this.get('selectedFeature') === this.get('feature');
+  }),
+
+  /**
+    Reference to component's template.
+  */
   layout,
 
   /**
-   Settings for display feature info
+   Settings for display feature info.
+
    @property displaySettings
    @type object
    @default null
-   */
+  */
   displaySettings: null,
 
   /**
-    feature for display
+    Feature's metadata.
+
     @property feature
     @type GeoJSON feature object
-   */
+  */
   feature: null,
 
   /**
-    Current selected feature
+    Current selected feature.
+
     @property feature
     @type GeoJSON feature object
-   */
+  */
   selectedFeature: null,
 
   actions: {
@@ -109,6 +173,15 @@ export default Ember.Component.extend({
      */
     showInfo() {
       this.set('_infoExpanded', !this.get('_infoExpanded'));
+      this.set('_linksExpanded', false);
+    },
+
+    /**
+      Show\hide links list (if present).
+      @method actions.toggleLinks
+     */
+    toggleLinks() {
+      this.set('_linksExpanded', !this.get('_linksExpanded'));
     }
   }
 
