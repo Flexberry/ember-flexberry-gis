@@ -2,6 +2,9 @@ export default {
   'info-format-dropdown': {
     'caption': 'Формат ответов GetFeatureInfo'
   },
+  'feature-count-textbox': {
+    'caption': 'Количество объектов в ответе GetFeatureInfo'
+  },
   'url-textbox': {
     'caption': 'Url'
   },
