@@ -113,27 +113,6 @@ export default BaseLayer.extend({
   },
 
   /**
-    Sets leaflet layer's visibility.
-
-    @method _setLayerOpacity
-    @private
-  */
-  _setLayerOpacity() {
-    let leafletLayer = this.get('_leafletObject');
-    let leafletLayerStyle = Ember.get(leafletLayer, 'options.style');
-    if (Ember.isNone(leafletLayerStyle)) {
-      leafletLayerStyle = {};
-      Ember.set(leafletLayer, 'options.style', leafletLayerStyle);
-    }
-
-    let opacity = this.get('opacity');
-    Ember.set(leafletLayerStyle, 'opacity', opacity);
-    Ember.set(leafletLayerStyle, 'fillOpacity', opacity);
-
-    leafletLayer.setStyle(leafletLayerStyle);
-  },
-
-  /**
     Creates leaflet layer related to layer type.
 
     @method createLayer
