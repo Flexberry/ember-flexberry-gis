@@ -9,7 +9,7 @@ import layout from '../../templates/components/layers/group-layer';
   Group layer component for leaflet map.
 
   @class GroupLayerComponent
-  @extend BaseLayerComponent
+  @extends BaseLayerComponent
 */
 export default BaseLayer.extend({
   layout,

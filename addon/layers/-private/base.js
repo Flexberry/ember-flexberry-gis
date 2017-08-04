@@ -81,7 +81,7 @@ export default Ember.Object.extend({
       bounds: [
         [-90, -180],
         [90, 180]
-      ],
+      ]
     };
 
     // Inject search & identify settings.

@@ -9,7 +9,7 @@ import BaseLayer from '../base-layer';
   WFS layer component for leaflet map.
 
   @class WfsLayerComponent
-  @extend BaseLayerComponent
+  @extends BaseLayerComponent
  */
 export default BaseLayer.extend({
   leafletOptions: [

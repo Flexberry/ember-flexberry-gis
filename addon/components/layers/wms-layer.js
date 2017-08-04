@@ -9,7 +9,7 @@ import TileLayer from './tile-layer';
   WMS layer component for leaflet map.
 
   @class WMSLayerComponent
-  @extend TileLayerComponent
+  @extends TileLayerComponent
  */
 export default TileLayer.extend({
   leafletOptions: [
