@@ -118,6 +118,15 @@ export default Ember.Component.extend(
     }),
 
     /**
+      This layer bounding box.
+
+      @property bounds
+      @type <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
+      @readonly
+     */
+    bounds: null,
+
+    /**
       Creates leaflet layer related to layer type.
 
       @method _createLayer

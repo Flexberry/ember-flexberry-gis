@@ -7,6 +7,7 @@ import RequiredActionsMixin from '../../mixins/required-actions';
 import DynamicActionsMixin from '../../mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 import layout from '../../templates/components/layers-dialogs/edit';
+import LeafletCrsMixin from '../../mixins/leaflet-crs';
 import {
   translationMacro as t
 } from 'ember-i18n';
@@ -41,11 +42,13 @@ const flexberryClassNames = {
   @uses RequiredActionsMixin
   @uses DynamicActionsMixin
   @uses DynamicPropertiesMixin
+  @uses LeafletCrsMixin
 */
 let FlexberryEditLayerDialogComponent = Ember.Component.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
-  DynamicPropertiesMixin, {
+  DynamicPropertiesMixin,
+  LeafletCrsMixin, {
     /**
       Available modes.
 
@@ -289,6 +292,16 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     _settings: null,
 
     /**
+      CRS object like {code: '', definition: ''}
+
+      @property coordinateReferenceSystem
+      @type Object
+      @default null
+      @private
+    */
+    coordinateReferenceSystem: null,
+
+    /**
       Inner hash containing coordinate reference systems settings mapped by available codes.
 
       @property _coordinateReferenceSystems
@@ -435,6 +448,33 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     boundsSegmentCaption: t('components.layers-dialogs.edit.bounds-segment.caption'),
 
     /**
+      Dialog's 'Bounds' segment's WGS84 option caption.
+
+      @property wgs84bboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption')
+    */
+    wgs84bboxCaption: t('components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption'),
+
+    /**
+      Dialog's 'Bounds' segment's BBOX option caption.
+
+      @property bboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.bounds-segment.options.bbox.caption')
+    */
+    bboxCaption: t('components.layers-dialogs.edit.bounds-segment.options.bbox.caption'),
+
+    /**
+      Dialog's 'Bounds' segment's mode.
+
+      @property boundsMode
+      @type String
+      @default "wgs84bbox"
+    */
+    boundsMode: 'wgs84bbox',
+
+    /**
       Dialog's 'CRS' segment caption.
 
       @property crsCaption
@@ -513,6 +553,48 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         Ember.set(layer, 'coordinateReferenceSystem', coordinateReferenceSystem);
 
         let settings = Ember.get(layer, 'settings');
+
+        // Put it in property to force LeafletCRSMixin do it's work.
+        this.set('coordinateReferenceSystem', coordinateReferenceSystem);
+
+        let boundsMode = this.get('boundsMode');
+        let geoJsonBounds;
+
+        // Coordinates should be projected to LatLngs.
+        if (boundsMode === 'bbox') {
+          let bbox = Ember.get(layer, 'settings.bbox');
+
+          if (!Ember.isBlank(bbox[0][0]) && !Ember.isBlank(bbox[0][1]) &&
+            !Ember.isBlank(bbox[1][0]) && !Ember.isBlank(bbox[1][1])) {
+
+            let crs = this.get('crs');
+
+            let corner1 = crs.unproject(L.point(bbox[0]));
+            let corner2 = crs.unproject(L.point(bbox[1]));
+
+            geoJsonBounds = [
+              [corner1.lat, corner1.lng],
+              [corner2.lat, corner2.lng]
+            ];
+          }
+        } else {
+          let wgs84bbox = Ember.get(layer, 'settings.wgs84bbox');
+
+          geoJsonBounds = wgs84bbox;
+        }
+
+        let bounds = L.latLngBounds(geoJsonBounds);
+
+        // If not bounds provided - set it to max.
+        if (!bounds || !bounds.isValid()) {
+          geoJsonBounds = [
+            [-90, -180],
+            [90, 180]
+          ];
+        }
+
+        Ember.set(settings, 'bounds', geoJsonBounds);
+
         settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
         Ember.set(layer, 'settings', settings);
 
@@ -602,6 +684,16 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         let $clickedTab = Ember.$(e.currentTarget);
         let clickedTabName = $clickedTab.attr('data-tab');
         this.set('_tabularMenuActiveTab', clickedTabName);
+      },
+
+      /**
+        Handler for bounds mode change.
+
+        @method actions.onBoundsModeChange
+        @param {String} newBoundsMode New bounds mode.
+      */
+      onBoundsModeChange(newBoundsMode) {
+        this.set('boundsMode', newBoundsMode);
       },
     },
 

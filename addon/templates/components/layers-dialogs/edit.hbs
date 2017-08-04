@@ -132,51 +132,114 @@
         <h5 class="ui header">
           {{boundsSegmentCaption}}
         </h5>
+        <div class="field">
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              class=(if (eq boundsMode "wgs84bbox") "active" "")
+              caption=(t "components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption")
+              click=(action "onBoundsModeChange" "wgs84bbox")
+            }}
+            <div class="or" data-text="{{t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.modes-divider.caption"}}">
+            </div>
+            {{flexberry-button
+              class=(if (eq boundsMode "bbox") "active" "")
+              caption=(t "components.layers-dialogs.edit.bounds-segment.options.bbox.caption")
+              click=(action "onBoundsModeChange" "bbox")
+            }}
+          </div>
+        </div>
         <div class="ui grid">
-          <div class="four wide column">
-            <div class="field">
-              <label>
-                {{t "components.layers-dialogs.edit.bounds-segment.south-lat-textbox.caption"}}
-              </label>
-              {{flexberry-textbox
-                class="fluid"
-                value=_layer.settings.bounds.[0].[0]
-              }}
+          {{#if (eq boundsMode "wgs84bbox")}}
+            <div class="four wide column">
+              <div class="field">
+                <label>
+                  {{t "components.layers-dialogs.edit.bounds-segment.min-x-textbox.caption"}}
+                </label>
+                {{flexberry-textbox
+                  class="fluid"
+                  value=_layer.settings.wgs84bbox.[0].[1]
+                }}
+              </div>
             </div>
-          </div>
-          <div class="four wide column">
-            <div class="field">
-              <label>
-                {{t "components.layers-dialogs.edit.bounds-segment.west-lon-textbox.caption"}}
-              </label>
-              {{flexberry-textbox
-                class="fluid"
-                value=_layer.settings.bounds.[0].[1]
-              }}
+            <div class="four wide column">
+              <div class="field">
+                <label>
+                  {{t "components.layers-dialogs.edit.bounds-segment.min-y-textbox.caption"}}
+                </label>
+                {{flexberry-textbox
+                  class="fluid"
+                  value=_layer.settings.wgs84bbox.[0].[0]
+                }}
+              </div>
             </div>
-          </div>
-          <div class="four wide column">
-            <div class="field">
-              <label>
-                {{t "components.layers-dialogs.edit.bounds-segment.north-lat-textbox.caption"}}
-              </label>
-              {{flexberry-textbox
-                class="fluid"
-                value=_layer.settings.bounds.[1].[0]
-              }}
+            <div class="four wide column">
+              <div class="field">
+                <label>
+                  {{t "components.layers-dialogs.edit.bounds-segment.max-x-textbox.caption"}}
+                </label>
+                {{flexberry-textbox
+                  class="fluid"
+                  value=_layer.settings.wgs84bbox.[1].[1]
+                }}
+              </div>
             </div>
-          </div>
-          <div class="four wide column">
-            <div class="field">
-              <label>
-                {{t "components.layers-dialogs.edit.bounds-segment.east-lon-textbox.caption"}}
-              </label>
-              {{flexberry-textbox
-                class="fluid"
-                value=_layer.settings.bounds.[1].[1]
-              }}
+            <div class="four wide column">
+              <div class="field">
+                <label>
+                  {{t "components.layers-dialogs.edit.bounds-segment.max-y-textbox.caption"}}
+                </label>
+                {{flexberry-textbox
+                  class="fluid"
+                  value=_layer.settings.wgs84bbox.[1].[0]
+                }}
+              </div>
             </div>
-          </div>
+          {{else if (eq boundsMode "bbox")}}
+            <div class="four wide column">
+              <div class="field">
+                  <label>
+                    {{t "components.layers-dialogs.edit.bounds-segment.min-x-textbox.caption"}}
+                  </label>
+                  {{flexberry-textbox
+                    class="fluid"
+                    value=_layer.settings.bbox.[0].[0]
+                  }}
+              </div>
+            </div>
+            <div class="four wide column">
+              <div class="field">
+                <label>
+                  {{t "components.layers-dialogs.edit.bounds-segment.min-y-textbox.caption"}}
+                </label>
+                {{flexberry-textbox
+                  class="fluid"
+                  value=_layer.settings.bbox.[0].[1]
+                }}
+              </div>
+            </div>
+            <div class="four wide column">
+              <div class="field">
+                <label>
+                  {{t "components.layers-dialogs.edit.bounds-segment.max-x-textbox.caption"}}
+                </label>
+                {{flexberry-textbox
+                  class="fluid"
+                  value=_layer.settings.bbox.[1].[0]
+                }}
+              </div>
+            </div>
+            <div class="four wide column">
+              <div class="field">
+                <label>
+                  {{t "components.layers-dialogs.edit.bounds-segment.max-y-textbox.caption"}}
+                </label>
+                {{flexberry-textbox
+                  class="fluid"
+                  value=_layer.settings.bbox.[1].[1]
+                }}
+              </div>
+            </div>
+          {{/if}}
         </div>
       </div>
       {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings}}

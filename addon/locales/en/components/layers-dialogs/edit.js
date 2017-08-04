@@ -17,17 +17,25 @@ export default {
   },
   'bounds-segment': {
     'caption': 'Bounding box',
-    'west-lon-textbox': {
-      'caption': 'W'
+    'min-x-textbox': {
+      'caption': 'Left border'
     },
-    'east-lon-textbox': {
-      'caption': 'E'
+    'min-y-textbox': {
+      'caption': 'Bottom border'
     },
-    'south-lat-textbox': {
-      'caption': 'S'
+    'max-x-textbox': {
+      'caption': 'Right border'
     },
-    'north-lat-textbox': {
-      'caption': 'N'
+    'max-y-textbox': {
+      'caption': 'Top border'
+    },
+    'options': {
+      'wgs84bbox': {
+        'caption': 'Latitude ang longitude',
+      },
+      'bbox': {
+        'caption': 'Layer\'s CRS'
+      }
     }
   },
   'crs': {

@@ -17,18 +17,26 @@ export default {
   },
   'bounds-segment': {
     'caption': 'Охват',
-    'west-lon-textbox': {
-      'caption': 'з.д.'
+    'min-x-textbox': {
+      'caption': 'Левая граница'
     },
-    'east-lon-textbox': {
-      'caption': 'в.д.'
+    'min-y-textbox': {
+      'caption': 'Нижняя граница'
     },
-    'south-lat-textbox': {
-      'caption': 'ю.ш.'
+    'max-x-textbox': {
+      'caption': 'Правая граница'
     },
-    'north-lat-textbox': {
-      'caption': 'с.ш.'
-    }
+    'max-y-textbox': {
+      'caption': 'Верхняя граница'
+    },
+    'options': {
+      'wgs84bbox': {
+        'caption': 'Широта и долгота',
+      },
+      'bbox': {
+        'caption': 'В системе координат слоя',
+      }
+    },
   },
   'crs': {
     'caption': 'Система координат слоя (CRS)',
