@@ -140,7 +140,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let filter = new L.Filter.Intersects().append(e.polygonLayer, this.get('geometryField'), this.get('crs'));
+    let filter = new L.Filter.Intersects(this.get('geometryField'), e.polygonLayer, this.get('crs'));
 
     let featuresPromise = this._getFeature({
       filter
@@ -168,7 +168,7 @@ export default BaseLayer.extend({
       return;
     }
 
-    let filter = new L.Filter.Like().append(propertyName, '*' + e.searchOptions.queryString + '*', {
+    let filter = new L.Filter.Like(propertyName, '*' + e.searchOptions.queryString + '*', {
       matchCase: false
     });
 
@@ -194,9 +194,8 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   query(layerLinks, e) {
-    let filter = new L.Filter.EQ();
     let queryFilter = e.queryFilter;
-
+    let equals = [];
     layerLinks.forEach((link) => {
       let linkParameters = link.get('linkParameter');
 
@@ -205,10 +204,17 @@ export default BaseLayer.extend({
           let property = linkParam.get('layerField');
           let propertyValue = queryFilter[linkParam.get('queryKey')];
 
-          filter.append(property, propertyValue);
+          equals.push(new L.Filter.EQ(property, propertyValue));
         });
       }
     });
+
+    let filter;
+    if (equals.length === 1) {
+      filter = equals[0];
+    } else {
+      filter = new L.Filter.And(...equals);
+    }
 
     let featuresPromise = this._getFeature({
       filter
