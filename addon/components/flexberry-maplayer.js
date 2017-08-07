@@ -177,26 +177,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
-      Flag: indicates whether componments' bounds are valid.
-
-      @property _hasBounds
-      @type boolean
-      @readonly
-      @private
-    */
-    _hasBounds: Ember.computed('bounds', function () {
-      let bounds = this.get('bounds');
-
-      let layerBounds = L.latLngBounds(bounds);
-      let earthBounds = L.latLngBounds([
-        [-90, -180],
-        [90, 180]
-      ]);
-
-      return layerBounds.isValid() && !layerBounds.equals(earthBounds);
-    }),
-
-    /**
       Flag: displays whether layer's opacity can be changed
 
       @property _canChangeOpacity
@@ -405,7 +385,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       Layer's latLngBounds.
 
       @property bounds
-      @type Array
+      @type <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
       @default null
     */
     bounds: null,

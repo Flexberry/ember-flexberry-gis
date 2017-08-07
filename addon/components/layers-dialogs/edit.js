@@ -554,9 +554,6 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
 
         let settings = Ember.get(layer, 'settings');
 
-        // Put it in property to force LeafletCRSMixin do it's work.
-        this.set('coordinateReferenceSystem', coordinateReferenceSystem);
-
         let boundsMode = this.get('boundsMode');
         let geoJsonBounds;
 
@@ -566,6 +563,9 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
 
           if (!Ember.isBlank(bbox[0][0]) && !Ember.isBlank(bbox[0][1]) &&
             !Ember.isBlank(bbox[1][0]) && !Ember.isBlank(bbox[1][1])) {
+
+            // Put it in property to force LeafletCRSMixin do it's work.
+            this.set('coordinateReferenceSystem', coordinateReferenceSystem);
 
             let crs = this.get('crs');
 
@@ -578,9 +578,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
             ];
           }
         } else {
-          let wgs84bbox = Ember.get(layer, 'settings.wgs84bbox');
-
-          geoJsonBounds = wgs84bbox;
+          geoJsonBounds = Ember.get(layer, 'settings.wgs84bbox');
         }
 
         let bounds = L.latLngBounds(geoJsonBounds);

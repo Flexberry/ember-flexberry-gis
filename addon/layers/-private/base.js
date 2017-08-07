@@ -83,12 +83,12 @@ export default Ember.Object.extend({
         [90, 180]
       ],
       wgs84bbox: [
-        [-90, -180],
-        [90, 180]
+        [undefined, undefined],
+        [undefined, undefined]
       ],
       bbox: [
-        [null, null],
-        [null, null]
+        [undefined, undefined],
+        [undefined, undefined]
       ]
     };
 

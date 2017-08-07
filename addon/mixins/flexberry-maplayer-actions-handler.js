@@ -206,13 +206,27 @@ export default Ember.Mixin.create({
       ```
     */
     onMapLayerFitBounds(...args) {
-      let boundsPropertyPath = args[0];
-      let bounds = getRecord(this, boundsPropertyPath);
-
       let leafletMap = this.get('leafletMap');
 
       if (leafletMap) {
-        leafletMap.fitBounds(bounds);
+        let boundsPropertyPath = args[0];
+        let bounds = getRecord(this, boundsPropertyPath);
+
+        let layerBounds = L.latLngBounds(bounds);
+
+        let earthBounds = L.latLngBounds([
+          [-90, -180],
+          [90, 180]
+        ]);
+
+        // Check if bounds are valid and are not 'full extent' (earth) bounds.
+        if (!layerBounds.isValid() || layerBounds.equals(earthBounds)) {
+          // Set it to map's bounds.
+          layerBounds = leafletMap.maxBounds;
+        }
+
+        // Fit map to bounds.
+        leafletMap.fitBounds(layerBounds && layerBounds.isValid() ? layerBounds : earthBounds);
       }
     },
 

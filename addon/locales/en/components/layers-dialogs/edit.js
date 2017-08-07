@@ -34,7 +34,7 @@ export default {
         'caption': 'Latitude ang longitude',
       },
       'bbox': {
-        'caption': 'Layer\'s CRS'
+        'caption': 'Layer coordinate reference system (CRS)'
       }
     }
   },
