@@ -1,12 +1,17 @@
 /**
   Common styles for layers-dialogs (see templates/components/layers-dialogs).
 */
+.ui.modal.flexberry-add-layer-dialog, .ui.modal.flexberry-edit-layer-dialog {
+  .flexberry-dialog-content.content {
+    min-height: 400px;
+  }
+}
 
 .ui.modal.flexberry-add-layer-dialog, .ui.modal.flexberry-edit-layer-dialog {
   &> .flexberry-dialog-content.content {
     // Same as dialog content's max-height in Semantic UI.
     height: 400px;
-    overflow: hidden;
+    overflow: hidden !important;
 
     form {
       height: 100%;
@@ -18,21 +23,20 @@
           .item {
             // Now there is only six items inside tabular menu (so 100% / 6 = 16.66...%).
             width: 16.65%;
+            min-height: 40px;
+            display: flex;
+            justify-content: center;
 
             &:last-child {
-              width: calc( 16.75% + 2px );
+              width: calc(16.85%);
             }
           }
-        }
-
-       .item {
-         min-height: 60px;
         }
       }
 
       .ui.tab.segment {
         // Height is 100% minus height of tabular menu items.
-        height: calc( 100% - 60px );
+        height: ~"calc(100% - 60px)";
         overflow: auto;
 
         .flexberry-dropdown.ui.selection.dropdown .menu {
@@ -47,5 +51,16 @@
         }
       }
     }
+  }
+
+  .ui.form {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      .ui.bottom.attached.tab.segment {
+          border-radius: 0px 0px 5px 5px;
+      }
+  }
+  .flexberry-jsonarea div.row:first-child {
+      text-align: center;
   }
 }

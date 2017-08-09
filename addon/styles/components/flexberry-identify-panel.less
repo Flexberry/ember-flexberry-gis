@@ -1,0 +1,87 @@
+.sidebar.identify {
+  background: #fff none;
+}
+
+.flexberry-identify-panel {
+  background: #fff none;
+
+  &.celled.grid {
+    margin: 0;
+    & .ui.four.wide.column:last-child {
+      text-align: right;
+      float: right;
+      width: 39% !important;
+      .button {
+        border-radius: 5px;
+      }
+    }
+  }
+  /* все слои, дерево слоёв*/
+  .ui.icon.button {
+    border-radius: 0px;
+    padding: 12px 4px;
+    font-weight: normal;
+    height: 40px;
+    width: 40px;
+    box-shadow: 0 0 4px @darkbluecolor;
+    display: inline-block;
+    color: @darkbluecolor;
+    background: @whitecolor;
+    font-size: 16px;
+    margin-right: -1px;
+    &.flexberry-identify-panel-all-layers-option,
+    &.flexberry-identify-panel-rectangle-tools-option {
+      border-radius: 5px 0px 0px 5px;
+    }
+    &.flexberry-identify-panel-top-visible-layers-option,
+    &.flexberry-identify-panel-polygon-tools-option {
+      border-radius: 0px 5px 5px 0px;
+    }
+  }
+  i.icon {
+    font-family: rgis;
+  }
+  &,
+  &-layers-options,
+  &-tools-options,
+  &>.ui.four.wide.column {
+    box-shadow: none !important;
+    padding: 0px !important;
+  }
+  .flexberry-identify-panel-layers-options {
+    text-align: left;
+    &[class*="eight wide"].column {
+      width: 35% !important;
+    }
+    i.icon.square.outline:before,
+    i.icon.list:before {
+      font-family: Crimean;
+      content: "\e825";
+    }
+    /* видимые слои */
+    i.icon.checkmark.box:before {
+      font-family: Crimean;
+      content: "\e829";
+    }
+    /* верхний видимый */
+    i.icon.chevron.up:before {
+      content: "\e828";
+    }
+  }
+  .flexberry-identify-panel-tools-options {
+    text-align: left;
+    i.icon.square.outline:before {
+      font-family: Icons;
+      content: "\f248";
+    }
+    /* линейка */
+    i.icon.star:before {
+      font-family: Crimean;
+      content: "\e802";
+    }
+  }
+  /* удаление */
+  i.icon.remove:before {
+    content: "\e814";
+  }
+}

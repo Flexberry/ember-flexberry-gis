@@ -17,8 +17,30 @@ export default Ember.Controller.extend({
       @method actions.toggleSidebar
     */
     toggleSidebar() {
-      Ember.$('.ui.sidebar.main.menu').sidebar('toggle');
-    }
+      let sidebar = Ember.$('.ui.left.sidebar');
+      sidebar.sidebar({
+        closable: false,
+        dimPage: false,
+        onHide: function () {
+          Ember.$('.sidebar.icon.text-menu-1').removeClass('hidden-menu');
+          Ember.$('.sidebar.icon.text-menu-2').addClass('hidden-menu');
+        }
+      }).sidebar('toggle');
+
+      if (Ember.$('.inverted.vertical.main.menu').hasClass('visible')) {
+        Ember.$('.sidebar.icon.text-menu-1').removeClass('hidden-menu');
+        Ember.$('.sidebar.icon.text-menu-2').addClass('hidden-menu');
+      } else {
+        Ember.$('.sidebar.icon.text-menu-1').addClass('hidden-menu');
+        Ember.$('.sidebar.icon.text-menu-2').removeClass('hidden-menu');
+      }
+
+      if (Ember.$('.inverted.vertical.main.menu').hasClass('visible')) {
+        Ember.$('.full.height').css({ 'transition': 'width 0.45s ease-in-out 0s', 'width': '100%' });
+      } else {
+        Ember.$('.full.height').css({ 'transition': 'width 0.3s ease-in-out 0s', 'width': 'calc(100% - ' + sidebar.width() + 'px)' });
+      }
+    },
   },
 
   /**
