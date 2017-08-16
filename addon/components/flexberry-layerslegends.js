@@ -34,5 +34,44 @@ export default Ember.Component.extend({
     @type Object[]
     @default null
   */
-  layers: null
+  layers: null,
+
+  /**
+    Visible not group layers.
+
+    @property visibleLayers
+    @type Object[]
+  */
+  visibleLayers: Ember.computed('layers.[]', function() {
+    let result = Ember.A();
+    let getLayers = function(layers) {
+      layers.forEach(function(layer) {
+        if (layer.get('visibility') && !layer.get('isDeleted')) {
+          if (layer.get('type') === 'group') {
+            getLayers(layer.get('layers'));
+          } else {
+            result.push(layer);
+          }
+        }
+      }, this);
+    };
+
+    let layers = this.get('layers');
+    if (Ember.isArray(layers)) {
+      getLayers(layers);
+    }
+
+    return result;
+  }),
+
+  actions: {
+    /**
+      Called when legends for one of the layers is loaded.
+
+      @method actions.legendsLoaded
+    */
+    legendsLoaded(layerName, legends) {
+      this.sendAction('legendsLoaded', layerName, legends);
+    }
+  }
 });

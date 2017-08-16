@@ -102,5 +102,24 @@ export default Ember.Component.extend({
   */
   _legends: Ember.computed('layerSettings.legendSettings', function () {
     return Ember.A();
-  })
+  }),
+
+  legendsObserver: Ember.on('init', Ember.observer('_legends', function() {
+    let legends = this.get('_legends');
+    if (legends instanceof Ember.RSVP.Promise) {
+      legends.then((result) => {
+        this.sendAction('legendsLoaded', this.get('layerName'), result);
+      });
+    } else {
+      this.sendAction('legendsLoaded', this.get('layerName'), this.get('_legends'));
+    }
+  })),
+
+  didRender() {
+    this._super(...arguments);
+    let height = this.get('height');
+    if (!Ember.isBlank(height)) {
+      this.$(`.${this.flexberryClassNames.imageWrapper}`).css('height', height + 'px');
+    }
+  }
 });
