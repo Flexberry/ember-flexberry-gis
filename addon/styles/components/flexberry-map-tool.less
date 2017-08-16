@@ -1,0 +1,329 @@
+.flexberry-map-tool-submenu {
+  z-index: 1000000 !important;
+}
+
+.flexberry-maptoolbar.ui.menu {
+  flex-wrap: wrap;
+}
+.ui.menu.flexberry-maptoolbar {
+    margin: 10px 10px 0px 10px;
+    background-color: transparent !important; // боримся с технологическими стилями
+    overflow: visible;
+    z-index: 999;
+    border: 0px !important; // боримся с технологическими стилями
+    position: absolute;
+    display: inline-block;
+    width: 0px;
+    /* элементы меню */
+    a.item,
+    .ui.dropdown .menu>a.item,
+    .ui.icon.button {
+        color: @darkbluecolor;
+        font-size: 0px;
+        background: @whitecolor;
+    }
+    /* элементы меню */
+    .item {
+        border-radius: 5px !important;
+        padding: 4px 8px;
+        font-weight: normal;
+        height: 36px;
+        box-shadow: 0 0 4px @darkbluecolor;
+        margin-bottom: 10px;
+        width: 36px;
+        font-size: 12px;
+    }
+    /* элементы внутри выпадающих списков */
+    .ui.dropdown .menu {
+        margin-left: 52px;
+        margin-top: -31px;
+        box-shadow: 0 0 4px @darkbluecolor;
+        border: 1px solid @bluecolor;
+        border-radius: 0.285714rem;
+        border-top-left-radius: 0;
+        &>a.item {
+            font-size: 13px !important;
+            width: auto;
+        }
+    }
+    /* элементы меню при наведении */
+    .item:hover,
+    .dropdown.item:hover,
+    .link.item:hover,
+    a.item:hover,
+    .active.item:hover,
+    .vertical .active.item:hover,
+    .ui.icon.button:hover,
+    .ui.dropdown .menu>.item:hover {
+        background-color: @lightbluecolor;
+        color: @bluecolor;
+    }
+    /* выбранный элемент меню */
+    .active.item,
+    .vertical .active.item {
+        background-color: @lightbluecolor;
+        color: @darkbluecolor;
+    }
+    /* элементы меню внутри dropdown */
+    .ui.dropdown .menu>a.item,
+    .ui.dropdown .menu>a.item:hover {
+        color: @bluecolor !important; // боримся с технологическими стилями
+    }
+    /* фон меню */
+    .item:before {
+        background: none;
+    }
+    /* первый блок */
+    .flexberry-zoom-in-map-tool,
+    .flexberry-zoom-out-map-tool,
+    .flexberry-identify-map-tool,
+    .flexberry-full-extent-map-command {
+        border-right: none;
+        border-left: none;
+        border-radius: 0px !important;
+        box-shadow: 0 0 4px @darkbluecolor;
+        position: absolute;
+        margin: 0px;
+    }
+    /* рука */
+    .flexberry-drag-map-tool {
+        border-right: solid 1px @lightgraycolor;
+        border-radius: 5px 0px 0px 5px !important;
+        position: absolute;
+        left: 130px;
+    }
+    /* приблизить */
+    .flexberry-zoom-in-map-tool {
+        left: 166px;
+    }
+    /* отдалить */
+    .flexberry-zoom-out-map-tool {
+        left: 202px;
+    }
+    /* переход к точке */
+    .flexberry-identify-map-tool {
+        border-radius: 0px 5px 5px 0px !important;
+        left: 238px;
+    }
+    /* сохранить */
+    .flexberry-save-map-button {
+        left: 286px;
+        width: 76px;
+        box-shadow: 0 0 4px @darkbluecolor;
+        color: @bluesky;
+        background: @whitecolor;
+        border-style: none;
+        &:hover {
+          background: @lightbluecolor;
+          color: @bluesky;
+        }
+        &:focus {
+          outline: none;
+        }
+    }
+    .flexberry-full-extent-map-command {
+        border-radius: 5px !important;
+    }
+    /* поиск по карте */
+    .flexberry-go-to-map-command {
+        margin-top: 180px;
+    }
+    /* раскрывающие списки */
+    .flexberry-search-map-command,
+    .flexberry-measure-map-tool,
+    .flexberry-draw-map-tool,
+    .flexberry-go-to-map-command,
+    .flexberry-export-map-command {
+        i.flexberry-map-tool-submenu-icon.dropdown.icon,
+        i.flexberry-map-command-submenu-icon.dropdown.icon {
+            display: none;
+        }
+        &.active {
+            i.flexberry-map-tool-submenu-icon.dropdown.icon,
+            i.flexberry-map-command-submenu-icon.dropdown.icon {
+                margin-left: 18px;
+                transform: rotate(90deg);
+                display: block;
+                &:before {
+                    font-size: 40px;
+                }
+            }
+        }
+        /* IE10+ фиксы */
+        @media screen and (-ms-high-contrast: active),
+        (-ms-high-contrast: none) {
+            &.active {
+                i.flexberry-map-tool-submenu-icon.dropdown.icon,
+                i.flexberry-map-command-submenu-icon.dropdown.icon {
+                    margin-left: 50px;
+                    margin-top: -20px;
+                }
+            }
+        }
+    }
+    /* показать слои */
+    .flexberry-maplayers-show {
+        display: inline-flex;
+        top: 35px;
+        left: 240px;
+        i.icon.list:before {
+            font-size: 20px;
+        }
+    }
+    /* иконки */
+    i.icon {
+        width: 20px;
+        height: 20px;
+        &:before {
+            font-family: Crimean;
+        }
+        &.dropdown:before {
+            font-family: Icons;
+        }
+    }
+    /* отступ в кнопках с иконками */
+    .ui.icon.button {
+        padding: 5px;
+    }
+    /* укрупненные иконки */
+    .flexberry-map-tool>i.icon:before,
+    .treeview>i.icon:before,
+    .flexberry-map-layers-add-button>i.plus.icon:before,
+    .icon.tpi {
+        font-size: 20px;
+    }
+    /* отображение слоёв */
+    i.icon.table:before {
+        content: "\e819";
+    }
+    /* рука */
+    i.icon.hand.paper:before {
+        content: "\e823";
+    }
+    /* + */
+    i.icon.zoom:before {
+        content: "\e831";
+    }
+    /* - */
+    i.icon.zoom.out:before {
+        content: "\e832";
+    }
+    /* перейти к точке */
+    i.icon.location.arrow:before {
+        content: "\e812";
+    }
+    /* отдалить на полную */
+    i.icon.globe:before {
+        content: "\e830";
+    }
+    /* поиск по адресу */
+    .address.search i.icon.address:before {
+        font-family: Icons;
+        content: "\f02d";
+        font-size: 20px;
+    }
+    /* идентифицировать слои */
+    i.icon.info.circle {
+        margin-left: -4px;
+        margin-right: 4px;
+        &:before {
+            content: "\e827";
+        }
+    }
+    /* все слои, дерево слоёв*/
+    i.icon.square.outline:before,
+    i.icon.list:before {
+        font-family: Crimean;
+        content: "\e825";
+    }
+    /* видимые слои */
+    i.icon.checkmark.box:before {
+        content: "\e829";
+    }
+    /* верхний видимый */
+    i.icon.chevron.up:before {
+        content: "\e828";
+    }
+    /* измерить */
+    i.icon.wizard {
+        margin-right: 2px;
+        &:before {
+            content: "\e82a";
+        }
+    }
+    /* координаты */
+    i.icon.marker:before {
+        content: "\e812";
+    }
+    /* радиус */
+    i.icon.circle:before {
+        content: "\e82b";
+    }
+    /* расстояние */
+    i.icon.empty.star:before {
+        font-family: Icons;
+        content: "\f065"
+    }
+    /* площадь */
+    i.icon.square:before {
+        font-family: Icons;
+        content: "\f248";
+    }
+    /* нарисовать */
+    i.icon.write:before,
+    i.icon.edit:before {
+        content: "\e810";
+    }
+    /* линейка */
+    i.icon.star:before {
+        content: "\e802";
+    }
+    /* экспортировать */
+    i.icon.external {
+        margin-left: -2px;
+        margin-right: 2px;
+        &:before {
+            content: "\e822";
+        }
+    }
+    /* изображение */
+    i.icon.download:before {
+        content: "\e824";
+    }
+    /* напечатать */
+    i.icon.print:before {
+        content: "\e80f";
+    }
+    /* + в сайдбаре */
+    i.icon.plus:before {
+        height: 26px;
+        color: @greencolor;
+        content: "\e833";
+    }
+    /* удаление */
+    i.icon.trash:before {
+        content: "\e814";
+    }
+    /* сохранить */
+    i.icon.save:before {
+        content: "\e80c";
+    }
+    /* поиск */
+    i.icon.search:before {
+        content: "\e803";
+    }
+    /* градсправка */
+    i.icon.tpi:before {
+        content: "\e836";
+    }
+    /* папка слоя */
+    i.icon.folder {
+        margin-right: 0px;
+        /* иконка */
+        &:before {
+            font-size: 18px;
+            font-family: FontAwesome;
+            content: "\f114";
+        }
+    }
+}

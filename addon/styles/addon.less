@@ -1,0 +1,67 @@
+@import './components/variables';
+@import './components/flexberry-button';
+@import './components/flexberry-map';
+@import './components/flexberry-map-tool';
+@import './components/flexberry-map-command';
+@import './components/flexberry-search-panel';
+@import './components/flexberry-identify-panel';
+@import './components/flexberry-spatial-bookmarks';
+@import './components/flexberry-tree';
+@import './components/flexberry-tab-bar';
+@import './components/flexberry-colorpicker';
+@import './components/layer-result-list';
+@import './components/layers';
+@import './components/map-commands-dialogs/search';
+@import './components/map-commands-dialogs/go-to';
+@import './components/map-commands-dialogs/export';
+@import './components/zoomslider-control';
+@import './components/legend-control';
+@import './components/layers-dialogs/common';
+@import './components/modals';
+@import './components/sidebar-wrapper';
+
+.ui.loading.form {
+  /**
+    Increased 'loading' form z-index to hide leaflet map placed on form.
+  */
+  &:before {
+    z-index: 1000000 !important;
+  }
+  /**
+    Increased 'loading' form spinner z-index to make it visible above leaflet map & form.
+  */
+  &:after {
+    z-index: 1000001 !important;
+  }
+}
+
+.ui.form {
+  /**
+    Prevent ui messages from being hided inside <form>.
+  */
+  .success.message,
+  .warning.message,
+  .error.message {
+    display: block !important;
+    /**
+      Hide hidden ui messages inside <form>.
+    */
+    &.hidden {
+      display: none !important;
+    }
+  }
+}
+
+/**
+    Fix disappearing checkboxes while scrolling
+*/
+
+.ui.checkbox {
+  .box:before,
+  label:before,
+  input:checked~.box:after,
+  input:checked~label:after {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}

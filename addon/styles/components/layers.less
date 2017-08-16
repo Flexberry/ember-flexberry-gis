@@ -1,0 +1,184 @@
+.treeview {
+    .ui.loading.form {
+        margin-top: 100px;
+    }
+}
+
+.ui.right.sidebar {
+    .ui.tab {
+        border-radius: 5px;
+        h3 {
+            margin: 7px 0px 13px 0px;
+        }
+    }
+    .flexberry-tree-header {
+        border-radius: 5px;
+        padding: 0.1em 0.75em 0.6em 0.75em;
+        position: absolute;
+        width: 100%;
+        top: 12px;
+        right: 0.75em;
+        /* + в сайдбаре */
+        .flexberry-maplayers-add-button {
+            height: 30px;
+            width: 30px;
+            padding: 7px 0;
+            .icon:before {
+                color: @greencolor !important;
+            }
+        }
+    }
+    /* дерево слоёв */
+    .flexberry-maplayers.flexberry-tree-root {
+        overflow: auto;
+        /* нижняя граница */
+        &> :last-child {
+            border-radius: 0px 0px 5px 5px;
+        }
+    }
+    /* элемент в сайдбаре с вложенными */
+    .ui.styled.accordion {
+        box-shadow: none;
+        .accordion {
+            margin: .5em 0;
+            border-radius: 5px 0px 0px 5px;
+            &:first-child .title {
+                border-top: 1px solid rgba(34, 36, 38, 0.15);
+            }
+            .flexberry-treenode:first-child {
+                .title {
+                    border-top: none;
+                }
+            }
+        }
+        /* заголовок элемента */
+        .flexberry-treenode-header {
+            /* текст-заголовок элемента */
+            &.title,
+            &.active.title {
+                vertical-align: middle;
+                font-weight: normal;
+                font-size: 14px;
+                color: @darkbluecolor;
+                padding: 12px 6px;
+                text-overflow: ellipsis;
+                line-height: 16px;
+                &:hover {
+                    color: @bluecolor;
+                }
+                i.icon {
+                    /* изображение */
+                    &.image {
+                        display: none;
+                    }
+                    &.folder:before {
+                        font-size: 20px;
+                        content: '\f114';
+                    }
+                }
+                .flexberry-maplayer-caption-label {
+                    font-size: 12px;
+                }
+                .button,
+                .flexberry-maplayer-opacity-label {
+                    vertical-align: baseline;
+                    color: @darkbluecolor;
+                    background-color: @whitecolor;
+                    box-shadow: 0 0 4px @darkbluecolor;
+                    width: 30px;
+                    height: 30px;
+                    padding: 7px 5px;
+                    margin: -3px 5px 0px 0px;
+                    &:hover {
+                        background-color: @lightbluecolor;
+                    }
+                    /* иконки */
+                    i.icon {
+                        &:before {
+                            font-size: 16px;
+                            font-family: Crimean;
+                        }
+                        &.trash:before {
+                            content: "\e814";
+                        }
+                        &.edit:before {
+                            content: "\e810";
+                        }
+                    }
+                }
+                .flexberry-maplayer-add-button {
+                    padding: 7px 0;
+                }
+                .flexberry-maplayer-opacity-label {
+                    padding: 10px 0;
+                }
+            }
+        }
+        /* отступ дочерних элементов */
+        .content,
+        .accordion .content {
+            padding: 0px 0px 8px 30px;
+            .flexberry-slider {
+                margin: 5px 0px 0px 0px;
+                .ui-slider .slider {
+                    &.slider.slider-horizontal {
+                        //margin-left: 60px;
+                        height: 7px;
+                        .slider-track {
+                            height: 7px;
+                        }
+                        .slider-selection {
+                            background: @lightbluecolor;
+                        }
+                    }
+                    .slider-handle {
+                        background: @bluecolor;
+                        margin-top: -3px;
+                        width: 12px;
+                        height: 12px;
+                    }
+                }
+            }
+            .layer-legend {
+                margin-top: 8px;
+                .flexberry-progressbar {
+                    margin-right: .7em;
+                    div.bar {
+                        background: @bluecolor;
+                        &::after {
+                            background: @lightbluecolor;
+                        }
+                        &::before {
+                            background: @lightbluecolor;
+                        }
+                    }
+                    .label {
+                        color: @darkbluecolor;
+                    }
+                }
+                .layer-legend-image-wrapper {
+                    min-height: 27px;
+                    font-size: 12px;
+                    vertical-align: middle;
+                    width: 100%;
+                    display: flex;
+                    .layer-legend-image,
+                    .layer-legend-caption {
+                        display: block;
+                        float: left;
+                    }
+                    .layer-legend-image {
+                        max-height: 27px;
+                        min-width: 34px;
+                    }
+                    .layer-legend-caption {
+                        color: @bluecolor;
+                        margin: 5px 0px 0px 5px;
+                        max-width: 80%;
+                        width: 80%;
+                    }
+                }
+            }
+        }
+    }
+}

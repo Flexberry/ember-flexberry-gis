@@ -9,12 +9,21 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   actions: {
     /**
-       Hides application sitemap's side bar.
+      Expands or callapses submenu node.
 
-       @method actions.hideSidebar
-     */
-    hideSidebar: function() {
-      Ember.$('.ui.sidebar').sidebar('hide');
+      @method actions.onSubmenuButtonClick
+    */
+    onSubmenuButtonClick(e) {
+      let $this =  Ember.$(e.currentTarget).parent().find('.subMenu:first');
+      if ($this.hasClass('hidden-menu')) {
+        $this.removeClass('hidden-menu');
+        Ember.$(e.target).parent().find('.item-minus:first').removeClass('hidden-menu');
+        Ember.$(e.target).parent().find('.item-plus:first').addClass('hidden-menu');
+      } else {
+        $this.addClass('hidden-menu');
+        Ember.$(e.target).parent().find('.item-minus:first').addClass('hidden-menu');
+        Ember.$(e.target).parent().find('.item-plus:first').removeClass('hidden-menu');
+      }
     }
   }
 });
