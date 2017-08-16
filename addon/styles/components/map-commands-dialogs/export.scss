@@ -106,6 +106,7 @@
   padding: 14px;
   margin: 0 auto;
   display: block;
+  overflow: hidden;
 
   .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
     // Distance between map & it's caption (same as padding inside sheet of paper).
@@ -155,19 +156,14 @@
 
   // Legend under map.
   .flexberry-export-map-command-dialog-legend-control-map {
-    .layer-legend {
-      float: left;
-      padding-right: 10px;
-      height: inherit;
-
       .layer-legend-image-wrapper {
         float: left;
         height: inherit;
+        padding-right: 10px;
 
         .layer-legend-image {
           height: inherit;
         }
       }
-    }
   }
 }
