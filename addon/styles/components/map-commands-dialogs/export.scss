@@ -113,6 +113,7 @@
   padding: 14px;
   margin: 0 auto;
   display: block;
+  overflow: hidden;
 
   .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
     // Distance between map & it's caption (same as padding inside sheet of paper).
@@ -170,24 +171,24 @@
   padding: 14px;
   margin: 0 auto;
   display: block;
+  overflow: hidden;
+}
+
+.flexberry-export-map-command-dialog-sheet-of-paper {
+  .flexberry-export-map-command-dialog-legend-control-map {
+    margin-top: 10px;
+  }
 }
 
 // Map legend.
 .flexberry-export-map-command-dialog-legend-control-map {
-  margin-top: 10px;
-
-  .layer-legend {
+  .layer-legend-image-wrapper {
     float: left;
-    padding-right: 10px;
     height: inherit;
+    padding-right: 10px;
 
-    .layer-legend-image-wrapper {
-      float: left;
+    .layer-legend-image {
       height: inherit;
-
-      .layer-legend-image {
-        height: inherit;
-      }
     }
   }
 }

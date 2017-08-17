@@ -96,8 +96,7 @@ const flexberryClassNames = {
 
 const legendStyleConstants = {
   heightMargin: 10,
-  widthPadding: 15,
-  iconSize: 10,
+  widthPadding: 15
 };
 
 /**
@@ -319,13 +318,13 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       let height = this.get('_sheetOfPaperRealHeight');
 
       // Add height for legend.
-      if (this.get('_options.legendSecondPage') && !this.get('showDownloadingFileSettings')) {
+      /*if (this.get('_options.legendSecondPage') && !this.get('showDownloadingFileSettings')) {
         let legendHeight = this.get('_mapCaptionRealHeight');
         let legendLines = this.get('_mapLegendLines');
 
         legendHeight = legendHeight * legendLines + 10; // margin
         height += legendHeight;
-      }
+      }*/
 
       return Ember.String.htmlSafe(
         `height: ${height}px; ` +
@@ -539,8 +538,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         `font-weight: ${this.get('_options.captionFontWeight')}; ` +
         `font-style: ${this.get('_options.captionFontStyle')}; ` +
         `text-decoration: ${this.get('_options.captionFontDecoration')}; ` +
-        `color: ${this.get('_options.captionFontColor')}; ` +
-        `height: ${mapCaptionPreviewHeight}px;`);
+        `color: ${this.get('_options.captionFontColor')};`);
     }
   ),
 
@@ -550,67 +548,56 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @type Array
     @private
   */
-  _getLayersInfo: function(layers) {
-    let res = Ember.A();
+  _getLayersInfo(layers, legends) {
+    var result = Ember.A();
 
     layers.forEach(function(layer) {
-      if (layer.get('type') === 'group') {
-        res = res.concat(this._getLayersInfo(layer.layers));
-      } else if (layer.get('legendCanBeDisplayed') && layer.get('visibility')) {
-        if (layer.get('type') === 'wms-single-tile' || layer.get('type') === 'wms') {
-          let wmsSettings = layer.get('settingsAsObject');
-
-          // Concat all sub-layers for WMS-layer.
-          if (!Ember.isEmpty(wmsSettings)) {
-            res = res.concat(wmsSettings.layers.split(','));
+      if (layer.get('visibility')) {
+        if (layer.get('type') === 'group') {
+          result = result.concat(this._getLayersInfo(layer.layers, legends));
+        } else if (layer.get('legendCanBeDisplayed')) {
+          if (Ember.isArray(legends[layer.get('name')])) {
+            legends[layer.get('name')].forEach(function(legend) {
+              let layerInfo = { name: legend.useMainLayerName ? layer.get('name') : legend.layerName, image: legend.src };
+              result.push(layerInfo);
+            });
+          } else {
+            let layerInfo = { name: layer.get('name') };
+            result.push(layerInfo);
           }
-        } else if (layer.get('type') === 'wms-esri') {
-          let wmsSettings = layer.get('settingsAsObject');
-          let restLegendUrl = wmsSettings.restUrl + '/legend?f=json';
-
-          Ember.$.ajax({
-            url: restLegendUrl,
-            async: false,
-            success: function(data) {
-              let result = {};
-              try {
-                result = JSON.parse(data);
-
-                if (result.error) {
-                  console.log(result.error);
-                } else {
-                  if (!Ember.isNone(result.layers) && result.layers.length !== 0) {
-                    result.layers.forEach((layer) => {
-                      res.push(layer.layerName);
-                    });
-                  }
-                }
-              } catch (error) {
-                console.log(error);
-              }
-            }
-          });
-        } else {
-          res.push(layer.get('name'));
         }
       }
     }, this);
 
-    return res;
+    return result;
   },
 
   /**
-    Get text width.
+    Get layer legend width.
 
     @type Number
     @private
   */
-  _getTextWidth: function (txt, font) {
-    var element = document.createElement('canvas');
-    var context = element.getContext('2d');
-    context.font = font;
+  _getLayerLegendWidth(txt, font, imageSrc, height) {
+    let element = document.createElement('div');
+    element.style.cssText = `height: ${height}px; visibility: hidden; position: absolute; display: inline-block; ` +
+    `font-family: ${font['font-family']}; line-height: ${font['line-height']}; font-size: ${font['font-size']}; ` +
+    `font-weight: ${font['font-weight']}; font-style: ${font['font-style']}; padding-right: 10px`;
+    if (!Ember.isBlank(imageSrc)) {
+      let image = document.createElement('img');
+      image.src = imageSrc;
+      image.style.cssText = 'height: inherit;';
+      element.appendChild(image);
+    }
 
-    return context.measureText(txt).width;
+    let text = document.createElement('label');
+    text.textContent = ' ' + txt;
+    element.appendChild(text);
+    document.body.appendChild(element);
+    let elementWidth = Ember.$(element)[0].getBoundingClientRect().width;
+    element.remove();
+
+    return elementWidth;
   },
 
   /**
@@ -623,6 +610,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   */
   _mapLegendLines: Ember.computed(
     '_sheetOfPaperPreviewWidth',
+    '_options.captionLineHeight',
     '_options.captionFontFamily',
     '_options.captionFontWeight',
     '_options.captionFontStyle',
@@ -630,29 +618,35 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     '_mapCaptionPreviewFontSize',
     '_mapCaptionPreviewHeight',
     '_options.legendControl',
+    'layers.@each.visibility',
+    'layers.@each.isDeleted',
+    'layers.@each.legendCanBeDisplayed',
+    'legendsUpdateTrigger',
     function() {
       let lineCount = 1;
       let layers = this.get('layers');
-      let legendsInfo = this._getLayersInfo(layers);
-      let legendWidth = this.get('_sheetOfPaperPreviewWidth') - legendStyleConstants.widthPadding * 2; // padding 14, border 1.
+      let legends = this.get('legends');
+      let legendsInfo = this._getLayersInfo(layers, legends);
+      let legendWidth = this.get('_sheetOfPaperPreviewWidth') - legendStyleConstants.widthPadding * 2; // padding left/right 14, border 1.
       let cutWidth = legendWidth;
 
-      for (let i = 0; i < legendsInfo.length; i++) {
-        let font = `${this.get('_options.captionFontStyle')} ` +
-          `${this.get('_options.captionFontWeight')} ` +
-          `${this.get('_mapCaptionPreviewFontSize')}px ` +
-          `${this.get('_options.captionFontFamily')}`;
-        let textWidth = this._getTextWidth(legendsInfo[i], font);
+      legendsInfo.forEach(function(legendInfo) {
+        if (Ember.isBlank(legendInfo)) {
+          legendInfo = {};
+        }
 
-        textWidth += this.get('_mapCaptionPreviewHeight') + legendStyleConstants.iconSize;
+        let font = { 'font-family': this.get('_options.captionFontFamily'), 'line-height': this.get('_options.captionLineHeight'),
+          'font-size': this.get('_mapCaptionPreviewFontSize') + 'px', 'font-weight': this.get('_options.captionFontWeight'),
+          'font-style': this.get('_options.captionFontStyle') };
 
+        let textWidth = this._getLayerLegendWidth(legendInfo.name, font, legendInfo.image, this.get('_mapCaptionPreviewHeight'));
         if (textWidth <= cutWidth) {
           cutWidth -= textWidth;
         } else {
           lineCount++;
           cutWidth = legendWidth - textWidth;
         }
-      }
+      }, this);
 
       return lineCount;
     }
@@ -954,6 +948,24 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   */
   timeout: 30000,
 
+  /**
+    Trigger for recompute _mapLegendLines.
+
+    @property legendsUpdateTrigger
+    @type Boolean
+    @default false
+  */
+  legendsUpdateTrigger: false,
+
+  /**
+    All loaded legends for layers.
+
+    @property legends
+    @type Object
+    @default {}
+  */
+  legends: {},
+
   actions: {
     /**
       Handler for settings tabs 'click' action.
@@ -1159,6 +1171,16 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     */
     onHide(e) {
       this.sendAction('hide', e);
+    },
+
+    /**
+      Called when legends for one of the layers is loaded.
+
+      @method actions.legendsLoaded
+    */
+    legendsLoaded(layerName, legends) {
+      this.set(`legends.${layerName}`, legends);
+      this.set('legendsUpdateTrigger', !this.get('legendsUpdateTrigger'));
     }
   },
 
