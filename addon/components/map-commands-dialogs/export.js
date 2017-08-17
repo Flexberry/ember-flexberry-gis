@@ -317,15 +317,6 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     function() {
       let height = this.get('_sheetOfPaperRealHeight');
 
-      // Add height for legend.
-      /*if (this.get('_options.legendSecondPage') && !this.get('showDownloadingFileSettings')) {
-        let legendHeight = this.get('_mapCaptionRealHeight');
-        let legendLines = this.get('_mapLegendLines');
-
-        legendHeight = legendHeight * legendLines + 10; // margin
-        height += legendHeight;
-      }*/
-
       return Ember.String.htmlSafe(
         `height: ${height}px; ` +
         `width: ${this.get('_sheetOfPaperRealWidth')}px;` +
