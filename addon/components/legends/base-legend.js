@@ -115,8 +115,16 @@ export default Ember.Component.extend({
     }
   })),
 
+  rightPaddingObserver: Ember.observer('rightPadding', function() {
+    let rightPadding = this.get('rightPadding');
+    if (!Ember.isBlank(rightPadding)) {
+      this.$(`.${this.flexberryClassNames.imageWrapper}`).css('padding-right', rightPadding + 'px');
+    }
+  }),
+
   didRender() {
     this._super(...arguments);
+
     let height = this.get('height');
     if (!Ember.isBlank(height)) {
       this.$(`.${this.flexberryClassNames.imageWrapper}`).css('height', height + 'px');

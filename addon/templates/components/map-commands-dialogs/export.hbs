@@ -274,7 +274,8 @@
           {{#if _mapCanBeShown}}
             {{flexberry-layerslegends
               layers=layers
-              height=_mapCaptionPreviewHeight
+              height=(if _isPreview _mapCaptionPreviewHeight _mapCaptionRealHeight)
+              rightPadding=_legendsRightPadding
               legendsLoaded='legendsLoaded'
             }}
           {{/if}}
@@ -286,7 +287,8 @@
             {{#if _mapCanBeShown}}
               {{flexberry-layerslegends
                 layers=layers
-                height=_mapCaptionPreviewHeight
+                height=(if _isPreview _mapCaptionPreviewHeight _mapCaptionRealHeight)
+                rightPadding=_legendsRightPadding
                 legendsLoaded='legendsLoaded'
               }}
             {{/if}}

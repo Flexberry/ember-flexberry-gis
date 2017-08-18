@@ -13,7 +13,7 @@
     "leaflet": "1.0.1",
     "leaflet.editable": "master",
     "leaflet-editable-measures": "0.1.0",
-    "leaflet-export": "0.1.0",
+    "leaflet-export": "master",
     "html2canvas": "master",
     "Leaflet-WFST": "develop",
     "proj4leaflet": "1.0.1",
