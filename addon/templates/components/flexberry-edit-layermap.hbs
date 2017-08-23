@@ -1,0 +1,142 @@
+<form class="ui form" role="form">
+  <div class="ui top attached fluid tabular menu">
+    <a class="tab item {{if (eq _tabularMenuActiveTab "main") "active"}}" data-tab="main" onclick={{action "onTabClick"}}>
+      {{t "components.layers-dialogs.edit.tabular-menu.main-tab.caption"}}
+    </a>
+    {{#if _crsSettingsAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "crs") "active"}}" data-tab="crs" onclick={{action "onTabClick"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.crs-tab.caption"}}
+      </a>
+    {{/if}}
+    {{#if _layerSettingsAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "settings") "active"}}" data-tab="settings" onclick={{action "onTabClick"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.settings-tab.caption"}}
+      </a>
+    {{/if}}
+    {{#if _identifySettingsAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "identifySettings") "active"}}" data-tab="identifySettings" onclick={{action "onTabClick"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.identify-settings-tab.caption"}}
+      </a>
+    {{/if}}
+    {{#if _searchSettingsAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "searchSettings") "active"}}" data-tab="searchSettings" onclick={{action "onTabClick"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.search-settings-tab.caption"}}
+      </a>
+    {{/if}}
+    {{#if _displaySettingsAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "displaySettings") "active"}}" data-tab="displaySettings" onclick={{action "onTabClick"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.display-settings-tab.caption"}}
+      </a>
+    {{/if}}
+    {{#if _legendSettingaAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "legendSettings") "active"}}" data-tab="legendSettings" onclick={{action "onTabClick"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.legend-settings-tab.caption"}}
+      </a>
+    {{/if}}
+  </div>
+  <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "main") "active"}}" data-tab="main">
+    {{#if _modesAreAvailable}}
+      <div class="field">
+        <label>
+          {{t "components.layers-dialogs.edit.mode-dropdown.caption"}}
+        </label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableModesCaptions
+          value=_selectedModeCaption
+        }}
+      </div>
+    {{/if}}
+    {{#if _selectedMode}}
+      {{component (concat "layers-dialogs/edit-modes/" _selectedMode.name) editingFinished=(action "onEditingFinished")}}
+    {{/if}}
+    <div class="field">
+      <label>
+        {{typeDropdownCaption}}
+      </label>
+      {{flexberry-dropdown
+        class="fluid"
+        items=_availableTypes
+        value=_layer.type
+        readonly=_typeIsReadonly
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{nameTextboxCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_layer.name
+      }}
+    </div>
+  </div>
+  {{#if _crsSettingsAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "crs") "active"}}" data-tab="crs">
+      <div class="field">
+        <label>
+          {{crsCaption}}
+        </label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableCoordinateReferenceSystemsCodes
+          value=_coordinateReferenceSystemCode
+        }}
+      </div>
+      {{#if _showCoordinateReferenceSystemFields}}
+        <div class="field">
+          <label>
+            {{crsNameTextboxCaption}}
+          </label>
+          {{flexberry-textbox
+            class="fluid"
+            value=_layer.coordinateReferenceSystem.name
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{crsCodeTextboxCaption}}
+          </label>
+          {{flexberry-textbox
+            class="fluid"
+            value=_layer.coordinateReferenceSystem.code
+          }}
+        </div>
+        <div class="field">
+          <label>
+            {{crsDefinitionTextareaCaption}}
+          </label>
+          {{flexberry-textarea
+            class="fluid"
+            value=_layer.coordinateReferenceSystem.definition
+          }}
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
+  {{#if _layerSettingsAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "settings") "active"}}" data-tab="settings">
+      {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings}}
+    </div>
+  {{/if}}
+  {{#if _identifySettingsAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "identifySettings") "active"}}" data-tab="identifySettings">
+      {{flexberry-jsonarea value=_layer.settings.identifySettings}}
+    </div>
+  {{/if}}
+  {{#if _searchSettingsAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "searchSettings") "active"}}" data-tab="searchSettings">
+      {{flexberry-jsonarea value=_layer.settings.searchSettings}}
+    </div>
+  {{/if}}
+  {{#if _displaySettingsAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "displaySettings") "active"}}" data-tab="displaySettings">
+      {{flexberry-jsonarea value=_layer.settings.displaySettings}}
+    </div>
+  {{/if}}
+  {{#if _legendSettingaAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "legendSettings") "active"}}" data-tab="legendSettings">
+      {{flexberry-jsonarea value=_layer.settings.legendSettings}}
+    </div>
+  {{/if}}
+</form>

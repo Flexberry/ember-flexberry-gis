@@ -34,56 +34,7 @@
       </button>
     </div>
   </div>
-  <div class="field">
-  {{
-    flexberry-field
-    placeholder=(t 'components.flexberry-field.placeholder')
-    readonly=readonly
-    required=true
-    value=model.name
-    class=(if model.errors.name 'error' '')
-    label=(t 'forms.new-platform-flexberry-g-i-s-layer-metadata-e.name-caption')
-  }}
-  {{flexberry-validationmessage error=model.errors.name pointing="pointing"}}
-</div>
-
-<div class="field">
-  {{
-    flexberry-field
-    placeholder=(t 'components.flexberry-field.placeholder')
-    readonly=readonly
-    required=true
-    value=model.type
-    class=(if model.errors.type 'error' '')
-    label=(t 'forms.new-platform-flexberry-g-i-s-layer-metadata-e.type-caption')
-  }}
-  {{flexberry-validationmessage error=model.errors.type pointing="pointing"}}
-</div>
-
-<div class="field">
-  {{
-    flexberry-field
-    placeholder=(t 'components.flexberry-field.placeholder')
-    readonly=readonly
-    required=true
-    value=model.coordinateReferenceSystem
-    class=(if model.errors.coordinateReferenceSystem 'error' '')
-    label=(t 'forms.new-platform-flexberry-g-i-s-layer-metadata-e.coordinateReferenceSystem-caption')
-  }}
-  {{flexberry-validationmessage error=model.errors.coordinateReferenceSystem pointing="pointing"}}
-</div>
-
-<div class="field">
-  {{
-    flexberry-field
-    placeholder=(t 'components.flexberry-field.placeholder')
-    readonly=readonly
-    required=true
-    value=model.settings
-    class=(if model.errors.settings 'error' '')
-    label=(t 'forms.new-platform-flexberry-g-i-s-layer-metadata-e.settings-caption')
-  }}
-  {{flexberry-validationmessage error=model.errors.settings pointing="pointing"}}
-</div>
+  
+  {{component 'flexberry-edit-layermap'}}
 
 </form>

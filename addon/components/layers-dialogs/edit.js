@@ -64,6 +64,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @readonly
     */
     _availableModesCaptions: Ember.computed('_availableModes', 'i18n', function () {
+      console.log("_availableModesCaptions");
       let _availableModes = this.get('_availableModes');
 
       let modes = Ember.A();
@@ -88,6 +89,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @readonly
     */
     _selectedMode: Ember.computed('_selectedModeCaption', function () {
+      console.log("_selectedMode");
       let _availableModes = this.get('_availableModes');
       let _availableModesCaptions = this.get('_availableModesCaptions');
       let _selectedModeCaption = this.get('_selectedModeCaption');
@@ -119,6 +121,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @readonly
     */
     _modesAreAvailable: Ember.computed('_availableModes', function () {
+      console.log("_modesAreAvailable");
       let _availableModes = this.get('_availableModes');
 
       return Ember.isArray(_availableModes) && !Ember.isBlank(_availableModes);
@@ -143,6 +146,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @readonly
     */
     _crsSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      console.log("_crsSettingsAreAvailableForType");
       let className = this.get('_layer.type');
 
       let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
@@ -165,6 +169,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @readonly
     */
     _layerSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      console.log("_layerSettingsAreAvailableForType");
       let className = this.get('_layer.type');
 
       let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
@@ -187,6 +192,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @readonly
     */
     _identifySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      console.log("_identifySettingsAreAvailableForType");
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
@@ -210,6 +216,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @readonly
     */
     _searchSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      console.log("_searchSettingsAreAvailableForType");
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
@@ -233,6 +240,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @readonly
     */
     _displaySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      console.log("_displaySettingsAreAvailableForType");
       return true;
     }),
 
@@ -245,6 +253,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @readonly
     */
     _legendSettingaAreAvailableForType: Ember.computed('_layer.type', function () {
+      console.log("_legendSettingaAreAvailableForType");
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
@@ -328,6 +337,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @readonly
     */
     _showCoordinateReferenceSystemFields: Ember.computed('_coordinateReferenceSystemCode', function () {
+      console.log("_showCoordinateReferenceSystemFields");
       return this.get('_coordinateReferenceSystemCode') === proj4CrsCode;
     }),
 
@@ -498,7 +508,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       */
       onApprove() {
         let layer = this.get('_layer');
-
+        
         let coordinateReferenceSystem = Ember.get(layer, 'coordinateReferenceSystem');
         coordinateReferenceSystem = Ember.$.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);
         Ember.set(layer, 'coordinateReferenceSystem', coordinateReferenceSystem);
@@ -603,6 +613,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @private
     */
     _createInnerCoordinateReferenceSystems() {
+      console.log("_createInnerCoordinateReferenceSystems");
       let coordinateReferenceSystems = {};
       Ember.A(this.get('_availableCoordinateReferenceSystemsCodes') || []).forEach((code) => {
         coordinateReferenceSystems[code] = {
@@ -621,6 +632,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @private
     */
     _createInnerSettings() {
+      console.log("_createInnerSettings");
       let settings = {};
       Ember.A(this.get('_availableTypes') || []).forEach((type) => {
         let layerClassFactory = Ember.getOwner(this).knownForType('layer', type);
@@ -637,6 +649,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @private
     */
     _destroyInnerSettings() {
+      console.log("_destroyInnerSettings");
       this.set('_settings', null);
     },
 
@@ -647,6 +660,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @private
     */
     _createInnerLayer() {
+      console.log("_createInnerLayer");
       let type = this.get('layer.type');
       let name = this.get('layer.name');
 
@@ -692,6 +706,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @private
     */
     _destroyInnerLayer() {
+      console.log("_destroyInnerLayer");
       this.set('_layer', null);
       this._destroyInnerSettings();
     },
@@ -703,6 +718,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @private
     */
     _resetTabularMenu() {
+      console.log("_resetTabularMenu");
       let $tabularMenu = this.get('_$tabularMenu');
       if (!Ember.isNone($tabularMenu)) {
         Ember.$('.tab.item', $tabularMenu).tab();
@@ -716,6 +732,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @private
     */
     _visibleDidChange: Ember.on('init', Ember.observer('visible', function () {
+      console.log("_visibleDidChange");
       if (this.get('visible')) {
         this._createInnerLayer();
       } else {
@@ -730,6 +747,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @private
     */
     _innerLayerTypeDidChange: Ember.observer('_layer.type', function () {
+      console.log("_innerLayerTypeDidChange");
       if (Ember.isNone(this.get('_layer'))) {
         return;
       }
@@ -745,6 +763,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @private
     */
     _coordinateReferenceSystemCodeDidChange: Ember.observer('_coordinateReferenceSystemCode', function () {
+      console.log("_coordinateReferenceSystemCodeDidChange");
       if (Ember.isNone(this.get('_layer'))) {
         return;
       }
@@ -758,7 +777,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     */
     init() {
       this._super(...arguments);
-
+      console.log("init");
       // Retrieve & remember constant (proj4 CRS code).
       let proj4CrsFactory = Ember.getOwner(this).knownForType('coordinate-reference-system', 'proj4');
       proj4CrsCode = Ember.get(proj4CrsFactory, 'code');
@@ -793,6 +812,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       Initializes component's DOM-related properties.
     */
     didInsertElement() {
+      console.log("didInsertElement");
       this._super(...arguments);
 
       let $tabularMenu = this.get('childViews')[0].$('.tabular.menu');
@@ -803,6 +823,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       Deinitializes component's DOM-related properties.
     */
     willDestroyElement() {
+      console.log("willDestroyElement");
       this._super(...arguments);
 
       let $tabularMenu = this.get('_$tabularMenu');

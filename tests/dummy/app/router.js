@@ -11,7 +11,9 @@ Router.map(function() {
   this.route('map', { path: 'maps/:id' });
   this.route('map.new', { path: 'maps/new' });
 
-  this.route('new-platform-flexberry-g-i-s-layer-metadata-l');
+  this.route('new-platform-flexberry-g-i-s-layer-metadata-l', { path: 'metadata' });
+  this.route('new-platform-flexberry-g-i-s-layer-metadata-e', { path: 'edit-metadata/:id' });
+  this.route('new-platform-flexberry-g-i-s-layer-metadata-e.new', { path: 'edit-metadata/new' });
 
   this.route('new-platform-flexberry-g-i-s-csw-connection-l', { path: 'csw-connections' });
   this.route('new-platform-flexberry-g-i-s-csw-connection-e', { path: 'csw-connections/:id' });
