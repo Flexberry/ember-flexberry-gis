@@ -1135,7 +1135,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       @method actions.onApprove
     */
     onApprove(e) {
-      if (this.get('_options.legendSecondPage') && this.get('showDownloadingFileSettings')) {
+      if (this.get('_options.legendSecondPage')) {
         Ember.set(e, 'exportOptions', [this._getLeafletExportOptions('1'), this._getLeafletExportOptions('2')]);
       } else {
         Ember.set(e, 'exportOptions', [this._getLeafletExportOptions('1')]);
