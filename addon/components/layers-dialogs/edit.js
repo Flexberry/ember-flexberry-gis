@@ -508,7 +508,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       */
       onApprove() {
         let layer = this.get('_layer');
-        
+        console.log("onApprove");
         let coordinateReferenceSystem = Ember.get(layer, 'coordinateReferenceSystem');
         coordinateReferenceSystem = Ember.$.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);
         Ember.set(layer, 'coordinateReferenceSystem', coordinateReferenceSystem);

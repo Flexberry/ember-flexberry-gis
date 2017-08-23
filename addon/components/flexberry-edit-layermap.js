@@ -75,6 +75,125 @@ export default Ember.Component.extend({
     _coordinateReferenceSystemCode: null,
 
     /**
+      Available modes.
+
+      @property _availableModes
+      @type Object[]
+      @default null
+      @private
+    */
+    _availableModes: null,
+
+    /**
+      Selected mode.
+
+      @property _selectedModeCaption
+      @type String
+      @default null
+      @private
+    */
+    _selectedModeCaption: null,
+
+    /**
+      Array containing available layers types.
+
+      @property _availableTypes
+      @type String[]
+      @default null
+      @private
+    */
+    _availableTypes: null,
+
+    /**
+      Inner hash containing editing layer.
+
+      @property layer
+      @type Object
+      @default null
+    */
+    _layer: null,
+
+    /**
+      Inner hash containing type-related settings mapped by available layer types.
+
+      @property _settings
+      @type Object
+      @default null
+      @private
+    */
+    _settings: null,
+
+    /**
+      Inner hash containing coordinate reference systems settings mapped by available codes.
+
+      @property _coordinateReferenceSystems
+      @type Object
+      @default null
+      @private
+    */
+    _coordinateReferenceSystems: null,
+
+    /**
+      Array containing user friendly coordinate reference systems (CRS) codes.
+      For example ['ESPG:4326', 'PROJ4'].
+
+      @property _availableCoordinateReferenceSystemsCodes
+      @type String[]
+      @default null
+      @private
+    */
+    _availableCoordinateReferenceSystemsCodes: null,
+
+    /**
+      Tabular menu containing tabs items.
+
+      @property _$tabularMenu
+      @type Object
+      @default null
+      @private
+    */
+    _$tabularMenu: null,
+    
+    /**
+      Tabular menu active tab name.
+
+      @property _tabularMenuActiveTab
+      @type String
+      @private
+    */
+    _tabularMenuActiveTab: 'main',
+
+    /**
+      Hash containing editing layer.
+
+      @property layer
+      @type Object
+      @default null
+    */
+    layer: null,
+    
+    /**
+      Leaflet map.
+    
+      @property leafletMap
+      @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+      @default null
+    */
+    leafletMap: null,
+
+    /**
+      Flag: indicates whether coordinate reference system (CRS) edit fields must be shown.
+
+      @property _availableCoordinateReferenceSystemsCodes
+      @type Boolean
+      @readonly
+    */
+    _showCoordinateReferenceSystemFields: Ember.computed('_coordinateReferenceSystemCode', function () {
+      console.log("_showCoordinateReferenceSystemFields");
+      return this.get('_coordinateReferenceSystemCode') === proj4CrsCode;
+    }),
+
+    /**
       Initializes component.
     */
     init() {
@@ -439,6 +558,20 @@ export default Ember.Component.extend({
       let $tabularMenu = this.get('_$tabularMenu');
       if (!Ember.isNone($tabularMenu)) {
         Ember.$('.tab.item', $tabularMenu).tab();
+      }
+    },
+
+    /**
+      Deinitializes component's DOM-related properties.
+    */
+    willDestroyElement() {
+      console.log("willDestroyElement");
+      this._super(...arguments);
+
+      let $tabularMenu = this.get('_$tabularMenu');
+      if (!Ember.isNone($tabularMenu)) {
+        Ember.$('.tab.item', $tabularMenu).tab('destroy');
+        this.set('_$tabularMenu', null);
       }
     },
 
