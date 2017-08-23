@@ -3,6 +3,7 @@ export default {
   'export-error-message-caption': 'Export map into image failed',
   'print-caption': 'Print map',
   'print-error-message-caption': 'Print map failed',
+  'legend-caption': 'Legend',
   'approve-button': {
     'caption': 'Ok'
   },
@@ -39,6 +40,15 @@ export default {
       },
       'scale-control': {
         'caption': 'Scale bar'
+      }
+    },
+    'legend-settings-panel': {
+      'caption': 'Legend position',
+      'under-map': {
+        'caption': 'Under the map'
+      },
+      'second-page': {
+        'caption': 'Separately'
       }
     }
   },

@@ -157,6 +157,25 @@
             }}
           </div>
         </div>
+        <div class="field">
+          <label>
+            {{t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.caption"}}
+          </label>
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              class=(if (eq _options.legendPosition "under-map") "active" "")
+              caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.under-map.caption")
+              click=(action "onLegendPositionChange" "under-map")
+            }}
+            <div class="or" data-text="{{t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.modes-divider.caption"}}">
+            </div>
+            {{flexberry-button
+              class=(if (eq _options.legendPosition "second-page") "active" "")
+              caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.legend-settings-panel.second-page.caption")
+              click=(action "onLegendPositionChange" "second-page")
+            }}
+          </div>
+        </div>
       </div>
       <div
         class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "paper") "active"}}"
@@ -215,20 +234,33 @@
         </div>
       </div>
     </div>
-    <div class="eleven wide column {{flexberryClassNames.previewColumn}}">
-      <div class="{{flexberryClassNames.sheetOfPaper}} {{_options.displayMode}}" style={{_sheetOfPaperPreviewStyle}}>
+    {{#if _options.legendSecondPage}}
+    <div class="one wide column {{flexberryClassNames.pagingColumn}}">
+      <div class="pages">
+        <div class="field">
+          {{flexberry-button
+            class=(if (eq _options.pageNumber "1") "active" "")
+            caption="1"
+            click=(action "onPageChange" "1")
+          }}
+        </div>
+        <div class="field">
+          {{flexberry-button
+            class=(if (eq _options.pageNumber "2") "active" "")
+            caption="2"
+            click=(action "onPageChange" "2")
+          }}
+        </div>
+      </div>
+    </div>
+    {{/if}}
+    <div class="{{if _options.legendSecondPage "ten" "eleven"}} wide column {{flexberryClassNames.previewColumn}}">
+      <div class="{{flexberryClassNames.sheetOfPaper}} {{_options.displayMode}} {{if _options.pageNumber2Selected "hidden" ""}}" style={{_sheetOfPaperPreviewStyle}}>
         <p class="{{flexberryClassNames.sheetOfPaperMapCaption}}" style={{_mapCaptionPreviewStyle}}>
           {{_options.caption}}
         </p>
         <div class="{{flexberryClassNames.sheetOfPaperMap}}" style={{_mapPreviewStyle}}>
           {{#if _mapCanBeShown}}
-            {{#if _options.legendControl}}
-              {{legend-control
-                map=leafletMap
-                position="bottomleft"
-                layers=layers
-              }}
-            {{/if}}
             {{#if _options.scaleControl}}
               {{scale-control
                 map=leafletMap
@@ -237,6 +269,30 @@
               }}
             {{/if}}
           {{/if}}
+        </div>
+        <div class="{{flexberryClassNames.legendControlMap}} {{if _options.legendUnderMap "" "hidden"}}" style={{_mapCaptionPreviewStyle}}>
+          {{#if _mapCanBeShown}}
+            {{flexberry-layerslegends
+              layers=layers
+              height=(if _isPreview _mapCaptionPreviewHeight _mapCaptionRealHeight)
+              rightPadding=_legendsRightPadding
+              legendsLoaded='legendsLoaded'
+            }}
+          {{/if}}
+        </div>
+      </div>
+      <div class="{{flexberryClassNames.sheetOfLegend}} {{_options.displayMode}} {{if _options.pageNumber2Selected "" "hidden"}}" style={{_sheetOfPaperPreviewStyle}}>
+        <div>
+          <div class="{{flexberryClassNames.legendControlMap}}" style={{_mapCaptionPreviewStyle}}>
+            {{#if _mapCanBeShown}}
+              {{flexberry-layerslegends
+                layers=layers
+                height=(if _isPreview _mapCaptionPreviewHeight _mapCaptionRealHeight)
+                rightPadding=_legendsRightPadding
+                legendsLoaded='legendsLoaded'
+              }}
+            {{/if}}
+          </div>
         </div>
       </div>
     </div>
