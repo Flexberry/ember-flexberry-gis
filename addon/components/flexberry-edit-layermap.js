@@ -1,11 +1,79 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-edit-layermap';
+import {
+  translationMacro as t
+} from 'ember-i18n';
 
 // Proj4 CRS code.
 // Will be initialized in 'init' method.
 let proj4CrsCode = null;
 
 export default Ember.Component.extend({
+    /**
+      Dialog's 'type' dropdown caption.
+
+      @property typeDropdownCaption
+      @type String
+      @default t('components.layers-dialogs.edit.type-dropdown.caption')
+    */
+    typeDropdownCaption: t('components.layers-dialogs.edit.type-dropdown.caption'),
+
+    /**
+      Dialog's 'name' textbox caption.
+
+      @property nameTextboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.name-textbox.caption')
+    */
+    nameTextboxCaption: t('components.layers-dialogs.edit.name-textbox.caption'),
+
+    /**
+      Dialog's 'CRS' segment caption.
+
+      @property crsCaption
+      @type String
+      @default t('components.layers-dialogs.edit.crs.caption')
+    */
+    crsCaption: t('components.layers-dialogs.edit.crs.caption'),
+
+    /**
+      Dialog's 'CRS' segment's name textbox caption.
+
+      @property crsNameTextboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.crs.name-textbox.caption')
+    */
+    crsNameTextboxCaption: t('components.layers-dialogs.edit.crs.name-textbox.caption'),
+
+    /**
+      Dialog's 'CRS' segment's code textbox caption.
+
+      @property crsCodeTextboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.crs.code-textbox.caption')
+    */
+    crsCodeTextboxCaption: t('components.layers-dialogs.edit.crs.code-textbox.caption'),
+
+    /**
+      Dialog's 'CRS' segment's definition textarea caption.
+
+      @property crsDefinitionTextareaCaption
+      @type String
+      @default t('components.layers-dialogs.edit.crs.definition-textarea.caption')
+    */
+    crsDefinitionTextareaCaption: t('components.layers-dialogs.edit.crs.definition-textarea.caption'),
+
+    /**
+      User friendly coordinate reference system (CRS) code.
+      For example 'ESPG:4326'.
+
+      @property _coordinateReferenceSystemCode
+      @type String
+      @default null
+      @private
+    */
+    _coordinateReferenceSystemCode: null,
+
     /**
       Initializes component.
     */
