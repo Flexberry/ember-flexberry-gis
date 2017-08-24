@@ -234,7 +234,6 @@
         </div>
       </div>
     </div>
-    {{#if _options.legendSecondPage}}
     <div class="one wide column {{flexberryClassNames.pagingColumn}}">
       <div class="pages">
         <div class="field">
@@ -244,17 +243,18 @@
             click=(action "onPageChange" "1")
           }}
         </div>
-        <div class="field">
-          {{flexberry-button
-            class=(if (eq _options.pageNumber "2") "active" "")
-            caption="2"
-            click=(action "onPageChange" "2")
-          }}
-        </div>
+        {{#if _options.legendSecondPage}}
+          <div class="field">
+            {{flexberry-button
+              class=(if (eq _options.pageNumber "2") "active" "")
+              caption="2"
+              click=(action "onPageChange" "2")
+            }}
+          </div>
+        {{/if}}
       </div>
     </div>
-    {{/if}}
-    <div class="{{if _options.legendSecondPage "ten" "eleven"}} wide column {{flexberryClassNames.previewColumn}}">
+    <div class="ten wide column {{flexberryClassNames.previewColumn}}">
       <div class="{{flexberryClassNames.sheetOfPaper}} {{_options.displayMode}} {{if _options.pageNumber2Selected "hidden" ""}}" style={{_sheetOfPaperPreviewStyle}}>
         <p class="{{flexberryClassNames.sheetOfPaperMapCaption}}" style={{_mapCaptionPreviewStyle}}>
           {{_options.caption}}
