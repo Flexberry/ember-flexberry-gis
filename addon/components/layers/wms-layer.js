@@ -53,6 +53,26 @@ export default TileLayer.extend({
   },
 
   /**
+    Returns leaflet layer's bounding box.
+
+    @method _getBoundingBox
+    @private
+    @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
+  */
+  _getBoundingBox(layer) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      layer.getBoundingBox({
+        done(boundingBox, xhr) {
+          resolve(boundingBox);
+        },
+        fail(errorThrown, xhr) {
+          reject(errorThrown);
+        }
+      });
+    });
+  },
+
+  /**
     Creates leaflet layer related to layer type.
 
     @method createLayer

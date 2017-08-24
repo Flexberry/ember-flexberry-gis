@@ -113,6 +113,26 @@ export default BaseLayer.extend({
   },
 
   /**
+    Returns leaflet layer's bounding box.
+
+    @method _getBoundingBox
+    @private
+    @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
+  */
+  _getBoundingBox(layer) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      layer.getBoundingBox(
+        (boundingBox, xhr) => {
+          resolve(boundingBox);
+        },
+        (errorThrown, xhr) => {
+          reject(errorThrown);
+        }
+      );
+    });
+  },
+
+  /**
     Sets leaflet layer's visibility.
 
     @method _setLayerOpacity

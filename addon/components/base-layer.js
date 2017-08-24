@@ -353,7 +353,7 @@ export default Ember.Component.extend(
       // Filter current layer links by setting.
       let layerLinks =
         this.get('layerModel.layerLink')
-        .filter(link => link.get('mapObjectSetting.id') === e.mapObjectSetting);
+          .filter(link => link.get('mapObjectSetting.id') === e.mapObjectSetting);
 
       if (!Ember.isArray(layerLinks) || layerLinks.length === 0) {
         return;
@@ -364,6 +364,17 @@ export default Ember.Component.extend(
         layerModel: this.get('layerModel'),
         features: this.query(layerLinks, e)
       });
+    },
+
+    /**
+      Returns leaflet layer's bounding box.
+
+      @method _getBoundingBox
+      @private
+      @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
+    */
+    _getBoundingBox() {
+      assert('BaseLayer\'s \'_getBoundingBox\' should be overridden.');
     },
 
     /**
@@ -472,6 +483,27 @@ export default Ember.Component.extend(
     */
     query(layerLinks, e) {
       assert('BaseLayer\'s \'query\' method should be overridden.');
+    },
+
+    /**
+      Returns leaflet layer's bounding box.
+
+      @method getBoundingBox
+      @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
+    */
+    getBoundingBox() {
+      let layer = this.get('_leafletObject');
+
+      if (Ember.isNone(layer)) {
+        return new Ember.RSVP.Promise((resolve, reject) => {
+          reject(`Leaflet layer for '${this.get('layerModel.name')}' isn't created yet`);
+        });
+      }
+
+      let bounds = this._getBoundingBox(layer);
+      this.set('bounds', bounds);
+
+      return bounds;
     },
 
     /**

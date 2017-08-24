@@ -382,15 +382,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     opacity: 1,
 
     /**
-      Layer's latLngBounds.
-
-      @property bounds
-      @type <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
-      @default null
-    */
-    bounds: null,
-
-    /**
       Flag: indicates whether layer's legend can be displayed.
 
       @property legendCanBeDisplayed
