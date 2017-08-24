@@ -19,6 +19,9 @@ Router.map(function() {
   this.route('components-examples/flexberry-ddau-checkbox/settings-example');
   this.route('components-examples/flexberry-maplayers/settings-example');
   this.route('components-examples/flexberry-tree/settings-example');
+
+  // GIS search form example
+  this.route('gis-search-form');
 });
 
 export default Router;

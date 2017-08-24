@@ -1,0 +1,69 @@
+<div class="ui attached message">
+    <div class="header">
+        {{t "forms.integration-examples.gis-search-form.header"}}
+    </div>
+    <p>{{t "forms.integration-examples.gis-search-form.subheader"}}</p>
+</div>
+<div class="ui form attached fluid segment">
+    <div class="ui grid">
+        <div class="row">
+            <div class="eight wide column">
+                <div class="ui container segment">
+                    <div class="ui top attached label">Что</div>
+                    <div class="field">
+                        <label>Ключевые слова</label> {{input value=keyWords type="text"}}
+                    </div>
+                    <div class="field">
+                        <label>Масштаб</label> {{input value=scale type="text"}}
+                    </div>
+                </div>
+            </div>
+            <div class="eight wide column">
+                <div class="ui container segment">
+                    <div class="ui top attached label">Где</div>
+                    <div class="field">
+                        <label>min Longitude</label> {{input value=minLng type="text"}}
+                    </div>
+                    <div class="field">
+                        <label>min Latitude</label> {{input value=minLat type="text"}}
+                    </div>
+                    <div class="field">
+                        <label>max Longitude</label> {{input value=maxLng type="text"}}
+                    </div>
+                    <div class="field">
+                        <label>max Latitude </label> {{input value=maxLat type="text"}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="seven wide column"></div>
+            <div class="two wide column">
+                <button class="ui labeled icon blue button" {{action "getSearchResults" on="click" }}>
+                    <i class="search icon"></i>
+                    Искать
+                </button>
+            </div>
+            <div class="seven wide column"></div>
+        </div>
+        <div class="row">
+            <div class="ui top attached label">Результаты</div>
+            <div class="eight wide column">
+                <ul>
+                    {{#each model.metadata as |data|}}
+                    <li>Название: {{data.name}}, Тип: {{data.type}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="eight wide column" style="margin-top: 2rem !important;">
+                <ul>
+                    {{#each model.maps as |data|}}
+                    <li>Название: {{data.name}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{outlet}}

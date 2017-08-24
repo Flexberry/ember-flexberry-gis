@@ -113,7 +113,11 @@ Ember.$.extend(true, translations, {
         },
         'integration-examples': {
           'caption': 'Integration examples',
-          'title': ''
+          'title': '',
+          'gis-search-form': {
+            'caption': 'GIS search form',
+            'title': 'Search through layer metadata and maps'
+          }
         }
       }
     },
@@ -157,6 +161,10 @@ Ember.$.extend(true, translations, {
     },
 
     'integration-examples': {
+      'gis-search-form': {
+        'header': 'Search',
+        'subheader': 'through layer metadata and maps'
+      }
     },
     'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
     'new-platform-flexberry-g-i-s-map-l': NewPlatformFlexberryGISMapLForm,
