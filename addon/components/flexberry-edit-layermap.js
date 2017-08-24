@@ -576,6 +576,21 @@ export default Ember.Component.extend({
     },
 
   actions: {
+    onApprove() {
+      let layer = this.get('_layer');
+      console.log("onApprove");
+      let coordinateReferenceSystem = Ember.get(layer, 'coordinateReferenceSystem');
+      coordinateReferenceSystem = Ember.$.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);
+      Ember.set(layer, 'coordinateReferenceSystem', coordinateReferenceSystem);
+
+      let settings = Ember.get(layer, 'settings');
+      settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
+      Ember.set(layer, 'settings', settings);
+      console.log(layer.name);
+      this.sendAction('approve', {
+        layerProperties: layer
+      });
+    },
     /**
       Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-edit-mode' components 'editingFinished' action {{/crossLink}}.
 

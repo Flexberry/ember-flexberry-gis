@@ -17,10 +17,22 @@
       {{flexberry-validationsummary errors=model.errors}}
     </div>
   </div>
+    
+  {{#flexberry-edit-layermap
+          layer=(hash
+          type=model.type
+          name=model.name
+          coordinateReferenceSystem=model.coordinateReferenceSystem
+          settings=model.settings
+        )
+          leafletMap=leafletMap
+          approve=(action "onApprove")
+          as |component|
+  }}
   <div class="field">
     <div class="flexberry-edit-panel">
       {{#unless readonly}}
-        <button type="submit" class="ui positive button" {{action 'save'}}>
+        <button type="submit" class="ui positive button" {{action 'onApprove' target=component}}>
           {{t "forms.edit-form.save-button-text"}}
         </button>
         {{#unless model.isNew}}
@@ -34,10 +46,6 @@
       </button>
     </div>
   </div>
-  
-  {{component 'flexberry-edit-layermap'
-          layer=null
-          leafletMap=leafletMap
-  }}
+  {{/flexberry-edit-layermap}}
 
 </form>

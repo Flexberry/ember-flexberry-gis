@@ -1,3 +1,5 @@
+{{yield this}}
+<form class="ui form" role="form">
   <div class="ui top attached fluid tabular menu">
     <a class="tab item {{if (eq _tabularMenuActiveTab "main") "active"}}" data-tab="main" onclick={{action "onTabClick"}}>
       {{t "components.layers-dialogs.edit.tabular-menu.main-tab.caption"}}
@@ -138,3 +140,4 @@
       {{flexberry-jsonarea value=_layer.settings.legendSettings}}
     </div>
   {{/if}}
+</form>
