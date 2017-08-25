@@ -163,7 +163,17 @@ Ember.$.extend(true, translations, {
     'integration-examples': {
       'gis-search-form': {
         'header': 'Search',
-        'subheader': 'through layer metadata and maps'
+        'subheader': 'through layer metadata and maps',
+        'keywords': 'Key words',
+        'scale': 'Scale',
+        'object': 'Object',
+        'position': 'Position',
+        'min-long': 'Min longitude',
+        'min-lat': 'Min latitude',
+        'max-long': 'Max longitude',
+        'max-lat': 'Max latitude',
+        'search': 'Search',
+        'results': 'Results'
       }
     },
     'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
