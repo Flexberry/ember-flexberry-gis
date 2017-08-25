@@ -163,7 +163,7 @@ export default Ember.Controller.extend({
         caption: i18n.t('forms.application.sitemap.integration-examples.caption'),
         title: i18n.t('forms.application.sitemap.integration-examples.title'),
         children: [{
-          link: "gis-search-form",
+          link: 'gis-search-form',
           caption: i18n.t('forms.application.sitemap.integration-examples.gis-search-form.caption'),
           title: i18n.t('forms.application.sitemap.integration-examples.gis-search-form.title'),
           children: null
