@@ -475,6 +475,15 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     boundsMode: 'wgs84bbox',
 
     /**
+      Flag: indicates whether to show bounds error message or not.
+
+      @property _showBoundsErrorMessage
+      @type Boolean
+      @readOnly
+    */
+    _showBoundsErrorMessage: false,
+
+    /**
       Dialog's 'CRS' segment caption.
 
       @property crsCaption
@@ -583,7 +592,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
 
         let bounds = L.latLngBounds(geoJsonBounds);
 
-        // If not bounds provided - set it to max.
+        // If no valid bounds provided - set it to max.
         if (!bounds || !bounds.isValid()) {
           geoJsonBounds = [
             [-90, -180],
@@ -693,6 +702,17 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       onBoundsModeChange(newBoundsMode) {
         this.set('boundsMode', newBoundsMode);
       },
+
+      /**
+        Handles coordinate input textboxes keyPress events.
+
+        @method actions.coordsInputKeyPress
+      */
+      coordsInputKeyPress(e) {
+        if (e.which !== 45 && e.which !== 44 && e.which !== 46 && (e.which < 48 || e.which > 57)) {
+          return false;
+        }
+      }
     },
 
     /**

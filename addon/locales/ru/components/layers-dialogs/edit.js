@@ -15,8 +15,16 @@ export default {
   'name-textbox': {
     'caption': 'Имя слоя'
   },
+  'error-message': {
+    'caption': 'Ошибка'
+  },
+  'get-capabilities-button': {
+    'caption': 'Получить данные с сервиса',
+    'error-caption': 'Для получения данных заполните поля: '
+  },
   'bounds-segment': {
     'caption': 'Охват',
+    'error-caption': 'Неверный формат введённых данных, введите числа',
     'min-x-textbox': {
       'caption': 'Левая граница'
     },

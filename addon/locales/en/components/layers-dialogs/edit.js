@@ -15,8 +15,16 @@ export default {
   'name-textbox': {
     'caption': 'Layer name'
   },
+  'error-message': {
+    'caption': 'Error'
+  },
+  'get-capabilities-button': {
+    'caption': 'Get capabilities',
+    'error-caption': 'To get capabilities fill required fields: '
+  },
   'bounds-segment': {
     'caption': 'Bounding box',
+    'error-caption': 'Wrong format, only numbers allowed',
     'min-x-textbox': {
       'caption': 'Left border'
     },

@@ -25,6 +25,15 @@ export default Ember.Component.extend({
   _availableInfoFormats: null,
 
   /**
+    Flag: indicates whether to show error message or not.
+
+    @property _showErrorMessage
+    @type Boolean
+    @readOnly
+  */
+  _showErrorMessage: false,
+
+  /**
     Reference to component's url regex.
   */
   urlRegex,
@@ -52,6 +61,114 @@ export default Ember.Component.extend({
     @default null
   */
   settings: null,
+
+  /**
+    Get capabilities promise.
+
+    @property getCapabilitiesPromise
+    @type <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    @default null
+  */
+  getCapabilitiesPromise: null,
+
+  /**
+    Get capabilities promise error message.
+
+    @property getCapabilitiesPromise
+    @type String
+    @default null
+  */
+  getCapabilitiesPromiseError: null,
+
+  /**
+    Get capabilities button error message.
+
+    @property getCapabilitiesErrorMessage
+    @type String
+    @readonly
+  */
+  getCapabilitiesErrorMessage: Ember.computed(
+    'getCapabilitiesPromiseError',
+    'i18n',
+    'settings.url',
+    'settings.layers',
+    'settings.version',
+    function () {
+      let getCapabilitiesPromiseError = this.get('getCapabilitiesPromiseError');
+
+      if (!Ember.isBlank(getCapabilitiesPromiseError)) {
+        this.set('getCapabilitiesPromiseError', null);
+        return getCapabilitiesPromiseError;
+      }
+
+      let message;
+      let fields = Ember.A();
+
+      let i18n = this.get('i18n');
+
+      let url = this.get('settings.url');
+      let layers = this.get('settings.layers');
+      let version = this.get('settings.version');
+
+      if (Ember.isBlank(url) || Ember.isBlank(url.toString().match(new RegExp(urlRegex)))) {
+        fields.pushObject(i18n.t('components.layers-dialogs.settings.wms.url-textbox.caption'));
+      }
+
+      if (Ember.isBlank(layers)) {
+        fields.pushObject(i18n.t('components.layers-dialogs.settings.wms.layers-textbox.caption'));
+      }
+
+      if (Ember.isBlank(version)) {
+        fields.pushObject(i18n.t('components.layers-dialogs.settings.wms.version-textbox.caption'));
+      }
+
+      if (!Ember.isBlank(fields)) {
+        message = i18n.t('components.layers-dialogs.edit.get-capabilities-button.error-caption') + fields.join(', ');
+      }
+
+      return message;
+    }
+  ),
+
+  actions: {
+    /**
+      Handler for error 'ui-message' component 'onShow' action.
+
+      @method actions.onErrorMessageShow
+    */
+    onErrorMessageShow() {
+      this.set('_showErrorMessage', true);
+    },
+
+    /**
+      Handler for error 'ui-message' component 'onHide' action.
+
+      @method actions.onErrorMessageHide
+    */
+    onErrorMessageHide() {
+      this.set('_showErrorMessage', false);
+    },
+
+    /**
+      Handler for error 'ui-message' component 'onHide' action.
+
+      @method actions.onGetCapabilitiesClick
+    */
+    onGetCapabilitiesClick(...args) {
+      let getCapabilitiesErrorMessage = this.get('getCapabilitiesErrorMessage');
+
+      if (getCapabilitiesErrorMessage) {
+        this.send('onErrorMessageShow', ...args);
+        return;
+      }
+
+      let settings = this.get('settings');
+      let getCapabilitiesPromise = this.getCapabilities(settings);
+
+      this.set('getCapabilitiesPromise', getCapabilitiesPromise);
+      this.send('onErrorMessageHide', ...args);
+    }
+  },
 
   /**
     Observes changes in settings.url property and checks whether it is correct url.
@@ -92,6 +209,35 @@ export default Ember.Component.extend({
       });
     });
   }),
+
+  getCapabilities(settings) {
+    let _this = this;
+
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      L.tileLayer.wms(settings.url, {
+        layers: settings.layers,
+        version: settings.version
+      }).getBoundingBox({
+        done(boundingBox, xhr) {
+          if (Ember.isBlank(boundingBox)) {
+            reject(`Service ${settings.url} had not returned any bounding box`);
+          }
+
+          _this.set('settings.wgs84bbox.0.1', boundingBox.getSouth());
+          _this.set('settings.wgs84bbox.0.0', boundingBox.getWest());
+          _this.set('settings.wgs84bbox.1.1', boundingBox.getNorth());
+          _this.set('settings.wgs84bbox.1.0', boundingBox.getEast());
+
+          resolve();
+        },
+        fail(errorThrown, xhr) {
+          _this.set('getCapabilitiesPromiseError', errorThrown);
+          _this.send('onErrorMessageShow', ...args);
+          reject(errorThrown);
+        }
+      });
+    });
+  },
 
   /**
     Initializes component.

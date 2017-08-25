@@ -132,6 +132,13 @@
         <h5 class="ui header">
           {{boundsSegmentCaption}}
         </h5>
+        {{ui-message
+          type="error"
+          closeable=true
+          visible=_showBoundsErrorMessage
+          caption=(t "components.layers-dialogs.edit.error-message.caption")
+          message=(t "components.layers-dialogs.edit.bounds-segment.error-caption")
+        }}
         <div class="field">
           <div class="ui small fluid buttons">
             {{flexberry-button
@@ -158,6 +165,7 @@
                 {{flexberry-textbox
                   class="fluid"
                   value=_layer.settings.wgs84bbox.[0].[1]
+                  keyPress=(action "coordsInputKeyPress")
                 }}
               </div>
             </div>
@@ -169,6 +177,7 @@
                 {{flexberry-textbox
                   class="fluid"
                   value=_layer.settings.wgs84bbox.[0].[0]
+                  keyPress=(action "coordsInputKeyPress")
                 }}
               </div>
             </div>
@@ -180,6 +189,7 @@
                 {{flexberry-textbox
                   class="fluid"
                   value=_layer.settings.wgs84bbox.[1].[1]
+                  keyPress=(action "coordsInputKeyPress")
                 }}
               </div>
             </div>
@@ -191,6 +201,7 @@
                 {{flexberry-textbox
                   class="fluid"
                   value=_layer.settings.wgs84bbox.[1].[0]
+                  keyPress=(action "coordsInputKeyPress")
                 }}
               </div>
             </div>
@@ -203,6 +214,7 @@
                   {{flexberry-textbox
                     class="fluid"
                     value=_layer.settings.bbox.[0].[0]
+                    keyPress=(action "coordsInputKeyPress")
                   }}
               </div>
             </div>
@@ -214,6 +226,7 @@
                 {{flexberry-textbox
                   class="fluid"
                   value=_layer.settings.bbox.[0].[1]
+                  keyPress=(action "coordsInputKeyPress")
                 }}
               </div>
             </div>
@@ -225,6 +238,7 @@
                 {{flexberry-textbox
                   class="fluid"
                   value=_layer.settings.bbox.[1].[0]
+                  keyPress=(action "coordsInputKeyPress")
                 }}
               </div>
             </div>
@@ -236,6 +250,7 @@
                 {{flexberry-textbox
                   class="fluid"
                   value=_layer.settings.bbox.[1].[1]
+                  keyPress=(action "coordsInputKeyPress")
                 }}
               </div>
             </div>
