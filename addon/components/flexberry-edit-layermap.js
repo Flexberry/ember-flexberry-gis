@@ -7,6 +7,23 @@ import {
 // Proj4 CRS code.
 // Will be initialized in 'init' method.
 let proj4CrsCode = null;
+/**
+  Component's CSS-classes names.
+  JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
+
+  @property {Object} flexberryClassNames
+  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-edit-layer-dialog').
+  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name (null, because component is tagless).
+  @readonly
+  @static
+
+  @for FlexberryEditLayerDialogComponent
+*/
+const flexberryClassNamesPrefix = 'flexberry-edit-layer-dialog';
+const flexberryClassNames = {
+  prefix: flexberryClassNamesPrefix,
+  wrapper: null
+};
 
 export default Ember.Component.extend({
     /**
@@ -26,6 +43,31 @@ export default Ember.Component.extend({
       @default t('components.layers-dialogs.edit.name-textbox.caption')
     */
     nameTextboxCaption: t('components.layers-dialogs.edit.name-textbox.caption'),
+
+    /**
+      Reference to component's CSS-classes names.
+      Must be also a component's instance property to be available from component's .hbs template.
+    */
+    flexberryClassNames,
+
+    /**
+      Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
+      is empty to disable component's wrapping <div>.
+
+      @property tagName
+      @type String
+      @default ''
+    */
+    tagName: '',
+
+    /**
+      Component's additional CSS-class names.
+
+      @property class
+      @type String
+      @default null
+    */
+    class: null,
 
     /**
       Dialog's 'CRS' segment caption.
@@ -64,6 +106,25 @@ export default Ember.Component.extend({
     crsDefinitionTextareaCaption: t('components.layers-dialogs.edit.crs.definition-textarea.caption'),
 
     /**
+      Flag: indicates whether layer type is in readonly mode.
+
+      @property _typeIsReadonly
+      @type Boolean
+      @default true
+      @private
+    */
+    _typeIsReadonly: false,
+
+    /**
+      Hash containing editing layer.
+
+      @property layer
+      @type Object
+      @default null
+    */
+    layer: null,
+
+    /**
       User friendly coordinate reference system (CRS) code.
       For example 'ESPG:4326'.
 
@@ -93,6 +154,16 @@ export default Ember.Component.extend({
       @private
     */
     _selectedModeCaption: null,
+
+    /**
+      Flag: indicates whether dialog is visible or not.
+      If true, then dialog will be shown, otherwise dialog will be closed.
+
+      @property visible
+      @type Boolean
+      @default false
+    */
+    visible: true,
 
     /**
       Array containing available layers types.
@@ -164,15 +235,6 @@ export default Ember.Component.extend({
     _tabularMenuActiveTab: 'main',
 
     /**
-      Hash containing editing layer.
-
-      @property layer
-      @type Object
-      @default null
-    */
-    layer: null,
-    
-    /**
       Leaflet map.
     
       @property leafletMap
@@ -189,45 +251,51 @@ export default Ember.Component.extend({
       @readonly
     */
     _showCoordinateReferenceSystemFields: Ember.computed('_coordinateReferenceSystemCode', function () {
-      console.log("_showCoordinateReferenceSystemFields");
       return this.get('_coordinateReferenceSystemCode') === proj4CrsCode;
     }),
 
     /**
-      Initializes component.
+      Creates inner hash containing layer CRS settings for different CRS codes.
+
+      @method _createInnerCoordinateReferenceSystems
+      @private
     */
-    init() {
-      this._super(...arguments);
-      console.log("init");
-      // Retrieve & remember constant (proj4 CRS code).
-      let proj4CrsFactory = Ember.getOwner(this).knownForType('coordinate-reference-system', 'proj4');
-      proj4CrsCode = Ember.get(proj4CrsFactory, 'code');
-
-      // Available layers types for related dropdown.
-      let owner = Ember.getOwner(this);
-      this.set('_availableTypes', owner.knownNamesForType('layer'));
-
-      // Available CRS codes for related dropdown.
-      let crsFactories = owner.knownForType('coordinate-reference-system');
-      let crsFactoriesNames = owner.knownNamesForType('coordinate-reference-system');
-      this.set('_availableCoordinateReferenceSystemsCodes', Ember.A(crsFactoriesNames.map((crsFactoryName) => {
-        let crsFactory = Ember.get(crsFactories, crsFactoryName);
-        return Ember.get(crsFactory, 'code');
-      })));
-
-      let availableEditModes = Ember.A();
-
-      let editModesNames = owner.knownNamesForType('edit-mode');
-      editModesNames.forEach((modeName) => {
-        let editModeFactory = owner.knownForType('edit-mode', modeName);
-        let isAvailable = editModeFactory.componentCanBeInserted(this);
-        if (isAvailable) {
-          availableEditModes.pushObject(editModeFactory);
-        }
+    _createInnerCoordinateReferenceSystems() {
+      let coordinateReferenceSystems = {};
+      Ember.A(this.get('_availableCoordinateReferenceSystemsCodes') || []).forEach((code) => {
+        coordinateReferenceSystems[code] = {
+          code: code === proj4CrsCode ? null : code,
+          definition: null
+        };
       });
 
-      this.set('_availableModes', availableEditModes);
-      this._createInnerLayer();
+      this.set('_coordinateReferenceSystems', coordinateReferenceSystems);
+    },
+
+    /**
+      Creates inner hash containing layer settings for different layer types.
+
+      @method _createInnerSettings
+      @private
+    */
+    _createInnerSettings() {
+      let settings = {};
+      Ember.A(this.get('_availableTypes') || []).forEach((type) => {
+        let layerClassFactory = Ember.getOwner(this).knownForType('layer', type);
+        settings[type] = layerClassFactory.createSettings();
+      });
+
+      this.set('_settings', settings);
+    },
+
+    /**
+      Destroys inner hash containing layer settings.
+
+      @method _destroyInnerSettings
+      @private
+    */
+    _destroyInnerSettings() {
+      this.set('_settings', null);
     },
 
     /**
@@ -237,7 +305,6 @@ export default Ember.Component.extend({
       @private
     */
     _createInnerLayer() {
-      console.log("_createInnerLayer");
       let type = this.get('layer.type');
       let name = this.get('layer.name');
 
@@ -277,13 +344,65 @@ export default Ember.Component.extend({
     },
 
     /**
+      Destroys inner hash containing layer copy.
+
+      @method _destroyInnerLayer
+      @private
+    */
+    _destroyInnerLayer() {
+      this.set('_layer', null);
+      this._destroyInnerSettings();
+    },
+
+    /**
+      Resets tabuler menu.
+
+      @method _resetTabularMenu
+      @private
+    */
+    _resetTabularMenu() {
+      let $tabularMenu = this.get('_$tabularMenu');
+      if (!Ember.isNone($tabularMenu)) {
+        Ember.$('.tab.item', $tabularMenu).tab();
+      }
+    },
+
+    /**
+      Observes visibility changes & creates/destroys inner hash containing layer copy.
+
+      @method _visibleDidChange
+      @private
+    */
+    _visibleDidChange: Ember.on('init', Ember.observer('visible', function () {
+      if (this.get('visible') || this.get('visible')===undefined) {
+        this._createInnerLayer();
+      } else {
+        this._destroyInnerLayer();
+      }
+    })),
+
+    /**
+      Observes type changes & changes link to object containing type-related settings.
+
+      @method _innerLayerTypeDidChange
+      @private
+    */
+    _innerLayerTypeDidChange: Ember.observer('_layer.type', function () {
+      if (Ember.isNone(this.get('_layer'))) {
+        return;
+      }
+
+      let type = this.get('_layer.type');
+      this.set('_layer.settings', this.get(`_settings.${type}`));
+    }),
+
+    /**
       Observes _coordinateReferenceSystemCode changes & changes link to object containing code-related CRS settings.
 
       @method _coordinateReferenceSystemCodeDidChange
       @private
     */
     _coordinateReferenceSystemCodeDidChange: Ember.observer('_coordinateReferenceSystemCode', function () {
-      console.log("_coordinateReferenceSystemCodeDidChange");
       if (Ember.isNone(this.get('_layer'))) {
         return;
       }
@@ -293,56 +412,53 @@ export default Ember.Component.extend({
     }),
 
     /**
-      Creates inner hash containing layer CRS settings for different CRS codes.
-
-      @method _createInnerCoordinateReferenceSystems
-      @private
+      Initializes component.
     */
-    _createInnerCoordinateReferenceSystems() {
-      console.log("_createInnerCoordinateReferenceSystems");
-      let coordinateReferenceSystems = {};
-      Ember.A(this.get('_availableCoordinateReferenceSystemsCodes') || []).forEach((code) => {
-        coordinateReferenceSystems[code] = {
-          code: code === proj4CrsCode ? null : code,
-          definition: null
-        };
+    init() {
+      this._super(...arguments);
+      // Retrieve & remember constant (proj4 CRS code).
+      let proj4CrsFactory = Ember.getOwner(this).knownForType('coordinate-reference-system', 'proj4');
+      proj4CrsCode = Ember.get(proj4CrsFactory, 'code');
+
+      // Available layers types for related dropdown.
+      let owner = Ember.getOwner(this);
+      this.set('_availableTypes', owner.knownNamesForType('layer'));
+
+      // Available CRS codes for related dropdown.
+      let crsFactories = owner.knownForType('coordinate-reference-system');
+      let crsFactoriesNames = owner.knownNamesForType('coordinate-reference-system');
+      this.set('_availableCoordinateReferenceSystemsCodes', Ember.A(crsFactoriesNames.map((crsFactoryName) => {
+        let crsFactory = Ember.get(crsFactories, crsFactoryName);
+        return Ember.get(crsFactory, 'code');
+      })));
+
+      let availableEditModes = Ember.A();
+
+      let editModesNames = owner.knownNamesForType('edit-mode');
+      editModesNames.forEach((modeName) => {
+        let editModeFactory = owner.knownForType('edit-mode', modeName);
+        let isAvailable = editModeFactory.componentCanBeInserted(this);
+        if (isAvailable) {
+          availableEditModes.pushObject(editModeFactory);
+        }
       });
 
-      this.set('_coordinateReferenceSystems', coordinateReferenceSystems);
+      this.set('_availableModes', availableEditModes);
+      this.sendAction('layerProperties', this.getLayerProperties.bind(this));
     },
 
-    /**
-      Creates inner hash containing layer settings for different layer types.
+    getLayerProperties() {
+      let layer = this.get('_layer');
+      let coordinateReferenceSystem = Ember.get(layer, 'coordinateReferenceSystem');
+      coordinateReferenceSystem = Ember.$.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);
+      Ember.set(layer, 'coordinateReferenceSystem', coordinateReferenceSystem);
 
-      @method _createInnerSettings
-      @private
-    */
-    _createInnerSettings() {
-      console.log("_createInnerSettings");
-      let settings = {};
-      Ember.A(this.get('_availableTypes') || []).forEach((type) => {
-        let layerClassFactory = Ember.getOwner(this).knownForType('layer', type);
-        settings[type] = layerClassFactory.createSettings();
-      });
-
-      this.set('_settings', settings);
+      let settings = Ember.get(layer, 'settings');
+      settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
+      Ember.set(layer, 'settings', settings);
+      
+      return layer;
     },
-
-    /**
-      Observes type changes & changes link to object containing type-related settings.
-
-      @method _innerLayerTypeDidChange
-      @private
-    */
-    _innerLayerTypeDidChange: Ember.observer('_layer.type', function () {
-      console.log("_innerLayerTypeDidChange");
-      if (Ember.isNone(this.get('_layer'))) {
-        return;
-      }
-
-      let type = this.get('_layer.type');
-      this.set('_layer.settings', this.get(`_settings.${type}`));
-    }),
 
     /**
       Flag: indicates whether CRS is available for the selected layer type.
@@ -353,7 +469,6 @@ export default Ember.Component.extend({
       @readonly
     */
     _crsSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      console.log("_crsSettingsAreAvailableForType");
       let className = this.get('_layer.type');
 
       let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
@@ -376,7 +491,6 @@ export default Ember.Component.extend({
       @readonly
     */
     _layerSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      console.log("_layerSettingsAreAvailableForType");
       let className = this.get('_layer.type');
 
       let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
@@ -399,7 +513,6 @@ export default Ember.Component.extend({
       @readonly
     */
     _identifySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      console.log("_identifySettingsAreAvailableForType");
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
@@ -423,7 +536,6 @@ export default Ember.Component.extend({
       @readonly
     */
     _searchSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      console.log("_searchSettingsAreAvailableForType");
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
@@ -447,7 +559,6 @@ export default Ember.Component.extend({
       @readonly
     */
     _displaySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      console.log("_displaySettingsAreAvailableForType");
       return true;
     }),
 
@@ -460,7 +571,6 @@ export default Ember.Component.extend({
       @readonly
     */
     _legendSettingaAreAvailableForType: Ember.computed('_layer.type', function () {
-      console.log("_legendSettingaAreAvailableForType");
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
@@ -476,42 +586,6 @@ export default Ember.Component.extend({
     }),
 
     /**
-      Flag: indicates whether modes are available.
-
-      @property _modesAreAvailable
-      @type Boolean
-      @readonly
-    */
-    _modesAreAvailable: Ember.computed('_availableModes', function () {
-      console.log("_modesAreAvailable");
-      let _availableModes = this.get('_availableModes');
-
-      return Ember.isArray(_availableModes) && !Ember.isBlank(_availableModes);
-    }),
-
-    /**
-      Selected mode.
-
-      @property _selectedMode
-      @type Object
-      @readonly
-    */
-    _selectedMode: Ember.computed('_selectedModeCaption', function () {
-      console.log("_selectedMode");
-      let _availableModes = this.get('_availableModes');
-      let _availableModesCaptions = this.get('_availableModesCaptions');
-      let _selectedModeCaption = this.get('_selectedModeCaption');
-
-      if (!Ember.isArray(_availableModes) || !Ember.isArray(_availableModesCaptions) || Ember.isBlank(_selectedModeCaption)) {
-        return null;
-      }
-
-      let modeIndex = _availableModesCaptions.findIndex(item => item.string === _selectedModeCaption) - 1;
-
-      return modeIndex > -1 ? _availableModes.objectAt(modeIndex) : null;
-    }),
-
-    /**
       Available modes captions.
 
       @property _availableModesCaptions
@@ -519,7 +593,6 @@ export default Ember.Component.extend({
       @readonly
     */
     _availableModesCaptions: Ember.computed('_availableModes', 'i18n', function () {
-      console.log("_availableModesCaptions");
       let _availableModes = this.get('_availableModes');
 
       let modes = Ember.A();
@@ -537,10 +610,43 @@ export default Ember.Component.extend({
     }),
 
     /**
+      Flag: indicates whether modes are available.
+
+      @property _modesAreAvailable
+      @type Boolean
+      @readonly
+    */
+    _modesAreAvailable: Ember.computed('_availableModes', function () {
+      let _availableModes = this.get('_availableModes');
+
+      return Ember.isArray(_availableModes) && !Ember.isBlank(_availableModes);
+    }),
+
+    /**
+      Selected mode.
+
+      @property _selectedMode
+      @type Object
+      @readonly
+    */
+    _selectedMode: Ember.computed('_selectedModeCaption', function () {
+      let _availableModes = this.get('_availableModes');
+      let _availableModesCaptions = this.get('_availableModesCaptions');
+      let _selectedModeCaption = this.get('_selectedModeCaption');
+
+      if (!Ember.isArray(_availableModes) || !Ember.isArray(_availableModesCaptions) || Ember.isBlank(_selectedModeCaption)) {
+        return null;
+      }
+
+      let modeIndex = _availableModesCaptions.findIndex(item => item.string === _selectedModeCaption) - 1;
+
+      return modeIndex > -1 ? _availableModes.objectAt(modeIndex) : null;
+    }),
+
+    /**
       Initializes component's DOM-related properties.
     *//*
     didInsertElement() {
-      console.log("didInsertElement");
       this._super(...arguments);
 
       let $tabularMenu = this.get('childViews')[0].$('.tabular.menu');
@@ -548,24 +654,9 @@ export default Ember.Component.extend({
     },*/
 
     /**
-      Resets tabuler menu.
-
-      @method _resetTabularMenu
-      @private
-    */
-    _resetTabularMenu() {
-      console.log("_resetTabularMenu");
-      let $tabularMenu = this.get('_$tabularMenu');
-      if (!Ember.isNone($tabularMenu)) {
-        Ember.$('.tab.item', $tabularMenu).tab();
-      }
-    },
-
-    /**
       Deinitializes component's DOM-related properties.
     */
     willDestroyElement() {
-      console.log("willDestroyElement");
       this._super(...arguments);
 
       let $tabularMenu = this.get('_$tabularMenu');
@@ -576,21 +667,6 @@ export default Ember.Component.extend({
     },
 
   actions: {
-    onApprove() {
-      let layer = this.get('_layer');
-      console.log("onApprove");
-      let coordinateReferenceSystem = Ember.get(layer, 'coordinateReferenceSystem');
-      coordinateReferenceSystem = Ember.$.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);
-      Ember.set(layer, 'coordinateReferenceSystem', coordinateReferenceSystem);
-
-      let settings = Ember.get(layer, 'settings');
-      settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
-      Ember.set(layer, 'settings', settings);
-      console.log(layer.name);
-      this.sendAction('approve', {
-        layerProperties: layer
-      });
-    },
     /**
       Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-edit-mode' components 'editingFinished' action {{/crossLink}}.
 
@@ -626,4 +702,8 @@ export default Ember.Component.extend({
   },
   
   layout
+});
+
+Ember.Component.reopenClass({
+  flexberryClassNames
 });

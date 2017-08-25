@@ -15,10 +15,14 @@ import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-con
 export default EditFormController.extend(EditFormControllerOperationsIndicationMixin, {
   
   actions: {
-    onApprove({layerProperties}){
+    onLayerProperties(getLayerProperties){
+      this.set('getLayerProperties', getLayerProperties);
+    },
+
+    onApprove(){
       let model = this.get('model');
+      let layerProperties = this.get('getLayerProperties')()
       
-      console.log(layerProperties);
       model.set('type', layerProperties.type);
       model.set('name', layerProperties.name);
       model.set('coordinateReferenceSystem', layerProperties.coordinateReferenceSystem);
