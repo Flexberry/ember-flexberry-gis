@@ -15,14 +15,14 @@ export default Ember.Controller.extend({
     */
     onSubmenuButtonClick(e) {
       let $this =  Ember.$(e.currentTarget).parent().find('.subMenu:first');
-      if ($this.hasClass('hidden-menu')) {
-        $this.removeClass('hidden-menu');
-        Ember.$(e.target).parent().find('.item-minus:first').removeClass('hidden-menu');
-        Ember.$(e.target).parent().find('.item-plus:first').addClass('hidden-menu');
+      if ($this.hasClass('hidden')) {
+        $this.removeClass('hidden');
+        Ember.$(e.target).parent().find('.item-minus:first').removeClass('hidden');
+        Ember.$(e.target).parent().find('.item-plus:first').addClass('hidden');
       } else {
-        $this.addClass('hidden-menu');
-        Ember.$(e.target).parent().find('.item-minus:first').addClass('hidden-menu');
-        Ember.$(e.target).parent().find('.item-plus:first').removeClass('hidden-menu');
+        $this.addClass('hidden');
+        Ember.$(e.target).parent().find('.item-minus:first').addClass('hidden');
+        Ember.$(e.target).parent().find('.item-plus:first').removeClass('hidden');
       }
     }
   }

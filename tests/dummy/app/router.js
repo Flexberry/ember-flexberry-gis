@@ -15,10 +15,7 @@ Router.map(function() {
   this.route('new-platform-flexberry-g-i-s-csw-connection-e.new', { path: 'csw-connections/new' });
 
   // Components examples routes (sorted by component's names).
-  this.route('components-examples/flexberry-button/settings-example');
-  this.route('components-examples/flexberry-ddau-checkbox/settings-example');
   this.route('components-examples/flexberry-maplayers/settings-example');
-  this.route('components-examples/flexberry-tree/settings-example');
 });
 
 export default Router;

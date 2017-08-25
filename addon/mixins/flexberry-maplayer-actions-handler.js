@@ -3,9 +3,9 @@
 */
 
 import Ember from 'ember';
-import FlexberryDdauCheckboxActionsHandlerMixin from './flexberry-ddau-checkbox-actions-handler';
-import FlexberryDdauSliderActionsHandlerMixin from './flexberry-ddau-slider-actions-handler';
-import { getRecord } from '../utils/extended-get';
+import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-checkbox-actions-handler';
+import FlexberryDdauSliderActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-slider-actions-handler';
+import { getRecord } from 'ember-flexberry/utils/extended-get';
 
 /**
   Mixin containing handlers for
