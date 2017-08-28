@@ -15,10 +15,16 @@ module.exports = {
         target: '1.0.1'
       },
 
-      // Leaflet.WFST.
+      // Leaflet-WFST.
       {
         name: 'Leaflet-WFST',
-        target: 'develop'
+        target: 'v2.0.0-beta.1'
+      },
+
+      // Leaflet-WMS.
+      {
+        name: 'leaflet-wms',
+        target: 'v1.1.0-beta.1'
       },
 
       // Leaflet.WMS.
@@ -49,11 +55,11 @@ module.exports = {
       // Leaflet.Export & dependencies.
       {
         name: 'html2canvas',
-        target: 'master'
+        target: '0.5.0-beta4'
       },
       {
         name: 'leaflet-export',
-        target: '0.1.0'
+        target: '0.2.0-beta.1'
       },
 
       // Leaflet-switch-scale-control.
@@ -79,12 +85,6 @@ module.exports = {
       {
         name: 'osmtogeojson',
         target: '2.2.12'
-      },
-
-      // OSGeo ows.js library (implementing JS API for CSW services).
-      {
-        name: 'ows.js',
-        target: '0.1.5'
       },
 
       // Bootstrap slider
