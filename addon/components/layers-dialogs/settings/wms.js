@@ -221,7 +221,7 @@ export default Ember.Component.extend({
 
   /**
     Binds current layer's capabilities from service.
-    
+
     @param {Object} settings
   */
   getCapabilities(settings) {
