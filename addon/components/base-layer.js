@@ -123,7 +123,7 @@ export default Ember.Component.extend(
       @property bounds
       @type <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
       @readonly
-     */
+    */
     bounds: null,
 
     /**

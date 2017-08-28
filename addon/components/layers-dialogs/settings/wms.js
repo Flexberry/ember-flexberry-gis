@@ -63,6 +63,15 @@ export default Ember.Component.extend({
   settings: null,
 
   /**
+    This layer bounding box.
+
+    @property bounds
+    @type <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
+    @readonly
+  */
+  bounds: null,
+
+  /**
     Get capabilities promise.
 
     @property getCapabilitiesPromise
@@ -223,16 +232,16 @@ export default Ember.Component.extend({
             reject(`Service ${settings.url} had not returned any bounding box`);
           }
 
-          _this.set('settings.wgs84bbox.0.1', boundingBox.getSouth());
-          _this.set('settings.wgs84bbox.0.0', boundingBox.getWest());
-          _this.set('settings.wgs84bbox.1.1', boundingBox.getNorth());
-          _this.set('settings.wgs84bbox.1.0', boundingBox.getEast());
+          _this.set('bounds.0.0', boundingBox.getSouth());
+          _this.set('bounds.0.1', boundingBox.getWest());
+          _this.set('bounds.1.0', boundingBox.getNorth());
+          _this.set('bounds.1.1', boundingBox.getEast());
 
           resolve();
         },
         fail(errorThrown, xhr) {
           _this.set('getCapabilitiesPromiseError', errorThrown);
-          _this.send('onErrorMessageShow', ...args);
+          _this.send('onErrorMessageShow');
           reject(errorThrown);
         }
       });

@@ -63,7 +63,7 @@ export default WmsSettingsComponent.extend({
       let version = this.get('settings.version');
 
       if (Ember.isBlank(url) || Ember.isBlank(url.toString().match(new RegExp(urlRegex)))) {
-        fields.pushObject(i18n.t('components.layers-dialogs.settings.wms.url-textbox.caption'));
+        fields.pushObject(i18n.t('components.layers-dialogs.settings.wfs.url-textbox.caption'));
       }
 
       if (Ember.isBlank(typeName)) {
@@ -75,7 +75,7 @@ export default WmsSettingsComponent.extend({
       }
 
       if (Ember.isBlank(version)) {
-        fields.pushObject(i18n.t('components.layers-dialogs.settings.wms.version-textbox.caption'));
+        fields.pushObject(i18n.t('components.layers-dialogs.settings.wfs.version-textbox.caption'));
       }
 
       if (!Ember.isBlank(fields)) {
@@ -101,21 +101,21 @@ export default WmsSettingsComponent.extend({
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       L.wfs(settings, null).getBoundingBox(
-        (boundingBox, xhr) => {
+        (boundingBox) => {
           if (Ember.isBlank(boundingBox)) {
             reject(`Service ${settings.url} had not returned any bounding box`);
           }
 
-          _this.set('settings.wgs84bbox.0.1', boundingBox.getSouth());
-          _this.set('settings.wgs84bbox.0.0', boundingBox.getWest());
-          _this.set('settings.wgs84bbox.1.1', boundingBox.getNorth());
-          _this.set('settings.wgs84bbox.1.0', boundingBox.getEast());
+          _this.set('bounds.0.0', boundingBox.getSouth());
+          _this.set('bounds.0.1', boundingBox.getWest());
+          _this.set('bounds.1.0', boundingBox.getNorth());
+          _this.set('bounds.1.1', boundingBox.getEast());
 
           resolve();
         },
-        (errorThrown, xhr) => {
+        (errorThrown) => {
           _this.set('getCapabilitiesPromiseError', errorThrown);
-          _this.send('onErrorMessageShow', ...args);
+          _this.send('onErrorMessageShow');
           reject(errorThrown);
         }
       );
