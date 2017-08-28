@@ -2,95 +2,145 @@ export default {
   projections: {
     AuditView: {
       name: {
-        caption: 'name'
+        caption: 'Name'
       },
       creator: {
-        caption: 'creator'
+        caption: 'Creator'
       },
       createTime: {
-        caption: 'createTime'
+        caption: 'Create time'
       },
       editor: {
-        caption: 'editor'
+        caption: 'Editor'
       },
       editTime: {
-        caption: 'editTime'
+        caption: 'Edit time'
+      }
+    },
+    Map: {
+      name: {
+        caption: 'Name'
+      },
+      lat: {
+        caption: 'Latitude'
+      },
+      lng: {
+        caption: 'Longitude'
+      },
+      zoom: {
+        caption: 'Zoom'
+      },
+      public: {
+        caption: 'Public'
+      },
+      coordinateReferenceSystem: {
+        caption: 'Coordinate reference system'
       }
     },
     MapE: {
       name: {
-        caption: 'name'
+        caption: 'Name'
+      },
+      description: {
+        caption: 'Description'
+      },
+      keyWords: {
+        caption: 'Key words'
       },
       lat: {
-        caption: 'lat'
+        caption: 'Latitude'
       },
       lng: {
-        caption: 'lng'
+        caption: 'Longitude'
       },
       zoom: {
-        caption: 'zoom'
+        caption: 'Zoom'
       },
       public: {
-        caption: 'public'
+        caption: 'Public'
+      },
+      scale: {
+        caption: 'Scale'
       },
       coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
+        caption: 'Coordinate reference system'
+      },
+      boundingBox: {
+        caption: 'Bounding box'
       },
       mapLayer: {
-        caption: 'mapLayer',
+        caption: 'Map layer',
         name: {
-          caption: 'name'
+          caption: 'Name'
         },
-        type: {
-          caption: 'type'
+        description: {
+          caption: 'Description'
         },
-        visibility: {
-          caption: 'visibility'
+        keyWords: {
+          caption: 'Key words'
         },
         index: {
-          caption: 'index'
+          caption: 'Index'
         },
-        coordinateReferenceSystem: {
-          caption: 'coordinateReferenceSystem'
+        visibility: {
+          caption: 'Visibility'
+        },
+        type: {
+          caption: 'Type'
         },
         settings: {
-          caption: 'settings'
+          caption: 'Settings'
+        },
+        scale: {
+          caption: 'Scale'
+        },
+        coordinateReferenceSystem: {
+          caption: 'Coordinate reference system'
+        },
+        boundingBox: {
+          caption: 'Bounding box'
         },
         parent: {
-          caption: 'parent'
+          caption: 'Parent'
         },
         map: {
-          caption: 'map'
+          caption: 'Map'
         },
         layerLink: {
-          caption: 'layerLink',
-          layer: {
-            caption: 'layer',
-            name: {
-              caption: 'name'
+          caption: 'Layer link',
+          mapObjectSetting: {
+            caption: 'Map object setting',
+            editForm: {
+              caption: 'Edit form'
             }
           },
-          mapObjectSetting: {
-            caption: 'mapObjectSetting'
-          }
+          layer: {
+            caption: 'Layer',
+            name: {
+              caption: 'Name'
+            }
+          },
+          allowShow: {
+          caption: 'Allow show'
+        }
         }
       }
     },
     MapL: {
       name: {
-        caption: 'name'
+        caption: 'Name'
       },
       lat: {
-        caption: 'lat'
+        caption: 'Latitude'
       },
       lng: {
-        caption: 'lng'
+        caption: 'Longitude'
       },
       zoom: {
-        caption: 'zoom'
+        caption: 'Zoom'
       },
       public: {
-        caption: 'public'
+        caption: 'Public'
       }
     }
   }

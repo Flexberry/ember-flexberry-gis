@@ -3,16 +3,18 @@
 */
 
 import FlexberryData from 'ember-flexberry-data';
-import {
-  Serializer as NewPlatformFlexberyGISMapSerializerMixin
-} from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-map';
+import { Serializer as MapSerializer } from '../mixins/regenerated/serializers/new-platform-flexberry-g-i-s-map';
 
 /**
-  Map model serializer.
+  Map serializer.
 
-  @class NewPlatformFlexberryGISMap
+  @class NewPlatformFlexberryGISMapSerializer
   @extends OdataSerializer
-  @uses NewPlatformFlexberyGISMapSerializerMixin
+  @uses NewPlatformFlexberryGISMapSerializerMixin
 */
-export default FlexberryData.Serializer.Odata.extend(NewPlatformFlexberyGISMapSerializerMixin, {
+export default FlexberryData.Serializer.Odata.extend(MapSerializer, {
+  /**
+  * Field name where object identifier is kept.
+  */
+  primaryKey: '__PrimaryKey'
 });

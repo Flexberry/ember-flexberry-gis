@@ -6,24 +6,50 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import { Projection } from 'ember-flexberry-data';
 
-/**
-  Mixin containing map model attributes, relations & projections.
-
-  @class NewPlatformFlexberyGISMapModelMixin
-  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
-*/
 export let Model = Ember.Mixin.create({
   name: DS.attr('string'),
+  description: DS.attr('string'),
+  keyWords: DS.attr('string'),
+
+  /**
+    Non-stored property.
+
+    @property anyText
+  */
+  anyText: DS.attr('string'),
+
+  /**
+    Method to set non-stored property.
+    Please, use code below in model class (outside of this mixin) otherwise it will be replaced during regeneration of models.
+    Please, implement 'anyTextCompute' method in model class (outside of this mixin) if you want to compute value of 'anyText' property.
+
+    @method _anyTextCompute
+    @private
+    @example
+      ```javascript
+      _anyTextChanged: Ember.on('init', Ember.observer('anyText', function() {
+        Ember.run.once(this, '_anyTextCompute');
+      }))
+      ```
+  */
+  _anyTextCompute: function() {
+    let result = (this.anyTextCompute && typeof this.anyTextCompute === 'function') ? this.anyTextCompute() : null;
+    this.set('anyText', result);
+  },
+
   lat: DS.attr('number'),
   lng: DS.attr('number'),
   zoom: DS.attr('number'),
   public: DS.attr('boolean'),
+  scale: DS.attr('number'),
   coordinateReferenceSystem: DS.attr('string'),
+  boundingBox: DS.attr('string'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
   editor: DS.attr('string'),
   mapLayer: DS.hasMany('new-platform-flexberry-g-i-s-map-layer', { inverse: 'map', async: false }),
+
   getValidations: function () {
     let parentValidations = this._super();
     let thisValidations = {
@@ -32,66 +58,76 @@ export let Model = Ember.Mixin.create({
     };
     return Ember.$.extend(true, {}, parentValidations, thisValidations);
   },
+
   init: function () {
     this.set('validations', this.getValidations());
     this._super.apply(this, arguments);
   }
 });
-export let defineProjections = function (model) {
-  model.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map', {
-    name: Projection.attr('Name'),
-    creator: Projection.attr('Creator'),
-    createTime: Projection.attr('Create time'),
-    editor: Projection.attr('Editor'),
-    editTime: Projection.attr('Edit time')
+
+export let defineProjections = function (modelClass) {
+  modelClass.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-map', {
+    name: Projection.attr('Наименование'),
+    creator: Projection.attr('Создатель'),
+    createTime: Projection.attr('Время создания'),
+    editor: Projection.attr('Редактор'),
+    editTime: Projection.attr('Время редактирования')
   });
-  model.defineProjection('MapE', 'new-platform-flexberry-g-i-s-map', {
-    name: Projection.attr('Name'),
-    lat: Projection.attr('Lat'),
-    lng: Projection.attr('Lng'),
-    zoom: Projection.attr('Zoom'),
-    public: Projection.attr('Public'),
-    coordinateReferenceSystem: Projection.attr('CRS'),
+
+  modelClass.defineProjection('Map', 'new-platform-flexberry-g-i-s-map', {
+    name: Projection.attr('Наименование'),
+    lat: Projection.attr('Широта', { hidden: true }),
+    lng: Projection.attr('Долгота', { hidden: true }),
+    zoom: Projection.attr('Зум', { hidden: true }),
+    public: Projection.attr('Общая', { hidden: true }),
+    coordinateReferenceSystem: Projection.attr('Система координат', { hidden: true })
+  });
+
+  modelClass.defineProjection('MapE', 'new-platform-flexberry-g-i-s-map', {
+    name: Projection.attr('Наименование'),
+    description: Projection.attr('Описание'),
+    keyWords: Projection.attr('Ключевые слова'),
+    lat: Projection.attr('Широта'),
+    lng: Projection.attr('Долгота'),
+    zoom: Projection.attr('Зум'),
+    public: Projection.attr('Общая'),
+    scale: Projection.attr('Масштаб'),
+    coordinateReferenceSystem: Projection.attr('Система координат'),
+    boundingBox: Projection.attr('Граница'),
     mapLayer: Projection.hasMany('new-platform-flexberry-g-i-s-map-layer', '', {
-      name: Projection.attr('Name'),
-      type: Projection.attr('Type'),
-      visibility: Projection.attr('Visibility'),
-      index: Projection.attr('Index'),
-      coordinateReferenceSystem: Projection.attr('CRS'),
-      settings: Projection.attr('Settings'),
-      parent: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Parent', {
+      name: Projection.attr('Наименование'),
+      description: Projection.attr('Описание'),
+      keyWords: Projection.attr('Ключевые слова'),
+      index: Projection.attr('Индекс'),
+      visibility: Projection.attr('Видимость'),
+      type: Projection.attr('Тип'),
+      settings: Projection.attr('Настройки'),
+      scale: Projection.attr('Масштаб'),
+      coordinateReferenceSystem: Projection.attr('Система координат'),
+      boundingBox: Projection.attr('Граница'),
+      parent: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
 
-      }),
-      map: Projection.belongsTo('new-platform-flexberry-g-i-s-map', 'Map', {
+      }, { hidden: true }),
+      map: Projection.belongsTo('new-platform-flexberry-g-i-s-map', 'Карта', {
 
-      }),
+      }, { hidden: true }),
       layerLink: Projection.hasMany('new-platform-flexberry-g-i-s-layer-link', '', {
-        allowShow: Projection.attr('Показывать'),
+        mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
+          editForm: Projection.attr('Форма редактирования')
+        }, { hidden: true }),
         layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
           name: Projection.attr('Слой')
         }, { hidden: true }),
-        mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
-          typeName: Projection.attr('Тип'),
-          listForm: Projection.attr('Списковая форма'),
-          editForm: Projection.attr('Форма редактирования')
-        }, { hidden: true }),
-        linkParameter: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', '', {
-          objectField: Projection.attr('Поле объекта'),
-          layerField: Projection.attr('Поле слоя'),
-          expression: Projection.attr('Выражение'),
-          queryKey: Projection.attr('Параметр запроса'),
-          linkField: Projection.attr('Поле связи')
-        }, {
-          hidden: true
-        })
+        allowShow: Projection.attr('Показывать')
       })
     })
   });
-  model.defineProjection('MapL', 'new-platform-flexberry-g-i-s-map', {
+
+  modelClass.defineProjection('MapL', 'new-platform-flexberry-g-i-s-map', {
     name: Projection.attr('Наименование'),
-    lat: Projection.attr('Lat'),
-    lng: Projection.attr('Lng'),
-    zoom: Projection.attr('Масштаб'),
+    lat: Projection.attr('Широта'),
+    lng: Projection.attr('Долгота'),
+    zoom: Projection.attr('Зум'),
     public: Projection.attr('Общая')
   });
 };
