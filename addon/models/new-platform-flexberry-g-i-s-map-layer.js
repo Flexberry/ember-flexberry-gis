@@ -165,15 +165,13 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
         [90, 180]
       ]);
 
-      layerBounds = L.latLngBounds([[0, 0], [0, 0]]);
-
       for (let layer of layers) {
-        if (layerBounds.equals(earthBounds)) {
+        if (layerBounds && layerBounds.equals(earthBounds)) {
           break;
         }
 
         let bounds = layer.get('bounds');
-        layerBounds = layerBounds.extend(bounds);
+        layerBounds = layerBounds ? layerBounds.extend(bounds) : L.latLngBounds(bounds);
       }
     } else {
       let bounds = this.get('settingsAsObject.bounds');

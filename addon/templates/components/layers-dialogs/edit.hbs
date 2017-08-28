@@ -257,7 +257,7 @@
           {{/if}}
         </div>
       </div>
-      {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings}}
+      {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings bounds=_layer.settings.wgs84bbox}}
     </div>
   {{/if}}
   {{#if _identifySettingsAreAvailableForType}}

@@ -590,7 +590,12 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
           geoJsonBounds = Ember.get(layer, 'settings.wgs84bbox');
         }
 
-        let bounds = L.latLngBounds(geoJsonBounds);
+        let bounds;
+        try {
+          bounds = L.latLngBounds(geoJsonBounds);
+        } catch (error) {
+          bounds = undefined;
+        }
 
         // If no valid bounds provided - set it to max.
         if (!bounds || !bounds.isValid()) {
