@@ -40,11 +40,13 @@
           click=(action "onAddButtonClick")
         }}
       {{/if}}
-      {{flexberry-button
-        class=(concat flexberryClassNames.boundsButton " right floated " flexberryClassNames.preventExpandCollapse)
-        iconClass="maximize icon"
-        click=(action "onBoundsButtonClick")
-      }}
+      {{#if (or _hasLayers (not (eq type "group")))}}
+        {{flexberry-button
+          class=(concat flexberryClassNames.boundsButton " right floated " flexberryClassNames.preventExpandCollapse)
+          iconClass="maximize icon"
+          click=(action "onBoundsButtonClick")
+        }}
+      {{/if}}
       <div style="clear: both;"></div>
     {{/if}}
 
