@@ -42,6 +42,15 @@ export default EditFormRoute.extend({
   },
 
   /**
+    Injected local-storage-service.
+
+    @property service
+    @type <a href="http://emberjs.com/api/classes/Ember.Service.html">Ember.Service</a>
+    @default service:local-storage
+  */
+  service: Ember.inject.service('local-storage'),
+
+  /**
     Name of model projection to be used as record's properties limitation.
 
     @property modelProjection
@@ -73,6 +82,7 @@ export default EditFormRoute.extend({
 
     if (layers) {
       model.set('hierarchy', this.sortLayersByIndex(layers));
+      this.initLayersFromLocalStorage(model.get('id'), layers);
     }
 
     let urlParams = ['zoom', 'lat', 'lng'];
@@ -86,7 +96,9 @@ export default EditFormRoute.extend({
       }
     });
 
-    this.transitionTo({ queryParams: currentParams });
+    this.transitionTo({
+      queryParams: currentParams
+    });
   },
 
   /**
@@ -106,6 +118,13 @@ export default EditFormRoute.extend({
     }
   },
 
+  /**
+    Recursively creates layers hierarchy.
+
+    @method sortLayersByIndex
+    @param layers FlexberryGisMapLayer[]
+    @returns FlexberryGisMapLayer[]
+  */
   sortLayersByIndex(layers) {
     let result = layers;
     if (result) {
@@ -118,5 +137,36 @@ export default EditFormRoute.extend({
     }
 
     return result;
+  },
+
+  /**
+    Recursively creates layers hierarchy.
+
+    @method initLayersFromLocalStorage
+    @param mapId {String}
+    @param layers FlexberryGisMapLayer[]
+  */
+  initLayersFromLocalStorage(mapId, layers) {
+    let localLayers = this.get('service').getFromStorage('layers', mapId);
+
+    for (let local of localLayers) {
+      // Find suitable layer.
+      let layer = layers.findBy('id', local.id);
+
+      if (Ember.isBlank(layer)) {
+        continue;
+      }
+
+      // Remove id to avoid explicit merge.      
+      delete local.id;
+
+      // Bind properties to maplayer from local stored layer.
+      for (let p in local) {
+        let value = Ember.get(local, p);
+
+        // If property is object - it should be merged.
+        layer.set(p, typeof local[p] !== 'object' ? value : Object.assign(layer.get(p), value));
+      }
+    }
   }
 });
