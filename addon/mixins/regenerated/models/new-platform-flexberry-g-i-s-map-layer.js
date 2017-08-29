@@ -86,7 +86,9 @@ export let defineProjections = function (modelClass) {
     settings: Projection.attr('Настройки'),
     scale: Projection.attr('Масштаб'),
     coordinateReferenceSystem: Projection.attr('Система координат'),
-    boundingBox: Projection.attr('Граница'),
+
+    // TODO: Uncomment when ODataService will support 'geography' type.
+    //boundingBox: Projection.attr('Граница'),
     parent: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
 
     }, { hidden: true }),
@@ -124,7 +126,9 @@ export let defineProjections = function (modelClass) {
     settings: Projection.attr('Настройки'),
     scale: Projection.attr('Масштаб'),
     coordinateReferenceSystem: Projection.attr('Система координат'),
-    boundingBox: Projection.attr('Граница'),
+
+    // TODO: Uncomment when ODataService will support 'geography' type.
+    //boundingBox: Projection.attr('Граница'),
     parent: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
 
     }, { displayMemberPath: 'name' }),

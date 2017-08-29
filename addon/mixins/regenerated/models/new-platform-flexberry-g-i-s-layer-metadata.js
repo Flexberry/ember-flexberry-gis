@@ -99,7 +99,9 @@ export let defineProjections = function (modelClass) {
     settings: Projection.attr('Настройки'),
     scale: Projection.attr('Масштаб'),
     coordinateReferenceSystem: Projection.attr('Система координат'),
-    boundingBox: Projection.attr('Граница'),
+
+    // TODO: Uncomment when ODataService will support 'geography' type.
+    //boundingBox: Projection.attr('Граница'),
     linkMetadata: Projection.hasMany('new-platform-flexberry-g-i-s-link-metadata', '', {
       layer: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
         name: Projection.attr('', { hidden: true })
