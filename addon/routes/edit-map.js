@@ -157,7 +157,7 @@ export default EditFormRoute.extend({
         continue;
       }
 
-      // Remove id to avoid explicit merge.      
+      // Remove id to avoid explicit merge.
       delete local.id;
 
       // Bind properties to maplayer from local stored layer.
