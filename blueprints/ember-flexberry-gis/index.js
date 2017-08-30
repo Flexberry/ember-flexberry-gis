@@ -18,13 +18,13 @@ module.exports = {
       // Leaflet-WFST.
       {
         name: 'Leaflet-WFST',
-        target: 'v2.0.0-beta.1'
+        target: 'v2.0.0'
       },
 
       // Leaflet-WMS.
       {
         name: 'leaflet-wms',
-        target: 'v1.1.0-beta.1'
+        target: 'v1.1.0'
       },
 
       // Leaflet.WMS.
@@ -59,7 +59,7 @@ module.exports = {
       },
       {
         name: 'leaflet-export',
-        target: '0.2.0-beta.1'
+        target: '0.2.0'
       },
 
       // Leaflet-switch-scale-control.
