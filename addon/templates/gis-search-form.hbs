@@ -1,79 +1,93 @@
 <div class="ui attached message">
-    <div class="header">
-        {{t "forms.integration-examples.gis-search-form.header"}}
-    </div>
-    <p>{{t "forms.integration-examples.gis-search-form.subheader"}}</p>
+  <div class="header">
+    {{t "forms.integration-examples.gis-search-form.header"}}
+  </div>
+  <p>{{t "forms.integration-examples.gis-search-form.subheader"}}</p>
 </div>
 <div class="ui form attached fluid segment">
-    <div class="ui grid">
-        <div class="row">
-            <div class="eight wide column">
-                <div class="ui container segment">
-                    <div class="ui top attached label">{{t "forms.integration-examples.gis-search-form.object"}}</div>
-                    <div class="field">
-                        <label>{{t "forms.integration-examples.gis-search-form.keywords"}}</label> {{input value=keyWords type="text"}}
-                    </div>
-                    <div class="field">
-                        <label>{{t "forms.integration-examples.gis-search-form.scale"}}</label> {{input value=scale type="text"}}
-                    </div>
-                </div>
-            </div>
-            <div class="eight wide column">
-                <div class="ui container segment">
-                    <div class="ui top attached label">{{t "forms.integration-examples.gis-search-form.position"}}</div>
-                    <div class="field">
-                        <label>{{t "forms.integration-examples.gis-search-form.min-long"}}</label> {{input value=minLng type="text"}}
-                    </div>
-                    <div class="field">
-                        <label>{{t "forms.integration-examples.gis-search-form.min-lat"}}</label> {{input value=minLat type="text"}}
-                    </div>
-                    <div class="field">
-                        <label>{{t "forms.integration-examples.gis-search-form.max-long"}}</label> {{input value=maxLng type="text"}}
-                    </div>
-                    <div class="field">
-                        <label>{{t "forms.integration-examples.gis-search-form.max-lat"}}</label> {{input value=maxLat type="text"}}
-                    </div>
-                </div>
-            </div>
+  <div class="ui grid">
+    <div class="row">
+      <div class="eight wide column">
+        <div class="ui container segment">
+          <div class="ui top attached label">{{t "forms.integration-examples.gis-search-form.object"}}</div>
+          <div class="field">
+            <label>{{t "forms.integration-examples.gis-search-form.keywords"}}</label> {{input value=keyWords type="text"}}
+          </div>
+          <div class="field">
+            <label>{{t "forms.integration-examples.gis-search-form.scale"}}</label> {{input value=scale type="text"}}
+          </div>
         </div>
-        <div class="row">
-            <div class="seven wide column"></div>
-            <div class="two wide column">
-                <button class="ui labeled icon blue button" {{action "getSearchResults" on="click" }}>
-                    <i class="search icon"></i>
-                    {{t "forms.integration-examples.gis-search-form.search"}}
-                </button>
-            </div>
-            <div class="seven wide column"></div>
+      </div>
+      <div class="eight wide column">
+        <div class="ui container segment">
+          <div class="ui top attached label">{{t "forms.integration-examples.gis-search-form.position"}}</div>
+          <div class="field">
+            <label>{{t "forms.integration-examples.gis-search-form.min-long"}}</label> {{input value=minLng type="text"}}
+          </div>
+          <div class="field">
+            <label>{{t "forms.integration-examples.gis-search-form.min-lat"}}</label> {{input value=minLat type="text"}}
+          </div>
+          <div class="field">
+            <label>{{t "forms.integration-examples.gis-search-form.max-long"}}</label> {{input value=maxLng type="text"}}
+          </div>
+          <div class="field">
+            <label>{{t "forms.integration-examples.gis-search-form.max-lat"}}</label> {{input value=maxLat type="text"}}
+          </div>
         </div>
-        <div class="row">
-            <div class="ui top attached label">{{t "forms.integration-examples.gis-search-form.results"}}</div>
-            <div class="eight wide column">
-                <ul>
-                    {{flexberry-table 
-                    rows=model.metadata 
-                    totalRowsCount=model.metadataCount 
-                    getData=(action "getData")
-                    modelName='new-platform-flexberry-g-i-s-layer-metadata'
-                    projectionName='LayerMetadataL'
-                    header=model.metadataHeader
-                    }}
-                </ul>
-            </div>
-            <div class="eight wide column" style="margin-top: 2rem !important;">
-                <ul>
-                    {{flexberry-table 
-                    rows=model.maps
-                    totalRowsCount=model.mapsCount 
-                    getData=(action "getData")
-                    modelName='new-platform-flexberry-g-i-s-map'
-                    projectionName='MapL'
-                    header=model.mapHeader
-                    }}
-                </ul>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="row">
+      <div class="seven wide column"></div>
+      <div class="two wide column">
+        <button class="ui labeled icon blue button" {{action "getSearchResults" on="click" }}>
+          <i class="search icon"></i>
+          {{t "forms.integration-examples.gis-search-form.search"}}
+        </button>
+      </div>
+      <div class="seven wide column"></div>
+    </div>
+    <div class="row">
+      <div class="ui top attached label">{{t "forms.integration-examples.gis-search-form.results"}}</div>
+      <div class="sixteen wide column">
+        <div class="ui top attached fluid tabular menu">
+          <a 
+            class="tab item {{if (eq _tabularMenuActiveTab "layer-metadata") "active "}}" 
+            data-tab="layer-metadata" 
+            title="Метаданные слоёв">
+            Метаданные слоёв
+          </a>
+          <a 
+            class="tab item {{if (eq _tabularMenuActiveTab "maps") "active "}}" 
+            data-tab="maps" 
+            title="Карты">
+            Карты
+          </a>
+        </div>
+        <div
+          class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "layer-metadata") "active"}}"
+          data-tab="layer-metadata">
+            {{flexberry-table 
+              rows=model.metadata 
+              totalRowsCount=model.metadataCount 
+              getData=(action "getData") 
+              modelName='new-platform-flexberry-g-i-s-layer-metadata'
+              projectionName='LayerMetadataL' 
+              header=model.metadataHeader }}
+        </div>
+        <div
+          class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "maps") "active"}}"
+          data-tab="maps">
+            {{flexberry-table 
+              rows=model.maps 
+              totalRowsCount=model.mapsCount 
+              getData=(action "getData") 
+              modelName='new-platform-flexberry-g-i-s-map'
+              projectionName='MapL' 
+              header=model.mapHeader }}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {{outlet}}

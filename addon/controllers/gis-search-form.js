@@ -7,6 +7,9 @@ export default Ember.Controller.extend({
   minLat: '',
   maxLng: '',
   maxLat: '',
+  
+  _tabularMenuActiveTab: 'layer-metadata',
+
   actions: {
     getSearchResults() {
       this.send('loadData', this.keyWords);
