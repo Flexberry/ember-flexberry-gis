@@ -50,16 +50,26 @@
             <div class="ui top attached label">{{t "forms.integration-examples.gis-search-form.results"}}</div>
             <div class="eight wide column">
                 <ul>
-                    {{#each model.metadata as |data|}}
-                    <li>Название: {{data.name}}, Тип: {{data.type}}</li>
-                    {{/each}}
+                    {{flexberry-table 
+                    rows=model.metadata 
+                    totalRowsCount=model.metadataCount 
+                    getData=(action "getData")
+                    modelName='new-platform-flexberry-g-i-s-layer-metadata'
+                    projectionName='LayerMetadataL'
+                    header=model.metadataHeader
+                    }}
                 </ul>
             </div>
             <div class="eight wide column" style="margin-top: 2rem !important;">
                 <ul>
-                    {{#each model.maps as |data|}}
-                    <li>Название: {{data.name}}</li>
-                    {{/each}}
+                    {{flexberry-table 
+                    rows=model.maps
+                    totalRowsCount=model.mapsCount 
+                    getData=(action "getData")
+                    modelName='new-platform-flexberry-g-i-s-map'
+                    projectionName='MapL'
+                    header=model.mapHeader
+                    }}
                 </ul>
             </div>
         </div>

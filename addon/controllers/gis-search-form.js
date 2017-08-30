@@ -10,6 +10,12 @@ export default Ember.Controller.extend({
   actions: {
     getSearchResults() {
       this.send('loadData', this.keyWords);
+    },
+    getData(data) {
+      let d = Ember.$().extend(data, {
+        keyWords: this.keyWords
+      });
+      this.send('getDataExt', d);
     }
   }
 });
