@@ -152,8 +152,7 @@ export default Ember.Mixin.create({
         Ember.typeOf(lngPropertyPath) === 'string');
 
       let newCenterLatLng = e.target.getCenter();
-      this.set(latPropertyPath, newCenterLatLng.lat);
-      this.set(lngPropertyPath, newCenterLatLng.lng);
+      this.transitionToRoute({ queryParams: { lat: newCenterLatLng.lat, lng: newCenterLatLng.lng, zoom: e.target.getZoom() } });
     },
 
     /**
@@ -200,7 +199,7 @@ export default Ember.Mixin.create({
         Ember.typeOf(zoomPropertyPath) === 'string');
 
       let newZoom = e.target.getZoom();
-      this.set(zoomPropertyPath, newZoom);
+      this.transitionToRoute({ queryParams: { zoom: newZoom } });
     }
   }
 });

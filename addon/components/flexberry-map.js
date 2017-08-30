@@ -359,6 +359,28 @@ let FlexberryMapComponent = Ember.Component.extend(
     },
 
     /**
+      Handles leaflet map's moveend event.
+
+      @method _moveend
+      @param {Object} e Event object.
+      @private
+    */
+    _moveend(e) {
+      this.sendAction('moveend', e);
+    },
+
+    /**
+      Handles leaflet map's zoomend event.
+
+      @method _zoomend
+      @param {Object} e Event object.
+      @private
+    */
+    _zoomend(e) {
+      this.sendAction('zoomend', e);
+    },
+
+    /**
       Initializes DOM-related component's properties.
     */
     didInsertElement() {
@@ -367,6 +389,8 @@ let FlexberryMapComponent = Ember.Component.extend(
       // Initialize leaflet map.
       let leafletMap = L.map(this.$()[0], this.get('options'));
       this._injectMapLoaderMethods(leafletMap);
+      leafletMap.on('moveend', this._moveend, this);
+      leafletMap.on('zoomend', this._zoomend, this);
 
       this.set('_leafletObject', leafletMap);
 
@@ -398,6 +422,8 @@ let FlexberryMapComponent = Ember.Component.extend(
       if (!Ember.isNone(leafletMap)) {
         // Destroy leaflet map.
         this._removeMapLoaderMethods(leafletMap);
+        leafletMap.off('moveend', this._moveend, this);
+        leafletMap.off('zoomend', this._zoomend, this);
         leafletMap.remove();
         this.set('_leafletObject', null);
 

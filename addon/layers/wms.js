@@ -31,6 +31,7 @@ export default TileLayer.extend({
     let settings = this._super(...arguments);
     Ember.$.extend(true, settings, {
       info_format: undefined,
+      feature_count: 100,
       url: undefined,
       version: undefined,
       layers: undefined,
@@ -58,6 +59,7 @@ export default TileLayer.extend({
     let settings = this._super(...arguments);
 
     settings.info_format = 'application/json';
+    settings.feature_count = 100;
     settings.url = record.url.split('?')[0];
     settings.version = '1.3.0';
     settings.layers = record.id;

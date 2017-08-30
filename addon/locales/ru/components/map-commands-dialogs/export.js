@@ -3,6 +3,7 @@ export default {
   'export-error-message-caption': 'Ошибка экспорта карты в изображение',
   'print-caption': 'Печать карты',
   'print-error-message-caption': 'Ошибка печати карты',
+  'legend-caption': 'Легенда',
   'approve-button': {
     'caption': 'Ок'
   },
@@ -39,6 +40,15 @@ export default {
       },
       'scale-control': {
         'caption': 'Масштаб'
+      }
+    },
+    'legend-settings-panel': {
+      'caption': 'Отображение легенды',
+      'under-map': {
+        'caption': 'Под картой'
+      },
+      'second-page': {
+        'caption': 'Отдельно'
       }
     }
   },

@@ -113,27 +113,6 @@ export default BaseLayer.extend({
   },
 
   /**
-    Sets leaflet layer's visibility.
-
-    @method _setLayerOpacity
-    @private
-  */
-  _setLayerOpacity() {
-    let leafletLayer = this.get('_leafletObject');
-    let leafletLayerStyle = Ember.get(leafletLayer, 'options.style');
-    if (Ember.isNone(leafletLayerStyle)) {
-      leafletLayerStyle = {};
-      Ember.set(leafletLayer, 'options.style', leafletLayerStyle);
-    }
-
-    let opacity = this.get('opacity');
-    Ember.set(leafletLayerStyle, 'opacity', opacity);
-    Ember.set(leafletLayerStyle, 'fillOpacity', opacity);
-
-    leafletLayer.setStyle(leafletLayerStyle);
-  },
-
-  /**
     Creates leaflet layer related to layer type.
 
     @method createLayer
@@ -161,7 +140,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let filter = new L.Filter.Intersects().append(e.polygonLayer, this.get('geometryField'), this.get('crs'));
+    let filter = new L.Filter.Intersects(this.get('geometryField'), e.polygonLayer, this.get('crs'));
 
     let featuresPromise = this._getFeature({
       filter
@@ -189,7 +168,7 @@ export default BaseLayer.extend({
       return;
     }
 
-    let filter = new L.Filter.Like().append(propertyName, '*' + e.searchOptions.queryString + '*', {
+    let filter = new L.Filter.Like(propertyName, '*' + e.searchOptions.queryString + '*', {
       matchCase: false
     });
 
@@ -208,21 +187,38 @@ export default BaseLayer.extend({
     Handles 'flexberry-map:query' event of leaflet map.
 
     @method _query
+    @param {Object[]} layerLinks Array containing metadata for query
     @param {Object} e Event object.
     @param {Object} queryFilter Object with query filter paramteres
     @param {Object[]} results.features Array containing leaflet layers objects
     or a promise returning such array.
   */
-  query(e) {
-    let filter = new L.Filter.EQ();
+  query(layerLinks, e) {
+    let queryFilter = e.queryFilter;
+    let equals = [];
+    layerLinks.forEach((link) => {
+      let linkParameters = link.get('linkParameter');
 
-    for (var property in e.queryFilter) {
-      if (e.queryFilter.hasOwnProperty(property)) {
-        filter.append(property, e.queryFilter[property]);
+      if (Ember.isArray(linkParameters) && linkParameters.length > 0) {
+        linkParameters.forEach(linkParam => {
+          let property = linkParam.get('layerField');
+          let propertyValue = queryFilter[linkParam.get('queryKey')];
+
+          equals.push(new L.Filter.EQ(property, propertyValue));
+        });
       }
+    });
+
+    let filter;
+    if (equals.length === 1) {
+      filter = equals[0];
+    } else {
+      filter = new L.Filter.And(...equals);
     }
 
-    let featuresPromise = this._getFeature({ filter }, true);
+    let featuresPromise = this._getFeature({
+      filter
+    });
 
     return featuresPromise;
   }
