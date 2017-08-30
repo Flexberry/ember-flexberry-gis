@@ -4,7 +4,7 @@
 [![Build Status Develop branch](https://img.shields.io/travis/Flexberry/ember-flexberry-gis/develop.svg?label=develop%20build)](https://travis-ci.org/Flexberry/ember-flexberry-gis/branches)
 
 [![ember](https://embadge.io/v1/badge.svg?label=ember&range=~2.4.3)](https://github.com/emberjs/ember.js/releases)
-[![ember-data](https://embadge.io/v1/badge.svg?label=ember-data&range=~2.4.2)](https://github.com/emberjs/data/releases)
+[![ember-data](https://embadge.io/v1/badge.svg?label=ember-data&range=2.4.3)](https://github.com/emberjs/data/releases)
 [![ember-cli](https://embadge.io/v1/badge.svg?label=ember-cli&range=2.4.3)](https://github.com/ember-cli/ember-cli/releases)
 
 Ember addon for web mapping SPA.

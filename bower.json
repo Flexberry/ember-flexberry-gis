@@ -1,6 +1,6 @@
 {
   "name": "ember-flexberry-gis",
-  "version": "0.2.0-beta.2",
+  "version": "0.2.0",
   "dependencies": {
     "blueimp-file-upload": "ember-flexberry dependencies",
     "blueimp-file-upload": "9.11.2",
@@ -20,12 +20,12 @@
     "leaflet": "1.0.1",
     "leaflet.editable": "master",
     "leaflet-editable-measures": "0.1.0",
-    "leaflet-export": "0.2.0-beta.1",
+    "leaflet-export": "0.2.0",
     "leaflet-history": "Flexberry/leaflet-history#d67e852ae405a0ca2f6cd069d2f0ff048d7a5ce8",
     "leaflet-minimap": "3.4.0",
     "leaflet-switch-scale-control": "0.1.0",
-    "Leaflet-WFST": "v2.0.0-beta.1",
-    "leaflet-wms": "v1.1.0-beta.1",
+    "Leaflet-WFST": "2.0.0",
+    "leaflet-wms": "1.1.0",
     "leaflet.wms": "gh-pages",
     "leaflet.zoomslider": "Flexberry/Leaflet.zoomslider#leaflet-1.0.1",
     "osmtogeojson": "2.2.12",

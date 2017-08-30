@@ -3,13 +3,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [0.2.0-beta.1] - 2017-08-28
+## [0.2.0] - 2017-08-30
 ### Added
 * Add `full-extent` map instrument.
 * Add map query parameters to URL (`lat`, `lng` and `zoom`).
 * Add redirect to list and edit forms from identification results.
 * Add legends export on separate page.
 * Add support for various response formats of WMS layers identification.
+
+### Changed
+* CSW moved to separate addon.
 
 ## [0.1.0] - 2017-06-27
 ### Added
