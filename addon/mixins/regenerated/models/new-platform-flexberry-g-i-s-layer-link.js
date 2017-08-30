@@ -6,6 +6,12 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import { Projection } from 'ember-flexberry-data';
 
+/**
+  Mixin containing layer link model attributes, relations & projections.
+
+  @class NewPlatformFlexberyGISLayerLinkModelMixin
+  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+*/
 export let Model = Ember.Mixin.create({
   allowShow: DS.attr('boolean'),
   mapObjectSetting: DS.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', { inverse: null, async: false }),
@@ -30,6 +36,8 @@ export let Model = Ember.Mixin.create({
 export let defineProjections = function (modelClass) {
   modelClass.defineProjection('LayerLinkD', 'new-platform-flexberry-g-i-s-layer-link', {
     mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
+      typeName: Projection.attr('Тип'),
+      listForm: Projection.attr('Списковая форма'),
       editForm: Projection.attr('Форма редактирования')
     }, { hidden: true }),
     layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {

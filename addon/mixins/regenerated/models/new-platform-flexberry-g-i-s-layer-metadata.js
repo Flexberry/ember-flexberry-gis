@@ -6,13 +6,21 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import { Projection } from 'ember-flexberry-data';
 
+/**
+  Mixin containing layer metadata model attributes, relations & projections.
+
+  @class NewPlatformFlexberyGISLayerMetadataModelMixin
+  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+*/
 export let Model = Ember.Mixin.create({
   name: DS.attr('string'),
   description: DS.attr('string'),
   keyWords: DS.attr('string'),
 
   /**
-    Non-stored property.
+    Non-stored property for full text search combining 'name', 'description', and 'keywords'.
+    See computaton logic in related model's 'anyTextCompute' method).
+    Also see OpenGIS Catalogue Services Specification (ISO19115/ISO19119).
 
     @property anyText
   */

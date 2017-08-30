@@ -6,18 +6,26 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import { Projection } from 'ember-flexberry-data';
 
+/**
+  Mixin containing map layer model attributes, relations & projections.
+
+  @class NewPlatformFlexberyGISMapLayerModelMixin
+  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+*/
 export let Model = Ember.Mixin.create({
   name: DS.attr('string'),
   description: DS.attr('string'),
   keyWords: DS.attr('string'),
 
   /**
-    Non-stored property.
+    Non-stored property for full text search combining 'name', 'description', and 'keywords'.
+    See computaton logic in related model's 'anyTextCompute' method).
+    Also see OpenGIS Catalogue Services Specification (ISO19115/ISO19119).
 
     @property anyText
   */
-
   anyText: DS.attr('string'),
+
   /**
     Method to set non-stored property.
     Please, use code below in model class (outside of this mixin) otherwise it will be replaced during regeneration of models.
@@ -97,6 +105,8 @@ export let defineProjections = function (modelClass) {
     }, { hidden: true }),
     layerLink: Projection.hasMany('new-platform-flexberry-g-i-s-layer-link', '', {
       mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
+        typeName: Projection.attr('Тип'),
+        listForm: Projection.attr('Списковая форма'),
         editForm: Projection.attr('Форма редактирования')
       }, { hidden: true }),
       layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {

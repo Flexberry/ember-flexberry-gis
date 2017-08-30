@@ -6,13 +6,21 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import { Projection } from 'ember-flexberry-data';
 
+/**
+  Mixin containing map model attributes, relations & projections.
+
+  @class NewPlatformFlexberyGISMapModelMixin
+  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+*/
 export let Model = Ember.Mixin.create({
   name: DS.attr('string'),
   description: DS.attr('string'),
   keyWords: DS.attr('string'),
 
   /**
-    Non-stored property.
+    Non-stored property for full text search combining 'name', 'description', and 'keywords'.
+    See computaton logic in related model's 'anyTextCompute' method.
+    Also see OpenGIS Catalogue Services Specification (ISO19115/ISO19119).
 
     @property anyText
   */
@@ -117,12 +125,24 @@ export let defineProjections = function (modelClass) {
       }, { hidden: true }),
       layerLink: Projection.hasMany('new-platform-flexberry-g-i-s-layer-link', '', {
         mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
+          typeName: Projection.attr('Тип'),
+          listForm: Projection.attr('Списковая форма'),
           editForm: Projection.attr('Форма редактирования')
         }, { hidden: true }),
         layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
           name: Projection.attr('Слой')
         }, { hidden: true }),
-        allowShow: Projection.attr('Показывать')
+        allowShow: Projection.attr('Показывать'),
+        linkParameter: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', '', {
+          objectField: Projection.attr('Поле объекта'),
+          layerField: Projection.attr('Поле слоя'),
+          expression: Projection.attr('Выражение'),
+          queryKey: Projection.attr('Параметр запроса'),
+          linkField: Projection.attr('Поле связи'),
+          layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
+
+          }, { hidden: true })
+        })
       })
     })
   });

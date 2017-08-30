@@ -43,7 +43,7 @@ export default {
         caption: 'Scale'
       },
       coordinateReferenceSystem: {
-        caption: 'Coordinate reference system'
+        caption: 'CRS'
       },
       boundingBox: {
         caption: 'Bounding box'
@@ -120,7 +120,7 @@ export default {
         caption: 'Scale'
       },
       coordinateReferenceSystem: {
-        caption: 'Coordinate reference system'
+        caption: 'CRS'
       },
       boundingBox: {
         caption: 'Bounding box'

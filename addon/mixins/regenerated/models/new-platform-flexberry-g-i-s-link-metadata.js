@@ -6,6 +6,12 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import { Projection } from 'ember-flexberry-data';
 
+/**
+  Mixin containing link metadata model attributes, relations & projections.
+
+  @class NewPlatformFlexberyGISLinkMetadataModelMixin
+  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+*/
 export let Model = Ember.Mixin.create({
   allowShow: DS.attr('boolean'),
   createTime: DS.attr('date'),

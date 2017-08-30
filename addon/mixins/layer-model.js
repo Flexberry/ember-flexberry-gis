@@ -5,7 +5,7 @@
 import Ember from 'ember';
 
 /**
-  Mixin containing additional logic for layer or layer-like models.
+  Mixin containing additional logic for layer and layer-like models.
 
   @class LayerModelMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
@@ -29,6 +29,7 @@ export default Ember.Mixin.create({
 
   /**
     Flag: indicates whether layer can be identified.
+
     @property canBeIdentified
     @type Boolean
     @readOnly
@@ -47,6 +48,7 @@ export default Ember.Mixin.create({
 
   /**
     Flag: indicates whether 'search' operation is available for this layer.
+
     @property canBeSearched
     @type Boolean
     @readOnly
@@ -65,6 +67,7 @@ export default Ember.Mixin.create({
 
   /**
     Flag: indicates whether 'context search' operation is available for this layer.
+
     @property canBeContextSearched
     @type Boolean
     @readOnly
@@ -83,6 +86,7 @@ export default Ember.Mixin.create({
 
   /**
    Checks whether layer should be shown on minimap.
+
     @property showOnMinimap
     @type {Boolean} Flag: indicates whether layer should be shown on minimap.
     @readOnly
@@ -93,6 +97,7 @@ export default Ember.Mixin.create({
 
   /**
     Flag: layer's whether layer's legend can be displayed.
+
     @property hasLegend
     @type Boolean
     @readOnly
@@ -111,6 +116,7 @@ export default Ember.Mixin.create({
 
   /**
     Collection of nested layers.
+
     @property layers
     @return {Array} collection of child layers
   */

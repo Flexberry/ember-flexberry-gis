@@ -6,6 +6,12 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import { Projection } from 'ember-flexberry-data';
 
+/**
+  Mixin containing map object setting model attributes, relations & projections.
+
+  @class NewPlatformFlexberyGISMapObjectSettingModelMixin
+  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+*/
 export let Model = Ember.Mixin.create({
   typeName: DS.attr('string'),
   listForm: DS.attr('string'),

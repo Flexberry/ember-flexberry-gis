@@ -4,6 +4,12 @@
 
 import Ember from 'ember';
 
+/**
+  Mixin containing initializetion logic for map offline serializer.
+
+  @class NewPlatformFlexberyGISMapOfflineSerializerMixin
+  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+*/
 export let OfflineSerializer = Ember.Mixin.create({
   getAttrs: function () {
     let parentAttrs = this._super();
