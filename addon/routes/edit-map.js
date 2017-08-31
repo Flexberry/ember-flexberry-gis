@@ -140,7 +140,7 @@ export default EditFormRoute.extend({
   },
 
   /**
-    Recursively creates layers hierarchy.
+    Binds data from localStorage to layers' properties.
 
     @method initLayersFromLocalStorage
     @param mapId {String}
@@ -162,6 +162,10 @@ export default EditFormRoute.extend({
 
       // Bind properties to maplayer from local stored layer.
       for (let p in local) {
+        if (!local.hasOwnProperty(p)) {
+          return;
+        }
+
         let value = Ember.get(local, p);
 
         // If property is object - it should be merged.

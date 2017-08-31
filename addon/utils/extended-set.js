@@ -76,7 +76,7 @@ let setAndAssign = function (source, keyName, value) {
   let keyPath = keys[0];
 
   // Create empty object if object in path could not be found or was destroyed.
-  for (let i = 1, len = keys.length; i < len; i++) {
+  for (let i = 1; i < keys.length; i++) {
     if (Ember.isBlank(Ember.get(source, keyPath))) {
       Ember.set(source, keyPath, {});
     }
