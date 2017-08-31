@@ -1,4 +1,7 @@
 import Ember from 'ember';
+import RequiredActionsMixin from '../mixins/required-actions';
+import DynamicActionsMixin from '../mixins/dynamic-actions';
+import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import layout from '../templates/components/flexberry-edit-layermap';
 import {
   translationMacro as t
@@ -25,7 +28,10 @@ const flexberryClassNames = {
   wrapper: null
 };
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(
+  RequiredActionsMixin,
+  DynamicActionsMixin,
+  DynamicPropertiesMixin, {
     /**
       Dialog's 'type' dropdown caption.
 
@@ -373,7 +379,7 @@ export default Ember.Component.extend({
       @method _visibleDidChange
       @private
     */
-    _visibleDidChange: Ember.on('init', Ember.observer('visible', function () {
+    _visibleDidChange: Ember.on('init', Ember.observer('visible', 'settings', 'name', 'coordinateReferenceSystem', function () {
       if (this.get('visible') || this.get('visible')===undefined) {
         this._createInnerLayer();
       } else {
@@ -458,6 +464,10 @@ export default Ember.Component.extend({
       Ember.set(layer, 'settings', settings);
       
       return layer;
+    },
+
+    getInitOnSave() {
+      this.init();
     },
 
     /**
