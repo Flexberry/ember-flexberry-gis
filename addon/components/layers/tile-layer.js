@@ -8,7 +8,7 @@ import BaseLayer from '../base-layer';
   Tile layer component for leaflet map.
 
   @class TileLayerComponent
-  @extend BaseLayerComponent
+  @extends BaseLayerComponent
  */
 export default BaseLayer.extend({
   /**

@@ -16,7 +16,7 @@
     "leaflet-editable-measures": "0.1.0",
     "leaflet-export": "master",
     "html2canvas": "0.5.0-beta4",
-    "Leaflet-WFST": "2.0.0-beta.1",
+    "Leaflet-WFST": "2.0.0",
     "proj4leaflet": "1.0.1",
     "osmtogeojson": "2.2.12",
     "js-beautify": "1.6.4",
