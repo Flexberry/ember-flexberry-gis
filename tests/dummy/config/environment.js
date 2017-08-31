@@ -39,7 +39,22 @@ module.exports = function (environment) {
       },
 
       // Flag: indicates whether to use user settings service or not.
-      useUserSettingsService: false
+      useUserSettingsService: false,
+
+      // Custom property with offline mode settings.
+      offline: {
+        dbName: 'ember-flexberry-gis-dummy',
+
+        // Flag that indicates whether offline mode in application is enabled or not.
+        offlineEnabled: false,
+
+        // Flag that indicates whether to switch to offline mode when got online connection errors or not.
+        modeSwitchOnErrorsEnabled: false,
+
+        // Flag that indicates whether to sync down all work with records when online or not.
+        // This let user to continue work without online connection.
+        syncDownWhenOnlineEnabled: false,
+      },
     }
   };
 

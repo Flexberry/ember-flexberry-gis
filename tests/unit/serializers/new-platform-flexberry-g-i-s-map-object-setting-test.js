@@ -3,9 +3,19 @@ import { moduleForModel, test } from 'ember-qunit';
 moduleForModel('new-platform-flexberry-g-i-s-map-object-setting', 'Unit | Serializer | new-platform-flexberry-g-i-s-map-object-setting', {
   // Specify the other units that are required for this test.
   needs: [
+    'serializer:new-platform-flexberry-g-i-s-map-object-setting',
+    'transform:file',
+    'transform:decimal',
+
+    'model:custom-inflector-rules',
     'model:new-platform-flexberry-g-i-s-layer-link',
+    'model:new-platform-flexberry-g-i-s-layer-metadata',
+    'model:new-platform-flexberry-g-i-s-link-metadata',
+    'model:new-platform-flexberry-g-i-s-link-parameter',
+    'model:new-platform-flexberry-g-i-s-map-layer',
     'model:new-platform-flexberry-g-i-s-map-object-setting',
-    'model:new-platform-flexberry-g-i-s-map'
+    'model:new-platform-flexberry-g-i-s-map',
+    'model:new-platform-flexberry-g-i-s-parameter-metadata'
   ]
 });
 
