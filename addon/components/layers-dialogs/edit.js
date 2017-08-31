@@ -44,7 +44,6 @@ const flexberryClassNames = {
   @uses RequiredActionsMixin
   @uses DynamicActionsMixin
   @uses DynamicPropertiesMixin
-  @uses LeafletCrsMixin
 */
 let FlexberryEditLayerDialogComponent = Ember.Component.extend(
   RequiredActionsMixin,
@@ -291,16 +290,6 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @private
     */
     _settings: null,
-
-    /**
-      CRS object like {code: '', definition: ''}
-
-      @property coordinateReferenceSystem
-      @type Object
-      @default null
-      @private
-    */
-    coordinateReferenceSystem: null,
 
     /**
       Inner hash containing coordinate reference systems settings mapped by available codes.
