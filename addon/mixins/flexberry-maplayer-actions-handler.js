@@ -182,9 +182,6 @@ export default Ember.Mixin.create({
 
       @method actions.onMapLayerFitBounds
       @param {String} boundsPropertyPath Path to a property, which value must be used within action.
-      @param {Object} e Action's event object.
-      @param {Object} e.originalEvent [jQuery event object](http://api.jquery.com/category/events/event-object/)
-      which describes button's 'click' event.
 
       @example
       templates/my-form.hbs
@@ -205,11 +202,10 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerFitBounds(...args) {
+    onMapLayerFitBounds([boundsPropertyPath]) {
       let leafletMap = this.get('leafletMap');
 
       if (leafletMap) {
-        let boundsPropertyPath = args[0];
         let bounds = getRecord(this, boundsPropertyPath);
 
         let layerBounds = L.latLngBounds(bounds);
