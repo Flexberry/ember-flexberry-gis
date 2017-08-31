@@ -1,6 +1,6 @@
 {
   "name": "ember-flexberry-gis",
-  "version": "0.1.1",
+  "version": "0.3.0-beta.1",
   "dependencies": {
     "ember": "~2.4.3",
     "ember-cli-shims": "0.1.1",
@@ -11,25 +11,25 @@
     "jquery-file-download": "1.4.4",
     "devicejs": "0.2.7",
     "semantic-ui": "^2.2.4",
-    "leaflet": "1.0.1",
+    "leaflet": "1.2.0",
     "leaflet.editable": "master",
-    "leaflet-editable-measures": "0.1.0",
-    "leaflet-export": "master",
+    "leaflet-editable-measures": "0.2.0-beta.1",
+    "leaflet-export": "0.2.1-beta.1",
     "html2canvas": "0.5.0-beta4",
-    "Leaflet-WFST": "develop",
-    "proj4leaflet": "1.0.1",
+    "leaflet-wfst": "2.0.1-beta.1",
+    "proj4leaflet": "1.0.2",
     "osmtogeojson": "2.2.12",
     "js-beautify": "1.6.4",
     "seiyria-bootstrap-slider": "~6.0.6",
     "jquery-minicolors": "2.2.6",
     "leaflet-minimap": "3.4.0",
-    "leaflet-wms": "Flexberry/Leaflet-WMS#master",
+    "leaflet-wms": "1.2.0-beta.1",
     "leaflet.wms": "gh-pages",
-    "leaflet-history": "Flexberry/leaflet-history#d67e852ae405a0ca2f6cd069d2f0ff048d7a5ce8",
-    "leaflet-switch-scale-control": "0.1.0",
-    "leaflet.zoomslider": "Flexberry/Leaflet.zoomslider#leaflet-1.0.1"
+    "leaflet-history": "Flexberry/leaflet-history#leaflet-1.2.0",
+    "leaflet-switch-scale-control": "0.1.1-beta.1",
+    "leaflet.zoomslider": "Flexberry/Leaflet.zoomslider#leaflet-1.2.0"
   },
   "resolutions": {
-    "leaflet": "1.0.1"
+    "leaflet": "1.2.0"
   }
 }
