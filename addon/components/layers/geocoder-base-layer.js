@@ -9,7 +9,7 @@ import BaseLayer from '../base-layer';
   Base geocoder layer component for leaflet map.
 
   @class GeocoderBaseLayerComponent
-  @extend BaseLayerComponent
+  @extends BaseLayerComponent
 */
 export default BaseLayer.extend({
   /**

@@ -37,7 +37,7 @@ let getRecord = function (source, keyName) {
       if (Ember.isArray(result) && !isNaN(keyValue)) {
         result = result.objectAt(keys[i]);
       } else {
-        result = result.get(keys[i]);
+        result = Ember.get(result, keys[i]);
       }
     }
   }

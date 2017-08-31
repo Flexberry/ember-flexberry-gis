@@ -76,6 +76,11 @@
                   actionName="onMapLayerChangeOpacity"
                   actionArguments=(array "{% layerPath %}.settingsAsObject.opacity")
                 )
+                (hash
+                  on="fitBounds"
+                  actionName="onMapLayerFitBounds"
+                  actionArguments=(array "{% layerPath %}.bounds")
+                )
               )
             )
           add=(action "onMapLayerAdd" "model.hierarchy")

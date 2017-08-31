@@ -15,6 +15,37 @@ export default {
   'name-textbox': {
     'caption': 'Имя слоя'
   },
+  'error-message': {
+    'caption': 'Ошибка'
+  },
+  'get-capabilities-button': {
+    'caption': 'Получить данные с сервиса',
+    'error-caption': 'Для получения данных заполните поля: '
+  },
+  'bounds-segment': {
+    'caption': 'Охват',
+    'error-caption': 'Неверный формат введённых данных, введите числа',
+    'min-x-textbox': {
+      'caption': 'Левая граница'
+    },
+    'min-y-textbox': {
+      'caption': 'Нижняя граница'
+    },
+    'max-x-textbox': {
+      'caption': 'Правая граница'
+    },
+    'max-y-textbox': {
+      'caption': 'Верхняя граница'
+    },
+    'options': {
+      'wgs84bbox': {
+        'caption': 'Широта и долгота',
+      },
+      'bbox': {
+        'caption': 'В системе координат слоя',
+      }
+    },
+  },
   'crs': {
     'caption': 'Система координат слоя (CRS)',
     'code-textbox': {

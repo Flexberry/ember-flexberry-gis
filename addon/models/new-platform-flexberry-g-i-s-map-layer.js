@@ -144,6 +144,41 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
     }
 
     return Ember.A();
+  }),
+
+  /**
+    Layer's latLngBounds.
+
+    @property bounds
+    @readonly
+    @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a> this layer's latLngBounds
+  */
+  bounds: Ember.computed('settingsAsObject.bounds', 'type', 'layers.@each.bounds', function () {
+    let layers = this.get('layers');
+    let type = this.get('type');
+
+    let layerBounds;
+
+    if (type === 'group' && layers.length > 0) {
+      let earthBounds = L.latLngBounds([
+        [-90, -180],
+        [90, 180]
+      ]);
+
+      for (let layer of layers) {
+        if (layerBounds && layerBounds.equals(earthBounds)) {
+          break;
+        }
+
+        let bounds = layer.get('bounds');
+        layerBounds = layerBounds ? layerBounds.extend(bounds) : L.latLngBounds(bounds);
+      }
+    } else {
+      let bounds = this.get('settingsAsObject.bounds');
+      layerBounds = L.latLngBounds(bounds);
+    }
+
+    return layerBounds;
   })
 });
 
