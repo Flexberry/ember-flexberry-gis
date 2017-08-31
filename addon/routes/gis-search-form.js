@@ -46,7 +46,7 @@ export default Ember.Route.extend({
   actions: {
     /**
       Loads the data according to request and refreshes current route
- 
+
       @param {Object} req
     */
     loadData(req) {
