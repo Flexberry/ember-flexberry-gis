@@ -19,14 +19,12 @@ export default Ember.Controller.extend({
     @default null
   */
   keyWords: null,
-  
   /**
     Scale. Used for search.
 
     // TODO For the next change it to 2 limitations >= ... < ...
   */
   scale: null,
-  
   /**
     Min longitude value. Used for search.
 
@@ -35,7 +33,6 @@ export default Ember.Controller.extend({
     @default null
   */
   minLng: null,
-  
   /**
     Min latitude value. Used for search.
 
@@ -44,7 +41,6 @@ export default Ember.Controller.extend({
     @default null
   */
   minLat: null,
-  
   /**
     Max longitude value. Used for search.
 
@@ -53,7 +49,6 @@ export default Ember.Controller.extend({
     @default null
   */
   maxLng: null,
-  
   /**
     Max latitude value. Used for search.
 
@@ -62,7 +57,6 @@ export default Ember.Controller.extend({
     @default null
   */
   maxLat: null,
-  
   actions: {
     /**
       Handles search click and passes search data to the route.

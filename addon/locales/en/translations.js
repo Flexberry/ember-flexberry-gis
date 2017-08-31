@@ -172,7 +172,7 @@ export default {
         'meter': '&nbsp;m',
         'kilometer': '&nbsp;km'
       }
-    }    
+    }
   },
 
   'map-commands': {
@@ -183,7 +183,7 @@ export default {
       'y-caption': 'Y'
     }
   },
-  
+
   'gis-search-form': {
     'header': 'Search',
     'subheader': 'through layer metadata and maps',

@@ -183,7 +183,7 @@ export default {
       'y-caption': 'Y'
     }
   },
-  
+
   'gis-search-form': {
     'header': 'Поиск',
     'subheader': 'по метаданным слоёв и проектам карт',

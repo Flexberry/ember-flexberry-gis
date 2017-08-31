@@ -15,7 +15,7 @@ import { Query } from 'ember-flexberry-data';
 export default Ember.Route.extend({
   /**
     Model for layer metadata list
-    
+
     @property _metadata
     @type Array
     @default null
@@ -24,7 +24,7 @@ export default Ember.Route.extend({
 
   /**
     Model for maps list
-    
+
     @property _maps
     @type Array
     @default null
@@ -45,13 +45,13 @@ export default Ember.Route.extend({
 
   actions: {
     /**
-     * Loads the data according to request and refreshes current route
-     * 
-     * @param {Object} req
-     */
+      Loads the data according to request and refreshes current route
+ 
+      @param {Object} req
+    */
     loadData(req) {
       let that = this;
-      
+
       const layerMetadataModelName = 'new-platform-flexberry-g-i-s-layer-metadata';
       const layerMetadataProjectionName = 'LayerMetadataL';
       const mapsModelName = 'new-platform-flexberry-g-i-s-map';
