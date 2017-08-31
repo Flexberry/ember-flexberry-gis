@@ -160,21 +160,7 @@ Ember.$.extend(true, translations, {
       }
     },
 
-    'integration-examples': {
-      'gis-search-form': {
-        'header': 'Поиск',
-        'subheader': 'по метаданным слоёв и проектам карт',
-        'keywords': 'Ключевые слова',
-        'scale': 'Масштаб',
-        'object': 'Что',
-        'position': 'Где',
-        'min-long': 'Долгота (мин.)',
-        'min-lat': 'Широта (мин.)',
-        'max-long': 'Долгота (макс.)',
-        'max-lat': 'Широта (макс.)',
-        'search': 'Искать',
-        'results': 'Результаты'
-      }
+    'integration-examples': {      
     },
     'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
     'new-platform-flexberry-g-i-s-map-l': NewPlatformFlexberryGISMapLForm,

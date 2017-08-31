@@ -1,69 +1,79 @@
 <div class="ui attached message">
-    <div class="header">
-        {{t "forms.integration-examples.gis-search-form.header"}}
-    </div>
-    <p>{{t "forms.integration-examples.gis-search-form.subheader"}}</p>
+  <div class="header">
+    {{t "gis-search-form.header"}}
+  </div>
+  <p>{{t "gis-search-form.subheader"}}</p>
 </div>
 <div class="ui form attached fluid segment">
-    <div class="ui grid">
-        <div class="row">
-            <div class="eight wide column">
-                <div class="ui container segment">
-                    <div class="ui top attached label">{{t "forms.integration-examples.gis-search-form.object"}}</div>
-                    <div class="field">
-                        <label>{{t "forms.integration-examples.gis-search-form.keywords"}}</label> {{input value=keyWords type="text"}}
-                    </div>
-                    <div class="field">
-                        <label>{{t "forms.integration-examples.gis-search-form.scale"}}</label> {{input value=scale type="text"}}
-                    </div>
-                </div>
-            </div>
-            <div class="eight wide column">
-                <div class="ui container segment">
-                    <div class="ui top attached label">{{t "forms.integration-examples.gis-search-form.position"}}</div>
-                    <div class="field">
-                        <label>{{t "forms.integration-examples.gis-search-form.min-long"}}</label> {{input value=minLng type="text"}}
-                    </div>
-                    <div class="field">
-                        <label>{{t "forms.integration-examples.gis-search-form.min-lat"}}</label> {{input value=minLat type="text"}}
-                    </div>
-                    <div class="field">
-                        <label>{{t "forms.integration-examples.gis-search-form.max-long"}}</label> {{input value=maxLng type="text"}}
-                    </div>
-                    <div class="field">
-                        <label>{{t "forms.integration-examples.gis-search-form.max-lat"}}</label> {{input value=maxLat type="text"}}
-                    </div>
-                </div>
-            </div>
+  <div class="ui grid">
+    <div class="row">
+      <div class="eight wide column">
+        <div class="ui container segment">
+          <div class="ui top attached label">
+            {{t "gis-search-form.object"}}
+          </div>
+          <div class="field">
+            <label>{{t "gis-search-form.keywords"}}</label>
+            {{input value=keyWords type="text"}}
+          </div>
+          <div class="field">
+            <label>{{t "gis-search-form.scale"}}</label>
+            {{input value=scale type="text"}}
+          </div>
         </div>
-        <div class="row">
-            <div class="seven wide column"></div>
-            <div class="two wide column">
-                <button class="ui labeled icon blue button" {{action "getSearchResults" on="click" }}>
-                    <i class="search icon"></i>
-                    {{t "forms.integration-examples.gis-search-form.search"}}
-                </button>
-            </div>
-            <div class="seven wide column"></div>
+      </div>
+      <div class="eight wide column">
+        <div class="ui container segment">
+          <div class="ui top attached label">
+            {{t "gis-search-form.position"}}
+          </div>
+          <div class="field">
+            <label>{{t "gis-search-form.min-long"}}</label>
+            {{input value=minLng type="text"}}
+          </div>
+          <div class="field">
+            <label>{{t "gis-search-form.min-lat"}}</label> 
+            {{input value=minLat type="text"}}
+          </div>
+          <div class="field">
+            <label>{{t "gis-search-form.max-long"}}</label>
+            {{input value=maxLng type="text"}}
+          </div>
+          <div class="field">
+            <label>{{t "gis-search-form.max-lat"}}</label>
+            {{input value=maxLat type="text"}}
+          </div>
         </div>
-        <div class="row">
-            <div class="ui top attached label">{{t "forms.integration-examples.gis-search-form.results"}}</div>
-            <div class="eight wide column">
-                <ul>
-                    {{#each model.metadata as |data|}}
-                    <li>Название: {{data.name}}, Тип: {{data.type}}</li>
-                    {{/each}}
-                </ul>
-            </div>
-            <div class="eight wide column" style="margin-top: 2rem !important;">
-                <ul>
-                    {{#each model.maps as |data|}}
-                    <li>Название: {{data.name}}</li>
-                    {{/each}}
-                </ul>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="row">
+      <div class="seven wide column"></div>
+      <div class="two wide column">
+        <button class="ui labeled icon blue button" {{action "getSearchResults" on="click"}}>
+          <i class="search icon"></i>
+          {{t "gis-search-form.search"}}
+        </button>
+      </div>
+      <div class="seven wide column"></div>
+    </div>
+    <div class="row">
+      <div class="ui top attached label">{{t "gis-search-form.results"}}</div>
+      <div class="eight wide column">
+        <ul>
+          {{#each model.metadata as |data|}}
+          <li>{{data.name}} - {{data.type}}</li>
+          {{/each}}
+        </ul>
+      </div>
+      <div class="eight wide column" style="margin-top: 2rem !important;">
+        <ul>
+          {{#each model.maps as |data|}}
+          <li>{{data.name}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
 
 {{outlet}}
