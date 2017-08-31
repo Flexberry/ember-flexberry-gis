@@ -7,7 +7,9 @@ import RequiredActionsMixin from '../../mixins/required-actions';
 import DynamicActionsMixin from '../../mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 import layout from '../../templates/components/layers-dialogs/edit';
-import LeafletCrsMixin from '../../mixins/leaflet-crs';
+import {
+  getLeafletCrs
+} from '../../utils/leaflet-crs';
 import {
   translationMacro as t
 } from 'ember-i18n';
@@ -47,8 +49,7 @@ const flexberryClassNames = {
 let FlexberryEditLayerDialogComponent = Ember.Component.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
-  DynamicPropertiesMixin,
-  LeafletCrsMixin, {
+  DynamicPropertiesMixin, {
     /**
       Available modes.
 
@@ -573,10 +574,8 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
           if (!Ember.isBlank(bbox[0][0]) && !Ember.isBlank(bbox[0][1]) &&
             !Ember.isBlank(bbox[1][0]) && !Ember.isBlank(bbox[1][1])) {
 
-            // Put it in property to force LeafletCRSMixin do it's work.
-            this.set('coordinateReferenceSystem', coordinateReferenceSystem);
-
-            let crs = this.get('crs');
+            // Compute leaflet crs
+            let crs = getLeafletCrs(coordinateReferenceSystem, this);
 
             let corner1 = crs.unproject(L.point(bbox[0]));
             let corner2 = crs.unproject(L.point(bbox[1]));
@@ -714,6 +713,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         @method actions.coordsInputKeyPress
       */
       coordsInputKeyPress(e) {
+        // Allow only numeric (with dot) and Delete, Insert, Print screen buttons.
         if (e.which !== 45 && e.which !== 44 && e.which !== 46 && (e.which < 48 || e.which > 57)) {
           return false;
         }

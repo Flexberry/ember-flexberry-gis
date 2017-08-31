@@ -150,8 +150,8 @@ let Model = Projection.Model.extend(NewPlatformFlexberyGISMapLayerModelMixin, Le
     Layer's latLngBounds.
 
     @property bounds
-    @type <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
-    @return {Array} collection of child layers
+    @readonly
+    @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a> this layer's latLngBounds
   */
   bounds: Ember.computed('settingsAsObject.bounds', 'type', 'layers.@each.bounds', function () {
     let layers = this.get('layers');

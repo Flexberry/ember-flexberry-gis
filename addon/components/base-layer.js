@@ -501,7 +501,6 @@ export default Ember.Component.extend(
       }
 
       let bounds = this._getBoundingBox(layer);
-      this.set('bounds', bounds);
 
       return bounds;
     },
