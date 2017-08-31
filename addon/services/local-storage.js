@@ -4,6 +4,13 @@
 
 import Ember from 'ember';
 
+/**
+  Local storage service.
+  Interacts with local storage to save and load data using key-value pairs.
+
+  @class LocalStorageService
+  @extends Ember.Service
+*/
 export default Ember.Service.extend({
   /**
     Flag: indicates whether service is available.
