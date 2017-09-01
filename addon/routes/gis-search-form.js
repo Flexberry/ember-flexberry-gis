@@ -14,44 +14,29 @@ import { Query } from 'ember-flexberry-data';
 */
 export default Ember.Route.extend({
   /**
-    Model for layer metadata list
+    Configuration hash for this route's queryParams. [More info](http://emberjs.com/api/classes/Ember.Route.html#property_queryParams).
 
-    @property _metadata
-    @type Array
-    @default null
-  */
-  _metadata: null,
-
-  /**
-    Model for maps list
-
-    @property _maps
-    @type Array
-    @default null
-  */
-  _maps: null,
-
+    @property queryParams
+    @type Object
+   */
+  queryParams: {
+    keyWords: { refreshModel: true },
+    scaleFrom: { refreshModel: true },
+    scaleTo: { refreshModel: true },
+    minLng: { refreshModel: true },
+    minLat: { refreshModel: true },
+    maxLng: { refreshModel: true },
+    maxLat: { refreshModel: true }
+  },
   /**
     [Model hook](http://emberjs.com/api/classes/Ember.Route.html#method_model) that returns a model object according to request.
 
     @method model
     @param {Object} params
-    @param {Object} transition
     @return {*} Model object according to request.
   */
-  model() {
-    return { metadata: this.get('_metadata'), maps: this.get('_maps') };
-  },
-
-  actions: {
-    /**
-      Loads the data according to request and refreshes current route
-
-      @param {Object} req
-    */
-    loadData(req) {
-      let that = this;
-
+  model(params) {
+    if (params.keyWords) {
       const layerMetadataModelName = 'new-platform-flexberry-g-i-s-layer-metadata';
       const layerMetadataProjectionName = 'LayerMetadataL';
       const mapsModelName = 'new-platform-flexberry-g-i-s-map';
@@ -68,13 +53,13 @@ export default Ember.Route.extend({
         .selectByProjection(mapsProjectionName);
       let getMaps = this.get('store').query(mapsModelName, mapsBuilder.build());
 
-      Ember.RSVP.all([getMetadata, getMaps]).then((data) => {
-        that._metadata = data[0];
-        that._maps = data[1];
-        that.refresh();
-      }).catch((errorMessage) => {
-        console.log(errorMessage);
-      });
+      return Ember.RSVP.all([getMetadata, getMaps]);
     }
+  },
+  setupController(controller, model) {
+    this._super(controller, model);
+
+    // Pass query params to search conditions
+    controller.set('searchConditions', controller.getProperties(['keyWords', 'scaleFrom', 'scaleTo', 'minLng', 'minLat', 'maxLng', 'maxLat']));
   }
 });

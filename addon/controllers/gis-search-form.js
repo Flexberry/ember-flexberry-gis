@@ -12,63 +12,71 @@ import Ember from 'ember';
 */
 export default Ember.Controller.extend({
   /**
-    Comma-separated list of key words. Used for search.
-
-    @property keyWords
-    @type String
-    @default null
+    Model for search panel
   */
-  keyWords: null,
-  /**
-    Scale. Used for search.
+  searchConditions: {
+    /**
+      Comma-separated list of key words. Used for search.
 
-    // TODO For the next change it to 2 limitations >= ... < ...
-  */
-  scale: null,
-  /**
-    Min longitude value. Used for search.
+      @property searchKeyWords
+      @type String
+      @default null
+    */
+    keyWords: null,
+    /**
+      Left boundary of scale limitation.
 
-    @property minLng
-    @type String
-    @default null
-  */
-  minLng: null,
-  /**
-    Min latitude value. Used for search.
+      @type Number
+      @default null
+    */
+    scaleFrom: null,
+    /**
+      Right boundary of scale limitation.
 
-    @property minLat
-    @type String
-    @default null
-  */
-  minLat: null,
-  /**
-    Max longitude value. Used for search.
+      @type Number
+      @default null
+    */
+    scaleTo: null,
+    /**
+      Min longitude value. Used for search.
 
-    @property maxLng
-    @type String
-    @default null
-  */
-  maxLng: null,
-  /**
-    Max latitude value. Used for search.
+      @property searchMinLng
+      @type Number
+      @default null
+    */
+    minLng: null,
+    /**
+      Min latitude value. Used for search.
 
-    @property maxLat
-    @type String
-    @default null
-  */
-  maxLat: null,
+      @property searchMinLat
+      @type Number
+      @default null
+    */
+    minLat: null,
+    /**
+      Max longitude value. Used for search.
+
+      @property searchMaxLng
+      @type Number
+      @default null
+    */
+    maxLng: null,
+    /**
+      Max latitude value. Used for search.
+
+      @property searchMaxLat
+      @type Number
+      @default null
+    */
+    maxLat: null
+  },
   actions: {
     /**
       Handles search click and passes search data to the route.
     */
     getSearchResults() {
-      this.send('loadData', {
-        keyWords: this.get('keyWords'),
-        scale: this.get('scale'),
-        minLng: this.get('minLng'),
-        minLat: this.get('minLat'),
-        maxLng: this.get('maxLng'),
-        maxLat: this.get('maxLat')
+      this.transitionToRoute({
+        queryParams: this.get('searchConditions')
       });
     }
   }
