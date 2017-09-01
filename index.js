@@ -4,10 +4,6 @@
 module.exports = {
   name: 'ember-flexberry-gis',
 
-  isDevelopingAddon() {
-    return true;
-  },
-
   included: function (app) {
     this._super.included.apply(this._super, arguments);
 
@@ -69,8 +65,8 @@ module.exports = {
     app.import(app.bowerDirectory + '/proj4/dist/proj4-src.js');
     app.import(app.bowerDirectory + '/proj4leaflet/src/proj4leaflet.js');
 
-    // Leaflet-WFST.
-    app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
+    // leaflet-wfst.
+    app.import(app.bowerDirectory + '/leaflet-wfst/dist/leaflet-wfst.src.js');
 
     // Leaflet-WMS.
     app.import(app.bowerDirectory + '/leaflet-wms/dist/Leaflet-WMS.js');
