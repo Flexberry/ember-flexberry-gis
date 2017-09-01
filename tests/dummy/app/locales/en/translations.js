@@ -160,7 +160,7 @@ Ember.$.extend(true, translations, {
       }
     },
 
-    'integration-examples': {      
+    'integration-examples': {
     },
     'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
     'new-platform-flexberry-g-i-s-map-l': NewPlatformFlexberryGISMapLForm,
