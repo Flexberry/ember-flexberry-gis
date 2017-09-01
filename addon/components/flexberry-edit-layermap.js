@@ -22,7 +22,7 @@ let proj4CrsCode = null;
 
   @for FlexberryEditLayerDialogComponent
 */
-const flexberryClassNamesPrefix = 'flexberry-edit-layer-dialog';
+const flexberryClassNamesPrefix = 'flexberry-edit-layermap';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null
@@ -335,7 +335,7 @@ export default Ember.Component.extend(
       } else if (!Ember.isNone(type)) {
         settings = defaultSettings;
       }
-
+      
       this._createInnerSettings();
       if (!Ember.isNone(settings)) {
         this.set(`_settings.${type}`, settings);
@@ -454,6 +454,7 @@ export default Ember.Component.extend(
     },
 
     getLayerProperties() {
+           
       let layer = this.get('_layer');
       let coordinateReferenceSystem = Ember.get(layer, 'coordinateReferenceSystem');
       coordinateReferenceSystem = Ember.$.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);
@@ -464,10 +465,6 @@ export default Ember.Component.extend(
       Ember.set(layer, 'settings', settings);
       
       return layer;
-    },
-
-    getInitOnSave() {
-      this.init();
     },
 
     /**
