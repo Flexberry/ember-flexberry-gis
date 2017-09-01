@@ -202,7 +202,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerFitBounds([boundsPropertyPath]) {
+    onMapLayerFitBounds(boundsPropertyPath) {
       let leafletMap = this.get('leafletMap');
 
       if (leafletMap) {
