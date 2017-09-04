@@ -2,6 +2,9 @@ export default {
   'info-format-dropdown': {
     'caption': 'GetFeatureInfo-responses format'
   },
+  'feature-count-textbox': {
+    'caption': 'GetFeatureInfo-responses feature count'
+  },
   'url-textbox': {
     'caption': 'Url'
   },
