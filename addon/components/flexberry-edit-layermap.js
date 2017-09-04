@@ -36,6 +36,17 @@ export default Ember.Component.extend(
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
     /**
+      Reference to component's CSS-classes names.
+      Must be also a component's instance property to be available from component's .hbs template.
+    */
+    flexberryClassNames,
+
+    /**
+      Reference to component's template.
+    */
+    layout,
+
+    /**
       Dialog's 'type' dropdown caption.
 
       @property typeDropdownCaption
@@ -52,12 +63,6 @@ export default Ember.Component.extend(
       @default t('components.layers-dialogs.edit.name-textbox.caption')
     */
     nameTextboxCaption: t('components.layers-dialogs.edit.name-textbox.caption'),
-
-    /**
-      Reference to component's CSS-classes names.
-      Must be also a component's instance property to be available from component's .hbs template.
-    */
-    flexberryClassNames,
 
     /**
       Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
@@ -309,6 +314,246 @@ export default Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether CRS is available for the selected layer type.
+
+      @property _crsSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _crsSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+
+      let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
+      if (!available && this.get('_tabularMenuActiveTab') === 'crs') {
+        this.set('_tabularMenuActiveTab', 'main');
+      }
+
+      // Reset tabular menu after tab has been added or removed.
+      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
+
+      return available;
+    }),
+
+    /**
+      Flag: indicates whether type-related settings are available for the selected layer type.
+
+      @property _layerSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _layerSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+
+      let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
+      if (!available && this.get('_tabularMenuActiveTab') === 'settings') {
+        this.set('_tabularMenuActiveTab', 'main');
+      }
+
+      // Reset tabular menu after tab has been added or removed.
+      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
+
+      return available;
+    }),
+
+    /**
+      Flag: indicates whether 'identify' operation settings are available for the selected layer type.
+
+      @property _identifySettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _identifySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      let available = !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('identify');
+      if (!available && this.get('_tabularMenuActiveTab') === 'identifySettings') {
+        this.set('_tabularMenuActiveTab', 'main');
+      }
+
+      // Reset tabular menu after tab has been added or removed.
+      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
+
+      return available;
+    }),
+
+    /**
+      Flag: indicates whether 'search' operation settings are available for the selected layer type.
+
+      @property _searchSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _searchSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      let available = !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('search');
+      if (!available && this.get('_tabularMenuActiveTab') === 'searchSettings') {
+        this.set('_tabularMenuActiveTab', 'main');
+      }
+
+      // Reset tabular menu after tab has been added or removed.
+      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
+
+      return available;
+    }),
+
+    /**
+      Flag: indicates whether 'display' operation settings are available for the selected layer type.
+
+      @property _displaySettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _displaySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      return true;
+    }),
+
+    /**
+      Flag: indicates whether 'legend' operation settings are available for the selected layer type.
+
+      @property _legendSettingaAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _legendSettingaAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      let available = !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
+      if (!available && this.get('_tabularMenuActiveTab') === 'legendSettings') {
+        this.set('_tabularMenuActiveTab', 'main');
+      }
+
+      // Reset tabular menu after tab has been added or removed.
+      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
+
+      return available;
+    }),
+
+    /**
+      Available modes captions.
+
+      @property _availableModesCaptions
+      @type String[]
+      @readonly
+    */
+    _availableModesCaptions: Ember.computed('_availableModes', 'i18n', function () {
+      let _availableModes = this.get('_availableModes');
+
+      let modes = Ember.A();
+      if (Ember.isArray(_availableModes) && _availableModes.length !== 0) {
+        let i18n = this.get('i18n');
+
+        modes.pushObject(i18n.t('components.layers-dialogs.edit-modes.new'));
+
+        modes.pushObjects(_availableModes.map((editMode) => {
+          return i18n.t('components.layers-dialogs.edit-modes.' + editMode.name);
+        }));
+      }
+
+      return modes;
+    }),
+
+    /**
+      Flag: indicates whether modes are available.
+
+      @property _modesAreAvailable
+      @type Boolean
+      @readonly
+    */
+    _modesAreAvailable: Ember.computed('_availableModes', function () {
+      let _availableModes = this.get('_availableModes');
+
+      return Ember.isArray(_availableModes) && !Ember.isBlank(_availableModes);
+    }),
+
+    /**
+      Selected mode.
+
+      @property _selectedMode
+      @type Object
+      @readonly
+    */
+    _selectedMode: Ember.computed('_selectedModeCaption', function () {
+      let _availableModes = this.get('_availableModes');
+      let _availableModesCaptions = this.get('_availableModesCaptions');
+      let _selectedModeCaption = this.get('_selectedModeCaption');
+
+      if (!Ember.isArray(_availableModes) || !Ember.isArray(_availableModesCaptions) || Ember.isBlank(_selectedModeCaption)) {
+        return null;
+      }
+
+      let modeIndex = _availableModesCaptions.findIndex(item => item.string === _selectedModeCaption) - 1;
+
+      return modeIndex > -1 ? _availableModes.objectAt(modeIndex) : null;
+    }),
+
+    actions: {
+      /**
+        Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-edit-mode' components 'editingFinished' action {{/crossLink}}.
+
+        @method actions.onEditingFinished
+        @param {Object} layer Modified layer model
+      */
+      onEditingFinished(layer) {
+        let _layerHash = this.get('_layer');
+
+        for (var propertyName in layer) {
+          if (layer.hasOwnProperty(propertyName) && _layerHash.hasOwnProperty(propertyName)) {
+            Ember.set(_layerHash, propertyName, Ember.get(layer, propertyName));
+          }
+        }
+
+        this.set('_layer', _layerHash);
+        this.set('_coordinateReferenceSystemCode', Ember.get(_layerHash, 'coordinateReferenceSystem.code'));
+      },
+
+      /**
+        Handles clicks on tabs.
+
+        @method actions.onTabClick
+        @param {Object} e Click event object.
+      */
+      onTabClick(e) {
+        e = Ember.$.event.fix(e);
+
+        let $clickedTab = Ember.$(e.currentTarget);
+        let clickedTabName = $clickedTab.attr('data-tab');
+        this.set('_tabularMenuActiveTab', clickedTabName);
+      },
+
+      /**
+        Handler for bounds mode change.
+
+        @method actions.onBoundsModeChange
+        @param {String} newBoundsMode New bounds mode.
+      */
+      onBoundsModeChange(newBoundsMode) {
+        this.set('boundsMode', newBoundsMode);
+      },
+
+      /**
+        Handles coordinate input textboxes keyPress events.
+
+        @method actions.coordsInputKeyPress
+      */
+      coordsInputKeyPress(e) {
+        // Allow only numeric (with dot) and Delete, Insert, Print screen buttons.
+        if (e.which !== 45 && e.which !== 44 && e.which !== 46 && (e.which < 48 || e.which > 57)) {
+          return false;
+        }
+      }
+    },
+
+    /**
       Creates inner hash containing layer CRS settings for different CRS codes.
 
       @method _createInnerCoordinateReferenceSystems
@@ -499,23 +744,33 @@ export default Ember.Component.extend(
       });
 
       this.set('_availableModes', availableEditModes);
-      this.sendAction('layerProperties', this.getLayerProperties.bind(this));
+      this.sendAction('onInit', this.getLayerProperties.bind(this));
     },
 
-    getLayerProperties() {
-      let layer = this.get('_layer');
-      let coordinateReferenceSystem = Ember.get(layer, 'coordinateReferenceSystem');
-      coordinateReferenceSystem = Ember.$.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);
-      Ember.set(layer, 'coordinateReferenceSystem', coordinateReferenceSystem);
+    /**
+      Applies data from controls to layer hash.
 
-      let settings = Ember.get(layer, 'settings');
+      @method getLayerProperties
+    */
+    getLayerProperties() {
+      // Inner layer hash.
+      let layer = this.get('_layer');
+
+      // Layer hash to send.
+      let _layerHash = Object.assign({}, layer);
+
+      let coordinateReferenceSystem = Ember.get(_layerHash, 'coordinateReferenceSystem');
+      coordinateReferenceSystem = Ember.$.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);
+      Ember.set(_layerHash, 'coordinateReferenceSystem', coordinateReferenceSystem);
+
+      let settings = Ember.get(_layerHash, 'settings');
 
       let boundsMode = this.get('boundsMode');
       let geoJsonBounds;
 
       // Coordinates should be projected to LatLngs.
       if (boundsMode === 'bbox') {
-        let bbox = Ember.get(layer, 'settings.bbox');
+        let bbox = Ember.get(settings, 'bbox');
 
         if (!Ember.isBlank(bbox[0][0]) && !Ember.isBlank(bbox[0][1]) &&
           !Ember.isBlank(bbox[1][0]) && !Ember.isBlank(bbox[1][1])) {
@@ -532,7 +787,7 @@ export default Ember.Component.extend(
           ];
         }
       } else {
-        geoJsonBounds = Ember.get(layer, 'settings.wgs84bbox');
+        geoJsonBounds = Ember.get(settings, 'wgs84bbox');
       }
 
       let bounds;
@@ -551,206 +806,12 @@ export default Ember.Component.extend(
       }
 
       Ember.set(settings, 'bounds', geoJsonBounds);
-
       settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
-      Ember.set(layer, 'settings', settings);
 
-      return layer;
+      Ember.set(_layerHash, 'settings', settings);
+
+      return _layerHash;
     },
-
-    /**
-      Flag: indicates whether CRS is available for the selected layer type.
-
-      @property _crsSettingsAreAvailableForType
-      @type Boolean
-      @private
-      @readonly
-    */
-    _crsSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      let className = this.get('_layer.type');
-
-      let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
-      if (!available && this.get('_tabularMenuActiveTab') === 'crs') {
-        this.set('_tabularMenuActiveTab', 'main');
-      }
-
-      // Reset tabular menu after tab has been added or removed.
-      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
-
-      return available;
-    }),
-
-    /**
-      Flag: indicates whether type-related settings are available for the selected layer type.
-
-      @property _layerSettingsAreAvailableForType
-      @type Boolean
-      @private
-      @readonly
-    */
-    _layerSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      let className = this.get('_layer.type');
-
-      let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
-      if (!available && this.get('_tabularMenuActiveTab') === 'settings') {
-        this.set('_tabularMenuActiveTab', 'main');
-      }
-
-      // Reset tabular menu after tab has been added or removed.
-      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
-
-      return available;
-    }),
-
-    /**
-      Flag: indicates whether 'identify' operation settings are available for the selected layer type.
-
-      @property _identifySettingsAreAvailableForType
-      @type Boolean
-      @private
-      @readonly
-    */
-    _identifySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      let className = this.get('_layer.type');
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
-
-      let available = !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('identify');
-      if (!available && this.get('_tabularMenuActiveTab') === 'identifySettings') {
-        this.set('_tabularMenuActiveTab', 'main');
-      }
-
-      // Reset tabular menu after tab has been added or removed.
-      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
-
-      return available;
-    }),
-
-    /**
-      Flag: indicates whether 'search' operation settings are available for the selected layer type.
-
-      @property _searchSettingsAreAvailableForType
-      @type Boolean
-      @private
-      @readonly
-    */
-    _searchSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      let className = this.get('_layer.type');
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
-
-      let available = !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('search');
-      if (!available && this.get('_tabularMenuActiveTab') === 'searchSettings') {
-        this.set('_tabularMenuActiveTab', 'main');
-      }
-
-      // Reset tabular menu after tab has been added or removed.
-      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
-
-      return available;
-    }),
-
-    /**
-      Flag: indicates whether 'display' operation settings are available for the selected layer type.
-
-      @property _displaySettingsAreAvailableForType
-      @type Boolean
-      @private
-      @readonly
-    */
-    _displaySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      return true;
-    }),
-
-    /**
-      Flag: indicates whether 'legend' operation settings are available for the selected layer type.
-
-      @property _legendSettingaAreAvailableForType
-      @type Boolean
-      @private
-      @readonly
-    */
-    _legendSettingaAreAvailableForType: Ember.computed('_layer.type', function () {
-      let className = this.get('_layer.type');
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
-
-      let available = !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
-      if (!available && this.get('_tabularMenuActiveTab') === 'legendSettings') {
-        this.set('_tabularMenuActiveTab', 'main');
-      }
-
-      // Reset tabular menu after tab has been added or removed.
-      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
-
-      return available;
-    }),
-
-    /**
-      Available modes captions.
-
-      @property _availableModesCaptions
-      @type String[]
-      @readonly
-    */
-    _availableModesCaptions: Ember.computed('_availableModes', 'i18n', function () {
-      let _availableModes = this.get('_availableModes');
-
-      let modes = Ember.A();
-      if (Ember.isArray(_availableModes) && _availableModes.length !== 0) {
-        let i18n = this.get('i18n');
-
-        modes.pushObject(i18n.t('components.layers-dialogs.edit-modes.new'));
-
-        modes.pushObjects(_availableModes.map((editMode) => {
-          return i18n.t('components.layers-dialogs.edit-modes.' + editMode.name);
-        }));
-      }
-
-      return modes;
-    }),
-
-    /**
-      Flag: indicates whether modes are available.
-
-      @property _modesAreAvailable
-      @type Boolean
-      @readonly
-    */
-    _modesAreAvailable: Ember.computed('_availableModes', function () {
-      let _availableModes = this.get('_availableModes');
-
-      return Ember.isArray(_availableModes) && !Ember.isBlank(_availableModes);
-    }),
-
-    /**
-      Selected mode.
-
-      @property _selectedMode
-      @type Object
-      @readonly
-    */
-    _selectedMode: Ember.computed('_selectedModeCaption', function () {
-      let _availableModes = this.get('_availableModes');
-      let _availableModesCaptions = this.get('_availableModesCaptions');
-      let _selectedModeCaption = this.get('_selectedModeCaption');
-
-      if (!Ember.isArray(_availableModes) || !Ember.isArray(_availableModesCaptions) || Ember.isBlank(_selectedModeCaption)) {
-        return null;
-      }
-
-      let modeIndex = _availableModesCaptions.findIndex(item => item.string === _selectedModeCaption) - 1;
-
-      return modeIndex > -1 ? _availableModes.objectAt(modeIndex) : null;
-    }),
-
-    /**
-      Initializes component's DOM-related properties.
-    */
-    /*
-        didInsertElement() {
-          this._super(...arguments);
-
-          let $tabularMenu = this.get('childViews')[0].$('.tabular.menu');
-          this.set('_$tabularMenu', $tabularMenu);
-        },*/
 
     /**
       Deinitializes component's DOM-related properties.
@@ -763,66 +824,14 @@ export default Ember.Component.extend(
         Ember.$('.tab.item', $tabularMenu).tab('destroy');
         this.set('_$tabularMenu', null);
       }
-    },
+    }
 
-    actions: {
-      /**
-        Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-edit-mode' components 'editingFinished' action {{/crossLink}}.
+    /**
+      Component's action invoking init hook is finished.
+      Provides binding for {{#crossLink "FlexberryEditLayerComponent/sendingActions.onInit:method"}}'flexberry-edit-layer' component's 'getLayerProperties' method{{/crossLink}}.
 
-        @method actions.onEditingFinished
-        @param {Object} layer Modified layer model
-      */
-      onEditingFinished(layer) {
-        let _layerHash = this.get('_layer');
-
-        for (var propertyName in layer) {
-          if (layer.hasOwnProperty(propertyName) && _layerHash.hasOwnProperty(propertyName)) {
-            Ember.set(_layerHash, propertyName, Ember.get(layer, propertyName));
-          }
-        }
-
-        this.set('_layer', _layerHash);
-        this.set('_coordinateReferenceSystemCode', Ember.get(_layerHash, 'coordinateReferenceSystem.code'));
-      },
-
-      /**
-        Handles clicks on tabs.
-
-        @method actions.onTabClick
-        @param {Object} e Click event object.
-      */
-      onTabClick(e) {
-        e = Ember.$.event.fix(e);
-
-        let $clickedTab = Ember.$(e.currentTarget);
-        let clickedTabName = $clickedTab.attr('data-tab');
-        this.set('_tabularMenuActiveTab', clickedTabName);
-      },
-
-      /**
-        Handler for bounds mode change.
-
-        @method actions.onBoundsModeChange
-        @param {String} newBoundsMode New bounds mode.
-      */
-      onBoundsModeChange(newBoundsMode) {
-        this.set('boundsMode', newBoundsMode);
-      },
-
-      /**
-        Handles coordinate input textboxes keyPress events.
-
-        @method actions.coordsInputKeyPress
-      */
-      coordsInputKeyPress(e) {
-        // Allow only numeric (with dot) and Delete, Insert, Print screen buttons.
-        if (e.which !== 45 && e.which !== 44 && e.which !== 46 && (e.which < 48 || e.which > 57)) {
-          return false;
-        }
-      }
-    },
-
-    layout
+      @method sendingActions.onInit
+    */
   });
 
 Ember.Component.reopenClass({

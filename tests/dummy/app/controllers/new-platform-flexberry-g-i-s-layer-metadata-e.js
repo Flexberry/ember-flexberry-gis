@@ -15,11 +15,21 @@ import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-con
 export default EditFormController.extend(EditFormControllerOperationsIndicationMixin, {
 
   actions: {
-    onLayerProperties(getLayerProperties) {
-      this.set('getLayerProperties', getLayerProperties);
+    /**
+      Handles {{#crossLink "FlexberryEditLayerComponent/sendingActions.onInit:method"}}'flexberry-edit-layer' component's 'onInit' action{{/crossLink}}.
+
+      @method actions.initLayerProperties
+    */
+    initLayerProperties(getLayerPropertiesFunction) {
+      this.set('getLayerProperties', getLayerPropertiesFunction);
     },
 
-    onApprove() {
+    /**
+      Default action for button 'Save'.
+
+      @method actions.save
+    */
+    save() {
       let model = this.get('model');
       let layerProperties = this.get('getLayerProperties')();
 
@@ -28,7 +38,7 @@ export default EditFormController.extend(EditFormControllerOperationsIndicationM
       model.set('coordinateReferenceSystem', layerProperties.coordinateReferenceSystem);
       model.set('settings', layerProperties.settings);
 
-      this.save();
+      this._super(...arguments);
     }
   },
   /**

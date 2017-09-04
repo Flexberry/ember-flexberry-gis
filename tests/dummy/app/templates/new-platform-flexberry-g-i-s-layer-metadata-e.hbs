@@ -20,7 +20,7 @@
     <div class="field">
     <div class="flexberry-edit-panel">
       {{#unless readonly}}
-        <button type="submit" class="ui positive button" {{action 'onApprove'}}>
+        <button type="submit" class="ui positive button" {{action 'save'}}>
           {{t "forms.edit-form.save-button-text"}}
         </button>
         {{#unless model.isNew}}
@@ -37,14 +37,14 @@
 
   {{flexberry-edit-layermap
     layer=(hash
-          type=model.type
-          name=model.name
-          coordinateReferenceSystem=model.coordinateReferenceSystem
-          settings=model.settings
-        )
+      type=model.type
+      name=model.name
+      coordinateReferenceSystem=model.coordinateReferenceSystem
+      settings=model.settings
+    )
     leafletMap=leafletMap
     _typeIsReadonly=(not model.isNew)
-    layerProperties=(action "onLayerProperties")
+    onInit=(action "initLayerProperties")
 }}
 
 </form>
