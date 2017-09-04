@@ -10,10 +10,8 @@ const createFeaturesPropertiesSettings = function () {
     displayProperty: null,
     excludedProperties: [],
     localizedProperties: {
-      ru: {
-      },
-      en: {
-      }
+      ru: {},
+      en: {}
     }
   };
 };
@@ -79,7 +77,19 @@ export default Ember.Object.extend({
   */
   createSettings() {
     let settings = {
-      opacity: 1
+      opacity: 1,
+      bounds: [
+        [-90, -180],
+        [90, 180]
+      ],
+      wgs84bbox: [
+        [undefined, undefined],
+        [undefined, undefined]
+      ],
+      bbox: [
+        [undefined, undefined],
+        [undefined, undefined]
+      ]
     };
 
     // Inject search & identify settings.

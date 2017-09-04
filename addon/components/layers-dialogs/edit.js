@@ -100,14 +100,14 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     denyButtonCaption: t('components.layers-dialogs.edit.deny-button.caption'),
 
     actions: {
-      onLayerProperties(getLayerProperties){
+      onLayerProperties(getLayerProperties) {
         this.set('getLayerProperties', getLayerProperties);
       },
 
-      onApprove(){
+      onApprove() {
         this.sendAction('approve', {
           layerProperties: this.get('getLayerProperties')()
-        });        
+        });
       },
       /**
         Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
@@ -158,7 +158,7 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       onHide() {
         this.sendAction('hide');
       },
-    },
+    }
 
     /**
       Component's action invoking when dialog starts to show.

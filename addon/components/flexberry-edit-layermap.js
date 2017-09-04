@@ -6,6 +6,9 @@ import layout from '../templates/components/flexberry-edit-layermap';
 import {
   translationMacro as t
 } from 'ember-i18n';
+import {
+  getLeafletCrs
+} from '../utils/leaflet-crs';
 
 // Proj4 CRS code.
 // Will be initialized in 'init' method.
@@ -110,6 +113,51 @@ export default Ember.Component.extend(
       @default t('components.layers-dialogs.edit.crs.definition-textarea.caption')
     */
     crsDefinitionTextareaCaption: t('components.layers-dialogs.edit.crs.definition-textarea.caption'),
+
+    /**
+      Dialog's 'Bounds' segment's caption.
+
+      @property boundsSegmentCaption
+      @type String
+      @default t('components.layers-dialogs.edit.bounds-segment.caption')
+    */
+    boundsSegmentCaption: t('components.layers-dialogs.edit.bounds-segment.caption'),
+
+    /**
+      Dialog's 'Bounds' segment's WGS84 option caption.
+
+      @property wgs84bboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption')
+    */
+    wgs84bboxCaption: t('components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption'),
+
+    /**
+      Dialog's 'Bounds' segment's BBOX option caption.
+
+      @property bboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.bounds-segment.options.bbox.caption')
+    */
+    bboxCaption: t('components.layers-dialogs.edit.bounds-segment.options.bbox.caption'),
+
+    /**
+      Dialog's 'Bounds' segment's mode.
+
+      @property boundsMode
+      @type String
+      @default "wgs84bbox"
+    */
+    boundsMode: 'wgs84bbox',
+
+    /**
+      Flag: indicates whether to show bounds error message or not.
+
+      @property _showBoundsErrorMessage
+      @type Boolean
+      @readOnly
+    */
+    _showBoundsErrorMessage: false,
 
     /**
       Flag: indicates whether layer type is in readonly mode.
@@ -230,7 +278,7 @@ export default Ember.Component.extend(
       @private
     */
     _$tabularMenu: null,
-    
+
     /**
       Tabular menu active tab name.
 
@@ -242,7 +290,7 @@ export default Ember.Component.extend(
 
     /**
       Leaflet map.
-    
+
       @property leafletMap
       @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
       @default null
@@ -335,7 +383,7 @@ export default Ember.Component.extend(
       } else if (!Ember.isNone(type)) {
         settings = defaultSettings;
       }
-      
+
       this._createInnerSettings();
       if (!Ember.isNone(settings)) {
         this.set(`_settings.${type}`, settings);
@@ -380,7 +428,7 @@ export default Ember.Component.extend(
       @private
     */
     _visibleDidChange: Ember.on('init', Ember.observer('visible', 'settings', 'name', 'coordinateReferenceSystem', function () {
-      if (this.get('visible') || this.get('visible')===undefined) {
+      if (this.get('visible') || this.get('visible') === undefined) {
         this._createInnerLayer();
       } else {
         this._destroyInnerLayer();
@@ -422,6 +470,7 @@ export default Ember.Component.extend(
     */
     init() {
       this._super(...arguments);
+
       // Retrieve & remember constant (proj4 CRS code).
       let proj4CrsFactory = Ember.getOwner(this).knownForType('coordinate-reference-system', 'proj4');
       proj4CrsCode = Ember.get(proj4CrsFactory, 'code');
@@ -454,16 +503,58 @@ export default Ember.Component.extend(
     },
 
     getLayerProperties() {
-           
       let layer = this.get('_layer');
       let coordinateReferenceSystem = Ember.get(layer, 'coordinateReferenceSystem');
       coordinateReferenceSystem = Ember.$.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);
       Ember.set(layer, 'coordinateReferenceSystem', coordinateReferenceSystem);
 
       let settings = Ember.get(layer, 'settings');
+
+      let boundsMode = this.get('boundsMode');
+      let geoJsonBounds;
+
+      // Coordinates should be projected to LatLngs.
+      if (boundsMode === 'bbox') {
+        let bbox = Ember.get(layer, 'settings.bbox');
+
+        if (!Ember.isBlank(bbox[0][0]) && !Ember.isBlank(bbox[0][1]) &&
+          !Ember.isBlank(bbox[1][0]) && !Ember.isBlank(bbox[1][1])) {
+
+          // Compute leaflet crs
+          let crs = getLeafletCrs(coordinateReferenceSystem, this);
+
+          let corner1 = crs.unproject(L.point(bbox[0]));
+          let corner2 = crs.unproject(L.point(bbox[1]));
+
+          geoJsonBounds = [
+            [corner1.lat, corner1.lng],
+            [corner2.lat, corner2.lng]
+          ];
+        }
+      } else {
+        geoJsonBounds = Ember.get(layer, 'settings.wgs84bbox');
+      }
+
+      let bounds;
+      try {
+        bounds = L.latLngBounds(geoJsonBounds);
+      } catch (error) {
+        bounds = undefined;
+      }
+
+      // If no valid bounds provided - set it to max.
+      if (!bounds || !bounds.isValid()) {
+        geoJsonBounds = [
+          [-90, -180],
+          [90, 180]
+        ];
+      }
+
+      Ember.set(settings, 'bounds', geoJsonBounds);
+
       settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
       Ember.set(layer, 'settings', settings);
-      
+
       return layer;
     },
 
@@ -652,13 +743,14 @@ export default Ember.Component.extend(
 
     /**
       Initializes component's DOM-related properties.
-    *//*
-    didInsertElement() {
-      this._super(...arguments);
+    */
+    /*
+        didInsertElement() {
+          this._super(...arguments);
 
-      let $tabularMenu = this.get('childViews')[0].$('.tabular.menu');
-      this.set('_$tabularMenu', $tabularMenu);
-    },*/
+          let $tabularMenu = this.get('childViews')[0].$('.tabular.menu');
+          this.set('_$tabularMenu', $tabularMenu);
+        },*/
 
     /**
       Deinitializes component's DOM-related properties.
@@ -673,43 +765,65 @@ export default Ember.Component.extend(
       }
     },
 
-  actions: {
-    /**
-      Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-edit-mode' components 'editingFinished' action {{/crossLink}}.
+    actions: {
+      /**
+        Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-edit-mode' components 'editingFinished' action {{/crossLink}}.
 
-      @method actions.onEditingFinished
-      @param {Object} layer Modified layer model
-    */
-    onEditingFinished(layer) {
-      let _layerHash = this.get('_layer');
+        @method actions.onEditingFinished
+        @param {Object} layer Modified layer model
+      */
+      onEditingFinished(layer) {
+        let _layerHash = this.get('_layer');
 
-      for (var propertyName in layer) {
-        if (layer.hasOwnProperty(propertyName) && _layerHash.hasOwnProperty(propertyName)) {
-          Ember.set(_layerHash, propertyName, Ember.get(layer, propertyName));
+        for (var propertyName in layer) {
+          if (layer.hasOwnProperty(propertyName) && _layerHash.hasOwnProperty(propertyName)) {
+            Ember.set(_layerHash, propertyName, Ember.get(layer, propertyName));
+          }
+        }
+
+        this.set('_layer', _layerHash);
+        this.set('_coordinateReferenceSystemCode', Ember.get(_layerHash, 'coordinateReferenceSystem.code'));
+      },
+
+      /**
+        Handles clicks on tabs.
+
+        @method actions.onTabClick
+        @param {Object} e Click event object.
+      */
+      onTabClick(e) {
+        e = Ember.$.event.fix(e);
+
+        let $clickedTab = Ember.$(e.currentTarget);
+        let clickedTabName = $clickedTab.attr('data-tab');
+        this.set('_tabularMenuActiveTab', clickedTabName);
+      },
+
+      /**
+        Handler for bounds mode change.
+
+        @method actions.onBoundsModeChange
+        @param {String} newBoundsMode New bounds mode.
+      */
+      onBoundsModeChange(newBoundsMode) {
+        this.set('boundsMode', newBoundsMode);
+      },
+
+      /**
+        Handles coordinate input textboxes keyPress events.
+
+        @method actions.coordsInputKeyPress
+      */
+      coordsInputKeyPress(e) {
+        // Allow only numeric (with dot) and Delete, Insert, Print screen buttons.
+        if (e.which !== 45 && e.which !== 44 && e.which !== 46 && (e.which < 48 || e.which > 57)) {
+          return false;
         }
       }
-
-      this.set('_layer', _layerHash);
-      this.set('_coordinateReferenceSystemCode', Ember.get(_layerHash, 'coordinateReferenceSystem.code'));
     },
 
-    /**
-      Handles clicks on tabs.
-
-      @method actions.onTabClick
-      @param {Object} e Click event object.
-    */
-    onTabClick(e) {
-      e = Ember.$.event.fix(e);
-
-      let $clickedTab = Ember.$(e.currentTarget);
-      let clickedTabName = $clickedTab.attr('data-tab');
-      this.set('_tabularMenuActiveTab', clickedTabName);
-    },
-  },
-  
-  layout
-});
+    layout
+  });
 
 Ember.Component.reopenClass({
   flexberryClassNames

@@ -9,7 +9,7 @@ import TileLayer from './tile-layer';
   WMS layer component for leaflet map.
 
   @class WMSLayerComponent
-  @extend TileLayerComponent
+  @extends TileLayerComponent
  */
 export default TileLayer.extend({
   leafletOptions: [
@@ -44,6 +44,26 @@ export default TileLayer.extend({
         done(featuresCollection, xhr) {
           let features = Ember.A(Ember.get(featuresCollection, 'features') || []);
           resolve(features);
+        },
+        fail(errorThrown, xhr) {
+          reject(errorThrown);
+        }
+      });
+    });
+  },
+
+  /**
+    Returns leaflet layer's bounding box.
+
+    @method _getBoundingBox
+    @private
+    @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
+  */
+  _getBoundingBox(layer) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      layer.getBoundingBox({
+        done(boundingBox, xhr) {
+          resolve(boundingBox);
         },
         fail(errorThrown, xhr) {
           reject(errorThrown);
