@@ -36,25 +36,34 @@ export default Ember.Route.extend({
     @return {*} Model object according to request.
   */
   model(params) {
+    const layerMetadataModelName = 'new-platform-flexberry-g-i-s-layer-metadata';
+    const layerMetadataProjectionName = 'LayerMetadataL';
+    const mapsModelName = 'new-platform-flexberry-g-i-s-map';
+    const mapsProjectionName = 'MapL';
+
+    let layerMetadataBuilder = new Query.Builder(this.get('store'))
+      .from(layerMetadataModelName)
+      .selectByProjection(layerMetadataProjectionName);
+    let mapsBuilder = new Query.Builder(this.get('store'))
+      .from(mapsModelName)
+      .selectByProjection(mapsProjectionName);
+
+    // If there are conditions - add them to the query
     if (params.keyWords) {
-      const layerMetadataModelName = 'new-platform-flexberry-g-i-s-layer-metadata';
-      const layerMetadataProjectionName = 'LayerMetadataL';
-      const mapsModelName = 'new-platform-flexberry-g-i-s-map';
-      const mapsProjectionName = 'MapL';
-
-      // For the present it loads all the data
-      let layerMetadataBuilder = new Query.Builder(this.get('store'))
-        .from(layerMetadataModelName)
-        .selectByProjection(layerMetadataProjectionName);
-      let getMetadata = this.get('store').query(layerMetadataModelName, layerMetadataBuilder.build());
-
-      let mapsBuilder = new Query.Builder(this.get('store'))
-        .from(mapsModelName)
-        .selectByProjection(mapsProjectionName);
-      let getMaps = this.get('store').query(mapsModelName, mapsBuilder.build());
-
-      return Ember.RSVP.all([getMetadata, getMaps]);
+      let keyWordsConditions = params.keyWords.split(',').map((item) => {
+        let str = item.trim();
+        return new Query.StringPredicate('keyWords').contains(str);
+      });
+      if (keyWordsConditions.length) {
+        let condition = keyWordsConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.And, ...keyWordsConditions) : keyWordsConditions[0];
+        layerMetadataBuilder = layerMetadataBuilder.where(condition);
+        mapsBuilder = mapsBuilder.where(condition);
+      }
     }
+
+    let getMetadata = this.get('store').query(layerMetadataModelName, layerMetadataBuilder.build());
+    let getMaps = this.get('store').query(mapsModelName, mapsBuilder.build());
+    return Ember.RSVP.all([getMetadata, getMaps]);
   },
   setupController(controller, model) {
     this._super(controller, model);
