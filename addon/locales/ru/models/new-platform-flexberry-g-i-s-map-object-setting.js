@@ -2,13 +2,13 @@ export default {
   projections: {
     MapObjectSetting: {
       typeName: {
-        caption: ''
+        caption: 'TypeName'
       },
       listForm: {
-        caption: ''
+        caption: 'ListForm'
       },
       editForm: {
-        caption: ''
+        caption: 'EditForm'
       },
       defaultMap: {
         caption: ''

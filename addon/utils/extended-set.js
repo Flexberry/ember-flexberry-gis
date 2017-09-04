@@ -53,6 +53,42 @@ let setRecord = function (source, keyName, value) {
   return Ember.set(source, keys[0] || keyName, value);
 };
 
+/**
+  Used for setting properties if object in path could not be found or was destroyed.
+
+  @for Utils.Layers
+  @method setAndAssign
+  @param {Object} source this
+  @param {String} keyName Property path
+  @param {Object} value New value for Property
+
+  Usage:
+  controllers/my-form.js
+  ```javascript
+    import { setAndAssign } from 'ember-flexberry-gis/utils/assignable-get'l
+    setAndAssign(this, 'map.mapLayer.1.visibility', false)
+
+  ```
+*/
+let setAndAssign = function (source, keyName, value) {
+  // Array of keys.
+  let keys = keyName.split('.');
+  let keyPath = keys[0];
+
+  // Create empty object if object in path could not be found or was destroyed.
+  for (let i = 1; i < keys.length; i++) {
+    if (Ember.isBlank(Ember.get(source, keyPath))) {
+      Ember.set(source, keyPath, {});
+    }
+
+    keyPath += '.' + keys[i];
+  }
+
+  // Directly set value for this property.
+  Ember.set(source, keyName, value);
+};
+
 export {
-  setRecord
+  setRecord,
+  setAndAssign
 };
