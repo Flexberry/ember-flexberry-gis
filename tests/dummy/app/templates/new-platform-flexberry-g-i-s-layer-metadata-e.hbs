@@ -45,6 +45,8 @@
     leafletMap=leafletMap
     _typeIsReadonly=(not model.isNew)
     onInit=(action "initLayerProperties")
-}}
+  }}
+
+  {{flexberry-links-editor model=model.linkMetadata.[0]}}
 
 </form>
