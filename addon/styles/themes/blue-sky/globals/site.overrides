@@ -1,0 +1,5 @@
+.ui.styled.accordion .title, .ui.styled.accordion .accordion .title {
+    & > .flexberry-checkbox {
+        line-height: 17px;
+    }
+}

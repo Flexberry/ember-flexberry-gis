@@ -1,0 +1,99 @@
+/*******************************
+             Sidebar
+*******************************/
+
+
+/*************************************************************
+                    Gis Theme Overrides
+*************************************************************/
+
+/*******************************
+         Sidebar Wrapper
+*******************************/
+
+@sidebarWrapperWidth: 100%;
+@sidebarWrapperHeight: ~"calc(100% - 60px)";
+@sidebarWrapperRight: -@sidebarWidth;
+@sidebarWrapperTransition: -webkit-transform .5s ease, right .5s ease;
+
+@sidebarWrapperTabColor: @darkbluecolor;
+
+@visibleRight: 0px;
+@visibleRightSidebarBackgroundColor: white;
+@visibleRightSidebarWidth: @sidebarWidth !important;
+@visibleRightSidebarHeight: auto !important;
+@visibleRightSidebarMargin: 10px 0px !important;
+@visibleRightSidebarMaxHeight: ~"calc(100% - 40px)";
+@visibleRightSidebarMinHeight: 250px;
+@visibleRightSidebarBorderRadius: 0px 5px 5px 5px !important;
+@visibleRightSidebarBoxShadow: @darkBoxShadow !important;
+
+/* Flexberry Tab Bar Block */
+@flexberryTabBarBorder: 0px;
+@flexberryTabBarBoxShadow: -1px 0px 4px 0px @darkbluecolor !important;
+@flexberryTabBarBackgroundColor: @whitecolor;
+@flexberryTabBarBorderRadius: 5px 0px 0px 5px;
+@flexberryTabBarRight: @sidebarWidth + 1px;
+@flexberryTabBarMarginRight: 0;
+
+@flexberryTabBarItemColor: @darkbluecolor;
+@flexberryTabBarItemBorder: 0px;
+@flexberryTabBarItemBorderRadius: 0px;
+@flexberryTabBarItemBoxShadow: 0px 0px 1px @darkbluecolor !important;
+@flexberryTabBarItemMargin: 0;
+@flexberryTabBarItemPadding: 10px 15px;
+
+@flexberryTabBarActiveItemBorderRaius: 0px !important;
+@flexberryTabBarActiveItemBackground: @lightbluecolor;
+@flexberryTabBarActiveItemMargin: 0;
+
+/* Bookmark Block */
+@flexberryTextboxColor: @darkbluecolor;
+@bmrkAddBlockButtonsColor: @darkgraycolor;
+@bmrkAddBlockButtonsBackground: @lightgraycolor;
+@bmrkAddBlockButtonsBackgroundHover: @lightgraycolor;
+@bmrkItemBorderBottom: 1px solid #E8E9E9;
+@bmrkItemBackgroundHover: #F3F3F3;
+
+
+/*****************
+      Layers
+******************/
+@flexberryTreeHeaderPadding: 0.1em 0.75em 0.6em 0.75em;
+@flexberryTreeHeaderWidth: 100%;
+@flexberryTreeHeaderTop: 12px;
+@flexberryTreeHeaderRight: 0.75em;
+
+@flexberryTreeHeaderTitleColor: @darkbluecolor;
+@flexberryTreeHeaderTitleFontSize: 14px;
+@flexberryTreeHeaderTitlePadding: 12px 6px;
+@flexberryTreeHeaderTitleLineHeight: 16px;
+@flexberryTreeHeaderTitleHoveredColor: @bluecolor;
+
+@flexberryMaplayerOpacitiLabelColor: @darkbluecolor;
+@flexberryMaplayerOpacitiLabelBackgroundColor: @whitecolor;
+@flexberryMaplayerOpacitiLabelBoxShadow: @darkBoxShadow;
+@flexberryMaplayerOpacitiLabelPadding: 7px 5px;
+@flexberryMaplayerOpacitiLabelMargin: -3px 5px 0px 0px;
+@flexberryMaplayerOpacitiLabelHoveredBackground: @lightbluecolor;
+
+@layerLegendProgressbarLabelColor: @darkbluecolor;
+@layerLegendProgressbarBackground: @bluecolor;
+@layerLegendProgressbarPseudoBackground: @lightbluecolor;
+
+@layerLegendImageWrapperMinHeight: 27px;
+@layerLegendImageWrapperFontSize: 12px;
+
+@layerLegendImageMaxHeight: 27px;
+@layerLegendImageMinWidth: 34px;
+
+@layerLegendCaptionColor: @bluecolor;
+@layerLegendCaptionMargin: 5px 0px 0px 5px;
+@layerLegendCaptionMaxWidth: 80%;
+@layerLegendCaptionWidth: 80%;
+
+/* Flexberry slider */
+@flexberrySliderMargin: 5px 0px 0px 0px;
+@sliderTrackHeight: 7px;
+@sliderSelectionBackgroud: @lightbluecolor;
+@sliderHandlerBackground: @bluesky;

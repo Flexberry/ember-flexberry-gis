@@ -1,0 +1,7 @@
+/*******************************
+             Modal
+*******************************/
+
+@headerColor: @white;
+@headerBackground: @darkbluecolor;
+@headerPadding: 1rem;
