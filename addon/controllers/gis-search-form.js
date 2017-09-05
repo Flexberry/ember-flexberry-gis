@@ -7,7 +7,7 @@ export default Ember.Controller.extend({
   minLat: '',
   maxLng: '',
   maxLat: '',
-  
+
   _tabularMenuActiveTab: 'layer-metadata',
 
   actions: {

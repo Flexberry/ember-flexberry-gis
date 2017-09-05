@@ -8,6 +8,7 @@ export default Ember.Component.extend({
   selectedPageNum: 1,
   rows: [],
   totalRowsCount: 0,
+
   totalPageCount: Ember.computed('totalRowsCount', 'perPageValue', {
     get() {
       let f = Math.floor(this.get('totalRowsCount') / this.get('perPageValue'));
@@ -15,6 +16,7 @@ export default Ember.Component.extend({
       return f + (p !== 0 ? 1 : 0);
     }
   }),
+
   pages: Ember.computed('totalPageCount', 'selectedPageNum', {
     get() {
       let a = [...Array(this.get('totalPageCount')).keys()];
@@ -28,21 +30,25 @@ export default Ember.Component.extend({
       return pages;
     }
   }),
+
   hasPreviousPage: Ember.computed('selectedPageNum', {
     get() {
       return this.get('selectedPageNum') > 1;
     }
   }),
+
   hasNextPage: Ember.computed('totalPageCount', 'selectedPageNum', {
     get() {
       return this.get('selectedPageNum') < this.get('totalPageCount');
     }
   }),
+
   columnCount: Ember.computed('header', {
     get() {
       return Object.keys(this.get('header')).length;
     }
   }),
+
   _reload() {
     let l = this.get('perPageValue');
     let p = this.get('selectedPageNum');
@@ -53,6 +59,7 @@ export default Ember.Component.extend({
       skip: (p - 1) * l
     });
   },
+
   actions: {
     perPageClick() {
       this._reload();
@@ -75,6 +82,6 @@ export default Ember.Component.extend({
     gotoPage(_, p) {
       this.set('selectedPageNum', p);
       this._reload();
-    }    
+    }
   },
 });

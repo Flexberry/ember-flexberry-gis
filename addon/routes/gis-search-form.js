@@ -11,6 +11,7 @@ export default Ember.Route.extend({
     return {
       metadata: this._metadata,
       metadataCount: this._metadataCount,
+
       // TODO: may be it's best to get that object from flexberry model, but it doesn't contain field order
       metadataHeader: { name: 'Название', type: 'Тип' },
       maps: this._maps,
@@ -22,7 +23,7 @@ export default Ember.Route.extend({
   actions: {
     loadData(req) {
       let that = this;
-      
+
       let b1 = new Query.Builder(this.store)
         .from('new-platform-flexberry-g-i-s-layer-metadata')
         .selectByProjection('LayerMetadataL')
@@ -45,6 +46,7 @@ export default Ember.Route.extend({
         console.log(errorMessage);
       });
     },
+
     getDataExt(req) {
       let that = this;
       that.changingModel = req.modelName;
