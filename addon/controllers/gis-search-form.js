@@ -85,6 +85,12 @@ export default Ember.Controller.extend({
       this.transitionToRoute({
         queryParams: this.get('searchConditions')
       });
+    },
+    getData(data) {
+      let d = Ember.$().extend(data, {
+        keyWords: this.keyWords
+      });
+      this.send('getDataExt', d);
     }
   }
 });
