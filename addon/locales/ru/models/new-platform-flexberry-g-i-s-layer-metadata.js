@@ -27,7 +27,7 @@ export default {
         mapObjectSetting: {
           caption: 'Настройка'
         },
-        parameterMetadata: {
+        parameters: {
           caption: '',
           objectField: {
           caption: 'Поле объекта'
@@ -89,7 +89,7 @@ export default {
         mapObjectSetting: {
           caption: 'Настройка'
         },
-        parameterMetadata: {
+        parameters: {
           caption: 'Параметры',
           objectField: {
           caption: 'Поле объекта'

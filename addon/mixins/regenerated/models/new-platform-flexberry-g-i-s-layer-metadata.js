@@ -86,7 +86,7 @@ export let defineProjections = function (modelClass) {
       mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
 
       }),
-      parameterMetadata: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', '', {
+      parameters: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', '', {
         objectField: Projection.attr('Поле объекта'),
         layerField: Projection.attr('Поле слоя'),
         expression: Projection.attr('Выражение'),
@@ -118,7 +118,7 @@ export let defineProjections = function (modelClass) {
       mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
 
       }, { hidden: true }),
-      parameterMetadata: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры', {
+      parameters: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры', {
         objectField: Projection.attr('Поле объекта'),
         layerField: Projection.attr('Поле слоя'),
         expression: Projection.attr('Выражение'),

@@ -19,7 +19,7 @@ export let Model = Ember.Mixin.create({
   queryKey: DS.attr('string'),
   linkField: DS.attr('boolean'),
   layerLink: DS.belongsTo('new-platform-flexberry-g-i-s-layer-link', { inverse: 'parameters', async: false }),
-  
+
   getValidations: function () {
     let parentValidations = this._super();
     let thisValidations = {

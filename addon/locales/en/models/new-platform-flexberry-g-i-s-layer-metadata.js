@@ -27,7 +27,7 @@ export default {
         mapObjectSetting: {
           caption: 'Map object setting'
         },
-        parameterMetadata: {
+        parameters: {
           caption: 'Parameter metadata',
           objectField: {
           caption: 'Object field'
@@ -89,7 +89,7 @@ export default {
         mapObjectSetting: {
           caption: 'Map object setting'
         },
-        parameterMetadata: {
+        parameters: {
           caption: 'Parameter metadata',
           objectField: {
           caption: 'Object field'
