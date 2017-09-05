@@ -30,6 +30,10 @@
         }
       }
 
+      .field + .ui.grid {
+        margin-bottom: 0em;
+      }
+
       .ui.tab.segment {
         // Height is 100% minus height of tabular menu items.
         height: calc( 100% - 60px );

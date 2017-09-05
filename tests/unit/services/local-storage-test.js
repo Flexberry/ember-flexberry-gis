@@ -1,6 +1,6 @@
 import { moduleFor, test } from 'ember-qunit';
 
-moduleFor('service:spatial-bookmark-local-storage', 'Unit | Service | spatial bookmark local storage', {
+moduleFor('service:local-storage', 'Unit | Service | local storage', {
   // Specify the other units that are required for this test.
   // needs: ['service:foo']
 });
