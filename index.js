@@ -66,7 +66,7 @@ module.exports = {
     app.import(app.bowerDirectory + '/proj4leaflet/src/proj4leaflet.js');
 
     // leaflet-wfst.
-    app.import(app.bowerDirectory + '/leaflet-wfst/dist/leaflet-wfst.src.js');
+    app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
 
     // Leaflet-WMS.
     app.import(app.bowerDirectory + '/leaflet-wms/dist/Leaflet-WMS.js');
