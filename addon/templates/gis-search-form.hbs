@@ -50,15 +50,15 @@
       <div class="ui top attached label">{{t "forms.integration-examples.gis-search-form.results"}}</div>
       <div class="sixteen wide column">
         <div class="ui top attached fluid tabular menu">
-          <a 
-            class="tab item {{if (eq _tabularMenuActiveTab "layer-metadata") "active "}}" 
-            data-tab="layer-metadata" 
+          <a
+            class="tab item {{if (eq _tabularMenuActiveTab "layer-metadata") "active "}}"
+            data-tab="layer-metadata"
             title="Метаданные слоёв">
             Метаданные слоёв
           </a>
-          <a 
-            class="tab item {{if (eq _tabularMenuActiveTab "maps") "active "}}" 
-            data-tab="maps" 
+          <a
+            class="tab item {{if (eq _tabularMenuActiveTab "maps") "active "}}"
+            data-tab="maps"
             title="Карты">
             Карты
           </a>
@@ -66,23 +66,21 @@
         <div
           class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "layer-metadata") "active"}}"
           data-tab="layer-metadata">
-            {{flexberry-table 
-              rows=model.metadata 
-              totalRowsCount=model.metadataCount 
-              getData=(action "getData") 
+            {{flexberry-table
+              model=model.metadata
+              getData=(action "getData")
               modelName='new-platform-flexberry-g-i-s-layer-metadata'
-              projectionName='LayerMetadataL' 
+              projectionName='LayerMetadataL'
               header=model.metadataHeader }}
         </div>
         <div
           class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "maps") "active"}}"
           data-tab="maps">
-            {{flexberry-table 
-              rows=model.maps 
-              totalRowsCount=model.mapsCount 
-              getData=(action "getData") 
+            {{flexberry-table
+              model=model.maps
+              getData=(action "getData")
               modelName='new-platform-flexberry-g-i-s-map'
-              projectionName='MapL' 
+              projectionName='MapL'
               header=model.mapHeader }}
         </div>
       </div>
