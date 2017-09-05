@@ -71,7 +71,7 @@ export default {
         allowShow: {
           caption: 'Allow show'
         },
-        linkParameter: {
+        parameters: {
           caption: 'Link parameter',
           objectField: {
           caption: 'Object field'
@@ -148,7 +148,7 @@ export default {
         allowShow: {
           caption: 'Allow show'
         },
-        linkParameter: {
+        parameters: {
           caption: 'Link parameter',
           objectField: {
           caption: 'Object field'

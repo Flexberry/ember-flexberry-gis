@@ -2,7 +2,13 @@ export default {
   projections: {
     LayerLinkD: {
       mapObjectSetting: {
-        caption: '',
+        caption: 'Тип',
+        typeName: {
+          caption: 'Тип объекта'
+        },
+        listForm: {
+          caption: 'Списковая форма'
+        },
         editForm: {
           caption: 'Форма редактирования'
         }
@@ -16,8 +22,8 @@ export default {
       allowShow: {
         caption: 'Показывать'
       },
-      linkParameter: {
-        caption: '',
+      parameters: {
+        caption: 'Параметры связи',
         objectField: {
           caption: 'Поле объекта'
         },
@@ -28,7 +34,7 @@ export default {
           caption: 'Выражение'
         },
         queryKey: {
-          caption: 'Параметр запроса'
+          caption: 'Ключ запроса'
         },
         linkField: {
           caption: 'Поле связи'
@@ -47,27 +53,6 @@ export default {
       },
       mapObjectSetting: {
         caption: ''
-      },
-      linkParameter: {
-        caption: '',
-        objectField: {
-          caption: 'Поле объекта'
-        },
-        layerField: {
-          caption: 'Поле слоя'
-        },
-        expression: {
-          caption: 'Выражение'
-        },
-        queryKey: {
-          caption: 'Параметр запроса'
-        },
-        linkField: {
-          caption: 'Поле связи'
-        },
-        layerLink: {
-          caption: 'Связь'
-        }
       }
     },
     LayerLinkI: {
@@ -86,8 +71,8 @@ export default {
       layer: {
         caption: ''
       },
-      linkParameter: {
-        caption: '',
+      parameters: {
+        caption: 'Параметры связи',
         objectField: {
           caption: 'Поле объекта'
         },
@@ -98,10 +83,10 @@ export default {
           caption: 'Выражение'
         },
         queryKey: {
-          caption: 'Параметр запроса'
+          caption: 'Ключ запроса'
         },
         linkField: {
-          caption: 'Поле связи'
+          caption: 'Ключ связи'
         },
         layerLink: {
           caption: 'Связь'
@@ -118,8 +103,8 @@ export default {
       mapObjectSetting: {
         caption: ''
       },
-      linkParameter: {
-        caption: '',
+      parameters: {
+        caption: 'Параметры связи',
         objectField: {
           caption: 'Поле объекта'
         },
@@ -130,10 +115,10 @@ export default {
           caption: 'Выражение'
         },
         queryKey: {
-          caption: 'Параметр запроса'
+          caption: 'Поле запроса'
         },
         linkField: {
-          caption: 'Поле связи'
+          caption: 'Ключ связи'
         },
         layerLink: {
           caption: 'Связь'

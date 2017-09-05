@@ -71,7 +71,7 @@ export default {
         allowShow: {
           caption: 'Показывать'
         },
-        linkParameter: {
+        parameters: {
           caption: '',
           objectField: {
           caption: 'Поле объекта'
@@ -148,7 +148,7 @@ export default {
         allowShow: {
           caption: 'Показывать'
         },
-        linkParameter: {
+        parameters: {
           caption: '',
           objectField: {
           caption: 'Поле объекта'

@@ -22,7 +22,7 @@ export let Model = Ember.Mixin.create({
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
   editor: DS.attr('string'),
-  layerLink: DS.belongsTo('new-platform-flexberry-g-i-s-link-metadata', { inverse: 'parameterMetadata', async: false }),
+  layerLink: DS.belongsTo('new-platform-flexberry-g-i-s-link-metadata', { inverse: 'parameters', async: false }),
 
   getValidations: function () {
     let parentValidations = this._super();
@@ -31,7 +31,6 @@ export let Model = Ember.Mixin.create({
     };
     return Ember.$.extend(true, {}, parentValidations, thisValidations);
   },
-
   init: function () {
     this.set('validations', this.getValidations());
     this._super.apply(this, arguments);
@@ -47,7 +46,7 @@ export let defineProjections = function (modelClass) {
     linkField: Projection.attr('Поле связи'),
     layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
 
-    }, { hidden: true })
+    })
   });
 
   modelClass.defineProjection('ParameterMetadataD', 'new-platform-flexberry-g-i-s-parameter-metadata', {
@@ -58,6 +57,6 @@ export let defineProjections = function (modelClass) {
     linkField: Projection.attr('Поле связи'),
     layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
 
-    })
+    }, { hidden: true })
   });
 };

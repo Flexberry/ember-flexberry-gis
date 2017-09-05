@@ -133,7 +133,7 @@ export let defineProjections = function (modelClass) {
           name: Projection.attr('Слой')
         }, { hidden: true }),
         allowShow: Projection.attr('Показывать'),
-        linkParameter: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', '', {
+        parameters: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', '', {
           objectField: Projection.attr('Поле объекта'),
           layerField: Projection.attr('Поле слоя'),
           expression: Projection.attr('Выражение'),

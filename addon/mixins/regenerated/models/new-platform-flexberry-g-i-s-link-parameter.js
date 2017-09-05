@@ -18,8 +18,8 @@ export let Model = Ember.Mixin.create({
   expression: DS.attr('string'),
   queryKey: DS.attr('string'),
   linkField: DS.attr('boolean'),
-  layerLink: DS.belongsTo('new-platform-flexberry-g-i-s-layer-link', { inverse: 'linkParameter', async: false }),
-
+  layerLink: DS.belongsTo('new-platform-flexberry-g-i-s-layer-link', { inverse: 'parameters', async: false }),
+  
   getValidations: function () {
     let parentValidations = this._super();
     let thisValidations = {
@@ -27,7 +27,6 @@ export let Model = Ember.Mixin.create({
     };
     return Ember.$.extend(true, {}, parentValidations, thisValidations);
   },
-
   init: function () {
     this.set('validations', this.getValidations());
     this._super.apply(this, arguments);
@@ -35,25 +34,14 @@ export let Model = Ember.Mixin.create({
 });
 
 export let defineProjections = function (modelClass) {
-  modelClass.defineProjection('LinkParameter', 'new-platform-flexberry-g-i-s-link-parameter', {
-    objectField: Projection.attr('Поле объекта'),
-    layerField: Projection.attr('Поле слоя'),
-    expression: Projection.attr('Выражение'),
-    queryKey: Projection.attr('Параметр запроса'),
-    linkField: Projection.attr('Поле связи'),
-    layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
-
-    })
-  });
-
   modelClass.defineProjection('LinkParameterD', 'new-platform-flexberry-g-i-s-link-parameter', {
     objectField: Projection.attr('Поле объекта'),
     layerField: Projection.attr('Поле слоя'),
-    expression: Projection.attr('Выражение'),
-    queryKey: Projection.attr('Параметр запроса'),
-    linkField: Projection.attr('Поле связи'),
+    expression: Projection.attr('Выражение', { hidden: true }),
+    queryKey: Projection.attr('Параметр запроса', { hidden: true }),
+    linkField: Projection.attr('Поле связи', { hidden: true }),
     layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
 
-    }, { hidden: true })
+    })
   });
 };

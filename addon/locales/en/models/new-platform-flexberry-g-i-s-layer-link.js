@@ -3,6 +3,12 @@ export default {
     LayerLinkD: {
       mapObjectSetting: {
         caption: 'Map object setting',
+        typeName: {
+          caption: 'Type name'
+        },
+        listForm: {
+          caption: 'List form'
+        },
         editForm: {
           caption: 'Edit form'
         }
@@ -16,8 +22,8 @@ export default {
       allowShow: {
         caption: 'Allow show'
       },
-      linkParameter: {
-        caption: 'Link parameter',
+      parameters: {
+        caption: 'Link parameters',
         objectField: {
           caption: 'Object field'
         },
@@ -47,27 +53,6 @@ export default {
       },
       mapObjectSetting: {
         caption: 'Map object setting'
-      },
-      linkParameter: {
-        caption: 'Link parameter',
-        objectField: {
-          caption: 'Object field'
-        },
-        layerField: {
-          caption: 'Layer field'
-        },
-        expression: {
-          caption: 'Expression'
-        },
-        queryKey: {
-          caption: 'Query key'
-        },
-        linkField: {
-          caption: 'Link field'
-        },
-        layerLink: {
-          caption: 'Layer link'
-        }
       }
     },
     LayerLinkI: {
@@ -86,8 +71,8 @@ export default {
       layer: {
         caption: 'Layer'
       },
-      linkParameter: {
-        caption: 'Link parameter',
+      parameters: {
+        caption: 'Link parameters',
         objectField: {
           caption: 'Object field'
         },
@@ -118,8 +103,8 @@ export default {
       mapObjectSetting: {
         caption: 'Map object setting'
       },
-      linkParameter: {
-        caption: 'Link parameter',
+      parameters: {
+        caption: 'Link parameters',
         objectField: {
           caption: 'Object field'
         },
