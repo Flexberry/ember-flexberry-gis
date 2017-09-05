@@ -28,6 +28,7 @@ export default Ember.Route.extend({
     maxLng: { refreshModel: true },
     maxLat: { refreshModel: true }
   },
+
   /**
     [Model hook](http://emberjs.com/api/classes/Ember.Route.html#method_model) that returns a model object according to request.
 
@@ -55,7 +56,7 @@ export default Ember.Route.extend({
         return new Query.StringPredicate('keyWords').contains(str);
       });
       if (keyWordsConditions.length) {
-        let condition = keyWordsConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.And, ...keyWordsConditions) : keyWordsConditions[0];
+        let condition = keyWordsConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.Or, ...keyWordsConditions) : keyWordsConditions[0];
         layerMetadataBuilder = layerMetadataBuilder.where(condition);
         mapsBuilder = mapsBuilder.where(condition);
       }
@@ -70,5 +71,9 @@ export default Ember.Route.extend({
 
     // Pass query params to search conditions
     controller.set('searchConditions', controller.getProperties(['keyWords', 'scaleFrom', 'scaleTo', 'minLng', 'minLat', 'maxLng', 'maxLat']));
+
+    // Add named data params to controller
+    controller.set('layerMetadata', model[0]);
+    controller.set('mapsData', model[1]);
   }
 });

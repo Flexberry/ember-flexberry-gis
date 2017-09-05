@@ -14,11 +14,11 @@
           </div>
           <div class="field">
             <label>{{t "gis-search-form.keywords"}}</label>
-            {{input value=searchConditions.keyWords type="text"}}
+            {{flexberry-textbox value=searchConditions.keyWords}}
           </div>
           <div class="field">
             <label>{{t "gis-search-form.scale"}}</label>
-            {{input value=searchConditions.scaleFrom type="text"}}
+            {{flexberry-textbox value=searchConditions.scaleFrom}}
           </div>
         </div>
       </div>
@@ -29,19 +29,19 @@
           </div>
           <div class="field">
             <label>{{t "gis-search-form.min-long"}}</label>
-            {{input value=searchConditions.minLng type="text"}}
+            {{flexberry-textbox value=searchConditions.minLng}}
           </div>
           <div class="field">
             <label>{{t "gis-search-form.min-lat"}}</label>
-            {{input value=searchConditions.minLat type="text"}}
+            {{flexberry-textbox value=searchConditions.minLat}}
           </div>
           <div class="field">
             <label>{{t "gis-search-form.max-long"}}</label>
-            {{input value=searchConditions.maxLng type="text"}}
+            {{flexberry-textbox value=searchConditions.maxLng}}
           </div>
           <div class="field">
             <label>{{t "gis-search-form.max-lat"}}</label>
-            {{input value=searchConditions.maxLat type="text"}}
+            {{flexberry-textbox value=searchConditions.maxLat}}
           </div>
         </div>
       </div>
@@ -60,14 +60,14 @@
       <div class="ui top attached label">{{t "gis-search-form.results"}}</div>
       <div class="eight wide column">
         <ul>
-          {{#each model.[0] as |data|}}
+          {{#each layerMetadata as |data|}}
           <li>{{data.name}} - {{data.type}}</li>
           {{/each}}
         </ul>
       </div>
       <div class="eight wide column" style="margin-top: 2rem !important;">
         <ul>
-          {{#each model.[1] as |data|}}
+          {{#each mapsData as |data|}}
           <li>{{data.name}}</li>
           {{/each}}
         </ul>
