@@ -5,24 +5,13 @@ import PaginatedControllerMixin from 'ember-flexberry/mixins/paginated-controlle
 export default Ember.Component.extend(PaginatedControllerMixin, {
   layout,
 
-  columnCount: Ember.computed('header', {
+  _columnCount: Ember.computed('header', {
     get() {
       return Object.keys(this.get('header')).length;
     }
   }),
 
-  _reload() {
-    let l = this.get('perPageValue');
-    let p = this.get('page');
-    this.sendAction('getData', {
-      modelName: this.attrs.modelName,
-      projectionName: this.attrs.projectionName,
-      top: l,
-      skip: (p - 1) * l
-    });
-  },
-
-  pageChanged: Ember.observer('page', () => {
+  _pageChanged: Ember.observer('page', function () {
     this._reload();
   }),
 
@@ -31,4 +20,15 @@ export default Ember.Component.extend(PaginatedControllerMixin, {
       this._reload();
     }
   },
+
+  _reload() {
+    let perPageValue = this.get('perPageValue');
+    let pageNum = this.get('page');
+    this.sendAction('getData', {
+      modelName: this.get('modelName'),
+      projectionName: this.get('projectionName'),
+      top: perPageValue,
+      skip: (pageNum - 1) * perPageValue
+    });
+  }
 });

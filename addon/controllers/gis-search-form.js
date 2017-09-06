@@ -77,20 +77,30 @@ export default Ember.Controller.extend({
     maxLat: null
   },
 
+  showFormErrorMessage: Ember.computed('error', function () {
+    if (this.get('error')) { return true; } else { return false; }
+  }),
+
   actions: {
     /**
-      Handles search click and passes search data to the route.
+      Handles search button click and passes search data to the route.
     */
     getSearchResults() {
-      this.transitionToRoute({
-        queryParams: this.get('searchConditions')
-      });
+      let req = { searchConditions: this.get('searchConditions') };
+      this.send('doSearch', req);
     },
-    getData(data) {
-      let d = Ember.$().extend(data, {
-        keyWords: this.keyWords
+
+    /**
+      Handles action from child table component
+      @param {*} field Field in which component waits the result data
+      @param {*} data Paging settings
+     */
+    getData(field, data) {
+      let req = Ember.$().extend(data, {
+        searchConditions: this.get('searchConditions'),
+        fieldName: field
       });
-      this.send('getDataExt', d);
+      this.send('doSearch', req);
     }
   }
 });

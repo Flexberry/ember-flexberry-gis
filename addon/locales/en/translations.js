@@ -200,6 +200,23 @@ export default {
     'max-long': 'Max longitude',
     'max-lat': 'Max latitude',
     'search': 'Search',
-    'results': 'Results'
+    'results': 'Results',
+    'layer-metadata': {
+      'title': 'Layer metadata',
+      'header': {
+        'name': 'Name',
+        'type': 'Type'
+      }
+    },
+    'maps': {
+      'title': 'Maps',
+      'header': {
+        'name': 'Name',
+        'lat': 'Latitude',
+        'lng': 'Longitude',
+        'zoom': 'Scale',
+        'public': 'Public'
+      }
+    }
   }
 };

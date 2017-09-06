@@ -200,6 +200,23 @@ export default {
     'max-long': 'Долгота (макс.)',
     'max-lat': 'Широта (макс.)',
     'search': 'Искать',
-    'results': 'Результаты'
+    'results': 'Результаты',
+    'layer-metadata': {
+      'title': 'Метаданные слоёв',
+      'header': {
+        'name': 'Название',
+        'type': 'Тип'
+      }
+    },
+    'maps': {
+      'title': 'Карты',
+      'header': {
+        'name': 'Название',
+        'lat': 'Широта',
+        'lng': 'Долгота',
+        'zoom': 'Масштаб',
+        'public': 'Общая'
+      }
+    }
   }
 };

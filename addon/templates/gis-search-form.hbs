@@ -1,3 +1,10 @@
+{{ui-message
+  type="error"
+  closeable=false
+  visible=showFormErrorMessage
+  caption=error.name
+  message=error.message
+}}
 <div class="ui attached message">
   <div class="header">
     {{t "gis-search-form.header"}}
@@ -60,39 +67,27 @@
       <div class="ui top attached label">{{t "gis-search-form.results"}}</div>
       <div class="sixteen wide column">
         <div class="ui top attached fluid tabular menu">
+          {{#each tabSettings as |tab index|}}
           <a
-            class="tab item {{if (eq _tabularMenuActiveTab "layer-metadata") "active "}}"
-            data-tab="layer-metadata"
-            title="Метаданные слоёв">
-            Метаданные слоёв
+            class="tab item {{if (eq index 0) "active"}}"
+            data-tab={{tab.tab}}
+            title={{t tab.title}}>
+            {{t tab.title}}
           </a>
-          <a
-            class="tab item {{if (eq _tabularMenuActiveTab "maps") "active "}}"
-            data-tab="maps"
-            title="Карты">
-            Карты
-          </a>
+          {{/each}}
         </div>
+        {{#each tabSettings as |tab index|}}
         <div
-          class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "layer-metadata") "active"}}"
-          data-tab="layer-metadata">
+          class="ui bottom attached tab segment {{if (eq index 0) "active"}}"
+          data-tab={{tab.tab}}>
             {{flexberry-table
-              model=model.metadata
-              getData=(action "getData")
-              modelName='new-platform-flexberry-g-i-s-layer-metadata'
-              projectionName='LayerMetadataL'
-              header=model.metadataHeader }}
+              model=(get this tab.fieldName)
+              getData=(action "getData" tab.fieldName)
+              modelName=tab.modelName
+              projectionName=tab.projectionName
+              header=tab.header }}
         </div>
-        <div
-          class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "maps") "active"}}"
-          data-tab="maps">
-            {{flexberry-table
-              model=model.maps
-              getData=(action "getData")
-              modelName='new-platform-flexberry-g-i-s-map'
-              projectionName='MapL'
-              header=model.mapHeader }}
-        </div>
+        {{/each}}
       </div>
     </div>
   </div>

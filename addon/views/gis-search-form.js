@@ -6,6 +6,7 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this._super(...arguments);
+
     // Initialize Semantic UI tabs.
     this.$('.tabular.menu .item').tab();
   }

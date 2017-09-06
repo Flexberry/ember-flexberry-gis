@@ -3,7 +3,7 @@
   <thead>
     <tr>
       {{#each-in header as |key value|}}
-      <th>{{value}}</th>
+      <th>{{t value}}</th>
       {{/each-in}}
     </tr>
   </thead>
@@ -11,14 +11,14 @@
     {{#each model as |row|}}
     <tr>
       {{#each-in header as |key value|}}
-      <td>{{getField row key}}</td>
+      <td>{{get row key}}</td>
       {{/each-in}}
     </tr>
     {{/each}}
   </tbody>
   <tfoot>
     <tr>
-      <th colspan="{{columnCount}}">
+      <th colspan="{{_columnCount}}">
         <div class="ui secondary menu no-margin">
           <div class="ui basic buttons">
             <button class="ui {{unless hasPreviousPage 'disabled'}} button" {{action (if this.attrs.previousPage this.attrs.previousPage
