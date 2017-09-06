@@ -73,6 +73,10 @@ Ember.$.extend(true, translations, {
           'csw-connections': {
             'caption': 'CSW connections',
             'title': ''
+          },
+          'map-metadata': {
+            'caption': 'Мetadata',
+            'title': ''
           }
         },
         'components-examples': {
