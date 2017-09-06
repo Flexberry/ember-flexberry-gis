@@ -303,6 +303,24 @@ export default Ember.Component.extend(
     leafletMap: null,
 
     /**
+      Layer's links
+
+      @property links
+      @type Array
+      @default Ember.A()
+    */
+    links: Ember.A(),
+
+    /**
+      Dialog's 'Links' segment caption.
+
+      @property linksCaption
+      @type String
+      @default t('components.layers-dialogs.edit.links.caption')
+    */
+    linksCaption: t('components.layers-dialogs.edit.links.caption'),
+
+    /**
       Flag: indicates whether coordinate reference system (CRS) edit fields must be shown.
 
       @property _availableCoordinateReferenceSystemsCodes
@@ -550,6 +568,24 @@ export default Ember.Component.extend(
         if (e.which !== 45 && e.which !== 44 && e.which !== 46 && (e.which < 48 || e.which > 57)) {
           return false;
         }
+      },
+
+      /**
+        Update relation value at model.
+        @method actions.updateLookupValue
+        @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
+      */
+      updateLookupValue(updateData) {
+        this.sendAction('updateLookupValue', updateData);
+      },
+
+      /**
+        Update relation value at model.
+        @method actions.updateLookupValue
+        @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
+      */
+      addLink(updateData) {
+        this.sendAction('updateLookupValue', updateData);
       }
     },
 

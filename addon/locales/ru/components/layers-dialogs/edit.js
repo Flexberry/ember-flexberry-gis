@@ -46,6 +46,11 @@ export default {
       }
     },
   },
+  'links-segment': {
+    'add-button': {
+      'caption': 'Добавить',
+    }
+  },
   'crs': {
     'caption': 'Система координат слоя (CRS)',
     'name-textbox': {
@@ -79,6 +84,9 @@ export default {
     },
     'legend-settings-tab': {
       'caption': 'Настройки легенды'
+    },
+    'link-settings-tab': {
+      'caption': 'Настройки связей'
     }
   }
 };

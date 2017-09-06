@@ -2,8 +2,12 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
 import layout from '../templates/components/flexberry-links-editor';
+import FlexberryLookupCompatibleComponent from 'ember-flexberry/mixins/flexberry-lookup-compatible-component';
+import FlexberryBaseComponent from 'ember-flexberry/components/flexberry-base-component';
+import {
+  translationMacro as t
+} from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -48,7 +52,7 @@ const flexberryClassNames = {
   @class FlexberryLinksEditorComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let FlexberryLinksEditorComponent = Ember.Component.extend({
+let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLookupCompatibleComponent, {
 
   /**
     Reference to component's template.
@@ -133,25 +137,50 @@ let FlexberryLinksEditorComponent = Ember.Component.extend({
   */
   readonly: false,
 
+  /**
+    Layer link's 'Map object setting' field's caption.
+
+    @property mosCaption
+    @type String
+    @default t('components.flexberry-links-editor.map-object-setting-textbox.caption')
+  */
+  mosCaption: t('components.flexberry-links-editor.map-object-setting-textbox.caption'),
+
+  /**
+    Layer link's 'Allow show' field's caption.
+
+    @property allowShowCaption
+    @type String
+    @default t('components.flexberry-links-editor.allow-show-textbox.caption')
+  */
+  allowShowCaption: t('components.flexberry-links-editor.allow-show-textbox.caption'),
+
   actions: {
     /**
-      Handles action from lookup choose action.
-
-      @method actions.showLookupDialog
-      @param {Object} chooseData Lookup parameters (projection name, relation name, etc).
+      Update relation value at model.
+      @method actions.updateLookupValue
+      @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
     */
-    showLookupDialog(chooseData) {
-      this.sendAction('showLookupDialog', chooseData);
+    updateLookupValue(updateData) {
+      this.sendAction('updateLookupValue', updateData);
     },
 
     /**
-      Handlers action from FlexberryLookup remove action.
-      @method actions.removeLookupValue
-      @param {Object} removeData Lookup parameters: { relationName, modelToLookup }.
+      Handles {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
+
+      @method actions.onVisibilityCheckboxChange
+      @param {Object} e eventObject Event object from {{#crossLink "FlexberryDdauCheckbox/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
     */
-    removeLookupValue(removeData) {
-      this.sendAction('removeLookupValue', removeData);
+    onVisibilityCheckboxChange(...args) {
+      this.sendAction('changeVisibility', ...args);
     }
+  },
+
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
   }
 });
 

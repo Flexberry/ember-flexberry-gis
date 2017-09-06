@@ -13,6 +13,7 @@ import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
+import FlexberryLinksEditorComponent from './components/flexberry-links-editor';
 
 export default {
   'models': {
@@ -28,6 +29,7 @@ export default {
 
   'components': {
     'feature-result-item': FeatureResultItemComponent,
+    'flexberry-links-editor': FlexberryLinksEditorComponent,
 
     'spatial-bookmarks': {
       'add-bookmark': 'Add new bookmark`',
@@ -83,8 +85,7 @@ export default {
       'opacity': 'Visibility'
     },
 
-    'flexberry-maptoolbar': {
-    },
+    'flexberry-maptoolbar': {},
 
     'map-tools': MapToolsComponents,
 

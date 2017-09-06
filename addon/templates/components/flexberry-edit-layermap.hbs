@@ -33,6 +33,11 @@
         {{t "components.layers-dialogs.edit.tabular-menu.legend-settings-tab.caption"}}
       </a>
     {{/if}}
+    {{#if _layerSettingsAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "linkSettings") "active"}}" data-tab="linkSettings" onclick={{action "onTabClick"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.link-settings-tab.caption"}}
+      </a>
+    {{/if}}
   </div>
   <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "main") "active"}}" data-tab="main">
     {{#if _modesAreAvailable}}
@@ -266,6 +271,22 @@
   {{#if _legendSettingaAreAvailableForType}}
     <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "legendSettings") "active"}}" data-tab="legendSettings">
       {{flexberry-jsonarea value=_layer.settings.legendSettings}}
+    </div>
+  {{/if}}
+  {{#if _layerSettingsAreAvailableForType}}
+    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "linkSettings") "active"}}" data-tab="linkSettings">
+      {{#each links as |link|}}
+          {{flexberry-links-editor
+            model=link
+            changeVisibility=allowShowCheckboxChange
+          }}
+      {{/each}}
+      <div class="field">
+        {{flexberry-button
+          class="fluid"
+          caption=(t "components.layers-dialogs.edit.links-segment.add-button.caption")
+        }}
+      </div>
     </div>
   {{/if}}
 </form>

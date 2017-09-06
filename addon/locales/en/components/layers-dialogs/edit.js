@@ -46,6 +46,11 @@ export default {
       }
     }
   },
+  'links-segment': {
+    'add-button': {
+      'caption': 'Add',
+    }
+  },
   'crs': {
     'caption': 'Layer coordinate reference system (CRS)',
     'name-textbox': {
@@ -79,6 +84,9 @@ export default {
     },
     'legend-settings-tab': {
       'caption': 'Legend settings'
+    },
+    'link-settings-tab': {
+      'caption': 'Links settings'
     }
   }
 };
