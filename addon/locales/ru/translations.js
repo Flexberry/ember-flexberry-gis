@@ -13,6 +13,7 @@ import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
+import FlexberryTableComponents from './components/flexberry-table';
 
 export default {
   'models': {
@@ -218,5 +219,7 @@ export default {
         'public': 'Общая'
       }
     }
-  }
+  },
+
+  'flexberry-table': FlexberryTableComponents
 };
