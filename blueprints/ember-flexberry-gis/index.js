@@ -6,19 +6,25 @@ module.exports = {
       // Leaflet.
       {
         name: 'leaflet',
-        target: '1.0.1'
+        target: '1.2.0'
       },
 
       // Leaflet.Proj4.
       {
         name: 'proj4leaflet',
-        target: '1.0.1'
+        target: '1.0.2'
       },
 
-      // Leaflet.WFST.
+      // leaflet-wfst.
       {
-        name: 'Leaflet-WFST',
-        target: 'develop'
+        name: 'leaflet-wfst',
+        target: '2.0.1-beta.1'
+      },
+
+      // Leaflet-WMS.
+      {
+        name: 'leaflet-wms',
+        target: '1.2.0-beta.1'
       },
 
       // Leaflet.WMS.
@@ -37,29 +43,29 @@ module.exports = {
       {
         name: 'leaflet-history',
         source: 'https://github.com/Flexberry/leaflet-history.git',
-        target: 'd67e852ae405a0ca2f6cd069d2f0ff048d7a5ce8'
+        target: 'leaflet-1.2.0'
       },
 
       // Leaflet.Editable.Measures.
       {
         name: 'leaflet-editable-measures',
-        target: '0.1.0'
+        target: '0.2.0-beta.1'
       },
 
       // Leaflet.Export & dependencies.
       {
         name: 'html2canvas',
-        target: 'master'
+        target: '0.5.0-beta4'
       },
       {
         name: 'leaflet-export',
-        target: '0.1.0'
+        target: '0.2.1-beta.1'
       },
 
       // Leaflet-switch-scale-control.
       {
         name: 'leaflet-switch-scale-control',
-        target: '0.1.0'
+        target: '0.1.1-beta.1'
       },
 
       // Leaflet.zoomslider.
@@ -79,12 +85,6 @@ module.exports = {
       {
         name: 'osmtogeojson',
         target: '2.2.12'
-      },
-
-      // OSGeo ows.js library (implementing JS API for CSW services).
-      {
-        name: 'ows.js',
-        target: '0.1.5'
       },
 
       // Bootstrap slider

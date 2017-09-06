@@ -46,7 +46,8 @@ export default BaseLegendComponent.extend({
 
       legends.pushObject({
         src: `${url}${L.Util.getParamString(parameters)}`,
-        layerName: layerName
+        layerName: layerName,
+        useLayerName: true
       });
     });
 

@@ -79,6 +79,11 @@
                     actionArguments=(array "{% layerPath %}.settingsAsObject.opacity")
                   )
                 )
+                (hash
+                  on="fitBounds"
+                  actionName="onMapLayerFitBounds"
+                  actionArguments=(array "{% layerPath %}.bounds")
+                )
               )
             add=(action "onMapLayerAdd" "model.hierarchy")
             }}
@@ -122,7 +127,7 @@
         <h3>Пространственные закладки</h3>
         {{spatial-bookmark
           leafletMap=leafletMap
-          mapid=model.id
+          storageKey=model.id
         }}
       </div>
     </div>

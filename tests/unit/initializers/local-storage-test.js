@@ -1,10 +1,10 @@
 import Ember from 'ember';
-import SpatialBookmarkStorageInitializer from 'dummy/initializers/spatial-bookmark-storage';
+import LocalStorageInitializer from 'ember-flexberry-gis/initializers/local-storage';
 import { module, test } from 'qunit';
 
 let application;
 
-module('Unit | Initializer | spatial bookmark storage', {
+module('Unit | Initializer | local storage', {
   beforeEach() {
     Ember.run(function() {
       application = Ember.Application.create();
@@ -15,7 +15,7 @@ module('Unit | Initializer | spatial bookmark storage', {
 
 // Replace this with your real tests.
 test('it works', function(assert) {
-  SpatialBookmarkStorageInitializer.initialize(application);
+  LocalStorageInitializer.initialize(application);
 
   // you would normally confirm the results of the initializer here
   assert.ok(true);

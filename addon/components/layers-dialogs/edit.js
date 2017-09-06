@@ -8,6 +8,9 @@ import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 import layout from '../../templates/components/layers-dialogs/edit';
 import {
+  getLeafletCrs
+} from '../../utils/leaflet-crs';
+import {
   translationMacro as t
 } from 'ember-i18n';
 
@@ -426,6 +429,51 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
     nameTextboxCaption: t('components.layers-dialogs.edit.name-textbox.caption'),
 
     /**
+      Dialog's 'Bounds' segment's caption.
+
+      @property boundsSegmentCaption
+      @type String
+      @default t('components.layers-dialogs.edit.bounds-segment.caption')
+    */
+    boundsSegmentCaption: t('components.layers-dialogs.edit.bounds-segment.caption'),
+
+    /**
+      Dialog's 'Bounds' segment's WGS84 option caption.
+
+      @property wgs84bboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption')
+    */
+    wgs84bboxCaption: t('components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption'),
+
+    /**
+      Dialog's 'Bounds' segment's BBOX option caption.
+
+      @property bboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.bounds-segment.options.bbox.caption')
+    */
+    bboxCaption: t('components.layers-dialogs.edit.bounds-segment.options.bbox.caption'),
+
+    /**
+      Dialog's 'Bounds' segment's mode.
+
+      @property boundsMode
+      @type String
+      @default "wgs84bbox"
+    */
+    boundsMode: 'wgs84bbox',
+
+    /**
+      Flag: indicates whether to show bounds error message or not.
+
+      @property _showBoundsErrorMessage
+      @type Boolean
+      @readOnly
+    */
+    _showBoundsErrorMessage: false,
+
+    /**
       Dialog's 'CRS' segment caption.
 
       @property crsCaption
@@ -504,6 +552,49 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         Ember.set(layer, 'coordinateReferenceSystem', coordinateReferenceSystem);
 
         let settings = Ember.get(layer, 'settings');
+
+        let boundsMode = this.get('boundsMode');
+        let geoJsonBounds;
+
+        // Coordinates should be projected to LatLngs.
+        if (boundsMode === 'bbox') {
+          let bbox = Ember.get(layer, 'settings.bbox');
+
+          if (!Ember.isBlank(bbox[0][0]) && !Ember.isBlank(bbox[0][1]) &&
+            !Ember.isBlank(bbox[1][0]) && !Ember.isBlank(bbox[1][1])) {
+
+            // Compute leaflet crs
+            let crs = getLeafletCrs(coordinateReferenceSystem, this);
+
+            let corner1 = crs.unproject(L.point(bbox[0]));
+            let corner2 = crs.unproject(L.point(bbox[1]));
+
+            geoJsonBounds = [
+              [corner1.lat, corner1.lng],
+              [corner2.lat, corner2.lng]
+            ];
+          }
+        } else {
+          geoJsonBounds = Ember.get(layer, 'settings.wgs84bbox');
+        }
+
+        let bounds;
+        try {
+          bounds = L.latLngBounds(geoJsonBounds);
+        } catch (error) {
+          bounds = undefined;
+        }
+
+        // If no valid bounds provided - set it to max.
+        if (!bounds || !bounds.isValid()) {
+          geoJsonBounds = [
+            [-90, -180],
+            [90, 180]
+          ];
+        }
+
+        Ember.set(settings, 'bounds', geoJsonBounds);
+
         settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
         Ember.set(layer, 'settings', settings);
 
@@ -594,6 +685,28 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
         let clickedTabName = $clickedTab.attr('data-tab');
         this.set('_tabularMenuActiveTab', clickedTabName);
       },
+
+      /**
+        Handler for bounds mode change.
+
+        @method actions.onBoundsModeChange
+        @param {String} newBoundsMode New bounds mode.
+      */
+      onBoundsModeChange(newBoundsMode) {
+        this.set('boundsMode', newBoundsMode);
+      },
+
+      /**
+        Handles coordinate input textboxes keyPress events.
+
+        @method actions.coordsInputKeyPress
+      */
+      coordsInputKeyPress(e) {
+        // Allow only numeric (with dot) and Delete, Insert, Print screen buttons.
+        if (e.which !== 45 && e.which !== 44 && e.which !== 46 && (e.which < 48 || e.which > 57)) {
+          return false;
+        }
+      }
     },
 
     /**
