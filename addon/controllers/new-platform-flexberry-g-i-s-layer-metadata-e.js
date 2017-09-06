@@ -3,7 +3,7 @@
 */
 
 import EditFormController from 'ember-flexberry/controllers/edit-form';
-import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-controller-operations-indication';
+import EditFormControllerOperationsIndicationMixin from 'ember-flexberry-gis/mixins/edit-form-controller-operations-indication';
 
 /**
   Maps layers metadata edit controller.
@@ -13,7 +13,6 @@ import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-con
   @uses EditFormControllerOperationsIndicationMixin
 */
 export default EditFormController.extend(EditFormControllerOperationsIndicationMixin, {
-
   actions: {
     /**
       Handles {{#crossLink "FlexberryEditLayerComponent/sendingActions.onInit:method"}}'flexberry-edit-layer' component's 'onInit' action{{/crossLink}}.
