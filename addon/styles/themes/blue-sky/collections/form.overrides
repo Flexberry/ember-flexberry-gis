@@ -11,4 +11,21 @@
   label {
     color: @modalLabelColor;
   }
+  .flexberry-export-map-command-dialog-paging-column {
+    label {
+      &.flexberry-button {
+        background: @white;
+        border: none;
+        box-shadow: @darkBoxShadow;
+        padding: 0.9em;
+
+        &:hover {
+            background: #f1f7ff;
+        }
+        &.active {
+            background: #f1f7ff;
+        }
+      }
+    }
+  }
 }

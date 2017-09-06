@@ -97,6 +97,7 @@
         background: @white !important;
         border: none !important;
         &:hover {
+            background: #f1f7ff !important;
             color: @darkbluecolor !important;
         }
     }
