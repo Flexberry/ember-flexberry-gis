@@ -77,6 +77,10 @@ Ember.$.extend(true, translations, {
           'map-metadata': {
             'caption': 'Метаданные',
             'title': ''
+          },
+          'gis-search-form': {
+            'caption': 'Поиск',
+            'title': 'Поиск по метаданным слоёв и проектам карт'
           }
         },
         'components-examples': {
@@ -117,11 +121,7 @@ Ember.$.extend(true, translations, {
         },
         'integration-examples': {
           'caption': 'Интеграционные примеры',
-          'title': '',
-          'gis-search-form': {
-            'caption': 'Форма поиска',
-            'title': 'Поиск по метаданным слоёв и проектам карт'
-          }
+          'title': ''
         }
       }
     },

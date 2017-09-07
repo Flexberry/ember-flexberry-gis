@@ -71,25 +71,26 @@
         </div>
         <div class="ui top attached fluid tabular menu">
           {{#each tabSettings as |tab index|}}
-          <a
-            class="tab item {{if (eq index 0) "active"}}"
-            data-tab={{tab.tab}}
-            title={{t tab.title}}>
-            {{t tab.title}}
-          </a>
+            <a
+              class="tab item {{if (eq index 0) "active"}}"
+              data-tab={{tab.tab}}
+              title={{t tab.title}}>
+              {{t tab.title}}
+            </a>
           {{/each}}
         </div>
         {{#each tabSettings as |tab index|}}
-        <div
-          class="ui bottom attached tab segment {{if (eq index 0) "active"}}"
-          data-tab={{tab.tab}}>
-            {{flexberry-table
-              model=(get this tab.fieldName)
-              getData=(action "getData" tab.fieldName)
-              modelName=tab.modelName
-              projectionName=tab.projectionName
-              header=tab.header }}
-        </div>
+          <div
+            class="ui bottom attached tab segment {{if (eq index 0) "active"}}"
+            data-tab={{tab.tab}}>
+              {{flexberry-table
+                model=(get this tab.fieldName)
+                getData=(action "getData" tab.fieldName)
+                modelName=tab.modelName
+                projectionName=tab.projectionName
+                header=tab.header
+              }}
+          </div>
         {{/each}}
       </div>
     </div>

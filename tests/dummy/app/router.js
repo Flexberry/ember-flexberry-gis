@@ -16,14 +16,14 @@ Router.map(function() {
   this.route('new-platform-flexberry-g-i-s-layer-metadata-e', { path: 'layer-metadata/:id' });
   this.route('new-platform-flexberry-g-i-s-layer-metadata-e.new', { path: 'layer-metadata/new' });
 
+  // Maps and metadata search form's route.
+  this.route('gis-search-form', { path: 'search' });
+
   // Components examples routes (sorted by component's names).
   this.route('components-examples/flexberry-button/settings-example');
   this.route('components-examples/flexberry-ddau-checkbox/settings-example');
   this.route('components-examples/flexberry-maplayers/settings-example');
   this.route('components-examples/flexberry-tree/settings-example');
-
-  // GIS search form example
-  this.route('gis-search-form');
 });
 
 export default Router;

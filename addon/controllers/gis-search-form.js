@@ -8,17 +8,17 @@ import Ember from 'ember';
   GIS search form controller.
 
   @class GisSearchFormController
-  @extends Ember.Controller
+  @extends <a href="http://emberjs.com/api/classes/Ember.Controller.html">Ember.Controller</a>
 */
 export default Ember.Controller.extend({
   /**
-    Model for search panel
+    Model for search panel.
   */
   searchConditions: {
     /**
       Comma-separated list of key words. Used for search.
 
-      @property searchKeyWords
+      @property searchConditions.searchKeyWords
       @type String
       @default null
     */
@@ -27,6 +27,7 @@ export default Ember.Controller.extend({
     /**
       Left boundary of scale limitation.
 
+      @property searchConditions.scaleFrom
       @type Number
       @default null
     */
@@ -35,6 +36,7 @@ export default Ember.Controller.extend({
     /**
       Right boundary of scale limitation.
 
+      @property searchConditions.scaleTo
       @type Number
       @default null
     */
@@ -43,7 +45,7 @@ export default Ember.Controller.extend({
     /**
       Min longitude value. Used for search.
 
-      @property searchMinLng
+      @property searchConditions.minLng
       @type Number
       @default null
     */
@@ -52,16 +54,16 @@ export default Ember.Controller.extend({
     /**
       Min latitude value. Used for search.
 
-      @property searchMinLat
+      @property searchConditions.minLat
       @type Number
       @default null
     */
-
     minLat: null,
+
     /**
       Max longitude value. Used for search.
 
-      @property searchMaxLng
+      @property searchConditions.maxLng
       @type Number
       @default null
     */
@@ -70,7 +72,7 @@ export default Ember.Controller.extend({
     /**
       Max latitude value. Used for search.
 
-      @property searchMaxLat
+      @property searchConditions.maxLat
       @type Number
       @default null
     */
@@ -79,6 +81,9 @@ export default Ember.Controller.extend({
 
   /**
     Indicates - when to show error message.
+
+    @property showFormErrorMessage
+    @readOnly
   */
   showFormErrorMessage: Ember.computed('error', function () {
     if (this.get('error')) { return true; } else { return false; }
@@ -87,6 +92,8 @@ export default Ember.Controller.extend({
   actions: {
     /**
       Handles search button click and passes search data to the route.
+
+      @method actions.getSearchResults
     */
     getSearchResults() {
       let req = { searchConditions: this.get('searchConditions') };
@@ -94,10 +101,12 @@ export default Ember.Controller.extend({
     },
 
     /**
-      Handles action from child table component
-      @param {*} field Field in which component waits the result data
-      @param {*} data Paging settings
-     */
+      Handles action from child table component.
+
+      @method actions.getData
+      @param {*} field Field in which component waits the result data.
+      @param {*} data Paging settings.
+    */
     getData(field, data) {
       let req = Ember.$().extend(data, {
         searchConditions: this.get('searchConditions'),

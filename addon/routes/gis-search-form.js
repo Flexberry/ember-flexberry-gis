@@ -10,9 +10,17 @@ import { Query } from 'ember-flexberry-data';
   Loads data according to filters and paging settings
 
   @class GisSearchFormRoute
-  @extends Ember.Route
+  @extends <a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Route</a>
 */
 export default Ember.Route.extend({
+  /**
+    A hook you can use to setup the controller for the current route.
+    [More info](http://emberjs.com/api/classes/Ember.Route.html#method_setupController).
+
+    @method setupController
+    @param {Ember.Controller} controller
+    @param {Object} model
+  */
   setupController(controller, model) {
     this._super(controller, model);
 
@@ -27,8 +35,7 @@ export default Ember.Route.extend({
         name: 'gis-search-form.layer-metadata.header.name',
         type: 'gis-search-form.layer-metadata.header.type'
       }
-    },
-    {
+    }, {
       title: 'gis-search-form.maps.title',
       modelName: 'new-platform-flexberry-g-i-s-map',
       projectionName: 'MapL',
@@ -48,6 +55,8 @@ export default Ember.Route.extend({
   actions: {
     /**
       Loads data according to search query
+
+      @method actions.doSearch
      */
     doSearch(req) {
       let tabSettings = this.get('controller').get('tabSettings');
@@ -87,12 +96,16 @@ export default Ember.Route.extend({
   },
 
   /**
-    Returns a query promise according to specified query options.
+    Produces data loading request.
+
+    @method _getQuery
     @param {*} modelName
     @param {*} projectionName
     @param {*} top
     @param {*} skip
     @param {*} searchConditions
+    @return {<a href="https://emberjs.com/api/ember/2.4/classes/RSVP.Promise">Ember.RSVP.Promise</a>} Promise which will be resolved with loaded data.
+    @private
    */
   _getQuery(modelName, projectionName, top, skip, searchConditions) {
     let queryBuilder = new Query.Builder(this.get('store'))

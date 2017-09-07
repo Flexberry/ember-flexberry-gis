@@ -112,11 +112,15 @@ export default Ember.Controller.extend({
           caption: i18n.t('forms.application.sitemap.gis.maps.caption'),
           title: i18n.t('forms.application.sitemap.gis.maps.title'),
           children: null
-        },
-        {
+        }, {
           link: 'new-platform-flexberry-g-i-s-layer-metadata-l',
           caption: i18n.t('forms.application.sitemap.gis.map-metadata.caption'),
           title: i18n.t('forms.application.sitemap.gis.map-metadata.title'),
+          children: null
+        }, {
+          link: 'gis-search-form',
+          caption: i18n.t('forms.application.sitemap.gis.gis-search-form.caption'),
+          title: i18n.t('forms.application.sitemap.gis.gis-search-form.title'),
           children: null
         }]
       }, {
@@ -163,16 +167,6 @@ export default Ember.Controller.extend({
             title: i18n.t('forms.application.sitemap.components-examples.flexberry-tree.settings-example.title'),
             children: null
           }]
-        }]
-      }, {
-        link: null,
-        caption: i18n.t('forms.application.sitemap.integration-examples.caption'),
-        title: i18n.t('forms.application.sitemap.integration-examples.title'),
-        children: [{
-          link: 'gis-search-form',
-          caption: i18n.t('forms.application.sitemap.integration-examples.gis-search-form.caption'),
-          title: i18n.t('forms.application.sitemap.integration-examples.gis-search-form.title'),
-          children: null
         }]
       }]
     };
