@@ -48,6 +48,9 @@ export default {
   },
   'crs': {
     'caption': 'Система координат слоя (CRS)',
+    'name-textbox': {
+      'caption': 'Название проекции'
+    },
     'code-textbox': {
       'caption': 'Код'
     },

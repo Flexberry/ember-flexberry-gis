@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import EditMapController from 'ember-flexberry-gis/controllers/edit-map';
-import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-controller-operations-indication';
+import EditFormControllerOperationsIndicationMixin from 'ember-flexberry-gis/mixins/edit-form-controller-operations-indication';
 
 /**
   Map controller.
