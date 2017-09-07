@@ -8,17 +8,18 @@ moduleForComponent('flexberry-table', 'Integration | Component | flexberry table
 test('it renders', function(assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
+  this.set('header', { name: 'gis-search-form.layer-metadata.header.name' });
 
-  this.render(hbs`{{flexberry-table}}`);
+  this.render(hbs`{{flexberry-table header=header}}`);
 
-  assert.equal(this.$().text().trim(), '');
+  assert.notEqual(this.$().text().indexOf('No data'), -1, 'Should contain "No data"');
 
   // Template block usage:
-  this.render(hbs`
-    {{#flexberry-table}}
-      template block text
-    {{/flexberry-table}}
-  `);
+  // this.render(hbs`
+  //   {{#flexberry-table}}
+  //     template block text
+  //   {{/flexberry-table}}
+  // `);
 
-  assert.equal(this.$().text().trim(), 'template block text');
+  // assert.equal(this.$().text().trim(), 'template block text');
 });
