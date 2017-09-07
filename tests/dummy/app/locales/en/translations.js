@@ -83,6 +83,10 @@ Ember.$.extend(true, translations, {
           'map-metadata': {
             'caption': 'Мetadata',
             'title': ''
+          },
+          'gis-search-form': {
+            'caption': 'Search',
+            'title': 'Search through layer metadata and maps'
           }
         },
         'components-examples': {
