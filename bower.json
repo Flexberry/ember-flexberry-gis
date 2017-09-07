@@ -36,6 +36,6 @@
   },
   "resolutions": {
     "leaflet": "1.2.0",
-    "semantic-ui": "git://github.com/Flexberry/Semantic-UI.git#fixed-abort"
+    "semantic-ui": "fixed-abort"
   }
 }
