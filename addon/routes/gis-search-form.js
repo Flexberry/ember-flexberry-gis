@@ -52,6 +52,7 @@ export default Ember.Route.extend({
     doSearch(req) {
       let tabSettings = this.get('controller').get('tabSettings');
       this.get('controller').set('error', null);
+      this.get('controller').set('isLoading', true);
 
       // wheter it's a request from a specific control or a common one
       if (req.modelName) {
@@ -65,6 +66,8 @@ export default Ember.Route.extend({
           this.get('controller').set(req.fieldName, data);
         }).catch((errorMessage) => {
           this.get('controller').set('error', errorMessage);
+        }).finally(() => {
+          this.get('controller').set('isLoading', false);
         });
       } else {
         let queries = tabSettings.map((item) => {
@@ -76,6 +79,8 @@ export default Ember.Route.extend({
           }
         }).catch((errorMessage) => {
           this.get('controller').set('error', errorMessage);
+        }).finally(() => {
+          this.get('controller').set('isLoading', false);
         });
       }
     }

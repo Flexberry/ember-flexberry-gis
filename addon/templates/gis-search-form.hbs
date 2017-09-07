@@ -66,6 +66,9 @@
     <div class="row">
       <div class="ui top attached label">{{t "gis-search-form.results"}}</div>
       <div class="sixteen wide column">
+        <div class="ui {{if isLoading "active" "disabled"}} inverted dimmer">
+          <div class="ui loader"></div>
+        </div>
         <div class="ui top attached fluid tabular menu">
           {{#each tabSettings as |tab index|}}
           <a
