@@ -48,6 +48,9 @@ export default {
   },
   'crs': {
     'caption': 'Layer coordinate reference system (CRS)',
+    'name-textbox': {
+      'caption': 'Projection name'
+    },
     'code-textbox': {
       'caption': 'Code'
     },

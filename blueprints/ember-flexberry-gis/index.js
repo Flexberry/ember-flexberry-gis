@@ -72,7 +72,7 @@ module.exports = {
       {
         name: 'Leaflet.zoomslider',
         source: 'https://github.com/Flexberry/Leaflet.zoomslider.git',
-        target: 'leaflet-1.0.1'
+        target: 'leaflet-1.2.0'
       },
 
       // Leaflet-MiniMap
