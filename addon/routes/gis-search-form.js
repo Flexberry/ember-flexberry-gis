@@ -18,8 +18,8 @@ export default Ember.Route.extend({
     [More info](http://emberjs.com/api/classes/Ember.Route.html#method_setupController).
 
     @method setupController
-    @param {Ember.Controller} controller
-    @param {Object} model
+    @param {<a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Controller</a>} controller Related controller.
+    @param {Object} model Related model.
   */
   setupController(controller, model) {
     this._super(controller, model);
@@ -99,11 +99,11 @@ export default Ember.Route.extend({
     Produces data loading request.
 
     @method _getQuery
-    @param {*} modelName
-    @param {*} projectionName
-    @param {*} top
-    @param {*} skip
-    @param {*} searchConditions
+    @param {String} modelName Name of model to be loaded.
+    @param {Stirng} projectionName Name of projection related to model, which must be used to loaad it.
+    @param {Number} top Count of records to be loaded.
+    @param {Number} skip Count of records to be skipped.
+    @param {Object} searchConditions Hash object containing filtering data.
     @return {<a href="https://emberjs.com/api/ember/2.4/classes/RSVP.Promise">Ember.RSVP.Promise</a>} Promise which will be resolved with loaded data.
     @private
    */
@@ -112,7 +112,7 @@ export default Ember.Route.extend({
       .from(modelName)
       .selectByProjection(projectionName);
 
-    // If there are conditions - add them to the query
+    // If there are conditions - add them to the query.
     if (searchConditions.keyWords) {
       let keyWordsConditions = searchConditions.keyWords.split(',').map((item) => {
         let str = item.trim();
@@ -123,7 +123,7 @@ export default Ember.Route.extend({
         queryBuilder = queryBuilder.where(condition);
       }
 
-      // TODO add all conditions handling
+      // TODO add all conditions handling.
     }
 
     if (top) { queryBuilder = queryBuilder.top(top); }

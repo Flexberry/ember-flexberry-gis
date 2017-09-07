@@ -86,7 +86,11 @@ export default Ember.Controller.extend({
     @readOnly
   */
   showFormErrorMessage: Ember.computed('error', function () {
-    if (this.get('error')) { return true; } else { return false; }
+    if (this.get('error')) {
+      return true;
+    } else {
+      return false;
+    }
   }),
 
   actions: {
@@ -104,8 +108,8 @@ export default Ember.Controller.extend({
       Handles action from child table component.
 
       @method actions.getData
-      @param {*} field Field in which component waits the result data.
-      @param {*} data Paging settings.
+      @param {String} field Path to property in which loaded data must be stored.
+      @param {Object} data Hash object containing paging and filtering data.
     */
     getData(field, data) {
       let req = Ember.$().extend(data, {
