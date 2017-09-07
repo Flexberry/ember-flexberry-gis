@@ -270,6 +270,8 @@
                 color: @darkbluecolor;
                 padding: @flexberryTreeHeaderTitlePadding;
                 line-height: @flexberryTreeHeaderTitleLineHeight;
+                display: flex;
+                align-items: baseline;
                 &:hover {
                     color: @flexberryTreeHeaderTitleHoveredColor;
                 }

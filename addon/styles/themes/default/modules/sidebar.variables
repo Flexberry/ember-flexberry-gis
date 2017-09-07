@@ -66,7 +66,7 @@
 
 @flexberryTreeHeaderTitleColor: @darkbluecolor;
 @flexberryTreeHeaderTitleFontSize: 14px;
-@flexberryTreeHeaderTitlePadding: 12px 6px;
+@flexberryTreeHeaderTitlePadding: 8px 6px;
 @flexberryTreeHeaderTitleLineHeight: 16px;
 @flexberryTreeHeaderTitleHoveredColor: @bluecolor;
 
@@ -74,7 +74,7 @@
 @flexberryMaplayerOpacitiLabelBackgroundColor: @whitecolor;
 @flexberryMaplayerOpacitiLabelBoxShadow: @darkBoxShadow;
 @flexberryMaplayerOpacitiLabelPadding: 7px 5px;
-@flexberryMaplayerOpacitiLabelMargin: -3px 5px 0px 0px;
+@flexberryMaplayerOpacitiLabelMargin: 3px 5px 2px 0px;
 @flexberryMaplayerOpacitiLabelHoveredBackground: @lightbluecolor;
 
 @layerLegendProgressbarLabelColor: @darkbluecolor;

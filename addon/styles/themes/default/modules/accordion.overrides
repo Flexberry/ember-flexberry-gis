@@ -2,8 +2,6 @@
 .ui.styled.accordion .accordion .title {
   line-height: 2em;
   &>* {
-    display: inline-block;
-    vertical-align: middle;
     line-height: 1em;
   }
   .flexberry-maplayer-opacity-label {
@@ -40,4 +38,11 @@
     .ui.loading.form {
         margin-top: 100px;
     }
+}
+
+.flexberry-treenode-header-block {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
