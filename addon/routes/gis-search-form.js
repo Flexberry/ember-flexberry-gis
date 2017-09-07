@@ -87,12 +87,12 @@ export default Ember.Route.extend({
   },
 
   /**
-   *
-   * @param {*} modelName
-   * @param {*} projectionName
-   * @param {*} top
-   * @param {*} skip
-   * @param {*} searchConditions
+    Returns a query promise according to specified query options.
+    @param {*} modelName
+    @param {*} projectionName
+    @param {*} top
+    @param {*} skip
+    @param {*} searchConditions
    */
   _getQuery(modelName, projectionName, top, skip, searchConditions) {
     let queryBuilder = new Query.Builder(this.get('store'))

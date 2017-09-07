@@ -77,6 +77,9 @@ export default Ember.Controller.extend({
     maxLat: null
   },
 
+  /**
+    Indicates - when to show error message.
+  */
   showFormErrorMessage: Ember.computed('error', function () {
     if (this.get('error')) { return true; } else { return false; }
   }),
