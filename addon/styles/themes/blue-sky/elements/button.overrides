@@ -9,10 +9,7 @@
 .ui.icon.button {
     color: @uiIconButtonColor;
     background: @uiIconButtonBackground;
-    height: @uiIconButtonHeight;
-    width: @uiIconButtonWidth;
     border-radius: @uiIconButtonBorderRadius;
-    box-shadow: @uiIconButtonBoxShadow;
     &.active,
     &:hover {
         color: @uiIconButtonHoveredColor;
@@ -60,6 +57,9 @@
         border-radius: 5px;
         font-weight: normal;
         display: inline-block;
+        height: @uiIconButtonHeight;
+        width: @uiIconButtonWidth;
+        box-shadow: @uiIconButtonBoxShadow;
         font-size: 16px;
         margin-left: 0px;
         &.active,

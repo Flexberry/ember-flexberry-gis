@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FlexberryDdauCheckboxComponent from 'ember-flexberry-gis/components/flexberry-ddau-checkbox';
+import FlexberryDdauCheckboxComponent from 'ember-flexberry/components/flexberry-ddau-checkbox';
 import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-ddau-checkbox-actions-handler';
 import storageService from 'ember-flexberry-gis/services/local-storage';
 import { moduleForComponent, test } from 'ember-qunit';

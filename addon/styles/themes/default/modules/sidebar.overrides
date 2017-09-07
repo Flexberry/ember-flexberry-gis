@@ -1,6 +1,10 @@
 /*******************************
          Theme Overrides
 *******************************/
+.ui.top.attached {
+  margin: 0;
+  width: 100%;
+}
 
 .sidebar-wrapper {
   position: absolute;
@@ -238,6 +242,7 @@
             height: 30px;
             width: 30px;
             padding: 6px 0;
+            box-shadow: @darkBoxShadow;
         }
     }
     .flexberry-maplayers.flexberry-tree-root {

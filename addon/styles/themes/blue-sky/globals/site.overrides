@@ -3,3 +3,8 @@
         line-height: 17px;
     }
 }
+
+.background-logo .ui.top.attached {
+    margin: 20px 5px;
+    width: 250px;
+}
