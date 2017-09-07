@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import RequiredActionsMixin from '../mixins/required-actions';
-import DynamicActionsMixin from '../mixins/dynamic-actions';
+import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
+import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import layout from '../templates/components/flexberry-edit-layermap';
 import {

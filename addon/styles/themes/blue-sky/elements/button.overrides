@@ -68,3 +68,28 @@
         }
     }
 }
+
+
+/* Flexberry Rdit Layermap Segment */
+.flexberry-edit-layermap {
+    .ui.small.fluid.buttons:not(.basic):not(.inverted) {
+      &>.button.flexberry-button {
+          background: @whitecolor;
+          color: @uiIconButtonColor;
+          border: 1px solid @bluesky;
+          &.active {
+              background: @lightbluecolor !important;
+          }
+          &:hover {
+              opacity: 0.8;
+              color: @uiIconButtonColor !important;
+          }
+      }
+    }
+    .button.flexberry-button {
+        color: @uiIconButtonColor !important;
+        &:hover {
+          color: @white !important;
+        }
+    }
+}

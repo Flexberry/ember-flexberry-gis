@@ -85,3 +85,20 @@ i.icon.angle.right:before {
         }
     }
 }
+
+
+/*********************************************
+        Flexberry Rdit Layermap Segment
+*********************************************/
+.ui.form.flexberry-edit-layermap {
+  i.icon.cloud.download:before {
+    font-family: Icons;
+    color: @bluesky;
+    &:hover {
+      color: @white;
+    }
+  }
+  .ui.button.flexberry-button:hover i.icon.cloud.download:before {
+    color: @white;
+  }
+}
