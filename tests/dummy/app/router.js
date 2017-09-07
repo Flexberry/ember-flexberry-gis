@@ -16,6 +16,9 @@ Router.map(function() {
   this.route('new-platform-flexberry-g-i-s-layer-metadata-e', { path: 'layer-metadata/:id' });
   this.route('new-platform-flexberry-g-i-s-layer-metadata-e.new', { path: 'layer-metadata/new' });
 
+  // Maps and metadata search form's route.
+  this.route('gis-search-form', { path: 'search' });
+
   // Components examples routes (sorted by component's names).
   this.route('components-examples/flexberry-button/settings-example');
   this.route('components-examples/flexberry-ddau-checkbox/settings-example');

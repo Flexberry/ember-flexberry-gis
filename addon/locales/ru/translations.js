@@ -13,6 +13,7 @@ import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
+import FlexberryTableComponents from './components/flexberry-table';
 
 export default {
   'models': {
@@ -186,5 +187,39 @@ export default {
       'x-caption': 'X',
       'y-caption': 'Y'
     }
-  }
+  },
+
+  'gis-search-form': {
+    'header': 'Поиск',
+    'subheader': 'по метаданным слоёв и проектам карт',
+    'keywords': 'Ключевые слова',
+    'scale': 'Масштаб',
+    'object': 'Что',
+    'position': 'Где',
+    'min-long': 'Долгота (мин.)',
+    'min-lat': 'Широта (мин.)',
+    'max-long': 'Долгота (макс.)',
+    'max-lat': 'Широта (макс.)',
+    'search': 'Искать',
+    'results': 'Результаты',
+    'layer-metadata': {
+      'title': 'Метаданные слоёв',
+      'header': {
+        'name': 'Название',
+        'type': 'Тип'
+      }
+    },
+    'maps': {
+      'title': 'Карты',
+      'header': {
+        'name': 'Название',
+        'lat': 'Широта',
+        'lng': 'Долгота',
+        'zoom': 'Масштаб',
+        'public': 'Общая'
+      }
+    }
+  },
+
+  'flexberry-table': FlexberryTableComponents
 };
