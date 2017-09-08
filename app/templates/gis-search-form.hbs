@@ -83,13 +83,24 @@
           <div
             class="ui bottom attached tab segment {{if (eq index 0) "active"}}"
             data-tab={{tab.tab}}>
-              {{flexberry-table
+              {{#flexberry-table
                 model=(get this tab.fieldName)
                 getData=(action "getData" tab.fieldName)
                 modelName=tab.modelName
                 projectionName=tab.projectionName
                 header=(header-from-projection modelName=tab.modelName projectionName=tab.projectionName)
               }}
+                {{#block-slot 'column-header'}}
+                  <th>Открыть</th>
+                {{/block-slot}}
+                {{#block-slot 'column-cell' as |row|}}
+                  <td>
+                    <button {{action "goTo" row on="click"}}>
+                      Открыть
+                    </button>
+                  </td>
+                {{/block-slot}}
+              {{/flexberry-table}}
           </div>
         {{/each}}
       </div>

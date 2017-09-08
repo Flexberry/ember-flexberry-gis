@@ -117,6 +117,10 @@ export default Ember.Controller.extend({
         fieldName: field
       });
       this.send('doSearch', req);
+    },
+
+    goTo() {
+      return;
     }
   }
 });

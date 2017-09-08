@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-table';
 import PaginatedControllerMixin from 'ember-flexberry/mixins/paginated-controller';
+import SlotsMixin from 'ember-block-slots';
 
 /**
   Flexberry table component with [Semantic UI table](https://semantic-ui.com/collections/table) style and paging handling.
@@ -12,8 +13,9 @@ import PaginatedControllerMixin from 'ember-flexberry/mixins/paginated-controlle
   @class FlexberryTableComponent
   @uses PaginatedControllerMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @extends <a href="https://github.com/ciena-blueplanet/ember-block-slots">Ember block slots</a>
 */
-export default Ember.Component.extend(PaginatedControllerMixin, {
+export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   /**
     Reference to component's template.
   */
