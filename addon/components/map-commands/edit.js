@@ -151,7 +151,16 @@ let EditMapCommandComponent = Ember.Component.extend({
     */
     onEditDialogApprove(e) {
       //Set properties from new map model to current map model.
+      let mapModel = e.mapProperties;
+      let model = this.get('mapModel');
 
+      model.set('name', mapModel.name);
+      model.set('lat', mapModel.lat);
+      model.set('lng', mapModel.lng);
+      model.set('zoom', mapModel.zoom);
+      model.set('public', mapModel.public);
+      model.set('description', mapModel.description);
+      model.save();
       //this.sendAction('execute', e);
     },
   },
