@@ -147,6 +147,10 @@
             execute=(action "onMapCommandExecute" target=mapToolbar)
             defaultMapCaption=model.name
           }}
+          {{map-commands/edit
+            execute=(action "onMapCommandExecute" target=mapToolbar)
+            mapModel=model
+          }}
           {{flexberry-tab-bar
             change=(action 'toggleSidebar' '.ui.sidebar.right' '.mappanel')
             items=sidebarItems

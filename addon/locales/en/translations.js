@@ -6,6 +6,7 @@ import NewPlatformFlexberryGISMapLayerModel from './models/new-platform-flexberr
 import NewPlatformFlexberryGISMapObjectSettingModel from './models/new-platform-flexberry-g-i-s-map-object-setting';
 
 import FeatureResultItemComponent from './components/feature-result-item';
+import MapDialogsComponents from './components/map-dialogs';
 import LayersDialogsComponents from './components/layers-dialogs';
 import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
@@ -56,6 +57,8 @@ export default {
         'caption': 'Error while parsing entered JSON-string'
       }
     },
+
+    'map-dialogs': MapDialogsComponents,
 
     'layers-dialogs': LayersDialogsComponents,
 
