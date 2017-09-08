@@ -1,5 +1,30 @@
 ﻿{
-  "propertyLookup": [],
+  "propertyLookup": [
+    {
+      "master": null,
+      "displayAttributeName": null,
+      "required": false,
+      "relationName": "LinkMetadata.Layer",
+      "projection": "LayerMetadataL",
+      "detailModelName": null
+    },
+    {
+      "master": null,
+      "displayAttributeName": null,
+      "required": false,
+      "relationName": "LinkMetadata.MapObjectSetting",
+      "projection": "",
+      "detailModelName": null
+    },
+    {
+      "master": null,
+      "displayAttributeName": null,
+      "required": false,
+      "relationName": "LinkMetadata.ParameterMetadata.LayerLink",
+      "projection": "",
+      "detailModelName": null
+    }
+  ],
   "caption": null,
   "name": "NewPlatformFlexberryGISLayerMetadataE",
   "className": "LayerMetadataE",
