@@ -30,25 +30,14 @@ export default Ember.Route.extend({
       projectionName: 'LayerMetadataL',
       top: 5,
       fieldName: 'layerMetadata',
-      tab: 'layer-metadata',
-      header: {
-        name: 'gis-search-form.layer-metadata.header.name',
-        type: 'gis-search-form.layer-metadata.header.type'
-      }
+      tab: 'layer-metadata'
     }, {
       title: 'gis-search-form.maps.title',
       modelName: 'new-platform-flexberry-g-i-s-map',
       projectionName: 'MapL',
       top: 5,
       fieldName: 'maps',
-      tab: 'maps',
-      header: {
-        name: 'gis-search-form.maps.header.name',
-        lat: 'gis-search-form.maps.header.lat',
-        lng: 'gis-search-form.maps.header.lng',
-        zoom: 'gis-search-form.maps.header.zoom',
-        public: 'gis-search-form.maps.header.public'
-      }
+      tab: 'maps'
     }]);
   },
 

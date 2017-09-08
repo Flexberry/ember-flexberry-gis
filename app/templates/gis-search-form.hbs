@@ -88,7 +88,7 @@
                 getData=(action "getData" tab.fieldName)
                 modelName=tab.modelName
                 projectionName=tab.projectionName
-                header=tab.header
+                header=(header-from-projection modelName=tab.modelName projectionName=tab.projectionName)
               }}
           </div>
         {{/each}}
