@@ -1,115 +1,142 @@
 export default {
   projections: {
     LayerLinkD: {
-      layer: {
-        caption: 'layer',
-        name: {
-          caption: 'name'
+      mapObjectSetting: {
+        caption: 'Map object setting',
+        editForm: {
+          caption: 'Edit form'
         }
       },
-      mapObjectSetting: {
-        caption: 'mapObjectSetting'
+      layer: {
+        caption: 'Layer',
+        name: {
+          caption: 'Name'
+        }
+      },
+      allowShow: {
+        caption: 'Allow show'
       },
       linkParameter: {
-        caption: 'linkParameter',
+        caption: 'Link parameter',
         objectField: {
-          caption: 'objectField'
+          caption: 'Object field'
         },
         layerField: {
-          caption: 'layerField'
+          caption: 'Layer field'
         },
         expression: {
-          caption: 'expression'
+          caption: 'Expression'
         },
         queryKey: {
-          caption: 'queryKey'
+          caption: 'Query key'
         },
         linkField: {
-          caption: 'linkField'
+          caption: 'Link field'
+        },
+        layerLink: {
+          caption: 'Layer link'
         }
       }
     },
     LayerLinkE: {
+      allowShow: {
+        caption: 'Allow show'
+      },
       layer: {
-        caption: 'layer'
+        caption: 'Layer'
       },
       mapObjectSetting: {
-        caption: 'mapObjectSetting'
+        caption: 'Map object setting'
       },
       linkParameter: {
-        caption: 'linkParameter',
+        caption: 'Link parameter',
         objectField: {
-          caption: 'objectField'
+          caption: 'Object field'
         },
         layerField: {
-          caption: 'layerField'
+          caption: 'Layer field'
         },
         expression: {
-          caption: 'expression'
+          caption: 'Expression'
         },
         queryKey: {
-          caption: 'queryKey'
+          caption: 'Query key'
         },
         linkField: {
-          caption: 'linkField'
+          caption: 'Link field'
+        },
+        layerLink: {
+          caption: 'Layer link'
         }
       }
     },
     LayerLinkI: {
       mapObjectSetting: {
-        caption: 'mapObjectSetting',
+        caption: 'Map object setting',
         listForm: {
-          caption: 'listForm'
+          caption: 'List form'
         },
         editForm: {
-          caption: 'editForm'
+          caption: 'Edit form'
         }
       },
+      allowShow: {
+        caption: 'Allow show'
+      },
       layer: {
-        caption: 'layer'
+        caption: 'Layer'
       },
       linkParameter: {
-        caption: 'linkParameter',
+        caption: 'Link parameter',
         objectField: {
-          caption: 'objectField'
+          caption: 'Object field'
         },
         layerField: {
-          caption: 'layerField'
+          caption: 'Layer field'
         },
         expression: {
-          caption: 'expression'
+          caption: 'Expression'
         },
         queryKey: {
-          caption: 'queryKey'
+          caption: 'Query key'
         },
         linkField: {
-          caption: 'linkField'
+          caption: 'Link field'
+        },
+        layerLink: {
+          caption: 'Layer link'
         }
       }
     },
     LayerLinkQ: {
+      allowShow: {
+        caption: 'Allow show'
+      },
       layer: {
-        caption: 'layer'
+        caption: 'Layer'
       },
       mapObjectSetting: {
-        caption: 'mapObjectSetting'
+        caption: 'Map object setting'
       },
       linkParameter: {
-        caption: 'linkParameter',
+        caption: 'Link parameter',
         objectField: {
-          caption: 'objectField'
+          caption: 'Object field'
         },
         layerField: {
-          caption: 'layerField'
+          caption: 'Layer field'
         },
         expression: {
-          caption: 'expression'
+          caption: 'Expression'
         },
         queryKey: {
-          caption: 'queryKey'
+          caption: 'Query key'
         },
         linkField: {
-          caption: 'linkField'
+          caption: 'Link field'
+        },
+        layerLink: {
+          caption: 'Layer link'
         }
       }
     }

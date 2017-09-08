@@ -2,77 +2,127 @@ export default {
   projections: {
     AuditView: {
       name: {
-        caption: 'Name'
+        caption: 'Наименование'
       },
       creator: {
-        caption: 'Creator'
+        caption: 'Создатель'
       },
       createTime: {
-        caption: 'Create time'
+        caption: 'Время создания'
       },
       editor: {
-        caption: 'Editor'
+        caption: 'Редактор'
       },
       editTime: {
-        caption: 'Edit time'
+        caption: 'Время редактирования'
+      }
+    },
+    Map: {
+      name: {
+        caption: 'Наименование'
+      },
+      lat: {
+        caption: 'Широта'
+      },
+      lng: {
+        caption: 'Долгота'
+      },
+      zoom: {
+        caption: 'Зум'
+      },
+      public: {
+        caption: 'Общая'
+      },
+      coordinateReferenceSystem: {
+        caption: 'Система координат'
       }
     },
     MapE: {
       name: {
-        caption: 'Name'
+        caption: 'Наименование'
+      },
+      description: {
+        caption: 'Описание'
+      },
+      keyWords: {
+        caption: 'Ключевые слова'
       },
       lat: {
-        caption: 'Lat'
+        caption: 'Широта'
       },
       lng: {
-        caption: 'Lng'
+        caption: 'Долгота'
       },
       zoom: {
-        caption: 'Zoom'
+        caption: 'Зум'
       },
       public: {
-        caption: 'Public'
+        caption: 'Общая'
+      },
+      scale: {
+        caption: 'Масштаб'
       },
       coordinateReferenceSystem: {
-        caption: 'CRS'
+        caption: 'Система координат'
+      },
+      boundingBox: {
+        caption: 'Граница'
       },
       mapLayer: {
         caption: '',
         name: {
-          caption: 'Name'
+          caption: 'Наименование'
         },
-        type: {
-          caption: 'Type'
+        description: {
+          caption: 'Описание'
         },
-        visibility: {
-          caption: 'Visibility'
+        keyWords: {
+          caption: 'Ключевые слова'
         },
         index: {
-          caption: 'Index'
+          caption: 'Индекс'
         },
-        coordinateReferenceSystem: {
-          caption: 'CRS'
+        visibility: {
+          caption: 'Видимость'
+        },
+        type: {
+          caption: 'Тип'
         },
         settings: {
-          caption: 'Settings'
+          caption: 'Настройки'
+        },
+        scale: {
+          caption: 'Масштаб'
+        },
+        coordinateReferenceSystem: {
+          caption: 'Система координат'
+        },
+        boundingBox: {
+          caption: 'Граница'
         },
         parent: {
-          caption: 'Parent'
+          caption: 'Родитель'
         },
         map: {
-          caption: 'Map'
+          caption: 'Карта'
         },
         layerLink: {
           caption: '',
+          mapObjectSetting: {
+            caption: '',
+            editForm: {
+              caption: 'Форма редактирования'
+            }
+          },
           layer: {
             caption: '',
             name: {
               caption: 'Слой'
             }
           },
-          mapObjectSetting: {
-            caption: ''
-          }
+          allowShow: {
+          caption: 'Показывать'
+        }
         }
       }
     },
@@ -81,13 +131,13 @@ export default {
         caption: 'Наименование'
       },
       lat: {
-        caption: 'Lat'
+        caption: 'Широта'
       },
       lng: {
-        caption: 'Lng'
+        caption: 'Долгота'
       },
       zoom: {
-        caption: 'Масштаб'
+        caption: 'Зум'
       },
       public: {
         caption: 'Общая'

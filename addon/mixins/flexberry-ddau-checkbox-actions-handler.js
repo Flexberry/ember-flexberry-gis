@@ -3,7 +3,9 @@
 */
 
 import Ember from 'ember';
-import { setRecord } from '../utils/extended-set';
+import {
+  setRecord
+} from '../utils/extended-set';
 
 /**
   Mixin containing handlers for
@@ -56,6 +58,9 @@ export default Ember.Mixin.create({
         mutablePropertyPathType === 'string');
 
       setRecord(this, mutablePropertyPath, e.newValue);
+
+      // Save changes to local storage.
+      this.mutateStorage('visibility', mutablePropertyPath, e.newValue);
     }
   }
 });

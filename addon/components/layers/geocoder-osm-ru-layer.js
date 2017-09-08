@@ -10,7 +10,7 @@ import GeocoderBaseLayer from './geocoder-base-layer';
   uses API of [OpenStreetMap.ru/api/search](https://github.com/ErshKUS/OpenStreetMap.ru/blob/master/api/search).
 
   @class GeocoderOsmRuLayerComponent
-  @extend GeocoderBaseLayer
+  @extends GeocoderBaseLayer
 */
 export default GeocoderBaseLayer.extend({
   /**

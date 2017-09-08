@@ -3,6 +3,9 @@
 */
 
 import Ember from 'ember';
+import {
+  getLeafletCrs
+} from '../utils/leaflet-crs';
 
 /**
   Mixin containing logic which builds leaflet coordinate reference system (CRS).
@@ -22,49 +25,7 @@ export default Ember.Mixin.create({
   */
   crs: Ember.computed('coordinateReferenceSystem', function () {
     let coordinateReferenceSystem = this.get('coordinateReferenceSystem');
-    coordinateReferenceSystem = Ember.isBlank(coordinateReferenceSystem) ? null : JSON.parse(coordinateReferenceSystem);
 
-    if (Ember.isNone(coordinateReferenceSystem)) {
-      return null;
-    }
-
-    let code = Ember.get(coordinateReferenceSystem, 'code');
-    let definition = Ember.get(coordinateReferenceSystem, 'definition');
-    if (Ember.isBlank(code) && Ember.isBlank(definition)) {
-      return null;
-    }
-
-    let crs = null;
-    let owner = Ember.getOwner(this);
-    if (Ember.isBlank(definition)) {
-      // Only code is defined.
-      // Try to find existing CRS with the same code.
-      let availableCrsCodes = Ember.A();
-      let crsFactories = owner.knownForType('coordinate-reference-system');
-      owner.knownNamesForType('coordinate-reference-system').forEach((crsName) => {
-        let crsFactory = Ember.get(crsFactories, crsName);
-        let crsFactoryCode = Ember.get(crsFactory, 'code');
-        availableCrsCodes.pushObject(crsFactoryCode);
-
-        // CRS code is the same.
-        // Create CRS from factory, remember it & break loop.
-        if (crsFactoryCode === code) {
-          crs = crsFactory.create(code, definition);
-          return false;
-        }
-      });
-
-      Ember.assert(
-        `Wrong value of \`coordinateReferenceSystem.code\` parameter: \`${code}\`. ` +
-        `Allowed values are: [\`${availableCrsCodes.join(`\`, \``)}\`].`,
-        !Ember.isNone(crs));
-    } else if (!Ember.isBlank(definition)) {
-      // CRS has definition.
-      // Try to create CRS from proj4.
-      let options = Ember.get(coordinateReferenceSystem, 'options');
-      crs = owner.knownForType('coordinate-reference-system', 'proj4').create(code, definition, options);
-    }
-
-    return crs;
+    return getLeafletCrs(coordinateReferenceSystem, this);
   })
 });
