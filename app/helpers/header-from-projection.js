@@ -1,1 +1,1 @@
-export { default, headerFromProjection } from 'ember-flexberry-gis/helpers/header-from-projection';
+export { default } from 'ember-flexberry-gis/helpers/header-from-projection';
