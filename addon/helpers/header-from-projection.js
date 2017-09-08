@@ -138,8 +138,9 @@ export default Ember.Helper.extend({
     let modelName = null;
     let projectionName = null;
 
-    if (args.length) {
-      [modelName, projectionName] = args;
+    if (args.length && args.length === 2) {
+      modelName = args[0];
+      projectionName = args[1];
     } else {
       modelName = Ember.get(hash, 'modelName');
       projectionName = Ember.get(hash, 'projectionName');
