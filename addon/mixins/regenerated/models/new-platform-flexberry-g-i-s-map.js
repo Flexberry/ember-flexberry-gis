@@ -18,6 +18,7 @@ export let Model = Ember.Mixin.create({
   lng: DS.attr('number'),
   zoom: DS.attr('number'),
   public: DS.attr('boolean'),
+  description: DS.attr('string'),
   coordinateReferenceSystem: DS.attr('string'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
@@ -51,6 +52,7 @@ export let defineProjections = function (model) {
     lng: Projection.attr('Lng'),
     zoom: Projection.attr('Zoom'),
     public: Projection.attr('Public'),
+    description: Projection.attr('Description'),
     coordinateReferenceSystem: Projection.attr('CRS'),
     mapLayer: Projection.hasMany('new-platform-flexberry-g-i-s-map-layer', '', {
       name: Projection.attr('Name'),
