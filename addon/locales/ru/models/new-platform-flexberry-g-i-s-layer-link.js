@@ -1,35 +1,47 @@
 export default {
   projections: {
     LayerLinkD: {
+      mapObjectSetting: {
+        caption: '',
+        editForm: {
+          caption: 'Форма редактирования'
+        }
+      },
       layer: {
         caption: '',
         name: {
           caption: 'Слой'
         }
       },
-      mapObjectSetting: {
-        caption: ''
+      allowShow: {
+        caption: 'Показывать'
       },
       linkParameter: {
         caption: '',
         objectField: {
-          caption: ''
+          caption: 'Поле объекта'
         },
         layerField: {
-          caption: ''
+          caption: 'Поле слоя'
         },
         expression: {
-          caption: ''
+          caption: 'Выражение'
         },
         queryKey: {
-          caption: ''
+          caption: 'Параметр запроса'
         },
         linkField: {
-          caption: ''
+          caption: 'Поле связи'
+        },
+        layerLink: {
+          caption: 'Связь'
         }
       }
     },
     LayerLinkE: {
+      allowShow: {
+        caption: 'Показывать'
+      },
       layer: {
         caption: 'Слой карты'
       },
@@ -39,19 +51,22 @@ export default {
       linkParameter: {
         caption: '',
         objectField: {
-          caption: ''
+          caption: 'Поле объекта'
         },
         layerField: {
-          caption: ''
+          caption: 'Поле слоя'
         },
         expression: {
-          caption: ''
+          caption: 'Выражение'
         },
         queryKey: {
-          caption: ''
+          caption: 'Параметр запроса'
         },
         linkField: {
-          caption: ''
+          caption: 'Поле связи'
+        },
+        layerLink: {
+          caption: 'Связь'
         }
       }
     },
@@ -65,29 +80,38 @@ export default {
           caption: ''
         }
       },
+      allowShow: {
+        caption: 'Показывать'
+      },
       layer: {
         caption: ''
       },
       linkParameter: {
         caption: '',
         objectField: {
-          caption: ''
+          caption: 'Поле объекта'
         },
         layerField: {
-          caption: ''
+          caption: 'Поле слоя'
         },
         expression: {
-          caption: ''
+          caption: 'Выражение'
         },
         queryKey: {
-          caption: ''
+          caption: 'Параметр запроса'
         },
         linkField: {
-          caption: ''
+          caption: 'Поле связи'
+        },
+        layerLink: {
+          caption: 'Связь'
         }
       }
     },
     LayerLinkQ: {
+      allowShow: {
+        caption: 'Показывать'
+      },
       layer: {
         caption: ''
       },
@@ -97,19 +121,22 @@ export default {
       linkParameter: {
         caption: '',
         objectField: {
-          caption: ''
+          caption: 'Поле объекта'
         },
         layerField: {
-          caption: ''
+          caption: 'Поле слоя'
         },
         expression: {
-          caption: ''
+          caption: 'Выражение'
         },
         queryKey: {
-          caption: ''
+          caption: 'Параметр запроса'
         },
         linkField: {
-          caption: ''
+          caption: 'Поле связи'
+        },
+        layerLink: {
+          caption: 'Связь'
         }
       }
     }

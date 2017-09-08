@@ -1,0 +1,181 @@
+﻿{
+  "name": "NewPlatformFlexberryGISLinkMetadata",
+  "modelName": "new-platform-flexberry-g-i-s-link-metadata",
+  "className": "LinkMetadata",
+  "parentModelName": null,
+  "parentClassName": null,
+  "attrs": [
+    {
+      "name": "allowShow",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": false,
+      "defaultValue": "false",
+      "stored": true
+    },
+    {
+      "name": "createTime",
+      "type": "date",
+      "flexberryType": "AuditNullableDateTime",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "creator",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "editTime",
+      "type": "date",
+      "flexberryType": "AuditNullableDateTime",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "editor",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    }
+  ],
+  "belongsTo": [
+    {
+      "polymorphic": false,
+      "presence": true,
+      "name": "mapObjectSetting",
+      "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
+      "inverse": null
+    },
+    {
+      "polymorphic": false,
+      "presence": true,
+      "name": "layer",
+      "relatedTo": "new-platform-flexberry-g-i-s-layer-metadata",
+      "inverse": "linkMetadata"
+    }
+  ],
+  "hasMany": [
+    {
+      "name": "parameterMetadata",
+      "relatedTo": "new-platform-flexberry-g-i-s-parameter-metadata",
+      "inverse": "layerLink"
+    }
+  ],
+  "projections": [
+    {
+      "name": "AuditView",
+      "modelName": "new-platform-flexberry-g-i-s-link-metadata",
+      "attrs": [
+        {
+          "name": "allowShow",
+          "caption": "Показывать",
+          "hidden": false,
+          "index": 0
+        }
+      ],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "Layer",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 1,
+          "caption": "Слой",
+          "name": "layer",
+          "relatedTo": "new-platform-flexberry-g-i-s-layer-metadata",
+          "inverse": null
+        },
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "MapObjectSetting",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [],
+          "index": 2,
+          "caption": "Настройка",
+          "name": "mapObjectSetting",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
+          "inverse": null
+        }
+      ],
+      "hasMany": [
+        {
+          "projectionName": "AuditView",
+          "caption": "",
+          "name": "parameterMetadata",
+          "relatedTo": "new-platform-flexberry-g-i-s-parameter-metadata",
+          "inverse": null
+        }
+      ]
+    },
+    {
+      "name": "LinkMetadataD",
+      "modelName": "new-platform-flexberry-g-i-s-link-metadata",
+      "attrs": [
+        {
+          "name": "allowShow",
+          "caption": "Показывать",
+          "hidden": false,
+          "index": 3
+        }
+      ],
+      "belongsTo": [
+        {
+          "lookupValue": "Name",
+          "lookupValueField": "name",
+          "relationName": "Layer",
+          "belongsTo": [],
+          "hidden": false,
+          "attrs": [
+            {
+              "name": "name",
+              "caption": "",
+              "hidden": true,
+              "index": 1
+            }
+          ],
+          "index": 0,
+          "caption": "Слой",
+          "name": "layer",
+          "relatedTo": "new-platform-flexberry-g-i-s-layer-metadata",
+          "inverse": null
+        },
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "MapObjectSetting",
+          "belongsTo": [],
+          "hidden": true,
+          "attrs": [],
+          "index": 2,
+          "caption": "Настройка",
+          "name": "mapObjectSetting",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
+          "inverse": null
+        }
+      ],
+      "hasMany": [
+        {
+          "projectionName": "ParameterMetadataD",
+          "caption": "Параметры",
+          "name": "parameterMetadata",
+          "relatedTo": "new-platform-flexberry-g-i-s-parameter-metadata",
+          "inverse": null
+        }
+      ]
+    }
+  ],
+  "stored": true,
+  "offline": true
+}

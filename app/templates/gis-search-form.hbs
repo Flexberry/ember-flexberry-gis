@@ -1,0 +1,100 @@
+{{ui-message
+  type="error"
+  closeable=false
+  visible=showFormErrorMessage
+  caption=error.name
+  message=error.message
+}}
+<div class="ui attached message">
+  <div class="header">
+    {{t "gis-search-form.header"}}
+  </div>
+  <p>{{t "gis-search-form.subheader"}}</p>
+</div>
+<div class="ui form attached fluid segment">
+  <div class="ui grid">
+    <div class="row">
+      <div class="eight wide column">
+        <div class="ui container segment">
+          <div class="ui top attached label">
+            {{t "gis-search-form.object"}}
+          </div>
+          <div class="field">
+            <label>{{t "gis-search-form.keywords"}}</label>
+            {{flexberry-textbox value=searchConditions.keyWords}}
+          </div>
+          <div class="field">
+            <label>{{t "gis-search-form.scale"}}</label>
+            {{flexberry-textbox value=searchConditions.scaleFrom}}
+          </div>
+        </div>
+      </div>
+      <div class="eight wide column">
+        <div class="ui container segment">
+          <div class="ui top attached label">
+            {{t "gis-search-form.position"}}
+          </div>
+          <div class="field">
+            <label>{{t "gis-search-form.min-long"}}</label>
+            {{flexberry-textbox value=searchConditions.minLng}}
+          </div>
+          <div class="field">
+            <label>{{t "gis-search-form.min-lat"}}</label>
+            {{flexberry-textbox value=searchConditions.minLat}}
+          </div>
+          <div class="field">
+            <label>{{t "gis-search-form.max-long"}}</label>
+            {{flexberry-textbox value=searchConditions.maxLng}}
+          </div>
+          <div class="field">
+            <label>{{t "gis-search-form.max-lat"}}</label>
+            {{flexberry-textbox value=searchConditions.maxLat}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="seven wide column"></div>
+      <div class="two wide column">
+        <button class="ui labeled icon blue button" {{action "getSearchResults" on="click"}}>
+          <i class="search icon"></i>
+          {{t "gis-search-form.search"}}
+        </button>
+      </div>
+      <div class="seven wide column"></div>
+    </div>
+    <div class="row">
+      <div class="ui top attached label">{{t "gis-search-form.results"}}</div>
+      <div class="sixteen wide column">
+        <div class="ui {{if isLoading "active" "disabled"}} inverted dimmer">
+          <div class="ui loader"></div>
+        </div>
+        <div class="ui top attached fluid tabular menu">
+          {{#each tabSettings as |tab index|}}
+            <a
+              class="tab item {{if (eq index 0) "active"}}"
+              data-tab={{tab.tab}}
+              title={{t tab.title}}>
+              {{t tab.title}}
+            </a>
+          {{/each}}
+        </div>
+        {{#each tabSettings as |tab index|}}
+          <div
+            class="ui bottom attached tab segment {{if (eq index 0) "active"}}"
+            data-tab={{tab.tab}}>
+              {{flexberry-table
+                model=(get this tab.fieldName)
+                getData=(action "getData" tab.fieldName)
+                modelName=tab.modelName
+                projectionName=tab.projectionName
+                header=tab.header
+              }}
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{outlet}}

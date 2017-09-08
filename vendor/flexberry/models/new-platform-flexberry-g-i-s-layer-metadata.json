@@ -10,60 +10,114 @@
       "type": "string",
       "flexberryType": "string",
       "notNull": true,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "keyWords",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "anyText",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": false
     },
     {
       "name": "type",
       "type": "string",
       "flexberryType": "string",
       "notNull": true,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "settings",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "scale",
+      "type": "number",
+      "flexberryType": "int",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "coordinateReferenceSystem",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
-      "name": "settings",
+      "name": "boundingBox",
       "type": "string",
-      "flexberryType": "string",
+      "flexberryType": "Geography",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "createTime",
       "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "creator",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "editTime",
       "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "editor",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     }
   ],
   "belongsTo": [],
-  "hasMany": [],
+  "hasMany": [
+    {
+      "name": "linkMetadata",
+      "relatedTo": "new-platform-flexberry-g-i-s-link-metadata",
+      "inverse": "layer"
+    }
+  ],
   "projections": [
     {
       "name": "AuditView",
@@ -71,37 +125,45 @@
       "attrs": [
         {
           "name": "name",
-          "caption": "Name",
+          "caption": "Наименование",
           "hidden": false,
           "index": 0
         },
         {
           "name": "creator",
-          "caption": "Creator",
+          "caption": "Создатель",
           "hidden": false,
           "index": 1
         },
         {
           "name": "createTime",
-          "caption": "Create time",
+          "caption": "Время создания",
           "hidden": false,
           "index": 2
         },
         {
           "name": "editor",
-          "caption": "Editor",
+          "caption": "Редактор",
           "hidden": false,
           "index": 3
         },
         {
           "name": "editTime",
-          "caption": "Edit time",
+          "caption": "Время редактирования",
           "hidden": false,
           "index": 4
         }
       ],
       "belongsTo": [],
-      "hasMany": []
+      "hasMany": [
+        {
+          "projectionName": "AuditView",
+          "caption": "",
+          "name": "linkMetadata",
+          "relatedTo": "new-platform-flexberry-g-i-s-link-metadata",
+          "inverse": null
+        }
+      ]
     },
     {
       "name": "LayerMetadataE",
@@ -109,31 +171,63 @@
       "attrs": [
         {
           "name": "name",
-          "caption": "Name",
+          "caption": "Наименование",
           "hidden": false,
           "index": 0
         },
         {
-          "name": "type",
-          "caption": "Type",
+          "name": "description",
+          "caption": "Описание",
           "hidden": false,
           "index": 1
         },
         {
-          "name": "coordinateReferenceSystem",
-          "caption": "CRS",
+          "name": "keyWords",
+          "caption": "Ключевые слова",
           "hidden": false,
           "index": 2
         },
         {
-          "name": "settings",
-          "caption": "Settings",
+          "name": "type",
+          "caption": "Тип",
           "hidden": false,
           "index": 3
+        },
+        {
+          "name": "settings",
+          "caption": "Настройки",
+          "hidden": false,
+          "index": 4
+        },
+        {
+          "name": "scale",
+          "caption": "Масштаб",
+          "hidden": false,
+          "index": 5
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Система координат",
+          "hidden": false,
+          "index": 6
+        },
+        {
+          "name": "boundingBox",
+          "caption": "Граница",
+          "hidden": false,
+          "index": 7
         }
       ],
       "belongsTo": [],
-      "hasMany": []
+      "hasMany": [
+        {
+          "projectionName": "LinkMetadataD",
+          "caption": "",
+          "name": "linkMetadata",
+          "relatedTo": "new-platform-flexberry-g-i-s-link-metadata",
+          "inverse": null
+        }
+      ]
     },
     {
       "name": "LayerMetadataL",
@@ -141,19 +235,27 @@
       "attrs": [
         {
           "name": "name",
-          "caption": "Name",
+          "caption": "Наименование",
           "hidden": false,
           "index": 0
         },
         {
-          "name": "type",
-          "caption": "Type",
+          "name": "description",
+          "caption": "Описание",
           "hidden": false,
           "index": 1
+        },
+        {
+          "name": "type",
+          "caption": "Тип",
+          "hidden": false,
+          "index": 2
         }
       ],
       "belongsTo": [],
       "hasMany": []
     }
-  ]
+  ],
+  "stored": true,
+  "offline": true
 }

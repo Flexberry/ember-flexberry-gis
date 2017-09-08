@@ -1,5 +1,6 @@
 ﻿{
   "applicationCaption": null,
   "applicationTitle": null,
-  "items": []
+  "items": [],
+  "mobile": true
 }

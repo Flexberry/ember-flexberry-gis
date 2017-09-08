@@ -10,70 +10,120 @@
       "type": "string",
       "flexberryType": "string",
       "notNull": true,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "keyWords",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "anyText",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": false
     },
     {
       "name": "lat",
       "type": "number",
       "flexberryType": "double",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "lng",
       "type": "number",
       "flexberryType": "double",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "zoom",
       "type": "number",
       "flexberryType": "double",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "public",
       "type": "boolean",
       "flexberryType": "bool",
       "notNull": true,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "scale",
+      "type": "number",
+      "flexberryType": "int",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "coordinateReferenceSystem",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "boundingBox",
+      "type": "string",
+      "flexberryType": "Geography",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "createTime",
       "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "creator",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "editTime",
       "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "editor",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     }
   ],
   "belongsTo": [],
@@ -91,33 +141,77 @@
       "attrs": [
         {
           "name": "name",
-          "caption": "Name",
+          "caption": "Наименование",
           "hidden": false,
           "index": 0
         },
         {
           "name": "creator",
-          "caption": "Creator",
+          "caption": "Создатель",
           "hidden": false,
           "index": 1
         },
         {
           "name": "createTime",
-          "caption": "Create time",
+          "caption": "Время создания",
           "hidden": false,
           "index": 2
         },
         {
           "name": "editor",
-          "caption": "Editor",
+          "caption": "Редактор",
           "hidden": false,
           "index": 3
         },
         {
           "name": "editTime",
-          "caption": "Edit time",
+          "caption": "Время редактирования",
           "hidden": false,
           "index": 4
+        }
+      ],
+      "belongsTo": [],
+      "hasMany": []
+    },
+    {
+      "name": "Map",
+      "modelName": "new-platform-flexberry-g-i-s-map",
+      "attrs": [
+        {
+          "name": "name",
+          "caption": "Наименование",
+          "hidden": false,
+          "index": 0
+        },
+        {
+          "name": "lat",
+          "caption": "Широта",
+          "hidden": true,
+          "index": 1
+        },
+        {
+          "name": "lng",
+          "caption": "Долгота",
+          "hidden": true,
+          "index": 2
+        },
+        {
+          "name": "zoom",
+          "caption": "Зум",
+          "hidden": true,
+          "index": 3
+        },
+        {
+          "name": "public",
+          "caption": "Общая",
+          "hidden": true,
+          "index": 4
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Система координат",
+          "hidden": true,
+          "index": 5
         }
       ],
       "belongsTo": [],
@@ -129,39 +223,63 @@
       "attrs": [
         {
           "name": "name",
-          "caption": "Name",
+          "caption": "Наименование",
           "hidden": false,
           "index": 0
         },
         {
-          "name": "lat",
-          "caption": "Lat",
+          "name": "description",
+          "caption": "Описание",
           "hidden": false,
           "index": 1
         },
         {
-          "name": "lng",
-          "caption": "Lng",
+          "name": "keyWords",
+          "caption": "Ключевые слова",
           "hidden": false,
           "index": 2
         },
         {
-          "name": "zoom",
-          "caption": "Zoom",
+          "name": "lat",
+          "caption": "Широта",
           "hidden": false,
           "index": 3
         },
         {
-          "name": "public",
-          "caption": "Public",
+          "name": "lng",
+          "caption": "Долгота",
           "hidden": false,
           "index": 4
         },
         {
-          "name": "coordinateReferenceSystem",
-          "caption": "CRS",
+          "name": "zoom",
+          "caption": "Зум",
           "hidden": false,
           "index": 5
+        },
+        {
+          "name": "public",
+          "caption": "Общая",
+          "hidden": false,
+          "index": 6
+        },
+        {
+          "name": "scale",
+          "caption": "Масштаб",
+          "hidden": false,
+          "index": 7
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Система координат",
+          "hidden": false,
+          "index": 8
+        },
+        {
+          "name": "boundingBox",
+          "caption": "Граница",
+          "hidden": false,
+          "index": 9
         }
       ],
       "belongsTo": [],
@@ -187,19 +305,19 @@
         },
         {
           "name": "lat",
-          "caption": "Lat",
+          "caption": "Широта",
           "hidden": false,
           "index": 1
         },
         {
           "name": "lng",
-          "caption": "Lng",
+          "caption": "Долгота",
           "hidden": false,
           "index": 2
         },
         {
           "name": "zoom",
-          "caption": "Масштаб",
+          "caption": "Зум",
           "hidden": false,
           "index": 3
         },
@@ -213,5 +331,7 @@
       "belongsTo": [],
       "hasMany": []
     }
-  ]
+  ],
+  "stored": true,
+  "offline": true
 }

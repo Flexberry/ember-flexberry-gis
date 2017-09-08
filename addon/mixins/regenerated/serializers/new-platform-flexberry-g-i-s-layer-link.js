@@ -1,13 +1,29 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 
+/**
+  Mixin containing initializetion logic for layer link serializer.
+
+  @class NewPlatformFlexberyGISLayerLinkSerializerMixin
+  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+*/
 export let Serializer = Ember.Mixin.create({
-  attrs: {
-    mapObjectSetting: { serialize: 'odata-id', deserialize: 'records' },
-    layer: { serialize: 'odata-id', deserialize: 'records' },
-    linkParameter: { serialize: false, deserialize: 'records' }
+  getAttrs: function () {
+    let parentAttrs = this._super();
+    let attrs = {
+      mapObjectSetting: { serialize: 'odata-id', deserialize: 'records' },
+      layer: { serialize: 'odata-id', deserialize: 'records' },
+      linkParameter: { serialize: false, deserialize: 'records' }
+    };
+
+    return Ember.$.extend(true, {}, parentAttrs, attrs);
   },
-  /**
-  * Field name where object identifier is kept.
-  */
-  primaryKey: '__PrimaryKey'
+
+  init: function () {
+    this.set('attrs', this.getAttrs());
+    this._super(...arguments);
+  }
 });

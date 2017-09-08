@@ -1,0 +1,69 @@
+{{#flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
+  caption=caption
+  approveButtonCaption=approveButtonCaption
+  denyButtonCaption=denyButtonCaption
+  visible=visible
+  approve=(action "onApprove")
+  deny=(action "onDeny")
+  beforeShow=(action "onBeforeShow")
+  beforeHide=(action "onBeforeHide")
+  show=(action "onShow")
+  hide=(action "onHide")
+}}
+<form class="ui form" role="form">
+  <div class="field">
+    <label>
+      {{nameTextboxCaption}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_mapModel.name
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{latTextboxCaption}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_mapModel.lat
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{lngTextboxCaption}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_mapModel.lng
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{zoomTextboxCaption}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_mapModel.zoom
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{publicTextboxCaption}}
+    </label>
+    {{flexberry-checkbox
+      class="fluid"
+      value=_mapModel.public
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{descriptionTextboxCaption}}
+    </label>
+    {{flexberry-textarea
+      class="fluid"
+      value=_mapModel.description
+    }}
+  </div>
+</form>
+{{/flexberry-dialog}}

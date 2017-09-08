@@ -10,35 +10,40 @@
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "layerField",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "expression",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "queryKey",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "linkField",
       "type": "boolean",
       "flexberryType": "bool",
       "notNull": false,
-      "defaultValue": "false"
+      "defaultValue": "false",
+      "stored": true
     }
   ],
   "belongsTo": [
@@ -58,31 +63,31 @@
       "attrs": [
         {
           "name": "objectField",
-          "caption": "",
+          "caption": "Поле объекта",
           "hidden": false,
           "index": 0
         },
         {
           "name": "layerField",
-          "caption": "",
+          "caption": "Поле слоя",
           "hidden": false,
           "index": 1
         },
         {
           "name": "expression",
-          "caption": "",
+          "caption": "Выражение",
           "hidden": false,
           "index": 2
         },
         {
           "name": "queryKey",
-          "caption": "",
+          "caption": "Параметр запроса",
           "hidden": false,
           "index": 3
         },
         {
           "name": "linkField",
-          "caption": "",
+          "caption": "Поле связи",
           "hidden": false,
           "index": 4
         }
@@ -96,7 +101,7 @@
           "hidden": false,
           "attrs": [],
           "index": 5,
-          "caption": "",
+          "caption": "Связь",
           "name": "layerLink",
           "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
           "inverse": null
@@ -110,37 +115,53 @@
       "attrs": [
         {
           "name": "objectField",
-          "caption": "",
-          "hidden": false,
-          "index": 0
-        },
-        {
-          "name": "layerField",
-          "caption": "",
+          "caption": "Поле объекта",
           "hidden": false,
           "index": 1
         },
         {
-          "name": "expression",
-          "caption": "",
+          "name": "layerField",
+          "caption": "Поле слоя",
           "hidden": false,
           "index": 2
         },
         {
-          "name": "queryKey",
-          "caption": "",
+          "name": "expression",
+          "caption": "Выражение",
           "hidden": false,
           "index": 3
         },
         {
-          "name": "linkField",
-          "caption": "",
+          "name": "queryKey",
+          "caption": "Параметр запроса",
           "hidden": false,
           "index": 4
+        },
+        {
+          "name": "linkField",
+          "caption": "Поле связи",
+          "hidden": false,
+          "index": 5
         }
       ],
-      "belongsTo": [],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "LayerLink",
+          "belongsTo": [],
+          "hidden": true,
+          "attrs": [],
+          "index": 0,
+          "caption": "Связь",
+          "name": "layerLink",
+          "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
+          "inverse": null
+        }
+      ],
       "hasMany": []
     }
-  ]
+  ],
+  "stored": true,
+  "offline": true
 }

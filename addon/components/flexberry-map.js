@@ -429,7 +429,7 @@ let FlexberryMapComponent = Ember.Component.extend(
 
         this.sendAction('leafletDestroy');
       }
-    }
+    },
 
     /**
       Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) initialized.
@@ -444,6 +444,21 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       @method sendingActions.leafletDestroy
     */
+
+    actions: {
+      /**
+        Handles edit dialog's 'approve' action.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.add:method"}}'edit'{{/crossLink}} action.
+
+        @method actions.onEditDialogApprove
+        @param {Object} e Action's event object.
+        @param {Object} e.layerProperties Object containing edited layer properties, which must be merged to layer on action.
+      */
+      onEditDialogApprove(...args) {
+        // Send outer 'edit' action.
+        this.sendAction('edit', ...args);
+      },
+    }
   }
 );
 

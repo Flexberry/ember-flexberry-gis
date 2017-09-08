@@ -76,6 +76,11 @@
                   actionName="onMapLayerChangeOpacity"
                   actionArguments=(array "{% layerPath %}.settingsAsObject.opacity")
                 )
+                (hash
+                  on="fitBounds"
+                  actionName="onMapLayerFitBounds"
+                  actionArguments=(array "{% layerPath %}.bounds")
+                )
               )
             )
           add=(action "onMapLayerAdd" "model.hierarchy")
@@ -113,7 +118,7 @@
       <div data-tab="bookmarks" class="ui tab bookmarks">
         {{spatial-bookmark
           leafletMap=leafletMap
-          mapid=model.id
+          storageKey=model.id
         }}
       </div>
     </div>
@@ -146,6 +151,10 @@
           {{map-commands/export
             execute=(action "onMapCommandExecute" target=mapToolbar)
             defaultMapCaption=model.name
+          }}
+          {{map-commands/edit
+            execute=(action "onMapCommandExecute" target=mapToolbar)
+            mapModel=model
           }}
           {{flexberry-tab-bar
             change=(action 'toggleSidebar' '.ui.sidebar.right' '.mappanel')
