@@ -93,6 +93,11 @@ export default Ember.Controller.extend({
     }
   }),
 
+  /**
+    Url of map page.
+  */
+  mapUrl: null,
+
   actions: {
     /**
       Handles search button click and passes search data to the route.
@@ -117,10 +122,6 @@ export default Ember.Controller.extend({
         fieldName: field
       });
       this.send('doSearch', req);
-    },
-
-    goTo() {
-      return;
     }
   }
 });

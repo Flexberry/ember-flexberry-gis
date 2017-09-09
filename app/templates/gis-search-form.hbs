@@ -90,14 +90,17 @@
                 projectionName=tab.projectionName
                 header=(header-from-projection modelName=tab.modelName projectionName=tab.projectionName)
               }}
-                {{#block-slot 'column-header'}}
+                {{#block-slot 'column-header-0'}}
                   <th>Открыть</th>
                 {{/block-slot}}
-                {{#block-slot 'column-cell' as |row|}}
-                  <td>
-                    <button {{action "goTo" row on="click"}}>
+                {{#block-slot 'column-cell-0' as |row|}}
+                  <td class="collapsing">
+                    {{!-- [<button {{action "goTo" row on="click"}}>
                       Открыть
-                    </button>
+                    </button> --}}
+                    <a href='{{concat mapUrl "/" row.id}}'>
+                      <i class="external share icon"></i>
+                    </a>
                   </td>
                 {{/block-slot}}
               {{/flexberry-table}}

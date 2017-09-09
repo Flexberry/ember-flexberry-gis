@@ -7,6 +7,10 @@ import layout from '../templates/components/flexberry-table';
 import PaginatedControllerMixin from 'ember-flexberry/mixins/paginated-controller';
 import SlotsMixin from 'ember-block-slots';
 
+let flatten = function (a) {
+  return Array.isArray(a) ? [].concat(...a.map(flatten)) : a;
+};
+
 /**
   Flexberry table component with [Semantic UI table](https://semantic-ui.com/collections/table) style and paging handling.
 
@@ -31,7 +35,18 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   */
   _columnCount: Ember.computed('header', {
     get() {
-      return Object.keys(this.get('header')).length;
+      let additionalColumns = 0;
+      let l = this.get('layout');
+      let s = l.raw.statements;
+      let f = flatten(s);
+
+      if (f && f.length) {
+        additionalColumns = f.filter(function (item) {
+          return item && typeof(item) === "string" && item.indexOf('column-header') !== -1;
+        }).length;
+      }
+
+      return Object.keys(this.get('header')).length + additionalColumns;
     }
   }),
 
@@ -52,7 +67,7 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
     @method _pageDidChange
     @private
   */
-  _pageDidChange: Ember.observer('page', function() {
+  _pageDidChange: Ember.observer('page', function () {
     this._reload();
   }),
 

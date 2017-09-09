@@ -10,7 +10,7 @@
       {{#each-in header as |key value|}}
       <th>{{value}}</th>
       {{/each-in}}
-      {{#yield-slot "column-header"}}
+      {{#yield-slot "column-header-0"}}
         {{yield}}
       {{/yield-slot}}
     </tr>
@@ -22,7 +22,7 @@
           {{#each-in header as |key value|}}
             <td>{{get row key}}</td>
           {{/each-in}}
-          {{#yield-slot "column-cell" (block-params row)}}
+          {{#yield-slot "column-cell-0" (block-params row)}}
             {{yield}}
           {{/yield-slot}}
         </tr>
