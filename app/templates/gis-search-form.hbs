@@ -86,13 +86,28 @@
           <div
             class="ui bottom attached tab segment active"
             data-tab="layer-metadata">
-              {{flexberry-table
+              {{#flexberry-table
                 model=layerMetadata
                 getData=(action "getData" "layerMetadata")
                 modelName="new-platform-flexberry-g-i-s-layer-metadata"
                 projectionName="LayerMetadataL"
                 header=(header-from-projection modelName="new-platform-flexberry-g-i-s-layer-metadata" projectionName="LayerMetadataL")
               }}
+              {{#block-slot "column-header-head-0"}}
+                  <th>{{t "gis-search-form.layer-metadata.actions.select"}}</th>
+                {{/block-slot}}
+                {{#block-slot "column-cell-head-0" as |row|}}
+                  <td class="collapsing">
+                    {{!-- <a {{action "goToMap" row allowedKeys="ctrl"}} style="cursor:pointer;">
+                      <i class="external share icon"></i>
+                    </a> --}}
+                    {{flexberry-checkbox
+                      value=(get selectedRows row.id)
+                      onChange=(action "onRowSelect" row.id)
+                    }}
+                  </td>
+                {{/block-slot}}
+              {{/flexberry-table}}
           </div>
           <div
             class="ui bottom attached tab segment"
@@ -104,10 +119,10 @@
                 projectionName="MapL"
                 header=(header-from-projection modelName="new-platform-flexberry-g-i-s-map" projectionName="MapL")
               }}
-                {{#block-slot "column-header-0"}}
+                {{#block-slot "column-header-tail-0"}}
                   <th>{{t "gis-search-form.maps.actions.open"}}</th>
                 {{/block-slot}}
-                {{#block-slot "column-cell-0" as |row|}}
+                {{#block-slot "column-cell-tail-0" as |row|}}
                   <td class="collapsing">
                     <a {{action "goToMap" row allowedKeys="ctrl"}} style="cursor:pointer;">
                       <i class="external share icon"></i>

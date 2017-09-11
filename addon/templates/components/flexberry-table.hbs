@@ -7,10 +7,13 @@
 <table class="ui celled table">
   <thead>
     <tr>
+      {{#yield-slot "column-header-head-0"}}
+        {{yield}}
+      {{/yield-slot}}
       {{#each-in header as |key value|}}
       <th>{{value}}</th>
       {{/each-in}}
-      {{#yield-slot "column-header-0"}}
+      {{#yield-slot "column-header-tail-0"}}
         {{yield}}
       {{/yield-slot}}
     </tr>
@@ -19,10 +22,13 @@
     {{#if model}}
         {{#each model as |row|}}
         <tr>
+          {{#yield-slot "column-cell-head-0" (block-params row)}}
+            {{yield}}
+          {{/yield-slot}}
           {{#each-in header as |key value|}}
             <td>{{get row key}}</td>
           {{/each-in}}
-          {{#yield-slot "column-cell-0" (block-params row)}}
+          {{#yield-slot "column-cell-tail-0" (block-params row)}}
             {{yield}}
           {{/yield-slot}}
         </tr>

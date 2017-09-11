@@ -93,6 +93,11 @@ export default Ember.Controller.extend({
     }
   }),
 
+  /**
+    Hash with ids of selected rows.
+  */
+  selectedRows: {},
+
   actions: {
     /**
       Handles search button click and passes search data to the route.
@@ -101,6 +106,7 @@ export default Ember.Controller.extend({
     */
     getSearchResults() {
       let req = { searchConditions: this.get('searchConditions') };
+      this.set('selectedRows', {}); // clear selected rows
       this.send('doSearch', req);
     },
 
@@ -128,6 +134,18 @@ export default Ember.Controller.extend({
     goToMap(mapModel) {
       // may be it should pass event.ctrlKey
       this.transitToMap(mapModel);
+    },
+
+    /**
+      Handles click on row select checkbox.
+
+      @param {String} rowId Id of selected row.
+      @param {Object} options Event options. We condider options.checked.
+    */
+    onRowSelect(rowId, options) {
+      let selected = this.get('selectedRows');
+      selected[rowId] = options.checked;
+      this.set('selectedRows', selected);
     }
   },
 

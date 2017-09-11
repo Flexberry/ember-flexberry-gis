@@ -203,7 +203,10 @@ export default {
     'search': 'Искать',
     'results': 'Результаты',
     'layer-metadata': {
-      'title': 'Метаданные слоёв'
+      'title': 'Метаданные слоёв',
+      'actions': {
+        'select': 'Выбрать'
+      }
     },
     'maps': {
       'title': 'Карты',

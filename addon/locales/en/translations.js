@@ -204,6 +204,9 @@ export default {
     'results': 'Results',
     'layer-metadata': {
       'title': 'Layer metadata',
+      'actions': {
+        'select': 'Select'
+      }
     },
     'maps': {
       'title': 'Maps',
