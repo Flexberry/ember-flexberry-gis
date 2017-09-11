@@ -2,11 +2,11 @@
   <h5 class="ui header">
     {{t "components.layers-dialogs.settings.wms-wfs.wms-segment.caption"}}
   </h5>
-  {{component "layers-dialogs/settings/wms" settings=settings}}
+  {{component "layers-dialogs/settings/wms" settings=settings bounds=settings.wgs84bbox}}
 </div>
 <div class="ui segment">
   <h5 class="ui header">
     {{t "components.layers-dialogs.settings.wms-wfs.wfs-segment.caption"}}
   </h5>
-  {{component "layers-dialogs/settings/wfs" settings=settings.wfs}}
+  {{component "layers-dialogs/settings/wfs" settings=settings.wfs bounds=settings.wgs84bbox}}
 </div>

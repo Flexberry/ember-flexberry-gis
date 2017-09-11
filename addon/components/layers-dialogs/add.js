@@ -32,16 +32,6 @@ const flexberryClassNames = {
 */
 let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend({
   /**
-    Flag: indicates whether layer type is in readonly mode.
-
-    @property _typeIsReadonly
-    @type Boolean
-    @default false
-    @private
-  */
-  _typeIsReadonly: false,
-
-  /**
     Reference to component's template.
   */
   layout,

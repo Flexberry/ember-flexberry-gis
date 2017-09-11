@@ -1,9 +1,11 @@
 import NewPlatformFlexberryGISLayerLinkModel from './models/new-platform-flexberry-g-i-s-layer-link';
 import NewPlatformFlexberryGISLayerMetadataModel from './models/new-platform-flexberry-g-i-s-layer-metadata';
+import NewPlatformFlexberryGISLinkMetadataModel from './models/new-platform-flexberry-g-i-s-link-metadata';
 import NewPlatformFlexberryGISLinkParameterModel from './models/new-platform-flexberry-g-i-s-link-parameter';
-import NewPlatformFlexberryGISMapModel from './models/new-platform-flexberry-g-i-s-map';
 import NewPlatformFlexberryGISMapLayerModel from './models/new-platform-flexberry-g-i-s-map-layer';
 import NewPlatformFlexberryGISMapObjectSettingModel from './models/new-platform-flexberry-g-i-s-map-object-setting';
+import NewPlatformFlexberryGISMapModel from './models/new-platform-flexberry-g-i-s-map';
+import NewPlatformFlexberryGISParameterMetadataModel from './models/new-platform-flexberry-g-i-s-parameter-metadata';
 
 import FeatureResultItemComponent from './components/feature-result-item';
 import MapDialogsComponents from './components/map-dialogs';
@@ -12,15 +14,18 @@ import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
+import FlexberryTableComponents from './components/flexberry-table';
 
 export default {
   'models': {
     'new-platform-flexberry-g-i-s-layer-link': NewPlatformFlexberryGISLayerLinkModel,
     'new-platform-flexberry-g-i-s-layer-metadata': NewPlatformFlexberryGISLayerMetadataModel,
+    'new-platform-flexberry-g-i-s-link-metadata': NewPlatformFlexberryGISLinkMetadataModel,
     'new-platform-flexberry-g-i-s-link-parameter': NewPlatformFlexberryGISLinkParameterModel,
-    'new-platform-flexberry-g-i-s-map': NewPlatformFlexberryGISMapModel,
     'new-platform-flexberry-g-i-s-map-layer': NewPlatformFlexberryGISMapLayerModel,
-    'new-platform-flexberry-g-i-s-map-object-setting': NewPlatformFlexberryGISMapObjectSettingModel
+    'new-platform-flexberry-g-i-s-map-object-setting': NewPlatformFlexberryGISMapObjectSettingModel,
+    'new-platform-flexberry-g-i-s-map': NewPlatformFlexberryGISMapModel,
+    'new-platform-flexberry-g-i-s-parameter-metadata': NewPlatformFlexberryGISParameterMetadataModel
   },
 
   'components': {
@@ -79,7 +84,7 @@ export default {
     },
 
     'flexberry-maplayer': {
-      'opacity': 'Прозрачность'
+      'opacity': 'Видимость'
     },
 
     'flexberry-maptoolbar': {
@@ -185,5 +190,39 @@ export default {
       'x-caption': 'X',
       'y-caption': 'Y'
     }
-  }
+  },
+
+  'gis-search-form': {
+    'header': 'Поиск',
+    'subheader': 'по метаданным слоёв и проектам карт',
+    'keywords': 'Ключевые слова',
+    'scale': 'Масштаб',
+    'object': 'Что',
+    'position': 'Где',
+    'min-long': 'Долгота (мин.)',
+    'min-lat': 'Широта (мин.)',
+    'max-long': 'Долгота (макс.)',
+    'max-lat': 'Широта (макс.)',
+    'search': 'Искать',
+    'results': 'Результаты',
+    'layer-metadata': {
+      'title': 'Метаданные слоёв',
+      'header': {
+        'name': 'Название',
+        'type': 'Тип'
+      }
+    },
+    'maps': {
+      'title': 'Карты',
+      'header': {
+        'name': 'Название',
+        'lat': 'Широта',
+        'lng': 'Долгота',
+        'zoom': 'Масштаб',
+        'public': 'Общая'
+      }
+    }
+  },
+
+  'flexberry-table': FlexberryTableComponents
 };

@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import FlexberryDdauCheckboxComponent from 'ember-flexberry-gis/components/flexberry-ddau-checkbox';
 import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-ddau-checkbox-actions-handler';
+import storageService from 'ember-flexberry-gis/services/local-storage';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
@@ -203,6 +204,16 @@ test('Component changes binded value (with \'change\' action handler from specia
 
   // Bind component's 'change' action handler from specialized mixin.
   this.set('actions.onCheckboxChange', FlexberryDdauCheckboxActionsHandlerMixin.mixins[0].properties.actions.onCheckboxChange);
+
+  // Mock component's 'mutateStorage'.
+  this.set('mutateStorage', function() {});
+
+  this.register('service:local-storage', storageService);
+
+  this.inject.service('local-storage', { as: 'service' });
+  Ember.Component.reopen({
+    'service': Ember.inject.service('local-storage')
+  });
 
   this.render(hbs`{{flexberry-ddau-checkbox value=flag change=(action "onCheckboxChange" "flag")}}`);
 

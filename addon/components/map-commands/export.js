@@ -271,6 +271,8 @@ let ExportMapCommandComponent = Ember.Component.extend({
         @param {Object} e Action's event object.
       */
       onExportDialogApprove(e) {
+        let options = Ember.get(e, 'exportOptions');
+
         if (this.get('_exportIsInProgress')) {
           // Prevent new export until already executing export will be completed.
           e.closeDialog = false;
@@ -281,9 +283,6 @@ let ExportMapCommandComponent = Ember.Component.extend({
         if (Ember.isNone(mapCommand)) {
           return;
         }
-
-        // Prevent export dialog from hiding until export will be completed.
-        e.closeDialog = false;
 
         // Listen to map-command's 'execute' event & handle it.
         mapCommand.one('execute', (e) => {
@@ -311,12 +310,14 @@ let ExportMapCommandComponent = Ember.Component.extend({
           });
         });
 
+        // Prevent export dialog from hiding until export will be completed.
+        e.closeDialog = false;
+
         // Set 'execute' flag to true, to force map-comand to be executed (not just initialized).
         let executeActionEventObject = this.get('_executeActionEventObject');
         Ember.set(executeActionEventObject, 'execute', true);
 
-        // Map toolbar will catch action, call to map-command's 'execute method', then 'execute' event will be triggered.
-        this.sendAction('execute', Ember.get(e, 'exportOptions'), executeActionEventObject);
+        this.sendAction('execute', options, executeActionEventObject);
       },
 
       /**

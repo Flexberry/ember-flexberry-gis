@@ -73,6 +73,14 @@ Ember.$.extend(true, translations, {
           'csw-connections': {
             'caption': 'CSW соединения',
             'title': ''
+          },
+          'map-metadata': {
+            'caption': 'Метаданные',
+            'title': ''
+          },
+          'gis-search-form': {
+            'caption': 'Поиск',
+            'title': 'Поиск по метаданным слоёв и проектам карт'
           }
         },
         'components-examples': {
