@@ -12,6 +12,9 @@ export default {
     'lng': 'Lng',
     'zoom': 'Zoom',
     'public': 'Public',
-    'description': 'description',
+    'description': 'Description',
+    'keyWords': 'Key words',
+    'scale': 'Scale',
+    'crs': 'CRS',
   },
 };

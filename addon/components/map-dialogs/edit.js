@@ -154,6 +154,33 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
     descriptionTextboxCaption: t('components.map-dialogs.edit.name-textbox.description'),
 
     /**
+      Dialog's 'keyWords' textbox caption.
+
+      @property keyWordsTextboxCaption
+      @type String
+      @default t('components.map-dialogs.edit.name-textbox.keyWords')
+    */
+    keyWordsTextboxCaption: t('components.map-dialogs.edit.name-textbox.keyWords'),
+
+    /**
+      Dialog's 'scale' textbox caption.
+
+      @property scaleTextboxCaption
+      @type String
+      @default t('components.map-dialogs.edit.name-textbox.scale')
+    */
+    scaleTextboxCaption: t('components.map-dialogs.edit.name-textbox.scale'),
+
+    /**
+      Dialog's 'coordinateReferenceSystem' textbox caption.
+
+      @property crsTextboxCaption
+      @type String
+      @default t('components.map-dialogs.edit.name-textbox.crs')
+    */
+    crsTextboxCaption: t('components.map-dialogs.edit.name-textbox.crs'),
+
+    /**
       Flag: indicates whether dialog is visible or not.
       If true, then dialog will be shown, otherwise dialog will be closed.
 
@@ -274,6 +301,9 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
       let zoom = this.get('mapModel.zoom');
       let isPublic = this.get('mapModel.public');
       let description = this.get('mapModel.description');
+      let keyWords = this.get('mapModel.keyWords');
+      let scale = this.get('mapModel.scale');
+      let crs = this.get('mapModel.coordinateReferenceSystem');
 
       this.set('_mapModel', {
         name: name,
@@ -281,7 +311,10 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
         lng: lng,
         zoom: zoom,
         public: isPublic,
-        description: description
+        description: description,
+        keyWords: keyWords,
+        scale: scale,
+        coordinateReferenceSystem: crs
       });
     },
 

@@ -22,6 +22,24 @@
   </div>
   <div class="field">
     <label>
+      {{descriptionTextboxCaption}}
+    </label>
+    {{flexberry-textarea
+      class="fluid"
+      value=_mapModel.description
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{keyWordsTextboxCaption}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_mapModel.keyWords
+    }}
+  </div>
+  <div class="field">
+    <label>
       {{latTextboxCaption}}
     </label>
     {{flexberry-textbox
@@ -49,6 +67,24 @@
   </div>
   <div class="field">
     <label>
+      {{scaleTextboxCaption}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_mapModel.scale
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{crsTextboxCaption}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_mapModel.coordinateReferenceSystem
+    }}
+  </div>
+  <div class="field">
+    <label>
       {{publicTextboxCaption}}
     </label>
     {{flexberry-checkbox
@@ -56,14 +92,6 @@
       value=_mapModel.public
     }}
   </div>
-  <div class="field">
-    <label>
-      {{descriptionTextboxCaption}}
-    </label>
-    {{flexberry-textarea
-      class="fluid"
-      value=_mapModel.description
-    }}
-  </div>
+
 </form>
 {{/flexberry-dialog}}

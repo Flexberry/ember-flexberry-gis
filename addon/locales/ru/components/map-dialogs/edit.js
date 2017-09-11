@@ -1,17 +1,20 @@
 export default {
   'caption': 'Редактирование карты',
   'approve-button': {
-    'caption': 'Ok'
+    'caption': 'Ок'
   },
   'deny-button': {
     'caption': 'Отмена'
   },
   'name-textbox': {
     'caption': 'Имя карты',
-    'lat': 'Lat',
-    'lng': 'Lng',
-    'zoom': 'Масштаб',
+    'lat': 'Широта',
+    'lng': 'Долгота',
+    'zoom': 'Зум',
     'public': 'Общая',
     'description': 'Описание',
+    'keyWords': 'Ключевые слова',
+    'scale': 'Масштаб',
+    'crs': 'Система координат',
   },
 };

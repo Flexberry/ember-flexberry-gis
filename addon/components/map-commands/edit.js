@@ -160,8 +160,9 @@ let EditMapCommandComponent = Ember.Component.extend({
       model.set('zoom', mapModel.zoom);
       model.set('public', mapModel.public);
       model.set('description', mapModel.description);
-      model.save();
-      //this.sendAction('execute', e);
+      model.set('keyWords', mapModel.keyWords);
+      model.set('scale', mapModel.scale);
+      model.set('coordinateReferenceSystem', mapModel.coordinateReferenceSystem);
     },
   },
 
