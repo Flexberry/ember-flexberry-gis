@@ -70,42 +70,55 @@
           <div class="ui loader"></div>
         </div>
         <div class="ui top attached fluid tabular menu">
-          {{#each tabSettings as |tab index|}}
-            <a
-              class="tab item {{if (eq index 0) "active"}}"
-              data-tab={{tab.tab}}
-              title={{t tab.title}}>
-              {{t tab.title}}
-            </a>
-          {{/each}}
+          <a
+            class="tab item active"
+            data-tab='layer-metadata'
+            title={{t 'gis-search-form.layer-metadata.title'}}>
+            {{t 'gis-search-form.layer-metadata.title'}}
+          </a>
+          <a
+            class="tab item"
+            data-tab='maps'
+            title={{t 'gis-search-form.maps.title'}}>
+            {{t 'gis-search-form.maps.title'}}
+          </a>
         </div>
-        {{#each tabSettings as |tab index|}}
           <div
-            class="ui bottom attached tab segment {{if (eq index 0) "active"}}"
-            data-tab={{tab.tab}}>
+            class="ui bottom attached tab segment active"
+            data-tab='layer-metadata'>
+              {{flexberry-table
+                model=layerMetadata
+                getData=(action "getData" 'layerMetadata')
+                modelName='new-platform-flexberry-g-i-s-layer-metadata'
+                projectionName='LayerMetadataL'
+                header=(header-from-projection modelName='new-platform-flexberry-g-i-s-layer-metadata' projectionName='LayerMetadataL')
+              }}
+          </div>
+          <div
+            class="ui bottom attached tab segment"
+            data-tab='maps'>
               {{#flexberry-table
-                model=(get this tab.fieldName)
-                getData=(action "getData" tab.fieldName)
-                modelName=tab.modelName
-                projectionName=tab.projectionName
-                header=(header-from-projection modelName=tab.modelName projectionName=tab.projectionName)
+                model=maps
+                getData=(action "getData" 'maps')
+                modelName='new-platform-flexberry-g-i-s-map'
+                projectionName='MapL'
+                header=(header-from-projection modelName='new-platform-flexberry-g-i-s-map' projectionName='MapL')
               }}
                 {{#block-slot 'column-header-0'}}
-                  <th>Открыть</th>
+                  <th>{{t 'gis-search-form.maps.actions.open'}}</th>
                 {{/block-slot}}
                 {{#block-slot 'column-cell-0' as |row|}}
                   <td class="collapsing">
                     {{!-- [<button {{action "goTo" row on="click"}}>
                       Открыть
                     </button> --}}
-                    <a href='{{concat mapUrl "/" row.id}}'>
+                    <a href='{{if mapUrl (concat mapUrl "/" row.id) "#"}}'>
                       <i class="external share icon"></i>
                     </a>
                   </td>
                 {{/block-slot}}
               {{/flexberry-table}}
           </div>
-        {{/each}}
       </div>
     </div>
   </div>

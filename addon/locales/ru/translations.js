@@ -203,20 +203,12 @@ export default {
     'search': 'Искать',
     'results': 'Результаты',
     'layer-metadata': {
-      'title': 'Метаданные слоёв',
-      'header': {
-        'name': 'Название',
-        'type': 'Тип'
-      }
+      'title': 'Метаданные слоёв'
     },
     'maps': {
       'title': 'Карты',
-      'header': {
-        'name': 'Название',
-        'lat': 'Широта',
-        'lng': 'Долгота',
-        'zoom': 'Масштаб',
-        'public': 'Общая'
+      'actions': {
+        'open': 'Открыть'
       }
     }
   },

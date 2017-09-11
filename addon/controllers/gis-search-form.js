@@ -94,7 +94,7 @@ export default Ember.Controller.extend({
   }),
 
   /**
-    Url of map page.
+    Url of the page containing a map.
   */
   mapUrl: null,
 

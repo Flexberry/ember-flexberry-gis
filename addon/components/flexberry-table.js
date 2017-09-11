@@ -7,6 +7,12 @@ import layout from '../templates/components/flexberry-table';
 import PaginatedControllerMixin from 'ember-flexberry/mixins/paginated-controller';
 import SlotsMixin from 'ember-block-slots';
 
+/**
+  Flattens an array of arrays and objects.
+
+  @param {Array} a Array to be flatten
+  @returns {Array}
+*/
 let flatten = function (a) {
   return Array.isArray(a) ? [].concat(...a.map(flatten)) : a;
 };
@@ -40,9 +46,10 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
       let s = l.raw.statements;
       let f = flatten(s);
 
+      // consider the added trough yeld-slots columns
       if (f && f.length) {
         additionalColumns = f.filter(function (item) {
-          return item && typeof(item) === "string" && item.indexOf('column-header') !== -1;
+          return item && typeof (item) === 'string' && item.indexOf('column-header') !== -1;
         }).length;
       }
 
