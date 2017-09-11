@@ -1,6 +1,17 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 import DS from 'ember-data';
 import { Projection } from 'ember-flexberry-data';
+
+/**
+  Mixin containing link parameter model attributes, relations & projections.
+
+  @class NewPlatformFlexberyGISLinkParameterModelMixin
+  @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
+*/
 export let Model = Ember.Mixin.create({
   objectField: DS.attr('string'),
   layerField: DS.attr('string'),
@@ -8,6 +19,7 @@ export let Model = Ember.Mixin.create({
   queryKey: DS.attr('string'),
   linkField: DS.attr('boolean'),
   layerLink: DS.belongsTo('new-platform-flexberry-g-i-s-layer-link', { inverse: 'linkParameter', async: false }),
+
   getValidations: function () {
     let parentValidations = this._super();
     let thisValidations = {
@@ -15,27 +27,33 @@ export let Model = Ember.Mixin.create({
     };
     return Ember.$.extend(true, {}, parentValidations, thisValidations);
   },
+
   init: function () {
     this.set('validations', this.getValidations());
     this._super.apply(this, arguments);
   }
 });
-export let defineProjections = function (model) {
-  model.defineProjection('LinkParameter', 'new-platform-flexberry-g-i-s-link-parameter', {
+
+export let defineProjections = function (modelClass) {
+  modelClass.defineProjection('LinkParameter', 'new-platform-flexberry-g-i-s-link-parameter', {
     objectField: Projection.attr('Поле объекта'),
     layerField: Projection.attr('Поле слоя'),
     expression: Projection.attr('Выражение'),
     queryKey: Projection.attr('Параметр запроса'),
     linkField: Projection.attr('Поле связи'),
-    layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', '', {
+    layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
 
     })
   });
-  model.defineProjection('LinkParameterD', 'new-platform-flexberry-g-i-s-link-parameter', {
+
+  modelClass.defineProjection('LinkParameterD', 'new-platform-flexberry-g-i-s-link-parameter', {
     objectField: Projection.attr('Поле объекта'),
     layerField: Projection.attr('Поле слоя'),
     expression: Projection.attr('Выражение'),
     queryKey: Projection.attr('Параметр запроса'),
-    linkField: Projection.attr('Поле связи')
+    linkField: Projection.attr('Поле связи'),
+    layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
+
+    }, { hidden: true })
   });
 };

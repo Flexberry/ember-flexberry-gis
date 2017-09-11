@@ -10,7 +10,7 @@ import GeocoderBaseLayer from './geocoder-base-layer';
   Uses [Overpass API](http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide) to perform straight & reverse geocoding).
 
   @class GeocoderOsmOverpassLayerComponent
-  @extend GeocoderBaseLayer
+  @extends GeocoderBaseLayer
 */
 export default GeocoderBaseLayer.extend({
   /**

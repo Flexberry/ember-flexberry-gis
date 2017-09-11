@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Added
+* Add `flexberry-edit-layermap` component to unify layers and layers-metadata editing.
+* Add `gis-search-form` making available search through maps and layer-metadata.
+
 ## [0.2.1] - 2017-09-04
 ### Removed
 * Remove `isDevelopingAddon` property from release.

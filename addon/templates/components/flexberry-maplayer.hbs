@@ -40,6 +40,13 @@
           click=(action "onAddButtonClick")
         }}
       {{/if}}
+      {{#if (or _hasLayers (not (eq type "group")))}}
+        {{flexberry-button
+          class=(concat flexberryClassNames.boundsButton " right floated " flexberryClassNames.preventExpandCollapse)
+          iconClass="maximize icon"
+          click=(action "onBoundsButtonClick")
+        }}
+      {{/if}}
       <div style="clear: both;"></div>
     {{/if}}
 
@@ -60,6 +67,7 @@
         layer=null
         cswConnections=cswConnections
         leafletMap=leafletMap
+        typeIsReadonly=false
         approve=(action "onAddDialogApprove")
       }}
     {{/if}}
@@ -75,6 +83,7 @@
         )
         cswConnections=cswConnections
         leafletMap=leafletMap
+        typeIsReadonly=true
         approve=(action "onEditDialogApprove")
       }}
     {{/if}}

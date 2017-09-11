@@ -7,6 +7,7 @@ import EditFormController from 'ember-flexberry/controllers/edit-form';
 import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-handler';
 import FlexberryMaplayerActionsHandlerMixin from '../mixins/flexberry-maplayer-actions-handler';
 import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-actions-handler';
+import LocalStorageBindingMixin from '../mixins/local-storage-binding';
 
 /**
   Edit map controller.
@@ -16,11 +17,13 @@ import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-acti
   @uses FlexberryMapActionsHandlerMixin
   @uses FlexberryMaplayerActionsHandlerMixin
   @uses LayerResultListActionsHandlerMixin
+  @uses LocalStorageBindingMixin
 */
 export default EditFormController.extend(
   FlexberryMapActionsHandlerMixin,
   FlexberryMaplayerActionsHandlerMixin,
-  LayerResultListActionsHandlerMixin, {
+  LayerResultListActionsHandlerMixin,
+  LocalStorageBindingMixin, {
     /**
       Leaflet map.
 
@@ -90,6 +93,42 @@ export default EditFormController.extend(
 
       return null;
     }),
+
+    /**
+      Class name used which will be used to save data in local storage.
+
+      @property bindingClass
+      @type String
+      @default 'layers'
+    */
+    bindingClass: 'layers',
+
+    /**
+      Key property used which will be used to save data in local storage.
+
+      @property keyProperty
+      @type String
+      @default 'model.id'
+    */
+    keyProperty: 'model.id',
+
+    /**
+      Object containing bindings as key-value pairs.
+
+      @property binding
+      @type Object
+      @example
+      ```javascript
+      binding: {
+        visibility: 'visibility',
+        opacity: 'settingsAsObject.opacity'
+      },
+      ```
+    */
+    binding: {
+      visibility: 'visibility',
+      opacity: 'settingsAsObject.opacity'
+    },
 
     /**
       This method will be invoked before save operation will be called.
