@@ -102,18 +102,43 @@ export default Ember.Route.extend({
       .selectByProjection(projectionName);
 
     // If there are conditions - add them to the query.
+    let condition;
+    let filterConditions = Ember.A();
     if (searchConditions.keyWords) {
       let keyWordsConditions = searchConditions.keyWords.split(',').map((item) => {
         let str = item.trim();
         return new Query.StringPredicate('keyWords').contains(str);
       });
       if (keyWordsConditions.length) {
-        let condition = keyWordsConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.Or, ...keyWordsConditions) : keyWordsConditions[0];
-        queryBuilder = queryBuilder.where(condition);
+        let keyWordsCondition = keyWordsConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.Or, ...keyWordsConditions) : keyWordsConditions[0];
+        filterConditions.addObject(keyWordsCondition);
       }
 
       // TODO add all conditions handling.
     }
+
+    if (searchConditions.scaleFilters && searchConditions.scaleFilters.length) {
+      let scaleConditions = searchConditions.scaleFilters.map((item) => {
+        let currentCondition = Ember.$('<textarea/>').html(item.condition).text();
+        if (currentCondition === '=') {
+          currentCondition = '==';
+        }
+
+        let scale = parseInt(item.scale) || 0;
+        return new Query.SimplePredicate('scale', currentCondition, scale);
+      });
+
+      if (scaleConditions.length) {
+        let scaleCondition = scaleConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.And, ...scaleConditions) : scaleConditions[0];
+        filterConditions.addObject(scaleCondition);
+      }
+    }
+
+    if (filterConditions.length) {
+      condition = filterConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.And, ...filterConditions) : filterConditions[0];
+    }
+
+    if (condition) { queryBuilder = queryBuilder.where(condition); }
 
     if (top) { queryBuilder = queryBuilder.top(top); }
 

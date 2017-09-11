@@ -194,6 +194,8 @@ export default {
     'subheader': 'по метаданным слоёв и проектам карт',
     'keywords': 'Ключевые слова',
     'scale': 'Масштаб',
+    'scale-prefix': '1:',
+    'scale-no-conditions': 'Условия не заданы',
     'object': 'Что',
     'position': 'Где',
     'min-long': 'Долгота (мин.)',

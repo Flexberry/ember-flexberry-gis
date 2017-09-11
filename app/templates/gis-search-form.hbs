@@ -23,9 +23,23 @@
             <label>{{t "gis-search-form.keywords"}}</label>
             {{flexberry-textbox value=searchConditions.keyWords}}
           </div>
-          <div class="field">
-            <label>{{t "gis-search-form.scale"}}</label>
-            {{flexberry-textbox value=searchConditions.scaleFrom}}
+          <div class="row">
+            <div class="scale-header">
+              <label>{{t "gis-search-form.scale"}}</label>
+              {{flexberry-button class="mini" iconClass="plus icon" click=(action "addScaleFilterCondition")}}
+            </div>
+            <div class="scale-filters">
+              {{#each searchConditions.scaleFilters as |filter index|}}
+                <div class="scale-filter">
+                  {{flexberry-dropdown items=scaleFilterConditions value=filter.condition needChecksOnValue=false class="compact selection"}}
+                  {{t "gis-search-form.scale-prefix"}}
+                  {{flexberry-textbox value=filter.scale keyDown=(action "scaleFilterKeyDown")}}
+                  {{flexberry-button iconClass="remove icon" click=(action "deleteScaleFilterCondition" index)}}
+                </div>
+              {{else}}
+                <label>{{t "gis-search-form.scale-no-conditions"}}</label>
+              {{/each}}
+            </div>
           </div>
         </div>
       </div>

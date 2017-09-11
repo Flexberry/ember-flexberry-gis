@@ -43,6 +43,15 @@ export default Ember.Controller.extend({
     scaleTo: null,
 
     /**
+      Scale filter conditions.
+
+      @property searchConditions.scaleFilters
+      @type Array
+      @default []
+    */
+    scaleFilters: Ember.A(),
+
+    /**
       Min longitude value. Used for search.
 
       @property searchConditions.minLng
@@ -78,6 +87,15 @@ export default Ember.Controller.extend({
     */
     maxLat: null
   },
+
+  /**
+    Array of posible scale filter conditions.
+
+    @property scaleFilterConditions
+    @type Array
+    @default ['>', '>=', '<', '<=', '=', '<>']
+  */
+  scaleFilterConditions: ['>', '>=', '<', '<=', '=', '<>'],
 
   /**
     Indicates - when to show error message.
@@ -117,6 +135,42 @@ export default Ember.Controller.extend({
         fieldName: field
       });
       this.send('doSearch', req);
+    },
+
+    /**
+      Handles add scale filter action.
+
+      @method actions.addScaleFilterCondition
+    */
+    addScaleFilterCondition() {
+      let searchConditions = this.get('searchConditions');
+      if (searchConditions && Ember.isArray(searchConditions.scaleFilters)) {
+        searchConditions.scaleFilters.addObject({ condition: '=', scale: '0' });
+      }
+    },
+
+    /**
+      Handles delete scale filter action.
+
+      @method actions.deleteScaleFilterCondition
+      @param {Integer} index Index of the condition for delete.
+    */
+    deleteScaleFilterCondition(index) {
+      let searchConditions = this.get('searchConditions');
+      if (searchConditions && Ember.isArray(searchConditions.scaleFilters)) {
+        searchConditions.scaleFilters.removeAt(index);
+      }
+    },
+
+    /**
+      Handles scale filter keyDown action.
+
+      @method actions.scaleFilterKeyDown
+    */
+    scaleFilterKeyDown(e) {
+      var key = e.charCode || e.keyCode || 0;
+      return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40) ||
+        (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
     }
   }
 });

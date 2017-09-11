@@ -194,6 +194,8 @@ export default {
     'subheader': 'through layer metadata and maps',
     'keywords': 'Key words',
     'scale': 'Scale',
+    'scale-prefix': '1:',
+    'scale-no-conditions': 'No conditions specified',
     'object': 'Object',
     'position': 'Position',
     'min-long': 'Min longitude',
