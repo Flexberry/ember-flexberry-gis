@@ -8,6 +8,7 @@ import NewPlatformFlexberryGISMapModel from './models/new-platform-flexberry-g-i
 import NewPlatformFlexberryGISParameterMetadataModel from './models/new-platform-flexberry-g-i-s-parameter-metadata';
 
 import FeatureResultItemComponent from './components/feature-result-item';
+import MapDialogsComponents from './components/map-dialogs';
 import LayersDialogsComponents from './components/layers-dialogs';
 import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
@@ -61,6 +62,8 @@ export default {
         'caption': 'Ошибка парсинга введенной JSON-строки'
       }
     },
+
+    'map-dialogs': MapDialogsComponents,
 
     'layers-dialogs': LayersDialogsComponents,
 
