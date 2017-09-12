@@ -83,51 +83,65 @@
             {{t tabSettings.1.title}}
           </a>
         </div>
-          <div
-            class="ui bottom attached tab segment active"
-            data-tab={{tabSettings.0.tab}}>
-              {{#flexberry-table
-                model=(get this tabSettings.0.fieldName)
-                getData=(action "getData" tabSettings.0.fieldName)
-                modelName=tabSettings.0.modelName
-                projectionName=tabSettings.0.projectionName
-                header=(header-from-projection modelName=tabSettings.0.modelName projectionName=tabSettings.0.projectionName)
-              }}
-              {{#block-slot "column-header-head-0"}}
-                  <th>{{t "gis-search-form.layer-metadata.actions.select"}}</th>
-                {{/block-slot}}
-                {{#block-slot "column-cell-head-0" as |row|}}
-                  <td class="collapsing">
-                    {{flexberry-checkbox
-                      value=(get selectedRows row.id)
-                      onChange=(action "onRowSelect" row.id)
-                    }}
-                  </td>
-                {{/block-slot}}
-              {{/flexberry-table}}
-          </div>
-          <div
-            class="ui bottom attached tab segment"
-            data-tab={{tabSettings.1.tab}}>
-              {{#flexberry-table
-                model=(get this tabSettings.1.fieldName)
-                getData=(action "getData" tabSettings.1.fieldName)
-                modelName=tabSettings.1.modelName
-                projectionName=tabSettings.1.projectionName
-                header=(header-from-projection modelName=tabSettings.1.modelName projectionName=tabSettings.1.projectionName)
-              }}
-                {{#block-slot "column-header-tail-0"}}
-                  <th>{{t "gis-search-form.maps.actions.open"}}</th>
-                {{/block-slot}}
-                {{#block-slot "column-cell-tail-0" as |row|}}
-                  <td class="collapsing">
-                    <a {{action "goToMap" row allowedKeys="ctrl"}} style="cursor:pointer;">
-                      <i class="external share icon"></i>
-                    </a>
-                  </td>
-                {{/block-slot}}
-              {{/flexberry-table}}
-          </div>
+        <div
+          class="ui bottom attached tab segment active"
+          data-tab={{tabSettings.0.tab}}>
+            {{#flexberry-table
+              model=(get this tabSettings.0.fieldName)
+              getData=(action "getData" tabSettings.0.fieldName)
+              modelName=tabSettings.0.modelName
+              projectionName=tabSettings.0.projectionName
+              header=(header-from-projection modelName=tabSettings.0.modelName projectionName=tabSettings.0.projectionName)
+            }}
+            {{#block-slot "column-header-head-0"}}
+                <th>{{t "gis-search-form.layer-metadata.actions.select"}}</th>
+              {{/block-slot}}
+              {{#block-slot "column-cell-head-0" as |row|}}
+                <td class="collapsing">
+                  {{flexberry-checkbox
+                    value=(get _selectedRows row.id)
+                    onChange=(action "onRowSelect" row.id)
+                  }}
+                </td>
+              {{/block-slot}}
+            {{/flexberry-table}}
+            {{#if (gt _selectedRowsCount 0)}}
+            <div class="ui segment">
+              <div style="display:inline-block;margin-right:10px;">Выбрано элементов: {{_selectedRowsCount}}. Открыть на карте: </div>
+              <div style="display:inline-block;">
+                <select class="ui dropdown" id="mapItems" onchange={{action (mut _selectedMap) value="target.value"}}>
+                  <option disabled selected>Выберите карту...</option>
+                  {{#each model as |mapItem|}}
+                    <option value="{{get mapItem "id"}}" selected={{eq (get mapItem "id") _selectedMap}}>{{get mapItem "name"}}</option>
+                  {{/each}}
+                </select>
+              </div>
+              <button class="ui button positive" {{action "goToMapWithMetadata"}}>OK</button>
+            </div>
+            {{/if}}
+        </div>
+        <div
+          class="ui bottom attached tab segment"
+          data-tab={{tabSettings.1.tab}}>
+            {{#flexberry-table
+              model=(get this tabSettings.1.fieldName)
+              getData=(action "getData" tabSettings.1.fieldName)
+              modelName=tabSettings.1.modelName
+              projectionName=tabSettings.1.projectionName
+              header=(header-from-projection modelName=tabSettings.1.modelName projectionName=tabSettings.1.projectionName)
+            }}
+              {{#block-slot "column-header-tail-0"}}
+                <th>{{t "gis-search-form.maps.actions.open"}}</th>
+              {{/block-slot}}
+              {{#block-slot "column-cell-tail-0" as |row|}}
+                <td class="collapsing">
+                  <a {{action "goToMap" row allowedKeys="ctrl"}} style="cursor:pointer;">
+                    <i class="external share icon"></i>
+                  </a>
+                </td>
+              {{/block-slot}}
+            {{/flexberry-table}}
+        </div>
       </div>
     </div>
   </div>

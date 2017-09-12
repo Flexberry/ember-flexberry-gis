@@ -96,7 +96,16 @@ export default Ember.Controller.extend({
   /**
     Hash with ids of selected rows.
   */
-  selectedRows: {},
+  _selectedRows: {},
+
+  _selectedRowsCount: Ember.computed('_selectedRows', function() {
+    let selectedRows = this.get('_selectedRows');
+    return Object.keys(selectedRows).filter(function(item) {
+      return Ember.get(selectedRows, item);
+    }).length;
+  }),
+
+  _selectedMap: null,
 
   /**
     The route name to transit when user clicks 'open a map'.
@@ -111,7 +120,8 @@ export default Ember.Controller.extend({
     */
     getSearchResults() {
       let req = { searchConditions: this.get('searchConditions') };
-      this.set('selectedRows', {}); // clear selected rows
+      this.set('_selectedRows', {}); // clear selected rows
+      this.notifyPropertyChange('_selectedRows');
       this.send('doSearch', req);
     },
 
@@ -141,16 +151,19 @@ export default Ember.Controller.extend({
       this.transitToMap(mapModel);
     },
 
+    goToMapWithMetadata() {
+    },
+
     /**
       Handles click on row select checkbox.
 
+      @method actions.onRowSelect
       @param {String} rowId Id of selected row.
       @param {Object} options Event options. We condider options.checked.
     */
     onRowSelect(rowId, options) {
-      let selected = this.get('selectedRows');
-      selected[rowId] = options.checked;
-      this.set('selectedRows', selected);
+      this.set(`_selectedRows.${rowId}`, options.checked);
+      this.notifyPropertyChange('_selectedRows');
     }
   },
 
