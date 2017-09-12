@@ -98,6 +98,11 @@ export default Ember.Controller.extend({
   */
   selectedRows: {},
 
+  /**
+    The route name to transit when user clicks 'open a map'.
+  */
+  mapRouteName: '',
+
   actions: {
     /**
       Handles search button click and passes search data to the route.
@@ -156,6 +161,8 @@ export default Ember.Controller.extend({
     @param {Object} mapModel Model of the map to transition
   */
   transitToMap(mapModel) {
-    // TODO add transition logic
+    let mapRoute = this.get('mapRouteName');
+    Ember.assert(`The parameter 'mapRouteName' shouldn't be empty!`, !Ember.isNone(mapRoute));
+    this.transitionToRoute(mapRoute, mapModel.get('object'));
   },
 });

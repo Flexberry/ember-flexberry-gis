@@ -42,13 +42,11 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   _columnCount: Ember.computed('header', {
     get() {
       let additionalColumns = 0;
-      let l = this.get('layout');
-      let s = l.raw.statements;
-      let f = flatten(s);
+      let flatStatements = flatten(this.get('layout.raw.statements'));
 
       // consider the added trough yeld-slots columns
-      if (f && f.length) {
-        additionalColumns = f.filter(function (item) {
+      if (flatStatements && flatStatements.length) {
+        additionalColumns = flatStatements.filter(function (item) {
           return item && typeof (item) === 'string' && item.indexOf('column-header') !== -1;
         }).length;
       }
