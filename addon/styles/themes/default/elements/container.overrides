@@ -312,25 +312,29 @@
         position: absolute;
         margin: 0px;
     }
+    .flexberry-edit-map-command {
+        position: absolute;
+        left: 130px;
+    }
     /* рука */
     .flexberry-drag-map-tool {
         border-right: solid 1px @lightgraycolor;
         border-radius: 5px 0px 0px 5px;
         position: absolute;
-        left: 130px;
+        left: 176px;
     }
     /* приблизить */
     .flexberry-zoom-in-map-tool {
-        left: 166px;
+        left: 212px;
     }
     /* отдалить */
     .flexberry-zoom-out-map-tool {
-        left: 202px;
+        left: 248px;
     }
     /* переход к точке */
     .flexberry-identify-map-tool {
         border-radius: 0px 5px 5px 0px;
-        left: 238px;
+        left: 284px;
     }
     .flexberry-full-extent-map-command {
         border-radius: 5px;

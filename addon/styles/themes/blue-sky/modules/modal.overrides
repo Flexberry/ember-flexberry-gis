@@ -2,10 +2,20 @@
          Theme Overrides
 *******************************/
 
+.ui.modal > .content {
+    overflow: auto;
+    max-height: 618px;
+}
+
+.ui.modal.flexberry-edit-map-dialog,
 .ui.modal.flexberry-edit-layer-dialog,
 .ui.modal.flexberry-export-map-command-dialog,
 .ui.modal.flexberry-search-map-command-dialog,
 .ui.modal.flexberry-go-to-map-command-dialog {
+
+    .content {
+        overflow: auto;
+    }
 
     .ui.attached.menu {
         background: @whitecolor;

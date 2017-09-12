@@ -1,0 +1,101 @@
+﻿{
+  "name": "NewPlatformFlexberryGISDataLinkParameter",
+  "modelName": "new-platform-flexberry-g-i-s-data-link-parameter",
+  "className": "DataLinkParameter",
+  "parentModelName": null,
+  "parentClassName": null,
+  "attrs": [
+    {
+      "name": "objectField",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "layerField",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "expression",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "linkField",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": false,
+      "defaultValue": "false",
+      "stored": true
+    }
+  ],
+  "belongsTo": [
+    {
+      "polymorphic": false,
+      "presence": true,
+      "name": "link",
+      "relatedTo": "new-platform-flexberry-g-i-s-data-link",
+      "inverse": "dataLinkParameter"
+    }
+  ],
+  "hasMany": [],
+  "projections": [
+    {
+      "name": "DataLinkParameterD",
+      "modelName": "new-platform-flexberry-g-i-s-data-link-parameter",
+      "attrs": [
+        {
+          "name": "linkField",
+          "caption": "Поле для связи",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "objectField",
+          "caption": "Поле в объекте",
+          "hidden": false,
+          "index": 2
+        },
+        {
+          "name": "layerField",
+          "caption": "Поле в таблице геоданных",
+          "hidden": false,
+          "index": 3
+        },
+        {
+          "name": "expression",
+          "caption": "SQL выражение",
+          "hidden": false,
+          "index": 4
+        }
+      ],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "Link",
+          "belongsTo": [],
+          "hidden": true,
+          "attrs": [],
+          "index": 0,
+          "caption": "",
+          "name": "link",
+          "relatedTo": "new-platform-flexberry-g-i-s-data-link",
+          "inverse": null
+        }
+      ],
+      "hasMany": []
+    }
+  ],
+  "stored": true,
+  "offline": true
+}

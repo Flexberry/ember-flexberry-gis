@@ -144,6 +144,10 @@
           lng=model.lng
           zoom=model.zoom
         }}
+        {{map-commands/edit
+          execute=(action "onMapCommandExecute" target=mapToolbar)
+          mapModel=model
+        }}
         {{scale-control map=leafletMap imperial=false}}
         {{history-control map=leafletMap}}
         {{map-tools/drag activate=(action "onMapToolActivate" target=mapToolbar)}}

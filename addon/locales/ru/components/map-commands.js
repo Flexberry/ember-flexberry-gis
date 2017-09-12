@@ -7,6 +7,10 @@ export default {
     'caption': '',
     'tooltip': 'Полный охват'
   },
+  'edit': {
+    'caption': 'Редактировать',
+    'tooltip': 'Редактировать'
+  },
   'export': {
     'caption': 'Экспортировать',
     'tooltip': 'Экспортировать',
