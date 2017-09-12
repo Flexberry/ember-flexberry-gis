@@ -1,9 +1,18 @@
+{{!--
+  See https://github.com/ciena-blueplanet/ember-block-slots#usage
+  {{yield}} is required here to make yield-slots available.
+--}}
+{{yield}}
+
 <table class="ui celled table">
   <thead>
     <tr>
       {{#each-in header as |key value|}}
       <th>{{value}}</th>
       {{/each-in}}
+      {{#yield-slot "column-header-0"}}
+        {{yield}}
+      {{/yield-slot}}
     </tr>
   </thead>
   <tbody>
@@ -13,6 +22,9 @@
           {{#each-in header as |key value|}}
             <td>{{get row key}}</td>
           {{/each-in}}
+          {{#yield-slot "column-cell-0" (block-params row)}}
+            {{yield}}
+          {{/yield-slot}}
         </tr>
         {{/each}}
     {{else}}
