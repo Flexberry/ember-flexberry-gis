@@ -1,5 +1,5 @@
 export default {
-  caption: '',
+  caption: 'NewPlatformFlexberryGISMapE',
   'name-caption': 'Name',
   'lat-caption': 'Lat',
   'lng-caption': 'Lng',
