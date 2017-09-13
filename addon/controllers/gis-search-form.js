@@ -98,6 +98,15 @@ export default Ember.Controller.extend({
   scaleFilterConditions: ['>', '>=', '<', '<=', '=', '<>'],
 
   /**
+    Array of posible scale values.
+
+    @property scales
+    @type Array
+    @default Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000])
+  */
+  scales: Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
+
+  /**
     Indicates - when to show error message.
 
     @property showFormErrorMessage
@@ -168,7 +177,7 @@ export default Ember.Controller.extend({
       @method actions.scaleFilterKeyDown
     */
     scaleFilterKeyDown(e) {
-      var key = e.charCode || e.keyCode || 0;
+      let key = e.which;
       return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40) ||
         (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
     }

@@ -65,6 +65,15 @@ export default Ember.Component.extend(
     nameTextboxCaption: t('components.layers-dialogs.edit.name-textbox.caption'),
 
     /**
+      Dialog's 'scale' textbox caption.
+
+      @property scaleTextboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.name-textbox.caption')
+    */
+    scaleTextboxCaption: t('components.layers-dialogs.edit.scale-textbox.caption'),
+
+    /**
       Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
       is empty to disable component's wrapping <div>.
 
@@ -301,6 +310,15 @@ export default Ember.Component.extend(
       @default null
     */
     leafletMap: null,
+
+    /**
+      Array of posible scale values.
+
+      @property scales
+      @type Array
+      @default [500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]
+    */
+    scales: Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
 
     /**
       Flag: indicates whether coordinate reference system (CRS) edit fields must be shown.
@@ -550,6 +568,17 @@ export default Ember.Component.extend(
         if (e.which !== 45 && e.which !== 44 && e.which !== 46 && (e.which < 48 || e.which > 57)) {
           return false;
         }
+      },
+
+      /**
+        Handles scale input keyDown action.
+
+        @method actions.scaleInputKeyDown
+      */
+      scaleInputKeyDown(e) {
+        let key = e.which;
+        return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40) ||
+          (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
       }
     },
 
@@ -606,6 +635,7 @@ export default Ember.Component.extend(
     _createInnerLayer() {
       let type = this.get('layer.type');
       let name = this.get('layer.name');
+      let scale = this.get('layer.scale');
 
       let crs = this.get('layer.coordinateReferenceSystem');
       crs = Ember.isNone(crs) ? {} : JSON.parse(crs);
@@ -637,6 +667,7 @@ export default Ember.Component.extend(
       this.set('_layer', {
         type: type,
         name: name,
+        scale: scale,
         coordinateReferenceSystem: crs,
         settings: settings,
       });

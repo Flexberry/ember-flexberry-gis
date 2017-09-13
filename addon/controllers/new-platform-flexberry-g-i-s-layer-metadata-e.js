@@ -34,6 +34,7 @@ export default EditFormController.extend(EditFormControllerOperationsIndicationM
 
       model.set('type', layerProperties.type);
       model.set('name', layerProperties.name);
+      model.set('scale', layerProperties.scale);
       model.set('coordinateReferenceSystem', layerProperties.coordinateReferenceSystem);
       model.set('settings', layerProperties.settings);
 

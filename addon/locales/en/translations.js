@@ -196,6 +196,8 @@ export default {
     'scale': 'Scale',
     'scale-prefix': '1:',
     'scale-no-conditions': 'No conditions specified',
+    'scale-dropdown-input-title': 'Specify your scale and press Enter',
+    'scale-dropdown-input-placeholder': 'Other...',
     'object': 'Object',
     'position': 'Position',
     'min-long': 'Min longitude',

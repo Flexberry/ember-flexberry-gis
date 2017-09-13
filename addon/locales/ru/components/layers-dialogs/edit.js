@@ -15,6 +15,9 @@ export default {
   'name-textbox': {
     'caption': 'Имя слоя'
   },
+  'scale-textbox': {
+    'caption': 'Масштаб'
+  },
   'error-message': {
     'caption': 'Ошибка'
   },

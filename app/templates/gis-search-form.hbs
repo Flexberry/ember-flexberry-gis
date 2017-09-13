@@ -33,7 +33,14 @@
                 <div class="scale-filter">
                   {{flexberry-dropdown items=scaleFilterConditions value=filter.condition needChecksOnValue=false class="compact selection"}}
                   {{t "gis-search-form.scale-prefix"}}
-                  {{flexberry-textbox value=filter.scale keyDown=(action "scaleFilterKeyDown")}}
+                  {{flexberry-dropdown-input
+                    items=scales
+                    value=filter.scale
+                    class="scale-value"
+                    onKeyDown=(action "scaleFilterKeyDown")
+                    inputPlaceholder=(t "gis-search-form.scale-dropdown-input-placeholder")
+                    inputTitle=(t "gis-search-form.scale-dropdown-input-title")
+                  }}
                   {{flexberry-button iconClass="remove icon" click=(action "deleteScaleFilterCondition" index)}}
                 </div>
               {{else}}

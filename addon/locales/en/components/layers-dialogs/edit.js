@@ -15,6 +15,9 @@ export default {
   'name-textbox': {
     'caption': 'Layer name'
   },
+  'scale-textbox': {
+    'caption': 'Scale'
+  },
   'error-message': {
     'caption': 'Error'
   },

@@ -196,6 +196,8 @@ export default {
     'scale': 'Масштаб',
     'scale-prefix': '1:',
     'scale-no-conditions': 'Условия не заданы',
+    'scale-dropdown-input-title': 'Задайте свой масштаб и нажмите Enter',
+    'scale-dropdown-input-placeholder': 'Другой...',
     'object': 'Что',
     'position': 'Где',
     'min-long': 'Долгота (мин.)',
