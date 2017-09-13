@@ -78,10 +78,12 @@ export default EditFormRoute.extend({
   */
   setupController(controller, model) {
     this._super(...arguments);
-    let layers = model.get('mapLayer').filter(layer => Ember.isEmpty(layer.get('parent')));
+    let layers = model.get('mapLayer');
 
     if (layers) {
-      model.set('hierarchy', this.sortLayersByIndex(layers));
+      let rootLayers = layers.filter(layer => Ember.isEmpty(layer.get('parent')));
+
+      model.set('hierarchy', this.sortLayersByIndex(rootLayers));
       this.initLayersFromLocalStorage(model.get('id'), layers);
     }
 
