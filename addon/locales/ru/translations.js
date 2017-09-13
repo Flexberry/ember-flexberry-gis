@@ -206,7 +206,11 @@ export default {
       'title': 'Метаданные слоёв',
       'actions': {
         'select': 'Выбрать'
-      }
+      },
+      'selected-message': 'Выбрано элементов:',
+      'reset': 'Сбросить',
+      'open-into-map': 'Открыть на карте:',
+      'ok': 'Ok'
     },
     'maps': {
       'title': 'Карты',

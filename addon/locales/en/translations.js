@@ -206,7 +206,11 @@ export default {
       'title': 'Layer metadata',
       'actions': {
         'select': 'Select'
-      }
+      },
+      'selected-message': 'Items selected:',
+      'reset': 'Clear',
+      'open-into-map': 'Open into a map:',
+      'ok': 'Ok'
     },
     'maps': {
       'title': 'Maps',

@@ -98,6 +98,9 @@ export default Ember.Controller.extend({
   */
   _selectedRows: {},
 
+  /**
+    Count of a selected rows.
+  */
   _selectedRowsCount: Ember.computed('_selectedRows', function() {
     let selectedRows = this.get('_selectedRows');
     return Object.keys(selectedRows).filter(function(item) {
@@ -105,12 +108,27 @@ export default Ember.Controller.extend({
     }).length;
   }),
 
+  /**
+    Id of a selected map.
+  */
   _selectedMap: null,
 
   /**
-    The route name to transit when user clicks 'open a map'.
+    Observes selected rows count and selected map and changes a flag that enables 'Open in a map' button.
   */
-  mapRouteName: '',
+  _canOpenMapWithMetadataObserver: Ember.observer('_selectedRowsCount', '_selectedMap', function() {
+    this.set('_canOpenMapWithMetadata', this.get('_selectedRowsCount') > 0 && !Ember.isNone(this.get('_selectedMap')));
+  }),
+
+  /**
+    The route name to transit when user clicks 'Open a map'.
+  */
+  mapRouteName: null,
+
+  /**
+    The route name to transit when user clicks 'Open metadata in a map'.
+   */
+  mapWithMetadataRouteName: null,
 
   actions: {
     /**
@@ -151,7 +169,17 @@ export default Ember.Controller.extend({
       this.transitToMap(mapModel);
     },
 
+    /**
+      Handles click on 'open a map with metadata' button.
+
+      @method actions.goToMapWithMetadata
+    */
     goToMapWithMetadata() {
+      let selectedRows = this.get('_selectedRows');
+      let metadataIds = Object.keys(selectedRows).filter(function(item) {
+        return Ember.get(selectedRows, item);
+      });
+      this.transitToMapWithMetadata(this.get('_selectedMap'), metadataIds);
     },
 
     /**
@@ -163,6 +191,16 @@ export default Ember.Controller.extend({
     */
     onRowSelect(rowId, options) {
       this.set(`_selectedRows.${rowId}`, options.checked);
+      this.notifyPropertyChange('_selectedRows');
+    },
+
+    /**
+      Clears selected rows.
+
+      @method actions._clearSelectedRows
+    */
+    _clearSelectedRows() {
+      this.set('_selectedRows', {});
       this.notifyPropertyChange('_selectedRows');
     }
   },
@@ -178,4 +216,17 @@ export default Ember.Controller.extend({
     Ember.assert(`The parameter 'mapRouteName' shouldn't be empty!`, !Ember.isNone(mapRoute));
     this.transitionToRoute(mapRoute, mapModel.get('object'));
   },
+
+  /**
+    Handles transition to selected map with metadata.
+
+    @method transitToMapWithMetadata
+    @param {String} mapId Map id
+    @param {Array} selectedMetadataIds Selected metadata ids
+  */
+  transitToMapWithMetadata(mapId, selectedMetadataIds) {
+    let mapRoute = this.get('mapWithMetadataRouteName');
+    Ember.assert(`The parameter 'mapWithMetadataRouteName' shouldn't be empty!`, !Ember.isNone(mapRoute));
+    this.transitionToRoute(mapRoute, mapId, selectedMetadataIds);
+  }
 });
