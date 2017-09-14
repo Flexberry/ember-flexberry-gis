@@ -101,9 +101,9 @@ export default Ember.Controller.extend({
   /**
     Count of a selected rows.
   */
-  _selectedRowsCount: Ember.computed('_selectedRows', function() {
+  _selectedRowsCount: Ember.computed('_selectedRows', function () {
     let selectedRows = this.get('_selectedRows');
-    return Object.keys(selectedRows).filter(function(item) {
+    return Object.keys(selectedRows).filter(function (item) {
       return Ember.get(selectedRows, item);
     }).length;
   }),
@@ -116,19 +116,23 @@ export default Ember.Controller.extend({
   /**
     Observes selected rows count and selected map and changes a flag that enables 'Open in a map' button.
   */
-  _canOpenMapWithMetadataObserver: Ember.observer('_selectedRowsCount', '_selectedMap', function() {
+  _canOpenMapWithMetadataObserver: Ember.observer('_selectedRowsCount', '_selectedMap', function () {
     this.set('_canOpenMapWithMetadata', this.get('_selectedRowsCount') > 0 && !Ember.isNone(this.get('_selectedMap')));
   }),
 
   /**
     The route name to transit when user clicks 'Open a map'.
+
+    @default 'map'
   */
   mapRouteName: 'map',
 
   /**
     The route name to transit when user clicks 'Open metadata in a map'.
-   */
-  mapWithMetadataRouteName: null,
+
+    @default 'map'
+  */
+  mapWithMetadataRouteName: 'map',
 
   actions: {
     /**
@@ -176,7 +180,7 @@ export default Ember.Controller.extend({
     */
     goToMapWithMetadata() {
       let selectedRows = this.get('_selectedRows');
-      let metadataIds = Object.keys(selectedRows).filter(function(item) {
+      let metadataIds = Object.keys(selectedRows).filter(function (item) {
         return Ember.get(selectedRows, item);
       });
       this.transitToMapWithMetadata(this.get('_selectedMap'), metadataIds);
@@ -227,6 +231,11 @@ export default Ember.Controller.extend({
   transitToMapWithMetadata(mapId, selectedMetadataIds) {
     let mapRoute = this.get('mapWithMetadataRouteName');
     Ember.assert(`The parameter 'mapWithMetadataRouteName' shouldn't be empty!`, !Ember.isNone(mapRoute));
-    this.transitionToRoute(mapRoute, mapId, selectedMetadataIds);
+    this.transitionToRoute(mapRoute, mapId,
+      {
+        queryParams: {
+          metadata: selectedMetadataIds.join(',')
+        }
+      });
   }
 });

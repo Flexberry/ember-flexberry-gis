@@ -4,6 +4,7 @@
 
 import EditMapRoute from 'ember-flexberry-gis/routes/edit-map';
 import EditFormRouteOperationsIndicationMixin from 'ember-flexberry-gis/mixins/edit-form-route-operations-indication';
+import MapRouteMetadataIdsHandlerMixin from 'ember-flexberry-gis/mixins/map-route-metadata-ids-handler';
 /**
   Map edit route.
 
@@ -11,5 +12,5 @@ import EditFormRouteOperationsIndicationMixin from 'ember-flexberry-gis/mixins/e
   @extends EditMapRoute
   @uses EditFormRouteOperationsIndicationMixin, MapRouteCswLoaderMixin
 */
-export default EditMapRoute.extend(EditFormRouteOperationsIndicationMixin, {
+export default EditMapRoute.extend(EditFormRouteOperationsIndicationMixin, MapRouteMetadataIdsHandlerMixin, {
 });
