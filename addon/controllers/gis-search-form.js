@@ -123,7 +123,7 @@ export default Ember.Controller.extend({
   /**
     The route name to transit when user clicks 'Open a map'.
   */
-  mapRouteName: null,
+  mapRouteName: 'map',
 
   /**
     The route name to transit when user clicks 'Open metadata in a map'.
@@ -214,7 +214,7 @@ export default Ember.Controller.extend({
   transitToMap(mapModel) {
     let mapRoute = this.get('mapRouteName');
     Ember.assert(`The parameter 'mapRouteName' shouldn't be empty!`, !Ember.isNone(mapRoute));
-    this.transitionToRoute(mapRoute, mapModel.get('object'));
+    this.transitionToRoute(mapRoute, mapModel.get('id'));
   },
 
   /**
