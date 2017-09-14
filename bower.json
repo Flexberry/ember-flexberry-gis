@@ -22,7 +22,7 @@
     "leaflet-wms": "1.2.0-beta.1",
     "leaflet.wms": "gh-pages",
     "leaflet.editable": "1.1.0",
-    "leaflet-editable-measures": "0.2.0-beta.1",
+    "leaflet-editable-measures": "0.2.0-beta.2",
     "html2canvas": "0.5.0-beta4",
     "leaflet-export": "0.2.1-beta.1",
     "leaflet-history": "Flexberry/leaflet-history#leaflet-1.2.0",
@@ -34,7 +34,6 @@
   "resolutions": {
     "ember": "2.4.3",
     "semantic-ui": "fixed-abort",
-    "leaflet": "1.2.0",
-    "leaflet.editable": "1.1.0"
+    "leaflet": "1.2.0"
   }
 }
