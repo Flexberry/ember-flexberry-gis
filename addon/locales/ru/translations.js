@@ -210,7 +210,9 @@ export default {
       'selected-message': 'Выбрано элементов:',
       'reset': 'Сбросить',
       'open-into-map': 'Открыть на карте:',
-      'ok': 'Ok'
+      'ok': 'Ok',
+      'new-map': '<Новая карта>',
+      'select-a-map': 'Выберите карту...'
     },
     'maps': {
       'title': 'Карты',

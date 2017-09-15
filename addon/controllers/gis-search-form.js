@@ -134,6 +134,13 @@ export default Ember.Controller.extend({
   */
   mapWithMetadataRouteName: 'map',
 
+  /**
+    The route name to transit when user clicks 'Open metadata in a new map'.
+
+    @default 'map.new'
+  */
+  newMapWithMetadataRouteName: 'map.new',
+
   actions: {
     /**
       Handles search button click and passes search data to the route.
@@ -229,13 +236,24 @@ export default Ember.Controller.extend({
     @param {Array} selectedMetadataIds Selected metadata ids
   */
   transitToMapWithMetadata(mapId, selectedMetadataIds) {
-    let mapRoute = this.get('mapWithMetadataRouteName');
-    Ember.assert(`The parameter 'mapWithMetadataRouteName' shouldn't be empty!`, !Ember.isNone(mapRoute));
-    this.transitionToRoute(mapRoute, mapId,
-      {
-        queryParams: {
-          metadata: selectedMetadataIds.join(',')
-        }
-      });
+    if (Ember.isEqual(mapId, 'new')) {
+      let mapRoute = this.get('newMapWithMetadataRouteName');
+      Ember.assert(`The parameter 'newMapWithMetadataRouteName' shouldn't be empty!`, !Ember.isNone(mapRoute));
+      this.transitionToRoute(mapRoute,
+        {
+          queryParams: {
+            metadata: selectedMetadataIds.join(',')
+          }
+        });
+    } else {
+      let mapRoute = this.get('mapWithMetadataRouteName');
+      Ember.assert(`The parameter 'mapWithMetadataRouteName' shouldn't be empty!`, !Ember.isNone(mapRoute));
+      this.transitionToRoute(mapRoute, mapId,
+        {
+          queryParams: {
+            metadata: selectedMetadataIds.join(',')
+          }
+        });
+    }
   }
 });

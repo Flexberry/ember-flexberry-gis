@@ -210,7 +210,9 @@ export default {
       'selected-message': 'Items selected:',
       'reset': 'Clear',
       'open-into-map': 'Open into a map:',
-      'ok': 'Ok'
+      'ok': 'Ok',
+      'new-map': '<New map>',
+      'select-a-map': 'Select a map...'
     },
     'maps': {
       'title': 'Maps',
