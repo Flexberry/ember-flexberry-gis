@@ -7,6 +7,10 @@ export default {
     'caption': '',
     'tooltip': 'Full extent'
   },
+  'edit': {
+    'caption': 'Edit',
+    'tooltip': 'Edit'
+  },
   'export': {
     'caption': 'Export',
     'tooltip': 'Export',
