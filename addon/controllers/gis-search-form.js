@@ -103,9 +103,7 @@ export default Ember.Controller.extend({
   */
   _selectedRowsCount: Ember.computed('_selectedRows', function () {
     let selectedRows = this.get('_selectedRows');
-    return Object.keys(selectedRows).filter(function (item) {
-      return Ember.get(selectedRows, item);
-    }).length;
+    return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
   }),
 
   /**
@@ -148,10 +146,9 @@ export default Ember.Controller.extend({
       @method actions.getSearchResults
     */
     getSearchResults() {
-      let req = { searchConditions: this.get('searchConditions') };
       this.set('_selectedRows', {}); // clear selected rows
       this.notifyPropertyChange('_selectedRows');
-      this.send('doSearch', req);
+      this.send('doSearch', { searchConditions: this.get('searchConditions') });
     },
 
     /**
@@ -187,9 +184,7 @@ export default Ember.Controller.extend({
     */
     goToMapWithMetadata() {
       let selectedRows = this.get('_selectedRows');
-      let metadataIds = Object.keys(selectedRows).filter(function (item) {
-        return Ember.get(selectedRows, item);
-      });
+      let metadataIds = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
       this.transitToMapWithMetadata(this.get('_selectedMap'), metadataIds);
     },
 
@@ -224,7 +219,7 @@ export default Ember.Controller.extend({
   */
   transitToMap(mapModel) {
     let mapRoute = this.get('mapRouteName');
-    Ember.assert(`The parameter 'mapRouteName' shouldn't be empty!`, !Ember.isNone(mapRoute));
+    Ember.assert(`The parameter 'mapRouteName' shouldn't be empty!`, !Ember.isBlank(mapRoute));
     this.transitionToRoute(mapRoute, mapModel.get('id'));
   },
 
@@ -236,24 +231,21 @@ export default Ember.Controller.extend({
     @param {Array} selectedMetadataIds Selected metadata ids
   */
   transitToMapWithMetadata(mapId, selectedMetadataIds) {
-    if (Ember.isEqual(mapId, 'new')) {
-      let mapRoute = this.get('newMapWithMetadataRouteName');
-      Ember.assert(`The parameter 'newMapWithMetadataRouteName' shouldn't be empty!`, !Ember.isNone(mapRoute));
-      this.transitionToRoute(mapRoute,
-        {
-          queryParams: {
-            metadata: selectedMetadataIds.join(',')
-          }
-        });
-    } else {
-      let mapRoute = this.get('mapWithMetadataRouteName');
-      Ember.assert(`The parameter 'mapWithMetadataRouteName' shouldn't be empty!`, !Ember.isNone(mapRoute));
-      this.transitionToRoute(mapRoute, mapId,
-        {
-          queryParams: {
-            metadata: selectedMetadataIds.join(',')
-          }
-        });
+    let mapRoutePath = Ember.isEqual(mapId, 'new') ? 'newMapWithMetadataRouteName' : 'mapWithMetadataRouteName';
+    let mapRoute = this.get(mapRoutePath);
+    Ember.assert(`The parameter '${mapRoutePath}' shouldn't be empty!`, !Ember.isBlank(mapRoute));
+
+    // We need mapId for an existing map.
+    let args = [mapRoute];
+    if (!Ember.isEqual(mapId, 'new')) {
+      args.push(mapId);
     }
+
+    this.transitionToRoute(...args,
+      {
+        queryParams: {
+          metadata: selectedMetadataIds.join(',')
+        }
+      });
   }
 });

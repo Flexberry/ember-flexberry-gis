@@ -98,7 +98,7 @@
                 </span>
               </div>
               <div style="display:inline-block;">
-                <select class="ui dropdown" id="mapItems" onchange={{action (mut _selectedMap) value="target.value"}}>
+                <select class="ui dropdown mapItems" onchange={{action (mut _selectedMap) value="target.value"}}>
                   <option selected value="">{{t "gis-search-form.layer-metadata.select-a-map"}}</option>
                   <option value="new">{{t "gis-search-form.layer-metadata.new-map"}}</option>
                   {{#each model as |mapItem|}}

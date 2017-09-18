@@ -44,11 +44,11 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
       let additionalColumns = 0;
       let flatStatements = flatten(this.get('layout.raw.statements'));
 
-      // consider the added trough yeld-slots columns
-      if (flatStatements && flatStatements.length) {
-        additionalColumns = flatStatements.filter(function (item) {
-          return item && typeof (item) === 'string' && item.indexOf('column-header') !== -1;
-        }).length;
+      // Consider the added trough yield-slots columns.
+      if (Ember.isArray(flatStatements)) {
+        additionalColumns = flatStatements.filter(
+          (item) => typeof (item) === 'string' && item.indexOf('column-header') !== -1
+        ).length;
       }
 
       return Object.keys(this.get('header')).length + additionalColumns;

@@ -5,7 +5,8 @@
 import Ember from 'ember';
 
 /**
-  Map edit form mixin which handles metadata ids.
+  Mixin containing metadata ids as query params.
+
   @class MapRouteMetadataIdsHandlerMixin
 */
 export default Ember.Mixin.create({
