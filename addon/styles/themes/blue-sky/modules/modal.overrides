@@ -2,11 +2,6 @@
          Theme Overrides
 *******************************/
 
-.ui.modal > .content {
-    overflow: auto;
-    max-height: 618px;
-}
-
 .ui.modal.flexberry-edit-map-dialog,
 .ui.modal.flexberry-edit-layer-dialog,
 .ui.modal.flexberry-export-map-command-dialog,
@@ -22,15 +17,15 @@
     }
     /* вкладки в модальных окнах */
     .ui.tabular.menu .item {
-        color: @bluecolor;
+        color: @tabularMenuItemColor;
         &.active {
-            color: @darkbluecolor;
+            color: @tabularMenuItemActiveColor;
         }
         &:hover {
-            color: @bluecolor;
+            color: @tabularMenuItemHoveredCcolor;
         }
         &.disabled i.icon:before {
-            color: #999 !important;
+            color: @tabularMenuItemDisabledIconColor;
         }
     }
     .actions:not(.ui) {

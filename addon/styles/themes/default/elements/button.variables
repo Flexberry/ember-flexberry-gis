@@ -2,7 +2,14 @@
       Gis Theme Overrides
 *******************************/
 
+@orBeforeBackground: @lightgraycolor;
+@orBeforeColor: @bluecolor;
+@orBeforeBoxShadow: @lightBoxShadow;
+
+@flexberryButtonBackground: @whitecolor;
+@flexberryButtonColor: @darkbluecolor;
 @flexberryButtonIconHoveredColor: @bluesky;
+@flexberryButtonActiveColor: @lightbluecolor !important; // Needs important to override basic theme style.
 
 
 /*********************************************

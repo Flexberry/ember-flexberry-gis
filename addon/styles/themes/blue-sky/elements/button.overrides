@@ -17,6 +17,15 @@
     }
 }
 
+.ui.form .field {
+    .button.flexberry-button {
+        color: @fieldButtonColor;
+        &:hover {
+            color: @fieldButtonHoveredColor;
+        }
+    }
+}
+
 .ui.menu.flexberry-maptoolbar {
     .ui.icon.button {
         font-size: 0px;
@@ -74,22 +83,16 @@
 .flexberry-edit-layermap {
     .ui.small.fluid.buttons:not(.basic):not(.inverted) {
       &>.button.flexberry-button {
-          background: @whitecolor;
+          background: @uiIconButtonBackground;
           color: @uiIconButtonColor;
-          border: 1px solid @bluesky;
+          border: 1px solid @uiIconButtonBorderColor;
           &.active {
-              background: @lightbluecolor !important;
+              background: @fluidButtonsActiveBackground;
           }
           &:hover {
               opacity: 0.8;
-              color: @uiIconButtonColor !important;
+              color: @uiIconButtonColor;
           }
       }
-    }
-    .button.flexberry-button {
-        color: @uiIconButtonColor !important;
-        &:hover {
-          color: @white !important;
-        }
     }
 }

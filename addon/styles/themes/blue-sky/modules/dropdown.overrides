@@ -54,7 +54,6 @@
             &:before {
                 font-family: Icons;
                 font-size: 16px;
-                color: @bluecolor;
             }
         }
         div.text {

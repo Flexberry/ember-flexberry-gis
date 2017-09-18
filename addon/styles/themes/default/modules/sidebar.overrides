@@ -22,7 +22,7 @@
     }
   }
   .ui.right.sidebar {
-    right: -2px !important;
+    right: -10px !important;
   }
   .ui.right.sidebar,
   .ui.right.sidebar.visible {
@@ -257,7 +257,7 @@
             margin: .5em 0;
             border-radius: 5px 0px 0px 5px;
             &:first-child .title {
-                border-top: 1px solid rgba(34, 36, 38, 0.15);
+                border-top: 1px solid @accordionFirstChildTitleBorderTopColor;
             }
             .flexberry-treenode:first-child {
                 .title {

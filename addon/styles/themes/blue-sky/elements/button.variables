@@ -10,6 +10,7 @@
 *********************************************/
 
 @uiIconButtonBorderRadius: 5px;
+@uiIconButtonBorderColor: @bluesky;
 @uiIconButtonPadding: 12px 4px;
 @uiIconButtonHeight: 40px;
 @uiIconButtonWidth: 40px;
@@ -26,3 +27,15 @@
 @uiIconButtonDisabledColor: @lightgraycolor;
 @uiIconButtonDisabledHoveredColor: @lightgraycolor;
 @uiIconButtonDisabledHoveredBackground: @whitecolor;
+
+/* Active */
+@fluidButtonsActiveBackground: @lightbluecolor !important; // Needs important to override basic theme style.
+
+
+/*********************************************
+            Field Button styles
+*********************************************/
+@fieldButtonColor: @bluesky;
+
+/* Hovered */
+@fieldButtonHoveredColor: @bluesky;

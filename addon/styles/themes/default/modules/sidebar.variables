@@ -59,6 +59,8 @@
 /*****************
       Layers
 ******************/
+@accordionFirstChildTitleBorderTopColor: rgba(34, 36, 38, 0.15);
+
 @flexberryTreeHeaderPadding: 0.1em 0.75em 0.6em 0.75em;
 @flexberryTreeHeaderWidth: 100%;
 @flexberryTreeHeaderTop: 12px;
