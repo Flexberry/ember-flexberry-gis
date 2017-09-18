@@ -10,3 +10,5 @@
 @tabularMenuItemActiveColor: @darkbluecolor;
 @tabularMenuItemHoveredCcolor: @bluecolor;
 @tabularMenuItemDisabledIconColor: #999 !important;
+
+@fieldButtonColor: @darkbluecolor;

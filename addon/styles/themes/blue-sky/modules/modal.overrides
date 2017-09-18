@@ -61,12 +61,27 @@
         box-shadow: @darkBoxShadow;
         &.active,
         &:hover {
-            color: @darkbluecolor !important;
-            background: @lightbluecolor !important;
+            color: @darkbluecolor;
+            background: @lightbluecolor;
             box-shadow: @darkBoxShadow;
 
             &>i.icon:before {
-              color: @darkbluecolor !important;
+              color: @darkbluecolor;
+            }
+        }
+    }
+    .ui.form .field {
+        .button.flexberry-button {
+          box-shadow: @darkBoxShadow;
+          color: @darkbluecolor;
+          border: none;
+            &>i.icon:before {
+              color: @darkbluecolor;
+            }
+            &:hover {
+                &>i.icon:before {
+                  color: @darkbluecolor;
+                }
             }
         }
     }
@@ -103,7 +118,7 @@
         border: none !important;
         &:hover {
             background: #f1f7ff !important;
-            color: @darkbluecolor !important;
+            color: @darkbluecolor;
         }
     }
     .ui.tab.segment,
@@ -114,6 +129,9 @@
             width: calc( 16.75% + 1px );
           }
         }
+    }
+    .flexberry-edit-layermap .ui.small.fluid.buttons:not(.basic):not(.inverted) > .button.flexberry-button {
+        color: @darkbluecolor;
     }
 }
 

@@ -83,7 +83,8 @@
 .sidebar-wrapper,
 .flexberry-export-map-command-dialog,
 .flexberry-search-map-command-dialog,
-.flexberry-go-to-map-command-dialog {
+.flexberry-go-to-map-command-dialog,
+.flexberry-edit-layer-dialog {
     .ui.icon.button {
         border-radius: 5px;
         font-weight: normal;
