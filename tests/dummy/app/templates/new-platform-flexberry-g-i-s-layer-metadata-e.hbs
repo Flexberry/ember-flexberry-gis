@@ -11,6 +11,7 @@
     }}
   {{/each}}
 {{/if}}
+
 <form class="ui form flexberry-vertical-form" role="form">
   <div class="field">
     <div class="sixteen wide">
@@ -44,8 +45,15 @@
     )
     leafletMap=leafletMap
     _typeIsReadonly=(not model.isNew)
+    links=(get this linksPropertyPath)
+    linksPropertyPath=linksPropertyPath
+    linksModelName=linksModelName
+    parametersModelName=linksParametersModelName
+    parametersModelProjection=linksParametersModelProjection
     onInit=(action "initLayerProperties")
-    links=model.linkMetadata
+    addLayerLink=(action "addLayerLink")
+    removeLayerLink=(action "removeLayerLink")
+    allowShowLayerLinkCheckboxChange=(action "onLayerLinkChangeVisibility")
   }}
 
 </form>

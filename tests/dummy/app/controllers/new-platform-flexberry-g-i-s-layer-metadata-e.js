@@ -4,6 +4,7 @@
 
 import EditFormController from 'ember-flexberry/controllers/edit-form';
 import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-controller-operations-indication';
+import FlexberryLinksEditorActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-links-editor-actions-handler';
 
 /**
   Maps layers metadata edit controller.
@@ -11,8 +12,45 @@ import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-con
   @class NewPlatformFlexberrtGISLayerMetadataEController
   @extends EditFormController
   @uses EditFormControllerOperationsIndicationMixin
+  @uses FlexberryLinksEditorActionsHandlerMixin
 */
-export default EditFormController.extend(EditFormControllerOperationsIndicationMixin, {
+export default EditFormController.extend(EditFormControllerOperationsIndicationMixin, FlexberryLinksEditorActionsHandlerMixin, {
+
+  /**
+    Layer's links' property path.
+
+    @property linksPropertyPath
+    @type String
+    @default 'model.linkMetadata'
+  */
+  linksPropertyPath: 'model.linkMetadata',
+
+  /**
+    Layer's links' model name.
+
+    @property linksModelName
+    @type String
+    @default 'new-platform-flexberry-g-i-s-link-metadata'
+  */
+  linksModelName: 'new-platform-flexberry-g-i-s-link-metadata',
+
+  /**
+    Layer's links' parameters model name.
+
+    @property linksParametersModelName
+    @type String
+    @default 'new-platform-flexberry-g-i-s-parameter-metadata'
+  */
+  linksParametersModelName: 'new-platform-flexberry-g-i-s-parameter-metadata',
+
+  /**
+    Layer's links' parameters model projection.
+
+    @property linksParametersModelProjection
+    @type String
+    @default 'ParameterMetadataD'
+  */
+  linksParametersModelProjection: 'ParameterMetadataD',
 
   actions: {
     /**
@@ -41,6 +79,7 @@ export default EditFormController.extend(EditFormControllerOperationsIndicationM
       this._super(...arguments);
     }
   },
+
   /**
     Parent route.
 

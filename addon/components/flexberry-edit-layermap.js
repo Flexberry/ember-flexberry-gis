@@ -303,13 +303,22 @@ export default Ember.Component.extend(
     leafletMap: null,
 
     /**
-      Layer's links
+      Layer's links.
 
       @property links
       @type Array
       @default Ember.A()
     */
     links: Ember.A(),
+
+    /**
+      Layer's links property path.
+
+      @property linksPropertyPath
+      @type String
+      @default ''
+    */
+    linksPropertyPath: '',
 
     /**
       Dialog's 'Links' segment caption.
@@ -319,6 +328,24 @@ export default Ember.Component.extend(
       @default t('components.layers-dialogs.edit.links.caption')
     */
     linksCaption: t('components.layers-dialogs.edit.links.caption'),
+
+    /**
+      Layer's links' parameters model name.
+
+      @property parametersModelName
+      @type String
+      @default ''
+    */
+    parametersModelName: '',
+
+    /**
+      Layer's links' parameters model projection.
+
+      @property parametersModelProjection
+      @type String
+      @default ''
+    */
+    parametersModelProjection: '',
 
     /**
       Flag: indicates whether coordinate reference system (CRS) edit fields must be shown.
@@ -581,11 +608,23 @@ export default Ember.Component.extend(
 
       /**
         Update relation value at model.
-        @method actions.updateLookupValue
-        @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
+        @method actions.removeLayerLink
+        @param {Object} removeLayerLink Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
       */
-      addLink(updateData) {
-        this.sendAction('updateLookupValue', updateData);
+      removeLayerLink(link) {
+        this.sendAction('removeLayerLink', link);
+      },
+
+      /**
+        Update relation value at model.
+        @method actions.addLayerLink
+      */
+      addLayerLink() {
+        this.sendAction('addLayerLink');
+      },
+
+      allowShowCheckboxChange(...args) {
+        this.sendAction('allowShowLayerLinkCheckboxChange', ...args);
       }
     },
 

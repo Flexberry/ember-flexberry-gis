@@ -1,23 +1,25 @@
 <div class="ui grid">
-    <div class="fourteen wide column">
+    <div class="thirteen wide column">
         <div class="field">
             <label>
                 {{mosCaption}}
             </label>
-            {{flexberry-lookup
-                placeholder="Нет значения"
-                readonly=false
-                value=model.mapObjectSetting
-                projection="MapObjectSettingL"
-                displayAttributeName="typeName"
-                title="Map object setting"
-                relatedModel=model
-                relationName="mapObjectSetting"
-                choose="showLookupDialog"
-                remove="removeLookupValue"
-                autocomplete=true
-                dropdown=false
-            }}
+
+                {{flexberry-lookup
+                    readonly=readonly
+                    placeholder=lookupPlaceholder
+                    value=(get this "model.mapObjectSetting")
+                    projection="MapObjectSettingL"
+                    displayAttributeName="typeName"
+                    title="Map object setting"
+                    relatedModel=model
+                    relationName="mapObjectSetting"
+                    choose="showLookupDialog"
+                    remove="removeLookupValue"
+                    autocomplete=true
+                    dropdown=false
+                }}
+            
         </div>
     </div>
     <div class="two wide column">
@@ -26,10 +28,41 @@
                 {{allowShowCaption}}
             </label>
             {{flexberry-ddau-checkbox
-                class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+                class=flexberryClassNames.visibilityCheckbox
                 value=model.allowShow
                 change=(action "onVisibilityCheckboxChange")
             }}
         </div>
     </div>
+    <div class="one wide column">
+        <div class="field">
+            {{flexberry-button
+                class=(concat flexberryClassNames.clearButton " " clearClass)
+                iconClass=clearIconClass
+                tooltip=clearCaption
+                click=(action "remove")
+            }}  
+        </div>
+    </div>
+</div>
+<div class="ui grid">
+    {{flexberry-groupedit
+        componentName=componentName
+        content=model.parameters
+        modelName=modelName
+        modelProjection=modelProjection
+        readonly=readonly
+        placeholder=groupeditPlaceholder
+        tableStriped=tableStriped
+        createNewButton=createNewButton
+        deleteButton=deleteButton
+        allowColumnResize=allowColumnResize
+        showAsteriskInRow=showAsteriskInRow
+        showCheckBoxInRow=showCheckBoxInRow
+        showDeleteButtonInRow=showDeleteButtonInRow
+        showEditMenuItemInRow=showEditMenuItemInRow
+        showDeleteMenuItemInRow=showDeleteMenuItemInRow
+        rowClickable=rowClickable
+        immediateDelete=immediateDelete
+    }}
 </div>

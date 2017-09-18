@@ -137,6 +137,13 @@ export default Ember.Mixin.create({
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
 
       actionHandler.apply(this, args);
+
+      // User can pass any additional arguments to action handler,
+      // so original action's event object will be the last one in arguments array.
+      let mutablePropertyPath = args[0];
+      let e = args[args.length - 1];
+
+      this.mutateStorage(mutablePropertyPath, e.newValue);
     },
 
     /**
@@ -174,6 +181,13 @@ export default Ember.Mixin.create({
       let actionHandler = objectContainingActionHandler.get('actions.onSliderChange');
 
       actionHandler.apply(this, args);
+
+      // User can pass any additional arguments to action handler,
+      // so original action's event object will be the last one in arguments array.
+      let mutablePropertyPath = args[0];
+      let e = args[args.length - 1];
+
+      this.mutateStorage(mutablePropertyPath, e.newValue);
     },
 
     /**

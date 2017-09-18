@@ -6,6 +6,8 @@ import Ember from 'ember';
 import RequiredActionsMixin from '../../mixins/required-actions';
 import DynamicActionsMixin from '../../mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
+import FlexberryLinksEditorActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-links-editor-actions-handler';
+import FlexberryBaseComponent from 'ember-flexberry/components/flexberry-base-component';
 import layout from '../../templates/components/layers-dialogs/edit';
 import {
   translationMacro as t
@@ -33,15 +35,17 @@ const flexberryClassNames = {
   Flexberry edit layer modal dialog with [Semantic UI modal](http://semantic-ui.com/modules/modal.html) style.
 
   @class FlexberryEditLayerDialogComponent
-  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @extends FlexberryBaseComponent
   @uses RequiredActionsMixin
   @uses DynamicActionsMixin
   @uses DynamicPropertiesMixin
+  @uses FlexberryLinksEditorActionsHandlerMixin
 */
-let FlexberryEditLayerDialogComponent = Ember.Component.extend(
+let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
-  DynamicPropertiesMixin, {
+  DynamicPropertiesMixin,
+  FlexberryLinksEditorActionsHandlerMixin, {
     /**
       Reference to component's template.
     */
@@ -98,6 +102,55 @@ let FlexberryEditLayerDialogComponent = Ember.Component.extend(
       @default t('components.layers-dialogs.edit.deny-button.caption')
     */
     denyButtonCaption: t('components.layers-dialogs.edit.deny-button.caption'),
+
+    /**
+      Layer's links' property path.
+
+      @property linksPropertyPath
+      @type String
+      @default 'model.layerLink'
+    */
+    linksPropertyPath: 'model.layerLink',
+
+    /**
+      Layer's links' model name.
+    
+      @property linksModelName
+      @type String
+      @default 'new-platform-flexberry-g-i-s-layer-link'
+    */
+    linksModelName: 'new-platform-flexberry-g-i-s-layer-link',
+
+    /**
+      Layer's links' parameters model name.
+    
+      @property linksParametersModelName
+      @type String
+      @default 'new-platform-flexberry-g-i-s-link-parameter'
+    */
+    linksParametersModelName: 'new-platform-flexberry-g-i-s-link-parameter',
+
+    /**
+      Layer's links' parameters model projection.
+  
+      @property linksParametersModelProjection
+      @type String
+      @default 'LinkParameterD'
+    */
+    linksParametersModelProjection: 'LinkParameterD',
+
+    /**
+      Kind of injected storage (from component's controller).
+      Brokes DDAU, but does not brake your mind.
+      
+      @property store
+      @type Object
+      @readonly
+    */
+    store: Ember.computed('currentController', function () {
+      let controller = this.get('currentController');
+      return controller.get('store');
+    }),
 
     actions: {
       /**

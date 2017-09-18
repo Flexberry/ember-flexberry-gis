@@ -4,5 +4,8 @@ export default {
   },
   'allow-show-textbox': {
     'caption': 'Show'
+  },
+  'clear-button': {
+    'caption': 'Remove'
   }
 };

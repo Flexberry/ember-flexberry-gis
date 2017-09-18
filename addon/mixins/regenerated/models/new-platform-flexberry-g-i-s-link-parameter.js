@@ -38,10 +38,10 @@ export let defineProjections = function (modelClass) {
     objectField: Projection.attr('Поле объекта'),
     layerField: Projection.attr('Поле слоя'),
     expression: Projection.attr('Выражение', { hidden: true }),
-    queryKey: Projection.attr('Параметр запроса', { hidden: true }),
+    queryKey: Projection.attr('Параметр запроса'),
     linkField: Projection.attr('Поле связи', { hidden: true }),
     layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
 
-    })
+    }, { hidden: true })
   });
 };

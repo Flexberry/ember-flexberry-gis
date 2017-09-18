@@ -58,9 +58,6 @@ export default Ember.Mixin.create({
         mutablePropertyPathType === 'string');
 
       setRecord(this, mutablePropertyPath, e.newValue);
-
-      // Save changes to local storage.
-      this.mutateStorage('visibility', mutablePropertyPath, e.newValue);
     }
   }
 });

@@ -62,6 +62,7 @@
     --}}
     {{#if _addDialogHasBeenRequested}}
       {{component "layers-dialogs/add"
+        model=model
         class=flexberryClassNames.addDialog
         visible=_addDialogIsVisible
         layer=null
@@ -73,6 +74,7 @@
     {{/if}}
     {{#if _editDialogHasBeenRequested}}
       {{component "layers-dialogs/edit"
+        model=model
         class=flexberryClassNames.editDialog
         visible=_editDialogIsVisible
         layer=(hash

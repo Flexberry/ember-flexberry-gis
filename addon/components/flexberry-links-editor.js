@@ -2,8 +2,9 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
 import layout from '../templates/components/flexberry-links-editor';
-import FlexberryLookupCompatibleComponent from 'ember-flexberry/mixins/flexberry-lookup-compatible-component';
+import FlexberryLookupCompatibleComponentMixin from 'ember-flexberry/mixins/flexberry-lookup-compatible-component';
 import FlexberryBaseComponent from 'ember-flexberry/components/flexberry-base-component';
 import {
   translationMacro as t
@@ -16,6 +17,8 @@ import {
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-links-editor').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-links-editor').
+  @property {String} flexberryClassNames.visibilityCheckbox Component's visibility checkbox CSS-class name ('flexberry-visibility-checkbox').
+  @property {String} flexberryClassNames.clearButton Component's clear button CSS-class name ('flexberry-clear-button').
   @readonly
   @static
 
@@ -24,35 +27,19 @@ import {
 const flexberryClassNamesPrefix = 'flexberry-links-editor';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix
+  wrapper: flexberryClassNamesPrefix,
+  visibilityCheckbox: flexberryClassNamesPrefix + '-visibility-checkbox',
+  clearButton: flexberryClassNamesPrefix + '-clear-button'
 };
 
 /**
-  Flexberry links editor component with [Semantic UI segment](http://semantic-ui.com/modules/button.html) style.
-
-  Usage:
-  templates/my-form.hbs
-  ```handlebars
-  {{flexberry-button
-    caption="My button"
-    click=(action "onMyButtonClick")
-  }}
-  ```
-
-  controllers/my-form.js
-  ```javascript
-  actions: {
-    onMyButtonClick(e) {
-      // Log jQuery 'click' event object triggered after checkbox input was clicked.
-      console.log('My button clicked. jQuery \'click\' event-object: ', e.originalEvent);
-    }
-  }
-  ```
+  Flexberry links editor component.
 
   @class FlexberryLinksEditorComponent
-  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @extends FlexberryBaseComponent
+  @uses FlexberryLookupCompatibleComponentMixin
 */
-let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLookupCompatibleComponent, {
+let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLookupCompatibleComponentMixin, {
 
   /**
     Reference to component's template.
@@ -70,36 +57,16 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
 
     Any other CSS-classes can be added through component's 'class' property.
     ```handlebars
-    {{flexberry-button
-      class="red"
-      caption="My red button"
-      click=(action "onMyRedButtonClick")
+    {{flexberry-links-editor
+      class='red'
     }}
     ```
 
     @property classNames
     @type String[]
-    @default ['flexberry-button', 'ui', 'segment']
+    @default ['flexberry-links-editor', 'ui', 'segment']
   */
   classNames: [flexberryClassNames.wrapper, 'ui', 'segment'],
-
-  /**
-    Components class names bindings.
-
-    @property classNameBindings
-    @type String[]
-    @default ['readonly:disabled', '_hasIconOnly:icon']
-  */
-  classNameBindings: ['readonly:disabled', '_hasIconOnly:icon'],
-
-  /**
-    Components attributes bindings.
-
-    @property attributeBindings
-    @type String[]
-    @default ['tooltip:title']
-  */
-  attributeBindings: ['tooltip:title'],
 
   /**
     Component's caption.
@@ -138,6 +105,132 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
   readonly: false,
 
   /**
+    Flag: indicates whether to show creation button at toolbar.
+    @property createNewButton
+    @type Boolean
+    @default true
+  */
+  createNewButton: true,
+
+  /**
+    Flag: indicates whether to show delete button at toolbar.
+    @property deleteButton
+    @type Boolean
+    @default true
+  */
+  deleteButton: true,
+
+  /**
+    Flag: indicates whether table are striped.
+    @property tableStriped
+    @type Boolean
+    @default true
+  */
+  tableStriped: true,
+
+  /**
+    Flag: indicates whether allow to resize columns (if `true`) or not (if `false`).
+    If {{#crossLink 'UserSettingsService'}}{{/crossLink}} is enabled then saved widths of columns are displayed on component.
+    @property allowColumnResize
+    @type Boolean
+    @default true
+  */
+  allowColumnResize: true,
+
+  /**
+    Flag: indicates whether to show asterisk icon in first column of every changed row.
+    @property showAsteriskInRow
+    @type Boolean
+    @default true
+  */
+  showAsteriskInRow: true,
+
+  /**
+    Flag: indicates whether to show checkbox in first column of every row.
+    @property showCheckBoxInRow
+    @type Boolean
+    @default true
+  */
+  showCheckBoxInRow: true,
+
+
+  /**
+    Flag: indicates whether to show delete button in first column of every row.
+    @property showDeleteButtonInRow
+    @type Boolean
+    @default true
+  */
+  showDeleteButtonInRow: true,
+
+  /**
+    Flag: indicates whether to show dropdown menu with edit menu item, in last column of every row.
+    For in-row menu following properties are used:
+    - {{#crossLink 'FlexberryGroupeditComponent/showDeleteMenuItemInRow:property'}}{{/crossLink}},
+    - {{#crossLink 'FlexberryGroupeditComponent/showEditMenuItemInRow:property'}}{{/crossLink}},
+    - {{#crossLink 'FlexberryGroupeditComponent/menuInRowAdditionalItems:property'}}{{/crossLink}}.
+    @property showEditMenuItemInRow
+    @type Boolean
+    @default false
+  */
+  showEditMenuItemInRow: false,
+
+  /**
+    Flag: indicates whether to show dropdown menu with delete menu item, in last column of every row.
+    For in-row menu following properties are used:
+    - {{#crossLink 'FlexberryGroupeditComponent/showDeleteMenuItemInRow:property'}}{{/crossLink}},
+    - {{#crossLink 'FlexberryGroupeditComponent/showEditMenuItemInRow:property'}}{{/crossLink}},
+    - {{#crossLink 'FlexberryGroupeditComponent/menuInRowAdditionalItems:property'}}{{/crossLink}}.
+    @property showDeleteMenuItemInRow
+    @type Boolean
+    @default false
+  */
+  showDeleteMenuItemInRow: false,
+
+  /**
+    Flag indicates whether table rows are clickable (action will be fired after row click).
+    @property rowClickable
+    @type Boolean
+    @default false
+  */
+  rowClickable: false,
+
+  /**
+    Flag indicates whether DELETE request should be immediately sended to server (on each deleted record) or not.
+    @property immediateDelete
+    @type Boolean
+    @default false
+  */
+  immediateDelete: false,
+
+  /**
+    Used to identify groupEdit on the page by component name.
+    @property componentName
+    @type String
+    @readonly
+  */
+  componentName: Ember.computed('elementId', function () {
+    return 'parametersGroupedit' + this.get('elementId');
+  }),
+
+  /**
+    Name of model to be used as form's record type.
+
+    @property modelName
+    @type String
+    @default null
+  */
+  modelName: null,
+
+  /**
+    Model projection which should be used to display given content.
+    Properties of objects by model projection are displayed on component.
+    @property modelProjection
+    @type Object
+    @default null
+  */
+  modelProjection: null,
+
+  /**
     Layer link's 'Map object setting' field's caption.
 
     @property mosCaption
@@ -155,6 +248,49 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
   */
   allowShowCaption: t('components.flexberry-links-editor.allow-show-textbox.caption'),
 
+  /**
+    Text to be displayed in table body, if content is not defined or empty.
+    @property groupeditPlaceholder
+    @type String
+    @default t('components.flexberry-groupedit.placeholder')
+  */
+  groupeditPlaceholder: t('components.flexberry-groupedit.placeholder'),
+
+  /**
+    Text to be displayed in table body, if content is not defined or empty.
+    @property lookupPlaceholder
+    @type String
+    @default t('components.flexberry-groupedit.placeholder')
+  */
+  lookupPlaceholder: t('components.flexberry-lookup.placeholder'),
+
+  /**
+    Clear button's CSS-class.
+
+    @property clearClass
+    @type String
+    @default null
+  */
+  clearClass: null,
+
+  /**
+    Clear button's caption.
+
+    @property clearCaption
+    @type String
+    @default t('components.flexberry-links-editor.clear-button.caption')
+  */
+  clearCaption: t('components.flexberry-links-editor.clear-button.caption'),
+
+  /**
+    Clear button's icon CSS-class names.
+
+    @property clearIconClass
+    @type String
+    @default 'remove icon'
+  */
+  clearIconClass: 'remove icon',
+
   actions: {
     /**
       Update relation value at model.
@@ -166,6 +302,15 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
     },
 
     /**
+      Update relation value at model.
+      @method actions.remove
+      @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
+    */
+    remove() {
+      this.sendAction('remove', this.get('model'));
+    },
+
+    /**
       Handles {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.
 
       @method actions.onVisibilityCheckboxChange
@@ -174,13 +319,6 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
     onVisibilityCheckboxChange(...args) {
       this.sendAction('changeVisibility', ...args);
     }
-  },
-
-  /**
-    Initializes DOM-related component's properties.
-  */
-  didInsertElement() {
-    this._super(...arguments);
   }
 });
 
