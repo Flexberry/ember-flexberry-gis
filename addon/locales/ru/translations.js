@@ -16,6 +16,10 @@ import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
 import FlexberryTableComponents from './components/flexberry-table';
 
+import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
+import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
+import GISSearchForm from './forms/gis-search-form';
+
 export default {
   'models': {
     'new-platform-flexberry-g-i-s-layer-link': NewPlatformFlexberryGISLayerLinkModel,
@@ -28,7 +32,15 @@ export default {
     'new-platform-flexberry-g-i-s-parameter-metadata': NewPlatformFlexberryGISParameterMetadataModel
   },
 
+  'forms': {
+    'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
+    'new-platform-flexberry-g-i-s-layer-metadata-e': NewPlatformFlexberryGISLayerMetadataEForm,
+    'gis-search-form': GISSearchForm
+  },
+
   'components': {
+    'flexberry-table': FlexberryTableComponents,
+
     'feature-result-item': FeatureResultItemComponent,
 
     'spatial-bookmarks': {
@@ -190,39 +202,5 @@ export default {
       'x-caption': 'X',
       'y-caption': 'Y'
     }
-  },
-
-  'gis-search-form': {
-    'header': 'Поиск',
-    'subheader': 'по метаданным слоёв и проектам карт',
-    'keywords': 'Ключевые слова',
-    'scale': 'Масштаб',
-    'object': 'Что',
-    'position': 'Где',
-    'min-long': 'Долгота (мин.)',
-    'min-lat': 'Широта (мин.)',
-    'max-long': 'Долгота (макс.)',
-    'max-lat': 'Широта (макс.)',
-    'search': 'Искать',
-    'results': 'Результаты',
-    'layer-metadata': {
-      'title': 'Метаданные слоёв',
-      'header': {
-        'name': 'Название',
-        'type': 'Тип'
-      }
-    },
-    'maps': {
-      'title': 'Карты',
-      'header': {
-        'name': 'Название',
-        'lat': 'Широта',
-        'lng': 'Долгота',
-        'zoom': 'Масштаб',
-        'public': 'Общая'
-      }
-    }
-  },
-
-  'flexberry-table': FlexberryTableComponents
+  }
 };

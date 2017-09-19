@@ -1,0 +1,3 @@
+.ui.attached.message {
+    margin-right: 1px;
+}

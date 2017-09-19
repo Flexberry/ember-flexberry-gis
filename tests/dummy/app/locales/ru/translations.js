@@ -2,11 +2,6 @@ import Ember from 'ember';
 import EmberFlexberryTranslations from 'ember-flexberry/locales/ru/translations';
 import EmberFlexberryGisTranslations from 'ember-flexberry-gis/locales/ru/translations';
 
-import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
-import NewPlatformFlexberryGISMapLForm from './forms/new-platform-flexberry-g-i-s-map-l';
-import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
-import NewPlatformFlexberryGISMapEForm from './forms/new-platform-flexberry-g-i-s-map-e';
-
 const translations = {};
 Ember.$.extend(true, translations, EmberFlexberryTranslations, EmberFlexberryGisTranslations);
 
@@ -30,6 +25,12 @@ Ember.$.extend(true, translations, {
           },
           'user-settings-service-checkbox': {
             'caption': 'Использовать сервис пользовательских настроек'
+          },
+          'show-menu': {
+            'caption': 'Показать меню'
+          },
+          'hide-menu': {
+            'caption': 'Скрыть меню'
           },
           'language-dropdown': {
             'caption': 'Язык приложения',
@@ -136,24 +137,6 @@ Ember.$.extend(true, translations, {
     },
 
     'components-examples': {
-      'flexberry-button': {
-        'settings-example': {
-          'caption': 'Пример работы с настройками flexberry-button'
-        }
-      },
-      'flexberry-ddau-checkbox': {
-        'settings-example': {
-          'caption': 'Пример работы с настройками flexberry-ddau-checkbox'
-        }
-      },
-      'flexberry-tree': {
-        'settings-example': {
-          'caption': 'Пример работы с настройками flexberry-tree',
-          'json-tree-tab-caption': 'Дерево заданное JSON-объектом',
-          'json-tree-latest-clicked-node-caption': 'Настройки последней кликнутой вершины дерева',
-          'json-tree-latest-clicked-node-placeholder': 'Кликните на любую вершину дерева, чтобы отобразить её настройки'
-        }
-      },
       'flexberry-maplayers': {
         'settings-example': {
           'caption': 'Пример работы с настройками flexberry-maplayers',
@@ -164,12 +147,9 @@ Ember.$.extend(true, translations, {
       }
     },
 
-    'integration-examples': {
+    'maps': {
+      'caption': 'Карты'
     },
-    'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
-    'new-platform-flexberry-g-i-s-map-l': NewPlatformFlexberryGISMapLForm,
-    'new-platform-flexberry-g-i-s-layer-metadata-e': NewPlatformFlexberryGISLayerMetadataEForm,
-    'new-platform-flexberry-g-i-s-map-e': NewPlatformFlexberryGISMapEForm,
     'map': {
       'caption': 'Карта',
       'treeviewbuttontooltip': 'Показать дерево слоёв',
