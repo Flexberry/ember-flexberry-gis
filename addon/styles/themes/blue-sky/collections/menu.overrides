@@ -1,0 +1,7 @@
+
+.ui.menu.flexberry-maptoolbar .active.item {
+    box-shadow: @darkBoxShadow;
+}
+.ui.menu.flexberry-maptoolbar > .item:first-child {
+  border-radius: 5px;
+}

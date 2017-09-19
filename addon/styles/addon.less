@@ -1,0 +1,51 @@
+@import './themes/default/globals/site.variables';
+@import './themes/default/elements/button.variables';
+@import './themes/default/elements/container.variables';
+@import './themes/default/modules/accordion.variables';
+@import './themes/default/modules/sidebar.variables';
+
+.ui.loading.form {
+  /**
+    Increased 'loading' form z-index to hide leaflet map placed on form.
+  */
+  &:before {
+    z-index: 1000000 !important;
+  }
+  /**
+    Increased 'loading' form spinner z-index to make it visible above leaflet map & form.
+  */
+  &:after {
+    z-index: 1000001 !important;
+  }
+}
+
+.ui.form {
+  /**
+    Prevent ui messages from being hided inside <form>.
+  */
+  .success.message,
+  .warning.message,
+  .error.message {
+    display: block !important;
+    /**
+      Hide hidden ui messages inside <form>.
+    */
+    &.hidden {
+      display: none !important;
+    }
+  }
+}
+
+/**
+    Fix disappearing checkboxes while scrolling
+*/
+
+.ui.checkbox {
+  .box:before,
+  label:before,
+  input:checked~.box:after,
+  input:checked~label:after {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}

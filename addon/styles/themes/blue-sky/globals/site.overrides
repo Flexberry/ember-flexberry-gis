@@ -1,0 +1,10 @@
+.ui.styled.accordion .title, .ui.styled.accordion .accordion .title {
+    & > .flexberry-checkbox {
+        line-height: 17px;
+    }
+}
+
+.background-logo .ui.top.attached {
+    margin: 20px 5px;
+    width: 250px;
+}

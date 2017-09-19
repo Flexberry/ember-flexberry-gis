@@ -16,6 +16,10 @@ import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
 import FlexberryTableComponents from './components/flexberry-table';
 
+import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
+import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
+import GISSearchForm from './forms/gis-search-form';
+
 export default {
   'models': {
     'new-platform-flexberry-g-i-s-layer-link': NewPlatformFlexberryGISLayerLinkModel,
@@ -28,7 +32,15 @@ export default {
     'new-platform-flexberry-g-i-s-parameter-metadata': NewPlatformFlexberryGISParameterMetadataModel
   },
 
+  'forms': {
+    'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
+    'new-platform-flexberry-g-i-s-layer-metadata-e': NewPlatformFlexberryGISLayerMetadataEForm,
+    'gis-search-form': GISSearchForm
+  },
+
   'components': {
+    'flexberry-table': FlexberryTableComponents,
+
     'feature-result-item': FeatureResultItemComponent,
 
     'spatial-bookmarks': {
@@ -190,40 +202,5 @@ export default {
       'x-caption': 'X',
       'y-caption': 'Y'
     }
-  },
-
-  'gis-search-form': {
-    'header': 'Search',
-    'subheader': 'through layer metadata and maps',
-    'keywords': 'Key words',
-    'scale': 'Scale',
-    'object': 'Object',
-    'position': 'Position',
-    'min-long': 'Min longitude',
-    'min-lat': 'Min latitude',
-    'max-long': 'Max longitude',
-    'max-lat': 'Max latitude',
-    'search': 'Search',
-    'results': 'Results',
-    'layer-metadata': {
-      'title': 'Layer metadata',
-      'actions': {
-        'select': 'Select'
-      },
-      'selected-message': 'Items selected:',
-      'reset': 'Clear',
-      'open-into-map': 'Open into a map:',
-      'ok': 'Ok',
-      'new-map': '<New map>',
-      'select-a-map': 'Select a map...'
-    },
-    'maps': {
-      'title': 'Maps',
-      'actions': {
-        'open': 'Open'
-      }
-    }
-  },
-
-  'flexberry-table': FlexberryTableComponents
+  }
 };

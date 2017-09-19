@@ -1,0 +1,41 @@
+/*******************************
+      Gis Theme Overrides
+*******************************/
+
+@flexberryButtonIconHoveredColor: @bluesky;
+
+
+/*********************************************
+            Ui Icon Button styles
+*********************************************/
+
+@uiIconButtonBorderRadius: 5px;
+@uiIconButtonBorderColor: @bluesky;
+@uiIconButtonPadding: 12px 4px;
+@uiIconButtonHeight: 40px;
+@uiIconButtonWidth: 40px;
+@uiIconButtonColor: @bluesky;
+@uiIconButtonBackground: @whitecolor;
+@uiIconButtonBoxShadow: 0 0 4px @darkbluecolor;
+
+/* Hovered */
+@uiIconButtonHoveredColor: @bluesky;
+@uiIconButtonHoveredBackground: @lightbluecolor;
+@uiIconButtonHoveredBoxShadow: 0 0 4px @darkbluecolor;
+
+/* Disabled */
+@uiIconButtonDisabledColor: @lightgraycolor;
+@uiIconButtonDisabledHoveredColor: @lightgraycolor;
+@uiIconButtonDisabledHoveredBackground: @whitecolor;
+
+/* Active */
+@fluidButtonsActiveBackground: @lightbluecolor !important; // Needs important to override basic theme style.
+
+
+/*********************************************
+            Field Button styles
+*********************************************/
+@fieldButtonColor: @bluesky;
+
+/* Hovered */
+@fieldButtonHoveredColor: @bluesky;

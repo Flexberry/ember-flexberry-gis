@@ -1,4 +1,4 @@
-/**
+﻿/**
   @module ember-flexberry-gis
 */
 
@@ -9,7 +9,7 @@ import { Query } from 'ember-flexberry-data';
   Query settings for layer metadata loading.
 */
 let _metadataSettings = {
-  title: 'gis-search-form.layer-metadata.title',
+  title: 'forms.gis-search-form.layer-metadata.title',
   modelName: 'new-platform-flexberry-g-i-s-layer-metadata',
   projectionName: 'LayerMetadataL',
   top: 5,
@@ -21,7 +21,7 @@ let _metadataSettings = {
   Query settings for maps loading.
 */
 let _mapSettings = {
-  title: 'gis-search-form.maps.title',
+  title: 'forms.gis-search-form.maps.title',
   modelName: 'new-platform-flexberry-g-i-s-map',
   projectionName: 'MapL',
   top: 5,

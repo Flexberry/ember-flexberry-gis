@@ -35,7 +35,7 @@
         {{/each}}
     {{else}}
      <tr>
-        <td class="center aligned" colspan="{{_columnCount}}">{{t 'flexberry-table.no-data'}}</td>
+        <td class="center aligned" colspan="{{_columnCount}}">{{t "components.flexberry-table.no-data"}}</td>
      </tr>
     {{/if}}
   </tbody>
@@ -44,9 +44,8 @@
       <th colspan="{{_columnCount}}">
         <div class="ui secondary menu no-margin">
           <div class="ui basic buttons">
-            <button
-              class="ui {{unless hasPreviousPage 'disabled'}} button" {{action (if this.attrs.previousPage this.attrs.previousPage 'previousPage')}}>
-              &laquo;
+            <button class="ui {{unless hasPreviousPage "disabled"}} button" {{action (if this.attrs.previousPage this.attrs.previousPage "previousPage")}}>
+              <i class="prev-page icon"></i>
             </button>
             {{#each pages as |page|}}
               {{#if page.isEllipsis}}
@@ -57,15 +56,14 @@
                     {{page.number}}
                   </button>
                 {{else}}
-                  <button class="ui button" {{action (if this.attrs.gotoPage this.attrs.gotoPage 'gotoPage') page.number}}>
+                  <button class="ui button" {{action (if this.attrs.gotoPage this.attrs.gotoPage "gotoPage") page.number}}>
                     {{page.number}}
                   </button>
                 {{/if}}
               {{/if}}
             {{/each}}
-            <button
-              class="ui {{unless hasNextPage 'disabled'}} button" {{action (if this.attrs.nextPage this.attrs.nextPage 'nextPage')}}>
-              &raquo;
+            <button class="ui {{unless hasNextPage "disabled"}} button" {{action (if this.attrs.nextPage this.attrs.nextPage "nextPage")}}>
+              <i class="next-page icon"></i>
             </button>
           </div>
           <div class="right menu">
