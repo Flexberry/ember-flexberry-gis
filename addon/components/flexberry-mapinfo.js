@@ -4,6 +4,9 @@
 
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-mapinfo';
+import {
+  translationMacro as t
+} from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -15,7 +18,7 @@ import layout from '../templates/components/flexberry-mapinfo';
   @readonly
   @static
 
-  @for FflexberryMapinfoComponent
+  @for FlexberryMapinfoComponent
 */
 const flexberryClassNamesPrefix = 'flexberry-mapinfo';
 const flexberryClassNames = {
@@ -122,16 +125,6 @@ let MapInfoComponent = Ember.Component.extend({
   visible: false,
 
   /**
-    Flag: indicates whether map info dialog is visible or not, based on local storage saved value.
-    If true, then dialog will be shown, otherwise dialog will be closed.
-
-    @property visibleStorage
-    @type Boolean
-    @default false
-  */
-  visibleStorage: false,
-
-  /**
     Map id.
 
     @property mapId
@@ -158,23 +151,79 @@ let MapInfoComponent = Ember.Component.extend({
   */
   description: null,
 
+  /**
+    Flag: indicates whether dialog is show on opening or not.
+
+    @property showOnOpen
+    @type Boolean
+    @default true
+  */
+  showOnOpen: true,
+
+  /**
+    Dialog's 'name' textbox caption.
+
+    @property nameTextboxCaption
+    @type String
+    @default t('components.flexberry-mapinfo.name-caption')
+  */
+  nameTextboxCaption: t('components.flexberry-mapinfo.name-caption'),
+
+  /**
+    Dialog's 'description' textbox caption.
+
+    @property descriptionTextboxCaption
+    @type String
+    @default t('components.flexberry-mapinfo.description-caption')
+  */
+  descriptionTextboxCaption: t('components.flexberry-mapinfo.description-caption'),
+
+  /**
+    Dialog's 'show-on-open' textbox caption.
+     @property showOnOpenTextboxCaption
+    @type String
+    @default t('components.flexberry-mapinfo.show-on-open-caption')
+  */
+  showOnOpenTextboxCaption: t('components.flexberry-mapinfo.show-on-open-caption'),
+
+  /**
+    Component's caption.
+
+    @property class
+    @type String
+    @default t('components.map-dialogs.info.caption')
+  */
+  caption: t('components.flexberry-mapinfo.caption'),
+
   actions: {
     /**
-      Handles info dialog's 'approve' action.
-      Invokes own {{#crossLink "MapInfoComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
+      Invokes {{#crossLink "FlexberryInfoMapDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
 
-      @method actions.onInfoDialogApprove
-      @param {Object} e Action's event object.
+      @method actions.onApprove
     */
-    onInfoDialogApprove(e) {
-      // Save changes to local storage.
-      let service = this.get('service');
-      let className = this.get('_storageClassName');
-      let mapId = this.get('mapId');
+    onApprove() {
+      var showOnOpen = this.get('showOnOpen');
 
-      service.setToStorage(className, mapId, { value: e.showOnOpen });
-      this.set('visibleStorage', e.showOnOpen);
-    },
+      let service = this.get('service');
+      let storageClass = this.get('_storageClassName');
+      let mapId = this.get('mapId');
+      service.setToStorage(storageClass, mapId, showOnOpen);
+    }
+  },
+
+  init() {
+    this._super(...arguments);
+    let service = this.get('service');
+    let storageClass = this.get('_storageClassName');
+    let mapId = this.get('mapId');
+    let dialogVisibility = service.getFromStorage(storageClass, mapId)[0];
+    if (Ember.isNone(dialogVisibility)) {
+      dialogVisibility = true;
+    }
+
+    this.set('visible', dialogVisibility);
+    this.set('showOnOpen', dialogVisibility);
   },
 
   /**
@@ -185,74 +234,10 @@ let MapInfoComponent = Ember.Component.extend({
   */
   _visibleDidChange: Ember.on('init', Ember.observer('visible', function () {
     if (this.get('visible')) {
-      this._showInfoDialog();
-    } else {
-      this._hideInfoDialog();
-    }
-  })),
-
-  /**
-    Shows map info dialog.
-
-    @method _showInfoDialog
-    @private
-  */
-  _showInfoDialog() {
-    let visibleStorage = this.get('visibleStorage');
-
-    if (visibleStorage) {
       // Include dialog to markup.
       this.set('_infoDialogHasBeenRequested', true);
-
-      // Show dialog.
-      this.set('_infoDialogIsVisible', true);
     }
-  },
-
-  /**
-    Hides map info dialog.
-
-    @method _hideInfoDialog
-    @private
-  */
-  _hideInfoDialog() {
-    // Hide dialog.
-    this.set('_infoDialogIsVisible', false);
-  },
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-
-    let service = this.get('service');
-    let className = this.get('_storageClassName');
-    let mapId = this.get('mapId');
-    let storageCollection = service.getFromStorage(className, mapId);
-
-    if (storageCollection.length > 0) {
-      this.set('visibleStorage', false);
-    } else {
-      this.set('visibleStorage', true);
-    }
-  },
-
-  /**
-    Destroys DOM-related component's properties & logic.
-  */
-  willDestroyElement() {
-    this._super(...arguments);
-
-    this._hideInfoDialog();
-  },
-
-  /**
-    Destroys component.
-  */
-  willDestroy() {
-    this._super(...arguments);
-  }
+  }))
 });
 
 // Add component's CSS-class names as component's class static constants

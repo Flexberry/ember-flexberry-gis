@@ -15,6 +15,7 @@ import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
 import FlexberryTableComponents from './components/flexberry-table';
+import FlexberryMapInfoComponent from './components/flexberry-mapinfo';
 
 export default {
   'models': {
@@ -92,7 +93,9 @@ export default {
 
     'map-tools': MapToolsComponents,
 
-    'map-commands': MapCommandsComponents
+    'map-commands': MapCommandsComponents,
+
+    'flexberry-mapinfo': FlexberryMapInfoComponent
   },
 
   'map-tools': {
