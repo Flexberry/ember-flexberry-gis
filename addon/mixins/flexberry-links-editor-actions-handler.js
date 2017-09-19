@@ -95,7 +95,7 @@ export default Ember.Mixin.create({
         ```javascript
           import Ember from 'ember';
           import FlexberryLinksEditorActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-links-editor-actions-handler';
-  
+
           export default Ember.Controller.extend(FlexberryLinksEditorActionsHandlerMixin, {
           });
         ```
