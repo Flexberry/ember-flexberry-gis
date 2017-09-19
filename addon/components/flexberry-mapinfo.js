@@ -217,7 +217,7 @@ let MapInfoComponent = Ember.Component.extend({
     let service = this.get('service');
     let storageClass = this.get('_storageClassName');
     let mapId = this.get('mapId');
-    let dialogVisibility = service.getFromStorage(storageClass, mapId)[0];
+    let dialogVisibility = service.getFromStorageSingle(storageClass, mapId);
     if (Ember.isNone(dialogVisibility)) {
       dialogVisibility = true;
     }
