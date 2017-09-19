@@ -23,21 +23,21 @@ export default Ember.Mixin.create({
   linksPropertyPath: '',
 
   /**
-      Layer's links' model name.
-  
-      @property linksModelName
-      @type String
-      @default ''
-    */
+    Layer's links' model name.
+
+    @property linksModelName
+    @type String
+    @default ''
+  */
   linksModelName: '',
 
   /**
-      Layer's links' parameters model name.
-  
-      @property linksParametersModelName
-      @type String
-      @default ''
-    */
+    Layer's links' parameters model name.
+
+    @property linksParametersModelName
+    @type String
+    @default ''
+  */
   linksParametersModelName: '',
 
   /**
@@ -75,7 +75,7 @@ export default Ember.Mixin.create({
     /**
         Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.allowShowLayerLinkCheckboxChange:method"}}flexberry-links-editor component's 'allowShowLayerLinkCheckboxChange' action{{/crossLink}}.
         It mutates value of property with given name to value of action's event object 'newValue' property.
-  
+
         @method actions.onLayerLinkChangeVisibility
         @param {String} mutablePropertyPath Path to a property, which value must be mutated on action.
         @param {Object} e Action's event object.

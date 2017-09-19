@@ -153,7 +153,6 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
   */
   showCheckBoxInRow: true,
 
-
   /**
     Flag: indicates whether to show delete button in first column of every row.
     @property showDeleteButtonInRow

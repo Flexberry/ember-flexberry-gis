@@ -114,7 +114,7 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
 
     /**
       Layer's links' model name.
-    
+
       @property linksModelName
       @type String
       @default 'new-platform-flexberry-g-i-s-layer-link'
@@ -123,7 +123,7 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
 
     /**
       Layer's links' parameters model name.
-    
+
       @property linksParametersModelName
       @type String
       @default 'new-platform-flexberry-g-i-s-link-parameter'
@@ -132,7 +132,7 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
 
     /**
       Layer's links' parameters model projection.
-  
+
       @property linksParametersModelProjection
       @type String
       @default 'LinkParameterD'
@@ -142,7 +142,7 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
     /**
       Kind of injected storage (from component's controller).
       Brokes DDAU, but does not brake your mind.
-      
+
       @property store
       @type Object
       @readonly
