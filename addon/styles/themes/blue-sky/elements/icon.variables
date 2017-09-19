@@ -1,0 +1,15 @@
+/*******************************
+             Icon
+*******************************/
+
+@colorIcon : @blue;
+@colorIconBorder: @blue;
+
+
+/*******************************
+      Gis Theme Overrides
+*******************************/
+/*-------------------
+   Icon Variables
+--------------------*/
+@cornerIconInvertedShadow: @blue;

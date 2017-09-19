@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import FlexberryTreenodeActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-treenode-actions-handler';
-import TreeNodeObject from 'ember-flexberry-gis/objects/tree-node';
+import FlexberryTreenodeActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-treenode-actions-handler';
+import TreeNodeObject from 'ember-flexberry/objects/tree-node';
 
 export default Ember.Controller.extend(FlexberryTreenodeActionsHandlerMixin, {
   /**

@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import RequiredActionsMixin from '../mixins/required-actions';
-import DynamicActionsMixin from '../mixins/dynamic-actions';
+import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
+import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import layout from '../templates/components/flexberry-edit-layermap';
 import {
@@ -63,6 +63,24 @@ export default Ember.Component.extend(
       @default t('components.layers-dialogs.edit.name-textbox.caption')
     */
     nameTextboxCaption: t('components.layers-dialogs.edit.name-textbox.caption'),
+
+    /**
+      Dialog's 'description' textbox caption.
+
+      @property descriptionTextboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.description-textbox.caption')
+    */
+    descriptionTextboxCaption: t('components.layers-dialogs.edit.description-textbox.caption'),
+
+    /**
+      Dialog's 'keyWords' textbox caption.
+
+      @property keyWordsTextboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.keywords-textbox.caption')
+    */
+    keyWordsTextboxCaption: t('components.layers-dialogs.edit.keywords-textbox.caption'),
 
     /**
       Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
@@ -606,6 +624,8 @@ export default Ember.Component.extend(
     _createInnerLayer() {
       let type = this.get('layer.type');
       let name = this.get('layer.name');
+      let description = this.get('layer.description');
+      let keyWords = this.get('layer.keyWords');
 
       let crs = this.get('layer.coordinateReferenceSystem');
       crs = Ember.isNone(crs) ? {} : JSON.parse(crs);
@@ -637,6 +657,8 @@ export default Ember.Component.extend(
       this.set('_layer', {
         type: type,
         name: name,
+        description: description,
+        keyWords: keyWords,
         coordinateReferenceSystem: crs,
         settings: settings,
       });

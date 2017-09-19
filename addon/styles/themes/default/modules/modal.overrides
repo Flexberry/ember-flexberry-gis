@@ -1,0 +1,390 @@
+/*******************************
+         Theme Overrides
+*******************************/
+
+.ui.modal {
+  .ui.icon.button {
+      box-shadow: none;
+      &.active,
+      &:hover {
+          background: @bluesky;
+      }
+  }
+  .ui.table {
+      margin-bottom: 0px;
+  }
+}
+
+/*************************************
+            Popup window
+**************************************/
+
+.leaflet-popup {
+    /* Close popup window */
+    a.leaflet-popup-close-button {
+        color: @lightbluecolor;
+        &:hover {
+            color: @lightbluecolor;
+            opacity: 0.8;
+        }
+    }
+    /* Content wrap */
+    &-content-wrapper,
+    &-tip {
+        background: @darkbluecolor;
+        font-size: 13px;
+    }
+    /* Window content */
+    &-content {
+        max-height: 600px;
+        max-width: 800px;
+        margin: 20px 0px;
+        padding: 10px 20px;
+        background-color: @whitecolor;
+    }
+}
+
+/************************
+      Search dialog
+*************************/
+
+.flexberry-search-map-command-dialog {
+    /* Internal block width */
+    &-settings {
+        width: 30% !important;
+    }
+    &-results {
+        width: 70% !important;
+    }
+    /* Block wrapper */
+    .ui.celled.grid {
+        margin: 0px;
+        box-shadow: none;
+        .column {
+            padding: 2rem 1rem;
+        }
+    }
+}
+
+.flexberry-go-to-map-command-dialog {
+    width: 600px;
+    .ui.form {
+        padding: 15px;
+        .goto.point .switch {
+            height: auto;
+            width: 30px;
+            top: 20px;
+            padding: 0;
+            border: none;
+        }
+        .field {
+            padding-bottom: 0.3em;
+        }
+        .goto.point {
+            .field {
+                width: ~"calc(100% - 40px)";
+            }
+        }
+    }
+}
+
+
+.flexberry-export-map-command-dialog {
+    .flexberry-dropdown.dropdown {
+        padding: .8em .2em .4em .5em;
+        .dropdown.icon {
+            &:before {
+                font-size: 13px;
+            }
+        }
+    }
+}
+
+.leaflet-legend-control {
+    max-width: 33%;
+    font-size: 8px;
+    .layer-legend {
+        margin: 0 !important;
+        display: inline-block;
+        .layer-legend-image-wrapper {
+            display: inline-block;
+            width: auto;
+            margin: .5em;
+            text-overflow: ellipsis;
+            word-break: break-all;
+        }
+    }
+}
+
+/**************************************************************************************
+    Styles for print/export tool's dialog (see templates/components/map-commands-dialogs/export.hbs).
+**************************************************************************************/
+
+.ui.modal.flexberry-export-map-command-dialog > .content.flexberry-dialog-content {
+  // Stretch dialog's content to whole available dialog's size.
+  padding: 0;
+
+  // Force color-picker's palette to be visible.
+  overflow: visible;
+
+  &.has.error.message {
+    overflow: auto;
+  }
+
+  > .ui.error.message {
+    margin: 14px;
+  }
+
+  > .ui.form > .ui.grid {
+    // Stretch nested grid to whole available content's size.
+    margin-top: 0;
+ 	  margin-bottom: 0;
+    box-shadow: none;
+
+    // Same as dialog content's max-height in Semantic UI.
+    height: 400px;
+    max-height: 400px;
+
+    .flexberry-export-map-command-dialog-settings-column {
+      padding-right: 0;
+      padding-left: 0;
+
+      .ui.tabular.menu {
+        &.fluid {
+          width: 100% !important;
+
+          .item {
+            // Now there is only four items inside tabular menu (so 100% / 4 = 25%).
+            width: 25%;
+
+            &:last-child {
+              width: calc( 25% + 1px );
+            }
+          }
+        }
+
+       .item {
+          padding-top: 10px;
+          padding-bottom: 10px;
+
+          i.icon {
+            margin: 0 auto;
+            font-size: 1.2em;
+          }
+
+          &.disabled {
+            i.icon.download:before {
+              color: #999;
+            }
+          }
+        }
+      }
+
+      .ui.tab.segment {
+        // Height is 100% minus height of tabular menu items related to their paddings, borders and font size.
+        height: calc( 100% - 24px - 1.2em );
+        border-radius: 0;
+
+        .flexberry-dropdown.ui.selection.dropdown .menu {
+          // About 4 items is enough.
+          // Without max height two scrolls will appear (one in settings column, another in dropdown menu).
+          max-height: 150px;
+        }
+
+        .ui.grid {
+          .row {
+            // Shrink distance between components neighbouring rows.
+            &:not(:last-child) {
+              padding-bottom: 0;
+            }
+
+            .column {
+              // Shrink distance between components located in same rows.
+              &:not(:last-child) {
+                padding-right: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .flexberry-export-map-command-dialog-preview-column,
+    .flexberry-export-map-command-dialog-paging-column  {
+      box-shadow: none;
+    }
+
+    .flexberry-export-map-command-dialog-sheet-of-legend {
+      background: white;
+      border: 1px solid #d4d4d5;
+      width: 100%;
+      height: 100%;
+      padding: 14px;
+      margin: 0 auto;
+      display: block;
+      overflow: hidden;
+    }
+    .flexberry-export-map-command-dialog-sheet-of-paper {
+      .flexberry-export-map-command-dialog-legend-control-map {
+        margin-top: 10px;
+      }
+    }
+
+    // Map legend.
+    .flexberry-export-map-command-dialog-legend-control-map {
+      .layer-legend-image-wrapper {
+        float: left;
+        height: inherit;
+        padding-right: 10px;
+
+        .layer-legend-image {
+          height: inherit;
+        }
+      }
+    }
+  }
+}
+
+// While export is running sheet of paper is outside of export dialog (straight in the document's body),
+// so styles for it is outside of export dialog's styles too.
+.flexberry-export-map-command-dialog-sheet-of-paper {
+  background: white;
+  border: 1px solid #d4d4d5;
+  width: 100%;
+  height: 100%;
+  padding: 14px;
+  margin: 0 auto;
+  display: block;
+  overflow: hidden;
+
+  .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
+    // Distance between map & it's caption (same as padding inside sheet of paper).
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .flexberry-export-map-command-dialog-sheet-of-paper-map {
+    background: #f4f4f4;
+    border: 1px solid #d4d4d5;
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    box-sizing: border-box;
+
+    .flexberry-map {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &.map-only-mode {
+    padding: 0;
+
+    .flexberry-export-map-command-dialog-sheet-of-paper-map-caption {
+      display: none;
+      margin-bottom: 0;
+    }
+
+    .flexberry-export-map-command-dialog-sheet-of-paper-map {
+      border: none;
+      width: 100%;
+      height: 100%;
+
+      .flexberry-map {
+        .leaflet-control-container {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+/* Go-to window */
+
+.goto.point {
+  padding-right: 18px;
+  position: relative;
+}
+
+.goto.point .switch {
+  position: absolute;
+  top: 22px;
+  right: 0px;
+  height: 112px;
+  line-height: 112px;
+  padding: 0px;
+  margin: 0px;
+}
+
+/* Search result */
+.flexberry-search-map-command-dialog-results {
+  overflow: auto;
+}
+
+/**************************************************************************************
+    Common styles for layers-dialogs (see templates/components/layers-dialogs).
+**************************************************************************************/
+
+.ui.modal.flexberry-add-layer-dialog, .ui.modal.flexberry-edit-layer-dialog {
+  .flexberry-dialog-content.content {
+    min-height: 400px;
+  }
+}
+
+.ui.modal.flexberry-add-layer-dialog, .ui.modal.flexberry-edit-layer-dialog {
+  &> .flexberry-dialog-content.content {
+    // Same as dialog content's max-height in Semantic UI.
+    height: 400px;
+    overflow: hidden !important;
+
+    form {
+      height: 100%;
+
+      .ui.tabular.menu {
+        &.fluid {
+          width: 100% !important;
+
+          .item {
+            // Now there is only seven items inside tabular menu (so 100% / 7 = 14.28...%).
+            width: 14.25%;
+            min-height: 40px;
+            display: flex;
+            justify-content: center;
+
+            &:last-child {
+              width: calc(14.65%);
+            }
+          }
+        }
+      }
+
+      .ui.tab.segment {
+        // Height is 100% minus height of tabular menu items.
+        height: ~"calc(100% - 60px)";
+        overflow: auto;
+
+        .flexberry-dropdown.ui.selection.dropdown .menu {
+          // About 3 items is enough.
+          // Without max height two scrolls will appear (one in settings column, another in dropdown menu).
+          max-height: 115px;
+        }
+
+        .flexberry-jsonarea {
+          margin-top: 0px;
+          margin-bottom: 0px;
+        }
+      }
+    }
+  }
+
+  .ui.form {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      .ui.bottom.attached.tab.segment {
+          border-radius: 0px 0px 5px 5px;
+      }
+  }
+  .flexberry-jsonarea div.row:first-child {
+      text-align: center;
+  }
+}

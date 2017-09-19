@@ -1,0 +1,14 @@
+/*******************************
+             Modal
+*******************************/
+
+@headerColor: @white;
+@headerBackground: @darkbluecolor;
+@headerPadding: 1rem;
+
+@tabularMenuItemColor: @bluecolor;
+@tabularMenuItemActiveColor: @darkbluecolor;
+@tabularMenuItemHoveredCcolor: @bluecolor;
+@tabularMenuItemDisabledIconColor: #999 !important;
+
+@fieldButtonColor: @darkbluecolor;

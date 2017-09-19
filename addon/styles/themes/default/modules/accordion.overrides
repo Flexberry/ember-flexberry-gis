@@ -1,0 +1,48 @@
+.ui.styled.accordion .title,
+.ui.styled.accordion .accordion .title {
+  line-height: 2em;
+  &>* {
+    line-height: 1em;
+  }
+  .flexberry-maplayer-opacity-label {
+    background: @flexberryMaplayerOpacityLabelBackgorund;
+    border-radius: @flexberryMaplayerOpacityLabelBorderRadius;
+    padding: @flexberryMaplayerOpacityLabelPadding;
+    min-width: 2.7em;
+    font-size: .8em;
+    text-align: center;
+    color: @flexberryMaplayerOpacityLabelColor;
+    float: right;
+    &:hover {
+      background-color: @flexberryMaplayerOpacityLabelBackgroundHover;
+    }
+  }
+  .flexberry-maplayer-caption-label {
+    text-overflow: ellipsis;
+    word-break: normal;
+    word-wrap: break-word;
+  }
+}
+
+.ui.accordion,
+.ui.accordion {
+  .content,
+  .accordion .content {
+    .layer-legend {
+      margin-top: 1em;
+    }
+  }
+}
+
+.treeview {
+    .ui.loading.form {
+        margin-top: 100px;
+    }
+}
+
+.flexberry-treenode-header-block {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

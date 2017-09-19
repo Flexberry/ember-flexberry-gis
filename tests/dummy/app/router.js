@@ -20,10 +20,7 @@ Router.map(function() {
   this.route('gis-search-form', { path: 'search' });
 
   // Components examples routes (sorted by component's names).
-  this.route('components-examples/flexberry-button/settings-example');
-  this.route('components-examples/flexberry-ddau-checkbox/settings-example');
   this.route('components-examples/flexberry-maplayers/settings-example');
-  this.route('components-examples/flexberry-tree/settings-example');
 });
 
 export default Router;

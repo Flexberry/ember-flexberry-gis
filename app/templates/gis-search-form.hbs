@@ -1,15 +1,15 @@
 {{ui-message
   type="error"
-  closeable=false
+  closeable=true
   visible=showFormErrorMessage
   caption=error.name
   message=error.message
 }}
 <div class="ui attached message">
   <div class="header">
-    {{t "gis-search-form.header"}}
+    {{t "forms.gis-search-form.header"}}
   </div>
-  <p>{{t "gis-search-form.subheader"}}</p>
+  <p>{{t "forms.gis-search-form.subheader"}}</p>
 </div>
 <div class="ui form attached fluid segment">
   <div class="ui grid">
@@ -17,14 +17,14 @@
       <div class="eight wide column">
         <div class="ui container segment">
           <div class="ui top attached label">
-            {{t "gis-search-form.object"}}
+            {{t "forms.gis-search-form.object"}}
           </div>
           <div class="field">
-            <label>{{t "gis-search-form.keywords"}}</label>
+            <label>{{t "forms.gis-search-form.keywords"}}</label>
             {{flexberry-textbox value=searchConditions.keyWords}}
           </div>
           <div class="field">
-            <label>{{t "gis-search-form.scale"}}</label>
+            <label>{{t "forms.gis-search-form.scale"}}</label>
             {{flexberry-textbox value=searchConditions.scaleFrom}}
           </div>
         </div>
@@ -32,22 +32,22 @@
       <div class="eight wide column">
         <div class="ui container segment">
           <div class="ui top attached label">
-            {{t "gis-search-form.position"}}
+            {{t "forms.gis-search-form.position"}}
           </div>
           <div class="field">
-            <label>{{t "gis-search-form.min-long"}}</label>
+            <label>{{t "forms.gis-search-form.min-long"}}</label>
             {{flexberry-textbox value=searchConditions.minLng}}
           </div>
           <div class="field">
-            <label>{{t "gis-search-form.min-lat"}}</label>
+            <label>{{t "forms.gis-search-form.min-lat"}}</label>
             {{flexberry-textbox value=searchConditions.minLat}}
           </div>
           <div class="field">
-            <label>{{t "gis-search-form.max-long"}}</label>
+            <label>{{t "forms.gis-search-form.max-long"}}</label>
             {{flexberry-textbox value=searchConditions.maxLng}}
           </div>
           <div class="field">
-            <label>{{t "gis-search-form.max-lat"}}</label>
+            <label>{{t "forms.gis-search-form.max-lat"}}</label>
             {{flexberry-textbox value=searchConditions.maxLat}}
           </div>
         </div>
@@ -58,13 +58,13 @@
       <div class="two wide column">
         <button class="ui labeled icon blue button" {{action "getSearchResults" on="click"}}>
           <i class="search icon"></i>
-          {{t "gis-search-form.search"}}
+          {{t "forms.gis-search-form.search"}}
         </button>
       </div>
       <div class="seven wide column"></div>
     </div>
     <div class="row">
-      <div class="ui top attached label">{{t "gis-search-form.results"}}</div>
+      <div class="ui top attached label">{{t "forms.gis-search-form.results"}}</div>
       <div class="sixteen wide column">
         <div class="ui {{if isLoading "active" "disabled"}} inverted dimmer">
           <div class="ui loader"></div>

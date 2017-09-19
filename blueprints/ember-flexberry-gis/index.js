@@ -36,14 +36,7 @@ module.exports = {
       // Leaflet.Editable.
       {
         name: 'leaflet.editable',
-        target: 'master'
-      },
-
-      // Leaflet history.
-      {
-        name: 'leaflet-history',
-        source: 'https://github.com/Flexberry/leaflet-history.git',
-        target: 'leaflet-1.2.0'
+        target: '1.1.0'
       },
 
       // Leaflet.Editable.Measures.
@@ -62,6 +55,13 @@ module.exports = {
         target: '0.2.1-beta.1'
       },
 
+      // Leaflet history.
+      {
+        name: 'leaflet-history',
+        source: 'https://github.com/Flexberry/leaflet-history.git',
+        target: 'leaflet-1.2.0'
+      },
+
       // Leaflet-switch-scale-control.
       {
         name: 'leaflet-switch-scale-control',
@@ -75,7 +75,7 @@ module.exports = {
         target: 'leaflet-1.2.0'
       },
 
-      // Leaflet-MiniMap
+      // Leaflet-MiniMap.
       {
         name: 'leaflet-minimap',
         target: '3.4.0'
@@ -85,32 +85,15 @@ module.exports = {
       {
         name: 'osmtogeojson',
         target: '2.2.12'
-      },
-
-      // Bootstrap slider
-      {
-        name: 'seiyria-bootstrap-slider',
-        target: '~6.0.6'
-      },
-      {
-        name: 'js-beautify',
-        target: '1.6.4'
-      },
-
-      // JQuery-plugin implementing color-picker.
-      {
-        name: 'jquery-minicolors',
-        target: '2.2.6'
       }
     ]).then(function () {
       return _this.addAddonsToProject({
         packages: [{
-            name: 'ember-block-slots',
-            target: '1.1.3'
-          },
-          {
-            name: 'ui-ember-slider',
-            target: '0.5.0'
+            name: 'ember-promise-helpers',
+            target: '1.0.2'
+          }, {
+            name: 'ember-prop-types',
+            target: '2.5.6'
           }
         ]
       });
