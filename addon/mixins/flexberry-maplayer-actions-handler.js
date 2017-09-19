@@ -135,6 +135,11 @@ export default Ember.Mixin.create({
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
 
       actionHandler.apply(this, args);
+
+      // Save changes to local storage.
+      let mutablePropertyPath = args[0];
+      let e = args[args.length - 1];
+      this.mutateStorage('visibility', mutablePropertyPath, e.newValue);
     },
 
     /**
@@ -172,6 +177,11 @@ export default Ember.Mixin.create({
       let actionHandler = objectContainingActionHandler.get('actions.onSliderChange');
 
       actionHandler.apply(this, args);
+
+      // Save changes to local storage.
+      let mutablePropertyPath = args[0];
+      let e = args[args.length - 1];
+      this.mutateStorage('opacity', mutablePropertyPath, e.newValue);
     },
 
     /**

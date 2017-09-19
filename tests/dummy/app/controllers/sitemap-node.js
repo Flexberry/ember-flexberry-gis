@@ -9,12 +9,21 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   actions: {
     /**
-      Expands or callapses submenu node.
+      Hide Sidebar by clicking submenu item.
 
-      @method actions.onSubmenuButtonClick
+      @method actions.subMenuEl
     */
-    onSubmenuButtonClick(e) {
-      let $this =  Ember.$(e.currentTarget).parent().find('.subMenu:first');
+    hideSidebar() {
+      Ember.$('.ui.sidebar').sidebar('hide');
+    },
+
+    /**
+      Expand menu items by click.
+
+      @method actions.subMenuEl
+    */
+    subMenuEl(e) {
+      let $this = Ember.$(e.currentTarget).parent().find('.subMenu:first');
       if ($this.hasClass('hidden')) {
         $this.removeClass('hidden');
         Ember.$(e.target).parent().find('.item-minus:first').removeClass('hidden');

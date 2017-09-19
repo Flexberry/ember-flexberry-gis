@@ -3,7 +3,8 @@
 */
 
 import EditMapRoute from 'ember-flexberry-gis/routes/edit-map';
-import EditFormRouteOperationsIndicationMixin from 'ember-flexberry-gis/mixins/edit-form-route-operations-indication';
+import EditFormRouteOperationsIndicationMixin from 'ember-flexberry/mixins/edit-form-route-operations-indication';
+
 /**
   Map edit route.
 

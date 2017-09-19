@@ -65,6 +65,24 @@ export default Ember.Component.extend(
     nameTextboxCaption: t('components.layers-dialogs.edit.name-textbox.caption'),
 
     /**
+      Dialog's 'description' textbox caption.
+
+      @property descriptionTextboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.description-textbox.caption')
+    */
+    descriptionTextboxCaption: t('components.layers-dialogs.edit.description-textbox.caption'),
+
+    /**
+      Dialog's 'keyWords' textbox caption.
+
+      @property keyWordsTextboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.keywords-textbox.caption')
+    */
+    keyWordsTextboxCaption: t('components.layers-dialogs.edit.keywords-textbox.caption'),
+
+    /**
       Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
       is empty to disable component's wrapping <div>.
 
@@ -606,6 +624,8 @@ export default Ember.Component.extend(
     _createInnerLayer() {
       let type = this.get('layer.type');
       let name = this.get('layer.name');
+      let description = this.get('layer.description');
+      let keyWords = this.get('layer.keyWords');
 
       let crs = this.get('layer.coordinateReferenceSystem');
       crs = Ember.isNone(crs) ? {} : JSON.parse(crs);
@@ -637,6 +657,8 @@ export default Ember.Component.extend(
       this.set('_layer', {
         type: type,
         name: name,
+        description: description,
+        keyWords: keyWords,
         coordinateReferenceSystem: crs,
         settings: settings,
       });

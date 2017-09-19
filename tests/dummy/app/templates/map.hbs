@@ -1,96 +1,94 @@
 <h3 class="ui header">{{t "forms.map.caption"}}</h3>
-{{ui-message
-  type="success"
-  closeable=true
-  visible=showFormSuccessMessage
-  caption=formSuccessMessageCaption
-  message=formSuccessMessage
-}}
-{{ui-message
-  type="error"
-  closeable=true
-  visible=showFormErrorMessage
-  caption=formErrorMessageCaption
-  message=formErrorMessage
-}}
-<div class="field">
-  <div class="flexberry-edit-panel">
-    {{#unless readonly}}
-      {{#unless (and hasParentRoute (not saveBeforeRouteLeave))}}
-        <button type="submit" class="ui button save-button" {{action "save"}}>
-          {{t "forms.edit-form.save-button-text"}}
-        </button>
+<form class="ui form flexberry-vertical-form" role="form">
+  {{ui-message
+    type="success"
+    closeable=true
+    visible=showFormSuccessMessage
+    caption=formSuccessMessageCaption
+    message=formSuccessMessage
+    onShow=(action "onSuccessMessageShow")
+    onHide=(action "onSuccessMessageHide")
+  }}
+  {{ui-message
+    type="error"
+    closeable=true
+    visible=showFormErrorMessage
+    caption=formErrorMessageCaption
+    message=formErrorMessage
+    onShow=(action "onErrorMessageShow")
+    onHide=(action "onErrorMessageHide")
+  }}
+  <div class="field">
+    <div class="flexberry-edit-panel">
+      {{#unless readonly}}
+        {{#unless (and hasParentRoute (not saveBeforeRouteLeave))}}
+          <button type="submit" class="ui button save-button" {{action "save"}}>{{t "forms.edit-form.save-button-text"}}</button>
+        {{/unless}}
+        {{#unless (and hasParentRoute (not saveBeforeRouteLeave))}}
+          <button type="submit" class="ui button save-close-button" {{action "saveAndClose"}}>{{t "forms.edit-form.saveAndClose-button-text"}}</button>
+        {{/unless}}
+        {{#unless (and model.isNew (or (not hasParentRoute) (and hasParentRoute saveBeforeRouteLeave)))}}
+          <button type="submit" class="ui button save-del-button" {{action "delete"}}>{{t "forms.edit-form.delete-button-text"}}</button>
+        {{/unless}}
       {{/unless}}
-      {{#unless (and hasParentRoute (not saveBeforeRouteLeave))}}
-        <button type="submit" class="ui button save-close-button" {{action "saveAndClose"}}>
-          {{t "forms.edit-form.saveAndClose-button-text"}}
-        </button>
-      {{/unless}}
-      {{#unless (and model.isNew (or (not hasParentRoute) (and hasParentRoute saveBeforeRouteLeave)))}}
-        <button type="submit" class="ui button save-del-button" {{action "delete"}}>
-          {{t "forms.edit-form.delete-button-text"}}
-        </button>
-      {{/unless}}
-    {{/unless}}
-    <button type="submit" class="ui button close-button" {{action "close"}}>{{t "forms.edit-form.close-button-text"}}</button>
+      <button type="submit" class="ui button close-button" {{action "close"}}>{{t "forms.edit-form.close-button-text"}}--></button>
+    </div>
   </div>
-</div>
-<div class="ui {{formState}} form flexberry-vertical-form">
   <div class="sidebar-wrapper">
     {{flexberry-tab-bar
-      change=(action 'toggleSidebar')
+      change=(action "toggleSidebar")
       items=sidebarItems
     }}
     <div class="ui very wide right sidebar pushable tabbar">
       <div data-tab="treeview" class="ui tab treeview">
-          <h3>Список слоёв</h3>
-          {{#if _showTree}}
-            {{flexberry-maplayers
-              class="styled"
-              cswConnections=cswConnections
-              leafletMap=leafletMap
-              layers=(get-with-dynamic-actions this "model.hierarchy"
-                hierarchyPropertyName="layers"
-                pathKeyword="layerPath"
-                dynamicActions=(array
-                  (hash
-                    on="add"
-                    actionName="onMapLayerAdd"
-                    actionArguments=(array "{% layerPath %}")
-                  )
-                  (hash
-                    on="edit"
-                    actionName="onMapLayerEdit"
-                    actionArguments=(array "{% layerPath %}")
-                  )
-                  (hash
-                    on="remove"
-                    actionName="onMapLayerRemove"
-                    actionArguments=(array "{% layerPath %}")
-                  )
-                  (hash
-                    on="changeVisibility"
-                    actionName="onMapLayerChangeVisibility"
-                    actionArguments=(array "{% layerPath %}.visibility")
-                  )
-                  (hash
-                    on="changeOpacity"
-                    actionName="onMapLayerChangeOpacity"
-                    actionArguments=(array "{% layerPath %}.settingsAsObject.opacity")
-                  )
-                  (hash
-                    on="fitBounds"
-                    actionName="onMapLayerFitBounds"
-                    actionArguments=(array "{% layerPath %}.bounds")
-                  )
+        <h3>Список слоев</h3>
+        {{#if _showTree}}
+          {{flexberry-maplayers
+            class="styled"
+            cswConnections=cswConnections
+            leafletMap=leafletMap
+            layers=(get-with-dynamic-actions this "model.hierarchy"
+              hierarchyPropertyName="layers"
+              pathKeyword="layerPath"
+              dynamicActions=(array
+                (hash
+                  on="add"
+                  actionName="onMapLayerAdd"
+                  actionArguments=(array "{% layerPath %}")
+                )
+                (hash
+                  on="edit"
+                  actionName="onMapLayerEdit"
+                  actionArguments=(array "{% layerPath %}")
+                )
+                (hash
+                  on="remove"
+                  actionName="onMapLayerRemove"
+                  actionArguments=(array "{% layerPath %}")
+                )
+                (hash
+                  on="changeVisibility"
+                  actionName="onMapLayerChangeVisibility"
+                  actionArguments=(array "{% layerPath %}.visibility")
+                )
+                (hash
+                  on="changeOpacity"
+                  actionName="onMapLayerChangeOpacity"
+                  actionArguments=(array "{% layerPath %}.settingsAsObject.opacity")
+                )
+                (hash
+                  on="fitBounds"
+                  actionName="onMapLayerFitBounds"
+                  actionArguments=(array "{% layerPath %}.bounds")
                 )
               )
+            )
             add=(action "onMapLayerAdd" "model.hierarchy")
-            }}
-          {{else}}
-            <div class="ui form loading" style="height: 100%;">
-            </div>
-          {{/if}}
+          }}
+        {{else}}
+          <div class="ui form loading" style="height: 100%;">
+          </div>
+        {{/if}}
       </div>
       <div data-tab="search" class="ui tab search">
         <h3>Поиск</h3>
@@ -131,8 +129,8 @@
         }}
       </div>
     </div>
-   </div>
-   <div class="row">
+  </div>
+  <div class="row">
     <div class="sixteen wide column">
       {{#flexberry-maptoolbar
         leafletMap=leafletMap
@@ -174,7 +172,7 @@
         }}
       {{/flexberry-maptoolbar}}
     </div>
-   </div>
+  </div>
   <div class="mappanel">
     <div class="pusher">
       {{#flexberry-map
@@ -215,4 +213,4 @@
       {{/flexberry-map}}
     </div>
   </div>
-</div>
+</form>

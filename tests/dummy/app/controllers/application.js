@@ -1,3 +1,7 @@
+/**
+  @module ember-flexberry-gis-dummy
+*/
+
 import Ember from 'ember';
 import config from '../config/environment';
 
@@ -10,6 +14,14 @@ const version = config.APP.version;
   @extends <a href="http://emberjs.com/api/classes/Ember.Controller.html">Ember.Controller</a>
 */
 export default Ember.Controller.extend({
+  /**
+    Service that triggers objectlistview events.
+
+    @property objectlistviewEventsService
+    @type Service
+  */
+  objectlistviewEventsService: Ember.inject.service('objectlistview-events'),
+
   actions: {
     /**
       Toggles application sitemap's side bar.
@@ -17,31 +29,82 @@ export default Ember.Controller.extend({
       @method actions.toggleSidebar
     */
     toggleSidebar() {
-      let sidebar = Ember.$('.ui.left.sidebar');
+      let sidebar = Ember.$('.ui.sidebar.main.menu');
+      let objectlistviewEventsService = this.get('objectlistviewEventsService');
       sidebar.sidebar({
         closable: false,
         dimPage: false,
-        onHide: function () {
+        onHide: function() {
           Ember.$('.sidebar.icon.text-menu-show').removeClass('hidden');
           Ember.$('.sidebar.icon.text-menu-hide').addClass('hidden');
+        },
+        onHidden: function() {
+          objectlistviewEventsService.updateWidthTrigger();
+        },
+        onShow: function() {
+          objectlistviewEventsService.updateWidthTrigger();
         }
       }).sidebar('toggle');
 
       if (Ember.$('.inverted.vertical.main.menu').hasClass('visible')) {
         Ember.$('.sidebar.icon.text-menu-show').removeClass('hidden');
         Ember.$('.sidebar.icon.text-menu-hide').addClass('hidden');
+        Ember.$('.bgw-opacity').addClass('hidden');
       } else {
         Ember.$('.sidebar.icon.text-menu-show').addClass('hidden');
         Ember.$('.sidebar.icon.text-menu-hide').removeClass('hidden');
+        Ember.$('.bgw-opacity').removeClass('hidden');
       }
 
       if (Ember.$('.inverted.vertical.main.menu').hasClass('visible')) {
-        Ember.$('.full.height').css({ 'transition': 'width 0.45s ease-in-out 0s', 'width': '100%' });
+        Ember.$('.full.height').css({ transition: 'width 0.45s ease-in-out 0s', width: '100%' });
       } else {
-        Ember.$('.full.height').css({ 'transition': 'width 0.3s ease-in-out 0s', 'width': 'calc(100% - ' + sidebar.width() + 'px)' });
+        Ember.$('.full.height').css({ transition: 'width 0.3s ease-in-out 0s', width: 'calc(100% - ' + sidebar.width() + 'px)' });
       }
     },
+
+    /**
+      Toggles application sitemap's side bar in mobile view.
+
+      @method actions.toggleSidebarMobile
+    */
+    toggleSidebarMobile() {
+      let sidebar = Ember.$('.ui.sidebar.main.menu');
+      let objectlistviewEventsService = this.get('objectlistviewEventsService');
+      sidebar.sidebar({
+        onHide: function() {
+          Ember.$('.sidebar.icon.text-menu-show').removeClass('hidden');
+          Ember.$('.sidebar.icon.text-menu-hide').addClass('hidden');
+        },
+        onHidden: function() {
+          objectlistviewEventsService.updateWidthTrigger();
+        },
+        onShow: function() {
+          objectlistviewEventsService.updateWidthTrigger();
+        }
+      }).sidebar('toggle');
+
+      if (Ember.$('.inverted.vertical.main.menu').hasClass('visible')) {
+        Ember.$('.sidebar.icon.text-menu-show').removeClass('hidden');
+        Ember.$('.sidebar.icon.text-menu-hide').addClass('hidden');
+        Ember.$('.bgw-opacity').addClass('hidden');
+      } else {
+        Ember.$('.sidebar.icon.text-menu-show').addClass('hidden');
+        Ember.$('.sidebar.icon.text-menu-hide').removeClass('hidden');
+        Ember.$('.bgw-opacity').removeClass('hidden');
+      }
+    }
   },
+
+  /**
+    Flag: indicates that form to which controller is related designed for acceptance tests &
+    all additional markup in application.hbs mustn't be rendered.
+
+    @property isInAcceptanceTestMode
+    @type Boolean
+    @default false
+  */
+  isInAcceptanceTestMode: false,
 
   /**
     Currernt addon version.
@@ -57,11 +120,11 @@ export default Ember.Controller.extend({
     @property addonVersionHref
     @type String
   */
-  addonVersionHref: Ember.computed('addonVersion', function () {
+  addonVersionHref: Ember.computed('addonVersion', function() {
     let addonVersion = this.get('addonVersion');
     let commitSha = addonVersion.split('+')[1];
 
-    return 'https://github.com/Flexberry/ember-flexberry-gis/commit/' + commitSha;
+    return 'https://github.com/Flexberry/ember-flexberry/commit/' + commitSha;
   }),
 
   /**
@@ -70,7 +133,7 @@ export default Ember.Controller.extend({
     @property browserIsInternetExplorer
     @type Boolean
   */
-  browserIsInternetExplorer: Ember.computed(function () {
+  browserIsInternetExplorer: Ember.computed(function() {
     let userAgent = window.navigator.userAgent;
 
     return userAgent.indexOf('MSIE ') > 0 || userAgent.indexOf('Trident/') > 0 || userAgent.indexOf('Edge/') > 0;
@@ -84,6 +147,16 @@ export default Ember.Controller.extend({
     @default ['ru', 'en']
   */
   locales: ['ru', 'en'],
+
+  /**
+    Handles changes in userSettingsService.isUserSettingsServiceEnabled.
+
+    @method _userSettingsServiceChanged
+    @private
+  */
+  _userSettingsServiceChanged: Ember.observer('userSettingsService.isUserSettingsServiceEnabled', function() {
+    this.get('target.router').refresh();
+  }),
 
   /**
     Initializes controller.
