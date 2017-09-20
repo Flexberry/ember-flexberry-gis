@@ -18,6 +18,12 @@ export default {
   'scale-textbox': {
     'caption': 'Масштаб'
   },
+  'description-textbox': {
+    'caption': 'Описание слоя'
+  },
+  'keywords-textbox': {
+    'caption': 'Ключевые слова'
+  },
   'error-message': {
     'caption': 'Ошибка'
   },

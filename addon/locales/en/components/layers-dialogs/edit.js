@@ -18,6 +18,12 @@ export default {
   'scale-textbox': {
     'caption': 'Scale'
   },
+  'description-textbox': {
+    'caption': 'Layer description'
+  },
+  'keywords-textbox': {
+    'caption': 'Layer keywords'
+  },
   'error-message': {
     'caption': 'Error'
   },

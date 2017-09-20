@@ -1,0 +1,8 @@
+@dropdownItemBackground: @white;
+@dropdownSelectedItemBackground: @white;
+@dropdownActiveItemBackground: @white;
+
+
+/*******************************
+      Gis Theme Overrides
+*******************************/

@@ -83,6 +83,24 @@
         inputTitle=(t "gis-search-form.scale-dropdown-input-title")
       }}
     </div>
+    <div class="field">
+      <label>
+        {{descriptionTextboxCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_layer.description
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{keyWordsTextboxCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_layer.keyWords
+      }}
+    </div>
   </div>
   {{#if _crsSettingsAreAvailableForType}}
     <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "crs") "active"}}" data-tab="crs">

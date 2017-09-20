@@ -1,0 +1,39 @@
+/*******************************
+            Container
+*******************************/
+
+
+@inputColor: @darkbluecolor;
+@borderRadius: 5px;
+@borderBottom: 0px;
+
+/*******************************
+      Gis Theme Overrides
+*******************************/
+/*-------------------------------------
+          Flexberry Map
+-------------------------------------*/
+@flexberryGisMapMaxWidth: 100%;
+@flexberryMapOnlyContainerHeight: 100vh;
+
+@flexberryMapWidth: 100%;
+@flexberryMapHeight: ~"calc(100vh - 225px)";
+@flexberryMapBackgroundColor: @whitecolor;
+
+@flexberryMapLoaderColor: #ffffff !important;
+
+@flexberryMapIdentifyPopupBackground: #aecff7;
+@flexberryMapIdentifyPopupBorder: 1px solid gray;
+@flexberryMapIdentifyPopupBorderRadius: 2px;
+
+/* leaflet-bar */
+@leafletBarButtonHeight: 36px;
+@leafletBarButtonWidth: 36px;
+@leafletBarButtonColor: @bluesky;
+@leafletBarButtonBackground: @whitecolor;
+@leafletBarButtonBoxShadow: @darkBoxShadow;
+@leafletBarButtonFontSize: 28px;
+
+@leafletBarButtonHoveredBoxShadow: @darkBoxShadow;
+@leafletBarButtonDisabledHoveredColor: @lightgraycolor;
+@leafletBarButtonDisabledHoveredBackground: @whitecolor;

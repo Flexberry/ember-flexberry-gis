@@ -25,14 +25,14 @@ export default Ember.Route.extend({
     this._super(controller, model);
 
     controller.set('tabSettings', [{
-      title: 'gis-search-form.layer-metadata.title',
+      title: 'forms.gis-search-form.layer-metadata.title',
       modelName: 'new-platform-flexberry-g-i-s-layer-metadata',
       projectionName: 'LayerMetadataL',
       top: 5,
       fieldName: 'layerMetadata',
       tab: 'layer-metadata'
     }, {
-      title: 'gis-search-form.maps.title',
+      title: 'forms.gis-search-form.maps.title',
       modelName: 'new-platform-flexberry-g-i-s-map',
       projectionName: 'MapL',
       top: 5,

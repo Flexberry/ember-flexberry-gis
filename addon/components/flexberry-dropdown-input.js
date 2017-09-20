@@ -69,11 +69,6 @@ export default Ember.Component.extend({
       }
 
       return this.onKeyDown.call(this, e);
-    },
-
-    didInsertElement() {
-      this._super(...arguments);
-      this.$('.flexberry-dropdown').dropdown('setting', 'action', 'select');
     }
   }
 });

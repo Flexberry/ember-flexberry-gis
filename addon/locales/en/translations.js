@@ -8,12 +8,17 @@ import NewPlatformFlexberryGISMapModel from './models/new-platform-flexberry-g-i
 import NewPlatformFlexberryGISParameterMetadataModel from './models/new-platform-flexberry-g-i-s-parameter-metadata';
 
 import FeatureResultItemComponent from './components/feature-result-item';
+import MapDialogsComponents from './components/map-dialogs';
 import LayersDialogsComponents from './components/layers-dialogs';
 import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
 import FlexberryTableComponents from './components/flexberry-table';
+
+import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
+import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
+import GISSearchForm from './forms/gis-search-form';
 
 export default {
   'models': {
@@ -27,7 +32,15 @@ export default {
     'new-platform-flexberry-g-i-s-parameter-metadata': NewPlatformFlexberryGISParameterMetadataModel
   },
 
+  'forms': {
+    'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
+    'new-platform-flexberry-g-i-s-layer-metadata-e': NewPlatformFlexberryGISLayerMetadataEForm,
+    'gis-search-form': GISSearchForm
+  },
+
   'components': {
+    'flexberry-table': FlexberryTableComponents,
+
     'feature-result-item': FeatureResultItemComponent,
 
     'spatial-bookmarks': {
@@ -61,6 +74,8 @@ export default {
         'caption': 'Error while parsing entered JSON-string'
       }
     },
+
+    'map-dialogs': MapDialogsComponents,
 
     'layers-dialogs': LayersDialogsComponents,
 
@@ -187,43 +202,5 @@ export default {
       'x-caption': 'X',
       'y-caption': 'Y'
     }
-  },
-
-  'gis-search-form': {
-    'header': 'Search',
-    'subheader': 'through layer metadata and maps',
-    'keywords': 'Key words',
-    'scale': 'Scale',
-    'scale-prefix': '1:',
-    'scale-no-conditions': 'No conditions specified',
-    'scale-dropdown-input-title': 'Specify your scale and press Enter',
-    'scale-dropdown-input-placeholder': 'Other...',
-    'object': 'Object',
-    'position': 'Position',
-    'min-long': 'Min longitude',
-    'min-lat': 'Min latitude',
-    'max-long': 'Max longitude',
-    'max-lat': 'Max latitude',
-    'search': 'Search',
-    'results': 'Results',
-    'layer-metadata': {
-      'title': 'Layer metadata',
-      'header': {
-        'name': 'Name',
-        'type': 'Type'
-      }
-    },
-    'maps': {
-      'title': 'Maps',
-      'header': {
-        'name': 'Name',
-        'lat': 'Latitude',
-        'lng': 'Longitude',
-        'zoom': 'Scale',
-        'public': 'Public'
-      }
-    }
-  },
-
-  'flexberry-table': FlexberryTableComponents
+  }
 };

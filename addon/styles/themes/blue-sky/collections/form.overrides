@@ -1,0 +1,31 @@
+.ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-export-map-command-dialog,
+.ui.modal.flexberry-search-map-command-dialog,
+.ui.modal.flexberry-go-to-map-command-dialog {
+  input, input:focus {
+    color: @modalInputColor;
+    border: @modalInputBorder;
+    border-radius: @modalInputBorderRadius;
+    box-shadow: @modalInputBoxShadow;
+  }
+  label {
+    color: @modalLabelColor;
+  }
+  .flexberry-export-map-command-dialog-paging-column {
+    label {
+      &.flexberry-button {
+        background: @white;
+        border: none;
+        box-shadow: @darkBoxShadow;
+        padding: 0.9em;
+
+        &:hover {
+            background: #f1f7ff;
+        }
+        &.active {
+            background: #f1f7ff;
+        }
+      }
+    }
+  }
+}

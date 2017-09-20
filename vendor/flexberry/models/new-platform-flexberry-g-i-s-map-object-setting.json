@@ -10,21 +10,24 @@
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "listForm",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "editForm",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     }
   ],
   "belongsTo": [
@@ -36,7 +39,7 @@
       "inverse": null
     }
   ],
-
+  "hasMany": [],
   "projections": [
     {
       "name": "MapObjectSetting",
@@ -44,21 +47,21 @@
       "attrs": [
         {
           "name": "typeName",
-          "caption": "",
+          "caption": "TypeName",
           "hidden": true,
-          "index": 0
+          "index": 1
         },
         {
           "name": "listForm",
-          "caption": "",
+          "caption": "ListForm",
           "hidden": true,
-          "index": 0
+          "index": 2
         },
         {
           "name": "editForm",
-          "caption": "",
+          "caption": "EditForm",
           "hidden": true,
-          "index": 0
+          "index": 3
         }
       ],
       "belongsTo": [
@@ -69,7 +72,7 @@
           "belongsTo": [],
           "hidden": false,
           "attrs": [],
-          "index": 1,
+          "index": 0,
           "caption": "",
           "name": "defaultMap",
           "relatedTo": "new-platform-flexberry-g-i-s-map",
@@ -151,5 +154,7 @@
       "belongsTo": [],
       "hasMany": []
     }
-  ]
+  ],
+  "stored": true,
+  "offline": true
 }

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-ddau-checkbox-actions-handler';
+import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-checkbox-actions-handler';
 
 export default Ember.Controller.extend(FlexberryDdauCheckboxActionsHandlerMixin, {
   /**

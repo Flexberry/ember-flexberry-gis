@@ -1,0 +1,779 @@
+/*******************************
+         Theme Overrides
+*******************************/
+
+.stackable.grid.container {
+    margin-top: 0px;
+}
+
+
+/*******************************
+          Flexberry Map
+*******************************/
+
+.flexberry-map {
+  font-family: inherit;
+  width: @flexberryMapWidth;
+  height: @flexberryMapHeight;
+  background-color: @flexberryMapBackgroundColor;
+
+  &.crosshair {
+    cursor: crosshair;
+  }
+  &.zoom-in {
+    cursor: zoom-in;
+  }
+  &.zoom-out {
+    cursor: zoom-out;
+  }
+  &.help {
+    cursor: help;
+  }
+  &-loader {
+    z-index: 10001 !important;
+
+    color: @flexberryMapLoaderColor;
+    &-dimmer {
+      z-index: 10000 !important;
+    }
+  }
+  .identify-popup {
+    .ui.accordion .item .title,
+    .ui.list .item {
+      cursor: pointer;
+    }
+    .item.active {
+      background: @flexberryMapIdentifyPopupBackground;
+      border: @flexberryMapIdentifyPopupBorder;
+      border-radius: @flexberryMapIdentifyPopupBorderRadius;
+    }
+    .leaflet-popup-content {
+      margin: 1.5em 1.5em;
+      .column {
+        overflow: auto;
+        max-height: 100%;
+      }
+    }
+    .ui.accordion .content .ui.list {
+      margin-left: 2em !important;
+    }
+  }
+}
+
+.flexberry-gis-map {
+    max-width: @flexberryGisMapMaxWidth;
+}
+
+.map-only-container .flexberry-map {
+   height: @flexberryMapOnlyContainerHeight;
+}
+
+/* Inside map */
+
+.mappanel {
+    height: 100%;
+    min-height: 100%;
+    /* Inserted container */
+    &>div {
+        height: 100%;
+    }
+    /* left control container */
+    .leaflet-bar {
+        border: none;
+        a {
+            font-weight: normal;
+            height: @leafletBarButtonHeight;
+            width: @leafletBarButtonWidth;
+            box-shadow: @leafletBarButtonBoxShadow;
+            color: @leafletBarButtonColor;
+            background: @leafletBarButtonBackground;
+            font-size: @leafletBarButtonFontSize;
+            .icon {
+                padding: 3px;
+                &:before {
+                    font-size: 1em;
+                }
+            }
+            &.active,
+            &:hover {
+                color: @leafletBarButtonColor;
+                background: @lightbluecolor;
+                box-shadow: @leafletBarButtonHoveredBoxShadow;
+            }
+            &.leaflet-disabled {
+                color: @lightgraycolor;
+                &:hover {
+                    color: @leafletBarButtonDisabledHoveredColor;
+                    background: @leafletBarButtonDisabledHoveredBackground;
+                }
+                i.icon:before {
+                    color: @lightgraycolor;
+                    &:hover {
+                        color: @leafletBarButtonDisabledHoveredColor;
+                        background: @leafletBarButtonDisabledHoveredBackground;
+                    }
+                }
+            }
+        }
+    }
+    .leaflet-left {
+        &.leaflet-top {
+            top: 50px;
+        }
+        .leaflet-control-zoom.leaflet-bar {
+            margin-top: 5px;
+            a {
+                padding-top: 3px;
+                &:first-child {
+                    border-radius: 5px 5px 0px 0px;
+                }
+                &:last-child {
+                    border-radius: 0px 0px 5px 5px;
+                }
+            }
+        }
+    }
+    .leaflet-right.leaflet-top {
+        left: 56px;
+        top: 10px;
+        right: auto;
+        .history-control.leaflet-bar {
+            margin: 0;
+            a {
+                border: none;
+                &:first-child {
+                    border-radius: 5px 0px 0px 5px;
+                }
+                &:last-child {
+                    border-radius: 0px 5px 5px 0px;
+                }
+            }
+        }
+    }
+    .leaflet-bottom.leaflet-right {
+        padding-right: 5px;
+        .leaflet-control {
+            margin: 0;
+        }
+        .leaflet-control-container {
+            vertical-align: bottom;
+            text-align: right;
+        }
+    }
+}
+
+
+/*********************************************
+        Containers with controls inside
+*********************************************/
+
+.mappanel,
+.sidebar-wrapper,
+.flexberry-export-map-command-dialog,
+.flexberry-search-map-command-dialog,
+.flexberry-go-to-map-command-dialog {
+    /* Table */
+    .ui.table {
+        color: #6f9be3;
+        /* Column header */
+        thead th {
+            color: @darkbluecolor;
+            background-color: @lightbluecolor;
+        }
+        tbody td {
+            color: @bluecolor;
+        }
+    }
+    /* Controls container */
+    .segment {
+        box-shadow: @lightBoxShadow;
+        border: none;
+        /* Container header */
+        .header {
+            color: @inputColor;
+            font-size: 16px;
+        }
+        .field {
+            .input {
+                .ember-text-field {
+                    background-color: @whitecolor;
+                    border-radius: @borderRadius;
+                    border-bottom: @borderBottom;
+                }
+            }
+        }
+    }
+    .ui.form {
+        .field {
+            &>.input {
+                .ember-text-field {
+                    color: @inputColor;
+                    box-shadow: @darkBoxShadow;
+                    border-radius: @borderRadius;
+                    border-bottom: @borderBottom;
+                }
+            }
+            .flexberry-dropdown {
+                border-radius: @borderRadius;
+                border-bottom: @borderBottom;
+                &:focus {
+                    border-radius: @borderRadius;
+                }
+            }
+        }
+    }
+    .ui.small.fluid.buttons:not(.basic):not(.inverted) {
+        &>.or::before {
+            background: @lightgraycolor;
+            color: @bluecolor;
+            box-shadow: @lightBoxShadow;
+        }
+        &>.button.flexberry-button {
+            background: @whitecolor;
+            color: @darkbluecolor;
+            box-shadow: @darkBoxShadow;
+            &.active {
+                background: @lightbluecolor !important;
+            }
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+}
+
+/*********************************************
+          Flexberry Map tools
+*********************************************/
+
+.flexberry-map-tool-submenu {
+  z-index: 1000000 !important;
+}
+
+.flexberry-maptoolbar.ui.menu {
+  flex-wrap: wrap;
+}
+.ui.menu.flexberry-maptoolbar {
+    margin: 10px 10px 0px 10px;
+    background-color: transparent !important; // боримся с технологическими стилями
+    overflow: visible;
+    z-index: 999;
+    border: 0px !important; // боримся с технологическими стилями
+    position: absolute;
+    display: inline-block;
+    width: 0px;
+    /* элементы меню */
+    a.item {
+        color: @darkbluecolor;
+        font-size: 0px;
+        background: @whitecolor;
+    }
+    /* элементы меню */
+    .item {
+        border-radius: 5px;
+        padding: 4px 8px;
+        font-weight: normal;
+        height: 36px;
+        box-shadow: @darkBoxShadow;
+        margin-bottom: 10px;
+        width: 36px;
+        font-size: 12px;
+    }
+    /* элементы меню при наведении */
+    .item:hover,
+    .link.item:hover,
+    a.item:hover,
+    .active.item:hover,
+    .vertical .active.item:hover,
+    .ui.icon.button:hover {
+        background-color: @lightbluecolor;
+        color: @bluecolor;
+    }
+    /* выбранный элемент меню */
+    .active.item,
+    .vertical .active.item {
+        background-color: @lightbluecolor;
+        color: @darkbluecolor;
+        box-shadow: @darkBoxShadow;
+    }
+    /* фон меню */
+    .item:before {
+        background: none;
+    }
+    /* первый блок */
+    .flexberry-zoom-in-map-tool,
+    .flexberry-zoom-out-map-tool,
+    .flexberry-identify-map-tool,
+    .flexberry-full-extent-map-command {
+        border-right: none;
+        border-left: none;
+        border-radius: 0px;
+        box-shadow: @darkBoxShadow;
+        position: absolute;
+        margin: 0px;
+    }
+    .flexberry-edit-map-command {
+        position: absolute;
+        left: 130px;
+    }
+    /* рука */
+    .flexberry-drag-map-tool {
+        border-right: solid 1px @lightgraycolor;
+        border-radius: 5px 0px 0px 5px;
+        position: absolute;
+        left: 176px;
+    }
+    /* приблизить */
+    .flexberry-zoom-in-map-tool {
+        left: 212px;
+    }
+    /* отдалить */
+    .flexberry-zoom-out-map-tool {
+        left: 248px;
+    }
+    /* переход к точке */
+    .flexberry-identify-map-tool {
+        border-radius: 0px 5px 5px 0px;
+        left: 284px;
+    }
+    .flexberry-full-extent-map-command {
+        border-radius: 5px;
+    }
+    /* поиск по карте */
+    .flexberry-go-to-map-command {
+        margin-top: 130px;
+    }
+    /* раскрывающие списки */
+    .flexberry-search-map-command,
+    .flexberry-measure-map-tool,
+    .flexberry-draw-map-tool,
+    .flexberry-go-to-map-command,
+    .flexberry-export-map-command {
+        i.flexberry-map-tool-submenu-icon.dropdown.icon,
+        i.flexberry-map-command-submenu-icon.dropdown.icon {
+            display: none;
+        }
+        &.active {
+            i.flexberry-map-tool-submenu-icon.dropdown.icon,
+            i.flexberry-map-command-submenu-icon.dropdown.icon {
+                margin-left: 18px;
+                transform: rotate(90deg);
+                display: block;
+                &:before {
+                    font-size: 40px;
+                }
+            }
+        }
+        /* IE10+ фиксы */
+        @media screen and (-ms-high-contrast: active),
+        (-ms-high-contrast: none) {
+            &.active {
+                i.flexberry-map-tool-submenu-icon.dropdown.icon,
+                i.flexberry-map-command-submenu-icon.dropdown.icon {
+                    margin-left: 50px;
+                    margin-top: -20px;
+                }
+            }
+        }
+    }
+    /* показать слои */
+    .flexberry-maplayers-show {
+        display: inline-flex;
+        top: 35px;
+        left: 240px;
+        i.icon.list:before {
+            font-size: 20px;
+        }
+    }
+    /* иконки */
+    i.icon {
+        width: 20px;
+        height: 20px;
+        &:before {
+            font-family: Crimean;
+        }
+        &.dropdown:before {
+            font-family: Icons;
+        }
+    }
+    /* отступ в кнопках с иконками */
+    .ui.icon.button {
+        padding: 5px;
+    }
+    /* укрупненные иконки */
+    .flexberry-map-tool>i.icon:before,
+    .treeview>i.icon:before,
+    .flexberry-map-layers-add-button>i.plus.icon:before,
+    .icon.tpi {
+        font-size: 20px;
+    }
+    /* отображение слоёв */
+    i.icon.table:before {
+        content: "\e819";
+    }
+    /* рука */
+    i.icon.hand.paper:before {
+        content: "\e823";
+    }
+    /* + */
+    i.icon.zoom:before {
+        content: "\e831";
+    }
+    /* - */
+    i.icon.zoom.out:before {
+        content: "\e832";
+    }
+    /* перейти к точке */
+    i.icon.location.arrow:before {
+        content: "\e812";
+    }
+    /* отдалить на полную */
+    i.icon.globe:before {
+        content: "\e830";
+    }
+    /* поиск по адресу */
+    .address.search i.icon.address:before {
+        font-family: Icons;
+        content: "\f02d";
+        font-size: 20px;
+    }
+    /* идентифицировать слои */
+    i.icon.info.circle {
+        margin-left: -4px;
+        margin-right: 4px;
+        &:before {
+            content: "\e827";
+        }
+    }
+    /* все слои, дерево слоёв*/
+    i.icon.square.outline:before,
+    i.icon.list:before {
+        font-family: Crimean;
+        content: "\e825";
+    }
+    /* видимые слои */
+    i.icon.checkmark.box:before {
+        content: "\e829";
+    }
+    /* верхний видимый */
+    i.icon.chevron.up:before {
+        content: "\e828";
+    }
+    /* измерить */
+    i.icon.wizard {
+        margin-right: 2px;
+        &:before {
+            content: "\e82a";
+        }
+    }
+    /* координаты */
+    i.icon.marker:before {
+        content: "\e812";
+    }
+    /* радиус */
+    i.icon.circle:before {
+        content: "\e82b";
+    }
+    /* расстояние */
+    i.icon.empty.star:before {
+        font-family: Icons;
+        content: "\f065"
+    }
+    /* площадь */
+    i.icon.square:before {
+        font-family: Icons;
+        content: "\f248";
+    }
+    /* нарисовать */
+    i.icon.write:before,
+    i.icon.edit:before {
+        content: "\e810";
+    }
+    /* линейка */
+    i.icon.star:before {
+        content: "\e802";
+    }
+    /* экспортировать */
+    i.icon.external {
+        margin-left: -2px;
+        margin-right: 2px;
+        &:before {
+            content: "\e822";
+        }
+    }
+    /* изображение */
+    i.icon.download:before {
+        content: "\e824";
+    }
+    /* напечатать */
+    i.icon.print:before {
+        content: "\e80f";
+    }
+    /* + в сайдбаре */
+    i.icon.plus:before {
+        height: 26px;
+        color: @greencolor;
+        content: "\e833";
+    }
+    /* удаление */
+    i.icon.trash:before {
+        content: "\e814";
+    }
+    /* сохранить */
+    i.icon.save:before {
+        content: "\e80c";
+    }
+    /* поиск */
+    i.icon.search:before {
+        content: "\e803";
+    }
+    /* градсправка */
+    i.icon.tpi:before {
+        content: "\e836";
+    }
+    /* папка слоя */
+    i.icon.folder {
+        margin-right: 0px;
+        /* иконка */
+        &:before {
+            font-size: 18px;
+            font-family: FontAwesome;
+            content: "\f114";
+        }
+    }
+}
+
+/*********************************************
+          Flexberry Identify Panel
+*********************************************/
+
+.sidebar.identify {
+  background: #fff none;
+}
+
+.flexberry-identify-panel {
+  background: #fff none;
+
+  &.celled.grid {
+    margin: 0;
+    & .ui.four.wide.column:last-child {
+      text-align: right;
+      float: right;
+      .button {
+        border-radius: 5px;
+      }
+    }
+  }
+  i.icon {
+    font-family: rgis;
+  }
+  &,
+  &-layers-options,
+  &-tools-options,
+  &>.ui.four.wide.column {
+    box-shadow: none !important;
+    padding: 0px !important;
+  }
+  .flexberry-identify-panel-layers-options {
+    text-align: left;
+    &[class*="eight wide"].column {
+      width: 35%;
+    }
+    i.icon.square.outline:before,
+    i.icon.list:before {
+      font-family: Crimean;
+      content: "\e825";
+    }
+    /* видимые слои */
+    i.icon.checkmark.box:before {
+      font-family: Crimean;
+      content: "\e829";
+    }
+    /* верхний видимый */
+    i.icon.chevron.up:before {
+      content: "\e828";
+    }
+  }
+  .flexberry-identify-panel-tools-options {
+    text-align: left;
+    i.icon.square.outline:before {
+      font-family: Icons;
+      content: "\f248";
+    }
+    /* линейка */
+    i.icon.star:before {
+      font-family: Crimean;
+      content: "\e802";
+    }
+  }
+  /* удаление */
+  i.icon.remove:before {
+    content: "\e814";
+  }
+}
+
+
+/*********************************************
+            Layers result list
+*********************************************/
+
+.layer-result-list {
+  padding-top: 15px;
+  text-align: center;
+  .icon.caret {
+    font-size: 20px;
+    margin: 0;
+  }
+  .ui.active.inline.loader {
+    margin-top: 10px;
+    left: 45%;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .feature-result-item {
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    &-title {
+        display: flex;
+        display: -webkit-flex;
+        flex-direction: row;
+    }
+    &-caption {
+        padding-left: 10px;
+        text-overflow: ellipsis;
+        max-width: 80%;
+        min-width: 350px;
+    }
+    .links~.feature-result-item-caption {
+        max-width: 300px;
+        min-width: 300px;
+    }
+    &-toolbar {
+        .ui.dropdown>.dropdown.icon {
+            margin: 0;
+        }
+    }
+  }
+  .feature-result-item-caption {
+    max-width: 68%;
+    word-break: break-word;
+    word-wrap: break-word;
+  }
+  .feature-result-item-select.icon.item {
+    font-size: 1.4em;
+  }
+  .feature-result-item-list.icon.item {
+    font-size: 1.35em;
+  }
+  .feature-result-item-group {
+    text-align: left;
+
+    .ui.dropdown>.dropdown.icon {
+        margin: 0;
+    }
+    &>.icon.item {
+      color: @darkbluecolor;
+      &.hover {
+        color: @graybluecolor;
+      }
+    }
+  }
+  .feature-result-item-toolbar {
+    display: flex;
+    flex-direction: row;
+    &>.icon.item {
+      font-size: 1.15em;
+    }
+  }
+  .ui.accordion .title .dropdown.icon {
+    padding: 0 !important;
+    display: block;
+    float: left;
+    transform-origin: 50% 60%;
+    &:before {
+      font-size: 20px;
+    }
+  }
+  .layer-result-list-toggler {
+    .title {
+      display: flex;
+      .flexberry-toggler-caption {
+        color: @darkbluecolor;
+        margin-left: 1.7em;
+        display: block;
+        float: left;
+        max-width: 80%;
+      }
+    }
+  }
+  .flexberry-toggler {
+    border-radius: 5px;
+    box-shadow: @darkBoxShadow;
+    padding: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
+  .ui.accordion:not(.styled) .title~.content:not(.ui):last-child:not(.flexberry-toggler-content) {
+    padding: 5px;
+  }
+  .flexberry-toggler-content {
+    border-radius: 5px;
+    .item:not(.icon) {
+      padding: 5px;
+      border-radius: 5px;
+      box-shadow: @darkBoxShadow;
+      margin-bottom: 5px;
+      .ui.table {
+        margin-top: 15px;
+        color: @darkbluecolor;
+        tr th {
+          background: @lightbluecolor;
+        }
+        td {
+          word-break: break-word;
+          word-wrap: break-word;
+          min-width: 80px;
+        }
+      }
+    }
+  }
+  .flexberry-progressbar {
+    margin-top: .5em !important;
+    margin-right: .7em;
+    div.bar {
+      background: @bluecolor;
+      &::after {
+        background: @lightbluecolor;
+      }
+      &::before {
+        background: @lightbluecolor;
+      }
+    }
+    .label {
+      color: @darkbluecolor;
+    }
+  }
+  .item {
+    cursor: pointer;
+    &.active {
+      background: #aecff7;
+      border: 1px solid gray;
+      border-radius: 2px;
+    }
+  }
+  &-toggler .title {
+    .flexberry-toggler-caption {
+      margin-left: 1em;
+    }
+  }
+}
+
+.details {
+  .detail.caption {
+    font-size: 14px;
+  }
+  .detail {
+    font-size: 13px;
+  }
+}
