@@ -87,27 +87,27 @@
           class="ui bottom attached tab segment active"
           data-tab={{tabSettings.0.tab}}>
             <div class="ui segment">
-              <div style="display:inline-block;margin-right:10px;">
-                <span>{{t "gis-search-form.layer-metadata.selected-message"}} {{_selectedRowsCount}}
+              <div class="search-result-top-panel-item">
+                <span>{{t "forms.gis-search-form.layer-metadata.selected-message"}} {{_selectedRowsCount}}
                   (<a {{action "_clearSelectedRows"}} style="cursor:pointer;">
-                    {{t "gis-search-form.layer-metadata.reset"}}
+                    {{t "forms.gis-search-form.layer-metadata.reset"}}
                     </a>).
                 </span>
-                <span style="margin-left: 5px;">
-                  {{t "gis-search-form.layer-metadata.open-into-map"}}
+                <span>
+                  {{t "forms.gis-search-form.layer-metadata.open-into-map"}}
                 </span>
               </div>
-              <div style="display:inline-block;">
+              <div class="search-result-top-panel-item">
                 <select class="ui dropdown mapItems" onchange={{action (mut _selectedMap) value="target.value"}}>
-                  <option selected value="">{{t "gis-search-form.layer-metadata.select-a-map"}}</option>
-                  <option value="new">{{t "gis-search-form.layer-metadata.new-map"}}</option>
+                  <option selected value="">{{t "forms.gis-search-form.layer-metadata.select-a-map"}}</option>
+                  <option value="new">{{t "forms.gis-search-form.layer-metadata.new-map"}}</option>
                   {{#each model as |mapItem|}}
                     <option value="{{get mapItem "id"}}" selected={{eq (get mapItem "id") _selectedMap}}>{{get mapItem "name"}}</option>
                   {{/each}}
                 </select>
               </div>
               <button class="ui button positive {{unless _canOpenMapWithMetadata 'disabled'}}" {{action "goToMapWithMetadata"}}>
-                {{t "gis-search-form.layer-metadata.ok"}}
+                {{t "forms.gis-search-form.layer-metadata.ok"}}
               </button>
             </div>
             {{#flexberry-table
@@ -118,7 +118,7 @@
               header=(header-from-projection modelName=tabSettings.0.modelName projectionName=tabSettings.0.projectionName)
             }}
             {{#block-slot "column-header-head-0"}}
-                <th>{{t "gis-search-form.layer-metadata.actions.select"}}</th>
+                <th>{{t "forms.gis-search-form.layer-metadata.actions.select"}}</th>
               {{/block-slot}}
               {{#block-slot "column-cell-head-0" as |row|}}
                 <td class="collapsing">
@@ -141,7 +141,7 @@
               header=(header-from-projection modelName=tabSettings.1.modelName projectionName=tabSettings.1.projectionName)
             }}
               {{#block-slot "column-header-tail-0"}}
-                <th>{{t "gis-search-form.maps.actions.open"}}</th>
+                <th>{{t "forms.gis-search-form.maps.actions.open"}}</th>
               {{/block-slot}}
               {{#block-slot "column-cell-tail-0" as |row|}}
                 <td class="collapsing">

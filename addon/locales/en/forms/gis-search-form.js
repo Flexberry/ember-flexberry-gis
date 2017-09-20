@@ -20,7 +20,7 @@ export default {
     'reset': 'Clear',
     'open-into-map': 'Open into a map:',
     'ok': 'Ok',
-    'new-map': '<New map>',
+    'new-map': '&lt;New map&gt;',
     'select-a-map': 'Select a map...'
   },
   'maps': {

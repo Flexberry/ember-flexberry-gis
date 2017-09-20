@@ -777,3 +777,15 @@
     font-size: 13px;
   }
 }
+
+
+/*********************************************
+            Search form
+*********************************************/
+
+.search-result-top-panel-item {
+    display: inline-block;
+    span {
+        margin: 5px;
+    }
+}
