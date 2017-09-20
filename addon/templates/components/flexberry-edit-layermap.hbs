@@ -75,6 +75,24 @@
         value=_layer.name
       }}
     </div>
+    <div class="field">
+      <label>
+        {{descriptionTextboxCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_layer.description
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{keyWordsTextboxCaption}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=_layer.keyWords
+      }}
+    </div>
   </div>
   {{#if _crsSettingsAreAvailableForType}}
     <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "crs") "active"}}" data-tab="crs">
@@ -271,28 +289,6 @@
   {{#if _legendSettingaAreAvailableForType}}
     <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "legendSettings") "active"}}" data-tab="legendSettings">
       {{flexberry-jsonarea value=_layer.settings.legendSettings}}
-    </div>
-  {{/if}}
-  {{#if _layerSettingsAreAvailableForType}}
-    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "linkSettings") "active"}}" data-tab="linkSettings">
-      {{#each links as |link index|}}
-          {{#unless link.isDeleted}}
-            {{flexberry-links-editor
-              model=link
-              changeVisibility=(action "allowShowCheckboxChange" (concat linksPropertyPath "." index ".allowShow"))
-              remove=(action "removeLayerLink")
-              modelName=parametersModelName
-              modelProjection=parametersModelProjection
-            }}
-          {{/unless}}
-      {{/each}}
-      <div class="field">
-        {{flexberry-button
-          class="fluid"
-          click=(action "addLayerLink")
-          caption=(t "components.layers-dialogs.edit.links-segment.add-button.caption")
-        }}
-      </div>
     </div>
   {{/if}}
 </form>

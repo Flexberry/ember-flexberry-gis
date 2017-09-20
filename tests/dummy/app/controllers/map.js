@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import EditMapController from 'ember-flexberry-gis/controllers/edit-map';
-import EditFormControllerOperationsIndicationMixin from '../mixins/edit-form-controller-operations-indication';
+import EditFormControllerOperationsIndicationMixin from 'ember-flexberry/mixins/edit-form-controller-operations-indication';
 
 /**
   Map controller.
@@ -44,6 +44,12 @@ export default EditMapController.extend(
     */
     parentRoute: 'maps',
 
+    identifyServiceLayer: null,
+
+    _showTree: false,
+
+    _scales: [500, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 150000, 200000],
+
     sidebar: Ember.A([{
         selector: 'treeview',
         captionPath: 'forms.map.treeviewbuttontooltip',
@@ -57,7 +63,7 @@ export default EditMapController.extend(
       {
         selector: 'identify',
         captionPath: 'forms.map.identifybuttontooltip',
-        iconClass: 'info icon',
+        iconClass: 'info circle icon',
         class: 'identify'
       },
       {
@@ -109,16 +115,17 @@ export default EditMapController.extend(
     }),
 
     actions: {
-      toggleSidebar(sidebar, context, e) {
+      toggleSidebar(e) {
         if (!e.changed) {
-          Ember.$(sidebar)
-            .sidebar({
-              context: Ember.$(context),
-              dimPage: false,
-              closable: false
-            })
-            .sidebar('setting', 'transition', 'overlay')
-            .sidebar('toggle');
+          let sidebarOpened = !this.get('sidebarOpened');
+          this.set('sidebarOpened', sidebarOpened);
+
+          // push left map controls to right for sidebar width
+          if (sidebarOpened) {
+            Ember.$('.sidebar-wrapper').addClass('visible');
+          } else {
+            Ember.$('.sidebar-wrapper').removeClass('visible');
+          }
         }
 
         if (e.tabName === 'identify') {
@@ -134,6 +141,14 @@ export default EditMapController.extend(
           leafletMap.fire('flexberry-map:identificationOptionChanged', {
             mapToolName
           });
+        }
+
+        if (e.tabName === 'treeview') {
+          if (!this.get('_showTree')) {
+            Ember.run.later(() => {
+              this.set('_showTree', true);
+            }, 500);
+          }
         }
       },
 

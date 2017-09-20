@@ -1,0 +1,7 @@
+/***************************************
+            Layers result list
+***************************************/
+
+.layer-result-list .flexberry-toggler-content .item:not(.icon) {
+    padding: 5px;
+}

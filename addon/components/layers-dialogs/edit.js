@@ -3,8 +3,8 @@
 */
 
 import Ember from 'ember';
-import RequiredActionsMixin from '../../mixins/required-actions';
-import DynamicActionsMixin from '../../mixins/dynamic-actions';
+import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
+import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 import FlexberryLinksEditorActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-links-editor-actions-handler';
 import FlexberryBaseComponent from 'ember-flexberry/components/flexberry-base-component';

@@ -10,70 +10,120 @@
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
-      "name": "type",
-      "type": "string",
-      "flexberryType": "string",
-      "notNull": true,
-      "defaultValue": ""
-    },
-    {
-      "name": "visibility",
-      "type": "boolean",
-      "flexberryType": "bool",
-      "notNull": false,
-      "defaultValue": "true"
-    },
-    {
-      "name": "settings",
+      "name": "description",
       "type": "string",
       "flexberryType": "stringMax",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
-      "name": "coordinateReferenceSystem",
+      "name": "keyWords",
       "type": "string",
-      "flexberryType": "string",
+      "flexberryType": "stringMax",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "anyText",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": false
     },
     {
       "name": "index",
       "type": "number",
       "flexberryType": "int",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "visibility",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": false,
+      "defaultValue": "true",
+      "stored": true
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "settings",
+      "type": "string",
+      "flexberryType": "stringMax",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "scale",
+      "type": "number",
+      "flexberryType": "int",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "coordinateReferenceSystem",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "boundingBox",
+      "type": "string",
+      "flexberryType": "Geography",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "createTime",
       "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "creator",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "editTime",
       "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "editor",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     }
   ],
   "belongsTo": [
@@ -106,31 +156,31 @@
       "attrs": [
         {
           "name": "name",
-          "caption": "Name",
+          "caption": "Наименование",
           "hidden": false,
           "index": 0
         },
         {
           "name": "creator",
-          "caption": "Creator",
+          "caption": "Создатель",
           "hidden": false,
           "index": 1
         },
         {
           "name": "createTime",
-          "caption": "Create time",
+          "caption": "Время создания",
           "hidden": false,
           "index": 2
         },
         {
           "name": "editor",
-          "caption": "Editor",
+          "caption": "Редактор",
           "hidden": false,
           "index": 3
         },
         {
           "name": "editTime",
-          "caption": "Edit time",
+          "caption": "Время редактирования",
           "hidden": false,
           "index": 4
         }
@@ -144,39 +194,63 @@
       "attrs": [
         {
           "name": "name",
-          "caption": "Name",
+          "caption": "Наименование",
           "hidden": false,
           "index": 0
         },
         {
-          "name": "type",
-          "caption": "Type",
+          "name": "description",
+          "caption": "Описание",
           "hidden": false,
           "index": 1
         },
         {
-          "name": "visibility",
-          "caption": "Visibility",
+          "name": "keyWords",
+          "caption": "Ключевые слова",
           "hidden": false,
           "index": 2
         },
         {
           "name": "index",
-          "caption": "Index",
+          "caption": "Индекс",
           "hidden": false,
           "index": 3
         },
         {
-          "name": "coordinateReferenceSystem",
-          "caption": "CRS",
+          "name": "visibility",
+          "caption": "Видимость",
           "hidden": false,
           "index": 4
         },
         {
-          "name": "settings",
-          "caption": "Settings",
+          "name": "type",
+          "caption": "Тип",
           "hidden": false,
           "index": 5
+        },
+        {
+          "name": "settings",
+          "caption": "Настройки",
+          "hidden": false,
+          "index": 6
+        },
+        {
+          "name": "scale",
+          "caption": "Масштаб",
+          "hidden": false,
+          "index": 7
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Система координат",
+          "hidden": false,
+          "index": 8
+        },
+        {
+          "name": "boundingBox",
+          "caption": "Граница",
+          "hidden": false,
+          "index": 9
         }
       ],
       "belongsTo": [
@@ -185,10 +259,10 @@
           "lookupValueField": null,
           "relationName": "Parent",
           "belongsTo": [],
-          "hidden": false,
+          "hidden": true,
           "attrs": [],
-          "index": 6,
-          "caption": "Parent",
+          "index": 10,
+          "caption": "Родитель",
           "name": "parent",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
           "inverse": null
@@ -198,10 +272,10 @@
           "lookupValueField": null,
           "relationName": "Map",
           "belongsTo": [],
-          "hidden": false,
+          "hidden": true,
           "attrs": [],
-          "index": 7,
-          "caption": "Map",
+          "index": 11,
+          "caption": "Карта",
           "name": "map",
           "relatedTo": "new-platform-flexberry-g-i-s-map",
           "inverse": null
@@ -223,39 +297,63 @@
       "attrs": [
         {
           "name": "name",
-          "caption": "Name",
+          "caption": "Наименование",
           "hidden": false,
           "index": 0
         },
         {
-          "name": "type",
-          "caption": "Type",
+          "name": "description",
+          "caption": "Описание",
           "hidden": false,
           "index": 1
         },
         {
-          "name": "visibility",
-          "caption": "Visibility",
+          "name": "keyWords",
+          "caption": "Ключевые слова",
           "hidden": false,
           "index": 2
         },
         {
           "name": "index",
-          "caption": "Index",
+          "caption": "Индекс",
           "hidden": false,
           "index": 3
         },
         {
-          "name": "coordinateReferenceSystem",
-          "caption": "CRS",
+          "name": "visibility",
+          "caption": "Видимость",
           "hidden": false,
           "index": 4
         },
         {
-          "name": "settings",
-          "caption": "Settings",
+          "name": "type",
+          "caption": "Тип",
           "hidden": false,
           "index": 5
+        },
+        {
+          "name": "settings",
+          "caption": "Настройки",
+          "hidden": false,
+          "index": 6
+        },
+        {
+          "name": "scale",
+          "caption": "Масштаб",
+          "hidden": false,
+          "index": 7
+        },
+        {
+          "name": "coordinateReferenceSystem",
+          "caption": "Система координат",
+          "hidden": false,
+          "index": 8
+        },
+        {
+          "name": "boundingBox",
+          "caption": "Граница",
+          "hidden": false,
+          "index": 9
         }
       ],
       "belongsTo": [
@@ -266,21 +364,21 @@
           "belongsTo": [],
           "hidden": false,
           "attrs": [],
-          "index": 6,
-          "caption": "Parent",
+          "index": 10,
+          "caption": "Родитель",
           "name": "parent",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
           "inverse": null
         },
         {
-          "lookupValue": null,
-          "lookupValueField": null,
+          "lookupValue": "Name",
+          "lookupValueField": "name",
           "relationName": "Map",
           "belongsTo": [],
           "hidden": false,
           "attrs": [],
-          "index": 7,
-          "caption": "Map",
+          "index": 11,
+          "caption": "Карта",
           "name": "map",
           "relatedTo": "new-platform-flexberry-g-i-s-map",
           "inverse": null
@@ -307,34 +405,16 @@
           "index": 0
         },
         {
-          "name": "type",
-          "caption": "Тип",
+          "name": "description",
+          "caption": "Описание",
           "hidden": false,
           "index": 1
         },
         {
-          "name": "visibility",
-          "caption": "Видимость",
+          "name": "type",
+          "caption": "Тип",
           "hidden": false,
           "index": 2
-        },
-        {
-          "name": "index",
-          "caption": "Индекс",
-          "hidden": false,
-          "index": 3
-        },
-        {
-          "name": "coordinateReferenceSystem",
-          "caption": "CRS",
-          "hidden": false,
-          "index": 4
-        },
-        {
-          "name": "settings",
-          "caption": "Настройки",
-          "hidden": false,
-          "index": 5
         }
       ],
       "belongsTo": [
@@ -347,13 +427,13 @@
           "attrs": [
             {
               "name": "name",
-              "caption": "Родительский слой",
+              "caption": "Родитель",
               "hidden": false,
-              "index": 6
+              "index": 3
             }
           ],
-          "index": 7,
-          "caption": "Родительский слой",
+          "index": -1,
+          "caption": "Родитель",
           "name": "parent",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
           "inverse": null
@@ -361,5 +441,7 @@
       ],
       "hasMany": []
     }
-  ]
+  ],
+  "stored": true,
+  "offline": true
 }

@@ -10,63 +10,72 @@
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "layerField",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "expression",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "queryKey",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "linkField",
       "type": "boolean",
       "flexberryType": "bool",
       "notNull": false,
-      "defaultValue": "false"
+      "defaultValue": "false",
+      "stored": true
     },
     {
       "name": "createTime",
-      "type": "string",
+      "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "creator",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "editTime",
-      "type": "string",
+      "type": "date",
       "flexberryType": "AuditNullableDateTime",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "editor",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     }
   ],
   "belongsTo": [
@@ -184,5 +193,7 @@
       ],
       "hasMany": []
     }
-  ]
+  ],
+  "stored": true,
+  "offline": true
 }

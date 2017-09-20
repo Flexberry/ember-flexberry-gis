@@ -1,0 +1,33 @@
+/*******************************
+         Theme Overrides
+*******************************/
+.flexberry-search-panel {
+  .flexberry-search {
+    width: 100%;
+  }
+}
+
+/* Sidebar search */
+div.sidebar.search div.item.expanded {
+    padding-bottom: 14px;
+}
+
+table.result.fields {
+    margin-bottom: 2px;
+}
+
+div.details {
+    border: 1px solid rgba(34, 36, 38, 0.1);
+    margin-bottom: 2px;
+}
+
+.details a.detail.caption {
+    padding: 6px 0px;
+
+    width: 100%;
+    display: block;
+}
+
+div.detail {
+    padding: 2px 0.7em;
+}

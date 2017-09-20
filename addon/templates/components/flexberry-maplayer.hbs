@@ -11,51 +11,56 @@
   beforeCollapse=(action "onBeforeCollapse")
 }}
   {{#block-slot "header"}}
-    {{flexberry-ddau-checkbox
-      class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
-      value=visibility
-      change=(action "onVisibilityCheckboxChange")
-    }}
-    {{flexberry-icon
-      class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
-    }}
-    <label class={{flexberryClassNames.caption}}>
-      {{name}}
-    </label>
-    {{#if (not readonly)}}
-      {{flexberry-button
-        class=(concat flexberryClassNames.removeButton " right floated " flexberryClassNames.preventExpandCollapse)
-        iconClass="trash icon"
-        click=(action "onRemoveButtonClick")
-      }}
-      {{flexberry-button
-        class=(concat flexberryClassNames.editButton " right floated " flexberryClassNames.preventExpandCollapse)
-        iconClass="edit icon"
-        click=(action "onEditButtonClick")
-      }}
-      {{#if _addOperationIsAvailable}}
-        {{flexberry-button
-          class=(concat flexberryClassNames.addButton " right floated " flexberryClassNames.preventExpandCollapse)
-          iconClass="plus icon"
-          click=(action "onAddButtonClick")
+    <div class="flexberry-treenode-header-block">
+      <div class="flexberry-treenode-caption-block">
+        {{flexberry-ddau-checkbox
+          class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+          value=visibility
+          change=(action "onVisibilityCheckboxChange")
         }}
-      {{/if}}
-      {{#if (or _hasLayers (not (eq type "group")))}}
-        {{flexberry-button
-          class=(concat flexberryClassNames.boundsButton " right floated " flexberryClassNames.preventExpandCollapse)
-          iconClass="maximize icon"
-          click=(action "onBoundsButtonClick")
+        {{flexberry-icon
+          class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
         }}
-      {{/if}}
-      <div style="clear: both;"></div>
-    {{/if}}
-
-    {{#if _canChangeOpacity}}
-      <label class="{{flexberryClassNames.opacityLabel}}" title="{{t "components.flexberry-maplayer.opacity" }}">
-        {{_opacityDisplayValue}}
+        <label class={{flexberryClassNames.caption}}>
+          {{name}}
       </label>
-    {{/if}}
+      </div>
+      <div class="flexberry-treenode-buttons-block">
+        {{#if (not readonly)}}
+          {{flexberry-button
+            class=(concat flexberryClassNames.removeButton " right floated " flexberryClassNames.preventExpandCollapse)
+            iconClass="trash icon"
+            click=(action "onRemoveButtonClick")
+          }}
+          {{flexberry-button
+            class=(concat flexberryClassNames.editButton " right floated " flexberryClassNames.preventExpandCollapse)
+            iconClass="edit icon"
+            click=(action "onEditButtonClick")
+          }}
+          {{#if _addOperationIsAvailable}}
+            {{flexberry-button
+              class=(concat flexberryClassNames.addButton " right floated " flexberryClassNames.preventExpandCollapse)
+              iconClass="plus icon"
+              click=(action "onAddButtonClick")
+            }}
+          {{/if}}
+          {{#if (or _hasLayers (not (eq type "group")))}}
+            {{flexberry-button
+              class=(concat flexberryClassNames.boundsButton " right floated " flexberryClassNames.preventExpandCollapse)
+              iconClass="maximize icon"
+              click=(action "onBoundsButtonClick")
+            }}
+          {{/if}}
+        {{/if}}
 
+        {{#if _canChangeOpacity}}
+          <label class="{{flexberryClassNames.opacityLabel}}" title="{{t "components.flexberry-maplayer.opacity" }}">
+            {{_opacityDisplayValue}}
+          </label>
+        {{/if}}
+
+      </div>
+    </div>
     {{!--
       Semantic UI modal dialogs takes long time to be initialized
       so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").

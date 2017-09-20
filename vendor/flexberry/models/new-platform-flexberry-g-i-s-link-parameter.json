@@ -10,35 +10,40 @@
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "layerField",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "expression",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "queryKey",
       "type": "string",
       "flexberryType": "string",
       "notNull": false,
-      "defaultValue": ""
+      "defaultValue": "",
+      "stored": true
     },
     {
       "name": "linkField",
       "type": "boolean",
       "flexberryType": "bool",
       "notNull": false,
-      "defaultValue": "false"
+      "defaultValue": "false",
+      "stored": true
     }
   ],
   "belongsTo": [
@@ -77,7 +82,7 @@
         {
           "name": "queryKey",
           "caption": "Ключ запроса",
-          "hidden": true,
+          "hidden": false,
           "index": 3
         },
         {
@@ -104,5 +109,7 @@
       ],
       "hasMany": []
     }
-  ]
+  ],
+  "stored": true,
+  "offline": true
 }

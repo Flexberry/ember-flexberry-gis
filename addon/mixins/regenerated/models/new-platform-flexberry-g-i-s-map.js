@@ -8,12 +8,11 @@ import { Projection } from 'ember-flexberry-data';
 
 /**
   Mixin containing map model attributes, relations & projections.
-
   @class NewPlatformFlexberyGISMapModelMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
 export let Model = Ember.Mixin.create({
-  name: DS.attr('string'),
+  name: DS.attr('string', { defaultValue: '' }),
   description: DS.attr('string'),
   keyWords: DS.attr('string'),
 
@@ -21,7 +20,6 @@ export let Model = Ember.Mixin.create({
     Non-stored property for full text search combining 'name', 'description', and 'keywords'.
     See computaton logic in related model's 'anyTextCompute' method.
     Also see OpenGIS Catalogue Services Specification (ISO19115/ISO19119).
-
     @property anyText
   */
   anyText: DS.attr('string'),
@@ -30,7 +28,6 @@ export let Model = Ember.Mixin.create({
     Method to set non-stored property.
     Please, use code below in model class (outside of this mixin) otherwise it will be replaced during regeneration of models.
     Please, implement 'anyTextCompute' method in model class (outside of this mixin) if you want to compute value of 'anyText' property.
-
     @method _anyTextCompute
     @private
     @example
@@ -45,12 +42,12 @@ export let Model = Ember.Mixin.create({
     this.set('anyText', result);
   },
 
-  lat: DS.attr('number'),
-  lng: DS.attr('number'),
-  zoom: DS.attr('number'),
-  public: DS.attr('boolean'),
-  scale: DS.attr('number'),
-  coordinateReferenceSystem: DS.attr('string'),
+  lat: DS.attr('number', { defaultValue: 0 }),
+  lng: DS.attr('number', { defaultValue: 0 }),
+  zoom: DS.attr('number', { defaultValue: 0 }),
+  public: DS.attr('boolean', { defaultValue: false }),
+  scale: DS.attr('number', { defaultValue: 0 }),
+  coordinateReferenceSystem: DS.attr('string', { defaultValue: '{"code":"EPSG:3857"}' }),
   boundingBox: DS.attr('string'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),

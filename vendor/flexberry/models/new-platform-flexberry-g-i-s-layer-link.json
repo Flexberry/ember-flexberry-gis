@@ -4,14 +4,18 @@
   "className": "LayerLink",
   "parentModelName": null,
   "parentClassName": null,
-  "attrs": [{
-    "name": "allowShow",
-    "type": "boolean",
-    "flexberryType": "bool",
-    "notNull": true,
-    "defaultValue": false
-  }],
-  "belongsTo": [{
+  "attrs": [
+    {
+      "name": "allowShow",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": false,
+      "defaultValue": "false",
+      "stored": true
+    }
+  ],
+  "belongsTo": [
+    {
       "polymorphic": false,
       "presence": true,
       "name": "mapObjectSetting",
@@ -38,7 +42,8 @@
         "name": "allowShow",
         "caption": "Показывать",
         "hidden": false,
-        "index": 6
+        "index": 6,
+        "stored": true
       }],
       "belongsTo": [{
           "lookupValue": null,
@@ -50,19 +55,22 @@
               "name": "typeName",
               "caption": "Тип объекта",
               "hidden": true,
-              "index": 1
+              "index": 1,
+              "stored": true
             },
             {
               "name": "listForm",
               "caption": "Списковая форма",
               "hidden": true,
-              "index": 2
+              "index": 2,
+              "stored": true
             },
             {
               "name": "editForm",
               "caption": "Форма редактирования",
               "hidden": true,
-              "index": 3
+              "index": 3,
+              "stored": true
             }
           ],
           "index": 0,
@@ -105,7 +113,8 @@
         "name": "allowShow",
         "caption": "Показывать",
         "hidden": false,
-        "index": 2
+        "index": 2,
+        "stored": true
       }],
       "belongsTo": [{
           "lookupValue": null,
@@ -143,7 +152,8 @@
         "name": "allowShow",
         "caption": "Показывать",
         "hidden": false,
-        "index": 3
+        "index": 3,
+        "stored": true
       }],
       "belongsTo": [{
           "lookupValue": null,
@@ -164,7 +174,8 @@
           "relationName": "MapObjectSetting",
           "belongsTo": [],
           "hidden": false,
-          "attrs": [{
+          "attrs": [
+            {
               "name": "listForm",
               "caption": "",
               "hidden": false,
@@ -199,7 +210,8 @@
         "name": "allowShow",
         "caption": "Показывать",
         "hidden": false,
-        "index": 2
+        "index": 2,
+        "stored": true
       }],
       "belongsTo": [{
           "lookupValue": null,
@@ -236,5 +248,7 @@
         "inverse": null
       }]
     }
-  ]
+  ],
+  "stored": true,
+  "offline": true
 }

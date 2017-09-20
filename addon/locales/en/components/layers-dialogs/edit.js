@@ -15,6 +15,12 @@ export default {
   'name-textbox': {
     'caption': 'Layer name'
   },
+  'description-textbox': {
+    'caption': 'Layer description'
+  },
+  'keywords-textbox': {
+    'caption': 'Layer keywords'
+  },
   'error-message': {
     'caption': 'Error'
   },

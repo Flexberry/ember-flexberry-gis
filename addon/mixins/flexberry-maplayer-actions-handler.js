@@ -3,11 +3,9 @@
 */
 
 import Ember from 'ember';
-import FlexberryDdauCheckboxActionsHandlerMixin from './flexberry-ddau-checkbox-actions-handler';
-import FlexberryDdauSliderActionsHandlerMixin from './flexberry-ddau-slider-actions-handler';
-import {
-  getRecord
-} from '../utils/extended-get';
+import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-checkbox-actions-handler';
+import FlexberryDdauSliderActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-slider-actions-handler';
+import { getRecord } from 'ember-flexberry/utils/extended-get';
 
 /**
   Mixin containing handlers for
@@ -138,12 +136,10 @@ export default Ember.Mixin.create({
 
       actionHandler.apply(this, args);
 
-      // User can pass any additional arguments to action handler,
-      // so original action's event object will be the last one in arguments array.
+      // Save changes to local storage.
       let mutablePropertyPath = args[0];
       let e = args[args.length - 1];
-
-      this.mutateStorage(mutablePropertyPath, e.newValue);
+      this.mutateStorage('visibility', mutablePropertyPath, e.newValue);
     },
 
     /**
@@ -182,12 +178,10 @@ export default Ember.Mixin.create({
 
       actionHandler.apply(this, args);
 
-      // User can pass any additional arguments to action handler,
-      // so original action's event object will be the last one in arguments array.
+      // Save changes to local storage.
       let mutablePropertyPath = args[0];
       let e = args[args.length - 1];
-
-      this.mutateStorage(mutablePropertyPath, e.newValue);
+      this.mutateStorage('opacity', mutablePropertyPath, e.newValue);
     },
 
     /**

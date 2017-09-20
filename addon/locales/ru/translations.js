@@ -8,12 +8,18 @@ import NewPlatformFlexberryGISMapModel from './models/new-platform-flexberry-g-i
 import NewPlatformFlexberryGISParameterMetadataModel from './models/new-platform-flexberry-g-i-s-parameter-metadata';
 
 import FeatureResultItemComponent from './components/feature-result-item';
+import MapDialogsComponents from './components/map-dialogs';
 import LayersDialogsComponents from './components/layers-dialogs';
 import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
 import FlexberryLinksEditorComponent from './components/flexberry-links-editor';
+import FlexberryTableComponents from './components/flexberry-table';
+
+import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
+import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
+import GISSearchForm from './forms/gis-search-form';
 
 export default {
   'models': {
@@ -27,7 +33,15 @@ export default {
     'new-platform-flexberry-g-i-s-parameter-metadata': NewPlatformFlexberryGISParameterMetadataModel
   },
 
+  'forms': {
+    'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
+    'new-platform-flexberry-g-i-s-layer-metadata-e': NewPlatformFlexberryGISLayerMetadataEForm,
+    'gis-search-form': GISSearchForm
+  },
+
   'components': {
+    'flexberry-table': FlexberryTableComponents,
+
     'feature-result-item': FeatureResultItemComponent,
     'flexberry-links-editor': FlexberryLinksEditorComponent,
 
@@ -62,6 +76,8 @@ export default {
         'caption': 'Ошибка парсинга введенной JSON-строки'
       }
     },
+
+    'map-dialogs': MapDialogsComponents,
 
     'layers-dialogs': LayersDialogsComponents,
 

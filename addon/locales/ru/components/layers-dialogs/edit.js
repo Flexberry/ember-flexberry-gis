@@ -15,6 +15,12 @@ export default {
   'name-textbox': {
     'caption': 'Имя слоя'
   },
+  'description-textbox': {
+    'caption': 'Описание слоя'
+  },
+  'keywords-textbox': {
+    'caption': 'Ключевые слова'
+  },
   'error-message': {
     'caption': 'Ошибка'
   },

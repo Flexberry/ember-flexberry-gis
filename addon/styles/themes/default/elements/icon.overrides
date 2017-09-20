@@ -1,0 +1,95 @@
+.ui.menu .ui.dropdown .menu > .active.item i.icon:before {
+    color: @bluesky;
+}
+.flexberry-map,
+.flexberry-maplayers,
+.flexberry-tab-bar,
+.tabular.menu {
+    i.icon:before { opacity: 1; }
+}
+
+
+/*********************************************
+            Map layer result list
+*********************************************/
+
+.layer-result-list {
+  .icon:not(.caret) {
+    margin: 0;
+    font-size: 18px;
+    &:before {
+      font-family: Crimean;
+    }
+    &.hand.paper:before {
+      content: '\e823';
+    }
+    &.marker:before {
+      content: "\e812";
+    }
+    &.window:before {
+      font-family: FontAwesome;
+      content: "\f0f6";
+    }
+    &.list:before {
+      font-family: FontAwesome;
+      content: "\f0ce";
+    }
+  }
+
+
+/***********************************
+          Sidebar wrapper
+************************************/
+
+.sidebar-wrapper {
+  i.icon:before {
+    font-family: Crimean;
+    font-size: 20px;
+  }
+  /* Identify layers */
+  i.icon.info.circle {
+    margin-left: -4px;
+    margin-right: 4px;
+    &:before {
+      content: "\e827";
+    }
+  }
+  /* All layers, layers tree */
+  i.icon.square.outline,
+  i.icon.list {
+    &:before {
+      content: "\e825";
+    }
+  }
+  /* Search */
+  i.icon.search:before {
+    content: "\e803";
+    font-weight: bold;
+  }
+  /* Bookmarks */
+  i.icon.bookmark:before {
+    font-family: icons;
+  }
+}
+
+
+/*********************************************
+            Flexberry search panel
+*********************************************/
+
+.flexberry-search-panel .flexberry-search.ui.search {
+  .ui.icon.button {
+    .icon {
+      &:before {
+        font-family: Crimean;
+      }
+      &.remove:before {
+        content: '\e806';
+        font-size: 13px;
+      }
+      &.search:before {
+        content: "\e803";
+      }
+    }
+  }
+}

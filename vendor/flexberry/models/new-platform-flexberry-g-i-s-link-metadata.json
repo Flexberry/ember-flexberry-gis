@@ -177,5 +177,7 @@
         }
       ]
     }
-  ]
+  ],
+  "stored": true,
+  "offline": true
 }

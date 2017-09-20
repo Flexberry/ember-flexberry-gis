@@ -84,19 +84,6 @@ module.exports = {
     // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
 
-    // JS-code beautifier to format strings containing JS-code & represent in in user-friendly view.
-    app.import(app.bowerDirectory + '/js-beautify/js/lib/beautify.js');
-
-    // UI-slider control
-    app.import(app.bowerDirectory + '/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js');
-
-    // JQuery-minicolors plugin required for flexberry-colorpicker component.
-    app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.js');
-    app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.css');
-    app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.png', {
-      destDir: appAssetsDirectory
-    });
-
     // Leaflet Div Control.
     app.import('vendor/leaflet/controls/leaflet.div-control.js');
 
