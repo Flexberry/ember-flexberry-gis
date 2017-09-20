@@ -12,7 +12,7 @@ import { Projection } from 'ember-flexberry-data';
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
 export let Model = Ember.Mixin.create({
-  name: DS.attr('string'),
+  name: DS.attr('string', { defaultValue: '' }),
   description: DS.attr('string'),
   keyWords: DS.attr('string'),
 
@@ -42,12 +42,12 @@ export let Model = Ember.Mixin.create({
     this.set('anyText', result);
   },
 
-  lat: DS.attr('number'),
-  lng: DS.attr('number'),
-  zoom: DS.attr('number'),
-  public: DS.attr('boolean'),
-  scale: DS.attr('number'),
-  coordinateReferenceSystem: DS.attr('string'),
+  lat: DS.attr('number', { defaultValue: 0 }),
+  lng: DS.attr('number', { defaultValue: 0 }),
+  zoom: DS.attr('number', { defaultValue: 0 }),
+  public: DS.attr('boolean', { defaultValue: false }),
+  scale: DS.attr('number', { defaultValue: 0 }),
+  coordinateReferenceSystem: DS.attr('string', { defaultValue: '{"code":"EPSG:3857"}' }),
   boundingBox: DS.attr('string'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
