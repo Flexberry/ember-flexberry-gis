@@ -50,7 +50,7 @@
         padding: 0px 1.5rem !important;
     }
     /* Кнопки с иконками */
-    .ui.icon.button {
+    .ui.icon.button:not(.fluid) {
         font-weight: normal;
         height: 36px;
         width: 36px;
@@ -72,9 +72,7 @@
     }
     .ui.form .field {
         .button.flexberry-button {
-          box-shadow: @darkBoxShadow;
           color: @darkbluecolor;
-          border: none;
             &>i.icon:before {
               color: @darkbluecolor;
             }
@@ -116,6 +114,7 @@
     .ui.attached.tab.segment .flexberry-button {
         background: @white !important;
         border: none !important;
+        box-shadow: @darkBoxShadow;
         &:hover {
             background: #f1f7ff !important;
             color: @darkbluecolor;
@@ -159,7 +158,7 @@
             .ui.two.column.celled.grid {
                 min-height: 400px;
             }
-            .flexberry-button.ui.button.icon {
+            .flexberry-button.ui.button.icon:not(.fluid) {
                 height: 36px;
                 width: 36px;
                 padding: 12px 8px;
