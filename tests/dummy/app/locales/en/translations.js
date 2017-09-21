@@ -85,37 +85,13 @@ Ember.$.extend(true, translations, {
           }
         },
         'components-examples': {
-          'caption': 'Components examples',
+          'caption': 'Примеры компонентов',
           'title': '',
-          'flexberry-button': {
-            'caption': 'flexberry-button',
+          'flexberry-boundingbox': {
+            'caption': 'flexberry-boundingbox',
             'title': '',
             'settings-example': {
-              'caption': 'Settings example',
-              'title': ''
-            }
-          },
-          'flexberry-ddau-checkbox': {
-            'caption': 'flexberry-ddau-checkbox',
-            'title': '',
-            'settings-example': {
-              'caption': 'Settings example',
-              'title': ''
-            }
-          },
-          'flexberry-maplayers': {
-            'caption': 'flexberry-maplayers',
-            'title': '',
-            'settings-example': {
-              'caption': 'Settings example',
-              'title': ''
-            }
-          },
-          'flexberry-tree': {
-            'caption': 'flexberry-tree',
-            'title': '',
-            'settings-example': {
-              'caption': 'Settings example',
+              'caption': 'Пример работы компонента',
               'title': ''
             }
           }
