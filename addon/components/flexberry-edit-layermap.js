@@ -616,7 +616,8 @@ export default Ember.Component.extend(
       },
 
       /**
-        Update relation value at model.
+        Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.updateLookupValue:method"}}'flexberry-links-editor' component's 'updateLookupValue' action{{/crossLink}}.
+
         @method actions.updateLookupValue
         @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
       */
@@ -625,22 +626,30 @@ export default Ember.Component.extend(
       },
 
       /**
-        Update relation value at model.
+        Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.remove:method"}}'flexberry-links-editor' component's 'remove' action{{/crossLink}}.
+
         @method actions.removeLayerLink
-        @param {Object} removeLayerLink Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
+        @param {Object} model Ember Model to be removed.
       */
-      removeLayerLink(link) {
-        this.sendAction('removeLayerLink', link);
+      removeLayerLink(model) {
+        this.sendAction('removeLayerLink', model);
       },
 
       /**
-        Update relation value at model.
+        Add new layer link model to relation.
+
         @method actions.addLayerLink
       */
       addLayerLink() {
         this.sendAction('addLayerLink');
       },
 
+      /**
+        Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
+
+        @method actions.allowShowCheckboxChange
+        @param {Object} e eventObject Event object from {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
+      */
       allowShowCheckboxChange(...args) {
         this.sendAction('allowShowLayerLinkCheckboxChange', ...args);
       }
@@ -928,6 +937,33 @@ export default Ember.Component.extend(
       Provides binding for {{#crossLink "FlexberryEditLayerComponent/sendingActions.onInit:method"}}'flexberry-edit-layer' component's 'getLayerProperties' method{{/crossLink}}.
 
       @method sendingActions.onInit
+    */
+
+    /**
+      Component's action invoking to update relation value at model.
+      @method sendingActions.updateLookupValue
+      @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
+      {{#crossLink "FlexberryLinksEditorComponent/sendingActions.updateLookupValue:method"}}flexberry-links-editor 'updateLookupValue' action{{/crossLink}}.
+    */
+
+    /**
+      Component's action invoking to remove model from store.
+      @method sendingActions.removeLayerLink
+      @param {Object} model Ember Model to be removed.
+      {{#crossLink "FlexberryLinksEditorComponent/sendingActions.remove:method"}}flexberry-links-editor 'remove' action{{/crossLink}}.
+    */
+
+    /**
+      Component's action invoking to add model to store.
+      @method sendingActions.addLayerLink
+    */
+
+    /**
+      Component's action invoking when model's 'allowShow' state changed.
+
+      @method sendingActions.allowShowLayerLinkCheckboxChange
+      @param {Object} e Event object from
+      {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
     */
   });
 

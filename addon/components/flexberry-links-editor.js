@@ -203,12 +203,22 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
 
   /**
     Used to identify groupEdit on the page by component name.
-    @property componentName
+    @property groupEditComponentName
     @type String
     @readonly
   */
-  componentName: Ember.computed('elementId', function () {
+  groupEditComponentName: Ember.computed('elementId', function () {
     return 'parametersGroupedit' + this.get('elementId');
+  }),
+
+  /**
+    Used to identify lookup on the page by component name.
+    @property lookupComponentName
+    @type String
+    @readonly
+  */
+  lookupComponentName: Ember.computed('elementId', function () {
+    return 'mosLookup' + this.get('elementId');
   }),
 
   /**
@@ -301,9 +311,8 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
     },
 
     /**
-      Update relation value at model.
+      Remove model from store.
       @method actions.remove
-      @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
     */
     remove() {
       this.sendAction('remove', this.get('model'));
@@ -319,6 +328,26 @@ let FlexberryLinksEditorComponent = FlexberryBaseComponent.extend(FlexberryLooku
       this.sendAction('changeVisibility', ...args);
     }
   }
+
+  /**
+    Component's action invoking to update relation value at model.
+    @method sendingActions.updateLookupValue
+    @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
+   */
+
+  /**
+    Component's action invoking to remove model from store.
+    @method sendingActions.remove
+    @param {Object} model Ember Model to be removed.
+   */
+
+  /**
+    Component's action invoking when model's 'allowShow' state changed.
+
+    @method sendingActions.changeVisibility
+    @param {Object} e Event object from
+    {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
+  */
 });
 
 // Add component's CSS-class names as component's class static constants

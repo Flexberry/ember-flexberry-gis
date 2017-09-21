@@ -7,6 +7,7 @@
 
                 {{flexberry-lookup
                     readonly=readonly
+                    componentName=lookupComponentName
                     placeholder=lookupPlaceholder
                     value=model.mapObjectSetting
                     projection="MapObjectSettingL"
@@ -47,7 +48,7 @@
 </div>
 <div class="ui grid">
     {{flexberry-groupedit
-        componentName=componentName
+        componentName=groupEditComponentName
         content=model.parameters
         modelName=modelName
         modelProjection=modelProjection

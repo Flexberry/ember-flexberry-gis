@@ -15,6 +15,14 @@ import FlexberryLinksEditorActionsHandlerMixin from 'ember-flexberry-gis/mixins/
   @uses FlexberryLinksEditorActionsHandlerMixin
 */
 export default EditFormController.extend(EditFormControllerOperationsIndicationMixin, FlexberryLinksEditorActionsHandlerMixin, {
+  /**
+    Parent route.
+
+    @property parentRoute
+    @type String
+    @default 'new-platform-flexberry-g-i-s-layer-metadata-l'
+  */
+  parentRoute: 'new-platform-flexberry-g-i-s-layer-metadata-l',
 
   /**
     Layer's links' property path.

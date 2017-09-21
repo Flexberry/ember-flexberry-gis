@@ -3,7 +3,7 @@
 */
 
 import Ember from 'ember';
-import FlexberryDdauCheckboxActionsHandlerMixin from './flexberry-ddau-checkbox-actions-handler';
+import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-checkbox-actions-handler';
 
 /**
   Mixin containing handlers for
@@ -106,5 +106,5 @@ export default Ember.Mixin.create({
 
       actionHandler.apply(this, args);
     }
-  },
+  }
 });
