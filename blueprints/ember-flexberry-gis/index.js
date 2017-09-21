@@ -39,6 +39,13 @@ module.exports = {
         target: '1.1.0'
       },
 
+      // Leaflet areaselect.
+      {
+        name: 'leaflet-areaselect',
+        source: 'https://github.com/heyman/leaflet-areaselect.git#d0910cc4e74b59bbd9eead447d2353c29dfe84b1',
+        target: 'master'
+      },
+
       // Leaflet.Editable.Measures.
       {
         name: 'leaflet-editable-measures',

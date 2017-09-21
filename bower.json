@@ -17,6 +17,7 @@
     "jquery-minicolors": "2.2.6",
     "js-beautify": "1.6.4",
     "leaflet": "1.2.0",
+	"leaflet-areaselect": "https://github.com/heyman/leaflet-areaselect.git#d0910cc4e74b59bbd9eead447d2353c29dfe84b1",
     "proj4leaflet": "1.0.2",
     "leaflet-wfst": "2.0.1-beta.1",
     "leaflet-wms": "1.2.0-beta.1",

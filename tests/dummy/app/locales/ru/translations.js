@@ -144,7 +144,12 @@ Ember.$.extend(true, translations, {
           'json-layers-latest-clicked-layer-caption': 'Настройки последнего кликнутого слоя',
           'json-layers-latest-clicked-layer-placeholder': 'Кликните на любой слой в дереве, чтобы отобразить его настройки'
         }
-      }
+      },
+      'flexberry-boundingbox': {
+        'settings-example': {
+          'caption': 'Тестовая форма flexberry-boundingbox'
+        }
+      },
     },
 
     'maps': {

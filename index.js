@@ -43,6 +43,10 @@ module.exports = {
 
     // Import leaflet plugins
 
+	// leaflet-areaselect
+    app.import(app.bowerDirectory + '/leaflet-areaselect/src/leaflet-areaselect.js');
+    app.import(app.bowerDirectory + '/leaflet-areaselect/src/leaflet-areaselect.css');
+
     // Leaflet.Editable
     app.import(app.bowerDirectory + '/leaflet.editable/src/Leaflet.Editable.js');
 

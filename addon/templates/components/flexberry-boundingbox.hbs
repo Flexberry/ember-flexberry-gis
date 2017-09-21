@@ -1,0 +1,78 @@
+<div class="ui grid">
+  <div class="row">
+    <div class="four wide column">
+      {{flexberry-button
+        class=class
+        iconClass=class
+        readonly=readonly
+        caption= (t "components.flexberry-boundingbox.button-caption")
+        click=(action "onButtonClick")
+      }}
+    </div>
+    <div class="eight wide column">
+        {{t "components.flexberry-boundingbox.max-lat-caption"}}
+        {{flexberry-textbox
+          type="number"
+          value=maxLatValue
+          class=maxLatClass
+          change=(action "latInputChange")
+          keyPress=(action "latInputChange")
+        }}
+    </div>
+    <div class="four wide column"></div>
+  </div>
+
+  <div class="row" style="width: 80%;">
+    <div class="four wide column">
+      {{t "components.flexberry-boundingbox.min-lgt-caption"}}
+      {{flexberry-textbox
+        type="number"
+        value=minLgtValue
+        class=minLgtClass
+        change=(action "lngInputChange")
+        keyPress=(action "lngInputChange")
+      }}
+      </div>
+  <div class="eight wide column">
+      {{#flexberry-map
+        lat=mapModel.lat
+        lng=mapModel.lng
+        zoom=mapModel.zoom
+        zoomControl=zoomControl
+        leafletInit=(action "onMapLeafletInit" "leafletMap")
+        leafletDestroy=(action "onMapLeafletDestroy" "leafletMap")
+      }}
+        {{flexberry-layers
+          leafletMap=leafletMap
+          leafletContainer=leafletMap
+          layers=mapModel.mapLayer
+          areaSelect = areaSelect
+        }}
+      {{/flexberry-map}}
+  </div>
+  <div class="four wide column">
+      {{t "components.flexberry-boundingbox.max-lgt-caption"}}
+        {{flexberry-textbox
+          type="number"
+          value=maxLgtValue
+          class=maxLgtClass
+          change=(action "lngInputChange")
+          keyPress=(action "lngInputChange")
+        }}
+      </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 5%">
+      <div class="four wide column"></div>
+      <div class="eight wide column">
+        {{t "components.flexberry-boundingbox.min-lat-caption"}}
+         {{flexberry-textbox
+           type="number"
+           value=minLatValue
+           class=minLatClass
+           change=(action "latInputChange")
+           keyPress=(action "latInputChange")
+         }}
+      </div>
+    </div>
+</div>

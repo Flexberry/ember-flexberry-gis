@@ -107,7 +107,15 @@ export default {
 
     'map-commands': MapCommandsComponents,
 
-    'flexberry-mapinfo': FlexberryMapInfoComponent
+    'flexberry-mapinfo': FlexberryMapInfoComponent,
+
+    'flexberry-boundingbox': {
+      'min-lat-caption': 'Широта, min: ',
+      'max-lat-caption': 'Широта, max: ',
+      'min-lgt-caption': 'Долгота, min: ',
+      'max-lgt-caption': 'Долгота, max: ',
+      'button-caption': 'Обновить границы'
+    }
   },
 
   'map-tools': {

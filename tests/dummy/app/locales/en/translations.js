@@ -145,6 +145,11 @@ Ember.$.extend(true, translations, {
           'json-layers-latest-clicked-layer-placeholder': 'Click on any layer to display it\'s settings'
         }
       },
+      'flexberry-boundingbox': {
+        'settings-example': {
+          'caption': 'Flexberry-boundingbox testing form'
+        }
+      },
     },
 
     'maps': {

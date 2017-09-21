@@ -107,7 +107,14 @@ export default {
 
     'map-commands': MapCommandsComponents,
 
-    'flexberry-mapinfo': FlexberryMapInfoComponent
+    'flexberry-mapinfo': FlexberryMapInfoComponent,
+    'flexberry-boundingbox': {
+      'min-lat-caption': 'Latitude, min: ',
+      'max-lat-caption': 'Latitude, max: ',
+      'min-lgt-caption': 'Longitude, min: ',
+      'max-lgt-caption': 'Longitude, max: ',
+      'button-caption': 'Update bounds'
+    }
   },
 
   'map-tools': {
