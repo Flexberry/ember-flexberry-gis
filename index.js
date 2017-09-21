@@ -81,6 +81,9 @@ module.exports = {
       destDir: appImagesDirectory
     });
 
+    // Leaflet-Omnivore.
+    app.import(app.bowerDirectory + '/leaflet-omnivore/leaflet-omnivore.min.js');
+
     // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
 

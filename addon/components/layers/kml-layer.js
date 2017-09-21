@@ -3,7 +3,6 @@
 */
 
 import Ember from 'ember';
-import omnivore from 'omnivore';
 import BaseLayer from '../base-layer';
 
 /**
@@ -27,14 +26,13 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
-    //return L.tileLayer(this.get('url'), this.get('options'));
     let kmlUrl = this.get('kmlUrl');
     let kmlString = this.get('kmlString');
     Ember.assert('Either "kmlUrl" or "kmlString" should be defined!', Ember.isPresent(kmlUrl) || Ember.isPresent(kmlString));
 
     if (kmlUrl) {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        let layer = omnivore.kml(kmlUrl)
+        let layer = window.omnivore.kml(kmlUrl)
           .on('ready', (e) => {
             resolve(layer);
           })
@@ -45,7 +43,7 @@ export default BaseLayer.extend({
     }
 
     if (kmlString) {
-      return omnivore.kml.parse(kmlString);
+      return window.omnivore.kml.parse(kmlString);
     }
   },
 
@@ -64,7 +62,7 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    // Tile-layers hasn't any identify logic.
+    // TODO add an identify logic.
   },
 
   /**
@@ -80,6 +78,6 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    // Tile-layers hasn't any search logic.
+    // TODO add a search logic.
   }
 });
