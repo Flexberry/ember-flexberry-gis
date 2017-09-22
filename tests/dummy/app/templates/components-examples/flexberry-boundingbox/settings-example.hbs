@@ -1,6 +1,25 @@
 <h3 class="ui header">{{t "forms.components-examples.flexberry-boundingbox.settings-example.caption"}}</h3>
+<div class ="ui segment">
+<strong>LatLngBounds:</strong>
+  <table width = "40%">
+    <tr>
+      <td>
+        <i>_northEast</i>:<br>
+        lat: {{maxLatFromAction}}<br>
+        lng: {{maxLgtFromAction}}<br>
+        </td>
+
+        <td>
+          <i>_southWest</i>:<br>
+          lat: {{minLatFromAction}}<br>
+          lng: {{minLgtFromAction}}<br>
+        </td>
+      </tr>
+  </table>
+</div>
 <form class="ui form flexberry-vertical-form" role="form">
     {{flexberry-boundingbox
      mapModel=model
+     boundingBoxChange=(action "onBoundingBoxChange")
     }}
 </form>

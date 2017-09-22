@@ -247,12 +247,12 @@ export default Ember.Component.extend(
 
       this._validateInputs();
       if (this.get('minLatValue') < -90 || this.get('minLatValue') > 90) {
-        this.set('minLatClass', 'input error');
+        this.set('minLatClass', 'error');
         return;
       }
 
       if (this.get('maxLatValue') < -90 || this.get('maxLatValue') > 90) {
-        this.set('maxLatClass', 'input error');
+        this.set('maxLatClass', 'error');
         return;
       }
 
@@ -267,12 +267,12 @@ export default Ember.Component.extend(
     lngInputChange(e) {
       this._validateInputs();
       if (this.get('maxLgtValue') < -180 || this.get('maxLgtValue') > 180) {
-        Ember.set(this, 'maxLgtClass', 'input error');
+        Ember.set(this, 'maxLgtClass', 'error');
         return;
       }
 
       if (this.get('minLgtValue') < -180 || this.get('minLgtValue') > 180) {
-        Ember.set(this, 'minLgtClass', 'input error');
+        Ember.set(this, 'minLgtClass', 'error');
         return;
       }
 
