@@ -13,6 +13,14 @@ import BaseLayer from '../base-layer';
  */
 export default BaseLayer.extend({
 
+  /**
+    Reference to a created KML layer.
+  */
+  _kmlLayer: null,
+
+  /**
+    Specific options available on the Layer settings tab.
+  */
   leafletOptions: [
     'kmlUrl',
     'kmlString'
@@ -34,6 +42,7 @@ export default BaseLayer.extend({
       return new Ember.RSVP.Promise((resolve, reject) => {
         let layer = window.omnivore.kml(kmlUrl)
           .on('ready', (e) => {
+            this.set('_kmlLayer', layer);
             resolve(layer);
           })
           .on('error', (e) => {
@@ -43,7 +52,9 @@ export default BaseLayer.extend({
     }
 
     if (kmlString) {
-      return window.omnivore.kml.parse(kmlString);
+      let layer = window.omnivore.kml.parse(kmlString);
+      this.set('_kmlLayer', layer);
+      return layer;
     }
   },
 
@@ -62,7 +73,20 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    // TODO add an identify logic.
+    var bounds = new window.Terraformer.Primitive(e.polygonLayer.toGeoJSON());
+    let kmlLayer = this.get('_kmlLayer');
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let features = Ember.A();
+      kmlLayer.eachLayer(function(layer) {
+        let geoLayer = layer.toGeoJSON();
+        let primitive = new window.Terraformer.Primitive(geoLayer.geometry);
+
+        if (primitive instanceof window.Terraformer.Point ? primitive.within(bounds) : (primitive.intersects(bounds) || primitive.within(bounds))) {
+          features.pushObject(layer.feature);
+        }
+      });
+      resolve(features);
+    });
   },
 
   /**
