@@ -24,11 +24,11 @@
 
   <div class="row" style="width: 80%;">
     <div class="four wide column">
-      {{t "components.flexberry-boundingbox.min-lgt-caption"}}
+      {{t "components.flexberry-boundingbox.min-lng-caption"}}
       {{flexberry-textbox
         type="number"
-        value=minLgtValue
-        class=minLgtClass
+        value=minLngValue
+        class=minLngClass
         change=(action "lngInputChange")
         keyPress=(action "lngInputChange")
       }}
@@ -51,11 +51,11 @@
       {{/flexberry-map}}
   </div>
   <div class="four wide column">
-      {{t "components.flexberry-boundingbox.max-lgt-caption"}}
+      {{t "components.flexberry-boundingbox.max-lng-caption"}}
         {{flexberry-textbox
           type="number"
-          value=maxLgtValue
-          class=maxLgtClass
+          value=maxLngValue
+          class=maxLngClass
           change=(action "lngInputChange")
           keyPress=(action "lngInputChange")
         }}

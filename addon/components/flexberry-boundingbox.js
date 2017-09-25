@@ -45,18 +45,18 @@ export default Ember.Component.extend(
   /**
           Minimal longitude value.
 
-          @property minLgt
+          @property minLng
           @type number
         */
-  minLgt: undefined,
+  minLng: undefined,
 
   /**
       Maximal longitude value.
 
-      @property maxLgt
+      @property maxLng
       @type number
     */
-  maxLgt: undefined,
+  maxLng: undefined,
 
   /**
     Moves areaSelect and map according to given bounds.
@@ -66,18 +66,18 @@ export default Ember.Component.extend(
   */
   _updateBounds() {
     let minLat = this.minLat;
-    let minLgt = this.minLgt;
+    let minLng = this.minLng;
     let maxLat = this.maxLat;
-    let maxLgt = this.maxLgt;
+    let maxLng = this.maxLng;
     let leafletMap = this.get('leafletMap');
     let areaSelect = this.get('areaSelect');
 
-    let coords = L.latLng((maxLat + minLat) / 2, (maxLgt + minLgt) / 2);
+    let coords = L.latLng((maxLat + minLat) / 2, (maxLng + minLng) / 2);
     leafletMap.panTo(coords);
 
-    leafletMap.fitBounds(L.latLngBounds(L.latLng(minLat, minLgt), L.latLng(maxLat, maxLgt)));
-    let newWidth = Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, maxLgt)).x) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLgt)).x);
-    let newHeight = Math.abs(leafletMap.latLngToLayerPoint(L.latLng(maxLat, minLgt)).y) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLgt)).y);
+    leafletMap.fitBounds(L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng)));
+    let newWidth = Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, maxLng)).x) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLng)).x);
+    let newHeight = Math.abs(leafletMap.latLngToLayerPoint(L.latLng(maxLat, minLng)).y) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLng)).y);
     newWidth = Math.abs(newWidth);
     newHeight = Math.abs(newHeight);
     areaSelect.setDimensions({ width: newWidth, height: newHeight });
@@ -91,11 +91,11 @@ export default Ember.Component.extend(
     let areaSelect = this.get('areaSelect');
     let bounds = areaSelect.getBounds();
 
-    Ember.set(this, 'minLgtValue', bounds.getWest());
-    this.minLgt = Number(bounds.getWest());
+    Ember.set(this, 'minLngValue', bounds.getWest());
+    this.minLng = Number(bounds.getWest());
 
-    Ember.set(this, 'maxLgtValue', bounds.getEast());
-    this.maxLgt = Number(bounds.getEast());
+    Ember.set(this, 'maxLngValue', bounds.getEast());
+    this.maxLng = Number(bounds.getEast());
 
     Ember.set(this, 'minLatValue', bounds.getSouth());
     this.minLat = Number(bounds.getSouth());
@@ -122,16 +122,16 @@ export default Ember.Component.extend(
       this.set('readonly', true);
       let areaSelect = L.areaSelect({ width: 100, height: 100 });
       areaSelect.addTo(leafletMap);
-      if (this.maxLgt === undefined && this.minLgt === undefined && this.maxLat === undefined && this.minLat === undefined)
+      if (this.maxLng === undefined && this.minLng === undefined && this.maxLat === undefined && this.minLat === undefined)
       {
         let bounds = areaSelect.getBounds();
         this.set('areaSelect', areaSelect);
 
-        this.set('maxLgtValue', bounds.getEast());
-        this.maxLgt = Number(bounds.getEast());
+        this.set('maxLngValue', bounds.getEast());
+        this.maxLng = Number(bounds.getEast());
 
-        this.set('minLgtValue', bounds.getWest());
-        this.minLgt = Number(bounds.getWest());
+        this.set('minLngValue', bounds.getWest());
+        this.minLng = Number(bounds.getWest());
 
         this.set('maxLatValue', bounds.getNorth());
         this.maxLat = Number(bounds.getNorth());
@@ -148,11 +148,11 @@ export default Ember.Component.extend(
           throw 'Incorrect maximal latitude value: should be [-90;90]';
         }
 
-        if (this.minLgt < -180 || this.minLgt > 180) {
+        if (this.minLng < -180 || this.minLng > 180) {
           throw 'Incorrect minimal longitude value: should be [-180;180]';
         }
 
-        if (this.maxLgt < -180 || this.maxLgt > 180) {
+        if (this.maxLng < -180 || this.maxLng > 180) {
           throw 'Incorrect maximal longitude value: should be [-180;180]';
         }
 
@@ -178,13 +178,13 @@ export default Ember.Component.extend(
 
     if (this.get('maxLatValue') > 90) {flag = true;}
 
-    if (this.get('minLgtValue') < -180) {flag = true;}
+    if (this.get('minLngValue') < -180) {flag = true;}
 
-    if (this.get('minLgtValue') > 180) {flag = true;}
+    if (this.get('minLngValue') > 180) {flag = true;}
 
-    if (this.get('maxLgtValue') < -180) {flag = true;}
+    if (this.get('maxLngValue') < -180) {flag = true;}
 
-    if (this.get('maxLgtValue') > 180) {flag = true;}
+    if (this.get('maxLngValue') > 180) {flag = true;}
 
     this.set('readonly', flag);
     return;
@@ -223,16 +223,16 @@ export default Ember.Component.extend(
         this.set('minLatValue', s);
       }
 
-      if (this.get('maxLgtValue') < this.get('minLgtValue')) {
-        let s = Number(this.get('maxLgtValue'));
-        this.set('maxLgtValue', Number(this.get('minLgtValue')));
-        this.set('minLgtValue', s);
+      if (this.get('maxLngValue') < this.get('minLngValue')) {
+        let s = Number(this.get('maxLngValue'));
+        this.set('maxLngValue', Number(this.get('minLngValue')));
+        this.set('minLngValue', s);
       }
 
       this.maxLat = Number(this.get('maxLatValue'));
       this.minLat = Number(this.get('minLatValue'));
-      this.maxLgt = Number(this.get('maxLgtValue'));
-      this.minLgt = Number(this.get('minLgtValue'));
+      this.maxLng = Number(this.get('maxLngValue'));
+      this.minLng = Number(this.get('minLngValue'));
 
       this._updateBounds();
       this.set('readonly', true);
@@ -266,13 +266,13 @@ export default Ember.Component.extend(
   */
     lngInputChange(e) {
       this._validateInputs();
-      if (this.get('maxLgtValue') < -180 || this.get('maxLgtValue') > 180) {
-        Ember.set(this, 'maxLgtClass', 'error');
+      if (this.get('maxLngValue') < -180 || this.get('maxLngValue') > 180) {
+        Ember.set(this, 'maxLngClass', 'error');
         return;
       }
 
-      if (this.get('minLgtValue') < -180 || this.get('minLgtValue') > 180) {
-        Ember.set(this, 'minLgtClass', 'error');
+      if (this.get('minLngValue') < -180 || this.get('minLngValue') > 180) {
+        Ember.set(this, 'minLngClass', 'error');
         return;
       }
 

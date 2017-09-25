@@ -112,8 +112,8 @@ export default {
     'flexberry-boundingbox': {
       'min-lat-caption': 'Широта, min: ',
       'max-lat-caption': 'Широта, max: ',
-      'min-lgt-caption': 'Долгота, min: ',
-      'max-lgt-caption': 'Долгота, max: ',
+      'min-lng-caption': 'Долгота, min: ',
+      'max-lng-caption': 'Долгота, max: ',
       'button-caption': 'Обновить границы'
     }
   },

@@ -111,8 +111,8 @@ export default {
     'flexberry-boundingbox': {
       'min-lat-caption': 'Latitude, min: ',
       'max-lat-caption': 'Latitude, max: ',
-      'min-lgt-caption': 'Longitude, min: ',
-      'max-lgt-caption': 'Longitude, max: ',
+      'min-lng-caption': 'Longitude, min: ',
+      'max-lng-caption': 'Longitude, max: ',
       'button-caption': 'Update bounds'
     }
   },
