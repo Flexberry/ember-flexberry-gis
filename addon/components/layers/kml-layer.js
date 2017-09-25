@@ -78,11 +78,13 @@ export default BaseLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let features = Ember.A();
       kmlLayer.eachLayer(function(layer) {
-        let geoLayer = layer.toGeoJSON();
-        let primitive = new window.Terraformer.Primitive(geoLayer.geometry);
+        let feature = layer.toGeoJSON();
+        let primitive = new window.Terraformer.Primitive(feature.geometry);
+        let l = L.geoJSON(feature);
 
         if (primitive instanceof window.Terraformer.Point ? primitive.within(bounds) : (primitive.intersects(bounds) || primitive.within(bounds))) {
-          features.pushObject(layer.feature);
+          feature.leafletLayer = l;
+          features.pushObject(feature);
         }
       });
       resolve(features);
