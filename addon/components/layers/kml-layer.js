@@ -104,6 +104,21 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    // TODO add a search logic.
+    let kmlLayer = this.get('_kmlLayer');
+    debugger;
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let features = Ember.A();
+      kmlLayer.eachLayer(function(layer) {
+        let feature = layer.toGeoJSON();
+        let l = L.geoJSON(feature);
+
+        // if layer satisfies search query
+        if (feature.properties.hintheader.includes(e.searchOptions.queryString)) {
+          feature.leafletLayer = l;
+          features.pushObject(feature);
+        }
+      });
+      resolve(features);
+    });
   }
 });
