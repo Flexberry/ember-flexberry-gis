@@ -4,5 +4,5 @@ import AddDialog from './map-dialogs/add';
 export default {
   'edit': EditDialog,
 
-  'add': AddDialog,
+  'add': AddDialog
 };
