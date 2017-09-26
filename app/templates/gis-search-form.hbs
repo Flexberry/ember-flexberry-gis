@@ -86,30 +86,6 @@
         <div
           class="ui bottom attached tab segment active"
           data-tab={{tabSettings.0.tab}}>
-            <div class="ui segment">
-              <div class="search-result-top-panel-item">
-                <span>{{t "forms.gis-search-form.layer-metadata.selected-message"}} {{_selectedRowsCount}}
-                  (<a {{action "_clearSelectedRows"}} style="cursor:pointer;">
-                    {{t "forms.gis-search-form.layer-metadata.reset"}}
-                    </a>).
-                </span>
-                <span>
-                  {{t "forms.gis-search-form.layer-metadata.open-into-map"}}
-                </span>
-              </div>
-              <div class="search-result-top-panel-item">
-                <select class="ui dropdown mapItems" onchange={{action (mut _selectedMap) value="target.value"}}>
-                  <option selected value="">{{t "forms.gis-search-form.layer-metadata.select-a-map"}}</option>
-                  <option value="new">{{t "forms.gis-search-form.layer-metadata.new-map"}}</option>
-                  {{#each model as |mapItem|}}
-                    <option value="{{get mapItem "id"}}" selected={{eq (get mapItem "id") _selectedMap}}>{{get mapItem "name"}}</option>
-                  {{/each}}
-                </select>
-              </div>
-              <button class="ui button positive {{unless _canOpenMapWithMetadata 'disabled'}}" {{action "goToMapWithMetadata"}}>
-                {{t "forms.gis-search-form.layer-metadata.ok"}}
-              </button>
-            </div>
             {{#flexberry-table
               model=(get this tabSettings.0.fieldName)
               getData=(action "getData" tabSettings.0.fieldName)
@@ -117,7 +93,45 @@
               projectionName=tabSettings.0.projectionName
               header=(header-from-projection modelName=tabSettings.0.modelName projectionName=tabSettings.0.projectionName)
             }}
-            {{#block-slot "column-header-head-0"}}
+              {{#block-slot "head-block"}}
+                <div class="search-result-top-panel">
+                  <div class="search-result-top-panel-item">
+                    <span>{{t "forms.gis-search-form.layer-metadata.selected-message"}} {{_selectedRowsCount}}
+                      (<a {{action "_clearSelectedRows"}} class="search-result-top-panel-clear">
+                        {{t "forms.gis-search-form.layer-metadata.reset"}}
+                        </a>).
+                    </span>
+                    <span>
+                      {{t "forms.gis-search-form.layer-metadata.open-into-map"}}
+                    </span>
+                  </div>
+                  <div class="search-result-top-panel-item">
+                    <select class="ui dropdown mapItems" onchange={{action (mut _selectedMap) value="target.value"}}>
+                      <option selected value="">{{t "forms.gis-search-form.layer-metadata.select-a-map"}}</option>
+                      <option value="new">{{t "forms.gis-search-form.layer-metadata.new-map"}}</option>
+                      {{#each model as |mapItem|}}
+                        <option value="{{get mapItem "id"}}" selected={{eq (get mapItem "id") _selectedMap}}>{{get mapItem "name"}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+                  {{#if _canOpenMapWithMetadata}}
+                    {{#if (eq _selectedMap 'new')}}
+                      {{#link-to
+                        newMapWithMetadataRouteName (query-params metadata=_metadataIds)
+                        class="ui positive button" title=(t "forms.gis-search-form.ctrl-message")}}
+                          {{t "forms.gis-search-form.layer-metadata.ok"}}
+                      {{/link-to}}
+                    {{else}}
+                      {{#link-to
+                        mapWithMetadataRouteName _selectedMap (query-params metadata=_metadataIds)
+                        class="ui positive button" title=(t "forms.gis-search-form.ctrl-message")}}
+                          {{t "forms.gis-search-form.layer-metadata.ok"}}
+                      {{/link-to}}
+                    {{/if}}
+                  {{/if}}
+                </div>
+              {{/block-slot}}
+              {{#block-slot "column-header-head-0"}}
                 <th>{{t "forms.gis-search-form.layer-metadata.actions.select"}}</th>
               {{/block-slot}}
               {{#block-slot "column-cell-head-0" as |row|}}
@@ -145,9 +159,9 @@
               {{/block-slot}}
               {{#block-slot "column-cell-tail-0" as |row|}}
                 <td class="collapsing">
-                  <a {{action "goToMap" row allowedKeys="ctrl"}} style="cursor:pointer;">
+                  {{#link-to mapRouteName row.id title=(t "forms.gis-search-form.ctrl-message")}}
                     <i class="external share icon"></i>
-                  </a>
+                  {{/link-to}}
                 </td>
               {{/block-slot}}
             {{/flexberry-table}}

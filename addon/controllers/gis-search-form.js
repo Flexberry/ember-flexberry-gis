@@ -106,6 +106,11 @@ export default Ember.Controller.extend({
     return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
   }),
 
+  _metadataIds: Ember.computed('_selectedRows', function() {
+    let selectedRows = this.get('_selectedRows');
+    return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
+  }),
+
   /**
     Id of a selected map.
   */
@@ -167,28 +172,6 @@ export default Ember.Controller.extend({
     },
 
     /**
-      Handles click on 'open map' button.
-
-      @method actions.goToMap
-      @param {Object} mapModel Model of the map to transition
-    */
-    goToMap(mapModel) {
-      // may be it should pass event.ctrlKey
-      this.transitToMap(mapModel);
-    },
-
-    /**
-      Handles click on 'open a map with metadata' button.
-
-      @method actions.goToMapWithMetadata
-    */
-    goToMapWithMetadata() {
-      let selectedRows = this.get('_selectedRows');
-      let metadataIds = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
-      this.transitToMapWithMetadata(this.get('_selectedMap'), metadataIds);
-    },
-
-    /**
       Handles click on row select checkbox.
 
       @method actions.onRowSelect
@@ -209,43 +192,5 @@ export default Ember.Controller.extend({
       this.set('_selectedRows', {});
       this.notifyPropertyChange('_selectedRows');
     }
-  },
-
-  /**
-    Handles transition to selected map.
-
-    @method transitToMap
-    @param {Object} mapModel Model of the map to transition
-  */
-  transitToMap(mapModel) {
-    let mapRoute = this.get('mapRouteName');
-    Ember.assert(`The parameter 'mapRouteName' shouldn't be empty!`, !Ember.isBlank(mapRoute));
-    this.transitionToRoute(mapRoute, mapModel.get('id'));
-  },
-
-  /**
-    Handles transition to selected map with metadata.
-
-    @method transitToMapWithMetadata
-    @param {String} mapId Map id
-    @param {Array} selectedMetadataIds Selected metadata ids
-  */
-  transitToMapWithMetadata(mapId, selectedMetadataIds) {
-    let mapRoutePath = Ember.isEqual(mapId, 'new') ? 'newMapWithMetadataRouteName' : 'mapWithMetadataRouteName';
-    let mapRoute = this.get(mapRoutePath);
-    Ember.assert(`The parameter '${mapRoutePath}' shouldn't be empty!`, !Ember.isBlank(mapRoute));
-
-    // We need mapId for an existing map.
-    let args = [mapRoute];
-    if (!Ember.isEqual(mapId, 'new')) {
-      args.push(mapId);
-    }
-
-    this.transitionToRoute(...args,
-      {
-        queryParams: {
-          metadata: selectedMetadataIds.join(',')
-        }
-      });
   }
 });

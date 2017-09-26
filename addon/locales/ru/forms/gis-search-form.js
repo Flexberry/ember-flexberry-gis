@@ -11,6 +11,7 @@ export default {
   'max-lat': 'Широта (макс.)',
   'search': 'Искать',
   'results': 'Результаты',
+  'ctrl-message': 'Удерживайте клавишу Ctrl, чтобы открыть в новом окне',
   'layer-metadata': {
     'title': 'Метаданные слоёв',
     'actions': {

@@ -783,9 +783,17 @@
             Search form
 *********************************************/
 
-.search-result-top-panel-item {
+.search-result-top-panel {
+  a {
+    line-height: 33px !important;
+  }
+  &-clear {
+    cursor: pointer;
+  }
+  &-item {
     display: inline-block;
     span {
         margin: 5px;
     }
+  }
 }

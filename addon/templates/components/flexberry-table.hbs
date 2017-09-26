@@ -4,6 +4,9 @@
 --}}
 {{yield}}
 
+{{#yield-slot "head-block"}}
+  {{yield}}
+{{/yield-slot}}
 <table class="ui celled table">
   <thead>
     <tr>

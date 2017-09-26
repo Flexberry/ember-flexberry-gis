@@ -11,6 +11,7 @@ export default {
   'max-lat': 'Max latitude',
   'search': 'Search',
   'results': 'Results',
+  'ctrl-message': 'Hold Ctrl-button to open in a new window',
   'layer-metadata': {
     'title': 'Layer metadata',
     'actions': {
