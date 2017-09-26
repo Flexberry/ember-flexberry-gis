@@ -169,30 +169,20 @@ export default Ember.Component.extend(
     @private
   */
   _validateInputs() {
-    let flag = false;
-    if (this.get('minLatValue') < -90) {flag = true;}
-
-    if (this.get('minLatValue') > 90) { flag = true;}
-
-    if (this.get('maxLatValue') < -90) {flag = true;}
-
-    if (this.get('maxLatValue') > 90) {flag = true;}
-
-    if (this.get('minLngValue') < -180) {flag = true;}
-
-    if (this.get('minLngValue') > 180) {flag = true;}
-
-    if (this.get('maxLngValue') < -180) {flag = true;}
-
-    if (this.get('maxLngValue') > 180) {flag = true;}
-
-    if (this.get('minLatValue') === '') {flag = true;}
-
-    if (this.get('maxLatValue') === '') {flag = true;}
-
-    if (this.get('minLngValue') === '') {flag = true;}
-
-    if (this.get('maxLngValue') === '') {flag = true;}
+    let flag = (
+    (this.get('minLatValue') < -90) ||
+    (this.get('minLatValue') > 90) ||
+    (this.get('maxLatValue') < -90) ||
+    (this.get('maxLatValue') > 90) ||
+    (this.get('minLngValue') < -180) ||
+    (this.get('minLngValue') > 180) ||
+    (this.get('maxLngValue') < -180) ||
+    (this.get('maxLngValue') > 180) ||
+    (this.get('minLatValue') === '') ||
+    (this.get('maxLatValue') === '') ||
+    (this.get('minLngValue') === '') ||
+    (this.get('maxLngValue') === '')
+    );
 
     this.set('readonly', flag);
     return;
