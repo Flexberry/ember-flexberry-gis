@@ -186,6 +186,14 @@ export default Ember.Component.extend(
 
     if (this.get('maxLngValue') > 180) {flag = true;}
 
+    if (this.get('minLatValue') === '') {flag = true;}
+
+    if (this.get('maxLatValue') === '') {flag = true;}
+
+    if (this.get('minLngValue') === '') {flag = true;}
+
+    if (this.get('maxLngValue') === '') {flag = true;}
+
     this.set('readonly', flag);
     return;
   },
@@ -209,6 +217,47 @@ export default Ember.Component.extend(
 
     this.sendAction('leafletDestroy');
   },
+  /**
+  Observes is latitude values are changed.
+
+  @method actions.latInputChange
+*/
+  latInputChanged: Ember.observer('minLatValue', 'maxLatValue', function() {
+    this._validateInputs();
+    if (this.get('minLatValue') < -90 || this.get('minLatValue') > 90) {
+      this.set('minLatClass', 'error');
+      return;
+    }
+
+    if (this.get('maxLatValue') < -90 || this.get('maxLatValue') > 90) {
+      this.set('maxLatClass', 'error');
+      return;
+    }
+
+    this.set('maxLatClass', '');
+    this.set('minLatClass', '');
+  }),
+
+  /**
+  Observes if longitude values are changed.
+
+  @method actions.lngInputChange
+*/
+  lngInputChanged: Ember.observer('minLngValue', 'maxLngValue', function() {
+    this._validateInputs();
+    if (this.get('maxLngValue') < -180 || this.get('maxLngValue') > 180) {
+      Ember.set(this, 'maxLngClass', 'error');
+      return;
+    }
+
+    if (this.get('minLngValue') < -180 || this.get('minLngValue') > 180) {
+      Ember.set(this, 'minLngClass', 'error');
+      return;
+    }
+
+    this.set('minLngClass', '');
+    this.set('maxLngClass', '');
+  }),
 
   actions: {
     /**
@@ -236,47 +285,6 @@ export default Ember.Component.extend(
 
       this._updateBounds();
       this.set('readonly', true);
-    },
-
-    /**
-    This action is called when latitude values are changed.
-
-    @method actions.latInputChange
-  */
-    latInputChange(e) {
-
-      this._validateInputs();
-      if (this.get('minLatValue') < -90 || this.get('minLatValue') > 90) {
-        this.set('minLatClass', 'error');
-        return;
-      }
-
-      if (this.get('maxLatValue') < -90 || this.get('maxLatValue') > 90) {
-        this.set('maxLatClass', 'error');
-        return;
-      }
-
-      this.set('minLatClass', '');
-    },
-
-    /**
-    This action is called when longitude values are changed.
-
-    @method actions.lngInputChange
-  */
-    lngInputChange(e) {
-      this._validateInputs();
-      if (this.get('maxLngValue') < -180 || this.get('maxLngValue') > 180) {
-        Ember.set(this, 'maxLngClass', 'error');
-        return;
-      }
-
-      if (this.get('minLngValue') < -180 || this.get('minLngValue') > 180) {
-        Ember.set(this, 'minLngClass', 'error');
-        return;
-      }
-
-      this.set('minLatClass', '');
     },
   },
 });

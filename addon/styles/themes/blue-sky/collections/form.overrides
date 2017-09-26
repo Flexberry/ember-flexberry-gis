@@ -29,3 +29,12 @@
     }
   }
 }
+
+//flexberry-input error class
+.ui.input.error {
+  input {
+    border-color: #e0b4b4;
+    color: #9f3a38;
+    box-shadow: none;
+  }
+}
