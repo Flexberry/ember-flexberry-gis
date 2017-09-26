@@ -196,7 +196,9 @@ export default BaseLayer.extend({
       filter,
       maxFeatures: e.searchOptions.maxResultsCount,
       style: {
-        color: 'yellow'
+        color: 'yellow',
+        weight: 2,
+        fillOpacity: 0.3
       }
     });
 
