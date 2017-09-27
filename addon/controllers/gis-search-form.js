@@ -180,6 +180,10 @@ export default Ember.Controller.extend({
       let key = e.which;
       return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40) ||
         (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    },
+
+    onScaleConditionChange(index, element, value) {
+      this.set(`searchConditions.scaleFilters.${index}.condition`, value);
     }
   }
 });

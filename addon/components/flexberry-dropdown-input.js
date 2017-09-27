@@ -63,6 +63,7 @@ export default Ember.Component.extend({
         let inputValue = this.get('inputValue') || 0;
         this.$('.flexberry-dropdown').dropdown('hide');
         this.$('.flexberry-dropdown').dropdown('set value', inputValue);
+        this.$('.flexberry-dropdown .text.default').removeClass('default');
         this.$('.flexberry-dropdown').dropdown('set text', inputValue);
         this.set('value', inputValue);
         this.set('inputValue', undefined);
