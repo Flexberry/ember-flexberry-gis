@@ -62,7 +62,7 @@
 .flexberry-export-map-command-dialog,
 .flexberry-search-map-command-dialog,
 .flexberry-go-to-map-command-dialog {
-    .ui.icon.button {
+    .ui.icon.button:not(.fluid) {
         border-radius: 5px;
         font-weight: normal;
         display: inline-block;

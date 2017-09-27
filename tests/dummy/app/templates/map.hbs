@@ -41,7 +41,7 @@
     }}
     <div class="ui very wide right sidebar pushable tabbar">
       <div data-tab="treeview" class="ui tab treeview">
-        <h3>Список слоев</h3>
+        <h3>{{t "forms.map.tabbar.treeview.caption"}}</h3>
         {{#if _showTree}}
           {{flexberry-maplayers
             class="styled"
@@ -91,7 +91,7 @@
         {{/if}}
       </div>
       <div data-tab="search" class="ui tab search">
-        <h3>Поиск</h3>
+        <h3>{{t "forms.map.tabbar.search.caption"}}</h3>
         {{flexberry-search-panel
           querySearch=(action "querySearch")
           clearSearch=(action "clearSearch")
@@ -106,7 +106,7 @@
         }}
       </div>
       <div data-tab="identify" class="ui tab identify">
-        <h3>Идентификация</h3>
+        <h3>{{t "forms.map.tabbar.identify.caption"}}</h3>
         {{flexberry-identify-panel
           leafletMap=leafletMap
           layerMode=identifyLayersOption
@@ -122,7 +122,7 @@
         }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
-        <h3>Пространственные закладки</h3>
+        <h3>{{t "forms.map.tabbar.bookmarks.caption"}}</h3>
         {{spatial-bookmark
           leafletMap=leafletMap
           storageKey=model.id
@@ -213,4 +213,9 @@
       {{/flexberry-map}}
     </div>
   </div>
+  {{flexberry-mapinfo
+    mapId=model.id
+    name=model.name
+    description=model.description
+  }}
 </form>

@@ -83,11 +83,7 @@
 @layerLegendProgressbarBackground: @bluecolor;
 @layerLegendProgressbarPseudoBackground: @lightbluecolor;
 
-@layerLegendImageWrapperMinHeight: 27px;
 @layerLegendImageWrapperFontSize: 12px;
-
-@layerLegendImageMaxHeight: 27px;
-@layerLegendImageMinWidth: 34px;
 
 @layerLegendCaptionColor: @bluecolor;
 @layerLegendCaptionMargin: 5px 0px 0px 5px;

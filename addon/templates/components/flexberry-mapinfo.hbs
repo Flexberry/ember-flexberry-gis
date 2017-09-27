@@ -1,0 +1,39 @@
+{{#if _infoDialogHasBeenRequested}}
+  {{#flexberry-dialog class=(concat class " " flexberryClassNames.infoDialog)
+    caption=caption
+    visible=visible
+    approve=(action "onApprove")
+  }}
+    <form class="ui form" role="form">
+      <div class="field">
+        <label>
+          {{nameTextboxCaption}}
+        </label>
+        {{flexberry-textbox
+          class="fluid"
+          value=name
+          readonly=true
+        }}
+      </div>
+      <div class="field">
+        <label>
+          {{descriptionTextboxCaption}}
+        </label>
+        {{flexberry-textarea
+          class="fluid"
+          value=description
+          readonly=true
+        }}
+      </div>
+      <div class="field">
+        <label>
+          {{showOnOpenTextboxCaption}}
+        </label>
+        {{flexberry-checkbox
+          class="fluid"
+          value=showOnOpen
+        }}
+      </div>
+    </form>
+  {{/flexberry-dialog}}
+{{/if}}

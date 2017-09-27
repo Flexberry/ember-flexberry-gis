@@ -73,12 +73,33 @@ export default Ember.Service.extend({
   },
 
   /**
-    Returns collection of object from local storage with provided className and key.
+    Returns value from local storage with provided className and Key.
 
-    @method getFromStorage
+    @method getFromStorageSingle
     @param {String} className Name of class of stored objects.
-    @param {String} key Key of collection.
-    @param Object[] value New value for a collection.
+    @param {String} key Key of value in class.
+    @param {Object} defaultValue default value thats return for something error.
+    @returns {Object}
+  */
+  getFromStorageSingle(className, key, defaultValue) {
+    if (this.get('available')) {
+      try {
+        return JSON.parse(localStorage.getItem(`${className}_${key}`));
+      } catch (e) {
+        return defaultValue;
+      }
+    }
+
+    return defaultValue;
+  },
+
+  /**
+    Set new value to local storage with provided className and key.
+
+    @method setToStorage
+    @param {String} className Name of class of stored objects.
+    @param {String} key Key of value.
+    @param Object[] value New value for specified className and Key.
   */
   setToStorage(className, key, value) {
     if (this.get('available')) {
