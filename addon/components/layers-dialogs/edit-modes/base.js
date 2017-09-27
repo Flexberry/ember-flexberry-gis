@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import FlexberryEditLayerMapComponent from '../../flexberry-edit-layermap';
 
 /**
   Flexberry add layer modal dialog with [Semantic UI modal](http://semantic-ui.com/modules/modal.html) style.
@@ -29,8 +30,17 @@ export default Ember.Component.extend({
     @method bindProperties
   */
   bindProperties() {
+    let findEditLayerMapComponent = (component) => {
+      let result = component.get('parentView');
+      if (result instanceof FlexberryEditLayerMapComponent) {
+        return result;
+      } else {
+        return findEditLayerMapComponent(result);
+      }
+    };
+
     // Instance of flexberry-edit-layermap component.
-    let parent = this.get('parentView.parentView.parentView');
+    let parent = findEditLayerMapComponent(this);
     let bindingProperties = this.get('bindingProperties');
 
     bindingProperties.forEach((property) => {
