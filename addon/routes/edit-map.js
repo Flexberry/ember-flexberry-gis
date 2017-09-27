@@ -103,13 +103,12 @@ export default EditFormRoute.extend({
   */
   model(params, transition) {
     let modelQuery = this._super.apply(this, arguments);
-    let that = this;
+    let metadataQuery = this._getMetadata(params.metadata);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let metadataQuery = this._getMetadata(params.metadata);
       Ember.RSVP.all([modelQuery, metadataQuery]).then((data) => {
         let [model, metadata] = data;
-        that._addMetadata(model, metadata);
+        this._addMetadata(model, metadata);
         resolve(model);
       }).catch((error) => {
         reject(error);
@@ -214,10 +213,9 @@ export default EditFormRoute.extend({
           scale: item.get('scale'),
           coordinateReferenceSystem: item.get('coordinateReferenceSystem'),
           boundingBox: item.get('boundingBox'),
-          createTime: item.get('createTime'),
-          creator: item.get('creator'),
-          editTime: item.get('editTime'),
-          editor: item.get('editor')
+
+          // If user has chosen to open metadata on map, then layer created on metadata basics must be visible by default.
+          visibility: true
         });
         model.get('mapLayer').pushObject(newLayer);
       });
