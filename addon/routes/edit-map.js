@@ -103,33 +103,13 @@ export default EditFormRoute.extend({
   */
   model(params, transition) {
     let modelQuery = this._super.apply(this, arguments);
+    let that = this;
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let store = this.get('store');
       let metadataQuery = this._getMetadata(params.metadata);
-
       Ember.RSVP.all([modelQuery, metadataQuery]).then((data) => {
         let [model, metadata] = data;
-        if (Ember.isArray(metadata)) {
-          metadata.forEach((item) => {
-            let newLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
-              name: item.get('name'),
-              description: item.get('description'),
-              keyWords: item.get('keyWords'),
-              type: item.get('type'),
-              settings: item.get('settings'),
-              scale: item.get('scale'),
-              coordinateReferenceSystem: item.get('coordinateReferenceSystem'),
-              boundingBox: item.get('boundingBox'),
-              createTime: item.get('createTime'),
-              creator: item.get('creator'),
-              editTime: item.get('editTime'),
-              editor: item.get('editor')
-            });
-            model.get('mapLayer').pushObject(newLayer);
-          });
-        }
-
+        that._addMetadata(model, metadata);
         resolve(model);
       }).catch((error) => {
         reject(error);
@@ -214,6 +194,34 @@ export default EditFormRoute.extend({
     }
 
     return null;
+  },
+
+  /**
+    Adds metadata to the model mapLayer collection.
+
+    @param {*} model Map model.
+    @param {*} metadata Metadata collection.
+  */
+  _addMetadata(model, metadata) {
+    if (Ember.isArray(metadata)) {
+      metadata.forEach((item) => {
+        let newLayer = this.get('store').createRecord('new-platform-flexberry-g-i-s-map-layer', {
+          name: item.get('name'),
+          description: item.get('description'),
+          keyWords: item.get('keyWords'),
+          type: item.get('type'),
+          settings: item.get('settings'),
+          scale: item.get('scale'),
+          coordinateReferenceSystem: item.get('coordinateReferenceSystem'),
+          boundingBox: item.get('boundingBox'),
+          createTime: item.get('createTime'),
+          creator: item.get('creator'),
+          editTime: item.get('editTime'),
+          editor: item.get('editor')
+        });
+        model.get('mapLayer').pushObject(newLayer);
+      });
+    }
   },
 
   /**
