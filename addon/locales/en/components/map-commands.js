@@ -7,6 +7,14 @@ export default {
     'caption': '',
     'tooltip': 'Full extent'
   },
+  'edit': {
+    'caption': 'Edit',
+    'tooltip': 'Edit'
+  },
+  'locate': {
+    'caption': '',
+    'tooltip': 'Find my location'
+  },
   'export': {
     'caption': 'Export',
     'tooltip': 'Export',

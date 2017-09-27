@@ -7,6 +7,14 @@ export default {
     'caption': '',
     'tooltip': 'Полный охват'
   },
+  'edit': {
+    'caption': 'Редактировать',
+    'tooltip': 'Редактировать'
+  },
+  'locate': {
+    'caption': '',
+    'tooltip': 'Мое местоположение'
+  },
   'export': {
     'caption': 'Экспортировать',
     'tooltip': 'Экспортировать',
