@@ -29,7 +29,8 @@ export default Ember.Component.extend({
     @method bindProperties
   */
   bindProperties() {
-    let parent = this.get('parentView.parentView');
+    // Instance of flexberry-edit-layermap component.
+    let parent = this.get('parentView.parentView.parentView');
     let bindingProperties = this.get('bindingProperties');
 
     bindingProperties.forEach((property) => {
