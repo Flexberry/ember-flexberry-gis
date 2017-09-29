@@ -13,7 +13,7 @@ import BaseLayer from '../base-layer';
  */
 export default BaseLayer.extend({
   /**
-    Specific options available on the Layer settings tab.
+    Specific option names available on the Layer settings tab.
   */
   leafletOptions: [
     'kmlUrl',
@@ -47,14 +47,17 @@ export default BaseLayer.extend({
     @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
-  createLayer() {
-    let kmlUrl = this.get('kmlUrl');
-    let kmlString = this.get('kmlString');
+  createLayer(options) {
+    options = Ember.$.extend(true, {}, this.get('options'), options);
+    let customLayer = L.geoJson(null, options);
+
+    let kmlUrl = this.get('options.kmlUrl');
+    let kmlString = this.get('options.kmlString');
     Ember.assert('Either "kmlUrl" or "kmlString" should be defined!', Ember.isPresent(kmlUrl) || Ember.isPresent(kmlString));
 
     if (kmlUrl) {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        let layer = window.omnivore.kml(kmlUrl)
+        let layer = window.omnivore.kml(kmlUrl, null, customLayer)
           .on('ready', (e) => {
             this.set('_leafletObject', layer);
             resolve(layer);
@@ -66,7 +69,7 @@ export default BaseLayer.extend({
     }
 
     if (kmlString) {
-      let layer = window.omnivore.kml.parse(kmlString);
+      let layer = window.omnivore.kml.parse(kmlString, null, customLayer);
       this.set('_leafletObject', layer);
       return layer;
     }
@@ -91,7 +94,7 @@ export default BaseLayer.extend({
     let kmlLayer = this.get('_leafletObject');
     return new Ember.RSVP.Promise((resolve, reject) => {
       let features = Ember.A();
-      kmlLayer.eachLayer(function(layer) {
+      kmlLayer.eachLayer((layer) => {
         let feature = layer.toGeoJSON();
         let primitive = new window.Terraformer.Primitive(feature.geometry);
         let l = L.geoJSON(feature);
@@ -119,18 +122,17 @@ export default BaseLayer.extend({
   */
   search(e) {
     if (this.get('searchSettings.canBeSearched')) {
-      let that = this;
       let kmlLayer = this.get('_leafletObject');
 
       return new Ember.RSVP.Promise((resolve, reject) => {
         let features = Ember.A();
-        kmlLayer.eachLayer(function(layer) {
+        kmlLayer.eachLayer((layer) => {
           if (features.length < e.searchOptions.maxResultsCount) {
             let feature = layer.toGeoJSON();
             let l = L.geoJSON(feature);
 
             // if layer satisfies search query
-            let searchFields = that.get('searchSettings.searchFields'); // []
+            let searchFields = this.get('searchSettings.searchFields'); // []
             let contains = searchFields.map((item) => {
               return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
             }).reduce((result, current) => {
