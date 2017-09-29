@@ -42,7 +42,7 @@ export default {
       mapObjectSetting: {
         caption: 'Setting',
         typeName: {
-          caption: '' 
+          caption: ''
         }
       },
       allowShow: {
