@@ -241,7 +241,7 @@ export default BaseLayer.extend({
     let queryFilter = e.queryFilter;
     let equals = [];
     layerLinks.forEach((link) => {
-      let linkParameters = link.get('linkParameter');
+      let linkParameters = link.get('parameters');
 
       if (Ember.isArray(linkParameters) && linkParameters.length > 0) {
         linkParameters.forEach(linkParam => {

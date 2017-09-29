@@ -109,7 +109,13 @@ export default {
         layerLink: {
           caption: '',
           mapObjectSetting: {
-            caption: '',
+            caption: 'Тип',
+            typeName: {
+              caption: 'Тип объекта'
+            },
+            listForm: {
+              caption: 'Списковая форма'
+            },
             editForm: {
               caption: 'Форма редактирования'
             }

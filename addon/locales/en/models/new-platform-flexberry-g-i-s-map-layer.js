@@ -57,7 +57,13 @@ export default {
       layerLink: {
         caption: 'Layer link',
         mapObjectSetting: {
-          caption: 'Map object setting',
+          caption: 'Type',
+          typeName: {
+            caption: 'Object type'
+          },
+          listForm: {
+            caption: 'List form'
+          },
           editForm: {
             caption: 'Edit form'
           }
@@ -71,23 +77,23 @@ export default {
         allowShow: {
           caption: 'Allow show'
         },
-        linkParameter: {
-          caption: 'Link parameter',
+        parameters: {
+          caption: 'Link parameters',
           objectField: {
-          caption: 'Object field'
-        },
+            caption: 'Object field'
+          },
           layerField: {
-          caption: 'Layer field'
-        },
+            caption: 'Layer field'
+          },
           expression: {
-          caption: 'Expression'
-        },
+            caption: 'Expression'
+          },
           queryKey: {
-          caption: 'Query key'
-        },
+            caption: 'Query key'
+          },
           linkField: {
-          caption: 'Link field'
-        },
+            caption: 'Link key'
+          },
           layerLink: {
             caption: 'Layer link'
           }
@@ -134,7 +140,13 @@ export default {
       layerLink: {
         caption: 'Layer link',
         mapObjectSetting: {
-          caption: 'Map object setting',
+          caption: 'Type',
+          typeName: {
+            caption: 'Object type'
+          },
+          listForm: {
+            caption: 'List form'
+          },
           editForm: {
             caption: 'Edit form'
           }
@@ -148,8 +160,8 @@ export default {
         allowShow: {
           caption: 'Allow show'
         },
-        linkParameter: {
-          caption: 'Link parameter',
+        parameters: {
+          caption: 'Link parameters',
           objectField: {
           caption: 'Object field'
         },
@@ -163,7 +175,7 @@ export default {
           caption: 'Query key'
         },
           linkField: {
-          caption: 'Link field'
+          caption: 'Link key'
         },
           layerLink: {
             caption: 'Layer link'
