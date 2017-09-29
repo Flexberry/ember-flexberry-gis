@@ -10,6 +10,9 @@ export default {
       editForm: {
         caption: 'EditForm'
       },
+      title: {
+        caption: 'Title'
+      },
       defaultMap: {
         caption: ''
       }
@@ -17,6 +20,9 @@ export default {
     MapObjectSettingE: {
       typeName: {
         caption: 'Тип'
+      },
+      title: {
+        caption: 'Отображаемое имя'
       },
       listForm: {
         caption: 'Списковая форма'

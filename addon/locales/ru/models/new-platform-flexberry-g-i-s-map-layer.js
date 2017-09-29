@@ -57,7 +57,13 @@ export default {
       layerLink: {
         caption: '',
         mapObjectSetting: {
-          caption: '',
+          caption: 'Тип',
+          typeName: {
+            caption: 'Тип объекта'
+          },
+          listForm: {
+            caption: 'Списковая форма'
+          },
           editForm: {
             caption: 'Форма редактирования'
           }
@@ -72,22 +78,22 @@ export default {
           caption: 'Показывать'
         },
         parameters: {
-          caption: '',
+          caption: 'Параметры связи',
           objectField: {
-          caption: 'Поле объекта'
-        },
+            caption: 'Поле объекта'
+          },
           layerField: {
-          caption: 'Поле слоя'
-        },
+            caption: 'Поле слоя'
+          },
           expression: {
-          caption: 'Выражение'
-        },
+            caption: 'Выражение'
+          },
           queryKey: {
-          caption: 'Параметр запроса'
-        },
+            caption: 'Ключ запроса'
+          },
           linkField: {
-          caption: 'Поле связи'
-        },
+            caption: 'Ключ связи'
+          },
           layerLink: {
             caption: 'Связь'
           }
@@ -134,7 +140,13 @@ export default {
       layerLink: {
         caption: '',
         mapObjectSetting: {
-          caption: '',
+          caption: 'Тип',
+          typeName: {
+            caption: 'Тип объекта'
+          },
+          listForm: {
+            caption: 'Списковая форма'
+          },
           editForm: {
             caption: 'Форма редактирования'
           }
@@ -151,20 +163,20 @@ export default {
         parameters: {
           caption: '',
           objectField: {
-          caption: 'Поле объекта'
-        },
+            caption: 'Поле объекта'
+          },
           layerField: {
-          caption: 'Поле слоя'
-        },
+            caption: 'Поле слоя'
+          },
           expression: {
-          caption: 'Выражение'
-        },
+            caption: 'Выражение'
+          },
           queryKey: {
-          caption: 'Параметр запроса'
-        },
+            caption: 'Ключ запроса'
+          },
           linkField: {
-          caption: 'Поле связи'
-        },
+            caption: 'Ключ связи'
+          },
           layerLink: {
             caption: 'Связь'
           }

@@ -41,10 +41,8 @@ export let defineProjections = function (modelClass) {
   modelClass.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-link-metadata', {
     allowShow: Projection.attr('Показывать'),
     layer: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
-
     }),
     mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
-
     }),
     parameters: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры связи', {
       objectField: Projection.attr('Поле объекта'),
@@ -53,7 +51,6 @@ export let defineProjections = function (modelClass) {
       queryKey: Projection.attr('Ключ запроса'),
       linkField: Projection.attr('Поле связи'),
       layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
-
       })
     })
   });
@@ -72,7 +69,6 @@ export let defineProjections = function (modelClass) {
       queryKey: Projection.attr('Ключ запроса'),
       linkField: Projection.attr('Поле связи'),
       layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
-
       }, { hidden: true })
     })
   });

@@ -45,7 +45,6 @@ export let defineProjections = function (modelClass) {
     queryKey: Projection.attr('Ключ запроса'),
     linkField: Projection.attr('Поле связи'),
     layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
-
     })
   });
 
@@ -56,7 +55,6 @@ export let defineProjections = function (modelClass) {
     queryKey: Projection.attr('Ключ запроса'),
     linkField: Projection.attr('Поле связи', { hidden: true }),
     layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
-
     }, { hidden: true })
   });
 };

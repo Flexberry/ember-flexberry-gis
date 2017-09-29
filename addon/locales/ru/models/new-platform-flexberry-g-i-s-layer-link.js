@@ -37,7 +37,7 @@ export default {
           caption: 'Ключ запроса'
         },
         linkField: {
-          caption: 'Поле связи'
+          caption: 'Ключ связи'
         },
         layerLink: {
           caption: 'Связь'
@@ -115,7 +115,7 @@ export default {
           caption: 'Выражение'
         },
         queryKey: {
-          caption: 'Поле запроса'
+          caption: 'Ключ запроса'
         },
         linkField: {
           caption: 'Ключ связи'

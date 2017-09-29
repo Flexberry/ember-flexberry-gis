@@ -28,7 +28,7 @@ export default {
           caption: 'Настройка'
         },
         parameters: {
-          caption: '',
+          caption: 'Параметры связи',
           objectField: {
           caption: 'Поле объекта'
         },
@@ -80,6 +80,12 @@ export default {
         layer: {
           caption: 'Слой',
           name: {
+            caption: ''
+          }
+        },
+        mapObjectSetting: {
+          caption: 'Настройка',
+          typeName: {
             caption: ''
           }
         },

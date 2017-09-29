@@ -14,7 +14,7 @@ export default {
         caption: 'Query key'
       },
       linkField: {
-        caption: 'Link field'
+        caption: 'Link key'
       },
       layerLink: {
         caption: 'Layer link'

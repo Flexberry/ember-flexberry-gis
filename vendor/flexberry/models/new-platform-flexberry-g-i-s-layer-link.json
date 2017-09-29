@@ -30,47 +30,50 @@
       "inverse": "layerLink"
     }
   ],
-  "hasMany": [{
-    "name": "parameters",
-    "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
-    "inverse": "layerLink"
-  }],
-  "projections": [{
+  "hasMany": [
+    {
+      "name": "parameters",
+      "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
+      "inverse": "layerLink"
+    }
+  ],
+  "projections": [
+    {
       "name": "LayerLinkD",
       "modelName": "new-platform-flexberry-g-i-s-layer-link",
-      "attrs": [{
-        "name": "allowShow",
-        "caption": "Показывать",
-        "hidden": false,
-        "index": 6,
-        "stored": true
-      }],
-      "belongsTo": [{
+      "attrs": [
+        {
+          "name": "allowShow",
+          "caption": "Показывать",
+          "hidden": false,
+          "index": 6
+        }
+      ],
+      "belongsTo": [
+        {
           "lookupValue": null,
           "lookupValueField": null,
           "relationName": "MapObjectSetting",
           "belongsTo": [],
           "hidden": false,
-          "attrs": [{
+          "attrs": [
+            {
               "name": "typeName",
               "caption": "Тип объекта",
               "hidden": true,
-              "index": 1,
-              "stored": true
+              "index": 1
             },
             {
               "name": "listForm",
               "caption": "Списковая форма",
               "hidden": true,
-              "index": 2,
-              "stored": true
+              "index": 2
             },
             {
               "name": "editForm",
               "caption": "Форма редактирования",
               "hidden": true,
-              "index": 3,
-              "stored": true
+              "index": 3
             }
           ],
           "index": 0,
@@ -85,12 +88,14 @@
           "relationName": "Layer",
           "belongsTo": [],
           "hidden": true,
-          "attrs": [{
-            "name": "name",
-            "caption": "Слой",
-            "hidden": true,
-            "index": 5
-          }],
+          "attrs": [
+            {
+              "name": "name",
+              "caption": "Слой",
+              "hidden": true,
+              "index": 5
+            }
+          ],
           "index": 4,
           "caption": "",
           "name": "layer",
@@ -98,13 +103,15 @@
           "inverse": null
         }
       ],
-      "hasMany": [{
-        "projectionName": "LinkParameterD",
-        "caption": "Параметры связи",
-        "name": "parameters",
-        "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
-        "inverse": null
-      }]
+      "hasMany": [
+        {
+          "projectionName": "LinkParameterD",
+          "caption": "Параметры связи",
+          "name": "parameters",
+          "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
+          "inverse": null
+        }
+      ]
     },
     {
       "name": "LayerLinkE",
@@ -195,13 +202,15 @@
           "inverse": null
         }
       ],
-      "hasMany": [{
-        "projectionName": "LinkParameterD",
-        "caption": "Параметры связи",
-        "name": "parameters",
-        "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
-        "inverse": null
-      }]
+      "hasMany": [
+        {
+          "projectionName": "LinkParameterD",
+          "caption": "Параметры связи",
+          "name": "parameters",
+          "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
+          "inverse": null
+        }
+      ]
     },
     {
       "name": "LayerLinkQ",
@@ -240,13 +249,15 @@
           "inverse": null
         }
       ],
-      "hasMany": [{
-        "projectionName": "LinkParameterD",
-        "caption": "Параметры связи",
-        "name": "parameters",
-        "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
-        "inverse": null
-      }]
+      "hasMany": [
+        {
+          "projectionName": "LinkParameterD",
+          "caption": "Параметры связи",
+          "name": "parameters",
+          "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
+          "inverse": null
+        }
+      ]
     }
   ],
   "stored": true,

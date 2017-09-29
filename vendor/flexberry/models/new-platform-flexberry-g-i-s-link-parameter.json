@@ -82,7 +82,7 @@
         {
           "name": "queryKey",
           "caption": "Ключ запроса",
-          "hidden": false,
+          "hidden": true,
           "index": 3
         },
         {

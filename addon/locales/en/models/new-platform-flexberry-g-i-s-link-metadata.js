@@ -11,7 +11,7 @@ export default {
         caption: 'Map object setting'
       },
       parameters: {
-        caption: 'Parameter metadata',
+        caption: 'Link parameters',
         objectField: {
           caption: 'Object field'
         },
@@ -40,16 +40,16 @@ export default {
         }
       },
       mapObjectSetting: {
-        caption: 'Map object setting',
+        caption: 'Setting',
         typeName: {
-          caption: 'Type name'
+          caption: ''
         }
       },
       allowShow: {
         caption: 'Allow show'
       },
       parameters: {
-        caption: 'Parameter metadata',
+        caption: 'Link parameters',
         objectField: {
           caption: 'Object field'
         },

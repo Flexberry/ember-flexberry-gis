@@ -98,9 +98,7 @@ export let defineProjections = function (modelClass) {
     public: Projection.attr('Общая'),
     scale: Projection.attr('Масштаб'),
     coordinateReferenceSystem: Projection.attr('Система координат'),
-
-    // TODO: Uncomment when ODataService will support 'geography' type.
-    //boundingBox: Projection.attr('Граница'),
+    boundingBox: Projection.attr('Граница'),
     mapLayer: Projection.hasMany('new-platform-flexberry-g-i-s-map-layer', '', {
       name: Projection.attr('Наименование'),
       description: Projection.attr('Описание'),
@@ -111,34 +109,29 @@ export let defineProjections = function (modelClass) {
       settings: Projection.attr('Настройки'),
       scale: Projection.attr('Масштаб'),
       coordinateReferenceSystem: Projection.attr('Система координат'),
-
-      // TODO: Uncomment when ODataService will support 'geography' type.
-      //boundingBox: Projection.attr('Граница'),
+      boundingBox: Projection.attr('Граница'),
       parent: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Родитель', {
-
       }, { hidden: true }),
       map: Projection.belongsTo('new-platform-flexberry-g-i-s-map', 'Карта', {
-
       }, { hidden: true }),
       layerLink: Projection.hasMany('new-platform-flexberry-g-i-s-layer-link', '', {
-        mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
-          typeName: Projection.attr('Тип'),
-          listForm: Projection.attr('Списковая форма'),
-          editForm: Projection.attr('Форма редактирования')
-        }, { hidden: true }),
+        mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Тип', {
+          typeName: Projection.attr('Тип объекта', { hidden: true }),
+          listForm: Projection.attr('Списковая форма', { hidden: true }),
+          editForm: Projection.attr('Форма редактирования', { hidden: true })
+        }),
         layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
-          name: Projection.attr('Слой')
+          name: Projection.attr('Слой', { hidden: true })
         }, { hidden: true }),
         allowShow: Projection.attr('Показывать'),
-        parameters: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', '', {
+        parameters: Projection.hasMany('new-platform-flexberry-g-i-s-link-parameter', 'Параметры связи', {
           objectField: Projection.attr('Поле объекта'),
           layerField: Projection.attr('Поле слоя'),
-          expression: Projection.attr('Выражение'),
-          queryKey: Projection.attr('Параметр запроса'),
-          linkField: Projection.attr('Поле связи'),
+          expression: Projection.attr('Выражение', { hidden: true }),
+          queryKey: Projection.attr('Ключ запроса', { hidden: true }),
+          linkField: Projection.attr('Ключ связи', { hidden: true }),
           layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
-
-          }, { hidden: true })
+          })
         })
       })
     })

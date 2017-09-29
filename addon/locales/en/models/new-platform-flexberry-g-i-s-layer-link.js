@@ -2,11 +2,11 @@ export default {
   projections: {
     LayerLinkD: {
       mapObjectSetting: {
-        caption: 'Map object setting',
+        caption: ' Type',
         typeName: {
-          caption: 'Type name'
+          caption: 'Object type'
         },
-        listForm: {
+        ListForm: {
           caption: 'List form'
         },
         editForm: {
@@ -37,7 +37,7 @@ export default {
           caption: 'Query key'
         },
         linkField: {
-          caption: 'Link field'
+          caption: 'Link key'
         },
         layerLink: {
           caption: 'Layer link'
@@ -52,7 +52,11 @@ export default {
         caption: 'Layer'
       },
       mapObjectSetting: {
+<<<<<<< HEAD
         caption: 'Map object setting'
+=======
+        caption: ''
+>>>>>>> origin/release-0.3.0
       }
     },
     LayerLinkI: {
@@ -86,7 +90,7 @@ export default {
           caption: 'Query key'
         },
         linkField: {
-          caption: 'Link field'
+          caption: 'Link key'
         },
         layerLink: {
           caption: 'Layer link'
@@ -101,10 +105,14 @@ export default {
         caption: 'Layer'
       },
       mapObjectSetting: {
-        caption: 'Map object setting'
+        caption: ''
       },
       parameters: {
+<<<<<<< HEAD
         caption: 'Link parameters',
+=======
+        caption: 'Link parameter',
+>>>>>>> origin/release-0.3.0
         objectField: {
           caption: 'Object field'
         },
@@ -118,7 +126,7 @@ export default {
           caption: 'Query key'
         },
         linkField: {
-          caption: 'Link field'
+          caption: 'Link key'
         },
         layerLink: {
           caption: 'Layer link'

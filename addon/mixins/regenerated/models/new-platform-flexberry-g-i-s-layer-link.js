@@ -47,7 +47,7 @@ export let defineProjections = function (modelClass) {
       objectField: Projection.attr('Поле объекта'),
       layerField: Projection.attr('Поле слоя'),
       expression: Projection.attr('Выражение', { hidden: true }),
-      queryKey: Projection.attr('Параметр запроса', { hidden: true }),
+      queryKey: Projection.attr('Ключ запроса', { hidden: true }),
       linkField: Projection.attr('Ключ связи', { hidden: true }),
       layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
 
@@ -58,10 +58,8 @@ export let defineProjections = function (modelClass) {
   modelClass.defineProjection('LayerLinkE', 'new-platform-flexberry-g-i-s-layer-link', {
     allowShow: Projection.attr('Показывать'),
     layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', 'Слой карты', {
-
     }),
     mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
-
     })
   });
   modelClass.defineProjection('LayerLinkI', 'new-platform-flexberry-g-i-s-layer-link', {
@@ -77,11 +75,11 @@ export let defineProjections = function (modelClass) {
       objectField: Projection.attr('Поле объекта'),
       layerField: Projection.attr('Поле слоя'),
       expression: Projection.attr('Выражение', { hidden: true }),
-      queryKey: Projection.attr('Параметр запроса', { hidden: true }),
+      queryKey: Projection.attr('Ключ запроса', { hidden: true }),
       linkField: Projection.attr('Ключ связи', { hidden: true }),
       layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
 
-      }, { hidden: true })
+      })
     })
   });
   modelClass.defineProjection('LayerLinkQ', 'new-platform-flexberry-g-i-s-layer-link', {
@@ -100,7 +98,7 @@ export let defineProjections = function (modelClass) {
       linkField: Projection.attr('Ключ связи', { hidden: true }),
       layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
 
-      }, { hidden: true })
+      })
     })
   });
 };
