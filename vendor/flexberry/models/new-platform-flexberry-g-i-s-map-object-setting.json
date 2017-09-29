@@ -28,6 +28,14 @@
       "notNull": false,
       "defaultValue": "",
       "stored": true
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
     }
   ],
   "belongsTo": [
@@ -62,6 +70,12 @@
           "caption": "EditForm",
           "hidden": true,
           "index": 3
+        },
+        {
+          "name": "title",
+          "caption": "Title",
+          "hidden": true,
+          "index": 4
         }
       ],
       "belongsTo": [
@@ -92,16 +106,22 @@
           "index": 0
         },
         {
+          "name": "title",
+          "caption": "Отображаемое имя",
+          "hidden": false,
+          "index": 1
+        },
+        {
           "name": "listForm",
           "caption": "Списковая форма",
           "hidden": false,
-          "index": 1
+          "index": 2
         },
         {
           "name": "editForm",
           "caption": "Форма редактирования",
           "hidden": false,
-          "index": 2
+          "index": 3
         }
       ],
       "belongsTo": [
@@ -116,10 +136,10 @@
               "name": "name",
               "caption": "",
               "hidden": true,
-              "index": 4
+              "index": 5
             }
           ],
-          "index": 3,
+          "index": 4,
           "caption": "Карта по умолчанию",
           "name": "defaultMap",
           "relatedTo": "new-platform-flexberry-g-i-s-map",

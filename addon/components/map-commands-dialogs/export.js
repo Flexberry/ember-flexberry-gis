@@ -1662,7 +1662,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
     @method export
   */
-  export (pageNumber) {
+  export(pageNumber) {
     let $sheetOfPaper = this.get('_$sheetOfPaper');
     let $sheetOfLegend = this.get('_$sheetOfLegend');
     let exportSheetOfPaper = () => {

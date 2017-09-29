@@ -2,7 +2,13 @@ export default {
   projections: {
     LayerLinkD: {
       mapObjectSetting: {
-        caption: 'Map object setting',
+        caption: ' Type',
+        typeName: {
+          caption: 'Object type'
+        },
+        ListForm: {
+          caption: 'List form'
+        },
         editForm: {
           caption: 'Edit form'
         }
@@ -16,8 +22,8 @@ export default {
       allowShow: {
         caption: 'Allow show'
       },
-      linkParameter: {
-        caption: 'Link parameter',
+      parameters: {
+        caption: 'Link parameters',
         objectField: {
           caption: 'Object field'
         },
@@ -31,7 +37,7 @@ export default {
           caption: 'Query key'
         },
         linkField: {
-          caption: 'Link field'
+          caption: 'Link key'
         },
         layerLink: {
           caption: 'Layer link'
@@ -46,28 +52,7 @@ export default {
         caption: 'Layer'
       },
       mapObjectSetting: {
-        caption: 'Map object setting'
-      },
-      linkParameter: {
-        caption: 'Link parameter',
-        objectField: {
-          caption: 'Object field'
-        },
-        layerField: {
-          caption: 'Layer field'
-        },
-        expression: {
-          caption: 'Expression'
-        },
-        queryKey: {
-          caption: 'Query key'
-        },
-        linkField: {
-          caption: 'Link field'
-        },
-        layerLink: {
-          caption: 'Layer link'
-        }
+        caption: ''
       }
     },
     LayerLinkI: {
@@ -86,8 +71,8 @@ export default {
       layer: {
         caption: 'Layer'
       },
-      linkParameter: {
-        caption: 'Link parameter',
+      parameters: {
+        caption: 'Link parameters',
         objectField: {
           caption: 'Object field'
         },
@@ -101,7 +86,7 @@ export default {
           caption: 'Query key'
         },
         linkField: {
-          caption: 'Link field'
+          caption: 'Link key'
         },
         layerLink: {
           caption: 'Layer link'
@@ -116,9 +101,9 @@ export default {
         caption: 'Layer'
       },
       mapObjectSetting: {
-        caption: 'Map object setting'
+        caption: ''
       },
-      linkParameter: {
+      parameters: {
         caption: 'Link parameter',
         objectField: {
           caption: 'Object field'
@@ -133,7 +118,7 @@ export default {
           caption: 'Query key'
         },
         linkField: {
-          caption: 'Link field'
+          caption: 'Link key'
         },
         layerLink: {
           caption: 'Layer link'
