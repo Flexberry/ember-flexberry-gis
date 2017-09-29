@@ -93,11 +93,7 @@ export default {
           caption: 'Show'
         },
         parameters: {
-<<<<<<< HEAD
-          caption: 'Parameter metadata',
-=======
           caption: 'Link parameters',
->>>>>>> origin/release-0.3.0
           objectField: {
           caption: 'Object field'
         },

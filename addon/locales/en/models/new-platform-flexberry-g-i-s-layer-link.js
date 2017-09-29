@@ -52,11 +52,7 @@ export default {
         caption: 'Layer'
       },
       mapObjectSetting: {
-<<<<<<< HEAD
         caption: 'Map object setting'
-=======
-        caption: ''
->>>>>>> origin/release-0.3.0
       }
     },
     LayerLinkI: {
@@ -108,11 +104,7 @@ export default {
         caption: ''
       },
       parameters: {
-<<<<<<< HEAD
         caption: 'Link parameters',
-=======
-        caption: 'Link parameter',
->>>>>>> origin/release-0.3.0
         objectField: {
           caption: 'Object field'
         },
