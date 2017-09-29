@@ -109,7 +109,13 @@ export default {
         layerLink: {
           caption: 'Layer link',
           mapObjectSetting: {
-            caption: 'Map object setting',
+            caption: 'Type',
+            typeName: {
+              caption: 'Object type'
+            },
+            listForm: {
+              caption: 'List form'
+            },
             editForm: {
               caption: 'Edit form'
             }

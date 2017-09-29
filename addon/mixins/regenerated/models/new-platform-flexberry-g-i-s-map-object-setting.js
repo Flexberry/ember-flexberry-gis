@@ -16,6 +16,7 @@ export let Model = Ember.Mixin.create({
   typeName: DS.attr('string'),
   listForm: DS.attr('string'),
   editForm: DS.attr('string'),
+  title: DS.attr('string'),
   defaultMap: DS.belongsTo('new-platform-flexberry-g-i-s-map', { inverse: null, async: false }),
 
   getValidations: function () {
@@ -36,6 +37,7 @@ export let defineProjections = function (modelClass) {
     typeName: Projection.attr('TypeName', { hidden: true }),
     listForm: Projection.attr('ListForm', { hidden: true }),
     editForm: Projection.attr('EditForm', { hidden: true }),
+    title: Projection.attr('Title', { hidden: true }),
     defaultMap: Projection.belongsTo('new-platform-flexberry-g-i-s-map', '', {
 
     })
@@ -43,6 +45,7 @@ export let defineProjections = function (modelClass) {
 
   modelClass.defineProjection('MapObjectSettingE', 'new-platform-flexberry-g-i-s-map-object-setting', {
     typeName: Projection.attr('Тип'),
+    title: Projection.attr('Отображаемое имя'),
     listForm: Projection.attr('Списковая форма'),
     editForm: Projection.attr('Форма редактирования'),
     defaultMap: Projection.belongsTo('new-platform-flexberry-g-i-s-map', 'Карта по умолчанию', {

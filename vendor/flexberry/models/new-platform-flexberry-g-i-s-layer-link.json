@@ -32,7 +32,7 @@
   ],
   "hasMany": [
     {
-      "name": "linkParameter",
+      "name": "parameters",
       "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
       "inverse": "layerLink"
     }
@@ -46,7 +46,7 @@
           "name": "allowShow",
           "caption": "Показывать",
           "hidden": false,
-          "index": 4
+          "index": 6
         }
       ],
       "belongsTo": [
@@ -55,17 +55,29 @@
           "lookupValueField": null,
           "relationName": "MapObjectSetting",
           "belongsTo": [],
-          "hidden": true,
+          "hidden": false,
           "attrs": [
+            {
+              "name": "typeName",
+              "caption": "Тип объекта",
+              "hidden": true,
+              "index": 1
+            },
+            {
+              "name": "listForm",
+              "caption": "Списковая форма",
+              "hidden": true,
+              "index": 2
+            },
             {
               "name": "editForm",
               "caption": "Форма редактирования",
-              "hidden": false,
-              "index": 1
+              "hidden": true,
+              "index": 3
             }
           ],
           "index": 0,
-          "caption": "",
+          "caption": "Тип",
           "name": "mapObjectSetting",
           "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
           "inverse": null
@@ -80,11 +92,11 @@
             {
               "name": "name",
               "caption": "Слой",
-              "hidden": false,
-              "index": 3
+              "hidden": true,
+              "index": 5
             }
           ],
-          "index": 2,
+          "index": 4,
           "caption": "",
           "name": "layer",
           "relatedTo": "new-platform-flexberry-g-i-s-map-layer",
@@ -94,8 +106,8 @@
       "hasMany": [
         {
           "projectionName": "LinkParameterD",
-          "caption": "",
-          "name": "linkParameter",
+          "caption": "Параметры связи",
+          "name": "parameters",
           "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
           "inverse": null
         }
@@ -140,15 +152,7 @@
           "inverse": null
         }
       ],
-      "hasMany": [
-        {
-          "projectionName": "LinkParameterD",
-          "caption": "",
-          "name": "linkParameter",
-          "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
-          "inverse": null
-        }
-      ]
+      "hasMany": []
     },
     {
       "name": "LayerLinkI",
@@ -205,8 +209,8 @@
       "hasMany": [
         {
           "projectionName": "LinkParameterD",
-          "caption": "",
-          "name": "linkParameter",
+          "caption": "Параметры связи",
+          "name": "parameters",
           "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
           "inverse": null
         }
@@ -254,8 +258,8 @@
       "hasMany": [
         {
           "projectionName": "LinkParameterD",
-          "caption": "",
-          "name": "linkParameter",
+          "caption": "Параметры связи",
+          "name": "parameters",
           "relatedTo": "new-platform-flexberry-g-i-s-link-parameter",
           "inverse": null
         }
