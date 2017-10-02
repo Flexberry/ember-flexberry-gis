@@ -5,12 +5,14 @@
 import Ember from 'ember';
 import BaseLayer from '../base-layer';
 
+/* globals Terraformer, omnivore */
+
 /**
   Kml layer component for leaflet map.
 
   @class KmlLayerComponent
   @extends BaseLayerComponent
- */
+*/
 export default BaseLayer.extend({
   /**
     Specific option names available on the Layer settings tab.
@@ -57,7 +59,7 @@ export default BaseLayer.extend({
 
     if (kmlUrl) {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        let layer = window.omnivore.kml(kmlUrl, null, customLayer)
+        let layer = omnivore.kml(kmlUrl, null, customLayer)
           .on('ready', (e) => {
             this.set('_leafletObject', layer);
             resolve(layer);
@@ -69,7 +71,7 @@ export default BaseLayer.extend({
     }
 
     if (kmlString) {
-      let layer = window.omnivore.kml.parse(kmlString, null, customLayer);
+      let layer = omnivore.kml.parse(kmlString, null, customLayer);
       this.set('_leafletObject', layer);
       return layer;
     }
@@ -90,17 +92,15 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    var bounds = new window.Terraformer.Primitive(e.polygonLayer.toGeoJSON());
-    let kmlLayer = this.get('_leafletObject');
     return new Ember.RSVP.Promise((resolve, reject) => {
+      let bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
+      let kmlLayer = this.get('_leafletObject');
       let features = Ember.A();
       kmlLayer.eachLayer((layer) => {
-        let feature = layer.toGeoJSON();
-        let primitive = new window.Terraformer.Primitive(feature.geometry);
-        let l = L.geoJSON(feature);
+        let feature = Ember.$.extend(true, {}, Ember.get(layer, 'feature')); // return a copy so that the original will be kept after cleaning the identification results
+        let primitive = new Terraformer.Primitive(feature.geometry);
 
-        if (primitive instanceof window.Terraformer.Point ? primitive.within(bounds) : (primitive.intersects(bounds) || primitive.within(bounds))) {
-          feature.leafletLayer = l;
+        if (primitive instanceof Terraformer.Point ? primitive.within(bounds) : (primitive.intersects(bounds) || primitive.within(bounds))) {
           features.pushObject(feature);
         }
       });
@@ -121,34 +121,27 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    if (this.get('searchSettings.canBeSearched')) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
       let kmlLayer = this.get('_leafletObject');
+      let features = Ember.A();
+      kmlLayer.eachLayer((layer) => {
+        if (features.length < e.searchOptions.maxResultsCount) {
+          let feature = Ember.get(layer, 'feature');
 
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        let features = Ember.A();
-        kmlLayer.eachLayer((layer) => {
-          if (features.length < e.searchOptions.maxResultsCount) {
-            let feature = layer.toGeoJSON();
-            let l = L.geoJSON(feature);
+          // if layer satisfies search query
+          let searchFields = this.get('searchSettings.searchFields'); // []
+          let contains = searchFields.map((item) => {
+            return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
+          }).reduce((result, current) => {
+            return result || current; // if any field contains
+          }, false);
 
-            // if layer satisfies search query
-            let searchFields = this.get('searchSettings.searchFields'); // []
-            let contains = searchFields.map((item) => {
-              return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
-            }).reduce((result, current) => {
-              return result || current; // if any field contains
-            }, false);
-
-            if (contains) {
-              feature.leafletLayer = l;
-              features.pushObject(feature);
-            }
+          if (contains) {
+            features.pushObject(feature);
           }
-        });
-        resolve(features);
+        }
       });
-    }
-
-    return null;
+      resolve(features);
+    });
   }
 });
