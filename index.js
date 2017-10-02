@@ -100,5 +100,8 @@ module.exports = {
     // Leaflet zoomslider control
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.js');
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.css');
+
+    // ESRI.terraformer
+    app.import(app.bowerDirectory + '/terraformer/terraformer.js');
   }
 };
