@@ -130,7 +130,7 @@ export default BaseLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let geojLayer = this.get('_leafletObject');
       let features = Ember.A();
-       geojLayer.eachLayer((layer) => {
+      geojLayer.eachLayer((layer) => {
         if (features.length < e.searchOptions.maxResultsCount) {
           let feature = Ember.get(layer, 'feature');
           let geoLayer = layer.toGeoJSON();
@@ -145,9 +145,9 @@ export default BaseLayer.extend({
 
           if (contains) {
             features.pushObject(geoLayer);
-            }
           }
-        });
+        }
+      });
       resolve(features);
     });
   },
