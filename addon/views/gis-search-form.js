@@ -9,5 +9,8 @@ export default Ember.Component.extend({
 
     // Initialize Semantic UI tabs.
     this.$('.tabular.menu .item').tab();
+
+    // Initialize Semantic UI dropdown
+    this.$('.mapItems').dropdown();
   }
 });

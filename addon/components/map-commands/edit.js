@@ -203,6 +203,24 @@ let EditMapCommandComponent = Ember.Component.extend({
   },
 
   /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    // Automatically show map edit dialog for new maps, to allow user immediately define it's properties.
+    if (this.get('mapModel.isNew')) {
+      Ember.run.scheduleOnce('afterRender', this, function () {
+        // Include dialog to markup.
+        this.set('_editDialogHasBeenRequested', true);
+
+        // Show dialog.
+        this.set('_editDialogIsVisible', true);
+      });
+    }
+  },
+
+  /**
     Destroys DOM-related component's properties & logic.
   */
   willDestroyElement() {

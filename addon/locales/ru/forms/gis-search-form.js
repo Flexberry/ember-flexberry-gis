@@ -15,21 +15,23 @@ export default {
   'max-lat': 'Широта (макс.)',
   'search': 'Искать',
   'results': 'Результаты',
+  'ctrl-message': 'Удерживайте клавишу Ctrl, чтобы открыть в новом окне',
   'layer-metadata': {
     'title': 'Метаданные слоёв',
-    'header': {
-      'name': 'Название',
-      'type': 'Тип'
-    }
+    'actions': {
+      'select': 'Выбрать'
+    },
+    'selected-message': 'Выбрано элементов:',
+    'reset': 'Сбросить',
+    'open-into-map': 'Открыть на карте:',
+    'ok': 'Ok',
+    'new-map': '&lt;Новая карта&gt;',
+    'select-a-map': 'Выберите карту...'
   },
   'maps': {
     'title': 'Карты',
-    'header': {
-      'name': 'Название',
-      'lat': 'Широта',
-      'lng': 'Долгота',
-      'zoom': 'Масштаб',
-      'public': 'Общая'
+    'actions': {
+      'open': 'Открыть'
     }
   }
 };

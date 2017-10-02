@@ -216,9 +216,10 @@ export default EditMapController.extend(
           this.set('sidebar.2.active', true);
         }
 
-        if (!Ember.$('.right.sidebar').hasClass('visible')) {
-          this.send('toggleSidebar', '.right.sidebar', '.mappanel', {
-            changed: false
+        if (!this.get('sidebarOpened')) {
+          this.send('toggleSidebar', {
+            changed: false,
+            tabName: 'identify'
           });
         }
       }

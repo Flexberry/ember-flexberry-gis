@@ -20,7 +20,7 @@ export let Model = Ember.Mixin.create({
   editor: DS.attr('string'),
   mapObjectSetting: DS.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', { inverse: null, async: false }),
   layer: DS.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', { inverse: 'linkMetadata', async: false }),
-  parameterMetadata: DS.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', { inverse: 'layerLink', async: false }),
+  parameters: DS.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', { inverse: 'layerLink', async: false }),
 
   getValidations: function () {
     let parentValidations = this._super();
@@ -41,20 +41,17 @@ export let defineProjections = function (modelClass) {
   modelClass.defineProjection('AuditView', 'new-platform-flexberry-g-i-s-link-metadata', {
     allowShow: Projection.attr('Показывать'),
     layer: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
-
     }),
     mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
-
     }),
-    parameterMetadata: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', '', {
+    parameters: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры связи', {
       objectField: Projection.attr('Поле объекта'),
       layerField: Projection.attr('Поле слоя'),
       expression: Projection.attr('Выражение'),
       queryKey: Projection.attr('Ключ запроса'),
       linkField: Projection.attr('Поле связи'),
       layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
-
-      }, { hidden: true })
+      })
     })
   });
 
@@ -62,19 +59,18 @@ export let defineProjections = function (modelClass) {
     layer: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
       name: Projection.attr('', { hidden: true })
     }, { displayMemberPath: 'name' }),
-    allowShow: Projection.attr('Показывать'),
     mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
-
-    }, { hidden: true }),
-    parameterMetadata: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры', {
+      typeName: Projection.attr('', { hidden: true })
+    }, { displayMemberPath: 'typeName' }),
+    allowShow: Projection.attr('Показывать'),
+    parameters: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры связи', {
       objectField: Projection.attr('Поле объекта'),
       layerField: Projection.attr('Поле слоя'),
       expression: Projection.attr('Выражение'),
       queryKey: Projection.attr('Ключ запроса'),
       linkField: Projection.attr('Поле связи'),
       layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
-
-      })
+      }, { hidden: true })
     })
   });
 };

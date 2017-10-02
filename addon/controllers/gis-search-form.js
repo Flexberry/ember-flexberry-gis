@@ -120,6 +120,57 @@ export default Ember.Controller.extend({
     }
   }),
 
+  /**
+    Hash with ids of selected rows.
+  */
+  _selectedRows: {},
+
+  /**
+    Count of a selected rows.
+  */
+  _selectedRowsCount: Ember.computed('_selectedRows', function () {
+    let selectedRows = this.get('_selectedRows');
+    return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
+  }),
+
+  _metadataIds: Ember.computed('_selectedRows', function() {
+    let selectedRows = this.get('_selectedRows');
+    return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
+  }),
+
+  /**
+    Id of a selected map.
+  */
+  _selectedMap: null,
+
+  /**
+    Observes selected rows count and selected map and changes a flag that enables 'Open in a map' button.
+  */
+  _canOpenMapWithMetadataObserver: Ember.observer('_selectedRowsCount', '_selectedMap', function () {
+    this.set('_canOpenMapWithMetadata', this.get('_selectedRowsCount') > 0 && !Ember.isNone(this.get('_selectedMap')));
+  }),
+
+  /**
+    The route name to transit when user clicks 'Open a map'.
+
+    @default 'map'
+  */
+  mapRouteName: 'map',
+
+  /**
+    The route name to transit when user clicks 'Open metadata in a map'.
+
+    @default 'map'
+  */
+  mapWithMetadataRouteName: 'map',
+
+  /**
+    The route name to transit when user clicks 'Open metadata in a new map'.
+
+    @default 'map.new'
+  */
+  newMapWithMetadataRouteName: 'map.new',
+
   actions: {
     /**
       Handles search button click and passes search data to the route.
@@ -127,8 +178,9 @@ export default Ember.Controller.extend({
       @method actions.getSearchResults
     */
     getSearchResults() {
-      let req = { searchConditions: this.get('searchConditions') };
-      this.send('doSearch', req);
+      this.set('_selectedRows', {}); // clear selected rows
+      this.notifyPropertyChange('_selectedRows');
+      this.send('doSearch', { searchConditions: this.get('searchConditions') });
     },
 
     /**
@@ -182,8 +234,38 @@ export default Ember.Controller.extend({
         (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
     },
 
+    /**
+      Handles scale condition changing.
+
+      @method actions.onScaleConditionChange
+      @param {String} index Index of selected element.
+      @param {Object} element Selected element.
+      @param {String} value Selected value.
+    */
     onScaleConditionChange(index, element, value) {
       this.set(`searchConditions.scaleFilters.${index}.condition`, value);
+    },
+
+    /**
+      Handles click on row select checkbox.
+
+      @method actions.onRowSelect
+      @param {String} rowId Id of selected row.
+      @param {Object} options Event options. We condider options.checked.
+    */
+    onRowSelect(rowId, options) {
+      this.set(`_selectedRows.${rowId}`, options.checked);
+      this.notifyPropertyChange('_selectedRows');
+    },
+
+    /**
+      Clears selected rows.
+
+      @method actions._clearSelectedRows
+    */
+    _clearSelectedRows() {
+      this.set('_selectedRows', {});
+      this.notifyPropertyChange('_selectedRows');
     }
   }
 });

@@ -25,7 +25,7 @@ let Model = Projection.Model.extend(Offline.ModelMixin, MapLayerMixin, LayerMode
   })),
 
   anyTextCompute() {
-    return `${this.get('name') || ''} ${this.get('description') || ''} ${(this.get('keyWords') || '').replace(',', ' ')}`;
+    return `${this.get('name') || ''} ${this.get('description') || ''} ${(this.get('keyWords') || '').replace(/,/g, ' ')}`;
   }
 });
 

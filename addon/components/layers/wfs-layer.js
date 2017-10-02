@@ -196,7 +196,9 @@ export default BaseLayer.extend({
       filter,
       maxFeatures: e.searchOptions.maxResultsCount,
       style: {
-        color: 'yellow'
+        color: 'yellow',
+        weight: 2,
+        fillOpacity: 0.3
       }
     });
 
@@ -217,7 +219,7 @@ export default BaseLayer.extend({
     let queryFilter = e.queryFilter;
     let equals = [];
     layerLinks.forEach((link) => {
-      let linkParameters = link.get('linkParameter');
+      let linkParameters = link.get('parameters');
 
       if (Ember.isArray(linkParameters) && linkParameters.length > 0) {
         linkParameters.forEach(linkParam => {

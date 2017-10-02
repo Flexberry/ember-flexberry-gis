@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
+import { Query } from 'ember-flexberry-data';
 
 /**
   Edit map route.
@@ -38,6 +39,11 @@ export default EditFormRoute.extend({
       refreshModel: false,
       replace: false,
       as: 'lng'
+    },
+    metadata: {
+      refreshModel: false,
+      replace: false,
+      as: 'metadata'
     }
   },
 
@@ -67,6 +73,48 @@ export default EditFormRoute.extend({
     @default 'new-platform-flexberry-g-i-s-map'
   */
   modelName: 'new-platform-flexberry-g-i-s-map',
+
+  /**
+    Name of metadata model projection to be used as layer metadata properties limitation.
+
+    @property metadataProjection
+    @type String
+    @default 'LayerMetadataE'
+  */
+  metadataProjection: 'LayerMetadataE',
+
+  /**
+    Name of metadata model to be used as layer metadata record type.
+
+    @property metadataModelName
+    @type String
+    @default 'new-platform-flexberry-g-i-s-layer-metadata'
+  */
+  metadataModelName: 'new-platform-flexberry-g-i-s-layer-metadata',
+
+  /**
+    [Model hook](http://emberjs.com/api/classes/Ember.Route.html#method_model) that returns a map project for current route.
+    Additionally loads layers according to metadata param.
+
+    @method model
+    @param {Object} params
+    @param {Object} transition
+    @return {*} Model of map project for current route.
+  */
+  model(params, transition) {
+    let modelQuery = this._super.apply(this, arguments);
+    let metadataQuery = this._getMetadata(params.metadata);
+
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      Ember.RSVP.all([modelQuery, metadataQuery]).then((data) => {
+        let [model, metadata] = data;
+        this._addMetadata(model, metadata);
+        resolve(model);
+      }).catch((error) => {
+        reject(error);
+      });
+    });
+  },
 
   /**
     Setups controller for the current route.
@@ -117,6 +165,60 @@ export default EditFormRoute.extend({
       controller.set('zoom', null);
       controller.set('lat', null);
       controller.set('lng', null);
+      controller.set('metadata', null);
+    }
+  },
+
+  /**
+    Produces metadata loading request.
+
+    @param {String} metadata Metadata ids to be used as query limitation.
+  */
+  _getMetadata(metadata) {
+    if (Ember.isPresent(metadata)) {
+      let queryBuilder = new Query.Builder(this.get('store'))
+      .from(this.get('metadataModelName'))
+      .selectByProjection(this.get('metadataProjection'));
+
+      let conditions = metadata.split(',').map((item) => {
+        let id = item.trim().toLowerCase();
+        return new Query.SimplePredicate('id', Query.FilterOperator.Eq, id);
+      });
+      if (Ember.isArray(conditions)) {
+        let condition = conditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.Or, ...conditions) : conditions[0];
+        queryBuilder = queryBuilder.where(condition);
+      }
+
+      return this.get('store').query(this.get('metadataModelName'), queryBuilder.build());
+    }
+
+    return null;
+  },
+
+  /**
+    Adds metadata to the model mapLayer collection.
+
+    @param {*} model Map model.
+    @param {*} metadata Metadata collection.
+  */
+  _addMetadata(model, metadata) {
+    if (Ember.isArray(metadata)) {
+      metadata.forEach((item) => {
+        let newLayer = this.get('store').createRecord('new-platform-flexberry-g-i-s-map-layer', {
+          name: item.get('name'),
+          description: item.get('description'),
+          keyWords: item.get('keyWords'),
+          type: item.get('type'),
+          settings: item.get('settings'),
+          scale: item.get('scale'),
+          coordinateReferenceSystem: item.get('coordinateReferenceSystem'),
+          boundingBox: item.get('boundingBox'),
+
+          // If user has chosen to open metadata on map, then layer created on metadata basics must be visible by default.
+          visibility: true
+        });
+        model.get('mapLayer').pushObject(newLayer);
+      });
     }
   },
 
