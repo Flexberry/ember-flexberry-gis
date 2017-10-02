@@ -217,10 +217,10 @@ export default BaseLayer.extend({
     let featuresPromise = this._getFeature({
       filter,
       maxFeatures: e.searchOptions.maxResultsCount,
+      fillOpacity: 0.3,
       style: {
         color: 'yellow',
-        weight: 2,
-        fillOpacity: 0.3
+        weight: 2
       }
     });
 
