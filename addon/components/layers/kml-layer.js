@@ -130,14 +130,16 @@ export default BaseLayer.extend({
 
           // if layer satisfies search query
           let searchFields = this.get('searchSettings.searchFields'); // []
-          let contains = searchFields.map((item) => {
-            return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
-          }).reduce((result, current) => {
-            return result || current; // if any field contains
-          }, false);
+          if (Ember.isArray(searchFields)) {
+            let contains = searchFields.map((item) => {
+              return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
+            }).reduce((result, current) => {
+              return result || current; // if any field contains
+            }, false);
 
-          if (contains) {
-            features.pushObject(feature);
+            if (contains) {
+              features.pushObject(feature);
+            }
           }
         }
       });
