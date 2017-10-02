@@ -341,7 +341,9 @@ let FlexberryMapComponent = Ember.Component.extend(
               let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
               if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
                 leafletLayer.setStyle({
-                  color: 'salmon'
+                  color: 'salmon',
+                  weight: 2,
+                  fillOpacity: 0.3
                 });
               }
 

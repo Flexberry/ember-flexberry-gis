@@ -81,20 +81,17 @@ export let defineProjections = function (modelClass) {
     linkMetadata: Projection.hasMany('new-platform-flexberry-g-i-s-link-metadata', '', {
       allowShow: Projection.attr('Показывать'),
       layer: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
-
       }),
       mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
-
       }),
-      parameterMetadata: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', '', {
+      parameters: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры связи', {
         objectField: Projection.attr('Поле объекта'),
         layerField: Projection.attr('Поле слоя'),
         expression: Projection.attr('Выражение'),
         queryKey: Projection.attr('Ключ запроса'),
         linkField: Projection.attr('Поле связи'),
         layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
-
-        }, { hidden: true })
+        })
       })
     })
   });
@@ -107,26 +104,23 @@ export let defineProjections = function (modelClass) {
     settings: Projection.attr('Настройки'),
     scale: Projection.attr('Масштаб'),
     coordinateReferenceSystem: Projection.attr('Система координат'),
-
-    // TODO: Uncomment when ODataService will support 'geography' type.
-    //boundingBox: Projection.attr('Граница'),
+    boundingBox: Projection.attr('Граница'),
     linkMetadata: Projection.hasMany('new-platform-flexberry-g-i-s-link-metadata', '', {
       layer: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
         name: Projection.attr('', { hidden: true })
       }, { displayMemberPath: 'name' }),
-      allowShow: Projection.attr('Показывать'),
       mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Настройка', {
-
-      }, { hidden: true }),
-      parameterMetadata: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры', {
+        typeName: Projection.attr('', { hidden: true })
+      }, { displayMemberPath: 'typeName' }),
+      allowShow: Projection.attr('Показывать'),
+      parameters: Projection.hasMany('new-platform-flexberry-g-i-s-parameter-metadata', 'Параметры связи', {
         objectField: Projection.attr('Поле объекта'),
         layerField: Projection.attr('Поле слоя'),
         expression: Projection.attr('Выражение'),
         queryKey: Projection.attr('Ключ запроса'),
         linkField: Projection.attr('Поле связи'),
         layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-link-metadata', 'Связь', {
-
-        })
+        }, { hidden: true })
       })
     })
   });

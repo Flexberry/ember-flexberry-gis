@@ -20,7 +20,7 @@
       "master": null,
       "displayAttributeName": null,
       "required": false,
-      "relationName": "LinkMetadata.ParameterMetadata.LayerLink",
+      "relationName": "LinkMetadata.Parameters.LayerLink",
       "projection": "",
       "detailModelName": null
     }

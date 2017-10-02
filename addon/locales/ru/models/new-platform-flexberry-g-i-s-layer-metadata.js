@@ -27,8 +27,8 @@ export default {
         mapObjectSetting: {
           caption: 'Настройка'
         },
-        parameterMetadata: {
-          caption: '',
+        parameters: {
+          caption: 'Параметры связи',
           objectField: {
           caption: 'Поле объекта'
         },
@@ -83,14 +83,17 @@ export default {
             caption: ''
           }
         },
+        mapObjectSetting: {
+          caption: 'Настройка',
+          typeName: {
+            caption: ''
+          }
+        },
         allowShow: {
           caption: 'Показывать'
         },
-        mapObjectSetting: {
-          caption: 'Настройка'
-        },
-        parameterMetadata: {
-          caption: 'Параметры',
+        parameters: {
+          caption: 'Параметры связи',
           objectField: {
           caption: 'Поле объекта'
         },

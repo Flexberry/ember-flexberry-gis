@@ -52,13 +52,13 @@
       "presence": true,
       "name": "layerLink",
       "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
-      "inverse": "linkParameter"
+      "inverse": "parameters"
     }
   ],
   "hasMany": [],
   "projections": [
     {
-      "name": "LinkParameter",
+      "name": "LinkParameterD",
       "modelName": "new-platform-flexberry-g-i-s-link-parameter",
       "attrs": [
         {
@@ -76,19 +76,19 @@
         {
           "name": "expression",
           "caption": "Выражение",
-          "hidden": false,
+          "hidden": true,
           "index": 2
         },
         {
           "name": "queryKey",
-          "caption": "Параметр запроса",
-          "hidden": false,
+          "caption": "Ключ запроса",
+          "hidden": true,
           "index": 3
         },
         {
           "name": "linkField",
-          "caption": "Поле связи",
-          "hidden": false,
+          "caption": "Ключ связи",
+          "hidden": true,
           "index": 4
         }
       ],
@@ -101,58 +101,6 @@
           "hidden": false,
           "attrs": [],
           "index": 5,
-          "caption": "Связь",
-          "name": "layerLink",
-          "relatedTo": "new-platform-flexberry-g-i-s-layer-link",
-          "inverse": null
-        }
-      ],
-      "hasMany": []
-    },
-    {
-      "name": "LinkParameterD",
-      "modelName": "new-platform-flexberry-g-i-s-link-parameter",
-      "attrs": [
-        {
-          "name": "objectField",
-          "caption": "Поле объекта",
-          "hidden": false,
-          "index": 1
-        },
-        {
-          "name": "layerField",
-          "caption": "Поле слоя",
-          "hidden": false,
-          "index": 2
-        },
-        {
-          "name": "expression",
-          "caption": "Выражение",
-          "hidden": false,
-          "index": 3
-        },
-        {
-          "name": "queryKey",
-          "caption": "Параметр запроса",
-          "hidden": false,
-          "index": 4
-        },
-        {
-          "name": "linkField",
-          "caption": "Поле связи",
-          "hidden": false,
-          "index": 5
-        }
-      ],
-      "belongsTo": [
-        {
-          "lookupValue": null,
-          "lookupValueField": null,
-          "relationName": "LayerLink",
-          "belongsTo": [],
-          "hidden": true,
-          "attrs": [],
-          "index": 0,
           "caption": "Связь",
           "name": "layerLink",
           "relatedTo": "new-platform-flexberry-g-i-s-layer-link",

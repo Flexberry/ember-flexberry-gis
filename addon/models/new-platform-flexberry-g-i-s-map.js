@@ -23,7 +23,7 @@ let Model = Projection.Model.extend(Offline.ModelMixin, MapMixin, LeafletCrsMixi
   })),
 
   anyTextCompute() {
-    return `${this.get('name') || ''} ${this.get('description') || ''} ${(this.get('keyWords') || '').replace(',', ' ')}`;
+    return `${this.get('name') || ''} ${this.get('description') || ''} ${(this.get('keyWords') || '').replace(/,/g, ' ')}`;
   }
 });
 

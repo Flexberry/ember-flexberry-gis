@@ -16,7 +16,7 @@ export let Serializer = Ember.Mixin.create({
     let attrs = {
       mapObjectSetting: { serialize: 'odata-id', deserialize: 'records' },
       layer: { serialize: 'odata-id', deserialize: 'records' },
-      parameterMetadata: { serialize: false, deserialize: 'records' }
+      parameters: { serialize: false, deserialize: 'records' }
     };
 
     return Ember.$.extend(true, {}, parentAttrs, attrs);
