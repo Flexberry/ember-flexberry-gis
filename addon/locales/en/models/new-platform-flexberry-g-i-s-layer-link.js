@@ -1,115 +1,127 @@
 export default {
   projections: {
     LayerLinkD: {
-      layer: {
-        caption: 'layer',
-        name: {
-          caption: 'name'
+      mapObjectSetting: {
+        caption: ' Type',
+        typeName: {
+          caption: 'Object type'
+        },
+        ListForm: {
+          caption: 'List form'
+        },
+        editForm: {
+          caption: 'Edit form'
         }
       },
-      mapObjectSetting: {
-        caption: 'mapObjectSetting'
+      layer: {
+        caption: 'Layer',
+        name: {
+          caption: 'Name'
+        }
       },
-      linkParameter: {
-        caption: 'linkParameter',
+      allowShow: {
+        caption: 'Allow show'
+      },
+      parameters: {
+        caption: 'Link parameters',
         objectField: {
-          caption: 'objectField'
+          caption: 'Object field'
         },
         layerField: {
-          caption: 'layerField'
+          caption: 'Layer field'
         },
         expression: {
-          caption: 'expression'
+          caption: 'Expression'
         },
         queryKey: {
-          caption: 'queryKey'
+          caption: 'Query key'
         },
         linkField: {
-          caption: 'linkField'
+          caption: 'Link key'
+        },
+        layerLink: {
+          caption: 'Layer link'
         }
       }
     },
     LayerLinkE: {
+      allowShow: {
+        caption: 'Allow show'
+      },
       layer: {
-        caption: 'layer'
+        caption: 'Layer'
       },
       mapObjectSetting: {
-        caption: 'mapObjectSetting'
-      },
-      linkParameter: {
-        caption: 'linkParameter',
-        objectField: {
-          caption: 'objectField'
-        },
-        layerField: {
-          caption: 'layerField'
-        },
-        expression: {
-          caption: 'expression'
-        },
-        queryKey: {
-          caption: 'queryKey'
-        },
-        linkField: {
-          caption: 'linkField'
-        }
+        caption: ''
       }
     },
     LayerLinkI: {
       mapObjectSetting: {
-        caption: 'mapObjectSetting',
+        caption: 'Map object setting',
         listForm: {
-          caption: 'listForm'
+          caption: 'List form'
         },
         editForm: {
-          caption: 'editForm'
+          caption: 'Edit form'
         }
       },
-      layer: {
-        caption: 'layer'
+      allowShow: {
+        caption: 'Allow show'
       },
-      linkParameter: {
-        caption: 'linkParameter',
+      layer: {
+        caption: 'Layer'
+      },
+      parameters: {
+        caption: 'Link parameters',
         objectField: {
-          caption: 'objectField'
+          caption: 'Object field'
         },
         layerField: {
-          caption: 'layerField'
+          caption: 'Layer field'
         },
         expression: {
-          caption: 'expression'
+          caption: 'Expression'
         },
         queryKey: {
-          caption: 'queryKey'
+          caption: 'Query key'
         },
         linkField: {
-          caption: 'linkField'
+          caption: 'Link key'
+        },
+        layerLink: {
+          caption: 'Layer link'
         }
       }
     },
     LayerLinkQ: {
+      allowShow: {
+        caption: 'Allow show'
+      },
       layer: {
-        caption: 'layer'
+        caption: 'Layer'
       },
       mapObjectSetting: {
-        caption: 'mapObjectSetting'
+        caption: ''
       },
-      linkParameter: {
-        caption: 'linkParameter',
+      parameters: {
+        caption: 'Link parameter',
         objectField: {
-          caption: 'objectField'
+          caption: 'Object field'
         },
         layerField: {
-          caption: 'layerField'
+          caption: 'Layer field'
         },
         expression: {
-          caption: 'expression'
+          caption: 'Expression'
         },
         queryKey: {
-          caption: 'queryKey'
+          caption: 'Query key'
         },
         linkField: {
-          caption: 'linkField'
+          caption: 'Link key'
+        },
+        layerLink: {
+          caption: 'Layer link'
         }
       }
     }

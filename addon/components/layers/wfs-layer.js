@@ -9,7 +9,7 @@ import BaseLayer from '../base-layer';
   WFS layer component for leaflet map.
 
   @class WfsLayerComponent
-  @extend BaseLayerComponent
+  @extends BaseLayerComponent
  */
 export default BaseLayer.extend({
   leafletOptions: [
@@ -113,6 +113,26 @@ export default BaseLayer.extend({
   },
 
   /**
+    Returns leaflet layer's bounding box.
+
+    @method _getBoundingBox
+    @private
+    @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
+  */
+  _getBoundingBox(layer) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      layer.getBoundingBox(
+        (boundingBox, xhr) => {
+          resolve(boundingBox);
+        },
+        (errorThrown, xhr) => {
+          reject(errorThrown);
+        }
+      );
+    });
+  },
+
+  /**
     Creates leaflet layer related to layer type.
 
     @method createLayer
@@ -176,7 +196,9 @@ export default BaseLayer.extend({
       filter,
       maxFeatures: e.searchOptions.maxResultsCount,
       style: {
-        color: 'yellow'
+        color: 'yellow',
+        weight: 2,
+        fillOpacity: 0.3
       }
     });
 
@@ -197,7 +219,7 @@ export default BaseLayer.extend({
     let queryFilter = e.queryFilter;
     let equals = [];
     layerLinks.forEach((link) => {
-      let linkParameters = link.get('linkParameter');
+      let linkParameters = link.get('parameters');
 
       if (Ember.isArray(linkParameters) && linkParameters.length > 0) {
         linkParameters.forEach(linkParam => {

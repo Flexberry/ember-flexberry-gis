@@ -1,3 +1,1 @@
-import Resolver from 'ember-flexberry/resolver';
-
-export default Resolver;
+export { default } from 'ember-flexberry/resolver';

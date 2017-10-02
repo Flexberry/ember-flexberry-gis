@@ -1,0 +1,79 @@
+{{!--
+  See https://github.com/ciena-blueplanet/ember-block-slots#usage
+  {{yield}} is required here to make yield-slots available.
+--}}
+{{yield}}
+
+{{#yield-slot "head-block"}}
+  {{yield}}
+{{/yield-slot}}
+<table class="ui celled table">
+  <thead>
+    <tr>
+      {{#yield-slot "column-header-head-0"}}
+        {{yield}}
+      {{/yield-slot}}
+      {{#each-in header as |key value|}}
+      <th>{{value}}</th>
+      {{/each-in}}
+      {{#yield-slot "column-header-tail-0"}}
+        {{yield}}
+      {{/yield-slot}}
+    </tr>
+  </thead>
+  <tbody>
+    {{#if model}}
+        {{#each model as |row|}}
+        <tr>
+          {{#yield-slot "column-cell-head-0" (block-params row)}}
+            {{yield}}
+          {{/yield-slot}}
+          {{#each-in header as |key value|}}
+            <td>{{get row key}}</td>
+          {{/each-in}}
+          {{#yield-slot "column-cell-tail-0" (block-params row)}}
+            {{yield}}
+          {{/yield-slot}}
+        </tr>
+        {{/each}}
+    {{else}}
+     <tr>
+        <td class="center aligned" colspan="{{_columnCount}}">{{t "components.flexberry-table.no-data"}}</td>
+     </tr>
+    {{/if}}
+  </tbody>
+  <tfoot>
+    <tr>
+      <th colspan="{{_columnCount}}">
+        <div class="ui secondary menu no-margin">
+          <div class="ui basic buttons">
+            <button class="ui {{unless hasPreviousPage "disabled"}} button" {{action (if this.attrs.previousPage this.attrs.previousPage "previousPage")}}>
+              <i class="prev-page icon"></i>
+            </button>
+            {{#each pages as |page|}}
+              {{#if page.isEllipsis}}
+                <button class="ui button">...</button>
+              {{else}}
+                {{#if page.isCurrent}}
+                  <button class="ui active button">
+                    {{page.number}}
+                  </button>
+                {{else}}
+                  <button class="ui button" {{action (if this.attrs.gotoPage this.attrs.gotoPage "gotoPage") page.number}}>
+                    {{page.number}}
+                  </button>
+                {{/if}}
+              {{/if}}
+            {{/each}}
+            <button class="ui {{unless hasNextPage "disabled"}} button" {{action (if this.attrs.nextPage this.attrs.nextPage "nextPage")}}>
+              <i class="next-page icon"></i>
+            </button>
+          </div>
+          <div class="right menu">
+            {{flexberry-dropdown items=perPageValues value=perPageValue class="compact selection" onChange=(action "perPageClick")}}
+          </div>
+        </div>
+      </th>
+    </tr>
+  </tfoot>
+</table>

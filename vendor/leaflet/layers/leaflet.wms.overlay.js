@@ -17,14 +17,15 @@ L.WMS.Overlay.Extended = L.WMS.Overlay.extend({
     // Keep current image overlay in place until new one loads
     // (inspired by esri.leaflet)
     var bounds = this._map.getBounds();
-    var overlay = L.imageOverlayExtended(url, bounds, {
+    var overlay = L.imageOverlay(url, bounds, {
       'opacity': 0
     });
     overlay.addTo(this._map);
     overlay.once('load', _swap, this);
+    overlay.once('error', _swap, this);
 
-    function _swap() {
-      if (!this._map) {
+    function _swap(e) {
+      if (e.type === 'error' || !this._map) {
         overlay.remove();
         return;
       }

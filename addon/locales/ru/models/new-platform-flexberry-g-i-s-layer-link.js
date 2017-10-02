@@ -1,58 +1,58 @@
 export default {
   projections: {
     LayerLinkD: {
+      mapObjectSetting: {
+        caption: 'Тип',
+        typeName: {
+          caption: 'Тип объекта'
+        },
+        listForm: {
+          caption: 'Списковая форма'
+        },
+        editForm: {
+          caption: 'Форма редактирования'
+        }
+      },
       layer: {
         caption: '',
         name: {
           caption: 'Слой'
         }
       },
-      mapObjectSetting: {
-        caption: ''
+      allowShow: {
+        caption: 'Показывать'
       },
-      linkParameter: {
-        caption: '',
+      parameters: {
+        caption: 'Параметры связи',
         objectField: {
-          caption: ''
+          caption: 'Поле объекта'
         },
         layerField: {
-          caption: ''
+          caption: 'Поле слоя'
         },
         expression: {
-          caption: ''
+          caption: 'Выражение'
         },
         queryKey: {
-          caption: ''
+          caption: 'Ключ запроса'
         },
         linkField: {
-          caption: ''
+          caption: 'Ключ связи'
+        },
+        layerLink: {
+          caption: 'Связь'
         }
       }
     },
     LayerLinkE: {
+      allowShow: {
+        caption: 'Показывать'
+      },
       layer: {
         caption: 'Слой карты'
       },
       mapObjectSetting: {
         caption: ''
-      },
-      linkParameter: {
-        caption: '',
-        objectField: {
-          caption: ''
-        },
-        layerField: {
-          caption: ''
-        },
-        expression: {
-          caption: ''
-        },
-        queryKey: {
-          caption: ''
-        },
-        linkField: {
-          caption: ''
-        }
       }
     },
     LayerLinkI: {
@@ -65,51 +65,63 @@ export default {
           caption: ''
         }
       },
+      allowShow: {
+        caption: 'Показывать'
+      },
       layer: {
         caption: ''
       },
-      linkParameter: {
-        caption: '',
+      parameters: {
+        caption: 'Параметры связи',
         objectField: {
-          caption: ''
+          caption: 'Поле объекта'
         },
         layerField: {
-          caption: ''
+          caption: 'Поле слоя'
         },
         expression: {
-          caption: ''
+          caption: 'Выражение'
         },
         queryKey: {
-          caption: ''
+          caption: 'Ключ запроса'
         },
         linkField: {
-          caption: ''
+          caption: 'Ключ связи'
+        },
+        layerLink: {
+          caption: 'Связь'
         }
       }
     },
     LayerLinkQ: {
+      allowShow: {
+        caption: 'Показывать'
+      },
       layer: {
         caption: ''
       },
       mapObjectSetting: {
         caption: ''
       },
-      linkParameter: {
-        caption: '',
+      parameters: {
+        caption: 'Параметры связи',
         objectField: {
-          caption: ''
+          caption: 'Поле объекта'
         },
         layerField: {
-          caption: ''
+          caption: 'Поле слоя'
         },
         expression: {
-          caption: ''
+          caption: 'Выражение'
         },
         queryKey: {
-          caption: ''
+          caption: 'Ключ запроса'
         },
         linkField: {
-          caption: ''
+          caption: 'Ключ связи'
+        },
+        layerLink: {
+          caption: 'Связь'
         }
       }
     }

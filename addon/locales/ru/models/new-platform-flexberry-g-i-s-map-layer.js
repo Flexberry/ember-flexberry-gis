@@ -2,130 +2,184 @@ export default {
   projections: {
     AuditView: {
       name: {
-        caption: 'Name'
+        caption: 'Наименование'
       },
       creator: {
-        caption: 'Creator'
+        caption: 'Создатель'
       },
       createTime: {
-        caption: 'Create time'
+        caption: 'Время создания'
       },
       editor: {
-        caption: 'Editor'
+        caption: 'Редактор'
       },
       editTime: {
-        caption: 'Edit time'
+        caption: 'Время редактирования'
       }
     },
     MapLayerD: {
       name: {
-        caption: 'Name'
+        caption: 'Наименование'
       },
-      type: {
-        caption: 'Type'
+      description: {
+        caption: 'Описание'
       },
-      visibility: {
-        caption: 'Visibility'
+      keyWords: {
+        caption: 'Ключевые слова'
       },
       index: {
-        caption: 'Index'
+        caption: 'Индекс'
       },
-      coordinateReferenceSystem: {
-        caption: 'CRS'
+      visibility: {
+        caption: 'Видимость'
+      },
+      type: {
+        caption: 'Тип'
       },
       settings: {
-        caption: 'Settings'
+        caption: 'Настройки'
+      },
+      scale: {
+        caption: 'Масштаб'
+      },
+      coordinateReferenceSystem: {
+        caption: 'Система координат'
+      },
+      boundingBox: {
+        caption: 'Граница'
       },
       parent: {
-        caption: 'Parent'
+        caption: 'Родитель'
       },
       map: {
-        caption: 'Map'
+        caption: 'Карта'
       },
       layerLink: {
         caption: '',
+        mapObjectSetting: {
+          caption: 'Тип',
+          typeName: {
+            caption: 'Тип объекта'
+          },
+          listForm: {
+            caption: 'Списковая форма'
+          },
+          editForm: {
+            caption: 'Форма редактирования'
+          }
+        },
         layer: {
           caption: '',
           name: {
             caption: 'Слой'
           }
         },
-        mapObjectSetting: {
-          caption: ''
+        allowShow: {
+          caption: 'Показывать'
         },
-        linkParameter: {
-          caption: '',
+        parameters: {
+          caption: 'Параметры связи',
           objectField: {
-          caption: ''
-        },
+            caption: 'Поле объекта'
+          },
           layerField: {
-          caption: ''
-        },
+            caption: 'Поле слоя'
+          },
           expression: {
-          caption: ''
-        },
+            caption: 'Выражение'
+          },
           queryKey: {
-          caption: ''
-        },
+            caption: 'Ключ запроса'
+          },
           linkField: {
-          caption: ''
-        }
+            caption: 'Ключ связи'
+          },
+          layerLink: {
+            caption: 'Связь'
+          }
         }
       }
     },
     MapLayerE: {
       name: {
-        caption: 'Name'
+        caption: 'Наименование'
       },
-      type: {
-        caption: 'Type'
+      description: {
+        caption: 'Описание'
       },
-      visibility: {
-        caption: 'Visibility'
+      keyWords: {
+        caption: 'Ключевые слова'
       },
       index: {
-        caption: 'Index'
+        caption: 'Индекс'
       },
-      coordinateReferenceSystem: {
-        caption: 'CRS'
+      visibility: {
+        caption: 'Видимость'
+      },
+      type: {
+        caption: 'Тип'
       },
       settings: {
-        caption: 'Settings'
+        caption: 'Настройки'
+      },
+      scale: {
+        caption: 'Масштаб'
+      },
+      coordinateReferenceSystem: {
+        caption: 'Система координат'
+      },
+      boundingBox: {
+        caption: 'Граница'
       },
       parent: {
-        caption: 'Parent'
+        caption: 'Родитель'
       },
       map: {
-        caption: 'Map'
+        caption: 'Карта'
       },
       layerLink: {
         caption: '',
+        mapObjectSetting: {
+          caption: 'Тип',
+          typeName: {
+            caption: 'Тип объекта'
+          },
+          listForm: {
+            caption: 'Списковая форма'
+          },
+          editForm: {
+            caption: 'Форма редактирования'
+          }
+        },
         layer: {
           caption: '',
           name: {
             caption: 'Слой'
           }
         },
-        mapObjectSetting: {
-          caption: ''
+        allowShow: {
+          caption: 'Показывать'
         },
-        linkParameter: {
+        parameters: {
           caption: '',
           objectField: {
-          caption: ''
-        },
+            caption: 'Поле объекта'
+          },
           layerField: {
-          caption: ''
-        },
+            caption: 'Поле слоя'
+          },
           expression: {
-          caption: ''
-        },
+            caption: 'Выражение'
+          },
           queryKey: {
-          caption: ''
-        },
+            caption: 'Ключ запроса'
+          },
           linkField: {
-          caption: ''
-        }
+            caption: 'Ключ связи'
+          },
+          layerLink: {
+            caption: 'Связь'
+          }
         }
       }
     },
@@ -133,25 +187,16 @@ export default {
       name: {
         caption: 'Наименование'
       },
+      description: {
+        caption: 'Описание'
+      },
       type: {
         caption: 'Тип'
       },
-      visibility: {
-        caption: 'Видимость'
-      },
-      index: {
-        caption: 'Индекс'
-      },
-      coordinateReferenceSystem: {
-        caption: 'CRS'
-      },
-      settings: {
-        caption: 'Настройки'
-      },
       parent: {
-        caption: 'Родительский слой',
+        caption: 'Родитель',
         name: {
-          caption: 'Родительский слой'
+          caption: 'Родитель'
         }
       }
     }

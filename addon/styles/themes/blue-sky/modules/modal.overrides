@@ -1,0 +1,174 @@
+/*******************************
+         Theme Overrides
+*******************************/
+
+.ui.modal.flexberry-edit-map-dialog,
+.ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-export-map-command-dialog,
+.ui.modal.flexberry-search-map-command-dialog,
+.ui.modal.flexberry-go-to-map-command-dialog {
+
+    .content {
+        overflow: auto;
+    }
+
+    .ui.attached.menu {
+        background: @whitecolor;
+    }
+    /* вкладки в модальных окнах */
+    .ui.tabular.menu .item {
+        color: @tabularMenuItemColor;
+        &.active {
+            color: @tabularMenuItemActiveColor;
+        }
+        &:hover {
+            color: @tabularMenuItemHoveredCcolor;
+        }
+        &.disabled i.icon:before {
+            color: @tabularMenuItemDisabledIconColor;
+        }
+    }
+    .actions:not(.ui) {
+        border-top: none;
+        background-color: @lightbluecolor;
+        padding: 1rem;
+        color: @whitecolor;
+        .ui.button {
+            padding: .6em 2em;
+        }
+    }
+    .ui.error.message {
+        margin: 10px 0 0 0;
+    }
+    /* иконка закрытия */
+    i.icon.close:before {
+        font-family: Crimean;
+        content: "\e806";
+    }
+    /* контент окна */
+    .flexberry-dialog-content {
+        padding: 0px 1.5rem !important;
+    }
+    /* Кнопки с иконками */
+    .ui.icon.button:not(.fluid) {
+        font-weight: normal;
+        height: 36px;
+        width: 36px;
+        display: flex;
+        font-size: 15px;
+        margin: 0 2px;
+        border: none;
+        box-shadow: @darkBoxShadow;
+        &.active,
+        &:hover {
+            color: @darkbluecolor;
+            background: @lightbluecolor;
+            box-shadow: @darkBoxShadow;
+
+            &>i.icon:before {
+              color: @darkbluecolor;
+            }
+        }
+    }
+    .ui.form .field {
+        .button.flexberry-button {
+          color: @darkbluecolor;
+            &>i.icon:before {
+              color: @darkbluecolor;
+            }
+            &:hover {
+                &>i.icon:before {
+                  color: @darkbluecolor;
+                }
+            }
+        }
+    }
+    .ui.icon.button.switch {
+        display: inline-block;
+        height: auto;
+    }
+    /* кнопка ОК */
+    .ui.positive.button {
+        font-weight: normal;
+        background-color: @bluecolor !important;
+        border: solid 1px @bluecolor !important;
+        color: @whitecolor;
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+    /* кнопка Отмена */
+    .ui.negative.button {
+        font-weight: normal;
+        background-color: @graybluecolor !important;
+        border: solid 1px @graybluecolor !important;
+        color: @whitecolor;
+        margin-left: 0px;
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+    .ui.attached.segment {
+      width: calc(100% + 2px) !important;
+    }
+    .ui.attached.tab.segment .flexberry-button {
+        background: @white !important;
+        border: none !important;
+        box-shadow: @darkBoxShadow;
+        &:hover {
+            background: #f1f7ff !important;
+            color: @darkbluecolor;
+        }
+    }
+    .ui.tab.segment,
+    .ui.tabular.menu {
+        margin-bottom: 0px !important;
+        &.fluid {
+          &.item:last-child {
+            width: calc( 16.75% + 1px );
+          }
+        }
+    }
+    .flexberry-edit-layermap .ui.small.fluid.buttons:not(.basic):not(.inverted) > .button.flexberry-button {
+        color: @darkbluecolor;
+    }
+}
+
+
+.ui.modal.flexberry-add-layer-dialog,
+.ui.modal.flexberry-edit-layer-dialog {
+    .ui.form {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        .ui.bottom.attached.tab.segment {
+            border-radius: 0px 0px 5px 5px;
+        }
+    }
+    .flexberry-jsonarea div.row:first-child {
+        text-align: center;
+    }
+}
+
+.ui.modal.flexberry-search-map-command-dialog {
+    &>.content {
+        max-height: 400px;
+        min-height: 400px;
+        .ui.form {
+            height: 100%;
+            .ui.two.column.celled.grid {
+                min-height: 400px;
+            }
+            .flexberry-button.ui.button.icon:not(.fluid) {
+                height: 36px;
+                width: 36px;
+                padding: 12px 8px;
+            }
+            i {
+                &.icon.map:before {
+                    content: "\e812";
+                    font-family: Crimean;
+                }
+            }
+        }
+    }
+}

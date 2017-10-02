@@ -1,40 +1,23 @@
 export default {
   projections: {
-    LinkParameter: {
-      objectField: {
-        caption: ''
-      },
-      layerField: {
-        caption: ''
-      },
-      expression: {
-        caption: ''
-      },
-      queryKey: {
-        caption: ''
-      },
-      linkField: {
-        caption: ''
-      },
-      layerLink: {
-        caption: ''
-      }
-    },
     LinkParameterD: {
       objectField: {
-        caption: ''
+        caption: 'Поле объекта'
       },
       layerField: {
-        caption: ''
+        caption: 'Поле слоя'
       },
       expression: {
-        caption: ''
+        caption: 'Выражение'
       },
       queryKey: {
-        caption: ''
+        caption: 'Ключ запроса'
       },
       linkField: {
-        caption: ''
+        caption: 'Ключ связи'
+      },
+      layerLink: {
+        caption: 'Связь'
       }
     }
   }

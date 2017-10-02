@@ -3,6 +3,10 @@ export default {
     'caption': '',
     'tooltip': 'Перейти к координатам'
   },
+  'locate': {
+    'caption': '',
+    'tooltip': 'Мое местоположение'
+  },
   'full-extent': {
     'caption': '',
     'tooltip': 'Полный охват'
@@ -10,10 +14,6 @@ export default {
   'edit': {
     'caption': 'Редактировать',
     'tooltip': 'Редактировать'
-  },
-  'locate': {
-    'caption': '',
-    'tooltip': 'Мое местоположение'
   },
   'export': {
     'caption': 'Экспортировать',

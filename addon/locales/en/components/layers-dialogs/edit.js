@@ -15,8 +15,48 @@ export default {
   'name-textbox': {
     'caption': 'Layer name'
   },
+  'description-textbox': {
+    'caption': 'Layer description'
+  },
+  'keywords-textbox': {
+    'caption': 'Layer keywords'
+  },
+  'error-message': {
+    'caption': 'Error'
+  },
+  'get-capabilities-button': {
+    'caption': 'Get capabilities',
+    'error-caption': 'To get capabilities fill required fields: '
+  },
+  'bounds-segment': {
+    'caption': 'Bounding box',
+    'error-caption': 'Wrong format, only numbers allowed',
+    'min-x-textbox': {
+      'caption': 'Left border'
+    },
+    'min-y-textbox': {
+      'caption': 'Bottom border'
+    },
+    'max-x-textbox': {
+      'caption': 'Right border'
+    },
+    'max-y-textbox': {
+      'caption': 'Top border'
+    },
+    'options': {
+      'wgs84bbox': {
+        'caption': 'Latitude ang longitude',
+      },
+      'bbox': {
+        'caption': 'Layer coordinate reference system (CRS)'
+      }
+    }
+  },
   'crs': {
     'caption': 'Layer coordinate reference system (CRS)',
+    'name-textbox': {
+      'caption': 'Projection name'
+    },
     'code-textbox': {
       'caption': 'Code'
     },

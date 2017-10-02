@@ -2,10 +2,7 @@ import Ember from 'ember';
 import EmberFlexberryTranslations from 'ember-flexberry/locales/en/translations';
 import EmberFlexberryGisTranslations from 'ember-flexberry-gis/locales/en/translations';
 
-import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
-import NewPlatformFlexberryGISMapLForm from './forms/new-platform-flexberry-g-i-s-map-l';
-import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
-import NewPlatformFlexberryGISMapEForm from './forms/new-platform-flexberry-g-i-s-map-e';
+import MapFormTranslations from './forms/map';
 
 const translations = {};
 Ember.$.extend(true, translations, EmberFlexberryTranslations, EmberFlexberryGisTranslations);
@@ -30,6 +27,12 @@ Ember.$.extend(true, translations, {
           },
           'user-settings-service-checkbox': {
             'caption': 'Use user settings service'
+          },
+          'show-menu': {
+            'caption': 'Show menu'
+          },
+          'hide-menu': {
+            'caption': 'Hide menu'
           },
           'language-dropdown': {
             'caption': 'Application language',
@@ -73,6 +76,14 @@ Ember.$.extend(true, translations, {
           'csw-connections': {
             'caption': 'CSW connections',
             'title': ''
+          },
+          'map-metadata': {
+            'caption': 'Мetadata',
+            'title': ''
+          },
+          'gis-search-form': {
+            'caption': 'Search',
+            'title': 'Search through layer metadata and maps'
           }
         },
         'components-examples': {
@@ -128,16 +139,6 @@ Ember.$.extend(true, translations, {
     },
 
     'components-examples': {
-      'flexberry-button': {
-        'settings-example': {
-          'caption': 'Settings example for flexberry-button'
-        }
-      },
-      'flexberry-ddau-checkbox': {
-        'settings-example': {
-          'caption': 'Settings example for flexberry-ddau-checkbox'
-        }
-      },
       'flexberry-maplayers': {
         'settings-example': {
           'caption': 'Settings example for flexberry-maplayers',
@@ -146,29 +147,14 @@ Ember.$.extend(true, translations, {
           'json-layers-latest-clicked-layer-placeholder': 'Click on any layer to display it\'s settings'
         }
       },
-      'flexberry-tree': {
-        'settings-example': {
-          'caption': 'Settings example for flexberry-tree',
-          'json-tree-tab-caption': 'JSON-object-defined tree',
-          'json-tree-latest-clicked-node-caption': 'Latest clicked tree node settings',
-          'json-tree-latest-clicked-node-placeholder': 'Click on any tree node to display it\'s settings'
-        }
-      }
     },
 
-    'integration-examples': {
+    'maps': {
+      'caption': 'Maps'
     },
-    'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
-    'new-platform-flexberry-g-i-s-map-l': NewPlatformFlexberryGISMapLForm,
-    'new-platform-flexberry-g-i-s-layer-metadata-e': NewPlatformFlexberryGISLayerMetadataEForm,
-    'new-platform-flexberry-g-i-s-map-e': NewPlatformFlexberryGISMapEForm,
-    'map': {
-      'caption': 'Map',
-      'treeviewbuttontooltip': 'Show tree view',
-      'searchbuttontooltip': 'Show search',
-      'bookmarksbuttontooltip': 'Spatial bookmarks',
-      'identifybuttontooltip': 'Show identification'
-    },
+
+    'map': MapFormTranslations,
+
     'crs': {
       'current': {
         'name': 'In map\'s coordinate system',

@@ -3,6 +3,10 @@ export default {
     'caption': '',
     'tooltip': 'Go to coordinates'
   },
+  'locate': {
+    'caption': '',
+    'tooltip': 'Find my location'
+  },
   'full-extent': {
     'caption': '',
     'tooltip': 'Full extent'
@@ -10,10 +14,6 @@ export default {
   'edit': {
     'caption': 'Edit',
     'tooltip': 'Edit'
-  },
-  'locate': {
-    'caption': '',
-    'tooltip': 'Find my location'
   },
   'export': {
     'caption': 'Export',

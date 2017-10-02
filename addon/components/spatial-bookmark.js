@@ -9,17 +9,20 @@ import Mixin from 'ember-validations';
 /**
   Flexberry component for display and add/remove spatial bookmarks
 
-  @class SpaceBookmarkCommandComponent
+  @class SpatialBookmarkComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
-let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
+let SpatialBookmarkComponent = Ember.Component.extend(Mixin, {
   /**
     Validation settings
   */
   validations: {
     '_addBookmarkName': {
       presence: true,
-      length: { minimum: 1, maximum: 200 }
+      length: {
+        minimum: 1,
+        maximum: 200
+      }
     }
   },
 
@@ -29,13 +32,14 @@ let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
   layout,
 
   /**
-    Map's id (primarykey). Key for store bookmarks
+    Map's id (primarykey). Key for storage.
 
-    @property mapid
+    @property storageKey
     @type string
+    @default null
     @public
   */
-  mapid: null,
+  storageKey: null,
 
   /**
     Bookmarks array
@@ -64,10 +68,27 @@ let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
   */
   _addBookmarkName: '',
 
+  /**
+    Current instance class name for storage.
+
+    @property storageClassName
+    @type string
+    @default 'bookmarks'
+    @private
+  */
+  _storageClassName: 'bookmarks',
+
+  /**
+    Initializes component.
+  */
   init() {
     this._super(...arguments);
 
-    this.set('bookmarks', this.get('storage-service').getFromStorage(this.get('mapid')));
+    let service = this.get('local-storage-service');
+    let className = this.get('_storageClassName');
+    let key = this.get('storageKey');
+
+    this.set('bookmarks', service.getFromStorage(className, key));
   },
 
   actions: {
@@ -93,14 +114,20 @@ let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
       }
 
       let map = this.get('leafletMap');
+      let service = this.get('local-storage-service');
+      let className = this.get('_storageClassName');
+      let key = this.get('storageKey');
+      let bookmarks = this.get('bookmarks');
       let bookmark = {
         name: this.get('_addBookmarkName'),
         center: map.getCenter(),
         zoom: map.getZoom()
       };
-      this.get('bookmarks').pushObject(bookmark);
-      this.get('storage-service').setToStorage(this.get('mapid'), this.get('bookmarks'));
 
+      bookmarks.pushObject(bookmark);
+      service.setToStorage(className, key, bookmarks);
+
+      this.set('bookmarks', bookmarks);
       this.set('_addBookmarkInProcess', false);
       this.set('_addBookmarkName', '');
     },
@@ -134,13 +161,19 @@ let SpaceBookmarkCommandComponent = Ember.Component.extend(Mixin, {
       @private
     */
     delBookmark(bookmark) {
-      this.get('bookmarks').removeObject(bookmark);
-      this.get('storage-service').setToStorage(this.get('mapid'), this.get('bookmarks'));
+      let bookmarks = this.get('bookmarks');
+      let service = this.get('local-storage-service');
+      let className = this.get('_storageClassName');
+      let key = this.get('storageKey');
+
+      bookmarks.removeObject(bookmark);
+      service.setToStorage(className, key, bookmarks);
+
+      this.set('bookmarks', bookmarks);
     }
   }
 });
 
-SpaceBookmarkCommandComponent.reopenClass({
-});
+SpatialBookmarkComponent.reopenClass({});
 
-export default SpaceBookmarkCommandComponent;
+export default SpatialBookmarkComponent;

@@ -12,8 +12,8 @@ import {
   Component's CSS-classes names.
   JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
   @property {Object} flexberryClassNames
-  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-drag-map-tool').
-  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-drag-map-tool').
+  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-locate-map-command').
+  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-locate-map-command').
   @readonly
   @static
   @for  LocateMapCommandComponent
@@ -25,14 +25,14 @@ const flexberryClassNames = {
 };
 
 /**
-  Flexberry full-extent map-command component.
+  Flexberry flexberry-locate-map-command component.
   Component must be used in combination with {{#crossLink "FlexberryMaptoolbarComponent"}}flexberry-maptoolbar component{{/crossLink}}
   as a wrapper.
   Usage:
   templates/my-map-form.hbs
   ```handlebars
   {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-commands/full-extent execute=(action "onMapCommandExecute" target=maptoolbar)}}
+    {{map-commands/locate execute=(action "onMapCommandExecute" target=maptoolbar)}}
   {{/flexberry-maptoolbar}}
   ```
   @class FullExtentMapCommandComponent
@@ -72,7 +72,7 @@ let LocateMapCommandComponent = Ember.Component.extend({
     Map command's caption.
     @property caption
     @type String
-    @default t('components.map-commands.full-extent.caption')
+    @default t('components.map-commands.locate.caption')
   */
   caption: t('components.map-commands.locate.caption'),
 
@@ -80,7 +80,7 @@ let LocateMapCommandComponent = Ember.Component.extend({
     Map command's tooltip text.
     Will be added as wrapper's element 'title' attribute.
     @property tooltip
-    @default t('components.map-commands.full-extent.tooltip')
+    @default t('components.map-commands.locate.tooltip')
   */
   tooltip: t('components.map-commands.locate.tooltip'),
 
@@ -88,15 +88,14 @@ let LocateMapCommandComponent = Ember.Component.extend({
     Map command's icon CSS-class names.
     @property iconClass
     @type String
-    @default 'globe icon'
+    @default 'bullseye icon'
   */
   iconClass: 'bullseye icon',
-
 
   actions: {
     /**
       Handles {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
-      Invokes own {{#crossLink "FullExtentMapCommandComponent/sendingActions.execute:method"}}'execute' action{{/crossLink}}.
+      Invokes own {{#crossLink "LocateMapCommandComponent/sendingActions.execute:method"}}'execute' action{{/crossLink}}.
       @method actions.onMapCommandExecute
       @param {Object} e Base map-command's 'execute' action event-object.
     */
@@ -119,4 +118,4 @@ LocateMapCommandComponent.reopenClass({
   flexberryClassNames
 });
 
-export default LocateMapCommandComponent; 
+export default LocateMapCommandComponent;
