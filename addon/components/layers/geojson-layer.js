@@ -127,20 +127,27 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    let geojsonLayer = this.get('_leafletObject');
-
     return new Ember.RSVP.Promise((resolve, reject) => {
+      let geojLayer = this.get('_leafletObject');
       let features = Ember.A();
-      geojsonLayer.eachLayer(function(layer) {
-        let geoLayer = layer.toGeoJSON();
+       geojLayer.eachLayer((layer) => {
+        if (features.length < e.searchOptions.maxResultsCount) {
+          let feature = Ember.get(layer, 'feature');
+          let geoLayer = layer.toGeoJSON();
 
-        // if layer satisfies search query
-        //for (var i = 0; i < e.searchOptions.searchFields.length; i++) {
-        //let property = e.searchOptions.searchFields[i];
-        if (geoLayer.properties.hintheader.includes(e.searchOptions.queryString)) {
-          features.pushObject(geoLayer);
-        }
-      });
+          // if layer satisfies search query
+          let searchFields = this.get('searchSettings.searchFields'); // []
+          let contains = searchFields.map((item) => {
+            return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
+          }).reduce((result, current) => {
+            return result || current; // if any field contains
+          }, false);
+
+          if (contains) {
+            features.pushObject(geoLayer);
+            }
+          }
+        });
       resolve(features);
     });
   },
