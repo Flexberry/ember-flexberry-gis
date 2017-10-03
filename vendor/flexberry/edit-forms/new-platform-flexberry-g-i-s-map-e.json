@@ -36,7 +36,7 @@
       "master": null,
       "displayAttributeName": null,
       "required": false,
-      "relationName": "MapLayer.LayerLink.LinkParameter.LayerLink",
+      "relationName": "MapLayer.LayerLink.Parameters.LayerLink",
       "projection": "",
       "detailModelName": null
     }

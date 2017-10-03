@@ -36,24 +36,54 @@ const defaultOptions = {
 */
 const paperFormatsInMillimeters = {
   'A5': {
-    'portrait': { width: 148, height: 210 },
-    'landscape': { width: 210, height: 148 }
+    'portrait': {
+      width: 148,
+      height: 210
+    },
+    'landscape': {
+      width: 210,
+      height: 148
+    }
   },
   'A4': {
-    'portrait': { width: 210, height: 297 },
-    'landscape': { width: 297, height: 210 }
+    'portrait': {
+      width: 210,
+      height: 297
+    },
+    'landscape': {
+      width: 297,
+      height: 210
+    }
   },
   'A3': {
-    'portrait': { width: 297, height: 420 },
-    'landscape': { width: 420, height: 297 }
+    'portrait': {
+      width: 297,
+      height: 420
+    },
+    'landscape': {
+      width: 420,
+      height: 297
+    }
   },
   'B5': {
-    'portrait': { width: 176, height: 250 },
-    'landscape': { width: 250, height: 176 }
+    'portrait': {
+      width: 176,
+      height: 250
+    },
+    'landscape': {
+      width: 250,
+      height: 176
+    }
   },
   'B4': {
-    'portrait': { width: 250, height: 353 },
-    'landscape': { width: 353, height: 250 }
+    'portrait': {
+      width: 250,
+      height: 353
+    },
+    'landscape': {
+      width: 353,
+      height: 250
+    }
   }
 };
 
@@ -185,7 +215,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @default 'caption'
     @private
   */
-  _tabularMenuActiveTab: Ember.computed('_tabularMenuClickedTab', 'showDownloadingFileSettings', function() {
+  _tabularMenuActiveTab: Ember.computed('_tabularMenuClickedTab', 'showDownloadingFileSettings', function () {
     let tabularMenuDefaultTab = 'caption';
     let tabularMenuClickedTab = this.get('_tabularMenuClickedTab') || tabularMenuDefaultTab;
     let showDownloadingFileSettings = this.get('showDownloadingFileSettings');
@@ -278,7 +308,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     '_dpi',
     '_options.paperFormat',
     '_options.paperOrientation',
-    function() {
+    function () {
       let dpi = this.get('_dpi');
       let paperFormat = this.get('_options.paperFormat');
       let paperOrientation = this.get('_options.paperOrientation');
@@ -300,7 +330,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     '_dpi',
     '_options.paperFormat',
     '_options.paperOrientation',
-    function() {
+    function () {
       let dpi = this.get('_dpi');
       let paperFormat = this.get('_options.paperFormat');
       let paperOrientation = this.get('_options.paperOrientation');
@@ -325,7 +355,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     'showDownloadingFileSettings',
     '_mapCaptionRealHeight',
     '_mapLegendLines',
-    function() {
+    function () {
       let height = this.get('_sheetOfPaperRealHeight');
 
       return Ember.String.htmlSafe(
@@ -368,7 +398,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   _sheetOfPaperPreviewScaleFactor: Ember.computed(
     '_sheetOfPaperRealHeight',
     '_sheetOfPaperPreviewHeight',
-    function() {
+    function () {
       let sheetOfPaperPreviewHeight = this.get('_sheetOfPaperPreviewHeight');
       if (Ember.isNone(sheetOfPaperPreviewHeight)) {
         return null;
@@ -389,7 +419,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   _sheetOfPaperPreviewWidth: Ember.computed(
     '_sheetOfPaperRealWidth',
     '_sheetOfPaperPreviewScaleFactor',
-    function() {
+    function () {
       let sheetOfPaperPreviewScaleFactor = this.get('_sheetOfPaperPreviewScaleFactor');
       if (Ember.isNone(sheetOfPaperPreviewScaleFactor)) {
         return null;
@@ -410,7 +440,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   _sheetOfPaperPreviewStyle: Ember.computed(
     '_sheetOfPaperPreviewHeight',
     '_sheetOfPaperPreviewWidth',
-    function() {
+    function () {
       let sheetOfPaperPreviewHeight = this.get('_sheetOfPaperPreviewHeight');
       let sheetOfPaperPreviewWidth = this.get('_sheetOfPaperPreviewWidth');
       if (Ember.isNone(sheetOfPaperPreviewHeight) || Ember.isNone(sheetOfPaperPreviewWidth)) {
@@ -432,7 +462,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     '_sheetOfPaperRealWidth',
     '_sheetOfPaperPreviewWidth',
     '_isPreview',
-    function() {
+    function () {
       let isPreview = this.get('_isPreview');
       if (isPreview) {
         return legendStyleConstants.rightPaddingLegend;
@@ -455,7 +485,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   _mapCaptionRealHeight: Ember.computed(
     '_options.captionLineHeight',
     '_options.captionFontSize',
-    function() {
+    function () {
       return Math.floor(this.get('_options.captionLineHeight') * this.get('_options.captionFontSize'));
     }
   ),
@@ -477,7 +507,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     '_options.captionFontStyle',
     '_options.captionFontDecoration',
     '_mapCaptionRealHeight',
-    function() {
+    function () {
       return Ember.String.htmlSafe(
         `font-family: "${this.get('_options.captionFontFamily')}"; ` +
         `line-height: ${this.get('_options.captionLineHeight')}; ` +
@@ -501,7 +531,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   _mapCaptionPreviewHeight: Ember.computed(
     '_mapCaptionRealHeight',
     '_sheetOfPaperPreviewScaleFactor',
-    function() {
+    function () {
       let sheetOfPaperPreviewScaleFactor = this.get('_sheetOfPaperPreviewScaleFactor');
       if (Ember.isNone(sheetOfPaperPreviewScaleFactor)) {
         return null;
@@ -522,7 +552,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   _mapCaptionPreviewFontSize: Ember.computed(
     '_options.captionLineHeight',
     '_mapCaptionPreviewHeight',
-    function() {
+    function () {
       let mapCaptionPreviewHeight = this.get('_mapCaptionPreviewHeight');
       if (Ember.isNone(mapCaptionPreviewHeight)) {
         return null;
@@ -549,7 +579,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     '_options.captionFontDecoration',
     '_mapCaptionPreviewFontSize',
     '_mapCaptionPreviewHeight',
-    function() {
+    function () {
       let mapCaptionPreviewFontSize = this.get('_mapCaptionPreviewFontSize');
       let mapCaptionPreviewHeight = this.get('_mapCaptionPreviewHeight');
       if (Ember.isNone(mapCaptionPreviewFontSize) || Ember.isNone(mapCaptionPreviewHeight)) {
@@ -576,18 +606,23 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   _getLayersInfo(layers, legends) {
     var result = Ember.A();
 
-    layers.forEach(function(layer) {
+    layers.forEach(function (layer) {
       if (layer.get('visibility')) {
         if (layer.get('type') === 'group') {
           result = result.concat(this._getLayersInfo(layer.layers, legends));
         } else if (layer.get('legendCanBeDisplayed')) {
           if (Ember.isArray(legends[layer.get('name')])) {
-            legends[layer.get('name')].forEach(function(legend) {
-              let layerInfo = { name: legend.useMainLayerName ? layer.get('name') : legend.layerName, image: legend.src };
+            legends[layer.get('name')].forEach(function (legend) {
+              let layerInfo = {
+                name: legend.useMainLayerName ? layer.get('name') : legend.layerName,
+                image: legend.src
+              };
               result.push(layerInfo);
             });
           } else {
-            let layerInfo = { name: layer.get('name') };
+            let layerInfo = {
+              name: layer.get('name')
+            };
             result.push(layerInfo);
           }
         }
@@ -606,8 +641,8 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   _getLayerLegendWidth(txt, font, imageSrc, height) {
     let element = document.createElement('div');
     element.style.cssText = `height: ${height}px; visibility: hidden; position: absolute; display: inline-block; ` +
-    `font-family: ${font['font-family']}; line-height: ${font['line-height']}; font-size: ${font['font-size']}; ` +
-    `font-weight: ${font['font-weight']}; font-style: ${font['font-style']}; padding-right: 10px`;
+      `font-family: ${font['font-family']}; line-height: ${font['line-height']}; font-size: ${font['font-size']}; ` +
+      `font-weight: ${font['font-weight']}; font-style: ${font['font-style']}; padding-right: 10px`;
     if (!Ember.isBlank(imageSrc)) {
       let image = document.createElement('img');
       image.src = imageSrc;
@@ -647,7 +682,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     'layers.@each.isDeleted',
     'layers.@each.legendCanBeDisplayed',
     'legendsUpdateTrigger',
-    function() {
+    function () {
       let lineCount = 1;
       let layers = this.get('layers');
       let legends = this.get('legends');
@@ -655,14 +690,18 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       let legendWidth = this.get('_sheetOfPaperPreviewWidth') - legendStyleConstants.widthPadding * 2; // padding left/right 14, border 1.
       let cutWidth = legendWidth;
 
-      legendsInfo.forEach(function(legendInfo) {
+      legendsInfo.forEach(function (legendInfo) {
         if (Ember.isBlank(legendInfo)) {
           legendInfo = {};
         }
 
-        let font = { 'font-family': this.get('_options.captionFontFamily'), 'line-height': this.get('_options.captionLineHeight'),
-          'font-size': this.get('_mapCaptionPreviewFontSize') + 'px', 'font-weight': this.get('_options.captionFontWeight'),
-          'font-style': this.get('_options.captionFontStyle') };
+        let font = {
+          'font-family': this.get('_options.captionFontFamily'),
+          'line-height': this.get('_options.captionLineHeight'),
+          'font-size': this.get('_mapCaptionPreviewFontSize') + 'px',
+          'font-weight': this.get('_options.captionFontWeight'),
+          'font-style': this.get('_options.captionFontStyle')
+        };
 
         let textWidth = this._getLayerLegendWidth(legendInfo.name, font, legendInfo.image, this.get('_mapCaptionPreviewHeight'));
         if (textWidth <= cutWidth) {
@@ -692,7 +731,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     '_sheetOfPaperRealHeight',
     '_mapCaptionRealHeight',
     '_mapHeightDelta',
-    function() {
+    function () {
       if (this.get('_options.displayMode') === 'map-only-mode') {
         return Ember.String.htmlSafe(`height: 100%;`);
       }
@@ -730,7 +769,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     '_sheetOfPaperPreviewHeight',
     '_mapCaptionPreviewHeight',
     '_mapHeightDelta',
-    function() {
+    function () {
       let sheetOfPaperPreviewHeight = this.get('_sheetOfPaperPreviewHeight');
       let mapCaptionPreviewHeight = this.get('_mapCaptionPreviewHeight');
       if (Ember.isNone(sheetOfPaperPreviewHeight) || Ember.isNone(mapCaptionPreviewHeight)) {
@@ -1116,8 +1155,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
       @method actions.onErrorMessageShow
     */
-    onErrorMessageShow() {
-    },
+    onErrorMessageShow() {},
 
     /**
       Handler for error 'ui-message' component 'onHide' action.
@@ -1204,7 +1242,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       @method actions.legendsLoaded
     */
     legendsLoaded(layerName, legends) {
-      this.set(`legends.${layerName}`, legends);
+      this[`legends.${layerName}`] = legends;
       this.set('legendsUpdateTrigger', !this.get('legendsUpdateTrigger'));
     }
   },
@@ -1215,7 +1253,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @method _mapCanBeShownDidChange
     @private
   */
-  _mapCanBeShownDidChange: Ember.observer('_isDialogAlreadyRendered', '_isDialogShown', 'leafletMap', function() {
+  _mapCanBeShownDidChange: Ember.observer('_isDialogAlreadyRendered', '_isDialogShown', 'leafletMap', function () {
     let leafletMap = this.get('leafletMap');
     let oldMapCanBeShown = this.get('_mapCanBeShown');
     let newMapCanBeShown = this.get('_isDialogAlreadyRendered') && this.get('_isDialogShown') && !Ember.isNone(leafletMap);
@@ -1238,7 +1276,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @method _legendControlDidChange
     @private
   */
-  _legendControlDidChange: Ember.observer('_options.legendControl', '_options.legendPosition', function() {
+  _legendControlDidChange: Ember.observer('_options.legendControl', '_options.legendPosition', function () {
     let legendVisible = this.get('_options.legendControl');
     let legendPosition = this.get('_options.legendPosition');
 
@@ -1256,7 +1294,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     @method _pageNumberDidChange
     @private
   */
-  _pageNumberDidChange: Ember.observer('_options.pageNumber', function() {
+  _pageNumberDidChange: Ember.observer('_options.pageNumber', function () {
     let pageNumber = this.get('_options.pageNumber');
 
     this.set('_options.pageNumber2Selected', pageNumber === '2');
@@ -1328,7 +1366,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       // Interval to check that tiles are ready.
       intervalId = setInterval(() => {
         let allTilesAreReady = true;
-        $tiles.each(function() {
+        $tiles.each(function () {
           let $tile = Ember.$(this);
 
           // Call to $.fn.css('opacity') will return '1' if 'opacity' isn't defined, that's why element.style.opacity is preferred.

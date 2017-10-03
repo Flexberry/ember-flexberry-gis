@@ -84,7 +84,7 @@
       "presence": true,
       "name": "layerLink",
       "relatedTo": "new-platform-flexberry-g-i-s-link-metadata",
-      "inverse": "parameterMetadata"
+      "inverse": "parameters"
     }
   ],
   "hasMany": [],
@@ -130,7 +130,7 @@
           "lookupValueField": null,
           "relationName": "LayerLink",
           "belongsTo": [],
-          "hidden": true,
+          "hidden": false,
           "attrs": [],
           "index": 5,
           "caption": "Связь",
@@ -182,7 +182,7 @@
           "lookupValueField": null,
           "relationName": "LayerLink",
           "belongsTo": [],
-          "hidden": false,
+          "hidden": true,
           "attrs": [],
           "index": 5,
           "caption": "Связь",

@@ -87,9 +87,6 @@ module.exports = {
     // Leaflet Div Control.
     app.import('vendor/leaflet/controls/leaflet.div-control.js');
 
-    // Leaflet ImageOverlay Extensions.
-    app.import('vendor/leaflet/layers/leaflet.imageoverlay.js');
-
     // Leaflet.WMS Overlay Extensions.
     app.import('vendor/leaflet/layers/leaflet.wms.overlay.js');
 
