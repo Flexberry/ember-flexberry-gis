@@ -1,0 +1,123 @@
+﻿{
+  "name": "NewPlatformFlexberryGISDataLink",
+  "modelName": "new-platform-flexberry-g-i-s-data-link",
+  "className": "DataLink",
+  "parentModelName": null,
+  "parentClassName": null,
+  "attrs": [
+    {
+      "name": "clearWithoutLink",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": false,
+      "defaultValue": "false",
+      "stored": true
+    },
+    {
+      "name": "layerTable",
+      "type": "string",
+      "flexberryType": "string",
+      "notNull": true,
+      "defaultValue": "",
+      "stored": true
+    },
+    {
+      "name": "createObject",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
+    }
+  ],
+  "belongsTo": [
+    {
+      "polymorphic": false,
+      "presence": true,
+      "name": "mapObjectSetting",
+      "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
+      "inverse": null
+    }
+  ],
+  "hasMany": [
+    {
+      "name": "dataLinkParameter",
+      "relatedTo": "new-platform-flexberry-g-i-s-data-link-parameter",
+      "inverse": "link"
+    }
+  ],
+  "projections": [
+    {
+      "name": "DataLinkD",
+      "modelName": "new-platform-flexberry-g-i-s-data-link",
+      "attrs": [
+        {
+          "name": "layerTable",
+          "caption": "Таблица в геоданных",
+          "hidden": false,
+          "index": 1
+        }
+      ],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "MapObjectSetting",
+          "belongsTo": [],
+          "hidden": true,
+          "attrs": [],
+          "index": 0,
+          "caption": "",
+          "name": "mapObjectSetting",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
+          "inverse": null
+        }
+      ],
+      "hasMany": []
+    },
+    {
+      "name": "DataLinkE",
+      "modelName": "new-platform-flexberry-g-i-s-data-link",
+      "attrs": [
+        {
+          "name": "layerTable",
+          "caption": "Таблица в геоданных",
+          "hidden": false,
+          "index": 1
+        },
+        {
+          "name": "clearWithoutLink",
+          "caption": "Очищать, если нет данных",
+          "hidden": false,
+          "index": 2
+        }
+      ],
+      "belongsTo": [
+        {
+          "lookupValue": null,
+          "lookupValueField": null,
+          "relationName": "MapObjectSetting",
+          "belongsTo": [],
+          "hidden": true,
+          "attrs": [],
+          "index": 0,
+          "caption": "",
+          "name": "mapObjectSetting",
+          "relatedTo": "new-platform-flexberry-g-i-s-map-object-setting",
+          "inverse": null
+        }
+      ],
+      "hasMany": [
+        {
+          "projectionName": "DataLinkParameterD",
+          "caption": "",
+          "name": "dataLinkParameter",
+          "relatedTo": "new-platform-flexberry-g-i-s-data-link-parameter",
+          "inverse": null
+        }
+      ]
+    }
+  ],
+  "stored": true,
+  "offline": true
+}

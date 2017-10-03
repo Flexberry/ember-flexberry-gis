@@ -2,95 +2,151 @@ export default {
   projections: {
     AuditView: {
       name: {
-        caption: 'name'
+        __caption__: 'Name'
       },
       creator: {
-        caption: 'creator'
+        __caption__: 'Creator'
       },
       createTime: {
-        caption: 'createTime'
+        __caption__: 'Create time'
       },
       editor: {
-        caption: 'editor'
+        __caption__: 'Editor'
       },
       editTime: {
-        caption: 'editTime'
+        __caption__: 'Edit time'
+      }
+    },
+    Map: {
+      name: {
+        __caption__: 'Name'
+      },
+      lat: {
+        __caption__: 'Latitude'
+      },
+      lng: {
+        __caption__: 'Longitude'
+      },
+      zoom: {
+        __caption__: 'Zoom'
+      },
+      public: {
+        __caption__: 'Public'
+      },
+      coordinateReferenceSystem: {
+        __caption__: 'CRS'
       }
     },
     MapE: {
       name: {
-        caption: 'name'
+        __caption__: 'Name'
+      },
+      description: {
+        __caption__: 'Description'
+      },
+      keyWords: {
+        __caption__: 'Key words'
       },
       lat: {
-        caption: 'lat'
+        __caption__: 'Latitude'
       },
       lng: {
-        caption: 'lng'
+        __caption__: 'Longitude'
       },
       zoom: {
-        caption: 'zoom'
+        __caption__: 'Zoom'
       },
       public: {
-        caption: 'public'
+        __caption__: 'Public'
+      },
+      scale: {
+        __caption__: 'Scale'
       },
       coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
+        __caption__: 'CRS'
+      },
+      boundingBox: {
+        __caption__: 'Bounding box'
       },
       mapLayer: {
-        caption: 'mapLayer',
+        __caption__: 'Map layer',
         name: {
-          caption: 'name'
+          __caption__: 'Name'
         },
-        type: {
-          caption: 'type'
+        description: {
+          __caption__: 'Description'
         },
-        visibility: {
-          caption: 'visibility'
+        keyWords: {
+          __caption__: 'Key words'
         },
         index: {
-          caption: 'index'
+          __caption__: 'Index'
         },
-        coordinateReferenceSystem: {
-          caption: 'coordinateReferenceSystem'
+        visibility: {
+          __caption__: 'Visibility'
+        },
+        type: {
+          __caption__: 'Type'
         },
         settings: {
-          caption: 'settings'
+          __caption__: 'Settings'
+        },
+        scale: {
+          __caption__: 'Scale'
+        },
+        coordinateReferenceSystem: {
+          __caption__: 'CRS'
+        },
+        boundingBox: {
+          __caption__: 'Bounding box'
         },
         parent: {
-          caption: 'parent'
+          __caption__: 'Parent'
         },
         map: {
-          caption: 'map'
+          __caption__: 'Map'
         },
         layerLink: {
-          caption: 'layerLink',
-          layer: {
-            caption: 'layer',
-            name: {
-              caption: 'name'
+          __caption__: 'Layer link',
+          mapObjectSetting: {
+            __caption__: 'Type',
+            typeName: {
+              __caption__: 'Object type'
+            },
+            listForm: {
+              __caption__: 'List form'
+            },
+            editForm: {
+              __caption__: 'Edit form'
             }
           },
-          mapObjectSetting: {
-            caption: 'mapObjectSetting'
-          }
+          layer: {
+            __caption__: 'Layer',
+            name: {
+              __caption__: 'Name'
+            }
+          },
+          allowShow: {
+          __caption__: 'Allow show'
+        }
         }
       }
     },
     MapL: {
       name: {
-        caption: 'name'
+        __caption__: 'Name'
       },
       lat: {
-        caption: 'lat'
+        __caption__: 'Latitude'
       },
       lng: {
-        caption: 'lng'
+        __caption__: 'Longitude'
       },
       zoom: {
-        caption: 'zoom'
+        __caption__: 'Zoom'
       },
       public: {
-        caption: 'public'
+        __caption__: 'Public'
       }
     }
   }

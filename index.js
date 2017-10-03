@@ -65,8 +65,8 @@ module.exports = {
     app.import(app.bowerDirectory + '/proj4/dist/proj4-src.js');
     app.import(app.bowerDirectory + '/proj4leaflet/src/proj4leaflet.js');
 
-    // Leaflet-WFST.
-    app.import(app.bowerDirectory + '/Leaflet-WFST/dist/Leaflet-WFST.src.js');
+    // leaflet-wfst.
+    app.import(app.bowerDirectory + '/leaflet-wfst/dist/leaflet-wfst.src.js');
 
     // Leaflet-WMS.
     app.import(app.bowerDirectory + '/leaflet-wms/dist/Leaflet-WMS.js');
@@ -84,24 +84,8 @@ module.exports = {
     // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
 
-    // JS-code beautifier to format strings containing JS-code & represent in in user-friendly view.
-    app.import(app.bowerDirectory + '/js-beautify/js/lib/beautify.js');
-
-    // UI-slider control
-    app.import(app.bowerDirectory + '/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js');
-
-    // JQuery-minicolors plugin required for flexberry-colorpicker component.
-    app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.js');
-    app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.css');
-    app.import(app.bowerDirectory + '/jquery-minicolors/jquery.minicolors.png', {
-      destDir: appAssetsDirectory
-    });
-
     // Leaflet Div Control.
     app.import('vendor/leaflet/controls/leaflet.div-control.js');
-
-    // Leaflet ImageOverlay Extensions.
-    app.import('vendor/leaflet/layers/leaflet.imageoverlay.js');
 
     // Leaflet.WMS Overlay Extensions.
     app.import('vendor/leaflet/layers/leaflet.wms.overlay.js');

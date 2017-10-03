@@ -9,7 +9,7 @@ import BaseLayer from '../base-layer';
   WFS layer component for leaflet map.
 
   @class WfsLayerComponent
-  @extend BaseLayerComponent
+  @extends BaseLayerComponent
  */
 export default BaseLayer.extend({
   leafletOptions: [
@@ -113,6 +113,26 @@ export default BaseLayer.extend({
   },
 
   /**
+    Returns leaflet layer's bounding box.
+
+    @method _getBoundingBox
+    @private
+    @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
+  */
+  _getBoundingBox(layer) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      layer.getBoundingBox(
+        (boundingBox, xhr) => {
+          resolve(boundingBox);
+        },
+        (errorThrown, xhr) => {
+          reject(errorThrown);
+        }
+      );
+    });
+  },
+
+  /**
     Creates leaflet layer related to layer type.
 
     @method createLayer
@@ -162,21 +182,45 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    let propertyName = e.searchOptions.propertyName;
+    let searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
 
-    if (Ember.isNone(propertyName)) {
-      return;
+    let searchFields;
+
+    // If exact field is specified in search options - use it only.
+    let propertyName = e.searchOptions.propertyName;
+    if (!Ember.isBlank(propertyName)) {
+      searchFields = propertyName;
+    } else {
+      searchFields = (e.context ? this.get(`${searchSettingsPath}.contextSearchFields`) : this.get(`${searchSettingsPath}.searchFields`)) || Ember.A();
     }
 
-    let filter = new L.Filter.Like(propertyName, '*' + e.searchOptions.queryString + '*', {
-      matchCase: false
+    // If single search field provided - transform it into array.
+    if (!Ember.isArray(searchFields)) {
+      searchFields = Ember.A([searchFields]);
+    }
+
+    // Create filter for each search field.
+    let equals = Ember.A();
+    searchFields.forEach((field) => {
+      equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', {
+        matchCase: false
+      }));
     });
+
+    let filter;
+    if (equals.length === 1) {
+      filter = equals[0];
+    } else {
+      filter = new L.Filter.Or(...equals);
+    }
 
     let featuresPromise = this._getFeature({
       filter,
       maxFeatures: e.searchOptions.maxResultsCount,
+      fillOpacity: 0.3,
       style: {
-        color: 'yellow'
+        color: 'yellow',
+        weight: 2
       }
     });
 
@@ -197,7 +241,7 @@ export default BaseLayer.extend({
     let queryFilter = e.queryFilter;
     let equals = [];
     layerLinks.forEach((link) => {
-      let linkParameters = link.get('linkParameter');
+      let linkParameters = link.get('parameters');
 
       if (Ember.isArray(linkParameters) && linkParameters.length > 0) {
         linkParameters.forEach(linkParam => {

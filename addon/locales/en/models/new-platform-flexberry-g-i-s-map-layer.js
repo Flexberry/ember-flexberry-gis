@@ -2,156 +2,201 @@ export default {
   projections: {
     AuditView: {
       name: {
-        caption: 'name'
+        __caption__: 'Name'
       },
       creator: {
-        caption: 'creator'
+        __caption__: 'Creator'
       },
       createTime: {
-        caption: 'createTime'
+        __caption__: 'Create time'
       },
       editor: {
-        caption: 'editor'
+        __caption__: 'Editor'
       },
       editTime: {
-        caption: 'editTime'
+        __caption__: 'Edit time'
       }
     },
     MapLayerD: {
       name: {
-        caption: 'name'
+        __caption__: 'Name'
       },
-      type: {
-        caption: 'type'
+      description: {
+        __caption__: 'Description'
       },
-      visibility: {
-        caption: 'visibility'
+      keyWords: {
+        __caption__: 'Key words'
       },
       index: {
-        caption: 'index'
+        __caption__: 'Index'
       },
-      coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
+      visibility: {
+        __caption__: 'Visibility'
+      },
+      type: {
+        __caption__: 'Type'
       },
       settings: {
-        caption: 'settings'
+        __caption__: 'Settings'
+      },
+      scale: {
+        __caption__: 'Scale'
+      },
+      coordinateReferenceSystem: {
+        __caption__: 'CRS'
+      },
+      boundingBox: {
+        __caption__: 'Bounding box'
       },
       parent: {
-        caption: 'parent'
+        __caption__: 'Parent'
       },
       map: {
-        caption: 'map'
+        __caption__: 'Map'
       },
       layerLink: {
-        caption: 'layerLink',
-        layer: {
-          caption: 'layer',
-          name: {
-            caption: 'name'
+        __caption__: 'Layer link',
+        mapObjectSetting: {
+          __caption__: 'Type',
+          typeName: {
+            __caption__: 'Object type'
+          },
+          listForm: {
+            __caption__: 'List form'
+          },
+          editForm: {
+            __caption__: 'Edit form'
           }
         },
-        mapObjectSetting: {
-          caption: 'mapObjectSetting'
+        layer: {
+          __caption__: 'Layer',
+          name: {
+            __caption__: 'Name'
+          }
         },
-        linkParameter: {
-          caption: 'linkParameter',
+        allowShow: {
+          __caption__: 'Allow show'
+        },
+        parameters: {
+          __caption__: 'Link parameters',
           objectField: {
-          caption: 'objectField'
-        },
+            __caption__: 'Object field'
+          },
           layerField: {
-          caption: 'layerField'
-        },
+            __caption__: 'Layer field'
+          },
           expression: {
-          caption: 'expression'
-        },
+            __caption__: 'Expression'
+          },
           queryKey: {
-          caption: 'queryKey'
-        },
+            __caption__: 'Query key'
+          },
           linkField: {
-          caption: 'linkField'
-        }
+            __caption__: 'Link key'
+          },
+          layerLink: {
+            __caption__: 'Layer link'
+          }
         }
       }
     },
     MapLayerE: {
       name: {
-        caption: 'name'
+        __caption__: 'Name'
       },
-      type: {
-        caption: 'type'
+      description: {
+        __caption__: 'Description'
       },
-      visibility: {
-        caption: 'visibility'
+      keyWords: {
+        __caption__: 'Key words'
       },
       index: {
-        caption: 'index'
+        __caption__: 'Index'
       },
-      coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
+      visibility: {
+        __caption__: 'Visibility'
+      },
+      type: {
+        __caption__: 'Type'
       },
       settings: {
-        caption: 'settings'
+        __caption__: 'Settings'
+      },
+      scale: {
+        __caption__: 'Scale'
+      },
+      coordinateReferenceSystem: {
+        __caption__: 'CRS'
+      },
+      boundingBox: {
+        __caption__: 'Bounding box'
       },
       parent: {
-        caption: 'parent'
+        __caption__: 'Parent'
       },
       map: {
-        caption: 'map'
+        __caption__: 'Map'
       },
       layerLink: {
-        caption: 'layerLink',
-        layer: {
-          caption: 'layer',
-          name: {
-            caption: 'name'
+        __caption__: 'Layer link',
+        mapObjectSetting: {
+          __caption__: 'Type',
+          typeName: {
+            __caption__: 'Object type'
+          },
+          listForm: {
+            __caption__: 'List form'
+          },
+          editForm: {
+            __caption__: 'Edit form'
           }
         },
-        mapObjectSetting: {
-          caption: 'mapObjectSetting'
+        layer: {
+          __caption__: 'Layer',
+          name: {
+            __caption__: 'Name'
+          }
         },
-        linkParameter: {
-          caption: 'linkParameter',
+        allowShow: {
+          __caption__: 'Allow show'
+        },
+        parameters: {
+          __caption__: 'Link parameters',
           objectField: {
-          caption: 'objectField'
+          __caption__: 'Object field'
         },
           layerField: {
-          caption: 'layerField'
+          __caption__: 'Layer field'
         },
           expression: {
-          caption: 'expression'
+          __caption__: 'Expression'
         },
           queryKey: {
-          caption: 'queryKey'
+          __caption__: 'Query key'
         },
           linkField: {
-          caption: 'linkField'
-        }
+          __caption__: 'Link key'
+        },
+          layerLink: {
+            __caption__: 'Layer link'
+          }
         }
       }
     },
     MapLayerL: {
       name: {
-        caption: 'name'
+        __caption__: 'Name'
+      },
+      description: {
+        __caption__: 'Description'
       },
       type: {
-        caption: 'type'
-      },
-      visibility: {
-        caption: 'visibility'
-      },
-      index: {
-        caption: 'index'
-      },
-      coordinateReferenceSystem: {
-        caption: 'coordinateReferenceSystem'
-      },
-      settings: {
-        caption: 'settings'
+        __caption__: 'Type'
       },
       parent: {
-        caption: 'parent',
+        __caption__: 'Parent',
         name: {
-          caption: 'name'
+          __caption__: 'Name'
         }
       }
     }

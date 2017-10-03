@@ -2,44 +2,50 @@ export default {
   projections: {
     MapObjectSetting: {
       typeName: {
-        caption: 'typeName'
+        __caption__: 'Type name'
       },
       listForm: {
-        caption: 'listForm'
+        __caption__: 'List form'
       },
       editForm: {
-        caption: 'editForm'
+        __caption__: 'Edit form'
+      },
+      title: {
+        __caption__: 'Title'
       },
       defaultMap: {
-        caption: 'defaultMap'
+        __caption__: 'Default map'
       }
     },
     MapObjectSettingE: {
       typeName: {
-        caption: 'typeName'
+        __caption__: 'Type name'
+      },
+      title: {
+        __caption__: 'Displaying name'
       },
       listForm: {
-        caption: 'listForm'
+        __caption__: 'List form'
       },
       editForm: {
-        caption: 'editForm'
+        __caption__: 'Edit form'
       },
       defaultMap: {
-        caption: 'defaultMap',
+        __caption__: 'Default map',
         name: {
-          caption: 'name'
+          __caption__: 'Name'
         }
       }
     },
     MapObjectSettingL: {
       typeName: {
-        caption: 'typeName'
+        __caption__: 'Type name'
       },
       listForm: {
-        caption: 'listForm'
+        __caption__: 'List form'
       },
       editForm: {
-        caption: 'editForm'
+        __caption__: 'Edit form'
       }
     }
   }

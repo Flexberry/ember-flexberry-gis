@@ -1,0 +1,63 @@
+@import 'src/semantic';
+@import 'addon/styles/addon';
+@import "node_modules/ember-flexberry/addon/styles/addon";
+
+.spinner {
+  background: url('images/cat.gif') no-repeat;
+  background-size: contain;
+  height: 140px;
+  width: 175px;
+  margin: 0 auto;
+}
+
+.loading-message {
+    text-align: center;
+    color: #aaa;
+}
+
+.exit-btn,
+&.page-header-caption {
+    cursor: pointer;
+}
+
+.stackable > .ui.message {
+  top: inherit;
+}
+
+#example {
+    .flexberry-content {
+        margin: 0;
+        padding: 0px;
+    }
+    .ui.container {
+        margin: 0;
+        width: 100%;
+    }
+    .grid.container>.row {
+        padding-right: 10px;
+    }
+    .full.height {
+      padding: 10px 10px 0 10px;
+      width: 100%;
+      transition: width 0.3s ease-in-out 0s;
+      overflow-x: hidden;
+    }
+    .flexberry-edit-panel {
+      margin-bottom: 1rem;
+    }
+}
+
+#example-mobile {
+    .flexberry-content {
+        padding: 0;
+    }
+    .ui.container {
+        margin: 0;
+        padding: 0;
+    }
+    .flexberry-content {
+        padding: 10px 0 0 10px;
+        margin: 0;
+        overflow-x: hidden;
+    }
+}

@@ -2,156 +2,201 @@ export default {
   projections: {
     AuditView: {
       name: {
-        caption: 'Name'
+        __caption__: 'Наименование'
       },
       creator: {
-        caption: 'Creator'
+        __caption__: 'Создатель'
       },
       createTime: {
-        caption: 'Create time'
+        __caption__: 'Время создания'
       },
       editor: {
-        caption: 'Editor'
+        __caption__: 'Редактор'
       },
       editTime: {
-        caption: 'Edit time'
+        __caption__: 'Время редактирования'
       }
     },
     MapLayerD: {
       name: {
-        caption: 'Name'
+        __caption__: 'Наименование'
       },
-      type: {
-        caption: 'Type'
+      description: {
+        __caption__: 'Описание'
       },
-      visibility: {
-        caption: 'Visibility'
+      keyWords: {
+        __caption__: 'Ключевые слова'
       },
       index: {
-        caption: 'Index'
+        __caption__: 'Индекс'
       },
-      coordinateReferenceSystem: {
-        caption: 'CRS'
+      visibility: {
+        __caption__: 'Видимость'
+      },
+      type: {
+        __caption__: 'Тип'
       },
       settings: {
-        caption: 'Settings'
+        __caption__: 'Настройки'
+      },
+      scale: {
+        __caption__: 'Масштаб'
+      },
+      coordinateReferenceSystem: {
+        __caption__: 'Система координат'
+      },
+      boundingBox: {
+        __caption__: 'Граница'
       },
       parent: {
-        caption: 'Parent'
+        __caption__: 'Родитель'
       },
       map: {
-        caption: 'Map'
+        __caption__: 'Карта'
       },
       layerLink: {
-        caption: '',
-        layer: {
-          caption: '',
-          name: {
-            caption: 'Слой'
+        __caption__: '',
+        mapObjectSetting: {
+          __caption__: 'Тип',
+          typeName: {
+            __caption__: 'Тип объекта'
+          },
+          listForm: {
+            __caption__: 'Списковая форма'
+          },
+          editForm: {
+            __caption__: 'Форма редактирования'
           }
         },
-        mapObjectSetting: {
-          caption: ''
+        layer: {
+          __caption__: '',
+          name: {
+            __caption__: 'Слой'
+          }
         },
-        linkParameter: {
-          caption: '',
+        allowShow: {
+          __caption__: 'Показывать'
+        },
+        parameters: {
+          __caption__: 'Параметры связи',
           objectField: {
-          caption: ''
-        },
+            __caption__: 'Поле объекта'
+          },
           layerField: {
-          caption: ''
-        },
+            __caption__: 'Поле слоя'
+          },
           expression: {
-          caption: ''
-        },
+            __caption__: 'Выражение'
+          },
           queryKey: {
-          caption: ''
-        },
+            __caption__: 'Ключ запроса'
+          },
           linkField: {
-          caption: ''
-        }
+            __caption__: 'Ключ связи'
+          },
+          layerLink: {
+            __caption__: 'Связь'
+          }
         }
       }
     },
     MapLayerE: {
       name: {
-        caption: 'Name'
+        __caption__: 'Наименование'
       },
-      type: {
-        caption: 'Type'
+      description: {
+        __caption__: 'Описание'
       },
-      visibility: {
-        caption: 'Visibility'
+      keyWords: {
+        __caption__: 'Ключевые слова'
       },
       index: {
-        caption: 'Index'
+        __caption__: 'Индекс'
       },
-      coordinateReferenceSystem: {
-        caption: 'CRS'
+      visibility: {
+        __caption__: 'Видимость'
+      },
+      type: {
+        __caption__: 'Тип'
       },
       settings: {
-        caption: 'Settings'
+        __caption__: 'Настройки'
+      },
+      scale: {
+        __caption__: 'Масштаб'
+      },
+      coordinateReferenceSystem: {
+        __caption__: 'Система координат'
+      },
+      boundingBox: {
+        __caption__: 'Граница'
       },
       parent: {
-        caption: 'Parent'
+        __caption__: 'Родитель'
       },
       map: {
-        caption: 'Map'
+        __caption__: 'Карта'
       },
       layerLink: {
-        caption: '',
-        layer: {
-          caption: '',
-          name: {
-            caption: 'Слой'
+        __caption__: '',
+        mapObjectSetting: {
+          __caption__: 'Тип',
+          typeName: {
+            __caption__: 'Тип объекта'
+          },
+          listForm: {
+            __caption__: 'Списковая форма'
+          },
+          editForm: {
+            __caption__: 'Форма редактирования'
           }
         },
-        mapObjectSetting: {
-          caption: ''
+        layer: {
+          __caption__: '',
+          name: {
+            __caption__: 'Слой'
+          }
         },
-        linkParameter: {
-          caption: '',
+        allowShow: {
+          __caption__: 'Показывать'
+        },
+        parameters: {
+          __caption__: '',
           objectField: {
-          caption: ''
-        },
+            __caption__: 'Поле объекта'
+          },
           layerField: {
-          caption: ''
-        },
+            __caption__: 'Поле слоя'
+          },
           expression: {
-          caption: ''
-        },
+            __caption__: 'Выражение'
+          },
           queryKey: {
-          caption: ''
-        },
+            __caption__: 'Ключ запроса'
+          },
           linkField: {
-          caption: ''
-        }
+            __caption__: 'Ключ связи'
+          },
+          layerLink: {
+            __caption__: 'Связь'
+          }
         }
       }
     },
     MapLayerL: {
       name: {
-        caption: 'Наименование'
+        __caption__: 'Наименование'
+      },
+      description: {
+        __caption__: 'Описание'
       },
       type: {
-        caption: 'Тип'
-      },
-      visibility: {
-        caption: 'Видимость'
-      },
-      index: {
-        caption: 'Индекс'
-      },
-      coordinateReferenceSystem: {
-        caption: 'CRS'
-      },
-      settings: {
-        caption: 'Настройки'
+        __caption__: 'Тип'
       },
       parent: {
-        caption: 'Родительский слой',
+        __caption__: 'Родитель',
         name: {
-          caption: 'Родительский слой'
+          __caption__: 'Родитель'
         }
       }
     }

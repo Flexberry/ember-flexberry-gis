@@ -1,0 +1,9 @@
+/*******************************
+      Gis Theme Overrides
+*******************************/
+
+@flexberryMaplayerOpacityLabelColor: rgba(0, 0, 0, 0.6);
+@flexberryMaplayerOpacityLabelBorderRadius: 0.28571429rem;
+@flexberryMaplayerOpacityLabelPadding: .75em .1em;
+@flexberryMaplayerOpacityLabelBackgorund: #E0E1E2 none;
+@flexberryMaplayerOpacityLabelBackgroundHover: #CACBCD;

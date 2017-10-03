@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+## [0.3.1] - 2017-10-03
+### Added
+* Add Semantic UI/Flexberry themes support.
+* Add `flexberry-edit-layermap` component to unify layers and layers-metadata editing.
+* Add `gis-search-form` making available search through maps and layer-metadata.
+* Add `edit` dialog allowing map properties editing, and add logic which opens `edit` dialog automatically for new maps.
+* Add `map-info` dialog which opens automatically and displays map description for those users who haven't seen it before.
+
 ## [0.2.1] - 2017-09-04
 ### Removed
 * Remove `isDevelopingAddon` property from release.

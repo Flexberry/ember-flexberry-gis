@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import SlotsMixin from 'ember-block-slots';
-import DomActionsMixin from '../../mixins/dom-actions';
+import DomActionsMixin from 'ember-flexberry/mixins/dom-actions';
 import layout from '../../templates/components/map-tools/base';
 
 /**

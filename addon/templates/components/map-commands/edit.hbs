@@ -1,0 +1,17 @@
+{{map-commands/base
+  class=(concat flexberryClassNames.wrapper " " class)
+  name="edit"
+  caption=caption
+  tooltip=tooltip
+  iconClass=iconClass
+  execute=(action "onEditMapCommandExecute")
+}}
+
+{{#if _editDialogHasBeenRequested}}
+  {{component "map-dialogs/edit"
+    class=flexberryClassNames.editDialog
+    visible=_editDialogIsVisible
+    mapModel=mapModel
+    approve=(action "onEditDialogApprove")
+  }}
+{{/if}}

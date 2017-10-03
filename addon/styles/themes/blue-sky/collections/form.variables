@@ -1,0 +1,14 @@
+/*******************************
+    Semantic Theme Overrides
+*******************************/
+
+/*******************************
+      Gis Theme Overrides
+*******************************/
+
+@modalInputColor: @darkbluecolor;
+@modalInputBorder: none;
+@modalInputBoxShadow: 0 0 4px @darkbluecolor;
+@modalInputBorderRadius: 4px;
+
+@modalLabelColor: @darkbluecolor;

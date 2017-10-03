@@ -1,40 +1,23 @@
 export default {
   projections: {
-    LinkParameter: {
-      objectField: {
-        caption: 'objectField'
-      },
-      layerField: {
-        caption: 'layerField'
-      },
-      expression: {
-        caption: 'expression'
-      },
-      queryKey: {
-        caption: 'queryKey'
-      },
-      linkField: {
-        caption: 'linkField'
-      },
-      layerLink: {
-        caption: 'layerLink'
-      }
-    },
     LinkParameterD: {
       objectField: {
-        caption: 'objectField'
+        __caption__: 'Object field'
       },
       layerField: {
-        caption: 'layerField'
+        __caption__: 'Layer field'
       },
       expression: {
-        caption: 'expression'
+        __caption__: 'Expression'
       },
       queryKey: {
-        caption: 'queryKey'
+        __caption__: 'Query key'
       },
       linkField: {
-        caption: 'linkField'
+        __caption__: 'Link key'
+      },
+      layerLink: {
+        __caption__: 'Layer link'
       }
     }
   }

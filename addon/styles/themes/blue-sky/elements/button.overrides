@@ -1,0 +1,98 @@
+.ui.button.flexberry-button:hover i.icon:before {
+    color: @flexberryButtonIconHoveredColor;
+}
+
+.ui.buttons .or {
+  display: block;
+}
+
+.ui.icon.button {
+    color: @uiIconButtonColor;
+    background: @uiIconButtonBackground;
+    border-radius: @uiIconButtonBorderRadius;
+    &.active,
+    &:hover {
+        color: @uiIconButtonHoveredColor;
+        background: @uiIconButtonHoveredBackground;
+    }
+}
+
+.ui.form .field {
+    .button.flexberry-button {
+        color: @fieldButtonColor;
+        &:hover {
+            color: @fieldButtonHoveredColor;
+        }
+    }
+}
+
+.ui.menu.flexberry-maptoolbar {
+    .ui.icon.button {
+        font-size: 0px;
+    }
+
+    i.icon:before {
+        opacity: 1;
+    }
+
+    /* сохранить */
+    .flexberry-save-map-button {
+        left: 286px;
+        width: 76px;
+        box-shadow: @uiIconButtonBoxShadow;
+        color: @uiIconButtonColor;
+        background: @whitecolor;
+        border-style: none;
+        &:hover {
+          background: @uiIconButtonHoveredBackground;
+          color: @uiIconButtonHoveredColor;
+        }
+        &:focus {
+          outline: none;
+        }
+    }
+}
+
+.sidebar-wrapper .ui.button {
+    border: none;
+}
+
+.mappanel,
+.sidebar-wrapper,
+.flexberry-export-map-command-dialog,
+.flexberry-search-map-command-dialog,
+.flexberry-go-to-map-command-dialog {
+    .ui.icon.button:not(.fluid) {
+        border-radius: 5px;
+        font-weight: normal;
+        display: inline-block;
+        height: @uiIconButtonHeight;
+        width: @uiIconButtonWidth;
+        box-shadow: @uiIconButtonBoxShadow;
+        font-size: 16px;
+        margin-left: 0px;
+        &.active,
+        &:hover {
+          opacity: 1;
+        }
+    }
+}
+
+
+/* Flexberry Rdit Layermap Segment */
+.flexberry-edit-layermap {
+    .ui.small.fluid.buttons:not(.basic):not(.inverted) {
+      &>.button.flexberry-button {
+          background: @uiIconButtonBackground;
+          color: @uiIconButtonColor;
+          border: 1px solid @uiIconButtonBorderColor;
+          &.active {
+              background: @fluidButtonsActiveBackground;
+          }
+          &:hover {
+              opacity: 0.8;
+              color: @uiIconButtonColor;
+          }
+      }
+    }
+}

@@ -1,0 +1,120 @@
+.ui.button.flexberry-button:hover i.icon:before {
+    color: @flexberryButtonIconHoveredColor;
+}
+
+.ui.buttons .or {
+  display: block;
+}
+
+.ui.icon.button {
+    color: @uiIconButtonColor;
+    background: @uiIconButtonBackground;
+    border-radius: @uiIconButtonBorderRadius;
+    &.active,
+    &:hover {
+        color: @uiIconButtonHoveredColor;
+        background: @uiIconButtonHoveredBackground;
+    }
+}
+
+.ui.menu.flexberry-maptoolbar {
+    .ui.icon.button {
+        font-size: 0px;
+    }
+
+    i.icon:before {
+        opacity: 1;
+    }
+
+    /* сохранить */
+    .flexberry-save-map-button {
+        left: 286px;
+        width: 76px;
+        box-shadow: @uiIconButtonBoxShadow;
+        color: @uiIconButtonColor;
+        background: @whitecolor;
+        border-style: none;
+        &:hover {
+          background: @uiIconButtonHoveredBackground;
+          color: @uiIconButtonHoveredColor;
+        }
+        &:focus {
+          outline: none;
+        }
+    }
+}
+
+.flexberry-identify-panel {
+    .ui.icon.button {
+      padding: @uiIconButtonPadding;
+      margin-right: -1px;
+      &.flexberry-identify-panel-all-layers-option,
+      &.flexberry-identify-panel-rectangle-tools-option {
+        border-radius: 5px 0px 0px 5px;
+      }
+      &.flexberry-identify-panel-polygon-tools-option {
+        border-radius: 0px 5px 5px 0px;
+      }
+      &.flexberry-identify-panel-all-visible-layers-option {
+        border-radius: 0px;
+      }
+      &.flexberry-identify-panel-top-visible-layers-option {
+        border-radius: 0px 5px 5px 0px;
+      }
+    }
+}
+
+.flexberry-search-panel .flexberry-search.ui.search {
+  .ui.search-button {
+    position: absolute;
+    right: 30px;
+    border: none;
+    height: 40px;
+  }
+  .ui.clear-search-button {
+    position: absolute;
+    right: 0px;
+    border: none;
+    height: 40px;
+  }
+}
+
+.mappanel,
+.sidebar-wrapper,
+.flexberry-export-map-command-dialog,
+.flexberry-search-map-command-dialog,
+.flexberry-go-to-map-command-dialog,
+.flexberry-edit-layer-dialog {
+    .ui.icon.button:not(.fluid) {
+        border-radius: 5px;
+        font-weight: normal;
+        display: inline-block;
+        height: @uiIconButtonHeight;
+        width: @uiIconButtonWidth;
+        box-shadow: @uiIconButtonBoxShadow;
+        font-size: 16px;
+        margin-left: 0px;
+        &.active,
+        &:hover {
+          opacity: 1;
+        }
+    }
+    .ui.small.fluid.buttons:not(.basic):not(.inverted) {
+        &>.or::before {
+            background: @orBeforeBackground;
+            color: @orBeforeColor;
+            box-shadow: @orBeforeBoxShadow;
+        }
+        &>.button.flexberry-button {
+            background: @flexberryButtonBackground;
+            color: @flexberryButtonColor;
+            box-shadow: @darkBoxShadow;
+            &.active {
+                background: @flexberryButtonActiveColor;
+            }
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+}

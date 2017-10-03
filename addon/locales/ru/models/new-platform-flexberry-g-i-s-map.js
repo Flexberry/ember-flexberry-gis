@@ -2,95 +2,151 @@ export default {
   projections: {
     AuditView: {
       name: {
-        caption: 'Name'
+        __caption__: 'Наименование'
       },
       creator: {
-        caption: 'Creator'
+        __caption__: 'Создатель'
       },
       createTime: {
-        caption: 'Create time'
+        __caption__: 'Время создания'
       },
       editor: {
-        caption: 'Editor'
+        __caption__: 'Редактор'
       },
       editTime: {
-        caption: 'Edit time'
+        __caption__: 'Время редактирования'
+      }
+    },
+    Map: {
+      name: {
+        __caption__: 'Наименование'
+      },
+      lat: {
+        __caption__: 'Широта'
+      },
+      lng: {
+        __caption__: 'Долгота'
+      },
+      zoom: {
+        __caption__: 'Зум'
+      },
+      public: {
+        __caption__: 'Общая'
+      },
+      coordinateReferenceSystem: {
+        __caption__: 'Система координат'
       }
     },
     MapE: {
       name: {
-        caption: 'Name'
+        __caption__: 'Наименование'
+      },
+      description: {
+        __caption__: 'Описание'
+      },
+      keyWords: {
+        __caption__: 'Ключевые слова'
       },
       lat: {
-        caption: 'Lat'
+        __caption__: 'Широта'
       },
       lng: {
-        caption: 'Lng'
+        __caption__: 'Долгота'
       },
       zoom: {
-        caption: 'Zoom'
+        __caption__: 'Зум'
       },
       public: {
-        caption: 'Public'
+        __caption__: 'Общая'
+      },
+      scale: {
+        __caption__: 'Масштаб'
       },
       coordinateReferenceSystem: {
-        caption: 'CRS'
+        __caption__: 'Система координат'
+      },
+      boundingBox: {
+        __caption__: 'Граница'
       },
       mapLayer: {
-        caption: '',
+        __caption__: '',
         name: {
-          caption: 'Name'
+          __caption__: 'Наименование'
         },
-        type: {
-          caption: 'Type'
+        description: {
+          __caption__: 'Описание'
         },
-        visibility: {
-          caption: 'Visibility'
+        keyWords: {
+          __caption__: 'Ключевые слова'
         },
         index: {
-          caption: 'Index'
+          __caption__: 'Индекс'
         },
-        coordinateReferenceSystem: {
-          caption: 'CRS'
+        visibility: {
+          __caption__: 'Видимость'
+        },
+        type: {
+          __caption__: 'Тип'
         },
         settings: {
-          caption: 'Settings'
+          __caption__: 'Настройки'
+        },
+        scale: {
+          __caption__: 'Масштаб'
+        },
+        coordinateReferenceSystem: {
+          __caption__: 'Система координат'
+        },
+        boundingBox: {
+          __caption__: 'Граница'
         },
         parent: {
-          caption: 'Parent'
+          __caption__: 'Родитель'
         },
         map: {
-          caption: 'Map'
+          __caption__: 'Карта'
         },
         layerLink: {
-          caption: '',
-          layer: {
-            caption: '',
-            name: {
-              caption: 'Слой'
+          __caption__: '',
+          mapObjectSetting: {
+            __caption__: 'Тип',
+            typeName: {
+              __caption__: 'Тип объекта'
+            },
+            listForm: {
+              __caption__: 'Списковая форма'
+            },
+            editForm: {
+              __caption__: 'Форма редактирования'
             }
           },
-          mapObjectSetting: {
-            caption: ''
-          }
+          layer: {
+            __caption__: '',
+            name: {
+              __caption__: 'Слой'
+            }
+          },
+          allowShow: {
+          __caption__: 'Показывать'
+        }
         }
       }
     },
     MapL: {
       name: {
-        caption: 'Наименование'
+        __caption__: 'Наименование'
       },
       lat: {
-        caption: 'Lat'
+        __caption__: 'Широта'
       },
       lng: {
-        caption: 'Lng'
+        __caption__: 'Долгота'
       },
       zoom: {
-        caption: 'Масштаб'
+        __caption__: 'Зум'
       },
       public: {
-        caption: 'Общая'
+        __caption__: 'Общая'
       }
     }
   }

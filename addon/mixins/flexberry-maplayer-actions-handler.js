@@ -3,9 +3,11 @@
 */
 
 import Ember from 'ember';
-import FlexberryDdauCheckboxActionsHandlerMixin from './flexberry-ddau-checkbox-actions-handler';
-import FlexberryDdauSliderActionsHandlerMixin from './flexberry-ddau-slider-actions-handler';
-import { getRecord } from '../utils/extended-get';
+import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-checkbox-actions-handler';
+import FlexberryDdauSliderActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-slider-actions-handler';
+import {
+  getRecord
+} from 'ember-flexberry/utils/extended-get';
 
 /**
   Mixin containing handlers for
@@ -42,8 +44,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerHeaderClick(...args) {
-    },
+    onMapLayerHeaderClick(...args) {},
 
     /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}flexberry-maplayers component's 'beforeExpand' action{{/crossLink}}.
@@ -71,8 +72,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerBeforeExpand(...args) {
-    },
+    onMapLayerBeforeExpand(...args) {},
 
     /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.beforeExpand:method"}}flexberry-maplayers component's 'beforeCollapse' action{{/crossLink}}.
@@ -100,8 +100,7 @@ export default Ember.Mixin.create({
         });
       ```
     */
-    onMapLayerBeforeCollapse(...args) {
-    },
+    onMapLayerBeforeCollapse(...args) {},
 
     /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.visiblilityChange:method"}}flexberry-maplayers component's 'visiblilityChange' action{{/crossLink}}.
@@ -138,6 +137,11 @@ export default Ember.Mixin.create({
       let actionHandler = objectContainingActionHandler.get('actions.onCheckboxChange');
 
       actionHandler.apply(this, args);
+
+      // Save changes to local storage.
+      let mutablePropertyPath = args[0];
+      let e = args[args.length - 1];
+      this.mutateStorage('visibility', mutablePropertyPath, e.newValue);
     },
 
     /**
@@ -175,6 +179,59 @@ export default Ember.Mixin.create({
       let actionHandler = objectContainingActionHandler.get('actions.onSliderChange');
 
       actionHandler.apply(this, args);
+
+      // Save changes to local storage.
+      let mutablePropertyPath = args[0];
+      let e = args[args.length - 1];
+      this.mutateStorage('opacity', mutablePropertyPath, e.newValue);
+    },
+
+    /**
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.fitBounds:method"}}flexberry-maplayers component's 'fitBounds' action{{/crossLink}}.
+      Fits leaflet map to bounds of selected maplayer.
+
+      @method actions.onMapLayerFitBounds
+      @param {String} boundsPropertyPath Path to a property, which value must be used within action.
+
+      @example
+      templates/my-form.hbs
+      ```handlebars
+        {{flexberry-maplayers
+          name="Tree node fit bounds button"
+          opacity=layer.options.opacity
+          fitBounds=(action "onMapLayerFitBounds" "layer.options.bounds")
+        }}
+      ```
+
+      controllers/my-form.js
+      ```javascript
+        import Ember from 'ember';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
+
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
+        });
+      ```
+    */
+    onMapLayerFitBounds(boundsPropertyPath) {
+      let leafletMap = this.get('leafletMap');
+
+      if (leafletMap) {
+        let bounds = getRecord(this, boundsPropertyPath);
+
+        let earthBounds = L.latLngBounds([
+          [-90, -180],
+          [90, 180]
+        ]);
+
+        // Check if bounds are valid and are not 'full extent' (earth) bounds.
+        if (!bounds.isValid() || bounds.equals(earthBounds)) {
+          // Set it to map's bounds.
+          bounds = leafletMap.maxBounds;
+        }
+
+        // Fit map to bounds.
+        leafletMap.fitBounds(bounds && bounds.isValid() ? bounds : earthBounds);
+      }
     },
 
     /**
@@ -213,7 +270,9 @@ export default Ember.Mixin.create({
         `but \`string\` is expected`,
         Ember.typeOf(parentLayerPath) === 'string');
 
-      let { layerProperties } = args[args.length - 1];
+      let {
+        layerProperties
+      } = args[args.length - 1];
       Ember.assert(
         `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
         `but \`object\` or  \`instance\` is expected`,
@@ -287,7 +346,9 @@ export default Ember.Mixin.create({
         `but \`string\` is expected`,
         Ember.typeOf(layerPath) === 'string');
 
-      let { layerProperties } = args[args.length - 1];
+      let {
+        layerProperties
+      } = args[args.length - 1];
       Ember.assert(
         `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
         `but \`object\` or  \`instance\` is expected`,

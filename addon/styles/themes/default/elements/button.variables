@@ -1,0 +1,43 @@
+/*******************************
+      Gis Theme Overrides
+*******************************/
+
+@orBeforeBackground: @lightgraycolor;
+@orBeforeColor: @bluecolor;
+@orBeforeBoxShadow: @lightBoxShadow;
+
+@flexberryButtonBackground: @whitecolor;
+@flexberryButtonColor: @darkbluecolor;
+@flexberryButtonIconHoveredColor: @bluesky;
+@flexberryButtonActiveColor: @lightbluecolor !important; // Needs important to override basic theme style.
+
+
+/*********************************************
+            Ui Icon Button styles
+*********************************************/
+
+@uiIconButtonBorderRadius: 5px;
+@uiIconButtonPadding: 12px 4px;
+@uiIconButtonHeight: 40px;
+@uiIconButtonWidth: 40px;
+@uiIconButtonColor: @bluesky;
+@uiIconButtonBackground: @whitecolor;
+@uiIconButtonBoxShadow: 0 0 4px @darkbluecolor;
+
+/* Hovered */
+@uiIconButtonHoveredColor: @bluesky;
+@uiIconButtonHoveredBackground: @lightbluecolor;
+@uiIconButtonHoveredBoxShadow: 0 0 4px @darkbluecolor;
+
+/* Disabled */
+@uiIconButtonDisabledColor: @lightgraycolor;
+@uiIconButtonDisabledHoveredColor: @lightgraycolor;
+@uiIconButtonDisabledHoveredBackground: @whitecolor;
+
+/* leaflet-bar */
+@leafletBarButtonHeight: 36px;
+@leafletBarButtonWidth: 36px;
+@leafletBarButtonColor: @uiIconButtonColor;
+@leafletBarButtonBackground: @uiIconButtonBackground;
+@leafletBarButtonBoxShadow: @uiIconButtonBoxShadow;
+@leafletBarButtonFontSize: 28px;

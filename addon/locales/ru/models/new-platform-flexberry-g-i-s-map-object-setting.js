@@ -2,44 +2,50 @@ export default {
   projections: {
     MapObjectSetting: {
       typeName: {
-        caption: ''
+        __caption__: 'TypeName'
       },
       listForm: {
-        caption: ''
+        __caption__: 'ListForm'
       },
       editForm: {
-        caption: ''
+        __caption__: 'EditForm'
+      },
+      title: {
+        __caption__: 'Title'
       },
       defaultMap: {
-        caption: ''
+        __caption__: ''
       }
     },
     MapObjectSettingE: {
       typeName: {
-        caption: 'Тип'
+        __caption__: 'Тип'
+      },
+      title: {
+        __caption__: 'Отображаемое имя'
       },
       listForm: {
-        caption: 'Списковая форма'
+        __caption__: 'Списковая форма'
       },
       editForm: {
-        caption: 'Форма редактирования'
+        __caption__: 'Форма редактирования'
       },
       defaultMap: {
-        caption: 'Карта по умолчанию',
+        __caption__: 'Карта по умолчанию',
         name: {
-          caption: ''
+          __caption__: ''
         }
       }
     },
     MapObjectSettingL: {
       typeName: {
-        caption: 'Тип'
+        __caption__: 'Тип'
       },
       listForm: {
-        caption: 'Списковая форма'
+        __caption__: 'Списковая форма'
       },
       editForm: {
-        caption: 'Форма редактирования'
+        __caption__: 'Форма редактирования'
       }
     }
   }

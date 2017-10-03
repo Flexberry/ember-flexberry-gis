@@ -1,115 +1,127 @@
 export default {
   projections: {
     LayerLinkD: {
-      layer: {
-        caption: '',
-        name: {
-          caption: 'Слой'
+      mapObjectSetting: {
+        __caption__: 'Тип',
+        typeName: {
+          __caption__: 'Тип объекта'
+        },
+        listForm: {
+          __caption__: 'Списковая форма'
+        },
+        editForm: {
+          __caption__: 'Форма редактирования'
         }
       },
-      mapObjectSetting: {
-        caption: ''
+      layer: {
+        __caption__: '',
+        name: {
+          __caption__: 'Слой'
+        }
       },
-      linkParameter: {
-        caption: '',
+      allowShow: {
+        __caption__: 'Показывать'
+      },
+      parameters: {
+        __caption__: 'Параметры связи',
         objectField: {
-          caption: ''
+          __caption__: 'Поле объекта'
         },
         layerField: {
-          caption: ''
+          __caption__: 'Поле слоя'
         },
         expression: {
-          caption: ''
+          __caption__: 'Выражение'
         },
         queryKey: {
-          caption: ''
+          __caption__: 'Ключ запроса'
         },
         linkField: {
-          caption: ''
+          __caption__: 'Ключ связи'
+        },
+        layerLink: {
+          __caption__: 'Связь'
         }
       }
     },
     LayerLinkE: {
+      allowShow: {
+        __caption__: 'Показывать'
+      },
       layer: {
-        caption: 'Слой карты'
+        __caption__: 'Слой карты'
       },
       mapObjectSetting: {
-        caption: ''
-      },
-      linkParameter: {
-        caption: '',
-        objectField: {
-          caption: ''
-        },
-        layerField: {
-          caption: ''
-        },
-        expression: {
-          caption: ''
-        },
-        queryKey: {
-          caption: ''
-        },
-        linkField: {
-          caption: ''
-        }
+        __caption__: ''
       }
     },
     LayerLinkI: {
       mapObjectSetting: {
-        caption: '',
+        __caption__: '',
         listForm: {
-          caption: ''
+          __caption__: ''
         },
         editForm: {
-          caption: ''
+          __caption__: ''
         }
       },
-      layer: {
-        caption: ''
+      allowShow: {
+        __caption__: 'Показывать'
       },
-      linkParameter: {
-        caption: '',
+      layer: {
+        __caption__: ''
+      },
+      parameters: {
+        __caption__: 'Параметры связи',
         objectField: {
-          caption: ''
+          __caption__: 'Поле объекта'
         },
         layerField: {
-          caption: ''
+          __caption__: 'Поле слоя'
         },
         expression: {
-          caption: ''
+          __caption__: 'Выражение'
         },
         queryKey: {
-          caption: ''
+          __caption__: 'Ключ запроса'
         },
         linkField: {
-          caption: ''
+          __caption__: 'Ключ связи'
+        },
+        layerLink: {
+          __caption__: 'Связь'
         }
       }
     },
     LayerLinkQ: {
+      allowShow: {
+        __caption__: 'Показывать'
+      },
       layer: {
-        caption: ''
+        __caption__: ''
       },
       mapObjectSetting: {
-        caption: ''
+        __caption__: ''
       },
-      linkParameter: {
-        caption: '',
+      parameters: {
+        __caption__: 'Параметры связи',
         objectField: {
-          caption: ''
+          __caption__: 'Поле объекта'
         },
         layerField: {
-          caption: ''
+          __caption__: 'Поле слоя'
         },
         expression: {
-          caption: ''
+          __caption__: 'Выражение'
         },
         queryKey: {
-          caption: ''
+          __caption__: 'Ключ запроса'
         },
         linkField: {
-          caption: ''
+          __caption__: 'Ключ связи'
+        },
+        layerLink: {
+          __caption__: 'Связь'
         }
       }
     }
