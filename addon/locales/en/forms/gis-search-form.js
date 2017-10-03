@@ -1,6 +1,7 @@
 export default {
   'header': 'Search',
   'subheader': 'through layer metadata and maps',
+  'any-text': 'Any text',
   'keywords': 'Key words',
   'scale': 'Scale',
   'object': 'Object',
@@ -9,6 +10,7 @@ export default {
   'min-lat': 'Min latitude',
   'max-long': 'Max longitude',
   'max-lat': 'Max latitude',
+  'advanced-search': 'Advanced search',
   'search': 'Search',
   'results': 'Results',
   'ctrl-message': 'Hold Ctrl-button to open in a new window',

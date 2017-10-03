@@ -15,40 +15,60 @@
   <div class="ui grid">
     <div class="row">
       <div class="eight wide column">
-        <div class="ui container segment">
-          <div class="ui top attached label">
-            {{t "forms.gis-search-form.object"}}
-          </div>
-          <div class="field">
-            <label>{{t "forms.gis-search-form.keywords"}}</label>
-            {{flexberry-textbox value=searchConditions.keyWords}}
-          </div>
-          <div class="field">
-            <label>{{t "forms.gis-search-form.scale"}}</label>
-            {{flexberry-textbox value=searchConditions.scaleFrom}}
-          </div>
+        <div class="field">
+          <label>{{t "forms.gis-search-form.any-text"}}</label>
+          {{flexberry-textbox value=searchConditions.anyText}}
         </div>
       </div>
-      <div class="eight wide column">
-        <div class="ui container segment">
-          <div class="ui top attached label">
-            {{t "forms.gis-search-form.position"}}
+    </div>
+    <div class="row">
+      <div class="sixteen wide column">
+        <div class="ui accordion">
+          <div class="title">
+            <i class="dropdown icon"></i>
+            {{t "forms.gis-search-form.advanced-search"}}
           </div>
-          <div class="field">
-            <label>{{t "forms.gis-search-form.min-long"}}</label>
-            {{flexberry-textbox value=searchConditions.minLng}}
-          </div>
-          <div class="field">
-            <label>{{t "forms.gis-search-form.min-lat"}}</label>
-            {{flexberry-textbox value=searchConditions.minLat}}
-          </div>
-          <div class="field">
-            <label>{{t "forms.gis-search-form.max-long"}}</label>
-            {{flexberry-textbox value=searchConditions.maxLng}}
-          </div>
-          <div class="field">
-            <label>{{t "forms.gis-search-form.max-lat"}}</label>
-            {{flexberry-textbox value=searchConditions.maxLat}}
+          <div class="content">
+            <div class="ui grid">
+              <div class="eight wide column">
+                <div class="ui container segment">
+                  <div class="ui top attached label">
+                    {{t "forms.gis-search-form.object"}}
+                  </div>
+                  <div class="field">
+                    <label>{{t "forms.gis-search-form.keywords"}}</label>
+                    {{flexberry-textbox value=searchConditions.keyWords}}
+                  </div>
+                  <div class="field">
+                    <label>{{t "forms.gis-search-form.scale"}}</label>
+                    {{flexberry-textbox value=searchConditions.scaleFrom}}
+                  </div>
+                </div>
+              </div>
+              <div class="eight wide column">
+                <div class="ui container segment">
+                  <div class="ui top attached label">
+                    {{t "forms.gis-search-form.position"}}
+                  </div>
+                  <div class="field">
+                    <label>{{t "forms.gis-search-form.min-long"}}</label>
+                    {{flexberry-textbox value=searchConditions.minLng}}
+                  </div>
+                  <div class="field">
+                    <label>{{t "forms.gis-search-form.min-lat"}}</label>
+                    {{flexberry-textbox value=searchConditions.minLat}}
+                  </div>
+                  <div class="field">
+                    <label>{{t "forms.gis-search-form.max-long"}}</label>
+                    {{flexberry-textbox value=searchConditions.maxLng}}
+                  </div>
+                  <div class="field">
+                    <label>{{t "forms.gis-search-form.max-lat"}}</label>
+                    {{flexberry-textbox value=searchConditions.maxLat}}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
