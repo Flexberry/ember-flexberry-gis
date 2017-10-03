@@ -12,30 +12,6 @@ import layout from '../../../templates/components/map-commands-dialogs/search-se
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 export default Ember.Component.extend({
-
-  _searchPropertiesArray: Ember.computed('searchProperties', function () {
-    let props = [];
-    let searchProperties = this.get('searchProperties');
-    for (var property in searchProperties) {
-      if (searchProperties.hasOwnProperty(property)) {
-        props.push(searchProperties[property]);
-      }
-    }
-
-    return props;
-  }),
-
-  actions: {
-    onChange(selectedText) {
-      let searchProperties = this.get('searchProperties');
-      for (var property in searchProperties) {
-        if (searchProperties[property] === selectedText) {
-          this.set('settings.propertyName', property);
-        }
-      }
-    }
-  },
-
   /**
     Reference to component's template.
   */

@@ -19,7 +19,8 @@ export default BaseLayer.extend({
   */
   leafletOptions: [
     'kmlUrl',
-    'kmlString'
+    'kmlString',
+    'style'
   ],
 
   /**
@@ -50,16 +51,13 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer(options) {
-    options = Ember.$.extend(true, {}, this.get('options'), options);
-    let customLayer = L.geoJson(null, options);
-
     let kmlUrl = this.get('options.kmlUrl');
     let kmlString = this.get('options.kmlString');
-    Ember.assert('Either "kmlUrl" or "kmlString" should be defined!', Ember.isPresent(kmlUrl) || Ember.isPresent(kmlString));
+    Ember.assert('The option "kmlUrl" or "kmlString" should be defined!', Ember.isPresent(kmlUrl) || Ember.isPresent(kmlString));
 
     if (kmlUrl) {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        let layer = omnivore.kml(kmlUrl, null, customLayer)
+        let layer = omnivore.kml(kmlUrl)
           .on('ready', (e) => {
             this.set('_leafletObject', layer);
             resolve(layer);
@@ -70,11 +68,9 @@ export default BaseLayer.extend({
       });
     }
 
-    if (kmlString) {
-      let layer = omnivore.kml.parse(kmlString, null, customLayer);
-      this.set('_leafletObject', layer);
-      return layer;
-    }
+    let layer = omnivore.kml.parse(kmlString);
+    this.set('_leafletObject', layer);
+    return layer;
   },
 
   /**
@@ -124,13 +120,14 @@ export default BaseLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let kmlLayer = this.get('_leafletObject');
       let features = Ember.A();
-      kmlLayer.eachLayer((layer) => {
-        if (features.length < e.searchOptions.maxResultsCount) {
-          let feature = Ember.get(layer, 'feature');
 
-          // if layer satisfies search query
-          let searchFields = this.get('searchSettings.searchFields'); // []
-          if (Ember.isArray(searchFields)) {
+      let searchFields = this.get('searchSettings.searchFields'); // []
+      if (Ember.isArray(searchFields)) {
+        kmlLayer.eachLayer((layer) => {
+          if (features.length < e.searchOptions.maxResultsCount) {
+            let feature = Ember.get(layer, 'feature');
+
+            // if layer satisfies search query
             let contains = searchFields.map((item) => {
               return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
             }).reduce((result, current) => {
@@ -141,8 +138,9 @@ export default BaseLayer.extend({
               features.pushObject(feature);
             }
           }
-        }
-      });
+        });
+      }
+
       resolve(features);
     });
   }

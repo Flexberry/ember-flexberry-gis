@@ -9,7 +9,7 @@
   <label>
     {{t "components.layers-dialogs.settings.kml.string-textbox.caption"}}
   </label>
-  {{flexberry-textbox
+  {{flexberry-textarea
     class=(concat "fluid" (if settings.kmlUrl " disabled" ""))
     value=settings.kmlString
   }}
