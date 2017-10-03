@@ -92,9 +92,6 @@ export default {
         allowShow: {
           caption: 'Показывать'
         },
-        mapObjectSetting: {
-          caption: 'Настройка'
-        },
         parameters: {
           caption: 'Параметры',
           objectField: {
