@@ -6,6 +6,30 @@ import Ember from 'ember';
 import { Query } from 'ember-flexberry-data';
 
 /**
+  Query settings for layer metadata loading.
+*/
+let _metadataSettings = {
+  title: 'forms.gis-search-form.layer-metadata.title',
+  modelName: 'new-platform-flexberry-g-i-s-layer-metadata',
+  projectionName: 'LayerMetadataL',
+  top: 5,
+  fieldName: 'layerMetadata',
+  tab: 'layer-metadata'
+};
+
+/**
+  Query settings for maps loading.
+*/
+let _mapSettings = {
+  title: 'forms.gis-search-form.maps.title',
+  modelName: 'new-platform-flexberry-g-i-s-map',
+  projectionName: 'MapL',
+  top: 5,
+  fieldName: 'maps',
+  tab: 'maps'
+};
+
+/**
   Route for GIS search form.
   Loads data according to filters and paging settings
 
@@ -13,6 +37,12 @@ import { Query } from 'ember-flexberry-data';
   @extends <a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Route</a>
 */
 export default Ember.Route.extend({
+
+  model() {
+    // model for dropdown list on the 'open metadata in a map' panel
+    return this._getQuery(_mapSettings.modelName, _mapSettings.projectionName, null, null, null);
+  },
+
   /**
     A hook you can use to setup the controller for the current route.
     [More info](http://emberjs.com/api/classes/Ember.Route.html#method_setupController).
@@ -24,21 +54,7 @@ export default Ember.Route.extend({
   setupController(controller, model) {
     this._super(controller, model);
 
-    controller.set('tabSettings', [{
-      title: 'forms.gis-search-form.layer-metadata.title',
-      modelName: 'new-platform-flexberry-g-i-s-layer-metadata',
-      projectionName: 'LayerMetadataL',
-      top: 5,
-      fieldName: 'layerMetadata',
-      tab: 'layer-metadata'
-    }, {
-      title: 'forms.gis-search-form.maps.title',
-      modelName: 'new-platform-flexberry-g-i-s-map',
-      projectionName: 'MapL',
-      top: 5,
-      fieldName: 'maps',
-      tab: 'maps'
-    }]);
+    controller.set('tabSettings', [_metadataSettings, _mapSettings]);
   },
 
   actions: {
@@ -102,7 +118,7 @@ export default Ember.Route.extend({
       .selectByProjection(projectionName);
 
     // If there are conditions - add them to the query.
-    if (searchConditions.keyWords) {
+    if (searchConditions && searchConditions.keyWords) {
       let keyWordsConditions = searchConditions.keyWords.split(',').map((item) => {
         let str = item.trim();
         return new Query.StringPredicate('keyWords').contains(str);

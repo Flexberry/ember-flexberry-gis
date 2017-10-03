@@ -5,6 +5,17 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-table';
 import PaginatedControllerMixin from 'ember-flexberry/mixins/paginated-controller';
+import SlotsMixin from 'ember-block-slots';
+
+/**
+  Flattens an array of arrays and objects.
+
+  @param {Array} a Array to be flatten
+  @returns {Array}
+*/
+let flatten = function (a) {
+  return Array.isArray(a) ? [].concat(...a.map(flatten)) : a;
+};
 
 /**
   Flexberry table component with [Semantic UI table](https://semantic-ui.com/collections/table) style and paging handling.
@@ -12,8 +23,9 @@ import PaginatedControllerMixin from 'ember-flexberry/mixins/paginated-controlle
   @class FlexberryTableComponent
   @uses PaginatedControllerMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @extends <a href="https://github.com/ciena-blueplanet/ember-block-slots">Ember block slots</a>
 */
-export default Ember.Component.extend(PaginatedControllerMixin, {
+export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   /**
     Reference to component's template.
   */
@@ -29,7 +41,17 @@ export default Ember.Component.extend(PaginatedControllerMixin, {
   */
   _columnCount: Ember.computed('header', {
     get() {
-      return Object.keys(this.get('header')).length;
+      let additionalColumns = 0;
+      let flatStatements = flatten(this.get('layout.raw.statements'));
+
+      // Consider the added trough yield-slots columns.
+      if (Ember.isArray(flatStatements)) {
+        additionalColumns = flatStatements.filter(
+          (item) => typeof (item) === 'string' && item.indexOf('column-header') !== -1
+        ).length;
+      }
+
+      return Object.keys(this.get('header')).length + additionalColumns;
     }
   }),
 
@@ -50,7 +72,7 @@ export default Ember.Component.extend(PaginatedControllerMixin, {
     @method _pageDidChange
     @private
   */
-  _pageDidChange: Ember.observer('page', function() {
+  _pageDidChange: Ember.observer('page', function () {
     this._reload();
   }),
 
