@@ -93,3 +93,21 @@ i.icon.angle.right:before {
 i.icon.cloud.download:before {
   font-family: Icons;
 }
+
+
+/*********************************************
+        Flexberry lists
+*********************************************/
+i.icon.prev-page:before {
+    content: "\e81a";
+    font-family: 'Crimean';
+    font-size: 14px;
+    opacity: 1;
+}
+
+i.icon.next-page:before {
+  content: "\e81b";
+  font-family: 'Crimean';
+  font-size: 14px;
+  opacity: 1;
+}
