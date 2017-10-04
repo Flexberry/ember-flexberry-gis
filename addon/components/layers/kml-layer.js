@@ -118,28 +118,81 @@ export default BaseLayer.extend({
   */
   search(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
+      let searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
       let kmlLayer = this.get('_leafletObject');
       let features = Ember.A();
 
-      let searchFields = this.get('searchSettings.searchFields'); // []
-      if (Ember.isArray(searchFields)) {
-        kmlLayer.eachLayer((layer) => {
-          if (features.length < e.searchOptions.maxResultsCount) {
-            let feature = Ember.get(layer, 'feature');
+      let searchFields = (e.context ? this.get(`${searchSettingsPath}.contextSearchFields`) : this.get(`${searchSettingsPath}.searchFields`)) || Ember.A();
 
-            // if layer satisfies search query
-            let contains = searchFields.map((item) => {
-              return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
-            }).reduce((result, current) => {
-              return result || current; // if any field contains
-            }, false);
-
-            if (contains) {
-              features.pushObject(feature);
-            }
-          }
-        });
+      // If single search field provided - transform it into array.
+      if (!Ember.isArray(searchFields)) {
+        searchFields = Ember.A([searchFields]);
       }
+
+      kmlLayer.eachLayer((layer) => {
+        if (features.length < e.searchOptions.maxResultsCount) {
+          let feature = Ember.get(layer, 'feature');
+
+          // if layer satisfies search query
+          let contains = searchFields.map((item) => {
+            return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
+          }).reduce((result, current) => {
+            return result || current; // if any field contains
+          }, false);
+
+          if (contains) {
+            features.pushObject(feature);
+          }
+        }
+      });
+
+      resolve(features);
+    });
+  },
+
+  /**
+    Handles 'flexberry-map:query' event of leaflet map.
+    @method _query
+    @param {Object[]} layerLinks Array containing metadata for query
+    @param {Object} e Event object.
+    @param {Object} queryFilter Object with query filter paramteres
+    @param {Object[]} results.features Array containing leaflet layers objects
+    or a promise returning such array.
+  */
+  query(layerLinks, e) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let queryFilter = e.queryFilter;
+      let features = Ember.A();
+      let equals = [];
+
+      layerLinks.forEach((link) => {
+        let linkParameters = link.get('parameters');
+
+        if (Ember.isArray(linkParameters) && linkParameters.length > 0) {
+          linkParameters.forEach(linkParam => {
+            let property = linkParam.get('layerField');
+            let propertyValue = queryFilter[linkParam.get('queryKey')];
+
+            equals.push({ 'prop': property, 'value': propertyValue });
+          });
+        }
+      });
+
+      let kmlLayer = this.get('_leafletObject');
+      kmlLayer.eachLayer((layer) => {
+        let feature = Ember.get(layer, 'feature');
+
+        // if layer properties meet the conditions
+        let meet = equals.map((item) => {
+          return Ember.isEqual(feature.properties[item.prop], item.value);
+        }).reduce((result, current) => {
+          return result && current;
+        }, true);
+
+        if (meet) {
+          features.pushObject(feature);
+        }
+      });
 
       resolve(features);
     });
