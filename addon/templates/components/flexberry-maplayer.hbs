@@ -54,12 +54,12 @@
         {{/if}}
 
         {{!--
-          надо создать класс для flexberryClassNames.attributesButton и иконку для "attr icon"
+          надо создать класс для flexberryClassNames.attributesButton
         --}}
         {{#if _attributesOperationIsAvailable}}
           {{flexberry-button
             class=(concat flexberryClassNames.attributesButton " right floated " flexberryClassNames.preventExpandCollapse)
-            iconClass="attr icon"
+            iconClass="browser icon"
             click=(action "onAttributesButtonClick")
           }}
         {{/if}}
