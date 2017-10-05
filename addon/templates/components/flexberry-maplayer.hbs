@@ -53,6 +53,18 @@
           {{/if}}
         {{/if}}
 
+        {{!--
+          надо создать класс для flexberryClassNames.attributesButton и иконку для "attr icon"
+        --}}
+        {{#if _attributesOperationIsAvailable}}
+          {{flexberry-button
+            class=(concat flexberryClassNames.attributesButton " right floated " flexberryClassNames.preventExpandCollapse)
+            iconClass="attr icon"
+            click=(action "onAttributesButtonClick")
+          }}
+        {{/if}}
+
+
         {{#if _canChangeOpacity}}
           <label class="{{flexberryClassNames.opacityLabel}}" title="{{t "components.flexberry-maplayer.opacity" }}">
             {{_opacityDisplayValue}}

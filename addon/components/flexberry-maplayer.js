@@ -244,6 +244,20 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether attributes operation is allowed for layer.
+
+      @property _attributesOperationIsAvailable
+      @type boolean
+      @readOnly
+      @private
+    */
+    _attributesOperationIsAvailable: Ember.computed('_layerClassFactory', function () {
+      let layerClassFactory = this.get('_layerClassFactory');
+
+      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('attributes');
+    }),
+
+    /**
       Flag: indicates whether add dialog has been already requested by user or not.
 
       @property _addDialogHasBeenRequested
@@ -598,7 +612,20 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onRemoveDialogApprove(...args) {
         // Send outer 'remove' action.
         this.sendAction('remove', ...args);
-      }
+      },
+
+      /**
+        Handles attributes button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.attributes:method"}}'attributes'{{/crossLink}} action.
+
+        @method actions.onAttributesButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onAttributesButtonClick(e) {
+
+        // вызов actions в controller-e.
+      },
     }
 
     /**
