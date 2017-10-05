@@ -129,8 +129,8 @@
           change=(action "onOpacitySliderChange")
         }}
       {{/if}}
-      {{#if (known-for-type 'component' (concat 'layer-tree-headers/' type))}}
-        {{component (concat 'layer-tree-headers/' type)
+      {{#if (known-for-type 'component' (concat 'layer-treenode-contents/' type))}}
+        {{component (concat 'layer-treenode-contents/' type)
           settingsAsObject=settingsAsObject
           dynamicActions=dynamicActions
         }}
