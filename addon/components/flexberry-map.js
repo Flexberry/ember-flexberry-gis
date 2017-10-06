@@ -358,6 +358,7 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       // Fire custom event on leaflet map.
       leafletMap.fire('flexberry-map:queryFinished', e);
+      this.sendAction('queryFinished', e);
     },
 
     /**
@@ -445,6 +446,13 @@ let FlexberryMapComponent = Ember.Component.extend(
       Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) destroyed.
 
       @method sendingActions.leafletDestroy
+    */
+
+    /**
+      Component's action invoking when query on map load finished.
+
+      @method sendingActions.queryFinished
+      @param {Object} e Query result object.
     */
 
     actions: {
