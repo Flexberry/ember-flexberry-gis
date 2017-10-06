@@ -797,3 +797,16 @@
     }
   }
 }
+
+/*********************************************
+            Flexberry table
+*********************************************/
+
+.flexberry-table-fixed {
+  table-layout: fixed;
+}
+
+.flexberry-table-cell-input {
+  display: inline-block;
+  max-width: 200px;
+}
