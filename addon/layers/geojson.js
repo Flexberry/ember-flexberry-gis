@@ -37,7 +37,7 @@ export default BaseLayer.extend({
       filter: undefined,
       coordsToLatLng: 'function(coords) { return L.latLng(coords[0], coords[1]); }',
       geojson: undefined,
-      clusterize: "false"
+      clusterize: 'false'
     });
 
     return settings;
