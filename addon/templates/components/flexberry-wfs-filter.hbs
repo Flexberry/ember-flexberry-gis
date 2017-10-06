@@ -1,1 +1,107 @@
-{{yield}}
+<div class="ui grid">
+  <div class = "eight wide column">
+    {{#each field in fields}}
+    {{flexberry-checkbox
+        value=model.flag
+        label=field
+        readonly=readonly
+        class=class
+        }}
+      {{else}}
+  Настройки не заданы
+{{/each}}
+  </div>
+  <div class = "eight wide column">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tincidunt sapien ut massa viverra tincidunt. Sed non faucibus arcu. Aenean eget ipsum nulla. Suspendisse vel mi sit amet enim elementum efficitur eu nec dui. Integer egestas tincidunt turpis id gravida. Fusce finibus libero quis turpis eleifend semper. Morbi a sapien eget neque fermentum egestas. Donec viverra id turpis eget feugiat. Morbi mauris ligula, hendrerit nec enim eu, scelerisque ornare odio. Sed sit amet risus iaculis, tempor est in, viverra nisi. Curabitur nunc dolor, imperdiet vitae sem imperdiet, sodales lacinia ex. Etiam aliquam venenatis ligula id pulvinar.
+  </div>
+  <div class = "sixteen wide column">
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption="="
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption="<"
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption=">"
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption="LIKE"
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption="%"
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption="В"
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption="НЕ В"
+      readonly=readonly
+    }}
+    <br>
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption="<="
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption=">="
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption="!="
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption="ILIKE"
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption="И"
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=class
+      iconClass=cчlass
+      caption="ИЛИ"
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=class
+      iconClass=class
+      caption="НЕ"
+      readonly=readonly
+    }}
+  </div>
+  <div class = "sixteen wide column">
+    {{textarea}}
+  </div>
+</div>
