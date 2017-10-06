@@ -1,0 +1,16 @@
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.kml.url-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class=(concat "fluid" (if settings.kmlString " disabled" ""))
+    value=settings.kmlUrl
+  }}
+  <label>
+    {{t "components.layers-dialogs.settings.kml.string-textbox.caption"}}
+  </label>
+  {{flexberry-textarea
+    class=(concat "fluid" (if settings.kmlUrl " disabled" ""))
+    value=settings.kmlString
+  }}
+</div>

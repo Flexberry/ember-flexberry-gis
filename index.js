@@ -81,6 +81,9 @@ module.exports = {
       destDir: appImagesDirectory
     });
 
+    // Leaflet-Omnivore.
+    app.import(app.bowerDirectory + '/leaflet-omnivore/leaflet-omnivore.js');
+
     // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
 
@@ -100,5 +103,8 @@ module.exports = {
     // Leaflet zoomslider control
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.js');
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.css');
+
+    // Import ESRI.terraformer
+    app.import(app.bowerDirectory + '/terraformer/terraformer.js');
   }
 };
