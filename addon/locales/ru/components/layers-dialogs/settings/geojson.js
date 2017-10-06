@@ -16,5 +16,8 @@ export default {
   },
   'filter-tjarea': {
     'caption': 'Функция filter'
+  },
+  'clusterize':{
+    'caption': 'Функция кластеризации маркеров'
   }
 };

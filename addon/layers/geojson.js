@@ -17,9 +17,9 @@ export default BaseLayer.extend({
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'legend']
+    @default ['edit', 'remove', 'identify', 'search']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'legend'],
+  operations: ['edit', 'remove', 'identify', 'search'],
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -36,7 +36,8 @@ export default BaseLayer.extend({
       '{ layer.bindPopup(feature.properties.popupContent); } } ',
       filter: undefined,
       coordsToLatLng: 'function(coords) { return L.latLng(coords[0], coords[1]); }',
-      geojson: undefined
+      geojson: undefined,
+      clusterize: "false"
     });
 
     return settings;

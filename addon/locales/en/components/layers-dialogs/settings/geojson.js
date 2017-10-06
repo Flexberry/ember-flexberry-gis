@@ -16,5 +16,8 @@ export default {
   },
   'filter-tjarea': {
     'caption': 'Function filter'
+  },
+  'clusterize':{
+    'caption': 'Marker Clustering functionality'
   }
 };

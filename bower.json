@@ -30,7 +30,8 @@
     "leaflet.zoomslider": "Flexberry/Leaflet.zoomslider#leaflet-1.2.0",
     "leaflet-minimap": "3.4.0",
     "osmtogeojson": "2.2.12",
-    "terraformer": "1.0.8"
+    "terraformer": "1.0.8",
+    "leaflet.markercluster": "1.1.0"
   },
   "resolutions": {
     "ember": "2.4.3",

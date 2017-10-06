@@ -6,12 +6,14 @@ import Ember from 'ember';
 import BaseLayer from '../base-layer';
 
 /**
-  WFS layer component for leaflet map.
+  GeoJSON layer component for leaflet map.
 
-  @class WfsLayerComponent
+  @class GeoJSONLayerComponent
   @extend BaseLayerComponent
  */
 export default BaseLayer.extend({
+  _geojsLayer: null,
+
   leafletOptions: [
     'pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng', 'geojson'
   ],
@@ -78,7 +80,18 @@ export default BaseLayer.extend({
       }
     }
 
-    return L.geoJSON(featureCollection, options);
+    let geojsLayer = L.geoJSON(featureCollection, options);
+    this.set('_geojsLayer', geojsLayer);
+
+    if (this.get('clusterize'))
+    {
+      var markers = L.markerClusterGroup();
+      markers.addLayer(geojsLayer);
+
+      return markers;
+    }
+
+    return geojsLayer;
   },
 
   /**
@@ -97,9 +110,8 @@ export default BaseLayer.extend({
   identify(e) {
     var bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
 
-    let geojsonLayer = this.get('_leafletObject');
+    let geojsonLayer = this.get('_geojsLayer');
 
-    //console.log("grouplayer: "+ groupLayer);
     return new Ember.RSVP.Promise((resolve, reject) => {
       let features = Ember.A();
       geojsonLayer.eachLayer(function(layer) {
@@ -128,17 +140,29 @@ export default BaseLayer.extend({
   */
   search(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let geojLayer = this.get('_leafletObject');
+      let searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
+      let geojLayer = this.get('_geojsLayer');
       let features = Ember.A();
+
+      let searchFields = (e.context ? this.get(`${searchSettingsPath}.contextSearchFields`) : this.get(`${searchSettingsPath}.searchFields`)) || Ember.A();
+
+      // If single search field provided - transform it into array.
+      if (!Ember.isArray(searchFields)) {
+        searchFields = Ember.A([searchFields]);
+      }
+
       geojLayer.eachLayer((layer) => {
         if (features.length < e.searchOptions.maxResultsCount) {
           let feature = Ember.get(layer, 'feature');
           let geoLayer = layer.toGeoJSON();
 
           // if layer satisfies search query
-          let searchFields = this.get('searchSettings.searchFields'); // []
           let contains = searchFields.map((item) => {
-            return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
+            if (feature){
+              if (feature.properties[item]){
+                return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
+              }
+            }
           }).reduce((result, current) => {
             return result || current; // if any field contains
           }, false);
