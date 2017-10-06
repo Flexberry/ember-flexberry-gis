@@ -158,8 +158,8 @@ export default BaseLayer.extend({
 
           // if layer satisfies search query
           let contains = searchFields.map((item) => {
-            if (feature){
-              if (feature.properties[item]){
+            if (feature) {
+              if (feature.properties[item]) {
                 return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
               }
             }
