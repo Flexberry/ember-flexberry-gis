@@ -624,8 +624,9 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onAttributesButtonClick(e) {
 
-        // вызов actions в controller-e.
-      },
+        let leafObj = this.get('leafletMap._leafletObject');
+        this.sendAction('getAttributes', leafObj);
+      }
     }
 
     /**

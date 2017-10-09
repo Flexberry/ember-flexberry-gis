@@ -130,6 +130,66 @@
       </div>
     </div>
   </div>
+
+  <div class="bottompanel-wrapper">
+    {{flexberry-tab-bar
+      change=(action "toggleBottompanel")
+      items=bottompanelItems
+    }}
+    <div class="ui very wide bottom bottompanel pushable tabbar">
+      <div data-tab="treeview" class="ui tab treeview">
+        {{#if _showTable}}
+        {{flexberry-maplayers
+          class="styled"
+          cswConnections=cswConnections
+          leafletMap=leafletMap
+          layers=(get-with-dynamic-actions this "model.hierarchy"
+            hierarchyPropertyName="layers"
+            pathKeyword="layerPath"
+            dynamicActions=(array
+              (hash
+                on="add"
+                actionName="onMapLayerAdd"
+                actionArguments=(array "{% layerPath %}")
+              )
+              (hash
+                on="edit"
+                actionName="onMapLayerEdit"
+                actionArguments=(array "{% layerPath %}")
+              )
+              (hash
+                on="remove"
+                actionName="onMapLayerRemove"
+                actionArguments=(array "{% layerPath %}")
+              )
+              (hash
+                on="changeVisibility"
+                actionName="onMapLayerChangeVisibility"
+                actionArguments=(array "{% layerPath %}.visibility")
+              )
+              (hash
+                on="changeOpacity"
+                actionName="onMapLayerChangeOpacity"
+                actionArguments=(array "{% layerPath %}.settingsAsObject.opacity")
+              )
+              (hash
+                on="fitBounds"
+                actionName="onMapLayerFitBounds"
+                actionArguments=(array "{% layerPath %}.bounds")
+              )
+            )
+          )
+          add=(action "onMapLayerAdd" "model.hierarchy")
+        }}
+        {{else}}
+          <div class="ui form loading" style="height: 100%;">
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+
+
   <div class="row">
     <div class="sixteen wide column">
       {{#flexberry-maptoolbar

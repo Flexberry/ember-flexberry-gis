@@ -48,6 +48,8 @@ export default EditMapController.extend(
 
     _showTree: false,
 
+    _showTable: false,
+
     _scales: [500, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 150000, 200000],
 
     sidebar: Ember.A([{
@@ -89,6 +91,19 @@ export default EditMapController.extend(
           Ember.set(item, 'caption', i18n.t(captionPath));
         }
       });
+
+      return result;
+    }),
+
+    /**
+     * items
+     */
+    bottompanelItems: Ember.computed('bottompanel.[]', 'bottompanel.@each.active', 'i18n', function () {
+      let result = Ember.A([{
+          selector: 'treeview',
+          captionPath: 'forms.map.treeviewbuttontooltip',
+          iconClass: 'list icon'
+        }]);
 
       return result;
     }),
@@ -150,6 +165,55 @@ export default EditMapController.extend(
             }, 500);
           }
         }
+      },
+
+      toggleBottompanel(e) {
+        if (!e.changed) {
+          let bottompanelOpened = !this.get('bottompanelOpened');
+          this.set('bottompanelOpened', bottompanelOpened);
+
+          // push left map controls to right for sidebar width
+          if (bottompanelOpened) {
+            Ember.$('.bottompanel-wrapper').addClass('visible');
+          } else {
+            Ember.$('.bottompanel-wrapper').removeClass('visible');
+          }
+        }
+
+        if (e.tabName === 'identify') {
+          let leafletMap = this.get('leafletMap');
+          if (Ember.isNone(leafletMap)) {
+            return;
+          }
+
+          let layer = this.get('identifyLayersOption');
+          let tool = this.get('identifyToolOption');
+
+          let mapToolName = 'identify-' + layer + '-' + tool;
+          leafletMap.fire('flexberry-map:identificationOptionChanged', {
+            mapToolName
+          });
+        }
+
+        if (e.tabName === 'treeview') {
+          if (!this.get('_showTree')) {
+            Ember.run.later(() => {
+              this.set('_showTree', true);
+            }, 500);
+          }
+        }
+
+        if (e.tabName === 'attr') {
+          if (!this.get('_showTable')) {
+            Ember.run.later(() => {
+              this.set('_showTable', true);
+            }, 500);
+          }
+        }
+      },
+
+      getAttributes(leafObj) {
+        console.log('Тест события');
       },
 
       querySearch(queryString) {

@@ -370,3 +370,98 @@
         }
     }
 }
+
+/***************************************************
+                    BottomPanel
+****************************************************/
+
+.bottompanel-wrapper {
+  position: absolute;
+  width: @sidebarWrapperWidth;
+  height: @sidebarWrapperHeight;
+  bottom: @sidebarWrapperRight;
+  transition: @sidebarWrapperTransition;
+  &.visible {
+    bottom: 0;
+    .ui.bottom.bottompanel {
+      bottom: 10px !important;
+    }
+    .ui.tabular.menu.flexberry-tab-bar {
+      bottom: 410px;
+    }
+  }
+  .ui.bottom.bottompanel {
+    bottom: -10px !important;
+  }
+  .ui.bottom.bottompanel,
+  .ui.bottom.bottompanel.visible {
+    position: absolute;
+    z-index: 900;
+    visibility: visible;
+    transform: none;
+    transition: none;
+    background-color: @visibleRightSidebarBackgroundColor;
+    margin: 0px 0px 0px 100px !important;
+    max-height: @visibleRightSidebarMaxHeight;
+    min-height: @visibleRightSidebarMinHeight;
+    height: 400px !important;
+    width: 700px !important;
+    .ui.tab {
+      padding: 10px;
+      color: @sidebarWrapperTabColor;
+    }
+  }
+  .ui.button.flexberry-button {
+    min-width: 30px;
+  }
+
+  .ui.tabular.menu.flexberry-tab-bar {
+    position: absolute;
+    float: left;
+    top: 37%;
+    z-index: 899;
+    overflow: visible;
+    display: block;
+    border: @flexberryTabBarBorder;
+    box-shadow: @flexberryTabBarBoxShadow;
+    background-color: @flexberryTabBarBackgroundColor;
+    margin: 0px 0px 0px 100px !important;
+    margin-bottom: @flexberryTabBarMarginRight;
+    &>* {
+      width: 50px;
+      height: 50px;
+      display: block;
+    }
+    .tab.item {
+      color: @flexberryTabBarItemColor;
+      border: @flexberryTabBarItemBorder;
+      border-radius: @flexberryTabBarItemBorderRadius;
+      box-shadow: @flexberryTabBarItemBoxShadow;
+      margin: @flexberryTabBarItemMargin;
+      padding: @flexberryTabBarItemPadding;
+      &.active.item {
+        border-radius: @flexberryTabBarActiveItemBorderRaius;
+        background: @flexberryTabBarActiveItemBackground;
+        margin: @flexberryTabBarActiveItemMargin;
+      }
+      .flexberry-tab-bar-tab-icon {
+        padding: 5px 5px 0px 0px;
+        &.bookmark {
+          padding: 5px 2px 0 2px;
+        }
+      }
+    }
+    .tab.item:first-child {
+      border-top-left-radius: 5px;
+      &.active.item {
+        border-top-left-radius: 5px !important;
+      }
+    }
+    .tab.item:last-child {
+      border-bottom-left-radius: 5px;
+      &.active.item {
+        border-bottom-left-radius: 5px !important;
+      }
+    }
+  }
+}
