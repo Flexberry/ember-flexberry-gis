@@ -185,7 +185,43 @@ export default BaseLayer.extend({
     @param {Object[]} results.features Array containing leaflet layers objects
     or a promise returning such array.
   */
-  query(e) {
+  query(layerLinks, e) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let queryFilter = e.queryFilter;
+      let features = Ember.A();
+      let equals = [];
 
+      layerLinks.forEach((link) => {
+        let linkParameters = link.get('parameters');
+
+        if (Ember.isArray(linkParameters) && linkParameters.length > 0) {
+          linkParameters.forEach(linkParam => {
+            let property = linkParam.get('layerField');
+            let propertyValue = queryFilter[linkParam.get('queryKey')];
+
+            equals.push({ 'prop': property, 'value': propertyValue });
+          });
+        }
+      });
+
+      let geojLayer = this.get('_geojsLayer');
+      geojLayer.eachLayer((layer) => {
+        let feature = Ember.get(layer, 'feature');
+        let geoLayer = layer.toGeoJSON();
+
+        // if layer properties meet the conditions
+        let meet = equals.map((item) => {
+          return Ember.isEqual(feature.properties[item.prop], item.value);
+        }).reduce((result, current) => {
+          return result && current;
+        }, true);
+
+        if (meet) {
+          features.pushObject(geoLayer);
+        }
+      });
+
+      resolve(features);
+    });
   }
 });
