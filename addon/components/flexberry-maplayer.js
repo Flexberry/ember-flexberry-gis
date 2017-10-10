@@ -1,4 +1,4 @@
-/**
+﻿/**
   @module ember-flexberry-gis
 */
 
@@ -626,8 +626,9 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         let currentController = this.getTargetObjectByCondition((targetObject) => {
           return targetObject instanceof Ember.Controller;
         });
-        let leafObj = this.get('leafletMap._leafletObject');
-        currentController.send('getAttributes', leafObj);
+        currentController.send('attributes', {
+          leafletObject: this.get('layerModel._leafletObject')
+        });
       }
     },
 
@@ -724,6 +725,14 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
       @method sendingActions.remove
       @param {Object} e Action's event object.
+    */
+
+    /**
+      Component's action invoking when user wants to look at attributes of current layer.
+
+      @method sendingActions.attributes
+      @param {Object} e Action's event object.
+      @param {Object} e.leafletObject Leaflet object with the attributes of current layer.
     */
   }
 );
