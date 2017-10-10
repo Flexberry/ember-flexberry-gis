@@ -131,56 +131,32 @@
     </div>
   </div>
 
+  {{#if _showAttr}}
   <div class="bottompanel-wrapper">
     {{flexberry-tab-bar
       change=(action "toggleBottompanel")
       items=bottompanelItems
     }}
     <div class="ui very wide bottom bottompanel pushable tabbar">
-      <div data-tab="treeview" class="ui tab treeview">
+      <div data-tab="attr" class="ui tab attr">
         {{#if _showTable}}
-        {{flexberry-maplayers
-          class="styled"
-          cswConnections=cswConnections
-          leafletMap=leafletMap
-          layers=(get-with-dynamic-actions this "model.hierarchy"
-            hierarchyPropertyName="layers"
-            pathKeyword="layerPath"
-            dynamicActions=(array
-              (hash
-                on="add"
-                actionName="onMapLayerAdd"
-                actionArguments=(array "{% layerPath %}")
-              )
-              (hash
-                on="edit"
-                actionName="onMapLayerEdit"
-                actionArguments=(array "{% layerPath %}")
-              )
-              (hash
-                on="remove"
-                actionName="onMapLayerRemove"
-                actionArguments=(array "{% layerPath %}")
-              )
-              (hash
-                on="changeVisibility"
-                actionName="onMapLayerChangeVisibility"
-                actionArguments=(array "{% layerPath %}.visibility")
-              )
-              (hash
-                on="changeOpacity"
-                actionName="onMapLayerChangeOpacity"
-                actionArguments=(array "{% layerPath %}.settingsAsObject.opacity")
-              )
-              (hash
-                on="fitBounds"
-                actionName="onMapLayerFitBounds"
-                actionArguments=(array "{% layerPath %}.bounds")
-              )
-            )
+        {{#flexberry-table
+          allowEdit="true"
+          model=(array
+          (hash
+            name="name1"
+            value="value1sdfdsfsdfsdfsdfsdfsdfsdf sdfsdf sdf sdfsd dsffffffffffffffffffffffff  sdfdsfsddsf sdf "
           )
-          add=(action "onMapLayerAdd" "model.hierarchy")
+          (hash
+            name="name2"
+            value="value2"
+          ))
+          header=(hash
+            name="Название"
+            value="Значение"
+          )
         }}
+        {{/flexberry-table}}
         {{else}}
           <div class="ui form loading" style="height: 100%;">
           </div>
@@ -188,7 +164,7 @@
       </div>
     </div>
   </div>
-
+  {{/if}}
 
   <div class="row">
     <div class="sixteen wide column">

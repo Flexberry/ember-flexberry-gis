@@ -50,6 +50,8 @@ export default EditMapController.extend(
 
     _showTable: false,
 
+    _showAttr: false,
+
     _scales: [500, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 150000, 200000],
 
     sidebar: Ember.A([{
@@ -96,13 +98,13 @@ export default EditMapController.extend(
     }),
 
     /**
-     * items
+     * bottompanel items
      */
     bottompanelItems: Ember.computed('bottompanel.[]', 'bottompanel.@each.active', 'i18n', function () {
       let result = Ember.A([{
-          selector: 'treeview',
-          captionPath: 'forms.map.treeviewbuttontooltip',
-          iconClass: 'list icon'
+          selector: 'attr',
+          captionPath: 'forms.map.bottompanelbuttontooltip',
+          iconClass: 'browser icon'
         }]);
 
       return result;
@@ -180,40 +182,17 @@ export default EditMapController.extend(
           }
         }
 
-        if (e.tabName === 'identify') {
-          let leafletMap = this.get('leafletMap');
-          if (Ember.isNone(leafletMap)) {
-            return;
-          }
-
-          let layer = this.get('identifyLayersOption');
-          let tool = this.get('identifyToolOption');
-
-          let mapToolName = 'identify-' + layer + '-' + tool;
-          leafletMap.fire('flexberry-map:identificationOptionChanged', {
-            mapToolName
-          });
-        }
-
-        if (e.tabName === 'treeview') {
-          if (!this.get('_showTree')) {
-            Ember.run.later(() => {
-              this.set('_showTree', true);
-            }, 500);
-          }
-        }
-
-        if (e.tabName === 'attr') {
-          if (!this.get('_showTable')) {
-            Ember.run.later(() => {
-              this.set('_showTable', true);
-            }, 500);
-          }
-        }
+        Ember.run.later(() => {
+          this.set('_showTable', true);
+        }, 500);
       },
 
       getAttributes(leafObj) {
-        console.log('Тест события');
+        if (!this.get('_showAttr')) {
+          Ember.run.later(() => {
+            this.set('_showAttr', true);
+          }, 500);
+        }
       },
 
       querySearch(queryString) {

@@ -401,9 +401,10 @@
     transform: none;
     transition: none;
     background-color: @visibleRightSidebarBackgroundColor;
-    margin: 0px 0px 0px 100px !important;
-    max-height: @visibleRightSidebarMaxHeight;
-    min-height: @visibleRightSidebarMinHeight;
+    margin: 0px 0px 0px 10% !important;
+    max-height: ~"calc(100% - 80px)";
+    min-height: 100px;
+    box-shadow: @darkBoxShadow !important;;
     height: 400px !important;
     width: 700px !important;
     .ui.tab {
@@ -418,31 +419,32 @@
   .ui.tabular.menu.flexberry-tab-bar {
     position: absolute;
     float: left;
-    top: 37%;
+    bottom: 400px;
     z-index: 899;
     overflow: visible;
     display: block;
-    border: @flexberryTabBarBorder;
-    box-shadow: @flexberryTabBarBoxShadow;
-    background-color: @flexberryTabBarBackgroundColor;
-    margin: 0px 0px 0px 100px !important;
-    margin-bottom: @flexberryTabBarMarginRight;
+    border: 0px;
+    box-shadow: -1px 0px 4px 0px @darkbluecolor !important;
+    background-color: @whitecolor;
+    border-radius: 8px;
+    margin: 0px 0px 0px 10% !important;
+    margin-bottom: 0;
     &>* {
       width: 50px;
       height: 50px;
       display: block;
     }
     .tab.item {
-      color: @flexberryTabBarItemColor;
-      border: @flexberryTabBarItemBorder;
-      border-radius: @flexberryTabBarItemBorderRadius;
-      box-shadow: @flexberryTabBarItemBoxShadow;
-      margin: @flexberryTabBarItemMargin;
-      padding: @flexberryTabBarItemPadding;
+      color: @darkbluecolor;
+      border: 0px;
+      border-radius: 0px;
+      box-shadow: 0px 0px 1px @darkbluecolor !important;;
+      margin: 0;
+      padding: 10px 15px;
       &.active.item {
-        border-radius: @flexberryTabBarActiveItemBorderRaius;
-        background: @flexberryTabBarActiveItemBackground;
-        margin: @flexberryTabBarActiveItemMargin;
+        border-radius: 0px !important;
+        background: @lightbluecolor;
+        margin: 0;
       }
       .flexberry-tab-bar-tab-icon {
         padding: 5px 5px 0px 0px;

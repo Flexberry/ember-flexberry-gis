@@ -623,11 +623,35 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         which describes button's 'click' event.
       */
       onAttributesButtonClick(e) {
-
+        let currentController = this.getTargetObjectByCondition((targetObject) => {
+          return targetObject instanceof Ember.Controller;
+        });
         let leafObj = this.get('leafletMap._leafletObject');
-        this.sendAction('getAttributes', leafObj);
+        currentController.send('getAttributes', leafObj);
       }
+    },
+
+    /**
+      Returns that 'targetObject' (from 'targetObject's hierarchy) which satisfies a given condition.
+
+      @method getTargetObjectByCondition.
+      @param {Function} condition Callback-function, which will be called for each 'targetObject' in 'targetObject's hierarchy, until callback return true for one of them.
+      @return {null|Ember.Component|Ember.Controller} Target object which satisfies a given condition or null.
+     */
+    getTargetObjectByCondition(condition) {
+    if (Ember.typeOf(condition) !== 'function') {
+      return null;
     }
+
+    // Component's 'targetObject' is parent component or a controller (in the end of components hierarchy).
+    // Search until 'targetObject' is none or condition is true.
+    let targetObject = this.get('targetObject');
+    while (!(Ember.isNone(targetObject) || condition(targetObject))) {
+      targetObject = targetObject.get('targetObject');
+    }
+
+    return targetObject;
+  },
 
     /**
       Component's action invoking when layer node's header has been clicked.
