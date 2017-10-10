@@ -32,6 +32,15 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   layout,
 
   /**
+    Flag that indicates whether cell editing is allowed.
+
+    @property allowEdit
+    @type Boolean
+    @default false
+  */
+  allowEdit: false,
+
+  /**
     Count of columns.
 
     @property _columnCount
@@ -55,6 +64,55 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
     }
   }),
 
+  /**
+    Selected cell name.
+    It's been using while cell editing.
+  */
+  _selectedCellName: null,
+
+  /**
+    Changes selected cell to the next or to the previous.
+  */
+  _moveCell(forward) {
+    let current = this.get('_selectedCellName');
+    if (Ember.isPresent(current)) {
+      let [rowId, cellKey] = current.split('_');
+      let headerKeys = Object.keys(this.get('header'));
+      let rowIds = this.get('model').map((item) => {
+        return Ember.guidFor(item);
+      });
+      let cellPos = headerKeys.indexOf(cellKey);
+      let rowPos = rowIds.indexOf(rowId);
+      if (forward) {
+        if (cellPos < headerKeys.length - 1) {
+          cellPos++;
+        } else {
+          cellPos = 0;
+          rowPos = (rowPos < rowIds.length - 1) ? rowPos + 1 : 0;
+        }
+      } else {
+        if (cellPos > 0) {
+          cellPos--;
+        } else {
+          cellPos = headerKeys.length - 1;
+          rowPos = (rowPos > 0) ? rowPos - 1 : rowIds.length - 1;
+        }
+      }
+
+      this.set('_selectedCellName', `${rowIds[rowPos]}_${headerKeys[cellPos]}`);
+    }
+  },
+
+  /**
+    Called after a component has been rendered, both on initial render and in subsequent rerenders.
+  */
+  didRender() {
+    this._super(...arguments);
+    if (this.get('allowEdit')) {
+      this.$('.flexberry-table-cell-input').focus();
+    }
+  },
+
   actions: {
     /**
       Handles changes in component's {{#crossLink "FlexberryTableComponent/page:property"}}'perPageValue' property{{/crossLink}}.
@@ -63,6 +121,33 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
     */
     perPageClick() {
       this._reload();
+    },
+
+    /**
+      Handles keyup event from cell edit input element.
+
+      @param {String} val Input value.
+      @param {Object} event Event object.
+    */
+    onInputKeyUp(val, event) {
+      let code = event.keyCode || event.which;
+      if (code === 13 || code === 27) {
+        this.set('_selectedCellName', null);
+      }
+    },
+
+    /**
+      Handles keydown event from cell edit input element.
+
+      @param {String} val Input value.
+      @param {Object} event Event object.
+    */
+    onInputKeyDown(val, event) {
+      let code = event.keyCode || event.which;
+      if (code === 9) {
+        this._moveCell(!event.shiftKey);
+        event.preventDefault();
+      }
     }
   },
 
