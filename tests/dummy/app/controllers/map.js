@@ -110,6 +110,54 @@ export default EditMapController.extend(
       return result;
     }),
 
+    _editedLayers: null,
+
+    _editedLayersFeatures: Ember.computed('_editedLayers.[]', function() {
+      let editedLayers = this.get('_editedLayers');
+      return editedLayers.map((item) => {
+        let name = Ember.get(item, 'name');
+        let header = {};
+        let featureLink = {};
+        let propertyLink = {};
+        let properties = Ember.A();
+        let leafletObject = Ember.get(item, 'leafletObject');
+
+        leafletObject.eachLayer((l) => {
+          let props = Ember.get(l, 'feature.properties');
+          let propId = Ember.guidFor(props);
+          if (Ember.isNone(l.feature.leafletLayer)) {
+            Ember.set(l.feature, 'leafletLayer', l);
+          }
+
+          featureLink[propId] = l; // make the hash containing guid of properties object and link to feature layer
+          propertyLink[propId] = props;
+
+          // collect the object keys for the header object
+          Object.keys(props).forEach((p) => {
+            if (!header.hasOwnProperty(p)) {
+              header[p] = p;
+            }
+          });
+          properties.pushObject(props);
+        });
+        let tabModel = Ember.Object.extend({
+          _selectedRows: {},
+          _selectedRowsCount: Ember.computed('_selectedRows', function() {
+            let selectedRows = Ember.get(this, '_selectedRows');
+            return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
+          })
+        });
+        return tabModel.create({
+          name: name,
+          leafletObject: leafletObject,
+          featureLink: featureLink,
+          propertyLink: propertyLink,
+          header: header,
+          properties: properties
+        });
+      });
+    }),
+
     availableCRS: Ember.computed('i18n.locale', function () {
       let availableModes = Ember.A();
       let i18n = this.get('i18n');
@@ -130,6 +178,20 @@ export default EditMapController.extend(
 
       return availableModes;
     }),
+
+    // code from layer-result-list
+    /**
+      Set selected feature and add its layer to serviceLayer on map.
+      @method _selectFeature
+      @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
+      @private
+    */
+    _selectFeature(feature) {
+      let serviceLayer = this.get('serviceLayer');
+      if (!Ember.isNone(feature)) {
+        serviceLayer.addLayer(feature.leafletLayer);
+      }
+    },
 
     actions: {
       toggleSidebar(e) {
@@ -187,12 +249,106 @@ export default EditMapController.extend(
         }, 500);
       },
 
-      getAttributes(leafObj) {
-        if (!this.get('_showAttr')) {
-          Ember.run.later(() => {
-            this.set('_showAttr', true);
-          }, 500);
+      getAttributes(object) {
+        let editedLayers = this.get('_editedLayers') || Ember.A();
+        editedLayers.push(object);
+        this.set('_editedLayers', editedLayers);
+
+        this.set('_showAttr', true);
+      },
+
+      onFeatureRowSelect(tabModel, rowId, options) {
+        let selectedRows = Ember.get(tabModel, '_selectedRows');
+        Ember.set(selectedRows, rowId, options.checked);
+        Ember.set(tabModel, '_selectedRows', selectedRows);
+        tabModel.notifyPropertyChange('_selectedRows');
+      },
+
+      onFindFeatureClick(tabModel) {
+        let selectedRows = Ember.get(tabModel, '_selectedRows');
+        let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+          .map((key) => {
+            return tabModel.featureLink[key].feature;
+          });
+        this.send('zoomTo', selectedFeatures);
+      },
+
+      ///////////// code from layer-result-list
+      /**
+        Handles inner FeatureResultItem's bubbled 'selectFeature' action.
+        Invokes component's {{#crossLink "FeatureResultItem/sendingActions.selectFeature:method"}}'selectFeature'{{/crossLink}} action.
+
+        @method actions.selectFeature
+        @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
+      */
+      selectFeature(feature) {
+        let selectedFeature = this.get('_selectedFeature');
+        let serviceLayer = this.get('serviceLayer');
+
+        if (selectedFeature !== feature) {
+          if (!Ember.isNone(serviceLayer)) {
+            serviceLayer.clearLayers();
+
+            if (Ember.isArray(feature)) {
+              feature.forEach((item) => this._selectFeature(item));
+            } else {
+              this._selectFeature(feature);
+            }
+          }
+
+          this.set('_selectedFeature', feature);
         }
+
+        // Send action despite of the fact feature changed or not. User can disable layer anytime.
+        // this.sendAction('featureSelected', feature);
+      },
+
+      /**
+        Select passed feature and zoom map to its layer bounds
+        @method actions.zoomTo
+        @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
+      */
+      zoomTo(feature) {
+        let serviceLayer = this.get('serviceLayer');
+        if (!serviceLayer) {
+          let leafletMap = this.get('leafletMap');
+          serviceLayer = L.featureGroup().addTo(leafletMap);
+          this.set('serviceLayer', serviceLayer);
+        } else {
+          serviceLayer.clearLayers();
+        }
+
+        this.send('selectFeature', feature);
+
+        let bounds;
+        if (typeof (serviceLayer.getBounds) === 'function') {
+          bounds = serviceLayer.getBounds();
+        } else {
+          let featureGroup = L.featureGroup(serviceLayer.getLayers());
+          if (featureGroup) {
+            bounds = featureGroup.getBounds();
+          }
+        }
+
+        if (!Ember.isBlank(bounds)) {
+          // 'bound.pad(1)' bounds with zoom decreased by 1 point (padding).
+          //  That allows to make map's bounds slightly larger than serviceLayer's bounds to make better UI.
+          this.get('leafletMap').fitBounds(bounds.pad(1));
+        }
+      },
+
+      ///////////// code from layer-result-list
+
+      onDeleteFeatureClick(tabModel) {
+        let selectedRows = Ember.get(tabModel, '_selectedRows');
+        let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
+        selectedFeatureKeys.forEach((key) => {
+          tabModel.leafletObject.removeLayer(tabModel.featureLink[key]);
+          delete selectedRows[key];
+          tabModel.properties.removeObject(tabModel.propertyLink[key]);
+        });
+        Ember.set(tabModel, '_selectedRows', selectedRows);
+        tabModel.notifyPropertyChange('_selectedRows');
       },
 
       querySearch(queryString) {

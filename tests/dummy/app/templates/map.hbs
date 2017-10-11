@@ -139,28 +139,46 @@
     }}
     <div class="ui very wide bottom bottompanel pushable tabbar">
       <div data-tab="attr" class="ui tab attr">
-        {{#if _showTable}}
-        {{#flexberry-table
-          allowEdit="true"
-          model=(array
-          (hash
-            name="name1"
-            value="value1sdfdsfsdfsdfsdfsdfsdfsdf sdfsdf sdf sdfsd dsffffffffffffffffffffffff  sdfdsfsddsf sdf "
-          )
-          (hash
-            name="name2"
-            value="value2"
-          ))
-          header=(hash
-            name="Название"
-            value="Значение"
-          )
-        }}
-        {{/flexberry-table}}
-        {{else}}
-          <div class="ui form loading" style="height: 100%;">
-          </div>
-        {{/if}}
+        {{#each _editedLayersFeatures key="name" as |layer|}}
+          {{#if _showTable}}
+          {{#flexberry-table
+            allowEdit="true"
+            model=layer.properties
+            header=layer.header
+          }}
+            {{#block-slot "head-block"}}
+              <div>
+                {{flexberry-button
+                  tooltip="Find feature on the map"
+                  click=(action "onFindFeatureClick" layer)
+                  iconClass="marker icon"
+                  readonly=(eq layer._selectedRowsCount 0)
+                }}
+                {{flexberry-button
+                  tooltip="Delete feature"
+                  click=(action "onDeleteFeatureClick" layer)
+                  iconClass="trash icon"
+                  readonly=(eq layer._selectedRowsCount 0)
+                }}
+              </div>
+            {{/block-slot}}
+            {{#block-slot "column-header-head-0"}}
+              <th>Select</th>
+            {{/block-slot}}
+            {{#block-slot "column-cell-head-0" as |row|}}
+              <td class="collapsing">
+                {{flexberry-checkbox
+                  value=(get layer._selectedRows (ember-guid row))
+                  onChange=(action "onFeatureRowSelect" layer (ember-guid row))
+                }}
+              </td>
+            {{/block-slot}}
+          {{/flexberry-table}}
+          {{else}}
+            <div class="ui form loading" style="height: 100%;">
+            </div>
+          {{/if}}
+        {{/each}}
       </div>
     </div>
   </div>
