@@ -1,283 +1,499 @@
-/**
-  Flexberry map component.
-  Wraps [leaflet-areaselect](https://github.com/heyman/leaflet-areaselect/) into ember component.
-
-  @class flexberry-boundingbox
-  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
-  @uses FlexberryMapActionsHandlerMixin
-*/
-
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-boundingbox';
 import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-handler';
 
-export default Ember.Component.extend(
-  FlexberryMapActionsHandlerMixin, {
+/**
+  Flexberry bounding box component.
 
-    /**
-      Reference to component's template.
-    */
-    layout,
+  @class FlexberryBoundingboxComponent
+  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses FlexberryMapActionsHandlerMixin
+*/
+export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
+  /**
+    Leaflet map.
 
-    /**
-      Leaflet map.
-      @property leafletMap
-      @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
-      @default null
-    */
-    leafletMap: null,
+    @property _leafletMap
+    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+    @default null
+    @private
+  */
+  _leafletMap: null,
 
-    /**
-      Minimal latitude value.
+  /**
+    Reference to areaselect object.
 
-      @property minLat
-      @type number
-    */
-    minLat: undefined,
+    @property _areaSelect
+    @type Object
+    @default null
+    @private
+  */
+  _areaSelect: null,
 
-    /**
-      Maximal latitude value.
+  /**
+    Minimal latitude value binded to textbox.
 
-      @property maxLat
-      @type number
-    */
-    maxLat: undefined,
+    @property _minLat
+    @type number
+    @default -90
+    @private
+  */
+  _minLat: -90,
 
-    /**
-      Minimal longitude value.
+  /**
+    Maximal latitude value binded to textbox.
 
-      @property minLng
-      @type number
-    */
-    minLng: undefined,
+    @property _maxLat
+    @type number
+    @default 90
+    @private
+  */
+  _maxLat: 90,
 
-    /**
-      Maximal longitude value.
+  /**
+    Minimal longitude value binded to textbox.
 
-      @property maxLng
-      @type number
-    */
-    maxLng: undefined,
+    @property _minLng
+    @type number
+    @default -180
+    @private
+  */
+  _minLng: -180,
 
-    actions: {
+  /**
+    Maximal longitude value binded to textbox.
 
-      /**
-        This action is called when change borders button is pressed.
+    @property _maxLng
+    @type number
+    @default 180
+    @private
+  */
+  _maxLng: 180,
 
-        @method actions.onButtonClick
-      */
-      onButtonClick() {
-        if (this.get('maxLatValue') < this.get('minLatValue')) {
-          let s = Number(this.get('maxLatValue'));
-          this.set('maxLatValue', Number(this.get('minLatValue')));
-          this.set('minLatValue', s);
-        }
+  /**
+    Flag: indicates whether min latitude in textbox is valid or not.
 
-        if (this.get('maxLngValue') < this.get('minLngValue')) {
-          let s = Number(this.get('maxLngValue'));
-          this.set('maxLngValue', Number(this.get('minLngValue')));
-          this.set('minLngValue', s);
-        }
+    @property _minLatIsValid
+    @type Boolean
+    @readOnly
+    @private
+  */
+  _minLatIsValid: Ember.computed('_minLat', function() {
+    let minLat = parseFloat(this.get('_minLat'));
 
-        this.maxLat = Number(this.get('maxLatValue'));
-        this.minLat = Number(this.get('minLatValue'));
-        this.maxLng = Number(this.get('maxLngValue'));
-        this.minLng = Number(this.get('minLngValue'));
+    return minLat >= -90 && minLat <= 90;
+  }),
 
-        this._updateBounds();
-        this.set('readonly', true);
-      },
-    },
+  /**
+    Flag: indicates whether min longitude in textbox is valid or not.
 
-    /**
-       Destroys DOM-related component's properties.
-    */
-    willDestroyElement() {
-      this._super(...arguments);
+    @property _minLngIsValid
+    @type Boolean
+    @readOnly
+    @private
+  */
+  _minLngIsValid: Ember.computed('_minLng', function() {
+    let minLng = parseFloat(this.get('_minLng'));
 
-      let leafletMap = this.get('leafletMap');
-      if (Ember.isNone(leafletMap)) {
-        return;
-      }
+    return minLng >= -180 && minLng <= 180;
+  }),
 
-      // Destroy leaflet map.
-      this._removeMapLoaderMethods(leafletMap);
-      leafletMap.off('change', this.areaSelectChanged, this);
-      leafletMap.remove();
-      this.set('leafletMap', null);
+  /**
+    Flag: indicates whether max latitude in textbox is valid or not.
 
-      this.sendAction('leafletDestroy');
-    },
+    @property _maxLatIsValid
+    @type Boolean
+    @readOnly
+    @private
+  */
+  _maxLatIsValid: Ember.computed('_maxLat', function() {
+    let maxLat = parseFloat(this.get('_maxLat'));
 
-    /**
-      Actions made when areaSelect.on('change') fires.
+    return maxLat >= -90 && maxLat <= 90;
+  }),
 
-      @method areaSelectChanged
-    */
-    areaSelectChanged() {
-      let areaSelect = this.get('areaSelect');
-      let bounds = areaSelect.getBounds();
+  /**
+    Flag: indicates whether max longitude in textbox is valid or not.
 
-      Ember.set(this, 'minLngValue', bounds.getWest());
-      this.set('minLng', Number(bounds.getWest()));
+    @property _maxLngIsValid
+    @type Boolean
+    @readOnly
+    @private
+  */
+  _maxLngIsValid: Ember.computed('_maxLng', function() {
+    let maxLng = parseFloat(this.get('_maxLng'));
 
-      Ember.set(this, 'maxLngValue', bounds.getEast());
-      this.set('maxLng', Number(bounds.getEast()));
+    return maxLng >= -180 && maxLng <= 180;
+  }),
 
-      Ember.set(this, 'minLatValue', bounds.getSouth());
-      this.set('minLat', Number(bounds.getSouth()));
+  /**
+    Flag: indicates whether coordinates in textboxes are valid or not.
 
-      Ember.set(this, 'maxLatValue', bounds.getNorth());
-      this.set('maxLat', Number(bounds.getNorth()));
-      this.sendAction('boundingBoxChange', bounds);
-    },
+    @property _coordinatesAreValid
+    @type Boolean
+    @readOnly
+    @private
+  */
+  _coordinatesAreValid: Ember.computed('_minLatIsValid', '_minLngIsValid', '_maxLatIsValid', '_maxLngIsValid', function() {
+    return this.get('_minLatIsValid') && this.get('_minLngIsValid') && this.get('_maxLatIsValid') && this.get('_maxLngIsValid');
+  }),
 
-    /**
-      Observes is latitude values are changed.
+  /**
+    Flag: indicates whether coordinates in textboxes are changed or not.
 
-      @method actions.latInputChange
-    */
-    latInputChanged: Ember.observer('minLatValue', 'maxLatValue', function() {
-      this._validateInputs();
-      if (this.get('minLatValue') < -90 || this.get('minLatValue') > 90) {
-        this.set('minLatClass', 'error');
-        return;
-      }
+    @property _coordinatesAreChanged
+    @type Boolean
+    @readOnly
+    @private
+  */
+  _coordinatesAreChanged: Ember.computed('_minLat', '_minLng', '_maxLat', '_maxLng', 'minLat', 'minLng', 'maxLat', 'maxLng', function() {
+    if (parseFloat(this.get('_minLat')) !== parseFloat(this.get('minLat'))) {
+      return true;
+    }
 
-      if (this.get('maxLatValue') < -90 || this.get('maxLatValue') > 90) {
-        this.set('maxLatClass', 'error');
-        return;
-      }
+    if (parseFloat(this.get('_minLng')) !== parseFloat(this.get('minLng'))) {
+      return true;
+    }
 
-      this.set('maxLatClass', '');
-      this.set('minLatClass', '');
-    }),
+    if (parseFloat(this.get('_maxLat')) !== parseFloat(this.get('maxLat'))) {
+      return true;
+    }
 
-    /**
-      Observes if longitude values are changed.
+    if (parseFloat(this.get('_maxLng')) !== parseFloat(this.get('maxLng'))) {
+      return true;
+    }
 
-      @method actions.lngInputChange
-    */
-    lngInputChanged: Ember.observer('minLngValue', 'maxLngValue', function() {
-      this._validateInputs();
-      if (this.get('maxLngValue') < -180 || this.get('maxLngValue') > 180) {
-        Ember.set(this, 'maxLngClass', 'error');
-        return;
-      }
+    return false;
+  }),
 
-      if (this.get('minLngValue') < -180 || this.get('minLngValue') > 180) {
-        Ember.set(this, 'minLngClass', 'error');
-        return;
-      }
+  /**
+    Flag: indicates whether areaselect neeed to be updated (in case of manual changes in coordanates) or not (in case of changes throught GUI).
 
-      this.set('minLngClass', '');
-      this.set('maxLngClass', '');
-    }),
+    @property _needToUpdateAreaSelect
+    @type Boolean
+    @default true
+    @private
+  */
+  _needToUpdateAreaSelect: true,
 
-    /**
-      Observes changes in reference to leaflet map.
-      Initializes area select plugin.
+  /**
+    Reference to component's template.
+  */
+  layout,
 
-      @method _leafletMapDidChange
-      @private
-    */
-    _leafletMapDidChange: Ember.on('init', Ember.observer('leafletMap', function() {
-        let leafletMap = this.get('leafletMap');
+  /**
+    Minimal latitude value.
 
-        if (Ember.isNone(leafletMap)) {
-          return;
-        }
+    @property minLat
+    @type number
+    @default -90
+  */
+  minLat: -90,
 
-        this.set('readonly', true);
-        let areaSelect = L.areaSelect({ width: 100, height: 100 });
-        areaSelect.addTo(leafletMap);
-        if (this.maxLng === undefined && this.minLng === undefined && this.maxLat === undefined && this.minLat === undefined)
-        {
-          let bounds = areaSelect.getBounds();
-          this.set('areaSelect', areaSelect);
+  /**
+    Maximal latitude value.
 
-          this.set('maxLngValue', bounds.getEast());
-          this.maxLng = Number(bounds.getEast());
+    @property maxLat
+    @type number
+    @default 90
+  */
+  maxLat: 90,
 
-          this.set('minLngValue', bounds.getWest());
-          this.minLng = Number(bounds.getWest());
+  /**
+    Minimal longitude value.
 
-          this.set('maxLatValue', bounds.getNorth());
-          this.maxLat = Number(bounds.getNorth());
+    @property minLng
+    @type number
+    @default -180
+  */
+  minLng: -180,
 
-          this.set('minLatValue', bounds.getSouth());
-          this.minLat = Number(bounds.getSouth());
-        } else
-        {
-          if (this.minLat < -90 || this.minLat > 90) {
-            throw 'Incorrect minimal latitude value: should be [-90;90]';
-          }
+  /**
+    Maximal longitude value.
 
-          if (this.maxLat < -90 || this.maxLat > 90) {
-            throw 'Incorrect maximal latitude value: should be [-90;90]';
-          }
+    @property maxLng
+    @type number
+    @default 180
+  */
+  maxLng: 180,
 
-          if (this.minLng < -180 || this.minLng > 180) {
-            throw 'Incorrect minimal longitude value: should be [-180;180]';
-          }
+  /**
+    Map model to be displayed.
 
-          if (this.maxLng < -180 || this.maxLng > 180) {
-            throw 'Incorrect maximal longitude value: should be [-180;180]';
-          }
+    @property maxLng
+    @type NewPlatformFlexberryGISMap
+    @default null
+  */
+  mapModel: null,
 
-          this._updateBounds();
-        }
+  /**
+    Flag: indicates whether to show zoom-control or not.
 
-        areaSelect.on('change', this.areaSelectChanged, this);
-      })),
+    @property zoomControl
+    @type Boolean
+    @default true
+  */
+  zoomControl: true,
 
-    /**
-      Validates input fields and blocks/unblocks bounds.
+  /**
+    Flag: indicates whether to show attribution-control or not.
 
-      @method _validateInputs
-      @private
-    */
-    _validateInputs() {
-      let flag = (
-      (this.get('minLatValue') < -90) ||
-      (this.get('minLatValue') > 90) ||
-      (this.get('maxLatValue') < -90) ||
-      (this.get('maxLatValue') > 90) ||
-      (this.get('minLngValue') < -180) ||
-      (this.get('minLngValue') > 180) ||
-      (this.get('maxLngValue') < -180) ||
-      (this.get('maxLngValue') > 180) ||
-      (this.get('minLatValue') === '') ||
-      (this.get('maxLatValue') === '') ||
-      (this.get('minLngValue') === '') ||
-      (this.get('maxLngValue') === '')
+    @property attributionControl
+    @type Boolean
+    @default false
+  */
+  attributionControl: false,
+
+  /**
+    Observes changes in reference to leaflet map.
+    Initializes area select plugin.
+
+    @method _leafletMapDidChange
+    @private
+  */
+  _leafletMapDidChange: Ember.observer('_leafletMap', function() {
+    let leafletMap = this.get('_leafletMap');
+    if (Ember.isNone(leafletMap)) {
+      return;
+    }
+
+    leafletMap.on('containerResizeStart', this._leafletMapOnContainerResizeStart, this);
+    leafletMap.on('containerResizeEnd', this._leafletMapOnContainerResizeEnd, this);
+
+    let areaSelect = L.areaSelect({ width: 100, height: 100 });
+    this.set('_areaSelect', areaSelect);
+
+    areaSelect.addTo(leafletMap);
+    areaSelect.on('change', this._areaSelectOnChange, this);
+
+    this._boundingBoxCoordinatesDidChange();
+  }),
+
+  /**
+    Handles leaflet map's 'resizeStart' event.
+
+    @method _leafletMapOnContainerResizeStart
+    @private
+  */
+  _leafletMapOnContainerResizeStart() {
+    let areaSelect = this.get('_areaSelect');
+    if (!Ember.isNone(areaSelect)) {
+      // Temporary unbind 'change' event handler to avoid changes in coordinates while resize is in process.
+      areaSelect.off('change', this._areaSelectOnChange, this);
+    }
+  },
+
+  /**
+    Handles leaflet map's 'resizeEnd' event.
+
+    @method _leafletMapOnContainerResizeEnd
+    @private
+  */
+  _leafletMapOnContainerResizeEnd() {
+    let areaSelect = this.get('_areaSelect');
+    if (!Ember.isNone(areaSelect)) {
+      // Bind 'change' event handler again.
+      areaSelect.on('change', this._areaSelectOnChange, this);
+
+      // Map size has been changed, so update areaSelect view without changes in coordinates.
+      this._updateAreaSelect();
+    }
+  },
+
+  /**
+    Observes changes in bounding box coordiantes.
+
+    @method _bboxCoordinatesDidChange
+    @private
+  */
+  _boundingBoxCoordinatesDidChange: Ember.observer('minLat', 'minLng', 'maxLat', 'maxLng', function() {
+    Ember.run.once(this, '_updateBoundingBoxCoordiantes');
+  }),
+
+  /**
+    Updtaes bounding box coordunates accirding tocoordinates specified in public properties.
+
+    @method _updateBoundingBoxCoordiantes
+    @private
+  */
+  _updateBoundingBoxCoordiantes() {
+    let minLat = this.get('minLat');
+    let minLng = this.get('minLng');
+    let maxLat = this.get('maxLat');
+    let maxLng = this.get('maxLng');
+
+    // Update coordiantes in textboxes.
+    this.setProperties({
+      _minLat: minLat,
+      _minLng: minLng,
+      _maxLat: maxLat,
+      _maxLng: maxLng
+    });
+
+    let leafletMap = this.get('_leafletMap');
+    let areaSelect = this.get('_areaSelect');
+    let coordinatesAreValid = this.get('_coordinatesAreValid');
+    if (Ember.isNone(leafletMap) || Ember.isNone(areaSelect) || !coordinatesAreValid) {
+      return;
+    }
+
+    // Update areaSelect if needed.
+    if (this.get('_needToUpdateAreaSelect')) {
+      this._updateAreaSelect();
+    } else {
+      this.set('_needToUpdateAreaSelect', true);
+    }
+
+    // Send 'boundingBoxChange' action to report about changes in bounds.
+    this.sendAction('boundingBoxChange', {
+      minLat,
+      minLng,
+      maxLat,
+      maxLng
+    });
+  },
+
+  /**
+    Updtaes areaSelect according to coordinates specified in public properties.
+
+    @method _updateAreaSelect
+    @private
+  */
+  _updateAreaSelect() {
+    let minLat = this.get('minLat');
+    let minLng = this.get('minLng');
+    let maxLat = this.get('maxLat');
+    let maxLng = this.get('maxLng');
+
+    let leafletMap = this.get('_leafletMap');
+    let areaSelect = this.get('_areaSelect');
+    if (Ember.isNone(leafletMap) || Ember.isNone(areaSelect)) {
+      return;
+    }
+
+    // Create new bounds.
+    let bounds = L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng));
+
+    // Temporary unbind 'change' event handler to avoid cyclic changes.
+    areaSelect.off('change', this._areaSelectOnChange, this);
+
+    // Fit map to new bounds.
+    this._fitBoundsOfLeafletMap(bounds).then(() => {
+      // Fit areaSelect to new bounds.
+      let newWidth = Math.abs(
+        leafletMap.latLngToLayerPoint(L.latLng(minLat, maxLng)).x) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLng)).x
       );
+      let newHeight = Math.abs(
+        leafletMap.latLngToLayerPoint(L.latLng(maxLat, minLng)).y) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLng)).y
+      );
+      areaSelect.setDimensions({ width: Math.abs(newWidth), height: Math.abs(newHeight) });
+    }).catch((error) => {
+      Ember.Logger.error(error);
+    }).finally(() => {
+      // Bind 'change' event handler again.
+      areaSelect.on('change', this._areaSelectOnChange, this);
+    });
+  },
 
-      this.set('readonly', flag);
-    },
+  /**
+    Actions made when areaSelect.on('change') fires.
 
+    @method _areaSelectOnChange
+    @private
+  */
+  _areaSelectOnChange() {
+    let areaSelect = this.get('_areaSelect');
+    let bounds = areaSelect.getBounds();
+
+    // Update component's public properties related to bounding box coordinates,
+    // it will force '_bboxCoordinatesDidChange' observer to be called.
+    this.set('_needToUpdateAreaSelect', false);
+    this.setProperties({
+      minLat: bounds.getSouth(),
+      minLng: bounds.getWest(),
+      maxLat: bounds.getNorth(),
+      maxLng: bounds.getEast()
+    });
+  },
+
+  /**
+    Fits specified leaflet map's bounds.
+
+    @method _fitBoundsOfLeafletMap
+    @param {<a href="http://leafletjs.com/reference-1.0.1.html#latlngbounds">L.LatLngBounds</a>} bounds Bounds to be fitted.
+    @returns <a htef="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    Promise which will be resolved when fitting will be finished.
+  */
+  _fitBoundsOfLeafletMap(bounds) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletMap = this.get('_leafletMap');
+      if (Ember.isNone(leafletMap)) {
+        reject('Leaflet map is not defined');
+      }
+
+      leafletMap.once('moveend', () => {
+        resolve();
+      });
+
+      leafletMap.fitBounds(bounds, {
+        animate: false
+      });
+    });
+  },
+
+  /**
+    Destroys DOM-related component's properties.
+  */
+  willDestroyElement() {
+    let areaSelect = this.get('_areaSelect');
+    if (!Ember.isNone(areaSelect)) {
+      // Unbind 'change' event handler to avoid memory leaks.
+      areaSelect.off('change', this._areaSelectOnChange, this);
+      areaSelect.remove();
+      this.set('_areaSelect', null);
+    }
+
+    let leafletMap = this.get('_leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      // Unbind 'containerResizeStart', 'containerResizeEnd' events handlers to avoid memory leaks.
+      leafletMap.off('containerResizeStart', this._leafletMapOnContainerResizeStart, this);
+      leafletMap.off('containerResizeEnd', this._leafletMapOnContainerResizeEnd, this);
+    }
+
+    this._super(...arguments);
+  },
+
+  actions: {
     /**
-      Moves areaSelect and map according to given bounds.
+      This action is called when change borders button is pressed.
 
-      @method _updateBounds
-      @private
+      @method actions.onButtonClick
     */
-    _updateBounds() {
-      let minLat = this.get('minLat');
-      let minLng = this.get('minLng');
-      let maxLat = this.get('maxLat');
-      let maxLng = this.get('maxLng');
-      let leafletMap = this.get('leafletMap');
-      let areaSelect = this.get('areaSelect');
+    onButtonClick() {
+      if (!(this.get('_coordinatesAreValid') || this.get('_coordinatesAreChanged'))) {
+        return;
+      }
 
-      let coords = L.latLng((maxLat + minLat) / 2, (maxLng + minLng) / 2);
-      leafletMap.panTo(coords);
-      let bounds = L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng));
-      leafletMap.fitBounds(bounds);
-      let newWidth = Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, maxLng)).x) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLng)).x);
-      let newHeight = Math.abs(leafletMap.latLngToLayerPoint(L.latLng(maxLat, minLng)).y) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLng)).y);
-      newWidth = Math.abs(newWidth);
-      newHeight = Math.abs(newHeight);
-      areaSelect.setDimensions({ width: newWidth, height: newHeight });
-    },
-  });
+      // Update related public properties with coordiantes to force '_updateBoundingBoxCoordiantes' to be triggered.
+      this.set('_needToUpdateAreaSelect', true);
+      this.setProperties({
+        minLat: parseFloat(this.get('_minLat')),
+        minLng: parseFloat(this.get('_minLng')),
+        maxLat: parseFloat(this.get('_maxLat')),
+        maxLng: parseFloat(this.get('_maxLng'))
+      });
+    }
+  }
+
+  /**
+    Component's action invoking when bounding box coordiantes did change.
+
+    @method sendingActions.boundingBoxChange
+    @param {Object} e Action's parameters.
+    @param {Number} e.minLat Bounding box min latitude.
+    @param {Number} e.minLng Bounding box min longitude.
+    @param {Number} e.maxLat Bounding box max latitude.
+    @param {Number} e.maxLng Bounding box max longitude.
+    @param {<a href="http://leafletjs.com/reference-1.2.0.html#latlngbounds">L.LatLngBounds</a>} e.bounds Bounds related to changed coordinates.
+  */
+});

@@ -3,6 +3,12 @@ module.exports = {
   afterInstall: function () {
     var _this = this;
     return this.addBowerPackagesToProject([
+      // Library allowing to detect DOM-elements resize.
+      {
+        name: 'javascript-detect-element-resize',
+        target: '0.5.3'
+      },
+
       // Leaflet.
       {
         name: 'leaflet',
@@ -42,8 +48,8 @@ module.exports = {
       // Leaflet areaselect.
       {
         name: 'leaflet-areaselect',
-        source: 'https://github.com/heyman/leaflet-areaselect.git#d0910cc4e74b59bbd9eead447d2353c29dfe84b1',
-        target: 'master'
+        source: 'https://github.com/heyman/leaflet-areaselect.git',
+        target: 'd0910cc4e74b59bbd9eead447d2353c29dfe84b1'
       },
 
       // Leaflet.Editable.Measures.
