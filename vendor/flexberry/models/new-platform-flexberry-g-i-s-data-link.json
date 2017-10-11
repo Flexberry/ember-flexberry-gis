@@ -20,6 +20,14 @@
       "notNull": true,
       "defaultValue": "",
       "stored": true
+    },
+    {
+      "name": "createObject",
+      "type": "boolean",
+      "flexberryType": "bool",
+      "notNull": false,
+      "defaultValue": "",
+      "stored": true
     }
   ],
   "belongsTo": [

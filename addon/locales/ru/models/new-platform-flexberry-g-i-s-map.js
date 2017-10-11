@@ -2,145 +2,151 @@ export default {
   projections: {
     AuditView: {
       name: {
-        caption: 'Наименование'
+        __caption__: 'Наименование'
       },
       creator: {
-        caption: 'Создатель'
+        __caption__: 'Создатель'
       },
       createTime: {
-        caption: 'Время создания'
+        __caption__: 'Время создания'
       },
       editor: {
-        caption: 'Редактор'
+        __caption__: 'Редактор'
       },
       editTime: {
-        caption: 'Время редактирования'
+        __caption__: 'Время редактирования'
       }
     },
     Map: {
       name: {
-        caption: 'Наименование'
+        __caption__: 'Наименование'
       },
       lat: {
-        caption: 'Широта'
+        __caption__: 'Широта'
       },
       lng: {
-        caption: 'Долгота'
+        __caption__: 'Долгота'
       },
       zoom: {
-        caption: 'Зум'
+        __caption__: 'Зум'
       },
       public: {
-        caption: 'Общая'
+        __caption__: 'Общая'
       },
       coordinateReferenceSystem: {
-        caption: 'Система координат'
+        __caption__: 'Система координат'
       }
     },
     MapE: {
       name: {
-        caption: 'Наименование'
+        __caption__: 'Наименование'
       },
       description: {
-        caption: 'Описание'
+        __caption__: 'Описание'
       },
       keyWords: {
-        caption: 'Ключевые слова'
+        __caption__: 'Ключевые слова'
       },
       lat: {
-        caption: 'Широта'
+        __caption__: 'Широта'
       },
       lng: {
-        caption: 'Долгота'
+        __caption__: 'Долгота'
       },
       zoom: {
-        caption: 'Зум'
+        __caption__: 'Зум'
       },
       public: {
-        caption: 'Общая'
+        __caption__: 'Общая'
       },
       scale: {
-        caption: 'Масштаб'
+        __caption__: 'Масштаб'
       },
       coordinateReferenceSystem: {
-        caption: 'Система координат'
+        __caption__: 'Система координат'
       },
       boundingBox: {
-        caption: 'Граница'
+        __caption__: 'Граница'
       },
       mapLayer: {
-        caption: '',
+        __caption__: '',
         name: {
-          caption: 'Наименование'
+          __caption__: 'Наименование'
         },
         description: {
-          caption: 'Описание'
+          __caption__: 'Описание'
         },
         keyWords: {
-          caption: 'Ключевые слова'
+          __caption__: 'Ключевые слова'
         },
         index: {
-          caption: 'Индекс'
+          __caption__: 'Индекс'
         },
         visibility: {
-          caption: 'Видимость'
+          __caption__: 'Видимость'
         },
         type: {
-          caption: 'Тип'
+          __caption__: 'Тип'
         },
         settings: {
-          caption: 'Настройки'
+          __caption__: 'Настройки'
         },
         scale: {
-          caption: 'Масштаб'
+          __caption__: 'Масштаб'
         },
         coordinateReferenceSystem: {
-          caption: 'Система координат'
+          __caption__: 'Система координат'
         },
         boundingBox: {
-          caption: 'Граница'
+          __caption__: 'Граница'
         },
         parent: {
-          caption: 'Родитель'
+          __caption__: 'Родитель'
         },
         map: {
-          caption: 'Карта'
+          __caption__: 'Карта'
         },
         layerLink: {
-          caption: '',
+          __caption__: '',
           mapObjectSetting: {
-            caption: '',
+            __caption__: 'Тип',
+            typeName: {
+              __caption__: 'Тип объекта'
+            },
+            listForm: {
+              __caption__: 'Списковая форма'
+            },
             editForm: {
-              caption: 'Форма редактирования'
+              __caption__: 'Форма редактирования'
             }
           },
           layer: {
-            caption: '',
+            __caption__: '',
             name: {
-              caption: 'Слой'
+              __caption__: 'Слой'
             }
           },
           allowShow: {
-          caption: 'Показывать'
+          __caption__: 'Показывать'
         }
         }
       }
     },
     MapL: {
       name: {
-        caption: 'Наименование'
+        __caption__: 'Наименование'
       },
       lat: {
-        caption: 'Широта'
+        __caption__: 'Широта'
       },
       lng: {
-        caption: 'Долгота'
+        __caption__: 'Долгота'
       },
       zoom: {
-        caption: 'Зум'
+        __caption__: 'Зум'
       },
       public: {
-        caption: 'Общая'
+        __caption__: 'Общая'
       }
     }
   }

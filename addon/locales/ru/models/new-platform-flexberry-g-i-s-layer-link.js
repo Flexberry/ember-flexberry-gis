@@ -2,141 +2,126 @@ export default {
   projections: {
     LayerLinkD: {
       mapObjectSetting: {
-        caption: '',
+        __caption__: 'Тип',
+        typeName: {
+          __caption__: 'Тип объекта'
+        },
+        listForm: {
+          __caption__: 'Списковая форма'
+        },
         editForm: {
-          caption: 'Форма редактирования'
+          __caption__: 'Форма редактирования'
         }
       },
       layer: {
-        caption: '',
+        __caption__: '',
         name: {
-          caption: 'Слой'
+          __caption__: 'Слой'
         }
       },
       allowShow: {
-        caption: 'Показывать'
+        __caption__: 'Показывать'
       },
-      linkParameter: {
-        caption: '',
+      parameters: {
+        __caption__: 'Параметры связи',
         objectField: {
-          caption: 'Поле объекта'
+          __caption__: 'Поле объекта'
         },
         layerField: {
-          caption: 'Поле слоя'
+          __caption__: 'Поле слоя'
         },
         expression: {
-          caption: 'Выражение'
+          __caption__: 'Выражение'
         },
         queryKey: {
-          caption: 'Параметр запроса'
+          __caption__: 'Ключ запроса'
         },
         linkField: {
-          caption: 'Поле связи'
+          __caption__: 'Ключ связи'
         },
         layerLink: {
-          caption: 'Связь'
+          __caption__: 'Связь'
         }
       }
     },
     LayerLinkE: {
       allowShow: {
-        caption: 'Показывать'
+        __caption__: 'Показывать'
       },
       layer: {
-        caption: 'Слой карты'
+        __caption__: 'Слой карты'
       },
       mapObjectSetting: {
-        caption: ''
-      },
-      linkParameter: {
-        caption: '',
-        objectField: {
-          caption: 'Поле объекта'
-        },
-        layerField: {
-          caption: 'Поле слоя'
-        },
-        expression: {
-          caption: 'Выражение'
-        },
-        queryKey: {
-          caption: 'Параметр запроса'
-        },
-        linkField: {
-          caption: 'Поле связи'
-        },
-        layerLink: {
-          caption: 'Связь'
-        }
+        __caption__: ''
       }
     },
     LayerLinkI: {
       mapObjectSetting: {
-        caption: '',
+        __caption__: '',
         listForm: {
-          caption: ''
+          __caption__: ''
         },
         editForm: {
-          caption: ''
+          __caption__: ''
         }
       },
       allowShow: {
-        caption: 'Показывать'
+        __caption__: 'Показывать'
       },
       layer: {
-        caption: ''
+        __caption__: ''
       },
-      linkParameter: {
-        caption: '',
+      parameters: {
+        __caption__: 'Параметры связи',
         objectField: {
-          caption: 'Поле объекта'
+          __caption__: 'Поле объекта'
         },
         layerField: {
-          caption: 'Поле слоя'
+          __caption__: 'Поле слоя'
         },
         expression: {
-          caption: 'Выражение'
+          __caption__: 'Выражение'
         },
         queryKey: {
-          caption: 'Параметр запроса'
+          __caption__: 'Ключ запроса'
         },
         linkField: {
-          caption: 'Поле связи'
+          __caption__: 'Ключ связи'
         },
         layerLink: {
-          caption: 'Связь'
+          __caption__: 'Связь'
         }
       }
     },
     LayerLinkQ: {
       allowShow: {
-        caption: 'Показывать'
+        __caption__: 'Показывать'
       },
       layer: {
-        caption: ''
+        __caption__: ''
       },
       mapObjectSetting: {
-        caption: ''
+        __caption__: ''
       },
-      linkParameter: {
-        caption: '',
+      parameters: {
+        __caption__: 'Параметры связи',
         objectField: {
-          caption: 'Поле объекта'
+          __caption__: 'Поле объекта'
         },
         layerField: {
-          caption: 'Поле слоя'
+          __caption__: 'Поле слоя'
         },
         expression: {
-          caption: 'Выражение'
+          __caption__: 'Выражение'
         },
         queryKey: {
-          caption: 'Параметр запроса'
+          __caption__: 'Ключ запроса'
         },
         linkField: {
-          caption: 'Поле связи'
+          __caption__: 'Ключ связи'
         },
         layerLink: {
-          caption: 'Связь'
+          __caption__: 'Связь'
         }
       }
     }

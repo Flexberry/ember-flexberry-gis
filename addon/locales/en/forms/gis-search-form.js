@@ -11,21 +11,23 @@ export default {
   'max-lat': 'Max latitude',
   'search': 'Search',
   'results': 'Results',
+  'ctrl-message': 'Hold Ctrl-button to open in a new window',
   'layer-metadata': {
     'title': 'Layer metadata',
-    'header': {
-      'name': 'Name',
-      'type': 'Type'
-    }
+    'actions': {
+      'select': 'Select'
+    },
+    'selected-message': 'Items selected:',
+    'reset': 'Clear',
+    'open-into-map': 'Open into a map:',
+    'ok': 'Ok',
+    'new-map': '&lt;New map&gt;',
+    'select-a-map': 'Select a map...'
   },
   'maps': {
     'title': 'Maps',
-    'header': {
-      'name': 'Name',
-      'lat': 'Latitude',
-      'lng': 'Longitude',
-      'zoom': 'Scale',
-      'public': 'Public'
+    'actions': {
+      'open': 'Open'
     }
   }
 };

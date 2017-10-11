@@ -1,6 +1,6 @@
 {
   "name": "ember-flexberry-gis",
-  "version": "0.3.0-beta.3",
+  "version": "0.3.1",
   "dependencies": {
     "ember": "~2.4.3",
     "ember-cli-shims": "0.1.1",
@@ -19,8 +19,8 @@
     "leaflet": "1.2.0",
 	"leaflet-areaselect": "https://github.com/heyman/leaflet-areaselect.git#d0910cc4e74b59bbd9eead447d2353c29dfe84b1",
     "proj4leaflet": "1.0.2",
-    "leaflet-wfst": "2.0.1-beta.1",
-    "leaflet-wms": "1.2.0-beta.1",
+    "leaflet-wfst": "2.0.1-beta.3",
+    "leaflet-wms": "1.2.0-beta.2",
     "leaflet.wms": "gh-pages",
     "leaflet.editable": "1.1.0",
     "leaflet-editable-measures": "0.2.0-beta.2",

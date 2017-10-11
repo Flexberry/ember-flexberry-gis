@@ -2,145 +2,151 @@ export default {
   projections: {
     AuditView: {
       name: {
-        caption: 'Name'
+        __caption__: 'Name'
       },
       creator: {
-        caption: 'Creator'
+        __caption__: 'Creator'
       },
       createTime: {
-        caption: 'Create time'
+        __caption__: 'Create time'
       },
       editor: {
-        caption: 'Editor'
+        __caption__: 'Editor'
       },
       editTime: {
-        caption: 'Edit time'
+        __caption__: 'Edit time'
       }
     },
     Map: {
       name: {
-        caption: 'Name'
+        __caption__: 'Name'
       },
       lat: {
-        caption: 'Latitude'
+        __caption__: 'Latitude'
       },
       lng: {
-        caption: 'Longitude'
+        __caption__: 'Longitude'
       },
       zoom: {
-        caption: 'Zoom'
+        __caption__: 'Zoom'
       },
       public: {
-        caption: 'Public'
+        __caption__: 'Public'
       },
       coordinateReferenceSystem: {
-        caption: 'CRS'
+        __caption__: 'CRS'
       }
     },
     MapE: {
       name: {
-        caption: 'Name'
+        __caption__: 'Name'
       },
       description: {
-        caption: 'Description'
+        __caption__: 'Description'
       },
       keyWords: {
-        caption: 'Key words'
+        __caption__: 'Key words'
       },
       lat: {
-        caption: 'Latitude'
+        __caption__: 'Latitude'
       },
       lng: {
-        caption: 'Longitude'
+        __caption__: 'Longitude'
       },
       zoom: {
-        caption: 'Zoom'
+        __caption__: 'Zoom'
       },
       public: {
-        caption: 'Public'
+        __caption__: 'Public'
       },
       scale: {
-        caption: 'Scale'
+        __caption__: 'Scale'
       },
       coordinateReferenceSystem: {
-        caption: 'CRS'
+        __caption__: 'CRS'
       },
       boundingBox: {
-        caption: 'Bounding box'
+        __caption__: 'Bounding box'
       },
       mapLayer: {
-        caption: 'Map layer',
+        __caption__: 'Map layer',
         name: {
-          caption: 'Name'
+          __caption__: 'Name'
         },
         description: {
-          caption: 'Description'
+          __caption__: 'Description'
         },
         keyWords: {
-          caption: 'Key words'
+          __caption__: 'Key words'
         },
         index: {
-          caption: 'Index'
+          __caption__: 'Index'
         },
         visibility: {
-          caption: 'Visibility'
+          __caption__: 'Visibility'
         },
         type: {
-          caption: 'Type'
+          __caption__: 'Type'
         },
         settings: {
-          caption: 'Settings'
+          __caption__: 'Settings'
         },
         scale: {
-          caption: 'Scale'
+          __caption__: 'Scale'
         },
         coordinateReferenceSystem: {
-          caption: 'CRS'
+          __caption__: 'CRS'
         },
         boundingBox: {
-          caption: 'Bounding box'
+          __caption__: 'Bounding box'
         },
         parent: {
-          caption: 'Parent'
+          __caption__: 'Parent'
         },
         map: {
-          caption: 'Map'
+          __caption__: 'Map'
         },
         layerLink: {
-          caption: 'Layer link',
+          __caption__: 'Layer link',
           mapObjectSetting: {
-            caption: 'Map object setting',
+            __caption__: 'Type',
+            typeName: {
+              __caption__: 'Object type'
+            },
+            listForm: {
+              __caption__: 'List form'
+            },
             editForm: {
-              caption: 'Edit form'
+              __caption__: 'Edit form'
             }
           },
           layer: {
-            caption: 'Layer',
+            __caption__: 'Layer',
             name: {
-              caption: 'Name'
+              __caption__: 'Name'
             }
           },
           allowShow: {
-          caption: 'Allow show'
+          __caption__: 'Allow show'
         }
         }
       }
     },
     MapL: {
       name: {
-        caption: 'Name'
+        __caption__: 'Name'
       },
       lat: {
-        caption: 'Latitude'
+        __caption__: 'Latitude'
       },
       lng: {
-        caption: 'Longitude'
+        __caption__: 'Longitude'
       },
       zoom: {
-        caption: 'Zoom'
+        __caption__: 'Zoom'
       },
       public: {
-        caption: 'Public'
+        __caption__: 'Public'
       }
     }
   }

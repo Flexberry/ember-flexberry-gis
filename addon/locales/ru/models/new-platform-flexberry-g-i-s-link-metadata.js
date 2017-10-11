@@ -2,68 +2,71 @@ export default {
   projections: {
     AuditView: {
       allowShow: {
-        caption: 'Показывать'
+        __caption__: 'Показывать'
       },
       layer: {
-        caption: 'Слой'
+        __caption__: 'Слой'
       },
       mapObjectSetting: {
-        caption: 'Настройка'
+        __caption__: 'Настройка'
       },
-      parameterMetadata: {
-        caption: '',
+      parameters: {
+        __caption__: 'Параметры связи',
         objectField: {
-          caption: 'Поле объекта'
+          __caption__: 'Поле объекта'
         },
         layerField: {
-          caption: 'Поле слоя'
+          __caption__: 'Поле слоя'
         },
         expression: {
-          caption: 'Выражение'
+          __caption__: 'Выражение'
         },
         queryKey: {
-          caption: 'Ключ запроса'
+          __caption__: 'Ключ запроса'
         },
         linkField: {
-          caption: 'Поле связи'
+          __caption__: 'Поле связи'
         },
         layerLink: {
-          caption: 'Связь'
+          __caption__: 'Связь'
         }
       }
     },
     LinkMetadataD: {
       layer: {
-        caption: 'Слой',
+        __caption__: 'Слой',
         name: {
-          caption: ''
+          __caption__: ''
+        }
+      },
+      mapObjectSetting: {
+        __caption__: 'Настройка',
+        typeName: {
+          __caption__: ''
         }
       },
       allowShow: {
-        caption: 'Показывать'
+        __caption__: 'Показывать'
       },
-      mapObjectSetting: {
-        caption: 'Настройка'
-      },
-      parameterMetadata: {
-        caption: 'Параметры',
+      parameters: {
+        __caption__: 'Параметры связи',
         objectField: {
-          caption: 'Поле объекта'
+          __caption__: 'Поле объекта'
         },
         layerField: {
-          caption: 'Поле слоя'
+          __caption__: 'Поле слоя'
         },
         expression: {
-          caption: 'Выражение'
+          __caption__: 'Выражение'
         },
         queryKey: {
-          caption: 'Ключ запроса'
+          __caption__: 'Ключ запроса'
         },
         linkField: {
-          caption: 'Поле связи'
+          __caption__: 'Поле связи'
         },
         layerLink: {
-          caption: 'Связь'
+          __caption__: 'Связь'
         }
       }
     }

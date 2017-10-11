@@ -2,6 +2,8 @@ import Ember from 'ember';
 import EmberFlexberryTranslations from 'ember-flexberry/locales/ru/translations';
 import EmberFlexberryGisTranslations from 'ember-flexberry-gis/locales/ru/translations';
 
+import MapFormTranslations from './forms/map';
+
 const translations = {};
 Ember.$.extend(true, translations, EmberFlexberryTranslations, EmberFlexberryGisTranslations);
 
@@ -131,16 +133,13 @@ Ember.$.extend(true, translations, {
     'maps': {
       'caption': 'Карты'
     },
-    'map': {
-      'caption': 'Карта',
-      'treeviewbuttontooltip': 'Показать дерево слоёв',
-      'searchbuttontooltip': 'Показать поиск',
-      'bookmarksbuttontooltip': 'Пространственные закладки',
-      'identifybuttontooltip': 'Показать идентификацию'
-    },
+
+    'map': MapFormTranslations,
+
     'csw': {
       'caption': 'CSW соединения'
     },
+
     'crs': {
       'current': {
         'name': 'В системе коодинат карты',

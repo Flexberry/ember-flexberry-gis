@@ -2,6 +2,8 @@ import Ember from 'ember';
 import EmberFlexberryTranslations from 'ember-flexberry/locales/en/translations';
 import EmberFlexberryGisTranslations from 'ember-flexberry-gis/locales/en/translations';
 
+import MapFormTranslations from './forms/map';
+
 const translations = {};
 Ember.$.extend(true, translations, EmberFlexberryTranslations, EmberFlexberryGisTranslations);
 
@@ -131,13 +133,9 @@ Ember.$.extend(true, translations, {
     'maps': {
       'caption': 'Maps'
     },
-    'map': {
-      'caption': 'Map',
-      'treeviewbuttontooltip': 'Show tree view',
-      'searchbuttontooltip': 'Show search',
-      'bookmarksbuttontooltip': 'Spatial bookmarks',
-      'identifybuttontooltip': 'Show identification'
-    },
+
+    'map': MapFormTranslations,
+
     'crs': {
       'current': {
         'name': 'In map\'s coordinate system',

@@ -348,7 +348,6 @@
                     }
                 }
                 .layer-legend-image-wrapper {
-                    min-height: @layerLegendImageWrapperMinHeight;
                     font-size: @layerLegendImageWrapperFontSize;
                     vertical-align: middle;
                     width: 100%;
@@ -359,8 +358,6 @@
                         float: left;
                     }
                     .layer-legend-image {
-                        max-height: @layerLegendImageMaxHeight;
-                        min-width: @layerLegendImageMinWidth;
                     }
                     .layer-legend-caption {
                         color: @layerLegendCaptionColor;

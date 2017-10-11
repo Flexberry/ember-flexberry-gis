@@ -122,7 +122,7 @@ export default Ember.Helper.extend({
   _createKey(bindingPath) {
     let projection = this.get('modelProjection');
     let modelName = projection.modelName;
-    return `models.${modelName}.projections.${projection.projectionName}.${bindingPath}.caption`;
+    return `models.${modelName}.projections.${projection.projectionName}.${bindingPath}.__caption__`;
   },
 
   /**

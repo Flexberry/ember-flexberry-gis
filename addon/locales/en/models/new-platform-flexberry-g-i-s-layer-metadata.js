@@ -2,125 +2,128 @@ export default {
   projections: {
     AuditView: {
       name: {
-        caption: 'Name'
+        __caption__: 'Name'
       },
       creator: {
-        caption: 'Creator'
+        __caption__: 'Creator'
       },
       createTime: {
-        caption: 'Create time'
+        __caption__: 'Create time'
       },
       editor: {
-        caption: 'Editor'
+        __caption__: 'Editor'
       },
       editTime: {
-        caption: 'Edit time'
+        __caption__: 'Edit time'
       },
       linkMetadata: {
-        caption: 'Link metadata',
+        __caption__: 'Link metadata',
         allowShow: {
-          caption: 'Allow show'
+          __caption__: 'Allow show'
         },
         layer: {
-          caption: 'Layer'
+          __caption__: 'Layer'
         },
         mapObjectSetting: {
-          caption: 'Map object setting'
+          __caption__: 'Map object setting'
         },
-        parameterMetadata: {
-          caption: 'Parameter metadata',
+        parameters: {
+          __caption__: 'Link parameters',
           objectField: {
-          caption: 'Object field'
+          __caption__: 'Object field'
         },
           layerField: {
-          caption: 'Layer field'
+          __caption__: 'Layer field'
         },
           expression: {
-          caption: 'Expression'
+          __caption__: 'Expression'
         },
           queryKey: {
-          caption: 'Query key'
+          __caption__: 'Query key'
         },
           linkField: {
-          caption: 'Link field'
+          __caption__: 'Link field'
         },
           layerLink: {
-            caption: 'Layer link'
+            __caption__: 'Layer link'
           }
         }
       }
     },
     LayerMetadataE: {
       name: {
-        caption: 'Name'
+        __caption__: 'Name'
       },
       description: {
-        caption: 'Description'
+        __caption__: 'Description'
       },
       keyWords: {
-        caption: 'Key words'
+        __caption__: 'Key words'
       },
       type: {
-        caption: 'Type'
+        __caption__: 'Type'
       },
       settings: {
-        caption: 'Settings'
+        __caption__: 'Settings'
       },
       scale: {
-        caption: 'Scale'
+        __caption__: 'Scale'
       },
       coordinateReferenceSystem: {
-        caption: 'CRS'
+        __caption__: 'CRS'
       },
       boundingBox: {
-        caption: 'Bounding box'
+        __caption__: 'Bounding box'
       },
       linkMetadata: {
-        caption: 'Link metadata',
+        __caption__: 'Link metadata',
         layer: {
-          caption: 'Layer',
+          __caption__: 'Layer',
           name: {
-            caption: 'Name'
+            __caption__: 'Name'
+          }
+        },
+        mapObjectSetting: {
+          __caption__: 'Setting',
+          typeName: {
+            __caption__: ''
           }
         },
         allowShow: {
-          caption: 'Allow show'
+          __caption__: 'Show'
         },
-        mapObjectSetting: {
-          caption: 'Map object setting'
-        },
-        parameterMetadata: {
-          caption: 'Parameter metadata',
+        parameters: {
+          __caption__: 'Link parameters',
           objectField: {
-          caption: 'Object field'
+          __caption__: 'Object field'
         },
           layerField: {
-          caption: 'Layer field'
+          __caption__: 'Layer field'
         },
           expression: {
-          caption: 'Expression'
+          __caption__: 'Expression'
         },
           queryKey: {
-          caption: 'Query key'
+          __caption__: 'Query key'
         },
           linkField: {
-          caption: 'Link field'
+          __caption__: 'Link field'
         },
           layerLink: {
-            caption: 'Layer link'
+            __caption__: 'Layer link'
           }
         }
       }
     },
     LayerMetadataL: {
       name: {
-        caption: 'Name'
+        __caption__: 'Name'
       },
       description: {
-        caption: 'Description'
+        __caption__: 'Description'
       },
       type: {
-        caption: 'Type'
+        __caption__: 'Type'
       }
     }
   }

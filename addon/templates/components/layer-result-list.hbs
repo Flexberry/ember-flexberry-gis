@@ -33,19 +33,32 @@
         </div>
       {{/if}}
     {{/if}}
-    {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}    
+    {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
       <div class="ui list transition">
         {{#each result.features as |feature|}}
-          {{feature-result-item
-            feature=feature
-            infoExpanded=(and (eq result.features.length 1) result.first)
-            displayProperty="displayValue"
-            displaySettings=result.settings
-            selectedFeature=_selectedFeature
-            selectFeature=(action "selectFeature")
-            panTo=(action "panTo")
-            zoomTo=(action "zoomTo")
-          }}
+          {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
+            {{component (concat 'feature-result-item-' result.layerModel.type)
+              feature=feature
+              infoExpanded=(and (eq result.features.length 1) result.first)
+              displayProperty="displayValue"
+              displaySettings=result.settings
+              selectedFeature=_selectedFeature
+              selectFeature=(action "selectFeature")
+              panTo=(action "panTo")
+              zoomTo=(action "zoomTo")
+            }}
+          {{else}}
+            {{feature-result-item
+              feature=feature
+              infoExpanded=(and (eq result.features.length 1) result.first)
+              displayProperty="displayValue"
+              displaySettings=result.settings
+              selectedFeature=_selectedFeature
+              selectFeature=(action "selectFeature")
+              panTo=(action "panTo")
+              zoomTo=(action "zoomTo")
+            }}
+          {{/if}}
         {{/each}}
       </div>
       {{/flexberry-toggler}}

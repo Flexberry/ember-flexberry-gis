@@ -2,68 +2,71 @@ export default {
   projections: {
     AuditView: {
       allowShow: {
-        caption: 'Allow show'
+        __caption__: 'Allow show'
       },
       layer: {
-        caption: 'Layer'
+        __caption__: 'Layer'
       },
       mapObjectSetting: {
-        caption: 'Map object setting'
+        __caption__: 'Map object setting'
       },
-      parameterMetadata: {
-        caption: 'Parameter metadata',
+      parameters: {
+        __caption__: 'Link parameters',
         objectField: {
-          caption: 'Object field'
+          __caption__: 'Object field'
         },
         layerField: {
-          caption: 'Layer field'
+          __caption__: 'Layer field'
         },
         expression: {
-          caption: 'Expression'
+          __caption__: 'Expression'
         },
         queryKey: {
-          caption: 'Query key'
+          __caption__: 'Query key'
         },
         linkField: {
-          caption: 'Link field'
+          __caption__: 'Link field'
         },
         layerLink: {
-          caption: 'Layer link'
+          __caption__: 'Layer link'
         }
       }
     },
     LinkMetadataD: {
       layer: {
-        caption: 'Layer',
+        __caption__: 'Layer',
         name: {
-          caption: 'Name'
+          __caption__: 'Name'
+        }
+      },
+      mapObjectSetting: {
+        __caption__: 'Setting',
+        typeName: {
+          __caption__: ''
         }
       },
       allowShow: {
-        caption: 'Allow show'
+        __caption__: 'Allow show'
       },
-      mapObjectSetting: {
-        caption: 'Map object setting'
-      },
-      parameterMetadata: {
-        caption: 'Parameter metadata',
+      parameters: {
+        __caption__: 'Link parameters',
         objectField: {
-          caption: 'Object field'
+          __caption__: 'Object field'
         },
         layerField: {
-          caption: 'Layer field'
+          __caption__: 'Layer field'
         },
         expression: {
-          caption: 'Expression'
+          __caption__: 'Expression'
         },
         queryKey: {
-          caption: 'Query key'
+          __caption__: 'Query key'
         },
         linkField: {
-          caption: 'Link field'
+          __caption__: 'Link field'
         },
         layerLink: {
-          caption: 'Layer link'
+          __caption__: 'Layer link'
         }
       }
     }
