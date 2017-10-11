@@ -2,126 +2,126 @@ export default {
   projections: {
     LayerLinkD: {
       mapObjectSetting: {
-        caption: ' Type',
+        __caption__: ' Type',
         typeName: {
-          caption: 'Object type'
+          __caption__: 'Object type'
         },
         ListForm: {
-          caption: 'List form'
+          __caption__: 'List form'
         },
         editForm: {
-          caption: 'Edit form'
+          __caption__: 'Edit form'
         }
       },
       layer: {
-        caption: 'Layer',
+        __caption__: 'Layer',
         name: {
-          caption: 'Name'
+          __caption__: 'Name'
         }
       },
       allowShow: {
-        caption: 'Allow show'
+        __caption__: 'Allow show'
       },
       parameters: {
-        caption: 'Link parameters',
+        __caption__: 'Link parameters',
         objectField: {
-          caption: 'Object field'
+          __caption__: 'Object field'
         },
         layerField: {
-          caption: 'Layer field'
+          __caption__: 'Layer field'
         },
         expression: {
-          caption: 'Expression'
+          __caption__: 'Expression'
         },
         queryKey: {
-          caption: 'Query key'
+          __caption__: 'Query key'
         },
         linkField: {
-          caption: 'Link key'
+          __caption__: 'Link key'
         },
         layerLink: {
-          caption: 'Layer link'
+          __caption__: 'Layer link'
         }
       }
     },
     LayerLinkE: {
       allowShow: {
-        caption: 'Allow show'
+        __caption__: 'Allow show'
       },
       layer: {
-        caption: 'Layer'
+        __caption__: 'Layer'
       },
       mapObjectSetting: {
-        caption: 'Map object setting'
+        __caption__: 'Map object setting'
       }
     },
     LayerLinkI: {
       mapObjectSetting: {
-        caption: 'Map object setting',
+        __caption__: 'Map object setting',
         listForm: {
-          caption: 'List form'
+          __caption__: 'List form'
         },
         editForm: {
-          caption: 'Edit form'
+          __caption__: 'Edit form'
         }
       },
       allowShow: {
-        caption: 'Allow show'
+        __caption__: 'Allow show'
       },
       layer: {
-        caption: 'Layer'
+        __caption__: 'Layer'
       },
       parameters: {
-        caption: 'Link parameters',
+        __caption__: 'Link parameters',
         objectField: {
-          caption: 'Object field'
+          __caption__: 'Object field'
         },
         layerField: {
-          caption: 'Layer field'
+          __caption__: 'Layer field'
         },
         expression: {
-          caption: 'Expression'
+          __caption__: 'Expression'
         },
         queryKey: {
-          caption: 'Query key'
+          __caption__: 'Query key'
         },
         linkField: {
-          caption: 'Link key'
+          __caption__: 'Link key'
         },
         layerLink: {
-          caption: 'Layer link'
+          __caption__: 'Layer link'
         }
       }
     },
     LayerLinkQ: {
       allowShow: {
-        caption: 'Allow show'
+        __caption__: 'Allow show'
       },
       layer: {
-        caption: 'Layer'
+        __caption__: 'Layer'
       },
       mapObjectSetting: {
-        caption: ''
+        __caption__: ''
       },
       parameters: {
-        caption: 'Link parameters',
+        __caption__: 'Link parameters',
         objectField: {
-          caption: 'Object field'
+          __caption__: 'Object field'
         },
         layerField: {
-          caption: 'Layer field'
+          __caption__: 'Layer field'
         },
         expression: {
-          caption: 'Expression'
+          __caption__: 'Expression'
         },
         queryKey: {
-          caption: 'Query key'
+          __caption__: 'Query key'
         },
         linkField: {
-          caption: 'Link key'
+          __caption__: 'Link key'
         },
         layerLink: {
-          caption: 'Layer link'
+          __caption__: 'Layer link'
         }
       }
     }

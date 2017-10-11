@@ -2,42 +2,42 @@ export default {
   projections: {
     AuditView: {
       objectField: {
-        caption: 'Object field'
+        __caption__: 'Object field'
       },
       layerField: {
-        caption: 'Layer field'
+        __caption__: 'Layer field'
       },
       expression: {
-        caption: 'Expression'
+        __caption__: 'Expression'
       },
       queryKey: {
-        caption: 'QueryKey'
+        __caption__: 'QueryKey'
       },
       linkField: {
-        caption: 'Link field'
+        __caption__: 'Link field'
       },
       layerLink: {
-        caption: 'Layer link'
+        __caption__: 'Layer link'
       }
     },
     ParameterMetadataD: {
       objectField: {
-        caption: 'Object field'
+        __caption__: 'Object field'
       },
       layerField: {
-        caption: 'Layer field'
+        __caption__: 'Layer field'
       },
       expression: {
-        caption: 'Expression'
+        __caption__: 'Expression'
       },
       queryKey: {
-        caption: 'Query key'
+        __caption__: 'Query key'
       },
       linkField: {
-        caption: 'Link field'
+        __caption__: 'Link field'
       },
       layerLink: {
-        caption: 'Layer link'
+        __caption__: 'Layer link'
       }
     }
   }
