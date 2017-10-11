@@ -28,43 +28,43 @@
         value=minLngValue
         class=minLngClass
       }}
-      </div>
-  <div class="eight wide column">
-      {{#flexberry-map
-        lat=mapModel.lat
-        lng=mapModel.lng
-        zoom=mapModel.zoom
-        zoomControl=zoomControl
-        leafletInit=(action "onMapLeafletInit" "leafletMap")
-        leafletDestroy=(action "onMapLeafletDestroy" "leafletMap")
-      }}
-        {{flexberry-layers
-          leafletMap=leafletMap
-          leafletContainer=leafletMap
-          layers=mapModel.mapLayer
-          areaSelect = areaSelect
+    </div>
+    <div class="eight wide column">
+        {{#flexberry-map
+          lat=mapModel.lat
+          lng=mapModel.lng
+          zoom=mapModel.zoom
+          zoomControl=zoomControl
+          leafletInit=(action "onMapLeafletInit" "leafletMap")
+          leafletDestroy=(action "onMapLeafletDestroy" "leafletMap")
         }}
-      {{/flexberry-map}}
+          {{flexberry-layers
+            leafletMap=leafletMap
+            leafletContainer=leafletMap
+            layers=mapModel.mapLayer
+            areaSelect = areaSelect
+          }}
+        {{/flexberry-map}}
+    </div>
+    <div class="four wide column">
+        {{t "components.flexberry-boundingbox.max-lng-caption"}}
+          {{flexberry-textbox
+            type="number"
+            value=maxLngValue
+            class=maxLngClass
+          }}
+    </div>
   </div>
-  <div class="four wide column">
-      {{t "components.flexberry-boundingbox.max-lng-caption"}}
-        {{flexberry-textbox
-          type="number"
-          value=maxLngValue
-          class=maxLngClass
-        }}
-      </div>
-    </div>
 
-    <div class="row" style="margin-bottom: 5%">
-      <div class="four wide column"></div>
-      <div class="eight wide column">
-        {{t "components.flexberry-boundingbox.min-lat-caption"}}
-         {{flexberry-textbox
-           type="number"
-           value=minLatValue
-           class=minLatClass
-         }}
-      </div>
+  <div class="row" style="margin-bottom: 5%">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+      {{t "components.flexberry-boundingbox.min-lat-caption"}}
+       {{flexberry-textbox
+         type="number"
+         value=minLatValue
+         class=minLatClass
+       }}
     </div>
+  </div>
 </div>
