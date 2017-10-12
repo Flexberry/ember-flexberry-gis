@@ -182,23 +182,45 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    let propertyName = e.searchOptions.propertyName;
+    let searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
 
-    if (Ember.isNone(propertyName)) {
-      return;
+    let searchFields;
+
+    // If exact field is specified in search options - use it only.
+    let propertyName = e.searchOptions.propertyName;
+    if (!Ember.isBlank(propertyName)) {
+      searchFields = propertyName;
+    } else {
+      searchFields = (e.context ? this.get(`${searchSettingsPath}.contextSearchFields`) : this.get(`${searchSettingsPath}.searchFields`)) || Ember.A();
     }
 
-    let filter = new L.Filter.Like(propertyName, '*' + e.searchOptions.queryString + '*', {
-      matchCase: false
+    // If single search field provided - transform it into array.
+    if (!Ember.isArray(searchFields)) {
+      searchFields = Ember.A([searchFields]);
+    }
+
+    // Create filter for each search field.
+    let equals = Ember.A();
+    searchFields.forEach((field) => {
+      equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', {
+        matchCase: false
+      }));
     });
+
+    let filter;
+    if (equals.length === 1) {
+      filter = equals[0];
+    } else {
+      filter = new L.Filter.Or(...equals);
+    }
 
     let featuresPromise = this._getFeature({
       filter,
       maxFeatures: e.searchOptions.maxResultsCount,
+      fillOpacity: 0.3,
       style: {
         color: 'yellow',
-        weight: 2,
-        fillOpacity: 0.3
+        weight: 2
       }
     });
 

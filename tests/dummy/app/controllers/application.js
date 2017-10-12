@@ -218,6 +218,16 @@ export default Ember.Controller.extend({
           title: i18n.t('forms.application.sitemap.gis.gis-search-form.title'),
           children: null
         }]
+      }, {
+        link: null,
+        caption: i18n.t('forms.application.sitemap.components-examples.caption'),
+        title: i18n.t('forms.application.sitemap.components-examples.title'),
+        children: [{
+          link: 'components-examples/flexberry-boundingbox/settings-example',
+          caption: i18n.t('forms.application.sitemap.components-examples.flexberry-boundingbox.caption'),
+          title: i18n.t('forms.application.sitemap.components-examples.flexberry-boundingbox.title'),
+          children: null
+        }]
       }]
     };
   })

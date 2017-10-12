@@ -1,0 +1,11 @@
+<h3 class="ui header">{{t "forms.components-examples.flexberry-boundingbox.settings-example.caption"}}</h3>
+<form class="ui form flexberry-vertical-form" role="form">
+  {{flexberry-boundingbox
+    mapModel=model
+    minLat=minLat
+    minLng=minLng
+    maxLat=maxLat
+    maxLng=maxLng
+    boundingBoxChange=(action "onBoundingBoxChange")
+  }}
+</form>
