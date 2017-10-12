@@ -33,6 +33,11 @@
         {{t "components.layers-dialogs.edit.tabular-menu.legend-settings-tab.caption"}}
       </a>
     {{/if}}
+    {{#if _filterSettingsAreAvailableForType}}
+      <a class="tab item {{if (eq _tabularMenuActiveTab "wfsFilterSettings") "active"}}" data-tab="wfsFilterSettings" onclick={{action "onTabClick"}}>
+        {{t "components.layers-dialogs.edit.tabular-menu.wfsFilterSettings.caption"}}
+      </a>
+    {{/if}}
   </div>
   <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "main") "active"}}" data-tab="main">
     {{#if _modesAreAvailable}}
@@ -285,5 +290,10 @@
     <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "legendSettings") "active"}}" data-tab="legendSettings">
       {{flexberry-jsonarea value=_layer.settings.legendSettings}}
     </div>
+  {{/if}}
+  {{#if _filterSettingsAreAvailableForType}}
+  <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "wfsFilterSettings") "active"}}" data-tab="wfsFilterSettings">
+    {{flexberry-wfs-filter}}
+  </div>
   {{/if}}
 </form>

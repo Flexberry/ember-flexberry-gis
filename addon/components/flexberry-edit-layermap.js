@@ -457,6 +457,18 @@ export default Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether 'filter' operation settings are available for the selected layer type. TODO!
+
+      @property _filterSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _filterSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      return true;
+    }),
+
+    /**
       Available modes captions.
 
       @property _availableModesCaptions
