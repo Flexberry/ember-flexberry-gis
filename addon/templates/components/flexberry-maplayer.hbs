@@ -129,6 +129,12 @@
           change=(action "onOpacitySliderChange")
         }}
       {{/if}}
+      {{#if (known-for-type 'component' (concat 'layer-treenode-contents/' type))}}
+        {{component (concat 'layer-treenode-contents/' type)
+          settingsAsObject=settingsAsObject
+          dynamicActions=dynamicActions
+        }}
+      {{/if}}
       {{#if (and legendCanBeDisplayed hasBeenExpanded)}}
         {{component (concat "legends/" type "-legend") layerName=name layerSettings=settingsAsObject}}
       {{/if}}
