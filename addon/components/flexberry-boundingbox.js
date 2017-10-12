@@ -290,14 +290,14 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
     @private
   */
   _leafletMapOnContainerResizeEnd() {
+    let leafletMap = this.get('_leafletMap');
     let areaSelect = this.get('_areaSelect');
-    if (!Ember.isNone(areaSelect)) {
-      // Bind 'change' event handler again.
-      areaSelect.on('change', this._areaSelectOnChange, this);
-
-      // Map size has been changed, so update areaSelect view without changes in coordinates.
-      this._updateAreaSelect();
+    if (Ember.isNone(leafletMap) || Ember.isNone(areaSelect)) {
+      return;
     }
+
+    let mapSize = leafletMap.getSize();
+    this._updateAreaSelect({ fitBounds: areaSelect._width > mapSize.x || areaSelect._height > mapSize.y });
   },
 
   /**
@@ -339,17 +339,18 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
 
     // Update areaSelect if needed.
     if (this.get('_needToUpdateAreaSelect')) {
-      this._updateAreaSelect();
+      this._updateAreaSelect({ fitBounds: true });
     } else {
       this.set('_needToUpdateAreaSelect', true);
     }
 
     // Send 'boundingBoxChange' action to report about changes in bounds.
     this.sendAction('boundingBoxChange', {
-      minLat,
-      minLng,
-      maxLat,
-      maxLng
+      minLat: minLat,
+      minLng: minLng,
+      maxLat: maxLat,
+      maxLng:maxLng,
+      bounds: L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng))
     });
   },
 
@@ -359,26 +360,20 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
     @method _updateAreaSelect
     @private
   */
-  _updateAreaSelect() {
-    let minLat = this.get('minLat');
-    let minLng = this.get('minLng');
-    let maxLat = this.get('maxLat');
-    let maxLng = this.get('maxLng');
-
+  _updateAreaSelect(options) {
+    options = options || {};
     let leafletMap = this.get('_leafletMap');
     let areaSelect = this.get('_areaSelect');
     if (Ember.isNone(leafletMap) || Ember.isNone(areaSelect)) {
       return;
     }
 
-    // Create new bounds.
-    let bounds = L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng));
+    let minLat = this.get('minLat');
+    let minLng = this.get('minLng');
+    let maxLat = this.get('maxLat');
+    let maxLng = this.get('maxLng');
 
-    // Temporary unbind 'change' event handler to avoid cyclic changes.
-    areaSelect.off('change', this._areaSelectOnChange, this);
-
-    // Fit map to new bounds.
-    this._fitBoundsOfLeafletMap(bounds).then(() => {
+    let updateAreaSelect = () => {
       // Fit areaSelect to new bounds.
       let newWidth = Math.abs(
         leafletMap.latLngToLayerPoint(L.latLng(minLat, maxLng)).x) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLng)).x
@@ -387,33 +382,30 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
         leafletMap.latLngToLayerPoint(L.latLng(maxLat, minLng)).y) - Math.abs(leafletMap.latLngToLayerPoint(L.latLng(minLat, minLng)).y
       );
       areaSelect.setDimensions({ width: Math.abs(newWidth), height: Math.abs(newHeight) });
-    }).catch((error) => {
-      Ember.Logger.error(error);
-    }).finally(() => {
+    };
+
+    if (options.fitBounds) {
+      // Temporary unbind 'change' event handler to avoid cyclic changes.
+      areaSelect.off('change', this._areaSelectOnChange, this);
+
+      // Fit map to new bounds.
+      this._fitBoundsOfLeafletMap(L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng))).then(() => {
+        updateAreaSelect();
+      }).catch((error) => {
+        Ember.Logger.error(error);
+      }).finally(() => {
+        // Bind 'change' event handler again.
+        areaSelect.on('change', this._areaSelectOnChange, this);
+      });
+    } else {
+      // Temporary unbind 'change' event handler to avoid cyclic changes.
+      areaSelect.off('change', this._areaSelectOnChange, this);
+
+      updateAreaSelect();
+
       // Bind 'change' event handler again.
       areaSelect.on('change', this._areaSelectOnChange, this);
-    });
-  },
-
-  /**
-    Actions made when areaSelect.on('change') fires.
-
-    @method _areaSelectOnChange
-    @private
-  */
-  _areaSelectOnChange() {
-    let areaSelect = this.get('_areaSelect');
-    let bounds = areaSelect.getBounds();
-
-    // Update component's public properties related to bounding box coordinates,
-    // it will force '_bboxCoordinatesDidChange' observer to be called.
-    this.set('_needToUpdateAreaSelect', false);
-    this.setProperties({
-      minLat: bounds.getSouth(),
-      minLng: bounds.getWest(),
-      maxLat: bounds.getNorth(),
-      maxLng: bounds.getEast()
-    });
+    }
   },
 
   /**
@@ -438,6 +430,27 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
       leafletMap.fitBounds(bounds, {
         animate: false
       });
+    });
+  },
+
+  /**
+    Actions made when areaSelect.on('change') fires.
+
+    @method _areaSelectOnChange
+    @private
+  */
+  _areaSelectOnChange() {
+    let areaSelect = this.get('_areaSelect');
+    let bounds = areaSelect.getBounds();
+
+    // Update component's public properties related to bounding box coordinates,
+    // it will force '_bboxCoordinatesDidChange' observer to be called.
+    this.set('_needToUpdateAreaSelect', false);
+    this.setProperties({
+      minLat: bounds.getSouth(),
+      minLng: bounds.getWest(),
+      maxLat: bounds.getNorth(),
+      maxLng: bounds.getEast()
     });
   },
 
