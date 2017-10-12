@@ -381,6 +381,7 @@
   height: @sidebarWrapperHeight;
   bottom: @sidebarWrapperRight;
   transition: @sidebarWrapperTransition;
+  visibility: hidden;
   &.visible {
     bottom: 0;
     .ui.bottom.bottompanel {
@@ -388,6 +389,7 @@
     }
     .ui.tabular.menu.flexberry-tab-bar {
       bottom: 410px;
+      visibility: hidden;
     }
   }
   .ui.bottom.bottompanel {
@@ -405,7 +407,7 @@
     max-height: ~"calc(100% - 80px)";
     min-height: 100px;
     box-shadow: @darkBoxShadow !important;;
-    height: 400px !important;
+    height: auto !important;
     width: 700px !important;
     .ui.tab {
       padding: 10px;
@@ -464,6 +466,24 @@
       &.active.item {
         border-bottom-left-radius: 5px !important;
       }
+    }
+  }
+
+  .tab.segment {
+    height: 300px;
+  }
+
+  .ui.tabular.menu .item {
+    background: #e3e3e3;
+    border-radius: 0.28571429rem 0.28571429rem 0px 0px;
+
+    &.active {
+      background: #ffffff;
+    }
+
+    .icon {
+      font-size: 0.7em;
+      padding-left: 10px;
     }
   }
 }

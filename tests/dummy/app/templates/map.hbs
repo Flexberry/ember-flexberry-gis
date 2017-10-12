@@ -131,16 +131,32 @@
     </div>
   </div>
 
-  {{#if _showAttr}}
   <div class="bottompanel-wrapper">
     {{flexberry-tab-bar
       change=(action "toggleBottompanel")
       items=bottompanelItems
     }}
     <div class="ui very wide bottom bottompanel pushable tabbar">
-      <div data-tab="attr" class="ui tab attr">
-        {{#each _editedLayersFeatures key="name" as |layer|}}
-          {{#if _showTable}}
+      <div class="ui top attached fluid tabular menu">
+            <a
+              class="tab item"
+              data-tab="toggle"
+              onClick={{action "toggleBottompanel"}}>
+              <i class="icon browser"></i>
+            </a>
+          {{#each _editedLayers as |tab index|}}
+            <a
+              class="bottompanel tab item active"
+              data-tab="{{tab.name}}"
+              onClick={{action "activeTab" tab}}>
+              {{tab.name}}
+              <i class="icon close" style="font-size: 0.7em; padding-left: 10px;" onClick={{action "closeTab" index}}></i>
+            </a>
+          {{/each}}
+      </div>
+
+      {{#each _editedLayersFeatures key="name" as |layer|}}
+        <div data-tab="{{layer.name}}" class="ui bottom attached tab segment active">
           {{#flexberry-table
             allowEdit="true"
             model=layer.properties
@@ -174,15 +190,10 @@
               </td>
             {{/block-slot}}
           {{/flexberry-table}}
-          {{else}}
-            <div class="ui form loading" style="height: 100%;">
-            </div>
-          {{/if}}
-        {{/each}}
-      </div>
+        </div>
+      {{/each}}
     </div>
   </div>
-  {{/if}}
 
   <div class="row">
     <div class="sixteen wide column">

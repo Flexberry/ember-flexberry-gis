@@ -48,10 +48,6 @@ export default EditMapController.extend(
 
     _showTree: false,
 
-    _showTable: false,
-
-    _showAttr: false,
-
     _scales: [500, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 150000, 200000],
 
     sidebar: Ember.A([{
@@ -114,48 +110,50 @@ export default EditMapController.extend(
 
     _editedLayersFeatures: Ember.computed('_editedLayers.[]', function() {
       let editedLayers = this.get('_editedLayers');
-      return editedLayers.map((item) => {
-        let name = Ember.get(item, 'name');
-        let header = {};
-        let featureLink = {};
-        let propertyLink = {};
-        let properties = Ember.A();
-        let leafletObject = Ember.get(item, 'leafletObject');
+      if (Ember.isPresent(editedLayers)) {
+        return editedLayers.map((item) => {
+          let name = Ember.get(item, 'name');
+          let header = {};
+          let featureLink = {};
+          let propertyLink = {};
+          let properties = Ember.A();
+          let leafletObject = Ember.get(item, 'leafletObject');
 
-        leafletObject.eachLayer((l) => {
-          let props = Ember.get(l, 'feature.properties');
-          let propId = Ember.guidFor(props);
-          if (Ember.isNone(l.feature.leafletLayer)) {
-            Ember.set(l.feature, 'leafletLayer', l);
-          }
-
-          featureLink[propId] = l; // make the hash containing guid of properties object and link to feature layer
-          propertyLink[propId] = props;
-
-          // collect the object keys for the header object
-          Object.keys(props).forEach((p) => {
-            if (!header.hasOwnProperty(p)) {
-              header[p] = p;
+          leafletObject.eachLayer((l) => {
+            let props = Ember.get(l, 'feature.properties');
+            let propId = Ember.guidFor(props);
+            if (Ember.isNone(l.feature.leafletLayer)) {
+              Ember.set(l.feature, 'leafletLayer', l);
             }
+
+            featureLink[propId] = l; // make the hash containing guid of properties object and link to feature layer
+            propertyLink[propId] = props;
+
+            // collect the object keys for the header object
+            Object.keys(props).forEach((p) => {
+              if (!header.hasOwnProperty(p)) {
+                header[p] = p;
+              }
+            });
+            properties.pushObject(props);
           });
-          properties.pushObject(props);
+          let tabModel = Ember.Object.extend({
+            _selectedRows: {},
+            _selectedRowsCount: Ember.computed('_selectedRows', function() {
+              let selectedRows = Ember.get(this, '_selectedRows');
+              return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
+            })
+          });
+          return tabModel.create({
+            name: name,
+            leafletObject: leafletObject,
+            featureLink: featureLink,
+            propertyLink: propertyLink,
+            header: header,
+            properties: properties
+          });
         });
-        let tabModel = Ember.Object.extend({
-          _selectedRows: {},
-          _selectedRowsCount: Ember.computed('_selectedRows', function() {
-            let selectedRows = Ember.get(this, '_selectedRows');
-            return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
-          })
-        });
-        return tabModel.create({
-          name: name,
-          leafletObject: leafletObject,
-          featureLink: featureLink,
-          propertyLink: propertyLink,
-          header: header,
-          properties: properties
-        });
-      });
+      }
     }),
 
     availableCRS: Ember.computed('i18n.locale', function () {
@@ -191,6 +189,26 @@ export default EditMapController.extend(
       if (!Ember.isNone(feature)) {
         serviceLayer.addLayer(feature.leafletLayer);
       }
+    },
+
+    _addAttrLayer(object, editedLayers) {
+      // Push don't update templates.
+      editedLayers.addObject(object);
+      this.set('_editedLayers', editedLayers);
+      if (Ember.$('.bottompanel-wrapper')[0].style.visibility !== 'visible') {
+        Ember.$('.bottompanel-wrapper')[0].style.visibility = 'visible';
+      }
+
+      if (!this.get('bottompanelOpened')) {
+        this.send('toggleBottompanel');
+      }
+
+      Ember.$('.bottompanel.tab.item.active').removeClass('active');
+      Ember.$('.bottom.attached.tab.segment.active').removeClass('active');
+    },
+
+    _newActiveTab() {
+      let editedLayers = this.get('_editedLayers');
     },
 
     actions: {
@@ -231,30 +249,65 @@ export default EditMapController.extend(
         }
       },
 
-      toggleBottompanel(e) {
-        if (!e.changed) {
-          let bottompanelOpened = !this.get('bottompanelOpened');
-          this.set('bottompanelOpened', bottompanelOpened);
+      toggleBottompanel() {
+        let bottompanelOpened = !this.get('bottompanelOpened');
+        this.set('bottompanelOpened', bottompanelOpened);
 
-          // push left map controls to right for sidebar width
-          if (bottompanelOpened) {
-            Ember.$('.bottompanel-wrapper').addClass('visible');
-          } else {
-            Ember.$('.bottompanel-wrapper').removeClass('visible');
-          }
+        // push left map controls to right for sidebar width
+        if (bottompanelOpened) {
+          Ember.$('.bottompanel-wrapper').addClass('visible');
+        } else {
+          Ember.$('.bottompanel-wrapper').removeClass('visible');
         }
+      },
 
-        Ember.run.later(() => {
-          this.set('_showTable', true);
-        }, 500);
+      activeTab(dataTab) {
+        Ember.$('.bottompanel.tab.item.active').removeClass('active');
+        Ember.$('.bottom.attached.tab.segment.active').removeClass('active');
+
+        let tabs = Ember.$('.bottompanel.tab.item');
+        var arrTabs = $.makeArray(tabs);
+        arrTabs.forEach((tab, index) => {
+          let data = $(tab).attr('data-tab');
+
+          if (dataTab.name === data) {
+            $(tab).addClass('active');
+            $($('.bottom.attached.tab.segment')[index]).addClass('active');
+            return;
+          }
+        });
+      },
+
+      closeTab(index) {
+        let editedLayers = this.get('_editedLayers');
+        editedLayers.removeAt(index);
+        if (editedLayers.length === 0) {
+          this.send('toggleBottompanel');
+          Ember.$('.bottompanel-wrapper')[0].style.visibility = 'hidden';
+        } else {
+          Ember.run.scheduleOnce('afterRender', this, '_newActiveTab');
+        }
       },
 
       getAttributes(object) {
-        let editedLayers = this.get('_editedLayers') || Ember.A();
-        editedLayers.push(object);
-        this.set('_editedLayers', editedLayers);
+        let editedLayers = this.get('_editedLayers');
+        let sendActiveTab = false;
 
-        this.set('_showAttr', true);
+        if (Ember.isNone(editedLayers)) {
+          editedLayers = Ember.A();
+          this._addAttrLayer(object, editedLayers);
+        } else {
+          editedLayers.forEach((layer) => {
+            if (layer.name === object.name) {
+              this.send('activeTab', object);
+              sendActiveTab = true;
+              return;
+            }
+          });
+          if (!sendActiveTab) {
+            this._addAttrLayer(object, editedLayers);
+          }
+        }
       },
 
       onFeatureRowSelect(tabModel, rowId, options) {
