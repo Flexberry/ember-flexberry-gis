@@ -97,10 +97,6 @@ Ember.$.extend(true, translations, {
               'title': ''
             }
           }
-        },
-        'integration-examples': {
-          'caption': 'Интеграционные примеры',
-          'title': ''
         }
       }
     },

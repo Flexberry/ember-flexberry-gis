@@ -155,6 +155,15 @@ export default Ember.Controller.extend({
 
   actions: {
     /**
+      Handles anyText 'clear' button click.
+
+      @method actions.getSearchResults
+    */
+    onAnyTextClearButtonClick() {
+      this.set('searchConditions.anyText', null);
+    },
+
+    /**
       Handles search button click and passes search data to the route.
 
       @method actions.getSearchResults

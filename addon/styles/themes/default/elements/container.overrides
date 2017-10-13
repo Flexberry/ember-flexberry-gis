@@ -782,22 +782,76 @@
 /*********************************************
             Search form
 *********************************************/
+.gis-search-form {
+  // Alignment for 'anyText' input & its buttons.
+  .ui.action.input {
+    .search-button {
+      position: absolute;
+      right: 35px;
+      border: none;
+      height: 35px;
+    }
 
-.search-result-top-panel {
-  a {
-    line-height: 33px !important;
-  }
-  &-clear {
-    cursor: pointer;
-  }
-  &-item {
-    display: inline-block;
-    span {
-        margin: 5px;
+    .clear-search-button {
+      position: absolute;
+      right: 0;
+      border: none;
+      height: 35px;
     }
   }
-}
 
-.search-result-tab-panel {
-  min-height: 400px;
+  // Hide segments borders exept tabular menu segments.
+  .ui.segment:not(.tab), .ui.segments {
+    border: none;
+    box-shadow: none;
+  }
+
+  // Alignment for tabular menu.
+  .ui.tabular.fluid.menu {
+    width: 100% !important;
+    margin-top: 35px;
+  }
+
+  // Fix display of horizontal segments inside accordion content.
+  .ui.horizontal.segments.content {
+    &.active, &.animating {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+
+  // Fix colors of labels inside accordion header.
+  .ui.label {
+    &.active {
+      background-color: #dcebfc;
+      border: 0px solid transparent;
+      background-image: none;
+      color: rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  // Hide icon in header of search-results segment.
+  .search-results {
+    .ui.label {
+      i {
+        opacity: 0;
+      }
+    }
+  }
+
+  // Alignment for results table top toolbar & its items.
+  .search-result-top-panel {
+    a {
+      line-height: 35px !important;
+    }
+    &-clear {
+      cursor: pointer;
+    }
+    &-item {
+      display: inline-block;
+      span {
+        margin: 5px;
+      }
+    }
+  }
 }

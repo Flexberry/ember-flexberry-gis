@@ -1,194 +1,188 @@
-{{ui-message
-  type="error"
-  closeable=true
-  visible=showFormErrorMessage
-  caption=error.name
-  message=error.message
-}}
-<div class="ui attached message">
-  <div class="header">
-    {{t "forms.gis-search-form.header"}}
+<h3 class="ui header">
+  {{t "forms.gis-search-form.header"}}
+</h3>
+<form class="ui form flexberry-vertical-form gis-search-form" role="form">
+  {{ui-message
+    type="error"
+    closeable=true
+    visible=showFormErrorMessage
+    caption=error.name
+    message=error.message
+  }}
+  <div class="ui fluid action input">
+    {{input
+      type="text"
+      value=searchConditions.anyText
+      placeholder=(t "components.flexberry-search.placeholder")
+      enter=(action "getSearchResults")
+    }}
+    <button class="ui icon button search-button" {{action "getSearchResults" on="click"}}>
+      <i class="search icon"></i>
+    </button>
+    <button class="ui icon button clear-search-button" {{action "onAnyTextClearButtonClick" on="click"}}>
+      <i class="remove icon"></i>
+    </button>
   </div>
-  <p>{{t "forms.gis-search-form.subheader"}}</p>
-</div>
-<div class="ui form attached fluid segment">
-  <div class="ui grid">
-    <div class="row">
-      <div class="eight wide column">
-        <div class="field">
-          <label>{{t "forms.gis-search-form.any-text"}}</label>
-          {{flexberry-textbox value=searchConditions.anyText}}
-        </div>
+  <div class="ui segments">
+    <div class="ui segment accordion advanced-search">
+      <div class="ui top attached label title">
+        <i class="dropdown icon"></i>
+        {{t "forms.gis-search-form.advanced-search-conditions"}}
       </div>
-    </div>
-    <div class="row">
-      <div class="sixteen wide column">
-        <div class="ui accordion">
-          <div class="title">
-            <i class="dropdown icon"></i>
-            {{t "forms.gis-search-form.advanced-search"}}
+      <div class="ui horizontal segments content">
+        <div class="ui segment">
+          <div class="ui top attached label">
+            {{t "forms.gis-search-form.search-conditions-what"}}
           </div>
-          <div class="content">
-            <div class="ui grid">
-              <div class="eight wide column">
-                <div class="ui container segment">
-                  <div class="ui top attached label">
-                    {{t "forms.gis-search-form.object"}}
-                  </div>
-                  <div class="field">
-                    <label>{{t "forms.gis-search-form.keywords"}}</label>
-                    {{flexberry-textbox value=searchConditions.keyWords}}
-                  </div>
-                  <div class="field">
-                    <label>{{t "forms.gis-search-form.scale"}}</label>
-                    {{flexberry-textbox value=searchConditions.scaleFrom}}
-                  </div>
-                </div>
-              </div>
-              <div class="eight wide column">
-                <div class="ui container segment">
-                  <div class="ui top attached label">
-                    {{t "forms.gis-search-form.position"}}
-                  </div>
-                  <div class="field">
-                    <label>{{t "forms.gis-search-form.min-long"}}</label>
-                    {{flexberry-textbox value=searchConditions.minLng}}
-                  </div>
-                  <div class="field">
-                    <label>{{t "forms.gis-search-form.min-lat"}}</label>
-                    {{flexberry-textbox value=searchConditions.minLat}}
-                  </div>
-                  <div class="field">
-                    <label>{{t "forms.gis-search-form.max-long"}}</label>
-                    {{flexberry-textbox value=searchConditions.maxLng}}
-                  </div>
-                  <div class="field">
-                    <label>{{t "forms.gis-search-form.max-lat"}}</label>
-                    {{flexberry-textbox value=searchConditions.maxLat}}
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="field">
+            <label>
+              {{t "forms.gis-search-form.keywords"}}
+            </label>
+            {{flexberry-textbox value=searchConditions.keyWords}}
+          </div>
+          <div class="field">
+            <label>
+              {{t "forms.gis-search-form.scale"}}
+            </label>
+            {{flexberry-textbox value=searchConditions.scaleFrom}}
+          </div>
+        </div>
+        <div class="ui segment">
+          <div class="ui top attached label">
+            {{t "forms.gis-search-form.search-conditions-where"}}
+          </div>
+          <div class="field">
+            <label>
+              {{t "forms.gis-search-form.min-long"}}
+            </label>
+            {{flexberry-textbox value=searchConditions.minLng}}
+          </div>
+          <div class="field">
+            <label>
+              {{t "forms.gis-search-form.min-lat"}}
+            </label>
+            {{flexberry-textbox value=searchConditions.minLat}}
+          </div>
+          <div class="field">
+            <label>
+              {{t "forms.gis-search-form.max-long"}}
+            </label>
+            {{flexberry-textbox value=searchConditions.maxLng}}
+          </div>
+          <div class="field">
+            <label>
+              {{t "forms.gis-search-form.max-lat"}}
+            </label>
+            {{flexberry-textbox value=searchConditions.maxLat}}
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="seven wide column"></div>
-      <div class="two wide column">
-        <button class="ui labeled icon blue button" {{action "getSearchResults" on="click"}}>
-          <i class="search icon"></i>
-          {{t "forms.gis-search-form.search"}}
-        </button>
+    <div class="ui segment search-results">
+      <div class="ui top attached label">
+        <i class="dropdown icon"></i>
+        {{t "forms.gis-search-form.search-results"}}
       </div>
-      <div class="seven wide column"></div>
-    </div>
-    <div class="row">
-      <div class="ui top attached label">{{t "forms.gis-search-form.results"}}</div>
-      <div class="sixteen wide column">
-        <div class="ui {{if isLoading "active" "disabled"}} inverted dimmer">
-          <div class="ui loader"></div>
-        </div>
-        <div class="ui top attached fluid tabular menu">
-          <a
-            class="tab item active"
-            data-tab={{tabSettings.0.tab}}
-            title={{t tabSettings.0.title}}>
-            {{t tabSettings.0.title}}
-          </a>
-          <a
-            class="tab item"
-            data-tab={{tabSettings.1.tab}}
-            title={{t tabSettings.1.title}}>
-            {{t tabSettings.1.title}}
-          </a>
-        </div>
-        <div
-          class="ui bottom attached tab segment active search-result-tab-panel"
-          data-tab={{tabSettings.0.tab}}>
-            {{#flexberry-table
-              model=(get this tabSettings.0.fieldName)
-              getData=(action "getData" tabSettings.0.fieldName)
-              modelName=tabSettings.0.modelName
-              projectionName=tabSettings.0.projectionName
-              header=(header-from-projection modelName=tabSettings.0.modelName projectionName=tabSettings.0.projectionName)
-            }}
-              {{#block-slot "head-block"}}
-                <div class="search-result-top-panel">
-                  <div class="search-result-top-panel-item">
-                    <span>{{t "forms.gis-search-form.layer-metadata.selected-message"}} {{_selectedRowsCount}}
-                      (<a {{action "_clearSelectedRows"}} class="search-result-top-panel-clear">
-                        {{t "forms.gis-search-form.layer-metadata.reset"}}
-                        </a>).
-                    </span>
-                    <span>
-                      {{t "forms.gis-search-form.layer-metadata.open-into-map"}}
-                    </span>
-                  </div>
-                  <div class="search-result-top-panel-item">
-                    <select class="ui dropdown mapItems" onchange={{action (mut _selectedMap) value="target.value"}}>
-                      <option selected value="">{{t "forms.gis-search-form.layer-metadata.select-a-map"}}</option>
-                      <option value="new">{{t "forms.gis-search-form.layer-metadata.new-map"}}</option>
-                      {{#each model as |mapItem|}}
-                        <option value="{{get mapItem "id"}}" selected={{eq (get mapItem "id") _selectedMap}}>{{get mapItem "name"}}</option>
-                      {{/each}}
-                    </select>
-                  </div>
-                  {{#if _canOpenMapWithMetadata}}
-                    {{#if (eq _selectedMap 'new')}}
-                      {{#link-to
-                        newMapWithMetadataRouteName (query-params metadata=_metadataIds)
-                        class="ui positive button" title=(t "forms.gis-search-form.ctrl-message")}}
-                          {{t "forms.gis-search-form.layer-metadata.ok"}}
-                      {{/link-to}}
-                    {{else}}
-                      {{#link-to
-                        mapWithMetadataRouteName _selectedMap (query-params metadata=_metadataIds)
-                        class="ui positive button" title=(t "forms.gis-search-form.ctrl-message")}}
-                          {{t "forms.gis-search-form.layer-metadata.ok"}}
-                      {{/link-to}}
-                    {{/if}}
+      <div class="ui {{if isLoading "active" "disabled"}} inverted dimmer">
+        <div class="ui loader"></div>
+      </div>
+      <div class="ui top attached fluid tabular menu">
+        <a
+          class="tab item active"
+          data-tab={{tabSettings.0.tab}}
+          title={{t tabSettings.0.title}}>
+          {{t tabSettings.0.title}}
+        </a>
+        <a
+          class="tab item"
+          data-tab={{tabSettings.1.tab}}
+          title={{t tabSettings.1.title}}>
+          {{t tabSettings.1.title}}
+        </a>
+      </div>
+      <div
+        class="ui bottom attached tab segment active search-result-tab-panel"
+        data-tab={{tabSettings.0.tab}}>
+          {{#flexberry-table
+            model=(get this tabSettings.0.fieldName)
+            getData=(action "getData" tabSettings.0.fieldName)
+            modelName=tabSettings.0.modelName
+            projectionName=tabSettings.0.projectionName
+            header=(header-from-projection modelName=tabSettings.0.modelName projectionName=tabSettings.0.projectionName)
+          }}
+            {{#block-slot "head-block"}}
+              <div class="search-result-top-panel">
+                <div class="search-result-top-panel-item">
+                  <span>{{t "forms.gis-search-form.layer-metadata.selected-message"}} {{_selectedRowsCount}}
+                    (<a {{action "_clearSelectedRows"}} class="search-result-top-panel-clear">
+                      {{t "forms.gis-search-form.layer-metadata.reset"}}
+                      </a>).
+                  </span>
+                  <span>
+                    {{t "forms.gis-search-form.layer-metadata.open-into-map"}}
+                  </span>
+                </div>
+                <div class="search-result-top-panel-item">
+                  <select class="ui dropdown mapItems" onchange={{action (mut _selectedMap) value="target.value"}}>
+                    <option selected value="">{{t "forms.gis-search-form.layer-metadata.select-a-map"}}</option>
+                    <option value="new">{{t "forms.gis-search-form.layer-metadata.new-map"}}</option>
+                    {{#each model as |mapItem|}}
+                      <option value="{{get mapItem "id"}}" selected={{eq (get mapItem "id") _selectedMap}}>{{get mapItem "name"}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+                {{#if _canOpenMapWithMetadata}}
+                  {{#if (eq _selectedMap 'new')}}
+                    {{#link-to
+                      newMapWithMetadataRouteName (query-params metadata=_metadataIds)
+                      class="ui positive button" title=(t "forms.gis-search-form.ctrl-message")}}
+                        {{t "forms.gis-search-form.layer-metadata.ok"}}
+                    {{/link-to}}
+                  {{else}}
+                    {{#link-to
+                      mapWithMetadataRouteName _selectedMap (query-params metadata=_metadataIds)
+                      class="ui positive button" title=(t "forms.gis-search-form.ctrl-message")}}
+                        {{t "forms.gis-search-form.layer-metadata.ok"}}
+                    {{/link-to}}
                   {{/if}}
-                </div>
-              {{/block-slot}}
-              {{#block-slot "column-header-head-0"}}
-                <th>{{t "forms.gis-search-form.layer-metadata.actions.select"}}</th>
-              {{/block-slot}}
-              {{#block-slot "column-cell-head-0" as |row|}}
-                <td class="collapsing">
-                  {{flexberry-checkbox
-                    value=(get _selectedRows row.id)
-                    onChange=(action "onRowSelect" row.id)
-                  }}
-                </td>
-              {{/block-slot}}
-            {{/flexberry-table}}
-        </div>
-        <div
-          class="ui bottom attached tab segment search-result-tab-panel"
-          data-tab={{tabSettings.1.tab}}>
-            {{#flexberry-table
-              model=(get this tabSettings.1.fieldName)
-              getData=(action "getData" tabSettings.1.fieldName)
-              modelName=tabSettings.1.modelName
-              projectionName=tabSettings.1.projectionName
-              header=(header-from-projection modelName=tabSettings.1.modelName projectionName=tabSettings.1.projectionName)
-            }}
-              {{#block-slot "column-header-tail-0"}}
-                <th>{{t "forms.gis-search-form.maps.actions.open"}}</th>
-              {{/block-slot}}
-              {{#block-slot "column-cell-tail-0" as |row|}}
-                <td class="collapsing">
-                  {{#link-to mapRouteName row.id title=(t "forms.gis-search-form.ctrl-message")}}
-                    <i class="external share icon"></i>
-                  {{/link-to}}
-                </td>
-              {{/block-slot}}
-            {{/flexberry-table}}
-        </div>
+                {{/if}}
+              </div>
+            {{/block-slot}}
+            {{#block-slot "column-header-head-0"}}
+              <th>{{t "forms.gis-search-form.layer-metadata.actions.select"}}</th>
+            {{/block-slot}}
+            {{#block-slot "column-cell-head-0" as |row|}}
+              <td class="collapsing">
+                {{flexberry-checkbox
+                  value=(get _selectedRows row.id)
+                  onChange=(action "onRowSelect" row.id)
+                }}
+              </td>
+            {{/block-slot}}
+          {{/flexberry-table}}
+      </div>
+      <div
+        class="ui bottom attached tab segment search-result-tab-panel"
+        data-tab={{tabSettings.1.tab}}>
+          {{#flexberry-table
+            model=(get this tabSettings.1.fieldName)
+            getData=(action "getData" tabSettings.1.fieldName)
+            modelName=tabSettings.1.modelName
+            projectionName=tabSettings.1.projectionName
+            header=(header-from-projection modelName=tabSettings.1.modelName projectionName=tabSettings.1.projectionName)
+          }}
+            {{#block-slot "column-header-tail-0"}}
+              <th>{{t "forms.gis-search-form.maps.actions.open"}}</th>
+            {{/block-slot}}
+            {{#block-slot "column-cell-tail-0" as |row|}}
+              <td class="collapsing">
+                {{#link-to mapRouteName row.id title=(t "forms.gis-search-form.ctrl-message")}}
+                  <i class="external share icon"></i>
+                {{/link-to}}
+              </td>
+            {{/block-slot}}
+          {{/flexberry-table}}
       </div>
     </div>
   </div>
-</div>
-
-{{outlet}}
+</form>
