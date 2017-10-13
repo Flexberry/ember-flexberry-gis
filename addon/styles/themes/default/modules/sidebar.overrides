@@ -381,7 +381,11 @@
   height: @sidebarWrapperHeight;
   bottom: @sidebarWrapperRight;
   transition: @sidebarWrapperTransition;
-  visibility: hidden;
+
+  &.hidden {
+    visibility: hidden;
+  }
+
   &.visible {
     bottom: 0;
     .ui.bottom.bottompanel {
@@ -392,9 +396,11 @@
       visibility: hidden;
     }
   }
+
   .ui.bottom.bottompanel {
     bottom: -10px !important;
   }
+
   .ui.bottom.bottompanel,
   .ui.bottom.bottompanel.visible {
     position: absolute;

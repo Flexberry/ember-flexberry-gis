@@ -1,4 +1,4 @@
-﻿/**
+/**
   @module ember-flexberry-gis-dummy
 */
 
@@ -106,11 +106,14 @@ export default EditMapController.extend(
       return result;
     }),
 
-    _editedLayers: null,
+    _editedLayers: Ember.A(),
 
-    _editedLayersFeatures: Ember.computed('_editedLayers.[]', function() {
+    _editedLayersActiveTabIndex: 0,
+
+    _editedLayersTabs: Ember.computed('_editedLayers.[]', function() {
       let editedLayers = this.get('_editedLayers');
       if (Ember.isPresent(editedLayers)) {
+        this.set('_editedLayersActiveTabIndex', editedLayers.length - 1);
         return editedLayers.map((item) => {
           let name = Ember.get(item, 'name');
           let header = {};
@@ -203,26 +206,6 @@ export default EditMapController.extend(
       }
     },
 
-    _addAttrLayer(object, editedLayers) {
-      // Push don't update templates.
-      editedLayers.addObject(object);
-      this.set('_editedLayers', editedLayers);
-      if (Ember.$('.bottompanel-wrapper')[0].style.visibility !== 'visible') {
-        Ember.$('.bottompanel-wrapper')[0].style.visibility = 'visible';
-      }
-
-      if (!this.get('bottompanelOpened')) {
-        this.send('toggleBottompanel');
-      }
-
-      Ember.$('.bottompanel.tab.item.active').removeClass('active');
-      Ember.$('.bottom.attached.tab.segment.active').removeClass('active');
-    },
-
-    _newActiveTab() {
-      let editedLayers = this.get('_editedLayers');
-    },
-
     actions: {
       toggleSidebar(e) {
         if (!e.changed) {
@@ -262,63 +245,30 @@ export default EditMapController.extend(
       },
 
       toggleBottompanel() {
-        let bottompanelOpened = !this.get('bottompanelOpened');
-        this.set('bottompanelOpened', bottompanelOpened);
-
-        // push left map controls to right for sidebar width
-        if (bottompanelOpened) {
-          Ember.$('.bottompanel-wrapper').addClass('visible');
-        } else {
-          Ember.$('.bottompanel-wrapper').removeClass('visible');
-        }
+        this.set('bottompanelOpened', !this.get('bottompanelOpened'));
       },
 
-      activeTab(dataTab) {
-        Ember.$('.bottompanel.tab.item.active').removeClass('active');
-        Ember.$('.bottom.attached.tab.segment.active').removeClass('active');
-
-        let tabs = Ember.$('.bottompanel.tab.item');
-        var arrTabs = $.makeArray(tabs);
-        arrTabs.forEach((tab, index) => {
-          let data = $(tab).attr('data-tab');
-
-          if (dataTab.name === data) {
-            $(tab).addClass('active');
-            $($('.bottom.attached.tab.segment')[index]).addClass('active');
-            return;
-          }
-        });
+      activeTab(index) {
+        this.set('_editedLayersActiveTabIndex', index);
       },
 
       closeTab(index) {
         let editedLayers = this.get('_editedLayers');
         editedLayers.removeAt(index);
-        if (editedLayers.length === 0) {
-          this.send('toggleBottompanel');
-          Ember.$('.bottompanel-wrapper')[0].style.visibility = 'hidden';
-        } else {
-          Ember.run.scheduleOnce('afterRender', this, '_newActiveTab');
-        }
       },
 
       getAttributes(object) {
-        let editedLayers = this.get('_editedLayers');
-        let sendActiveTab = false;
-
-        if (Ember.isNone(editedLayers)) {
-          editedLayers = Ember.A();
-          this._addAttrLayer(object, editedLayers);
+        let editedLayers = this.get('_editedLayers') || Ember.A();
+        let index = editedLayers.findIndex((item) => Ember.isEqual(item.name, object.name));
+        if (index >= 0) {
+          this.send('activeTab', index);
         } else {
-          editedLayers.forEach((layer) => {
-            if (layer.name === object.name) {
-              this.send('activeTab', object);
-              sendActiveTab = true;
-              return;
-            }
-          });
-          if (!sendActiveTab) {
-            this._addAttrLayer(object, editedLayers);
-          }
+          editedLayers.addObject(object);
+          this.set('_editedLayers', editedLayers);
+        }
+
+        if (!this.get('bottompanelOpened')) {
+          this.send('toggleBottompanel');
         }
       },
 

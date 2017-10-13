@@ -131,7 +131,7 @@
     </div>
   </div>
 
-  <div class="bottompanel-wrapper">
+  <div class={{concat "bottompanel-wrapper" (if (eq _editedLayers.length 0) " hidden" "") (if bottompanelOpened " visible" "")}}>
     {{flexberry-tab-bar
       change=(action "toggleBottompanel")
       items=bottompanelItems
@@ -144,43 +144,50 @@
               onClick={{action "toggleBottompanel"}}>
               <i class="icon browser"></i>
             </a>
-          {{#each _editedLayers as |tab index|}}
+          {{#each _editedLayersTabs key="name" as |tabModel index|}}
             <a
-              class="bottompanel tab item active"
-              data-tab="{{tab.name}}"
-              onClick={{action "activeTab" tab}}>
-              {{tab.name}}
-              <i class="icon close" style="font-size: 0.7em; padding-left: 10px;" onClick={{action "closeTab" index}}></i>
+              class={{concat "bottompanel tab item" (if (eq _editedLayersActiveTabIndex index) " active" "")}}
+              data-tab="{{tabModel.name}}"
+              {{action "activeTab" index}}>
+              {{tabModel.name}}
+              <i class="icon close" style="font-size: 0.7em; padding-left: 10px;" {{action "closeTab" index bubbles=false}}></i>
             </a>
           {{/each}}
       </div>
 
-      {{#each _editedLayersFeatures key="name" as |layer|}}
-        <div data-tab="{{layer.name}}" class="ui bottom attached tab segment active">
+      {{#each _editedLayersTabs key="name" as |tabModel index|}}
+        <div data-tab="{{tabModel.name}}" class={{concat "ui bottom attached tab segment" (if (eq _editedLayersActiveTabIndex index) " active" "")}}>
           {{#flexberry-table
             allowEdit="true"
             perPageAvailable=false
-            model=layer.propertiesToShow
-            header=layer.header
-            recordsTotalCount=layer.properties.length
-            getData=(action "onFeatureGetData" layer)
+            model=tabModel.propertiesToShow
+            header=tabModel.header
+            recordsTotalCount=tabModel.properties.length
+            getData=(action "onFeatureGetData" tabModel)
             additionalColumnsCount=1
           }}
             {{#block-slot "head-block"}}
               <div>
-                {{flexberry-checkbox label=(if layer.selectAll "Clear" "Select all") value=layer.selectAll onChange=(action "onFeatureSelectClick" layer)}}
-                {{flexberry-button
-                  tooltip="Find feature on the map"
-                  click=(action "onFindFeatureClick" layer)
-                  iconClass="marker icon"
-                  readonly=(eq layer._selectedRowsCount 0)
+                {{flexberry-checkbox
+                  label=(if tabModel.selectAll "Clear" "Select all")
+                  value=tabModel.selectAll
+                  onChange=(action "onFeatureSelectClick" tabModel)
+                  class=(if (eq tabModel.properties.length 0) "disabled")
                 }}
-                {{flexberry-button
-                  tooltip="Delete feature"
-                  click=(action "onDeleteFeatureClick" layer)
-                  iconClass="trash icon"
-                  readonly=(eq layer._selectedRowsCount 0)
-                }}
+                <div style="display:inline-block;">
+                  {{flexberry-button
+                    tooltip="Find feature on the map"
+                    click=(action "onFindFeatureClick" tabModel)
+                    iconClass="marker icon"
+                    readonly=(eq tabModel._selectedRowsCount 0)
+                  }}
+                  {{flexberry-button
+                    tooltip="Delete feature"
+                    click=(action "onDeleteFeatureClick" tabModel)
+                    iconClass="trash icon"
+                    readonly=(eq tabModel._selectedRowsCount 0)
+                  }}
+                </div>
               </div>
             {{/block-slot}}
             {{#block-slot "column-header-head-0"}}
@@ -189,8 +196,8 @@
             {{#block-slot "column-cell-head-0" as |row|}}
               <td class="narrow">
                 {{flexberry-checkbox
-                  value=(get layer._selectedRows (ember-guid row))
-                  onChange=(action "onFeatureRowSelect" layer (ember-guid row))
+                  value=(get tabModel._selectedRows (ember-guid row))
+                  onChange=(action "onFeatureRowSelect" tabModel (ember-guid row))
                 }}
               </td>
             {{/block-slot}}
