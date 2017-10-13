@@ -1,4 +1,4 @@
-/**
+﻿/**
   @module ember-flexberry-gis-dummy
 */
 
@@ -126,7 +126,10 @@ export default EditMapController.extend(
               Ember.set(l.feature, 'leafletLayer', l);
             }
 
-            featureLink[propId] = l; // make the hash containing guid of properties object and link to feature layer
+            // the hash containing guid of properties object and link to feature layer
+            featureLink[propId] = l;
+
+            // the hash containing guid of properties object and link to that object
             propertyLink[propId] = props;
 
             // collect the object keys for the header object
@@ -138,10 +141,19 @@ export default EditMapController.extend(
             properties.pushObject(props);
           });
           let tabModel = Ember.Object.extend({
+            _top: 5,
+            _skip: 0,
             _selectedRows: {},
             _selectedRowsCount: Ember.computed('_selectedRows', function() {
               let selectedRows = Ember.get(this, '_selectedRows');
               return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
+            }),
+            selectAll: false,
+            propertiesToShow: Ember.computed('properties.[]', '_top', '_skip', function() {
+              let properties = this.get('properties');
+              let top = this.get('_top');
+              let skip = this.get('_skip');
+              return properties.slice(skip, skip + top);
             })
           });
           return tabModel.create({
@@ -324,6 +336,23 @@ export default EditMapController.extend(
             return tabModel.featureLink[key].feature;
           });
         this.send('zoomTo', selectedFeatures);
+      },
+
+      onFeatureSelectClick(tabModel) {
+        let selectAll = Ember.get(tabModel, 'selectAll');
+        if (!selectAll) {
+          Ember.set(tabModel, '_selectedRows', {});
+        } else {
+          let selectedRows = Object.assign(...Object.keys(Ember.get(tabModel, 'propertyLink')).map(k => ({ [k]: true })));
+          Ember.set(tabModel, '_selectedRows', selectedRows);
+        }
+
+        tabModel.notifyPropertyChange('_selectedRows');
+      },
+
+      onFeatureGetData(tabModel, options) {
+        Ember.set(tabModel, '_skip', options.skip);
+        Ember.set(tabModel, '_top', options.top);
       },
 
       ///////////// code from layer-result-list

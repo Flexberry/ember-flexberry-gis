@@ -804,9 +804,15 @@
 
 .flexberry-table-fixed {
   table-layout: fixed;
+  font-size: 12px !important;
+
+  th.narrow, td.narrow {
+    width: 80px;
+  }
 }
 
 .flexberry-table-cell-input {
   display: inline-block;
   max-width: 200px;
+  padding: 0.5em 1em;
 }

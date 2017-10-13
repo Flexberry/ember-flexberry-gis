@@ -159,11 +159,16 @@
         <div data-tab="{{layer.name}}" class="ui bottom attached tab segment active">
           {{#flexberry-table
             allowEdit="true"
-            model=layer.properties
+            perPageAvailable=false
+            model=layer.propertiesToShow
             header=layer.header
+            recordsTotalCount=layer.properties.length
+            getData=(action "onFeatureGetData" layer)
+            additionalColumnsCount=1
           }}
             {{#block-slot "head-block"}}
               <div>
+                {{flexberry-checkbox label=(if layer.selectAll "Clear" "Select all") value=layer.selectAll onChange=(action "onFeatureSelectClick" layer)}}
                 {{flexberry-button
                   tooltip="Find feature on the map"
                   click=(action "onFindFeatureClick" layer)
@@ -179,10 +184,10 @@
               </div>
             {{/block-slot}}
             {{#block-slot "column-header-head-0"}}
-              <th>Select</th>
+              <th class="narrow">Select</th>
             {{/block-slot}}
             {{#block-slot "column-cell-head-0" as |row|}}
-              <td class="collapsing">
+              <td class="narrow">
                 {{flexberry-checkbox
                   value=(get layer._selectedRows (ember-guid row))
                   onChange=(action "onFeatureRowSelect" layer (ember-guid row))
