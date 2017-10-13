@@ -8,16 +8,6 @@ import PaginatedControllerMixin from 'ember-flexberry/mixins/paginated-controlle
 import SlotsMixin from 'ember-block-slots';
 
 /**
-  Flattens an array of arrays and objects.
-
-  @param {Array} a Array to be flatten
-  @returns {Array}
-*/
-let flatten = function (a) {
-  return Array.isArray(a) ? [].concat(...a.map(flatten)) : a;
-};
-
-/**
   Flexberry table component with [Semantic UI table](https://semantic-ui.com/collections/table) style and paging handling.
 
   @class FlexberryTableComponent
@@ -40,6 +30,24 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   */
   allowEdit: false,
 
+  /*
+    Flag that indicates whether 'rows per page' select is available or isn't.
+
+    @property perPageAvailable
+    @type Boolean
+    @default true
+  */
+  perPageAvailable: true,
+
+  /*
+    Indicates how many additional columns added to the header.
+
+    @property additionalColumnsCount
+    @type Int
+    @default 0
+  */
+  additionalColumnsCount: 0,
+
   /**
     Count of columns.
 
@@ -50,17 +58,8 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   */
   _columnCount: Ember.computed('header', {
     get() {
-      let additionalColumns = 0;
-      let flatStatements = flatten(this.get('layout.raw.statements'));
-
-      // Consider the added trough yield-slots columns.
-      if (Ember.isArray(flatStatements)) {
-        additionalColumns = flatStatements.filter(
-          (item) => typeof (item) === 'string' && item.indexOf('column-header') !== -1
-        ).length;
-      }
-
-      return Object.keys(this.get('header')).length + additionalColumns;
+      let additionalColumnsCount = this.get('additionalColumnsCount');
+      return Object.keys(this.get('header')).length + additionalColumnsCount;
     }
   }),
 

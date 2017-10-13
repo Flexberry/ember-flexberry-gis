@@ -80,9 +80,11 @@
                 <i class="next-page icon"></i>
               </button>
             </div>
-            <div class="right menu">
-              {{flexberry-dropdown items=perPageValues value=perPageValue class="compact selection" onChange=(action "perPageClick")}}
-            </div>
+            {{#if perPageAvailable}}
+              <div class="right menu">
+                {{flexberry-dropdown items=perPageValues value=perPageValue class="compact selection" onChange=(action "perPageClick")}}
+              </div>
+            {{/if}}
           </div>
         </th>
       </tr>
