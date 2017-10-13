@@ -16,6 +16,15 @@ export default Ember.Controller.extend({
   */
   searchConditions: {
     /**
+      Comma-separated list of words to search in any text field.
+
+      @property searchConditions.anyText
+      @type String
+      @default null
+    */
+    anyText: null,
+
+    /**
       Comma-separated list of key words. Used for search.
 
       @property searchConditions.searchKeyWords
@@ -145,6 +154,15 @@ export default Ember.Controller.extend({
   newMapWithMetadataRouteName: 'map.new',
 
   actions: {
+    /**
+      Handles anyText 'clear' button click.
+
+      @method actions.getSearchResults
+    */
+    onAnyTextClearButtonClick() {
+      this.set('searchConditions.anyText', null);
+    },
+
     /**
       Handles search button click and passes search data to the route.
 
