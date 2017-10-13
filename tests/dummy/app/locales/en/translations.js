@@ -87,7 +87,7 @@ Ember.$.extend(true, translations, {
           }
         },
         'components-examples': {
-          'caption': 'Примеры компонентов',
+          'caption': 'Components examples',
           'title': '',
           'flexberry-boundingbox': {
             'caption': 'flexberry-boundingbox',
@@ -97,10 +97,6 @@ Ember.$.extend(true, translations, {
               'title': ''
             }
           }
-        },
-        'integration-examples': {
-          'caption': 'Integration examples',
-          'title': ''
         }
       }
     },
