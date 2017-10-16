@@ -201,7 +201,7 @@ export default EditMapController.extend(
     _selectFeature(feature) {
       let serviceLayer = this.get('serviceLayer');
       if (!Ember.isNone(feature)) {
-        serviceLayer.addLayer(feature.leafletLayer);
+        serviceLayer.addLayer(feature.leafletLayer.setStyle({ color:'salmon', weight:2, opacity:1, fillOpacity:0.3 }));
       }
     },
 
