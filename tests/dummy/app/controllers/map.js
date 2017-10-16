@@ -329,8 +329,7 @@ export default EditMapController.extend(
           if (offset > 0) {
             offset -= Math.min(25, offset);
           }
-        }
-        else {
+        } else {
           let panelWidth = Ember.$('.feature-tab-nav-panel-tabs').innerWidth();
           let itemsWidth = 0;
           Ember.$('.feature-tab-nav-panel-tabs').children().each((index, item) => {
