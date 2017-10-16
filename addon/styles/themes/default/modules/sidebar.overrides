@@ -417,7 +417,7 @@
   }
 
   .tab.segment {
-    height: 300px;
+    height: 350px;
   }
 
   .ui.tabular.menu .item {

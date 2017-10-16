@@ -170,6 +170,8 @@ export default EditMapController.extend(
       }
     }),
 
+    _featureTabsOffset: 0,
+
     availableCRS: Ember.computed('i18n.locale', function () {
       let availableModes = Ember.A();
       let i18n = this.get('i18n');
@@ -318,6 +320,26 @@ export default EditMapController.extend(
       onFeatureGetData(tabModel, options) {
         Ember.set(tabModel, '_skip', options.skip);
         Ember.set(tabModel, '_top', options.top);
+      },
+
+      onFeatureTabMove(left) {
+        // move tabs bar on the left or on the right
+        let offset = this.get('_featureTabsOffset');
+        if (left) {
+          if (offset > 0) {
+            offset -= Math.min(25, offset);
+          }
+        } else {
+          let panelWidth = Ember.$('.feature-tab-nav-panel-tabs').innerWidth();
+          let itemsWidth = 0;
+          Ember.$('.feature-tab-nav-panel-tabs').children().each((index, item) => {
+            itemsWidth += Ember.$(item).outerWidth();
+          });
+          offset += Math.min(25, (panelWidth >= itemsWidth ? 0 : (offset >= itemsWidth - panelWidth + 25 ? 0 : itemsWidth - panelWidth + 25 - offset)));
+        }
+
+        this.set('_featureTabsOffset', offset);
+        Ember.$('.feature-tab-nav-panel-tabs').css('left', `-${offset}px`);
       },
 
       ///////////// code from layer-result-list
