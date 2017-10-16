@@ -113,7 +113,6 @@ export default EditMapController.extend(
     _editedLayersTabs: Ember.computed('_editedLayers.[]', function() {
       let editedLayers = this.get('_editedLayers');
       if (Ember.isPresent(editedLayers)) {
-        //this.set('_editedLayersActiveTabIndex', editedLayers.length - 1);
         return editedLayers.map((item) => {
           let name = Ember.get(item, 'name');
           let header = {};
@@ -280,6 +279,7 @@ export default EditMapController.extend(
         } else {
           editedLayers.addObject(object);
           this.set('_editedLayers', editedLayers);
+          this.set('_editedLayersActiveTabIndex', editedLayers.length - 1);
         }
 
         if (!this.get('bottompanelOpened')) {
