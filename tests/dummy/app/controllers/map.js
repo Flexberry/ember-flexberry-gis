@@ -113,7 +113,7 @@ export default EditMapController.extend(
     _editedLayersTabs: Ember.computed('_editedLayers.[]', function() {
       let editedLayers = this.get('_editedLayers');
       if (Ember.isPresent(editedLayers)) {
-        this.set('_editedLayersActiveTabIndex', editedLayers.length - 1);
+        //this.set('_editedLayersActiveTabIndex', editedLayers.length - 1);
         return editedLayers.map((item) => {
           let name = Ember.get(item, 'name');
           let header = {};
@@ -253,12 +253,23 @@ export default EditMapController.extend(
           this.send('toggleBottompanel');
         } else {
           this.set('_editedLayersActiveTabIndex', index);
+          if (!this.get('bottompanelOpened')) {
+            this.send('toggleBottompanel');
+          }
         }
       },
 
       closeTab(index) {
         let editedLayers = this.get('_editedLayers');
-        editedLayers.removeAt(index);
+
+        if (this.get('_editedLayersActiveTabIndex') < index) {
+          editedLayers.removeAt(index);
+        } else {
+          editedLayers.removeAt(index);
+          if (this.get('_editedLayersActiveTabIndex') - 1 >= 0) {
+            this.set('_editedLayersActiveTabIndex', this.get('_editedLayersActiveTabIndex') - 1);
+          }
+        }
       },
 
       getAttributes(object) {
