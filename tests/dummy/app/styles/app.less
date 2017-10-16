@@ -61,3 +61,57 @@
         overflow-x: hidden;
     }
 }
+
+/* Bottom panel */
+
+.bottompanel {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.feature-tab-nav-button {
+  position: absolute;
+  width: 25px;
+  height: 40px;
+  line-height: 40px;
+  top: 0;
+  color: #428bca;
+  cursor: pointer;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 0;
+  padding: 0;
+  background-color: #fff;
+  z-index: 10;
+
+  &-left {
+    left: 0;
+    border-top-left-radius: 5px;
+  }
+
+  &-right {
+    right: 0;
+    border-top-right-radius: 5px;
+  }
+}
+
+.feature-tab-nav-panel {
+  width: 100%;
+  padding-left: 25px;
+
+  &-tabs {
+    position: relative;
+
+    a {
+      font-weight: 400 !important;
+    }
+
+    .icon.close {
+      font-size: 0.7em; padding-left: 10px;
+    }
+  }
+}
+
+.feature-tab-data-panel {
+  border-top: 0 !important;
+}

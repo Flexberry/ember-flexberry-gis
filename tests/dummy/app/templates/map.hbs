@@ -1,4 +1,4 @@
-<h3 class="ui header">{{t "forms.map.caption"}}</h3>
+﻿<h3 class="ui header">{{t "forms.map.caption"}}</h3>
 <form class="ui form flexberry-vertical-form" role="form">
   {{ui-message
     type="success"
@@ -133,20 +133,32 @@
 
   <div class={{concat "bottompanel-wrapper" (if (eq _editedLayers.length 0) " hidden" "")}}>
     <div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if bottompanelOpened "" " invisibly")}}>
-      <div class="ui top attached fluid tabular menu">
+      <button
+        class={{concat "feature-tab-nav-button feature-tab-nav-button-left" (if (eq _featureTabsOffset 0) " disabled" "")}}
+        {{action "onFeatureTabMove" true}}>
+        <i class="left arrow icon"></i>
+      </button>
+      <div class="feature-tab-nav-panel">
+        <div class="ui top attached tabular menu feature-tab-nav-panel-tabs">
           {{#each _editedLayersTabs key="name" as |tabModel index|}}
             <a
               class={{concat "bottompanel tab item" (if (eq _editedLayersActiveTabIndex index) " active" "")}}
               data-tab="{{tabModel.name}}"
               {{action "activeTab" index}}>
               {{tabModel.name}}
-              <i class="icon close" style="font-size: 0.7em; padding-left: 10px;" {{action "closeTab" index bubbles=false}}></i>
+              <i class="icon close" {{action "closeTab" index bubbles=false}}></i>
             </a>
           {{/each}}
+        </div>
       </div>
+      <button
+        class="feature-tab-nav-button feature-tab-nav-button-right"
+        {{action "onFeatureTabMove" false}}>
+        <i class="right arrow icon"></i>
+      </button>
 
       {{#each _editedLayersTabs key="name" as |tabModel index|}}
-        <div data-tab="{{tabModel.name}}" class={{concat "ui bottom attached tab segment" (if (eq _editedLayersActiveTabIndex index) " active" "")}}>
+        <div data-tab="{{tabModel.name}}" class={{concat "ui bottom attached tab segment feature-tab-data-panel" (if (eq _editedLayersActiveTabIndex index) " active" "")}}>
           {{#flexberry-table
             allowEdit="true"
             perPageAvailable=false
@@ -157,7 +169,7 @@
             additionalColumnsCount=1
           }}
             {{#block-slot "head-block"}}
-              <div>
+              <div class="feature-tab-head-panel">
                 {{flexberry-checkbox
                   label=(if tabModel.selectAll "Clear" "Select all")
                   value=tabModel.selectAll
