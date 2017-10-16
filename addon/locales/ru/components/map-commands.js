@@ -5,7 +5,10 @@ export default {
   },
   'locate': {
     'caption': '',
-    'tooltip': 'Мое местоположение'
+    'tooltip': 'Мое местоположение',
+    'lat': 'Широта: ',
+    'lng': 'Долгота: ',
+    'error': 'Местоположение не найдено'
   },
   'full-extent': {
     'caption': '',

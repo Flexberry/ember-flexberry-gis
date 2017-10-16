@@ -5,7 +5,10 @@ export default {
   },
   'locate': {
     'caption': '',
-    'tooltip': 'Find my location'
+    'tooltip': 'Find my location',
+    'lat': 'Latitude: ',
+    'lng': 'Longitude: ',
+    'error': 'Location not found'
   },
   'full-extent': {
     'caption': '',
