@@ -131,19 +131,9 @@
     </div>
   </div>
 
-  <div class={{concat "bottompanel-wrapper" (if (eq _editedLayers.length 0) " hidden" "") (if bottompanelOpened " visible" "")}}>
-    {{flexberry-tab-bar
-      change=(action "toggleBottompanel")
-      items=bottompanelItems
-    }}
-    <div class="ui very wide bottom bottompanel pushable tabbar">
+  <div class={{concat "bottompanel-wrapper" (if (eq _editedLayers.length 0) " hidden" "")}}>
+    <div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if bottompanelOpened "" " invisibly")}}>
       <div class="ui top attached fluid tabular menu">
-            <a
-              class="tab item"
-              data-tab="toggle"
-              onClick={{action "toggleBottompanel"}}>
-              <i class="icon browser"></i>
-            </a>
           {{#each _editedLayersTabs key="name" as |tabModel index|}}
             <a
               class={{concat "bottompanel tab item" (if (eq _editedLayersActiveTabIndex index) " active" "")}}

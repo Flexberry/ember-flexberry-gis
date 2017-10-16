@@ -374,105 +374,43 @@
 /***************************************************
                     BottomPanel
 ****************************************************/
-
 .bottompanel-wrapper {
   position: absolute;
-  width: @sidebarWrapperWidth;
-  height: @sidebarWrapperHeight;
-  bottom: @sidebarWrapperRight;
-  transition: @sidebarWrapperTransition;
+  width: 100%;
+  height: ~"calc(100% - 60px)";
+  bottom: 0;
+  transition: -webkit-transform .5s ease, bottom .5s ease;
 
   &.hidden {
     visibility: hidden;
   }
 
-  &.visible {
-    bottom: 0;
-    .ui.bottom.bottompanel {
-      bottom: 10px !important;
-    }
-    .ui.tabular.menu.flexberry-tab-bar {
-      bottom: 410px;
-      visibility: hidden;
-    }
-  }
-
   .ui.bottom.bottompanel {
-    bottom: -10px !important;
-  }
-
-  .ui.bottom.bottompanel,
-  .ui.bottom.bottompanel.visible {
+    bottom: 10px !important;
     position: absolute;
     z-index: 900;
-    visibility: visible;
     transform: none;
     transition: none;
-    background-color: @visibleRightSidebarBackgroundColor;
+    background-color: white;
     margin: 0px 0px 0px 10% !important;
-    max-height: ~"calc(100% - 80px)";
-    min-height: 100px;
-    box-shadow: @darkBoxShadow !important;;
-    height: auto !important;
+    box-shadow: 0 0 4px #3C4F76 !important;;
+    height: 350px !important;
     width: 700px !important;
     .ui.tab {
       padding: 10px;
-      color: @sidebarWrapperTabColor;
+      color: #3C4F76;
+    }
+
+    &.invisibly {
+      overflow-y: hidden;
+      height: 40px !important;
+      .tab.segment {
+        visibility: hidden;
+      }
     }
   }
   .ui.button.flexberry-button {
     min-width: 30px;
-  }
-
-  .ui.tabular.menu.flexberry-tab-bar {
-    position: absolute;
-    float: left;
-    bottom: 400px;
-    z-index: 899;
-    overflow: visible;
-    display: block;
-    border: 0px;
-    box-shadow: -1px 0px 4px 0px @darkbluecolor !important;
-    background-color: @whitecolor;
-    border-radius: 8px;
-    margin: 0px 0px 0px 10% !important;
-    margin-bottom: 0;
-    &>* {
-      width: 50px;
-      height: 50px;
-      display: block;
-    }
-    .tab.item {
-      color: @darkbluecolor;
-      border: 0px;
-      border-radius: 0px;
-      box-shadow: 0px 0px 1px @darkbluecolor !important;;
-      margin: 0;
-      padding: 10px 15px;
-      &.active.item {
-        border-radius: 0px !important;
-        background: @lightbluecolor;
-        margin: 0;
-      }
-      .flexberry-tab-bar-tab-icon {
-        padding: 5px 5px 0px 0px;
-        &.bookmark {
-          padding: 5px 2px 0 2px;
-        }
-      }
-    }
-    .tab.item:first-child {
-      border-top-left-radius: 5px;
-      &.active.item {
-        border-top-left-radius: 5px !important;
-      }
-    }
-    .tab.item:last-child {
-      border-bottom-left-radius: 5px;
-      &.active.item {
-        border-bottom-left-radius: 5px !important;
-      }
-    }
   }
 
   .tab.segment {

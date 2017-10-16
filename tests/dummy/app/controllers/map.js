@@ -249,7 +249,11 @@ export default EditMapController.extend(
       },
 
       activeTab(index) {
-        this.set('_editedLayersActiveTabIndex', index);
+        if (index === this.get('_editedLayersActiveTabIndex')) {
+          this.send('toggleBottompanel');
+        } else {
+          this.set('_editedLayersActiveTabIndex', index);
+        }
       },
 
       closeTab(index) {
