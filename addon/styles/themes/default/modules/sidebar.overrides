@@ -396,7 +396,7 @@
     box-shadow: 0 0 4px #3C4F76 !important;
     border-radius: 5px 5px 5px 5px !important;
     max-height: ~"calc(100% - 80px)";
-    height: 350px !important;
+    height: 410px !important;
     width: 700px !important;
     .ui.tab {
       padding: 10px;
