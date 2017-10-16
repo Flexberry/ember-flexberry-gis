@@ -345,8 +345,8 @@
           width: 100% !important;
 
           .item {
-            // Now there is only seven items inside tabular menu (so 100% / 7 = 14.28...%).
-            width: 14.25%;
+            // Now there are only eight items inside tabular menu (so 100% / 8 = 12.5%).
+            width: 12.5%;
             min-height: 40px;
             display: flex;
             justify-content: center;

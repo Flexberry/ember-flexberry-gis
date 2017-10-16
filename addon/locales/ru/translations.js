@@ -107,7 +107,19 @@ export default {
 
     'map-commands': MapCommandsComponents,
 
-    'flexberry-mapinfo': FlexberryMapInfoComponent
+    'flexberry-mapinfo': FlexberryMapInfoComponent,
+
+    'flexberry-wfs-filter': {
+      'caption': 'Фильтры WFS-слоя',
+      'settings-not-set': 'Настройки не заданы',
+      'buttons': {
+        'in': 'В',
+        'not-in': 'НЕ В',
+        'and': 'И',
+        'or': 'ИЛИ',
+        'not': 'НЕ'
+      },
+    }
   },
 
   'map-tools': {

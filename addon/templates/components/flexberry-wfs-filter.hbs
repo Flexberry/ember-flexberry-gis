@@ -8,7 +8,7 @@
         class=class
         }}
       {{else}}
-  Настройки не заданы
+   {{t "components.flexberry-wfs-filter.settings-not-set"}}
 {{/each}}
   </div>
   <div class = "eight wide column">
@@ -16,88 +16,60 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tincidunt s
   </div>
   <div class = "sixteen wide column">
     {{flexberry-button
-      class=class
-      iconClass=class
       caption="="
       readonly=readonly
     }}
     {{flexberry-button
-      class=class
-      iconClass=class
       caption="<"
       readonly=readonly
     }}
     {{flexberry-button
-      class=class
-      iconClass=class
       caption=">"
       readonly=readonly
     }}
     {{flexberry-button
-      class=class
-      iconClass=class
       caption="LIKE"
       readonly=readonly
     }}
     {{flexberry-button
-      class=class
-      iconClass=class
       caption="%"
       readonly=readonly
     }}
     {{flexberry-button
-      class=class
-      iconClass=class
-      caption="В"
+      caption=(t "components.flexberry-wfs-filter.buttons.in")
       readonly=readonly
     }}
     {{flexberry-button
-      class=class
-      iconClass=class
-      caption="НЕ В"
+      caption=(t "components.flexberry-wfs-filter.buttons.not-in")
       readonly=readonly
     }}
     <br>
     {{flexberry-button
-      class=class
-      iconClass=class
       caption="<="
       readonly=readonly
     }}
     {{flexberry-button
-      class=class
-      iconClass=class
       caption=">="
       readonly=readonly
     }}
     {{flexberry-button
-      class=class
-      iconClass=class
       caption="!="
       readonly=readonly
     }}
     {{flexberry-button
-      class=class
-      iconClass=class
       caption="ILIKE"
       readonly=readonly
     }}
     {{flexberry-button
-      class=class
-      iconClass=class
-      caption="И"
+      caption=(t "components.flexberry-wfs-filter.buttons.and")
       readonly=readonly
     }}
     {{flexberry-button
-      class=class
-      iconClass=cчlass
-      caption="ИЛИ"
+      caption=(t "components.flexberry-wfs-filter.buttons.or")
       readonly=readonly
     }}
     {{flexberry-button
-      class=class
-      iconClass=class
-      caption="НЕ"
+      caption=(t "components.flexberry-wfs-filter.buttons.not")
       readonly=readonly
     }}
   </div>

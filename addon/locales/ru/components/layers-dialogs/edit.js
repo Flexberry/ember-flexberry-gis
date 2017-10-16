@@ -85,6 +85,9 @@ export default {
     },
     'legend-settings-tab': {
       'caption': 'Настройки легенды'
+    },
+    'wfs-filter-settings': {
+      'caption': 'Настройки фильтра'
     }
   }
 };
