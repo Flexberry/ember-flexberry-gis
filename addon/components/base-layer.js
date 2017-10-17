@@ -141,7 +141,9 @@ export default Ember.Component.extend(
         leafletLayer
       }) => {
         this.set('_leafletObject', leafletLayer);
-        this.get('layerModel').set('_leafletObject', leafletLayer);
+        if (Ember.isPresent(this.get('layerModel'))) {
+          this.get('layerModel').set('_leafletObject', leafletLayer);
+        }
 
         return leafletLayer;
       }).catch((errorMessage) => {
@@ -160,7 +162,9 @@ export default Ember.Component.extend(
 
       this.set('_leafletObject', null);
       this.set('_leafletLayerPromise', null);
-      this.get('layerModel').set('_leafletObject', null);
+      if (Ember.isPresent(this.get('layerModel'))) {
+        this.get('layerModel').set('_leafletObject', null);
+      }
     },
 
     /**
