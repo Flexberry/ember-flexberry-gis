@@ -1762,6 +1762,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       // Place sheet of papaer in the preview dialog again.
       $sheetOfPaper.appendTo($sheetOfPaperParent[0]);
 
+      let $body = $sheetOfPaper.closest('body');
+      $body.css('height', '');
+      $body.css('width', '');
+
       if (pageNumber === '2') {
         resolve();
       } else {
@@ -1775,10 +1779,6 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
         // Set sheet of paper map style relative to real size of the selected paper format.
         $sheetOfPaperMap.attr('style', this.get('_mapPreviewStyle'));
-
-        let $body = $sheetOfPaper.closest('body');
-        $body.css('height', '');
-        $body.css('width', '');
 
         // Invalidate map size, then fit it's bounds, and then resolve resulting promise.
         this._invalidateSizeOfLeafletMap().then(() => {
