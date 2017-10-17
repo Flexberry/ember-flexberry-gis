@@ -2,201 +2,201 @@ export default {
   projections: {
     AuditView: {
       name: {
-        caption: 'Name'
+        __caption__: 'Name'
       },
       creator: {
-        caption: 'Creator'
+        __caption__: 'Creator'
       },
       createTime: {
-        caption: 'Create time'
+        __caption__: 'Create time'
       },
       editor: {
-        caption: 'Editor'
+        __caption__: 'Editor'
       },
       editTime: {
-        caption: 'Edit time'
+        __caption__: 'Edit time'
       }
     },
     MapLayerD: {
       name: {
-        caption: 'Name'
+        __caption__: 'Name'
       },
       description: {
-        caption: 'Description'
+        __caption__: 'Description'
       },
       keyWords: {
-        caption: 'Key words'
+        __caption__: 'Key words'
       },
       index: {
-        caption: 'Index'
+        __caption__: 'Index'
       },
       visibility: {
-        caption: 'Visibility'
+        __caption__: 'Visibility'
       },
       type: {
-        caption: 'Type'
+        __caption__: 'Type'
       },
       settings: {
-        caption: 'Settings'
+        __caption__: 'Settings'
       },
       scale: {
-        caption: 'Scale'
+        __caption__: 'Scale'
       },
       coordinateReferenceSystem: {
-        caption: 'CRS'
+        __caption__: 'CRS'
       },
       boundingBox: {
-        caption: 'Bounding box'
+        __caption__: 'Bounding box'
       },
       parent: {
-        caption: 'Parent'
+        __caption__: 'Parent'
       },
       map: {
-        caption: 'Map'
+        __caption__: 'Map'
       },
       layerLink: {
-        caption: 'Layer link',
+        __caption__: 'Layer link',
         mapObjectSetting: {
-          caption: 'Type',
+          __caption__: 'Type',
           typeName: {
-            caption: 'Object type'
+            __caption__: 'Object type'
           },
           listForm: {
-            caption: 'List form'
+            __caption__: 'List form'
           },
           editForm: {
-            caption: 'Edit form'
+            __caption__: 'Edit form'
           }
         },
         layer: {
-          caption: 'Layer',
+          __caption__: 'Layer',
           name: {
-            caption: 'Name'
+            __caption__: 'Name'
           }
         },
         allowShow: {
-          caption: 'Allow show'
+          __caption__: 'Allow show'
         },
         parameters: {
-          caption: 'Link parameters',
+          __caption__: 'Link parameters',
           objectField: {
-            caption: 'Object field'
+            __caption__: 'Object field'
           },
           layerField: {
-            caption: 'Layer field'
+            __caption__: 'Layer field'
           },
           expression: {
-            caption: 'Expression'
+            __caption__: 'Expression'
           },
           queryKey: {
-            caption: 'Query key'
+            __caption__: 'Query key'
           },
           linkField: {
-            caption: 'Link key'
+            __caption__: 'Link key'
           },
           layerLink: {
-            caption: 'Layer link'
+            __caption__: 'Layer link'
           }
         }
       }
     },
     MapLayerE: {
       name: {
-        caption: 'Name'
+        __caption__: 'Name'
       },
       description: {
-        caption: 'Description'
+        __caption__: 'Description'
       },
       keyWords: {
-        caption: 'Key words'
+        __caption__: 'Key words'
       },
       index: {
-        caption: 'Index'
+        __caption__: 'Index'
       },
       visibility: {
-        caption: 'Visibility'
+        __caption__: 'Visibility'
       },
       type: {
-        caption: 'Type'
+        __caption__: 'Type'
       },
       settings: {
-        caption: 'Settings'
+        __caption__: 'Settings'
       },
       scale: {
-        caption: 'Scale'
+        __caption__: 'Scale'
       },
       coordinateReferenceSystem: {
-        caption: 'CRS'
+        __caption__: 'CRS'
       },
       boundingBox: {
-        caption: 'Bounding box'
+        __caption__: 'Bounding box'
       },
       parent: {
-        caption: 'Parent'
+        __caption__: 'Parent'
       },
       map: {
-        caption: 'Map'
+        __caption__: 'Map'
       },
       layerLink: {
-        caption: 'Layer link',
+        __caption__: 'Layer link',
         mapObjectSetting: {
-          caption: 'Type',
+          __caption__: 'Type',
           typeName: {
-            caption: 'Object type'
+            __caption__: 'Object type'
           },
           listForm: {
-            caption: 'List form'
+            __caption__: 'List form'
           },
           editForm: {
-            caption: 'Edit form'
+            __caption__: 'Edit form'
           }
         },
         layer: {
-          caption: 'Layer',
+          __caption__: 'Layer',
           name: {
-            caption: 'Name'
+            __caption__: 'Name'
           }
         },
         allowShow: {
-          caption: 'Allow show'
+          __caption__: 'Allow show'
         },
         parameters: {
-          caption: 'Link parameters',
+          __caption__: 'Link parameters',
           objectField: {
-          caption: 'Object field'
+          __caption__: 'Object field'
         },
           layerField: {
-          caption: 'Layer field'
+          __caption__: 'Layer field'
         },
           expression: {
-          caption: 'Expression'
+          __caption__: 'Expression'
         },
           queryKey: {
-          caption: 'Query key'
+          __caption__: 'Query key'
         },
           linkField: {
-          caption: 'Link key'
+          __caption__: 'Link key'
         },
           layerLink: {
-            caption: 'Layer link'
+            __caption__: 'Layer link'
           }
         }
       }
     },
     MapLayerL: {
       name: {
-        caption: 'Name'
+        __caption__: 'Name'
       },
       description: {
-        caption: 'Description'
+        __caption__: 'Description'
       },
       type: {
-        caption: 'Type'
+        __caption__: 'Type'
       },
       parent: {
-        caption: 'Parent',
+        __caption__: 'Parent',
         name: {
-          caption: 'Name'
+          __caption__: 'Name'
         }
       }
     }

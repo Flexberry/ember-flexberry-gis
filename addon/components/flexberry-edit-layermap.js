@@ -321,6 +321,15 @@ export default Ember.Component.extend(
     _tabularMenuActiveTab: 'main',
 
     /**
+      Leaflet layer related to layer model.
+
+      @property _leafletObject
+      @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+      @private
+    */
+    _leafletObject: null,
+
+    /**
       Leaflet map.
 
       @property leafletMap
@@ -347,6 +356,20 @@ export default Ember.Component.extend(
     */
     _showCoordinateReferenceSystemFields: Ember.computed('_coordinateReferenceSystemCode', function () {
       return this.get('_coordinateReferenceSystemCode') === proj4CrsCode;
+    }),
+
+    /**
+      Flag: indicates whether scale settings are available for the selected layer type.
+
+      @property _scaleSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _scaleSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+
+      return Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
     }),
 
     /**
@@ -595,6 +618,8 @@ export default Ember.Component.extend(
       */
       scaleInputKeyDown(e) {
         let key = e.which;
+
+        // Allow only numbers, backspace, arrows, etc.
         return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40) ||
           (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
       }

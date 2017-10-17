@@ -5,7 +5,9 @@
 import Ember from 'ember';
 import FlexberryDdauCheckboxActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-checkbox-actions-handler';
 import FlexberryDdauSliderActionsHandlerMixin from 'ember-flexberry/mixins/flexberry-ddau-slider-actions-handler';
-import { getRecord } from 'ember-flexberry/utils/extended-get';
+import {
+  getRecord
+} from 'ember-flexberry/utils/extended-get';
 
 /**
   Mixin containing handlers for
@@ -216,21 +218,19 @@ export default Ember.Mixin.create({
       if (leafletMap) {
         let bounds = getRecord(this, boundsPropertyPath);
 
-        let layerBounds = L.latLngBounds(bounds);
-
         let earthBounds = L.latLngBounds([
           [-90, -180],
           [90, 180]
         ]);
 
         // Check if bounds are valid and are not 'full extent' (earth) bounds.
-        if (!layerBounds.isValid() || layerBounds.equals(earthBounds)) {
+        if (!bounds.isValid() || bounds.equals(earthBounds)) {
           // Set it to map's bounds.
-          layerBounds = leafletMap.maxBounds;
+          bounds = leafletMap.maxBounds;
         }
 
         // Fit map to bounds.
-        leafletMap.fitBounds(layerBounds && layerBounds.isValid() ? layerBounds : earthBounds);
+        leafletMap.fitBounds(bounds && bounds.isValid() ? bounds : earthBounds);
       }
     },
 
@@ -450,6 +450,9 @@ export default Ember.Mixin.create({
 
     Ember.set(layer, 'type', Ember.get(layerProperties, 'type'));
     Ember.set(layer, 'name', Ember.get(layerProperties, 'name'));
+    Ember.set(layer, 'description', Ember.get(layerProperties, 'description'));
+    Ember.set(layer, 'keyWords', Ember.get(layerProperties, 'keyWords'));
+    Ember.set(layer, 'scale', Ember.get(layerProperties, 'scale'));
     Ember.set(layer, 'coordinateReferenceSystem', Ember.get(layerProperties, 'coordinateReferenceSystem'));
     Ember.set(layer, 'settings', Ember.get(layerProperties, 'settings'));
     return layer;

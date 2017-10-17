@@ -32,7 +32,6 @@ let _mapSettings = {
 /**
   Route for GIS search form.
   Loads data according to filters and paging settings
-
   @class GisSearchFormRoute
   @extends <a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Route</a>
 */
@@ -46,7 +45,6 @@ export default Ember.Route.extend({
   /**
     A hook you can use to setup the controller for the current route.
     [More info](http://emberjs.com/api/classes/Ember.Route.html#method_setupController).
-
     @method setupController
     @param {<a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Controller</a>} controller Related controller.
     @param {Object} model Related model.
@@ -59,7 +57,7 @@ export default Ember.Route.extend({
 
   actions: {
     /**
-      Loads data according to search query
+      Loads data according to search query.
 
       @method actions.doSearch
      */
@@ -120,14 +118,30 @@ export default Ember.Route.extend({
     // If there are conditions - add them to the query.
     let condition;
     let filterConditions = Ember.A();
-    if (searchConditions && searchConditions.keyWords) {
-      let keyWordsConditions = searchConditions.keyWords.split(',').map((item) => {
+
+    let getOrSeparatedCondition = (searchObject, key) => {
+      let conditions = searchObject.split(',').map((item) => {
         let str = item.trim();
-        return new Query.StringPredicate('keyWords').contains(str);
+        return new Query.StringPredicate(key).contains(str);
       });
-      if (keyWordsConditions.length) {
-        let keyWordsCondition = keyWordsConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.Or, ...keyWordsConditions) : keyWordsConditions[0];
+      if (Ember.isArray(conditions)) {
+        return conditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.Or, ...conditions) : conditions[0];
+      }
+
+      return null;
+    };
+
+    if (searchConditions && searchConditions.keyWords) {
+      let keyWordsCondition = getOrSeparatedCondition(searchConditions.keyWords, 'keyWords');
+      if (keyWordsCondition) {
         filterConditions.addObject(keyWordsCondition);
+      }
+    }
+
+    if (searchConditions && searchConditions.anyText) {
+      let anyTextConditions = getOrSeparatedCondition(searchConditions.anyText, 'anyText');
+      if (anyTextConditions) {
+        filterConditions.addObject(anyTextConditions);
       }
     }
 
