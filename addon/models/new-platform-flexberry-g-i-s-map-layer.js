@@ -20,6 +20,15 @@ import LeafletCrsMixin from '../mixins/leaflet-crs';
   @uses LeafletCrsMixin
 */
 let Model = Projection.Model.extend(Offline.ModelMixin, MapLayerMixin, LayerModelMixin, LeafletCrsMixin, {
+  /**
+    Leaflet layer related to layer model.
+
+    @property _leafletObject
+    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+    @private
+  */
+  _leafletObject: null,
+
   _anyTextChanged: Ember.on('init', Ember.observer('name', 'description', 'keyWords', function() {
     Ember.run.once(this, '_anyTextCompute');
   })),

@@ -32,7 +32,6 @@ let _mapSettings = {
 /**
   Route for GIS search form.
   Loads data according to filters and paging settings
-
   @class GisSearchFormRoute
   @extends <a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Route</a>
 */
@@ -46,7 +45,6 @@ export default Ember.Route.extend({
   /**
     A hook you can use to setup the controller for the current route.
     [More info](http://emberjs.com/api/classes/Ember.Route.html#method_setupController).
-
     @method setupController
     @param {<a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Controller</a>} controller Related controller.
     @param {Object} model Related model.
@@ -59,7 +57,7 @@ export default Ember.Route.extend({
 
   actions: {
     /**
-      Loads data according to search query
+      Loads data according to search query.
 
       @method actions.doSearch
      */
@@ -118,6 +116,7 @@ export default Ember.Route.extend({
       .selectByProjection(projectionName);
 
     // If there are conditions - add them to the query.
+    let condition;
     let filterConditions = Ember.A();
 
     let getOrSeparatedCondition = (searchObject, key) => {
@@ -146,8 +145,23 @@ export default Ember.Route.extend({
       }
     }
 
-    // TODO add all conditions handling.
-    let condition;
+    if (searchConditions && searchConditions.scaleFilters && searchConditions.scaleFilters.length) {
+      let scaleConditions = searchConditions.scaleFilters.map((item) => {
+        let currentCondition = Ember.$('<textarea/>').html(item.condition).text();
+        if (currentCondition === '=') {
+          currentCondition = '==';
+        }
+
+        let scale = parseInt(item.scale) || 0;
+        return new Query.SimplePredicate('scale', currentCondition, scale);
+      });
+
+      if (scaleConditions.length) {
+        let scaleCondition = scaleConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.And, ...scaleConditions) : scaleConditions[0];
+        filterConditions.addObject(scaleCondition);
+      }
+    }
+
     if (filterConditions.length) {
       condition = filterConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.And, ...filterConditions) : filterConditions[0];
     }

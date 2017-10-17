@@ -65,6 +65,15 @@ export default Ember.Component.extend(
     nameTextboxCaption: t('components.layers-dialogs.edit.name-textbox.caption'),
 
     /**
+      Dialog's 'scale' textbox caption.
+
+      @property scaleTextboxCaption
+      @type String
+      @default t('components.layers-dialogs.edit.name-textbox.caption')
+    */
+    scaleTextboxCaption: t('components.layers-dialogs.edit.scale-textbox.caption'),
+
+    /**
       Dialog's 'description' textbox caption.
 
       @property descriptionTextboxCaption
@@ -312,6 +321,15 @@ export default Ember.Component.extend(
     _tabularMenuActiveTab: 'main',
 
     /**
+      Leaflet layer related to layer model.
+
+      @property _leafletObject
+      @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+      @private
+    */
+    _leafletObject: null,
+
+    /**
       Leaflet map.
 
       @property leafletMap
@@ -319,6 +337,15 @@ export default Ember.Component.extend(
       @default null
     */
     leafletMap: null,
+
+    /**
+      Array of posible scale values.
+
+      @property scales
+      @type Array
+      @default [500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]
+    */
+    scales: Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
 
     /**
       Flag: indicates whether coordinate reference system (CRS) edit fields must be shown.
@@ -329,6 +356,20 @@ export default Ember.Component.extend(
     */
     _showCoordinateReferenceSystemFields: Ember.computed('_coordinateReferenceSystemCode', function () {
       return this.get('_coordinateReferenceSystemCode') === proj4CrsCode;
+    }),
+
+    /**
+      Flag: indicates whether scale settings are available for the selected layer type.
+
+      @property _scaleSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _scaleSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+
+      return Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
     }),
 
     /**
@@ -568,6 +609,19 @@ export default Ember.Component.extend(
         if (e.which !== 45 && e.which !== 44 && e.which !== 46 && (e.which < 48 || e.which > 57)) {
           return false;
         }
+      },
+
+      /**
+        Handles scale input keyDown action.
+
+        @method actions.scaleInputKeyDown
+      */
+      scaleInputKeyDown(e) {
+        let key = e.which;
+
+        // Allow only numbers, backspace, arrows, etc.
+        return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40) ||
+          (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
       }
     },
 
@@ -624,6 +678,7 @@ export default Ember.Component.extend(
     _createInnerLayer() {
       let type = this.get('layer.type');
       let name = this.get('layer.name');
+      let scale = this.get('layer.scale');
       let description = this.get('layer.description');
       let keyWords = this.get('layer.keyWords');
 
@@ -657,6 +712,7 @@ export default Ember.Component.extend(
       this.set('_layer', {
         type: type,
         name: name,
+        scale: scale,
         description: description,
         keyWords: keyWords,
         coordinateReferenceSystem: crs,
