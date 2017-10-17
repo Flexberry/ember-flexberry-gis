@@ -1,0 +1,39 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/tmp
+
+# dependencies
+/node_modules
+/bower_components
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/blueprints/**/*.map
+
+# ide and code editor files
+/.idea
+.tern-port
+.dir-locals.el
+/blueprints/.vscode
+/tsconfig.json
+/blueprints/.editorconfig
+/.vscode
+
+.vscodeignore
+jsconfig.json
+typings/ember/ember.d.ts
+/blueprints/.vs
+/blueprints/bin
+/blueprints/obj
+**/*.sln
+**/*.njsproj
+/.vs
+/bin
+/obj
