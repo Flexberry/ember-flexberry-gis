@@ -42,23 +42,23 @@
       {{#block-slot "head-block"}}
         <div class="bottompanel-tab-head-panel">
           {{flexberry-checkbox
-            label=(if tabModel.selectAll "Clear" "Select all")
+            label=(if tabModel.selectAll (t "components.flexberry-layers-attributes-panel.clear") (t "components.flexberry-layers-attributes-panel.select-all"))
             value=tabModel.selectAll
             onChange=(action "onFeatureSelectClick" tabModel)
             class=(if (eq tabModel.properties.length 0) "disabled") }}
           <div class="buttons">
             {{flexberry-button
-              tooltip="Select feature on the map"
+              tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
               click=(action "onFindFeatureClick" tabModel)
               iconClass="marker icon"
               readonly=(eq tabModel._selectedRowsCount 0) }}
             {{flexberry-button
-              tooltip="Clear selection"
+              tooltip=(t "components.flexberry-layers-attributes-panel.clear-found")
               click=(action "onClearFoundFeatureClick")
               iconClass="trash icon"
               readonly=(eq tabModel._selectedRowsCount 0) }}
             {{flexberry-button
-              tooltip="Delete feature"
+              tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
               click=(action "onDeleteFeatureClick" tabModel)
               iconClass="remove icon"
               readonly=(eq tabModel._selectedRowsCount 0) }}
@@ -67,7 +67,7 @@
       {{/block-slot}}
 
       {{#block-slot "column-header-head-0"}}
-        <th class="narrow">Select</th>
+        <th class="narrow">{{t "components.flexberry-layers-attributes-panel.select-item"}}</th>
       {{/block-slot}}
 
       {{#block-slot "column-cell-head-0" as |row|}}

@@ -496,7 +496,7 @@
 
     &-tab-head-panel {
       .flexberry-checkbox {
-        width: 100px;
+        width: 120px;
         padding-left: 10px;
       }
 
