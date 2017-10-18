@@ -121,8 +121,6 @@ export default {
       },
     },
 
-    'flexberry-mapinfo': FlexberryMapInfoComponent,
-
     'flexberry-boundingbox': FlexberryBoundingboxComponent
   },
 
