@@ -143,8 +143,8 @@ export default Ember.Mixin.create({
     @readonly
     @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a> this layer's latLngBounds.
   */
-  bounds: Ember.computed('settingsAsObject.bounds', 'type', 'layers.@each.bounds', function () {
-    let layers = this.get('layers');
+  bounds: Ember.computed(function () {
+    let layers = this.get('layers').filterBy('visibility', true);
     let type = this.get('type');
 
     let layerBounds;
@@ -169,5 +169,5 @@ export default Ember.Mixin.create({
     }
 
     return layerBounds;
-  })
+  }).volatile()
 });
