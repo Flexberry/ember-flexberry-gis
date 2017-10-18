@@ -1,0 +1,84 @@
+<div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if folded " folded" "")}}>
+  {{!-- tab panel --}}
+  {{!-- disabled={{eq _featureTabsOffset 0}} --}}
+  <button class="bottompanel-tab-nav-button bottompanel-tab-nav-button-left"
+    {{action "onFeatureTabMove" true}}>
+    <i class="left arrow icon"></i>
+  </button>
+  <div class="bottompanel-tab-nav-panel">
+    <div class="ui top attached tabular menu bottompanel-tab-nav-panel-tabs">
+      {{#each _tabModels key="name" as |tabModel index|}}
+      <a class={{concat "bottompanel tab item"
+        (if (eq selectedTabIndex index) " active" "")}} data-tab="{{tabModel.name}}"
+        {{action "onTabSelect" index}}>
+        {{tabModel.name}}
+        <i class="icon close" {{action "closeTab" index bubbles=false}}></i>
+      </a>
+      {{/each}}
+    </div>
+  </div>
+  {{!-- disabled={{eq _offsetDelta 0}} --}}
+  <button
+    class="bottompanel-tab-nav-button bottompanel-tab-nav-button-right"
+    {{action "onFeatureTabMove" false}}>
+    <i class="right arrow icon"></i>
+  </button>
+  {{!-- tab panel --}}
+
+  {{#each _tabModels key="name" as |tabModel index|}}
+  <div data-tab="{{tabModel.name}}"
+    class={{concat "ui bottom attached tab segment bottompanel-tab-data-panel"
+    (if (eq selectedTabIndex index) " active" "")}}>
+
+    {{#flexberry-table
+      allowEdit="true"
+      perPageAvailable=false
+      model=tabModel.propertiesToShow
+      header=tabModel.header
+      recordsTotalCount=tabModel.properties.length
+      getData=(action "onFeatureGetData" tabModel)
+      additionalColumnsCount=1 }}
+
+      {{#block-slot "head-block"}}
+        <div class="bottompanel-tab-head-panel">
+          {{flexberry-checkbox
+            label=(if tabModel.selectAll "Clear" "Select all")
+            value=tabModel.selectAll
+            onChange=(action "onFeatureSelectClick" tabModel)
+            class=(if (eq tabModel.properties.length 0) "disabled") }}
+          <div class="buttons">
+            {{flexberry-button
+              tooltip="Select feature on the map"
+              click=(action "onFindFeatureClick" tabModel)
+              iconClass="marker icon"
+              readonly=(eq tabModel._selectedRowsCount 0) }}
+            {{flexberry-button
+              tooltip="Clear selection"
+              click=(action "onClearFoundFeatureClick")
+              iconClass="trash icon"
+              readonly=(eq tabModel._selectedRowsCount 0) }}
+            {{flexberry-button
+              tooltip="Delete feature"
+              click=(action "onDeleteFeatureClick" tabModel)
+              iconClass="remove icon"
+              readonly=(eq tabModel._selectedRowsCount 0) }}
+          </div>
+        </div>
+      {{/block-slot}}
+
+      {{#block-slot "column-header-head-0"}}
+        <th class="narrow">Select</th>
+      {{/block-slot}}
+
+      {{#block-slot "column-cell-head-0" as |row|}}
+        <td class="narrow">
+        {{flexberry-checkbox
+          value=(get tabModel._selectedRows (ember-guid row))
+          onChange=(action "onFeatureRowSelect" tabModel (ember-guid row)) }}
+        </td>
+      {{/block-slot}}
+
+    {{/flexberry-table}}
+  </div>
+  {{/each}}
+</div>

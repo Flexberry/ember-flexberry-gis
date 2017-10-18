@@ -398,12 +398,13 @@
     max-height: ~"calc(100% - 80px)";
     height: 410px !important;
     width: 700px !important;
+
     .ui.tab {
       padding: 10px;
       color: #3C4F76;
     }
 
-    &.invisibly {
+    &.folded {
       bottom: 0 !important;
       overflow-y: hidden;
       height: 40px !important;
@@ -412,6 +413,7 @@
       }
     }
   }
+
   .ui.button.flexberry-button {
     min-width: 30px;
   }
@@ -436,6 +438,71 @@
     .icon {
       font-size: 0.7em;
       padding-left: 10px;
+    }
+  }
+
+  .bottompanel {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    &-tab-nav-button {
+      position: absolute;
+      width: 25px;
+      height: 40px;
+      line-height: 40px;
+      top: 0;
+      color: #428bca;
+      cursor: pointer;
+      text-align: center;
+      border: 1px solid #ddd;
+      border-radius: 0;
+      padding: 0;
+      background-color: #fff;
+      z-index: 10;
+
+      &-left {
+        left: 0;
+        border-top-left-radius: 5px;
+      }
+
+      &-right {
+        right: 0;
+        border-top-right-radius: 5px;
+      }
+    }
+
+    &-tab-nav-panel {
+      width: 100%;
+      padding-left: 25px;
+
+      &-tabs {
+        position: relative;
+        border-bottom: 0 !important;
+
+        a {
+          font-weight: 400 !important;
+          border-bottom: 0 !important;
+        }
+
+        .icon.close {
+          font-size: 0.7em; padding-left: 10px;
+        }
+      }
+    }
+
+    &-tab-data-panel {
+      border-top: 1px solid #D4D4D5 !important;
+    }
+
+    &-tab-head-panel {
+      .flexberry-checkbox {
+        width: 100px;
+        padding-left: 10px;
+      }
+
+      .buttons {
+        display: inline-block;
+      }
     }
   }
 }

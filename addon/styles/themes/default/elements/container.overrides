@@ -859,7 +859,6 @@
 /*********************************************
             Flexberry table
 *********************************************/
-
 .flexberry-table-fixed {
   table-layout: fixed;
   font-size: 12px !important;
@@ -867,17 +866,10 @@
   th.narrow, td.narrow {
     width: 80px;
   }
-}
 
-.flexberry-table-cell-input {
-  display: inline-block;
-  max-width: 200px;
-  padding: 0.5em 1em;
-}
-
-.feature-tab-head-panel {
-  .checkbox {
-    width: 100px;
-    padding-left: 10px;
+  td input[type="text"] {
+    padding: 0.3em 1em !important;
+    display: inline-block;
+    max-width: 200px;
   }
 }

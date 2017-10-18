@@ -32,7 +32,7 @@
             {{#if allowEdit}}
               <td onclick={{action (mut _selectedCellName) (concat (ember-guid row) "_" key)}}>
                 {{#if (eq _selectedCellName (concat (ember-guid row) "_" key))}}
-                  {{input class="flexberry-table-cell-input" value=(mut (get row key)) key-up="onInputKeyUp" key-down="onInputKeyDown"}}
+                  {{input value=(mut (get row key)) key-up="onInputKeyUp" key-down="onInputKeyDown"}}
                 {{else}}
                   {{get row key}}
                 {{/if}}
