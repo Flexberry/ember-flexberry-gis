@@ -1,15 +1,21 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 
+/**
+  The component for editing layers attributes.
+
+  @class FlexberryLayersAttributesPanelComponent
+  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+ */
 export default Ember.Component.extend({
-  layout,
 
-  selectedTabIndex: 0,
-
-  folded: false,
-
-  items: Ember.A(),
-
+  /**
+    Computed property that builds tab models collection from items.
+  */
   _tabModels: Ember.computed('items.[]', function () {
     let editedLayers = this.get('items');
     if (Ember.isPresent(editedLayers)) {
@@ -72,14 +78,42 @@ export default Ember.Component.extend({
     }
   }),
 
+  /**
+    Offset of tab panel in pixels.
+  */
   _featureTabsOffset: 0,
 
   // _offsetDelta: 0,
 
   /**
+    Reference to component's template.
+  */
+  layout,
+
+  /**
+    Selected tab index.
+  */
+  selectedTabIndex: 0,
+
+  /**
+    Flag indicates that the panel is folded or not.
+  */
+  folded: false,
+
+  /**
+    Collection of tab items.
+
+    @property items
+    @type Object[]
+    @default null
+  */
+  items: null,
+
+  // from feature-result-list
+  /**
     Set selected feature and add its layer to serviceLayer on map.
     @method _selectFeature
-    @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
+    @param {Object} feature Describes feature object or array of it.
     @private
   */
   _selectFeature(feature) {
@@ -96,21 +130,27 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    toggle() {
-      this.set('folded', !this.get('folded'));
-    },
+    /**
+      Handles click on a tab.
 
+      @param Number index
+    */
     onTabSelect(index) {
       if (index === this.get('selectedTabIndex')) {
-        this.send('toggle');
+        this.set('folded', !this.get('folded'));
       } else {
         this.set('selectedTabIndex', index);
         if (this.get('folded')) {
-          this.send('toggle');
+          this.set('folded', true);
         }
       }
     },
 
+    /**
+      Handles click on tab close icon.
+
+      @param Number index
+    */
     closeTab(index) {
       let editedLayers = this.get('items');
       let selectedTabIndex = this.get('selectedTabIndex');
@@ -120,14 +160,26 @@ export default Ember.Component.extend({
       }
     },
 
-    onFeatureRowSelect(tabModel, rowId, options) {
+    /**
+      Handles attributes row selection.
+
+      @param Object tabModel
+      @param String rowId
+      @param Object options
+    */
+    onRowSelect(tabModel, rowId, options) {
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       Ember.set(selectedRows, rowId, options.checked);
       Ember.set(tabModel, '_selectedRows', selectedRows);
       tabModel.notifyPropertyChange('_selectedRows');
     },
 
-    onFindFeatureClick(tabModel) {
+    /**
+      Handles 'Find an item on the map' button click.
+
+      @param Object tabModel
+    */
+    onFindItemClick(tabModel) {
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
         .map((key) => {
@@ -136,12 +188,18 @@ export default Ember.Component.extend({
       this.send('zoomTo', selectedFeatures);
     },
 
-    onClearFoundFeatureClick() {
+    /**
+      Handles 'Clear found items' button click.
+    */
+    onClearFoundItemClick() {
       let serviceLayer = this.get('serviceLayer');
       serviceLayer.clearLayers();
     },
 
-    onFeatureSelectClick(tabModel) {
+    /**
+      Handles 'Select all' checkbox click.
+    */
+    onSelectAllClick(tabModel) {
       let selectAll = Ember.get(tabModel, 'selectAll');
       if (!selectAll) {
         Ember.set(tabModel, '_selectedRows', {});
@@ -155,12 +213,20 @@ export default Ember.Component.extend({
       tabModel.notifyPropertyChange('_selectedRows');
     },
 
-    onFeatureGetData(tabModel, options) {
+    /**
+      Handles 'getData' action from flexberry-table.
+    */
+    onTabGetData(tabModel, options) {
       Ember.set(tabModel, '_skip', options.skip);
       Ember.set(tabModel, '_top', options.top);
     },
 
-    onFeatureTabMove(left) {
+    /**
+      Handles tab panel moving.
+
+      @param Boolean left
+    */
+    onTabMove(left) {
       // move tabs bar on the left or on the right
       let offset = this.get('_featureTabsOffset');
       if (left) {
@@ -186,7 +252,12 @@ export default Ember.Component.extend({
       Ember.$('.bottompanel-tab-nav-panel-tabs').css('left', `-${offset}px`);
     },
 
-    onDeleteFeatureClick(tabModel) {
+    /**
+      Handles 'Delete selected items' button click.
+
+      @param Object tabModel
+    */
+    onDeleteItemClick(tabModel) {
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
       selectedFeatureKeys.forEach((key) => {

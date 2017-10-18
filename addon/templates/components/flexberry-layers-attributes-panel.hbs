@@ -2,7 +2,7 @@
   {{!-- tab panel --}}
   {{!-- disabled={{eq _featureTabsOffset 0}} --}}
   <button class="bottompanel-tab-nav-button bottompanel-tab-nav-button-left"
-    {{action "onFeatureTabMove" true}}>
+    {{action "onTabMove" true}}>
     <i class="left arrow icon"></i>
   </button>
   <div class="bottompanel-tab-nav-panel">
@@ -20,7 +20,7 @@
   {{!-- disabled={{eq _offsetDelta 0}} --}}
   <button
     class="bottompanel-tab-nav-button bottompanel-tab-nav-button-right"
-    {{action "onFeatureTabMove" false}}>
+    {{action "onTabMove" false}}>
     <i class="right arrow icon"></i>
   </button>
   {{!-- tab panel --}}
@@ -36,7 +36,7 @@
       model=tabModel.propertiesToShow
       header=tabModel.header
       recordsTotalCount=tabModel.properties.length
-      getData=(action "onFeatureGetData" tabModel)
+      getData=(action "onTabGetData" tabModel)
       additionalColumnsCount=1 }}
 
       {{#block-slot "head-block"}}
@@ -44,22 +44,22 @@
           {{flexberry-checkbox
             label=(if tabModel.selectAll (t "components.flexberry-layers-attributes-panel.clear") (t "components.flexberry-layers-attributes-panel.select-all"))
             value=tabModel.selectAll
-            onChange=(action "onFeatureSelectClick" tabModel)
+            onChange=(action "onSelectAllClick" tabModel)
             class=(if (eq tabModel.properties.length 0) "disabled") }}
           <div class="buttons">
             {{flexberry-button
               tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
-              click=(action "onFindFeatureClick" tabModel)
+              click=(action "onFindItemClick" tabModel)
               iconClass="marker icon"
               readonly=(eq tabModel._selectedRowsCount 0) }}
             {{flexberry-button
               tooltip=(t "components.flexberry-layers-attributes-panel.clear-found")
-              click=(action "onClearFoundFeatureClick")
+              click=(action "onClearFoundItemClick")
               iconClass="trash icon"
               readonly=(eq tabModel._selectedRowsCount 0) }}
             {{flexberry-button
               tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
-              click=(action "onDeleteFeatureClick" tabModel)
+              click=(action "onDeleteItemClick" tabModel)
               iconClass="remove icon"
               readonly=(eq tabModel._selectedRowsCount 0) }}
           </div>
@@ -74,7 +74,7 @@
         <td class="narrow">
         {{flexberry-checkbox
           value=(get tabModel._selectedRows (ember-guid row))
-          onChange=(action "onFeatureRowSelect" tabModel (ember-guid row)) }}
+          onChange=(action "onRowSelect" tabModel (ember-guid row)) }}
         </td>
       {{/block-slot}}
 
