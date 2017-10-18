@@ -49,7 +49,7 @@ export default Ember.Controller.extend({
       @type Number
       @default null
     */
-    minLng: null,
+    minLng: -180,
 
     /**
       Min latitude value. Used for search.
@@ -57,7 +57,7 @@ export default Ember.Controller.extend({
       @type Number
       @default null
     */
-    minLat: null,
+    minLat: -90,
 
     /**
       Max longitude value. Used for search.
@@ -65,7 +65,7 @@ export default Ember.Controller.extend({
       @type Number
       @default null
     */
-    maxLng: null,
+    maxLng: 180,
 
     /**
       Max latitude value. Used for search.
@@ -73,15 +73,24 @@ export default Ember.Controller.extend({
       @type Number
       @default null
     */
-    maxLat: null
+    maxLat: 90
   },
+
+  /**
+    Map model to be displayed in `flexberry-boundingbox` component.
+
+    @property
+    @default null
+
+  */
+  boundingBoxComponentMapModel: null,
 
   /**
     Array of posible scale filter conditions.
 
     @property scaleFilterConditions
-    @type Array
-    @default ['>', '>=', '<', '<=', '=', '<>']
+    @type String[]
+    @default `['>', '>=', '<', '<=', '=', '<>']`
   */
   scaleFilterConditions: ['>', '>=', '<', '<=', '=', '<>'],
 
@@ -89,7 +98,7 @@ export default Ember.Controller.extend({
     Array of posible scale values.
 
     @property scales
-    @type Array
+    @type Number[]
     @default Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000])
   */
   scales: Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),

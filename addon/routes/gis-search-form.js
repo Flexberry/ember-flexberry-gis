@@ -36,7 +36,6 @@ let _mapSettings = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Route</a>
 */
 export default Ember.Route.extend({
-
   model() {
     // model for dropdown list on the 'open metadata in a map' panel
     return this._getQuery(_mapSettings.modelName, _mapSettings.projectionName, null, null, null);
@@ -53,6 +52,29 @@ export default Ember.Route.extend({
     this._super(controller, model);
 
     controller.set('tabSettings', [_metadataSettings, _mapSettings]);
+
+    // Create map model to be displayed in `flexberry-boundingbox` component.
+    let boundingBoxComponentMapModel = this.store.createRecord('new-platform-flexberry-g-i-s-map', {
+      name: 'testmap',
+      lat: 0,
+      lng: 0,
+      zoom: 0,
+      public: true,
+      coordinateReferenceSystem: '{"code":"EPSG:4326"}'
+    });
+
+    // Create layer model & add to map model.
+    let openStreetMapLayer = this.store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
+      name: 'OSM',
+      type: 'tile',
+      visibility: true,
+      index: 0,
+      coordinateReferenceSystem: '{"code":"EPSG:3857","definition":null}',
+      settings: '{"opacity": 1, "url":"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}'
+    });
+    boundingBoxComponentMapModel.get('mapLayer').pushObject(openStreetMapLayer);
+
+    controller.set('boundingBoxComponentMapModel', boundingBoxComponentMapModel);
   },
 
   actions: {
@@ -160,6 +182,20 @@ export default Ember.Route.extend({
         let scaleCondition = scaleConditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.And, ...scaleConditions) : scaleConditions[0];
         filterConditions.addObject(scaleCondition);
       }
+    }
+
+    if (searchConditions && !(
+      Ember.isNone(searchConditions.minLng) ||
+      Ember.isNone(searchConditions.minLat) ||
+      Ember.isNone(searchConditions.maxLng) ||
+      Ember.isNone(searchConditions.maxLat))) {
+      let boundingBoxIntersectionCondition = new Query.GeographyPredicate('boundingBox').
+        intersects(`SRID=4326;POLYGON((${searchConditions.minLng} ${searchConditions.minLat},${searchConditions.minLng} ${searchConditions.maxLat},` +
+          `${searchConditions.maxLng} ${searchConditions.maxLat},${searchConditions.maxLng} ${searchConditions.minLat},${searchConditions.minLng} ` +
+          `${searchConditions.minLat}))`);
+      let boundingBoxIsNullCondition = new Query.SimplePredicate('boundingBox', Query.FilterOperator.Eq, null);
+
+      filterConditions.addObject(new Query.ComplexPredicate(Query.Condition.Or, boundingBoxIsNullCondition, boundingBoxIntersectionCondition));
     }
 
     if (filterConditions.length) {

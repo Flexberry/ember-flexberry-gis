@@ -3,6 +3,24 @@ import layout from '../templates/components/flexberry-boundingbox';
 import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-handler';
 
 /**
+  Component's CSS-classes names.
+  JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
+
+  @property {Object} flexberryClassNames
+  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-boundingbox').
+  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-boundingbox').
+  @readonly
+  @static
+
+  @for FlexberryBoundingboxComponent
+*/
+const flexberryClassNamesPrefix = 'flexberry-boundingbox';
+const flexberryClassNames = {
+  prefix: flexberryClassNamesPrefix,
+  wrapper: flexberryClassNamesPrefix
+};
+
+/**
   Flexberry bounding box component.
 
   @class FlexberryBoundingboxComponent
@@ -182,6 +200,26 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
   layout,
 
   /**
+    Reference to component's CSS-classes names.
+    Must be also a component's instance property to be available from component's .hbs template.
+  */
+  flexberryClassNames,
+
+  /**
+    Component's wrapping <div> CSS-classes names.
+
+    Any other CSS-class names can be added through component's 'class' property.
+    ```handlebars
+    {{flexberry-boundingbox class="my-class"}}
+    ```
+
+    @property classNames
+    @type String[]
+    @default ['flexberry-boundingbox']
+  */
+  classNames: [flexberryClassNames.wrapper],
+
+  /**
     Minimal latitude value.
 
     @property minLat
@@ -260,13 +298,7 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
     leafletMap.on('containerResizeStart', this._leafletMapOnContainerResizeStart, this);
     leafletMap.on('containerResizeEnd', this._leafletMapOnContainerResizeEnd, this);
 
-    let areaSelect = L.areaSelect({ width: 100, height: 100 });
-    this.set('_areaSelect', areaSelect);
-
-    areaSelect.addTo(leafletMap);
-    areaSelect.on('change', this._areaSelectOnChange, this);
-
-    this._boundingBoxCoordinatesDidChange();
+    this._initizlizeAreaSelect();
   }),
 
   /**
@@ -290,14 +322,47 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
     @private
   */
   _leafletMapOnContainerResizeEnd() {
-    let leafletMap = this.get('_leafletMap');
     let areaSelect = this.get('_areaSelect');
-    if (Ember.isNone(leafletMap) || Ember.isNone(areaSelect)) {
+    if (Ember.isNone(areaSelect)) {
+      this._initizlizeAreaSelect();
+    } else {
+      let leafletMap = this.get('_leafletMap');
+      let leafletMapSize = leafletMap.getSize();
+      this._updateAreaSelect({ fitBounds: areaSelect._width > leafletMapSize.x || areaSelect._height > leafletMapSize.y });
+    }
+  },
+
+  /**
+    Initializes area select.
+
+    @method _initizlizeAreaSelect
+    @private
+  */
+  _initizlizeAreaSelect() {
+    let areaSelect = this.get('_areaSelect');
+    if (!Ember.isNone(areaSelect)) {
+      // Area select is already initialized.
       return;
     }
 
-    let mapSize = leafletMap.getSize();
-    this._updateAreaSelect({ fitBounds: areaSelect._width > mapSize.x || areaSelect._height > mapSize.y });
+    let leafletMap = this.get('_leafletMap');
+    if (Ember.isNone(leafletMap)) {
+      return;
+    }
+
+    let leafletMapSize = leafletMap.getSize();
+    if (leafletMapSize.x <= 0 || leafletMapSize.y <= 0) {
+      // Map is invisible, so area select can't be initialized properly.
+      return;
+    }
+
+    areaSelect = L.areaSelect({ width: 100, height: 100 });
+    this.set('_areaSelect', areaSelect);
+
+    areaSelect.addTo(leafletMap);
+    areaSelect.on('change', this._areaSelectOnChange, this);
+
+    this._boundingBoxCoordinatesDidChange();
   },
 
   /**

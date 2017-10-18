@@ -30,7 +30,7 @@
         {{t "forms.gis-search-form.advanced-search-conditions"}}
       </div>
       <div class="ui horizontal segments content">
-        <div class="ui segment">
+        <div class="ui segment advanced-search-what-segment">
           <div class="ui top attached label">
             {{t "forms.gis-search-form.search-conditions-what"}}
           </div>
@@ -76,34 +76,17 @@
           	{{/each}}
           </div>
         </div>
-        <div class="ui segment">
+        <div class="ui segment advanced-search-where-segment">
           <div class="ui top attached label">
             {{t "forms.gis-search-form.search-conditions-where"}}
           </div>
-          <div class="field">
-            <label>
-              {{t "forms.gis-search-form.min-long"}}
-            </label>
-            {{flexberry-textbox value=searchConditions.minLng}}
-          </div>
-          <div class="field">
-            <label>
-              {{t "forms.gis-search-form.min-lat"}}
-            </label>
-            {{flexberry-textbox value=searchConditions.minLat}}
-          </div>
-          <div class="field">
-            <label>
-              {{t "forms.gis-search-form.max-long"}}
-            </label>
-            {{flexberry-textbox value=searchConditions.maxLng}}
-          </div>
-          <div class="field">
-            <label>
-              {{t "forms.gis-search-form.max-lat"}}
-            </label>
-            {{flexberry-textbox value=searchConditions.maxLat}}
-          </div>
+          {{flexberry-boundingbox
+            mapModel=boundingBoxComponentMapModel
+            minLat=minLat
+            minLng=minLng
+            maxLat=maxLat
+            maxLng=maxLng
+          }}
         </div>
       </div>
     </div>
