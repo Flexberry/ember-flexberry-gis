@@ -1,4 +1,4 @@
-/**
+﻿/**
   @module ember-flexberry-gis
 */
 
@@ -26,7 +26,7 @@ export default Ember.Component.extend(
       Leaflet layer object init by settings from model.
 
       @property _leafletObject
-      @type L.Layer
+      @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
       @default null
       @private
      */

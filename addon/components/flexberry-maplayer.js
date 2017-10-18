@@ -312,6 +312,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     _removeDialogIsVisible: false,
 
     /**
+      Leaflet layer related to layer model.
+
+      @property _leafletObject
+      @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+      @private
+    */
+    _leafletObject: null,
+
+    /**
       Reference to component's template.
     */
     layout,

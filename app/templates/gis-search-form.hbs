@@ -40,11 +40,40 @@
             </label>
             {{flexberry-textbox value=searchConditions.keyWords}}
           </div>
-          <div class="field">
-            <label>
-              {{t "forms.gis-search-form.scale"}}
-            </label>
-            {{flexberry-textbox value=searchConditions.scaleFrom}}
+          <div class="scale-header">
+          	<label>{{t "forms.gis-search-form.scale"}}</label>
+          	<button class="ui button icon mini compact" onclick={{action "addScaleFilterCondition"}}>
+          	  <i class="plus icon"></i>
+          	</button>
+          </div>
+          <div class="scale-filters">
+          	{{#each searchConditions.scaleFilters as |filter index|}}
+          	  <div class="scale-filter">
+          		{{#ui-dropdown class="compact selection" onChange=(action "onScaleConditionChange" index)}}
+          		  <i class="dropdown icon"></i>
+          		  <div class="text">{{filter.condition}}</div>
+          		  <div class="menu">
+          			{{log "scaleFilterConditions:" scaleFilterConditions}}
+          			{{#each-in scaleFilterConditions as |key value|}}
+          				<div class="item" data-value="{{value}}">{{value}}</div>
+          			{{/each-in}}
+          		  </div>
+          		{{/ui-dropdown}}
+          		{{t "forms.gis-search-form.scale-prefix"}}
+          		{{flexberry-dropdown-input
+          		  items=scales
+          		  value=filter.scale
+          		  class="scale-value fluid"
+          		  onKeyDown=(action "scaleFilterKeyDown")
+          		  direction="downward"
+          		  inputPlaceholder=(t "forms.gis-search-form.scale-dropdown-input-placeholder")
+          		  inputTitle=(t "forms.gis-search-form.scale-dropdown-input-title")
+          		}}
+          		{{flexberry-button iconClass="remove icon" click=(action "deleteScaleFilterCondition" index)}}
+          	  </div>
+          	{{else}}
+          	  <label>{{t "forms.gis-search-form.scale-no-conditions"}}</label>
+          	{{/each}}
           </div>
         </div>
         <div class="ui segment">

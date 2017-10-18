@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Fixed
+* Fix map export/printing in yandex browser.
+
 ## [0.3.1] - 2017-10-03
 ### Added
 * Add Semantic UI/Flexberry themes support.
