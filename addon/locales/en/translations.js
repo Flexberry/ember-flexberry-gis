@@ -16,6 +16,7 @@ import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
 import FlexberryTableComponents from './components/flexberry-table';
 import FlexberryMapInfoComponent from './components/flexberry-mapinfo';
+import FlexberryBoundingboxComponent from './components/flexberry-boundingbox';
 
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
@@ -104,7 +105,6 @@ export default {
     },
 
     'map-tools': MapToolsComponents,
-
     'map-commands': MapCommandsComponents,
 
     'flexberry-mapinfo': FlexberryMapInfoComponent,
@@ -119,7 +119,11 @@ export default {
         'or': 'OR',
         'not': 'NOT'
       },
-    }
+    },
+
+    'flexberry-mapinfo': FlexberryMapInfoComponent,
+
+    'flexberry-boundingbox': FlexberryBoundingboxComponent
   },
 
   'map-tools': {

@@ -83,9 +83,13 @@
         layer=(hash
           type=type
           name=name
+          description=description
+          keyWords=keyWords
+          scale=scale
           coordinateReferenceSystem=coordinateReferenceSystem
           settings=settings
         )
+        _leafletObject=_leafletObject
         cswConnections=cswConnections
         leafletMap=leafletMap
         typeIsReadonly=true
@@ -127,6 +131,12 @@
           class=(concat flexberryClassNames.opacitySlider " " flexberryClassNames.preventExpandCollapse)
           value=opacity
           change=(action "onOpacitySliderChange")
+        }}
+      {{/if}}
+      {{#if (known-for-type 'component' (concat 'layer-treenode-contents/' type))}}
+        {{component (concat 'layer-treenode-contents/' type)
+          settingsAsObject=settingsAsObject
+          dynamicActions=dynamicActions
         }}
       {{/if}}
       {{#if (and legendCanBeDisplayed hasBeenExpanded)}}

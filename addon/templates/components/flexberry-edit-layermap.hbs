@@ -93,6 +93,21 @@
         value=_layer.keyWords
       }}
     </div>
+    {{#if _scaleSettingsAreAvailableForType}}
+      <div class="field">
+        <label>
+          {{scaleTextboxCaption}}
+        </label>
+        {{flexberry-dropdown-input
+          items=scales
+          value=_layer.scale
+          class="scale-value fluid"
+          onKeyDown=(action "scaleInputKeyDown")
+          inputPlaceholder=(t "forms.gis-search-form.scale-dropdown-input-placeholder")
+          inputTitle=(t "forms.gis-search-form.scale-dropdown-input-title")
+        }}
+      </div>
+    {{/if}}
   </div>
   {{#if _crsSettingsAreAvailableForType}}
     <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "crs") "active"}}" data-tab="crs">
