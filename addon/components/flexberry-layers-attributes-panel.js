@@ -4,14 +4,16 @@
 
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
+import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 
 /**
   The component for editing layers attributes.
 
   @class FlexberryLayersAttributesPanelComponent
+  @uses LeafletZoomToFeatureMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
-export default Ember.Component.extend({
+export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   /**
     Computed property that builds tab models collection from items.
@@ -107,24 +109,19 @@ export default Ember.Component.extend({
   */
   items: null,
 
-  // from feature-result-list
   /**
-    Set selected feature and add its layer to serviceLayer on map.
-    @method _selectFeature
-    @param {Object} feature Describes feature object or array of it.
-    @private
+    Overrides {{#crosslink "LeafletZoomToFeatureMixin/_prepareLayer:method"}} to make a copy of passed layer
+    and apply a style to the layer to make it more visible.
+
+    @param Object layer
   */
-  _selectFeature(feature) {
-    let serviceLayer = this.get('serviceLayer');
-    if (!Ember.isNone(feature)) {
-      // make a copy - to don't worry about removal
-      serviceLayer.addLayer(L.geoJson(feature.leafletLayer.toGeoJSON()).setStyle({
-        color: 'salmon',
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.3
-      }));
-    }
+  _prepareLayer(layer) {
+    return L.geoJson(layer.toGeoJSON()).setStyle({
+      color: 'salmon',
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.3
+    });
   },
 
   actions: {
@@ -265,69 +262,6 @@ export default Ember.Component.extend({
       });
       Ember.set(tabModel, '_selectedRows', selectedRows);
       tabModel.notifyPropertyChange('_selectedRows');
-    },
-
-    /**
-      Handles inner FeatureResultItem's bubbled 'selectFeature' action.
-      Invokes component's {{#crossLink "FeatureResultItem/sendingActions.selectFeature:method"}}'selectFeature'{{/crossLink}} action.
-
-      @method actions.selectFeature
-      @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
-    */
-    selectFeature(feature) {
-      let selectedFeature = this.get('_selectedFeature');
-      let serviceLayer = this.get('serviceLayer');
-
-      if (selectedFeature !== feature) {
-        if (!Ember.isNone(serviceLayer)) {
-          serviceLayer.clearLayers();
-
-          if (Ember.isArray(feature)) {
-            feature.forEach((item) => this._selectFeature(item));
-          } else {
-            this._selectFeature(feature);
-          }
-        }
-
-        this.set('_selectedFeature', feature);
-      }
-
-      // Send action despite of the fact feature changed or not. User can disable layer anytime.
-      // this.sendAction('featureSelected', feature);
-    },
-
-    /**
-      Select passed feature and zoom map to its layer bounds
-      @method actions.zoomTo
-      @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
-    */
-    zoomTo(feature) {
-      let serviceLayer = this.get('serviceLayer');
-      if (!serviceLayer) {
-        let leafletMap = this.get('leafletMap');
-        serviceLayer = L.featureGroup().addTo(leafletMap);
-        this.set('serviceLayer', serviceLayer);
-      } else {
-        serviceLayer.clearLayers();
-      }
-
-      this.send('selectFeature', feature);
-
-      let bounds;
-      if (typeof (serviceLayer.getBounds) === 'function') {
-        bounds = serviceLayer.getBounds();
-      } else {
-        let featureGroup = L.featureGroup(serviceLayer.getLayers());
-        if (featureGroup) {
-          bounds = featureGroup.getBounds();
-        }
-      }
-
-      if (!Ember.isBlank(bounds)) {
-        // 'bound.pad(1)' bounds with zoom decreased by 1 point (padding).
-        //  That allows to make map's bounds slightly larger than serviceLayer's bounds to make better UI.
-        this.get('leafletMap').fitBounds(bounds.pad(1));
-      }
     }
   }
 });
