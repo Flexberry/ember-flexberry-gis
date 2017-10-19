@@ -429,7 +429,7 @@
 
   .ui.tabular.menu .item {
     background: #e3e3e3;
-    border-radius: 0.28571429rem 0.28571429rem 0px 0px;
+    border-radius: 0.3rem 0.3rem 0px 0px;
 
     &.active {
       background: #ffffff;
@@ -481,7 +481,6 @@
 
         a {
           font-weight: 400 !important;
-          border-bottom: 0 !important;
         }
 
         .icon.close {

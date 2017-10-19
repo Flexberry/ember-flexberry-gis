@@ -130,6 +130,8 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
     */
     onInputKeyUp(val, event) {
       let code = event.keyCode || event.which;
+
+      // if Enter (keycode: 13) or Esc (keycode: 27) was pressed, remove input from the cell
       if (code === 13 || code === 27) {
         this.set('_selectedCellName', null);
       }
@@ -143,6 +145,8 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
     */
     onInputKeyDown(val, event) {
       let code = event.keyCode || event.which;
+
+      // If Tab key (with Shift or not) was pressed, move input to the next/previous cell
       if (code === 9) {
         this._moveCell(!event.shiftKey);
         event.preventDefault();

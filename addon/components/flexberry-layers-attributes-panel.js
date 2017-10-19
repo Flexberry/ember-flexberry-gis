@@ -27,15 +27,15 @@ export default Ember.Component.extend({
         let properties = Ember.A();
         let leafletObject = Ember.get(item, 'leafletObject');
 
-        leafletObject.eachLayer((l) => {
-          let props = Ember.get(l, 'feature.properties');
+        leafletObject.eachLayer((layer) => {
+          let props = Ember.get(layer, 'feature.properties');
           let propId = Ember.guidFor(props);
-          if (Ember.isNone(l.feature.leafletLayer)) {
-            Ember.set(l.feature, 'leafletLayer', l);
+          if (Ember.isNone(layer.feature.leafletLayer)) {
+            Ember.set(layer.feature, 'leafletLayer', layer);
           }
 
           // the hash containing guid of properties object and link to feature layer
-          featureLink[propId] = l;
+          featureLink[propId] = layer;
 
           // the hash containing guid of properties object and link to that object
           propertyLink[propId] = props;
@@ -82,8 +82,6 @@ export default Ember.Component.extend({
     Offset of tab panel in pixels.
   */
   _featureTabsOffset: 0,
-
-  // _offsetDelta: 0,
 
   /**
     Reference to component's template.
@@ -331,19 +329,5 @@ export default Ember.Component.extend({
         this.get('leafletMap').fitBounds(bounds.pad(1));
       }
     }
-  },
-
-  // didRender() {
-  //   this._super(...arguments);
-
-  //   let panelWidth = Ember.$('.feature-tab-nav-panel-tabs').innerWidth();
-  //   let itemsWidth = 0;
-  //   Ember.$('.feature-tab-nav-panel-tabs').children().each((index, item) => {
-  //     itemsWidth += Ember.$(item).outerWidth();
-  //   });
-
-  //   if (itemsWidth > panelWidth) {
-  //     this.set('_offsetDelta', 1);
-  //   }
-  // }
+  }
 });

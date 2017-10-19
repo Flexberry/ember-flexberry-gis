@@ -648,21 +648,21 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @method getTargetObjectByCondition.
       @param {Function} condition Callback-function, which will be called for each 'targetObject' in 'targetObject's hierarchy, until callback return true for one of them.
       @return {null|Ember.Component|Ember.Controller} Target object which satisfies a given condition or null.
-     */
+    */
     getTargetObjectByCondition(condition) {
-    if (Ember.typeOf(condition) !== 'function') {
-      return null;
-    }
+      if (Ember.typeOf(condition) !== 'function') {
+        return null;
+      }
 
-    // Component's 'targetObject' is parent component or a controller (in the end of components hierarchy).
-    // Search until 'targetObject' is none or condition is true.
-    let targetObject = this.get('targetObject');
-    while (!(Ember.isNone(targetObject) || condition(targetObject))) {
-      targetObject = targetObject.get('targetObject');
-    }
+      // Component's 'targetObject' is parent component or a controller (in the end of components hierarchy).
+      // Search until 'targetObject' is none or condition is true.
+      let targetObject = this.get('targetObject');
+      while (!(Ember.isNone(targetObject) || condition(targetObject))) {
+        targetObject = targetObject.get('targetObject');
+      }
 
-    return targetObject;
-  },
+      return targetObject;
+    },
 
     /**
       Component's action invoking when layer node's header has been clicked.
