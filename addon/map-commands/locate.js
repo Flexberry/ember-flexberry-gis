@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import BaseMapCommand from './base';
+import LeafletOptionsMixin from '../mixins/leaflet-options';
 
 /**
   Locate map-command.
@@ -11,9 +12,80 @@ import BaseMapCommand from './base';
 
   @class LocateMapCommand
   @extends BaseMapCommand
+  @uses LeafletOptionsMixin
 */
 
-export default BaseMapCommand.extend({
+export default BaseMapCommand.extend(LeafletOptionsMixin, {
+  /**
+    List of component's properties which must be interpreted as leaflet locate options.
+    See {{#crossLink "LeafletOptionsMixin/leafletOptions:property"}}Leaflet options mixin's 'leafletOptions' property{{/crossLink}}.
+
+    @property leafletOptions
+    @type <a href=” http://leafletjs.com/reference-1.2.0.html#marker”>L.Marker</a>
+    @default null
+  */
+  leafletOptions: ['watch', 'setView', 'maxZoom', 'timeout', 'maximumAge', 'enableHighAccuracy'],
+
+  /**
+    Flag: indicates whether to start continous watching of location changes (instead of detecting it once) or not.
+    See (leaflet locate options)[http://leafletjs.com/reference-1.2.0.html#locate-options-watch].
+
+    @property watch
+    @type Boolean
+    @default false
+  */
+  watch: false,
+
+  /**
+    Flag: indicates whether to set the map view to the user location automatically or not.
+    See (leaflet locate options)[http://leafletjs.com/reference-1.2.0.html#locate-options-setview].
+
+    @property setView
+    @type Boolean
+    @default true
+  */
+  setView: true,
+
+  /**
+    The maximum zoom for automatic view setting when using {{#crossLink "LocateMapCommand/setView:property"}}'setView' option{{/crossLink}}.
+    See (leaflet locate options)[http://leafletjs.com/reference-1.2.0.html#locate-options-maxzoom].
+
+    @property maxZoom
+    @type Number
+    @default 16
+  */
+  maxZoom: 16,
+
+  /**
+    Max number of milliseconds to wait for a response from geolocation.
+    See (leaflet locate options)[http://leafletjs.com/reference-1.2.0.html#locate-options-timeout].
+
+    @property timeout
+    @type Number
+    @default 1000
+  */
+  timeout: 1000,
+
+  /**
+    Maximum age of detected location.
+    See (leaflet locate options)[http://leafletjs.com/reference-1.2.0.html#locate-options-maximumage].
+
+    @property maximumAge
+    @type Number
+    @default false
+  */
+  maximumAge: 0,
+
+  /**
+    Flag: indicates whether to enable high accuracy or not.
+    See (leaflet locate options)[http://leafletjs.com/reference-1.2.0.html#locate-options-enablehighaccuracy].
+
+    @property enableHighAccuracy
+    @type Boolean
+    @default false
+  */
+  enableHighAccuracy: false,
+
   /**
     Location marker.
 
@@ -48,7 +120,7 @@ export default BaseMapCommand.extend({
     leafletMap.on('locationfound', this.onLocationFound, this);
     leafletMap.on('locationerror', this.onLocationError, this);
 
-    leafletMap.locate({ setView: true, maxZoom: 16 });
+    leafletMap.locate(this.get('options'));
   },
 
   /**
@@ -110,7 +182,7 @@ export default BaseMapCommand.extend({
   /**
     Clean ups location results & handles leaflet map's 'popupclose' event.
 
-    @method onLocationFound
+    @method cleanUpLocationResults
     @param {Object} [e] Event object.
     @param {Object} [e.popup] Reference to closed popup.
   */
