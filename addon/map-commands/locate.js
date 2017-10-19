@@ -62,9 +62,9 @@ export default BaseMapCommand.extend(LeafletOptionsMixin, {
 
     @property timeout
     @type Number
-    @default 1000
+    @default 10000
   */
-  timeout: 1000,
+  timeout: 10000,
 
   /**
     Maximum age of detected location.
