@@ -283,6 +283,24 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
   attributionControl: false,
 
   /**
+    Default width for area select.
+
+    @property areaSelectDefaultWidth
+    @type Number
+    @default 100
+  */
+  areaSelectDefaultWidth: 100,
+
+  /**
+    Default height for area select.
+
+    @property areaSelectDefaultHeight
+    @type Number
+    @default 100
+  */
+  areaSelectDefaultHeight: 100,
+
+  /**
     Observes changes in reference to leaflet map.
     Initializes area select plugin.
 
@@ -356,7 +374,7 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
       return;
     }
 
-    areaSelect = L.areaSelect({ width: 100, height: 100 });
+    areaSelect = L.areaSelect({ width: this.get('areaSelectDefaultWidth'), height: this.get('areaSelectDefaultHeight') });
     this.set('_areaSelect', areaSelect);
 
     areaSelect.addTo(leafletMap);

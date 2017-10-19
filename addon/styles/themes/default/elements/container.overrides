@@ -820,6 +820,24 @@
     }
   }
 
+  .advanced-search {
+    .ui.horizontal.segments {
+      &> .segment.advanced-search-what-segment {
+        width: 50%;
+      }
+
+      &> .segment.advanced-search-where-segment {
+        width: 50%;
+
+        .flexberry-boundingbox {
+          .flexberry-map {
+            max-height: 300px;
+          }
+        }
+      }
+    }
+  }
+
   // Fix colors of labels inside accordion header.
   .ui.label {
     &.active {

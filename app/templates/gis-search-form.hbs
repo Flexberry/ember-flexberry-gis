@@ -81,7 +81,7 @@
             {{t "forms.gis-search-form.search-conditions-where"}}
           </div>
           {{flexberry-boundingbox
-            mapModel=boundingBoxComponentMapModel
+            mapModel=model.boundingBoxComponentMap
             minLat=minLat
             minLng=minLng
             maxLat=maxLat
@@ -138,7 +138,7 @@
                   <select class="ui dropdown mapItems" onchange={{action (mut _selectedMap) value="target.value"}}>
                     <option selected value="">{{t "forms.gis-search-form.layer-metadata.select-a-map"}}</option>
                     <option value="new">{{t "forms.gis-search-form.layer-metadata.new-map"}}</option>
-                    {{#each model as |mapItem|}}
+                    {{#each model.availableMaps as |mapItem|}}
                       <option value="{{get mapItem "id"}}" selected={{eq (get mapItem "id") _selectedMap}}>{{get mapItem "name"}}</option>
                     {{/each}}
                   </select>

@@ -36,14 +36,28 @@ let _mapSettings = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Route</a>
 */
 export default Ember.Route.extend({
+  /**
+    A hook you can implement to convert the URL into the model for this route.
+    [More info](http://emberjs.com/api/classes/Ember.Route.html#method_model).
+
+    @method model
+    @param {Object} params
+    @param {Object} transition
+  */
   model() {
-    // model for dropdown list on the 'open metadata in a map' panel
-    return this._getQuery(_mapSettings.modelName, _mapSettings.projectionName, null, null, null);
+    return Ember.RSVP.hash({
+      // Get available maps list to be displayed in founded layer metadata toolbar.
+      availableMaps: this._getQuery(_mapSettings.modelName, _mapSettings.projectionName, null, null, null),
+
+      // Get map model to be displayed in `flexberry-boundingbox` component.
+      boundingBoxComponentMap: this._getBoundingBoxComponentMapModel()
+    });
   },
 
   /**
     A hook you can use to setup the controller for the current route.
     [More info](http://emberjs.com/api/classes/Ember.Route.html#method_setupController).
+
     @method setupController
     @param {<a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Controller</a>} controller Related controller.
     @param {Object} model Related model.
@@ -52,29 +66,6 @@ export default Ember.Route.extend({
     this._super(controller, model);
 
     controller.set('tabSettings', [_metadataSettings, _mapSettings]);
-
-    // Create map model to be displayed in `flexberry-boundingbox` component.
-    let boundingBoxComponentMapModel = this.store.createRecord('new-platform-flexberry-g-i-s-map', {
-      name: 'testmap',
-      lat: 0,
-      lng: 0,
-      zoom: 0,
-      public: true,
-      coordinateReferenceSystem: '{"code":"EPSG:4326"}'
-    });
-
-    // Create layer model & add to map model.
-    let openStreetMapLayer = this.store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
-      name: 'OSM',
-      type: 'tile',
-      visibility: true,
-      index: 0,
-      coordinateReferenceSystem: '{"code":"EPSG:3857","definition":null}',
-      settings: '{"opacity": 1, "url":"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}'
-    });
-    boundingBoxComponentMapModel.get('mapLayer').pushObject(openStreetMapLayer);
-
-    controller.set('boundingBoxComponentMapModel', boundingBoxComponentMapModel);
   },
 
   actions: {
@@ -82,7 +73,7 @@ export default Ember.Route.extend({
       Loads data according to search query.
 
       @method actions.doSearch
-     */
+    */
     doSearch(req) {
       let tabSettings = this.get('controller').get('tabSettings');
       this.get('controller').set('error', null);
@@ -118,6 +109,38 @@ export default Ember.Route.extend({
         });
       }
     }
+  },
+
+  /**
+    Gets map model to be displayed in `flexberry-boundingbox` component.
+
+    @method _getBoundingBoxComponentMapModel
+    @return {NewPlatformFlexberryGISMap} Map model or promise returning it.
+    @private
+  */
+  _getBoundingBoxComponentMapModel() {
+    // Create map model to be displayed in `flexberry-boundingbox` component.
+    let mapModel = this.store.createRecord('new-platform-flexberry-g-i-s-map', {
+      name: 'testmap',
+      lat: 0,
+      lng: 0,
+      zoom: 0,
+      public: true,
+      coordinateReferenceSystem: '{"code":"EPSG:4326"}'
+    });
+
+    // Create layer model & add to map model.
+    let openStreetMapLayer = this.store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
+      name: 'OSM',
+      type: 'tile',
+      visibility: true,
+      index: 0,
+      coordinateReferenceSystem: '{"code":"EPSG:3857","definition":null}',
+      settings: '{"opacity": 1, "url":"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}'
+    });
+    mapModel.get('mapLayer').pushObject(openStreetMapLayer);
+
+    return mapModel;
   },
 
   /**

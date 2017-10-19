@@ -77,15 +77,6 @@ export default Ember.Controller.extend({
   },
 
   /**
-    Map model to be displayed in `flexberry-boundingbox` component.
-
-    @property
-    @default null
-
-  */
-  boundingBoxComponentMapModel: null,
-
-  /**
     Array of posible scale filter conditions.
 
     @property scaleFilterConditions
