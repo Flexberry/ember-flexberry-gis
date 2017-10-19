@@ -392,12 +392,12 @@
     transform: none;
     transition: none;
     background-color: white;
-    margin: 0px 0px 0px 10% !important;
-    box-shadow: 0 0 4px #3C4F76 !important;
-    border-radius: 5px 5px 5px 5px !important;
+    margin: 0px 0px 0px 10%;
+    box-shadow: 0 0 4px #3C4F76;
+    border-radius: 5px 5px 5px 5px;
     max-height: ~"calc(100% - 80px)";
-    height: 391px !important;
-    width: 700px !important;
+    height: 391px;
+    width: 700px;
 
     .ui.tab {
       padding: 10px;
@@ -405,9 +405,9 @@
     }
 
     &.folded {
-      bottom: 0 !important;
+      bottom: 0;
       overflow-y: hidden;
-      height: 40px !important;
+      height: 40px;
       .tab.segment {
         visibility: hidden;
       }
@@ -475,12 +475,12 @@
       width: 100%;
       padding-left: 25px;
 
-      &-tabs {
+      &-tabs.ui.tabular.menu {
         position: relative;
-        border-bottom: 0 !important;
+        border-bottom: 0;
 
         a {
-          font-weight: 400 !important;
+          font-weight: 400;
         }
 
         .icon.close {
@@ -489,9 +489,12 @@
       }
     }
 
-    &-tab-data-panel {
-      border-top: 1px solid #D4D4D5 !important;
-      margin-bottom: 1px !important;
+    .ui.attached + .ui.attached.segment:not(.top) {
+      border-top: 1px solid #D4D4D5;
+    }
+
+    .ui.segment[class*="bottom attached"] {
+      margin-bottom: 1px;
     }
 
     &-tab-head-panel {

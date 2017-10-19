@@ -21,6 +21,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _tabModels: Ember.computed('items.[]', function () {
     let editedLayers = this.get('items');
     if (Ember.isPresent(editedLayers)) {
+      if (editedLayers.length === 1) {
+        this.set('_featureTabsOffset', 0);
+        this.send('onTabMove', true);
+      }
+
       return editedLayers.map((item) => {
         let name = Ember.get(item, 'name');
         let header = {};
