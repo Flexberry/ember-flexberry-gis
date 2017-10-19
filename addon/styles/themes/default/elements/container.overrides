@@ -849,7 +849,9 @@
   }
 
   // Hide icon in header of search-results segment.
-  .search-results {
+  .ui.segments:not(.horizontal) > .ui.segment.search-results {
+    margin-top: 1em;
+
     .ui.label {
       i {
         opacity: 0;

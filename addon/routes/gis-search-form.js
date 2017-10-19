@@ -6,36 +6,36 @@ import Ember from 'ember';
 import { Query } from 'ember-flexberry-data';
 
 /**
-  Query settings for layer metadata loading.
-*/
-let _metadataSettings = {
-  title: 'forms.gis-search-form.layer-metadata.title',
-  modelName: 'new-platform-flexberry-g-i-s-layer-metadata',
-  projectionName: 'LayerMetadataL',
-  top: 5,
-  fieldName: 'layerMetadata',
-  tab: 'layer-metadata'
-};
-
-/**
-  Query settings for maps loading.
-*/
-let _mapSettings = {
-  title: 'forms.gis-search-form.maps.title',
-  modelName: 'new-platform-flexberry-g-i-s-map',
-  projectionName: 'MapL',
-  top: 5,
-  fieldName: 'maps',
-  tab: 'maps'
-};
-
-/**
   Route for GIS search form.
   Loads data according to filters and paging settings
   @class GisSearchFormRoute
   @extends <a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Route</a>
 */
 export default Ember.Route.extend({
+  /**
+    Query settings for layer metadata loading.
+  */
+  _metadataSettings: {
+    title: 'forms.gis-search-form.layer-metadata.title',
+    modelName: 'new-platform-flexberry-g-i-s-layer-metadata',
+    projectionName: 'LayerMetadataL',
+    top: 5,
+    fieldName: 'layerMetadata',
+    tab: 'layer-metadata'
+  },
+
+  /**
+    Query settings for maps loading.
+  */
+  _mapSettings: {
+    title: 'forms.gis-search-form.maps.title',
+    modelName: 'new-platform-flexberry-g-i-s-map',
+    projectionName: 'MapGisSearchFormL',
+    top: 5,
+    fieldName: 'maps',
+    tab: 'maps'
+  },
+
   /**
     A hook you can implement to convert the URL into the model for this route.
     [More info](http://emberjs.com/api/classes/Ember.Route.html#method_model).
@@ -47,7 +47,7 @@ export default Ember.Route.extend({
   model() {
     return Ember.RSVP.hash({
       // Get available maps list to be displayed in founded layer metadata toolbar.
-      availableMaps: this._getQuery(_mapSettings.modelName, _mapSettings.projectionName, null, null, null),
+      availableMaps: this._getQuery(this.get('_mapSettings.modelName'), this.get('_mapSettings.projectionName'), null, null, null),
 
       // Get map model to be displayed in `flexberry-boundingbox` component.
       boundingBoxComponentMap: this._getBoundingBoxComponentMapModel()
@@ -65,7 +65,7 @@ export default Ember.Route.extend({
   setupController(controller, model) {
     this._super(controller, model);
 
-    controller.set('tabSettings', [_metadataSettings, _mapSettings]);
+    controller.set('tabSettings', [this.get('_mapSettings'), this.get('_metadataSettings')]);
   },
 
   actions: {

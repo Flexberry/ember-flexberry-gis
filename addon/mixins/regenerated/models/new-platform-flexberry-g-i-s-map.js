@@ -144,4 +144,8 @@ export let defineProjections = function (modelClass) {
     zoom: Projection.attr('Зум'),
     public: Projection.attr('Общая')
   });
+
+  modelClass.defineProjection('MapGisSearchFormL', 'new-platform-flexberry-g-i-s-map', {
+    name: Projection.attr('Наименование')
+  });
 };
