@@ -39,14 +39,19 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   */
   perPageAvailable: true,
 
-  /*
-    Indicates how many additional columns added to the header.
-
-    @property additionalColumnsCount
-    @type Int
-    @default 0
+  /**
+    Computes - how many block-slots are used.
   */
-  additionalColumnsCount: 0,
+  _additionalColumnsCount: Ember.computed('_slots.[]', function() {
+    let slots = ['column-header-head-0', 'column-header-tail-0'];
+    let result = 0;
+    slots.forEach((item) => {
+      if (this._isRegistered(item)) {
+        result++;
+      }
+    });
+    return result;
+  }),
 
   /**
     Count of columns.
@@ -58,7 +63,7 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   */
   _columnCount: Ember.computed('header', {
     get() {
-      let additionalColumnsCount = this.get('additionalColumnsCount');
+      let additionalColumnsCount = this.get('_additionalColumnsCount');
       return Object.keys(this.get('header')).length + additionalColumnsCount;
     }
   }),
