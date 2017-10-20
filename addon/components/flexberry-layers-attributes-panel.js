@@ -289,6 +289,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       });
       Ember.set(tabModel, '_selectedRows', selectedRows);
       tabModel.notifyPropertyChange('_selectedRows');
+    },
+
+    onRowEdit(tabModel, rowId) {
+
     }
   }
 });

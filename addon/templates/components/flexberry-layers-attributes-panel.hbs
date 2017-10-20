@@ -69,11 +69,26 @@
         <th class="narrow">{{t "components.flexberry-layers-attributes-panel.select-item"}}</th>
       {{/block-slot}}
 
+      {{#block-slot "column-header-head-1"}}
+        <th class="narrow">{{t "components.flexberry-layers-attributes-panel.edit-item"}}</th>
+      {{/block-slot}}
+
       {{#block-slot "column-cell-head-0" as |row|}}
         <td class="narrow">
         {{flexberry-checkbox
           value=(get tabModel._selectedRows (ember-guid row))
           onChange=(action "onRowSelect" tabModel (ember-guid row)) }}
+        </td>
+      {{/block-slot}}
+
+      {{#block-slot "column-cell-head-1" as |row|}}
+        <td>
+          {{flexberry-button
+            class="small-button"
+            tooltip=(t "components.flexberry-layers-attributes-panel.edit-item")
+            click=(action "onRowEdit" tabModel (ember-guid row))
+            iconClass="edit icon"
+          }}
         </td>
       {{/block-slot}}
 
