@@ -4,7 +4,8 @@ import Search from './map-commands-dialogs/search';
 
 import GeocoderOsmRuSearchSettings from './map-commands-dialogs/search-settings/geocoder-osm-ru';
 import WFSSearchSettings from './map-commands-dialogs/search-settings/wfs';
-import GJSearchSettings from './map-commands-dialogs/search-settings/geojson';
+import GeoJSONSearchSettings from './map-commands-dialogs/search-settings/geojson';
+import KMLSearchSettings from './map-commands-dialogs/search-settings/kml';
 
 export default {
   'go-to': GoTo,
@@ -13,6 +14,7 @@ export default {
   'search-settings': {
     'geocoder-osm-ru': GeocoderOsmRuSearchSettings,
     'wfs': WFSSearchSettings,
-    'geojson':GJSearchSettings
+    'geojson':GeoJSONSearchSettings,
+    'kml': KMLSearchSettings
   }
 };

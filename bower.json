@@ -1,6 +1,6 @@
 {
   "name": "ember-flexberry-gis",
-  "version": "0.3.0-beta.4",
+  "version": "0.3.1",
   "dependencies": {
     "ember": "~2.4.3",
     "ember-cli-shims": "0.1.1",
@@ -18,8 +18,8 @@
     "js-beautify": "1.6.4",
     "leaflet": "1.2.0",
     "proj4leaflet": "1.0.2",
-    "leaflet-wfst": "2.0.1-beta.1",
-    "leaflet-wms": "1.2.0-beta.1",
+    "leaflet-wfst": "2.0.1-beta.3",
+    "leaflet-wms": "1.2.0-beta.2",
     "leaflet.wms": "gh-pages",
     "leaflet.editable": "1.1.0",
     "leaflet-editable-measures": "0.2.0-beta.2",
@@ -31,7 +31,8 @@
     "leaflet-minimap": "3.4.0",
     "osmtogeojson": "2.2.12",
     "terraformer": "1.0.8",
-    "leaflet.markercluster": "1.1.0"
+    "leaflet.markercluster": "1.1.0",
+    "leaflet-omnivore": "0.3.3"
   },
   "resolutions": {
     "ember": "2.4.3",

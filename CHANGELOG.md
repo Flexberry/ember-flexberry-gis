@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+## [0.3.1] - 2017-10-03
 ### Added
 * Add Semantic UI/Flexberry themes support.
 * Add `flexberry-edit-layermap` component to unify layers and layers-metadata editing.
