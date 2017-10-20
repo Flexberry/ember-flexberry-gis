@@ -6,9 +6,9 @@ import Ember from 'ember';
 import BaseLayer from './-private/base';
 
 /**
-  Class describing WFS layer metadata.
+  Class describing GeoJSON layer metadata.
 
-  @class WfsLayer
+  @class GeoJSONLayer
   @extends BaseLayer
 */
 export default BaseLayer.extend({
@@ -29,18 +29,16 @@ export default BaseLayer.extend({
   */
   createSettings() {
     let settings = this._super(...arguments);
-    Ember.$.extend(true, settings, {
+    return Ember.assign(settings, {
       pointToLayer: undefined,
       style: 'function(feature) { return { opacity: 0.65 }; }',
       onEachFeature: 'function(feature, layer) { if (feature.properties && feature.properties.popupContent) ' +
-      '{ layer.bindPopup(feature.properties.popupContent); } } ',
-      filter: undefined,
+      '{ layer.bindPopup(feature.properties.popupContent); } }',
+      filter: null,
       coordsToLatLng: 'function(coords) { return L.latLng(coords[0], coords[1]); }',
-      geojson: undefined,
-      clusterize: 'false'
+      geojson: null,
+      clusterize: false
     });
-
-    return settings;
   },
 
   /**
@@ -51,11 +49,9 @@ export default BaseLayer.extend({
   */
   createSearchSettings() {
     let settings = this._super(...arguments);
-    Ember.$.extend(true, settings, {
+    return Ember.assign(settings, {
       queryString: '',
       maxResultsCount: 10
     });
-
-    return settings;
   }
 });

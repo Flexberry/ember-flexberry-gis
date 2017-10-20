@@ -1,6 +1,16 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 import layout from '../../../templates/components/layers-dialogs/settings/geojson';
 
+/**
+  Settings-part of GeoJSON layer modal dialog.
+
+  @class GeoJSONLayerSettingsComponent
+  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+*/
 export default Ember.Component.extend({
   /**
     Reference to component's template.
