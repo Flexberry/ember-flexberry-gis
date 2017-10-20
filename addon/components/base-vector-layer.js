@@ -37,7 +37,7 @@ export default BaseLayer.extend({
   },
 
   createLayer() {
-    return Ember.RSVP.Promise((resolve, reject) => {
+    return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.RSVP.hash({
         vectorLayer: this.createVectorLayer()
       }).then(({ vectorLayer }) => {

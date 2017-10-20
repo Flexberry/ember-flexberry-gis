@@ -1,0 +1,27 @@
+<h3 class="ui header">{{t "forms.map.caption"}}</h3>
+<form class="ui form flexberry-vertical-form" role="form">
+  {{#flexberry-map
+    lat=58.03
+    lng=56.25
+    zoom=6
+    zoomControl=true
+    leafletInit=(action "onMapLeafletInit" "leafletMap")
+  }}
+    {{#if leafletMap}}
+      {{layers/tile-layer
+        leafletMap=leafletMap
+        leafletContainer=leafletMap
+        visibility=true
+        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }}
+      {{layers/geojson-layer
+        leafletMap=leafletMap
+        leafletContainer=leafletMap
+        visibility=true
+        url='sample/perm.json'
+        crs=L.CRS.EPSG4326
+      }}
+    {{/if}}
+  {{/flexberry-map}}
+</form>

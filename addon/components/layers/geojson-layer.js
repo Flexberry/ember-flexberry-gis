@@ -14,10 +14,12 @@ import BaseLayer from '../base-vector-layer';
 export default BaseLayer.extend({
 
   leafletOptions: [
-    'pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng', 'geojson'
+    'pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng', 'geojson', 'crs'
   ],
 
   layerFunctions: ['pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng'],
+
+  url: null,
 
   /**
     Creates leaflet layer related to layer type.
@@ -27,9 +29,35 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer(options) {
-    options = Ember.assign({}, this.get('options'), options);
+    options = Ember.$.extend({}, this.get('options'), options);
     let geojson = options.geojson || {};
     options = options || {};
+
+    let layerFunctions = this.get('layerFunctions');
+    let customFunction;
+    for (let i = 0; i < layerFunctions.length; i++) {
+      customFunction = Ember.get(options, layerFunctions[i]);
+      if (customFunction) {
+        Ember.set(options, layerFunctions[i], new Function('return ' + customFunction)());
+      }
+    }
+
+    let url = this.get('url');
+    if (!Ember.isNone(url)) {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        Ember.$.ajax({
+          type: 'get',
+          url: url,
+          dataType: 'json',
+          success: function (response) {
+            resolve(L.geoJson(response, options));
+          },
+          error: function (error) {
+            reject(error);
+          }
+        });
+      });
+    }
 
     let featureCollection = {
       type: 'FeatureCollection',
@@ -47,15 +75,6 @@ export default BaseLayer.extend({
     let features = Ember.A(Ember.get(featureCollection, 'features') || []);
     if (Ember.get(features, 'length') === 0) {
       return L.geoJSON();
-    }
-
-    let layerFunctions = this.get('layerFunctions');
-    let customFunction;
-    for (let i = 0; i < layerFunctions.length; i++) {
-      customFunction = Ember.get(options, layerFunctions[i]);
-      if (customFunction) {
-        Ember.set(options, layerFunctions[i], new Function('return ' + customFunction)());
-      }
     }
 
     let geojsLayer = L.geoJSON(featureCollection, options);

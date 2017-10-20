@@ -72,7 +72,7 @@ export default Ember.Component.extend(
       @type Object
       @default null
     */
-    layerModel: null,
+    layerModel: Ember.Object.extend({}).create(),
 
     /**
       This layer index, used for layer ordering in Map.

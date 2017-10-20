@@ -29,7 +29,7 @@ export default BaseLayer.extend({
   */
   createSettings() {
     let settings = this._super(...arguments);
-    return Ember.assign(settings, {
+    return Ember.$.extend(settings, {
       pointToLayer: undefined,
       style: 'function(feature) { return { opacity: 0.65 }; }',
       onEachFeature: 'function(feature, layer) { if (feature.properties && feature.properties.popupContent) ' +
@@ -49,7 +49,7 @@ export default BaseLayer.extend({
   */
   createSearchSettings() {
     let settings = this._super(...arguments);
-    return Ember.assign(settings, {
+    return Ember.$.extend(settings, {
       queryString: '',
       maxResultsCount: 10
     });
