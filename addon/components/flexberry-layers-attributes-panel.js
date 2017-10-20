@@ -17,6 +17,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   /**
     Computed property that builds tab models collection from items.
+
+    @property _tabModels
+    @type Object[]
+    @private
+    @readonly
   */
   _tabModels: Ember.computed('items.[]', function () {
     let editedLayers = this.get('items');
@@ -87,6 +92,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   /**
     Offset of tab panel in pixels.
+
+    @property _featureTabsOffset
+    @type Number
+    @default 0
+    @private
+    @readonly
   */
   _featureTabsOffset: 0,
 
@@ -97,11 +108,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   /**
     Selected tab index.
+
+    @property selectedTabIndex
+    @type Number
+    @default 0
   */
   selectedTabIndex: 0,
 
   /**
     Flag indicates that the panel is folded or not.
+
+    @property folded
+    @type Boolean
+    @default false
   */
   folded: false,
 
@@ -198,6 +217,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     /**
       Handles 'Select all' checkbox click.
+
+      @param Object tabModel
     */
     onSelectAllClick(tabModel) {
       let selectAll = Ember.get(tabModel, 'selectAll');
@@ -215,6 +236,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     /**
       Handles 'getData' action from flexberry-table.
+
+      @param Object tabModel
+      @param Object options
     */
     onTabGetData(tabModel, options) {
       Ember.set(tabModel, '_skip', options.skip);
@@ -244,8 +268,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           (offset >= itemsWidth - panelWidth + navButtonWidth ? 0 :
             itemsWidth - panelWidth + navButtonWidth - offset)));
         offset += offsetDelta;
-
-        // this.set('_offsetDelta', offsetDelta);
       }
 
       this.set('_featureTabsOffset', offset);

@@ -30,7 +30,7 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   */
   allowEdit: false,
 
-  /*
+  /**
     Flag that indicates whether 'rows per page' select is available or isn't.
 
     @property perPageAvailable
@@ -41,6 +41,12 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
 
   /**
     Computes - how many block-slots are used.
+
+    @property _additionalColumnsCount
+    @type Number
+    @private
+    @readonly
+    @private
   */
   _additionalColumnsCount: Ember.computed('_slots.[]', function() {
     let slots = ['column-header-head-0', 'column-header-tail-0'];
@@ -71,11 +77,20 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   /**
     Selected cell name.
     It's been using while cell editing.
+
+    @property _selectedCellName
+    @type String
+    @default null
+    @private
   */
   _selectedCellName: null,
 
   /**
     Changes selected cell to the next or to the previous.
+
+    @method _moveCell
+    @param {Boolean} forward Shows whether need to move to the next cell or previous.
+    @private
   */
   _moveCell(forward) {
     let current = this.get('_selectedCellName');
