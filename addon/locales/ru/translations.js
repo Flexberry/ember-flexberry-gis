@@ -117,7 +117,9 @@ export default {
         'not-in': 'НЕ В',
         'and': 'И',
         'or': 'ИЛИ',
-        'not': 'НЕ'
+        'not': 'НЕ',
+        'example': 'Образец',
+        'all': 'Все'
       },
     },
 

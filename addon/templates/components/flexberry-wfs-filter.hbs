@@ -9,71 +9,98 @@
         }}
       {{else}}
    {{t "components.flexberry-wfs-filter.settings-not-set"}}
-{{/each}}
+   {{/each}}
   </div>
   <div class = "eight wide column">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tincidunt sapien ut massa viverra tincidunt. Sed non faucibus arcu. Aenean eget ipsum nulla. Suspendisse vel mi sit amet enim elementum efficitur eu nec dui. Integer egestas tincidunt turpis id gravida. Fusce finibus libero quis turpis eleifend semper. Morbi a sapien eget neque fermentum egestas. Donec viverra id turpis eget feugiat. Morbi mauris ligula, hendrerit nec enim eu, scelerisque ornare odio. Sed sit amet risus iaculis, tempor est in, viverra nisi. Curabitur nunc dolor, imperdiet vitae sem imperdiet, sodales lacinia ex. Etiam aliquam venenatis ligula id pulvinar.
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tincidunt sapien ut massa viverra tincidunt. Sed non faucibus arcu. Aenean eget ipsum nulla. Suspendisse vel mi sit amet enim elementum efficitur eu nec dui. Integer egestas tincidunt turpis id gravida. Fusce finibus libero quis turpis eleifend semper. Morbi a sapien eget neque fermentum egestas. Donec viverra id turpis eget feugiat. Morbi mauris ligula, hendrerit nec enim eu, scelerisque ornare odio. Sed sit amet risus iaculis, tempor est in, viverra nisi. Curabitur nunc dolor, imperdiet vitae sem imperdiet, sodales lacinia ex. Etiam aliquam venenatis ligula id pulvinar.
+    <br>
+    {{flexberry-button
+      class=biggerButtonClass
+      caption=(t "components.flexberry-wfs-filter.buttons.example")
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=biggerButtonClass
+      caption=(t "components.flexberry-wfs-filter.buttons.all")
+      readonly=readonly
+    }}
   </div>
   <div class = "sixteen wide column">
     {{flexberry-button
+      class=smallButtonClass
       caption="="
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption="<"
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=">"
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption="LIKE"
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption="%"
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.in")
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.not-in")
       readonly=readonly
     }}
     <br>
     {{flexberry-button
+      class=smallButtonClass
       caption="<="
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=">="
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption="!="
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption="ILIKE"
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.and")
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.or")
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.not")
       readonly=readonly
     }}
   </div>
   <div class = "sixteen wide column">
-    {{textarea}}
+    {{textarea
+      readonly=true
+    }}
   </div>
 </div>

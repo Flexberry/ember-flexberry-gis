@@ -117,7 +117,9 @@ export default {
         'not-in': 'NOT IN',
         'and': 'AND',
         'or': 'OR',
-        'not': 'NOT'
+        'not': 'NOT',
+        'example': 'Example',
+        'all': 'All'
       },
     },
 
