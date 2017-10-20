@@ -1,10 +1,36 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 import BaseLayer from './base-layer';
 
 const { assert } = Ember;
 
+/**
+  BaseVectorLayer component for other flexberry-gis vector(geojson, kml, etc.) layers.
+
+  @class BaseVectorLayerComponent
+  @extends BaseLayerComponent
+ */
 export default BaseLayer.extend({
+
+  /**
+    Leaflet layer group or feature group object created by model settings.
+
+    @property _vectorLayerGroup
+    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+    @default null
+    @private
+  */
   _vectorLayerGroup: null,
+
+  clusterize: null,
+
+  init() {
+    this._super(...arguments);
+    this.set('clusterize', false);
+  },
 
   createVectorLayer() {
     assert('BaseVectorLayer\'s \'createVectorLayer\' should be overridden.');
@@ -20,7 +46,6 @@ export default BaseLayer.extend({
         if (this.get('clusterize')) {
           var cluster = L.markerClusterGroup();
           cluster.addLayer(vectorLayer);
-
           resolve(cluster);
         }
 
@@ -89,13 +114,12 @@ export default BaseLayer.extend({
           let feature = Ember.get(layer, 'feature');
 
           // if layer satisfies search query
-          let contains = searchFields.map((item) => {
+          let contains = false;
+          searchFields.forEach((field) => {
             if (feature && (feature.properties[item])) {
-              return feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
+               contains = contains || feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
             }
-          }).reduce((result, current) => {
-            return result || current; // if any field contains
-          }, false);
+          });
 
           if (contains) {
             features.pushObject(layer.toGeoJSON());
@@ -119,7 +143,6 @@ export default BaseLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let queryFilter = e.queryFilter;
       let features = Ember.A();
-      let equals = [];
 
       layerLinks.forEach((link) => {
         let linkParameters = link.get('parameters');
@@ -137,17 +160,13 @@ export default BaseLayer.extend({
       let vectorLayerGroup = this.get('_vectorLayerGroup');
       vectorLayerGroup.eachLayer((layer) => {
         let feature = Ember.get(layer, 'feature');
-        let geoLayer = layer.toGeoJSON();
-
-        // if layer properties meet the conditions
-        let meet = equals.map((item) => {
-          return Ember.isEqual(feature.properties[item.prop], item.value);
-        }).reduce((result, current) => {
-          return result && current;
-        }, true);
+        let meet = true;
+        equals.forEach((equal) => {
+          meet = meet && Ember.isEqual(feature.properties[equal.prop], equal.value);
+        });
 
         if (meet) {
-          features.pushObject(geoLayer);
+          features.pushObject(layer.toGeoJSON());
         }
       });
 
