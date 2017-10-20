@@ -450,6 +450,9 @@ export default Ember.Mixin.create({
 
     Ember.set(layer, 'type', Ember.get(layerProperties, 'type'));
     Ember.set(layer, 'name', Ember.get(layerProperties, 'name'));
+    Ember.set(layer, 'description', Ember.get(layerProperties, 'description'));
+    Ember.set(layer, 'keyWords', Ember.get(layerProperties, 'keyWords'));
+    Ember.set(layer, 'scale', Ember.get(layerProperties, 'scale'));
     Ember.set(layer, 'coordinateReferenceSystem', Ember.get(layerProperties, 'coordinateReferenceSystem'));
     Ember.set(layer, 'settings', Ember.get(layerProperties, 'settings'));
     return layer;
