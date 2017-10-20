@@ -116,8 +116,8 @@ export default BaseLayer.extend({
           // if layer satisfies search query
           let contains = false;
           searchFields.forEach((field) => {
-            if (feature && (feature.properties[item])) {
-               contains = contains || feature.properties[item].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
+            if (feature && (feature.properties[field])) {
+              contains = contains || feature.properties[field].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
             }
           });
 
@@ -143,6 +143,7 @@ export default BaseLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let queryFilter = e.queryFilter;
       let features = Ember.A();
+      let equals = [];
 
       layerLinks.forEach((link) => {
         let linkParameters = link.get('parameters');
