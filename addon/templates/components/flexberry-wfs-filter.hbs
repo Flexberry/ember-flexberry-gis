@@ -1,32 +1,32 @@
 <div class="ui grid">
   <div class = "eight wide column">
-    {{#each field in fields}}
-    {{flexberry-checkbox
-        value=model.flag
-        label=field
-        readonly=readonly
-        class=class
-        }}
+    <h4>{{t "components.flexberry-wfs-filter.fields"}}</h4>
+      <div class="ui middle aligned selection list">
+    {{#each fields as |field|}}
+      <div class="item">
+        <div class="content">
+          {{field}}
+        </div>
+      </div>
       {{else}}
    {{t "components.flexberry-wfs-filter.settings-not-set"}}
    {{/each}}
+   </div>
   </div>
+
   <div class = "eight wide column">
+    <h4>{{t "components.flexberry-wfs-filter.values"}}</h4>
     <div class="ui middle aligned selection list">
-      <div class="item">
-        <div class="content">
-          айтем
+      {{#each values as |value|}}
+        <div class="item">
+          <div class="content">
+            {{value}}
+          </div>
         </div>
-      </div>
-      <div class="item">
-        айтем
-      </div>
-      <div class="item">
-        айтем
-      </div>
+        {{else}}
+     {{t "components.flexberry-wfs-filter.settings-not-set"}}
+     {{/each}}
     </div>
-
-
     {{flexberry-button
       class=biggerButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.example")
@@ -39,6 +39,7 @@
     }}
   </div>
   <div class = "sixteen wide column">
+  <h4>{{t "components.flexberry-wfs-filter.operators"}}</h4>
     {{flexberry-button
       class=smallButtonClass
       caption="="

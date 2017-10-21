@@ -112,6 +112,9 @@ export default {
     'flexberry-wfs-filter': {
       'caption': 'Фильтры WFS-слоя',
       'settings-not-set': 'Настройки не заданы',
+      'fields': 'Поля',
+      'values': 'Значения',
+      'operators': 'Операторы',
       'buttons': {
         'in': 'В',
         'not-in': 'НЕ В',

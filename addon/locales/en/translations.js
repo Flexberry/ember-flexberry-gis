@@ -112,6 +112,9 @@ export default {
     'flexberry-wfs-filter': {
       'caption': 'WFS layer filters',
       'settings-not-set': 'Settings were not set',
+      'fields': 'Fields',
+      'values': 'Values',
+      'operators': 'Operators',
       'buttons': {
         'in': 'IN',
         'not-in': 'NOT IN',

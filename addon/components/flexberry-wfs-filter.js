@@ -6,5 +6,8 @@ export default Ember.Component.extend({
 
   smallButtonClass: 'smaller',
 
-  biggerButtonClass: 'bigger'
+  biggerButtonClass: 'bigger',
+
+  fields: ['example', 'example2', 'example3', 'example4', 'example', 'example2', 'example3', 'example4'],
+  values: ['example', 'example2', 'example3', 'example4', 'example', 'example2', 'example3', 'example4']
 });
