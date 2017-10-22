@@ -208,7 +208,7 @@ export default Ember.Component.extend({
   },
 
   /**
-     Checks model layer links and adds list and edit forms to result object
+     Checks model layer links and adds list and edit forms to result object.
 
      @method _processLayerLinkForDisplayResults
      @param {Object} searchResults

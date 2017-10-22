@@ -46,7 +46,6 @@ export default BaseLayer.extend({
 
   init() {
     this._super(...arguments);
-    this.set('clusterize', false);
   },
 
   /**
