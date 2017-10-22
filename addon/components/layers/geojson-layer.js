@@ -44,7 +44,7 @@ export default BaseLayer.extend({
     let customFunction;
     for (let i = 0; i < layerFunctions.length; i++) {
       customFunction = Ember.get(options, layerFunctions[i]);
-      if (customFunction && typeof(customFunction) === 'string') {
+      if (customFunction && typeof (customFunction) === 'string') {
         Ember.set(options, layerFunctions[i], new Function('return ' + customFunction)());
       }
     }
