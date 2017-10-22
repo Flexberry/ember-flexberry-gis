@@ -23,6 +23,7 @@ Router.map(function() {
   this.route('components-examples/flexberry-maplayers/settings-example');
   this.route('components-examples/flexberry-boundingbox/settings-example');
   this.route('geojson-map');
+  this.route('kml-map');
 });
 
 export default Router;

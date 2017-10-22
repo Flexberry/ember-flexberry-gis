@@ -208,6 +208,58 @@ export default Ember.Component.extend({
   },
 
   /**
+     Checks model layer links and adds list and edit forms to result object
+
+     @method _processLayerLinkForDisplayResults
+     @param {Object} searchResults
+     @param {Object} displayResult
+     @private
+   */
+  _processLayerLinkForDisplayResults(searchResults, displayResult) {
+    let links = Ember.get(searchResults, 'layerModel.layerLink');
+    let layerLink = links.filter(link => link.get('allowShow') === true);
+
+    layerLink.forEach((link) => {
+      if (!Ember.isBlank(link)) {
+        let mos = link.get('mapObjectSetting');
+        if (!Ember.isBlank(mos)) {
+          let editForm = mos.get('editForm');
+          if (!Ember.isBlank(editForm)) {
+            let linkParameters = link.get('parameters');
+
+            linkParameters.forEach((param) => {
+              if (!Ember.isBlank(param)) {
+                let queryKey = param.get('queryKey');
+
+                if (!Ember.isBlank(queryKey)) {
+                  let listForm = mos.get('listForm');
+                  if (!Ember.isBlank(listForm)) {
+                    displayResult.listForms.pushObject({
+                      url: listForm,
+                      typeName: mos.get('typeName'),
+                      queryKey: queryKey
+                    });
+                  }
+
+                  let layerField = param.get('layerField');
+                  if (!Ember.isBlank(layerField)) {
+                    displayResult.editForms.pushObject({
+                      url: editForm,
+                      typeName: mos.get('typeName'),
+                      queryKey: queryKey,
+                      layerField: layerField
+                    });
+                  }
+                }
+              }
+            });
+          }
+        }
+      }
+    });
+  },
+
+  /**
     Observer for passed results
     @method _resultObserver
   */
@@ -230,63 +282,25 @@ export default Ember.Component.extend({
 
     // Prepare results format for template.
     results.forEach((result) => {
-      let r = {
-        name: Ember.get(result, 'layerModel.name') || '',
-        settings: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings'),
-        displayProperties: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
-        listForms: Ember.A(),
-        editForms: Ember.A(),
-        features: Ember.A(),
-        layerModel: Ember.get(result, 'layerModel')
-      };
-
-      let links = Ember.get(result, 'layerModel.layerLink');
-      let layerLink = links.filter(link => link.get('allowShow') === true);
-
-      layerLink.forEach((link) => {
-        if (!Ember.isBlank(link)) {
-          let mos = link.get('mapObjectSetting');
-          if (!Ember.isBlank(mos)) {
-            let editForm = mos.get('editForm');
-            if (!Ember.isBlank(editForm)) {
-              let linkParameters = link.get('parameters');
-
-              linkParameters.forEach((param) => {
-                if (!Ember.isBlank(param)) {
-                  let queryKey = param.get('queryKey');
-
-                  if (!Ember.isBlank(queryKey)) {
-                    let listForm = mos.get('listForm');
-                    if (!Ember.isBlank(listForm)) {
-                      r.listForms.pushObject({
-                        url: listForm,
-                        typeName: mos.get('typeName'),
-                        queryKey: queryKey
-                      });
-                    }
-
-                    let layerField = param.get('layerField');
-                    if (!Ember.isBlank(layerField)) {
-                      r.editForms.pushObject({
-                        url: editForm,
-                        typeName: mos.get('typeName'),
-                        queryKey: queryKey,
-                        layerField: layerField
-                      });
-                    }
-                  }
-                }
-              });
-            }
-          }
-        }
-      });
+      if (Ember.isBlank(result.features)) {
+        return;
+      }
 
       result.features.then(
         (features) => {
           if (features.length > 0) {
-            r.features = Ember.A(features);
-            displayResults.pushObject(r);
+            let displayResult = {
+              name: Ember.get(result, 'layerModel.name') || '',
+              settings: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings'),
+              displayProperties: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
+              listForms: Ember.A(),
+              editForms: Ember.A(),
+              features: Ember.A(features),
+              layerModel: Ember.get(result, 'layerModel')
+            };
+
+            this._processLayerLinkForDisplayResults(result, displayResult);
+            displayResults.pushObject(displayResult);
           }
         }
       );

@@ -31,12 +31,12 @@ export default BaseLayer.extend({
     let settings = this._super(...arguments);
     return Ember.$.extend(settings, {
       pointToLayer: undefined,
-      style: 'function(feature) { return { opacity: 0.65 }; }',
-      onEachFeature: 'function(feature, layer) { if (feature.properties && feature.properties.popupContent) ' +
-      '{ layer.bindPopup(feature.properties.popupContent); } }',
+      style: null,
+      onEachFeature: null,
       filter: null,
-      coordsToLatLng: 'function(coords) { return L.latLng(coords[0], coords[1]); }',
+      coordsToLatLng: null,
       geojson: null,
+      url: null,
       clusterize: false
     });
   },
