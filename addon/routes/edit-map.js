@@ -175,24 +175,24 @@ export default EditFormRoute.extend({
     @param {String} metadata Metadata ids to be used as query limitation.
   */
   _getMetadata(metadata) {
-    if (Ember.isPresent(metadata)) {
-      let queryBuilder = new Query.Builder(this.get('store'))
-      .from(this.get('metadataModelName'))
-      .selectByProjection(this.get('metadataProjection'));
-
-      let conditions = metadata.split(',').map((item) => {
-        let id = item.trim().toLowerCase();
-        return new Query.SimplePredicate('id', Query.FilterOperator.Eq, id);
-      });
-      if (Ember.isArray(conditions)) {
-        let condition = conditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.Or, ...conditions) : conditions[0];
-        queryBuilder = queryBuilder.where(condition);
-      }
-
-      return this.get('store').query(this.get('metadataModelName'), queryBuilder.build());
+    if (!Ember.isPresent(metadata)) {
+      return null;
     }
 
-    return null;
+    let queryBuilder = new Query.Builder(this.get('store'))
+    .from(this.get('metadataModelName'))
+    .selectByProjection(this.get('metadataProjection'));
+
+    let conditions = metadata.split(',').map((item) => {
+      let id = item.trim().toLowerCase();
+      return new Query.SimplePredicate('id', Query.FilterOperator.Eq, id);
+    });
+    if (Ember.isArray(conditions)) {
+      let condition = conditions.length > 1 ? new Query.ComplexPredicate(Query.Condition.Or, ...conditions) : conditions[0];
+      queryBuilder = queryBuilder.where(condition);
+    }
+
+    return this.get('store').query(this.get('metadataModelName'), queryBuilder.build());
   },
 
   /**
