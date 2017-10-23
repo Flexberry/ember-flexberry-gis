@@ -819,7 +819,7 @@
 
   // Fix display of horizontal segments inside accordion content.
   .ui.horizontal.segments.content {
-    min-width: 325px !important;
+    min-width: 325px;
     &.active, &.animating {
       display: flex;
       flex-direction: row;
@@ -876,7 +876,7 @@
   }
 
   .ui.button {
-    border: none !important;
+    border: none;
     position: absolute;
     right: 0;
   }
