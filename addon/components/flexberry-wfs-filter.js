@@ -11,6 +11,6 @@ export default Ember.Component.extend({
   fields: ['example', 'example2', 'example3', 'example4', 'example', 'example2', 'example3', 'example4'],
   values: ['example', 'example2', 'example3', 'example4', 'example', 'example2', 'example3', 'example4'],
   _test: Ember.on('init', function() {
-    console.log(this.parentView.attrs._leafletObject.values);
+    console.log(this.get('_leafletObject'));
   })
 });
