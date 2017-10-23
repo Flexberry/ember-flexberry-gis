@@ -44,6 +44,15 @@ export default BaseLayer.extend({
    */
   clusterize: false,
 
+  /**
+    Property contains options for <a href="http://leaflet.github.io/Leaflet.markercluster/#options">L.markerClusterGroup</a>.
+
+    @property clusterOptions
+    @type Object
+    @default null
+   */
+  clusterOptions: null,
+
   init() {
     this._super(...arguments);
   },
@@ -71,7 +80,7 @@ export default BaseLayer.extend({
         }
 
         if (this.get('clusterize')) {
-          var cluster = L.markerClusterGroup();
+          var cluster = L.markerClusterGroup(this.get('clusterOptions'));
           cluster.addLayer(vectorLayer);
           resolve(cluster);
           return;
@@ -213,7 +222,7 @@ export default BaseLayer.extend({
   _setLayerOpacity() {
     let opacity = this.get('opacity');
     if (!Ember.isNone(opacity)) {
-      let leafletLayer = this.get('_leafletObject');
+      let leafletLayer = this.get('_vectorLayerGroup');
       let leafletLayerStyle = Ember.get(leafletLayer, 'options.style');
 
       if (Ember.isNone(leafletLayerStyle)) {
