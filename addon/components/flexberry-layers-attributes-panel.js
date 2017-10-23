@@ -102,6 +102,36 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _featureTabsOffset: 0,
 
   /**
+    Flag indicates whether attributes edit dialog has been already requested by user or not.
+
+    @property _editRowDialogHasBeenRequested
+    @type Boolean
+    @default false
+    @private
+  */
+  _editRowDialogHasBeenRequested: false,
+
+  /**
+    Flag indicates whether to show edit row dialog.
+
+    @property _onEditRowDialogIsVisible
+    @type Boolean
+    @default false
+    @private
+  */
+  _onEditRowDialogIsVisible: false,
+
+  /**
+   * Hash with edited row data.
+   */
+  _editRowData: null,
+
+  /**
+   * Hash with edited row data copy.
+   */
+  _editRowDataCopy: null,
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -292,7 +322,26 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     onRowEdit(tabModel, rowId) {
+      let editedProperty = tabModel.propertyLink[rowId];
+      this.set('_editRowData', editedProperty);
+      this.set('_editRowDataCopy', Ember.copy(editedProperty, false));
 
+      // Include dialog to markup.
+      this.set('_editRowDialogHasBeenRequested', true);
+
+      // Show dialog.
+      this.set('_onEditRowDialogIsVisible', true);
+    },
+
+    onEditRowDialogApprove(data) {
+      for (var key in data) {
+        if (data.hasOwnProperty(key)) {
+          var element = data[key];
+          if (!Ember.isEqual(element, this.get(`_editRowData.${key}`))) {
+            this.set(`_editRowData.${key}`, element);
+          }
+        }
+      }
     }
   }
 });

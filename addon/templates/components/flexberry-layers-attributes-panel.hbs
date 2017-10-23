@@ -96,3 +96,16 @@
   </div>
   {{/each}}
 </div>
+
+{{!--
+  Semantic UI modal dialogs takes long time to be initialized
+  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+--}}
+{{#if _editRowDialogHasBeenRequested}}
+  {{component "layers-dialogs/attributes/edit"
+    class=flexberryClassNames.addDialog
+    visible=_onEditRowDialogIsVisible
+    data=_editRowDataCopy
+    approve=(action "onEditRowDialogApprove")
+  }}
+{{/if}}
