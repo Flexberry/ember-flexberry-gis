@@ -14,6 +14,10 @@ export default Ember.Controller.extend({
 
   _val2: null,
 
+  _captionType: ["pie", "column"],
+
+  _valType: "pie",
+
   _geoJsonData: {
     "type": "FeatureCollection",
     "features": [
@@ -28,70 +32,64 @@ export default Ember.Controller.extend({
 
   actions: {
     onLoad() {
-      var geoJsonLayer = L.geoJson(this.get('_geoJsonData'), {
+      let geoJsonLayer = L.geoJson(this.get('_geoJsonData'), {
   			onEachFeature: function (feature, layer) {
   				layer.bindPopup(feature.properties.address);
   			}
   		});
 
-      var arrTume = [];
-      var arrTume1 = [];
+      let arrTume1 = Ember.A([]);
 
-      let feature = Ember.get(geoJsonLayer._layers[1], 'feature');
+      let feature = Ember.get(geoJsonLayer._layers[Object.keys(geoJsonLayer._layers)[0]], 'feature');
+      let isObject = Object.keys(feature.properties);
 
-      for (var i in Object.keys(feature.properties))
+      for (var i in isObject)
       {
-        let isObject = Object.keys(feature.properties)[i];
-
-        if (isFinite(feature.properties[isObject])){
-          arrTume1.push (isObject);
-        }
-        else {
-          arrTume.push (isObject);
+        if (isFinite(feature.properties[isObject[i]])){
+          arrTume1.pushObject (isObject[i]);
         }
       }
 
-      this.set('_captionSeries', arrTume);
+      this.set('_captionSeries', isObject);
       this.set('_valueSeries', arrTume1);
     },
 
     onClick() {
-      let dataSeries = [];
-      // Пример geojson слоя для построения данных
+      let dataSeries = Ember.A([]);
 
-    var geoJsonLayer = L.geoJson(this.get('_geoJsonData'), {
-			onEachFeature: function (feature, layer) {
-				layer.bindPopup(feature.properties.address);
-			}
-		});
+      let geoJsonLayer = L.geoJson(this.get('_geoJsonData'), {
+			     onEachFeature: function (feature, layer) {
+				         layer.bindPopup(feature.properties.address);
+			       }
+		      });
 
-    //Обход всех слоев для получения значений из  выбранных настроек слоя
-    let propName = this.get('_val1');
-    let propVal = this.get('_val2');
+      //Обход всех слоев для получения значений из  выбранных настроек слоя
+      let propName = this.get('_val1');
+      let propVal = this.get('_val2');
 
-    geoJsonLayer.eachLayer(function(layer) {
+      geoJsonLayer.eachLayer(function(layer) {
         let feature = Ember.get(layer, 'feature');
-        var arrTume = [];
+        let dsCopy = Ember.A([]);
 
-        arrTume.push(feature.properties[propName],
+        dsCopy.push(feature.properties[propName],
                       parseFloat(feature.properties[propVal]));
-        dataSeries.push(arrTume);
+        dataSeries.push(dsCopy);
       });
 
       this.set('_dataSeries', dataSeries);
 
-      var chart = {
+      let chart = {
                plotBackgroundColor: null,
                plotBorderWidth: null,
                plotShadow: false
             };
-            var title = {
+            let title = {
                text: this.get('_captionChart')
             };
-            var tooltip = {
-               pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            let tooltip = {
+               pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
             };
-            var plotOptions = {
+            let plotOptions = {
                pie: {
                   allowPointSelect: true,
                   cursor: 'pointer',
@@ -106,13 +104,13 @@ export default Ember.Controller.extend({
                   }
                }
             };
-            var series = [{
-               type: 'pie',
+            let series = [{
+               type: this.get('_valType'),
                name: propVal,
                data: this.get('_dataSeries')
             }];
 
-            var json = {};
+            let json = {};
             json.chart = chart;
             json.title = title;
             json.tooltip = tooltip;

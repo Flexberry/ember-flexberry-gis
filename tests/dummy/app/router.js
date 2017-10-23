@@ -22,7 +22,7 @@ Router.map(function() {
   // Components examples routes (sorted by component's names).
   this.route('components-examples/flexberry-maplayers/settings-example');
 
-  this.route('chart-result', { path: 'chart-result' });
+  this.route('charts-result', { path: 'chart-result' });
 });
 
 export default Router;

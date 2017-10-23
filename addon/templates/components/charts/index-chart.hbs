@@ -1,1 +1,41 @@
-sfsadfgsadg
+<div class="ui centered grid">
+  <div class="six wide column">
+    <div class="field">
+      <label>
+        Тип диаграммы
+      </label>
+    {{flexberry-dropdown
+      items=_availableTypes
+      value=_selectedModeType
+    }}
+    </div>
+    <div class="field">
+      <label>
+        Заголовок диаграммы
+      </label>
+    {{flexberry-textbox
+      value=_captionChart
+    }}
+    </div>
+
+    <div class="ui grid">
+      <div class="column">
+        {{#if _selectedModeType}}
+          {{component (concat "charts/type-charts/" _selectedModeType) _layer = _geoJsonLayer}}
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="ui grid">
+      <div class="right aligned column">
+        {{flexberry-button
+          caption="Сформировать диаграмму"
+        }}
+      </div>
+    </div>
+  </div>
+
+  <div class="nine wide column">
+    {{component (concat "charts/chart-result")}}
+  </div>
+</div>

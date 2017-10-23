@@ -744,7 +744,7 @@ export default Ember.Component.extend(
 
       // Available layers types for related dropdown.
       let owner = Ember.getOwner(this);
-      this.set('_availableTypes', owner.knownNamesForType('layer'));
+      this.set('_availableTypes', owner.knownNamesForType('layer')); 
 
       // Available CRS codes for related dropdown.
       let crsFactories = owner.knownForType('coordinate-reference-system');
