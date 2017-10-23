@@ -75,9 +75,11 @@ export default Ember.Route.extend({
       @method actions.doSearch
     */
     doSearch(req) {
-      let tabSettings = this.get('controller').get('tabSettings');
-      this.get('controller').set('error', null);
-      this.get('controller').set('isLoading', true);
+      let controller = this.get('controller');
+      let tabSettings = controller.get('tabSettings');
+      controller.set('error', null);
+      controller.set('showError', false);
+      controller.set('isLoading', true);
 
       // wheter it's a request from a specific control or a common one
       if (req.modelName) {
@@ -89,8 +91,10 @@ export default Ember.Route.extend({
         var query = this._getQuery(req.modelName, req.projectionName, req.top, req.skip, req.searchConditions);
         query.then((data) => {
           this.get('controller').set(req.fieldName, data);
-        }).catch((errorMessage) => {
-          this.get('controller').set('error', errorMessage);
+        }).catch((error) => {
+          let controller = this.get('controller');
+          controller.set('error', error);
+          controller.set('showError', true);
         }).finally(() => {
           this.get('controller').set('isLoading', false);
         });
@@ -102,8 +106,10 @@ export default Ember.Route.extend({
           for (let i = 0; i < tabSettings.length; i++) {
             this.get('controller').set(tabSettings[i].fieldName, data[i]);
           }
-        }).catch((errorMessage) => {
-          this.get('controller').set('error', errorMessage);
+        }).catch((error) => {
+          let controller = this.get('controller');
+          controller.set('error', error);
+          controller.set('showError', true);
         }).finally(() => {
           this.get('controller').set('isLoading', false);
         });
@@ -212,10 +218,21 @@ export default Ember.Route.extend({
       Ember.isNone(searchConditions.minLat) ||
       Ember.isNone(searchConditions.maxLng) ||
       Ember.isNone(searchConditions.maxLat))) {
-      let boundingBoxIntersectionCondition = new Query.GeographyPredicate('boundingBox').
-        intersects(`SRID=4326;POLYGON((${searchConditions.minLng} ${searchConditions.minLat},${searchConditions.minLng} ${searchConditions.maxLat},` +
-          `${searchConditions.maxLng} ${searchConditions.maxLat},${searchConditions.maxLng} ${searchConditions.minLat},${searchConditions.minLng} ` +
-          `${searchConditions.minLat}))`);
+
+      // If some of polygon's edges have length of 180 (for example from latitude -90 till latitude 90)
+      // then PostGIS will throw an exception "Antipodal (180 degrees long) edge detected".
+      // Workaround is to make each edge shorter (add additional points into polygon's edges).
+      let boundingBoxIntersectionCondition = new Query.GeographyPredicate('boundingBox').intersects(
+        `SRID=4326;POLYGON((` +
+        `${searchConditions.minLng} ${searchConditions.minLat},` +
+        `${searchConditions.minLng} ${searchConditions.minLat + (searchConditions.maxLat - searchConditions.minLat) * 0.5},` +
+        `${searchConditions.minLng} ${searchConditions.maxLat},` +
+        `${searchConditions.minLng + (searchConditions.maxLng - searchConditions.minLng) * 0.5} ${searchConditions.maxLat},` +
+        `${searchConditions.maxLng} ${searchConditions.maxLat},` +
+        `${searchConditions.maxLng} ${searchConditions.minLat + (searchConditions.maxLat - searchConditions.minLat) * 0.5},` +
+        `${searchConditions.maxLng} ${searchConditions.minLat},` +
+        `${searchConditions.minLng + (searchConditions.maxLng - searchConditions.minLng) * 0.5} ${searchConditions.minLat},` +
+        `${searchConditions.minLng} ${searchConditions.minLat}))`);
       let boundingBoxIsNullCondition = new Query.SimplePredicate('boundingBox', Query.FilterOperator.Eq, null);
 
       filterConditions.addObject(new Query.ComplexPredicate(Query.Condition.Or, boundingBoxIsNullCondition, boundingBoxIntersectionCondition));

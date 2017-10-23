@@ -5,9 +5,11 @@
   {{ui-message
     type="error"
     closeable=true
-    visible=showFormErrorMessage
-    caption=error.name
-    message=error.message
+    visible=showError
+    caption=errorCaption
+    message=errorMessage
+    onShow=(action "onErrorShow")
+    onHide=(action "onErrorHide")
   }}
   <div class="ui fluid action input">
     {{input
@@ -82,10 +84,10 @@
           </div>
           {{flexberry-boundingbox
             mapModel=model.boundingBoxComponentMap
-            minLat=minLat
-            minLng=minLng
-            maxLat=maxLat
-            maxLng=maxLng
+            minLat=searchConditions.minLat
+            minLng=searchConditions.minLng
+            maxLat=searchConditions.maxLat
+            maxLng=searchConditions.maxLng
           }}
         </div>
       </div>
