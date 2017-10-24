@@ -3,6 +3,13 @@ export default {
     'caption': '',
     'tooltip': 'Перейти к координатам'
   },
+  'locate': {
+    'caption': '',
+    'tooltip': 'Мое местоположение',
+    'lat': 'Широта: ',
+    'lng': 'Долгота: ',
+    'error': 'Местоположение не найдено'
+  },
   'full-extent': {
     'caption': '',
     'tooltip': 'Полный охват'

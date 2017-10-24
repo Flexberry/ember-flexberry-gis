@@ -1,4 +1,4 @@
-/*******************************
+﻿/*******************************
          Theme Overrides
 *******************************/
 
@@ -431,6 +431,11 @@
     i.icon.globe:before {
         content: "\e830";
     }
+    /* геолокация */
+    i.icon.bullseye:before {
+        font-family: Icons;
+        content: "\f140";
+    }
     /* поиск по адресу */
     .address.search i.icon.address:before {
         font-family: Icons;
@@ -814,9 +819,28 @@
 
   // Fix display of horizontal segments inside accordion content.
   .ui.horizontal.segments.content {
+    min-width: 325px;
     &.active, &.animating {
       display: flex;
       flex-direction: row;
+    }
+  }
+
+  .advanced-search {
+    .ui.horizontal.segments {
+      &> .segment.advanced-search-what-segment {
+        width: 50%;
+      }
+
+      &> .segment.advanced-search-where-segment {
+        width: 50%;
+
+        .flexberry-boundingbox {
+          .flexberry-map {
+            max-height: 300px;
+          }
+        }
+      }
     }
   }
 
@@ -831,7 +855,9 @@
   }
 
   // Hide icon in header of search-results segment.
-  .search-results {
+  .ui.segments:not(.horizontal) > .ui.segment.search-results {
+    margin-top: 1em;
+
     .ui.label {
       i {
         opacity: 0;
@@ -853,6 +879,26 @@
         margin: 5px;
       }
     }
+  }
+}
+
+.scale-filter {
+  margin: 0em 0em 0.5em;
+  white-space: nowrap;
+
+  .compact.selection {
+    width: 5%;
+  }
+
+  .scale-value {
+    width: ~"calc(100% - 50px)" !important;
+    display: inline-block;
+  }
+
+  .ui.button {
+    border: none;
+    position: absolute;
+    right: 0;
   }
 }
 
