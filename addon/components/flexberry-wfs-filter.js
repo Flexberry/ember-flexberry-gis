@@ -69,7 +69,7 @@ export default Ember.Component.extend({
     for (let layer in _leafletObject._layers) {
       let properties = _leafletObject._layers[layer].feature.properties;
       for (let property in properties) {
-        if (fields.indexOf(property) != -1) {
+        if (fields.indexOf(property) < 0) {
           fields.push(property);
         }
       }
@@ -136,11 +136,13 @@ export default Ember.Component.extend({
           if (logicalExp.test(condition) || conditionExp.test(condition)) {
             properties.addObject(this._parseExpression(condition));
             propertiesString = propertiesString.slice(index + 1);
+            index = 0;
           }
         } else {
           propertiesString = propertiesString.trim();
           if (propertiesString[0] === '(' && propertiesString.slice(-1) === ')') {
             propertiesString = propertiesString.slice(1, propertiesString.length - 1);
+            index--;
           }
 
           if (logicalExp.test(propertiesString) || conditionExp.test(propertiesString)) {
@@ -169,6 +171,28 @@ export default Ember.Component.extend({
 
     this.set('_filterIsCorrect', false);
     return null;
+  },
+
+  _pasteIntoFilterString(pasteString, caretShift) {
+    let textarea = this.$('.edit-filter-textarea')[0];
+    let filterString = this.get('filterStringValue') || '';
+    let newFilterString = '';
+    let caretPosition = 0;
+    if (filterString.length > 0) {
+      newFilterString = `${filterString.slice(0, textarea.selectionStart)}${pasteString}${filterString.slice(textarea.selectionEnd)}`;
+      caretPosition = textarea.selectionStart + pasteString.length;
+    } else {
+      newFilterString = pasteString;
+      caretPosition = pasteString.length;
+    }
+
+    caretPosition = caretPosition + (caretShift || 0);
+    this.set('filterStringValue', newFilterString);
+    Ember.run.scheduleOnce('afterRender', this, function () {
+      textarea.focus();
+      textarea.setSelectionRange(caretPosition, caretPosition);
+    });
+
   },
 
   actions: {
@@ -204,7 +228,7 @@ export default Ember.Component.extend({
 
       for (let layer in _leafletObject._layers) {
         let property = _leafletObject._layers[layer].feature.properties[selectedField];
-        if (values.indexOf(property) != -1) {
+        if (!(values.includes(property))) {
           values.push(property);
         }
 
@@ -228,7 +252,7 @@ export default Ember.Component.extend({
 
       for (let layer in _leafletObject._layers) {
         let property = _leafletObject._layers[layer].feature.properties[selectedField];
-        if (values.indexOf(property) != -1) {
+        if (!(values.includes(property))) {
           values.push(property);
         }
       }
@@ -257,7 +281,8 @@ export default Ember.Component.extend({
       @param {String} condition
     */
     pasteConditionExpression(condition) {
-      this.set('filterStringValue', `${this.get('filterStringValue') || ''}'example' ${condition} 'ex'`);
+      let expressionString = `'example' ${condition} 'ex'`;
+      this._pasteIntoFilterString(expressionString);
     },
 
     /**
@@ -267,7 +292,8 @@ export default Ember.Component.extend({
       @param {String} condition
     */
     pasteLogicalExpression(condition) {
-      this.set('filterStringValue', `${this.get('filterStringValue') || ''}${condition} ()`);
+      let expressionString = `${condition} ()`;
+      this._pasteIntoFilterString(expressionString, -1);
     },
 
     /**
@@ -277,6 +303,7 @@ export default Ember.Component.extend({
       @param {String} symbol
     */
     pasteSymbol(symbol) {
-      this.set('filterStringValue', `${this.get('filterStringValue') || ''}${symbol}`);
+      let expressionString = `${symbol}`;
+      this._pasteIntoFilterString(expressionString);
     }
   } });

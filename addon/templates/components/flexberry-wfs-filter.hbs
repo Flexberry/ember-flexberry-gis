@@ -68,7 +68,7 @@
       class=smallButtonClass
       caption=","
       readonly=readonly
-      click=(action "pasteSymbol" ",")
+      click=(action "pasteSymbol" ", ")
     }}
     {{flexberry-button
       class=smallButtonClass
@@ -116,6 +116,6 @@
     }}
   </div>
   <div class = "sixteen wide column">
-    {{textarea value=filterStringValue doubleClick=(action "parseFilter")}}
+    {{textarea class="edit-filter-textarea" value=filterStringValue doubleClick=(action "parseFilter")}}
   </div>
 </div>
