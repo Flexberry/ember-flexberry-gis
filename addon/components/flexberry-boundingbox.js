@@ -349,7 +349,7 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
       minLat: minLat,
       minLng: minLng,
       maxLat: maxLat,
-      maxLng:maxLng,
+      maxLng: maxLng,
       bounds: L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng))
     });
   },

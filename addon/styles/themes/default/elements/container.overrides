@@ -431,6 +431,11 @@
     i.icon.globe:before {
         content: "\e830";
     }
+    /* геолокация */
+    i.icon.bullseye:before {
+        font-family: Icons;
+        content: "\f140";
+    }
     /* поиск по адресу */
     .address.search i.icon.address:before {
         font-family: Icons;

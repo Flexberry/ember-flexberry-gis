@@ -6,6 +6,7 @@
   display: block;
 }
 
+
 .ui.icon.button {
     color: @uiIconButtonColor;
     background: @uiIconButtonBackground;
@@ -117,4 +118,13 @@
             }
         }
     }
+}
+
+.smaller {
+  width: 70px;
+  margin-bottom: 1px;
+}
+
+.bigger {
+  width: 76px;
 }

@@ -1,85 +1,124 @@
 <div class="ui grid">
   <div class = "eight wide column">
-    {{#each field in fields}}
-    {{flexberry-checkbox
-        value=model.flag
-        label=field
-        readonly=readonly
-        class=class
-        }}
+    <h4>{{t "components.flexberry-wfs-filter.fields"}}</h4>
+      <div class="ui middle aligned selection list">
+    {{#each fields as |field|}}
+      <div class="item">
+        <div class="content">
+          {{field}}
+        </div>
+      </div>
       {{else}}
    {{t "components.flexberry-wfs-filter.settings-not-set"}}
-{{/each}}
+   {{/each}}
+   </div>
   </div>
+
   <div class = "eight wide column">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tincidunt sapien ut massa viverra tincidunt. Sed non faucibus arcu. Aenean eget ipsum nulla. Suspendisse vel mi sit amet enim elementum efficitur eu nec dui. Integer egestas tincidunt turpis id gravida. Fusce finibus libero quis turpis eleifend semper. Morbi a sapien eget neque fermentum egestas. Donec viverra id turpis eget feugiat. Morbi mauris ligula, hendrerit nec enim eu, scelerisque ornare odio. Sed sit amet risus iaculis, tempor est in, viverra nisi. Curabitur nunc dolor, imperdiet vitae sem imperdiet, sodales lacinia ex. Etiam aliquam venenatis ligula id pulvinar.
+    <h4>{{t "components.flexberry-wfs-filter.values"}}</h4>
+    <div class="ui middle aligned selection list">
+      {{#each values as |value|}}
+        <div class="item">
+          <div class="content">
+            {{value}}
+          </div>
+        </div>
+        {{else}}
+     {{t "components.flexberry-wfs-filter.settings-not-set"}}
+     {{/each}}
+    </div>
+    {{flexberry-button
+      class=biggerButtonClass
+      caption=(t "components.flexberry-wfs-filter.buttons.example")
+      readonly=readonly
+    }}
+    {{flexberry-button
+      class=biggerButtonClass
+      caption=(t "components.flexberry-wfs-filter.buttons.all")
+      readonly=readonly
+    }}
   </div>
   <div class = "sixteen wide column">
+  <h4>{{t "components.flexberry-wfs-filter.operators"}}</h4>
     {{flexberry-button
+      class=smallButtonClass
       caption="="
       readonly=readonly
       click=(action "pasteConditionExpression" "=")
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption="<"
       readonly=readonly
       click=(action "pasteConditionExpression" "<")
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=">"
       readonly=readonly
       click=(action "pasteConditionExpression" ">")
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption="LIKE"
       readonly=readonly
       click=(action "pasteConditionExpression" "LIKE")
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=","
       readonly=readonly
       click=(action "pasteSymbol" ",")
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.in")
       readonly=readonly
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.not-in")
       readonly=readonly
     }}
     <br>
     {{flexberry-button
+      class=smallButtonClass
       caption="<="
       readonly=readonly
       click=(action "pasteConditionExpression" "<=")
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=">="
       readonly=readonly
       click=(action "pasteConditionExpression" ">=")
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption="!="
       readonly=readonly
       click=(action "pasteConditionExpression" "!=")
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption="ILIKE"
       readonly=readonly
       click=(action "pasteConditionExpression" "ILIKE")
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.and")
       readonly=readonly
       click=(action "pasteLogicalExpression" "AND")
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.or")
       readonly=readonly
       click=(action "pasteLogicalExpression" "OR")
     }}
     {{flexberry-button
+      class=smallButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.not")
       readonly=readonly
       click=(action "pasteLogicalExpression" "NOT")
