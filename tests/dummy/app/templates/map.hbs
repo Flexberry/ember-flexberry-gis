@@ -160,7 +160,11 @@
         {{map-commands/go-to
           tooltip="Перейти к координатам"
           availableCRS=availableCRS
-          execute=(action "onMapCommandExecute" target=mapToolbar)}}
+          execute=(action "onMapCommandExecute" target=mapToolbar)
+        }}
+        {{map-commands/locate
+        	execute=(action "onMapCommandExecute" target=mapToolbar)
+        }}
         {{map-commands/search execute=(action "onMapCommandExecute" target=mapToolbar)}}
         {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
         {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
@@ -191,9 +195,9 @@
         zoomend=(action "onMapZoomend" "model.zoom")
       }}
         {{flexberry-layers
-            leafletMap=leafletMap
-            leafletContainer=leafletMap
-            layers=model.hierarchy
+          leafletMap=leafletMap
+          leafletContainer=leafletMap
+          layers=model.hierarchy
         }}
         {{switch-scale-control
           map=leafletMap

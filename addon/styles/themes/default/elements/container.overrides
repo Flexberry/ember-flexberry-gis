@@ -431,6 +431,11 @@
     i.icon.globe:before {
         content: "\e830";
     }
+    /* геолокация */
+    i.icon.bullseye:before {
+        font-family: Icons;
+        content: "\f140";
+    }
     /* поиск по адресу */
     .address.search i.icon.address:before {
         font-family: Icons;
@@ -782,18 +787,117 @@
 /*********************************************
             Search form
 *********************************************/
-
-.search-result-top-panel {
-  a {
-    line-height: 33px !important;
-  }
-  &-clear {
-    cursor: pointer;
-  }
-  &-item {
-    display: inline-block;
-    span {
-        margin: 5px;
+.gis-search-form {
+  // Alignment for 'anyText' input & its buttons.
+  .ui.action.input {
+    .search-button {
+      position: absolute;
+      right: 35px;
+      border: none;
+      height: 35px;
     }
+
+    .clear-search-button {
+      position: absolute;
+      right: 0;
+      border: none;
+      height: 35px;
+    }
+  }
+
+  // Hide segments borders exept tabular menu segments.
+  .ui.segment:not(.tab), .ui.segments {
+    border: none;
+    box-shadow: none;
+  }
+
+  // Alignment for tabular menu.
+  .ui.tabular.fluid.menu {
+    width: 100% !important;
+    margin-top: 35px;
+  }
+
+  // Fix display of horizontal segments inside accordion content.
+  .ui.horizontal.segments.content {
+    min-width: 325px;
+    &.active, &.animating {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+
+  .advanced-search {
+    .ui.horizontal.segments {
+      &> .segment.advanced-search-what-segment {
+        width: 50%;
+      }
+
+      &> .segment.advanced-search-where-segment {
+        width: 50%;
+
+        .flexberry-boundingbox {
+          .flexberry-map {
+            max-height: 300px;
+          }
+        }
+      }
+    }
+  }
+
+  // Fix colors of labels inside accordion header.
+  .ui.label {
+    &.active {
+      background-color: #dcebfc;
+      border: 0px solid transparent;
+      background-image: none;
+      color: rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  // Hide icon in header of search-results segment.
+  .ui.segments:not(.horizontal) > .ui.segment.search-results {
+    margin-top: 1em;
+
+    .ui.label {
+      i {
+        opacity: 0;
+      }
+    }
+  }
+
+  // Alignment for results table top toolbar & its items.
+  .search-result-top-panel {
+    a {
+      line-height: 35px !important;
+    }
+    &-clear {
+      cursor: pointer;
+    }
+    &-item {
+      display: inline-block;
+      span {
+        margin: 5px;
+      }
+    }
+  }
+}
+
+.scale-filter {
+  margin: 0em 0em 0.5em;
+  white-space: nowrap;
+
+  .compact.selection {
+    width: 5%;
+  }
+
+  .scale-value {
+    width: ~"calc(100% - 50px)" !important;
+    display: inline-block;
+  }
+
+  .ui.button {
+    border: none;
+    position: absolute;
+    right: 0;
   }
 }
