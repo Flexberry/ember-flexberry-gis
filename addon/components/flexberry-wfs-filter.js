@@ -69,7 +69,7 @@ export default Ember.Component.extend({
     for (let layer in _leafletObject._layers) {
       let properties = _leafletObject._layers[layer].feature.properties;
       for (let property in properties) {
-        if (!(fields.includes(property))) {
+        if (fields.indexOf(property) != -1) {
           fields.push(property);
         }
       }
@@ -204,7 +204,7 @@ export default Ember.Component.extend({
 
       for (let layer in _leafletObject._layers) {
         let property = _leafletObject._layers[layer].feature.properties[selectedField];
-        if (!(values.includes(property))) {
+        if (values.indexOf(property) != -1) {
           values.push(property);
         }
 
@@ -228,7 +228,7 @@ export default Ember.Component.extend({
 
       for (let layer in _leafletObject._layers) {
         let property = _leafletObject._layers[layer].feature.properties[selectedField];
-        if (!(values.includes(property))) {
+        if (values.indexOf(property) != -1) {
           values.push(property);
         }
       }
