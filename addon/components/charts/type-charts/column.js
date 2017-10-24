@@ -38,6 +38,7 @@ export default Ember.Component.extend({
   },
 
   getJsonCharts() {
+    let xCategories = Ember.A([]);
     let dataSeries = Ember.A([]);
     let geoJsonLayer = this.get('_layer');
 
@@ -49,37 +50,42 @@ export default Ember.Component.extend({
       let dsCopy = Ember.A([]);
 
       dsCopy.push(feature.properties[propName],
-                    parseFloat(feature.properties[propVal]));
-      dataSeries.push(dsCopy);
+        parseFloat(feature.properties[propVal]));
+      xCategories.push(dsCopy[0]);
+      dataSeries.push(dsCopy[1]);
     });
 
     let chart = {
-             plotBackgroundColor: null,
-             plotBorderWidth: null,
-             plotShadow: false
-          };
+      type: this.get('_selectedModeType')
+    };
     let title = {
       text: this.get('_captionChart')
     };
+    let xAxis = {
+      categories: xCategories,
+      crosshair: true
+    };
+    let yAxis = {
+      min: 0,
+      title: {
+        text: propVal
+      }
+    };
     let tooltip = {
-      pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
+      headerFormat: '<span style = "font-size:10px">{point.key}</span><table>',
+      pointFormat: '<tr><td style = "color:{series.color};padding:0">{series.name}: </td>' +
+        '<td style = "padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+      footerFormat: '</table>',
+      shared: true,
+      useHTML: true
     };
     let plotOptions = {
-      pie: {
-        allowPointSelect: true,
-        cursor: 'pointer',
-
-        dataLabels: {
-          enabled: true,
-          format: '<b>{point.name}%</b>: {point.percentage:.1f} %',
-          style: {
-            color: (Highcharts.theme && Highcharts.theme.contrastTextColor)||'black'
-          }
-        }
+      column: {
+        pointPadding: 0.2,
+        borderWidth: 0
       }
     };
     let series = [{
-      type: this.get('_selectedModeType'),
       name: propVal,
       data: dataSeries
     }];
@@ -88,6 +94,8 @@ export default Ember.Component.extend({
     json.chart = chart;
     json.title = title;
     json.tooltip = tooltip;
+    json.xAxis = xAxis;
+    json.yAxis = yAxis;
     json.series = series;
     json.plotOptions = plotOptions;
 
