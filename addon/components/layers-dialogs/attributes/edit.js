@@ -92,6 +92,26 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
 
   actions: {
     /**
+      Handles 'change' event from controls that don't change the model value directly.
+
+      @param {String} key
+      @param {Object} event
+     */
+    onFieldChange(key, event) {
+      let newValue = null;
+      let data = this.get('data');
+      let parsers = this.get('fieldParsers');
+
+      if (event.target) {
+        newValue = event.target.value;
+      } else {
+        newValue = event.checked.toString(); // boolean parser waits for string
+      }
+
+      Ember.set(data, key, parsers[key](newValue));
+    },
+
+    /**
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
       Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
 

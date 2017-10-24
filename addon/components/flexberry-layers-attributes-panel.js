@@ -325,6 +325,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let editedProperty = tabModel.propertyLink[rowId];
       this.set('_editRowData', editedProperty);
       this.set('_editRowDataCopy', Ember.copy(editedProperty, false));
+      this.set('_editRowFieldTypes', Ember.get(tabModel, 'leafletObject.readFormat.featureType.fieldTypes'));
+      this.set('_editRowFieldParsers', Ember.get(tabModel, 'leafletObject.readFormat.featureType.fields'));
 
       // Include dialog to markup.
       this.set('_editRowDialogHasBeenRequested', true);
