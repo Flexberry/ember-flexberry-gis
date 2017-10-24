@@ -39,5 +39,18 @@ export default Ember.Component.extend({
     this.set('_geoJsonLayer', geoJsonLayer);
   },
 
+  actions: {
+
+    initJsonCharts(getJsonCharts) {
+      this.set('getJsonCharts', getJsonCharts);
+    },
+
+    onClick() {
+      let json = this.get('getJsonCharts')();
+
+      this.$('.containerCR').highcharts(json);
+    }
+  },
+
   layout
 });

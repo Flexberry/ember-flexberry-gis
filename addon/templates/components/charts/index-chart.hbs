@@ -21,7 +21,12 @@
     <div class="ui grid">
       <div class="column">
         {{#if _selectedModeType}}
-          {{component (concat "charts/type-charts/" _selectedModeType) _layer = _geoJsonLayer}}
+          {{component (concat "charts/type-charts/" _selectedModeType)
+            _layer = _geoJsonLayer
+            _captionChart = _captionChart
+            _selectedModeType = _selectedModeType
+            onInit=(action "initJsonCharts")
+          }}
         {{/if}}
       </div>
     </div>
@@ -30,12 +35,14 @@
       <div class="right aligned column">
         {{flexberry-button
           caption="Сформировать диаграмму"
+          click=(action "onClick")
         }}
       </div>
     </div>
   </div>
 
   <div class="nine wide column">
-    {{component (concat "charts/chart-result")}}
+    <div class="containerCR" style="width:100%; height:500px;">
+    </div>
   </div>
 </div>
