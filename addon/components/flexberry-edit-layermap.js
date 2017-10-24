@@ -896,6 +896,10 @@ export default Ember.Component.extend(
       }
 
       Ember.set(settings, 'bounds', geoJsonBounds);
+      if (Ember.get(settings, 'filter') instanceof Element) {
+        Ember.set(settings, 'filter', L.XmlUtil.serializeXmlToString(Ember.get(settings, 'filter')));
+      }
+
       settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
 
       Ember.set(_layerHash, 'settings', settings);

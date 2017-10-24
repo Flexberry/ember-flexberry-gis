@@ -18,22 +18,27 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tincidunt s
     {{flexberry-button
       caption="="
       readonly=readonly
+      click=(action "pasteConditionExpression" "=")
     }}
     {{flexberry-button
       caption="<"
       readonly=readonly
+      click=(action "pasteConditionExpression" "<")
     }}
     {{flexberry-button
       caption=">"
       readonly=readonly
+      click=(action "pasteConditionExpression" ">")
     }}
     {{flexberry-button
       caption="LIKE"
       readonly=readonly
+      click=(action "pasteConditionExpression" "LIKE")
     }}
     {{flexberry-button
-      caption="%"
+      caption=","
       readonly=readonly
+      click=(action "pasteSymbol" ",")
     }}
     {{flexberry-button
       caption=(t "components.flexberry-wfs-filter.buttons.in")
@@ -47,33 +52,40 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse tincidunt s
     {{flexberry-button
       caption="<="
       readonly=readonly
+      click=(action "pasteConditionExpression" "<=")
     }}
     {{flexberry-button
       caption=">="
       readonly=readonly
+      click=(action "pasteConditionExpression" ">=")
     }}
     {{flexberry-button
       caption="!="
       readonly=readonly
+      click=(action "pasteConditionExpression" "!=")
     }}
     {{flexberry-button
       caption="ILIKE"
       readonly=readonly
+      click=(action "pasteConditionExpression" "ILIKE")
     }}
     {{flexberry-button
       caption=(t "components.flexberry-wfs-filter.buttons.and")
       readonly=readonly
+      click=(action "pasteLogicalExpression" "AND")
     }}
     {{flexberry-button
       caption=(t "components.flexberry-wfs-filter.buttons.or")
       readonly=readonly
+      click=(action "pasteLogicalExpression" "OR")
     }}
     {{flexberry-button
       caption=(t "components.flexberry-wfs-filter.buttons.not")
       readonly=readonly
+      click=(action "pasteLogicalExpression" "NOT")
     }}
   </div>
   <div class = "sixteen wide column">
-    {{textarea}}
+    {{textarea value=filterStringValue doubleClick=(action "parseFilter")}}
   </div>
 </div>

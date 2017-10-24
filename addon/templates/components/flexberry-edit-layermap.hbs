@@ -308,7 +308,7 @@
   {{/if}}
   {{#if _filterSettingsAreAvailableForType}}
   <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "wfsFilterSettings") "active"}}" data-tab="wfsFilterSettings">
-    {{flexberry-wfs-filter}}
+    {{flexberry-wfs-filter value=_layer.settings.filter}}
   </div>
   {{/if}}
 </form>

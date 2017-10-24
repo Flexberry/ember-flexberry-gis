@@ -23,7 +23,8 @@ export default BaseLayer.extend({
     'crs',
     'maxFeatures',
     'showExisting',
-    'style'
+    'style',
+    'filter'
   ],
 
   /**
@@ -141,6 +142,9 @@ export default BaseLayer.extend({
   */
   createLayer(options) {
     options = Ember.$.extend(true, {}, this.get('options'), options);
+    if (options.filter) {
+      options.filter = L.XmlUtil.parseXml(options.filter).firstChild;
+    }
     let featuresReadFormat = this.get('featuresReadFormat');
 
     return L.wfs(options, featuresReadFormat);
