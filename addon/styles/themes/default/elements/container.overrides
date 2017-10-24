@@ -895,9 +895,19 @@
     display: inline-block;
   }
 
+  .ui.icon.button {
+    background: none;
+  }
+
   .ui.button {
     border: none;
     position: absolute;
     right: 0;
+    .remove.icon:before:hover {
+      color: #FF7500;
+    }
+    .remove.icon:hover:before {
+      color: #FF7500;
+    }
   }
 }
