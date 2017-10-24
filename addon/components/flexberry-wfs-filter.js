@@ -60,7 +60,9 @@ export default Ember.Component.extend({
     @default null
     @private
   */
-  _selectedField: null,
+  _selectedField: undefined,
+
+  _selectedValue: undefined,
 
   _test: Ember.on('init', function() {
     let _leafletObject = this.get('_leafletObject');
@@ -196,6 +198,32 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    addFieldButton() {
+      if (this._selectedField === undefined) {
+        return;
+      }
+
+      let newString = '"' + this._selectedField + '"';
+      this._pasteIntoFilterString(newString);
+    },
+
+    addValueButton() {
+      if (this._selectedValue === undefined) {
+        return;
+      }
+
+      let newString = '';
+      if (typeof (this._selectedValue) === 'number') {
+        newString = this._selectedValue;
+      }
+
+      if (typeof (this._selectedValue) === 'string') {
+        newString = '\'' + this._selectedValue + '\'';
+      }
+
+      this._pasteIntoFilterString(newString);
+    },
+
     fieldClick(text) {
       this.set('values', []);
       if (this._selectedField != null) {
@@ -228,7 +256,7 @@ export default Ember.Component.extend({
 
       for (let layer in _leafletObject._layers) {
         let property = _leafletObject._layers[layer].feature.properties[selectedField];
-        if (!(values.includes(property))) {
+        if (values.indexOf(property) < 0) {
           values.push(property);
         }
 
@@ -252,7 +280,7 @@ export default Ember.Component.extend({
 
       for (let layer in _leafletObject._layers) {
         let property = _leafletObject._layers[layer].feature.properties[selectedField];
-        if (!(values.includes(property))) {
+        if (values.indexOf(property) < 0) {
           values.push(property);
         }
       }
