@@ -6,6 +6,7 @@ moduleForModel('new-platform-flexberry-g-i-s-map-layer', 'Unit | Serializer | ne
     'serializer:new-platform-flexberry-g-i-s-map-layer',
     'transform:file',
     'transform:decimal',
+    'transform:json',
 
     'model:custom-inflector-rules',
     'model:new-platform-flexberry-g-i-s-layer-link',

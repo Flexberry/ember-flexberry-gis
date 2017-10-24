@@ -41,6 +41,6 @@ export let defineProjections = function (modelClass) {
     queryKey: Projection.attr('Параметр запроса'),
     linkField: Projection.attr('Поле связи', { hidden: true }),
     layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
-    })
+    }, { hidden: true })
   });
 };

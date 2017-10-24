@@ -6,6 +6,7 @@ moduleForModel('new-platform-flexberry-g-i-s-layer-metadata', 'Unit | Serializer
     'serializer:new-platform-flexberry-g-i-s-layer-metadata',
     'transform:file',
     'transform:decimal',
+    'transform:json',
 
     'model:custom-inflector-rules',
     'model:new-platform-flexberry-g-i-s-layer-link',

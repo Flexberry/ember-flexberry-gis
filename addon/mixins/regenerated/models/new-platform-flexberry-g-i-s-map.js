@@ -48,7 +48,7 @@ export let Model = Ember.Mixin.create({
   public: DS.attr('boolean', { defaultValue: false }),
   scale: DS.attr('number', { defaultValue: 0 }),
   coordinateReferenceSystem: DS.attr('string', { defaultValue: '{"code":"EPSG:3857"}' }),
-  boundingBox: DS.attr('string'),
+  boundingBox: DS.attr('json'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
   editTime: DS.attr('date'),
