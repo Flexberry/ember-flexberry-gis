@@ -26,8 +26,24 @@ export default Ember.Component.extend({
   */
   _filterIsCorrect: true,
 
+  /**
+    Style for smaller buttons.
+
+    @property smallButtonClass
+    @type String
+    @default smaller
+    @private
+  */
   smallButtonClass: 'smaller',
 
+  /**
+    Flag indicates whether filterStringValue is correct or not.
+
+    @property biggerButtonClass
+    @type String
+    @default bigger
+    @private
+  */
   biggerButtonClass: 'bigger',
 
   _leafletObject: null,
@@ -35,6 +51,16 @@ export default Ember.Component.extend({
   fields: [],
 
   values: [],
+
+  /**
+    Contains selected field.
+
+    @property _selectedField
+    @type String
+    @default null
+    @private
+  */
+  _selectedField: null,
 
   _test: Ember.on('init', function() {
     let _leafletObject = this.get('_leafletObject');
@@ -170,6 +196,71 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    fieldClick(text) {
+      this.set('values', []);
+      if (this._selectedField != null) {
+        this.$('#' + this._selectedField).removeClass('active');
+      }
+
+      this.$('#' + text).addClass('active');
+      this._selectedField = text;
+    },
+
+    valueClick(text) {
+      if (this._selectedValue != null) {
+        this.$('#' + this._selectedValue).removeClass('active');
+      }
+
+      this.$('#' + text).addClass('active');
+      this._selectedValue = text;
+
+      //пока что не передаю никуда
+    },
+
+    showExample() {
+      if (this._selectedField === null) {
+        return;
+      } //может быть попап приделать "выделите поле"?
+
+      let _leafletObject = this.get('_leafletObject');
+      let values = [];
+      let selectedField = this._selectedField;
+
+      for (let layer in _leafletObject._layers) {
+        let property = _leafletObject._layers[layer].feature.properties[selectedField];
+        if (!(values.includes(property))) {
+          values.push(property);
+        }
+
+        if (values.length === 10) {
+          break;
+        }
+      }
+
+      values.sort();
+      this.set('values', values);
+    },
+
+    showAll() {
+      if (this._selectedField === null) {
+        return; //может быть попап приделать "выделите поле"?
+      }
+
+      let _leafletObject = this.get('_leafletObject');
+      let values = [];
+      let selectedField = this._selectedField;
+
+      for (let layer in _leafletObject._layers) {
+        let property = _leafletObject._layers[layer].feature.properties[selectedField];
+        if (!(values.includes(property))) {
+          values.push(property);
+        }
+      }
+
+      values.sort();
+      this.set('values', values);
+    },
+
     parseFilter() {
       let a = this.get('filterStringValue');
       a = a.replace(/[\n\r]/g, '');

@@ -3,7 +3,7 @@
     <h4>{{t "components.flexberry-wfs-filter.fields"}}</h4>
       <div class="ui middle aligned selection list">
     {{#each fields as |field|}}
-      <div class="item">
+      <div class="item"  id={{field}} {{action "fieldClick" field}}>
         <div class="content">
           {{field}}
         </div>
@@ -18,7 +18,7 @@
     <h4>{{t "components.flexberry-wfs-filter.values"}}</h4>
     <div class="ui middle aligned selection list">
       {{#each values as |value|}}
-        <div class="item">
+        <div class="item" id={{value}} {{action "valueClick" value}}>
           <div class="content">
             {{value}}
           </div>
@@ -30,12 +30,12 @@
     {{flexberry-button
       class=biggerButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.example")
-      readonly=readonly
+      click=(action "showExample")
     }}
     {{flexberry-button
       class=biggerButtonClass
       caption=(t "components.flexberry-wfs-filter.buttons.all")
-      readonly=readonly
+      click=(action "showAll")
     }}
   </div>
   <div class = "sixteen wide column">
@@ -72,15 +72,18 @@
     }}
     {{flexberry-button
       class=smallButtonClass
-      caption=(t "components.flexberry-wfs-filter.buttons.in")
+      caption=(t "components.flexberry-wfs-filter.buttons.not")
       readonly=readonly
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption=(t "components.flexberry-wfs-filter.buttons.not-in")
-      readonly=readonly
+      click=(action "pasteLogicalExpression" "NOT")
     }}
     <br>
+
+    {{flexberry-button
+      class=smallButtonClass
+      caption="!="
+      readonly=readonly
+      click=(action "pasteConditionExpression" "!=")
+    }}
     {{flexberry-button
       class=smallButtonClass
       caption="<="
@@ -92,12 +95,6 @@
       caption=">="
       readonly=readonly
       click=(action "pasteConditionExpression" ">=")
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption="!="
-      readonly=readonly
-      click=(action "pasteConditionExpression" "!=")
     }}
     {{flexberry-button
       class=smallButtonClass
@@ -116,12 +113,6 @@
       caption=(t "components.flexberry-wfs-filter.buttons.or")
       readonly=readonly
       click=(action "pasteLogicalExpression" "OR")
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption=(t "components.flexberry-wfs-filter.buttons.not")
-      readonly=readonly
-      click=(action "pasteLogicalExpression" "NOT")
     }}
   </div>
   <div class = "sixteen wide column">
