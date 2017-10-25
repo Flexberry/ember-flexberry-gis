@@ -783,7 +783,6 @@
   }
 }
 
-
 /*********************************************
             Search form
 *********************************************/
@@ -891,23 +890,26 @@
   }
 
   .scale-value {
-    width: ~"calc(100% - 50px)" !important;
-    display: inline-block;
-  }
+    &:not(.flexberry-dropdown) {
+      width: ~"calc(100% - 64px)";
+      display: inline-block;
 
-  .ui.icon.button {
-    background: none;
+      .flexberry-dropdown {
+        i.dropdown.icon {
+          right: 32px;
+        }
+      }
+    }
   }
 
   .ui.button {
-    border: none;
     position: absolute;
     right: 0;
-    .remove.icon:before:hover {
-      color: #FF7500;
-    }
+    border: none;
+    height: 35px;
+
     .remove.icon:hover:before {
-      color: #FF7500;
+      color: @red;
     }
   }
 }
