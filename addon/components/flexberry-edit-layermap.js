@@ -406,7 +406,7 @@ export default Ember.Component.extend(
       '_crsSettingsAreAvailableForType',
       '_layerSettingsAreAvailableForType',
       function () {
-        // Group is available when at least one of it's tabs is available.
+        // Group is available when at least one of it's tab is available.
         return this.get('_mainSettingsAreAvailableForType') ||
           this.get('_crsSettingsAreAvailableForType') ||
           this.get('_layerSettingsAreAvailableForType');
@@ -481,7 +481,7 @@ export default Ember.Component.extend(
       '_displaySettingsAreAvailableForType',
       '_legendSettingsAreAvailableForType',
       function () {
-        // Group is available when at least one of it's tabs is available.
+        // Group is available when at least one of it's tab is available.
         return this.get('_identifySettingsAreAvailableForType') ||
           this.get('_searchSettingsAreAvailableForType') ||
           this.get('_displaySettingsAreAvailableForType') ||
@@ -557,7 +557,7 @@ export default Ember.Component.extend(
     _linksGroupIsAvailableForType: Ember.computed(
       '_linksSettingsAreAvailableForType',
       function () {
-        // Group is available when at least one of it's tabs is available.
+        // Group is available when at least one of it's tab is available.
         return this.get('_linksSettingsAreAvailableForType');
       }
     ),
