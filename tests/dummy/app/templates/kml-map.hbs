@@ -1,0 +1,21 @@
+{{#simple-map
+  lat=58.03
+  lng=56.25
+  zoom=6
+ as |leafletMap|}}
+  {{layers/tile-layer
+    leafletMap=leafletMap
+    leafletContainer=leafletMap
+    visibility=true
+    url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    layerModel=(hash )
+  }}
+  {{layers/kml-layer
+    leafletMap=leafletMap
+    leafletContainer=leafletMap
+    visibility=true
+    layerModel=model
+    dynamicProperties=model.settingsAsObject
+  }}
+{{/simple-map}}
