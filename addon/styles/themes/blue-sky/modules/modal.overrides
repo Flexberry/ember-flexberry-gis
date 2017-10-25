@@ -10,6 +10,11 @@
 
     .content {
         overflow: auto;
+        &.layers-fields-container {
+            border-radius: 0.5em;
+            border: 1px solid #bcc0c3;
+            margin: 5px !important;
+        }
     }
 
     .ui.attached.menu {
@@ -113,11 +118,17 @@
     }
     .ui.attached.tab.segment .flexberry-button {
         background: @white !important;
-        border: none !important;
         box-shadow: @darkBoxShadow;
         &:hover {
             background: #f1f7ff !important;
             color: @darkbluecolor;
+        }
+        &:not(.disabled) {
+            border: none !important;
+        }
+        &.filter-operator-button {
+            margin: 5px;
+            width: 5em;
         }
     }
     .ui.tab.segment,

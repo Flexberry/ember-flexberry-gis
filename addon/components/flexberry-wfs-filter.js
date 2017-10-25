@@ -27,24 +27,25 @@ export default Ember.Component.extend({
   _filterIsCorrect: true,
 
   /**
-    Style for smaller buttons.
+    Class for operator buttons.
 
-    @property smallButtonClass
+    @property operatorButtonClass
     @type String
-    @default smaller
-    @private
+    @default 'filter-operator-button'
   */
-  smallButtonClass: 'smaller',
+  operatorButtonClass: 'filter-operator-button',
 
   /**
-    Flag indicates whether filterStringValue is correct or not.
+    Classes for Example and All buttons.
 
-    @property biggerButtonClass
+    @property fieldValuesLoadButtonClass
     @type String
-    @default bigger
-    @private
   */
-  biggerButtonClass: 'bigger',
+  fieldValuesLoadButtonClass: Ember.computed('_selectedField', function() {
+    let field = this.get('_selectedField');
+
+    return Ember.isBlank(field) ? 'filter-operator-button disabled' : 'filter-operator-button';
+  }),
 
   _leafletObject: null,
 
@@ -220,36 +221,6 @@ export default Ember.Component.extend({
   },
 
   actions: {
-
-    /**
-      This action is called when an + button above the Fields list is pressed.
-
-      @method actions.addFieldButton
-    */
-    addFieldButton() {
-      if (this.get('_selectedField') === undefined) {
-        return;
-      }
-
-      let newString = '"' + this.get('_selectedField') + '"';
-      this._pasteIntoFilterString(newString);
-    },
-
-    /**
-      This action is called when an + button above the Values list is pressed.
-
-      @method actions.addValueButton
-    */
-    addValueButton() {
-      if (this.get('_selectedValue') === undefined) {
-        return;
-      }
-
-      let newString = '\'' + this.get('_selectedValue') + '\'';
-
-      this._pasteIntoFilterString(newString);
-    },
-
     /**
       This action is called when an item in Fields list is pressed.
 
@@ -276,10 +247,6 @@ export default Ember.Component.extend({
       @method actions.showExample
     */
     showExample() {
-      if (this.get('_selectedField') === null) {
-        return;
-      } //может быть попап приделать "выделите поле"?
-
       let _leafletObject = this.get('_leafletObject');
       let values = [];
       let selectedField = this.get('_selectedField');
@@ -305,10 +272,6 @@ export default Ember.Component.extend({
       @method actions.ShowAll
     */
     showAll() {
-      if (this.get('_selectedField') === null) {
-        return; //может быть попап приделать "выделите поле"?
-      }
-
       let _leafletObject = this.get('_leafletObject');
       let values = [];
       let selectedField = this.get('_selectedField');
@@ -344,15 +307,8 @@ export default Ember.Component.extend({
       @param {String} condition
     */
     pasteConditionExpression(condition) {
-      let operandBefore = '';
-      let operandAfter = '';
-      if (this.get('_selectedField') !== undefined) {
-        operandBefore = this.get('_selectedField');
-      }
-
-      if (this.get('_selectedValue') !== undefined) {
-        operandAfter = this.get('_selectedValue');
-      }
+      let operandBefore = this.get('_selectedField') || '';
+      let operandAfter = this.get('_selectedValue') || '';
 
       let expressionString = `'${operandBefore}' ${condition} '${operandAfter}'`;
       this._pasteIntoFilterString(expressionString);
@@ -378,5 +334,16 @@ export default Ember.Component.extend({
     pasteSymbol(symbol) {
       let expressionString = `${symbol}`;
       this._pasteIntoFilterString(expressionString);
-    }
+    },
+
+    /**
+      Paste selected field or field value into filter string.
+
+      @method actions.pasteFieldValue
+      @param {String} value
+    */
+    pasteFieldValue(value) {
+      let newString = `'${value || ''}'`;
+      this._pasteIntoFilterString(newString);
+    },
   } });

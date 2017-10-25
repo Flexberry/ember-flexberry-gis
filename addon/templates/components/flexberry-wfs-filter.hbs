@@ -1,136 +1,134 @@
-<div class="ui grid">
-  <div class = "eight wide column">
-    <h4>{{t "components.flexberry-wfs-filter.fields"}}</h4>
-      {{flexberry-button
-        class="circular"
-        caption="+"
-        click=(action "addFieldButton")
-      }}
-    <div class = "ui container scrollable content" style="height: 60%;">
-      <div class="ui middle aligned selection list">
-        {{#each fields as |field|}}
-          <div class="item {{if (eq _selectedField field) "active"}}" {{action "fieldClick" field}}>
-            <div class="content">
-              {{field}}
+<div class="ui celled grid">
+  <div class="row">
+    <div class = "eight wide column">
+      <h4>{{t "components.flexberry-wfs-filter.fields"}}</h4>
+      <div class = "ui container scrollable content layers-fields-container" style="height: 200px;">
+        <div class="ui middle aligned selection list">
+          {{#each fields as |field|}}
+            <div class="item {{if (eq _selectedField field) "active"}}" {{action "fieldClick" field}} {{action "pasteFieldValue" field on="doubleClick"}}>
+              <div class="content unselectable">
+                {{field}}
+              </div>
             </div>
+            {{else}}
+          <div class="item">
+            {{t "components.flexberry-wfs-filter.settings-not-set"}}
           </div>
-          {{else}}
-       {{t "components.flexberry-wfs-filter.settings-not-set"}}
-       {{/each}}
+         {{/each}}
+       </div>
      </div>
-   </div>
-  </div>
-  <div class = "eight wide column">
-    <h4>{{t "components.flexberry-wfs-filter.values"}}</h4>
-    {{flexberry-button
-      class="circular"
-      caption="+"
-      click=(action "addValueButton")
-    }}
-    <div class = "ui container scrollable content" style="height: 60%;">
-      <div class="ui middle aligned selection list">
-        {{#each values as |value|}}
-          <div class="item {{if (eq _selectedValue value) "active"}}" {{action "valueClick" value}}>
-            <div class="content">
-              {{value}}
-            </div>
-          </div>
-          {{else}}
-       {{t "components.flexberry-wfs-filter.settings-not-set"}}
-       {{/each}}
-      </div>
     </div>
-    {{flexberry-button
-      class=biggerButtonClass
-      caption=(t "components.flexberry-wfs-filter.buttons.example")
-      click=(action "showExample")
-    }}
-    {{flexberry-button
-      class=biggerButtonClass
-      caption=(t "components.flexberry-wfs-filter.buttons.all")
-      click=(action "showAll")
-    }}
+    <div class = "eight wide column">
+      <h4>{{t "components.flexberry-wfs-filter.values"}}</h4>
+      <div class = "ui container scrollable content layers-fields-container" style="height: 200px;">
+        <div class="ui middle aligned selection list">
+          {{#each values as |value|}}
+            <div class="item {{if (eq _selectedValue value) "active"}}" {{action "valueClick" value}} {{action "pasteFieldValue" value on="doubleClick"}}>
+              <div class="content unselectable">
+                {{value}}
+              </div>
+            </div>
+            {{else}}
+          <div class="item">
+            {{t "components.flexberry-wfs-filter.settings-not-set"}}
+          </div>
+         {{/each}}
+        </div>
+      </div>
+      {{flexberry-button
+        class=fieldValuesLoadButtonClass
+        caption=(t "components.flexberry-wfs-filter.buttons.example")
+        click=(action "showExample")
+      }}
+      {{flexberry-button
+        class=fieldValuesLoadButtonClass
+        caption=(t "components.flexberry-wfs-filter.buttons.all")
+        click=(action "showAll")
+      }}
+    </div>
   </div>
+  <div class="row">
+    <div class = "sixteen wide column">
+    <h4>{{t "components.flexberry-wfs-filter.operators"}}</h4>
+      {{flexberry-button
+        class=operatorButtonClass
+        caption="="
+        readonly=readonly
+        click=(action "pasteConditionExpression" "=")
+      }}
+      {{flexberry-button
+        class=operatorButtonClass
+        caption="<"
+        readonly=readonly
+        click=(action "pasteConditionExpression" "<")
+      }}
+      {{flexberry-button
+        class=operatorButtonClass
+        caption=">"
+        readonly=readonly
+        click=(action "pasteConditionExpression" ">")
+      }}
+      {{flexberry-button
+        class=operatorButtonClass
+        caption="LIKE"
+        readonly=readonly
+        click=(action "pasteConditionExpression" "LIKE")
+      }}
+      {{flexberry-button
+        class=operatorButtonClass
+        caption=","
+        readonly=readonly
+        click=(action "pasteSymbol" ", ")
+      }}
+      {{flexberry-button
+        class=operatorButtonClass
+        caption=(t "components.flexberry-wfs-filter.buttons.not")
+        readonly=readonly
+        click=(action "pasteLogicalExpression" "NOT")
+      }}
+      <br>
 
-
-  <div class = "sixteen wide column">
-  <h4>{{t "components.flexberry-wfs-filter.operators"}}</h4>
-    {{flexberry-button
-      class=smallButtonClass
-      caption="="
-      readonly=readonly
-      click=(action "pasteConditionExpression" "=")
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption="<"
-      readonly=readonly
-      click=(action "pasteConditionExpression" "<")
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption=">"
-      readonly=readonly
-      click=(action "pasteConditionExpression" ">")
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption="LIKE"
-      readonly=readonly
-      click=(action "pasteConditionExpression" "LIKE")
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption=","
-      readonly=readonly
-      click=(action "pasteSymbol" ", ")
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption=(t "components.flexberry-wfs-filter.buttons.not")
-      readonly=readonly
-      click=(action "pasteLogicalExpression" "NOT")
-    }}
-    <br>
-
-    {{flexberry-button
-      class=smallButtonClass
-      caption="!="
-      readonly=readonly
-      click=(action "pasteConditionExpression" "!=")
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption="<="
-      readonly=readonly
-      click=(action "pasteConditionExpression" "<=")
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption=">="
-      readonly=readonly
-      click=(action "pasteConditionExpression" ">=")
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption="ILIKE"
-      readonly=readonly
-      click=(action "pasteConditionExpression" "ILIKE")
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption=(t "components.flexberry-wfs-filter.buttons.and")
-      readonly=readonly
-      click=(action "pasteLogicalExpression" "AND")
-    }}
-    {{flexberry-button
-      class=smallButtonClass
-      caption=(t "components.flexberry-wfs-filter.buttons.or")
-      readonly=readonly
-      click=(action "pasteLogicalExpression" "OR")
-    }}
+      {{flexberry-button
+        class=operatorButtonClass
+        caption="!="
+        readonly=readonly
+        click=(action "pasteConditionExpression" "!=")
+      }}
+      {{flexberry-button
+        class=operatorButtonClass
+        caption="<="
+        readonly=readonly
+        click=(action "pasteConditionExpression" "<=")
+      }}
+      {{flexberry-button
+        class=operatorButtonClass
+        caption=">="
+        readonly=readonly
+        click=(action "pasteConditionExpression" ">=")
+      }}
+      {{flexberry-button
+        class=operatorButtonClass
+        caption="ILIKE"
+        readonly=readonly
+        click=(action "pasteConditionExpression" "ILIKE")
+      }}
+      {{flexberry-button
+        class=operatorButtonClass
+        caption=(t "components.flexberry-wfs-filter.buttons.and")
+        readonly=readonly
+        click=(action "pasteLogicalExpression" "AND")
+      }}
+      {{flexberry-button
+        class=operatorButtonClass
+        caption=(t "components.flexberry-wfs-filter.buttons.or")
+        readonly=readonly
+        click=(action "pasteLogicalExpression" "OR")
+      }}
+    </div>
   </div>
-  <div class = "sixteen wide column">
-    {{textarea class="edit-filter-textarea" value=filterStringValue doubleClick=(action "parseFilter")}}
+  <div class="row">
+    <div class = "sixteen wide column">
+      {{textarea class="edit-filter-textarea" value=filterStringValue doubleClick=(action "parseFilter")}}
+    </div>
   </div>
 </div>
