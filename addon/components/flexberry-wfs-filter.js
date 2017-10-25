@@ -48,8 +48,22 @@ export default Ember.Component.extend({
 
   _leafletObject: null,
 
+  /**
+    Array contains Fields in current leaflet object.
+
+    @property fields
+    @type Array
+    @default []
+  */
   fields: [],
 
+  /**
+    Array contains shown values of current field.
+
+    @property values
+    @type Array
+    @default []
+  */
   values: [],
 
   /**
@@ -57,11 +71,19 @@ export default Ember.Component.extend({
 
     @property _selectedField
     @type String
-    @default null
+    @default undefined
     @private
   */
   _selectedField: undefined,
 
+  /**
+    Contains selected value.
+
+    @property _selectedValue
+    @type String
+    @default undefined
+    @private
+  */
   _selectedValue: undefined,
 
   _test: Ember.on('init', function() {
@@ -198,61 +220,69 @@ export default Ember.Component.extend({
   },
 
   actions: {
+
+    /**
+      This action is called when an + button above the Fields list is pressed.
+
+      @method actions.addFieldButton
+    */
     addFieldButton() {
-      if (this._selectedField === undefined) {
+      if (this.get('_selectedField') === undefined) {
         return;
       }
 
-      let newString = '"' + this._selectedField + '"';
+      let newString = '"' + this.get('_selectedField') + '"';
       this._pasteIntoFilterString(newString);
     },
 
+    /**
+      This action is called when an + button above the Values list is pressed.
+
+      @method actions.addValueButton
+    */
     addValueButton() {
-      if (this._selectedValue === undefined) {
+      if (this.get('_selectedValue') === undefined) {
         return;
       }
 
-      let newString = '';
-      if (typeof (this._selectedValue) === 'number') {
-        newString = this._selectedValue;
-      }
-
-      if (typeof (this._selectedValue) === 'string') {
-        newString = '\'' + this._selectedValue + '\'';
-      }
+      let newString = '\'' + this.get('_selectedValue') + '\'';
 
       this._pasteIntoFilterString(newString);
     },
 
+    /**
+      This action is called when an item in Fields list is pressed.
+
+      @method actions.fieldClick
+    */
     fieldClick(text) {
       this.set('values', []);
-      if (this._selectedField != null) {
-        this.$('#' + this._selectedField).removeClass('active');
-      }
-
-      this.$('#' + text).addClass('active');
-      this._selectedField = text;
+      this.set('_selectedValue', undefined);
+      this.set('_selectedField', text);
     },
 
+    /**
+      This action is called when an item in Values list is pressed.
+
+      @method actions.valueClick
+    */
     valueClick(text) {
-      if (this._selectedValue != null) {
-        this.$('#' + this._selectedValue).removeClass('active');
-      }
-
-      this.$('#' + text).addClass('active');
-      this._selectedValue = text;
-
-      //пока что не передаю никуда
+      this.set('_selectedValue', text);
     },
 
+    /**
+      This action is called when "Examples" button is pressed.
+
+      @method actions.showExample
+    */
     showExample() {
-      if (this._selectedField === null) {
+      if (this.get('_selectedField') === null) {
         return;
       } //может быть попап приделать "выделите поле"?
 
       let _leafletObject = this.get('_leafletObject');
       let values = [];
-      let selectedField = this._selectedField;
+      let selectedField = this.get('_selectedField');
 
       for (let layer in _leafletObject._layers) {
         let property = _leafletObject._layers[layer].feature.properties[selectedField];
@@ -269,14 +299,19 @@ export default Ember.Component.extend({
       this.set('values', values);
     },
 
+    /**
+      This action is called when "Show all" button is pressed.
+
+      @method actions.ShowAll
+    */
     showAll() {
-      if (this._selectedField === null) {
+      if (this.get('_selectedField') === null) {
         return; //может быть попап приделать "выделите поле"?
       }
 
       let _leafletObject = this.get('_leafletObject');
       let values = [];
-      let selectedField = this._selectedField;
+      let selectedField = this.get('_selectedField');
 
       for (let layer in _leafletObject._layers) {
         let property = _leafletObject._layers[layer].feature.properties[selectedField];
@@ -309,7 +344,17 @@ export default Ember.Component.extend({
       @param {String} condition
     */
     pasteConditionExpression(condition) {
-      let expressionString = `'example' ${condition} 'ex'`;
+      let operandBefore = '';
+      let operandAfter = '';
+      if (this.get('_selectedField') !== undefined) {
+        operandBefore = this.get('_selectedField');
+      }
+
+      if (this.get('_selectedValue') !== undefined) {
+        operandAfter = this.get('_selectedValue');
+      }
+
+      let expressionString = `'${operandBefore}' ${condition} '${operandAfter}'`;
       this._pasteIntoFilterString(expressionString);
     },
 

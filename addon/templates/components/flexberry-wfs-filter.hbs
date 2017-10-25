@@ -6,9 +6,10 @@
         caption="+"
         click=(action "addFieldButton")
       }}
+    <div class = "ui container scrollable content" style="height: 60%;">
       <div class="ui middle aligned selection list">
         {{#each fields as |field|}}
-          <div class="item"  id={{field}} {{action "fieldClick" field}}>
+          <div class="item {{if (eq _selectedField field) "active"}}" {{action "fieldClick" field}}>
             <div class="content">
               {{field}}
             </div>
@@ -17,18 +18,19 @@
        {{t "components.flexberry-wfs-filter.settings-not-set"}}
        {{/each}}
      </div>
-    </div>
-
-    <div class = "eight wide column">
-      <h4>{{t "components.flexberry-wfs-filter.values"}}</h4>
-      {{flexberry-button
-        class="circular"
-        caption="+"
-        click=(action "addValueButton")
-      }}
+   </div>
+  </div>
+  <div class = "eight wide column">
+    <h4>{{t "components.flexberry-wfs-filter.values"}}</h4>
+    {{flexberry-button
+      class="circular"
+      caption="+"
+      click=(action "addValueButton")
+    }}
+    <div class = "ui container scrollable content" style="height: 60%;">
       <div class="ui middle aligned selection list">
         {{#each values as |value|}}
-          <div class="item" id={{value}} {{action "valueClick" value}}>
+          <div class="item {{if (eq _selectedValue value) "active"}}" {{action "valueClick" value}}>
             <div class="content">
               {{value}}
             </div>
@@ -37,17 +39,19 @@
        {{t "components.flexberry-wfs-filter.settings-not-set"}}
        {{/each}}
       </div>
-      {{flexberry-button
-        class=biggerButtonClass
-        caption=(t "components.flexberry-wfs-filter.buttons.example")
-        click=(action "showExample")
-      }}
-      {{flexberry-button
-        class=biggerButtonClass
-        caption=(t "components.flexberry-wfs-filter.buttons.all")
-        click=(action "showAll")
-      }}
     </div>
+    {{flexberry-button
+      class=biggerButtonClass
+      caption=(t "components.flexberry-wfs-filter.buttons.example")
+      click=(action "showExample")
+    }}
+    {{flexberry-button
+      class=biggerButtonClass
+      caption=(t "components.flexberry-wfs-filter.buttons.all")
+      click=(action "showAll")
+    }}
+  </div>
+
 
   <div class = "sixteen wide column">
   <h4>{{t "components.flexberry-wfs-filter.operators"}}</h4>
