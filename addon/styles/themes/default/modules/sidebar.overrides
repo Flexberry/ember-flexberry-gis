@@ -427,7 +427,7 @@
 
   .tab.segment {
     height: 350px;
-    .ui.table td {
+    .ui.table td, th {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

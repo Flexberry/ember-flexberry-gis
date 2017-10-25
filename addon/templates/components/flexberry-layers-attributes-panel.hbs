@@ -1,6 +1,4 @@
 <div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if folded " folded" "")}}>
-  {{!-- tab panel --}}
-  {{!-- disabled={{eq _featureTabsOffset 0}} --}}
   <button class="bottompanel-tab-nav-button bottompanel-tab-nav-button-left"
     {{action "onTabMove" true}}>
     <i class="left arrow icon"></i>
@@ -17,13 +15,11 @@
       {{/each}}
     </div>
   </div>
-  {{!-- disabled={{eq _offsetDelta 0}} --}}
   <button
     class="bottompanel-tab-nav-button bottompanel-tab-nav-button-right"
     {{action "onTabMove" false}}>
     <i class="right arrow icon"></i>
   </button>
-  {{!-- tab panel --}}
 
   {{#each _tabModels key="name" as |tabModel index|}}
   <div data-tab="{{tabModel.name}}"

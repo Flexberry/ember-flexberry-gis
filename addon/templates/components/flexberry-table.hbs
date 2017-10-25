@@ -37,7 +37,7 @@
           {{#each-in header as |key value|}}
             {{#if allowEdit}}
               <td onclick={{action (mut _selectedCellName) (concat (ember-guid row) "_" key)}}>
-                {{#if (eq _selectedCellName (concat (ember-guid row) "_" key))}}
+                {{#if (and (eq _selectedCellName (concat (ember-guid row) "_" key)) (object-contains row key))}}
                   {{input value=(mut (get row key)) key-up="onInputKeyUp" key-down="onInputKeyDown"}}
                 {{else}}
                   {{get row key}}
