@@ -6,6 +6,14 @@
     margin-top: 0px;
 }
 
+/*******************************
+          Flexbery lookup
+*******************************/
+.flexberry-lookup.fluid {
+  .flexberry-dropdown {
+    width: 100%;
+  }
+}
 
 /*******************************
           Flexberry Map
@@ -783,7 +791,6 @@
   }
 }
 
-
 /*********************************************
             Search form
 *********************************************/
@@ -819,9 +826,28 @@
 
   // Fix display of horizontal segments inside accordion content.
   .ui.horizontal.segments.content {
+    min-width: 325px;
     &.active, &.animating {
       display: flex;
       flex-direction: row;
+    }
+  }
+
+  .advanced-search {
+    .ui.horizontal.segments {
+      &> .segment.advanced-search-what-segment {
+        width: 50%;
+      }
+
+      &> .segment.advanced-search-where-segment {
+        width: 50%;
+
+        .flexberry-boundingbox {
+          .flexberry-map {
+            max-height: 300px;
+          }
+        }
+      }
     }
   }
 
@@ -836,7 +862,9 @@
   }
 
   // Hide icon in header of search-results segment.
-  .search-results {
+  .ui.segments:not(.horizontal) > .ui.segment.search-results {
+    margin-top: 1em;
+
     .ui.label {
       i {
         opacity: 0;
@@ -857,6 +885,39 @@
       span {
         margin: 5px;
       }
+    }
+  }
+}
+
+.scale-filter {
+  margin: 0em 0em 0.5em;
+  white-space: nowrap;
+
+  .compact.selection {
+    width: 5%;
+  }
+
+  .scale-value {
+    &:not(.flexberry-dropdown) {
+      width: ~"calc(100% - 64px)";
+      display: inline-block;
+
+      .flexberry-dropdown {
+        i.dropdown.icon {
+          right: 32px;
+        }
+      }
+    }
+  }
+
+  .ui.button {
+    position: absolute;
+    right: 0;
+    border: none;
+    height: 35px;
+
+    .remove.icon:hover:before {
+      color: @red;
     }
   }
 }

@@ -1,0 +1,72 @@
+<div class="ui grid">
+  <div class="thirteen wide column">
+    <div class="field">
+      <label>
+        {{mosCaption}}
+      </label>
+      {{flexberry-lookup
+        class="fluid"
+        readonly=readonly
+        componentName=lookupComponentName
+        placeholder=lookupPlaceholder
+        value=model.mapObjectSetting
+        projection="MapObjectSettingL"
+        displayAttributeName="typeName"
+        title="Map object setting"
+        relatedModel=model
+        relationName="mapObjectSetting"
+        choose="showLookupDialog"
+        remove="removeLookupValue"
+        dropdown=true
+        dropdownIsSearch=true
+        sorting="desc"
+        direction="downward"
+      }}
+    </div>
+  </div>
+  <div class="two wide column">
+    <div class="field">
+      <label>
+        {{allowShowCaption}}
+      </label>
+      {{flexberry-ddau-checkbox
+        class=flexberryClassNames.visibilityCheckbox
+        value=model.allowShow
+        change=(action "onVisibilityCheckboxChange")
+      }}
+    </div>
+  </div>
+  <div class="one wide column">
+    <div class="field">
+      {{flexberry-button
+        class=(concat flexberryClassNames.clearButton " " clearClass)
+        iconClass=clearIconClass
+        tooltip=clearCaption
+        click=(action "remove")
+      }}
+    </div>
+  </div>
+</div>
+<div class="ui grid">
+  {{flexberry-groupedit
+    class="fluid"
+    componentName=groupEditComponentName
+    content=model.parameters
+    modelName=modelName
+    modelProjection=modelProjection
+    readonly=readonly
+    placeholder=groupeditPlaceholder
+    tableStriped=tableStriped
+    createNewButton=createNewButton
+    deleteButton=deleteButton
+    allowColumnResize=allowColumnResize
+    showAsteriskInRow=showAsteriskInRow
+    showCheckBoxInRow=showCheckBoxInRow
+    showDeleteButtonInRow=showDeleteButtonInRow
+    showEditMenuItemInRow=showEditMenuItemInRow
+    showDeleteMenuItemInRow=showDeleteMenuItemInRow
+    rowClickable=rowClickable
+    immediateDelete=immediateDelete
+    getCellComponent=getCellComponent
+  }}
+</div>

@@ -1,5 +1,5 @@
 export default {
-  'header': 'Поиск проектов карт и метаданных слоев',
+  'header': 'Поиск карт и слоев по метаданным',
   'advanced-search-conditions': 'Расширенные условия поиска',
   'search-conditions-what': 'Что искать',
   'keywords': 'Ключевые слова',
@@ -16,7 +16,7 @@ export default {
   'search-results': 'Результаты поиска',
   'ctrl-message': 'Удерживайте клавишу Ctrl, чтобы открыть в новом окне',
   'layer-metadata': {
-    'title': 'Метаданные слоёв',
+    'title': 'Cлои',
     'actions': {
       'select': 'Выбрать'
     },

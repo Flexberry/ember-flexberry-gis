@@ -302,23 +302,13 @@ export default Ember.Component.extend(
     _availableCoordinateReferenceSystemsCodes: null,
 
     /**
-      Tabular menu containing tabs items.
+      Tabular menu state.
 
-      @property _$tabularMenu
+      @property _tabularMenuState
       @type Object
-      @default null
       @private
     */
-    _$tabularMenu: null,
-
-    /**
-      Tabular menu active tab name.
-
-      @property _tabularMenuActiveTab
-      @type String
-      @private
-    */
-    _tabularMenuActiveTab: 'main',
+    _tabularMenuState: null,
 
     /**
       Leaflet layer related to layer model.
@@ -348,6 +338,51 @@ export default Ember.Component.extend(
     scales: Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
 
     /**
+      Layer's links.
+
+      @property links
+      @type Array
+      @default null
+    */
+    links: null,
+
+    /**
+      Layer's links property path.
+
+      @property linksPropertyPath
+      @type String
+      @default ''
+    */
+    linksPropertyPath: '',
+
+    /**
+      Dialog's 'Links' segment caption.
+
+      @property linksCaption
+      @type String
+      @default t('components.layers-dialogs.edit.links.caption')
+    */
+    linksCaption: t('components.layers-dialogs.edit.links.caption'),
+
+    /**
+      Layer's links' parameters model name.
+
+      @property parametersModelName
+      @type String
+      @default ''
+    */
+    parametersModelName: '',
+
+    /**
+      Layer's links' parameters model projection.
+
+      @property parametersModelProjection
+      @type String
+      @default ''
+    */
+    parametersModelProjection: '',
+
+    /**
       Flag: indicates whether coordinate reference system (CRS) edit fields must be shown.
 
       @property _availableCoordinateReferenceSystemsCodes
@@ -357,6 +392,26 @@ export default Ember.Component.extend(
     _showCoordinateReferenceSystemFields: Ember.computed('_coordinateReferenceSystemCode', function () {
       return this.get('_coordinateReferenceSystemCode') === proj4CrsCode;
     }),
+
+    /**
+      Flag: indicates whether 'main-group' of settings is available for the selected layer type.
+
+      @property _mainGroupIsAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _mainGroupIsAvailableForType: Ember.computed(
+      '_mainSettingsAreAvailableForType',
+      '_crsSettingsAreAvailableForType',
+      '_layerSettingsAreAvailableForType',
+      function () {
+        // Group is available when at least one of it's tab is available.
+        return this.get('_mainSettingsAreAvailableForType') ||
+          this.get('_crsSettingsAreAvailableForType') ||
+          this.get('_layerSettingsAreAvailableForType');
+      }
+    ),
 
     /**
       Flag: indicates whether scale settings are available for the selected layer type.
@@ -373,6 +428,18 @@ export default Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether scale settings are available for the selected layer type.
+
+      @property _scaleSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _mainSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      return true;
+    }),
+
+    /**
       Flag: indicates whether CRS is available for the selected layer type.
 
       @property _crsSettingsAreAvailableForType
@@ -383,15 +450,7 @@ export default Ember.Component.extend(
     _crsSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
 
-      let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
-      if (!available && this.get('_tabularMenuActiveTab') === 'crs') {
-        this.set('_tabularMenuActiveTab', 'main');
-      }
-
-      // Reset tabular menu after tab has been added or removed.
-      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
-
-      return available;
+      return Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
     }),
 
     /**
@@ -405,16 +464,30 @@ export default Ember.Component.extend(
     _layerSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
 
-      let available = Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
-      if (!available && this.get('_tabularMenuActiveTab') === 'settings') {
-        this.set('_tabularMenuActiveTab', 'main');
-      }
-
-      // Reset tabular menu after tab has been added or removed.
-      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
-
-      return available;
+      return Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
     }),
+
+    /**
+      Flag: indicates whether 'display-group' of settings is available for the selected layer type.
+
+      @property _displayGroupIsAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _displayGroupIsAvailableForType: Ember.computed(
+      '_identifySettingsAreAvailableForType',
+      '_searchSettingsAreAvailableForType',
+      '_displaySettingsAreAvailableForType',
+      '_legendSettingsAreAvailableForType',
+      function () {
+        // Group is available when at least one of it's tab is available.
+        return this.get('_identifySettingsAreAvailableForType') ||
+          this.get('_searchSettingsAreAvailableForType') ||
+          this.get('_displaySettingsAreAvailableForType') ||
+          this.get('_legendSettingsAreAvailableForType');
+      }
+    ),
 
     /**
       Flag: indicates whether 'identify' operation settings are available for the selected layer type.
@@ -428,15 +501,7 @@ export default Ember.Component.extend(
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
-      let available = !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('identify');
-      if (!available && this.get('_tabularMenuActiveTab') === 'identifySettings') {
-        this.set('_tabularMenuActiveTab', 'main');
-      }
-
-      // Reset tabular menu after tab has been added or removed.
-      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
-
-      return available;
+      return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('identify');
     }),
 
     /**
@@ -451,15 +516,7 @@ export default Ember.Component.extend(
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
-      let available = !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('search');
-      if (!available && this.get('_tabularMenuActiveTab') === 'searchSettings') {
-        this.set('_tabularMenuActiveTab', 'main');
-      }
-
-      // Reset tabular menu after tab has been added or removed.
-      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
-
-      return available;
+      return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('search');
     }),
 
     /**
@@ -477,24 +534,44 @@ export default Ember.Component.extend(
     /**
       Flag: indicates whether 'legend' operation settings are available for the selected layer type.
 
-      @property _legendSettingaAreAvailableForType
+      @property _legendSettingsAreAvailableForType
       @type Boolean
       @private
       @readonly
     */
-    _legendSettingaAreAvailableForType: Ember.computed('_layer.type', function () {
+    _legendSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
-      let available = !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
-      if (!available && this.get('_tabularMenuActiveTab') === 'legendSettings') {
-        this.set('_tabularMenuActiveTab', 'main');
+      return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
+    }),
+
+    /**
+      Flag: indicates whether 'links-group' of settings is available for the selected layer type.
+
+      @property _linksGroupIsAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _linksGroupIsAvailableForType: Ember.computed(
+      '_linksSettingsAreAvailableForType',
+      function () {
+        // Group is available when at least one of it's tab is available.
+        return this.get('_linksSettingsAreAvailableForType');
       }
+    ),
 
-      // Reset tabular menu after tab has been added or removed.
-      Ember.run.scheduleOnce('afterRender', this, '_resetTabularMenu');
+    /**
+      Flag: indicates whether layer links settings are available for the selected layer type.
 
-      return available;
+      @property _linksSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _linksSettingsAreAvailableForType: Ember.computed('_layerSettingsAreAvailableForType', function() {
+      return this.get('_layerSettingsAreAvailableForType');
     }),
 
     /**
@@ -576,6 +653,20 @@ export default Ember.Component.extend(
       },
 
       /**
+        Handles clicks on groups.
+
+        @method actions.onGroupClick
+        @param {Object} e Click event object.
+      */
+      onGroupClick(e) {
+        e = Ember.$.event.fix(e);
+
+        let $clickedGroup = Ember.$(e.currentTarget);
+        let clickedGroupName = $clickedGroup.attr('data-tab');
+        this.set('_tabularMenuState.activeGroup', clickedGroupName);
+      },
+
+      /**
         Handles clicks on tabs.
 
         @method actions.onTabClick
@@ -586,7 +677,11 @@ export default Ember.Component.extend(
 
         let $clickedTab = Ember.$(e.currentTarget);
         let clickedTabName = $clickedTab.attr('data-tab');
-        this.set('_tabularMenuActiveTab', clickedTabName);
+
+        let $relatedGroup = $clickedTab.closest('.tab.segment');
+        let relatedGroupName = $relatedGroup.attr('data-tab');
+
+        this.set(`_tabularMenuState.groups.${relatedGroupName}.activeTab`, clickedTabName);
       },
 
       /**
@@ -622,6 +717,45 @@ export default Ember.Component.extend(
         // Allow only numbers, backspace, arrows, etc.
         return (key === 8 || key === 9 || key === 46 || (key >= 37 && key <= 40) ||
           (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.updateLookupValue:method"}}'flexberry-links-editor' component's 'updateLookupValue' action{{/crossLink}}.
+
+        @method actions.updateLookupValue
+        @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
+      */
+      updateLookupValue(updateData) {
+        this.sendAction('updateLookupValue', updateData);
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.remove:method"}}'flexberry-links-editor' component's 'remove' action{{/crossLink}}.
+
+        @method actions.removeLayerLink
+        @param {Object} model Ember Model to be removed.
+      */
+      removeLayerLink(model) {
+        this.sendAction('removeLayerLink', model);
+      },
+
+      /**
+        Add new layer link model to relation.
+
+        @method actions.addLayerLink
+      */
+      addLayerLink() {
+        this.sendAction('addLayerLink');
+      },
+
+      /**
+        Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
+
+        @method actions.allowShowCheckboxChange
+        @param {Object} e eventObject Event object from {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
+      */
+      allowShowCheckboxChange(...args) {
+        this.sendAction('allowShowLayerLinkCheckboxChange', ...args);
       }
     },
 
@@ -732,19 +866,6 @@ export default Ember.Component.extend(
     },
 
     /**
-      Resets tabuler menu.
-
-      @method _resetTabularMenu
-      @private
-    */
-    _resetTabularMenu() {
-      let $tabularMenu = this.get('_$tabularMenu');
-      if (!Ember.isNone($tabularMenu)) {
-        Ember.$('.tab.item', $tabularMenu).tab();
-      }
-    },
-
-    /**
       Observes visibility changes & creates/destroys inner hash containing layer copy.
 
       @method _visibleDidChange
@@ -793,6 +914,25 @@ export default Ember.Component.extend(
     */
     init() {
       this._super(...arguments);
+
+      if (Ember.isNone(this.get('links'))) {
+        this.set('links', Ember.A());
+      }
+
+      this.set('_tabularMenuState', {
+        activeGroup: 'main-group',
+        groups: {
+          'main-group': {
+            activeTab: 'main-tab'
+          },
+          'display-group': {
+            activeTab: 'identify-tab'
+          },
+          'links-group': {
+            activeTab: 'links-tab'
+          }
+        }
+      });
 
       // Retrieve & remember constant (proj4 CRS code).
       let proj4CrsFactory = Ember.getOwner(this).knownForType('coordinate-reference-system', 'proj4');
@@ -892,23 +1032,37 @@ export default Ember.Component.extend(
     },
 
     /**
-      Deinitializes component's DOM-related properties.
-    */
-    willDestroyElement() {
-      this._super(...arguments);
-
-      let $tabularMenu = this.get('_$tabularMenu');
-      if (!Ember.isNone($tabularMenu)) {
-        Ember.$('.tab.item', $tabularMenu).tab('destroy');
-        this.set('_$tabularMenu', null);
-      }
-    }
-
-    /**
       Component's action invoking init hook is finished.
       Provides binding for {{#crossLink "FlexberryEditLayerComponent/sendingActions.onInit:method"}}'flexberry-edit-layer' component's 'getLayerProperties' method{{/crossLink}}.
 
       @method sendingActions.onInit
+    */
+
+    /**
+      Component's action invoking to update relation value at model.
+      @method sendingActions.updateLookupValue
+      @param {Object} updateData Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.
+      {{#crossLink "FlexberryLinksEditorComponent/sendingActions.updateLookupValue:method"}}flexberry-links-editor 'updateLookupValue' action{{/crossLink}}.
+    */
+
+    /**
+      Component's action invoking to remove model from store.
+      @method sendingActions.removeLayerLink
+      @param {Object} model Ember Model to be removed.
+      {{#crossLink "FlexberryLinksEditorComponent/sendingActions.remove:method"}}flexberry-links-editor 'remove' action{{/crossLink}}.
+    */
+
+    /**
+      Component's action invoking to add model to store.
+      @method sendingActions.addLayerLink
+    */
+
+    /**
+      Component's action invoking when model's 'allowShow' state changed.
+
+      @method sendingActions.allowShowLayerLinkCheckboxChange
+      @param {Object} e Event object from
+      {{#crossLink "FlexberryDdauCheckboxComponent/sendingActions.change:method"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.
     */
   });
 

@@ -32,7 +32,6 @@ export let Model = Ember.Mixin.create({
     this._super.apply(this, arguments);
   }
 });
-
 export let defineProjections = function (modelClass) {
   modelClass.defineProjection('LayerLinkD', 'new-platform-flexberry-g-i-s-layer-link', {
     mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', 'Тип', {
@@ -63,7 +62,6 @@ export let defineProjections = function (modelClass) {
     mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
     })
   });
-
   modelClass.defineProjection('LayerLinkI', 'new-platform-flexberry-g-i-s-layer-link', {
     mapObjectSetting: Projection.belongsTo('new-platform-flexberry-g-i-s-map-object-setting', '', {
       listForm: Projection.attr(''),
@@ -84,7 +82,6 @@ export let defineProjections = function (modelClass) {
       })
     })
   });
-
   modelClass.defineProjection('LayerLinkQ', 'new-platform-flexberry-g-i-s-layer-link', {
     allowShow: Projection.attr('Показывать'),
     layer: Projection.belongsTo('new-platform-flexberry-g-i-s-map-layer', '', {
