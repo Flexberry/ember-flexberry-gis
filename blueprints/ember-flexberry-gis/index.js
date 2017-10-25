@@ -98,6 +98,24 @@ module.exports = {
       {
         name: 'osmtogeojson',
         target: '2.2.12'
+      },
+
+      // Terrafotmer library (used in vector layers).
+      {
+        name: 'terraformer',
+        target: '1.0.8'
+      },
+
+      // Leaflet-MarkerCluster (used in vector layers).
+      {
+        name: 'leaflet.markercluster',
+        target: '1.1.0'
+      },
+
+      // Leaflet-Omnivore (used in vector layers).
+      {
+        name: 'leaflet-omnivore',
+        target: '0.3.3'
       }
     ]).then(function () {
       return _this.addAddonsToProject({
