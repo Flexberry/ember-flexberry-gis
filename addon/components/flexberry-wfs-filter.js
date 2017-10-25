@@ -263,6 +263,11 @@ export default Ember.Component.extend({
       }
 
       values.sort();
+      if (values[-1] === undefined) {
+        values.pop();
+        values.unshift('NULL');
+      }
+
       this.set('values', values);
     },
 
@@ -284,6 +289,11 @@ export default Ember.Component.extend({
       }
 
       values.sort();
+      if (values[-1] === undefined) {
+        values.pop();
+        values.unshift('NULL');
+      }
+
       this.set('values', values);
     },
 
