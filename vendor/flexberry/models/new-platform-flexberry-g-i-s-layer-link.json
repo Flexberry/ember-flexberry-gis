@@ -116,16 +116,14 @@
     {
       "name": "LayerLinkE",
       "modelName": "new-platform-flexberry-g-i-s-layer-link",
-      "attrs": [
-        {
-          "name": "allowShow",
-          "caption": "Показывать",
-          "hidden": false,
-          "index": 2
-        }
-      ],
-      "belongsTo": [
-        {
+      "attrs": [{
+        "name": "allowShow",
+        "caption": "Показывать",
+        "hidden": false,
+        "index": 2,
+        "stored": true
+      }],
+      "belongsTo": [{
           "lookupValue": null,
           "lookupValueField": null,
           "relationName": "Layer",
@@ -157,16 +155,14 @@
     {
       "name": "LayerLinkI",
       "modelName": "new-platform-flexberry-g-i-s-layer-link",
-      "attrs": [
-        {
-          "name": "allowShow",
-          "caption": "Показывать",
-          "hidden": false,
-          "index": 3
-        }
-      ],
-      "belongsTo": [
-        {
+      "attrs": [{
+        "name": "allowShow",
+        "caption": "Показывать",
+        "hidden": false,
+        "index": 3,
+        "stored": true
+      }],
+      "belongsTo": [{
           "lookupValue": null,
           "lookupValueField": null,
           "relationName": "Layer",
@@ -219,16 +215,14 @@
     {
       "name": "LayerLinkQ",
       "modelName": "new-platform-flexberry-g-i-s-layer-link",
-      "attrs": [
-        {
-          "name": "allowShow",
-          "caption": "Показывать",
-          "hidden": false,
-          "index": 2
-        }
-      ],
-      "belongsTo": [
-        {
+      "attrs": [{
+        "name": "allowShow",
+        "caption": "Показывать",
+        "hidden": false,
+        "index": 2,
+        "stored": true
+      }],
+      "belongsTo": [{
           "lookupValue": null,
           "lookupValueField": null,
           "relationName": "Layer",

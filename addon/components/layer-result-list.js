@@ -249,9 +249,9 @@ export default Ember.Component.extend({
           if (!Ember.isBlank(mos)) {
             let editForm = mos.get('editForm');
             if (!Ember.isBlank(editForm)) {
-              let linkParameters = link.get('parameters');
+              let parameters = link.get('parameters');
 
-              linkParameters.forEach((param) => {
+              parameters.forEach((param) => {
                 if (!Ember.isBlank(param)) {
                   let queryKey = param.get('queryKey');
 

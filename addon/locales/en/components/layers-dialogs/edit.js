@@ -55,6 +55,11 @@ export default {
       }
     }
   },
+  'links-segment': {
+    'add-button': {
+      'caption': 'Add',
+    }
+  },
   'crs': {
     'caption': 'Layer coordinate reference system (CRS)',
     'name-textbox': {
@@ -63,13 +68,13 @@ export default {
     'code-textbox': {
       'caption': 'Code'
     },
-    'definition-textare': {
+    'definition-textarea': {
       'caption': 'Definition'
     }
   },
   'tabular-menu': {
     'main-tab': {
-      'caption': 'Main'
+      'caption': 'Main settings'
     },
     'crs-tab': {
       'caption': 'Coordinate system'
@@ -88,6 +93,20 @@ export default {
     },
     'legend-settings-tab': {
       'caption': 'Legend settings'
+    },
+    'links-tab': {
+      'caption': 'Links settings'
+    }
+  },
+  'groups': {
+    'main-group': {
+      'caption': 'Main'
+    },
+    'display-group': {
+      'caption': 'Display'
+    },
+    'links-group': {
+      'caption': 'Links'
     }
   }
 };
