@@ -791,7 +791,6 @@
   }
 }
 
-
 /*********************************************
             Search form
 *********************************************/
@@ -899,13 +898,26 @@
   }
 
   .scale-value {
-    width: ~"calc(100% - 50px)" !important;
-    display: inline-block;
+    &:not(.flexberry-dropdown) {
+      width: ~"calc(100% - 64px)";
+      display: inline-block;
+
+      .flexberry-dropdown {
+        i.dropdown.icon {
+          right: 32px;
+        }
+      }
+    }
   }
 
   .ui.button {
-    border: none;
     position: absolute;
     right: 0;
+    border: none;
+    height: 35px;
+
+    .remove.icon:hover:before {
+      color: @red;
+    }
   }
 }
