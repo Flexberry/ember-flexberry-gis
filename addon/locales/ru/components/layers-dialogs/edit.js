@@ -74,7 +74,7 @@ export default {
   },
   'tabular-menu': {
     'main-tab': {
-      'caption': 'Основное'
+      'caption': 'Основные настройки'
     },
     'crs-tab': {
       'caption': 'Система координат'
@@ -94,8 +94,19 @@ export default {
     'legend-settings-tab': {
       'caption': 'Настройки легенды'
     },
-    'link-settings-tab': {
+    'links-tab': {
       'caption': 'Настройки связей'
+    }
+  },
+  'groups': {
+    'main-group': {
+      'caption': 'Основное'
+    },
+    'display-group': {
+      'caption': 'Отображение'
+    },
+    'links-group': {
+      'caption': 'Связи'
     }
   }
 };

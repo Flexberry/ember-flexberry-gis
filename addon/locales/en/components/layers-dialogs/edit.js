@@ -68,13 +68,13 @@ export default {
     'code-textbox': {
       'caption': 'Code'
     },
-    'definition-textare': {
+    'definition-textarea': {
       'caption': 'Definition'
     }
   },
   'tabular-menu': {
     'main-tab': {
-      'caption': 'Main'
+      'caption': 'Main settings'
     },
     'crs-tab': {
       'caption': 'Coordinate system'
@@ -94,8 +94,19 @@ export default {
     'legend-settings-tab': {
       'caption': 'Legend settings'
     },
-    'link-settings-tab': {
+    'links-tab': {
       'caption': 'Links settings'
+    }
+  },
+  'groups': {
+    'main-group': {
+      'caption': 'Main'
+    },
+    'display-group': {
+      'caption': 'Display'
+    },
+    'links-group': {
+      'caption': 'Links'
     }
   }
 };
