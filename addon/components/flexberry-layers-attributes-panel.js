@@ -134,6 +134,18 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   items: null,
 
   /**
+    Integration with the layer tree
+
+    @property settings
+    @type Boolean
+    @default false
+  */
+  settings: {
+      withToolbar: false,
+      sidebarOpened: false,
+    },
+
+  /**
     Overrides {{#crosslink "LeafletZoomToFeatureMixin/_prepareLayer:method"}} to make a copy of passed layer
     and apply a style to the layer to make it more visible.
 

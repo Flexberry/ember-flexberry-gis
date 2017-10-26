@@ -99,6 +99,29 @@ export default EditMapController.extend(
 
     editedLayersPanelFolded: true,
 
+    editedLayersPanelSettings: {
+        withToolbar: false,
+        sidebarOpened: false,
+      },
+
+    _editedLayersPanelWidth: Ember.observer('sidebarOpened', function() {
+      if (this.get('sidebarOpened')) {
+        this.set('editedLayersPanelSettings.sidebarOpened', true);
+      } else {
+        this.set('editedLayersPanelSettings.sidebarOpened', false);
+      }
+    }),
+
+    _leafletMapOnContainerResizeStart() {
+      let panelHeight = Ember.$('.mappanel').innerHeight();
+      if ( panelHeight < 600) {
+        this.set('editedLayersPanelSettings.withToolbar', true);
+      } else {
+        this.set('editedLayersPanelSettings.withToolbar', false);
+      }
+    },
+
+
     availableCRS: Ember.computed('i18n.locale', function () {
       let availableModes = Ember.A();
       let i18n = this.get('i18n');
@@ -231,6 +254,7 @@ export default EditMapController.extend(
       },
 
       getAttributes(object) {
+        this.leafletMap.on('containerResizeStart', this._leafletMapOnContainerResizeStart, this);
         let editedLayers = this.get('editedLayers') || Ember.A();
         let index = editedLayers.findIndex((item) => Ember.isEqual(item.name, object.name));
         if (index >= 0) {
@@ -239,6 +263,7 @@ export default EditMapController.extend(
           editedLayers.addObject(object);
           this.set('editedLayers', editedLayers);
           this.set('editedLayersSelectedTabIndex', editedLayers.length - 1);
+          this._leafletMapOnContainerResizeStart();
         }
 
         if (this.get('editedLayersPanelFolded')) {

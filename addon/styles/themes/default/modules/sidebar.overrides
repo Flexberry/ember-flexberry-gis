@@ -379,7 +379,6 @@
   width: 100%;
   height: ~"calc(100% - 60px)";
   bottom: 0;
-  transition: -webkit-transform .5s ease, height .10s ease;
 
   &.hidden {
     visibility: hidden;
@@ -390,14 +389,14 @@
     position: absolute;
     z-index: 1010;
     transform: none;
-    transition: none;
+    transition: 0.3s linear;
     background-color: white;
     margin: 0px 10px 0px 10px;
     box-shadow: 0 0 4px #3C4F76;
     border-radius: 5px 5px 5px 5px;
     max-height: ~"calc(100% - 80px)";
-    height: auto;
-    width: auto;
+    height: 400px;
+    width: ~"calc(100% - 20px)";
 
     .ui.tab {
       padding: 10px;
@@ -408,8 +407,16 @@
       bottom: 0;
       overflow-y: hidden;
       height: 40px;
-      .tab.segment {
-        visibility: hidden;
+    }
+
+    &.sidebarOpened {
+      width: ~"calc(100% - 430px)";
+    }
+
+    &.withToolbar {
+      width: ~"calc(100% - 70px)";
+      &.sidebarOpened {
+        width: ~"calc(100% - 480px)";
       }
     }
   }

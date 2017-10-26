@@ -1,4 +1,4 @@
-<div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if folded " folded" "")}}>
+<div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if folded " folded" "") (if settings.withToolbar " withToolbar" "") (if settings.sidebarOpened " sidebarOpened" "")}}>
   {{!-- tab panel --}}
   {{!-- disabled={{eq _featureTabsOffset 0}} --}}
   <button class="bottompanel-tab-nav-button bottompanel-tab-nav-button-left"
