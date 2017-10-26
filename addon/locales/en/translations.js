@@ -122,7 +122,10 @@ export default {
         'or': 'OR',
         'not': 'NOT',
         'example': 'Example',
-        'all': 'All'
+        'all': 'All',
+        'apply': 'Apply',
+        'check': 'Check',
+        'clear': 'Clear'
       },
     },
 
