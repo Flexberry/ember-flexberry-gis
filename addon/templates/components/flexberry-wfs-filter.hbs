@@ -2,7 +2,7 @@
   <div class="row">
     <div class = "eight wide column">
       <h4>{{t "components.flexberry-wfs-filter.fields"}}</h4>
-      <div class = "ui container scrollable content layers-fields-container" style="height: 200px;">
+      <div class = "ui container scrollable content layers-fields-container">
         <div class="ui middle aligned selection list">
           {{#each fields as |field|}}
             <div class="item {{if (eq _selectedField field) "active"}}" {{action "fieldClick" field}} {{action "pasteFieldValue" field on="doubleClick"}}>
@@ -20,7 +20,7 @@
     </div>
     <div class = "eight wide column">
       <h4>{{t "components.flexberry-wfs-filter.values"}}</h4>
-      <div class = "ui container scrollable content layers-fields-container" style="height: 200px;">
+      <div class = "ui container scrollable content layers-fields-container">
         <div class="ui middle aligned selection list">
           {{#each values as |value|}}
             <div class="item {{if (eq _selectedValue value) "active"}}" {{action "valueClick" value}} {{action "pasteFieldValue" value on="doubleClick"}}>

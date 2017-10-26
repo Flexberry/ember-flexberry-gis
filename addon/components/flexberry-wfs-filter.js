@@ -87,12 +87,14 @@ export default Ember.Component.extend({
   */
   _selectedValue: undefined,
 
-  _test: Ember.on('init', function() {
-    let _leafletObject = this.get('_leafletObject');
-    let fields = this.get('fields');
+  init() {
+    this._super(...arguments);
+
+    let _leafletObject = this.get('_leafletObject') || {};
+    let fields = [];
 
     for (let layer in _leafletObject._layers) {
-      let properties = _leafletObject._layers[layer].feature.properties;
+      let properties = Ember.get(_leafletObject._layers[layer], 'feature.properties') || {};
       for (let property in properties) {
         if (fields.indexOf(property) < 0) {
           fields.push(property);
@@ -101,7 +103,7 @@ export default Ember.Component.extend({
     }
 
     this.set('fields', fields);
-  }),
+  },
 
   /**
     Creates filter object from string.
