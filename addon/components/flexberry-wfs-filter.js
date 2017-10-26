@@ -265,7 +265,7 @@ export default Ember.Component.extend({
       }
 
       values.sort();
-      if (values[-1] === undefined) {
+      if (Ember.isNone(values[values.length - 1])) {
         values.pop();
         values.unshift('NULL');
       }
@@ -291,7 +291,7 @@ export default Ember.Component.extend({
       }
 
       values.sort();
-      if (values[-1] === undefined) {
+      if (Ember.isNone(values[values.length - 1])) {
         values.pop();
         values.unshift('NULL');
       }
@@ -355,6 +355,11 @@ export default Ember.Component.extend({
       @param {String} value
     */
     pasteFieldValue(value) {
+      if (value === 'NULL') {
+        this._pasteIntoFilterString(value);
+        return;
+      }
+
       let newString = `'${value || ''}'`;
       this._pasteIntoFilterString(newString);
     },
