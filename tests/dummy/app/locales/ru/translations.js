@@ -96,6 +96,14 @@ Ember.$.extend(true, translations, {
               'caption': 'Пример работы компонента',
               'title': ''
             }
+          },
+          'geojson-layer': {
+            'caption': 'geojson-layer',
+            'title': 'Пример работы слоя GeoJSON'
+          },
+          'kml-layer': {
+            'caption': 'kml-layer',
+            'title': 'Пример работы слоя KML'
           }
         }
       }

@@ -1,6 +1,8 @@
 import Wms from './settings/wms';
 import Wfs from './settings/wfs';
 import WmsWfs from './settings/wms-wfs';
+import GeoJson from './settings/geojson';
+import Kml from './settings/kml';
 
 export default {
   'group': {
@@ -19,6 +21,10 @@ export default {
   'wms-single-tile': Wms,
 
   'wms-wfs': WmsWfs,
+
+  'geojson': GeoJson,
+
+  'kml': Kml,
 
   'geocoder-osm-overpass': {
     'url-textbox': {

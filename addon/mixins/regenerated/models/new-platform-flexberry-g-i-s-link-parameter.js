@@ -27,7 +27,6 @@ export let Model = Ember.Mixin.create({
     };
     return Ember.$.extend(true, {}, parentValidations, thisValidations);
   },
-
   init: function () {
     this.set('validations', this.getValidations());
     this._super.apply(this, arguments);
@@ -39,9 +38,9 @@ export let defineProjections = function (modelClass) {
     objectField: Projection.attr('Поле объекта'),
     layerField: Projection.attr('Поле слоя'),
     expression: Projection.attr('Выражение', { hidden: true }),
-    queryKey: Projection.attr('Ключ запроса', { hidden: true }),
-    linkField: Projection.attr('Ключ связи', { hidden: true }),
+    queryKey: Projection.attr('Параметр запроса'),
+    linkField: Projection.attr('Поле связи', { hidden: true }),
     layerLink: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-link', 'Связь', {
-    })
+    }, { hidden: true })
   });
 };
