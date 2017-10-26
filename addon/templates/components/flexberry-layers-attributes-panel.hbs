@@ -32,6 +32,7 @@
       model=tabModel.propertiesToShow
       header=tabModel.header
       recordsTotalCount=tabModel.properties.length
+      fieldTypes=tabModel.leafletObject.readFormat.featureType.fieldTypes
       getData=(action "onTabGetData" tabModel)}}
 
       {{#block-slot "head-block"}}
