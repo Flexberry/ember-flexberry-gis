@@ -1,4 +1,3 @@
----
 language: node_js
 node_js:
   - "6.10.3"
@@ -47,6 +46,6 @@ deploy:
   provider: npm
   email: mail@flexberry.net
   api_key:
-    secure: iVCJs9sbr3XVHUsxr42whWBpQdlHeooxG1NviveUEfsKSbtEVNqnuRLTv7fktKxySoh9nKHfzfCYsrbEKEcwuBUDZGDIxJcDulqoZB2nuPY4DK2Htqww/HHDLqVu+KY56OBOygnfmc+PCPD1G+YEHGh8udVsmY/iY6zQ0gKRGOI=
+    secure: nov91ogxvME3ZpCmIfo6QhV4jzeY/lZMToo/A38bmfOsO5q3lbQTOk+GAP+ofFU0c89pYFtDpQtZRhrz0ksnfIGOIMpWvK5JjUqJ9mf9LSZxv0vorgcFVcTrHb9lRJLlkNvrTAQrvtwC0eMCyvrCVoqsROZp2ZR87T0fxrFPnD4W2bW2S5ZadZCLv7C/J4QmGVkvqxvwU0UiEKXinRWyyjF1Nd3A+Yvc/cr+sGXAT9SDe8/zYemn132VW7WFttSfLjRwja2qFoy1cmVtLVWuLK3rQmUlLmP7Jxi86r3WViWyed64Ew+KQpHWqM6IQ+MMIqnXsqOfaH5zRSCNhyysuqmJy0+kknXXX4+DRDgF8nKj4js/o+d25SMNux8HiwWIC3isQ3plQtNs/CKcCxpdR/xyiD+wEbpHenoScnCjRXPWevNhDRu5etgOGSep8OAi1NvCveZBHXzD95pO/QLZIuSoUigqzkVZ886U+v2FODqfSyPaXYMEvzOgdKxL+/JQ1bViUio0AE41EHObrBhQuGlGWkeyr6ajbYYwcvkdXAiiyFAOpunBPTp/cJ7m0u68bTSqTJfyf99YEK6PEN6xgf5yaatEnnKlrxHprPRWemy+EvWpOL0cA71Cp1Ixs0jgKIKQbfLvQNaBMnvx9JuTzZ/fWgq/wJW9/cbV5hzeg9A=
   on:
     tags: true
