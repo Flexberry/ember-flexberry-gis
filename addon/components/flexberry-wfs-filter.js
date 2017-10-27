@@ -35,8 +35,6 @@ export default Ember.Component.extend({
   */
   _filterIsCorrect: true,
 
-  filter: undefined,
-
   /**
     Class for operator buttons.
 
@@ -330,10 +328,10 @@ export default Ember.Component.extend({
     applyFilter() {
       let filter = this.parseFilter();
       if (Ember.isNone(filter)) {
-        Ember.set(this, 'value', filter);
+        Ember.set(this, 'filter', filter);
       } else {
         if (Ember.get(this, '_filterIsCorrect')) {
-          Ember.set(this, 'value', undefined);
+          Ember.set(this, 'filter', undefined);
         }
       }
     },
