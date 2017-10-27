@@ -126,9 +126,31 @@
       }}
     </div>
   </div>
+
   <div class="row">
-    <div class = "sixteen wide column">
-      {{textarea class="edit-filter-textarea" value=filterStringValue doubleClick=(action "parseFilter")}}
+    <div class="sixteen wide column">
+      <div class="three top attached buttons">
+        {{flexberry-button
+          class=operatorButtonClass
+          caption=(t "components.flexberry-wfs-filter.buttons.apply")
+          readonly=readonly
+          click=(action "applyFilter")
+        }}
+        {{flexberry-button
+          class=operatorButtonClass
+          caption=(t "components.flexberry-wfs-filter.buttons.check")
+          readonly=readonly
+          click=(action "checkFilter")
+        }}
+        {{flexberry-button
+          class=operatorButtonClass
+          caption=(t "components.flexberry-wfs-filter.buttons.clear")
+          readonly=readonly
+          click=(action "clearFilter")
+        }}
+        <div class={{statusClass}}>{{currentStatus}}</div>
+      </div>
+      {{textarea class="edit-filter-textarea" value=filterStringValue}}
     </div>
   </div>
 </div>

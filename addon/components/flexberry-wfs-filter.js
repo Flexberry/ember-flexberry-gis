@@ -35,6 +35,8 @@ export default Ember.Component.extend({
   */
   _filterIsCorrect: true,
 
+  filter: undefined,
+
   /**
     Class for operator buttons.
 
@@ -75,6 +77,10 @@ export default Ember.Component.extend({
     @default []
   */
   values: [],
+
+  currentStatus: 'OK',
+
+  statusClass: 'ui green label',
 
   /**
     Contains selected field.
@@ -169,6 +175,19 @@ export default Ember.Component.extend({
       default:
         return '';
     }
+  },
+
+  parseFilter() {
+    let a = this.get('filterStringValue') || '';
+    a = a.replace(/[\n\r]/g, '');
+    this.set('_filterIsCorrect', true);
+    if (Ember.isBlank(a)) {
+      return null;
+    }
+
+    let filter =  this._parseExpression(a);
+
+    return this.get('_filterIsCorrect') && filter.toGml ? filter.toGml() : null;
   },
 
   /**
@@ -302,6 +321,49 @@ export default Ember.Component.extend({
   },
 
   actions: {
+
+    /**
+      This action is called when Apply button is pressed.
+
+      @method actions.applyFilter
+    */
+    applyFilter() {
+      let filter = this.parseFilter();
+      if (Ember.isNone(filter)) {
+        Ember.set(this, 'value', filter);
+      } else {
+        if (Ember.get(this, '_filterIsCorrect')) {
+          Ember.set(this, 'value', undefined);
+        }
+      }
+    },
+
+    /**
+      This action is called when Check button is pressed.
+
+      @method actions.checkFilter
+    */
+    checkFilter() {
+      this.parseFilter();
+      if (Ember.get(this, '_filterIsCorrect')) {
+        Ember.set(this, 'currentStatus', 'OK');
+        Ember.set(this, 'statusClass', 'ui green label');
+      } else {
+        Ember.set(this, 'currentStatus', 'Error');
+        Ember.set(this, 'statusClass', 'ui red label');
+      }
+    },
+
+    /**
+      This action is called when Clear button is pressed.
+
+      @method actions.clearFilter
+    */
+    clearFilter() {
+      Ember.set(this, 'filter', undefined);
+      Ember.set(this, 'filterStringValue', undefined);
+    },
+
     /**
       This action is called when an item in Fields list is pressed.
 
@@ -344,7 +406,7 @@ export default Ember.Component.extend({
       }
 
       values.sort();
-      if (values[-1] === undefined) {
+      if (Ember.isNone(values[values.length - 1])) {
         values.pop();
         values.unshift('NULL');
       }
@@ -370,25 +432,12 @@ export default Ember.Component.extend({
       }
 
       values.sort();
-      if (values[-1] === undefined) {
+      if (Ember.isNone(values[values.length - 1])) {
         values.pop();
         values.unshift('NULL');
       }
 
       this.set('values', values);
-    },
-
-    parseFilter() {
-      let a = this.get('filterStringValue') || '';
-      a = a.replace(/[\n\r]/g, '');
-      this.set('_filterIsCorrect', true);
-      if (Ember.isBlank(a)) {
-        return null;
-      }
-
-      let filter =  this._parseExpression(a);
-
-      return this.get('_filterIsCorrect') && filter.toGml ? filter.toGml() : null;
     },
 
     /**
@@ -434,6 +483,11 @@ export default Ember.Component.extend({
       @param {String} value
     */
     pasteFieldValue(value) {
+      if (value === 'NULL') {
+        this._pasteIntoFilterString(value);
+        return;
+      }
+
       let newString = `'${value || ''}'`;
       this._pasteIntoFilterString(newString);
     },
