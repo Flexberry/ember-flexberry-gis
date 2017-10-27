@@ -309,7 +309,7 @@
   {{#if _filterSettingsAreAvailableForType}}
   <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "wfsFilterSettings") "active"}}" data-tab="wfsFilterSettings">
     {{flexberry-wfs-filter
-      value=_layer.settings.filter
+      filter=_layer.settings.filter
       _leafletObject=_leafletObject
     }}
   </div>

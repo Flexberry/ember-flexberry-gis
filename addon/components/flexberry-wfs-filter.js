@@ -8,6 +8,15 @@ export default Ember.Component.extend({
   layout,
 
   /**
+    Current layer filter.
+
+    @property filter
+    @type Element
+    @default undefined
+  */
+  filter: undefined,
+
+  /**
     String value of filter.
 
     @property filterStringValue
@@ -90,6 +99,7 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
 
+    this._updateFilterString();
     let _leafletObject = this.get('_leafletObject') || {};
     let fields = [];
 
@@ -105,6 +115,62 @@ export default Ember.Component.extend({
     this.set('fields', fields);
   },
 
+  _updateFilterString() {
+    let filter = this.get('filter') || '';
+
+    if (Ember.isBlank(filter)) {
+      this.set('filterStringValue', '');
+      return;
+    }
+
+    if (!(filter instanceof Element)) {
+      filter = L.XmlUtil.parseXml(filter).firstChild;
+    }
+
+    this.set('filterStringValue', this._gmlFilterToString(filter));
+  },
+
+  _gmlFilterToString(filter) {
+    switch (filter.nodeName) {
+      case 'Or':
+      case 'And':
+        let expressionString = '';
+        filter.childNodes.forEach((node) => {
+          expressionString += this._gmlFilterToString(node) + ', ';
+        }, this);
+        expressionString = expressionString.slice(0, -2);
+        return `${filter.nodeName.toUpperCase()} (${expressionString})`;
+      case 'Not':
+        if (filter.firstChild.nodeName === 'ogc:PropertyIsNull') {
+          return `'${filter.firstChild.firstChild.textContent}' != NULL`;
+        }
+
+        return `NOT (${this._gmlFilterToString(filter.firstChild)})`;
+      case 'ogc:PropertyIsNull':
+        return `'${filter.firstChild.textContent}' = NULL`;
+      case 'ogc:PropertyIsEqualTo':
+        return `'${filter.firstChild.textContent}' = '${filter.childNodes[1].textContent}'`;
+      case 'ogc:PropertyIsLessThan':
+        return `'${filter.firstChild.textContent}' < '${filter.childNodes[1].textContent}'`;
+      case 'ogc:PropertyIsGreaterThan':
+        return `'${filter.firstChild.textContent}' > '${filter.childNodes[1].textContent}'`;
+      case 'ogc:PropertyIsNotEqualTo':
+        return `'${filter.firstChild.textContent}' != '${filter.childNodes[1].textContent}'`;
+      case 'ogc:PropertyIsLessThanOrEqualTo':
+        return `'${filter.firstChild.textContent}' <= '${filter.childNodes[1].textContent}'`;
+      case 'ogc:PropertyIsGreaterThanOrEqualTo':
+        return `'${filter.firstChild.textContent}' >= '${filter.childNodes[1].textContent}'`;
+      case 'ogc:PropertyIsLike':
+        if (filter.getAttribute('matchCase') === 'false') {
+          return `'${filter.firstChild.textContent}' ILIKE '${filter.childNodes[1].textContent}'`;
+        }
+
+        return `'${filter.firstChild.textContent}' LIKE '${filter.childNodes[1].textContent}'`;
+      default:
+        return '';
+    }
+  },
+
   /**
     Creates filter object from string.
 
@@ -115,7 +181,7 @@ export default Ember.Component.extend({
   */
   _parseExpression(expression) {
     const logicalExp = /^\s*([Aa][Nn][Dd]|[Oo][Rr]|[Nn][Oo][Tt])\s*\((.+)\)\s*$/;
-    const conditionExp = /^\s*('[^']+'|"[^"]+")\s*(=|<|>|<=|>=|!=|[Ii]?[Ll][Ii][Kk][Ee])\s*('[^']+'|"[^"]+")\s*$/;
+    const conditionExp = /^\s*('[^']+'|"[^"]+")\s*(=|<|>|<=|>=|!=|[Ii]?[Ll][Ii][Kk][Ee])\s*('[^']+'|"[^"]+"|[Nn][Uu][Ll][Ll])\s*$/;
 
     let exp = expression.trim();
     if (exp[0] === '(' && exp.slice(-1) === ')') {
@@ -125,12 +191,25 @@ export default Ember.Component.extend({
     let conditionExpResult = conditionExp.exec(exp);
     if (conditionExpResult) {
       conditionExpResult[1] = conditionExpResult[1].slice(1, conditionExpResult[1].length - 1);
-      conditionExpResult[3] = conditionExpResult[3].slice(1, conditionExpResult[3].length - 1);
+      if (conditionExpResult[3].toLowerCase() !== 'null') {
+        conditionExpResult[3] = conditionExpResult[3].slice(1, conditionExpResult[3].length - 1);
+      } else {
+        conditionExpResult[3] = '';
+      }
+
       let properties = Ember.A([conditionExpResult[1], conditionExpResult[3]]);
       switch (conditionExpResult[2].toLowerCase()) {
         case '=':
+          if (Ember.isBlank(properties[1])) {
+            return new L.Filter.IsNull(properties[0]);
+          }
+
           return new L.Filter.EQ(...properties, true);
         case '!=':
+          if (Ember.isBlank(properties[1])) {
+            return new L.Filter.Not(new L.Filter.IsNull(properties[0]));
+          }
+
           return new L.Filter.NotEQ(...properties, true);
         case '>':
           return new L.Filter.GT(...properties, true);
@@ -191,7 +270,7 @@ export default Ember.Component.extend({
           case 'or':
             return new L.Filter.Or(...properties);
           case 'not':
-            return new L.Filter.Not(...properties);
+            return new L.Filter.Not(properties[0]);
         }
       }
     }
@@ -300,7 +379,7 @@ export default Ember.Component.extend({
     },
 
     parseFilter() {
-      let a = this.get('filterStringValue');
+      let a = this.get('filterStringValue') || '';
       a = a.replace(/[\n\r]/g, '');
       this.set('_filterIsCorrect', true);
       if (Ember.isBlank(a)) {
@@ -309,7 +388,7 @@ export default Ember.Component.extend({
 
       let filter =  this._parseExpression(a);
 
-      return this.get('_filterIsCorrect') ? filter : null;
+      return this.get('_filterIsCorrect') && filter.toGml ? filter.toGml() : null;
     },
 
     /**
