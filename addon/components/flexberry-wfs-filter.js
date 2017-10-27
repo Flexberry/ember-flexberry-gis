@@ -26,6 +26,8 @@ export default Ember.Component.extend({
   */
   _filterIsCorrect: true,
 
+  filter: undefined,
+
   /**
     Class for operator buttons.
 
@@ -67,6 +69,10 @@ export default Ember.Component.extend({
   */
   values: [],
 
+  currentStatus: 'OK',
+
+  statusClass: 'ui green label',
+
   /**
     Contains selected field.
 
@@ -103,6 +109,19 @@ export default Ember.Component.extend({
     }
 
     this.set('fields', fields);
+  },
+
+  parseFilter() {
+    let a = this.get('filterStringValue');
+    a = a.replace(/[\n\r]/g, '');
+    this.set('_filterIsCorrect', true);
+    if (Ember.isBlank(a)) {
+      return null;
+    }
+
+    let filter =  this._parseExpression(a);
+
+    return this.get('_filterIsCorrect') ? filter : null;
   },
 
   /**
@@ -223,6 +242,34 @@ export default Ember.Component.extend({
   },
 
   actions: {
+
+    applyFilter() {
+      let filter = this.parseFilter();
+      if (Ember.isNone(filter)) {
+        Ember.set(this, 'value', filter);
+      } else {
+        if (Ember.get(this, '_filterIsCorrect')) {
+          Ember.set(this, 'value', undefined);
+        }
+      }
+    },
+
+    checkFilter() {
+      this.parseFilter();
+      if (Ember.get(this, '_filterIsCorrect')) {
+        Ember.set(this, 'currentStatus', 'OK');
+        Ember.set(this, 'statusClass', 'ui green label');
+      } else {
+        Ember.set(this, 'currentStatus', 'Error');
+        Ember.set(this, 'statusClass', 'ui red label');
+      }
+    },
+
+    clearFilter() {
+      Ember.set(this, 'filter', undefined);
+      Ember.set(this, 'filterStringValue', undefined);
+    },
+
     /**
       This action is called when an item in Fields list is pressed.
 
@@ -297,19 +344,6 @@ export default Ember.Component.extend({
       }
 
       this.set('values', values);
-    },
-
-    parseFilter() {
-      let a = this.get('filterStringValue');
-      a = a.replace(/[\n\r]/g, '');
-      this.set('_filterIsCorrect', true);
-      if (Ember.isBlank(a)) {
-        return null;
-      }
-
-      let filter =  this._parseExpression(a);
-
-      return this.get('_filterIsCorrect') ? filter : null;
     },
 
     /**

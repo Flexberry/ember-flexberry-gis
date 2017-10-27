@@ -134,19 +134,23 @@
           class=operatorButtonClass
           caption=(t "components.flexberry-wfs-filter.buttons.apply")
           readonly=readonly
+          click=(action "applyFilter")
         }}
         {{flexberry-button
           class=operatorButtonClass
           caption=(t "components.flexberry-wfs-filter.buttons.check")
           readonly=readonly
+          click=(action "checkFilter")
         }}
         {{flexberry-button
           class=operatorButtonClass
           caption=(t "components.flexberry-wfs-filter.buttons.clear")
           readonly=readonly
+          click=(action "clearFilter")
         }}
+        <div class={{statusClass}}>{{currentStatus}}</div>
       </div>
-      {{textarea class="edit-filter-textarea" value=filterStringValue doubleClick=(action "parseFilter")}}
+      {{textarea class="edit-filter-textarea" value=filterStringValue}}
     </div>
   </div>
 </div>
