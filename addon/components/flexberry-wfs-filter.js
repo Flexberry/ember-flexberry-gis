@@ -243,6 +243,11 @@ export default Ember.Component.extend({
 
   actions: {
 
+    /**
+      This action is called when Apply button is pressed.
+
+      @method actions.applyFilter
+    */
     applyFilter() {
       let filter = this.parseFilter();
       if (Ember.isNone(filter)) {
@@ -254,6 +259,11 @@ export default Ember.Component.extend({
       }
     },
 
+    /**
+      This action is called when Check button is pressed.
+
+      @method actions.checkFilter
+    */
     checkFilter() {
       this.parseFilter();
       if (Ember.get(this, '_filterIsCorrect')) {
@@ -265,6 +275,11 @@ export default Ember.Component.extend({
       }
     },
 
+    /**
+      This action is called when Clear button is pressed.
+
+      @method actions.clearFilter
+    */
     clearFilter() {
       Ember.set(this, 'filter', undefined);
       Ember.set(this, 'filterStringValue', undefined);
