@@ -109,45 +109,9 @@
       {{/if}}
       {{#if _crsSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.main-group.activeTab "crs-tab") "active"}}" data-tab="crs-tab">
-          <div class="field">
-            <label>
-              {{crsCaption}}
-            </label>
-            {{flexberry-dropdown
-              class="fluid"
-              items=_availableCoordinateReferenceSystemsCodes
-              value=_coordinateReferenceSystemCode
-            }}
-          </div>
-          {{#if _showCoordinateReferenceSystemFields}}
-            <div class="field">
-              <label>
-                {{crsNameTextboxCaption}}
-              </label>
-              {{flexberry-textbox
-                class="fluid"
-                value=_layer.coordinateReferenceSystem.name
-              }}
-            </div>
-            <div class="field">
-              <label>
-                {{crsCodeTextboxCaption}}
-              </label>
-              {{flexberry-textbox
-                class="fluid"
-                value=_layer.coordinateReferenceSystem.code
-              }}
-            </div>
-            <div class="field">
-              <label>
-                {{crsDefinitionTextareaCaption}}
-              </label>
-              {{flexberry-textarea
-                class="fluid"
-                value=_layer.coordinateReferenceSystem.definition
-              }}
-            </div>
-          {{/if}}
+          {{flexberry-edit-crs
+            coordinateReferenceSystem=_layer.coordinateReferenceSystem
+          }}
         </div>
       {{/if}}
       {{#if _layerSettingsAreAvailableForType}}
