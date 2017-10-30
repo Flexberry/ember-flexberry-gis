@@ -244,6 +244,20 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether attributes operation is allowed for layer.
+
+      @property _attributesOperationIsAvailable
+      @type boolean
+      @readOnly
+      @private
+    */
+    _attributesOperationIsAvailable: Ember.computed('_layerClassFactory', function () {
+      let layerClassFactory = this.get('_layerClassFactory');
+
+      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('attributes');
+    }),
+
+    /**
       Flag: indicates whether add dialog has been already requested by user or not.
 
       @property _addDialogHasBeenRequested
@@ -607,8 +621,48 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onRemoveDialogApprove(...args) {
         // Send outer 'remove' action.
         this.sendAction('remove', ...args);
+      },
+
+      /**
+        Handles attributes button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.attributes:method"}}'attributes'{{/crossLink}} action.
+
+        @method actions.onAttributesButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onAttributesButtonClick(e) {
+        let currentController = this.getTargetObjectByCondition((targetObject) => {
+          return targetObject instanceof Ember.Controller;
+        });
+        currentController.send('getAttributes', {
+          name: this.get('name'),
+          leafletObject: this.get('layerModel._leafletObject')
+        });
       }
-    }
+    },
+
+    /**
+      Returns that 'targetObject' (from 'targetObject's hierarchy) which satisfies a given condition.
+
+      @method getTargetObjectByCondition.
+      @param {Function} condition Callback-function, which will be called for each 'targetObject' in 'targetObject's hierarchy, until callback return true for one of them.
+      @return {null|Ember.Component|Ember.Controller} Target object which satisfies a given condition or null.
+    */
+    getTargetObjectByCondition(condition) {
+      if (Ember.typeOf(condition) !== 'function') {
+        return null;
+      }
+
+      // Component's 'targetObject' is parent component or a controller (in the end of components hierarchy).
+      // Search until 'targetObject' is none or condition is true.
+      let targetObject = this.get('targetObject');
+      while (!(Ember.isNone(targetObject) || condition(targetObject))) {
+        targetObject = targetObject.get('targetObject');
+      }
+
+      return targetObject;
+    },
 
     /**
       Component's action invoking when layer node's header has been clicked.
@@ -681,6 +735,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
       @method sendingActions.remove
       @param {Object} e Action's event object.
+    */
+
+    /**
+      Component's action invoking when user wants to look at attributes of current layer.
+
+      @method sendingActions.getAttributes
+      @param {Object} e Action's event object.
+      @param {String} e.name Current layer name.
+      @param {Object} e.leafletObject Leaflet object with the attributes of current layer.
     */
   }
 );

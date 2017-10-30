@@ -93,6 +93,12 @@ export default EditMapController.extend(
       return result;
     }),
 
+    editedLayers: Ember.A(),
+
+    editedLayersSelectedTabIndex: 0,
+
+    editedLayersPanelFolded: true,
+
     availableCRS: Ember.computed('i18n.locale', function () {
       let availableModes = Ember.A();
       let i18n = this.get('i18n');
@@ -221,6 +227,22 @@ export default EditMapController.extend(
             changed: false,
             tabName: 'identify'
           });
+        }
+      },
+
+      getAttributes(object) {
+        let editedLayers = this.get('editedLayers') || Ember.A();
+        let index = editedLayers.findIndex((item) => Ember.isEqual(item.name, object.name));
+        if (index >= 0) {
+          this.set('editedLayersSelectedTabIndex', index);
+        } else {
+          editedLayers.addObject(object);
+          this.set('editedLayers', editedLayers);
+          this.set('editedLayersSelectedTabIndex', editedLayers.length - 1);
+        }
+
+        if (this.get('editedLayersPanelFolded')) {
+          this.set('editedLayersPanelFolded', false);
         }
       }
     }

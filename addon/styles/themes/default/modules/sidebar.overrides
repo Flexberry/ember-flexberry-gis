@@ -370,3 +370,149 @@
         }
     }
 }
+
+/***************************************************
+                    BottomPanel
+****************************************************/
+.bottompanel-wrapper {
+  position: absolute;
+  width: 100%;
+  height: ~"calc(100% - 60px)";
+  bottom: 0;
+  transition: -webkit-transform .5s ease, bottom .5s ease;
+
+  &.hidden {
+    visibility: hidden;
+  }
+
+  .ui.bottom.bottompanel {
+    bottom: 10px;
+    position: absolute;
+    z-index: 900;
+    transform: none;
+    transition: none;
+    background-color: white;
+    margin: 0px 0px 0px 10%;
+    box-shadow: 0 0 4px #3C4F76;
+    border-radius: 5px 5px 5px 5px;
+    max-height: ~"calc(100% - 80px)";
+    height: 391px;
+    width: 700px;
+
+    .ui.tab {
+      padding: 10px;
+      color: #3C4F76;
+    }
+
+    &.folded {
+      bottom: 0;
+      overflow-y: hidden;
+      height: 40px;
+      .tab.segment {
+        visibility: hidden;
+      }
+    }
+  }
+
+  .ui.button.flexberry-button {
+    min-width: 30px;
+
+    &.small-button {
+      min-width: 0;
+      width: 1.7em;
+      height: 1.6em;
+      padding: 0.2em;
+    }
+  }
+
+  .tab.segment {
+    height: 350px;
+    .ui.table td, th {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .ui.tabular.menu .item {
+    background: #e3e3e3;
+    border-radius: 0.3rem 0.3rem 0px 0px;
+
+    &.active {
+      background: #ffffff;
+    }
+
+    .icon {
+      font-size: 0.7em;
+      padding-left: 10px;
+    }
+  }
+
+  .bottompanel {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    &-tab-nav-button {
+      position: absolute;
+      width: 25px;
+      height: 40px;
+      line-height: 40px;
+      top: 0;
+      color: #428bca;
+      cursor: pointer;
+      text-align: center;
+      border: 1px solid #ddd;
+      border-radius: 0;
+      padding: 0;
+      background-color: #fff;
+      z-index: 10;
+
+      &-left {
+        left: 0;
+        border-top-left-radius: 5px;
+      }
+
+      &-right {
+        right: 0;
+        border-top-right-radius: 5px;
+      }
+    }
+
+    &-tab-nav-panel {
+      width: 100%;
+      padding-left: 25px;
+
+      &-tabs.ui.tabular.menu {
+        position: relative;
+        border-bottom: 0;
+
+        a {
+          font-weight: 400;
+        }
+
+        .icon.close {
+          font-size: 0.7em; padding-left: 10px;
+        }
+      }
+    }
+
+    .ui.attached + .ui.attached.segment:not(.top) {
+      border-top: 1px solid #D4D4D5;
+    }
+
+    .ui.segment[class*="bottom attached"] {
+      margin-bottom: 1px;
+    }
+
+    &-tab-head-panel {
+      .flexberry-checkbox {
+        width: 120px;
+        padding-left: 10px;
+      }
+
+      .buttons {
+        display: inline-block;
+      }
+    }
+  }
+}
