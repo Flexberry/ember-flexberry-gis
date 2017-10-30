@@ -17,4 +17,13 @@ export default {
     'scale': 'Масштаб',
     'crs': 'Система координат',
   },
+  mainTab: {
+    'caption': 'Основные настройки'
+  },
+  crsTab: {
+    'caption': 'Система координат'
+  },
+  bordersTab: {
+    'caption': 'Границы'
+  }
 };

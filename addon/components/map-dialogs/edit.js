@@ -181,6 +181,33 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
     crsTextboxCaption: t('components.map-dialogs.edit.name-textbox.crs'),
 
     /**
+      Dialog's 'Main settings' tab caption.
+
+      @property mainTabCaption
+      @type String
+      @default t('components.map-dialogs.edit.mainTab.caption')
+    */
+    mainTabCaption: t('components.map-dialogs.edit.mainTab.caption'),
+
+    /**
+      Dialog's 'Coordinate system' tab caption.
+
+      @property crsTabCaption
+      @type String
+      @default t('components.map-dialogs.edit.crsTab.caption')
+    */
+    crsTabCaption: t('components.map-dialogs.edit.crsTab.caption'),
+
+    /**
+      Dialog's 'Borders settings' tab caption.
+
+      @property bordersTabCaption
+      @type String
+      @default t('components.map-dialogs.edit.bordersTab.caption')
+    */
+    bordersTabCaption: t('components.map-dialogs.edit.bordersTab.caption'),
+
+    /**
       Flag: indicates whether dialog is visible or not.
       If true, then dialog will be shown, otherwise dialog will be closed.
 
@@ -208,7 +235,27 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
     */
     _mapModel: null,
 
+    /**
+     * Active tab name.
+     */
+    _activeTab: 'main-tab',
+
     actions: {
+      /**
+       * Handles click on a tab.
+
+       * @method actions.onTabClick
+       * @param {Object} e Click event object.
+       */
+      onTabClick(e) {
+        e = Ember.$.event.fix(e);
+
+        let $clickedTab = Ember.$(e.currentTarget);
+        let clickedTabName = $clickedTab.attr('data-tab');
+
+        this.set('_activeTab', clickedTabName);
+      },
+
       /**
         Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
         Invokes {{#crossLink "FlexberryRemoveMapDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
@@ -217,6 +264,9 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
       */
       onApprove() {
         let mapModel = this.get('_mapModel');
+        let crs = Ember.get(mapModel, 'coordinateReferenceSystem');
+        crs = Ember.$.isEmptyObject(crs) ? null : JSON.stringify(crs);
+        Ember.set(mapModel, 'coordinateReferenceSystem', crs);
 
         this.sendAction('approve', {
           mapProperties: mapModel
@@ -304,6 +354,8 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
       let keyWords = this.get('mapModel.keyWords');
       let scale = this.get('mapModel.scale');
       let crs = this.get('mapModel.coordinateReferenceSystem');
+
+      crs = Ember.isNone(crs) ? {} : JSON.parse(crs);
 
       this.set('_mapModel', {
         name: name,

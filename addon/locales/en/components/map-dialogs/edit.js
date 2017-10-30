@@ -17,4 +17,13 @@ export default {
     'scale': 'Scale',
     'crs': 'CRS',
   },
+  mainTab: {
+    'caption': 'Main settings'
+  },
+  crsTab: {
+    'caption': 'Coordinate system'
+  },
+  bordersTab: {
+    'caption': 'Borders settings'
+  }
 };

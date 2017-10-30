@@ -921,3 +921,13 @@
     }
   }
 }
+
+/* Edit map dialog tuning */
+.flexberry-edit-map-dialog {
+  .form {
+    margin-top: 10px;
+  }
+  .ui.tab {
+    min-height: 450px;
+  }
+}
