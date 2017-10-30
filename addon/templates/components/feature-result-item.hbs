@@ -55,10 +55,10 @@
               {{/if}}
             </td>
             <td>
-              {{#if (regex-test propertyValue '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?')}}
+              {{#if (regex-test propertyValue '^(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?')}}
                 <a href="{{propertyValue}}">{{propertyValue}}</a>
               {{else}}
-                {{propertyValue}}
+                {{{propertyValue}}}
               {{/if}}
             </td>
           </tr>

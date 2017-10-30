@@ -57,6 +57,10 @@ export default BaseLayer.extend({
           url: url,
           dataType: 'json',
           success: function (response) {
+            if (typeof (response) === 'string') {
+              response = JSON.parse(response);
+            }
+
             resolve(L.geoJson(response, options));
           },
           error: function (error) {
