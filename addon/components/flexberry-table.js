@@ -49,7 +49,7 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
     @private
   */
   _additionalColumnsCount: Ember.computed('_slots.[]', function() {
-    let slots = ['column-header-head-0', 'column-header-tail-0'];
+    let slots = ['column-header-head-0', 'column-cell-head-1', 'column-header-tail-0'];
     let result = 0;
     slots.forEach((item) => {
       if (this._isRegistered(item)) {

@@ -13,6 +13,9 @@
       {{#yield-slot "column-header-head-0"}}
         {{yield}}
       {{/yield-slot}}
+      {{#yield-slot "column-header-head-1"}}
+        {{yield}}
+      {{/yield-slot}}
       {{#each-in header as |key value|}}
       <th>{{value}}</th>
       {{/each-in}}
@@ -28,10 +31,13 @@
           {{#yield-slot "column-cell-head-0" (block-params row)}}
             {{yield}}
           {{/yield-slot}}
+          {{#yield-slot "column-cell-head-1" (block-params row)}}
+            {{yield}}
+          {{/yield-slot}}
           {{#each-in header as |key value|}}
             {{#if allowEdit}}
               <td onclick={{action (mut _selectedCellName) (concat (ember-guid row) "_" key)}}>
-                {{#if (and (eq _selectedCellName (concat (ember-guid row) "_" key)) (object-contains row key))}}
+                {{#if (and (eq _selectedCellName (concat (ember-guid row) "_" key)) (object-contains row key) (eq (get fieldTypes key) "string"))}}
                   {{input value=(mut (get row key)) key-up="onInputKeyUp" key-down="onInputKeyDown"}}
                 {{else}}
                   {{get row key}}

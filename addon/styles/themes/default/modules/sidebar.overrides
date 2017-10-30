@@ -423,6 +423,13 @@
 
   .ui.button.flexberry-button {
     min-width: 30px;
+
+    &.small-button {
+      min-width: 0;
+      width: 1.7em;
+      height: 1.6em;
+      padding: 0.2em;
+    }
   }
 
   .tab.segment {

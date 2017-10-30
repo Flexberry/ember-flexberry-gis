@@ -32,6 +32,7 @@
       model=tabModel.propertiesToShow
       header=tabModel.header
       recordsTotalCount=tabModel.properties.length
+      fieldTypes=tabModel.leafletObject.readFormat.featureType.fieldTypes
       getData=(action "onTabGetData" tabModel)}}
 
       {{#block-slot "head-block"}}
@@ -65,6 +66,10 @@
         <th class="narrow">{{t "components.flexberry-layers-attributes-panel.select-item"}}</th>
       {{/block-slot}}
 
+      {{#block-slot "column-header-head-1"}}
+        <th class="narrow">{{t "components.flexberry-layers-attributes-panel.edit-item"}}</th>
+      {{/block-slot}}
+
       {{#block-slot "column-cell-head-0" as |row|}}
         <td class="narrow">
         {{flexberry-checkbox
@@ -73,7 +78,33 @@
         </td>
       {{/block-slot}}
 
+      {{#block-slot "column-cell-head-1" as |row|}}
+        <td>
+          {{flexberry-button
+            class="small-button"
+            tooltip=(t "components.flexberry-layers-attributes-panel.edit-item")
+            click=(action "onRowEdit" tabModel (ember-guid row))
+            iconClass="edit icon"
+          }}
+        </td>
+      {{/block-slot}}
+
     {{/flexberry-table}}
   </div>
   {{/each}}
 </div>
+
+{{!--
+  Semantic UI modal dialogs takes long time to be initialized
+  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+--}}
+{{#if _editRowDialogHasBeenRequested}}
+  {{component "layers-dialogs/attributes/edit"
+    class=flexberryClassNames.addDialog
+    visible=_onEditRowDialogIsVisible
+    data=_editRowDataCopy
+    fieldTypes=_editRowFieldTypes
+    fieldParsers=_editRowFieldParsers
+    approve=(action "onEditRowDialogApprove")
+  }}
+{{/if}}
