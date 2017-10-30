@@ -172,7 +172,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       } else {
         this.set('selectedTabIndex', index);
         if (this.get('folded')) {
-          this.set('folded', true);
+          this.set('folded', false);
         }
       }
     },
