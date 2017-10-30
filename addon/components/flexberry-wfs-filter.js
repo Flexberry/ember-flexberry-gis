@@ -26,16 +26,6 @@ export default Ember.Component.extend({
   filterStringValue: undefined,
 
   /**
-    Flag indicates whether filterStringValue is correct or not.
-
-    @property _filterIsCorrect
-    @type Boolean
-    @default true
-    @private
-  */
-  _filterIsCorrect: true,
-
-  /**
     Class for operator buttons.
 
     @property operatorButtonClass
@@ -45,40 +35,41 @@ export default Ember.Component.extend({
   operatorButtonClass: 'filter-operator-button',
 
   /**
-    Classes for Example and All buttons.
-
-    @property fieldValuesLoadButtonClass
-    @type String
-  */
-  fieldValuesLoadButtonClass: Ember.computed('_selectedField', function() {
-    let field = this.get('_selectedField');
-
-    return Ember.isBlank(field) ? 'filter-operator-button disabled' : 'filter-operator-button';
-  }),
-
-  _leafletObject: null,
-
-  /**
     Array contains Fields in current leaflet object.
 
     @property fields
     @type Array
-    @default []
+    @default Ember.A()
   */
-  fields: [],
+  fields: Ember.A(),
 
   /**
     Array contains shown values of current field.
 
     @property values
     @type Array
-    @default []
+    @default Ember.A()
   */
-  values: [],
+  values: Ember.A(),
 
-  currentStatus: 'OK',
+  /**
+    Values count for 'Example' button.
 
-  statusClass: 'ui green label',
+    @property valuesCount
+    @type Integer
+    @default 10
+  */
+  valuesCount: 10,
+
+  /**
+    Leaflet's wfs layer object.
+
+    @property _leafletObject
+    @type Object
+    @default null
+    @private
+  */
+  _leafletObject: null,
 
   /**
     Contains selected field.
@@ -100,25 +91,38 @@ export default Ember.Component.extend({
   */
   _selectedValue: undefined,
 
+  /**
+    Flag indicates whether filterStringValue is correct or not.
+
+    @property _filterIsCorrect
+    @type Boolean
+    @default true
+    @private
+  */
+  _filterIsCorrect: true,
+
   init() {
     this._super(...arguments);
 
     this._updateFilterString();
-    let _leafletObject = this.get('_leafletObject') || {};
-    let fields = [];
+    let fieldsDescription = this.get('_leafletObject.readFormat.featureType.fields') || {};
+    let fields = Ember.A();
 
-    for (let layer in _leafletObject._layers) {
-      let properties = Ember.get(_leafletObject._layers[layer], 'feature.properties') || {};
-      for (let property in properties) {
-        if (fields.indexOf(property) < 0) {
-          fields.push(property);
-        }
+    for (let field in fieldsDescription) {
+      if (fields.indexOf(field) < 0) {
+        fields.addObject(field);
       }
     }
 
     this.set('fields', fields);
   },
 
+  /**
+    Updates filter string.
+
+    @method _updateFilterString
+    @private
+  */
   _updateFilterString() {
     let filter = this.get('filter') || '';
 
@@ -134,6 +138,14 @@ export default Ember.Component.extend({
     this.set('filterStringValue', this._gmlFilterToString(filter));
   },
 
+  /**
+    Creates filter string from gml filter object.
+
+    @method _gmlFilterToString
+    @param {Object} filter Filter to parse into string
+    @return {String} Returns filter string
+    @private
+  */
   _gmlFilterToString(filter) {
     switch (filter.nodeName) {
       case 'Or':
@@ -175,7 +187,14 @@ export default Ember.Component.extend({
     }
   },
 
-  parseFilter() {
+  /**
+    Creates filter object from string.
+
+    @method _parseFilter
+    @return {Object} Returns new created gml filter
+    @private
+  */
+  _parseFilter() {
     let a = this.get('filterStringValue') || '';
     a = a.replace(/[\n\r]/g, '');
     this.set('_filterIsCorrect', true);
@@ -296,6 +315,14 @@ export default Ember.Component.extend({
     return null;
   },
 
+  /**
+    Paste specified string into filter string.
+
+    @method _pasteIntoFilterString
+    @param {String} pasteString String for pasting
+    @param {Integer} caretShift Caret shift after string is pasted
+    @private
+  */
   _pasteIntoFilterString(pasteString, caretShift) {
     let textarea = this.$('.edit-filter-textarea')[0];
     let filterString = this.get('filterStringValue') || '';
@@ -315,24 +342,18 @@ export default Ember.Component.extend({
       textarea.focus();
       textarea.setSelectionRange(caretPosition, caretPosition);
     });
-
   },
 
   actions: {
-
     /**
       This action is called when Apply button is pressed.
 
       @method actions.applyFilter
     */
     applyFilter() {
-      let filter = this.parseFilter();
-      if (Ember.isNone(filter)) {
-        Ember.set(this, 'filter', filter);
-      } else {
-        if (Ember.get(this, '_filterIsCorrect')) {
-          Ember.set(this, 'filter', undefined);
-        }
+      let filter = this._parseFilter();
+      if (this.get('_filterIsCorrect')) {
+        this.set('filter', filter);
       }
     },
 
@@ -342,14 +363,7 @@ export default Ember.Component.extend({
       @method actions.checkFilter
     */
     checkFilter() {
-      this.parseFilter();
-      if (Ember.get(this, '_filterIsCorrect')) {
-        Ember.set(this, 'currentStatus', 'OK');
-        Ember.set(this, 'statusClass', 'ui green label');
-      } else {
-        Ember.set(this, 'currentStatus', 'Error');
-        Ember.set(this, 'statusClass', 'ui red label');
-      }
+      this._parseFilter();
     },
 
     /**
@@ -358,81 +372,59 @@ export default Ember.Component.extend({
       @method actions.clearFilter
     */
     clearFilter() {
-      Ember.set(this, 'filter', undefined);
-      Ember.set(this, 'filterStringValue', undefined);
+      this.set('_filterIsCorrect', true);
+      this.set('filter', undefined);
+      this.set('filterStringValue', undefined);
     },
 
     /**
       This action is called when an item in Fields list is pressed.
 
       @method actions.fieldClick
+      @param {String} text Selected field
     */
     fieldClick(text) {
-      this.set('values', []);
-      this.set('_selectedValue', undefined);
-      this.set('_selectedField', text);
+      if (this.get('_selectedField') !== text) {
+        this.set('values', Ember.A());
+        this.set('_selectedValue', undefined);
+        this.set('_selectedField', text);
+      }
     },
 
     /**
       This action is called when an item in Values list is pressed.
 
       @method actions.valueClick
+      @param {String} text Selected value
     */
     valueClick(text) {
       this.set('_selectedValue', text);
     },
 
     /**
-      This action is called when "Examples" button is pressed.
+      This action is called when "Show all" or "Show example" button is pressed.
 
-      @method actions.showExample
+      @method actions.showFieldValues
+      @param {Integer} count Values count to show
     */
-    showExample() {
-      let _leafletObject = this.get('_leafletObject');
-      let values = [];
+    showFieldValues(count) {
+      let layers = this.get('_leafletObject._layers') || {};
+      let values = Ember.A();
       let selectedField = this.get('_selectedField');
 
-      for (let layer in _leafletObject._layers) {
-        let property = _leafletObject._layers[layer].feature.properties[selectedField];
-        if (values.indexOf(property) < 0) {
-          values.push(property);
-        }
+      for (let layer in layers) {
+        let property = Ember.get(layers, `${layer}.feature.properties.${selectedField}`);
+        values.addObject(property);
 
-        if (values.length === 10) {
+        if (values.length === count) {
           break;
         }
       }
 
       values.sort();
-      if (Ember.isNone(values[values.length - 1])) {
-        values.pop();
-        values.unshift('NULL');
-      }
-
-      this.set('values', values);
-    },
-
-    /**
-      This action is called when "Show all" button is pressed.
-
-      @method actions.ShowAll
-    */
-    showAll() {
-      let _leafletObject = this.get('_leafletObject');
-      let values = [];
-      let selectedField = this.get('_selectedField');
-
-      for (let layer in _leafletObject._layers) {
-        let property = _leafletObject._layers[layer].feature.properties[selectedField];
-        if (values.indexOf(property) < 0) {
-          values.push(property);
-        }
-      }
-
-      values.sort();
-      if (Ember.isNone(values[values.length - 1])) {
-        values.pop();
-        values.unshift('NULL');
+      if (values.indexOf(undefined) >= 0) {
+        values.removeObject(undefined);
+        values.unshiftObject(undefined);
       }
 
       this.set('values', values);
@@ -446,9 +438,12 @@ export default Ember.Component.extend({
     */
     pasteConditionExpression(condition) {
       let operandBefore = this.get('_selectedField') || '';
-      let operandAfter = this.get('_selectedValue') || '';
+      let operandAfter = this.get('_selectedValue') || 'NULL';
+      if (operandAfter !== 'NULL') {
+        operandAfter = `'${operandAfter}'`;
+      }
 
-      let expressionString = `'${operandBefore}' ${condition} '${operandAfter}'`;
+      let expressionString = `'${operandBefore}' ${condition} ${operandAfter}`;
       this._pasteIntoFilterString(expressionString);
     },
 
@@ -481,12 +476,13 @@ export default Ember.Component.extend({
       @param {String} value
     */
     pasteFieldValue(value) {
-      if (value === 'NULL') {
-        this._pasteIntoFilterString(value);
+      if (Ember.isNone(value)) {
+        this._pasteIntoFilterString('NULL');
         return;
       }
 
-      let newString = `'${value || ''}'`;
+      let newString = `'${value}'`;
       this._pasteIntoFilterString(newString);
     },
-  } });
+  }
+});

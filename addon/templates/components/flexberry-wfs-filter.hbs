@@ -12,7 +12,7 @@
             </div>
             {{else}}
           <div class="item">
-            {{t "components.flexberry-wfs-filter.settings-not-set"}}
+            {{t "components.flexberry-wfs-filter.no-fields"}}
           </div>
          {{/each}}
        </div>
@@ -25,25 +25,29 @@
           {{#each values as |value|}}
             <div class="item {{if (eq _selectedValue value) "active"}}" {{action "valueClick" value}} {{action "pasteFieldValue" value on="doubleClick"}}>
               <div class="content unselectable">
-                {{value}}
+                {{#if (is-none value)}}
+                  {{t "components.flexberry-wfs-filter.null-value"}}
+                {{else}}
+                  {{value}}
+                {{/if}}
               </div>
             </div>
             {{else}}
           <div class="item">
-            {{t "components.flexberry-wfs-filter.settings-not-set"}}
+            {{t "components.flexberry-wfs-filter.no-values"}}
           </div>
          {{/each}}
         </div>
       </div>
       {{flexberry-button
-        class=fieldValuesLoadButtonClass
+        class=(if (is-none _selectedField) (concat operatorButtonClass ' disabled') operatorButtonClass)
         caption=(t "components.flexberry-wfs-filter.buttons.example")
-        click=(action "showExample")
+        click=(action "showFieldValues" valuesCount)
       }}
       {{flexberry-button
-        class=fieldValuesLoadButtonClass
+        class=(if (is-none _selectedField) (concat operatorButtonClass ' disabled') operatorButtonClass)
         caption=(t "components.flexberry-wfs-filter.buttons.all")
-        click=(action "showAll")
+        click=(action "showFieldValues")
       }}
     </div>
   </div>
@@ -126,7 +130,6 @@
       }}
     </div>
   </div>
-
   <div class="row">
     <div class="sixteen wide column">
       <div class="three top attached buttons">
@@ -148,7 +151,11 @@
           readonly=readonly
           click=(action "clearFilter")
         }}
-        <div class={{statusClass}}>{{currentStatus}}</div>
+        {{#if _filterIsCorrect}}
+          <div class='ui green label'>{{t "components.flexberry-wfs-filter.filter-ok"}}</div>
+        {{else}}
+          <div class='ui red label'>{{t "components.flexberry-wfs-filter.filter-error"}}</div>
+        {{/if}}
       </div>
       {{textarea class="edit-filter-textarea" value=filterStringValue}}
     </div>
