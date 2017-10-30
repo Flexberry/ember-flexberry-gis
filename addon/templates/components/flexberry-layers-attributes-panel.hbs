@@ -1,4 +1,4 @@
-<div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if folded " folded" "")}}>
+<div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if folded " folded" "") (if settings.withToolbar " withToolbar" "") (if settings.sidebarOpened " sidebarOpened" "")}}>
   <button class="bottompanel-tab-nav-button bottompanel-tab-nav-button-left"
     {{action "onTabMove" true}}>
     <i class="left arrow icon"></i>
