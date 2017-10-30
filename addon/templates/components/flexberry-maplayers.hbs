@@ -38,6 +38,7 @@
     {{#each layers as |layer|}}
       {{#if (not layer.isDeleted)}}
         {{flexberry-maplayer
+          model=layer
           type=layer.type
           name=layer.name
           description=layer.description

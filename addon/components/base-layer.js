@@ -1,4 +1,4 @@
-/**
+﻿/**
   @module ember-flexberry-gis
 */
 

@@ -1,304 +1,368 @@
 <form class="ui form {{flexberryClassNames.prefix}}" role="form">
-  <div class="ui top attached fluid tabular menu">
-    <a class="tab item {{if (eq _tabularMenuActiveTab "main") "active"}}" data-tab="main" onclick={{action "onTabClick"}}>
-      {{t "components.layers-dialogs.edit.tabular-menu.main-tab.caption"}}
-    </a>
-    {{#if _crsSettingsAreAvailableForType}}
-      <a class="tab item {{if (eq _tabularMenuActiveTab "crs") "active"}}" data-tab="crs" onclick={{action "onTabClick"}}>
-        {{t "components.layers-dialogs.edit.tabular-menu.crs-tab.caption"}}
+  <div class="ui pointing group secondary menu">
+    {{#if _mainGroupIsAvailableForType}}
+      <a class="item {{if (eq _tabularMenuState.activeGroup "main-group") "active"}}" data-tab="main-group" onclick={{action "onGroupClick"}}>
+        {{t "components.layers-dialogs.edit.groups.main-group.caption"}}
       </a>
     {{/if}}
-    {{#if _layerSettingsAreAvailableForType}}
-      <a class="tab item {{if (eq _tabularMenuActiveTab "settings") "active"}}" data-tab="settings" onclick={{action "onTabClick"}}>
-        {{t "components.layers-dialogs.edit.tabular-menu.settings-tab.caption"}}
+    {{#if _displayGroupIsAvailableForType}}
+      <a class="item {{if (eq _tabularMenuState.activeGroup "display-group") "active"}}" data-tab="display-group" onclick={{action "onGroupClick"}}>
+        {{t "components.layers-dialogs.edit.groups.display-group.caption"}}
       </a>
     {{/if}}
-    {{#if _identifySettingsAreAvailableForType}}
-      <a class="tab item {{if (eq _tabularMenuActiveTab "identifySettings") "active"}}" data-tab="identifySettings" onclick={{action "onTabClick"}}>
-        {{t "components.layers-dialogs.edit.tabular-menu.identify-settings-tab.caption"}}
-      </a>
-    {{/if}}
-    {{#if _searchSettingsAreAvailableForType}}
-      <a class="tab item {{if (eq _tabularMenuActiveTab "searchSettings") "active"}}" data-tab="searchSettings" onclick={{action "onTabClick"}}>
-        {{t "components.layers-dialogs.edit.tabular-menu.search-settings-tab.caption"}}
-      </a>
-    {{/if}}
-    {{#if _displaySettingsAreAvailableForType}}
-      <a class="tab item {{if (eq _tabularMenuActiveTab "displaySettings") "active"}}" data-tab="displaySettings" onclick={{action "onTabClick"}}>
-        {{t "components.layers-dialogs.edit.tabular-menu.display-settings-tab.caption"}}
-      </a>
-    {{/if}}
-    {{#if _legendSettingaAreAvailableForType}}
-      <a class="tab item {{if (eq _tabularMenuActiveTab "legendSettings") "active"}}" data-tab="legendSettings" onclick={{action "onTabClick"}}>
-        {{t "components.layers-dialogs.edit.tabular-menu.legend-settings-tab.caption"}}
+    {{#if _linksGroupIsAvailableForType}}
+      <a class="item {{if (eq _tabularMenuState.activeGroup "links-group") "active"}}" data-tab="links-group" onclick={{action "onGroupClick"}}>
+        {{t "components.layers-dialogs.edit.groups.links-group.caption"}}
       </a>
     {{/if}}
   </div>
-  <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "main") "active"}}" data-tab="main">
-    {{#if _modesAreAvailable}}
-      <div class="field">
-        <label>
-          {{t "components.layers-dialogs.edit.mode-dropdown.caption"}}
-        </label>
-        {{flexberry-dropdown
-          class="fluid"
-          items=_availableModesCaptions
-          value=_selectedModeCaption
-        }}
+  {{#if _mainGroupIsAvailableForType}}
+    <div class="ui group tab segment {{if (eq _tabularMenuState.activeGroup "main-group") "active"}}" data-tab="main-group">
+      <div class="ui top attached fluid tabular menu">
+        {{#if _mainSettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _tabularMenuState.groups.main-group.activeTab "main-tab") "active"}}" data-tab="main-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.main-tab.caption"}}
+          </a>
+        {{/if}}
+        {{#if _crsSettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _tabularMenuState.groups.main-group.activeTab "crs-tab") "active"}}" data-tab="crs-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.crs-tab.caption"}}
+          </a>
+        {{/if}}
+        {{#if _layerSettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _tabularMenuState.groups.main-group.activeTab "settings-tab") "active"}}" data-tab="settings-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.settings-tab.caption"}}
+          </a>
+        {{/if}}
       </div>
-    {{/if}}
-    {{#if _selectedMode}}
-      {{component (concat "layers-dialogs/edit-modes/" _selectedMode.name) editingFinished=(action "onEditingFinished")}}
-    {{/if}}
-    <div class="field">
-      <label>
-        {{typeDropdownCaption}}
-      </label>
-      {{flexberry-dropdown
-        class="fluid"
-        items=_availableTypes
-        value=_layer.type
-        readonly=_typeIsReadonly
-      }}
-    </div>
-    <div class="field">
-      <label>
-        {{nameTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_layer.name
-      }}
-    </div>
-    <div class="field">
-      <label>
-        {{descriptionTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_layer.description
-      }}
-    </div>
-    <div class="field">
-      <label>
-        {{keyWordsTextboxCaption}}
-      </label>
-      {{flexberry-textbox
-        class="fluid"
-        value=_layer.keyWords
-      }}
-    </div>
-    {{#if _scaleSettingsAreAvailableForType}}
-      <div class="field">
-        <label>
-          {{scaleTextboxCaption}}
-        </label>
-        {{flexberry-dropdown-input
-          items=scales
-          value=_layer.scale
-          class="scale-value fluid"
-          onKeyDown=(action "scaleInputKeyDown")
-          inputPlaceholder=(t "forms.gis-search-form.scale-dropdown-input-placeholder")
-          inputTitle=(t "forms.gis-search-form.scale-dropdown-input-title")
-        }}
-      </div>
-    {{/if}}
-  </div>
-  {{#if _crsSettingsAreAvailableForType}}
-    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "crs") "active"}}" data-tab="crs">
-      <div class="field">
-        <label>
-          {{crsCaption}}
-        </label>
-        {{flexberry-dropdown
-          class="fluid"
-          items=_availableCoordinateReferenceSystemsCodes
-          value=_coordinateReferenceSystemCode
-        }}
-      </div>
-      {{#if _showCoordinateReferenceSystemFields}}
-        <div class="field">
-          <label>
-            {{crsNameTextboxCaption}}
-          </label>
-          {{flexberry-textbox
-            class="fluid"
-            value=_layer.coordinateReferenceSystem.name
-          }}
+      {{#if _mainSettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.main-group.activeTab "main-tab") "active"}}" data-tab="main-tab">
+          {{#if _modesAreAvailable}}
+            <div class="field">
+              <label>
+                {{t "components.layers-dialogs.edit.mode-dropdown.caption"}}
+              </label>
+              {{flexberry-dropdown
+                class="fluid"
+                items=_availableModesCaptions
+                value=_selectedModeCaption
+              }}
+            </div>
+          {{/if}}
+          {{#if _selectedMode}}
+            {{component (concat "layers-dialogs/edit-modes/" _selectedMode.name) editingFinished=(action "onEditingFinished")}}
+          {{/if}}
+          <div class="field">
+            <label>
+              {{typeDropdownCaption}}
+            </label>
+            {{flexberry-dropdown
+              class="fluid"
+              items=_availableTypes
+              value=_layer.type
+              readonly=_typeIsReadonly
+            }}
+          </div>
+          <div class="field">
+            <label>
+              {{nameTextboxCaption}}
+            </label>
+            {{flexberry-textbox
+              class="fluid"
+              value=_layer.name
+            }}
+          </div>
+          <div class="field">
+            <label>
+              {{descriptionTextboxCaption}}
+            </label>
+            {{flexberry-textbox
+              class="fluid"
+              value=_layer.description
+            }}
+          </div>
+          <div class="field">
+            <label>
+              {{keyWordsTextboxCaption}}
+            </label>
+            {{flexberry-textbox
+              class="fluid"
+              value=_layer.keyWords
+            }}
+          </div>
+          {{#if _scaleSettingsAreAvailableForType}}
+            <div class="field">
+              <label>
+                {{scaleTextboxCaption}}
+              </label>
+              {{flexberry-dropdown-input
+                items=scales
+                value=_layer.scale
+                class="scale-value fluid"
+                onKeyDown=(action "scaleInputKeyDown")
+                inputPlaceholder=(t "forms.gis-search-form.scale-dropdown-input-placeholder")
+                inputTitle=(t "forms.gis-search-form.scale-dropdown-input-title")
+              }}
+            </div>
+          {{/if}}
         </div>
-        <div class="field">
-          <label>
-            {{crsCodeTextboxCaption}}
-          </label>
-          {{flexberry-textbox
-            class="fluid"
-            value=_layer.coordinateReferenceSystem.code
-          }}
+      {{/if}}
+      {{#if _crsSettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.main-group.activeTab "crs-tab") "active"}}" data-tab="crs-tab">
+          <div class="field">
+            <label>
+              {{crsCaption}}
+            </label>
+            {{flexberry-dropdown
+              class="fluid"
+              items=_availableCoordinateReferenceSystemsCodes
+              value=_coordinateReferenceSystemCode
+            }}
+          </div>
+          {{#if _showCoordinateReferenceSystemFields}}
+            <div class="field">
+              <label>
+                {{crsNameTextboxCaption}}
+              </label>
+              {{flexberry-textbox
+                class="fluid"
+                value=_layer.coordinateReferenceSystem.name
+              }}
+            </div>
+            <div class="field">
+              <label>
+                {{crsCodeTextboxCaption}}
+              </label>
+              {{flexberry-textbox
+                class="fluid"
+                value=_layer.coordinateReferenceSystem.code
+              }}
+            </div>
+            <div class="field">
+              <label>
+                {{crsDefinitionTextareaCaption}}
+              </label>
+              {{flexberry-textarea
+                class="fluid"
+                value=_layer.coordinateReferenceSystem.definition
+              }}
+            </div>
+          {{/if}}
         </div>
-        <div class="field">
-          <label>
-            {{crsDefinitionTextareaCaption}}
-          </label>
-          {{flexberry-textarea
-            class="fluid"
-            value=_layer.coordinateReferenceSystem.definition
-          }}
+      {{/if}}
+      {{#if _layerSettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.main-group.activeTab "settings-tab") "active"}}" data-tab="settings-tab">
+          <div class="ui segment">
+            <h5 class="ui header">
+              {{boundsSegmentCaption}}
+            </h5>
+            {{ui-message
+              type="error"
+              closeable=true
+              visible=_showBoundsErrorMessage
+              caption=(t "components.layers-dialogs.edit.error-message.caption")
+              message=(t "components.layers-dialogs.edit.bounds-segment.error-caption")
+            }}
+            <div class="field">
+              <div class="ui small fluid buttons">
+                {{flexberry-button
+                  class=(if (eq boundsMode "wgs84bbox") "active" "")
+                  caption=(t "components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption")
+                  click=(action "onBoundsModeChange" "wgs84bbox")
+                }}
+                <div class="or" data-text="{{t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.modes-divider.caption"}}">
+                </div>
+                {{flexberry-button
+                  class=(if (eq boundsMode "bbox") "active" "")
+                  caption=(t "components.layers-dialogs.edit.bounds-segment.options.bbox.caption")
+                  click=(action "onBoundsModeChange" "bbox")
+                }}
+              </div>
+            </div>
+            <div class="ui grid">
+              {{#if (eq boundsMode "wgs84bbox")}}
+                <div class="four wide column">
+                  <div class="field">
+                    <label>
+                      {{t "components.layers-dialogs.edit.bounds-segment.min-x-textbox.caption"}}
+                    </label>
+                    {{flexberry-textbox
+                      class="fluid"
+                      value=_layer.settings.wgs84bbox.[0].[1]
+                      keyPress=(action "coordsInputKeyPress")
+                    }}
+                  </div>
+                </div>
+                <div class="four wide column">
+                  <div class="field">
+                    <label>
+                      {{t "components.layers-dialogs.edit.bounds-segment.min-y-textbox.caption"}}
+                    </label>
+                    {{flexberry-textbox
+                      class="fluid"
+                      value=_layer.settings.wgs84bbox.[0].[0]
+                      keyPress=(action "coordsInputKeyPress")
+                    }}
+                  </div>
+                </div>
+                <div class="four wide column">
+                  <div class="field">
+                    <label>
+                      {{t "components.layers-dialogs.edit.bounds-segment.max-x-textbox.caption"}}
+                    </label>
+                    {{flexberry-textbox
+                      class="fluid"
+                      value=_layer.settings.wgs84bbox.[1].[1]
+                      keyPress=(action "coordsInputKeyPress")
+                    }}
+                  </div>
+                </div>
+                <div class="four wide column">
+                  <div class="field">
+                    <label>
+                      {{t "components.layers-dialogs.edit.bounds-segment.max-y-textbox.caption"}}
+                    </label>
+                    {{flexberry-textbox
+                      class="fluid"
+                      value=_layer.settings.wgs84bbox.[1].[0]
+                      keyPress=(action "coordsInputKeyPress")
+                    }}
+                  </div>
+                </div>
+              {{else if (eq boundsMode "bbox")}}
+                <div class="four wide column">
+                  <div class="field">
+                      <label>
+                        {{t "components.layers-dialogs.edit.bounds-segment.min-x-textbox.caption"}}
+                      </label>
+                      {{flexberry-textbox
+                        class="fluid"
+                        value=_layer.settings.bbox.[0].[0]
+                        keyPress=(action "coordsInputKeyPress")
+                      }}
+                  </div>
+                </div>
+                <div class="four wide column">
+                  <div class="field">
+                    <label>
+                      {{t "components.layers-dialogs.edit.bounds-segment.min-y-textbox.caption"}}
+                    </label>
+                    {{flexberry-textbox
+                      class="fluid"
+                      value=_layer.settings.bbox.[0].[1]
+                      keyPress=(action "coordsInputKeyPress")
+                    }}
+                  </div>
+                </div>
+                <div class="four wide column">
+                  <div class="field">
+                    <label>
+                      {{t "components.layers-dialogs.edit.bounds-segment.max-x-textbox.caption"}}
+                    </label>
+                    {{flexberry-textbox
+                      class="fluid"
+                      value=_layer.settings.bbox.[1].[0]
+                      keyPress=(action "coordsInputKeyPress")
+                    }}
+                  </div>
+                </div>
+                <div class="four wide column">
+                  <div class="field">
+                    <label>
+                      {{t "components.layers-dialogs.edit.bounds-segment.max-y-textbox.caption"}}
+                    </label>
+                    {{flexberry-textbox
+                      class="fluid"
+                      value=_layer.settings.bbox.[1].[1]
+                      keyPress=(action "coordsInputKeyPress")
+                    }}
+                  </div>
+                </div>
+              {{/if}}
+            </div>
+          </div>
+          {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings bounds=_layer.settings.wgs84bbox}}
         </div>
       {{/if}}
     </div>
   {{/if}}
-  {{#if _layerSettingsAreAvailableForType}}
-    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "settings") "active"}}" data-tab="settings">
-      <div class="ui segment">
-        <h5 class="ui header">
-          {{boundsSegmentCaption}}
-        </h5>
-        {{ui-message
-          type="error"
-          closeable=true
-          visible=_showBoundsErrorMessage
-          caption=(t "components.layers-dialogs.edit.error-message.caption")
-          message=(t "components.layers-dialogs.edit.bounds-segment.error-caption")
-        }}
-        <div class="field">
-          <div class="ui small fluid buttons">
+  {{#if _displayGroupIsAvailableForType}}
+    <div class="ui group tab segment {{if (eq _tabularMenuState.activeGroup "display-group") "active"}}" data-tab="display-group">
+      <div class="ui top attached fluid tabular menu">
+        {{#if _identifySettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _tabularMenuState.groups.display-group.activeTab "identify-tab") "active"}}" data-tab="identify-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.identify-settings-tab.caption"}}
+          </a>
+        {{/if}}
+        {{#if _searchSettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _tabularMenuState.groups.display-group.activeTab "search-tab") "active"}}" data-tab="search-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.search-settings-tab.caption"}}
+          </a>
+        {{/if}}
+        {{#if _displaySettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _tabularMenuState.groups.display-group.activeTab "display-tab") "active"}}" data-tab="display-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.display-settings-tab.caption"}}
+          </a>
+        {{/if}}
+        {{#if _legendSettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _tabularMenuState.groups.display-group.activeTab "legend-tab") "active"}}" data-tab="legend-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.legend-settings-tab.caption"}}
+          </a>
+        {{/if}}
+      </div>
+      {{#if _identifySettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.display-group.activeTab "identify-tab") "active"}}" data-tab="identify-tab">
+          {{flexberry-jsonarea value=_layer.settings.identifySettings}}
+        </div>
+      {{/if}}
+      {{#if _searchSettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.display-group.activeTab "search-tab") "active"}}" data-tab="search-tab">
+          {{flexberry-jsonarea value=_layer.settings.searchSettings}}
+        </div>
+      {{/if}}
+      {{#if _displaySettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.display-group.activeTab "display-tab") "active"}}" data-tab="display-tab">
+          {{flexberry-jsonarea value=_layer.settings.displaySettings}}
+        </div>
+      {{/if}}
+      {{#if _legendSettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.display-group.activeTab "legend-tab") "active"}}" data-tab="legend-tab">
+          {{flexberry-jsonarea value=_layer.settings.legendSettings}}
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
+  {{#if _linksGroupIsAvailableForType}}
+    <div class="ui group tab segment {{if (eq _tabularMenuState.activeGroup "links-group") "active"}}" data-tab="links-group">
+      <div class="ui top attached fluid tabular menu">
+        {{#if _linksSettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _tabularMenuState.groups.links-group.activeTab "links-tab") "active"}}" data-tab="links-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.links-tab.caption"}}
+          </a>
+        {{/if}}
+      </div>
+      {{#if _linksSettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.links-group.activeTab "links-tab") "active"}}" data-tab="links-tab">
+          {{#each links as |link index|}}
+            {{#unless link.isDeleted}}
+              {{flexberry-links-editor
+                model=link
+                changeVisibility=(action "allowShowCheckboxChange" (concat linksPropertyPath "." index ".allowShow"))
+                remove=(action "removeLayerLink")
+                modelName=parametersModelName
+                modelProjection=parametersModelProjection
+              }}
+            {{/unless}}
+          {{/each}}
+          <div class="field">
             {{flexberry-button
-              class=(if (eq boundsMode "wgs84bbox") "active" "")
-              caption=(t "components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption")
-              click=(action "onBoundsModeChange" "wgs84bbox")
-            }}
-            <div class="or" data-text="{{t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.modes-divider.caption"}}">
-            </div>
-            {{flexberry-button
-              class=(if (eq boundsMode "bbox") "active" "")
-              caption=(t "components.layers-dialogs.edit.bounds-segment.options.bbox.caption")
-              click=(action "onBoundsModeChange" "bbox")
+              class="fluid"
+              click=(action "addLayerLink")
+              caption=(t "components.layers-dialogs.edit.links-segment.add-button.caption")
             }}
           </div>
         </div>
-        <div class="ui grid">
-          {{#if (eq boundsMode "wgs84bbox")}}
-            <div class="four wide column">
-              <div class="field">
-                <label>
-                  {{t "components.layers-dialogs.edit.bounds-segment.min-x-textbox.caption"}}
-                </label>
-                {{flexberry-textbox
-                  class="fluid"
-                  value=_layer.settings.wgs84bbox.[0].[1]
-                  keyPress=(action "coordsInputKeyPress")
-                }}
-              </div>
-            </div>
-            <div class="four wide column">
-              <div class="field">
-                <label>
-                  {{t "components.layers-dialogs.edit.bounds-segment.min-y-textbox.caption"}}
-                </label>
-                {{flexberry-textbox
-                  class="fluid"
-                  value=_layer.settings.wgs84bbox.[0].[0]
-                  keyPress=(action "coordsInputKeyPress")
-                }}
-              </div>
-            </div>
-            <div class="four wide column">
-              <div class="field">
-                <label>
-                  {{t "components.layers-dialogs.edit.bounds-segment.max-x-textbox.caption"}}
-                </label>
-                {{flexberry-textbox
-                  class="fluid"
-                  value=_layer.settings.wgs84bbox.[1].[1]
-                  keyPress=(action "coordsInputKeyPress")
-                }}
-              </div>
-            </div>
-            <div class="four wide column">
-              <div class="field">
-                <label>
-                  {{t "components.layers-dialogs.edit.bounds-segment.max-y-textbox.caption"}}
-                </label>
-                {{flexberry-textbox
-                  class="fluid"
-                  value=_layer.settings.wgs84bbox.[1].[0]
-                  keyPress=(action "coordsInputKeyPress")
-                }}
-              </div>
-            </div>
-          {{else if (eq boundsMode "bbox")}}
-            <div class="four wide column">
-              <div class="field">
-                  <label>
-                    {{t "components.layers-dialogs.edit.bounds-segment.min-x-textbox.caption"}}
-                  </label>
-                  {{flexberry-textbox
-                    class="fluid"
-                    value=_layer.settings.bbox.[0].[0]
-                    keyPress=(action "coordsInputKeyPress")
-                  }}
-              </div>
-            </div>
-            <div class="four wide column">
-              <div class="field">
-                <label>
-                  {{t "components.layers-dialogs.edit.bounds-segment.min-y-textbox.caption"}}
-                </label>
-                {{flexberry-textbox
-                  class="fluid"
-                  value=_layer.settings.bbox.[0].[1]
-                  keyPress=(action "coordsInputKeyPress")
-                }}
-              </div>
-            </div>
-            <div class="four wide column">
-              <div class="field">
-                <label>
-                  {{t "components.layers-dialogs.edit.bounds-segment.max-x-textbox.caption"}}
-                </label>
-                {{flexberry-textbox
-                  class="fluid"
-                  value=_layer.settings.bbox.[1].[0]
-                  keyPress=(action "coordsInputKeyPress")
-                }}
-              </div>
-            </div>
-            <div class="four wide column">
-              <div class="field">
-                <label>
-                  {{t "components.layers-dialogs.edit.bounds-segment.max-y-textbox.caption"}}
-                </label>
-                {{flexberry-textbox
-                  class="fluid"
-                  value=_layer.settings.bbox.[1].[1]
-                  keyPress=(action "coordsInputKeyPress")
-                }}
-              </div>
-            </div>
-          {{/if}}
-        </div>
-      </div>
-      {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings bounds=_layer.settings.wgs84bbox}}
-    </div>
-  {{/if}}
-  {{#if _identifySettingsAreAvailableForType}}
-    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "identifySettings") "active"}}" data-tab="identifySettings">
-      {{flexberry-jsonarea value=_layer.settings.identifySettings}}
-    </div>
-  {{/if}}
-  {{#if _searchSettingsAreAvailableForType}}
-    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "searchSettings") "active"}}" data-tab="searchSettings">
-      {{flexberry-jsonarea value=_layer.settings.searchSettings}}
-    </div>
-  {{/if}}
-  {{#if _displaySettingsAreAvailableForType}}
-    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "displaySettings") "active"}}" data-tab="displaySettings">
-      {{flexberry-jsonarea value=_layer.settings.displaySettings}}
-    </div>
-  {{/if}}
-  {{#if _legendSettingaAreAvailableForType}}
-    <div class="ui bottom attached tab segment {{if (eq _tabularMenuActiveTab "legendSettings") "active"}}" data-tab="legendSettings">
-      {{flexberry-jsonarea value=_layer.settings.legendSettings}}
+      {{/if}}
     </div>
   {{/if}}
 </form>
