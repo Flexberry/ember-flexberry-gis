@@ -108,9 +108,7 @@
             opacity: 0.8;
         }
     }
-    .ui.attached.segment {
-      width: calc(100% + 2px) !important;
-    }
+
     .ui.attached.tab.segment .flexberry-button {
         background: @white !important;
         border: none !important;

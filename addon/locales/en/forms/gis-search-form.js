@@ -1,5 +1,5 @@
 export default {
-  'header': 'Search of map projects & layers metadata',
+  'header': 'Search of maps & layers by metadata',
   'advanced-search-conditions': 'Advanced search conditions',
   'search-conditions-what': 'What to search',
   'keywords': 'Key words',
@@ -16,7 +16,7 @@ export default {
   'search-results': 'Search results',
   'ctrl-message': 'Hold Ctrl-button to open in a new window',
   'layer-metadata': {
-    'title': 'Layer metadata',
+    'title': 'Layers',
     'actions': {
       'select': 'Select'
     },

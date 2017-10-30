@@ -443,6 +443,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       let serviceLayer = L.featureGroup();
       leafletMap.addLayer(serviceLayer);
       this.set('serviceLayer', serviceLayer);
+      this.sendAction('serviceLayerInit', serviceLayer);
 
       let queryFilter = this.get('queryFilter');
       let mapObjectSetting = this.get('mapObjectSetting');

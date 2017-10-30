@@ -227,6 +227,18 @@ export default Ember.Controller.extend({
           caption: i18n.t('forms.application.sitemap.components-examples.flexberry-boundingbox.caption'),
           title: i18n.t('forms.application.sitemap.components-examples.flexberry-boundingbox.title'),
           children: null
+        },
+        {
+          link: 'geojson-map',
+          caption: i18n.t('forms.application.sitemap.components-examples.geojson-layer.caption'),
+          title: i18n.t('forms.application.sitemap.components-examples.geojson-layer.title'),
+          children: null
+        },
+        {
+          link: 'kml-map',
+          caption: i18n.t('forms.application.sitemap.components-examples.kml-layer.caption'),
+          title: i18n.t('forms.application.sitemap.components-examples.kml-layer.title'),
+          children: null
         }]
       }]
     };
