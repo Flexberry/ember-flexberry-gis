@@ -1,4 +1,4 @@
-<h3 class="ui header">{{t "forms.map.caption"}}</h3>
+﻿<h3 class="ui header">{{t "forms.map.caption"}}</h3>
 <form class="ui form flexberry-vertical-form" role="form">
   {{ui-message
     type="success"
@@ -130,6 +130,18 @@
       </div>
     </div>
   </div>
+
+  <div class={{concat "bottompanel-wrapper" (if (eq editedLayers.length 0) " hidden" "")}}>
+    {{flexberry-layers-attributes-panel
+      items=editedLayers
+      serviceLayer=serviceLayer
+      leafletMap=leafletMap
+      selectedTabIndex=editedLayersSelectedTabIndex
+      folded=editedLayersPanelFolded
+      settings=editedLayersPanelSettings
+    }}
+  </div>
+
   <div class="row">
     <div class="sixteen wide column">
       {{#flexberry-maptoolbar
