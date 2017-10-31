@@ -147,6 +147,12 @@ export default Ember.Component.extend({
   _gmlFilterToString(filter) {
     switch (filter.nodeName) {
       case 'Or':
+        if (filter.firstChild.nodeName === 'ogc:PropertyIsNotEqualTo' && filter.lastChild.nodeName === 'ogc:PropertyIsNull') {
+          return `'${filter.firstChild.firstChild.textContent}' != '${filter.firstChild.childNodes[1].textContent}'`;
+        }
+
+        // JSHint requires break statement.
+        /* falls through */
       case 'And':
         let expressionString = '';
         filter.childNodes.forEach((node) => {
@@ -244,7 +250,7 @@ export default Ember.Component.extend({
             return new L.Filter.Not(new L.Filter.IsNull(properties[0]));
           }
 
-          return new L.Filter.NotEQ(...properties, true);
+          return new L.Filter.Or(new L.Filter.NotEQ(...properties, true), new L.Filter.IsNull(properties[0]));
         case '>':
           return new L.Filter.GT(...properties, true);
         case '<':

@@ -119,12 +119,3 @@
         }
     }
 }
-
-.smaller {
-  width: 70px;
-  margin-bottom: 1px;
-}
-
-.bigger {
-  width: 76px;
-}
