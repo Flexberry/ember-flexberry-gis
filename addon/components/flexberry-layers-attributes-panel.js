@@ -7,14 +7,6 @@ import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 
 /**
- * Merges items of array with remove duplicates.
- * @param {Array} arr
- */
-var mergeDedupe = function(arr) {
-  return [...new Set([].concat(...arr))];
-};
-
-/**
   The component for editing layers attributes.
 
   @class FlexberryLayersAttributesPanelComponent
@@ -41,7 +33,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       return editedLayers.map((item) => {
         let name = Ember.get(item, 'name');
-        let headerArr = [];
         let header = {};
         let featureLink = {};
         let propertyLink = {};
@@ -60,16 +51,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
           // the hash containing guid of properties object and link to that object
           propertyLink[propId] = props;
-
-          // collect the object keys for the header object
-          headerArr = headerArr.concat(Object.keys(props));
           properties.pushObject(props);
         });
 
-        headerArr = mergeDedupe(headerArr);
-        headerArr.forEach((p) => {
+        for (let p in leafletObject.readFormat.featureType.fields) {
           header[p] = p;
-        });
+        }
 
         let tabModel = Ember.Object.extend({
           _top: 5,
