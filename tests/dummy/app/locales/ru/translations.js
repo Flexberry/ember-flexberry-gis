@@ -97,6 +97,10 @@ Ember.$.extend(true, translations, {
               'title': ''
             }
           },
+          'flexberry-vector-layers-settings': {
+            'caption': 'flexberry-vector-layers-settings',
+            'title': 'Пример работы flexberry-vector-layers-settings'
+          },
           'geojson-layer': {
             'caption': 'geojson-layer',
             'title': 'Пример работы слоя GeoJSON'

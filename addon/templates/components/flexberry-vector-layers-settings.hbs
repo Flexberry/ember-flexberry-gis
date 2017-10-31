@@ -1,0 +1,125 @@
+<div class="flexberry-vector-layers-settings">
+  <div class="ui segments">
+    <div class="ui top attached label">{{t "components.flexberry-vector-layers-settings.outline.caption"}}</div>
+    <div class="field">
+      <label>
+        {{t "components.flexberry-vector-layers-settings.outline.settings.visibility"}}
+      </label>
+      {{flexberry-checkbox
+        value=visibilityOutline
+        label=(t "components.flexberry-vector-layers-settings.outline.settings.visibility")
+        class="fluid"
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{t "components.flexberry-vector-layers-settings.outline.settings.сolour"}}
+      </label>
+        {{flexberry-colorpicker
+          value=colorOutline
+          change=(action "onColorOutlineChange")
+        }}
+    </div>
+    <div class="field">
+      <label>
+        {{t "components.flexberry-vector-layers-settings.outline.settings.thickness"}}
+      </label>
+      {{flexberry-field
+        type="number"
+        value=thicknessOutline
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{t "components.flexberry-vector-layers-settings.outline.settings.opacity"}}
+      </label>
+      {{flexberry-ddau-slider
+        value=opacityOutline
+        change=(action "onOpacityOutlineChange")
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{t "components.flexberry-vector-layers-settings.outline.settings.ends"}}
+      </label>
+      {{flexberry-dropdown
+        class="fluid"
+        items=_itemsLineCap
+        value=valueLineCap
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{t "components.flexberry-vector-layers-settings.outline.settings.corners"}}
+      </label>
+      {{flexberry-dropdown
+        class="fluid"
+        items=_itemsLineJoin
+        value=valueLineJoin
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{t "components.flexberry-vector-layers-settings.outline.settings.hatching"}}
+      </label>
+      {{flexberry-dropdown
+        class="fluid"
+        items=_itemsDashArray
+        value=valueDashArray
+      }}
+    </div>
+
+    <div class="field">
+      <label>
+        {{t "components.flexberry-vector-layers-settings.outline.settings.displacement"}}
+      </label>
+      {{flexberry-field
+        type="number"
+        value=valueDashOffset
+      }}
+    </div>
+  </div>
+
+
+
+
+
+
+
+  <div class="ui segments">
+    <div class="ui top attached label">{{t "components.flexberry-vector-layers-settings.pouring.caption"}}</div>
+    <div class="field">
+      <label>
+        {{t "components.layers-dialogs.edit.mode-dropdown.caption"}}
+      </label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableModesCaptions
+          value=_selectedModeCaption
+        }}
+      </div>
+    <div class="field">
+      <label>
+        {{typeDropdownCaption}}
+      </label>
+      {{flexberry-dropdown
+        class="fluid"
+        items=_availableTypes
+        value=_layer.type
+        readonly=_typeIsReadonly
+      }}
+    </div>
+
+  </div>
+
+
+
+
+  {{#flexberry-map}}
+  {{flexberry-layers
+    leafletMap=leafletMap
+    leafletContainer=leafletContainer
+    layers=layers
+  }}
+  {{/flexberry-map}}
+</div>

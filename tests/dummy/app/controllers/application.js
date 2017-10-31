@@ -229,6 +229,12 @@ export default Ember.Controller.extend({
           children: null
         },
         {
+          link: 'components-examples/flexberry-vector-layers-settings/settings-example',
+          caption: i18n.t('forms.application.sitemap.components-examples.flexberry-vector-layers-settings.caption'),
+          title: i18n.t('forms.application.sitemap.components-examples.flexberry-vector-layers-settings.title'),
+          children: null
+        },
+        {
           link: 'geojson-map',
           caption: i18n.t('forms.application.sitemap.components-examples.geojson-layer.caption'),
           title: i18n.t('forms.application.sitemap.components-examples.geojson-layer.title'),
