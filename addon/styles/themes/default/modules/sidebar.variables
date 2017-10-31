@@ -95,3 +95,6 @@
 @sliderTrackHeight: 7px;
 @sliderSelectionBackgroud: @lightbluecolor;
 @sliderHandlerBackground: @bluesky;
+
+/* Bottombar */
+@dataPanelBorderColor: #D4D4D5;
