@@ -45,7 +45,7 @@ export default BaseLayer.extend({
         weight: undefined
       },
       namespaceUri: undefined,
-      filter: undefined
+      filter: ''
     });
 
     return settings;

@@ -109,9 +109,7 @@ export default Ember.Component.extend({
     let fields = Ember.A();
 
     for (let field in fieldsDescription) {
-      if (fields.indexOf(field) < 0) {
-        fields.addObject(field);
-      }
+      fields.addObject(field);
     }
 
     this.set('fields', fields);

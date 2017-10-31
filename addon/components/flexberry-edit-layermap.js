@@ -506,7 +506,9 @@ export default Ember.Component.extend(
       @readonly
     */
     _filterSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      return true;
+      let className = this.get('_layer.type');
+
+      return className === 'wfs';
     }),
 
     /**
