@@ -22,6 +22,6 @@ export default Ember.Helper.extend({
     @return {Boolen} Flag: indicates whether the specified object contains the given key or not.
   */
   compute([obj, key]) {
-    return Ember.A(Object.keys(obj)).contains(key);
+    return obj.hasOwnProperty(key);
   }
 });
