@@ -925,16 +925,16 @@
 /*********************************************
             Flexberry table
 *********************************************/
-.flexberry-table-fixed {
+.ui.table.flexberry-table-fixed {
   table-layout: fixed;
-  font-size: 12px !important;
+  font-size: 12px;
 
   th.narrow, td.narrow {
     width: 80px;
   }
 
   td input[type="text"] {
-    padding: 0.3em 1em !important;
+    padding: 0.3em 1em;
     display: inline-block;
     max-width: 200px;
   }
