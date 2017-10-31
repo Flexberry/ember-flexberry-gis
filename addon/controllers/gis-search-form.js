@@ -49,7 +49,7 @@ export default Ember.Controller.extend({
       @type Number
       @default null
     */
-    minLng: null,
+    minLng: -180,
 
     /**
       Min latitude value. Used for search.
@@ -57,7 +57,7 @@ export default Ember.Controller.extend({
       @type Number
       @default null
     */
-    minLat: null,
+    minLat: -90,
 
     /**
       Max longitude value. Used for search.
@@ -65,7 +65,7 @@ export default Ember.Controller.extend({
       @type Number
       @default null
     */
-    maxLng: null,
+    maxLng: 180,
 
     /**
       Max latitude value. Used for search.
@@ -73,15 +73,15 @@ export default Ember.Controller.extend({
       @type Number
       @default null
     */
-    maxLat: null
+    maxLat: 90
   },
 
   /**
     Array of posible scale filter conditions.
 
     @property scaleFilterConditions
-    @type Array
-    @default ['>', '>=', '<', '<=', '=', '<>']
+    @type String[]
+    @default `['>', '>=', '<', '<=', '=', '<>']`
   */
   scaleFilterConditions: ['>', '>=', '<', '<=', '=', '<>'],
 
@@ -89,23 +89,50 @@ export default Ember.Controller.extend({
     Array of posible scale values.
 
     @property scales
-    @type Array
+    @type Number[]
     @default Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000])
   */
   scales: Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
 
   /**
-    Indicates - when to show error message.
+    Indicates whether to show error or not.
 
-    @property showFormErrorMessage
+    @property showError
+    @type Boolean
+    @default false
+  */
+  showError: false,
+
+  /**
+    Error caption.
+
+    @property errorCaption
+    @type String
     @readOnly
   */
-  showFormErrorMessage: Ember.computed('error', function () {
-    if (this.get('error')) {
-      return true;
-    } else {
-      return false;
+  errorCaption: Ember.computed('error', function () {
+    let error = this.get('error');
+    if (Ember.isNone(error)) {
+      return '';
     }
+
+    return error.name;
+  }),
+
+  /**
+    Error message.
+
+    @property errorMessage
+    @type String
+    @readOnly
+  */
+  errorMessage: Ember.computed('error', function () {
+    let error = this.get('error');
+    if (Ember.isNone(error)) {
+      return '';
+    }
+
+    return error.message;
   }),
 
   /**
@@ -190,6 +217,23 @@ export default Ember.Controller.extend({
   newMapWithMetadataRouteName: 'map.new',
 
   actions: {
+    /**
+      Handler for error 'ui-message' component 'onShow' action.
+
+      @method actions.onErrorShow
+    */
+    onErrorShow() {
+    },
+
+    /**
+      Handler for error 'ui-message' component 'onHide' action.
+
+      @method actions.onErrorHide
+    */
+    onErrorHide() {
+      this.set('showError', false);
+    },
+
     /**
       Handles anyText 'clear' button click.
 

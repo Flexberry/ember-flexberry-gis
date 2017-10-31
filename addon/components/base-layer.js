@@ -141,7 +141,7 @@ export default Ember.Component.extend(
         leafletLayer
       }) => {
         this.set('_leafletObject', leafletLayer);
-        this.get('layerModel').set('_leafletObject', leafletLayer);
+        Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
 
         return leafletLayer;
       }).catch((errorMessage) => {

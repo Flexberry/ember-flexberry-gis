@@ -4,6 +4,7 @@
 
 import EditFormController from 'ember-flexberry/controllers/edit-form';
 import EditFormControllerOperationsIndicationMixin from 'ember-flexberry/mixins/edit-form-controller-operations-indication';
+import FlexberryLinksEditorActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-links-editor-actions-handler';
 
 /**
   Maps layers metadata edit controller.
@@ -11,8 +12,9 @@ import EditFormControllerOperationsIndicationMixin from 'ember-flexberry/mixins/
   @class NewPlatformFlexberrtGISLayerMetadataEController
   @extends EditFormController
   @uses EditFormControllerOperationsIndicationMixin
+  @uses FlexberryLinksEditorActionsHandlerMixin
 */
-export default EditFormController.extend(EditFormControllerOperationsIndicationMixin, {
+export default EditFormController.extend(EditFormControllerOperationsIndicationMixin, FlexberryLinksEditorActionsHandlerMixin, {
   /**
     Parent route.
 
@@ -21,6 +23,42 @@ export default EditFormController.extend(EditFormControllerOperationsIndicationM
     @default 'new-platform-flexberry-g-i-s-layer-metadata-l'
   */
   parentRoute: 'new-platform-flexberry-g-i-s-layer-metadata-l',
+
+  /**
+    Layer's links' property path.
+
+    @property linksPropertyPath
+    @type String
+    @default 'model.linkMetadata'
+  */
+  linksPropertyPath: 'model.linkMetadata',
+
+  /**
+    Layer's links' model name.
+
+    @property linksModelName
+    @type String
+    @default 'new-platform-flexberry-g-i-s-link-metadata'
+  */
+  linksModelName: 'new-platform-flexberry-g-i-s-link-metadata',
+
+  /**
+    Layer's links' parameters model name.
+
+    @property linksParametersModelName
+    @type String
+    @default 'new-platform-flexberry-g-i-s-parameter-metadata'
+  */
+  linksParametersModelName: 'new-platform-flexberry-g-i-s-parameter-metadata',
+
+  /**
+    Layer's links' parameters model projection.
+
+    @property linksParametersModelProjection
+    @type String
+    @default 'ParameterMetadataD'
+  */
+  linksParametersModelProjection: 'ParameterMetadataD',
 
   actions: {
     /**

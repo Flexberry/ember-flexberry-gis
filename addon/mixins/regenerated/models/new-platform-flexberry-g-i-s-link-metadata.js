@@ -54,7 +54,6 @@ export let defineProjections = function (modelClass) {
       })
     })
   });
-
   modelClass.defineProjection('LinkMetadataD', 'new-platform-flexberry-g-i-s-link-metadata', {
     layer: Projection.belongsTo('new-platform-flexberry-g-i-s-layer-metadata', 'Слой', {
       name: Projection.attr('', { hidden: true })

@@ -246,10 +246,10 @@ export default BaseLayer.extend({
     let queryFilter = e.queryFilter;
     let equals = [];
     layerLinks.forEach((link) => {
-      let linkParameters = link.get('parameters');
+      let parameters = link.get('parameters');
 
-      if (Ember.isArray(linkParameters) && linkParameters.length > 0) {
-        linkParameters.forEach(linkParam => {
+      if (Ember.isArray(parameters) && parameters.length > 0) {
+        parameters.forEach(linkParam => {
           let property = linkParam.get('layerField');
           let propertyValue = queryFilter[linkParam.get('queryKey')];
 

@@ -32,16 +32,20 @@ export default EditMapRoute.extend({
     @return {*} Model of map project for current route.
   */
   model(params, transition) {
-    let that = this;
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getMetadata(params.metadata).then((metadata) => {
-        let mapProject = this.store.createRecord(this.get('modelName'));
-        mapProject.set('mapLayer', Ember.A());
-        that._addMetadata(mapProject, metadata);
+      let mapProject = this.store.createRecord(this.get('modelName'));
+      mapProject.set('mapLayer', Ember.A());
+
+      if (Ember.isPresent(params.metadata)) {
+        this._getMetadata(params.metadata).then((metadata) => {
+          this._addMetadata(mapProject, metadata);
+          resolve(mapProject);
+        }).catch((error) => {
+          reject(error);
+        });
+      } else {
         resolve(mapProject);
-      }).catch((error) => {
-        reject(error);
-      });
+      }
     });
   },
 

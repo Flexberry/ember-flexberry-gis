@@ -336,55 +336,62 @@
     // Same as dialog content's max-height in Semantic UI.
     height: 400px;
     overflow: hidden !important;
+  }
+}
 
-    form {
-      height: 100%;
+form.flexberry-edit-layermap {
+  height: 100%;
 
-      .ui.tabular.menu {
-        &.fluid {
-          width: 100% !important;
+  .ui.menu {
+    &.group {
+      //margin-bottom: 0;
+    }
 
-          .item {
-            // Now there are only eight items inside tabular menu (so 100% / 8 = 12.5%).
-            width: 12.5%;
-            min-height: 40px;
-            display: flex;
-            justify-content: center;
+    &.tabular {
+      &.fluid {
+        width: 100% !important;
 
-            &:last-child {
-              width: calc(14.65%);
-            }
+        .item {
+          // Now there is only seven items inside tabular menu (so 100% / 7 = 14.28...%).
+          width: 14.25%;
+          min-height: 40px;
+          display: flex;
+          justify-content: center;
+
+          &:last-child {
+            width: calc(14.65%);
           }
-        }
-      }
-
-      .ui.tab.segment {
-        // Height is 100% minus height of tabular menu items.
-        height: ~"calc(100% - 60px)";
-        overflow: auto;
-
-        .flexberry-dropdown.ui.selection.dropdown .menu {
-          // About 3 items is enough.
-          // Without max height two scrolls will appear (one in settings column, another in dropdown menu).
-          max-height: 115px;
-        }
-
-        .flexberry-jsonarea {
-          margin-top: 0px;
-          margin-bottom: 0px;
         }
       }
     }
   }
 
-  .ui.form {
-      margin-top: 10px;
-      margin-bottom: 10px;
-      .ui.bottom.attached.tab.segment {
-          border-radius: 0px 0px 5px 5px;
-      }
-  }
-  .flexberry-jsonarea div.row:first-child {
-      text-align: center;
+  .ui.tab.segment {
+    &.group {
+      // Height is 100% minus height of tabular menu items.
+      height: ~"calc(100% - 64px)";
+      margin-top: 0;
+      padding: 0;
+      border: none;
+    }
+
+    &:not(.group) {
+      // Height is 100% minus height of tabular menu items.
+      height: ~"calc(100% - 40px)";
+      margin: 0;
+    }
+
+    overflow: auto;
+
+    .flexberry-dropdown.ui.selection.dropdown .menu {
+      // About 3 items is enough.
+      // Without max height two scrolls will appear (one in settings column, another in dropdown menu).
+      max-height: 115px;
+    }
+
+    .flexberry-jsonarea {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
   }
 }

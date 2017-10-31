@@ -55,6 +55,11 @@ export default {
       }
     },
   },
+  'links-segment': {
+    'add-button': {
+      'caption': 'Добавить',
+    }
+  },
   'crs': {
     'caption': 'Система координат слоя (CRS)',
     'name-textbox': {
@@ -69,7 +74,7 @@ export default {
   },
   'tabular-menu': {
     'main-tab': {
-      'caption': 'Основное'
+      'caption': 'Основные настройки'
     },
     'crs-tab': {
       'caption': 'Система координат'
@@ -89,8 +94,22 @@ export default {
     'legend-settings-tab': {
       'caption': 'Настройки легенды'
     },
-    'wfs-filter-settings': {
+    'wfs-filter-settings-tab': {
       'caption': 'Настройки фильтра'
+    },
+    'links-tab': {
+      'caption': 'Настройки связей'
+    }
+  },
+  'groups': {
+    'main-group': {
+      'caption': 'Основное'
+    },
+    'display-group': {
+      'caption': 'Отображение'
+    },
+    'links-group': {
+      'caption': 'Связи'
     }
   }
 };
