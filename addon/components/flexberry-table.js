@@ -17,29 +17,6 @@ import SlotsMixin from 'ember-block-slots';
 */
 export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   /**
-    Reference to component's template.
-  */
-  layout,
-
-  /**
-    Flag that indicates whether cell editing is allowed.
-
-    @property allowEdit
-    @type Boolean
-    @default false
-  */
-  allowEdit: false,
-
-  /**
-    Flag that indicates whether 'rows per page' select is available or isn't.
-
-    @property perPageAvailable
-    @type Boolean
-    @default true
-  */
-  perPageAvailable: true,
-
-  /**
     Computes - how many block-slots are used.
 
     @property _additionalColumnsCount
@@ -86,51 +63,27 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   _selectedCellName: null,
 
   /**
-    Changes selected cell to the next or to the previous.
-
-    @method _moveCell
-    @param {Boolean} forward Shows whether need to move to the next cell or previous.
-    @private
+    Reference to component's template.
   */
-  _moveCell(forward) {
-    let current = this.get('_selectedCellName');
-    if (Ember.isPresent(current)) {
-      let [rowId, cellKey] = current.split('_');
-      let headerKeys = Object.keys(this.get('header'));
-      let rowIds = this.get('model').map((item) => {
-        return Ember.guidFor(item);
-      });
-      let cellPos = headerKeys.indexOf(cellKey);
-      let rowPos = rowIds.indexOf(rowId);
-      if (forward) {
-        if (cellPos < headerKeys.length - 1) {
-          cellPos++;
-        } else {
-          cellPos = 0;
-          rowPos = (rowPos < rowIds.length - 1) ? rowPos + 1 : 0;
-        }
-      } else {
-        if (cellPos > 0) {
-          cellPos--;
-        } else {
-          cellPos = headerKeys.length - 1;
-          rowPos = (rowPos > 0) ? rowPos - 1 : rowIds.length - 1;
-        }
-      }
-
-      this.set('_selectedCellName', `${rowIds[rowPos]}_${headerKeys[cellPos]}`);
-    }
-  },
+  layout,
 
   /**
-    Called after a component has been rendered, both on initial render and in subsequent rerenders.
+    Flag that indicates whether cell editing is allowed.
+
+    @property allowEdit
+    @type Boolean
+    @default false
   */
-  didRender() {
-    this._super(...arguments);
-    if (this.get('allowEdit')) {
-      this.$('.flexberry-table-cell-input').focus();
-    }
-  },
+  allowEdit: false,
+
+  /**
+    Flag that indicates whether 'rows per page' select is available or isn't.
+
+    @property perPageAvailable
+    @type Boolean
+    @default true
+  */
+  perPageAvailable: true,
 
   actions: {
     /**
@@ -175,6 +128,16 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   },
 
   /**
+    Called after a component has been rendered, both on initial render and in subsequent rerenders.
+  */
+  didRender() {
+    this._super(...arguments);
+    if (this.get('allowEdit')) {
+      this.$('.flexberry-table-cell-input').focus();
+    }
+  },
+
+  /**
     Observes {{#crossLink "FlexberryTableComponent/page:property"}}'page' property{{/crossLink}} and handles changes in it.
 
     @method _pageDidChange
@@ -202,7 +165,44 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
       top: perPageValue,
       skip: pageNum > 0 ? (pageNum - 1) * perPageValue : 0
     });
-  }
+  },
+
+  /**
+    Changes selected cell to the next or to the previous.
+
+    @method _moveCell
+    @param {Boolean} forward Shows whether need to move to the next cell or previous.
+    @private
+  */
+  _moveCell(forward) {
+    let current = this.get('_selectedCellName');
+    if (Ember.isPresent(current)) {
+      let [rowId, cellKey] = current.split('_');
+      let headerKeys = Object.keys(this.get('header'));
+      let rowIds = this.get('model').map((item) => {
+        return Ember.guidFor(item);
+      });
+      let cellPos = headerKeys.indexOf(cellKey);
+      let rowPos = rowIds.indexOf(rowId);
+      if (forward) {
+        if (cellPos < headerKeys.length - 1) {
+          cellPos++;
+        } else {
+          cellPos = 0;
+          rowPos = (rowPos < rowIds.length - 1) ? rowPos + 1 : 0;
+        }
+      } else {
+        if (cellPos > 0) {
+          cellPos--;
+        } else {
+          cellPos = headerKeys.length - 1;
+          rowPos = (rowPos > 0) ? rowPos - 1 : rowIds.length - 1;
+        }
+      }
+
+      this.set('_selectedCellName', `${rowIds[rowPos]}_${headerKeys[cellPos]}`);
+    }
+  },
 
   /**
     Component's action invoking when component needs assosiated data to be loaded or reloaded.

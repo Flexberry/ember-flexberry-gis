@@ -100,25 +100,8 @@ export default EditMapController.extend(
     editedLayersPanelFolded: true,
 
     editedLayersPanelSettings: {
-        withToolbar: false,
-        sidebarOpened: false,
-      },
-
-    _editedLayersPanelWidth: Ember.observer('sidebarOpened', function() {
-      if (this.get('sidebarOpened')) {
-        this.set('editedLayersPanelSettings.sidebarOpened', true);
-      } else {
-        this.set('editedLayersPanelSettings.sidebarOpened', false);
-      }
-    }),
-
-    _leafletMapOnContainerResizeStart() {
-      let panelHeight = Ember.$('.mappanel').innerHeight();
-      if (panelHeight < 630) {
-        this.set('editedLayersPanelSettings.withToolbar', true);
-      } else {
-        this.set('editedLayersPanelSettings.withToolbar', false);
-      }
+      withToolbar: false,
+      sidebarOpened: false,
     },
 
     availableCRS: Ember.computed('i18n.locale', function () {
@@ -279,4 +262,21 @@ export default EditMapController.extend(
         this.leafletMap.off('containerResizeStart', this._leafletMapOnContainerResizeStart, this);
       }
     },
+
+    _editedLayersPanelWidth: Ember.observer('sidebarOpened', function() {
+      if (this.get('sidebarOpened')) {
+        this.set('editedLayersPanelSettings.sidebarOpened', true);
+      } else {
+        this.set('editedLayersPanelSettings.sidebarOpened', false);
+      }
+    }),
+
+    _leafletMapOnContainerResizeStart() {
+      let panelHeight = Ember.$('.mappanel').innerHeight();
+      if (panelHeight < 630) {
+        this.set('editedLayersPanelSettings.withToolbar', true);
+      } else {
+        this.set('editedLayersPanelSettings.withToolbar', false);
+      }
+    }
   });

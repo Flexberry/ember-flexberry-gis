@@ -175,21 +175,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       sidebarOpened: false,
     },
 
-  /**
-    Overrides {{#crosslink "LeafletZoomToFeatureMixin/_prepareLayer:method"}} to make a copy of passed layer
-    and apply a style to the layer to make it more visible.
-
-    @param Object layer
-  */
-  _prepareLayer(layer) {
-    return L.geoJson(layer.toGeoJSON()).setStyle({
-      color: 'salmon',
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.3
-    });
-  },
-
   actions: {
     /**
       Handles click on a tab.
@@ -357,5 +342,20 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         }
       }
     }
+  },
+
+  /**
+    Overrides {{#crosslink "LeafletZoomToFeatureMixin/_prepareLayer:method"}} to make a copy of passed layer
+    and apply a style to the layer to make it more visible.
+
+    @param Object layer
+  */
+  _prepareLayer(layer) {
+    return L.geoJson(layer.toGeoJSON()).setStyle({
+      color: 'salmon',
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.3
+    });
   }
 });

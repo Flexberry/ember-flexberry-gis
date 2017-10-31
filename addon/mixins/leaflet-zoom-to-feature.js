@@ -12,29 +12,6 @@ import Ember from 'ember';
 */
 export default Ember.Mixin.create({
 
-  /**
-    Set selected feature and add its layer to serviceLayer on map.
-
-    @method _selectFeature
-    @param {Object} feature Describes feature object or array of it.
-    @private
-  */
-  _selectFeature(feature) {
-    let serviceLayer = this.get('serviceLayer');
-    if (!Ember.isNone(feature)) {
-      serviceLayer.addLayer(this._prepareLayer(feature.leafletLayer));
-    }
-  },
-
-  /**
-    Additional preparation of the selected layer.
-
-    @param Object layer
-  */
-  _prepareLayer(layer) {
-    return layer;
-  },
-
   actions: {
     /**
       Handles inner FeatureResultItem's bubbled 'selectFeature' action.
@@ -116,7 +93,30 @@ export default Ember.Mixin.create({
       this.get('leafletMap').panTo(latLng);
       this.send('selectFeature', feature);
     },
-  }
+  },
+
+  /**
+    Set selected feature and add its layer to serviceLayer on map.
+
+    @method _selectFeature
+    @param {Object} feature Describes feature object or array of it.
+    @private
+  */
+  _selectFeature(feature) {
+    let serviceLayer = this.get('serviceLayer');
+    if (!Ember.isNone(feature)) {
+      serviceLayer.addLayer(this._prepareLayer(feature.leafletLayer));
+    }
+  },
+
+  /**
+    Additional preparation of the selected layer.
+
+    @param Object layer
+  */
+  _prepareLayer(layer) {
+    return layer;
+  },
 
   /**
     Action invoking when feature item was selected.
