@@ -80,7 +80,7 @@ export default BaseLayer.extend({
         }
 
         if (this.get('clusterize')) {
-          var cluster = L.markerClusterGroup(this.get('clusterOptions'));
+          let cluster = L.markerClusterGroup(this.get('clusterOptions'));
           cluster.addLayer(vectorLayer);
           resolve(cluster);
           return;

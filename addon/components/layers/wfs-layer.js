@@ -27,6 +27,24 @@ export default BaseLayer.extend({
   ],
 
   /**
+    Property flag indicates than result layer will be showed as cluster layer.
+
+    @property clusterize
+    @type Boolean
+    @default false
+   */
+  clusterize: false,
+
+  /**
+    Property contains options for <a href="http://leaflet.github.io/Leaflet.markercluster/#options">L.markerClusterGroup</a>.
+
+    @property clusterOptions
+    @type Object
+    @default null
+    */
+  clusterOptions: null,
+
+  /**
     Features read format.
     Server responses format will rely on it.
 
@@ -106,7 +124,7 @@ export default BaseLayer.extend({
         showExisting: true
       });
 
-      layer = this.createLayer(options)
+      layer = this._createWFSLayer(options)
         .once('load', onLayerLoad)
         .once('error', onLayerError);
     });
@@ -132,6 +150,13 @@ export default BaseLayer.extend({
     });
   },
 
+  _createWFSLayer(options) {
+    options = Ember.$.extend(true, {}, this.get('options'), options);
+    let featuresReadFormat = this.get('featuresReadFormat');
+
+    return L.wfs(options, featuresReadFormat);
+  },
+
   /**
     Creates leaflet layer related to layer type.
 
@@ -140,10 +165,27 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer(options) {
-    options = Ember.$.extend(true, {}, this.get('options'), options);
-    let featuresReadFormat = this.get('featuresReadFormat');
 
-    return L.wfs(options, featuresReadFormat);
+    // TODO fix wms-wfs for work with promise
+    if (this.get('clusterize')) {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        let onLayerLoad = (e) => {
+          let cluster = L.markerClusterGroup(this.get('clusterOptions'));
+          cluster.addLayer(e.target);
+          resolve(cluster);
+        };
+
+        let onLayerError = (e) => {
+          reject(e);
+        };
+
+        this._createWFSLayer(options)
+          .once('load', onLayerLoad)
+          .once('error', onLayerError);
+      });
+    }
+
+    return this._createWFSLayer(options);
   },
 
   /**
