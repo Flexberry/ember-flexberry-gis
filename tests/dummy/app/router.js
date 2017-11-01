@@ -22,8 +22,6 @@ Router.map(function() {
   // Components examples routes (sorted by component's names).
   this.route('components-examples/flexberry-maplayers/settings-example');
 
-  this.route('components-examples/flexberry-wfs-filter/settings-example');
-
   this.route('components-examples/flexberry-boundingbox/settings-example');
   this.route('geojson-map');
   this.route('kml-map');
