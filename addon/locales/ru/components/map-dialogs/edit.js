@@ -23,6 +23,9 @@ export default {
   crsTab: {
     'caption': 'Система координат'
   },
+  positionTab: {
+    'caption': 'Положение'
+  },
   bordersTab: {
     'caption': 'Границы'
   }

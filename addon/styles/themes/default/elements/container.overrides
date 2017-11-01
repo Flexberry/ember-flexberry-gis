@@ -176,10 +176,7 @@
 *********************************************/
 
 .mappanel,
-.sidebar-wrapper,
-.flexberry-export-map-command-dialog,
-.flexberry-search-map-command-dialog,
-.flexberry-go-to-map-command-dialog {
+.sidebar-wrapper {
     /* Table */
     .ui.table {
         color: #6f9be3;
@@ -919,15 +916,5 @@
     .remove.icon:hover:before {
       color: @red;
     }
-  }
-}
-
-/* Edit map dialog tuning */
-.flexberry-edit-map-dialog {
-  .form {
-    margin-top: 10px;
-  }
-  .ui.tab {
-    min-height: 450px;
   }
 }

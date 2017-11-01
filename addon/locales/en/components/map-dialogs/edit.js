@@ -23,7 +23,10 @@ export default {
   crsTab: {
     'caption': 'Coordinate system'
   },
+  positionTab: {
+    'caption': 'Position'
+  },
   bordersTab: {
-    'caption': 'Borders settings'
+    'caption': 'Borders'
   }
 };

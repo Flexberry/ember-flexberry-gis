@@ -96,9 +96,10 @@
                 {{scaleTextboxCaption}}
               </label>
               {{flexberry-dropdown-input
+                class="scale-value fluid"
+                direction="upward"
                 items=scales
                 value=_layer.scale
-                class="scale-value fluid"
                 onKeyDown=(action "scaleInputKeyDown")
                 inputPlaceholder=(t "forms.gis-search-form.scale-dropdown-input-placeholder")
                 inputTitle=(t "forms.gis-search-form.scale-dropdown-input-title")
