@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
@@ -34,5 +35,7 @@ test('it renders', function(assert) {
   let $window = this.$().closest('#ember-testing-container')
     .siblings('.ui.modals').find('.flexberry-edit-layer-attributes-dialog');
   assert.ok($window.find('.flexberry-textbox').length === 1, 'It renders one input');
-  $window.find('.approve.button').click();
+  Ember.run(() => {
+    $window.find('.approve.button').click();
+  });
 });
