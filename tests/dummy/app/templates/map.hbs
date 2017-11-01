@@ -81,6 +81,11 @@
                   actionName="onMapLayerFitBounds"
                   actionArguments=(array "{% layerPath %}.bounds")
                 )
+                (hash
+                  on="attributesEdit"
+                  actionName="onAttributesEdit"
+                  actionArguments=(array "{% layerPath %}")
+                )
               )
             )
             add=(action "onMapLayerAdd" "model.hierarchy")

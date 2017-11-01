@@ -235,6 +235,53 @@ export default Ember.Mixin.create({
     },
 
     /**
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.fitBounds:method"}}flexberry-maplayers component's 'fitBounds' action{{/crossLink}}.
+      Fits leaflet map to bounds of selected maplayer.
+
+      @method actions.onMapLayerFitBounds
+      @param {String} boundsPropertyPath Path to a property, which value must be used within action.
+
+      @example
+      templates/my-form.hbs
+      ```handlebars
+        {{flexberry-maplayers
+          name="Tree node fit bounds button"
+          opacity=layer.options.opacity
+          fitBounds=(action "onMapLayerFitBounds" "layer.options.bounds")
+        }}
+      ```
+
+      controllers/my-form.js
+      ```javascript
+        import Ember from 'ember';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
+
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
+        });
+      ```
+    */
+    onAttributesEdit(layerPath) {
+      let layerModel = getRecord(this, layerPath);
+      let name = Ember.get(layerModel, 'name');
+      let leafletObject = Ember.get(layerModel, '_leafletObject');
+
+      let editedLayers = this.get('editedLayers') || Ember.A();
+      let index = editedLayers.findIndex((item) => Ember.isEqual(item.name, name));
+      if (index >= 0) {
+        this.set('editedLayersSelectedTabIndex', index);
+      } else {
+        editedLayers.addObject({ name: name, leafletObject: leafletObject });
+        this.set('editedLayers', editedLayers);
+        this.set('editedLayersSelectedTabIndex', editedLayers.length - 1);
+        this._leafletMapOnContainerResizeStart();
+      }
+
+      if (this.get('editedLayersPanelFolded')) {
+        this.set('editedLayersPanelFolded', false);
+      }
+    },
+
+    /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.addChild:method"}}flexberry-maplayers component's 'addChild' action{{/crossLink}}.
       It adds new child layer.
 

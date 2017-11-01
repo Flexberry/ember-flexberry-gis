@@ -631,37 +631,9 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
         which describes button's 'click' event.
       */
-      onAttributesButtonClick(e) {
-        let currentController = this.getTargetObjectByCondition((targetObject) => {
-          return targetObject instanceof Ember.Controller;
-        });
-        currentController.send('getAttributes', {
-          name: this.get('name'),
-          leafletObject: this.get('layerModel._leafletObject')
-        });
+      onAttributesButtonClick(...args) {
+        this.sendAction('attributesEdit', ...args);
       }
-    },
-
-    /**
-      Returns that 'targetObject' (from 'targetObject's hierarchy) which satisfies a given condition.
-
-      @method getTargetObjectByCondition.
-      @param {Function} condition Callback-function, which will be called for each 'targetObject' in 'targetObject's hierarchy, until callback return true for one of them.
-      @return {null|Ember.Component|Ember.Controller} Target object which satisfies a given condition or null.
-    */
-    getTargetObjectByCondition(condition) {
-      if (Ember.typeOf(condition) !== 'function') {
-        return null;
-      }
-
-      // Component's 'targetObject' is parent component or a controller (in the end of components hierarchy).
-      // Search until 'targetObject' is none or condition is true.
-      let targetObject = this.get('targetObject');
-      while (!(Ember.isNone(targetObject) || condition(targetObject))) {
-        targetObject = targetObject.get('targetObject');
-      }
-
-      return targetObject;
     },
 
     /**
@@ -740,10 +712,8 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     /**
       Component's action invoking when user wants to look at attributes of current layer.
 
-      @method sendingActions.getAttributes
+      @method sendingActions.attributesEdit
       @param {Object} e Action's event object.
-      @param {String} e.name Current layer name.
-      @param {Object} e.leafletObject Leaflet object with the attributes of current layer.
     */
   }
 );

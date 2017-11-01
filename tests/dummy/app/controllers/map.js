@@ -235,23 +235,6 @@ export default EditMapController.extend(
         }
       },
 
-      getAttributes(object) {
-        let editedLayers = this.get('editedLayers') || Ember.A();
-        let index = editedLayers.findIndex((item) => Ember.isEqual(item.name, object.name));
-        if (index >= 0) {
-          this.set('editedLayersSelectedTabIndex', index);
-        } else {
-          editedLayers.addObject(object);
-          this.set('editedLayers', editedLayers);
-          this.set('editedLayersSelectedTabIndex', editedLayers.length - 1);
-          this._leafletMapOnContainerResizeStart();
-        }
-
-        if (this.get('editedLayersPanelFolded')) {
-          this.set('editedLayersPanelFolded', false);
-        }
-      },
-
       onMapLeafletInit() {
         this._super(...arguments);
         this.leafletMap.on('containerResizeStart', this._leafletMapOnContainerResizeStart, this);
