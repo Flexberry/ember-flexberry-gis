@@ -235,30 +235,11 @@ export default Ember.Mixin.create({
     },
 
     /**
-      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.fitBounds:method"}}flexberry-maplayers component's 'fitBounds' action{{/crossLink}}.
-      Fits leaflet map to bounds of selected maplayer.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.attributesEdit:method"}}flexberry-maplayers component's 'attributesEdit' action{{/crossLink}}.
+      Opens {{#FlexberryLayersAttributesPanelComponent}}flexberry-layers-attributes-panel component to edit attributes of the selected layer.
 
-      @method actions.onMapLayerFitBounds
-      @param {String} boundsPropertyPath Path to a property, which value must be used within action.
-
-      @example
-      templates/my-form.hbs
-      ```handlebars
-        {{flexberry-maplayers
-          name="Tree node fit bounds button"
-          opacity=layer.options.opacity
-          fitBounds=(action "onMapLayerFitBounds" "layer.options.bounds")
-        }}
-      ```
-
-      controllers/my-form.js
-      ```javascript
-        import Ember from 'ember';
-        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
-
-        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
-        });
-      ```
+      @method actions.onAttributesEdit
+      @param {String} layerModelPath Path to a layer model, which value must be used within action.
     */
     onAttributesEdit(layerPath) {
       let layerModel = getRecord(this, layerPath);
