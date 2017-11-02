@@ -11,14 +11,21 @@
   show=(action "onShow")
   hide=(action "onHide")
 }}
-
-{{flexberry-edit-layermap
+  {{flexberry-edit-layermap
     visible=visible
     cswConnections=cswConnections
     layer=layer
     leafletMap=leafletMap
+    _leafletObject=_leafletObject
     _typeIsReadonly=typeIsReadonly
+    links=(get this linksPropertyPath)
+    linksPropertyPath=linksPropertyPath
+    linksModelName=linksModelName
+    parametersModelName=linksParametersModelName
+    parametersModelProjection=linksParametersModelProjection
     onInit=(action "initLayerProperties")
-}}
-
+    addLayerLink=(action "addLayerLink")
+    removeLayerLink=(action "removeLayerLink")
+    allowShowLayerLinkCheckboxChange=(action "onLayerLinkChangeVisibility")
+  }}
 {{/flexberry-dialog}}

@@ -9,15 +9,7 @@
     onShow=(action "onSuccessMessageShow")
     onHide=(action "onSuccessMessageHide")
   }}
-  {{ui-message
-    type="error"
-    closeable=true
-    visible=showFormErrorMessage
-    caption=formErrorMessageCaption
-    message=formErrorMessage
-    onShow=(action "onErrorMessageShow")
-    onHide=(action "onErrorMessageHide")
-  }}
+  {{flexberry-error error=error}}
   <div class="field">
     <div class="flexberry-edit-panel">
       {{#unless readonly}}
@@ -160,7 +152,11 @@
         {{map-commands/go-to
           tooltip="Перейти к координатам"
           availableCRS=availableCRS
-          execute=(action "onMapCommandExecute" target=mapToolbar)}}
+          execute=(action "onMapCommandExecute" target=mapToolbar)
+        }}
+        {{map-commands/locate
+        	execute=(action "onMapCommandExecute" target=mapToolbar)
+        }}
         {{map-commands/search execute=(action "onMapCommandExecute" target=mapToolbar)}}
         {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
         {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
@@ -191,9 +187,9 @@
         zoomend=(action "onMapZoomend" "model.zoom")
       }}
         {{flexberry-layers
-            leafletMap=leafletMap
-            leafletContainer=leafletMap
-            layers=model.hierarchy
+          leafletMap=leafletMap
+          leafletContainer=leafletMap
+          layers=model.hierarchy
         }}
         {{switch-scale-control
           map=leafletMap

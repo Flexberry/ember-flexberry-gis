@@ -89,42 +89,22 @@ Ember.$.extend(true, translations, {
         'components-examples': {
           'caption': 'Components examples',
           'title': '',
-          'flexberry-button': {
-            'caption': 'flexberry-button',
+          'flexberry-boundingbox': {
+            'caption': 'flexberry-boundingbox',
             'title': '',
             'settings-example': {
-              'caption': 'Settings example',
+              'caption': 'Пример работы компонента',
               'title': ''
             }
           },
-          'flexberry-ddau-checkbox': {
-            'caption': 'flexberry-ddau-checkbox',
-            'title': '',
-            'settings-example': {
-              'caption': 'Settings example',
-              'title': ''
-            }
+          'geojson-layer': {
+            'caption': 'geojson-layer',
+            'title': 'GeoJSON layer example'
           },
-          'flexberry-maplayers': {
-            'caption': 'flexberry-maplayers',
-            'title': '',
-            'settings-example': {
-              'caption': 'Settings example',
-              'title': ''
-            }
-          },
-          'flexberry-tree': {
-            'caption': 'flexberry-tree',
-            'title': '',
-            'settings-example': {
-              'caption': 'Settings example',
-              'title': ''
-            }
+          'kml-layer': {
+            'caption': 'kml-layer',
+            'title': 'KML layer example'
           }
-        },
-        'integration-examples': {
-          'caption': 'Integration examples',
-          'title': ''
         }
       }
     },
@@ -145,6 +125,11 @@ Ember.$.extend(true, translations, {
           'json-layers-tab-caption': 'JSON-object-defined layers tree',
           'json-layers-latest-clicked-layer-caption': 'Latest clicked layer settings',
           'json-layers-latest-clicked-layer-placeholder': 'Click on any layer to display it\'s settings'
+        }
+      },
+      'flexberry-boundingbox': {
+        'settings-example': {
+          'caption': 'Flexberry-boundingbox testing form'
         }
       },
     },

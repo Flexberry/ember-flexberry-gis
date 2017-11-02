@@ -3,6 +3,12 @@ module.exports = {
   afterInstall: function () {
     var _this = this;
     return this.addBowerPackagesToProject([
+      // Library allowing to detect DOM-elements resize.
+      {
+        name: 'javascript-detect-element-resize',
+        target: '0.5.3'
+      },
+
       // Leaflet.
       {
         name: 'leaflet',
@@ -18,13 +24,13 @@ module.exports = {
       // leaflet-wfst.
       {
         name: 'leaflet-wfst',
-        target: '2.0.1-beta.1'
+        target: '2.0.1-beta.10'
       },
 
       // Leaflet-WMS.
       {
         name: 'leaflet-wms',
-        target: '1.2.0-beta.1'
+        target: '1.2.0-beta.2'
       },
 
       // Leaflet.WMS.
@@ -39,10 +45,17 @@ module.exports = {
         target: '1.1.0'
       },
 
+      // Leaflet areaselect.
+      {
+        name: 'leaflet-areaselect',
+        source: 'https://github.com/heyman/leaflet-areaselect.git',
+        target: 'd0910cc4e74b59bbd9eead447d2353c29dfe84b1'
+      },
+
       // Leaflet.Editable.Measures.
       {
         name: 'leaflet-editable-measures',
-        target: '0.2.0-beta.1'
+        target: '0.2.0-beta.2'
       },
 
       // Leaflet.Export & dependencies.
@@ -85,6 +98,24 @@ module.exports = {
       {
         name: 'osmtogeojson',
         target: '2.2.12'
+      },
+
+      // Terrafotmer library (used in vector layers).
+      {
+        name: 'terraformer',
+        target: '1.0.8'
+      },
+
+      // Leaflet-MarkerCluster (used in vector layers).
+      {
+        name: 'leaflet.markercluster',
+        target: '1.1.0'
+      },
+
+      // Leaflet-Omnivore (used in vector layers).
+      {
+        name: 'leaflet-omnivore',
+        target: '0.3.3'
       }
     ]).then(function () {
       return _this.addAddonsToProject({

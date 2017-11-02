@@ -67,6 +67,7 @@
     --}}
     {{#if _addDialogHasBeenRequested}}
       {{component "layers-dialogs/add"
+        model=model
         class=flexberryClassNames.addDialog
         visible=_addDialogIsVisible
         layer=null
@@ -78,14 +79,19 @@
     {{/if}}
     {{#if _editDialogHasBeenRequested}}
       {{component "layers-dialogs/edit"
+        model=model
         class=flexberryClassNames.editDialog
         visible=_editDialogIsVisible
         layer=(hash
           type=type
           name=name
+          description=description
+          keyWords=keyWords
+          scale=scale
           coordinateReferenceSystem=coordinateReferenceSystem
           settings=settings
         )
+        _leafletObject=_leafletObject
         cswConnections=cswConnections
         leafletMap=leafletMap
         typeIsReadonly=true

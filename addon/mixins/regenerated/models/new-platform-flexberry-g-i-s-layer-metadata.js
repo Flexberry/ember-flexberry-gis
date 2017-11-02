@@ -49,7 +49,7 @@ export let Model = Ember.Mixin.create({
   settings: DS.attr('string'),
   scale: DS.attr('number'),
   coordinateReferenceSystem: DS.attr('string'),
-  boundingBox: DS.attr('string'),
+  boundingBox: DS.attr('json'),
   createTime: DS.attr('date'),
   creator: DS.attr('string'),
   editTime: DS.attr('date'),

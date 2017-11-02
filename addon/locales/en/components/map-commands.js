@@ -3,6 +3,13 @@ export default {
     'caption': '',
     'tooltip': 'Go to coordinates'
   },
+  'locate': {
+    'caption': '',
+    'tooltip': 'Find my location',
+    'lat': 'Latitude: ',
+    'lng': 'Longitude: ',
+    'error': 'Location not found'
+  },
   'full-extent': {
     'caption': '',
     'tooltip': 'Full extent'

@@ -21,8 +21,14 @@ Router.map(function() {
 
   // Components examples routes (sorted by component's names).
   this.route('components-examples/flexberry-maplayers/settings-example');
+<<<<<<< HEAD
 
   this.route('charts-result', { path: 'chart-result' });
+=======
+  this.route('components-examples/flexberry-boundingbox/settings-example');
+  this.route('geojson-map');
+  this.route('kml-map');
+>>>>>>> origin/develop
 });
 
 export default Router;

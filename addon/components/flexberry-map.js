@@ -54,6 +54,16 @@ let FlexberryMapComponent = Ember.Component.extend(
     _leafletObject: null,
 
     /**
+      Leaflet map container.
+
+      @property _$leafletContainer
+      @type <a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery.Object</a>
+      @default null
+      @private
+    */
+    _$leafletContainer: null,
+
+    /**
       Flag: indicates whether map loader is shown or not.
       Use leaflet map's 'showLoader', 'hideLoader' methods to set this property value.
 
@@ -108,7 +118,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     leafletOptions: [
 
       // Map state options.
-      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'crs',
+      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs',
 
       // Interaction options.
       'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
@@ -384,18 +394,47 @@ let FlexberryMapComponent = Ember.Component.extend(
     },
 
     /**
+      Handles leaflet map container's resize.
+
+      @property _onLeafletContainerResize
+      @type function
+      @default null
+      @private
+    */
+    _onLeafletContainerResize: null,
+
+    /**
       Initializes DOM-related component's properties.
     */
     didInsertElement() {
       this._super(...arguments);
 
+      let $leafletContainer = this.$();
+      this.set('_$leafletContainer', $leafletContainer);
+
       // Initialize leaflet map.
-      let leafletMap = L.map(this.$()[0], this.get('options'));
+      let leafletMap = L.map($leafletContainer[0], this.get('options'));
+      this.set('_leafletObject', leafletMap);
+
       this._injectMapLoaderMethods(leafletMap);
       leafletMap.on('moveend', this._moveend, this);
       leafletMap.on('zoomend', this._zoomend, this);
 
-      this.set('_leafletObject', leafletMap);
+      // Bind map container's resize event handler.
+      let onLeafletContainerResize = {
+        onResizeStart: () => {
+          leafletMap.fire('containerResizeStart');
+        },
+        onResize: () => {
+          leafletMap.invalidateSize(false);
+          leafletMap.fire('containerResize');
+        },
+        onResizeEnd: () => {
+          leafletMap.fire('containerResizeEnd');
+        }
+      };
+      this.set('_onLeafletContainerResize', onLeafletContainerResize);
+      $leafletContainer.resize(onLeafletContainerResize);
 
       this.sendAction('leafletInit', {
         map: leafletMap
@@ -404,6 +443,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       let serviceLayer = L.featureGroup();
       leafletMap.addLayer(serviceLayer);
       this.set('serviceLayer', serviceLayer);
+      this.sendAction('serviceLayerInit', serviceLayer);
 
       let queryFilter = this.get('queryFilter');
       let mapObjectSetting = this.get('mapObjectSetting');
@@ -427,8 +467,18 @@ let FlexberryMapComponent = Ember.Component.extend(
         this._removeMapLoaderMethods(leafletMap);
         leafletMap.off('moveend', this._moveend, this);
         leafletMap.off('zoomend', this._zoomend, this);
+
+        // Unbind map container's resize event handler.
+        let $leafletContainer = this.get('_$leafletContainer');
+        let onLeafletContainerResize = this.get('_onLeafletContainerResize');
+        if (!Ember.isNone($leafletContainer) && !Ember.isNone(onLeafletContainerResize)) {
+          $leafletContainer.removeResize(onLeafletContainerResize);
+          this.set('_onLeafletContainerResize', null);
+        }
+
         leafletMap.remove();
         this.set('_leafletObject', null);
+        this.set('_$leafletContainer', null);
 
         this.sendAction('leafletDestroy');
       }

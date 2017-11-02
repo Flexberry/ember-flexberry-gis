@@ -15,6 +15,9 @@ export default {
   'name-textbox': {
     'caption': 'Layer name'
   },
+  'scale-textbox': {
+    'caption': 'Scale'
+  },
   'description-textbox': {
     'caption': 'Layer description'
   },
@@ -52,21 +55,14 @@ export default {
       }
     }
   },
-  'crs': {
-    'caption': 'Layer coordinate reference system (CRS)',
-    'name-textbox': {
-      'caption': 'Projection name'
-    },
-    'code-textbox': {
-      'caption': 'Code'
-    },
-    'definition-textare': {
-      'caption': 'Definition'
+  'links-segment': {
+    'add-button': {
+      'caption': 'Add',
     }
   },
   'tabular-menu': {
     'main-tab': {
-      'caption': 'Main'
+      'caption': 'Main settings'
     },
     'crs-tab': {
       'caption': 'Coordinate system'
@@ -85,6 +81,20 @@ export default {
     },
     'legend-settings-tab': {
       'caption': 'Legend settings'
+    },
+    'links-tab': {
+      'caption': 'Links settings'
+    }
+  },
+  'groups': {
+    'main-group': {
+      'caption': 'Main'
+    },
+    'display-group': {
+      'caption': 'Display'
+    },
+    'links-group': {
+      'caption': 'Links'
     }
   }
 };

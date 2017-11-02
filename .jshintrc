@@ -4,7 +4,11 @@
     "window",
     "-Promise",
     "L",
+<<<<<<< HEAD
     "Highcharts"
+=======
+    "Terraformer"
+>>>>>>> origin/develop
   ],
   "globals": {
     "moment": true

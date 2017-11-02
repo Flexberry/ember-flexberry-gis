@@ -148,6 +148,11 @@ export default {
       public: {
         __caption__: 'Общая'
       }
+    },
+    MapGisSearchFormL: {
+      name: {
+        __caption__: 'Наименование'
+      }
     }
   }
 };
