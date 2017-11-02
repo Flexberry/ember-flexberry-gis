@@ -107,10 +107,10 @@ export default Ember.Component.extend({
     }
 
     let chart = {
-             plotBackgroundColor: null,
-             plotBorderWidth: null,
-             plotShadow: false
-          };
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false
+    };
     let title = {
       text: this.get('_titleChart')
     };
@@ -126,7 +126,7 @@ export default Ember.Component.extend({
           enabled: true,
           format: '<b>{point.name}%</b>: {point.percentage:.1f} %',
           style: {
-            color: (Highcharts.theme && Highcharts.theme.contrastTextColor)||'black'
+            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) ||'black'
           }
         }
       }
