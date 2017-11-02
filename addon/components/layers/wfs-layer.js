@@ -165,27 +165,25 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer(options) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      if (!this.get('clusterize')) {
+        resolve(this._createWFSLayer(options));
+      }
 
-    // TODO fix wms-wfs for work with promise
-    if (this.get('clusterize')) {
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        let onLayerLoad = (e) => {
-          let cluster = L.markerClusterGroup(this.get('clusterOptions'));
-          cluster.addLayer(e.target);
-          resolve(cluster);
-        };
+      let onLayerLoad = (e) => {
+        let cluster = L.markerClusterGroup(this.get('clusterOptions'));
+        cluster.addLayer(e.target);
+        resolve(cluster);
+      };
 
-        let onLayerError = (e) => {
-          reject(e);
-        };
+      let onLayerError = (e) => {
+        reject(e);
+      };
 
-        this._createWFSLayer(options)
-          .once('load', onLayerLoad)
-          .once('error', onLayerError);
-      });
-    }
-
-    return this._createWFSLayer(options);
+      this._createWFSLayer(options)
+        .once('load', onLayerLoad)
+        .once('error', onLayerError);
+    });
   },
 
   /**
