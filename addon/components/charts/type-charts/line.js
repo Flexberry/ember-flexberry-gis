@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import layout from '../../../templates/components/charts/type-charts/column';
+import layout from '../../../templates/components/charts/type-charts/line';
 
 export default Ember.Component.extend({
   /**

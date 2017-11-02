@@ -20,6 +20,7 @@ import FlexberryMapInfoComponent from './components/flexberry-mapinfo';
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
 import GISSearchForm from './forms/gis-search-form';
+import ruCharts from './components/charts';
 
 export default {
   'models': {
@@ -107,7 +108,9 @@ export default {
 
     'map-commands': MapCommandsComponents,
 
-    'flexberry-mapinfo': FlexberryMapInfoComponent
+    'flexberry-mapinfo': FlexberryMapInfoComponent,
+
+    'charts': ruCharts
   },
 
   'map-tools': {

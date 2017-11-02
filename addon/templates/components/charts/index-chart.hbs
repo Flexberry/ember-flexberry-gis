@@ -2,7 +2,7 @@
   <div class="six wide column">
     <div class="field">
       <label>
-        Тип диаграммы
+        {{t "components.charts.index-chart.typr-charts.caption"}}
       </label>
     {{flexberry-dropdown
       items=_availableTypes
@@ -11,7 +11,7 @@
     </div>
     <div class="field">
       <label>
-        Заголовок диаграммы
+        {{t "components.charts.index-chart.caption-charts"}}
       </label>
     {{flexberry-textbox
       value=_captionChart
@@ -22,9 +22,9 @@
       <div class="column">
         {{#if _selectedModeType}}
           {{component (concat "charts/type-charts/" _selectedModeType)
-            _layer = _geoJsonLayer
-            _captionChart = _captionChart
-            _selectedModeType = _selectedModeType
+            _isObject = _isObjProperties
+            _titleChart = _captionChart
+            _chartType = _selectedModeType
             onInit=(action "initJsonCharts")
           }}
         {{/if}}
