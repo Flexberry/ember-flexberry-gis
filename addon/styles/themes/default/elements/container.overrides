@@ -176,10 +176,7 @@
 *********************************************/
 
 .mappanel,
-.sidebar-wrapper,
-.flexberry-export-map-command-dialog,
-.flexberry-search-map-command-dialog,
-.flexberry-go-to-map-command-dialog {
+.sidebar-wrapper {
     /* Table */
     .ui.table {
         color: #6f9be3;

@@ -200,58 +200,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         return;
       }
 
-      let r = {
-        name: Ember.get(result, 'layerModel.name') || '',
-        settings: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings'),
-        displayProperties: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
-        listForms: Ember.A(),
-        editForms: Ember.A(),
-        features: Ember.A(),
-        layerModel: Ember.get(result, 'layerModel')
-      };
-
-      let links = Ember.get(result, 'layerModel.layerLink');
-      let layerLink = links.filter(link => link.get('allowShow') === true);
-
-      layerLink.forEach((link) => {
-        if (!Ember.isBlank(link)) {
-          let mos = link.get('mapObjectSetting');
-          if (!Ember.isBlank(mos)) {
-            let editForm = mos.get('editForm');
-            if (!Ember.isBlank(editForm)) {
-              let parameters = link.get('parameters');
-
-              parameters.forEach((param) => {
-                if (!Ember.isBlank(param)) {
-                  let queryKey = param.get('queryKey');
-
-                  if (!Ember.isBlank(queryKey)) {
-                    let listForm = mos.get('listForm');
-                    if (!Ember.isBlank(listForm)) {
-                      r.listForms.pushObject({
-                        url: listForm,
-                        typeName: mos.get('typeName'),
-                        queryKey: queryKey
-                      });
-                    }
-
-                    let layerField = param.get('layerField');
-                    if (!Ember.isBlank(layerField)) {
-                      r.editForms.pushObject({
-                        url: editForm,
-                        typeName: mos.get('typeName'),
-                        queryKey: queryKey,
-                        layerField: layerField
-                      });
-                    }
-                  }
-                }
-              });
-            }
-          }
-        }
-      });
-
       result.features.then(
         (features) => {
           if (features.length > 0) {
