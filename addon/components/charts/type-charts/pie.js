@@ -77,8 +77,8 @@ export default Ember.Component.extend({
 
     for (var i in propName)
     {
-      if (isFinite(isObject[i][propName[i]])){
-        isObjectNumber.pushObject (propName[i]);
+      if (isFinite(isObject[i][propName[i]])) {
+        isObjectNumber.pushObject(propName[i]);
       }
     }
 
