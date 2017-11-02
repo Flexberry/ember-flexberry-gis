@@ -114,10 +114,9 @@ module.exports = {
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.js');
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.css');
 
-<<<<<<< HEAD
     // LOAD HIGHCHARTS
     app.import(app.bowerDirectory + '/highcharts/highcharts.js');
-=======
+
     // ESRI.terraformer
     app.import(app.bowerDirectory + '/terraformer/terraformer.js');
 
@@ -125,6 +124,5 @@ module.exports = {
     app.import(app.bowerDirectory + '/leaflet.markercluster/dist/leaflet.markercluster.js');
     app.import(app.bowerDirectory + '/leaflet.markercluster/dist/MarkerCluster.css');
     app.import(app.bowerDirectory + '/leaflet.markercluster/dist/MarkerCluster.Default.css');
->>>>>>> origin/develop
   }
 };

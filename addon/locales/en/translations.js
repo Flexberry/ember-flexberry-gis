@@ -112,13 +112,11 @@ export default {
     'flexberry-mapinfo': FlexberryMapInfoComponent,
     'flexberry-boundingbox': FlexberryBoundingboxComponent,
 
-<<<<<<< HEAD
     'flexberry-mapinfo': FlexberryMapInfoComponent,
 
-    'charts': enCharts
-=======
+    'charts': enCharts,
+
     'flexberry-edit-crs': FlexberryEditCrsComponent
->>>>>>> origin/develop
   },
 
   'map-tools': {
