@@ -1,0 +1,39 @@
+<div class="field">
+  <label>
+    {{crsCaption}}
+  </label>
+  {{flexberry-dropdown
+    class="fluid"
+    items=_availableCoordinateReferenceSystemsCodes
+    value=_coordinateReferenceSystemCode
+  }}
+</div>
+{{#if _showCoordinateReferenceSystemFields}}
+  <div class="field">
+    <label>
+      {{crsNameTextboxCaption}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=coordinateReferenceSystem.name
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{crsCodeTextboxCaption}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=coordinateReferenceSystem.code
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{crsDefinitionTextareaCaption}}
+    </label>
+    {{flexberry-textarea
+      class="fluid"
+      value=coordinateReferenceSystem.definition
+    }}
+  </div>
+{{/if}}

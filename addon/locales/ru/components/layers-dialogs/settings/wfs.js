@@ -37,5 +37,8 @@ export default {
     'weight-textbox': {
       'caption': 'Толщина обводки'
     }
+  },
+  'clusterize': {
+    'caption': 'Кластеризовать'
   }
 };

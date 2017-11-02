@@ -325,13 +325,16 @@
     Common styles for layers-dialogs (see templates/components/layers-dialogs).
 **************************************************************************************/
 
-.ui.modal.flexberry-add-layer-dialog, .ui.modal.flexberry-edit-layer-dialog {
+.ui.modal.flexberry-add-layer-dialog,
+.ui.modal.flexberry-edit-layer-dialog {
   .flexberry-dialog-content.content {
     min-height: 400px;
   }
 }
 
-.ui.modal.flexberry-add-layer-dialog, .ui.modal.flexberry-edit-layer-dialog {
+.ui.modal.flexberry-add-layer-dialog,
+.ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-edit-map-dialog {
   &> .flexberry-dialog-content.content {
     // Same as dialog content's max-height in Semantic UI.
     height: 400px;
@@ -339,7 +342,7 @@
   }
 }
 
-form.flexberry-edit-layermap {
+form.flexberry-edit-layermap, form.flexberry-edit-map {
   height: 100%;
 
   .ui.menu {
@@ -367,21 +370,24 @@ form.flexberry-edit-layermap {
   }
 
   .ui.tab.segment {
+    // Height is 100% minus height of tabular menu items.
+    height: ~"calc(100% - 50px)";
+    margin: 0;
+    overflow: auto;
+
     &.group {
       // Height is 100% minus height of tabular menu items.
       height: ~"calc(100% - 64px)";
       margin-top: 0;
       padding: 0;
       border: none;
-    }
 
-    &:not(.group) {
-      // Height is 100% minus height of tabular menu items.
-      height: ~"calc(100% - 40px)";
-      margin: 0;
+      .ui.tab.segment {
+        // Height is 100% minus height of tabular menu items.
+        height: ~"calc(100% - 40px)";
+        margin: 0;
+      }
     }
-
-    overflow: auto;
 
     .flexberry-dropdown.ui.selection.dropdown .menu {
       // About 3 items is enough.

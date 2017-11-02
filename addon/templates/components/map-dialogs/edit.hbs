@@ -10,88 +10,111 @@
   show=(action "onShow")
   hide=(action "onHide")
 }}
-<form class="ui form" role="form">
-  <div class="field">
-    <label>
-      {{nameTextboxCaption}}
-    </label>
-    {{flexberry-textbox
-      class="fluid"
-      value=_mapModel.name
-    }}
-  </div>
-  <div class="field">
-    <label>
-      {{descriptionTextboxCaption}}
-    </label>
-    {{flexberry-textarea
-      class="fluid"
-      value=_mapModel.description
-    }}
-  </div>
-  <div class="field">
-    <label>
-      {{keyWordsTextboxCaption}}
-    </label>
-    {{flexberry-textbox
-      class="fluid"
-      value=_mapModel.keyWords
-    }}
-  </div>
-  <div class="field">
-    <label>
-      {{latTextboxCaption}}
-    </label>
-    {{flexberry-textbox
-      class="fluid"
-      value=_mapModel.lat
-    }}
-  </div>
-  <div class="field">
-    <label>
-      {{lngTextboxCaption}}
-    </label>
-    {{flexberry-textbox
-      class="fluid"
-      value=_mapModel.lng
-    }}
-  </div>
-  <div class="field">
-    <label>
-      {{zoomTextboxCaption}}
-    </label>
-    {{flexberry-textbox
-      class="fluid"
-      value=_mapModel.zoom
-    }}
-  </div>
-  <div class="field">
-    <label>
-      {{scaleTextboxCaption}}
-    </label>
-    {{flexberry-textbox
-      class="fluid"
-      value=_mapModel.scale
-    }}
-  </div>
-  <div class="field">
-    <label>
-      {{crsTextboxCaption}}
-    </label>
-    {{flexberry-textbox
-      class="fluid"
-      value=_mapModel.coordinateReferenceSystem
-    }}
-  </div>
-  <div class="field">
-    <label>
-      {{publicTextboxCaption}}
-    </label>
-    {{flexberry-checkbox
-      class="fluid"
-      value=_mapModel.public
-    }}
-  </div>
-
-</form>
+  <form class="ui form {{flexberryClassNames.form}}" role="form">
+    <div class="ui top attached tabular menu">
+      <a class="tab item {{if (eq _activeTab "main-tab") "active"}}" data-tab="main-tab" onclick={{action "onTabClick"}}>
+        {{mainTabCaption}}
+      </a>
+      <a class="tab item {{if (eq _activeTab "crs-tab") "active"}}" data-tab="crs-tab" onclick={{action "onTabClick"}}>
+        {{crsTabCaption}}
+      </a>
+      <a class="tab item {{if (eq _activeTab "position-tab") "active"}}" data-tab="position-tab" onclick={{action "onTabClick"}}>
+        {{positionTabCaption}}
+      </a>
+      <a class="tab item {{if (eq _activeTab "borders-tab") "active"}}" data-tab="borders-tab" onclick={{action "onTabClick"}}>
+        {{bordersTabCaption}}
+      </a>
+    </div>
+    <div class="ui bottom attached tab segment {{if (eq _activeTab "main-tab") "active"}}" data-tab="main-tab">
+      <div class="field">
+        <label>
+          {{nameTextboxCaption}}
+        </label>
+        {{flexberry-textbox
+          class="fluid"
+          value=_mapModel.name
+        }}
+      </div>
+      <div class="field">
+        <label>
+          {{descriptionTextboxCaption}}
+        </label>
+        {{flexberry-textarea
+          class="fluid"
+          value=_mapModel.description
+        }}
+      </div>
+      <div class="field">
+        <label>
+          {{keyWordsTextboxCaption}}
+        </label>
+        {{flexberry-textbox
+          class="fluid"
+          value=_mapModel.keyWords
+        }}
+      </div>
+      <div class="field">
+        <label>
+          {{scaleTextboxCaption}}
+        </label>
+        {{flexberry-dropdown-input
+          class="scale-value fluid"
+          direction="upward"
+          items=scales
+          value=_mapModel.scale
+          onKeyDown=(action "scaleInputKeyDown")
+          inputPlaceholder=(t "forms.gis-search-form.scale-dropdown-input-placeholder")
+          inputTitle=(t "forms.gis-search-form.scale-dropdown-input-title")
+        }}
+      </div>
+      <div class="field">
+        <label>
+          {{publicTextboxCaption}}
+        </label>
+        {{flexberry-checkbox
+          class="fluid"
+          value=_mapModel.public
+        }}
+      </div>
+    </div>
+    <div class="ui tab bottom attached segment {{if (eq _activeTab "crs-tab") "active"}}" data-tab="crs-tab">
+      {{#if visible}}
+        {{flexberry-edit-crs
+          coordinateReferenceSystem=_mapModel.coordinateReferenceSystem
+        }}
+      {{/if}}
+    </div>
+    <div class="ui tab bottom attached segment {{if (eq _activeTab "position-tab") "active"}}" data-tab="position-tab">
+      <div class="field">
+        <label>
+          {{latTextboxCaption}}
+        </label>
+        {{flexberry-textbox
+          class="fluid"
+          value=_mapModel.lat
+        }}
+      </div>
+      <div class="field">
+        <label>
+          {{lngTextboxCaption}}
+        </label>
+        {{flexberry-textbox
+          class="fluid"
+          value=_mapModel.lng
+        }}
+      </div>
+      <div class="field">
+        <label>
+          {{zoomTextboxCaption}}
+        </label>
+        {{flexberry-textbox
+          class="fluid"
+          value=_mapModel.zoom
+        }}
+      </div>
+    </div>
+    <div class="ui tab bottom attached segment {{if (eq _activeTab "borders-tab") "active"}}" data-tab="borders-tab">
+      {{!-- Place flexberry-boundingbox here --}}
+    </div>
+  </form>
 {{/flexberry-dialog}}
