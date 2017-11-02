@@ -112,8 +112,6 @@ export default {
     'flexberry-mapinfo': FlexberryMapInfoComponent,
     'flexberry-boundingbox': FlexberryBoundingboxComponent,
 
-    'flexberry-mapinfo': FlexberryMapInfoComponent,
-
     'charts': ruCharts,
 
     'flexberry-edit-crs': FlexberryEditCrsComponent
