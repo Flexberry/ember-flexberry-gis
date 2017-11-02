@@ -31,14 +31,11 @@
     "leaflet.zoomslider": "Flexberry/Leaflet.zoomslider#leaflet-1.2.0",
     "leaflet-minimap": "3.4.0",
     "osmtogeojson": "2.2.12",
-<<<<<<< HEAD
-    "highcharts":"6.0.1"
-=======
+    "highcharts":"6.0.1",
     "terraformer": "1.0.8",
     "leaflet.markercluster": "1.1.0",
     "leaflet-omnivore": "0.3.3",
     "javascript-detect-element-resize": "0.5.3"
->>>>>>> origin/develop
   },
   "resolutions": {
     "ember": "2.4.3",
