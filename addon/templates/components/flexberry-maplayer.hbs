@@ -51,6 +51,13 @@
               click=(action "onBoundsButtonClick")
             }}
           {{/if}}
+          {{#if _objectsEditOperationIsAvailable}}
+            {{flexberry-button
+              class=(concat flexberryClassNames.objectsEditButton " right floated " flexberryClassNames.preventExpandCollapse)
+              iconClass=(concat (if _objectsEditDialogHasBeenRequested "map outline" "map") " icon")
+              click=(action "onObjectsEditButtonClick")
+            }}
+          {{/if}}
         {{/if}}
 
         {{#if _canChangeOpacity}}
