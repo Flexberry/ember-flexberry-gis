@@ -168,6 +168,7 @@ export default BaseLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (!this.get('clusterize')) {
         resolve(this._createWFSLayer(options));
+        return;
       }
 
       let onLayerLoad = (e) => {
