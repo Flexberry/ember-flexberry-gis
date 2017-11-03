@@ -342,6 +342,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     }
   },
 
+  didRender() {
+    this._super(...arguments);
+
+    // Initialize Semantic UI accordion.
+    //this.$('.ui.accordion').accordion();
+  },
+
   /**
     Overrides {{#crosslink "LeafletZoomToFeatureMixin/_prepareLayer:method"}} to make a copy of passed layer
     and apply a style to the layer to make it more visible.
