@@ -235,6 +235,34 @@ export default Ember.Mixin.create({
     },
 
     /**
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.attributesEdit:method"}}flexberry-maplayers component's 'attributesEdit' action{{/crossLink}}.
+      Opens {{#FlexberryLayersAttributesPanelComponent}}flexberry-layers-attributes-panel component to edit attributes of the selected layer.
+
+      @method actions.onAttributesEdit
+      @param {String} layerModelPath Path to a layer model, which value must be used within action.
+    */
+    onAttributesEdit(layerPath) {
+      let layerModel = getRecord(this, layerPath);
+      let name = Ember.get(layerModel, 'name');
+      let leafletObject = Ember.get(layerModel, '_leafletObject');
+
+      let editedLayers = this.get('editedLayers') || Ember.A();
+      let index = editedLayers.findIndex((item) => Ember.isEqual(item.name, name));
+      if (index >= 0) {
+        this.set('editedLayersSelectedTabIndex', index);
+      } else {
+        editedLayers.addObject({ name: name, leafletObject: leafletObject });
+        this.set('editedLayers', editedLayers);
+        this.set('editedLayersSelectedTabIndex', editedLayers.length - 1);
+        this._leafletMapOnContainerResizeStart();
+      }
+
+      if (this.get('editedLayersPanelFolded')) {
+        this.set('editedLayersPanelFolded', false);
+      }
+    },
+
+    /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.addChild:method"}}flexberry-maplayers component's 'addChild' action{{/crossLink}}.
       It adds new child layer.
 

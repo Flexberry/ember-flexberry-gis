@@ -176,10 +176,7 @@
 *********************************************/
 
 .mappanel,
-.sidebar-wrapper,
-.flexberry-export-map-command-dialog,
-.flexberry-search-map-command-dialog,
-.flexberry-go-to-map-command-dialog {
+.sidebar-wrapper {
     /* Table */
     .ui.table {
         color: #6f9be3;
@@ -919,5 +916,23 @@
     .remove.icon:hover:before {
       color: @red;
     }
+  }
+}
+
+/*********************************************
+            Flexberry table
+*********************************************/
+.ui.table.flexberry-table-fixed {
+  table-layout: fixed;
+  font-size: 12px;
+
+  th.narrow, td.narrow {
+    width: 80px;
+  }
+
+  td input[type="text"] {
+    padding: 0.3em 1em;
+    display: inline-block;
+    max-width: 200px;
   }
 }
