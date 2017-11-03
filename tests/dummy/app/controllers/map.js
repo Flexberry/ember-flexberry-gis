@@ -241,8 +241,8 @@ export default EditMapController.extend(
       },
 
       onMapLeafletDestroy() {
-        this._super(...arguments);
         this.leafletMap.off('containerResizeStart', this._leafletMapOnContainerResizeStart, this);
+        this._super(...arguments);
       }
     },
 
