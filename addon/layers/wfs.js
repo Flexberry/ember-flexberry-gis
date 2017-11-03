@@ -44,7 +44,9 @@ export default BaseLayer.extend({
         color: undefined,
         weight: undefined
       },
-      namespaceUri: undefined
+      namespaceUri: undefined,
+      clusterize: false,
+      clusterOptions: undefined
     });
 
     return settings;
