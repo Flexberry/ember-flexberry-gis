@@ -95,47 +95,6 @@ export default Ember.Controller.extend({
   scales: Ember.A([500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]),
 
   /**
-    Indicates whether to show error or not.
-
-    @property showError
-    @type Boolean
-    @default false
-  */
-  showError: false,
-
-  /**
-    Error caption.
-
-    @property errorCaption
-    @type String
-    @readOnly
-  */
-  errorCaption: Ember.computed('error', function () {
-    let error = this.get('error');
-    if (Ember.isNone(error)) {
-      return '';
-    }
-
-    return error.name;
-  }),
-
-  /**
-    Error message.
-
-    @property errorMessage
-    @type String
-    @readOnly
-  */
-  errorMessage: Ember.computed('error', function () {
-    let error = this.get('error');
-    if (Ember.isNone(error)) {
-      return '';
-    }
-
-    return error.message;
-  }),
-
-  /**
     Hash with ids of selected rows.
 
     @property _selectedRows
@@ -217,23 +176,6 @@ export default Ember.Controller.extend({
   newMapWithMetadataRouteName: 'map.new',
 
   actions: {
-    /**
-      Handler for error 'ui-message' component 'onShow' action.
-
-      @method actions.onErrorShow
-    */
-    onErrorShow() {
-    },
-
-    /**
-      Handler for error 'ui-message' component 'onHide' action.
-
-      @method actions.onErrorHide
-    */
-    onErrorHide() {
-      this.set('showError', false);
-    },
-
     /**
       Handles anyText 'clear' button click.
 

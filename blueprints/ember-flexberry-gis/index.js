@@ -24,13 +24,13 @@ module.exports = {
       // leaflet-wfst.
       {
         name: 'leaflet-wfst',
-        target: '2.0.1-beta.1'
+        target: '2.0.1-beta.10'
       },
 
       // Leaflet-WMS.
       {
         name: 'leaflet-wms',
-        target: '1.2.0-beta.1'
+        target: '1.2.0-beta.2'
       },
 
       // Leaflet.WMS.
@@ -55,7 +55,7 @@ module.exports = {
       // Leaflet.Editable.Measures.
       {
         name: 'leaflet-editable-measures',
-        target: '0.2.0-beta.1'
+        target: '0.2.0-beta.2'
       },
 
       // Leaflet.Export & dependencies.
