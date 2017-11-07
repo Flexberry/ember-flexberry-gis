@@ -142,8 +142,8 @@ export default BaseLayer.extend({
   */
   createLayer(options) {
     options = Ember.$.extend(true, {}, this.get('options'), options);
-    if (options.filter) {
-      options.filter = L.XmlUtil.parseXml(options.filter).firstChild;
+    if (options.filter && !(options.filter instanceof Element)) {
+      options.filter = Ember.getOwner(this).knownForType('layer', 'wfs').parseFilter(options.filter).toGml();
     }
 
     let featuresReadFormat = this.get('featuresReadFormat');

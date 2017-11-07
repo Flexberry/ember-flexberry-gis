@@ -39,6 +39,9 @@ export default BaseLayer.extend({
     options = Ember.$.extend({}, this.get('options'), options);
     let geojson = options.geojson || {};
     options = options || {};
+    if (options.filter) {
+      options.filter = Ember.getOwner(this).knownForType('layer', 'geojson').parseFilter(options.filter);
+    }
 
     let layerFunctions = this.get('layerFunctions');
     let customFunction;

@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import BaseLayer from './-private/base';
+import GeoJsonFilterParserMixin from 'ember-flexberry-gis/mixins/geojson-filter-parser';
 
 /**
   Class describing kml layer metadata.
@@ -11,7 +12,7 @@ import BaseLayer from './-private/base';
   @class KmlLayer
   @extends BaseLayer
 */
-export default BaseLayer.extend({
+export default BaseLayer.extend(GeoJsonFilterParserMixin, {
   /**
     Icon class related to layer type.
 
@@ -40,7 +41,8 @@ export default BaseLayer.extend({
     let settings = this._super(...arguments);
     Ember.$.extend(true, settings, {
       kmlUrl: undefined,
-      kmlString: undefined
+      kmlString: undefined,
+      filter: ''
     });
 
     return settings;
