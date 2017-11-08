@@ -40,17 +40,10 @@ export default BaseLayer.extend({
     let geojson = options.geojson || {};
     options = options || {};
     if (options.filter) {
-      options.filter = Ember.getOwner(this).knownForType('layer', 'geojson').parseFilter(options.filter);
+      options.filter = Ember.getOwner(this).lookup('layer:geojson').parseFilter(options.filter);
     }
 
-    let layerFunctions = this.get('layerFunctions');
-    let customFunction;
-    for (let i = 0; i < layerFunctions.length; i++) {
-      customFunction = Ember.get(options, layerFunctions[i]);
-      if (customFunction && typeof (customFunction) === 'string') {
-        Ember.set(options, layerFunctions[i], new Function('return ' + customFunction)());
-      }
-    }
+    this._convertLayerFunctions(options);
 
     let url = this.get('url');
     if (!Ember.isNone(url)) {

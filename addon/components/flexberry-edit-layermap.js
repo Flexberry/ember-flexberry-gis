@@ -586,8 +586,9 @@ export default Ember.Component.extend(
     */
     _filterSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
-      return className === 'wfs' || className === 'geojson' || className === 'kml';
+      return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('filter');
     }),
 
     /**

@@ -27,9 +27,9 @@ export default BaseLayer.extend(GeoJsonFilterParserMixin, {
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'query']
+    @default ['edit', 'remove', 'identify', 'search', 'query', 'filter']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'query'],
+  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter'],
 
   /**
     Creates new settings object (with settings related to layer-type).

@@ -108,10 +108,11 @@ export default Ember.Component.extend({
     let type = this.get('_layerType');
     let leafletObject = this.get('_leafletObject');
 
-    if (!(Ember.isBlank(leafletObject) || Ember.isBlank(leafletObject))) {
-      let fields = Ember.A(Ember.getOwner(this).knownForType('layer', type).getLayerProperties(leafletObject));
-
-      this.set('fields', fields);
+    if (!(Ember.isBlank(leafletObject) || Ember.isBlank(type))) {
+      let layerClass = Ember.getOwner(this).knownForType('layer', type);
+      if (!Ember.isNone(layerClass)) {
+        this.set('fields', Ember.A(layerClass.getLayerProperties(leafletObject)));
+      }
     }
   },
 
@@ -123,11 +124,16 @@ export default Ember.Component.extend({
     @private
   */
   _parseFilter() {
-    let a = this.get('filterStringValue') || '';
-    a = a.replace(/[\n\r]/g, '');
+    let filterStringValue = this.get('filterStringValue') || '';
+    filterStringValue = filterStringValue.replace(/[\n\r]/g, '');
     let type = this.get('_layerType');
     this.set('_filterIsCorrect', false);
-    let filter = Ember.getOwner(this).knownForType('layer', type).parseFilter(a);
+    let layerClass = Ember.getOwner(this).knownForType('layer', type);
+    let filter;
+    if (!Ember.isNone(layerClass)) {
+      filter =  layerClass.parseFilter(filterStringValue);
+    }
+
     if (!Ember.isNone(filter)) {
       this.set('_filterIsCorrect', true);
     }
@@ -231,9 +237,14 @@ export default Ember.Component.extend({
       let type = this.get('_layerType');
       let leafletObject = this.get('_leafletObject');
       let selectedField = this.get('_selectedField');
-      let values = Ember.A(Ember.getOwner(this).knownForType('layer', type).getLayerPropertyValues(leafletObject, selectedField, count));
+      let layerClass = Ember.getOwner(this).knownForType('layer', type);
+      let values = Ember.A();
+      if (!Ember.isNone(layerClass)) {
+        values = Ember.A(layerClass.getLayerPropertyValues(leafletObject, selectedField, count));
+      }
+
       values.sort();
-      if (values.indexOf(undefined) >= 0 || values.indexOf(null) >= 0 || values.length === 0) {
+      if (values.indexOf(undefined) >= 0 || values.indexOf(null) >= 0) {
         values.removeObject(undefined);
         values.removeObject(null);
         values.unshiftObject(undefined);

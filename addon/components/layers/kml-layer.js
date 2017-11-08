@@ -36,17 +36,10 @@ export default BaseLayer.extend({
   createVectorLayer(options) {
     options = Ember.$.extend({}, this.get('options'), options);
     if (options.filter) {
-      options.filter = Ember.getOwner(this).knownForType('layer', 'kml').parseFilter(options.filter);
+      options.filter = Ember.getOwner(this).lookup('layer:kml').parseFilter(options.filter);
     }
 
-    let layerFunctions = this.get('layerFunctions');
-    let customFunction;
-    for (let i = 0; i < layerFunctions.length; i++) {
-      customFunction = Ember.get(options, layerFunctions[i]);
-      if (customFunction && typeof (customFunction) === 'string') {
-        Ember.set(options, layerFunctions[i], new Function('return ' + customFunction)());
-      }
-    }
+    this._convertLayerFunctions(options);
 
     let layerWithOptions = L.geoJSON([], options);
     Ember.assert('The option "kmlUrl" or "kmlString" should be defined!', Ember.isPresent(options.kmlUrl) || Ember.isPresent(options.kmlString));
