@@ -10,9 +10,6 @@ import {
   getLeafletCrs
 } from '../utils/leaflet-crs';
 
-// Proj4 CRS code.
-// Will be initialized in 'init' method.
-let proj4CrsCode = null;
 /**
   Component's CSS-classes names.
   JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
@@ -111,42 +108,6 @@ export default Ember.Component.extend(
     class: null,
 
     /**
-      Dialog's 'CRS' segment caption.
-
-      @property crsCaption
-      @type String
-      @default t('components.layers-dialogs.edit.crs.caption')
-    */
-    crsCaption: t('components.layers-dialogs.edit.crs.caption'),
-
-    /**
-      Dialog's 'CRS' segment's name textbox caption.
-
-      @property crsNameTextboxCaption
-      @type String
-      @default t('components.layers-dialogs.edit.crs.name-textbox.caption')
-    */
-    crsNameTextboxCaption: t('components.layers-dialogs.edit.crs.name-textbox.caption'),
-
-    /**
-      Dialog's 'CRS' segment's code textbox caption.
-
-      @property crsCodeTextboxCaption
-      @type String
-      @default t('components.layers-dialogs.edit.crs.code-textbox.caption')
-    */
-    crsCodeTextboxCaption: t('components.layers-dialogs.edit.crs.code-textbox.caption'),
-
-    /**
-      Dialog's 'CRS' segment's definition textarea caption.
-
-      @property crsDefinitionTextareaCaption
-      @type String
-      @default t('components.layers-dialogs.edit.crs.definition-textarea.caption')
-    */
-    crsDefinitionTextareaCaption: t('components.layers-dialogs.edit.crs.definition-textarea.caption'),
-
-    /**
       Dialog's 'Bounds' segment's caption.
 
       @property boundsSegmentCaption
@@ -209,17 +170,6 @@ export default Ember.Component.extend(
       @default null
     */
     layer: null,
-
-    /**
-      User friendly coordinate reference system (CRS) code.
-      For example 'ESPG:4326'.
-
-      @property _coordinateReferenceSystemCode
-      @type String
-      @default null
-      @private
-    */
-    _coordinateReferenceSystemCode: null,
 
     /**
       Available modes.
@@ -289,17 +239,6 @@ export default Ember.Component.extend(
       @private
     */
     _coordinateReferenceSystems: null,
-
-    /**
-      Array containing user friendly coordinate reference systems (CRS) codes.
-      For example ['ESPG:4326', 'PROJ4'].
-
-      @property _availableCoordinateReferenceSystemsCodes
-      @type String[]
-      @default null
-      @private
-    */
-    _availableCoordinateReferenceSystemsCodes: null,
 
     /**
       Tabular menu state.
@@ -381,17 +320,6 @@ export default Ember.Component.extend(
       @default ''
     */
     parametersModelProjection: '',
-
-    /**
-      Flag: indicates whether coordinate reference system (CRS) edit fields must be shown.
-
-      @property _availableCoordinateReferenceSystemsCodes
-      @type Boolean
-      @readonly
-    */
-    _showCoordinateReferenceSystemFields: Ember.computed('_coordinateReferenceSystemCode', function () {
-      return this.get('_coordinateReferenceSystemCode') === proj4CrsCode;
-    }),
 
     /**
       Flag: indicates whether 'main-group' of settings is available for the selected layer type.
@@ -777,24 +705,6 @@ export default Ember.Component.extend(
     },
 
     /**
-      Creates inner hash containing layer CRS settings for different CRS codes.
-
-      @method _createInnerCoordinateReferenceSystems
-      @private
-    */
-    _createInnerCoordinateReferenceSystems() {
-      let coordinateReferenceSystems = {};
-      Ember.A(this.get('_availableCoordinateReferenceSystemsCodes') || []).forEach((code) => {
-        coordinateReferenceSystems[code] = {
-          code: code === proj4CrsCode ? null : code,
-          definition: null
-        };
-      });
-
-      this.set('_coordinateReferenceSystems', coordinateReferenceSystems);
-    },
-
-    /**
       Creates inner hash containing layer settings for different layer types.
 
       @method _createInnerSettings
@@ -835,17 +745,6 @@ export default Ember.Component.extend(
 
       let crs = this.get('layer.coordinateReferenceSystem');
       crs = Ember.isNone(crs) ? {} : JSON.parse(crs);
-
-      let crsCode = Ember.get(crs, 'code');
-      if (!Ember.isBlank(crsCode) && !this.get('_availableCoordinateReferenceSystemsCodes').contains(crsCode)) {
-        // Unknown CRS code means that proj4 is used.
-        crsCode = proj4CrsCode;
-      }
-
-      this.set('_coordinateReferenceSystemCode', crsCode);
-
-      this._createInnerCoordinateReferenceSystems();
-      this.set(`_coordinateReferenceSystems.${crsCode}`, crs);
 
       let settings = this.get('layer.settings');
       let defaultSettings = Ember.isNone(type) ? {} : Ember.getOwner(this).knownForType('layer', type).createSettings();
@@ -888,7 +787,7 @@ export default Ember.Component.extend(
       @method _visibleDidChange
       @private
     */
-    _visibleDidChange: Ember.on('init', Ember.observer('visible', 'settings', 'name', 'coordinateReferenceSystem', function () {
+    _visibleDidChange: Ember.on('init', Ember.observer('visible', function () {
       if (this.get('visible') || this.get('visible') === undefined) {
         this._createInnerLayer();
       } else {
@@ -909,21 +808,6 @@ export default Ember.Component.extend(
 
       let type = this.get('_layer.type');
       this.set('_layer.settings', this.get(`_settings.${type}`));
-    }),
-
-    /**
-      Observes _coordinateReferenceSystemCode changes & changes link to object containing code-related CRS settings.
-
-      @method _coordinateReferenceSystemCodeDidChange
-      @private
-    */
-    _coordinateReferenceSystemCodeDidChange: Ember.observer('_coordinateReferenceSystemCode', function () {
-      if (Ember.isNone(this.get('_layer'))) {
-        return;
-      }
-
-      let code = this.get('_coordinateReferenceSystemCode');
-      this.set('_layer.coordinateReferenceSystem', this.get(`_coordinateReferenceSystems.${code}`));
     }),
 
     /**
@@ -951,24 +835,11 @@ export default Ember.Component.extend(
         }
       });
 
-      // Retrieve & remember constant (proj4 CRS code).
-      let proj4CrsFactory = Ember.getOwner(this).knownForType('coordinate-reference-system', 'proj4');
-      proj4CrsCode = Ember.get(proj4CrsFactory, 'code');
-
       // Available layers types for related dropdown.
       let owner = Ember.getOwner(this);
       this.set('_availableTypes', owner.knownNamesForType('layer'));
 
-      // Available CRS codes for related dropdown.
-      let crsFactories = owner.knownForType('coordinate-reference-system');
-      let crsFactoriesNames = owner.knownNamesForType('coordinate-reference-system');
-      this.set('_availableCoordinateReferenceSystemsCodes', Ember.A(crsFactoriesNames.map((crsFactoryName) => {
-        let crsFactory = Ember.get(crsFactories, crsFactoryName);
-        return Ember.get(crsFactory, 'code');
-      })));
-
       let availableEditModes = Ember.A();
-
       let editModesNames = owner.knownNamesForType('edit-mode');
       editModesNames.forEach((modeName) => {
         let editModeFactory = owner.knownForType('edit-mode', modeName);

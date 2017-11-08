@@ -60,18 +60,6 @@ export default {
       'caption': 'Добавить',
     }
   },
-  'crs': {
-    'caption': 'Система координат слоя (CRS)',
-    'name-textbox': {
-      'caption': 'Название проекции'
-    },
-    'code-textbox': {
-      'caption': 'Код'
-    },
-    'definition-textarea': {
-      'caption': 'Определение'
-    }
-  },
   'tabular-menu': {
     'main-tab': {
       'caption': 'Основные настройки'

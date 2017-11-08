@@ -28,6 +28,24 @@ export default BaseLayer.extend({
   ],
 
   /**
+    Property flag indicates than result layer will be showed as cluster layer.
+
+    @property clusterize
+    @type Boolean
+    @default false
+   */
+  clusterize: false,
+
+  /**
+    Property contains options for <a href="http://leaflet.github.io/Leaflet.markercluster/#options">L.markerClusterGroup</a>.
+
+    @property clusterOptions
+    @type Object
+    @default null
+    */
+  clusterOptions: null,
+
+  /**
     Features read format.
     Server responses format will rely on it.
 
@@ -107,7 +125,7 @@ export default BaseLayer.extend({
         showExisting: true
       });
 
-      layer = this.createLayer(options)
+      layer = this._createWFSLayer(options)
         .once('load', onLayerLoad)
         .once('error', onLayerError);
     });
@@ -133,14 +151,7 @@ export default BaseLayer.extend({
     });
   },
 
-  /**
-    Creates leaflet layer related to layer type.
-
-    @method createLayer
-    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
-    Leaflet layer or promise returning such layer.
-  */
-  createLayer(options) {
+  _createWFSLayer(options) {
     options = Ember.$.extend(true, {}, this.get('options'), options);
     if (options.filter && !(options.filter instanceof Element)) {
       let filter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(options.filter);
@@ -154,6 +165,36 @@ export default BaseLayer.extend({
     let featuresReadFormat = this.get('featuresReadFormat');
 
     return L.wfs(options, featuresReadFormat);
+  },
+
+  /**
+    Creates leaflet layer related to layer type.
+
+    @method createLayer
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    Leaflet layer or promise returning such layer.
+  */
+  createLayer(options) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      if (!this.get('clusterize')) {
+        resolve(this._createWFSLayer(options));
+        return;
+      }
+
+      let onLayerLoad = (e) => {
+        let cluster = L.markerClusterGroup(this.get('clusterOptions'));
+        cluster.addLayer(e.target);
+        resolve(cluster);
+      };
+
+      let onLayerError = (e) => {
+        reject(e);
+      };
+
+      this._createWFSLayer(options)
+        .once('load', onLayerLoad)
+        .once('error', onLayerError);
+    });
   },
 
   /**

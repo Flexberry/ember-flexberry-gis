@@ -2,8 +2,8 @@
          Theme Overrides
 *******************************/
 
-.ui.modal.flexberry-edit-map-dialog,
 .ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-edit-map-dialog,
 .ui.modal.flexberry-export-map-command-dialog,
 .ui.modal.flexberry-search-map-command-dialog,
 .ui.modal.flexberry-go-to-map-command-dialog {
@@ -146,7 +146,8 @@
 
 
 .ui.modal.flexberry-add-layer-dialog,
-.ui.modal.flexberry-edit-layer-dialog {
+.ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-edit-map-dialog {
     .ui.form {
         margin-top: 10px;
         margin-bottom: 10px;

@@ -96,9 +96,10 @@
                 {{scaleTextboxCaption}}
               </label>
               {{flexberry-dropdown-input
+                class="scale-value fluid"
+                direction="upward"
                 items=scales
                 value=_layer.scale
-                class="scale-value fluid"
                 onKeyDown=(action "scaleInputKeyDown")
                 inputPlaceholder=(t "forms.gis-search-form.scale-dropdown-input-placeholder")
                 inputTitle=(t "forms.gis-search-form.scale-dropdown-input-title")
@@ -109,45 +110,9 @@
       {{/if}}
       {{#if _crsSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.main-group.activeTab "crs-tab") "active"}}" data-tab="crs-tab">
-          <div class="field">
-            <label>
-              {{crsCaption}}
-            </label>
-            {{flexberry-dropdown
-              class="fluid"
-              items=_availableCoordinateReferenceSystemsCodes
-              value=_coordinateReferenceSystemCode
-            }}
-          </div>
-          {{#if _showCoordinateReferenceSystemFields}}
-            <div class="field">
-              <label>
-                {{crsNameTextboxCaption}}
-              </label>
-              {{flexberry-textbox
-                class="fluid"
-                value=_layer.coordinateReferenceSystem.name
-              }}
-            </div>
-            <div class="field">
-              <label>
-                {{crsCodeTextboxCaption}}
-              </label>
-              {{flexberry-textbox
-                class="fluid"
-                value=_layer.coordinateReferenceSystem.code
-              }}
-            </div>
-            <div class="field">
-              <label>
-                {{crsDefinitionTextareaCaption}}
-              </label>
-              {{flexberry-textarea
-                class="fluid"
-                value=_layer.coordinateReferenceSystem.definition
-              }}
-            </div>
-          {{/if}}
+          {{flexberry-edit-crs
+            coordinateReferenceSystem=_layer.coordinateReferenceSystem
+          }}
         </div>
       {{/if}}
       {{#if _layerSettingsAreAvailableForType}}
