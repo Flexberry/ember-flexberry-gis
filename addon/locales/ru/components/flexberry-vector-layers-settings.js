@@ -1,6 +1,5 @@
 export default {
   'outline': {
-    'caption': 'Стиль обводки',
     'settings': {
       'visibility': 'Наличие обводки',
       'сolour': 'Цвет обводки',
@@ -13,11 +12,11 @@ export default {
     }
   },
   'pouring': {
-    'caption': 'Стиль заливки',
     'settings': {
       'visibility': 'Наличие заливки',
       'сolour': 'Цвет заливки',
       'opacity': 'Прозрачность заливки'
     }
-  }
+  },
+  'caption': 'Стиль векторных слоев',
 };

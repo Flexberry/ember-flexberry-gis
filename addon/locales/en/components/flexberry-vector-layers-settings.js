@@ -1,6 +1,5 @@
 export default {
   'outline': {
-    'caption': 'Style outline',
     'settings': {
       'visibility': 'Visibility outline',
       'сolour': 'Colour outline',
@@ -14,11 +13,11 @@ export default {
     }
   },
   'pouring': {
-    'caption': 'Style pouring',
     'settings': {
       'visibility': 'Visibility pouring',
       'сolour': 'Colour pouring',
       'opacity': 'Opacity pouring'
     }
-  }
+  },
+  'caption': 'Style vector layers',
 };
