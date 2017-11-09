@@ -265,6 +265,7 @@ export default Ember.Component.extend({
       ctx.globalAlpha = opacityOutline;
       ctx.stroke();
     }
+
     this.sendAction('sendSettings', this.get('settings'));
   },
 
