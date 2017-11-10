@@ -383,7 +383,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       let editTools = this._getEditTools();
       Ember.set(this.get('leafletMap'), 'drawTools', editTools);
-      editTools.on('editable:drawing:end', this.disableDraw, { component: this, tabModel: tabModel });
+      let that = { component: this, tabModel: tabModel };
+      editTools.on('editable:drawing:end', this.disableDraw, that);
+      this.$().closest('body').off('keydown');
+      this.$().closest('body').on('keydown', ((e) => {
+        // Esc was pressed
+        if (e.which === 27) {
+          this.disableDraw.call(that);
+        }
+      }));
 
       switch (mapToolName) {
         case 'marker':
@@ -491,7 +499,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   disableDraw(e) {
     let that = this.component;
     let tabModel = this.tabModel;
-    let editedLayer = e.layer;
     let editTools = that.get('_editTools');
 
     if (!Ember.isNone(editTools)) {
@@ -499,6 +506,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       editTools.stopDrawing();
     }
 
-    that._showNewRowDialog(tabModel, editedLayer);
+    if (!Ember.isNone(e)) {
+      let editedLayer = e.layer;
+      that._showNewRowDialog(tabModel, editedLayer);
+    }
   }
 });
