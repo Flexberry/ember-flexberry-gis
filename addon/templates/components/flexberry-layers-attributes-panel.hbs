@@ -64,27 +64,36 @@
                   <i class="plus icon"></i>
                   <i class="dropdown icon"></i>
                   <div class="menu">
-                    {{!-- TODO Добавить условие на тип слоя --}}
-                    <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "marker"}}>
-                      <i class="flexberry-map-tool-icon marker icon"></i>
-                      Marker
-                    </a>
-                    <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "polyline"}}>
-                      <i class="flexberry-map-tool-icon empty star icon"></i>
-                      Polyline
-                    </a>
-                    <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "circle"}}>
-                      <i class="flexberry-map-tool-icon circle icon"></i>
-                      Circle
-                    </a>
-                    <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "rectangle"}}>
-                      <i class="flexberry-map-tool-icon square icon"></i>
-                      Rectangle
-                    </a>
-                    <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "polygon"}}>
-                      <i class="flexberry-map-tool-icon star icon"></i>
-                      Polygon
-                    </a>
+                    {{#if (array-contains tabModel.availableDrawTools "marker")}}
+                      <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "marker"}}>
+                        <i class="flexberry-map-tool-icon marker icon"></i>
+                        Marker
+                      </a>
+                    {{/if}}
+                    {{#if (array-contains tabModel.availableDrawTools "polyline")}}
+                      <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "polyline"}}>
+                        <i class="flexberry-map-tool-icon empty star icon"></i>
+                        Polyline
+                      </a>
+                    {{/if}}
+                    {{#if (array-contains tabModel.availableDrawTools "circle")}}
+                      <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "circle"}}>
+                        <i class="flexberry-map-tool-icon circle icon"></i>
+                        Circle
+                      </a>
+                    {{/if}}
+                    {{#if (array-contains tabModel.availableDrawTools "rectangle")}}
+                      <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "rectangle"}}>
+                        <i class="flexberry-map-tool-icon square icon"></i>
+                        Rectangle
+                      </a>
+                    {{/if}}
+                    {{#if (array-contains tabModel.availableDrawTools "polygon")}}
+                      <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "polygon"}}>
+                        <i class="flexberry-map-tool-icon star icon"></i>
+                        Polygon
+                      </a>
+                    {{/if}}
                   </div>
                 </div>
               </div>

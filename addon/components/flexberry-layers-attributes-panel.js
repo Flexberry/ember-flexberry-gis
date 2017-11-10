@@ -48,6 +48,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let properties = Ember.A();
         let leafletObject = Ember.get(item, 'leafletObject');
 
+        let availableDrawTools = this._getAvailableDrawTools(Ember.get(leafletObject, 'readFormat.featureType.geometryFields'));
+
         leafletObject.eachLayer((layer) => {
           let props = Ember.get(layer, 'feature.properties');
           let propId = Ember.guidFor(props);
@@ -92,7 +94,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           featureLink: featureLink,
           propertyLink: propertyLink,
           header: header,
-          properties: properties
+          properties: properties,
+          availableDrawTools: availableDrawTools
         });
       });
     }
@@ -379,18 +382,18 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     onGeometryTypeSelect(tabModel, mapToolName) {
-      // TODO add event listener on mapTool.enable event - to disable drawing tool when user click on any map tool.
-
       let editTools = this._getEditTools();
       Ember.set(this.get('leafletMap'), 'drawTools', editTools);
       let that = { component: this, tabModel: tabModel };
-      editTools.on('editable:drawing:end', this.disableDraw, that);
+      editTools.on('editable:drawing:end', this._disableDraw, that);
       this.$().closest('body').on('keydown', ((e) => {
         // Esc was pressed
         if (e.which === 27) {
-          this.disableDraw.call(that);
+          this._disableDraw.call(that);
         }
       }));
+
+      // TODO add event listener on mapTool.enable event - to disable drawing tool when user click on any map tool.
 
       switch (mapToolName) {
         case 'marker':
@@ -495,7 +498,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     this.set('_newRowDialogIsVisible', true);
   },
 
-  disableDraw(e) {
+  _disableDraw(e) {
     let that = this.component;
     let tabModel = this.tabModel;
     let editTools = that.get('_editTools');
@@ -503,7 +506,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     that.$().closest('body').off('keydown');
 
     if (!Ember.isNone(editTools)) {
-      editTools.off('editable:drawing:end', that.disableDraw, this);
+      editTools.off('editable:drawing:end', that._disableDraw, this);
       editTools.stopDrawing();
     }
 
@@ -511,5 +514,27 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let editedLayer = e.layer;
       that._showNewRowDialog(tabModel, editedLayer);
     }
+  },
+
+  _getAvailableDrawTools(geometryFields) {
+    if (!Ember.isNone(geometryFields)) {
+      let firstField = Object.keys(geometryFields)[0];
+      switch (geometryFields[firstField]) {
+        case 'PointPropertyType':
+        case 'MultiPointPropertyType':
+          return ['marker'];
+
+        case 'LineStringPropertyType':
+        case 'MultiLineStringPropertyType':
+          return ['polyline'];
+
+        case 'MultiSurfacePropertyType':
+        case 'PolygonPropertyType':
+        case 'MultiPolygonPropertyType':
+          return ['circle', 'rectangle', 'polygon'];
+      }
+    }
+
+    return ['marker', 'circle', 'polyline', 'rectangle', 'polygon'];
   }
 });
