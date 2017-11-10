@@ -154,7 +154,7 @@ export default BaseLayer.extend({
     options = Ember.$.extend(true, {}, this.get('options'), options);
     let featuresReadFormat = this.get('featuresReadFormat');
 
-    return L.wfs(options, featuresReadFormat);
+    return L.wfst(options, featuresReadFormat);
   },
 
   /**
