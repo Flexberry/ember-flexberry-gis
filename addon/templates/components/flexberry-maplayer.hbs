@@ -51,14 +51,6 @@
               click=(action "onBoundsButtonClick")
             }}
           {{/if}}
-          {{#if _objectsEditOperationIsAvailable}}
-            {{flexberry-button
-              tooltip=(if _objectsEditDialogHasBeenRequested "Выключить редактирование" "Включить редактирование")
-              class=(concat flexberryClassNames.objectsEditButton " right floated " flexberryClassNames.preventExpandCollapse)
-              iconClass=(concat (if _objectsEditDialogHasBeenRequested "map outline" "map") " icon")
-              click=(action "onObjectsEditButtonClick")
-            }}
-          {{/if}}
         {{/if}}
 
         {{!--

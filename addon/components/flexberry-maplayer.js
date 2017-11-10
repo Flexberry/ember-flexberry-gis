@@ -25,7 +25,6 @@ import layout from '../templates/components/flexberry-maplayer';
   @property {String} flexberryClassNames.addButton Component's 'add' button CSS-class name ('flexberry-maplayer-add-button').
   @property {String} flexberryClassNames.editButton Component's 'edit' button CSS-class name ('flexberry-maplayer-edit-button').
   @property {String} flexberryClassNames.removeButton Component's 'remove' button CSS-class name ('flexberry-maplayer-remove-button').
-  @property {String} flexberryClassNames.objectsEditButton Component's 'objects edit' button CSS-class name ('flexberry-maplayer-objects-edit-button').
   @property {String} flexberryClassNames.caption Component's 'name' label CSS-class name ('flexberry-maplayer-caption-label').
   @property {String} flexberryClassNames.preventExpandCollapse Component's CSS-class name to prevent nodes expand/collapse animation ('flexberry-treenode-prevent-expand-collapse').
   @readonly
@@ -44,7 +43,6 @@ const flexberryClassNames = {
   addButton: flexberryClassNamesPrefix + '-add-button',
   editButton: flexberryClassNamesPrefix + '-edit-button',
   removeButton: flexberryClassNamesPrefix + '-remove-button',
-  objectsEditButton: flexberryClassNamesPrefix + '-objects-edit-button',
   caption: flexberryClassNamesPrefix + '-caption-label',
   legendToggler: flexberryClassNamesPrefix + '-legend-toggler',
   preventExpandCollapse: FlexberryTreenodeComponent.flexberryClassNames.preventExpandCollapse,
@@ -230,29 +228,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
       return Ember.get(layerClassFactory, 'iconClass');
     }),
-
-    /**
-      Flag: indicates whether objects edit operation is allowed for layer.
-
-      @property _objectsEditOperationIsAvailable
-      @type boolean
-      @readOnly
-      @private
-    */
-    _objectsEditOperationIsAvailable: Ember.computed('_layerClassFactory', function() {
-      let layerClassFactory = this.get('_layerClassFactory');
-
-      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('objects-edit');
-    }),
-
-    /**
-      Flag: indicates whether objects edit dialog has been already requested by user or not.
-
-      @property _objectsEditDialogHasBeenRequested
-      @type boolean
-      @private
-    */
-    _objectsEditDialogHasBeenRequested: false,
 
     /**
       Flag: indicates whether add operation is allowed for layer.
@@ -564,18 +539,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       },
 
       /**
-        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.objectsEdit:method"}}'objectsEdit' action{{/crossLink}}.
-
-        @method actions.onObjectsEditButtonClick
-        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
-        which describes button's 'click' event.
-      */
-      onObjectsEditButtonClick(...args) {
-        this.sendAction('objectsEdit', ...args);
-        this.set('_objectsEditDialogHasBeenRequested', !this.get('_objectsEditDialogHasBeenRequested'));
-      },
-
-      /**
         Handles add button's 'click' event.
         Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
 
@@ -746,13 +709,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @param {Object} e Action's event object.
     */
 
-    /**
-      Component's action invoking when user wants to edit objects of current layer.
-
-      @method sendingActions.objectsEdit
-      @param {Object} e Action's event object.
-    */
-    
     /**
       Component's action invoking when user wants to look at attributes of current layer.
 

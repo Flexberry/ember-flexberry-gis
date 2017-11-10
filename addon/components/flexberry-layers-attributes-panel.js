@@ -14,6 +14,15 @@ import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
+  /**
+    Leaflet.Editable drawing tools instance.
+
+    @property _editTools
+    @type <a href="http://leaflet.github.io/Leaflet.Editable/doc/api.html">L.Ediatble</a>
+    @default null
+    @private
+  */
+  _editTools: null,
 
   /**
     Computed property that builds tab models collection from items.
@@ -62,6 +71,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           _top: 5,
           _skip: 0,
           _selectedRows: {},
+          _editedRows: {},
           _selectedRowsCount: Ember.computed('_selectedRows', function () {
             let selectedRows = Ember.get(this, '_selectedRows');
             return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
@@ -339,14 +349,108 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           }
         }
       }
+    },
+
+    onRowGeometryEdit(tabModel, rowId) {
+      // Toggle row geometry editing
+      let editedRows = Ember.get(tabModel, '_editedRows');
+      let edit = Ember.get(editedRows, rowId) || false;
+      edit = !edit;
+      Ember.set(editedRows, rowId, edit);
+      Ember.set(tabModel, '_editedRows', editedRows);
+      tabModel.notifyPropertyChange('_editedRows');
+
+      // Enable feature editing
+      let layer = Ember.get(tabModel, `featureLink.${rowId}`);
+      let leafletMap = this.get('leafletMap');
+
+      let editTools = this._getEditTools();
+      Ember.set(leafletMap, 'editTools', editTools);
+
+      if (edit) {
+        layer.enableEdit(leafletMap);
+
+        // TODO add begin editing event binding - to check that geomentry was changed
+      } else {
+        layer.disableEdit();
+
+        // TODO add stop editing event binding
+      }
+    },
+
+    onGeometryTypeSelect(tabModel, mapToolName) {
+      // TODO add event listener on mapTool.enable event - to disable drawing tool when user click on any map tool.
+
+      let editTools = this._getEditTools();
+      Ember.set(this.get('leafletMap'), 'drawTools', editTools);
+      editTools.on('editable:drawing:end', this.disableDraw, { component: this, tabModel: tabModel });
+
+      switch (mapToolName) {
+        case 'marker':
+          editTools.startMarker();
+          break;
+        case 'polyline':
+          editTools.startPolyline();
+          break;
+        case 'circle':
+          editTools.startCircle();
+          break;
+        case 'rectangle':
+          editTools.startRectangle();
+          break;
+        case 'polygon':
+          editTools.startPolygon();
+          break;
+      }
+
+    },
+
+    onSaveChangesClick(tabModel) {
+      // TODO добавить обработку сохранения изменений
+      // layer.save()...
+
+    },
+
+    onNewRowDialogApprove(data) {
+      let tabModel = this.get('_newRowTabModel');
+      let layer = this.get('_newRowLayer');
+
+      Ember.set(layer, 'feature', { type: 'Feature' });
+      Ember.set(layer.feature, 'properties', data);
+      Ember.set(layer.feature, 'leafletLayer', layer);
+      layer.setStyle(Ember.get(tabModel, 'leafletObject.options.style'));
+      tabModel.leafletObject.addLayer(layer);
+      layer.disableEdit();
+
+      let propId = Ember.guidFor(data);
+
+      // the hash containing guid of properties object and link to feature layer
+      Ember.set(tabModel, `featureLink.${propId}`, layer);
+
+      // the hash containing guid of properties object and link to that object
+      Ember.set(tabModel, `propertyLink.${propId}`, data);
+      tabModel.properties.pushObject(data);
+    },
+
+    onNewRowDialogDeny() {
+      let layer = this.get('_newRowLayer');
+      this.get('leafletMap').removeLayer(layer);
+
+      this.set('_newRowTabModel', null);
+      this.set('_newRowLayer', null);
     }
   },
 
-  didRender() {
-    this._super(...arguments);
+  _getEditTools() {
+    let leafletMap = this.get('leafletMap');
 
-    // Initialize Semantic UI accordion.
-    //this.$('.ui.accordion').accordion();
+    let editTools = this.get('_editTools');
+    if (Ember.isNone(editTools)) {
+      editTools = new L.Editable(leafletMap);
+      this.set('_editTools', editTools);
+    }
+
+    return editTools;
   },
 
   /**
@@ -362,5 +466,39 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       opacity: 1,
       fillOpacity: 0.3
     });
+  },
+
+  _showNewRowDialog(tabModel, layer) {
+    let fields = Ember.get(tabModel, 'leafletObject.readFormat.featureType.fields');
+    let fieldTypes = Ember.get(tabModel, 'leafletObject.readFormat.featureType.fieldTypes');
+    let data = Object.keys(fields).reduce((result, item) => {
+      result[item] = null;
+      return result;
+    }, {});
+    this.set('_newRowTabModel', tabModel);
+    this.set('_newRowLayer', layer);
+    this.set('_newRowData', data);
+    this.set('_newRowFieldTypes', fieldTypes);
+    this.set('_newRowFieldParsers', fields);
+
+    // Include dialog to markup.
+    this.set('_newRowDialogHasBeenRequested', true);
+
+    // Show dialog.
+    this.set('_newRowDialogIsVisible', true);
+  },
+
+  disableDraw(e) {
+    let that = this.component;
+    let tabModel = this.tabModel;
+    let editedLayer = e.layer;
+    let editTools = that.get('_editTools');
+
+    if (!Ember.isNone(editTools)) {
+      editTools.off('editable:drawing:end', that.disableDraw, this);
+      editTools.stopDrawing();
+    }
+
+    that._showNewRowDialog(tabModel, editedLayer);
   }
 });

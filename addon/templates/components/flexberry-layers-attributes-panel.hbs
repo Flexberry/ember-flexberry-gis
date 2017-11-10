@@ -26,98 +26,113 @@
     class={{concat "ui bottom attached tab segment bottompanel-tab-data-panel"
     (if (eq selectedTabIndex index) " active" "")}}>
 
-    <div class="ui fluid accordion">
+      {{#flexberry-table
+        allowEdit="true"
+        perPageAvailable=false
+        model=tabModel.propertiesToShow
+        header=tabModel.header
+        recordsTotalCount=tabModel.properties.length
+        fieldTypes=tabModel.leafletObject.readFormat.featureType.fieldTypes
+        getData=(action "onTabGetData" tabModel)}}
 
-      <div class="active title">
-        <i class="dropdown icon"></i>
-        Геометрия слоя
-      </div>
-      <div class="active content">
-        <div class="buttons">
-          {{flexberry-button
-            iconClass="flexberry-map-tool-icon marker icon"
-          }}
-          {{flexberry-button
-            iconClass="flexberry-map-tool-icon empty star icon"
-          }}
-          {{flexberry-button
-            iconClass="flexberry-map-tool-icon square icon"
-          }}
-        </div>
-      </div>
-
-      <div class="title">
-        <i class="dropdown icon"></i>
-        Свойства слоя
-      </div>
-      <div class="content">
-        {{#flexberry-table
-          allowEdit="true"
-          perPageAvailable=false
-          model=tabModel.propertiesToShow
-          header=tabModel.header
-          recordsTotalCount=tabModel.properties.length
-          fieldTypes=tabModel.leafletObject.readFormat.featureType.fieldTypes
-          getData=(action "onTabGetData" tabModel)}}
-
-          {{#block-slot "head-block"}}
-            <div class="bottompanel-tab-head-panel">
-              {{flexberry-checkbox
-                label=(if tabModel.selectAll (t "components.flexberry-layers-attributes-panel.clear") (t "components.flexberry-layers-attributes-panel.select-all"))
-                value=tabModel.selectAll
-                onChange=(action "onSelectAllClick" tabModel)
-                class=(if (eq tabModel.properties.length 0) "disabled") }}
-              <div class="buttons">
-                {{flexberry-button
-                  tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
-                  click=(action "onFindItemClick" tabModel)
-                  iconClass="marker icon"
-                  readonly=(eq tabModel._selectedRowsCount 0) }}
-                {{flexberry-button
-                  tooltip=(t "components.flexberry-layers-attributes-panel.clear-found")
-                  click=(action "onClearFoundItemClick")
-                  iconClass="trash icon"
-                }}
-                {{flexberry-button
-                  tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
-                  click=(action "onDeleteItemClick" tabModel)
-                  iconClass="remove icon"
-                  readonly=(eq tabModel._selectedRowsCount 0) }}
-              </div>
-            </div>
-          {{/block-slot}}
-
-          {{#block-slot "column-header-head-0"}}
-            <th class="narrow">{{t "components.flexberry-layers-attributes-panel.select-item"}}</th>
-          {{/block-slot}}
-
-          {{#block-slot "column-header-head-1"}}
-            <th class="narrow">{{t "components.flexberry-layers-attributes-panel.edit-item"}}</th>
-          {{/block-slot}}
-
-          {{#block-slot "column-cell-head-0" as |row|}}
-            <td class="narrow">
+        {{#block-slot "head-block"}}
+          <div class="bottompanel-tab-head-panel">
             {{flexberry-checkbox
-              value=(get tabModel._selectedRows (ember-guid row))
-              onChange=(action "onRowSelect" tabModel (ember-guid row)) }}
-            </td>
-          {{/block-slot}}
-
-          {{#block-slot "column-cell-head-1" as |row|}}
-            <td>
+              label=(if tabModel.selectAll (t "components.flexberry-layers-attributes-panel.clear") (t "components.flexberry-layers-attributes-panel.select-all"))
+              value=tabModel.selectAll
+              onChange=(action "onSelectAllClick" tabModel)
+              class=(if (eq tabModel.properties.length 0) "disabled") }}
+            <div class="buttons">
               {{flexberry-button
-                class="small-button"
-                tooltip=(t "components.flexberry-layers-attributes-panel.edit-item")
-                click=(action "onRowEdit" tabModel (ember-guid row))
-                iconClass="edit icon"
+                tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
+                click=(action "onFindItemClick" tabModel)
+                iconClass="marker icon"
+                readonly=(eq tabModel._selectedRowsCount 0) }}
+              {{flexberry-button
+                tooltip=(t "components.flexberry-layers-attributes-panel.clear-found")
+                click=(action "onClearFoundItemClick")
+                iconClass="trash icon"
               }}
-            </td>
-          {{/block-slot}}
+              {{flexberry-button
+                tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
+                click=(action "onDeleteItemClick" tabModel)
+                iconClass="remove icon"
+                readonly=(eq tabModel._selectedRowsCount 0) }}
 
-        {{/flexberry-table}}
-      </div>
+              <div style="height: 35px; color: #7ba7d9; background: #fff; border-radius: 5px; border: 1px solid #7ba7d9; display: inline-block;">
+                <div class="ui simple dropdown item" style="line-height: 30px; margin: 1.8px 5px;">
+                  <i class="plus icon"></i>
+                  <i class="dropdown icon"></i>
+                  <div class="menu">
+                    {{!-- TODO Добавить условие на тип слоя --}}
+                    <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "marker"}}>
+                      <i class="flexberry-map-tool-icon marker icon"></i>
+                      Marker
+                    </a>
+                    <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "polyline"}}>
+                      <i class="flexberry-map-tool-icon empty star icon"></i>
+                      Polyline
+                    </a>
+                    <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "circle"}}>
+                      <i class="flexberry-map-tool-icon circle icon"></i>
+                      Circle
+                    </a>
+                    <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "rectangle"}}>
+                      <i class="flexberry-map-tool-icon square icon"></i>
+                      Rectangle
+                    </a>
+                    <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "polygon"}}>
+                      <i class="flexberry-map-tool-icon star icon"></i>
+                      Polygon
+                    </a>
+                  </div>
+                </div>
+              </div>
+              {{flexberry-button
+                tooltip="Сохранить изменения"
+                click=(action "onSaveChangesClick" tabModel)
+                iconClass="save icon"
+                readonly=false
+              }}
 
-    </div>
+            </div>
+          </div>
+        {{/block-slot}}
+
+        {{#block-slot "column-header-head-0"}}
+          <th class="narrow">{{t "components.flexberry-layers-attributes-panel.select-item"}}</th>
+        {{/block-slot}}
+
+        {{#block-slot "column-header-head-1"}}
+          <th class="narrow">{{t "components.flexberry-layers-attributes-panel.edit-item"}}</th>
+        {{/block-slot}}
+
+        {{#block-slot "column-cell-head-0" as |row|}}
+          <td class="narrow">
+          {{flexberry-checkbox
+            value=(get tabModel._selectedRows (ember-guid row))
+            onChange=(action "onRowSelect" tabModel (ember-guid row)) }}
+          </td>
+        {{/block-slot}}
+
+        {{#block-slot "column-cell-head-1" as |row|}}
+          <td>
+            {{flexberry-button
+              class="small-button"
+              tooltip=(t "components.flexberry-layers-attributes-panel.edit-item")
+              click=(action "onRowEdit" tabModel (ember-guid row))
+              iconClass="edit icon"
+            }}
+            {{flexberry-button
+              class=(concat "small-button" (if (get tabModel._editedRows (ember-guid row)) " active" ""))
+              tooltip="Редактировать геометрию"
+              click=(action "onRowGeometryEdit" tabModel (ember-guid row))
+              iconClass="move icon"
+            }}
+          </td>
+        {{/block-slot}}
+
+      {{/flexberry-table}}
 
   </div>
   {{/each}}
@@ -135,5 +150,16 @@
     fieldTypes=_editRowFieldTypes
     fieldParsers=_editRowFieldParsers
     approve=(action "onEditRowDialogApprove")
+  }}
+{{/if}}
+{{#if _newRowDialogHasBeenRequested}}
+  {{component "layers-dialogs/attributes/edit"
+    class=flexberryClassNames.addDialog
+    visible=_newRowDialogIsVisible
+    data=_newRowData
+    fieldTypes=_newRowFieldTypes
+    fieldParsers=_newRowFieldParsers
+    approve=(action "onNewRowDialogApprove")
+    deny=(action "onNewRowDialogDeny")
   }}
 {{/if}}
