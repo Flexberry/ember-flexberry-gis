@@ -385,7 +385,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(this.get('leafletMap'), 'drawTools', editTools);
       let that = { component: this, tabModel: tabModel };
       editTools.on('editable:drawing:end', this.disableDraw, that);
-      this.$().closest('body').off('keydown');
       this.$().closest('body').on('keydown', ((e) => {
         // Esc was pressed
         if (e.which === 27) {
@@ -500,6 +499,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     let that = this.component;
     let tabModel = this.tabModel;
     let editTools = that.get('_editTools');
+
+    that.$().closest('body').off('keydown');
 
     if (!Ember.isNone(editTools)) {
       editTools.off('editable:drawing:end', that.disableDraw, this);
