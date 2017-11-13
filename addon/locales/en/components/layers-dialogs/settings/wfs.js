@@ -37,5 +37,8 @@ export default {
     'weight-textbox': {
       'caption': 'Weight'
     }
-  }
+  },
+  'clusterize': {
+    'caption': 'Clusterize'
+  },
 };

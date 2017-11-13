@@ -9,20 +9,7 @@
     onShow=(action "onSuccessMessageShow")
     onHide=(action "onSuccessMessageHide")
   }}
-  {{ui-message
-    type="error"
-    closeable=true
-    visible=showFormErrorMessage
-    caption=formErrorMessageCaption
-    message=formErrorMessage
-    onShow=(action "onErrorMessageShow")
-    onHide=(action "onErrorMessageHide")
-  }}
-  <div class="field">
-    <div class="sixteen wide">
-      {{flexberry-validationsummary errors=model.errors}}
-    </div>
-  </div>
+  {{flexberry-error error=error}}
   <div class="field">
     <div class="flexberry-edit-panel">
       {{#unless readonly}}

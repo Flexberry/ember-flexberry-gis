@@ -78,7 +78,6 @@ export default Ember.Route.extend({
       let controller = this.get('controller');
       let tabSettings = controller.get('tabSettings');
       controller.set('error', null);
-      controller.set('showError', false);
       controller.set('isLoading', true);
 
       // wheter it's a request from a specific control or a common one
@@ -94,7 +93,6 @@ export default Ember.Route.extend({
         }).catch((error) => {
           let controller = this.get('controller');
           controller.set('error', error);
-          controller.set('showError', true);
         }).finally(() => {
           this.get('controller').set('isLoading', false);
         });
@@ -109,7 +107,6 @@ export default Ember.Route.extend({
         }).catch((error) => {
           let controller = this.get('controller');
           controller.set('error', error);
-          controller.set('showError', true);
         }).finally(() => {
           this.get('controller').set('isLoading', false);
         });

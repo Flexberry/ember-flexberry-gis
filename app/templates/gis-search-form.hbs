@@ -2,15 +2,7 @@
   {{t "forms.gis-search-form.header"}}
 </h3>
 <form class="ui form flexberry-vertical-form gis-search-form" role="form">
-  {{ui-message
-    type="error"
-    closeable=true
-    visible=showError
-    caption=errorCaption
-    message=errorMessage
-    onShow=(action "onErrorShow")
-    onHide=(action "onErrorHide")
-  }}
+  {{flexberry-error error=error}}
   <div class="ui fluid action input">
     {{input
       type="text"

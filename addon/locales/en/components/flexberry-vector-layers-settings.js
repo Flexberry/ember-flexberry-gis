@@ -9,7 +9,6 @@ export default {
       'corners': 'The shape of the angles of the lines outline',
       'hatching': 'Hatching outline',
       'displacement': 'Outline displacement relative to the starting position',
-
     }
   },
   'pouring': {
