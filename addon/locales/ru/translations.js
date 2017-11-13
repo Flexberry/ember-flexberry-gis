@@ -111,12 +111,8 @@ export default {
     'map-commands': MapCommandsComponents,
     'flexberry-mapinfo': FlexberryMapInfoComponent,
     'flexberry-boundingbox': FlexberryBoundingboxComponent,
-<<<<<<< HEAD
     'flexberry-vector-layers-settings': FlexberryVectorLayersSettingsComponent,
-=======
-
     'flexberry-edit-crs': FlexberryEditCrsComponent
->>>>>>> develop
   },
 
   'map-tools': {
