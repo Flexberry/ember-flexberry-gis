@@ -4,20 +4,19 @@
       <label>
         {{t "components.charts.index-chart.typr-charts.caption"}}
       </label>
-    {{flexberry-dropdown
-      items=_availableTypes
-      value=_selectedModeType
-    }}
+      {{flexberry-dropdown
+        items=_availableTypes
+        value=_selectedModeType
+      }}
     </div>
     <div class="field">
       <label>
         {{t "components.charts.index-chart.caption-charts"}}
       </label>
-    {{flexberry-textbox
-      value=_captionChart
-    }}
+      {{flexberry-textbox
+        value=_captionChart
+      }}
     </div>
-
     <div class="ui grid">
       <div class="column">
         {{#if _selectedModeType}}
@@ -30,19 +29,17 @@
         {{/if}}
       </div>
     </div>
-
     <div class="ui grid">
       <div class="right aligned column">
         {{flexberry-button
           caption="Сформировать диаграмму"
-          click=(action "onClick")
+          click=(action "onGenerateChart")
         }}
       </div>
     </div>
   </div>
-
   <div class="nine wide column">
-    <div class="containerCR" style="width:100%; height:500px;">
+    <div class="containerCR">
     </div>
   </div>
 </div>

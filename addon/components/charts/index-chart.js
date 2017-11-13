@@ -1,7 +1,23 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 import layout from '../../templates/components/charts/index-chart';
 
+/**
+  Component for charting.
+
+  @class IndexChartComponent
+  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+*/
+
 export default Ember.Component.extend({
+  /**
+    Reference to component's template.
+  */
+  layout,
+
   /**
     Editing chart type.
 
@@ -36,13 +52,7 @@ export default Ember.Component.extend({
     @type Object[]
     @default null
   */
-  _isObjProperties: [{ 'name':'Tokyo', 'name1':'New York1', 'rainfall': '60.4', 'countP': '100' },
-      { 'name':'New York', 'name1':'London1', 'rainfall': '38.8', 'countP': '200' },
-      { 'name':'London', 'name1':'Berlin1', 'rainfall': '52.4', 'countP': '300' },
-      { 'name':'Berlin', 'name1':'Perm1', 'rainfall': '-105.0', 'countP': '400' },
-      { 'name':'Perm', 'name1':'Paris1', 'rainfall': '216.4', 'countP': '500' },
-      { 'name':'Paris', 'name1':'Tokyo1', 'rainfall': '33.2', 'countP': '600' }
-  ],
+  _isObjProperties: null,
 
   /**
     Initializes component.
@@ -68,19 +78,14 @@ export default Ember.Component.extend({
 
     /**
       Handles clicks on button.
-      Invokes {{#crossLink "type-chart/sendingActions.onClick:method"}}'onClick' action{{/crossLink}}.
+      Invokes {{#crossLink "type-chart/sendingActions.onGenerateChart:method"}}'onGenerateChart' action{{/crossLink}}.
 
-      @method actions.onClick
+      @method actions.onGenerateChart
     */
-    onClick() {
+    onGenerateChart() {
       let json = this.get('getJsonCharts')();
 
       this.$('.containerCR').highcharts(json);
     }
-  },
-
-  /**
-    Reference to component's template.
-  */
-  layout
+  }
 });

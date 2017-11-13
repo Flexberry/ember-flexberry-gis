@@ -23,7 +23,7 @@ import FlexberryEditCrsComponent from './components/flexberry-edit-crs';
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
 import GISSearchForm from './forms/gis-search-form';
-import enCharts from './components/charts';
+import Charts from './components/charts';
 
 export default {
   'models': {
@@ -112,7 +112,7 @@ export default {
     'flexberry-mapinfo': FlexberryMapInfoComponent,
     'flexberry-boundingbox': FlexberryBoundingboxComponent,
 
-    'charts': enCharts,
+    'charts': Charts,
 
     'flexberry-edit-crs': FlexberryEditCrsComponent
   },

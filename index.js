@@ -114,7 +114,7 @@ module.exports = {
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.js');
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.css');
 
-    // LOAD HIGHCHARTS
+    // Load highcharts
     app.import(app.bowerDirectory + '/highcharts/highcharts.js');
 
     // ESRI.terraformer

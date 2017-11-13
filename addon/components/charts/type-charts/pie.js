@@ -1,7 +1,23 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 import layout from '../../../templates/components/charts/type-charts/pie';
 
+/**
+  Component for type chart pie.
+
+  @class PieComponent
+  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+*/
+
 export default Ember.Component.extend({
+  /**
+    Reference to component's template.
+  */
+  layout,
+
   /**
     Available field name sector chart.
 
@@ -137,18 +153,12 @@ export default Ember.Component.extend({
       data: dataSeries
     }];
 
-    let json = {};
-    json.chart = chart;
-    json.title = title;
-    json.tooltip = tooltip;
-    json.series = series;
-    json.plotOptions = plotOptions;
-
-    return json;
-  },
-
-  /**
-    Reference to component's template.
-  */
-  layout
+    return {
+      chart,
+      title,
+      tooltip,
+      plotOptions,
+      series
+    };
+  }
 });

@@ -1,7 +1,23 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 import layout from '../../../templates/components/charts/type-charts/column';
 
+/**
+  Component for type chart column.
+
+  @class ColumnComponent
+  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+*/
+
 export default Ember.Component.extend({
+  /**
+    Reference to component's template.
+  */
+  layout,
+
   /**
     Available field name xAxis chart.
 
@@ -135,16 +151,13 @@ export default Ember.Component.extend({
       data: dataSeries
     }];
 
-    let json = {};
-    json.chart = chart;
-    json.title = title;
-    json.tooltip = tooltip;
-    json.xAxis = xAxis;
-    json.series = series;
-    json.plotOptions = plotOptions;
-
-    return json;
-  },
-
-  layout
+    return {
+      chart,
+      title,
+      xAxis,
+      tooltip,
+      plotOptions,
+      series
+    };
+  }
 });
