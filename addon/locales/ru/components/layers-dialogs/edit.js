@@ -79,6 +79,9 @@ export default {
     'display-settings-tab': {
       'caption': 'Настройки отображения'
     },
+    'style-settings-tab': {
+      'caption': 'Настройки стиля поля'
+    },
     'legend-settings-tab': {
       'caption': 'Настройки легенды'
     },

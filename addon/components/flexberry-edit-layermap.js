@@ -259,6 +259,16 @@ export default Ember.Component.extend(
     _leafletObject: null,
 
     /**
+      Style vector layer.
+
+      @property _styleSettings
+      @type Object
+      @default null
+      @private
+    */
+    _styleSettings: null,
+
+    /**
       Leaflet map.
 
       @property leafletMap
@@ -407,12 +417,14 @@ export default Ember.Component.extend(
       '_identifySettingsAreAvailableForType',
       '_searchSettingsAreAvailableForType',
       '_displaySettingsAreAvailableForType',
+      '_styleSettingsAreAvailableForType',
       '_legendSettingsAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
         return this.get('_identifySettingsAreAvailableForType') ||
           this.get('_searchSettingsAreAvailableForType') ||
           this.get('_displaySettingsAreAvailableForType') ||
+          this.get('_styleSettingsAreAvailableForType') ||
           this.get('_legendSettingsAreAvailableForType');
       }
     ),
@@ -472,6 +484,21 @@ export default Ember.Component.extend(
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
       return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
+    }),
+
+    /**
+      Flag: indicates whether 'style' operation settings are available for the selected layer type.
+
+      @property _styleSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _styleSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('style');
     }),
 
     /**
@@ -684,6 +711,16 @@ export default Ember.Component.extend(
       */
       allowShowCheckboxChange(...args) {
         this.sendAction('allowShowLayerLinkCheckboxChange', ...args);
+      },
+
+      /**
+        Change style vector layer.
+
+        @method actions.onChangeSettings
+        @param {Object} settings style vector layer.
+      */
+      onChangeSettings(settings) {
+        this.set('_styleSettings', settings);
       }
     },
 
@@ -898,6 +935,24 @@ export default Ember.Component.extend(
       settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
 
       Ember.set(_layerHash, 'settings', settings);
+
+      if (this.get('_styleSettingsAreAvailableForType')) {
+        let styleSettings = this.get('_styleSettings');
+        let leafletObject = this.get('_leafletObject');
+        leafletObject.setStyle({
+          stroke: styleSettings.visibilityOutline,
+          color: styleSettings.colorOutline,
+          weight: styleSettings.thicknessOutline,
+          opacity: styleSettings.opacityOutline,
+          lineCap: styleSettings.valueLineCap,
+          lineJoin: styleSettings.valueLineJoin,
+          dashArray: styleSettings.valueDashArray,
+          dashOffset: styleSettings.valueDashOffset,
+          fill: styleSettings.visibilityPouring,
+          fillColor: styleSettings.colorPouring,
+          fillOpacity: styleSettings.opacityPouring,
+        });
+      }
 
       return _layerHash;
     },

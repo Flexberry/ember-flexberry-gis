@@ -269,6 +269,11 @@
             {{t "components.layers-dialogs.edit.tabular-menu.display-settings-tab.caption"}}
           </a>
         {{/if}}
+        {{#if _styleSettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _tabularMenuState.groups.display-group.activeTab "style-tab") "active"}}" data-tab="style-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.style-settings-tab.caption"}}
+          </a>
+        {{/if}}
         {{#if _legendSettingsAreAvailableForType}}
           <a class="tab item {{if (eq _tabularMenuState.groups.display-group.activeTab "legend-tab") "active"}}" data-tab="legend-tab" onclick={{action "onTabClick"}}>
             {{t "components.layers-dialogs.edit.tabular-menu.legend-settings-tab.caption"}}
@@ -288,6 +293,11 @@
       {{#if _displaySettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.display-group.activeTab "display-tab") "active"}}" data-tab="display-tab">
           {{flexberry-jsonarea value=_layer.settings.displaySettings}}
+        </div>
+      {{/if}}
+      {{#if _styleSettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.display-group.activeTab "style-tab") "active"}}" data-tab="style-tab">
+          {{flexberry-vector-layers-settings sendSettings=(action "onChangeSettings")}}
         </div>
       {{/if}}
       {{#if _legendSettingsAreAvailableForType}}
