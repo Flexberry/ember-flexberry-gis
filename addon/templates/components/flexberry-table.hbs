@@ -34,17 +34,28 @@
           {{#yield-slot "column-cell-head-1" (block-params row)}}
             {{yield}}
           {{/yield-slot}}
-          {{#each-in header as |key value|}}
+          {{#each-in header as |fieldName value|}}
             {{#if allowEdit}}
-              <td onclick={{action (mut _selectedCellName) (concat (ember-guid row) "_" key)}}>
-                {{#if (and (eq _selectedCellName (concat (ember-guid row) "_" key)) (object-contains row key) (eq (get fieldTypes key) "string"))}}
-                  {{input value=(mut (get row key)) key-up="onInputKeyUp" key-down="onInputKeyDown"}}
+              <td onclick={{action "onCellClick" (concat (ember-guid row) "_" fieldName)}}>
+                {{#if (eq (get fieldTypes fieldName) "boolean")}}
+                  {{flexberry-checkbox
+                    value=(mut (get row fieldName))
+                  }}
+                {{else if (eq _selectedCellName (concat (ember-guid row) "_" fieldName))}}
+                  {{input
+                    type="text"
+                    value=(if (eq (get fieldTypes fieldName) "date") (moment-format (get row fieldName) allowEmpty=true) (get row fieldName))
+                    key-down=(action "onCellInputKeyDown" (hash row=row fieldName=fieldName))
+                    focus-out=(action "onCellInputFocusOut" (hash row=row fieldName=fieldName))
+                  }}
+                {{else if (eq (get fieldTypes fieldName) "date")}}
+                  {{moment-format (get row fieldName) allowEmpty=true}}
                 {{else}}
-                  {{get row key}}
+                  {{get row fieldName}}
                 {{/if}}
               </td>
             {{else}}
-              <td>{{get row key}}</td>
+              <td>{{get row fieldName}}</td>
             {{/if}}
           {{/each-in}}
           {{#yield-slot "column-cell-tail-0" (block-params row)}}

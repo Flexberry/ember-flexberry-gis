@@ -32,7 +32,10 @@
       model=tabModel.propertiesToShow
       header=tabModel.header
       recordsTotalCount=tabModel.properties.length
-      fieldTypes=tabModel.leafletObject.readFormat.featureType.fieldTypes
+      fieldNames=(get tabModel "header")
+      fieldTypes=(get tabModel "leafletObject.readFormat.featureType.fieldTypes")
+      fieldParsers=(get tabModel "leafletObject.readFormat.featureType.fields")
+      fieldValidators=(get tabModel "leafletObject.readFormat.featureType.fieldValidators")
       getData=(action "onTabGetData" tabModel)}}
 
       {{#block-slot "head-block"}}
@@ -102,9 +105,11 @@
   {{component "layers-dialogs/attributes/edit"
     class=flexberryClassNames.addDialog
     visible=_onEditRowDialogIsVisible
-    data=_editRowDataCopy
+    fieldNames=_editRowFieldNames
     fieldTypes=_editRowFieldTypes
     fieldParsers=_editRowFieldParsers
+    fieldValidators=_editRowFieldValidators
+    data=_editRowDataCopy
     approve=(action "onEditRowDialogApprove")
   }}
 {{/if}}

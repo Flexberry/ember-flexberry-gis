@@ -15,6 +15,7 @@ import {
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-edit-layer-attributes-dialog').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name (null, because component is tagless).
+  @property {String} flexberryClassNames.form Component's inner <form> CSS-class name ('flexberry-edit-layer-attributes').
   @readonly
   @static
 
@@ -23,7 +24,8 @@ import {
 const flexberryClassNamesPrefix = 'flexberry-edit-layer-attributes-dialog';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: null
+  wrapper: null,
+  form: 'flexberry-edit-layer-attributes'
 };
 
 let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
@@ -86,51 +88,106 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
   denyButtonCaption: t('components.layers-dialogs.edit.deny-button.caption'),
 
   /**
-   * Editing object.
-   */
+    Hash containing field names.
+
+    @property fieldNames
+    @type Object
+    @default null
+  */
+  fieldNames: null,
+
+  /**
+    Hash containing type names related to field names.
+
+    @property fieldTypes
+    @type Object
+    @default null
+  */
+  fieldTypes: null,
+
+  /**
+    Hash containing type parsers related to field names.
+
+    @property fieldParsers
+    @type Object
+    @default null
+  */
+  fieldParsers: null,
+
+  /**
+    Hash containing type validators related to field names.
+
+    @property fieldValidators
+    @type Object
+    @default null
+  */
+  fieldValidators: null,
+
+  /**
+    Editing object.
+
+    @property data
+    @type Object
+    @default null
+  */
   data: null,
 
-  actions: {
-    /**
-      Handles 'change' event from controls that don't change the model value directly.
+  /**
+    Hash containing parsing errors related to field names.
 
-      @param {String} key
-      @param {Object} event
-     */
-    onFieldChange(key, event) {
-      let newValue = null;
-      let data = this.get('data');
-      let parsers = this.get('fieldParsers');
+    @property parsingErrors
+    @type Object
+    @default null
+  */
+  parsingErrors: null,
 
-      if (event.target) {
-        newValue = event.target.value;
-      } else {
-        newValue = event.checked.toString(); // boolean parser waits for string
+  /**
+    Parses data.
+
+    @method parseData
+    @return {Object} Parsed data if it is valid or null.
+  */
+  parseData() {
+    let fieldNames = this.get('fieldNames');
+    let fieldParsers = this.get('fieldParsers');
+    let fieldValidators = this.get('fieldValidators');
+
+    let data = Ember.$.extend(true, {}, this.get('data'));
+    let parsingErrors = {};
+    let dataIsValid = true;
+
+    for (let fieldName in fieldNames) {
+      if (!fieldNames.hasOwnProperty(fieldName)) {
+        continue;
       }
 
-      Ember.set(data, key, parsers[key](newValue));
-    },
+      let text = Ember.get(data, fieldName);
+      let value = fieldParsers[fieldName](text);
+      let valueIsValid = fieldValidators[fieldName](value);
 
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
+      if (valueIsValid) {
+        Ember.set(data, fieldName, value);
+      }
 
-      @method actions.onApprove
-    */
-    onApprove() {
-      this.sendAction('approve', this.get('data'));
-    },
+      dataIsValid = dataIsValid && valueIsValid;
+      Ember.set(parsingErrors, fieldName, !valueIsValid);
+    }
 
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.deny:method"}}'deny' action{{/crossLink}}.
+    this.set('parsingErrors', parsingErrors);
 
-      @method actions.onDeny
-    */
-    onDeny() {
-      this.sendAction('deny');
-    },
+    return dataIsValid ? data : null;
+  },
 
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this.set('parsingErrors', {});
+  },
+
+  actions: {
     /**
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.beforeShow:method"}}'flexberry-dialog' component's 'beforeShow' action{{/crossLink}}.
       Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.beforeShow:method"}}'beforeShow' action{{/crossLink}}.
@@ -138,17 +195,9 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
       @method actions.onBeforeShow
     */
     onBeforeShow() {
+      this.parseData();
+
       this.sendAction('beforeShow');
-    },
-
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.beforeHide:method"}}'flexberry-dialog' component's 'beforeHide' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.beforeHide:method"}}'beforeHide' action{{/crossLink}}.
-
-      @method actions.onBeforeHide
-    */
-    onBeforeHide() {
-      this.sendAction('beforeHide');
     },
 
     /**
@@ -162,6 +211,16 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
     },
 
     /**
+      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.beforeHide:method"}}'flexberry-dialog' component's 'beforeHide' action{{/crossLink}}.
+      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.beforeHide:method"}}'beforeHide' action{{/crossLink}}.
+
+      @method actions.onBeforeHide
+    */
+    onBeforeHide() {
+      this.sendAction('beforeHide');
+    },
+
+    /**
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.hide:method"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.
       Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.hide:method"}}'hide' action{{/crossLink}}.
 
@@ -170,6 +229,34 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
     onHide() {
       this.sendAction('hide');
     },
+
+    /**
+      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
+      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
+
+      @method actions.onApprove
+    */
+    onApprove(e) {
+      let parsedData = this.parseData();
+      if (Ember.isNone(parsedData)) {
+        // Prevent dialog from being closed.
+        e.closeDialog = false;
+
+        return;
+      }
+
+      this.sendAction('approve', parsedData);
+    },
+
+    /**
+      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
+      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.deny:method"}}'deny' action{{/crossLink}}.
+
+      @method actions.onDeny
+    */
+    onDeny() {
+      this.sendAction('deny');
+    }
   }
 
   /**

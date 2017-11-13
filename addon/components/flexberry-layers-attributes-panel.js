@@ -54,7 +54,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           properties.pushObject(props);
         });
 
-        for (let p in leafletObject.readFormat.featureType.fields) {
+        for (let p in Ember.get(leafletObject, 'readFormat.featureType.fields')) {
           header[p] = p;
         }
 
@@ -120,13 +120,23 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _onEditRowDialogIsVisible: false,
 
   /**
-   * Hash with edited row data.
-   */
+    Hash with edited row data.
+
+    @property _editRowData
+    @type Object
+    @default null
+    @private
+  */
   _editRowData: null,
 
   /**
-   * Hash with edited row data copy.
-   */
+    Hash with edited row data copy.
+
+    @property _editRowDataCopy
+    @type Object
+    @default null
+    @private
+  */
   _editRowDataCopy: null,
 
   /**
@@ -166,22 +176,45 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     @property settings
     @type Boolean
-    @default false
+    @default null
   */
-  settings: {
-      withToolbar: false,
-      sidebarOpened: false,
-    },
+  settings: null,
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    let settings = this.get('settings');
+    if (Ember.isNone(settings)) {
+      settings = {
+        withToolbar: false,
+        sidebarOpened: false,
+      };
+
+      this.set('settings', settings);
+    }
+  },
 
   actions: {
     /**
       Handles click on a tab.
 
-      @param Number index
+      @method actions.onTabSelect
+      @param {Number} index Selected tab index.
     */
     onTabSelect(index) {
       if (index === this.get('selectedTabIndex')) {
         this.set('folded', !this.get('folded'));
+
+        // While executing transition vertical scroll will always appear, it is unnecessary and looks very strange,
+        // so we can hide scroll untill transition end.
+        let $tabs = this.$('.bottompanel-tab-data-panel');
+        $tabs.css('overflow', 'hidden');
+        this.$('.ui.bottom.bottompanel').one('webkitTransitionEnd mozTransitionEnd oTransitionEnd otransitionend transitionend', () => {
+          $tabs.css('overflow', 'auto');
+        });
       } else {
         this.set('selectedTabIndex', index);
         if (this.get('folded')) {
@@ -193,7 +226,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles click on tab close icon.
 
-      @param Number index
+      @method actions.closeTab
+      @param {Number} index closed tab index.
     */
     closeTab(index) {
       let editedLayers = this.get('items');
@@ -207,9 +241,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles attributes row selection.
 
-      @param Object tabModel
-      @param String rowId
-      @param Object options
+      @method actions.onRowSelect
+      @param {Object} tabModel Related tab.
+      @param {String} rowId Selected row identifier.
+      @param {Object} options Selection options.
     */
     onRowSelect(tabModel, rowId, options) {
       let selectedRows = Ember.get(tabModel, '_selectedRows');
@@ -221,7 +256,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles 'Find an item on the map' button click.
 
-      @param Object tabModel
+      @method actions.onFindItemClick
+      @param {Object} tabModel Related tab.
     */
     onFindItemClick(tabModel) {
       let selectedRows = Ember.get(tabModel, '_selectedRows');
@@ -234,6 +270,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     /**
       Handles 'Clear found items' button click.
+
+      @method actions.onClearFoundItemClick
     */
     onClearFoundItemClick() {
       let serviceLayer = this.get('serviceLayer');
@@ -243,7 +281,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles 'Select all' checkbox click.
 
-      @param Object tabModel
+      @method actions.onSelectAllClick
+      @param {Object} tabModel Related tab.
     */
     onSelectAllClick(tabModel) {
       let selectAll = Ember.get(tabModel, 'selectAll');
@@ -262,8 +301,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles 'getData' action from flexberry-table.
 
-      @param Object tabModel
-      @param Object options
+      @method actions.onTabGetData
+      @param {Object} tabModel
+      @param {Object} options
     */
     onTabGetData(tabModel, options) {
       Ember.set(tabModel, '_skip', options.skip);
@@ -273,7 +313,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles tab panel moving.
 
-      @param Boolean left
+      @method actions.onTabMove
+      @param {Boolean} left Flag: indicates whether move direction is left or not.
     */
     onTabMove(left) {
       // move tabs bar on the left or on the right
@@ -302,7 +343,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles 'Delete selected items' button click.
 
-      @param Object tabModel
+      @method actions.onDeleteItemClick
+      @param {Object} tabModel Related tab.
     */
     onDeleteItemClick(tabModel) {
       let selectedRows = Ember.get(tabModel, '_selectedRows');
@@ -316,12 +358,21 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       tabModel.notifyPropertyChange('_selectedRows');
     },
 
+    /**
+      Performs row editing.
+
+      @method actions.onRowEdit
+      @param {Object} tabModel Related tab.
+      @param {Object} rowId Editing row identifier.
+    */
     onRowEdit(tabModel, rowId) {
       let editedProperty = tabModel.propertyLink[rowId];
-      this.set('_editRowData', editedProperty);
-      this.set('_editRowDataCopy', Ember.copy(editedProperty, false));
+      this.set('_editRowFieldNames', Ember.get(tabModel, 'header'));
       this.set('_editRowFieldTypes', Ember.get(tabModel, 'leafletObject.readFormat.featureType.fieldTypes'));
       this.set('_editRowFieldParsers', Ember.get(tabModel, 'leafletObject.readFormat.featureType.fields'));
+      this.set('_editRowFieldValidators', Ember.get(tabModel, 'leafletObject.readFormat.featureType.fieldValidators'));
+      this.set('_editRowData', editedProperty);
+      this.set('_editRowDataCopy', Ember.copy(editedProperty, false));
 
       // Include dialog to markup.
       this.set('_editRowDialogHasBeenRequested', true);
@@ -330,6 +381,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_onEditRowDialogIsVisible', true);
     },
 
+    /**
+      Handles row edit dialog's 'approve' action.
+
+      @method actions.onEditRowDialogApprove
+      @param {Object} data Hash cantaining edited data.
+    */
     onEditRowDialogApprove(data) {
       for (var key in data) {
         if (data.hasOwnProperty(key)) {
@@ -346,7 +403,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     Overrides {{#crosslink "LeafletZoomToFeatureMixin/_prepareLayer:method"}} to make a copy of passed layer
     and apply a style to the layer to make it more visible.
 
-    @param Object layer
+    @method _prepareLayer
+    @param {Object} layer
+    @return {<a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} Prepared layer.
+    @private
   */
   _prepareLayer(layer) {
     return L.geoJson(layer.toGeoJSON()).setStyle({

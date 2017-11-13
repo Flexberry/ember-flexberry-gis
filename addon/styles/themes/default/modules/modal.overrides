@@ -326,7 +326,9 @@
 **************************************************************************************/
 
 .ui.modal.flexberry-add-layer-dialog,
-.ui.modal.flexberry-edit-layer-dialog {
+.ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-edit-map-dialog,
+.ui.modal.flexberry-edit-layer-attributes-dialog {
   .flexberry-dialog-content.content {
     min-height: 400px;
   }
@@ -334,7 +336,8 @@
 
 .ui.modal.flexberry-add-layer-dialog,
 .ui.modal.flexberry-edit-layer-dialog,
-.ui.modal.flexberry-edit-map-dialog {
+.ui.modal.flexberry-edit-map-dialog,
+.ui.modal.flexberry-edit-layer-attributes-dialog {
   &> .flexberry-dialog-content.content {
     // Same as dialog content's max-height in Semantic UI.
     height: 400px;
@@ -342,7 +345,9 @@
   }
 }
 
-form.flexberry-edit-layermap, form.flexberry-edit-map {
+form.flexberry-edit-layermap,
+form.flexberry-edit-map,
+form.flexberry-edit-layer-attributes {
   height: 100%;
 
   .ui.menu {
@@ -400,4 +405,9 @@ form.flexberry-edit-layermap, form.flexberry-edit-map {
       margin-bottom: 0px;
     }
   }
+}
+
+// Attributes dialog hasn't any tabs, so whole form must be scrollable.
+form.flexberry-edit-layer-attributes {
+  overflow: auto;
 }

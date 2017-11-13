@@ -10,20 +10,25 @@
   show=(action "onShow")
   hide=(action "onHide")
 }}
-  <div class="ui form">
-    {{#each-in data as |key value|}}
-      <div class="field">
-        <label>{{key}}</label>
-        {{#if (eq (get fieldTypes key) 'date')}}
-          {{flexberry-datepicker value=(mut (get data key))}}
-        {{else if (eq (get fieldTypes key) 'boolean')}}
-          {{flexberry-checkbox value=(get data key) onChange=(action "onFieldChange" key)}}
-        {{else if (eq (get fieldTypes key) 'number')}}
-          {{input type="text" value=(get data key) change=(action "onFieldChange" key)}}
+  <form class="ui form {{flexberryClassNames.form}}" role="form">
+    {{#each-in fieldNames as |fieldName|}}
+      <div class="field {{if (get parsingErrors fieldName) "error" ""}}">
+        <label>{{fieldName}}</label>
+        {{#if (eq (get fieldTypes fieldName) "date")}}
+          {{flexberry-datepicker
+            value=(mut (get data fieldName))
+          }}
+        {{else if (eq (get fieldTypes fieldName) "boolean")}}
+          {{flexberry-checkbox
+            value=(mut (get data fieldName))
+          }}
         {{else}}
-          {{flexberry-textbox value=(mut (get data key))}}
+          {{input
+            type="text"
+            value=(mut (get data fieldName))
+          }}
         {{/if}}
       </div>
     {{/each-in}}
-  </div>
+  </form>
 {{/flexberry-dialog}}

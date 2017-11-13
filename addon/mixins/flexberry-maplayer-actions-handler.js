@@ -240,25 +240,28 @@ export default Ember.Mixin.create({
 
       @method actions.onAttributesEdit
       @param {String} layerModelPath Path to a layer model, which value must be used within action.
+      @param {Object} attributesPanelSettingsPathes Object containing pathes to properties containing 'flexberry-layers-attributes-panel' settings.
+      @param {String} attributesPanelSettingsPathes.itemsPath path to property containing 'flexberry-layers-attributes-panel' items.
+      @param {String} attributesPanelSettingsPathes.selectedTabIndexPath path to property containing 'flexberry-layers-attributes-panel' selected tab index.
+      @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
     */
-    onAttributesEdit(layerPath) {
+    onAttributesEdit(layerPath, { itemsPath, selectedTabIndexPath, foldedPath }) {
       let layerModel = getRecord(this, layerPath);
       let name = Ember.get(layerModel, 'name');
       let leafletObject = Ember.get(layerModel, '_leafletObject');
 
-      let editedLayers = this.get('editedLayers') || Ember.A();
-      let index = editedLayers.findIndex((item) => Ember.isEqual(item.name, name));
+      let items = this.get(itemsPath) || Ember.A();
+      let index = items.findIndex((item) => Ember.isEqual(item.name, name));
       if (index >= 0) {
-        this.set('editedLayersSelectedTabIndex', index);
+        this.set(selectedTabIndexPath, index);
       } else {
-        editedLayers.addObject({ name: name, leafletObject: leafletObject });
-        this.set('editedLayers', editedLayers);
-        this.set('editedLayersSelectedTabIndex', editedLayers.length - 1);
-        this._leafletMapOnContainerResizeStart();
+        items.addObject({ name: name, leafletObject: leafletObject });
+        this.set(itemsPath, items);
+        this.set(selectedTabIndexPath, items.length - 1);
       }
 
-      if (this.get('editedLayersPanelFolded')) {
-        this.set('editedLayersPanelFolded', false);
+      if (this.get(foldedPath)) {
+        this.set(foldedPath, false);
       }
     },
 
