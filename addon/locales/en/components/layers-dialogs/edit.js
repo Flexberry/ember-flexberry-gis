@@ -79,6 +79,9 @@ export default {
     'display-settings-tab': {
       'caption': 'Display settings'
     },
+    'style-settings-tab': {
+      'caption': 'Style layer settings'
+    },
     'legend-settings-tab': {
       'caption': 'Legend settings'
     },

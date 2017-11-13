@@ -407,12 +407,14 @@ export default Ember.Component.extend(
       '_identifySettingsAreAvailableForType',
       '_searchSettingsAreAvailableForType',
       '_displaySettingsAreAvailableForType',
+      '_styleSettingsAreAvailableForType',
       '_legendSettingsAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
         return this.get('_identifySettingsAreAvailableForType') ||
           this.get('_searchSettingsAreAvailableForType') ||
           this.get('_displaySettingsAreAvailableForType') ||
+          this.get('_styleSettingsAreAvailableForType') ||
           this.get('_legendSettingsAreAvailableForType');
       }
     ),
@@ -472,6 +474,21 @@ export default Ember.Component.extend(
       let layerClass = Ember.getOwner(this).knownForType('layer', className);
 
       return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
+    }),
+
+    /**
+      Flag: indicates whether 'style' operation settings are available for the selected layer type.
+
+      @property _styleSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _styleSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('style');
     }),
 
     /**
