@@ -259,6 +259,16 @@ export default Ember.Component.extend(
     _leafletObject: null,
 
     /**
+      Style vector layer.
+
+      @property _styleSettings
+      @type Object
+      @default null
+      @private
+    */
+    _styleSettings: null,
+
+    /**
       Leaflet map.
 
       @property leafletMap
@@ -701,6 +711,16 @@ export default Ember.Component.extend(
       */
       allowShowCheckboxChange(...args) {
         this.sendAction('allowShowLayerLinkCheckboxChange', ...args);
+      },
+
+      /**
+        Change style vector layer.
+
+        @method actions.onChangeSettings
+        @param {Object} settings style vector layer.
+      */
+      onChangeSettings(settings) {
+        this.set('_styleSettings', settings);
       }
     },
 
@@ -915,6 +935,24 @@ export default Ember.Component.extend(
       settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
 
       Ember.set(_layerHash, 'settings', settings);
+
+      if (this.get('_styleSettingsAreAvailableForType')) {
+        let styleSettings = this.get('_styleSettings');
+        let leafletObject = this.get('_leafletObject');
+        leafletObject.setStyle({
+          stroke: styleSettings.visibilityOutline,
+          color: styleSettings.colorOutline,
+          weight: styleSettings.thicknessOutline,
+          opacity: styleSettings.opacityOutline,
+          lineCap: styleSettings.valueLineCap,
+          lineJoin: styleSettings.valueLineJoin,
+          dashArray: styleSettings.valueDashArray,
+          dashOffset: styleSettings.valueDashOffset,
+          fill: styleSettings.visibilityPouring,
+          fillColor: styleSettings.colorPouring,
+          fillOpacity: styleSettings.opacityPouring,
+        });
+      }
 
       return _layerHash;
     },

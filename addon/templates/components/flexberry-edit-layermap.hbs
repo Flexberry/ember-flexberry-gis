@@ -297,7 +297,7 @@
       {{/if}}
       {{#if _styleSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.display-group.activeTab "style-tab") "active"}}" data-tab="style-tab">
-          {{flexberry-vector-layers-settings}}
+          {{flexberry-vector-layers-settings sendSettings=(action "onChangeSettings")}}
         </div>
       {{/if}}
       {{#if _legendSettingsAreAvailableForType}}
