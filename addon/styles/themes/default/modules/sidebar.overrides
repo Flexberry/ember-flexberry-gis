@@ -371,3 +371,161 @@
     }
 }
 
+/***************************************************
+                    BottomPanel
+****************************************************/
+.bottompanel-wrapper {
+  position: absolute;
+  width: 100%;
+  height: ~"calc(100% - 60px)";
+  bottom: 0;
+
+  &.hidden {
+    visibility: hidden;
+  }
+
+  .ui.bottom.bottompanel {
+    bottom: 10px;
+    position: absolute;
+    z-index: 1010;
+    transform: none;
+    transition: 0.3s linear;
+    background-color: @whitecolor;
+    margin: 0px 10px 0px 10px;
+    box-shadow: 0 0 4px @darkbluecolor;
+    border-radius: 5px 5px 5px 5px;
+    max-height: ~"calc(100% - 80px)";
+    height: 400px;
+    width: ~"calc(100% - 20px)";
+
+    .ui.tab {
+      padding: 10px;
+      color: @darkbluecolor;
+    }
+
+    &.folded {
+      bottom: 0;
+      overflow-y: hidden;
+      height: 40px;
+    }
+
+    &.sidebarOpened {
+      width: ~"calc(100% - 430px)";
+    }
+
+    &.withToolbar {
+      width: ~"calc(100% - 70px)";
+      &.sidebarOpened {
+        width: ~"calc(100% - 480px)";
+      }
+    }
+  }
+
+  .ui.button.flexberry-button {
+    min-width: 30px;
+
+    &.small-button {
+      min-width: 0;
+      width: 1.7em;
+      height: 1.6em;
+      padding: 0.2em;
+
+      &.active {
+        background: #bbd6f9; /*TODO set as variable*/
+      }
+    }
+  }
+
+  .tab.segment {
+    height: auto;
+    .ui.table td, th {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .ui.tabular.menu .item {
+    background: @lightgraycolor;
+    border-radius: 0.3rem 0.3rem 0px 0px;
+
+    &.active {
+      background: @whitecolor;
+    }
+
+    .icon {
+      font-size: 0.7em;
+      padding-left: 10px;
+    }
+  }
+
+  .bottompanel {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    &-tab-nav-button {
+      position: absolute;
+      width: 25px;
+      height: 40px;
+      line-height: 40px;
+      top: 0;
+      color: @bluesky;
+      cursor: pointer;
+      text-align: center;
+      border: 1px solid @lightgraycolor;
+      border-bottom: 0;
+      border-radius: 0;
+      padding: 0;
+      background-color: @whitecolor;
+      z-index: 10;
+
+      &-left {
+        left: 0;
+        border-top-left-radius: 5px;
+      }
+
+      &-right {
+        right: 0;
+        border-top-right-radius: 5px;
+      }
+    }
+
+    &-tab-nav-panel {
+      width: 100%;
+      padding-left: 25px;
+
+      &-tabs.ui.tabular.menu {
+        position: relative;
+        border-bottom: 0;
+
+        a {
+          font-weight: 400;
+        }
+
+        .icon.close {
+          font-size: 0.7em; padding-left: 10px;
+        }
+      }
+    }
+
+    .ui.attached.segment,
+    .ui.attached + .ui.attached.segment:not(.top) {
+      border-top: 1px solid @dataPanelBorderColor;
+    }
+
+    .ui.segment[class*="bottom attached"] {
+      margin-bottom: 1px;
+    }
+
+    &-tab-head-panel {
+      .flexberry-checkbox {
+        width: 120px;
+        padding-left: 10px;
+      }
+
+      .buttons {
+        display: inline-block;
+      }
+    }
+  }
+}
