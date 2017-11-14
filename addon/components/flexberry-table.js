@@ -174,9 +174,20 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
       let valueIsValid = fieldValidators[fieldName](value);
       if (valueIsValid) {
         Ember.set(row, fieldName, value);
+        this.sendAction('rowEdited', Ember.guidFor(row));
       }
 
       this.set('_selectedCellName', null);
+    },
+
+    /**
+      Handles cell checkbox 'onChange' action.
+
+      @param {Object} row Row containing changed cell.
+      @param {Object} e Event object.
+     */
+    onCellCheckboxChange(row, e) {
+      this.sendAction('rowEdited', Ember.guidFor(row));
     },
 
     /**
@@ -234,5 +245,11 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
 
     @method sendingActions.getData
     @param {Object} req Action's event object.
+  */
+
+  /**
+    Component's action invoking when table row data is edited.
+    @method sendingActions.rowEdited
+    @param {String} rowId Edited row's id.
   */
 });

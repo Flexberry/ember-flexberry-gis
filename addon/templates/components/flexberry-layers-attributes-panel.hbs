@@ -36,7 +36,8 @@
       fieldTypes=(get tabModel "leafletObject.readFormat.featureType.fieldTypes")
       fieldParsers=(get tabModel "leafletObject.readFormat.featureType.fields")
       fieldValidators=(get tabModel "leafletObject.readFormat.featureType.fieldValidators")
-      getData=(action "onTabGetData" tabModel)}}
+      getData=(action "onTabGetData" tabModel)
+      rowEdited=(action "onTableRowEdited" tabModel)}}
 
         {{#block-slot "head-block"}}
           <div class="bottompanel-tab-head-panel">
@@ -104,7 +105,7 @@
                 tooltip="Сохранить изменения"
                 click=(action "onSaveChangesClick" tabModel)
                 iconClass="save icon"
-                readonly=false
+                readonly=(not tabModel._changed)
               }}
 
             </div>
@@ -171,8 +172,10 @@
     class=flexberryClassNames.addDialog
     visible=_newRowDialogIsVisible
     data=_newRowData
-    fieldTypes=_newRowFieldTypes
-    fieldParsers=_newRowFieldParsers
+    fieldNames=(get _newRowTabModel "header")
+    fieldTypes=(get _newRowTabModel "leafletObject.readFormat.featureType.fieldTypes")
+    fieldParsers=(get _newRowTabModel "leafletObject.readFormat.featureType.fields")
+    fieldValidators=(get _newRowTabModel "leafletObject.readFormat.featureType.fieldValidators")
     approve=(action "onNewRowDialogApprove")
     deny=(action "onNewRowDialogDeny")
   }}
