@@ -21,9 +21,8 @@
 @visibleRight: 0px;
 @visibleRightSidebarBackgroundColor: white;
 @visibleRightSidebarWidth: @sidebarWidth !important;
-@visibleRightSidebarHeight: auto !important;
+@visibleRightSidebarHeight: ~"calc(100% - 10px)" !important;
 @visibleRightSidebarMargin: 10px 0px !important;
-@visibleRightSidebarMaxHeight: ~"calc(100% - 40px)";
 @visibleRightSidebarMinHeight: 250px;
 @visibleRightSidebarBorderRadius: 0px 5px 5px 5px !important;
 @visibleRightSidebarBoxShadow: @darkBoxShadow !important;

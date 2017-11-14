@@ -26,14 +26,17 @@
     class={{concat "ui bottom attached tab segment bottompanel-tab-data-panel"
     (if (eq selectedTabIndex index) " active" "")}}>
 
-      {{#flexberry-table
-        allowEdit="true"
-        perPageAvailable=false
-        model=tabModel.propertiesToShow
-        header=tabModel.header
-        recordsTotalCount=tabModel.properties.length
-        fieldTypes=tabModel.leafletObject.readFormat.featureType.fieldTypes
-        getData=(action "onTabGetData" tabModel)}}
+    {{#flexberry-table
+      allowEdit="true"
+      perPageAvailable=false
+      model=tabModel.propertiesToShow
+      header=tabModel.header
+      recordsTotalCount=tabModel.properties.length
+      fieldNames=(get tabModel "header")
+      fieldTypes=(get tabModel "leafletObject.readFormat.featureType.fieldTypes")
+      fieldParsers=(get tabModel "leafletObject.readFormat.featureType.fields")
+      fieldValidators=(get tabModel "leafletObject.readFormat.featureType.fieldValidators")
+      getData=(action "onTabGetData" tabModel)}}
 
         {{#block-slot "head-block"}}
           <div class="bottompanel-tab-head-panel">
@@ -155,9 +158,11 @@
   {{component "layers-dialogs/attributes/edit"
     class=flexberryClassNames.addDialog
     visible=_onEditRowDialogIsVisible
-    data=_editRowDataCopy
+    fieldNames=_editRowFieldNames
     fieldTypes=_editRowFieldTypes
     fieldParsers=_editRowFieldParsers
+    fieldValidators=_editRowFieldValidators
+    data=_editRowDataCopy
     approve=(action "onEditRowDialogApprove")
   }}
 {{/if}}

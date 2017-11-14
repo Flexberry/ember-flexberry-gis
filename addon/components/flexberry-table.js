@@ -77,6 +77,42 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   allowEdit: false,
 
   /**
+    Hash containing field names.
+
+    @property fieldNames
+    @type Object
+    @default null
+  */
+  fieldNames: null,
+
+  /**
+    Hash containing type names related to field names.
+
+    @property fieldTypes
+    @type Object
+    @default null
+  */
+  fieldTypes: null,
+
+  /**
+    Hash containing type parsers related to field names.
+
+    @property fieldParsers
+    @type Object
+    @default null
+  */
+  fieldParsers: null,
+
+  /**
+    Hash containing type validators related to field names.
+
+    @property fieldValidators
+    @type Object
+    @default null
+  */
+  fieldValidators: null,
+
+  /**
     Flag that indicates whether 'rows per page' select is available or isn't.
 
     @property perPageAvailable
@@ -96,44 +132,70 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
     },
 
     /**
-      Handles keyup event from cell edit input element.
+      Handles cell 'click' event.
 
-      @param {String} val Input value.
-      @param {Object} event Event object.
+      @method actions.onCellClick
+      @param {String} newSelectedCellName New selected cell name.
+      @param {Object} e Event object.
     */
-    onInputKeyUp(val, event) {
-      let code = event.keyCode || event.which;
-
-      // if Enter (keycode: 13) or Esc (keycode: 27) was pressed, remove input from the cell
-      if (code === 13 || code === 27) {
-        this.set('_selectedCellName', null);
+    onCellClick(newSelectedCellName, e) {
+      if (Ember.isNone(newSelectedCellName)) {
+        return;
       }
+
+      this.set('_selectedCellName', newSelectedCellName);
+
+      // Convert native event object into jQuery event object.
+      e = Ember.$.event.fix(e);
+
+      // Wait while input will be embeded into clicked cell (after render), and focus on it.
+      Ember.run.scheduleOnce('afterRender', this, function () {
+        let $cellInput = Ember.$(e.target).find('input').first();
+        $cellInput.focus();
+      });
     },
 
     /**
-      Handles keydown event from cell edit input element.
+      Handles cell textbox 'focusout' event.
 
-      @param {String} val Input value.
-      @param {Object} event Event object.
+      @method actions.onCellInputChange
+      @param {Object} options Hash containing action's options.
+      @param {Object} options.row Row containing changed property.
+      @param {String} options.fieldName Changed property name.
+      @param {String} inputText Actual input text.
+      @param {Object} e Event object.
     */
-    onInputKeyDown(val, event) {
-      let code = event.keyCode || event.which;
+    onCellInputFocusOut({ row, fieldName }, inputText, e) {
+      inputText = inputText;
+      let fieldParsers = this.get('fieldParsers');
+      let fieldValidators = this.get('fieldValidators');
 
-      // If Tab key (with Shift or not) was pressed, move input to the next/previous cell
-      if (code === 9) {
-        this._moveCell(!event.shiftKey);
-        event.preventDefault();
+      let value = fieldParsers[fieldName](inputText);
+      let valueIsValid = fieldValidators[fieldName](value);
+      if (valueIsValid) {
+        Ember.set(row, fieldName, value);
       }
-    }
-  },
 
-  /**
-    Called after a component has been rendered, both on initial render and in subsequent rerenders.
-  */
-  didRender() {
-    this._super(...arguments);
-    if (this.get('allowEdit')) {
-      this.$('.flexberry-table-cell-input').focus();
+      this.set('_selectedCellName', null);
+    },
+
+    /**
+      Handles cell textbox 'keydown' event.
+
+      @method actions.onCellInputKeyDown
+      @param {Object} options Hash containing action's options.
+      @param {Object} options.row Row containing changed property.
+      @param {String} options.fieldName Changed property name.
+      @param {String} inputText Actual input text.
+      @param {Object} e Event object.
+    */
+    onCellInputKeyDown(options, inputText, e) {
+      // If Enter (keycode: 13) or Esc (keycode: 27) was pressed, remove input from the cell.
+      let code = e.keyCode || e.which;
+      if (code === 13 || code === 27) {
+        e.preventDefault();
+        this.send('onCellInputFocusOut', options, inputText, e);
+      }
     }
   },
 
@@ -165,43 +227,6 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
       top: perPageValue,
       skip: pageNum > 0 ? (pageNum - 1) * perPageValue : 0
     });
-  },
-
-  /**
-    Changes selected cell to the next or to the previous.
-
-    @method _moveCell
-    @param {Boolean} forward Shows whether need to move to the next cell or previous.
-    @private
-  */
-  _moveCell(forward) {
-    let current = this.get('_selectedCellName');
-    if (Ember.isPresent(current)) {
-      let [rowId, cellKey] = current.split('_');
-      let headerKeys = Object.keys(this.get('header'));
-      let rowIds = this.get('model').map((item) => {
-        return Ember.guidFor(item);
-      });
-      let cellPos = headerKeys.indexOf(cellKey);
-      let rowPos = rowIds.indexOf(rowId);
-      if (forward) {
-        if (cellPos < headerKeys.length - 1) {
-          cellPos++;
-        } else {
-          cellPos = 0;
-          rowPos = (rowPos < rowIds.length - 1) ? rowPos + 1 : 0;
-        }
-      } else {
-        if (cellPos > 0) {
-          cellPos--;
-        } else {
-          cellPos = headerKeys.length - 1;
-          rowPos = (rowPos > 0) ? rowPos - 1 : rowIds.length - 1;
-        }
-      }
-
-      this.set('_selectedCellName', `${rowIds[rowPos]}_${headerKeys[cellPos]}`);
-    }
   },
 
   /**

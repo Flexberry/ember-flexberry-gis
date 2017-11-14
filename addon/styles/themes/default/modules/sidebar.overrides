@@ -28,13 +28,12 @@
   .ui.right.sidebar.visible {
     position: absolute;
     top: 0px;
-    z-index: 900;
+    z-index: 1010;
     visibility: visible;
     transform: none;
     transition: none;
     background-color: @visibleRightSidebarBackgroundColor;
     margin: @visibleRightSidebarMargin;
-    max-height: @visibleRightSidebarMaxHeight;
     min-height: @visibleRightSidebarMinHeight;
     height: @visibleRightSidebarHeight;
     border-radius: @visibleRightSidebarBorderRadius;
@@ -385,6 +384,7 @@
   }
 
   .ui.bottom.bottompanel {
+    overflow: hidden;
     bottom: 10px;
     position: absolute;
     z-index: 1010;
@@ -393,7 +393,6 @@
     background-color: @whitecolor;
     margin: 0px 10px 0px 10px;
     box-shadow: 0 0 4px @darkbluecolor;
-    border-radius: 5px 5px 5px 5px;
     max-height: ~"calc(100% - 80px)";
     height: 400px;
     width: ~"calc(100% - 20px)";
@@ -405,7 +404,6 @@
 
     &.folded {
       bottom: 0;
-      overflow-y: hidden;
       height: 40px;
     }
 
@@ -437,7 +435,14 @@
   }
 
   .tab.segment {
-    height: auto;
+    overflow: auto;
+    height: ~"calc(100% - 40px)";
+
+    &.ui.attached:not(.top) {
+      border: none;
+      border-top: 1px solid @dataPanelBorderColor;
+    }
+
     .ui.table td, th {
       white-space: nowrap;
       overflow: hidden;
@@ -506,11 +511,6 @@
           font-size: 0.7em; padding-left: 10px;
         }
       }
-    }
-
-    .ui.attached.segment,
-    .ui.attached + .ui.attached.segment:not(.top) {
-      border-top: 1px solid @dataPanelBorderColor;
     }
 
     .ui.segment[class*="bottom attached"] {

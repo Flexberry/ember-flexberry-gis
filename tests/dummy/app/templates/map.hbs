@@ -34,7 +34,7 @@
     <div class="ui very wide right sidebar pushable tabbar">
       <div data-tab="treeview" class="ui tab treeview">
         <h3>{{t "forms.map.tabbar.treeview.caption"}}</h3>
-        {{#if _showTree}}
+        {{#if showTree}}
           {{flexberry-maplayers
             class="styled"
             cswConnections=cswConnections
@@ -76,7 +76,13 @@
                 (hash
                   on="attributesEdit"
                   actionName="onAttributesEdit"
-                  actionArguments=(array "{% layerPath %}")
+                  actionArguments=(array "{% layerPath %}"
+                    (hash
+                      itemsPath="editedLayers"
+                      selectedTabIndexPath="editedLayersSelectedTabIndex"
+                      foldedPath="editedLayersPanelFolded"
+                    )
+                  )
                 )
               )
             )
@@ -127,8 +133,7 @@
       </div>
     </div>
   </div>
-
-  <div class={{concat "bottompanel-wrapper" (if (eq editedLayers.length 0) " hidden" "")}}>
+  <div class={{concat "bottompanel-wrapper" (if (not (gt editedLayers.length 0)) " hidden" "")}}>
     {{flexberry-layers-attributes-panel
       items=editedLayers
       serviceLayer=serviceLayer
@@ -138,7 +143,6 @@
       settings=editedLayersPanelSettings
     }}
   </div>
-
   <div class="row">
     <div class="sixteen wide column">
       {{#flexberry-maptoolbar
@@ -211,7 +215,7 @@
         {{switch-scale-control
           map=leafletMap
           updateWhenIdle=true
-          scales=_scales
+          scales=switchScaleControlScales
         }}
         {{#minimap-control
           minimized=true
