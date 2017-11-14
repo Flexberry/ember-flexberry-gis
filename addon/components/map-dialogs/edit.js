@@ -6,6 +6,7 @@ import Ember from 'ember';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
+import FlexberryBoundingboxMapLoaderMixin from '../../mixins/flexberry-boundingbox-map-loader';
 import layout from '../../templates/components/map-dialogs/edit';
 import {
   translationMacro as t
@@ -43,7 +44,8 @@ const flexberryClassNames = {
 let FlexberryEditMapDialogComponent = Ember.Component.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
-  DynamicPropertiesMixin, {
+  DynamicPropertiesMixin,
+  FlexberryBoundingboxMapLoaderMixin, {
     /**
       Reference to component's template.
     */
@@ -247,6 +249,15 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
     mapModel: null,
 
     /**
+      Map model fot bounding box component.
+
+      @property boundingBoxComponentMap
+      @type Object
+      @default null
+    */
+    boundingBoxComponentMap: null,
+
+    /**
       Inner hash containing editing map model.
 
       @property _mapModel
@@ -259,6 +270,15 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
      * Active tab name.
      */
     _activeTab: 'main-tab',
+
+    /**
+      Indicates that boundingBox component's map is loading.
+
+      @property _bboxMapIsLoading
+      @type Boolean
+      @default false
+    */
+    _bboxMapIsLoading: false,
 
     actions: {
       /**
@@ -357,6 +377,15 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
       onHide() {
         this.sendAction('hide');
       },
+
+      /**
+        Handles bounding box changes.
+
+        @method actions.onBoundingBoxChange
+      */
+      onBoundingBoxChange(e) {
+        this.set('_mapModel.boundingBox', e.bboxGeoJSON);
+      },
     },
 
     /**
@@ -375,6 +404,29 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
       let keyWords = this.get('mapModel.keyWords');
       let scale = this.get('mapModel.scale');
       let crs = this.get('mapModel.coordinateReferenceSystem');
+      let minLat;
+      let minLng;
+      let maxLat;
+      let maxLng;
+      let boundingBox = this.get('mapModel.boundingBox');
+      let boundingBoxCoords = this.get('mapModel.boundingBox.coordinates.0') || [];
+      boundingBoxCoords.forEach(coordinate => {
+        if (coordinate[0] > maxLng || Ember.isNone(maxLng)) {
+          maxLng = coordinate[0];
+        }
+
+        if (coordinate[0] < minLng || Ember.isNone(minLng)) {
+          minLng = coordinate[0];
+        }
+
+        if (coordinate[1] > maxLat || Ember.isNone(maxLat)) {
+          maxLat = coordinate[1];
+        }
+
+        if (coordinate[1] < minLat || Ember.isNone(minLat)) {
+          minLat = coordinate[1];
+        }
+      });
 
       crs = Ember.isNone(crs) ? {} : JSON.parse(crs);
 
@@ -387,7 +439,14 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
         description: description,
         keyWords: keyWords,
         scale: scale,
-        coordinateReferenceSystem: crs
+        coordinateReferenceSystem: crs,
+        boundingBox: boundingBox,
+        bboxCoords: {
+          minLat: minLat || -90,
+          minLng: minLng || -180,
+          maxLat: maxLat || 90,
+          maxLng: maxLng || 180,
+        },
       });
     },
 
@@ -406,6 +465,13 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
     */
     init() {
       this._super(...arguments);
+      let _this = this;
+      this.set('_bboxMapIsLoading', true);
+
+      this.getBoundingBoxComponentMapModel().then(result => {
+        _this.set('boundingBoxComponentMap', result);
+        _this.set('_bboxMapIsLoading', false);
+      });
 
       this._createInnerMap();
     },
@@ -416,6 +482,7 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
     willDestroy() {
       this._super(...arguments);
 
+      this.set('boundingBoxComponentMap', null);
       this._destroyInnerMap();
     }
 
