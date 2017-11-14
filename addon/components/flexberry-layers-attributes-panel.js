@@ -416,9 +416,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     onSaveChangesClick(tabModel) {
-      // TODO добавить обработку сохранения изменений
-      // layer.save()...
-
+      tabModel.leafletObject.save();
     },
 
     onNewRowDialogApprove(data) {
