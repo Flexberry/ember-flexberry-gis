@@ -8,7 +8,7 @@
             {{t "components.flexberry-vector-layers-settings.outline.settings.visibility"}}
           </label>
           {{flexberry-checkbox
-            value=settings.visibilityOutline
+            value=settings.stroke
             label=(t "components.flexberry-vector-layers-settings.outline.settings.visibility")
             class="fluid"
           }}
@@ -18,7 +18,7 @@
             {{t "components.flexberry-vector-layers-settings.outline.settings.сolour"}}
           </label>
           {{flexberry-colorpicker
-            value=settings.colorOutline
+            value=settings.color
             change=(action "onColorOutlineChange")
           }}
         </div>
@@ -28,7 +28,7 @@
           </label>
           {{flexberry-field
             type="number"
-            value=settings.thicknessOutline
+            value=settings.weight
           }}
         </div>
         <div class="field">
@@ -36,7 +36,7 @@
             {{t "components.flexberry-vector-layers-settings.outline.settings.opacity"}}
           </label>
           {{flexberry-ddau-slider
-            value=settings.opacityOutline
+            value=settings.opacity
             change=(action "onOpacityOutlineChange")
           }}
         </div>
@@ -47,7 +47,7 @@
           {{flexberry-dropdown
             class="fluid"
             items=_itemsLineCap
-            value=settings.valueLineCap
+            value=settings.lineCap
           }}
         </div>
         <div class="field">
@@ -57,7 +57,7 @@
           {{flexberry-dropdown
             class="fluid"
             items=_itemsLineJoin
-            value=settings.valueLineJoin
+            value=settings.lineJoin
           }}
         </div>
         <div class="field">
@@ -67,7 +67,7 @@
           {{flexberry-dropdown
             class="fluid"
             items=_itemsDashArray
-            value=settings.valueDashArray
+            value=settings.dashArray
           }}
         </div>
         <div class="field">
@@ -76,7 +76,7 @@
           </label>
           {{flexberry-field
             type="number"
-            value=settings.valueDashOffset
+            value=settings.dashOffset
           }}
         </div>
 
@@ -85,7 +85,7 @@
             {{t "components.flexberry-vector-layers-settings.pouring.settings.visibility"}}
           </label>
           {{flexberry-checkbox
-            value=settings.visibilityPouring
+            value=settings.fill
             label=(t "components.flexberry-vector-layers-settings.pouring.settings.visibility")
             class="fluid"
           }}
@@ -95,7 +95,7 @@
             {{t "components.flexberry-vector-layers-settings.pouring.settings.сolour"}}
           </label>
           {{flexberry-colorpicker
-            value=settings.colorPouring
+            value=settings.fillColor
             change=(action "onColorPouringChange")
           }}
         </div>
@@ -104,7 +104,7 @@
             {{t "components.flexberry-vector-layers-settings.pouring.settings.opacity"}}
           </label>
           {{flexberry-ddau-slider
-            value=settings.opacityPouring
+            value=settings.fillOpacity
             change=(action "onOpacityPouringChange")
           }}
         </div>

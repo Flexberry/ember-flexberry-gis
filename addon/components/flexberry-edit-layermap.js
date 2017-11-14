@@ -779,6 +779,8 @@ export default Ember.Component.extend(
         this.set(`_settings.${type}`, settings);
       }
 
+      this.set(`_styleSettings`, settings.style);
+
       this.set('_layer', {
         type: type,
         name: name,
@@ -932,27 +934,28 @@ export default Ember.Component.extend(
       }
 
       Ember.set(settings, 'bounds', geoJsonBounds);
-      settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
-
-      Ember.set(_layerHash, 'settings', settings);
 
       if (this.get('_styleSettingsAreAvailableForType')) {
         let styleSettings = this.get('_styleSettings');
-        let leafletObject = this.get('_leafletObject');
-        leafletObject.setStyle({
-          stroke: styleSettings.visibilityOutline,
-          color: styleSettings.colorOutline,
-          weight: styleSettings.thicknessOutline,
-          opacity: styleSettings.opacityOutline,
-          lineCap: styleSettings.valueLineCap,
-          lineJoin: styleSettings.valueLineJoin,
-          dashArray: styleSettings.valueDashArray,
-          dashOffset: styleSettings.valueDashOffset,
-          fill: styleSettings.visibilityPouring,
-          fillColor: styleSettings.colorPouring,
-          fillOpacity: styleSettings.opacityPouring,
+        let style = Ember.Object.create({
+          stroke: styleSettings.stroke,
+          color: styleSettings.color,
+          weight: styleSettings.weight,
+          opacity: styleSettings.opacity,
+          lineCap: styleSettings.lineCap,
+          lineJoin: styleSettings.lineJoin,
+          dashArray: styleSettings.dashArray,
+          dashOffset: styleSettings.dashOffset,
+          fill: styleSettings.fill,
+          fillColor: styleSettings.fillColor,
+          fillOpacity: styleSettings.fillOpacity,
         });
+        Ember.set(settings, 'style', style);
       }
+
+      settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
+
+      Ember.set(_layerHash, 'settings', settings);
 
       return _layerHash;
     },
