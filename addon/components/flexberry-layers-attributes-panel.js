@@ -438,14 +438,20 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles flexberry-table 'rowEdited' action.
 
-      @param {Object} tabModel
-      @param {String} rowId
+      @param {Object} tabModel Related tab.
+      @param {String} rowId Editing row identifier.
     */
     onTableRowEdited(tabModel, rowId) {
       let layer = tabModel.featureLink[rowId];
       this._triggerChanged.call([tabModel, layer], { layer });
     },
 
+    /**
+      Handles row's geometry editing.
+
+      @param {Object} tabModel Related tab.
+      @param {String} rowId Editing row identifier.
+    */
     onRowGeometryEdit(tabModel, rowId) {
       // Toggle row geometry editing
       let editedRows = Ember.get(tabModel, '_editedRows');
@@ -505,6 +511,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     },
 
+    /**
+      Handles click on 'Save changes' button.
+
+      @param {Object} tabModel Related tab model.
+    */
     onSaveChangesClick(tabModel) {
       tabModel.leafletObject.save();
       Ember.set(tabModel, '_changed', false);
@@ -607,6 +618,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     }
   },
 
+  /**
+    Returns the available drawing tools according to the type of layer geometry.
+
+    @param {Object} geometryFields Hash with the layer geometry field names and their types.
+  */
   _getAvailableDrawTools(geometryFields) {
     if (!Ember.isNone(geometryFields)) {
       let firstField = Object.keys(geometryFields)[0];
