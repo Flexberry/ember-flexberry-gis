@@ -63,8 +63,8 @@
                 iconClass="remove icon"
                 readonly=(eq tabModel._selectedRowsCount 0) }}
 
-              <div style="height: 35px; color: #7ba7d9; background: #fff; border-radius: 5px; border: 1px solid #7ba7d9; display: inline-block;">
-                <div class="ui simple dropdown item" style="line-height: 30px; margin: 1.8px 5px;">
+              <div class="draw-tools-wrapper">
+                <div class="ui simple dropdown item">
                   <i class="plus icon"></i>
                   <i class="dropdown icon"></i>
                   <div class="menu">
@@ -102,7 +102,7 @@
                 </div>
               </div>
               {{flexberry-button
-                tooltip="Сохранить изменения"
+                tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
                 click=(action "onSaveChangesClick" tabModel)
                 iconClass="save icon"
                 readonly=(not tabModel._changed)
@@ -138,7 +138,7 @@
             }}
             {{flexberry-button
               class=(concat "small-button" (if (get tabModel._editedRows (ember-guid row)) " active" ""))
-              tooltip="Редактировать геометрию"
+              tooltip=(t "components.flexberry-layers-attributes-panel.edit-item-geometry")
               click=(action "onRowGeometryEdit" tabModel (ember-guid row))
               iconClass="move icon"
             }}
@@ -169,6 +169,7 @@
 {{/if}}
 {{#if _newRowDialogHasBeenRequested}}
   {{component "layers-dialogs/attributes/edit"
+    caption=(t "components.layers-dialogs.edit-attributes.add")
     class=flexberryClassNames.addDialog
     visible=_newRowDialogIsVisible
     data=_newRowData
