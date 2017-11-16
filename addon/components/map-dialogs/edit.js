@@ -8,6 +8,7 @@ import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../mixins/dynamic-properties';
 import FlexberryBoundingboxMapLoaderMixin from '../../mixins/flexberry-boundingbox-map-loader';
 import layout from '../../templates/components/map-dialogs/edit';
+import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
 import {
   translationMacro as t
 } from 'ember-i18n';
@@ -404,29 +405,8 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
       let keyWords = this.get('mapModel.keyWords');
       let scale = this.get('mapModel.scale');
       let crs = this.get('mapModel.coordinateReferenceSystem');
-      let minLat;
-      let minLng;
-      let maxLat;
-      let maxLng;
       let boundingBox = this.get('mapModel.boundingBox');
-      let boundingBoxCoords = this.get('mapModel.boundingBox.coordinates.0') || [];
-      boundingBoxCoords.forEach(coordinate => {
-        if (coordinate[0] > maxLng || Ember.isNone(maxLng)) {
-          maxLng = coordinate[0];
-        }
-
-        if (coordinate[0] < minLng || Ember.isNone(minLng)) {
-          minLng = coordinate[0];
-        }
-
-        if (coordinate[1] > maxLat || Ember.isNone(maxLat)) {
-          maxLat = coordinate[1];
-        }
-
-        if (coordinate[1] < minLat || Ember.isNone(minLat)) {
-          minLat = coordinate[1];
-        }
-      });
+      let bounds = getBounds(boundingBox);
 
       crs = Ember.isNone(crs) ? {} : JSON.parse(crs);
 
@@ -442,10 +422,10 @@ let FlexberryEditMapDialogComponent = Ember.Component.extend(
         coordinateReferenceSystem: crs,
         boundingBox: boundingBox,
         bboxCoords: {
-          minLat: minLat || -90,
-          minLng: minLng || -180,
-          maxLat: maxLat || 90,
-          maxLng: maxLng || 180,
+          minLat: bounds.minLat,
+          minLng: bounds.minLng,
+          maxLat: bounds.maxLat,
+          maxLng: bounds.maxLng,
         },
       });
     },

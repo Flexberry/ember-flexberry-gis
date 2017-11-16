@@ -454,9 +454,9 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
         coordinates: [
           [
             [minLng, minLat],
-            [minLng, maxLat],
-            [maxLng, maxLat],
             [maxLng, minLat],
+            [maxLng, maxLat],
+            [minLng, maxLat],
             [minLng, minLat]
           ]
         ],

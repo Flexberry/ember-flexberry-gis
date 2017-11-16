@@ -455,6 +455,7 @@ export default Ember.Mixin.create({
     Ember.set(layer, 'scale', Ember.get(layerProperties, 'scale'));
     Ember.set(layer, 'coordinateReferenceSystem', Ember.get(layerProperties, 'coordinateReferenceSystem'));
     Ember.set(layer, 'settings', Ember.get(layerProperties, 'settings'));
+    Ember.set(layer, 'boundingBox', Ember.get(layerProperties, 'boundingBox'));
     return layer;
   },
 
