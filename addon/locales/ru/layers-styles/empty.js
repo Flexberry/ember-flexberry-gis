@@ -1,3 +1,4 @@
 export default {
-  'caption': 'Без знака'
+  'caption': 'Без знака',
+  'layer-will-be-invisible-message': 'Слой будет невидим на карте'
 };

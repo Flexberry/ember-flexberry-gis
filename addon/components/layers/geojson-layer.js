@@ -14,7 +14,13 @@ import BaseLayer from '../base-vector-layer';
 export default BaseLayer.extend({
 
   leafletOptions: [
-    'pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng', 'geojson', 'crs'
+    'pointToLayer',
+    'onEachFeature',
+    'filter',
+    'coordsToLatLng',
+    'geojson',
+    'crs',
+    'style'
   ],
 
   layerFunctions: ['pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng'],

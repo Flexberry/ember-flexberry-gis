@@ -20,9 +20,9 @@ export default Ember.Component.extend({
   /**
     Hash containing style settings.
 
-    @property styleSettings
+    @property style
     @type Object
     @default null
   */
-  styleSettings: null
+  style: null
 });

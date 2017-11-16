@@ -642,28 +642,19 @@ export default Ember.Component.extend(
       '_availableLayerStylesCaptions.[]',
       '_layer.settings.styleSettings.type',
       function() {
-        Ember.run.once(this, '_setSelectedLayerStyleCaption');
+        //Ember.run.once(this, '_setSelectedLayerStyleCaption');
+        let availableLayerStyles = this.get('_availableLayerStyles');
+        let selectedLayerStyle = this.get('_layer.settings.styleSettings.type');
+        let selectedLayerStyleIndex = availableLayerStyles.findIndex((layerStyle) => {
+          return selectedLayerStyle === layerStyle;
+        });
+
+        if (selectedLayerStyleIndex >= 0) {
+          let layerStylesCaptions = this.get('_availableLayerStylesCaptions');
+          this.set('_selectedLayerStyleCaption', layerStylesCaptions.objectAt(selectedLayerStyleIndex));
+        }
       }
     ),
-
-    /**
-      Sets selected layer style caption by its value.
-
-      @method _setSelectedLayerStyleCaption
-      @private
-    */
-    _setSelectedLayerStyleCaption() {
-      let availableLayerStyles = this.get('_availableLayerStyles');
-      let selectedLayerStyle = this.get('_layer.settings.styleSettings.type');
-      let selectedLayerStyleIndex = availableLayerStyles.findIndex((layerStyle) => {
-        return selectedLayerStyle === layerStyle;
-      });
-
-      if (selectedLayerStyleIndex >= 0) {
-        let layerStylesCaptions = this.get('_availableLayerStylesCaptions');
-        this.set('_selectedLayerStyleCaption', layerStylesCaptions.objectAt(selectedLayerStyleIndex));
-      }
-    },
 
     /**
       Observes changes in '_selectedLayerStyleCaption' property and changes style type in related layer settings hash.

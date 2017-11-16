@@ -97,10 +97,13 @@ export default Ember.Service.extend({
     @param {Object} options Method options.
     @param {String} options.type Layer style type.
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} options.leafletLayer Leaflet layer to which layer-style must be applied.
-    @param {Object} options.style Hash containing style settings.
+    @param {Object} options.styleSettings Hash containing style settings.
   */
-  renderOnLeafletLayer({ type, leafletLayer, style }) {
+  renderOnLeafletLayer({ leafletLayer, styleSettings }) {
+    let type = Ember.get(styleSettings, 'type');
+    let style = Ember.get(styleSettings, 'style');
     let layerStyle = this._getLayerStyle(type);
+
     layerStyle.renderOnLeafletLayer({ leafletLayer, style });
   },
 
@@ -109,12 +112,14 @@ export default Ember.Service.extend({
 
     @method applyStyleToLeafletLayer
     @param {Object} options Method options.
-    @param {String} options.type Layer style type.
     @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which layer-style preview must be rendered.
-    @param {Object} options.style Hash containing style settings.
+    @param {Object} options.styleSettings Hash containing style settings.
   */
-  renderOnCanvas({ type, canvas, style }) {
+  renderOnCanvas({ canvas, styleSettings }) {
+    let type = Ember.get(styleSettings, 'type');
+    let style = Ember.get(styleSettings, 'style');
     let layerStyle = this._getLayerStyle(type);
+
     layerStyle.renderOnCanvas({ canvas, style });
   }
 });

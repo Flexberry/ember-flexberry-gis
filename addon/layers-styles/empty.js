@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
 import BaseLayerStyle from './-private/base';
 
 /**
@@ -31,7 +32,15 @@ export default BaseLayerStyle.extend({
     @param {Object} options.style Hash containing style settings.
   */
   renderOnLeafletLayer({ leafletLayer, style }) {
-    throw `Method 'renderOnLeafletLayer' isn't implemented in 'empty' layer-style`;
+    if (!leafletLayer.setStyle) {
+      Ember.Logger.error(`Specified leaflet layer doesn't implement 'setStyle' method.`);
+      return;
+    }
+
+    leafletLayer.setStyle({
+      opacity: 0,
+      fillOpacity: 0
+    });
   },
 
   /**
@@ -43,6 +52,6 @@ export default BaseLayerStyle.extend({
     @param {Object} options.style Hash containing style settings.
   */
   renderOnCanvas({ canvas, style }) {
-    throw `Method 'renderOnCanvas' isn't implemented in 'empty' layer-style`;
+    // Nothing must be rendered on canvas for 'empty' layer style.
   }
 });

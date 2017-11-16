@@ -3,7 +3,7 @@
 */
 
 import Ember from 'ember';
-import layout from '../../templates/components/layers-styles/empty';
+import layout from '../../templates/components/layers-styles/simple';
 
 /**
   Component containing GUI for 'simple' layers-style
@@ -20,9 +20,9 @@ export default Ember.Component.extend({
   /**
     Hash containing style settings.
 
-    @property styleSettings
+    @property style
     @type Object
     @default null
   */
-  styleSettings: null
+  style: null
 });

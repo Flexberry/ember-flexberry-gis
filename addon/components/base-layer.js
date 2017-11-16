@@ -43,6 +43,15 @@ export default Ember.Component.extend(
     _leafletLayerPromise: null,
 
     /**
+      Reference to 'layers-styles-renderer' servie.
+
+      @property _layersStylesRenderer
+      @type LayersStylesRendererService
+      @private
+    */
+    _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
+
+    /**
       Overload wrapper tag name for disabling wrapper.
      */
     tagName: '',
@@ -100,6 +109,15 @@ export default Ember.Component.extend(
       @default null
      */
     opacity: null,
+
+    /**
+      Hash containing layer's style settings.
+
+      @property styleSettings
+      @type Object
+      @default null
+     */
+    styleSettings: null,
 
     /**
       Layer's coordinate reference system (CRS).
@@ -177,6 +195,7 @@ export default Ember.Component.extend(
       this._setLayerVisibility();
       this._setLayerZIndex();
       this._setLayerOpacity();
+      this._setLayerStyle();
     },
 
     /**
@@ -221,6 +240,28 @@ export default Ember.Component.extend(
       }
 
       leafletLayer.setOpacity(this.get('opacity'));
+    },
+
+    /**
+      Sets leaflet layer's style.
+
+      @method _setLayerStyle
+      @private
+    */
+    _setLayerStyle() {
+      let leafletLayer = this.get('_leafletObject');
+
+      if (Ember.isNone(leafletLayer)) {
+        return;
+      }
+
+      let styleSettings = this.get('styleSettings');
+      if (Ember.isNone(styleSettings)) {
+        return;
+      }
+
+      let layersStylesRenderer = this.get('_layersStylesRenderer');
+      layersStylesRenderer.renderOnLeafletLayer({ leafletLayer, styleSettings });
     },
 
     /**
@@ -281,11 +322,22 @@ export default Ember.Component.extend(
       Observes and handles changes in {{#crossLink "BaseLayerComponent/opacity:property"}}'opacity' property{{/crossLink}}.
       Changes layer's opacity.
 
-      @method opacityDidChange
+      @method _opacityDidChange
       @private
     */
     _opacityDidChange: Ember.observer('opacity', function () {
       this._setLayerOpacity();
+    }),
+
+    /**
+      Observes and handles changes in {{#crossLink "BaseLayerComponent/styleSettings:property"}}'styleSettings' property{{/crossLink}}.
+      Changes layer's style settings.
+
+      @method _styleSettingsDidChange
+      @private
+    */
+    _styleSettingsDidChange: Ember.observer('styleSettings', function () {
+      this._setLayerStyle();
     }),
 
     /**

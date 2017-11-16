@@ -68,7 +68,6 @@ export default BaseLayerStyle.extend({
     @param {Object} options.style Hash containing style settings.
   */
   renderOnLeafletLayer({ leafletLayer, style }) {
-    throw `Method 'renderOnLeafletLayer' isn't implemented in 'simple' layer-style`;
   },
 
   /**
@@ -80,6 +79,5 @@ export default BaseLayerStyle.extend({
     @param {Object} options.style Hash containing style settings.
   */
   renderOnCanvas({ canvas, style }) {
-    throw `Method 'renderOnCanvas' isn't implemented in 'simple' layer-style`;
   }
 });

@@ -6,30 +6,42 @@ import Ember from 'ember';
 
 /**
   Mixin containing additional logic for layer and layer-like models.
-
   @class LayerModelMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
 export default Ember.Mixin.create({
-  settingsAsObject: Ember.computed('settings', function () {
+  /**
+    Object with layer's settings.
+    @property settingsAsObject
+    @type Object
+    @default null
+    @readOnly
+  */
+  settingsAsObject: null,
+
+  /**
+    SettingsAsObject computing with observer, because Yandex browser don't recompute settingsAsObject,
+    when it's computed property.
+  */
+  settingsObserver: Ember.on('init', Ember.observer('settings', function() {
     let stringToDeserialize = this.get('settings');
     if (!Ember.isBlank(stringToDeserialize)) {
       try {
         let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
         let defaultSettings = layerClassFactory.createSettings();
+        this.set('settingsAsObject', Ember.$.extend(true, defaultSettings, JSON.parse(stringToDeserialize)));
 
-        return Ember.$.extend(true, defaultSettings, JSON.parse(stringToDeserialize));
+        return;
       } catch (e) {
         Ember.Logger.error(`Computation of 'settingsAsObject' property for '${this.get('name')}' layer has been failed: ${e}`);
       }
     }
 
-    return {};
-  }),
+    this.set('settingsAsObject', {});
+  })),
 
   /**
     Flag: indicates whether layer can be identified.
-
     @property canBeIdentified
     @type Boolean
     @readOnly
@@ -48,7 +60,6 @@ export default Ember.Mixin.create({
 
   /**
     Flag: indicates whether 'search' operation is available for this layer.
-
     @property canBeSearched
     @type Boolean
     @readOnly
@@ -67,7 +78,6 @@ export default Ember.Mixin.create({
 
   /**
     Flag: indicates whether 'context search' operation is available for this layer.
-
     @property canBeContextSearched
     @type Boolean
     @readOnly
@@ -86,7 +96,6 @@ export default Ember.Mixin.create({
 
   /**
    Checks whether layer should be shown on minimap.
-
     @property showOnMinimap
     @type {Boolean} Flag: indicates whether layer should be shown on minimap.
     @readOnly
@@ -97,7 +106,6 @@ export default Ember.Mixin.create({
 
   /**
     Flag: layer's whether layer's legend can be displayed.
-
     @property hasLegend
     @type Boolean
     @readOnly
@@ -116,7 +124,6 @@ export default Ember.Mixin.create({
 
   /**
     Collection of nested layers.
-
     @property layers
     @return {Array} collection of child layers
   */
@@ -138,7 +145,6 @@ export default Ember.Mixin.create({
 
   /**
     Layer's latLngBounds.
-
     @property bounds
     @readonly
     @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a> this layer's latLngBounds.

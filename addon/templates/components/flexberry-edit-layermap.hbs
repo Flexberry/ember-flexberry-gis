@@ -313,7 +313,7 @@
             }}
           </div>
           {{#if (known-for-type "component" (concat "layers-styles/" _layer.settings.styleSettings.type))}}
-            {{component (concat "layers-styles/" _layer.settings.styleSettings.type) styleSettings=_layer.settings.styleSettings}}
+            {{component (concat "layers-styles/" _layer.settings.styleSettings.type) style=_layer.settings.styleSettings.style}}
           {{else}}
             {{ui-message
               type="error"
