@@ -63,49 +63,22 @@
                 iconClass="remove icon"
                 readonly=(eq tabModel._selectedRowsCount 0) }}
 
-              <div class="draw-tools-wrapper">
-                <div class="ui simple dropdown item">
-                  <i class="plus icon"></i>
-                  <i class="dropdown icon"></i>
-                  <div class="menu">
-                    {{#if (array-contains tabModel.availableDrawTools "marker")}}
-                      <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "marker"}}>
-                        <i class="flexberry-map-tool-icon marker icon"></i>
-                        Marker
-                      </a>
-                    {{/if}}
-                    {{#if (array-contains tabModel.availableDrawTools "polyline")}}
-                      <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "polyline"}}>
-                        <i class="flexberry-map-tool-icon empty star icon"></i>
-                        Polyline
-                      </a>
-                    {{/if}}
-                    {{#if (array-contains tabModel.availableDrawTools "circle")}}
-                      <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "circle"}}>
-                        <i class="flexberry-map-tool-icon circle icon"></i>
-                        Circle
-                      </a>
-                    {{/if}}
-                    {{#if (array-contains tabModel.availableDrawTools "rectangle")}}
-                      <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "rectangle"}}>
-                        <i class="flexberry-map-tool-icon square icon"></i>
-                        Rectangle
-                      </a>
-                    {{/if}}
-                    {{#if (array-contains tabModel.availableDrawTools "polygon")}}
-                      <a class="item" onclick={{action "onGeometryTypeSelect" tabModel "polygon"}}>
-                        <i class="flexberry-map-tool-icon star icon"></i>
-                        Polygon
-                      </a>
-                    {{/if}}
-                  </div>
-                </div>
-              </div>
+              {{!-- available geometry add tools --}}
+              {{#each availableGeometryAddModes as |mode|}}
+                {{component (concat "geometry-add-modes/" mode)
+                  leafletMap=leafletMap
+                  settings=(hash
+                    drawTools=tabModel.availableDrawTools
+                  )
+                  onComplete=(action "onGeometryAddComplete" tabModel)
+                }}
+              {{/each}}
+
               {{flexberry-button
                 tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
                 click=(action "onSaveChangesClick" tabModel)
                 iconClass="save icon"
-                readonly=(not tabModel._changed)
+                readonly=(not (get tabModel "leafletObject._wasChanged"))
               }}
 
             </div>

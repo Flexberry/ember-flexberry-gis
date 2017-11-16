@@ -72,7 +72,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let tabModel = Ember.Object.extend({
           _top: 5,
           _skip: 0,
-          _changed: false,
           _selectedRows: {},
           _editedRows: {},
           _selectedRowsCount: Ember.computed('_selectedRows', function () {
@@ -193,6 +192,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default null
   */
   settings: null,
+
+  /**
+    Available geometry add modes.
+
+  */
+  availableGeometryAddModes: ['draw'], // TODO Добавить 'manual' и 'geoprovider'
 
   /**
     Initializes component.
@@ -477,40 +482,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
     },
 
-    onGeometryTypeSelect(tabModel, mapToolName) {
-      let editTools = this._getEditTools();
-      Ember.set(this.get('leafletMap'), 'drawTools', editTools);
-      let that = { component: this, tabModel: tabModel };
-      editTools.on('editable:drawing:end', this._disableDraw, that);
-      this.$().closest('body').on('keydown', ((e) => {
-        // Esc was pressed
-        if (e.which === 27) {
-          this._disableDraw.call(that);
-        }
-      }));
-
-      // TODO add event listener on mapTool.enable event - to disable drawing tool when user click on any map tool.
-
-      switch (mapToolName) {
-        case 'marker':
-          editTools.startMarker();
-          break;
-        case 'polyline':
-          editTools.startPolyline();
-          break;
-        case 'circle':
-          editTools.startCircle();
-          break;
-        case 'rectangle':
-          editTools.startRectangle();
-          break;
-        case 'polygon':
-          editTools.startPolygon();
-          break;
-      }
-
-    },
-
     /**
       Handles click on 'Save changes' button.
 
@@ -518,9 +489,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     */
     onSaveChangesClick(tabModel) {
       tabModel.leafletObject.save();
-      Ember.set(tabModel, '_changed', false);
+      Ember.set(tabModel, 'leafletObject._wasChanged', false);
     },
 
+    /**
+      Handles new row attributes dialog's 'approve' action.
+
+      @param {Object} data A hash containing added feature properties.
+    */
     onNewRowDialogApprove(data) {
       let tabModel = this.get('_newRowTabModel');
       let layer = this.get('_newRowLayer');
@@ -544,12 +520,25 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this._triggerChanged.call([tabModel, layer, true], { layer });
     },
 
+    /**
+      Handles new row attributes dialog's 'deny' action.
+    */
     onNewRowDialogDeny() {
       let layer = this.get('_newRowLayer');
       this.get('leafletMap').removeLayer(layer);
 
       this.set('_newRowTabModel', null);
       this.set('_newRowLayer', null);
+    },
+
+    /**
+      Handles a new geometry adding completion.
+
+      @param {Object} tabModel Related tab model.
+      @param {Object} addedLayer Added layer.
+    */
+    onGeometryAddComplete(tabModel, addedLayer) {
+      this._showNewRowDialog(tabModel, addedLayer);
     }
   },
 
@@ -600,24 +589,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     this.set('_newRowDialogIsVisible', true);
   },
 
-  _disableDraw(e) {
-    let that = this.component;
-    let tabModel = this.tabModel;
-    let editTools = that.get('_editTools');
-
-    that.$().closest('body').off('keydown');
-
-    if (!Ember.isNone(editTools)) {
-      editTools.off('editable:drawing:end', that._disableDraw, this);
-      editTools.stopDrawing();
-    }
-
-    if (!Ember.isNone(e)) {
-      let editedLayer = e.layer;
-      that._showNewRowDialog(tabModel, editedLayer);
-    }
-  },
-
   /**
     Returns the available drawing tools according to the type of layer geometry.
 
@@ -648,8 +619,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _triggerChanged(e) {
     let [tabModel, layer, onlyChange] = this;
     if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(layer))) {
-      Ember.set(tabModel, '_changed', true);
-      tabModel.notifyPropertyChange('_changed');
+      Ember.set(tabModel, 'leafletObject._wasChanged', true);
+      tabModel.notifyPropertyChange('leafletObject._wasChanged');
 
       if (!onlyChange) {
         tabModel.leafletObject.editLayer(layer);

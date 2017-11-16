@@ -527,7 +527,7 @@
         display: inline-block;
       }
 
-      .draw-tools-wrapper {
+      .flexberry-geometry-add-mode-draw {
         height: 35px;
         color: #7ba7d9;
         background: #fff;
