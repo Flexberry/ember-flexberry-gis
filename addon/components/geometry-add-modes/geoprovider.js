@@ -133,7 +133,7 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
   /**
     Component's action invoking when new geometry was added.
 
-    @method sendingActions.onComplete
+    @method sendingActions.complete
     @param {Object} addedLayer Added layer.
   */
 });

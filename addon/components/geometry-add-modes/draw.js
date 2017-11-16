@@ -113,14 +113,14 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
     if (!Ember.isNone(e)) {
       let addedLayer = e.layer;
-      this.sendAction('onComplete', addedLayer);
+      this.sendAction('complete', addedLayer);
     }
   },
 
   /**
     Component's action invoking when new geometry was added.
 
-    @method sendingActions.onComplete
+    @method sendingActions.complete
     @param {Object} addedLayer Added layer.
   */
 });

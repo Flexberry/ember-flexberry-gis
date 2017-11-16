@@ -68,9 +68,10 @@
                 {{component (concat "geometry-add-modes/" mode)
                   leafletMap=leafletMap
                   settings=(hash
-                    drawTools=tabModel.availableDrawTools
+                    drawTools=(get tabModel "availableDrawTools")
+                    layerCRS=(get tabModel "leafletObject.options.crs")
                   )
-                  onComplete=(action "onGeometryAddComplete" tabModel)
+                  complete=(action "onGeometryAddComplete" tabModel)
                 }}
               {{/each}}
 

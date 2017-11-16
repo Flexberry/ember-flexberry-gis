@@ -50,6 +50,13 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
 
   _dialogVisible: false,
 
+  /**
+    Added coordinates.
+  */
+  _coordinates: null,
+
+  _coordinatesWithError: null,
+
   actions: {
     /**
       Handles button click.
@@ -60,80 +67,76 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
     },
 
     /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.beforeShow:method"}}'flexberry-dialog' component's 'beforeShow' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.beforeShow:method"}}'beforeShow' action{{/crossLink}}.
-
-      @method actions.onBeforeShow
-    */
-    onBeforeShow() {
-      // this.parseData();
-
-      // this.sendAction('beforeShow');
-    },
-
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.show:method"}}'flexberry-dialog' component's 'show' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.show:method"}}'show' action{{/crossLink}}.
-
-      @method actions.onShow
-    */
-    onShow() {
-      // this.sendAction('show');
-    },
-
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.beforeHide:method"}}'flexberry-dialog' component's 'beforeHide' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.beforeHide:method"}}'beforeHide' action{{/crossLink}}.
-
-      @method actions.onBeforeHide
-    */
-    onBeforeHide() {
-      // this.sendAction('beforeHide');
-    },
-
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.hide:method"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.hide:method"}}'hide' action{{/crossLink}}.
-
-      @method actions.onHide
-    */
-    onHide() {
-      // this.sendAction('hide');
-    },
-
-    /**
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
+      Invokes {{#crossLink "FlexberryGeometryAddModeManualComponent/sendingActions.complete:method"}}'complete' action{{/crossLink}}.
 
       @method actions.onApprove
     */
     onApprove(e) {
-      // let parsedData = this.parseData();
-      // if (Ember.isNone(parsedData)) {
-      //   // Prevent dialog from being closed.
-      //   e.closeDialog = false;
+      let parsedCoordinates = this.parseCoordinates();
+      if (Ember.isNone(parsedCoordinates)) {
+        // Prevent dialog from being closed.
+        e.closeDialog = false;
 
-      //   return;
-      // }
+        return;
+      }
 
-      // this.sendAction('approve', parsedData);
+      // create a polygon with provided coordinates
+      let addedLayer = L.polygon(parsedCoordinates);
+      this.set('_coordinates', null);
+      this.set('_coordinatesWithError', null);
+
+      this.sendAction('complete', addedLayer);
     },
 
     /**
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.deny:method"}}'deny' action{{/crossLink}}.
 
       @method actions.onDeny
     */
-    onDeny() {
-      // this.sendAction('deny');
+    onDeny(e) {
+      this.set('_coordinates', null);
+      this.set('_coordinatesWithError', null);
     }
-  }
+  },
+
+  /**
+    Parses coordinates.
+
+    @method parseCoordinates
+    @return {Object} Parsed coordinates if it is valid or null.
+  */
+  parseCoordinates() {
+    let coordinates = this.get('_coordinates');
+    let result = null;
+
+    if (Ember.isNone(coordinates)) {
+      this.set('_coordinatesWithError', true);
+    } else {
+      let lines = coordinates.split('\n');
+      lines.forEach((line) => {
+        let check = line.match(/(.*) (.*)/);
+        if (!check) {
+          this.set('_coordinatesWithError', true);
+          return null;
+        }
+
+        result = result || [];
+        result.push([check[1], check[2]]);
+      });
+    }
+
+    if (!Ember.isNone(result)) {
+      this.set('_coordinatesWithError', false);
+    }
+
+    return result;
+  },
 
   /**
     Component's action invoking when new geometry was added.
 
-    @method sendingActions.onComplete
+    @method sendingActions.complete
     @param {Object} addedLayer Added layer.
   */
 });
