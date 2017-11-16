@@ -21,6 +21,8 @@ import FlexberryBoundingboxComponent from './components/flexberry-boundingbox';
 import FlexberryLayersAttributesPanel from './components/flexberry-layers-attributes-panel';
 import FlexberryEditCrsComponent from './components/flexberry-edit-crs';
 
+import LayersStyles from './layers-styles';
+
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
 import GISSearchForm from './forms/gis-search-form';
@@ -36,6 +38,8 @@ export default {
     'new-platform-flexberry-g-i-s-map': NewPlatformFlexberryGISMapModel,
     'new-platform-flexberry-g-i-s-parameter-metadata': NewPlatformFlexberryGISParameterMetadataModel
   },
+
+  'layers-styles': LayersStyles,
 
   'forms': {
     'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,

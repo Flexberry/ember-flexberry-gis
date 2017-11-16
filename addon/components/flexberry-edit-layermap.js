@@ -2,6 +2,7 @@ import Ember from 'ember';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
+import VectorLayer from '../layers/-private/vector';
 import layout from '../templates/components/flexberry-edit-layermap';
 import {
   translationMacro as t
@@ -170,16 +171,6 @@ export default Ember.Component.extend(
       @default null
     */
     layer: null,
-
-    /**
-      Available modes.
-
-      @property _availableModes
-      @type Object[]
-      @default null
-      @private
-    */
-    _availableModes: null,
 
     /**
       Selected mode.
@@ -408,12 +399,14 @@ export default Ember.Component.extend(
       '_searchSettingsAreAvailableForType',
       '_displaySettingsAreAvailableForType',
       '_legendSettingsAreAvailableForType',
+      '_styleSettingsAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
         return this.get('_identifySettingsAreAvailableForType') ||
           this.get('_searchSettingsAreAvailableForType') ||
           this.get('_displaySettingsAreAvailableForType') ||
-          this.get('_legendSettingsAreAvailableForType');
+          this.get('_legendSettingsAreAvailableForType') ||
+          this.get('_styleSettingsAreAvailableForType');
       }
     ),
 
@@ -475,6 +468,23 @@ export default Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether 'style' settings are available for the selected layer type.
+
+      @property _styleSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _styleSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+
+      // Style settings are available only for vector layers.
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      return !Ember.isNone(layerClass) && layerClass instanceof VectorLayer;
+    }),
+
+    /**
       Flag: indicates whether 'links-group' of settings is available for the selected layer type.
 
       @property _linksGroupIsAvailableForType
@@ -503,13 +513,24 @@ export default Ember.Component.extend(
     }),
 
     /**
+      Available modes.
+      Initializes in component's 'init' method.
+
+      @property _availableModes
+      @type Object[]
+      @default null
+      @private
+    */
+    _availableModes: null,
+
+    /**
       Available modes captions.
 
       @property _availableModesCaptions
       @type String[]
       @readonly
     */
-    _availableModesCaptions: Ember.computed('_availableModes', 'i18n', function () {
+    _availableModesCaptions: Ember.computed('_availableModes', 'i18n.locale', function () {
       let _availableModes = this.get('_availableModes');
 
       let modes = Ember.A();
@@ -559,6 +580,163 @@ export default Ember.Component.extend(
 
       return modeIndex > -1 ? _availableModes.objectAt(modeIndex) : null;
     }),
+
+    /**
+      Reference to 'layers-styles-renderer' servie.
+
+      @property _layersStylesRenderer
+      @type LayersStylesRendererService
+      @private
+    */
+    _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
+
+    /**
+      Available layer styles.
+      Initializes in component's 'init' method.
+
+      @property _availableLayerStyles
+      @type Object[]
+      @default null
+      @private
+    */
+    _availableLayerStyles: null,
+
+    /**
+      Available layer styles captions.
+
+      @property _availableLayerStylesCaptions
+      @type String[]
+      @readonly
+    */
+    _availableLayerStylesCaptions: Ember.computed('_availableLayerStyles', 'i18n.locale', function() {
+      let availableLayerStyles = this.get('_availableLayerStyles');
+
+      let layerStylesCaptions = Ember.A();
+      if (Ember.isArray(availableLayerStyles) && availableLayerStyles.length > 0) {
+        let i18n = this.get('i18n');
+        layerStylesCaptions.pushObjects(availableLayerStyles.map((layerStyle) => {
+          return i18n.t(`layers-styles.${layerStyle}.caption`);
+        }));
+      }
+
+      return layerStylesCaptions;
+    }),
+
+    /**
+      Selected layer style caption.
+
+      @property _selectedLayerStyleCaption
+      @type String
+      @default null
+      @private
+    */
+    _selectedLayerStyleCaption: null,
+
+    /**
+      Observes changes in '_availableLayerStylesCaptions' or '_layer.settings.styleSettings.type' and computes '_selectedLayerStyleCaption'.
+
+      @method _availableLayerStylesCaptionsOrSelectedLayerStyleDidChange
+      @private
+    */
+    _availableLayerStylesCaptionsOrSelectedLayerStyleDidChange: Ember.observer(
+      '_availableLayerStylesCaptions.[]',
+      '_layer.settings.styleSettings.type',
+      function() {
+        Ember.run.once(this, '_setSelectedLayerStyleCaption');
+      }
+    ),
+
+    /**
+      Sets selected layer style caption by its value.
+
+      @method _setSelectedLayerStyleCaption
+      @private
+    */
+    _setSelectedLayerStyleCaption() {
+      let availableLayerStyles = this.get('_availableLayerStyles');
+      let selectedLayerStyle = this.get('_layer.settings.styleSettings.type');
+      let selectedLayerStyleIndex = availableLayerStyles.findIndex((layerStyle) => {
+        return selectedLayerStyle === layerStyle;
+      });
+
+      if (selectedLayerStyleIndex >= 0) {
+        let layerStylesCaptions = this.get('_availableLayerStylesCaptions');
+        this.set('_selectedLayerStyleCaption', layerStylesCaptions.objectAt(selectedLayerStyleIndex));
+      }
+    },
+
+    /**
+      Observes changes in '_selectedLayerStyleCaption' property and changes style type in related layer settings hash.
+
+      @method _selectedLayerStyleCaptionDidChange
+      @private
+    */
+    _selectedLayerStyleCaptionDidChange: Ember.observer('_selectedLayerStyleCaption', function () {
+      Ember.run.once(this, '_setSelectedLayerStyle');
+    }),
+
+    /**
+      Sets selected layer style by its i18n-ed caption.
+
+      @method _setSelectedLayerStyle
+      @private
+    */
+    _setSelectedLayerStyle() {
+      let availableLayerStyles = this.get('_availableLayerStyles');
+      let availableLayerStylesCaptions = this.get('_availableLayerStylesCaptions');
+      let selectedLayerStyleCaption = this.get('_selectedLayerStyleCaption');
+
+      if (!Ember.isArray(availableLayerStyles) || !Ember.isArray(availableLayerStylesCaptions) || Ember.isBlank(selectedLayerStyleCaption)) {
+        return null;
+      }
+
+      let selectedLayerStyleIndex = availableLayerStylesCaptions.findIndex((layerStylesCaption) => {
+        return layerStylesCaption.toString() === selectedLayerStyleCaption.toString();
+      });
+
+      let selectedLayerStyle = selectedLayerStyleIndex > -1 ?
+        availableLayerStyles.objectAt(selectedLayerStyleIndex) :
+        null;
+
+      this.set('_layer.settings.styleSettings.type', selectedLayerStyle);
+    },
+
+    /**
+      Observes changes in '_layer.settings.styleSettings.type' and computes default style setings.
+
+      @method _selectedLayerStyleDidChange
+      @private
+    */
+    _selectedLayerStyleDidChange: Ember.observer('_layer.settings.styleSettings.type', function() {
+      Ember.run.once(this, '_setSelectedLayerStyleDefaultSettings');
+    }),
+
+    /**
+      Previosly selected layer style.
+
+      @property _previouslySelectedLayerStyle
+      @type string
+      @private
+    */
+    _previouslySelectedLayerStyle: null,
+
+    /**
+      Sets default style settings withrespect to '_layer.settings.styleSettings.type'.
+
+      @method _setSelectedLayerStyleDefaultSettings
+      @private
+    */
+    _setSelectedLayerStyleDefaultSettings() {
+      let previouslySelectedLayerStyle = this.get('_previouslySelectedLayerStyle');
+      let selectedLayerStyle = this.get('_layer.settings.styleSettings.type');
+      if (previouslySelectedLayerStyle === selectedLayerStyle) {
+        return;
+      }
+
+      this.set('_layer.settings.styleSettings', this.get('_layersStylesRenderer').getDefaultStyleSettings(selectedLayerStyle));
+
+      this.set('_previouslySelectedLayerStyle', selectedLayerStyle);
+    },
 
     actions: {
       /**
@@ -751,6 +929,8 @@ export default Ember.Component.extend(
         coordinateReferenceSystem: crs,
         settings: settings,
       });
+
+      this.set('_previouslySelectedLayerStyle', Ember.get(settings, 'styleSettings.type'));
     },
 
     /**
@@ -761,6 +941,7 @@ export default Ember.Component.extend(
     */
     _destroyInnerLayer() {
       this.set('_layer', null);
+      this.set('_previouslySelectedLayerStyle', null);
       this._destroyInnerSettings();
     },
 
@@ -810,7 +991,7 @@ export default Ember.Component.extend(
             activeTab: 'main-tab'
           },
           'display-group': {
-            activeTab: 'identify-tab'
+            activeTab: 'display-tab'
           },
           'links-group': {
             activeTab: 'links-tab'
@@ -818,10 +999,12 @@ export default Ember.Component.extend(
         }
       });
 
-      // Available layers types for related dropdown.
       let owner = Ember.getOwner(this);
+
+      // Initialize available layers types for related dropdown.
       this.set('_availableTypes', owner.knownNamesForType('layer'));
 
+      // Initialize available edit modes.
       let availableEditModes = Ember.A();
       let editModesNames = owner.knownNamesForType('edit-mode');
       editModesNames.forEach((modeName) => {
@@ -831,8 +1014,11 @@ export default Ember.Component.extend(
           availableEditModes.pushObject(editModeFactory);
         }
       });
-
       this.set('_availableModes', availableEditModes);
+
+      // Initialize available layer styles.
+      this.set('_availableLayerStyles', this.get('_layersStylesRenderer').getAvailableLayerStylesTypes());
+
       this.sendAction('onInit', this.getLayerProperties.bind(this));
     },
 
