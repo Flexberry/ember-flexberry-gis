@@ -1,0 +1,26 @@
+{{flexberry-button
+  tooltip="Add with geoprovider"
+  click=(action "onButtonClick")
+  iconClass="world icon"
+}}
+
+{{!--
+  Semantic UI modal dialogs takes long time to be initialized
+  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+--}}
+{{#if _dialogHasBeenRequested}}
+  {{#flexberry-dialog class=flexberryClassNames.dialog
+    caption="Add with coordinates"
+    approveButtonCaption="Ok"
+    denyButtonCaption="Cancel"
+    visible=_dialogVisible
+    approve=(action "onApprove")
+    deny=(action "onDeny")
+    beforeShow=(action "onBeforeShow")
+    beforeHide=(action "onBeforeHide")
+    show=(action "onShow")
+    hide=(action "onHide")
+  }}
+  <div>TEST</div>
+{{/flexberry-dialog}}
+{{/if}}

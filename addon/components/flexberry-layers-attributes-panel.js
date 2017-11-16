@@ -197,7 +197,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     Available geometry add modes.
 
   */
-  availableGeometryAddModes: ['draw'], // TODO Добавить 'manual' и 'geoprovider'
+  availableGeometryAddModes: ['draw', 'manual', 'geoprovider'],
 
   /**
     Initializes component.

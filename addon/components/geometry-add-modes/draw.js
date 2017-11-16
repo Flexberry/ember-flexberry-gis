@@ -23,8 +23,7 @@ const flexberryClassNames = {
   wrapper: flexberryClassNamesPrefix
 };
 
-export default Ember.Component.extend({
-
+let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   /**
     Reference to component's template.
   */
@@ -125,3 +124,11 @@ export default Ember.Component.extend({
     @param {Object} addedLayer Added layer.
   */
 });
+
+// Add component's CSS-class names as component's class static constants
+// to make them available outside of the component instance.
+FlexberryGeometryAddModeDrawComponent.reopenClass({
+  flexberryClassNames
+});
+
+export default FlexberryGeometryAddModeDrawComponent;
