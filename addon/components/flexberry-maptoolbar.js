@@ -160,6 +160,8 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
 
       this.set('_activeMapTool', mapTool);
       mapTool.enable(...args);
+
+      this.trigger('activate');
     },
 
     /**

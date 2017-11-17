@@ -5,5 +5,7 @@ export default {
   'clear-found': 'Очистить найденные элементы',
   'delete-selected': 'Удалить выбранные элементы',
   'select-item': 'Выбрать',
-  'edit-item': 'Редактировать'
+  'edit-item': 'Редактировать',
+  'edit-item-geometry': 'Редактировать геометрию',
+  'save-changes': 'Сохранить изменения',
 };

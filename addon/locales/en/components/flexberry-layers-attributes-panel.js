@@ -5,5 +5,7 @@ export default {
   'clear-found': 'Clear the found items',
   'delete-selected': 'Delete the selected items',
   'select-item': 'Select',
-  'edit-item': 'Edit'
+  'edit-item': 'Edit',
+  'edit-item-geometry': 'Edit geometry',
+  'save-changes': 'Save changes',
 };

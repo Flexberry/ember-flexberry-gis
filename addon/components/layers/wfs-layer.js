@@ -164,7 +164,7 @@ export default BaseLayer.extend({
 
     let featuresReadFormat = this.getFeaturesReadFormat();
 
-    return L.wfs(options, featuresReadFormat);
+    return L.wfst(options, featuresReadFormat);
   },
 
   /**

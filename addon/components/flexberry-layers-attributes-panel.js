@@ -14,6 +14,15 @@ import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
+  /**
+    Leaflet.Editable drawing tools instance.
+
+    @property _editTools
+    @type <a href="http://leaflet.github.io/Leaflet.Editable/doc/api.html">L.Ediatble</a>
+    @default null
+    @private
+  */
+  _editTools: null,
 
   /**
     Computed property that builds tab models collection from items.
@@ -39,6 +48,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let properties = Ember.A();
         let leafletObject = Ember.get(item, 'leafletObject');
 
+        let availableDrawTools = this._getAvailableDrawTools(Ember.get(leafletObject, 'readFormat.featureType.geometryFields'));
+
         leafletObject.eachLayer((layer) => {
           let props = Ember.get(layer, 'feature.properties');
           let propId = Ember.guidFor(props);
@@ -62,6 +73,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           _top: 5,
           _skip: 0,
           _selectedRows: {},
+          _editedRows: {},
           _selectedRowsCount: Ember.computed('_selectedRows', function () {
             let selectedRows = Ember.get(this, '_selectedRows');
             return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
@@ -82,7 +94,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           featureLink: featureLink,
           propertyLink: propertyLink,
           header: header,
-          properties: properties
+          properties: properties,
+          availableDrawTools: availableDrawTools
         });
       });
     }
@@ -179,6 +192,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default null
   */
   settings: null,
+
+  /**
+    Available modes to add geometry.
+
+    @property availableGeometryAddModes
+    @type Array
+    @default ['draw', 'manual', 'geoprovider']
+  */
+  availableGeometryAddModes: ['draw', 'manual', 'geoprovider'],
 
   /**
     Initializes component.
@@ -348,14 +370,32 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     */
     onDeleteItemClick(tabModel) {
       let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let editedRows = Ember.get(tabModel, '_editedRows');
+      let editedRowsChange = false;
       let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
       selectedFeatureKeys.forEach((key) => {
-        tabModel.leafletObject.removeLayer(tabModel.featureLink[key]);
-        delete selectedRows[key];
+        let layer = tabModel.featureLink[key];
+        tabModel.leafletObject.removeLayer(layer);
         tabModel.properties.removeObject(tabModel.propertyLink[key]);
+        delete selectedRows[key];
+        delete tabModel.featureLink[key];
+        delete tabModel.propertyLink[key];
+
+        if (Ember.get(editedRows, key) || false) {
+          delete editedRows[key];
+          editedRowsChange = true;
+          layer.disableEdit();
+          this.get('leafletMap').off('editable:editing', this._triggerChanged, [tabModel, layer, true]);
+        }
+
+        this._triggerChanged.call([tabModel, layer, false], { layer });
       });
       Ember.set(tabModel, '_selectedRows', selectedRows);
       tabModel.notifyPropertyChange('_selectedRows');
+      if (editedRowsChange) {
+        Ember.set(tabModel, '_editedRows', editedRows);
+        tabModel.notifyPropertyChange('_editedRows');
+      }
     },
 
     /**
@@ -373,6 +413,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_editRowFieldValidators', Ember.get(tabModel, 'leafletObject.readFormat.featureType.fieldValidators'));
       this.set('_editRowData', editedProperty);
       this.set('_editRowDataCopy', Ember.copy(editedProperty, false));
+      this.set('_editRowTabModel', tabModel);
+      this.set('_editRowLayer', tabModel.featureLink[rowId]);
 
       // Include dialog to markup.
       this.set('_editRowDialogHasBeenRequested', true);
@@ -393,10 +435,129 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           var element = data[key];
           if (!Ember.isEqual(element, this.get(`_editRowData.${key}`))) {
             this.set(`_editRowData.${key}`, element);
+            let tabModel = this.get('_editRowTabModel');
+            let layer = this.get('_editRowLayer');
+            this._triggerChanged.call([tabModel, layer, true], { layer });
           }
         }
       }
+    },
+
+    /**
+      Handles flexberry-table 'rowEdited' action.
+
+      @param {Object} tabModel Related tab.
+      @param {String} rowId Editing row identifier.
+    */
+    onTableRowEdited(tabModel, rowId) {
+      let layer = tabModel.featureLink[rowId];
+      this._triggerChanged.call([tabModel, layer, true], { layer });
+    },
+
+    /**
+      Handles row's geometry editing.
+
+      @param {Object} tabModel Related tab.
+      @param {String} rowId Editing row identifier.
+    */
+    onRowGeometryEdit(tabModel, rowId) {
+      // Toggle row geometry editing
+      let editedRows = Ember.get(tabModel, '_editedRows');
+      let edit = Ember.get(editedRows, rowId) || false;
+      edit = !edit;
+      Ember.set(editedRows, rowId, edit);
+      Ember.set(tabModel, '_editedRows', editedRows);
+      tabModel.notifyPropertyChange('_editedRows');
+
+      // Enable feature editing
+      let layer = Ember.get(tabModel, `featureLink.${rowId}`);
+      let leafletMap = this.get('leafletMap');
+
+      let editTools = this._getEditTools();
+      Ember.set(leafletMap, 'editTools', editTools);
+
+      if (edit) {
+        layer.enableEdit(leafletMap);
+        leafletMap.on('editable:editing', this._triggerChanged, [tabModel, layer, true]);
+      } else {
+        layer.disableEdit();
+        leafletMap.off('editable:editing', this._triggerChanged, [tabModel, layer, true]);
+      }
+    },
+
+    /**
+      Handles click on 'Save changes' button.
+
+      @param {Object} tabModel Related tab model.
+    */
+    onSaveChangesClick(tabModel) {
+      tabModel.leafletObject.save();
+      Ember.set(tabModel, 'leafletObject._wasChanged', false);
+    },
+
+    /**
+      Handles new row attributes dialog's 'approve' action.
+
+      @param {Object} data A hash containing added feature properties.
+    */
+    onNewRowDialogApprove(data) {
+      let tabModel = this.get('_newRowTabModel');
+      let layer = this.get('_newRowLayer');
+
+      Ember.set(layer, 'feature', { type: 'Feature' });
+      Ember.set(layer.feature, 'properties', data);
+      Ember.set(layer.feature, 'leafletLayer', layer);
+      layer.setStyle(Ember.get(tabModel, 'leafletObject.options.style'));
+      tabModel.leafletObject.addLayer(layer);
+      layer.disableEdit();
+
+      let propId = Ember.guidFor(data);
+
+      // the hash containing guid of properties object and link to feature layer
+      Ember.set(tabModel, `featureLink.${propId}`, layer);
+
+      // the hash containing guid of properties object and link to that object
+      Ember.set(tabModel, `propertyLink.${propId}`, data);
+      tabModel.properties.pushObject(data);
+
+      this._triggerChanged.call([tabModel, layer, false], { layer });
+    },
+
+    /**
+      Handles new row attributes dialog's 'deny' action.
+    */
+    onNewRowDialogDeny() {
+      let layer = this.get('_newRowLayer');
+      this.get('leafletMap').removeLayer(layer);
+
+      this.set('_newRowTabModel', null);
+      this.set('_newRowLayer', null);
+    },
+
+    /**
+      Handles a new geometry adding completion.
+
+      @param {Object} tabModel Related tab model.
+      @param {Object} addedLayer Added layer.
+    */
+    onGeometryAddComplete(tabModel, addedLayer) {
+      this._showNewRowDialog(tabModel, addedLayer);
     }
+  },
+
+  /**
+    Returns Leaflet.Editable instance.
+  */
+  _getEditTools() {
+    let leafletMap = this.get('leafletMap');
+
+    let editTools = this.get('_editTools');
+    if (Ember.isNone(editTools)) {
+      editTools = new L.Editable(leafletMap);
+      this.set('_editTools', editTools);
+    }
+
+    return editTools;
   },
 
   /**
@@ -415,5 +576,72 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       opacity: 1,
       fillOpacity: 0.3
     });
+  },
+
+  /**
+    Shows a dialog for entering the attributes of the newly added layer.
+
+    @param {Object} tabModel Related tab model.
+    @param {Object} addedLayer Newly added layer.
+  */
+  _showNewRowDialog(tabModel, addedLayer) {
+    let fields = Ember.get(tabModel, 'leafletObject.readFormat.featureType.fields');
+    let data = Object.keys(fields).reduce((result, item) => {
+      result[item] = null;
+      return result;
+    }, {});
+    this.set('_newRowTabModel', tabModel);
+    this.set('_newRowLayer', addedLayer);
+    this.set('_newRowData', data);
+
+    // Include dialog to markup.
+    this.set('_newRowDialogHasBeenRequested', true);
+
+    // Show dialog.
+    this.set('_newRowDialogIsVisible', true);
+  },
+
+  /**
+    Returns the available drawing tools according to the type of layer geometry.
+
+    @param {Object} geometryFields Hash with the layer geometry field names and their types.
+  */
+  _getAvailableDrawTools(geometryFields) {
+    if (!Ember.isNone(geometryFields)) {
+      let firstField = Object.keys(geometryFields)[0];
+      switch (geometryFields[firstField]) {
+        case 'PointPropertyType':
+        case 'MultiPointPropertyType':
+          return ['marker'];
+
+        case 'LineStringPropertyType':
+        case 'MultiLineStringPropertyType':
+          return ['polyline'];
+
+        case 'MultiSurfacePropertyType':
+        case 'PolygonPropertyType':
+        case 'MultiPolygonPropertyType':
+          return ['circle', 'rectangle', 'polygon'];
+      }
+    }
+
+    return ['marker', 'circle', 'polyline', 'rectangle', 'polygon'];
+  },
+
+  /**
+    Mark layer as changed.
+
+    @param {Object} e Event object.
+  */
+  _triggerChanged(e) {
+    let [tabModel, layer, setEdited] = this;
+    if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(layer))) {
+      Ember.set(tabModel, 'leafletObject._wasChanged', true);
+      tabModel.notifyPropertyChange('leafletObject._wasChanged');
+
+      if (setEdited) {
+        tabModel.leafletObject.editLayer(layer);
+      }
+    }
   }
 });
