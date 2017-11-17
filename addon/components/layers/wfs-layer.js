@@ -23,7 +23,8 @@ export default BaseLayer.extend({
     'crs',
     'maxFeatures',
     'showExisting',
-    'style'
+    'style',
+    'filter'
   ],
 
   /**
@@ -152,6 +153,15 @@ export default BaseLayer.extend({
 
   _createWFSLayer(options) {
     options = Ember.$.extend(true, {}, this.get('options'), options);
+    if (options.filter && !(options.filter instanceof Element)) {
+      let filter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(options.filter);
+      if (filter.toGml) {
+        filter = filter.toGml();
+      }
+
+      options.filter = filter;
+    }
+
     let featuresReadFormat = this.getFeaturesReadFormat();
 
     return L.wfs(options, featuresReadFormat);

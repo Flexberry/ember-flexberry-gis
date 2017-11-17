@@ -75,6 +75,15 @@ export default Ember.Component.extend(
     layerModel: null,
 
     /**
+      Layer functions, which must be converted from strings to functions.
+
+      @property layerFunctions
+      @type Array
+      @default []
+    */
+    layerFunctions: [],
+
+    /**
       This layer index, used for layer ordering in Map.
 
       @property index
@@ -253,6 +262,24 @@ export default Ember.Component.extend(
       }
 
       leafletContainer.removeLayer(leafletLayer);
+    },
+
+    /**
+      Converts layer functions from string to function.
+
+      @method _convertLayerFunctions
+      @param {Object} option Layer's current options
+      @private
+    */
+    _convertLayerFunctions(options) {
+      let layerFunctions = this.get('layerFunctions');
+      let customFunction;
+      for (let i = 0; i < layerFunctions.length; i++) {
+        customFunction = Ember.get(options, layerFunctions[i]);
+        if (customFunction && typeof (customFunction) === 'string') {
+          Ember.set(options, layerFunctions[i], new Function('return ' + customFunction)());
+        }
+      }
     },
 
     /**
