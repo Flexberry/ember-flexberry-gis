@@ -87,6 +87,9 @@ export default {
     },
     'links-tab': {
       'caption': 'Настройки связей'
+    },
+    'bbox-tab': {
+      'caption': 'Границы'
     }
   },
   'groups': {

@@ -427,13 +427,46 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
       this.set('_needToUpdateAreaSelect', true);
     }
 
+    // If some of polygon's edges have length of 180 (for example from latitude -90 till latitude 90)
+    // then PostGIS will throw an exception "Antipodal (180 degrees long) edge detected".
+    // Workaround is to make each edge shorter (add additional points into polygon's edges).
+    let bboxEWKT = `SRID=4326;POLYGON((` +
+      `${minLng} ${minLat},` +
+      `${minLng} ${minLat + (maxLat - minLat) * 0.5},` +
+      `${minLng} ${maxLat},` +
+      `${minLng + (maxLng - minLng) * 0.5} ${maxLat},` +
+      `${maxLng} ${maxLat},` +
+      `${maxLng} ${minLat + (maxLat - minLat) * 0.5},` +
+      `${maxLng} ${minLat},` +
+      `${minLng + (maxLng - minLng) * 0.5} ${minLat},` +
+      `${minLng} ${minLat}))`;
+
     // Send 'boundingBoxChange' action to report about changes in bounds.
     this.sendAction('boundingBoxChange', {
       minLat: minLat,
       minLng: minLng,
       maxLat: maxLat,
       maxLng: maxLng,
-      bounds: L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng))
+      bounds: L.latLngBounds(L.latLng(minLat, minLng), L.latLng(maxLat, maxLng)),
+      bboxEWKT: bboxEWKT,
+      bboxGeoJSON: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [minLng, minLat],
+            [maxLng, minLat],
+            [maxLng, maxLat],
+            [minLng, maxLat],
+            [minLng, minLat]
+          ]
+        ],
+        crs: {
+          type: 'name',
+          properties: {
+            name: 'EPSG:4326'
+          }
+        }
+      }
     });
   },
 

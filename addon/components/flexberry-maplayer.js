@@ -369,6 +369,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     coordinateReferenceSystem: null,
 
     /**
+      Layer's bounding box.
+
+      @property boundingBox
+      @type Object
+      @default null
+    */
+    boundingBox: null,
+
+    /**
       Layer's serialized type-related settings.
 
       @property type
