@@ -14,8 +14,12 @@ import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
+import FlexberryLinksEditorComponent from './components/flexberry-links-editor';
 import FlexberryTableComponents from './components/flexberry-table';
 import FlexberryMapInfoComponent from './components/flexberry-mapinfo';
+import FlexberryBoundingboxComponent from './components/flexberry-boundingbox';
+import FlexberryLayersAttributesPanel from './components/flexberry-layers-attributes-panel';
+import FlexberryEditCrsComponent from './components/flexberry-edit-crs';
 
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
@@ -43,6 +47,7 @@ export default {
     'flexberry-table': FlexberryTableComponents,
 
     'feature-result-item': FeatureResultItemComponent,
+    'flexberry-links-editor': FlexberryLinksEditorComponent,
 
     'spatial-bookmarks': {
       'add-bookmark': 'Добавить в закладки',
@@ -100,14 +105,15 @@ export default {
       'opacity': 'Видимость'
     },
 
-    'flexberry-maptoolbar': {
-    },
+    'flexberry-maptoolbar': {},
 
     'map-tools': MapToolsComponents,
-
     'map-commands': MapCommandsComponents,
+    'flexberry-mapinfo': FlexberryMapInfoComponent,
+    'flexberry-boundingbox': FlexberryBoundingboxComponent,
 
-    'flexberry-mapinfo': FlexberryMapInfoComponent
+    'flexberry-layers-attributes-panel': FlexberryLayersAttributesPanel,
+    'flexberry-edit-crs': FlexberryEditCrsComponent
   },
 
   'map-tools': {

@@ -1,31 +1,36 @@
 export default {
-  'header': 'Поиск',
-  'subheader': 'по метаданным слоёв и проектам карт',
+  'header': 'Поиск карт и слоев по метаданным',
+  'advanced-search-conditions': 'Расширенные условия поиска',
+  'search-conditions-what': 'Что искать',
   'keywords': 'Ключевые слова',
   'scale': 'Масштаб',
-  'object': 'Что',
-  'position': 'Где',
+  'scale-prefix': '1:',
+  'scale-no-conditions': 'Условия не заданы',
+  'scale-dropdown-input-title': 'Задайте свой масштаб и нажмите Enter',
+  'scale-dropdown-input-placeholder': 'Другой...',
+  'search-conditions-where': 'Где искать',
   'min-long': 'Долгота (мин.)',
   'min-lat': 'Широта (мин.)',
   'max-long': 'Долгота (макс.)',
   'max-lat': 'Широта (макс.)',
-  'search': 'Искать',
-  'results': 'Результаты',
+  'search-results': 'Результаты поиска',
+  'ctrl-message': 'Удерживайте клавишу Ctrl, чтобы открыть в новом окне',
   'layer-metadata': {
-    'title': 'Метаданные слоёв',
-    'header': {
-      'name': 'Название',
-      'type': 'Тип'
-    }
+    'title': 'Cлои',
+    'actions': {
+      'select': 'Выбрать'
+    },
+    'selected-message': 'Выбрано элементов:',
+    'reset': 'Сбросить',
+    'open-into-map': 'Открыть на карте:',
+    'ok': 'Ok',
+    'new-map': '&lt;Новая карта&gt;',
+    'select-a-map': 'Выберите карту...'
   },
   'maps': {
     'title': 'Карты',
-    'header': {
-      'name': 'Название',
-      'lat': 'Широта',
-      'lng': 'Долгота',
-      'zoom': 'Масштаб',
-      'public': 'Общая'
+    'actions': {
+      'open': 'Открыть'
     }
   }
 };

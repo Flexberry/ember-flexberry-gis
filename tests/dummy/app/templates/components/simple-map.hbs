@@ -1,0 +1,34 @@
+<form class="ui form flexberry-vertical-form" role="form">
+  <div class="ui grid">
+    <div class="twelve wide column">
+      {{flexberry-map
+        lat=lat
+        lng=lng
+        zoom=zoom
+        zoomControl=true
+        leafletInit=(action "onMapLeafletInit" "leafletMap")
+        serviceLayerInit=(action "onServiceLayerInit" "serviceLayer")
+      }}
+      {{#if leafletMap}}
+        {{yield leafletMap}}
+      {{/if}}
+    </div>
+    <div class="four wide column">
+      <div>
+        <h3>{{t "forms.map.tabbar.search.caption"}}</h3>
+        {{flexberry-search-panel
+          querySearch=(action "querySearch")
+          clearSearch=(action "clearSearch")
+          searchInProcess=searchInProcess
+          searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+        }}
+        {{layer-result-list
+          results=searchResults
+          featureSelected=(action 'onLayerFeatureSelected')
+          serviceLayer=serviceLayer
+          leafletMap=leafletMap
+        }}
+      </div>
+    </div>
+  </div>
+</form>

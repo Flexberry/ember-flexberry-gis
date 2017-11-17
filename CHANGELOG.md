@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [0.4.0.beta.x] - 26.10.2017
+### Added
+* Add base class for vector layers.
+* Add vector layer class implementation for KML layers.
+* Add vector layer class implementation for GeoJSON layers.
+* Add markers clusterization for vector layers.
+* Add `flexberry-boundingbox` component.
+* Add bounding box filtration into `gis-search-form`.
+* Add scale filtration into `gis-search-form`.
+* Add layer links GUI into layers and metadata edit forms/dialogs.
+* Add `locate` map-command for geolocation.
+* Add ability to customize `flexberry-maplayer` content (layers tree nodes) with own components.
+### Fixed
+* Fix map export/printing in yandex browser.
+
 ## [0.3.1] - 2017-10-03
 ### Added
 * Add Semantic UI/Flexberry themes support.

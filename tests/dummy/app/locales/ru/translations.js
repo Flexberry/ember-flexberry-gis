@@ -89,42 +89,22 @@ Ember.$.extend(true, translations, {
         'components-examples': {
           'caption': 'Примеры компонентов',
           'title': '',
-          'flexberry-button': {
-            'caption': 'flexberry-button',
+          'flexberry-boundingbox': {
+            'caption': 'flexberry-boundingbox',
             'title': '',
             'settings-example': {
-              'caption': 'Пример работы с настройками',
+              'caption': 'Пример работы компонента',
               'title': ''
             }
           },
-          'flexberry-ddau-checkbox': {
-            'caption': 'flexberry-ddau-checkbox',
-            'title': '',
-            'settings-example': {
-              'caption': 'Пример работы с настройками',
-              'title': ''
-            }
+          'geojson-layer': {
+            'caption': 'geojson-layer',
+            'title': 'Пример работы слоя GeoJSON'
           },
-          'flexberry-maplayers': {
-            'caption': 'flexberry-maplayers',
-            'title': '',
-            'settings-example': {
-              'caption': 'Пример работы с настройками',
-              'title': ''
-            }
-          },
-          'flexberry-tree': {
-            'caption': 'flexberry-tree',
-            'title': '',
-            'settings-example': {
-              'caption': 'Пример работы с настройками',
-              'title': ''
-            }
+          'kml-layer': {
+            'caption': 'kml-layer',
+            'title': 'Пример работы слоя KML'
           }
-        },
-        'integration-examples': {
-          'caption': 'Интеграционные примеры',
-          'title': ''
         }
       }
     },
@@ -146,7 +126,12 @@ Ember.$.extend(true, translations, {
           'json-layers-latest-clicked-layer-caption': 'Настройки последнего кликнутого слоя',
           'json-layers-latest-clicked-layer-placeholder': 'Кликните на любой слой в дереве, чтобы отобразить его настройки'
         }
-      }
+      },
+      'flexberry-boundingbox': {
+        'settings-example': {
+          'caption': 'Тестовая форма flexberry-boundingbox'
+        }
+      },
     },
 
     'maps': {

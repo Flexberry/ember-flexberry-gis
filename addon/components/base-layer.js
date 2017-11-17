@@ -26,7 +26,7 @@ export default Ember.Component.extend(
       Leaflet layer object init by settings from model.
 
       @property _leafletObject
-      @type L.Layer
+      @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
       @default null
       @private
      */
@@ -141,6 +141,9 @@ export default Ember.Component.extend(
         leafletLayer
       }) => {
         this.set('_leafletObject', leafletLayer);
+        if (Ember.isPresent(this.get('layerModel'))) {
+          Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
+        }
 
         return leafletLayer;
       }).catch((errorMessage) => {
@@ -159,6 +162,9 @@ export default Ember.Component.extend(
 
       this.set('_leafletObject', null);
       this.set('_leafletLayerPromise', null);
+      if (Ember.isPresent(this.get('layerModel'))) {
+        Ember.set(this.get('layerModel'), '_leafletObject', null);
+      }
     },
 
     /**

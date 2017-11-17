@@ -244,6 +244,20 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether attributes operation is allowed for layer.
+
+      @property _attributesOperationIsAvailable
+      @type boolean
+      @readOnly
+      @private
+    */
+    _attributesOperationIsAvailable: Ember.computed('_layerClassFactory', function () {
+      let layerClassFactory = this.get('_layerClassFactory');
+
+      return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('attributes');
+    }),
+
+    /**
       Flag: indicates whether add dialog has been already requested by user or not.
 
       @property _addDialogHasBeenRequested
@@ -296,6 +310,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @private
     */
     _removeDialogIsVisible: false,
+
+    /**
+      Leaflet layer related to layer model.
+
+      @property _leafletObject
+      @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+      @private
+    */
+    _leafletObject: null,
 
     /**
       Reference to component's template.
@@ -598,8 +621,20 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onRemoveDialogApprove(...args) {
         // Send outer 'remove' action.
         this.sendAction('remove', ...args);
+      },
+
+      /**
+        Handles attributes button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.attributes:method"}}'attributes'{{/crossLink}} action.
+
+        @method actions.onAttributesButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onAttributesButtonClick(...args) {
+        this.sendAction('attributesEdit', ...args);
       }
-    }
+    },
 
     /**
       Component's action invoking when layer node's header has been clicked.
@@ -671,6 +706,13 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       Component's action invoking when user wants to remove current layer.
 
       @method sendingActions.remove
+      @param {Object} e Action's event object.
+    */
+
+    /**
+      Component's action invoking when user wants to look at attributes of current layer.
+
+      @method sendingActions.attributesEdit
       @param {Object} e Action's event object.
     */
   }

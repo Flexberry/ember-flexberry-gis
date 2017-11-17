@@ -52,7 +52,7 @@ export default {
         __caption__: 'Layer'
       },
       mapObjectSetting: {
-        __caption__: ''
+        __caption__: 'Map object setting'
       }
     },
     LayerLinkI: {
@@ -104,7 +104,7 @@ export default {
         __caption__: ''
       },
       parameters: {
-        __caption__: 'Link parameter',
+        __caption__: 'Link parameters',
         objectField: {
           __caption__: 'Object field'
         },

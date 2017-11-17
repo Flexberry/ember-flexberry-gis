@@ -19,7 +19,7 @@ export default BaseLayer.extend({
     @type String[]
     @default ['edit', 'remove', 'identify', 'search', 'legend']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'legend'],
+  operations: ['edit', 'remove', 'identify', 'search', 'legend', 'attributes'],
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -44,7 +44,9 @@ export default BaseLayer.extend({
         color: undefined,
         weight: undefined
       },
-      namespaceUri: undefined
+      namespaceUri: undefined,
+      clusterize: false,
+      clusterOptions: undefined
     });
 
     return settings;
