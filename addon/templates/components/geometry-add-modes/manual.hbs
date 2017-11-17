@@ -17,13 +17,15 @@
     approve=(action "onApprove")
     deny=(action "onDeny")
   }}
-  <div class="ui form" style="max-height: 400px; overflow-x:hidden;overflow-y: scroll;">
+  <form class="ui form {{flexberryClassNames.form}}" role="form">
+    {{!-- currently disabled --}}
     <div class="field disabled">
       {{flexberry-edit-crs
         crsCaption="Coordinate reference system"
         coordinateReferenceSystem=settings.layerCRS
       }}
     </div>
+    {{!-- currently disabled --}}
     <div class="field disabled">
       <label>Geometry type</label>
       {{flexberry-dropdown
@@ -38,7 +40,7 @@
         placeholder='Enter coordinates...'
       }}
     </div>
-  </div>
+  </form>
 
 {{/flexberry-dialog}}
 {{/if}}

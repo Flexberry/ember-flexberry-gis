@@ -10,17 +10,26 @@
 --}}
 {{#if _dialogHasBeenRequested}}
   {{#flexberry-dialog class=flexberryClassNames.dialog
-    caption="Add with coordinates"
+    caption="Add with geoprovider"
     approveButtonCaption="Ok"
     denyButtonCaption="Cancel"
     visible=_dialogVisible
     approve=(action "onApprove")
     deny=(action "onDeny")
-    beforeShow=(action "onBeforeShow")
-    beforeHide=(action "onBeforeHide")
-    show=(action "onShow")
-    hide=(action "onHide")
   }}
-  <div>TEST</div>
-{{/flexberry-dialog}}
+    <form class="ui form {{concat flexberryClassNames.form (if _loading " loading" "")}}" role="form">
+      <div class="field">
+        <label>Address</label>
+        {{flexberry-textbox
+          value=address
+        }}
+      </div>
+      <div class="field">
+        <label>Provider</label>
+        {{flexberry-textbox
+          value=provider
+        }}
+      </div>
+    </form>
+  {{/flexberry-dialog}}
 {{/if}}

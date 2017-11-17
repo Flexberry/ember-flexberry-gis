@@ -6,6 +6,8 @@
 .ui.modal.flexberry-edit-layer-dialog,
 .ui.modal.flexberry-edit-map-dialog,
 .ui.modal.flexberry-edit-layer-attributes-dialog,
+.ui.modal.flexberry-geometry-add-mode-manual-dialog,
+.ui.modal.flexberry-geometry-add-mode-geoprovider-dialog,
 .ui.modal.flexberry-export-map-command-dialog,
 .ui.modal.flexberry-search-map-command-dialog,
 .ui.modal.flexberry-go-to-map-command-dialog {
@@ -138,7 +140,9 @@
 .ui.modal.flexberry-add-layer-dialog,
 .ui.modal.flexberry-edit-layer-dialog,
 .ui.modal.flexberry-edit-map-dialog,
-.ui.modal.flexberry-edit-layer-attributes-dialog {
+.ui.modal.flexberry-edit-layer-attributes-dialog,
+.ui.modal.flexberry-geometry-add-mode-manual-dialog,
+.ui.modal.flexberry-geometry-add-mode-geoprovider-dialog {
     .ui.form {
         margin-top: 10px;
         margin-bottom: 10px;

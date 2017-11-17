@@ -12,6 +12,8 @@ import layout from '../../templates/components/geometry-add-modes/geoprovider';
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-geometry-add-mode-geoprovider').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-geometry-add-mode-geoprovider').
+  @property {String} flexberryClassNames.dialog Component's inner dialog CSS-class name ('flexberry-geometry-add-mode-geoprovider').
+  @property {String} flexberryClassNames.form Component's inner <form> CSS-class name ('flexberry-geometry-add-mode-geoprovider').
   @readonly
   @static
 
@@ -21,7 +23,8 @@ const flexberryClassNamesPrefix = 'flexberry-geometry-add-mode-geoprovider';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
-  dialog: flexberryClassNamesPrefix + '-dialog'
+  dialog: flexberryClassNamesPrefix + '-dialog',
+  form: flexberryClassNamesPrefix + '-form'
 };
 
 let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
@@ -50,6 +53,12 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
 
   _dialogVisible: false,
 
+  _loading: false,
+
+  address: null,
+
+  provider: null,
+
   actions: {
     /**
       Handles button click.
@@ -60,73 +69,23 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
     },
 
     /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.beforeShow:method"}}'flexberry-dialog' component's 'beforeShow' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.beforeShow:method"}}'beforeShow' action{{/crossLink}}.
-
-      @method actions.onBeforeShow
-    */
-    onBeforeShow() {
-      // this.parseData();
-
-      // this.sendAction('beforeShow');
-    },
-
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.show:method"}}'flexberry-dialog' component's 'show' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.show:method"}}'show' action{{/crossLink}}.
-
-      @method actions.onShow
-    */
-    onShow() {
-      // this.sendAction('show');
-    },
-
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.beforeHide:method"}}'flexberry-dialog' component's 'beforeHide' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.beforeHide:method"}}'beforeHide' action{{/crossLink}}.
-
-      @method actions.onBeforeHide
-    */
-    onBeforeHide() {
-      // this.sendAction('beforeHide');
-    },
-
-    /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.hide:method"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.hide:method"}}'hide' action{{/crossLink}}.
-
-      @method actions.onHide
-    */
-    onHide() {
-      // this.sendAction('hide');
-    },
-
-    /**
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
+      Invokes {{#crossLink "FlexberryGeometryAddModeGeoProviderComponent/sendingActions.complete:method"}}'complete' action{{/crossLink}}.
 
       @method actions.onApprove
     */
     onApprove(e) {
-      // let parsedData = this.parseData();
-      // if (Ember.isNone(parsedData)) {
-      //   // Prevent dialog from being closed.
-      //   e.closeDialog = false;
 
-      //   return;
-      // }
-
-      // this.sendAction('approve', parsedData);
     },
 
     /**
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.deny:method"}}'deny' action{{/crossLink}}.
 
       @method actions.onDeny
     */
     onDeny() {
-      // this.sendAction('deny');
+      this.set('address', null);
+      this.set('provider', null);
     }
   }
 

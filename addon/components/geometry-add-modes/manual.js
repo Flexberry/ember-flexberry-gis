@@ -12,6 +12,8 @@ import layout from '../../templates/components/geometry-add-modes/manual';
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-geometry-add-mode-manual').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-geometry-add-mode-manual').
+  @property {String} flexberryClassNames.dialog Component's inner dialog CSS-class name ('flexberry-geometry-add-mode-manual').
+  @property {String} flexberryClassNames.form Component's inner <form> CSS-class name ('flexberry-geometry-add-mode-manual').
   @readonly
   @static
 
@@ -21,7 +23,8 @@ const flexberryClassNamesPrefix = 'flexberry-geometry-add-mode-manual';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
-  dialog: flexberryClassNamesPrefix + '-dialog'
+  dialog: flexberryClassNamesPrefix + '-dialog',
+  form: flexberryClassNamesPrefix + '-form'
 };
 
 let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
@@ -46,16 +49,45 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
   */
   tagName: '',
 
+  /**
+    Flag indicates whether manual geometry adding dialog has been already requested by user or not.
+
+    @property _dialogHasBeenRequested
+    @type Boolean
+    @default false
+    @private
+  */
   _dialogHasBeenRequested: false,
 
+  /**
+    Flag indicates whether to show manual geometry adding dialog.
+
+    @property _dialogVisible
+    @type Boolean
+    @default false
+    @private
+  */
   _dialogVisible: false,
 
   /**
     Added coordinates.
+
+    @property _coordinates
+    @type String
+    @default null
+    @private
   */
   _coordinates: null,
 
-  _coordinatesWithError: null,
+  /**
+    Flag indicates that entered coordinates has invalid format or is emty.
+
+    @property _coordinatesWithError
+    @type Boolean
+    @default false
+    @private
+  */
+  _coordinatesWithError: false,
 
   actions: {
     /**
