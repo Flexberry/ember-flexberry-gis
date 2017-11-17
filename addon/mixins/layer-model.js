@@ -11,21 +11,35 @@ import Ember from 'ember';
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
 export default Ember.Mixin.create({
-  settingsAsObject: Ember.computed('settings', function () {
+  /**
+    Object with layer's settings.
+
+    @property settingsAsObject
+    @type Object
+    @readOnly
+  */
+  settingsAsObject: {},
+
+  /**
+    SettingsAsObject computing with observer, because Yandex browser don't recompute settingsAsObject,
+    when it's computed property.
+  */
+  settingsObserver: Ember.on('init', Ember.observer('settings', function() {
     let stringToDeserialize = this.get('settings');
     if (!Ember.isBlank(stringToDeserialize)) {
       try {
         let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
         let defaultSettings = layerClassFactory.createSettings();
+        this.set('settingsAsObject', Ember.$.extend(true, defaultSettings, JSON.parse(stringToDeserialize)));
 
-        return Ember.$.extend(true, defaultSettings, JSON.parse(stringToDeserialize));
+        return;
       } catch (e) {
         Ember.Logger.error(`Computation of 'settingsAsObject' property for '${this.get('name')}' layer has been failed: ${e}`);
       }
     }
 
-    return {};
-  }),
+    this.set('settingsAsObject', {});
+  })),
 
   /**
     Flag: indicates whether layer can be identified.
