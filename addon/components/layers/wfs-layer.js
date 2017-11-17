@@ -46,13 +46,13 @@ export default BaseLayer.extend({
   clusterOptions: null,
 
   /**
-    Features read format.
+    Returns features read format depending on 'format', 'options.crs', 'options.geometryField'.
     Server responses format will rely on it.
 
-    @property featuresReadFormat
-    @type {Object}
+    @method getFeaturesReadFormat
+    @return {Object} Features read format.
   */
-  featuresReadFormat: Ember.computed('format', 'options.crs', 'options.geometryField', function () {
+  getFeaturesReadFormat() {
     let format = this.get('format');
     let availableFormats = Ember.A(Object.keys(L.Format) || []).filter((format) => {
       format = format.toLowerCase();
@@ -71,7 +71,7 @@ export default BaseLayer.extend({
       crs,
       geometryField
     });
-  }),
+  },
 
   /**
     Performs 'getFeature' request to WFS-service related to layer.
@@ -162,7 +162,7 @@ export default BaseLayer.extend({
       options.filter = filter;
     }
 
-    let featuresReadFormat = this.get('featuresReadFormat');
+    let featuresReadFormat = this.getFeaturesReadFormat();
 
     return L.wfs(options, featuresReadFormat);
   },
@@ -182,8 +182,14 @@ export default BaseLayer.extend({
       }
 
       let onLayerLoad = (e) => {
+        let wfsLayer = e.target;
+
         let cluster = L.markerClusterGroup(this.get('clusterOptions'));
-        cluster.addLayer(e.target);
+        cluster.addLayer(wfsLayer);
+
+        // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
+        cluster.readFormat = Ember.get(wfsLayer, 'readFormat');
+
         resolve(cluster);
       };
 
