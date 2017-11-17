@@ -18,13 +18,13 @@
     deny=(action "onDeny")
   }}
     <form class="ui form {{concat flexberryClassNames.form (if _loading " loading" "")}}" role="form">
-      <div class="field">
+      <div class="field {{if (get _parsingErrors "address") "error" ""}}">
         <label>Address</label>
         {{flexberry-textbox
           value=address
         }}
       </div>
-      <div class="field">
+      <div class="field {{if (get _parsingErrors "provider") "error" ""}}">
         <label>Provider</label>
         {{flexberry-textbox
           value=provider

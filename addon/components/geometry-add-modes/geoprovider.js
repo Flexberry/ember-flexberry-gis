@@ -49,14 +49,62 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
   */
   tagName: '',
 
+  /**
+    Flag indicates whether geometry adding dialog has been already requested by user or not.
+
+    @property _dialogHasBeenRequested
+    @type Boolean
+    @default false
+    @private
+  */
   _dialogHasBeenRequested: false,
 
+  /**
+    Flag indicates whether to show geometry adding dialog.
+
+    @property _dialogVisible
+    @type Boolean
+    @default false
+    @private
+  */
   _dialogVisible: false,
 
+  /**
+    Flag indicates that provider request is running.
+
+    @property _loading
+    @type Boolean
+    @default false
+    @private
+  */
   _loading: false,
 
+  /**
+    Object with field names that is invalid.
+
+    @property _parsingErrors
+    @type Object
+    @default null
+    @private
+  */
+  _parsingErrors: {},
+
+  /**
+    Address for request.
+
+    @property address
+    @type String
+    @default null
+  */
   address: null,
 
+  /**
+    Provider for request.
+
+    @property address
+    @type String
+    @default null
+  */
   provider: null,
 
   actions: {
@@ -75,7 +123,33 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
       @method actions.onApprove
     */
     onApprove(e) {
+      // Prevent dialog from being closed.
+      e.closeDialog = false;
 
+      let parsedData = this.parseData();
+      if (Ember.isNone(parsedData)) {
+        return;
+      }
+
+      this.set('_loading', true);
+
+      let requestResult = this.executeRequest(parsedData);
+
+      if (!(requestResult instanceof Ember.RSVP.Promise)) {
+        requestResult = new Ember.RSVP.Promise((resolve, reject) => {
+          resolve(requestResult);
+        });
+      }
+
+      requestResult.then((result) => {
+        let addedLayer = this.parseRequestResult(result);
+        this.sendAction('complete', addedLayer);
+      }).finally(() => {
+        this.set('_loading', false);
+        this.set('address', null);
+        this.set('provider', null);
+        e.target.modal('hide');
+      });
     },
 
     /**
@@ -87,7 +161,42 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
       this.set('address', null);
       this.set('provider', null);
     }
-  }
+  },
+
+  executeRequest({ address, provider }) {
+    // not implemeted
+  },
+
+  parseRequestResult(data) {
+    // not implemeted
+  },
+
+  /**
+    Parses input data.
+
+    @method parseData
+    @return {Object} Parsed data if it is valid or null.
+  */
+  parseData() {
+    let address = this.get('address');
+    let provider = this.get('provider');
+    let dataIsValid = true;
+    let errors = {};
+
+    if (Ember.isBlank(address)) {
+      errors.address = true;
+      dataIsValid = false;
+    }
+
+    if (Ember.isBlank(provider)) {
+      errors.provider = true;
+      dataIsValid = false;
+    }
+
+    this.set('_parsingErrors', errors);
+
+    return dataIsValid ? { address, provider } : null;
+  },
 
   /**
     Component's action invoking when new geometry was added.
