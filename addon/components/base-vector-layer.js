@@ -220,26 +220,34 @@ export default BaseLayer.extend({
     @private
   */
   _setLayerOpacity() {
-    let opacity = this.get('opacity');
-    if (!Ember.isNone(opacity)) {
-      let leafletLayer = this.get('_vectorLayerGroup');
-      let leafletLayerStyle = Ember.get(leafletLayer, 'options.style');
-
-      if (Ember.isNone(leafletLayerStyle)) {
-        leafletLayerStyle = {};
-        Ember.set(leafletLayer, 'options.style', leafletLayerStyle);
-      }
-
-      // TODO Check when style is function
-      Ember.set(leafletLayerStyle, 'opacity', opacity);
-      let initialFillOpacity = this.get('_initialFillOpacity');
-      if (Ember.isNone(initialFillOpacity)) {
-        Ember.set(leafletLayerStyle, 'fillOpacity', opacity);
-      } else {
-        Ember.set(leafletLayerStyle, 'fillOpacity', initialFillOpacity * opacity);
-      }
-
-      leafletLayer.setStyle(leafletLayerStyle);
+    // Layers with 'empty' layers-style always must have their opacity set to 0, so we don't change such layers opacity here.
+    let layerStyleType = this.get('styleSettings.type');
+    if (layerStyleType === 'empty') {
+      return;
     }
+
+    let opacity = this.get('opacity');
+    if (Ember.isNone(opacity)) {
+      return;
+    }
+
+    let leafletLayer = this.get('_vectorLayerGroup');
+    let leafletLayerStyle = Ember.get(leafletLayer, 'options.style');
+
+    if (Ember.isNone(leafletLayerStyle)) {
+      leafletLayerStyle = {};
+      Ember.set(leafletLayer, 'options.style', leafletLayerStyle);
+    }
+
+    // TODO Check when style is function
+    Ember.set(leafletLayerStyle, 'opacity', opacity);
+    let initialFillOpacity = this.get('_initialFillOpacity');
+    if (Ember.isNone(initialFillOpacity)) {
+      Ember.set(leafletLayerStyle, 'fillOpacity', opacity);
+    } else {
+      Ember.set(leafletLayerStyle, 'fillOpacity', initialFillOpacity * opacity);
+    }
+
+    leafletLayer.setStyle(leafletLayerStyle);
   }
 });

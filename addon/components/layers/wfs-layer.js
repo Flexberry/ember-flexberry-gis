@@ -166,21 +166,19 @@ export default BaseLayer.extend({
   */
   createLayer(options) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      if (!this.get('clusterize')) {
-        resolve(this._createWFSLayer(options));
-        return;
-      }
-
       let onLayerLoad = (e) => {
         let wfsLayer = e.target;
+        if (this.get('clusterize')) {
+          let cluster = L.markerClusterGroup(this.get('clusterOptions'));
+          cluster.addLayer(wfsLayer);
 
-        let cluster = L.markerClusterGroup(this.get('clusterOptions'));
-        cluster.addLayer(wfsLayer);
+          // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
+          cluster.readFormat = Ember.get(wfsLayer, 'readFormat');
 
-        // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
-        cluster.readFormat = Ember.get(wfsLayer, 'readFormat');
-
-        resolve(cluster);
+          resolve(cluster);
+        } else {
+          resolve(wfsLayer);
+        }
       };
 
       let onLayerError = (e) => {

@@ -909,6 +909,7 @@ export default Ember.Component.extend(
       this._createInnerSettings();
       if (!Ember.isNone(settings)) {
         this.set(`_settings.${type}`, settings);
+        this.set('_previouslySelectedLayerStyle', Ember.get(settings, 'styleSettings.type'));
       }
 
       this.set('_layer', {
@@ -920,8 +921,6 @@ export default Ember.Component.extend(
         coordinateReferenceSystem: crs,
         settings: settings,
       });
-
-      this.set('_previouslySelectedLayerStyle', Ember.get(settings, 'styleSettings.type'));
     },
 
     /**
@@ -1023,7 +1022,7 @@ export default Ember.Component.extend(
       let layer = this.get('_layer');
 
       // Layer hash to send.
-      let _layerHash = Object.assign({}, layer);
+      let _layerHash = Ember.$.extend(true, {}, layer);
 
       let coordinateReferenceSystem = Ember.get(_layerHash, 'coordinateReferenceSystem');
       coordinateReferenceSystem = Ember.$.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);

@@ -194,8 +194,8 @@ export default Ember.Component.extend(
     _setLayerState() {
       this._setLayerVisibility();
       this._setLayerZIndex();
-      this._setLayerOpacity();
       this._setLayerStyle();
+      this._setLayerOpacity();
     },
 
     /**
@@ -234,6 +234,12 @@ export default Ember.Component.extend(
       @private
     */
     _setLayerOpacity() {
+      // Layers with 'empty' layers-style always must have their opacity set to 0, so we don't change such layers opacity here.
+      let layerStyleType = this.get('styleSettings.type');
+      if (layerStyleType === 'empty') {
+        return;
+      }
+
       let leafletLayer = this.get('_leafletObject');
       if (Ember.isNone(leafletLayer) || Ember.typeOf(leafletLayer.setOpacity) !== 'function') {
         return;
@@ -338,6 +344,10 @@ export default Ember.Component.extend(
     */
     _styleSettingsDidChange: Ember.observer('styleSettings', function () {
       this._setLayerStyle();
+
+      // When we set new style it can change layer's opacity to style's default value,
+      // so we must restore opacity to user defined value.
+      this._setLayerOpacity();
     }),
 
     /**
