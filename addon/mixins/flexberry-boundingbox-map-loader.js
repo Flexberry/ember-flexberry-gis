@@ -44,7 +44,7 @@ export default Ember.Mixin.create({
           .selectByProjection('MapE')
           .byId(mapId);
         this.get('store').queryRecord(this.get('mapModelName'), builder.build()).then(record => {
-          resolve(record);
+          resolve(Ember.isNone(record) ? this.getDefaultBoundingBoxComponentMapModel() : record);
         }).catch(() => {
           resolve(this.getDefaultBoundingBoxComponentMapModel());
         });
