@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import BaseLayer from './-private/base';
+import GeoJsonFilterParserMixin from 'ember-flexberry-gis/mixins/geojson-filter-parser';
 
 /**
   Class describing GeoJSON layer metadata.
@@ -11,15 +12,15 @@ import BaseLayer from './-private/base';
   @class GeoJSONLayer
   @extends BaseLayer
 */
-export default BaseLayer.extend({
+export default BaseLayer.extend(GeoJsonFilterParserMixin, {
   /**
     Permitted operations related to layer type.
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'search']
+    @default ['edit', 'remove', 'identify', 'search', 'query', 'filter']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'query'],
+  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter'],
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -33,7 +34,7 @@ export default BaseLayer.extend({
       pointToLayer: undefined,
       style: null,
       onEachFeature: null,
-      filter: null,
+      filter: '',
       coordsToLatLng: null,
       geojson: null,
       url: null,

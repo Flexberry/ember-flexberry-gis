@@ -18,6 +18,7 @@ import FlexberryLinksEditorComponent from './components/flexberry-links-editor';
 import FlexberryTableComponents from './components/flexberry-table';
 import FlexberryMapInfoComponent from './components/flexberry-mapinfo';
 import FlexberryBoundingboxComponent from './components/flexberry-boundingbox';
+import FlexberryLayersAttributesPanel from './components/flexberry-layers-attributes-panel';
 import FlexberryEditCrsComponent from './components/flexberry-edit-crs';
 
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
@@ -108,9 +109,37 @@ export default {
 
     'map-tools': MapToolsComponents,
     'map-commands': MapCommandsComponents,
+
     'flexberry-mapinfo': FlexberryMapInfoComponent,
+
+    'flexberry-wfs-filter': {
+      'caption': 'WFS layer filters',
+      'settings-not-set': 'Settings were not set',
+      'null-value': 'NULL',
+      'fields': 'Fields',
+      'values': 'Values',
+      'operators': 'Operators',
+      'filter-ok': 'OK',
+      'filter-error': 'Error',
+      'no-fields': 'Fields isn\'t loaded',
+      'no-values': 'Values isn\'t loaded',
+      'buttons': {
+        'in': 'IN',
+        'not-in': 'NOT IN',
+        'and': 'AND',
+        'or': 'OR',
+        'not': 'NOT',
+        'example': 'Example',
+        'all': 'All',
+        'apply': 'Apply',
+        'check': 'Check',
+        'clear': 'Clear'
+      },
+    },
+
     'flexberry-boundingbox': FlexberryBoundingboxComponent,
 
+    'flexberry-layers-attributes-panel': FlexberryLayersAttributesPanel,
     'flexberry-edit-crs': FlexberryEditCrsComponent
   },
 

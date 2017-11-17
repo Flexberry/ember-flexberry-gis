@@ -440,12 +440,14 @@ export default Ember.Component.extend(
       '_searchSettingsAreAvailableForType',
       '_displaySettingsAreAvailableForType',
       '_legendSettingsAreAvailableForType',
+      '_filterSettingsAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
         return this.get('_identifySettingsAreAvailableForType') ||
           this.get('_searchSettingsAreAvailableForType') ||
           this.get('_displaySettingsAreAvailableForType') ||
-          this.get('_legendSettingsAreAvailableForType');
+          this.get('_legendSettingsAreAvailableForType') ||
+          this.get('_filterSettingsAreAvailableForType');
       }
     ),
 
@@ -532,6 +534,21 @@ export default Ember.Component.extend(
     */
     _linksSettingsAreAvailableForType: Ember.computed('_layerSettingsAreAvailableForType', function() {
       return this.get('_layerSettingsAreAvailableForType');
+    }),
+
+    /**
+      Flag: indicates whether 'filter' operation settings are available for the selected layer type. TODO!
+
+      @property _filterSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _filterSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('filter');
     }),
 
     /**
@@ -913,6 +930,11 @@ export default Ember.Component.extend(
       Ember.set(_layerHash, 'coordinateReferenceSystem', coordinateReferenceSystem);
 
       let settings = Ember.get(_layerHash, 'settings');
+
+      if (Ember.get(settings, 'filter') instanceof Element) {
+        Ember.set(settings, 'filter', L.XmlUtil.serializeXmlToString(Ember.get(settings, 'filter')));
+      }
+
       settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
 
       Ember.set(_layerHash, 'settings', settings);
