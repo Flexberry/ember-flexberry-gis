@@ -402,13 +402,27 @@ export default Ember.Component.extend(
       '_styleSettingsAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
-        return this.get('_identifySettingsAreAvailableForType') ||
+        return this.get('_displaySettingsAreAvailableForType') ||
+          this.get('_identifySettingsAreAvailableForType') ||
           this.get('_searchSettingsAreAvailableForType') ||
-          this.get('_displaySettingsAreAvailableForType') ||
           this.get('_legendSettingsAreAvailableForType') ||
           this.get('_styleSettingsAreAvailableForType');
       }
     ),
+
+    /**
+      Flag: indicates whether 'display' operation settings are available for the selected layer type.
+
+      @property _displaySettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _displaySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+
+      return Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
+    }),
 
     /**
       Flag: indicates whether 'identify' operation settings are available for the selected layer type.
@@ -420,7 +434,9 @@ export default Ember.Component.extend(
     */
     _identifySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+      let layerClass = Ember.isNone(className) ?
+        null :
+        Ember.getOwner(this).knownForType('layer', className);
 
       return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('identify');
     }),
@@ -435,21 +451,11 @@ export default Ember.Component.extend(
     */
     _searchSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+      let layerClass = Ember.isNone(className) ?
+        null :
+        Ember.getOwner(this).knownForType('layer', className);
 
       return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('search');
-    }),
-
-    /**
-      Flag: indicates whether 'display' operation settings are available for the selected layer type.
-
-      @property _displaySettingsAreAvailableForType
-      @type Boolean
-      @private
-      @readonly
-    */
-    _displaySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      return true;
     }),
 
     /**
@@ -462,7 +468,9 @@ export default Ember.Component.extend(
     */
     _legendSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+      let layerClass = Ember.isNone(className) ?
+        null :
+        Ember.getOwner(this).knownForType('layer', className);
 
       return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
     }),
@@ -477,10 +485,11 @@ export default Ember.Component.extend(
     */
     _styleSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
+      let layerClass = Ember.isNone(className) ?
+        null :
+        Ember.getOwner(this).knownForType('layer', className);
 
       // Style settings are available only for vector layers.
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
-
       return !Ember.isNone(layerClass) && layerClass instanceof VectorLayer;
     }),
 
@@ -720,12 +729,11 @@ export default Ember.Component.extend(
     _setSelectedLayerStyleDefaultSettings() {
       let previouslySelectedLayerStyle = this.get('_previouslySelectedLayerStyle');
       let selectedLayerStyle = this.get('_layer.settings.styleSettings.type');
-      if (previouslySelectedLayerStyle === selectedLayerStyle) {
+      if (Ember.isBlank(selectedLayerStyle) || previouslySelectedLayerStyle === selectedLayerStyle) {
         return;
       }
 
       this.set('_layer.settings.styleSettings', this.get('_layersStylesRenderer').getDefaultStyleSettings(selectedLayerStyle));
-
       this.set('_previouslySelectedLayerStyle', selectedLayerStyle);
     },
 

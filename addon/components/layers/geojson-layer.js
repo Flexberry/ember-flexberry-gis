@@ -12,7 +12,12 @@ import BaseLayer from '../base-vector-layer';
   @extend BaseVectorLayerComponent
  */
 export default BaseLayer.extend({
+  /**
+    Array containing component's properties which are also leaflet layer options.
 
+    @property leafletOptions
+    @type Stirng[]
+  */
   leafletOptions: [
     'pointToLayer',
     'onEachFeature',
@@ -23,7 +28,32 @@ export default BaseLayer.extend({
     'style'
   ],
 
+  /**
+    Array containing component's properties which are also leaflet layer callbacks.
+
+    @property layerFunctions
+    @type Stirng[]
+  */
   layerFunctions: ['pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng'],
+
+  /**
+    Hash containing default implementations for leaflet layer callbacks.
+
+    @property defaultLayerFunctions
+    @type Object
+  */
+  defaultLayerFunctions: {
+    coordsToLatLng: function(coords) {
+      let crs = this.get('crs');
+      let point = new L.Point(coords[0], coords[1]);
+      let latlng = crs.projection.unproject(point);
+      if (!Ember.isNone(coords[2])) {
+        latlng.alt = coords[2];
+      }
+
+      return latlng;
+    }
+  },
 
   /**
     Url for download geojson.
@@ -42,16 +72,25 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer(options) {
-    options = Ember.$.extend({}, this.get('options'), options);
-    let geojson = options.geojson || {};
-    options = options || {};
+    options = Ember.$.extend(true, {}, this.get('options'), options);
 
     let layerFunctions = this.get('layerFunctions');
-    let customFunction;
     for (let i = 0; i < layerFunctions.length; i++) {
-      customFunction = Ember.get(options, layerFunctions[i]);
-      if (customFunction && typeof (customFunction) === 'string') {
-        Ember.set(options, layerFunctions[i], new Function('return ' + customFunction)());
+      let functionName = layerFunctions[i];
+
+      let customFunction = Ember.get(options, functionName);
+      customFunction = typeof (customFunction) === 'string' && !Ember.isBlank(customFunction) ? new Function('return ' + customFunction)() : null;
+
+      let resultingFunction;
+      if (typeof customFunction === 'function') {
+        resultingFunction = customFunction;
+      } else {
+        let defaultFunction = this.get(`defaultLayerFunctions.${functionName}`);
+        resultingFunction = typeof defaultFunction === 'function' ? defaultFunction.bind(this) : null;
+      }
+
+      if (typeof resultingFunction === 'function') {
+        Ember.set(options, functionName, resultingFunction);
       }
     }
 
@@ -76,6 +115,7 @@ export default BaseLayer.extend({
       });
     }
 
+    let geojson = options.geojson || {};
     let featureCollection = {
       type: 'FeatureCollection',
       features: []
@@ -94,7 +134,6 @@ export default BaseLayer.extend({
       return L.geoJSON();
     }
 
-    let geojsLayer = L.geoJSON(featureCollection, options);
-    return geojsLayer;
+    return L.geoJSON(featureCollection, options);
   }
 });

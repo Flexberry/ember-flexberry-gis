@@ -41,7 +41,7 @@ export default Ember.Service.extend({
   _getLayerStyle(type) {
     let layerStyle = this.get(`_layersStyles.${type}`);
     if (Ember.isNone(layerStyle)) {
-      throw `Can't find '${type}' layer-style, it isn't implemented`;
+      Ember.Logger.error(`Service 'layer-styles-renderer' can't find '${type}' layers-style, it doesn't exist.`);
     }
 
     return layerStyle;
@@ -84,6 +84,11 @@ export default Ember.Service.extend({
   */
   getDefaultStyleSettings(type) {
     let layerStyle = this._getLayerStyle(type);
+    if (Ember.isNone(layerStyle)) {
+      Ember.Logger.error(`Service 'layer-styles-renderer' can't get default style settings for '${type}' layers-style.`);
+      return null;
+    }
+
     return {
       type: type,
       style: layerStyle.getDefaultStyleSettings()
@@ -102,7 +107,12 @@ export default Ember.Service.extend({
   renderOnLeafletLayer({ leafletLayer, styleSettings }) {
     let type = Ember.get(styleSettings, 'type');
     let style = Ember.get(styleSettings, 'style');
+
     let layerStyle = this._getLayerStyle(type);
+    if (Ember.isNone(layerStyle)) {
+      Ember.Logger.error(`Service 'layer-styles-renderer' can't render '${type}' layers-style on leaflet layer.`);
+      return;
+    }
 
     layerStyle.renderOnLeafletLayer({ leafletLayer, style });
   },
@@ -118,7 +128,12 @@ export default Ember.Service.extend({
   renderOnCanvas({ canvas, styleSettings }) {
     let type = Ember.get(styleSettings, 'type');
     let style = Ember.get(styleSettings, 'style');
+
     let layerStyle = this._getLayerStyle(type);
+    if (Ember.isNone(layerStyle)) {
+      Ember.Logger.error(`Service 'layer-styles-renderer' can't render '${type}' layers-style on canvas.`);
+      return;
+    }
 
     layerStyle.renderOnCanvas({ canvas, style });
   }

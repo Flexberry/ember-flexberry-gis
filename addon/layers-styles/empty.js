@@ -33,7 +33,7 @@ export default BaseLayerStyle.extend({
   */
   renderOnLeafletLayer({ leafletLayer, style }) {
     if (!leafletLayer.setStyle) {
-      Ember.Logger.error(`Specified leaflet layer doesn't implement 'setStyle' method.`);
+      Ember.Logger.error(`Specified leaflet layer doesn't implement 'setStyle' method, so 'empty' layers-style can't be rendered on it.`);
       return;
     }
 
