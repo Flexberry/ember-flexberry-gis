@@ -14,27 +14,6 @@ const { assert } = Ember;
   @extends BaseLayerComponent
  */
 export default BaseLayer.extend({
-
-  /**
-    Leaflet layer group or feature group object created by model settings.
-
-    @property _vectorLayerGroup
-    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
-    @default null
-    @private
-  */
-  _vectorLayerGroup: null,
-
-  /**
-    Fill opacity passed on initization, will be used when user change layer opacity.
-
-    @property _initialFillOpacity
-    @type Number
-    @default null
-    @private
-   */
-  _initialFillOpacity: null,
-
   /**
     Property flag indicates than result layer will be showed as cluster layer.
 
@@ -73,21 +52,16 @@ export default BaseLayer.extend({
       Ember.RSVP.hash({
         vectorLayer: this.createVectorLayer()
       }).then(({ vectorLayer }) => {
-        this.set('_vectorLayerGroup', vectorLayer);
-        let initialFillOpacity = this.get('style.fillOpacity');
-        if (!Ember.isNone(initialFillOpacity)) {
-          this.set('_initialFillOpacity', initialFillOpacity);
-        }
-
         if (this.get('clusterize')) {
           let cluster = L.markerClusterGroup(this.get('clusterOptions'));
           cluster.addLayer(vectorLayer);
           resolve(cluster);
-          return;
+        } else {
+          resolve(vectorLayer);
         }
-
-        resolve(vectorLayer);
-      }).catch((e) => { reject(e); });
+      }).catch((e) => {
+        reject(e);
+      });
     });
   },
 
@@ -108,8 +82,8 @@ export default BaseLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let features = Ember.A();
       let bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
-      let vectorLayerGroup = this.get('_vectorLayerGroup');
-      vectorLayerGroup.eachLayer(function (layer) {
+      let leafletLayer = this.get('_leafletObject');
+      leafletLayer.eachLayer(function (layer) {
         let geoLayer = layer.toGeoJSON();
         let primitive = new Terraformer.Primitive(geoLayer.geometry);
         if (primitive.within(bounds) || primitive.intersects(bounds)) {
@@ -136,7 +110,7 @@ export default BaseLayer.extend({
   search(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
-      let vectorLayerGroup = this.get('_vectorLayerGroup');
+      let leafletLayer = this.get('_leafletObject');
       let features = Ember.A();
 
       let searchFields = (e.context ? this.get(`${searchSettingsPath}.contextSearchFields`) : this.get(`${searchSettingsPath}.searchFields`)) || Ember.A();
@@ -146,7 +120,7 @@ export default BaseLayer.extend({
         searchFields = Ember.A([searchFields]);
       }
 
-      vectorLayerGroup.eachLayer((layer) => {
+      leafletLayer.eachLayer((layer) => {
         if (features.length < e.searchOptions.maxResultsCount) {
           let feature = Ember.get(layer, 'feature');
 
@@ -197,8 +171,8 @@ export default BaseLayer.extend({
         }
       });
 
-      let vectorLayerGroup = this.get('_vectorLayerGroup');
-      vectorLayerGroup.eachLayer((layer) => {
+      let leafletLayer = this.get('_leafletObject');
+      leafletLayer.eachLayer((layer) => {
         let feature = Ember.get(layer, 'feature');
         let meet = true;
         equals.forEach((equal) => {
@@ -215,7 +189,8 @@ export default BaseLayer.extend({
   },
 
   /**
-    Sets leaflet layer's visibility.
+    Sets leaflet layer's opacity.
+
     @method _setLayerOpacity
     @private
   */
@@ -231,23 +206,41 @@ export default BaseLayer.extend({
       return;
     }
 
-    let leafletLayer = this.get('_vectorLayerGroup');
-    let leafletLayerStyle = Ember.get(leafletLayer, 'options.style');
-
-    if (Ember.isNone(leafletLayerStyle)) {
-      leafletLayerStyle = {};
-      Ember.set(leafletLayer, 'options.style', leafletLayerStyle);
+    let leafletLayer = this.get('_leafletObject');
+    if (Ember.isNone(leafletLayer)) {
+      return;
     }
 
-    // TODO Check when style is function
-    Ember.set(leafletLayerStyle, 'opacity', opacity);
-    let initialFillOpacity = this.get('_initialFillOpacity');
-    if (Ember.isNone(initialFillOpacity)) {
-      Ember.set(leafletLayerStyle, 'fillOpacity', opacity);
-    } else {
-      Ember.set(leafletLayerStyle, 'fillOpacity', initialFillOpacity * opacity);
+    this._setEachLayerOpacity(leafletLayer, opacity);
+  },
+
+  /**
+    Sets opacity for the specified leaflet layer and all it's nested layers.
+
+    @method _setEachLayerOpacity
+    @param {<a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} leafletLayer Leaflet layer which opacity must be changed.
+    @param {Number} opacity Opacity value.
+    @private
+  */
+  _setEachLayerOpacity(leafletLayer, opacity) {
+    if (typeof leafletLayer.setOpacity === 'function') {
+      leafletLayer.setOpacity(opacity);
+    } else if (typeof leafletLayer.setStyle === 'function') {
+      let oldStyle = Ember.get(leafletLayer, 'options.style') || {};
+      if (typeof oldStyle === 'function') {
+        Ember.Logger.error(
+          `Option 'style' of '${this.get('layerModel.name')}' leaflet layer is a callback function, ` +
+          `so it's opacity can't be simply changed through call to 'setStyle' method.`);
+      } else {
+        let newStyle = Ember.$.extend(true, {}, oldStyle, { opacity: opacity, fillOpacity: opacity });
+        leafletLayer.setStyle(newStyle);
+      }
     }
 
-    leafletLayer.setStyle(leafletLayerStyle);
+    if (typeof leafletLayer.eachLayer === 'function') {
+      leafletLayer.eachLayer((nestedLeafletLayer) => {
+        this._setEachLayerOpacity(nestedLeafletLayer, opacity);
+      });
+    }
   }
 });
