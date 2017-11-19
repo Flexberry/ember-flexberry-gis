@@ -2,8 +2,8 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
 import BaseLayerStyle from './-private/base';
+import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
 
 /**
   Class implementing empty stylization for vector layers.
@@ -32,15 +32,7 @@ export default BaseLayerStyle.extend({
     @param {Object} options.style Hash containing style settings.
   */
   renderOnLeafletLayer({ leafletLayer, style }) {
-    if (!leafletLayer.setStyle) {
-      Ember.Logger.error(`Specified leaflet layer doesn't implement 'setStyle' method, so 'empty' layers-style can't be rendered on it.`);
-      return;
-    }
-
-    leafletLayer.setStyle({
-      opacity: 0,
-      fillOpacity: 0
-    });
+    setLeafletLayerOpacity({ leafletLayer, opacity: 0 });
   },
 
   /**

@@ -40,9 +40,7 @@ export default VectorLayer.extend({
       typeNSName: undefined,
       maxFeatures: undefined,
       format: undefined,
-      namespaceUri: undefined,
-      clusterize: false,
-      clusterOptions: undefined
+      namespaceUri: undefined
     });
 
     return settings;

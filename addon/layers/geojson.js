@@ -26,8 +26,7 @@ export default VectorLayer.extend({
       filter: null,
       coordsToLatLng: null,
       geojson: null,
-      url: null,
-      clusterize: false
+      url: null
     });
   }
 });
