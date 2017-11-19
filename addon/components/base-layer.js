@@ -176,6 +176,10 @@ export default Ember.Component.extend(
       @private
     */
     _destroyLayer() {
+      // Execute specific destroy logic related to layer's type.
+      this.destroyLayer();
+
+      // Now execute base destroy logic.
       this._removeLayerFromLeafletContainer();
 
       this.set('_leafletObject', null);
@@ -183,6 +187,25 @@ export default Ember.Component.extend(
       if (Ember.isPresent(this.get('layerModel'))) {
         Ember.set(this.get('layerModel'), '_leafletObject', null);
       }
+    },
+
+    /**
+      Resets leaflet layer related to layer type.
+
+      @method _resetLayer
+      @private
+    */
+    _resetLayer() {
+      // Destroy previously created leaflet layer (created with old settings).
+      this._destroyLayer();
+
+      // Create new leaflet layer (with new settings).
+      this._createLayer();
+
+      // Wait for the layer creation to be finished and set it's state related to new settings.
+      this.get('_leafletLayerPromise').then((leafletLayer) => {
+        this._setLayerState();
+      });
     },
 
     /**
@@ -505,6 +528,14 @@ export default Ember.Component.extend(
     },
 
     /**
+      Destroys leaflet layer related to layer type.
+
+      @method destroyLayer
+    */
+    destroyLayer() {
+    },
+
+    /**
       Identifies layer's objects inside specified bounding box.
 
       @method identify
@@ -596,16 +627,7 @@ export default Ember.Component.extend(
         return;
       }
 
-      // Destroy previously created leaflet layer (created with old settings).
-      this._destroyLayer();
-
-      // Create new leaflet layer (with new settings).
-      this._createLayer();
-
-      // Wait for the layer creation to be finished and set it's state related to new settings.
-      this.get('_leafletLayerPromise').then((leafletLayer) => {
-        this._setLayerState();
-      });
+      this._resetLayer();
     },
 
     /**
