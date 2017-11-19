@@ -24,7 +24,7 @@ module.exports = {
       // leaflet-wfst.
       {
         name: 'leaflet-wfst',
-        target: '2.0.1-beta.10'
+        target: '2.0.1-beta.14'
       },
 
       // Leaflet-WMS.

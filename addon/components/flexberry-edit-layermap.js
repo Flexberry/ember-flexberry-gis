@@ -2,13 +2,12 @@ import Ember from 'ember';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
+import FlexberryBoundingboxMapLoaderMixin from '../mixins/flexberry-boundingbox-map-loader';
 import layout from '../templates/components/flexberry-edit-layermap';
+import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
 import {
   translationMacro as t
 } from 'ember-i18n';
-import {
-  getLeafletCrs
-} from '../utils/leaflet-crs';
 
 /**
   Component's CSS-classes names.
@@ -31,7 +30,8 @@ const flexberryClassNames = {
 export default Ember.Component.extend(
   RequiredActionsMixin,
   DynamicActionsMixin,
-  DynamicPropertiesMixin, {
+  DynamicPropertiesMixin,
+  FlexberryBoundingboxMapLoaderMixin, {
     /**
       Reference to component's CSS-classes names.
       Must be also a component's instance property to be available from component's .hbs template.
@@ -142,6 +142,24 @@ export default Ember.Component.extend(
       @default "wgs84bbox"
     */
     boundsMode: 'wgs84bbox',
+
+    /**
+      Map model fot bounding box component.
+
+      @property boundingBoxComponentMap
+      @type Object
+      @default null
+    */
+    boundingBoxComponentMap: null,
+
+    /**
+      Indicates that boundingBox component's map is loading.
+
+      @property _bboxMapIsLoading
+      @type Boolean
+      @default false
+    */
+    _bboxMapIsLoading: false,
 
     /**
       Flag: indicates whether to show bounds error message or not.
@@ -333,11 +351,13 @@ export default Ember.Component.extend(
       '_mainSettingsAreAvailableForType',
       '_crsSettingsAreAvailableForType',
       '_layerSettingsAreAvailableForType',
+      '_bboxSettingsAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
         return this.get('_mainSettingsAreAvailableForType') ||
           this.get('_crsSettingsAreAvailableForType') ||
-          this.get('_layerSettingsAreAvailableForType');
+          this.get('_layerSettingsAreAvailableForType') ||
+          this.get('_bboxSettingsAreAvailableForType');
       }
     ),
 
@@ -396,6 +416,18 @@ export default Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether bbox settings are available for the selected layer type.
+
+      @property _bboxSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _bboxSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      return true;
+    }),
+
+    /**
       Flag: indicates whether 'display-group' of settings is available for the selected layer type.
 
       @property _displayGroupIsAvailableForType
@@ -408,12 +440,14 @@ export default Ember.Component.extend(
       '_searchSettingsAreAvailableForType',
       '_displaySettingsAreAvailableForType',
       '_legendSettingsAreAvailableForType',
+      '_filterSettingsAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
         return this.get('_identifySettingsAreAvailableForType') ||
           this.get('_searchSettingsAreAvailableForType') ||
           this.get('_displaySettingsAreAvailableForType') ||
-          this.get('_legendSettingsAreAvailableForType');
+          this.get('_legendSettingsAreAvailableForType') ||
+          this.get('_filterSettingsAreAvailableForType');
       }
     ),
 
@@ -500,6 +534,21 @@ export default Ember.Component.extend(
     */
     _linksSettingsAreAvailableForType: Ember.computed('_layerSettingsAreAvailableForType', function() {
       return this.get('_layerSettingsAreAvailableForType');
+    }),
+
+    /**
+      Flag: indicates whether 'filter' operation settings are available for the selected layer type. TODO!
+
+      @property _filterSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _filterSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+
+      return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('filter');
     }),
 
     /**
@@ -684,7 +733,16 @@ export default Ember.Component.extend(
       */
       allowShowCheckboxChange(...args) {
         this.sendAction('allowShowLayerLinkCheckboxChange', ...args);
-      }
+      },
+
+      /**
+        Handles bounding box changes.
+
+        @method actions.onBoundingBoxChange
+      */
+      onBoundingBoxChange(e) {
+        this.set('_layer.boundingBox', e.bboxGeoJSON);
+      },
     },
 
     /**
@@ -725,6 +783,8 @@ export default Ember.Component.extend(
       let scale = this.get('layer.scale');
       let description = this.get('layer.description');
       let keyWords = this.get('layer.keyWords');
+      let boundingBox = this.get('layer.boundingBox');
+      let bounds = getBounds(boundingBox);
 
       let crs = this.get('layer.coordinateReferenceSystem');
       crs = Ember.isNone(crs) ? {} : JSON.parse(crs);
@@ -750,6 +810,13 @@ export default Ember.Component.extend(
         keyWords: keyWords,
         coordinateReferenceSystem: crs,
         settings: settings,
+        boundingBox: boundingBox,
+        bboxCoords: {
+          minLat: bounds.minLat,
+          minLng: bounds.minLng,
+          maxLat: bounds.maxLat,
+          maxLng: bounds.maxLng,
+        },
       });
     },
 
@@ -772,8 +839,10 @@ export default Ember.Component.extend(
     */
     _visibleDidChange: Ember.on('init', Ember.observer('visible', function () {
       if (this.get('visible') || this.get('visible') === undefined) {
+        this.set('_hideBbox', false);
         this._createInnerLayer();
       } else {
+        this.set('_hideBbox', true);
         this._destroyInnerLayer();
       }
     })),
@@ -802,6 +871,14 @@ export default Ember.Component.extend(
       if (Ember.isNone(this.get('links'))) {
         this.set('links', Ember.A());
       }
+
+      let _this = this;
+      this.set('_bboxMapIsLoading', true);
+
+      this.getBoundingBoxComponentMapModel().then(result => {
+        _this.set('boundingBoxComponentMap', result);
+        _this.set('_bboxMapIsLoading', false);
+      });
 
       this.set('_tabularMenuState', {
         activeGroup: 'main-group',
@@ -854,47 +931,10 @@ export default Ember.Component.extend(
 
       let settings = Ember.get(_layerHash, 'settings');
 
-      let boundsMode = this.get('boundsMode');
-      let geoJsonBounds;
-
-      // Coordinates should be projected to LatLngs.
-      if (boundsMode === 'bbox') {
-        let bbox = Ember.get(settings, 'bbox');
-
-        if (!Ember.isBlank(bbox[0][0]) && !Ember.isBlank(bbox[0][1]) &&
-          !Ember.isBlank(bbox[1][0]) && !Ember.isBlank(bbox[1][1])) {
-
-          // Compute leaflet crs
-          let crs = getLeafletCrs(coordinateReferenceSystem, this);
-
-          let corner1 = crs.unproject(L.point(bbox[0]));
-          let corner2 = crs.unproject(L.point(bbox[1]));
-
-          geoJsonBounds = [
-            [corner1.lat, corner1.lng],
-            [corner2.lat, corner2.lng]
-          ];
-        }
-      } else {
-        geoJsonBounds = Ember.get(settings, 'wgs84bbox');
+      if (Ember.get(settings, 'filter') instanceof Element) {
+        Ember.set(settings, 'filter', L.XmlUtil.serializeXmlToString(Ember.get(settings, 'filter')));
       }
 
-      let bounds;
-      try {
-        bounds = L.latLngBounds(geoJsonBounds);
-      } catch (error) {
-        bounds = undefined;
-      }
-
-      // If no valid bounds provided - set it to max.
-      if (!bounds || !bounds.isValid()) {
-        geoJsonBounds = [
-          [-90, -180],
-          [90, 180]
-        ];
-      }
-
-      Ember.set(settings, 'bounds', geoJsonBounds);
       settings = Ember.$.isEmptyObject(settings) ? null : JSON.stringify(settings);
 
       Ember.set(_layerHash, 'settings', settings);

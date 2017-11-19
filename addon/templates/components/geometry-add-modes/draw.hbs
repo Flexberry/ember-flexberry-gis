@@ -1,0 +1,36 @@
+<div class="ui simple dropdown item">
+  <i class="plus icon"></i>
+  <i class="dropdown icon"></i>
+  <div class="menu">
+    {{#if (array-contains settings.drawTools "marker")}}
+      <a class="item" onclick={{action "onGeometryTypeSelect" "marker"}}>
+        <i class="flexberry-map-tool-icon marker icon"></i>
+        {{t "components.map-tools.draw.draw-marker.caption"}}
+      </a>
+    {{/if}}
+    {{#if (array-contains settings.drawTools "polyline")}}
+      <a class="item" onclick={{action "onGeometryTypeSelect" "polyline"}}>
+        <i class="flexberry-map-tool-icon empty star icon"></i>
+        {{t "components.map-tools.draw.draw-polyline.caption"}}
+      </a>
+    {{/if}}
+    {{#if (array-contains settings.drawTools "circle")}}
+      <a class="item" onclick={{action "onGeometryTypeSelect" "circle"}}>
+        <i class="flexberry-map-tool-icon circle icon"></i>
+        {{t "components.map-tools.draw.draw-circle.caption"}}
+      </a>
+    {{/if}}
+    {{#if (array-contains settings.drawTools "rectangle")}}
+      <a class="item" onclick={{action "onGeometryTypeSelect" "rectangle"}}>
+        <i class="flexberry-map-tool-icon square icon"></i>
+        {{t "components.map-tools.draw.draw-rectangle.caption"}}
+      </a>
+    {{/if}}
+    {{#if (array-contains settings.drawTools "polygon")}}
+      <a class="item" onclick={{action "onGeometryTypeSelect" "polygon"}}>
+        <i class="flexberry-map-tool-icon star icon"></i>
+        {{t "components.map-tools.draw.draw-polygon.caption"}}
+      </a>
+    {{/if}}
+  </div>
+</div>

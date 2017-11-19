@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
 
 /**
   Mixin containing additional logic for layer and layer-like models.
@@ -11,21 +12,35 @@ import Ember from 'ember';
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
 export default Ember.Mixin.create({
-  settingsAsObject: Ember.computed('settings', function () {
+  /**
+    Object with layer's settings.
+
+    @property settingsAsObject
+    @type Object
+    @readOnly
+  */
+  settingsAsObject: {},
+
+  /**
+    SettingsAsObject computing with observer, because Yandex browser don't recompute settingsAsObject,
+    when it's computed property.
+  */
+  settingsObserver: Ember.on('init', Ember.observer('settings', function() {
     let stringToDeserialize = this.get('settings');
     if (!Ember.isBlank(stringToDeserialize)) {
       try {
         let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
         let defaultSettings = layerClassFactory.createSettings();
+        this.set('settingsAsObject', Ember.$.extend(true, defaultSettings, JSON.parse(stringToDeserialize)));
 
-        return Ember.$.extend(true, defaultSettings, JSON.parse(stringToDeserialize));
+        return;
       } catch (e) {
         Ember.Logger.error(`Computation of 'settingsAsObject' property for '${this.get('name')}' layer has been failed: ${e}`);
       }
     }
 
-    return {};
-  }),
+    this.set('settingsAsObject', {});
+  })),
 
   /**
     Flag: indicates whether layer can be identified.
@@ -164,8 +179,9 @@ export default Ember.Mixin.create({
         layerBounds = layerBounds ? layerBounds.extend(bounds) : L.latLngBounds(bounds);
       }
     } else {
-      let bounds = this.get('settingsAsObject.bounds');
-      layerBounds = L.latLngBounds(bounds);
+      let boundingBox = this.get('boundingBox');
+      let bounds = getBounds(boundingBox);
+      layerBounds = L.latLngBounds([bounds.minLat, bounds.minLng], [bounds.maxLat, bounds.maxLng]);
     }
 
     return layerBounds;

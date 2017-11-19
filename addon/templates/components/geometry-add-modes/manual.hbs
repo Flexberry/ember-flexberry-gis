@@ -1,0 +1,46 @@
+{{flexberry-button
+  tooltip="Add with coordinates"
+  click=(action "onButtonClick")
+  iconClass="flexberry-map-command-icon location arrow icon"
+}}
+
+{{!--
+  Semantic UI modal dialogs takes long time to be initialized
+  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+--}}
+{{#if _dialogHasBeenRequested}}
+  {{#flexberry-dialog class=flexberryClassNames.dialog
+    caption="Add with coordinates"
+    approveButtonCaption="Ok"
+    denyButtonCaption="Cancel"
+    visible=_dialogVisible
+    approve=(action "onApprove")
+    deny=(action "onDeny")
+  }}
+  <form class="ui form {{flexberryClassNames.form}}" role="form">
+    {{!-- currently disabled --}}
+    <div class="field disabled">
+      {{flexberry-edit-crs
+        crsCaption="Coordinate reference system"
+        coordinateReferenceSystem=settings.layerCRS
+      }}
+    </div>
+    {{!-- currently disabled --}}
+    <div class="field disabled">
+      <label>Geometry type</label>
+      {{flexberry-dropdown
+        items=settings.drawTools
+        value="polygon"
+      }}
+    </div>
+    <div class="field {{if _coordinatesWithError "error" ""}}">
+      <label>Coordinates to add</label>
+      {{flexberry-textarea
+        value=_coordinates
+        placeholder='Enter coordinates...'
+      }}
+    </div>
+  </form>
+
+{{/flexberry-dialog}}
+{{/if}}

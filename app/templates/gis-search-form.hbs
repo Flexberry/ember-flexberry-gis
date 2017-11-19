@@ -1,4 +1,4 @@
-<h3 class="ui header">
+﻿<h3 class="ui header">
   {{t "forms.gis-search-form.header"}}
 </h3>
 <form class="ui form flexberry-vertical-form gis-search-form" role="form">
@@ -81,6 +81,7 @@
             minLng=searchConditions.minLng
             maxLat=searchConditions.maxLat
             maxLng=searchConditions.maxLng
+            boundingBoxChange=(action "onBoundingBoxChange")
           }}
         </div>
       </div>

@@ -73,7 +73,15 @@ export default Ember.Controller.extend({
       @type Number
       @default null
     */
-    maxLat: 90
+    maxLat: 90,
+
+    /**
+      Bounding box in EWKT format.
+      @property searchConditions.boundingBoxEWKT
+      @type String
+      @default undefined
+    */
+    boundingBoxEWKT: undefined
   },
 
   /**
@@ -274,6 +282,15 @@ export default Ember.Controller.extend({
     onRowSelect(rowId, options) {
       this.set(`_selectedRows.${rowId}`, options.checked);
       this.notifyPropertyChange('_selectedRows');
+    },
+
+    /**
+      Handles bounding box changes.
+
+      @method actions.onBoundingBoxChange
+    */
+    onBoundingBoxChange(e) {
+      this.set('searchConditions.boundingBoxEWKT', e.bboxEWKT);
     },
 
     /**

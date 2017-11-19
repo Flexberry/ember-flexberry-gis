@@ -53,6 +53,18 @@
           {{/if}}
         {{/if}}
 
+        {{!--
+          надо создать класс для flexberryClassNames.attributesButton
+        --}}
+        {{#if _attributesOperationIsAvailable}}
+          {{flexberry-button
+            class=(concat flexberryClassNames.attributesButton " right floated " flexberryClassNames.preventExpandCollapse)
+            iconClass="browser icon"
+            click=(action "onAttributesButtonClick")
+          }}
+        {{/if}}
+
+
         {{#if _canChangeOpacity}}
           <label class="{{flexberryClassNames.opacityLabel}}" title="{{t "components.flexberry-maplayer.opacity" }}">
             {{_opacityDisplayValue}}
@@ -89,6 +101,7 @@
           keyWords=keyWords
           scale=scale
           coordinateReferenceSystem=coordinateReferenceSystem
+          boundingBox=boundingBox
           settings=settings
         )
         _leafletObject=_leafletObject
