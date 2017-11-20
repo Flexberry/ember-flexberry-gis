@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
 
 /**
   Mixin containing additional logic for layer and layer-like models.
@@ -178,8 +179,9 @@ export default Ember.Mixin.create({
         layerBounds = layerBounds ? layerBounds.extend(bounds) : L.latLngBounds(bounds);
       }
     } else {
-      let bounds = this.get('settingsAsObject.bounds');
-      layerBounds = L.latLngBounds(bounds);
+      let boundingBox = this.get('boundingBox');
+      let bounds = getBounds(boundingBox);
+      layerBounds = L.latLngBounds([bounds.minLat, bounds.minLng], [bounds.maxLat, bounds.maxLng]);
     }
 
     return layerBounds;

@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import { Query } from 'ember-flexberry-data';
+import FlexberryBoundingboxMapLoaderMixin from '../mixins/flexberry-boundingbox-map-loader';
 
 /**
   Route for GIS search form.
@@ -11,7 +12,7 @@ import { Query } from 'ember-flexberry-data';
   @class GisSearchFormRoute
   @extends <a href="http://emberjs.com/api/classes/Ember.Route.html">Ember.Route</a>
 */
-export default Ember.Route.extend({
+export default Ember.Route.extend(FlexberryBoundingboxMapLoaderMixin, {
   /**
     Query settings for layer metadata loading.
   */
@@ -50,7 +51,7 @@ export default Ember.Route.extend({
       availableMaps: this._getQuery(this.get('_mapSettings.modelName'), this.get('_mapSettings.projectionName'), null, null, null),
 
       // Get map model to be displayed in `flexberry-boundingbox` component.
-      boundingBoxComponentMap: this._getBoundingBoxComponentMapModel()
+      boundingBoxComponentMap: this.getBoundingBoxComponentMapModel()
     });
   },
 
@@ -112,38 +113,6 @@ export default Ember.Route.extend({
         });
       }
     }
-  },
-
-  /**
-    Gets map model to be displayed in `flexberry-boundingbox` component.
-
-    @method _getBoundingBoxComponentMapModel
-    @return {NewPlatformFlexberryGISMap} Map model or promise returning it.
-    @private
-  */
-  _getBoundingBoxComponentMapModel() {
-    // Create map model to be displayed in `flexberry-boundingbox` component.
-    let mapModel = this.store.createRecord('new-platform-flexberry-g-i-s-map', {
-      name: 'testmap',
-      lat: 0,
-      lng: 0,
-      zoom: 0,
-      public: true,
-      coordinateReferenceSystem: '{"code":"EPSG:4326"}'
-    });
-
-    // Create layer model & add to map model.
-    let openStreetMapLayer = this.store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
-      name: 'OSM',
-      type: 'tile',
-      visibility: true,
-      index: 0,
-      coordinateReferenceSystem: '{"code":"EPSG:3857","definition":null}',
-      settings: '{"opacity": 1, "url":"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}'
-    });
-    mapModel.get('mapLayer').pushObject(openStreetMapLayer);
-
-    return mapModel;
   },
 
   /**
@@ -216,20 +185,7 @@ export default Ember.Route.extend({
       Ember.isNone(searchConditions.maxLng) ||
       Ember.isNone(searchConditions.maxLat))) {
 
-      // If some of polygon's edges have length of 180 (for example from latitude -90 till latitude 90)
-      // then PostGIS will throw an exception "Antipodal (180 degrees long) edge detected".
-      // Workaround is to make each edge shorter (add additional points into polygon's edges).
-      let boundingBoxIntersectionCondition = new Query.GeographyPredicate('boundingBox').intersects(
-        `SRID=4326;POLYGON((` +
-        `${searchConditions.minLng} ${searchConditions.minLat},` +
-        `${searchConditions.minLng} ${searchConditions.minLat + (searchConditions.maxLat - searchConditions.minLat) * 0.5},` +
-        `${searchConditions.minLng} ${searchConditions.maxLat},` +
-        `${searchConditions.minLng + (searchConditions.maxLng - searchConditions.minLng) * 0.5} ${searchConditions.maxLat},` +
-        `${searchConditions.maxLng} ${searchConditions.maxLat},` +
-        `${searchConditions.maxLng} ${searchConditions.minLat + (searchConditions.maxLat - searchConditions.minLat) * 0.5},` +
-        `${searchConditions.maxLng} ${searchConditions.minLat},` +
-        `${searchConditions.minLng + (searchConditions.maxLng - searchConditions.minLng) * 0.5} ${searchConditions.minLat},` +
-        `${searchConditions.minLng} ${searchConditions.minLat}))`);
+      let boundingBoxIntersectionCondition = new Query.GeographyPredicate('boundingBox').intersects(searchConditions.boundingBoxEWKT);
       let boundingBoxIsNullCondition = new Query.SimplePredicate('boundingBox', Query.FilterOperator.Eq, null);
 
       filterConditions.addObject(new Query.ComplexPredicate(Query.Condition.Or, boundingBoxIsNullCondition, boundingBoxIntersectionCondition));

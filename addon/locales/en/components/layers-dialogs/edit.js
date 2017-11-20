@@ -87,6 +87,9 @@ export default {
     },
     'links-tab': {
       'caption': 'Links settings'
+    },
+    'bbox-tab': {
+      'caption': 'Bounds'
     }
   },
   'groups': {
