@@ -3,12 +3,12 @@
 */
 
 import Ember from 'ember';
-import layout from '../../templates/components/layers-styles/empty';
+import layout from '../../templates/components/markers-styles/default';
 
 /**
-  Component containing GUI for 'empty' layers-style
+  Component containing GUI for 'dafault' markers-style
 
-  @class EmptyLayersStyleComponent
+  @class DefaultMarkersStyleComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 export default Ember.Component.extend({

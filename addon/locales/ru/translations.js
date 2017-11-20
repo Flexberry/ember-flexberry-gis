@@ -22,6 +22,7 @@ import FlexberryLayersAttributesPanel from './components/flexberry-layers-attrib
 import FlexberryEditCrsComponent from './components/flexberry-edit-crs';
 
 import LayersStyles from './layers-styles';
+import MarkersStyles from './markers-styles';
 
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
@@ -46,6 +47,7 @@ export default {
   },
 
   'layers-styles': LayersStyles,
+  'markers-styles': MarkersStyles,
 
   'components': {
     'flexberry-table': FlexberryTableComponents,

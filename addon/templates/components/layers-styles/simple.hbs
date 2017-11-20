@@ -1,1 +1,48 @@
-{{flexberry-jsonarea value=style}}
+<div class="ui pointing secondary menu">
+  <a class="item {{if (eq _activeTab "path-tab") "active"}}" data-tab="path-tab" onclick={{action "onTabClick"}}>
+    {{t "layers-styles.simple.path-tab.caption"}}
+  </a>
+  <a class="item {{if (eq _activeTab "marker-tab") "active"}}" data-tab="marker-tab" onclick={{action "onTabClick"}}>
+    {{t "layers-styles.simple.marker-tab.caption"}}
+  </a>
+</div>
+<div class="ui tab segment {{if (eq _activeTab "path-tab") "active"}}" data-tab="path-tab">
+  <div class="ui centered grid">
+    <div class="twelve wide column">
+      {{flexberry-jsonarea value=styleSettings.style.path}}
+    </div>
+    <div class="four wide center aligned column">
+      <canvas></canvas>
+    </div>
+  </div>
+</div>
+<div class="ui tab segment {{if (eq _activeTab "marker-tab") "active"}}" data-tab="marker-tab">
+  <div class="ui centered grid">
+    <div class="twelve wide column">
+      <div class="field">
+        <label>
+          {{t "layers-styles.simple.marker-tab.markers-styles-dropdown.caption"}}
+        </label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableMarkerStylesCaptions
+          value=_selectedMarkerStyleCaption
+        }}
+      </div>
+      {{#if (known-for-type "component" (concat "markers-styles/" styleSettings.style.marker.type))}}
+        {{component (concat "markers-styles/" styleSettings.style.marker.type) styleSettings=styleSettings.style.marker}}
+      {{else}}
+        {{ui-message
+          type="error"
+          message=(t
+            "layers-styles.simple.marker-tab.marker-style-component-not-implemented.message"
+            componentName=(concat "markers-styles/" styleSettings.style.marker.type)
+          )
+        }}
+      {{/if}}
+    </div>
+    <div class="four wide center aligned column">
+      <canvas></canvas>
+    </div>
+  </div>
+</div>

@@ -651,7 +651,6 @@ export default Ember.Component.extend(
       '_availableLayerStylesCaptions.[]',
       '_layer.settings.styleSettings.type',
       function() {
-        //Ember.run.once(this, '_setSelectedLayerStyleCaption');
         let availableLayerStyles = this.get('_availableLayerStyles');
         let selectedLayerStyle = this.get('_layer.settings.styleSettings.type');
         let selectedLayerStyleIndex = availableLayerStyles.findIndex((layerStyle) => {

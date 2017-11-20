@@ -60,5 +60,10 @@ export default BaseMarkerStyle.extend({
     @param {Object} options.style Hash containing style settings.
   */
   renderOnCanvas({ canvas, style }) {
+    let context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.font = '24px Verdana';
+    context.strokeStyle = 'red';
+    context.strokeText('Image marker preview', 10, 20);
   }
 });
