@@ -26,7 +26,8 @@
       </div>
       <div class="field {{if (get _parsingErrors "provider") "error" ""}}">
         <label>Provider</label>
-        {{flexberry-textbox
+        {{flexberry-dropdown
+          items=_availableProviderNames
           value=provider
         }}
       </div>
