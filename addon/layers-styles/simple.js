@@ -14,6 +14,14 @@ import BaseLayerStyle from './-private/base';
 */
 export default BaseLayerStyle.extend({
   /**
+    Reference to 'markers-styles-renderer' servie.
+
+    @property markersStylesRenderer
+    @type MarkersStylesRendererService
+  */
+  markersStylesRenderer: Ember.inject.service('markers-styles-renderer'),
+
+  /**
     Applies layer-style to the specified leaflet layer.
 
     @method _renderOnLeafletLayer
@@ -64,7 +72,7 @@ export default BaseLayerStyle.extend({
     @param {Object} options.style Hash containing style settings.
   */
   _renderOnLeafletMarker({ marker, style }) {
-    // TODO: Implement markers rendering.
+    this.get('markersStylesRenderer').renderOnLeafletMarker({ marker, style: style.marker });
   },
 
   /**
@@ -77,69 +85,38 @@ export default BaseLayerStyle.extend({
     return {
       path: {
         // Whether to draw stroke along the path. Set it to `false` to disable borders on polygons or circles.
-    		stroke: true,
+        stroke: true,
 
-    		// Stroke color
-    		color: '#3388ff',
+        // Stroke color
+        color: '#3388ff',
 
-    		// Stroke width in pixels
-    		weight: 3,
+        // Stroke width in pixels
+        weight: 3,
 
-    		// A string that defines [shape to be used at the end](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linecap) of the stroke.
-    		lineCap: 'round',
+        // A string that defines [shape to be used at the end](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linecap) of the stroke.
+        lineCap: 'round',
 
-    		// A string that defines [shape to be used at the corners](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linejoin) of the stroke.
-    		lineJoin: 'round',
+        // A string that defines [shape to be used at the corners](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-linejoin) of the stroke.
+        lineJoin: 'round',
 
-    		// A string that defines the stroke [dash pattern](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dasharray).
+        // A string that defines the stroke [dash pattern](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dasharray).
         // Doesn't work on `Canvas`-powered layers in [some old browsers](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility).
-    		dashArray: null,
+        dashArray: null,
 
-    		// A string that defines the [distance into the dash pattern to start the dash](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dashoffset).
+        // A string that defines the [distance into the dash pattern to start the dash](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dashoffset).
         // Doesn't work on `Canvas`-powered layers in [some old browsers](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility).
-    		dashOffset: null,
+        dashOffset: null,
 
         // Whether to fill the path with color.
-    		fill: true,
+        fill: true,
 
-    		// Fill color.
-    		fillColor: '#3388ff',
+        // Fill color.
+        fillColor: '#3388ff',
 
-    		// A string that defines [how the inside of a shape](https://developer.mozilla.org/docs/Web/SVG/Attribute/fill-rule) is determined.
-    		fillRule: 'evenodd'
+        // A string that defines [how the inside of a shape](https://developer.mozilla.org/docs/Web/SVG/Attribute/fill-rule) is determined.
+        fillRule: 'evenodd'
       },
-      imageMarker: {
-        // Whether to use image marker to display layers with point/multypoint geometries.
-        imageMarker: true,
-
-        // Marker icon URL.
-        iconUrl: 'marker-icon.png',
-
-        // Icon size.
-        iconSize: [25, 41],
-
-        // Icon anchor relative to it's size.
-        iconAnchor: [12, 41],
-
-        // Marker shadow icon URL.
-        shadowUrl: 'marker-shadow.png',
-
-        // Shadow icon size.
-        shadowSize: [41, 41],
-
-        // Shadow icon anchor relative to it's size.
-        shadowAnchor: null
-      },
-      divMarker: {
-        // Whether to use DIV marker to display layers with point/multypoint geometries.
-        divMarker: false,
-
-        // DIV size.
-        iconSize: [12, 12],
-
-        // Custom HTML code to put inside the div element, empty by default.
-        html: ''
-      }
+      marker: this.get('markersStylesRenderer').getDefaultStyleSettings('default')
     };
   },
 

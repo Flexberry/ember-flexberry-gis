@@ -41,7 +41,7 @@ export default Ember.Service.extend({
   _getLayerStyle(type) {
     let layerStyle = this.get(`_layersStyles.${type}`);
     if (Ember.isNone(layerStyle)) {
-      Ember.Logger.error(`Service 'layer-styles-renderer' can't find '${type}' layers-style, it doesn't exist.`);
+      Ember.Logger.error(`Service 'layers-styles-renderer' can't find '${type}' layers-style, it doesn't exist.`);
     }
 
     return layerStyle;
@@ -67,9 +67,9 @@ export default Ember.Service.extend({
   /**
     Gets available layer styles types.
 
-    @method getDefaultStyleSettings
+    @method getAvailableLayerStylesTypes
     @param {String} type Layer style type.
-    @return {Object} Hash containing style type and it's default style settings (for example { type: 'simple', style: { fill: ..., stroke: ..., ... } }).
+    @return {Strng[]} Array containing available 'layers-styles' types.
   */
   getAvailableLayerStylesTypes() {
     return this.get('_layersStylesTypes');
@@ -85,7 +85,7 @@ export default Ember.Service.extend({
   getDefaultStyleSettings(type) {
     let layerStyle = this._getLayerStyle(type);
     if (Ember.isNone(layerStyle)) {
-      Ember.Logger.error(`Service 'layer-styles-renderer' can't get default style settings for '${type}' layers-style.`);
+      Ember.Logger.error(`Service 'layers-styles-renderer' can't get default style settings for '${type}' layers-style.`);
       return null;
     }
 
@@ -98,7 +98,7 @@ export default Ember.Service.extend({
   /**
     Applies layer-style to the specified leaflet layer.
 
-    @method applyStyleToLeafletLayer
+    @method renderOnLeafletLayer
     @param {Object} options Method options.
     @param {String} options.type Layer style type.
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} options.leafletLayer Leaflet layer to which layer-style must be applied.
@@ -110,7 +110,7 @@ export default Ember.Service.extend({
 
     let layerStyle = this._getLayerStyle(type);
     if (Ember.isNone(layerStyle)) {
-      Ember.Logger.error(`Service 'layer-styles-renderer' can't render '${type}' layers-style on leaflet layer.`);
+      Ember.Logger.error(`Service 'layers-styles-renderer' can't render '${type}' layers-style on leaflet layer.`);
       return;
     }
 
@@ -120,7 +120,7 @@ export default Ember.Service.extend({
   /**
     Renderes layer-style preview on the specified canvas element.
 
-    @method applyStyleToLeafletLayer
+    @method renderOnCanvas
     @param {Object} options Method options.
     @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which layer-style preview must be rendered.
     @param {Object} options.styleSettings Hash containing style settings.
@@ -131,7 +131,7 @@ export default Ember.Service.extend({
 
     let layerStyle = this._getLayerStyle(type);
     if (Ember.isNone(layerStyle)) {
-      Ember.Logger.error(`Service 'layer-styles-renderer' can't render '${type}' layers-style on canvas.`);
+      Ember.Logger.error(`Service 'layers-styles-renderer' can't render '${type}' layers-style on canvas.`);
       return;
     }
 
