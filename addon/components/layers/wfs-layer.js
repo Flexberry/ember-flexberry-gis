@@ -154,7 +154,11 @@ export default BaseLayer.extend({
   _createWFSLayer(options) {
     options = Ember.$.extend(true, {}, this.get('options'), options);
     if (options.filter && !(options.filter instanceof Element)) {
-      let filter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(options.filter);
+      let filter = options.filter;
+      if (typeof (options.filter) === 'string') {
+        filter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(options.filter);
+      }
+
       if (filter.toGml) {
         filter = filter.toGml();
       }
