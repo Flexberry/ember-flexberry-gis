@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/geometry-add-modes/geoprovider';
+import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -123,6 +124,26 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
     Total count of query result items.
   */
   _queryResultsTotalCount: 0,
+
+  menuButtonTooltip: t('components.geometry-add-modes.geoprovider.menu-button-tooltip'),
+
+  dialogApproveButtonCaption: t('components.geometry-add-modes.geoprovider.dialog-approve-button-caption'),
+
+  dialogDenyButtonCaption: t('components.geometry-add-modes.geoprovider.dialog-deny-button-caption'),
+
+  addressLabel: t('components.geometry-add-modes.geoprovider.address-field-label'),
+
+  providerLabel: t('components.geometry-add-modes.geoprovider.provider-field-label'),
+
+  searchButtonCaption: t('components.geometry-add-modes.geoprovider.search-button-caption'),
+
+  resultsLabel: t('components.geometry-add-modes.geoprovider.results-label'),
+
+  resultsHeaderSelect: t('components.geometry-add-modes.geoprovider.results-header-select'),
+
+  resultsHeaderName: t('components.geometry-add-modes.geoprovider.results-header-name'),
+
+  resultsHeaderPosition: t('components.geometry-add-modes.geoprovider.results-header-position'),
 
   /**
     Address for request.
