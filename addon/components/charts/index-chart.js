@@ -60,11 +60,14 @@ export default Ember.Component.extend({
     @type Object[]
   */
   _availableTypes: Ember.computed('i18n.locale', function() {
-    let types = Ember.getOwner(this).knownNamesForType('components/charts/type-chart');
     let result = {};
-    types.forEach(type => {
-      result[type] = this.get('i18n').t(`components.charts.type-charts.${type}.name`).toString();
-    }, this);
+    let owner = Ember.getOwner(this) || {};
+    if (owner.knownNamesForType) {
+      let types = owner.knownNamesForType('components/charts/type-chart');
+      types.forEach(type => {
+        result[type] = this.get('i18n').t(`components.charts.type-charts.${type}.name`).toString();
+      }, this);
+    }
 
     return result;
   }),
