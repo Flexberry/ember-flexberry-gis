@@ -155,7 +155,7 @@ export default BaseLayer.extend({
     options = Ember.$.extend(true, {}, this.get('options'), options);
     if (options.filter && !(options.filter instanceof Element)) {
       let filter = options.filter;
-      if(typeof(options.filter) === 'string') {
+      if (typeof (options.filter) === 'string') {
         filter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(options.filter);
       }
 
