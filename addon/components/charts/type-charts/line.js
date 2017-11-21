@@ -89,7 +89,7 @@ export default Ember.Component.extend({
 
     let isObjectNumber = Ember.A([]);
     let isObject = this.get('_isObject');
-    let propName = Object.keys(isObject[0]);
+    let propName = Object.keys(isObject[0] || {});
 
     for (var i in propName)
     {

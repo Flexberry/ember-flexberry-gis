@@ -2,5 +2,7 @@ export default {
   'typr-charts':{
     'caption': 'Chart type'
   },
-  'caption-charts': 'Сhart title'
+  'default-caption': 'Сhart title',
+  'caption-charts': 'Сhart title',
+  'create-button': 'Create diagram'
 };

@@ -239,12 +239,6 @@ export default Ember.Controller.extend({
           caption: i18n.t('forms.application.sitemap.components-examples.kml-layer.caption'),
           title: i18n.t('forms.application.sitemap.components-examples.kml-layer.title'),
           children: null
-        },
-        {
-          link: 'charts-result',
-          caption: i18n.t('forms.application.sitemap.components-examples.chart-editor.caption'),
-          title: i18n.t('forms.application.sitemap.components-examples.chart-editor.title'),
-          children: null
         }]
       }]
     };

@@ -2,5 +2,7 @@ export default {
   'typr-charts':{
     'caption': 'Тип диаграммы'
   },
-  'caption-charts': 'Заголовок диаграммы'
+  'default-caption': 'Заголовок диаграммы',
+  'caption-charts': 'Заголовок диаграммы',
+  'create-button': 'Сформировать диаграмму'
 };

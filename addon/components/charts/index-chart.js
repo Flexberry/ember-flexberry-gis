@@ -4,6 +4,9 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/charts/index-chart';
+import {
+  translationMacro as t
+} from 'ember-i18n';
 
 /**
   Component for charting.
@@ -23,18 +26,9 @@ export default Ember.Component.extend({
 
     @property _captionChart
     @type string
-    @default 'Сhart title'
+    @default t(`components.charts.index-chart.default-caption`)
   */
-  _captionChart: 'Сhart title',
-
-  /**
-    Available chart type.
-
-    @property _availableTypes
-    @type Object[]
-    @default null
-  */
-  _availableTypes: null,
+  _captionChart: t(`components.charts.index-chart.default-caption`),
 
   /**
     Selected chart type.
@@ -54,16 +48,26 @@ export default Ember.Component.extend({
   */
   _isObjProperties: null,
 
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
+  selectedModeType: Ember.computed('i18n.locale', '_selectedModeType', function() {
+    let type = this.get('_selectedModeType');
+    return this.get('i18n').t(`components.charts.type-charts.${type}.name`).toString();
+  }),
 
-    // Available layers types for related dropdown.
-    let owner = Ember.getOwner(this);
-    this.set('_availableTypes', owner.knownNamesForType('components/charts/type-chart'));
-  },
+  /**
+    Available chart type.
+
+    @property _availableTypes
+    @type Object[]
+  */
+  _availableTypes: Ember.computed('i18n.locale', function() {
+    let types = Ember.getOwner(this).knownNamesForType('components/charts/type-chart');
+    let result = {};
+    types.forEach(type => {
+      result[type] = this.get('i18n').t(`components.charts.type-charts.${type}.name`).toString();
+    }, this);
+
+    return result;
+  }),
 
   actions: {
 
@@ -86,6 +90,10 @@ export default Ember.Component.extend({
       let json = this.get('getJsonCharts')();
 
       this.$('.containerCR').highcharts(json);
+    },
+
+    onModeTypeChange(item, key) {
+      this.set('_selectedModeType', key);
     }
   }
 });

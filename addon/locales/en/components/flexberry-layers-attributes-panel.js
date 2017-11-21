@@ -8,4 +8,6 @@ export default {
   'edit-item': 'Edit',
   'edit-item-geometry': 'Edit geometry',
   'save-changes': 'Save changes',
+  'table-tab': 'Table',
+  'diagram-tab': 'Chart',
 };

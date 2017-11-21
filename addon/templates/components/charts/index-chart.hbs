@@ -1,13 +1,28 @@
 <div class="ui centered grid">
   <div class="six wide column">
+    <div class="ui grid">
+      <div class="left aligned column">
+        {{flexberry-button
+          caption=(t "components.charts.index-chart.create-button")
+          click=(action "onGenerateChart")
+        }}
+      </div>
+    </div>
     <div class="field">
       <label>
         {{t "components.charts.index-chart.typr-charts.caption"}}
       </label>
-      {{flexberry-dropdown
-        items=_availableTypes
-        value=_selectedModeType
-      }}
+      {{#ui-dropdown class="compact selection" onChange=(action "onModeTypeChange")}}
+        <i class="dropdown icon"></i>
+        <div class="text">
+          {{selectedModeType}}
+        </div>
+        <div class="menu">
+          {{#each-in _availableTypes as |key value|}}
+            <div class="item" data-value="{{key}}">{{value}}</div>
+          {{/each-in}}
+        </div>
+      {{/ui-dropdown}}
     </div>
     <div class="field">
       <label>
@@ -27,14 +42,6 @@
             onInit=(action "initJsonCharts")
           }}
         {{/if}}
-      </div>
-    </div>
-    <div class="ui grid">
-      <div class="right aligned column">
-        {{flexberry-button
-          caption="Сформировать диаграмму"
-          click=(action "onGenerateChart")
-        }}
       </div>
     </div>
   </div>
