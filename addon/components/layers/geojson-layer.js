@@ -38,11 +38,30 @@ export default BaseVectorLayer.extend({
 
   /**
     Url for download geojson.
+
     @property url
     @type String
     @default null
   */
   url: null,
+
+  /**
+    Parses specified serialized callback into function.
+
+    @method parseLeafletOptionsCallback
+    @param {Object} options Method options.
+    @param {String} options.callbackName Callback name.
+    @param {String} options.serializedCallback Serialized callback.
+    @return {Function} Deserialized callback function.
+  */
+  parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
+    // First filter must be converted into serialized function from temporary filter language.
+    if (callbackName === 'filter' && typeof serializedCallback === 'string') {
+      serializedCallback = Ember.getOwner(this).lookup('layer:geojson').parseFilter(serializedCallback);
+    }
+
+    return this._super({ callbackName, serializedCallback });
+  },
 
   /**
     Creates leaflet layer related to layer type.
@@ -52,9 +71,6 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer(options) {
     options = Ember.$.extend(true, {}, this.get('options'), options);
-    if (options.filter) {
-      options.filter = Ember.getOwner(this).lookup('layer:geojson').parseFilter(options.filter);
-    }
 
     let url = this.get('url');
     if (!Ember.isNone(url)) {

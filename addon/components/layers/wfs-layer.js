@@ -116,15 +116,32 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer(options) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      options = Ember.$.extend(true, {}, this.get('options'), options);
-      if (options.filter && !(options.filter instanceof Element)) {
-        let filter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(options.filter);
-        if (filter.toGml) {
-          filter = filter.toGml();
-        }
-
-        options.filter = filter;
+      // Retrieve possibly defined in layer's settings filter.
+      let initialOptions = this.get('options') || {};
+      let initialFilter = Ember.get(initialOptions, 'filter');
+      if (typeof initialFilter === 'string') {
+        initialFilter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(initialFilter);
       }
+
+      // Retrieve possibly defined in method options filter.
+      options = options || {};
+      let additionalFilter = Ember.get(options, 'filter');
+      if (typeof additionalFilter === 'string') {
+        additionalFilter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(additionalFilter);
+      }
+
+      // Try to combine filters or choose one which is defined.
+      let resultingFilter = null;
+      if (initialFilter && additionalFilter) {
+        resultingFilter = new L.Filter.And(initialFilter, additionalFilter).toGml();
+      } else if (initialFilter) {
+        resultingFilter = initialFilter.toGml();
+      } else if (additionalFilter) {
+        resultingFilter = additionalFilter.toGml();
+      }
+
+      // Combine options defined in layer's settings with options defined in method, and with resulting filter option.
+      options = Ember.$.extend(true, {}, initialOptions, options, { filter: resultingFilter });
 
       let featuresReadFormat = this.getFeaturesReadFormat();
       L.wfst(options, featuresReadFormat)
@@ -159,7 +176,7 @@ export default BaseVectorLayer.extend({
     @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
-  createLayer(options) {
+  createLayer() {
     // Base logic from 'base-vector-layer' 'createLayer' method is enough.
     return this._super(...arguments);
   },

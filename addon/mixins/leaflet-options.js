@@ -114,7 +114,7 @@ export default Ember.Mixin.create({
         let callbackName = leafletOptionsCallbacks[i];
 
         let customCallback = Ember.get(options, callbackName);
-        customCallback = typeof customCallback === 'string' && !Ember.isBlank(customCallback) ? new Function('return ' + customCallback)() : null;
+        customCallback = this.parseLeafletOptionsCallback({ callbackName, serializedCallback: customCallback });
 
         let resultingCallback;
         if (typeof customCallback === 'function') {
@@ -138,6 +138,21 @@ export default Ember.Mixin.create({
         changedOptions
       });
     }
+  },
+
+  /**
+    Parses specified serialized callback into function.
+
+    @method parseLeafletOptionsCallback
+    @param {Object} options Method options.
+    @param {String} options.callbackName Callback name.
+    @param {String} options.serializedCallback Serialized callback.
+    @return {Function} Deserialized callback function.
+  */
+  parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
+    return typeof serializedCallback === 'string' && !Ember.isBlank(serializedCallback) ?
+      new Function('return ' + serializedCallback)() :
+      null;
   },
 
   /**

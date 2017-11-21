@@ -34,6 +34,24 @@ export default BaseVectorLayer.extend({
   leafletOptionsCallbacks: ['filter'],
 
   /**
+    Parses specified serialized callback into function.
+
+    @method parseLeafletOptionsCallback
+    @param {Object} options Method options.
+    @param {String} options.callbackName Callback name.
+    @param {String} options.serializedCallback Serialized callback.
+    @return {Function} Deserialized callback function.
+  */
+  parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
+    // First filter must be converted into serialized function from temporary filter language.
+    if (callbackName === 'filter' && typeof serializedCallback === 'string') {
+      serializedCallback = Ember.getOwner(this).lookup('layer:kml').parseFilter(serializedCallback);
+    }
+
+    return this._super({ callbackName, serializedCallback });
+  },
+
+  /**
     Creates leaflet layer related to layer type.
 
     @method createLayer
@@ -42,9 +60,6 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer(options) {
     options = Ember.$.extend({}, this.get('options'), options);
-    if (options.filter) {
-      options.filter = Ember.getOwner(this).lookup('layer:kml').parseFilter(options.filter);
-    }
 
     let layerWithOptions = L.geoJSON([], options);
     Ember.assert('The option \'kmlUrl\' or \'kmlString\' should be defined!', Ember.isPresent(options.kmlUrl) || Ember.isPresent(options.kmlString));
