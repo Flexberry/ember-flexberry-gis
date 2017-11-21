@@ -75,15 +75,8 @@ export default Ember.Mixin.create({
   */
   parseFilter(filter, isInnerExpression) {
     let result = this._super(...arguments);
-    if (isInnerExpression) {
-      return result;
-    }
 
-    if (Ember.isBlank(result)) {
-      return null;
-    }
-
-    return `function(feature) { return ${result}; }`;
+    return Ember.isBlank(result) || isInnerExpression ? result : `function(feature) { return ${result}; }`;
   },
 
   /**
