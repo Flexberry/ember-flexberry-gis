@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import GeoJsonFilterParserMixin from '../mixins/geojson-filter-parser';
 import VectorLayer from './-private/vector';
 
 /**
@@ -11,7 +12,7 @@ import VectorLayer from './-private/vector';
   @class GeoJSONLayer
   @extends VectorLayer
 */
-export default VectorLayer.extend({
+export default VectorLayer.extend(GeoJsonFilterParserMixin, {
   /**
     Creates new settings object (with settings related to layer-type).
 
@@ -23,7 +24,7 @@ export default VectorLayer.extend({
     return Ember.$.extend(settings, {
       pointToLayer: undefined,
       onEachFeature: null,
-      filter: null,
+      filter: '',
       coordsToLatLng: null,
       geojson: null,
       url: null

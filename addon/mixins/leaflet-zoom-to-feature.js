@@ -21,14 +21,18 @@ export default Ember.Mixin.create({
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
     selectFeature(feature) {
-      let selectedFeature = this.get('_selectedFeature');
+      let leafletMap = this.get('leafletMap');
+      if (Ember.isNone(leafletMap)) {
+        return;
+      }
+
       let serviceLayer = this.get('serviceLayer');
       if (Ember.isNone(serviceLayer)) {
-        let leafletMap = this.get('leafletMap');
         serviceLayer = L.featureGroup().addTo(leafletMap);
         this.set('serviceLayer', serviceLayer);
       }
 
+      let selectedFeature = this.get('_selectedFeature');
       if (selectedFeature !== feature) {
         serviceLayer.clearLayers();
 
@@ -51,6 +55,11 @@ export default Ember.Mixin.create({
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
     zoomTo(feature) {
+      let leafletMap = this.get('leafletMap');
+      if (Ember.isNone(leafletMap)) {
+        return;
+      }
+
       this.send('selectFeature', feature);
 
       let bounds;
@@ -75,6 +84,11 @@ export default Ember.Mixin.create({
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
     panTo(feature) {
+      let leafletMap = this.get('leafletMap');
+      if (Ember.isNone(leafletMap)) {
+        return;
+      }
+
       let latLng;
       if (typeof (feature.leafletLayer.getBounds) === 'function') {
         latLng = feature.leafletLayer.getBounds().getCenter();

@@ -25,9 +25,9 @@ export default BaseLayer.extend({
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'query']
+    @default ['edit', 'remove', 'identify', 'search', 'query', 'filter']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'query'],
+  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter'],
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -42,6 +42,7 @@ export default BaseLayer.extend({
     Ember.$.extend(true, settings, {
       clusterize: false,
       clusterOptions: undefined,
+      filter: '',
 
       // Layer style 'simple' is default for vector layers (see ember-flexberry-gis/layers-styles/simple).
       styleSettings: layersStylesRenderer.getDefaultStyleSettings('simple')

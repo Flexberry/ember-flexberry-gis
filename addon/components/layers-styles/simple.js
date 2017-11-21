@@ -177,7 +177,6 @@ export default Ember.Component.extend({
     this.set('_previouslySelectedMarkerStyle', selectedMarkerStyle);
   },
 
-
   /**
     Reference to component's template.
   */

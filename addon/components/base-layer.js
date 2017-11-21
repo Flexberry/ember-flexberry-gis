@@ -21,7 +21,6 @@ const {
 export default Ember.Component.extend(
   DynamicPropertiesMixin,
   LeafletOptionsMixin, {
-
     /**
       Leaflet layer object init by settings from model.
 
@@ -55,6 +54,41 @@ export default Ember.Component.extend(
       Overload wrapper tag name for disabling wrapper.
      */
     tagName: '',
+
+    /**
+      Array containing component's properties which are also leaflet layer options (see leaflet-options mixin).
+
+      @property leafletOptions
+      @type Stirng[]
+    */
+    leafletOptions: null,
+
+    /**
+      Array containing component's properties which are also leaflet layer options callbacks (see leaflet-options mixin).
+
+      @property leafletOptionsCallbacks
+      @type Stirng[]
+    */
+    leafletOptionsCallbacks: null,
+
+    /**
+      Hash containing default implementations for leaflet layer options callbacks (see leaflet-options mixin).
+
+      @property defaultLeafletOptionsCallbacks
+      @type Object
+    */
+    defaultLeafletOptionsCallbacks: {
+      coordsToLatLng: function(coords) {
+        let crs = this.get('crs');
+        let point = new L.Point(coords[0], coords[1]);
+        let latlng = crs.projection.unproject(point);
+        if (!Ember.isNone(coords[2])) {
+          latlng.alt = coords[2];
+        }
+
+        return latlng;
+      }
+    },
 
     /**
       Leaflet map.

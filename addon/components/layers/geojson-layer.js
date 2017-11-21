@@ -3,15 +3,15 @@
 */
 
 import Ember from 'ember';
-import BaseLayer from '../base-vector-layer';
+import BaseVectorLayer from '../base-vector-layer';
 
 /**
   GeoJSON layer component for leaflet map.
 
   @class GeoJSONLayerComponent
-  @extend BaseVectorLayerComponent
+  @extends BaseVectorLayerComponent
  */
-export default BaseLayer.extend({
+export default BaseVectorLayer.extend({
   /**
     Array containing component's properties which are also leaflet layer options.
 
@@ -29,35 +29,15 @@ export default BaseLayer.extend({
   ],
 
   /**
-    Array containing component's properties which are also leaflet layer callbacks.
+    Array containing component's properties which are also leaflet layer options callbacks.
 
-    @property layerFunctions
+    @property leafletOptionsCallbacks
     @type Stirng[]
   */
-  layerFunctions: ['pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng'],
-
-  /**
-    Hash containing default implementations for leaflet layer callbacks.
-
-    @property defaultLayerFunctions
-    @type Object
-  */
-  defaultLayerFunctions: {
-    coordsToLatLng: function(coords) {
-      let crs = this.get('crs');
-      let point = new L.Point(coords[0], coords[1]);
-      let latlng = crs.projection.unproject(point);
-      if (!Ember.isNone(coords[2])) {
-        latlng.alt = coords[2];
-      }
-
-      return latlng;
-    }
-  },
+  leafletOptionsCallbacks: ['pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng'],
 
   /**
     Url for download geojson.
-
     @property url
     @type String
     @default null
@@ -66,32 +46,14 @@ export default BaseLayer.extend({
 
   /**
     Creates leaflet layer related to layer type.
-
     @method createLayer
     @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer(options) {
     options = Ember.$.extend(true, {}, this.get('options'), options);
-
-    let layerFunctions = this.get('layerFunctions');
-    for (let i = 0; i < layerFunctions.length; i++) {
-      let functionName = layerFunctions[i];
-
-      let customFunction = Ember.get(options, functionName);
-      customFunction = typeof (customFunction) === 'string' && !Ember.isBlank(customFunction) ? new Function('return ' + customFunction)() : null;
-
-      let resultingFunction;
-      if (typeof customFunction === 'function') {
-        resultingFunction = customFunction;
-      } else {
-        let defaultFunction = this.get(`defaultLayerFunctions.${functionName}`);
-        resultingFunction = typeof defaultFunction === 'function' ? defaultFunction.bind(this) : null;
-      }
-
-      if (typeof resultingFunction === 'function') {
-        Ember.set(options, functionName, resultingFunction);
-      }
+    if (options.filter) {
+      options.filter = Ember.getOwner(this).lookup('layer:geojson').parseFilter(options.filter);
     }
 
     let url = this.get('url');

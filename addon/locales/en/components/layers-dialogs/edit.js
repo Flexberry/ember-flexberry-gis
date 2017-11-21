@@ -93,8 +93,14 @@ export default {
     'legend-settings-tab': {
       'caption': 'Legend settings'
     },
+    'wfs-filter-settings-tab': {
+      'caption': 'Filter settings'
+    },
     'links-tab': {
       'caption': 'Links settings'
+    },
+    'bbox-tab': {
+      'caption': 'Bounds'
     }
   },
   'groups': {

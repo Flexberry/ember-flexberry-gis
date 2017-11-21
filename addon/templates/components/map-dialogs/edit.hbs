@@ -114,7 +114,19 @@
       </div>
     </div>
     <div class="ui tab bottom attached segment {{if (eq _activeTab "borders-tab") "active"}}" data-tab="borders-tab">
-      {{!-- Place flexberry-boundingbox here --}}
+      {{#if _bboxMapIsLoading}}
+        <div class="ui form loading" style="height: 100%;">
+        </div>
+      {{else}}
+        {{flexberry-boundingbox
+          mapModel=boundingBoxComponentMap
+          minLat=_mapModel.bboxCoords.minLat
+          minLng=_mapModel.bboxCoords.minLng
+          maxLat=_mapModel.bboxCoords.maxLat
+          maxLng=_mapModel.bboxCoords.maxLng
+          boundingBoxChange=(action "onBoundingBoxChange")
+        }}
+      {{/if}}
     </div>
   </form>
 {{/flexberry-dialog}}

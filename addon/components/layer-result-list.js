@@ -177,7 +177,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     Observer for passed results
     @method _resultObserver
   */
-  _resultObserver: Ember.observer('results', function () {
+  _resultObserver: Ember.on('init', Ember.observer('results', function () {
     this.send('selectFeature', null);
     this.set('_hasError', false);
     this.set('_noData', false);
@@ -378,5 +378,5 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.send('zoomTo', displayResults.objectAt(0).features);
       }
     });
-  })
+  }))
 });

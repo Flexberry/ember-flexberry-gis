@@ -3,25 +3,35 @@
 */
 
 import Ember from 'ember';
-import BaseLayer from '../base-vector-layer';
-
-/* globals omnivore */
+import BaseVectorLayer from '../base-vector-layer';
 
 /**
   Kml layer component for leaflet map.
 
   @class KmlLayerComponent
-  @extends BaseLayerComponent
+  @extends BaseVectorLayerComponent
 */
-export default BaseLayer.extend({
+export default BaseVectorLayer.extend({
   /**
-    Specific option names available on the Layer settings tab.
+    Array containing component's properties which are also leaflet layer options.
+
+    @property leafletOptions
+    @type Stirng[]
   */
   leafletOptions: [
     'kmlUrl',
     'kmlString',
-    'style'
+    'style',
+    'filter'
   ],
+
+  /**
+    Array containing component's properties which are also leaflet layer options callbacks.
+
+    @property leafletOptionsCallbacks
+    @type Stirng[]
+  */
+  leafletOptionsCallbacks: ['filter'],
 
   /**
     Creates leaflet layer related to layer type.
@@ -30,13 +40,18 @@ export default BaseLayer.extend({
     @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
-  createVectorLayer() {
-    let options = this.get('options');
-    Ember.assert('The option "kmlUrl" or "kmlString" should be defined!', Ember.isPresent(options.kmlUrl) || Ember.isPresent(options.kmlString));
+  createVectorLayer(options) {
+    options = Ember.$.extend({}, this.get('options'), options);
+    if (options.filter) {
+      options.filter = Ember.getOwner(this).lookup('layer:kml').parseFilter(options.filter);
+    }
+
+    let layerWithOptions = L.geoJSON([], options);
+    Ember.assert('The option \'kmlUrl\' or \'kmlString\' should be defined!', Ember.isPresent(options.kmlUrl) || Ember.isPresent(options.kmlString));
 
     if (options.kmlUrl) {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        let layer = omnivore.kml(options.kmlUrl)
+        let layer = omnivore.kml(options.kmlUrl, {}, layerWithOptions)
           .on('ready', (e) => {
             resolve(layer);
           })
@@ -46,6 +61,6 @@ export default BaseLayer.extend({
       });
     }
 
-    return omnivore.kml.parse(options.kmlString);
+    return omnivore.kml.parse(options.kmlString, {}, layerWithOptions);
   }
 });

@@ -7,14 +7,12 @@ import BaseVectorLayer from '../base-vector-layer';
 
 /**
   WFS layer component for leaflet map.
-
   @class WfsLayerComponent
   @extends BaseVectorLayerComponent
  */
 export default BaseVectorLayer.extend({
   /**
     Array containing component's properties which are also leaflet layer options.
-
     @property leafletOptions
     @type Stirng[]
   */
@@ -29,13 +27,13 @@ export default BaseVectorLayer.extend({
     'crs',
     'maxFeatures',
     'showExisting',
-    'style'
+    'style',
+    'filter'
   ],
 
   /**
     Returns features read format depending on 'format', 'options.crs', 'options.geometryField'.
     Server responses format will rely on it.
-
     @method getFeaturesReadFormat
     @return {Object} Features read format.
   */
@@ -62,7 +60,6 @@ export default BaseVectorLayer.extend({
 
   /**
     Performs 'getFeature' request to WFS-service related to layer.
-
     @param {<a href="https://github.com/Flexberry/Leaflet-WFST#initialization-options">L.WFS initialization options</a>} options WFS layer options.
     @param {Boolean} [single = false] Flag: indicates whether result should be a single layer.
   */
@@ -93,7 +90,6 @@ export default BaseVectorLayer.extend({
 
   /**
     Returns leaflet layer's bounding box.
-
     @method _getBoundingBox
     @private
     @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
@@ -113,7 +109,6 @@ export default BaseVectorLayer.extend({
 
   /**
     Creates leaflet vector layer related to layer type.
-
     @method createVectorLayer
     @param {Object} options Layer options.
     @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
@@ -122,8 +117,17 @@ export default BaseVectorLayer.extend({
   createVectorLayer(options) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       options = Ember.$.extend(true, {}, this.get('options'), options);
+      if (options.filter && !(options.filter instanceof Element)) {
+        let filter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(options.filter);
+        if (filter.toGml) {
+          filter = filter.toGml();
+        }
+
+        options.filter = filter;
+      }
+
       let featuresReadFormat = this.getFeaturesReadFormat();
-      L.wfs(options, featuresReadFormat)
+      L.wfst(options, featuresReadFormat)
         .once('load', (e) => {
           let wfsLayer = e.target;
           resolve(wfsLayer);
@@ -136,7 +140,6 @@ export default BaseVectorLayer.extend({
 
   /**
     Clusterizes created vector layer if 'clusterize' option is enabled.
-
     @method createClusterLayer
     @param {<a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>} vectorLayer Vector layer which must be clusterized.
     @return {<a href="https://github.com/Leaflet/Leaflet.markercluster/blob/master/src/MarkerClusterGroup.js">L.MarkerClusterGroup</a>} Clusterized vector layer.
@@ -152,7 +155,6 @@ export default BaseVectorLayer.extend({
 
   /**
     Creates leaflet layer related to layer type.
-
     @method createLayer
     @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
@@ -164,7 +166,6 @@ export default BaseVectorLayer.extend({
 
   /**
     Handles 'flexberry-map:identify' event of leaflet map.
-
     @method identify
     @param {Object} e Event object.
     @param {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>} polygonLayer Polygon layer related to given area.
@@ -185,7 +186,6 @@ export default BaseVectorLayer.extend({
 
   /**
     Handles 'flexberry-map:search' event of leaflet map.
-
     @method search
     @param {Object} e Event object.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
@@ -242,7 +242,6 @@ export default BaseVectorLayer.extend({
 
   /**
     Handles 'flexberry-map:query' event of leaflet map.
-
     @method _query
     @param {Object[]} layerLinks Array containing metadata for query
     @param {Object} e Event object.

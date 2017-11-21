@@ -40,6 +40,7 @@
                 {{#if (eq (get fieldTypes fieldName) "boolean")}}
                   {{flexberry-checkbox
                     value=(mut (get row fieldName))
+                    onChange=(action "onCellCheckboxChange" row)
                   }}
                 {{else if (eq _selectedCellName (concat (ember-guid row) "_" fieldName))}}
                   {{input

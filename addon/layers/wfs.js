@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import WfsFilterParserMixin from '../mixins/wfs-filter-parser';
 import VectorLayer from './-private/vector';
 
 /**
@@ -11,15 +12,15 @@ import VectorLayer from './-private/vector';
   @class WfsLayer
   @extends VectorLayer
 */
-export default VectorLayer.extend({
+export default VectorLayer.extend(WfsFilterParserMixin, {
   /**
     Permitted operations related to layer type.
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'legend']
+    @default ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'legend', 'attributes'],
+  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes'],
 
   /**
     Creates new settings object (with settings related to layer-type).
