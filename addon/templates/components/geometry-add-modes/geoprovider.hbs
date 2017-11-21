@@ -26,10 +26,47 @@
       </div>
       <div class="field {{if (get _parsingErrors "provider") "error" ""}}">
         <label>Provider</label>
-        {{flexberry-dropdown
-          items=_availableProviderNames
-          value=provider
+        <div class="fields">
+          <div class="fourteen wide field">
+            {{flexberry-dropdown
+              items=_availableProviderNames
+              value=provider
+            }}
+          </div>
+          <div class="two wide field">
+            {{flexberry-button
+              tooltip="Search"
+              caption="Search"
+              click=(action "onSearchClick")
+              iconClass="search icon"
+              readonly=false
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="field {{if (get _parsingErrors "results") "error" ""}}">
+        <label>Query results</label>
+        {{#flexberry-table
+          perPageAvailable=false
+          header=(hash
+            name="Name"
+            position="Position"
+          )
+          model=_queryResults
+          recordsTotalCount=_queryResultsTotalCount
+          getData=(action "onResultsTableGetData")
         }}
+        {{#block-slot "column-header-head-0"}}
+          <th class="narrow">{{t "components.flexberry-layers-attributes-panel.select-item"}}</th>
+        {{/block-slot}}
+        {{#block-slot "column-cell-head-0" as |row|}}
+          <td class="narrow">
+          {{flexberry-checkbox
+            value=(eq _selectedRow (ember-guid row))
+            onChange=(action "onRowSelect" (ember-guid row)) }}
+          </td>
+        {{/block-slot}}
+        {{/flexberry-table}}
       </div>
     </form>
   {{/flexberry-dialog}}

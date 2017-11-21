@@ -90,6 +90,46 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
   _parsingErrors: {},
 
   /**
+    Available instances of geoproviders.
+
+    @property _availableProviders
+    @type Object
+    @default null
+    @private
+  */
+  _availableProviders: null,
+
+  /**
+    Names of the available geoproviders.
+
+    @property _availableProviderNames
+    @type Array
+    @default null
+    @private
+  */
+  _availableProviderNames: null,
+
+  /**
+    Geometry object to be added as layer.
+  */
+  _selectedGeoObject: null,
+
+  /**
+    The collection of geoObjects - result of geoprovider query.
+  */
+  _queryResults: null,
+
+  /**
+    Total count of query result items.
+  */
+  _queryResultsTotalCount: 0,
+
+  /**
+    Options for geoprovider request.
+  */
+  // _searchOptions: null,
+
+  /**
     Address for request.
 
     @property address
@@ -107,10 +147,6 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
   */
   provider: null,
 
-  _availableProviders: null,
-
-  _availableProviderNames: null,
-
   actions: {
     /**
       Handles button click.
@@ -121,49 +157,71 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
     },
 
     /**
+      Handles search button click.
+    */
+    onSearchClick() {
+      let options = { skip: 0, top: 5 };
+      this._doSearch(options);
+    },
+
+    /**
+      Handles row selection in query results table.
+    */
+    onRowSelect(rowId, { checked }) {
+      // TODO set _selectedGeoObject
+      if (checked) {
+        this.set('_selectedRow', rowId);
+      } else {
+        this.set('_selectedRow', null);
+      }
+    },
+
+    /**
+      Handles 'getData' action from flexberry-table.
+
+      @method actions.onResultsTableGetData
+      @param {Object} options
+    */
+    onResultsTableGetData(options) {
+      this._doSearch(options);
+    },
+
+    /**
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
       Invokes {{#crossLink "FlexberryGeometryAddModeGeoProviderComponent/sendingActions.complete:method"}}'complete' action{{/crossLink}}.
 
       @method actions.onApprove
     */
     onApprove(e) {
-      // Prevent dialog from being closed.
-      e.closeDialog = false;
+      let _selectedRow = this.get('_selectedRow');
 
-      let parsedData = this.parseData();
-      if (Ember.isNone(parsedData)) {
+      if (Ember.isNone(_selectedRow)) {
+        let errors = this.get('_parsingErrors');
+        errors.results = true;
+        this.set('_parsingErrors', errors);
+
+        // Prevent dialog from being closed.
+        e.closeDialog = false;
         return;
       }
 
-      let providerName = parsedData.provider;
-      if (Ember.isNone(this.get(`_availableProviders.${providerName}`))) {
-        return;
-      }
-
-      this.set('_loading', true);
-      let provider = this.get(`_availableProviders.${providerName}`);
-
-      provider.executeGeocoding({ query: parsedData.address }).then((result) => {
-        if (Ember.isBlank(result)) {
-          this.set('_parsingErrors', { address: true });
-          return;
-        }
-
-        // TODO geocoder may return a collection of elements.
-        // user must select an appropriate element.
-        // as for now - just selects the first.
-        let addedLayer = this.getLayer(result[0]);
-
-        this.sendAction('complete', addedLayer);
-
-      }).catch(() => {
-        console.log(arguments);
-      }).finally(() => {
-        this.set('_loading', false);
-        this.set('address', null);
-        this.set('provider', null);
-        e.target.modal('hide');
+      let geoObject = this.get('_queryResults').find((row) => {
+        return Ember.isEqual(_selectedRow, Ember.guidFor(row));
       });
+
+      if (Ember.isNone(geoObject)) {
+        let errors = this.get('_parsingErrors');
+        errors.results = true;
+        this.set('_parsingErrors', errors);
+
+        // Prevent dialog from being closed.
+        e.closeDialog = false;
+        return;
+      }
+
+      let addedLayer = this.getLayer(geoObject);
+      this.sendAction('complete', addedLayer);
+      this._cleanUpForm();
     },
 
     /**
@@ -172,8 +230,7 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
       @method actions.onDeny
     */
     onDeny() {
-      this.set('address', null);
-      this.set('provider', null);
+      this._cleanUpForm();
     }
   },
 
@@ -183,6 +240,56 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
   init() {
     this._super(...arguments);
     this.initProviders();
+  },
+
+  /**
+    Makes a request to the selected geoprovider with specified options.
+
+    @param {Object} options Search options.
+  */
+  _doSearch(options) {
+    this.set('_selectedRow', null);
+
+    let parsedData = this.parseData();
+    if (Ember.isNone(parsedData)) {
+      this.set('_queryResults', null);
+      this.set('_queryResultsTotalCount', 0);
+      return;
+    }
+
+    let providerName = parsedData.provider;
+    if (Ember.isNone(this.get(`_availableProviders.${providerName}`))) {
+      return;
+    }
+
+    this.set('_loading', true);
+    let provider = this.get(`_availableProviders.${providerName}`);
+
+    let searchOptions = Ember.$.extend(options, { query: parsedData.address });
+    provider.executeGeocoding(searchOptions).then((result) => {
+      if (Ember.isBlank(result)) {
+        this.set('_parsingErrors', { address: true });
+        return;
+      }
+
+      this.set('_queryResults', result.data);
+      this.set('_queryResultsTotalCount', result.total);
+
+    }).catch(() => {
+      console.log(arguments);
+    }).finally(() => {
+      this.set('_loading', false);
+    });
+  },
+
+  _cleanUpForm() {
+    this.set('address', null);
+    this.set('provider', null);
+    this.set('_parsingErrors', null);
+    this.set('_queryResults', null);
+    this.set('_queryResultsTotalCount', 0);
+    this.set('_selectedRow', null);
+    this.set('_searchOptions', null);
   },
 
   /**
@@ -234,7 +341,7 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
   getLayer(data) {
     switch (data.type) {
       case 'marker':
-        let [lng, lat] = data.coordinates.split(' ');
+        let [lng, lat] = data.position.split(' ');
         return L.marker([lat, lng]);
       default:
         return null;

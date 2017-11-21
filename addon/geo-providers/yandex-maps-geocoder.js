@@ -28,10 +28,14 @@ export default BaseGeoProvider.extend({
   _executeRequest(options) {
     let geocode = options.query;
     let format = 'json';
+    let top = options.top;
+    let skip = options.skip;
 
     let baseUrl = this.get('url');
     let requestUrl = `${baseUrl}?geocode=${geocode}&` +
-      `format=${format}`;
+      `format=${format}&` +
+      `results=${top}&` +
+      `skip=${skip}`;
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.run(() => {
@@ -47,16 +51,24 @@ export default BaseGeoProvider.extend({
   /**
     Parses response data.
 
-    @param {String} response Response result.
+    @param {Object} response Response result.
   */
   _parseRequestResult({ response }) {
-    let result = [];
+    let result = null;
     let geoObjectCollection = Ember.get(response, 'GeoObjectCollection');
     if (!Ember.isNone(geoObjectCollection)) {
+      let total = Ember.get(geoObjectCollection, 'metaDataProperty.GeocoderResponseMetaData.found');
+      if (!Ember.isNone(total) && total !== '0') {
+        result = { total, data: [] };
 
-      if (Ember.isArray(geoObjectCollection.featureMember) && !Ember.isBlank(geoObjectCollection.featureMember)) {
-        let geoObject = Ember.get(geoObjectCollection, 'featureMember.0.GeoObject');
-        result.push({ name: `${geoObject.description}, ${geoObject.name}`, type: 'marker', coordinates: Ember.get(geoObject, 'Point.pos') });
+        let objects = Ember.get(geoObjectCollection, 'featureMember');
+        objects.forEach(element => {
+          let description = Ember.get(element, 'GeoObject.description');
+          let name = Ember.get(element, 'GeoObject.name');
+          let position = Ember.get(element, 'GeoObject.Point.pos');
+
+          result.data.push({ name: `${description}, ${name}`, type: 'marker', position });
+        });
       }
     }
 
