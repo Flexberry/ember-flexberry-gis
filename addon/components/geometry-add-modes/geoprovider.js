@@ -125,11 +125,6 @@ let FlexberryGeometryAddModeGeoProviderComponent = Ember.Component.extend({
   _queryResultsTotalCount: 0,
 
   /**
-    Options for geoprovider request.
-  */
-  // _searchOptions: null,
-
-  /**
     Address for request.
 
     @property address
