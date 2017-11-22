@@ -36,9 +36,9 @@
       <div class="column">
         {{#if _selectedModeType}}
           {{component (concat "charts/type-charts/" _selectedModeType)
-            _isObject = _isObjProperties
-            _titleChart = _captionChart
-            _chartType = _selectedModeType
+            _isObject=_isObjProperties
+            _titleChart=_captionChart
+            _chartType=_selectedModeType
             onInit=(action "initJsonCharts")
           }}
         {{/if}}
