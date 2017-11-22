@@ -21,6 +21,12 @@ export default WmsLayerComponent.extend({
   */
   _wfsLayer: null,
 
+  _getAttributesObject() {
+    let options = Ember.$.extend(this.get('_wfsLayer.options') || {}, { showExisting: true });
+    let innerLayer = this.get('_wfsLayer').createVectorLayer(options);
+    return innerLayer;
+  },
+
   /**
     Handles 'flexberry-map:identify' event of leaflet map.
 
