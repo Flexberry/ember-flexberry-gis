@@ -22,7 +22,12 @@ import FlexberryLayersAttributesPanel from './components/flexberry-layers-attrib
 import FlexberryEditCrsComponent from './components/flexberry-edit-crs';
 
 import LayersStyles from './layers-styles';
+import LayersStylesEditorComponent from './components/layers-styles-editor';
+import LayersStylesComponents from './components/layers-styles';
+
 import MarkersStyles from './markers-styles';
+import MarkersStylesEditorComponent from './components/markers-styles-editor';
+import MarkersStylesComponents from './components/markers-styles';
 
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
@@ -40,16 +45,22 @@ export default {
     'new-platform-flexberry-g-i-s-parameter-metadata': NewPlatformFlexberryGISParameterMetadataModel
   },
 
-  'layers-styles': LayersStyles,
-  'markers-styles': MarkersStyles,
-
   'forms': {
     'new-platform-flexberry-g-i-s-layer-metadata-l': NewPlatformFlexberryGISLayerMetadataLForm,
     'new-platform-flexberry-g-i-s-layer-metadata-e': NewPlatformFlexberryGISLayerMetadataEForm,
     'gis-search-form': GISSearchForm
   },
 
+  'layers-styles': LayersStyles,
+  'markers-styles': MarkersStyles,
+
   'components': {
+    'layers-styles-editor': LayersStylesEditorComponent,
+    'layers-styles': LayersStylesComponents,
+
+    'markers-styles-editor': MarkersStylesEditorComponent,
+    'markers-styles': MarkersStylesComponents,
+
     'flexberry-table': FlexberryTableComponents,
 
     'feature-result-item': FeatureResultItemComponent,

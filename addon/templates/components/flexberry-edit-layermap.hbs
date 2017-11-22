@@ -209,27 +209,9 @@
       {{/if}}
       {{#if _styleSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.display-group.activeTab "style-tab") "active"}}" data-tab="style-tab">
-          <div class="field">
-            <label>
-              {{t "components.layers-dialogs.edit.style-segment.layer-style-dropdown.caption"}}
-            </label>
-            {{flexberry-dropdown
-              class="fluid"
-              items=_availableLayerStylesCaptions
-              value=_selectedLayerStyleCaption
-            }}
-          </div>
-          {{#if (known-for-type "component" (concat "layers-styles/" _layer.settings.styleSettings.type))}}
-            {{component (concat "layers-styles/" _layer.settings.styleSettings.type) styleSettings=_layer.settings.styleSettings}}
-          {{else}}
-            {{ui-message
-              type="error"
-              message=(t
-                "components.layers-dialogs.edit.style-segment.layer-style-component-not-implemented.message"
-                componentName=(concat "layers-styles/" _layer.settings.styleSettings.type)
-              )
-            }}
-          {{/if}}
+          {{layers-styles-editor
+            styleSettings=_layer.settings.styleSettings
+          }}
         </div>
       {{/if}}
     </div>

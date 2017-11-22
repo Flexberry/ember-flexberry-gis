@@ -31,14 +31,6 @@ export default {
     'caption': 'Получить данные с сервиса',
     'error-caption': 'Для получения данных заполните поля: '
   },
-  'style-segment': {
-    'layer-style-dropdown': {
-      'caption': 'Тип знака'
-    },
-    'layer-style-component-not-implemented': {
-      'message': 'Компонент \'{{componentName}}\' не реализован'
-    },
-  },
   'bounds-segment': {
     'caption': 'Охват',
     'error-caption': 'Неверный формат введённых данных, введите числа',

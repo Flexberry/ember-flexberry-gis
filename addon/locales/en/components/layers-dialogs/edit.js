@@ -31,14 +31,6 @@ export default {
     'caption': 'Get capabilities',
     'error-caption': 'To get capabilities fill required fields: '
   },
-  'style-segment': {
-    'layer-style-dropdown': {
-      'caption': 'Symbol type'
-    },
-    'layer-style-component-not-implemented': {
-      'message': 'Component \'{{componentName}}\' isn\'t implemented'
-    },
-  },
   'bounds-segment': {
     'caption': 'Bounding box',
     'error-caption': 'Wrong format, only numbers allowed',
