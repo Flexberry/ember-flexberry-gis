@@ -334,6 +334,12 @@
   .flexberry-dialog-content.content {
     min-height: 400px;
   }
+
+  .flexberry-boundingbox {
+    .flexberry-map {
+      max-height: 300px;
+    }
+  }
 }
 
 .ui.modal.flexberry-add-layer-dialog,

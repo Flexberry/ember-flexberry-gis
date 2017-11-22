@@ -36,36 +36,6 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Get property values from leaflet layer object.
-
-    @method getLayerPropertyValues
-    @param {Object} leafletObject Leaflet layer object
-    @param {String} selectedField Selected field name
-    @param {Integer} count Amount of values to return (for all values must be 0)
-    @returns {Array} Array with selected property values
-  */
-  getLayerPropertyValues(leafletObject, selectedField, count) {
-    if (Ember.isNone(leafletObject)) {
-      return Ember.A();
-    }
-
-    let geojson = leafletObject.toGeoJSON() || {};
-    let features = geojson.features || [];
-    let values = Ember.A();
-
-    for (let i = 0; i < features.length; i++) {
-      let property = Ember.get(features, `${i}.properties.${selectedField}`);
-      values.addObject(property);
-
-      if (values.length === count) {
-        break;
-      }
-    }
-
-    return values;
-  },
-
-  /**
     Used for parsing filter string to layer's filter.
 
     @method parseFilterExpression
