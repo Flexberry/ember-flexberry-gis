@@ -27,7 +27,8 @@
     (if (eq selectedTabIndex index) " active" "")}}>
 
     {{#flexberry-table
-      allowEdit="true"
+      class="flexberry-table-fixed"
+      allowEdit=tabModel.allowEdit
       perPageAvailable=false
       model=tabModel.propertiesToShow
       header=tabModel.header
@@ -57,31 +58,31 @@
                 click=(action "onClearFoundItemClick")
                 iconClass="trash icon"
               }}
-              {{flexberry-button
-                tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
-                click=(action "onDeleteItemClick" tabModel)
-                iconClass="remove icon"
-                readonly=(eq tabModel._selectedRowsCount 0) }}
-
-              {{!-- available geometry add tools --}}
-              {{#each availableGeometryAddModes as |mode|}}
-                {{component (concat "geometry-add-modes/" mode)
-                  leafletMap=leafletMap
-                  settings=(hash
-                    drawTools=(get tabModel "availableDrawTools")
-                    layerCRS=(get tabModel "leafletObject.options.crs")
-                  )
-                  complete=(action "onGeometryAddComplete" tabModel)
+              {{#if tabModel.allowEdit}}
+                {{flexberry-button
+                  tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
+                  click=(action "onDeleteItemClick" tabModel)
+                  iconClass="remove icon"
+                  readonly=(eq tabModel._selectedRowsCount 0)
                 }}
-              {{/each}}
-
-              {{flexberry-button
-                tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
-                click=(action "onSaveChangesClick" tabModel)
-                iconClass="save icon"
-                readonly=(not (get tabModel "leafletObject._wasChanged"))
-              }}
-
+                {{!-- available geometry adding tools --}}
+                {{#each availableGeometryAddModes as |mode|}}
+                  {{component (concat "geometry-add-modes/" mode)
+                    leafletMap=leafletMap
+                    settings=(hash
+                      drawTools=(get tabModel "availableDrawTools")
+                      layerCRS=(get tabModel "leafletObject.options.crs")
+                    )
+                    complete=(action "onGeometryAddComplete" tabModel)
+                  }}
+                {{/each}}
+                {{flexberry-button
+                  tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
+                  click=(action "onSaveChangesClick" tabModel)
+                  iconClass="save icon"
+                  readonly=(not (get tabModel "leafletObject._wasChanged"))
+                }}
+              {{/if}}
             </div>
           </div>
         {{/block-slot}}
@@ -90,9 +91,11 @@
           <th class="narrow">{{t "components.flexberry-layers-attributes-panel.select-item"}}</th>
         {{/block-slot}}
 
-        {{#block-slot "column-header-head-1"}}
-          <th class="narrow">{{t "components.flexberry-layers-attributes-panel.edit-item"}}</th>
-        {{/block-slot}}
+        {{#if tabModel.allowEdit}}
+          {{#block-slot "column-header-head-1"}}
+            <th class="narrow">{{t "components.flexberry-layers-attributes-panel.edit-item"}}</th>
+          {{/block-slot}}
+        {{/if}}
 
         {{#block-slot "column-cell-head-0" as |row|}}
           <td class="narrow">
@@ -102,22 +105,24 @@
           </td>
         {{/block-slot}}
 
-        {{#block-slot "column-cell-head-1" as |row|}}
-          <td>
-            {{flexberry-button
-              class="small-button"
-              tooltip=(t "components.flexberry-layers-attributes-panel.edit-item")
-              click=(action "onRowEdit" tabModel (ember-guid row))
-              iconClass="edit icon"
-            }}
-            {{flexberry-button
-              class=(concat "small-button" (if (get tabModel._editedRows (ember-guid row)) " active" ""))
-              tooltip=(t "components.flexberry-layers-attributes-panel.edit-item-geometry")
-              click=(action "onRowGeometryEdit" tabModel (ember-guid row))
-              iconClass="move icon"
-            }}
-          </td>
-        {{/block-slot}}
+        {{#if tabModel.allowEdit}}
+          {{#block-slot "column-cell-head-1" as |row|}}
+            <td>
+              {{flexberry-button
+                class="small-button"
+                tooltip=(t "components.flexberry-layers-attributes-panel.edit-item")
+                click=(action "onRowEdit" tabModel (ember-guid row))
+                iconClass="edit icon"
+              }}
+              {{flexberry-button
+                class=(concat "small-button" (if (get tabModel._editedRows (ember-guid row)) " active" ""))
+                tooltip=(t "components.flexberry-layers-attributes-panel.edit-item-geometry")
+                click=(action "onRowGeometryEdit" tabModel (ember-guid row))
+                iconClass="move icon"
+              }}
+            </td>
+          {{/block-slot}}
+        {{/if}}
 
       {{/flexberry-table}}
 

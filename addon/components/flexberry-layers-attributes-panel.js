@@ -42,6 +42,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       return editedLayers.map((item) => {
         let name = Ember.get(item, 'name');
+        let allowEdit = true;
         let header = {};
         let featureLink = {};
         let propertyLink = {};
@@ -89,13 +90,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           })
         });
         return tabModel.create({
-          name: name,
-          leafletObject: leafletObject,
-          featureLink: featureLink,
-          propertyLink: propertyLink,
-          header: header,
-          properties: properties,
-          availableDrawTools: availableDrawTools
+          name,
+          allowEdit,
+          leafletObject,
+          featureLink,
+          propertyLink,
+          header,
+          properties,
+          availableDrawTools
         });
       });
     }
