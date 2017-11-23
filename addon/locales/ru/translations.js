@@ -21,6 +21,14 @@ import FlexberryBoundingboxComponent from './components/flexberry-boundingbox';
 import FlexberryLayersAttributesPanel from './components/flexberry-layers-attributes-panel';
 import FlexberryEditCrsComponent from './components/flexberry-edit-crs';
 
+import LayersStyles from './layers-styles';
+import LayersStylesEditorComponent from './components/layers-styles-editor';
+import LayersStylesComponents from './components/layers-styles';
+
+import MarkersStyles from './markers-styles';
+import MarkersStylesEditorComponent from './components/markers-styles-editor';
+import MarkersStylesComponents from './components/markers-styles';
+
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
 import GISSearchForm from './forms/gis-search-form';
@@ -43,7 +51,16 @@ export default {
     'gis-search-form': GISSearchForm
   },
 
+  'layers-styles': LayersStyles,
+  'markers-styles': MarkersStyles,
+
   'components': {
+    'layers-styles-editor': LayersStylesEditorComponent,
+    'layers-styles': LayersStylesComponents,
+
+    'markers-styles-editor': MarkersStylesEditorComponent,
+    'markers-styles': MarkersStylesComponents,
+
     'flexberry-table': FlexberryTableComponents,
 
     'feature-result-item': FeatureResultItemComponent,

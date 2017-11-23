@@ -1,0 +1,21 @@
+<div class="field">
+  <label>
+    {{t "components.markers-styles-editor.markers-styles-dropdown.caption"}}
+  </label>
+  {{flexberry-dropdown
+    class="fluid"
+    items=_availableMarkerStylesCaptions
+    value=_selectedMarkerStyleCaption
+  }}
+</div>
+{{#if (known-for-type "component" (concat "markers-styles/" styleSettings.type))}}
+  {{component (concat "markers-styles/" styleSettings.type) styleSettings=styleSettings}}
+{{else}}
+  {{ui-message
+    type="error"
+    message=(t
+      "components.markers-styles-editor.marker-style-component-not-implemented.message"
+      componentName=(concat "markers-styles/" styleSettings.type)
+    )
+  }}
+{{/if}}

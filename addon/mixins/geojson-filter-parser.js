@@ -75,12 +75,12 @@ export default Ember.Mixin.create({
   */
   parseFilter(filter, isInnerExpression) {
     let result = this._super(...arguments);
-    return Ember.isNone(result) || isInnerExpression ? result : `function(feature) { return ${result}; }`;
+
+    return Ember.isBlank(result) || isInnerExpression ? result : `function(feature) { return ${result}; }`;
   },
 
   /**
-    Parse filter condition expression.
-    ('=', '!=', '<', '<=', '>', '>=', 'LIKE', 'ILIKE').
+    Parse filter condition expression ('=', '!=', '<', '<=', '>', '>=', 'LIKE', 'ILIKE').
 
     @method parseFilterConditionExpression
     @param {String} field Field name
@@ -126,8 +126,7 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Parse filter logical expression.
-    ('AND', 'OR', 'NOT').
+    Parse filter logical expression ('AND', 'OR', 'NOT').
 
     @method parseFilterLogicalExpression
     @param {String} condition Filter condition
@@ -143,5 +142,5 @@ export default Ember.Mixin.create({
       case 'not':
         return `!(${properties[0]})`;
     }
-  },
+  }
 });

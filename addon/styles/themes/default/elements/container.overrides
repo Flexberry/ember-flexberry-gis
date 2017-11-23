@@ -936,3 +936,25 @@
     max-width: 200px;
   }
 }
+
+/************************************************************
+    Simple layers-style (components/layers-styles/simple)
+************************************************************/
+.simple-layers-style {
+  .ui.pointing.secondary.menu {
+    .item {
+      display: flex;
+      justify-content: center;
+      width: 50%;
+    }
+  }
+
+  .ui.tab.segment {
+    border: none;
+  }
+
+  canvas {
+    width: 100%;
+    height: 200px;
+  }
+}

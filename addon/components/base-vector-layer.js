@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import BaseLayer from './base-layer';
+import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
 
 const { assert } = Ember;
 
@@ -14,27 +15,6 @@ const { assert } = Ember;
   @extends BaseLayerComponent
  */
 export default BaseLayer.extend({
-
-  /**
-    Leaflet layer group or feature group object created by model settings.
-
-    @property _vectorLayerGroup
-    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
-    @default null
-    @private
-  */
-  _vectorLayerGroup: null,
-
-  /**
-    Fill opacity passed on initization, will be used when user change layer opacity.
-
-    @property _initialFillOpacity
-    @type Number
-    @default null
-    @private
-   */
-  _initialFillOpacity: null,
-
   /**
     Property flag indicates than result layer will be showed as cluster layer.
 
@@ -53,42 +33,118 @@ export default BaseLayer.extend({
    */
   clusterOptions: null,
 
-  init() {
-    this._super(...arguments);
+  /**
+    Observes and handles changes in {{#crossLink "BaseVectorLayerComponent/clusterize:property"}}'clusterize' property{{/crossLink}}.
+    Resets layer with respect to new value of {{#crossLink "BaseVectorLayerComponent/clusterize:property"}}'clusterize' property{{/crossLink}}.
+
+    @method _clusterizeDidChange
+    @private
+  */
+  _clusterizeDidChange: Ember.observer('clusterize', function () {
+    // Call to Ember.run.once is needed because some of layer's 'dynamicProperties' can be unchenged yet ('clusterize' is dynamic property),
+    // but Ember.run.once guarantee that all 'dynamicProperies' will be already chaged before '_resetLayer' will be called.
+    Ember.run.once(this, '_resetLayer');
+  }),
+
+  /**
+    Sets leaflet layer's opacity.
+
+    @method _setLayerOpacity
+    @private
+  */
+  _setLayerOpacity() {
+    // Layers with 'empty' layers-style always must have their opacity set to 0, so we don't change such layers opacity here.
+    let layerStyleType = this.get('styleSettings.type');
+    if (layerStyleType === 'empty') {
+      return;
+    }
+
+    let opacity = this.get('opacity');
+    if (Ember.isNone(opacity)) {
+      return;
+    }
+
+    let leafletLayer = this.get('_leafletObject');
+    if (Ember.isNone(leafletLayer)) {
+      return;
+    }
+
+    setLeafletLayerOpacity({ leafletLayer, opacity });
   },
 
   /**
     Creates leaflet vector layer related to layer type.
 
-    @method createLayer
+    @method createVectorLayer
+    @param {Object} options Layer options.
     @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
-  createVectorLayer() {
+  createVectorLayer(options) {
     assert('BaseVectorLayer\'s \'createVectorLayer\' should be overridden.');
   },
 
+  /**
+    Clusterizes created vector layer if 'clusterize' option is enabled.
+
+    @method createClusterLayer
+    @param {<a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>} vectorLayer Vector layer which must be clusterized.
+    @return {<a href="https://github.com/Leaflet/Leaflet.markercluster/blob/master/src/MarkerClusterGroup.js">L.MarkerClusterGroup</a>} Clusterized vector layer.
+  */
+  createClusterLayer(vectorLayer) {
+    let clusterLayer = L.markerClusterGroup(this.get('clusterOptions'));
+    clusterLayer.addLayer(vectorLayer);
+
+    clusterLayer._featureGroup.on('layeradd', this._setLayerOpacity, this);
+    clusterLayer._featureGroup.on('layerremove', this._setLayerOpacity, this);
+
+    return clusterLayer;
+  },
+
+  /**
+    Destroys clusterized leaflet layer related to layer type.
+
+    @method destroyLayer
+  */
+  destroyClusterLayer(clusterLayer) {
+    clusterLayer._featureGroup.off('layeradd', this._setLayerOpacity, this);
+    clusterLayer._featureGroup.off('layerremove', this._setLayerOpacity, this);
+  },
+
+  /**
+    Creates leaflet layer related to layer type.
+
+    @method createLayer
+    @return {<a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>}
+    Leaflet layer or promise returning such layer.
+  */
   createLayer() {
     return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.RSVP.hash({
         vectorLayer: this.createVectorLayer()
       }).then(({ vectorLayer }) => {
-        this.set('_vectorLayerGroup', vectorLayer);
-        let initialFillOpacity = this.get('style.fillOpacity');
-        if (!Ember.isNone(initialFillOpacity)) {
-          this.set('_initialFillOpacity', initialFillOpacity);
-        }
-
         if (this.get('clusterize')) {
-          let cluster = L.markerClusterGroup(this.get('clusterOptions'));
-          cluster.addLayer(vectorLayer);
-          resolve(cluster);
-          return;
+          let clusterLayer = this.createClusterLayer(vectorLayer);
+          resolve(clusterLayer);
+        } else {
+          resolve(vectorLayer);
         }
-
-        resolve(vectorLayer);
-      }).catch((e) => { reject(e); });
+      }).catch((e) => {
+        reject(e);
+      });
     });
+  },
+
+  /**
+    Destroys leaflet layer related to layer type.
+
+    @method destroyLayer
+  */
+  destroyLayer() {
+    let leafletLayer = this.get('_leafletObject');
+    if (leafletLayer instanceof L.MarkerClusterGroup) {
+      this.destroyClusterLayer(leafletLayer);
+    }
   },
 
   /**
@@ -105,19 +161,43 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      let features = Ember.A();
-      let bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
-      let vectorLayerGroup = this.get('_vectorLayerGroup');
-      vectorLayerGroup.eachLayer(function (layer) {
-        let geoLayer = layer.toGeoJSON();
-        let primitive = new Terraformer.Primitive(geoLayer.geometry);
-        if (primitive.within(bounds) || primitive.intersects(bounds)) {
-          features.pushObject(geoLayer);
-        }
-      });
+    let primitiveSatisfiesBounds = (primitive, bounds) => {
+      let satisfiesBounds = false;
 
-      resolve(features);
+      if (typeof primitive.forEach === 'function') {
+        primitive.forEach((nestedGeometry) => {
+          if (satisfiesBounds) {
+            return;
+          }
+
+          let nestedPrimitive = new Terraformer.Primitive(nestedGeometry);
+          satisfiesBounds = primitiveSatisfiesBounds(nestedPrimitive, bounds);
+        });
+      } else {
+        satisfiesBounds = primitive.within(bounds) || primitive.intersects(bounds);
+      }
+
+      return satisfiesBounds;
+    };
+
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      try {
+        let features = Ember.A();
+        let bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
+        let leafletLayer = this.get('_leafletObject');
+        leafletLayer.eachLayer(function (layer) {
+          let geoLayer = layer.toGeoJSON();
+          let primitive = new Terraformer.Primitive(geoLayer.geometry);
+
+          if (primitiveSatisfiesBounds(primitive, bounds)) {
+            features.pushObject(geoLayer);
+          }
+        });
+
+        resolve(features);
+      } catch (e) {
+        reject(e.error || e);
+      }
     });
   },
 
@@ -136,7 +216,7 @@ export default BaseLayer.extend({
   search(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
-      let vectorLayerGroup = this.get('_vectorLayerGroup');
+      let leafletLayer = this.get('_leafletObject');
       let features = Ember.A();
 
       let searchFields = (e.context ? this.get(`${searchSettingsPath}.contextSearchFields`) : this.get(`${searchSettingsPath}.searchFields`)) || Ember.A();
@@ -146,7 +226,7 @@ export default BaseLayer.extend({
         searchFields = Ember.A([searchFields]);
       }
 
-      vectorLayerGroup.eachLayer((layer) => {
+      leafletLayer.eachLayer((layer) => {
         if (features.length < e.searchOptions.maxResultsCount) {
           let feature = Ember.get(layer, 'feature');
 
@@ -197,8 +277,8 @@ export default BaseLayer.extend({
         }
       });
 
-      let vectorLayerGroup = this.get('_vectorLayerGroup');
-      vectorLayerGroup.eachLayer((layer) => {
+      let leafletLayer = this.get('_leafletObject');
+      leafletLayer.eachLayer((layer) => {
         let feature = Ember.get(layer, 'feature');
         let meet = true;
         equals.forEach((equal) => {
@@ -212,34 +292,5 @@ export default BaseLayer.extend({
 
       resolve(features);
     });
-  },
-
-  /**
-    Sets leaflet layer's visibility.
-    @method _setLayerOpacity
-    @private
-  */
-  _setLayerOpacity() {
-    let opacity = this.get('opacity');
-    if (!Ember.isNone(opacity)) {
-      let leafletLayer = this.get('_vectorLayerGroup');
-      let leafletLayerStyle = Ember.get(leafletLayer, 'options.style');
-
-      if (Ember.isNone(leafletLayerStyle)) {
-        leafletLayerStyle = {};
-        Ember.set(leafletLayer, 'options.style', leafletLayerStyle);
-      }
-
-      // TODO Check when style is function
-      Ember.set(leafletLayerStyle, 'opacity', opacity);
-      let initialFillOpacity = this.get('_initialFillOpacity');
-      if (Ember.isNone(initialFillOpacity)) {
-        Ember.set(leafletLayerStyle, 'fillOpacity', opacity);
-      } else {
-        Ember.set(leafletLayerStyle, 'fillOpacity', initialFillOpacity * opacity);
-      }
-
-      leafletLayer.setStyle(leafletLayerStyle);
-    }
   }
 });

@@ -7,44 +7,87 @@ import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
 
 /**
   Mixin containing additional logic for layer and layer-like models.
-
   @class LayerModelMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
 export default Ember.Mixin.create({
   /**
-    Object with layer's settings.
+    Injected local-storage service.
 
-    @property settingsAsObject
-    @type Object
-    @readOnly
+    @property localStorageService
+    @type <a href="http://emberjs.com/api/classes/Ember.Service.html">Ember.Service</a>
   */
-  settingsAsObject: {},
+  localStorageService: Ember.inject.service('local-storage'),
 
   /**
-    SettingsAsObject computing with observer, because Yandex browser don't recompute settingsAsObject,
-    when it's computed property.
+    Object with layer's settings.
+    @property settingsAsObject
+    @type Object
+    @default null
+    @readOnly
   */
-  settingsObserver: Ember.on('init', Ember.observer('settings', function() {
+  settingsAsObject: null,
+
+  /**
+    Observes changes in 'settings' property and comutes related 'settingsAsObject' property.
+    Computation implemented with observer, because sometimes browser doesn't recompute settingsAsObject,
+    when it's computed property.
+
+    @method _settingsDidChange
+    @private
+  */
+  _settingsDidChange: Ember.on('init', Ember.observer('settings', function() {
     let stringToDeserialize = this.get('settings');
+    let settingsAsObject = {};
+
     if (!Ember.isBlank(stringToDeserialize)) {
       try {
         let layerClassFactory = Ember.getOwner(this).knownForType('layer', this.get('type'));
         let defaultSettings = layerClassFactory.createSettings();
-        this.set('settingsAsObject', Ember.$.extend(true, defaultSettings, JSON.parse(stringToDeserialize)));
-
-        return;
+        settingsAsObject = Ember.$.extend(true, defaultSettings, JSON.parse(stringToDeserialize));
       } catch (e) {
         Ember.Logger.error(`Computation of 'settingsAsObject' property for '${this.get('name')}' layer has been failed: ${e}`);
       }
     }
 
-    this.set('settingsAsObject', {});
+    this.set('settingsAsObject', settingsAsObject);
+
+    // Some layer properties can be stored in local-storage, so resulting layer model must be extended with them.
+    this._applyLayerPropertiesFromLocalStorage();
   })),
 
   /**
-    Flag: indicates whether layer can be identified.
+    Applies layer properties stored in local-storage.
 
+    @method _applyLayerPropertiesFromLocalStorage
+    @private
+  */
+  _applyLayerPropertiesFromLocalStorage() {
+    let mapId = this.get('map.id');
+    let layerId = this.get('id');
+    let localStorageLayer = Ember.isBlank(mapId) || Ember.isBlank(layerId) ?
+      null :
+      this.get('localStorageService').getFromStorage('layers', mapId).findBy('id', layerId);
+    if (!Ember.isNone(localStorageLayer)) {
+      // Remove id to avoid explicit merge.
+      delete localStorageLayer.id;
+
+      // Apply properties to layer model.
+      for (let propertyName in localStorageLayer) {
+        if (!localStorageLayer.hasOwnProperty(propertyName)) {
+          continue;
+        }
+
+        let value = Ember.get(localStorageLayer, propertyName);
+        value = typeof value === 'object' ? Ember.$.extend(true, this.get(propertyName), value) : value;
+
+        this.set(propertyName, value);
+      }
+    }
+  },
+
+  /**
+    Flag: indicates whether layer can be identified.
     @property canBeIdentified
     @type Boolean
     @readOnly
@@ -63,7 +106,6 @@ export default Ember.Mixin.create({
 
   /**
     Flag: indicates whether 'search' operation is available for this layer.
-
     @property canBeSearched
     @type Boolean
     @readOnly
@@ -82,7 +124,6 @@ export default Ember.Mixin.create({
 
   /**
     Flag: indicates whether 'context search' operation is available for this layer.
-
     @property canBeContextSearched
     @type Boolean
     @readOnly
@@ -101,7 +142,6 @@ export default Ember.Mixin.create({
 
   /**
    Checks whether layer should be shown on minimap.
-
     @property showOnMinimap
     @type {Boolean} Flag: indicates whether layer should be shown on minimap.
     @readOnly
@@ -112,7 +152,6 @@ export default Ember.Mixin.create({
 
   /**
     Flag: layer's whether layer's legend can be displayed.
-
     @property hasLegend
     @type Boolean
     @readOnly
@@ -131,7 +170,6 @@ export default Ember.Mixin.create({
 
   /**
     Collection of nested layers.
-
     @property layers
     @return {Array} collection of child layers
   */
@@ -153,7 +191,6 @@ export default Ember.Mixin.create({
 
   /**
     Layer's latLngBounds.
-
     @property bounds
     @readonly
     @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a> this layer's latLngBounds.

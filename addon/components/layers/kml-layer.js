@@ -3,19 +3,20 @@
 */
 
 import Ember from 'ember';
-import BaseLayer from '../base-vector-layer';
-
-/* globals omnivore */
+import BaseVectorLayer from '../base-vector-layer';
 
 /**
   Kml layer component for leaflet map.
 
   @class KmlLayerComponent
-  @extends BaseLayerComponent
+  @extends BaseVectorLayerComponent
 */
-export default BaseLayer.extend({
+export default BaseVectorLayer.extend({
   /**
-    Specific option names available on the Layer settings tab.
+    Array containing component's properties which are also leaflet layer options.
+
+    @property leafletOptions
+    @type Stirng[]
   */
   leafletOptions: [
     'kmlUrl',
@@ -24,7 +25,31 @@ export default BaseLayer.extend({
     'filter'
   ],
 
-  layerFunctions: ['filter'],
+  /**
+    Array containing component's properties which are also leaflet layer options callbacks.
+
+    @property leafletOptionsCallbacks
+    @type Stirng[]
+  */
+  leafletOptionsCallbacks: ['filter'],
+
+  /**
+    Parses specified serialized callback into function.
+
+    @method parseLeafletOptionsCallback
+    @param {Object} options Method options.
+    @param {String} options.callbackName Callback name.
+    @param {String} options.serializedCallback Serialized callback.
+    @return {Function} Deserialized callback function.
+  */
+  parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
+    // First filter must be converted into serialized function from temporary filter language.
+    if (callbackName === 'filter' && typeof serializedCallback === 'string') {
+      serializedCallback = Ember.getOwner(this).lookup('layer:kml').parseFilter(serializedCallback);
+    }
+
+    return this._super({ callbackName, serializedCallback });
+  },
 
   /**
     Creates leaflet layer related to layer type.
@@ -35,14 +60,9 @@ export default BaseLayer.extend({
   */
   createVectorLayer(options) {
     options = Ember.$.extend({}, this.get('options'), options);
-    if (options.filter) {
-      options.filter = Ember.getOwner(this).lookup('layer:kml').parseFilter(options.filter);
-    }
-
-    this._convertLayerFunctions(options);
 
     let layerWithOptions = L.geoJSON([], options);
-    Ember.assert('The option "kmlUrl" or "kmlString" should be defined!', Ember.isPresent(options.kmlUrl) || Ember.isPresent(options.kmlString));
+    Ember.assert('The option \'kmlUrl\' or \'kmlString\' should be defined!', Ember.isPresent(options.kmlUrl) || Ember.isPresent(options.kmlString));
 
     if (options.kmlUrl) {
       return new Ember.RSVP.Promise((resolve, reject) => {
