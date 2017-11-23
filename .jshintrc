@@ -4,6 +4,7 @@
     "window",
     "-Promise",
     "L",
+    "Highcharts",
     "Terraformer",
     "omnivore"
   ],

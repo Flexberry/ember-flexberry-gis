@@ -104,6 +104,10 @@ Ember.$.extend(true, translations, {
           'kml-layer': {
             'caption': 'kml-layer',
             'title': 'Пример работы слоя KML'
+          },
+          'chart-editor': {
+            'caption': 'chart-editor',
+            'title': 'Пример работы редактора диаграмм'
           }
         }
       }

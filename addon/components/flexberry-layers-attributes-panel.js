@@ -24,6 +24,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   _editTools: null,
 
+  _activeTabs: {},
+
   /**
     Computed property that builds tab models collection from items.
 
@@ -258,6 +260,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       if (selectedTabIndex >= index && selectedTabIndex - 1 >= 0) {
         this.set('selectedTabIndex', selectedTabIndex - 1);
       }
+    },
+
+    onTabClick(tabModelName, e) {
+      e = Ember.$.event.fix(e);
+      let clickedTabName = Ember.$(e.currentTarget).attr('data-tab');
+
+      Ember.set(this, `_activeTabs.${tabModelName}`, clickedTabName);
     },
 
     /**
