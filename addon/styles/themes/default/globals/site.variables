@@ -23,3 +23,5 @@
 
 @lightBoxShadow: 0 0 4px @bluecolor;
 @darkBoxShadow: 0 0 4px @darkbluecolor;
+
+@erroneousFieldColor: #E0B4B4;
