@@ -49,6 +49,7 @@ test('it renders', function(assert) {
     name: 'test layer',
     leafletObject: geoJson
   }]));
+  Ember.getOwner(this).knownNamesForType = () => { return []; };
 
   this.render(hbs`
     {{flexberry-layers-attributes-panel items=items folded=false}}

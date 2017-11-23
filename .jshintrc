@@ -5,7 +5,8 @@
     "-Promise",
     "L",
     "Highcharts",
-    "Terraformer"
+    "Terraformer",
+    "omnivore"
   ],
   "globals": {
     "moment": true

@@ -21,18 +21,25 @@ export default Ember.Mixin.create({
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
     selectFeature(feature) {
-      let selectedFeature = this.get('_selectedFeature');
+      let leafletMap = this.get('leafletMap');
+      if (Ember.isNone(leafletMap)) {
+        return;
+      }
+
       let serviceLayer = this.get('serviceLayer');
+      if (Ember.isNone(serviceLayer)) {
+        serviceLayer = L.featureGroup().addTo(leafletMap);
+        this.set('serviceLayer', serviceLayer);
+      }
 
+      let selectedFeature = this.get('_selectedFeature');
       if (selectedFeature !== feature) {
-        if (!Ember.isNone(serviceLayer)) {
-          serviceLayer.clearLayers();
+        serviceLayer.clearLayers();
 
-          if (Ember.isArray(feature)) {
-            feature.forEach((item) => this._selectFeature(item));
-          } else {
-            this._selectFeature(feature);
-          }
+        if (Ember.isArray(feature)) {
+          feature.forEach((item) => this._selectFeature(item));
+        } else {
+          this._selectFeature(feature);
         }
 
         this.set('_selectedFeature', feature);
@@ -48,28 +55,23 @@ export default Ember.Mixin.create({
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
     zoomTo(feature) {
-      let serviceLayer = this.get('serviceLayer');
-      if (!serviceLayer) {
-        let leafletMap = this.get('leafletMap');
-        serviceLayer = L.featureGroup().addTo(leafletMap);
-        this.set('serviceLayer', serviceLayer);
-      } else {
-        serviceLayer.clearLayers();
+      let leafletMap = this.get('leafletMap');
+      if (Ember.isNone(leafletMap)) {
+        return;
       }
 
       this.send('selectFeature', feature);
 
       let bounds;
+      let serviceLayer = this.get('serviceLayer');
       if (typeof (serviceLayer.getBounds) === 'function') {
         bounds = serviceLayer.getBounds();
       } else {
         let featureGroup = L.featureGroup(serviceLayer.getLayers());
-        if (featureGroup) {
-          bounds = featureGroup.getBounds();
-        }
+        bounds = featureGroup.getBounds();
       }
 
-      if (!Ember.isBlank(bounds)) {
+      if (!Ember.isNone(bounds)) {
         // 'bound.pad(1)' bounds with zoom decreased by 1 point (padding).
         //  That allows to make map's bounds slightly larger than serviceLayer's bounds to make better UI.
         this.get('leafletMap').fitBounds(bounds.pad(1));
@@ -82,6 +84,11 @@ export default Ember.Mixin.create({
       @param {Object} feature Describes inner FeatureResultItem's feature object or array of it.
     */
     panTo(feature) {
+      let leafletMap = this.get('leafletMap');
+      if (Ember.isNone(leafletMap)) {
+        return;
+      }
+
       let latLng;
       if (typeof (feature.leafletLayer.getBounds) === 'function') {
         latLng = feature.leafletLayer.getBounds().getCenter();

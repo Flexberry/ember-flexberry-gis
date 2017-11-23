@@ -3,34 +3,16 @@
 */
 
 import Ember from 'ember';
-import BaseLayer from './-private/base';
-import GeoJsonFilterParserMixin from 'ember-flexberry-gis/mixins/geojson-filter-parser';
+import GeoJsonFilterParserMixin from '../mixins/geojson-filter-parser';
+import VectorLayer from './-private/vector';
 
 /**
   Class describing kml layer metadata.
 
   @class KmlLayer
-  @extends BaseLayer
+  @extends VectorLayer
 */
-export default BaseLayer.extend(GeoJsonFilterParserMixin, {
-  /**
-    Icon class related to layer type.
-
-    @property iconClass
-    @type String
-    @default 'map icon'
-  */
-  iconClass: 'map icon',
-
-  /**
-    Permitted operations related to layer type.
-
-    @property operations
-    @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'query', 'filter']
-  */
-  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter'],
-
+export default VectorLayer.extend(GeoJsonFilterParserMixin, {
   /**
     Creates new settings object (with settings related to layer-type).
 
@@ -43,22 +25,6 @@ export default BaseLayer.extend(GeoJsonFilterParserMixin, {
       kmlUrl: undefined,
       kmlString: undefined,
       filter: ''
-    });
-
-    return settings;
-  },
-
-  /**
-    Creates new search settings object (with search settings related to layer-type).
-
-    @method createSearchSettings
-    @returns {Object} New search settings object (with search settings related to layer-type).
-  */
-  createSearchSettings() {
-    let settings = this._super(...arguments);
-    Ember.$.extend(true, settings, {
-      queryString: '',
-      maxResultsCount: 10
     });
 
     return settings;
