@@ -21,6 +21,12 @@ export default WmsLayerComponent.extend({
   */
   _wfsLayer: null,
 
+  /**
+    Returns promise with the properties object of inner wfs layer.
+
+    @method _getAttributesObject
+    @private
+  */
   _getAttributesObject() {
     let options = Ember.$.extend(this.get('_wfsLayer.options') || {}, { showExisting: true });
     let innerLayer = this.get('_wfsLayer').createVectorLayer(options);

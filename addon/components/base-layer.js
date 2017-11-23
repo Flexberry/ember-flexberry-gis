@@ -195,6 +195,8 @@ export default Ember.Component.extend(
         this.set('_leafletObject', leafletLayer);
         if (Ember.isPresent(this.get('layerModel'))) {
           Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
+
+          // Save the reference to the instance method for getting attributes object.
           Ember.set(this.get('layerModel'), '_attributesObject', this._getAttributesObject.bind(this));
         }
 
@@ -225,10 +227,15 @@ export default Ember.Component.extend(
       }
     },
 
+    /**
+      Returns promise with the layer properties object.
+
+      @method _getAttributesObject
+      @private
+    */
     _getAttributesObject() {
-      let that = this;
       return new Ember.RSVP.Promise((resolve, reject) => {
-        resolve(that.get('_leafletObject'));
+        resolve(this.get('_leafletObject'));
       });
     },
 
