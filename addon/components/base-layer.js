@@ -196,8 +196,10 @@ export default Ember.Component.extend(
         if (Ember.isPresent(this.get('layerModel'))) {
           Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
 
-          // Save the reference to the instance method for getting attributes object.
-          Ember.set(this.get('layerModel'), '_attributesObject', this._getAttributesObject.bind(this));
+          // Save the reference to the instance method for getting attributes options.
+          if (Ember.isNone(this.get('layerModel._attributesOptions'))) {
+            Ember.set(this.get('layerModel'), '_attributesOptions', this._getAttributesOptions.bind(this));
+          }
         }
 
         return leafletLayer;
@@ -223,19 +225,25 @@ export default Ember.Component.extend(
       this.set('_leafletLayerPromise', null);
       if (Ember.isPresent(this.get('layerModel'))) {
         Ember.set(this.get('layerModel'), '_leafletObject', null);
-        Ember.set(this.get('layerModel'), '_attributesObject', null);
+        Ember.set(this.get('layerModel'), '_attributesOptions', null);
       }
     },
 
     /**
       Returns promise with the layer properties object.
 
-      @method _getAttributesObject
+      @method _getAttributesOptions
       @private
     */
-    _getAttributesObject() {
+    _getAttributesOptions() {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        resolve(this.get('_leafletObject'));
+        resolve({
+          object: this.get('_leafletObject'),
+          settings: {
+            readonly: true,
+            localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties')
+          }
+        });
       });
     },
 
