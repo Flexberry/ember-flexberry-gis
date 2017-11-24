@@ -162,10 +162,10 @@
   {{component "layers-dialogs/attributes/edit"
     class=flexberryClassNames.addDialog
     visible=_onEditRowDialogIsVisible
-    fieldNames=_editRowFieldNames
-    fieldTypes=_editRowFieldTypes
-    fieldParsers=_editRowFieldParsers
-    fieldValidators=_editRowFieldValidators
+    fieldNames=(get _editRowTabModel "header")
+    fieldTypes=(get _editRowTabModel "leafletObject.readFormat.featureType.fieldTypes")
+    fieldParsers=(get _editRowTabModel "leafletObject.readFormat.featureType.fields")
+    fieldValidators=(get _editRowTabModel "leafletObject.readFormat.featureType.fieldValidators")
     data=_editRowDataCopy
     approve=(action "onEditRowDialogApprove")
   }}
