@@ -667,7 +667,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         case 'MultiSurfacePropertyType':
         case 'PolygonPropertyType':
         case 'MultiPolygonPropertyType':
-          return ['circle', 'rectangle', 'polygon'];
+          return ['rectangle', 'polygon'];
       }
     }
 
