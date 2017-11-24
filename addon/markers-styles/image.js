@@ -58,12 +58,45 @@ export default BaseMarkerStyle.extend({
     @param {Object} options Method options.
     @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which marker-style preview must be rendered.
     @param {Object} options.style Hash containing style settings.
+    @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style }) {
-    let context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.font = '24px Verdana';
-    context.strokeStyle = 'red';
-    context.strokeText('Image marker preview', 10, 20);
+  renderOnCanvas({ canvas, style, target }) {
+    let width = canvas.width;
+    let height = canvas.height;
+    let ctx = canvas.getContext('2d');
+
+    // Clear canvas.
+    ctx.clearRect(0, 0, width, height);
+
+    var image = new Image();
+    image.onload = function() {
+      // Draw loaded image.
+      let iconWidth = style.iconSize[0] || this.width;
+      let iconHeight = style.iconSize[1] || this.height;
+
+      let scale = iconWidth > width || iconHeight > height ?
+        Math.min(width / iconWidth, height / iconHeight) :
+        1;
+      let xOffset = (width - iconWidth * scale) / 2;
+      let yOffset = (height - iconHeight * scale) / 2;
+
+      ctx.drawImage(this, xOffset, yOffset, iconWidth * scale, iconHeight * scale);
+    };
+
+    image.onerror = function() {
+      // Draw red cross instead of image.
+      ctx.moveTo(0, 0);
+      ctx.lineTo(width, height);
+
+      ctx.moveTo(width, 0);
+      ctx.lineTo(0, height);
+
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#ff0000';
+      ctx.stroke();
+    };
+
+    // Set image src to start loading.
+    image.src = style.iconUrl;
   }
 });

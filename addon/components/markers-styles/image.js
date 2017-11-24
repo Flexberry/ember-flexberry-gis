@@ -24,5 +24,34 @@ export default Ember.Component.extend({
     @type Object
     @default null
   */
-  styleSettings: null
+  styleSettings: null,
+
+  /**
+    Observer changes in marker style settings.
+
+    @method _styleSettingsDidChange
+    @private
+  */
+  _styleSettingsDidChange: Ember.observer(
+    'styleSettings',
+    'styleSettings.iconUrl',
+    'styleSettings.iconSize',
+    'styleSettings.iconAnchor',
+    'styleSettings.shadowUrl',
+    'styleSettings.shadowSize',
+    'styleSettings.shadowAnchor',
+    function() {
+      Ember.run.once(this, '_sendChangeAction');
+    }
+  ),
+
+  /**
+    Sends 'change' action to notify about changes in marker style settings.
+
+    @method _sendChangeAction
+    @private
+  */
+  _sendChangeAction() {
+    this.sendAction('change', this.get('styleSettings'));
+  },
 });

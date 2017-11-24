@@ -102,11 +102,11 @@ export default Ember.Service.extend({
     @param {Object} options Method options.
     @param {String} options.type Layer style type.
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} options.leafletLayer Leaflet layer to which layer-style must be applied.
-    @param {Object} options.style Hash containing style settings.
+    @param {Object} options.styleSettings Hash containing style settings.
   */
-  renderOnLeafletMarker({ marker, style }) {
-    let type = Ember.get(style, 'type');
-    style = Ember.get(style, 'style');
+  renderOnLeafletMarker({ marker, styleSettings }) {
+    let type = Ember.get(styleSettings, 'type');
+    let style = Ember.get(styleSettings, 'style');
 
     let markerStyle = this._getMarkerStyle(type);
     if (Ember.isNone(markerStyle)) {
@@ -123,11 +123,14 @@ export default Ember.Service.extend({
     @method renderOnCanvas
     @param {Object} options Method options.
     @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which layer-style preview must be rendered.
-    @param {Object} options.style Hash containing style settings.
+    @param {Object} options.styleSettings Hash containing style settings.
+    @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style }) {
-    let type = Ember.get(style, 'type');
-    style = Ember.get(style, 'style');
+  renderOnCanvas({ canvas, styleSettings, target }) {
+    target = target || 'preview';
+
+    let type = Ember.get(styleSettings, 'type');
+    let style = Ember.get(styleSettings, 'style');
 
     let markerStyle = this._getMarkerStyle(type);
     if (Ember.isNone(markerStyle)) {
@@ -135,6 +138,6 @@ export default Ember.Service.extend({
       return;
     }
 
-    markerStyle.renderOnCanvas({ canvas, style });
+    markerStyle.renderOnCanvas({ canvas, style, target });
   }
 });

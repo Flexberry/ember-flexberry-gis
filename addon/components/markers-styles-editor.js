@@ -18,6 +18,15 @@ export default Ember.Component.extend({
   layout,
 
   /**
+    Component's wrapping <div> CSS-classes names.
+
+    @property classNames
+    @type String[]
+    @default ['markers-styles-editor']
+  */
+  classNames: ['markers-styles-editor'],
+
+  /**
     Hash containing style settings.
 
     @property styleSettings
@@ -170,6 +179,8 @@ export default Ember.Component.extend({
 
     this.set('styleSettings', this.get('_markersStylesRenderer').getDefaultStyleSettings(selectedMarkerStyle));
     this.set('_previouslySelectedMarkerStyle', selectedMarkerStyle);
+
+    this.send('onStyleSettingsChange');
   },
 
   /**
@@ -182,5 +193,16 @@ export default Ember.Component.extend({
     this.set('_previouslySelectedMarkerStyle', this.get('styleSettings.type'));
     this.set('_availableMarkerStyles', this.get('_markersStylesRenderer').getAvailableMarkerStylesTypes());
     this._availableMarkerStylesCaptionsOrSelectedMarkerStyleDidChange();
+  },
+
+  actions: {
+    /**
+      Handles changes in marker style settings.
+
+      @method actions.onStyleSettingsChange
+    */
+    onStyleSettingsChange() {
+      this.sendAction('change', this.get('styleSettings'));
+    }
   }
 });

@@ -1,5 +1,5 @@
 export default {
-  'markers-styles-dropdown': {
+  'markers-styles-selector': {
     'caption': 'Тип маркера'
   },
   'marker-style-component-not-implemented': {

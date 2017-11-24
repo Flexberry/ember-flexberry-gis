@@ -1,0 +1,27 @@
+<table class="ui small compact celled table">
+  <thead>
+    <tr>
+      <th>
+        {{t "components.layers-styles.simple.fill-editor.fill-presence"}}
+      </th>
+      <th>
+        {{t "components.layers-styles.simple.fill-editor.fill-color"}}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        {{flexberry-checkbox
+          value=styleSettings.fill
+        }}
+      </td>
+      <td>
+        {{flexberry-colorpicker
+          value=styleSettings.fillColor
+          change=(action "onFillColorChange" "styleSettings.fillColor")
+        }}
+      </td>
+    </tr>
+  </tbody>
+</table>
