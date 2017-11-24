@@ -115,15 +115,15 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Parse filter bbox expression.
+    Parse filter geometry expression.
     ('IN', 'NOT IN').
 
-    @method parseFilterBboxExpression
+    @method parseFilterGeometryExpression
     @param {String} condition Filter condition
-    @param {Object} coords Bbox coordinates
+    @param {Object} geoJSON Geometry
     @returns {Object} Filter object
   */
-  parseFilterBboxExpression(condition, coords) {
+  parseFilterGeometryExpression(condition, geoJSON) {
     /*let bboxPolygon = `{type: 'Polygon', coordinates: [[[${coords.minLng}, ${coords.minLat}], [${coords.maxLng}, ` +
       `${coords.minLat}], [${coords.maxLng}, ${coords.maxLat}], [${coords.minLng}, ${coords.maxLat}], [${coords.minLng}, ${coords.minLat}]]] }`;
     let filter = `new Terraformer.Primitive(feature.geometry).within(${bboxPolygon})`;

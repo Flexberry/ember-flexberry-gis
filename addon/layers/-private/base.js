@@ -182,9 +182,7 @@ export default Ember.Object.extend({
   parseFilter(expression, geometryField, isInnerExpression) {
     const logicalExp = /^\s*([Aa][Nn][Dd]|[Oo][Rr]|[Nn][Oo][Tt])\s*\((.+)\)\s*$/;
     const conditionExp = /^\s*('[^']+'|"[^"]+")\s*(=|<|>|<=|>=|!=|[Ii]?[Ll][Ii][Kk][Ee])\s*('[^']+'|"[^"]+"|[Nn][Uu][Ll][Ll])\s*$/;
-    const numberExp = '\\-?[0-9]+(?:\\.[0-9]+)?';
-    const bboxExp = new RegExp(`^\\s*((?:[Nn][Oo][Tt]\\s)?[Ii][Nn])\\s*` +
-      `\\(\\s*\\[(${numberExp}),\\s*(${numberExp})\\]\\s*,\\s*\\[(${numberExp}),\\s*(${numberExp})\\]\\s*\\)\\s*$`);
+    const geometryExp = /^\s*((?:[Nn][Oo][Tt]\s)?[Ii][Nn])\s*\((.+)\)\s*$/;
 
     if (Ember.isBlank(expression)) {
       return '';
@@ -220,7 +218,7 @@ export default Ember.Object.extend({
             condition = condition.slice(1, condition.length - 1);
           }
 
-          if (logicalExp.test(condition) || conditionExp.test(condition) || bboxExp.test(condition)) {
+          if (logicalExp.test(condition) || conditionExp.test(condition) || geometryExp.test(condition)) {
             properties.addObject(this.parseFilter(condition, geometryField, true));
             propertiesString = propertiesString.slice(index + 1);
             index = 0;
@@ -232,7 +230,7 @@ export default Ember.Object.extend({
             index--;
           }
 
-          if (logicalExp.test(propertiesString) || conditionExp.test(propertiesString) || bboxExp.test(propertiesString)) {
+          if (logicalExp.test(propertiesString) || conditionExp.test(propertiesString) || geometryExp.test(propertiesString)) {
             properties.addObject(this.parseFilter(propertiesString, geometryField, true));
           } else {
             return null;
@@ -249,16 +247,16 @@ export default Ember.Object.extend({
       }
     }
 
-    let bboxExpResult = bboxExp.exec(exp);
-    if (bboxExpResult) {
-      let coords = {
-        minLng: bboxExpResult[2],
-        minLat: bboxExpResult[3],
-        maxLng: bboxExpResult[4],
-        maxLat: bboxExpResult[5],
-      };
+    let geometryExpResult = geometryExp.exec(exp);
+    if (geometryExpResult) {
+      let geometry;
+      try {
+        geometry = JSON.parse(geometryExpResult[2].trim());
+      } catch (e) {
+        return null;
+      }
 
-      return this.parseFilterBboxExpression(bboxExpResult[1].toLowerCase(), coords, geometryField);
+      return this.parseFilterGeometryExpression(geometryExpResult[1].toLowerCase(), geometry, geometryField);
     }
 
     return null;
@@ -292,16 +290,16 @@ export default Ember.Object.extend({
   },
 
   /**
-    Parse filter bbox expression.
+    Parse filter geometry expression.
     ('IN', 'NOT IN').
 
-    @method parseFilterBboxExpression
+    @method parseFilterGeometryExpression
     @param {String} condition Filter condition
-    @param {Object} coords Bbox coordinates
+    @param {Object} geoJSON Geometry
     @param {String} geometryField Layer's geometry field
     @returns {Object} Filter object
   */
-  parseFilterBboxExpression(condition, coords, geometryField) {
+  parseFilterGeometryExpression(condition, geoJSON, geometryField) {
     assert('BaseLayer\'s \'parseFilterBboxExpression\' should be overridden.');
   },
 });

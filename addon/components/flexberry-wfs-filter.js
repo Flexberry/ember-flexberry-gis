@@ -357,7 +357,7 @@ export default Ember.Component.extend({
       @method actions.onBoundingBoxChange
     */
     onBoundingBoxChange(e) {
-      this.set('_currentSelectedBbox', `[${e.minLng}, ${e.minLat}], [${e.maxLng}, ${e.maxLat}]`);
+      this.set('_currentSelectedBbox', JSON.stringify(e.bboxGeoJSON));
     },
   }
 });
