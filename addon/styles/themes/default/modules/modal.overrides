@@ -347,6 +347,22 @@
     height: 400px;
     overflow: hidden !important;
   }
+
+  .row.ui.accordion.bbox-selector {
+    min-height: 31px;
+    & > .content {
+      padding: 0px;
+      width: 100%;
+      & > .ui.celled.grid {
+        margin: 0px;
+        .flexberry-boundingbox {
+          .flexberry-map {
+            max-height: 250px;
+          }
+        }
+      }
+    }
+  }
 }
 
 form.flexberry-edit-layermap,

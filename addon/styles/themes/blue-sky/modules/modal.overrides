@@ -119,7 +119,7 @@
         }
     }
 
-    .ui.attached.tab.segment .flexberry-button {
+    .ui.attached.tab.segment .flexberry-button:not(.success) {
         background: @white !important;
         box-shadow: @darkBoxShadow;
         &:hover {

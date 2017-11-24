@@ -196,7 +196,9 @@
       {{#if _filterSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.display-group.activeTab "filter-tab") "active"}}" data-tab="filter-tab">
           {{flexberry-wfs-filter
+            boundingBoxComponentMap=boundingBoxComponentMap
             filter=_layer.settings.filter
+            geometryField=_layer.settings.geometryField
             _leafletObject=_leafletObject
             _layerType=_layer.type
           }}

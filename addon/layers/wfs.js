@@ -178,4 +178,28 @@ export default BaseLayer.extend({
         return new L.Filter.Not(properties[0]);
     }
   },
+
+  /**
+    Parse filter bbox expression.
+    ('IN', 'NOT IN').
+
+    @method parseFilterBboxExpression
+    @param {String} condition Filter condition
+    @param {Object} coords Bbox coordinates
+    @param {String} geometryField Layer's geometry field
+    @returns {Object} Filter object
+  */
+  parseFilterBboxExpression(condition, coords, geometryField) {
+    let filter = new L.Filter.BBox(
+      geometryField,
+      L.latLngBounds(L.latLng(coords.minLat, coords.minLng), L.latLng(coords.maxLat, coords.maxLng)),
+      L.CRS.EPSG4326
+    );
+    switch (condition) {
+      case 'in':
+        return filter;
+      case 'not in':
+        return new L.Filter.Not(filter);
+    }
+  },
 });

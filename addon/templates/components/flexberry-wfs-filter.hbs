@@ -130,6 +130,44 @@
       }}
     </div>
   </div>
+  <div class="row ui accordion bbox-selector">
+    <div class="ui top attached label title">
+      <i class="dropdown icon"></i>
+      {{t "components.flexberry-wfs-filter.geometry-filters.caption"}}
+    </div>
+    <div class="content">
+      <div class="ui celled grid">
+        <div class="row">
+          {{#if boundingBoxComponentMap}}
+            <div class = "fourteen wide column">
+              {{flexberry-boundingbox
+                mapModel=boundingBoxComponentMap
+                boundingBoxChange=(action "onBoundingBoxChange")
+              }}
+            </div>
+            <div class = "two wide column">
+              {{flexberry-button
+                class=operatorButtonClass
+                caption=(t "components.flexberry-wfs-filter.buttons.in")
+                readonly=readonly
+                click=(action "pasteBboxExpression" "IN")
+              }}
+              <br>
+              {{flexberry-button
+                class=operatorButtonClass
+                caption=(t "components.flexberry-wfs-filter.buttons.not-in")
+                readonly=readonly
+                click=(action "pasteBboxExpression" "NOT IN")
+              }}
+            </div>
+          {{else}}
+            <div class="ui form loading" style="height: 200px; width: 100%;">
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="sixteen wide column">
       <div class="three top attached buttons">

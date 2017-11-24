@@ -62,6 +62,15 @@ export default Ember.Component.extend({
   valuesCount: 10,
 
   /**
+    Map object for flexberry-bounding box component.
+
+    @property boundingBoxComponentMap
+    @type Object
+    @default null
+  */
+  boundingBoxComponentMap: null,
+
+  /**
     Leaflet's wfs layer object.
 
     @property _leafletObject
@@ -101,6 +110,16 @@ export default Ember.Component.extend({
   */
   _filterIsCorrect: true,
 
+  /**
+    Bbox, selected with flexberry-boundingbox component.
+
+    @property _currentSelectedBbox
+    @type String
+    @default undefined
+    @private
+  */
+  _currentSelectedBbox: undefined,
+
   init() {
     this._super(...arguments);
 
@@ -114,6 +133,16 @@ export default Ember.Component.extend({
         this.set('fields', Ember.A(layerClass.getLayerProperties(leafletObject)));
       }
     }
+  },
+
+  /**
+    Initializes page's DOM-related properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+
+    // Initialize Semantic UI accordion.
+    this.$('.ui.accordion').accordion();
   },
 
   /**
@@ -131,7 +160,7 @@ export default Ember.Component.extend({
     let layerClass = Ember.getOwner(this).knownForType('layer', type);
     let filter;
     if (!Ember.isNone(layerClass)) {
-      filter =  layerClass.parseFilter(filterStringValue);
+      filter =  layerClass.parseFilter(filterStringValue, this.get('geometryField'));
     }
 
     if (!Ember.isNone(filter)) {
@@ -282,6 +311,20 @@ export default Ember.Component.extend({
     },
 
     /**
+      Paste bbox expression into fiter string.
+
+      @method pasteBboxExpression
+      @param {String} condition
+    */
+    pasteBboxExpression(condition) {
+      let bboxString = this.get('_currentSelectedBbox');
+      if (!Ember.isBlank(bboxString)) {
+        let expressionString = `${condition} (${bboxString})`;
+        this._pasteIntoFilterString(expressionString);
+      }
+    },
+
+    /**
       Paste symbol into fiter string.
 
       @method pasteSymbol
@@ -306,6 +349,15 @@ export default Ember.Component.extend({
 
       let newString = `'${value}'`;
       this._pasteIntoFilterString(newString);
+    },
+
+    /**
+      Handles bounding box changes.
+
+      @method actions.onBoundingBoxChange
+    */
+    onBoundingBoxChange(e) {
+      this.set('_currentSelectedBbox', `[${e.minLng}, ${e.minLat}], [${e.maxLng}, ${e.maxLat}]`);
     },
   }
 });
