@@ -144,7 +144,7 @@
           </div>
           <div class="ui bottom attached tab segment layers-attributes-segment {{if (eq (get _activeTabs tabModel.name) "chart-tab") "active"}}" data-tab="chart-tab">
             {{charts/index-chart
-              _isObjProperties=tabModel.propertiesToShow
+              _isObjProperties=tabModel._selectedRowsProperties
             }}
           </div>
         </div>

@@ -99,6 +99,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
           }),
 
+          _selectedRowsProperties: Ember.computed('_selectedRows', 'featureLink', function () {
+            let selectedRows = Ember.get(this, '_selectedRows');
+            let featureLink = Ember.get(this, 'featureLink');
+            let result = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+              .map((key) => {
+                return featureLink[key].feature.properties;
+              });
+
+            return result.length > 0 ? result : Ember.get(this, 'properties');
+          }),
+
           selectAll: false,
 
           // paging implementation
