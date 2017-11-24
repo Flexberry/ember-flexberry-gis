@@ -41,4 +41,7 @@ export default {
   'clusterize': {
     'caption': 'Clusterize'
   },
+  'readonly': {
+    'caption': 'Read only'
+  }
 };
