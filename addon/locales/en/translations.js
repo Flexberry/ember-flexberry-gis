@@ -33,6 +33,7 @@ import MarkersStylesComponents from './components/markers-styles';
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
 import GISSearchForm from './forms/gis-search-form';
+import Charts from './components/charts';
 
 export default {
   'models': {
@@ -156,6 +157,8 @@ export default {
     },
 
     'flexberry-boundingbox': FlexberryBoundingboxComponent,
+
+    'charts': Charts,
 
     'flexberry-layers-attributes-panel': FlexberryLayersAttributesPanel,
     'flexberry-edit-crs': FlexberryEditCrsComponent,
