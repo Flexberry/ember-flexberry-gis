@@ -560,6 +560,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       tabModel.properties.pushObject(data);
 
       this._triggerChanged.call([tabModel, layer, false], { layer });
+
+      if (this.get('_newRowPanToObject')) {
+        this.send('zoomTo', layer.feature);
+        this.set('_newRowPanToObject', null);
+        this.send('onClearFoundItemClick');
+      }
     },
 
     /**
@@ -571,6 +577,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       this.set('_newRowTabModel', null);
       this.set('_newRowLayer', null);
+      this.set('_newRowPanToObject', null);
     },
 
     /**
@@ -579,7 +586,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} tabModel Related tab model.
       @param {Object} addedLayer Added layer.
     */
-    onGeometryAddComplete(tabModel, addedLayer) {
+    onGeometryAddComplete(tabModel, addedLayer, options) {
+      if (!Ember.isNone(options) && Ember.get(options, 'panToAddedObject')) {
+        this.set('_newRowPanToObject', true);
+      }
+
       this._showNewRowDialog(tabModel, addedLayer);
     }
   },
