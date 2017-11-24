@@ -40,5 +40,8 @@ export default {
   },
   'clusterize': {
     'caption': 'Кластеризовать'
+  },
+  'readonly': {
+    'caption': 'Только чтение'
   }
 };

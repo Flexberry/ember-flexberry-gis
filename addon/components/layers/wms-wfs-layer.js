@@ -24,13 +24,18 @@ export default WmsLayerComponent.extend({
   /**
     Returns promise with the properties object of inner wfs layer.
 
-    @method _getAttributesObject
+    @method _getAttributesOptions
     @private
   */
-  _getAttributesObject() {
+  _getAttributesOptions() {
     let options = Ember.$.extend(this.get('_wfsLayer.options') || {}, { showExisting: true });
     let innerLayer = this.get('_wfsLayer').createVectorLayer(options);
-    return innerLayer;
+    return Ember.RSVP.hash({
+      object: innerLayer,
+      settings: {
+        readonly: this.get('wfs.readonly')
+      }
+    });
   },
 
   /**

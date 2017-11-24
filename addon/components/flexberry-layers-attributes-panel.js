@@ -42,19 +42,40 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       return editedLayers.map((item) => {
         let name = Ember.get(item, 'name');
-        let allowEdit = true;
-        let header = {};
         let featureLink = {};
         let propertyLink = {};
         let properties = Ember.A();
-        let leafletObject = Ember.get(item, 'leafletObject');
 
-        let availableDrawTools = this._getAvailableDrawTools(Ember.get(leafletObject, 'readFormat.featureType.geometryFields'));
+        let leafletObject = Ember.get(item, 'leafletObject');
+        let readonly = Ember.get(item, 'settings.readonly') || false;
+
+        let getHeader = () => {
+          if (!Ember.isNone(Ember.get(item, 'settings.localizedProperties'))) {
+            let locale = this.get('i18n.locale');
+            return Ember.get(item, `settings.localizedProperties.${locale}`);
+          } else {
+            let result = {};
+            for (let p in Ember.get(leafletObject, 'readFormat.featureType.fields')) {
+              result[p] = p;
+            }
+
+            return result;
+          }
+        };
+
+        let availableDrawTools = null;
+        if (!readonly) {
+          availableDrawTools = this._getAvailableDrawTools(Ember.get(leafletObject, 'readFormat.featureType.geometryFields'));
+        }
 
         leafletObject.eachLayer((layer) => {
+          if (Ember.isNone(Ember.get(layer, 'feature'))) {
+            Ember.set(layer, 'feature', {});
+          }
+
           let props = Ember.get(layer, 'feature.properties');
           let propId = Ember.guidFor(props);
-          if (Ember.isNone(layer.feature.leafletLayer)) {
+          if (Ember.isNone(Ember.get(layer, 'feature.leafletLayer'))) {
             Ember.set(layer.feature, 'leafletLayer', layer);
           }
 
@@ -66,10 +87,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           properties.pushObject(props);
         });
 
-        for (let p in Ember.get(leafletObject, 'readFormat.featureType.fields')) {
-          header[p] = p;
-        }
-
         let tabModel = Ember.Object.extend({
           _top: 5,
           _skip: 0,
@@ -79,6 +96,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             let selectedRows = Ember.get(this, '_selectedRows');
             return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
           }),
+
           selectAll: false,
 
           // paging implementation
@@ -87,18 +105,28 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             let top = this.get('_top');
             let skip = this.get('_skip');
             return properties.slice(skip, skip + top);
-          })
+          }),
+
+          i18n: Ember.inject.service('i18n'),
+
+          header: Ember.computed('i18n.locale', getHeader),
+
+          init() {
+            this.get('i18n.locale');
+          }
         });
-        return tabModel.create({
-          name,
-          allowEdit,
-          leafletObject,
-          featureLink,
-          propertyLink,
-          header,
-          properties,
-          availableDrawTools
-        });
+        return tabModel.create(
+          Ember.getOwner(this).ownerInjection(),
+          {
+            name,
+            allowEdit: !readonly,
+            leafletObject,
+            featureLink,
+            propertyLink,
+            properties,
+            availableDrawTools
+          }
+        );
       });
     }
   }),

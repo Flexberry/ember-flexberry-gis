@@ -108,6 +108,23 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Returns promise with the layer properties object.
+
+    @method _getAttributesOptions
+    @private
+  */
+  _getAttributesOptions() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      resolve({
+        object: this.get('_leafletObject'),
+        settings: {
+          readonly: this.get('readonly') || false
+        }
+      });
+    });
+  },
+
+  /**
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
     @param {Object} options Layer options.
