@@ -197,7 +197,9 @@ export default Ember.Component.extend(
           Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
 
           // Save the reference to the instance method for getting attributes options.
-          Ember.set(this.get('layerModel'), '_attributesOptions', this._getAttributesOptions.bind(this));
+          if (Ember.isNone(this.get('layerModel._attributesOptions'))) {
+            Ember.set(this.get('layerModel'), '_attributesOptions', this._getAttributesOptions.bind(this));
+          }
         }
 
         return leafletLayer;
