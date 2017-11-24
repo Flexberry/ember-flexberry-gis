@@ -4,7 +4,9 @@
     "window",
     "-Promise",
     "L",
-    "Terraformer"
+    "Highcharts",
+    "Terraformer",
+    "omnivore"
   ],
   "globals": {
     "moment": true

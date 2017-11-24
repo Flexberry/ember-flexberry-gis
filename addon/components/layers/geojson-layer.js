@@ -3,21 +3,38 @@
 */
 
 import Ember from 'ember';
-import BaseLayer from '../base-vector-layer';
+import BaseVectorLayer from '../base-vector-layer';
 
 /**
   GeoJSON layer component for leaflet map.
 
   @class GeoJSONLayerComponent
-  @extend BaseVectorLayerComponent
+  @extends BaseVectorLayerComponent
  */
-export default BaseLayer.extend({
+export default BaseVectorLayer.extend({
+  /**
+    Array containing component's properties which are also leaflet layer options.
 
+    @property leafletOptions
+    @type Stirng[]
+  */
   leafletOptions: [
-    'pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng', 'geojson', 'crs'
+    'pointToLayer',
+    'onEachFeature',
+    'filter',
+    'coordsToLatLng',
+    'geojson',
+    'crs',
+    'style'
   ],
 
-  layerFunctions: ['pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng'],
+  /**
+    Array containing component's properties which are also leaflet layer options callbacks.
+
+    @property leafletOptionsCallbacks
+    @type Stirng[]
+  */
+  leafletOptionsCallbacks: ['pointToLayer', 'style', 'onEachFeature', 'filter', 'coordsToLatLng'],
 
   /**
     Url for download geojson.
@@ -29,21 +46,31 @@ export default BaseLayer.extend({
   url: null,
 
   /**
-    Creates leaflet layer related to layer type.
+    Parses specified serialized callback into function.
 
+    @method parseLeafletOptionsCallback
+    @param {Object} options Method options.
+    @param {String} options.callbackName Callback name.
+    @param {String} options.serializedCallback Serialized callback.
+    @return {Function} Deserialized callback function.
+  */
+  parseLeafletOptionsCallback({ callbackName, serializedCallback }) {
+    // First filter must be converted into serialized function from temporary filter language.
+    if (callbackName === 'filter' && typeof serializedCallback === 'string') {
+      serializedCallback = Ember.getOwner(this).lookup('layer:geojson').parseFilter(serializedCallback);
+    }
+
+    return this._super({ callbackName, serializedCallback });
+  },
+
+  /**
+    Creates leaflet layer related to layer type.
     @method createLayer
     @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
   createVectorLayer(options) {
-    options = Ember.$.extend({}, this.get('options'), options);
-    let geojson = options.geojson || {};
-    options = options || {};
-    if (options.filter) {
-      options.filter = Ember.getOwner(this).lookup('layer:geojson').parseFilter(options.filter);
-    }
-
-    this._convertLayerFunctions(options);
+    options = Ember.$.extend(true, {}, this.get('options'), options);
 
     let url = this.get('url');
     if (!Ember.isNone(url)) {
@@ -66,6 +93,7 @@ export default BaseLayer.extend({
       });
     }
 
+    let geojson = options.geojson || {};
     let featureCollection = {
       type: 'FeatureCollection',
       features: []
@@ -84,7 +112,6 @@ export default BaseLayer.extend({
       return L.geoJSON();
     }
 
-    let geojsLayer = L.geoJSON(featureCollection, options);
-    return geojsLayer;
+    return L.geoJSON(featureCollection, options);
   }
 });

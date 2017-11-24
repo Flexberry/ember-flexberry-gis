@@ -146,7 +146,28 @@ export default Ember.Object.extend({
     @returns {Array} Array with selected property values
   */
   getLayerPropertyValues(leafletObject, selectedField, count) {
-    assert('BaseLayer\'s \'getLayerPropertyValues\' should be overridden.');
+    if (Ember.isNone(leafletObject)) {
+      return Ember.A();
+    }
+
+    if (Ember.isNone(leafletObject.toGeoJSON)) {
+      assert('Method \'getLayerPropertyValues\' should be overridden, because layer hasn\'t toGeoJSON function.');
+    }
+
+    let geojson = leafletObject.toGeoJSON() || {};
+    let features = geojson.features || [];
+    let values = Ember.A();
+
+    for (let i = 0; i < features.length; i++) {
+      let property = Ember.get(features, `${i}.properties.${selectedField}`);
+      values.addObject(property);
+
+      if (values.length === count) {
+        break;
+      }
+    }
+
+    return values;
   },
 
   /**

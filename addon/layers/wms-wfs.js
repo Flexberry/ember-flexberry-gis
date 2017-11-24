@@ -4,7 +4,6 @@
 
 import Ember from 'ember';
 import WmsLayer from './wms';
-import WfsLayer from './wfs';
 
 /**
   Class describing WMS layer metadata.
@@ -27,9 +26,9 @@ export default WmsLayer.extend({
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'legend']
+    @default ['edit', 'remove', 'identify', 'search', 'legend', 'attributes']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'legend'],
+  operations: ['edit', 'remove', 'identify', 'search', 'legend', 'attributes'],
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -39,7 +38,9 @@ export default WmsLayer.extend({
   */
   createSettings() {
     let settings = this._super(...arguments);
-    let wfsSettings = WfsLayer.create().createSettings();
+    let owner = Ember.getOwner(this);
+    let wfsLayer = owner.lookup('layer:wfs');
+    let wfsSettings = wfsLayer.createSettings();
 
     Ember.set(settings, 'identifySettings', wfsSettings.identifySettings);
     delete wfsSettings.identifySettings;
@@ -62,6 +63,9 @@ export default WmsLayer.extend({
     @returns {Object} New search settings object (with search settings related to layer-type).
   */
   createSearchSettings() {
-    return WfsLayer.create().createSearchSettings();
+    let owner = Ember.getOwner(this);
+    let wfsLayer = owner.lookup('layer:wfs');
+
+    return wfsLayer.createSearchSettings();
   }
 });
