@@ -33,7 +33,8 @@ export default WmsLayerComponent.extend({
     return Ember.RSVP.hash({
       object: innerLayer,
       settings: {
-        readonly: this.get('wfs.readonly')
+        readonly: this.get('wfs.readonly'),
+        localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties')
       }
     });
   },

@@ -118,7 +118,8 @@ export default BaseVectorLayer.extend({
       resolve({
         object: this.get('_leafletObject'),
         settings: {
-          readonly: this.get('readonly') || false
+          readonly: this.get('readonly') || false,
+          localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties')
         }
       });
     });
