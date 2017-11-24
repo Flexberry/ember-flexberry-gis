@@ -70,6 +70,9 @@ export default {
     'settings-tab': {
       'caption': 'Layer settings'
     },
+    'style-settings-tab': {
+      'caption': 'Style settings'
+    },
     'identify-settings-tab': {
       'caption': 'Identification settings'
     },

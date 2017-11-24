@@ -3,25 +3,16 @@
 */
 
 import Ember from 'ember';
-import BaseLayer from './-private/base';
-import GeoJsonFilterParserMixin from 'ember-flexberry-gis/mixins/geojson-filter-parser';
+import GeoJsonFilterParserMixin from '../mixins/geojson-filter-parser';
+import VectorLayer from './-private/vector';
 
 /**
   Class describing GeoJSON layer metadata.
 
   @class GeoJSONLayer
-  @extends BaseLayer
+  @extends VectorLayer
 */
-export default BaseLayer.extend(GeoJsonFilterParserMixin, {
-  /**
-    Permitted operations related to layer type.
-
-    @property operations
-    @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'query', 'filter']
-  */
-  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter'],
-
+export default VectorLayer.extend(GeoJsonFilterParserMixin, {
   /**
     Creates new settings object (with settings related to layer-type).
 
@@ -32,27 +23,11 @@ export default BaseLayer.extend(GeoJsonFilterParserMixin, {
     let settings = this._super(...arguments);
     return Ember.$.extend(settings, {
       pointToLayer: undefined,
-      style: null,
       onEachFeature: null,
       filter: '',
       coordsToLatLng: null,
       geojson: null,
-      url: null,
-      clusterize: false
-    });
-  },
-
-  /**
-    Creates new search settings object (with search settings related to layer-type).
-
-    @method createSearchSettings
-    @returns {Object} New search settings object (with search settings related to layer-type).
-  */
-  createSearchSettings() {
-    let settings = this._super(...arguments);
-    return Ember.$.extend(settings, {
-      queryString: '',
-      maxResultsCount: 10
+      url: null
     });
   }
 });

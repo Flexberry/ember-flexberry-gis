@@ -3,6 +3,7 @@ import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import FlexberryBoundingboxMapLoaderMixin from '../mixins/flexberry-boundingbox-map-loader';
+import VectorLayer from '../layers/-private/vector';
 import layout from '../templates/components/flexberry-edit-layermap';
 import { getBounds } from 'ember-flexberry-gis/utils/get-bounds-from-polygon';
 import {
@@ -188,16 +189,6 @@ export default Ember.Component.extend(
       @default null
     */
     layer: null,
-
-    /**
-      Available modes.
-
-      @property _availableModes
-      @type Object[]
-      @default null
-      @private
-    */
-    _availableModes: null,
 
     /**
       Selected mode.
@@ -436,20 +427,36 @@ export default Ember.Component.extend(
       @readonly
     */
     _displayGroupIsAvailableForType: Ember.computed(
+      '_displaySettingsAreAvailableForType',
       '_identifySettingsAreAvailableForType',
       '_searchSettingsAreAvailableForType',
-      '_displaySettingsAreAvailableForType',
       '_legendSettingsAreAvailableForType',
       '_filterSettingsAreAvailableForType',
+      '_styleSettingsAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
-        return this.get('_identifySettingsAreAvailableForType') ||
+        return this.get('_displaySettingsAreAvailableForType') ||
+          this.get('_identifySettingsAreAvailableForType') ||
           this.get('_searchSettingsAreAvailableForType') ||
-          this.get('_displaySettingsAreAvailableForType') ||
           this.get('_legendSettingsAreAvailableForType') ||
-          this.get('_filterSettingsAreAvailableForType');
+          this.get('_filterSettingsAreAvailableForType') ||
+          this.get('_styleSettingsAreAvailableForType');
       }
     ),
+
+    /**
+      Flag: indicates whether 'display' operation settings are available for the selected layer type.
+
+      @property _displaySettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _displaySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+
+      return Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
+    }),
 
     /**
       Flag: indicates whether 'identify' operation settings are available for the selected layer type.
@@ -461,7 +468,9 @@ export default Ember.Component.extend(
     */
     _identifySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+      let layerClass = Ember.isNone(className) ?
+        null :
+        Ember.getOwner(this).knownForType('layer', className);
 
       return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('identify');
     }),
@@ -476,21 +485,11 @@ export default Ember.Component.extend(
     */
     _searchSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+      let layerClass = Ember.isNone(className) ?
+        null :
+        Ember.getOwner(this).knownForType('layer', className);
 
       return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('search');
-    }),
-
-    /**
-      Flag: indicates whether 'display' operation settings are available for the selected layer type.
-
-      @property _displaySettingsAreAvailableForType
-      @type Boolean
-      @private
-      @readonly
-    */
-    _displaySettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      return true;
     }),
 
     /**
@@ -503,9 +502,46 @@ export default Ember.Component.extend(
     */
     _legendSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
       let className = this.get('_layer.type');
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
+      let layerClass = Ember.isNone(className) ?
+        null :
+        Ember.getOwner(this).knownForType('layer', className);
 
       return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
+    }),
+
+    /**
+      Flag: indicates whether 'filter' operation settings are available for the selected layer type. TODO!
+
+      @property _filterSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _filterSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.isNone(className) ?
+        null :
+        Ember.getOwner(this).knownForType('layer', className);
+
+      return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('filter');
+    }),
+
+    /**
+      Flag: indicates whether 'style' settings are available for the selected layer type.
+
+      @property _styleSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _styleSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+      let layerClass = Ember.isNone(className) ?
+        null :
+        Ember.getOwner(this).knownForType('layer', className);
+
+      // Style settings are available only for vector layers.
+      return !Ember.isNone(layerClass) && layerClass instanceof VectorLayer;
     }),
 
     /**
@@ -537,19 +573,15 @@ export default Ember.Component.extend(
     }),
 
     /**
-      Flag: indicates whether 'filter' operation settings are available for the selected layer type. TODO!
+      Available modes.
+      Initializes in component's 'init' method.
 
-      @property _filterSettingsAreAvailableForType
-      @type Boolean
+      @property _availableModes
+      @type Object[]
+      @default null
       @private
-      @readonly
     */
-    _filterSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-      let className = this.get('_layer.type');
-      let layerClass = Ember.getOwner(this).knownForType('layer', className);
-
-      return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('filter');
-    }),
+    _availableModes: null,
 
     /**
       Available modes captions.
@@ -558,7 +590,7 @@ export default Ember.Component.extend(
       @type String[]
       @readonly
     */
-    _availableModesCaptions: Ember.computed('_availableModes', 'i18n', function () {
+    _availableModesCaptions: Ember.computed('_availableModes', 'i18n.locale', function () {
       let _availableModes = this.get('_availableModes');
 
       let modes = Ember.A();
@@ -887,7 +919,7 @@ export default Ember.Component.extend(
             activeTab: 'main-tab'
           },
           'display-group': {
-            activeTab: 'identify-tab'
+            activeTab: 'display-tab'
           },
           'links-group': {
             activeTab: 'links-tab'
@@ -895,10 +927,12 @@ export default Ember.Component.extend(
         }
       });
 
-      // Available layers types for related dropdown.
       let owner = Ember.getOwner(this);
+
+      // Initialize available layers types for related dropdown.
       this.set('_availableTypes', owner.knownNamesForType('layer'));
 
+      // Initialize available edit modes.
       let availableEditModes = Ember.A();
       let editModesNames = owner.knownNamesForType('edit-mode');
       editModesNames.forEach((modeName) => {
@@ -908,8 +942,8 @@ export default Ember.Component.extend(
           availableEditModes.pushObject(editModeFactory);
         }
       });
-
       this.set('_availableModes', availableEditModes);
+
       this.sendAction('onInit', this.getLayerProperties.bind(this));
     },
 
@@ -923,7 +957,7 @@ export default Ember.Component.extend(
       let layer = this.get('_layer');
 
       // Layer hash to send.
-      let _layerHash = Object.assign({}, layer);
+      let _layerHash = Ember.$.extend(true, {}, layer);
 
       let coordinateReferenceSystem = Ember.get(_layerHash, 'coordinateReferenceSystem');
       coordinateReferenceSystem = Ember.$.isEmptyObject(coordinateReferenceSystem) ? null : JSON.stringify(coordinateReferenceSystem);

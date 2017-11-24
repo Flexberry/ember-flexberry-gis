@@ -3,15 +3,19 @@
 */
 
 import Ember from 'ember';
-import BaseLayer from '../base-layer';
+import BaseVectorLayer from '../base-vector-layer';
 
 /**
   WFS layer component for leaflet map.
-
   @class WfsLayerComponent
-  @extends BaseLayerComponent
+  @extends BaseVectorLayerComponent
  */
-export default BaseLayer.extend({
+export default BaseVectorLayer.extend({
+  /**
+    Array containing component's properties which are also leaflet layer options.
+    @property leafletOptions
+    @type Stirng[]
+  */
   leafletOptions: [
     'url',
     'version',
@@ -28,27 +32,8 @@ export default BaseLayer.extend({
   ],
 
   /**
-    Property flag indicates than result layer will be showed as cluster layer.
-
-    @property clusterize
-    @type Boolean
-    @default false
-   */
-  clusterize: false,
-
-  /**
-    Property contains options for <a href="http://leaflet.github.io/Leaflet.markercluster/#options">L.markerClusterGroup</a>.
-
-    @property clusterOptions
-    @type Object
-    @default null
-    */
-  clusterOptions: null,
-
-  /**
     Returns features read format depending on 'format', 'options.crs', 'options.geometryField'.
     Server responses format will rely on it.
-
     @method getFeaturesReadFormat
     @return {Object} Features read format.
   */
@@ -75,35 +60,21 @@ export default BaseLayer.extend({
 
   /**
     Performs 'getFeature' request to WFS-service related to layer.
-
-    @param {<a href="https://github.com/Flexberry/Leaflet-WFST#initialization-options">L.WFS initialization options</a>} options
-    Options of WFS plugin layer
-    @param bool single
-    Result should be single layer
+    @param {<a href="https://github.com/Flexberry/Leaflet-WFST#initialization-options">L.WFS initialization options</a>} options WFS layer options.
+    @param {Boolean} [single = false] Flag: indicates whether result should be a single layer.
   */
   _getFeature(options, single = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let layer = null;
-      let destroyLayer = () => {
-        if (Ember.isNone(layer)) {
-          return;
-        }
-
-        layer.off('load', onLayerLoad);
-        layer.off('error', onLayerError);
-        layer = null;
-      };
-
-      let onLayerLoad = (e) => {
-
+      options = Ember.$.extend(options || {}, { showExisting: true });
+      this.createVectorLayer(options).then((wfsLayer) => {
         if (single) {
-          resolve(e.target);
+          resolve(wfsLayer);
         } else {
           let features = Ember.A();
 
-          // Instead of injectLeafletLayersIntoGeoJSON to avoid duplicate repropjection,
+          // Instead of injectLeafletLayersIntoGeoJSON to avoid duplicate reprojection,
           // retrieve features from already projected layers & inject layers into retrieved features.
-          e.target.eachLayer((layer) => {
+          wfsLayer.eachLayer((layer) => {
             let feature = layer.feature;
             feature.leafletLayer = layer;
             features.pushObject(feature);
@@ -111,29 +82,14 @@ export default BaseLayer.extend({
 
           resolve(features);
         }
-
-        destroyLayer();
-      };
-
-      let onLayerError = (e) => {
-        reject(e.error || e);
-
-        destroyLayer();
-      };
-
-      options = Ember.$.extend(options || {}, {
-        showExisting: true
+      }).catch((e) => {
+        reject(e);
       });
-
-      layer = this._createWFSLayer(options)
-        .once('load', onLayerLoad)
-        .once('error', onLayerError);
     });
   },
 
   /**
     Returns leaflet layer's bounding box.
-
     @method _getBoundingBox
     @private
     @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
@@ -151,61 +107,82 @@ export default BaseLayer.extend({
     });
   },
 
-  _createWFSLayer(options) {
-    options = Ember.$.extend(true, {}, this.get('options'), options);
-    if (options.filter && !(options.filter instanceof Element)) {
-      let filter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(options.filter);
-      if (filter.toGml) {
-        filter = filter.toGml();
-      }
-
-      options.filter = filter;
-    }
-
-    let featuresReadFormat = this.getFeaturesReadFormat();
-
-    return L.wfst(options, featuresReadFormat);
-  },
-
   /**
-    Creates leaflet layer related to layer type.
-
-    @method createLayer
+    Creates leaflet vector layer related to layer type.
+    @method createVectorLayer
+    @param {Object} options Layer options.
     @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
-  createLayer(options) {
+  createVectorLayer(options) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      if (!this.get('clusterize')) {
-        resolve(this._createWFSLayer(options));
-        return;
+      // Retrieve possibly defined in layer's settings filter.
+      let initialOptions = this.get('options') || {};
+      let initialFilter = Ember.get(initialOptions, 'filter');
+      if (typeof initialFilter === 'string') {
+        initialFilter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(initialFilter);
       }
 
-      let onLayerLoad = (e) => {
-        let wfsLayer = e.target;
+      // Retrieve possibly defined in method options filter.
+      options = options || {};
+      let additionalFilter = Ember.get(options, 'filter');
+      if (typeof additionalFilter === 'string') {
+        additionalFilter = Ember.getOwner(this).lookup('layer:wfs').parseFilter(additionalFilter);
+      }
 
-        let cluster = L.markerClusterGroup(this.get('clusterOptions'));
-        cluster.addLayer(wfsLayer);
+      // Try to combine filters or choose one which is defined.
+      let resultingFilter = null;
+      if (initialFilter && additionalFilter) {
+        resultingFilter = new L.Filter.And(initialFilter, additionalFilter).toGml();
+      } else if (initialFilter) {
+        resultingFilter = initialFilter.toGml();
+      } else if (additionalFilter) {
+        resultingFilter = additionalFilter.toGml();
+      }
 
-        // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
-        cluster.readFormat = Ember.get(wfsLayer, 'readFormat');
+      // Combine options defined in layer's settings with options defined in method, and with resulting filter option.
+      options = Ember.$.extend(true, {}, initialOptions, options, { filter: resultingFilter });
 
-        resolve(cluster);
-      };
-
-      let onLayerError = (e) => {
-        reject(e);
-      };
-
-      this._createWFSLayer(options)
-        .once('load', onLayerLoad)
-        .once('error', onLayerError);
+      let featuresReadFormat = this.getFeaturesReadFormat();
+      L.wfst(options, featuresReadFormat)
+        .once('load', (e) => {
+          let wfsLayer = e.target;
+          resolve(wfsLayer);
+        })
+        .once('error', (e) => {
+          reject(e.error || e);
+        });
     });
   },
 
   /**
-    Handles 'flexberry-map:identify' event of leaflet map.
+    Clusterizes created vector layer if 'clusterize' option is enabled.
+    @method createClusterLayer
+    @param {<a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>} vectorLayer Vector layer which must be clusterized.
+    @return {<a href="https://github.com/Leaflet/Leaflet.markercluster/blob/master/src/MarkerClusterGroup.js">L.MarkerClusterGroup</a>} Clusterized vector layer.
+  */
+  createClusterLayer(vectorLayer) {
+    let clusterLayer = this._super(...arguments);
 
+    // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
+    clusterLayer.readFormat = Ember.get(vectorLayer, 'readFormat');
+
+    return clusterLayer;
+  },
+
+  /**
+    Creates leaflet layer related to layer type.
+    @method createLayer
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    Leaflet layer or promise returning such layer.
+  */
+  createLayer() {
+    // Base logic from 'base-vector-layer' 'createLayer' method is enough.
+    return this._super(...arguments);
+  },
+
+  /**
+    Handles 'flexberry-map:identify' event of leaflet map.
     @method identify
     @param {Object} e Event object.
     @param {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>} polygonLayer Polygon layer related to given area.
@@ -219,16 +196,13 @@ export default BaseLayer.extend({
   identify(e) {
     let filter = new L.Filter.Intersects(this.get('geometryField'), e.polygonLayer, this.get('crs'));
 
-    let featuresPromise = this._getFeature({
+    return this._getFeature({
       filter
     });
-
-    return featuresPromise;
   },
 
   /**
     Handles 'flexberry-map:search' event of leaflet map.
-
     @method search
     @param {Object} e Event object.
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
@@ -239,9 +213,8 @@ export default BaseLayer.extend({
     or a promise returning such array.
   */
   search(e) {
-    let searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
-
     let searchFields;
+    let searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
 
     // If exact field is specified in search options - use it only.
     let propertyName = e.searchOptions.propertyName;
@@ -286,7 +259,6 @@ export default BaseLayer.extend({
 
   /**
     Handles 'flexberry-map:query' event of leaflet map.
-
     @method _query
     @param {Object[]} layerLinks Array containing metadata for query
     @param {Object} e Event object.

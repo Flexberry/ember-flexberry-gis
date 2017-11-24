@@ -24,6 +24,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   _editTools: null,
 
+  _activeTabs: {},
+
   /**
     Computed property that builds tab models collection from items.
 
@@ -258,6 +260,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       if (selectedTabIndex >= index && selectedTabIndex - 1 >= 0) {
         this.set('selectedTabIndex', selectedTabIndex - 1);
       }
+    },
+
+    onTabClick(tabModelName, e) {
+      e = Ember.$.event.fix(e);
+      let clickedTabName = Ember.$(e.currentTarget).attr('data-tab');
+
+      Ember.set(this, `_activeTabs.${tabModelName}`, clickedTabName);
     },
 
     /**
@@ -507,7 +516,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(layer, 'feature', { type: 'Feature' });
       Ember.set(layer.feature, 'properties', data);
       Ember.set(layer.feature, 'leafletLayer', layer);
-      layer.setStyle(Ember.get(tabModel, 'leafletObject.options.style'));
+      if (typeof (layer.setStyle) === 'function') {
+        layer.setStyle(Ember.get(tabModel, 'leafletObject.options.style'));
+      }
+
       tabModel.leafletObject.addLayer(layer);
       layer.disableEdit();
 
@@ -585,6 +597,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @param {Object} addedLayer Newly added layer.
   */
   _showNewRowDialog(tabModel, addedLayer) {
+    if (Ember.isNone(addedLayer)) {
+      return;
+    }
+
     let fields = Ember.get(tabModel, 'leafletObject.readFormat.featureType.fields');
     let data = Object.keys(fields).reduce((result, item) => {
       result[item] = null;
