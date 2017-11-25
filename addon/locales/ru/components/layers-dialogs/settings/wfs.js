@@ -40,5 +40,11 @@ export default {
   },
   'clusterize': {
     'caption': 'Кластеризовать'
+  },
+  'readonly': {
+    'caption': 'Только чтение'
+  },
+  'forceMulti': {
+    'caption': 'Создавать многоконтурные геометрии'
   }
 };
