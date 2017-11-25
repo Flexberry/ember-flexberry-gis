@@ -43,5 +43,8 @@ export default {
   },
   'readonly': {
     'caption': 'Только чтение'
+  },
+  'forceMulti': {
+    'caption': 'Создавать многоконтурные геометрии'
   }
 };
