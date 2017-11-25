@@ -11,9 +11,9 @@
   hide=(action "onHide")
 }}
   <form class="ui form {{flexberryClassNames.form}}" role="form">
-    {{#each-in fieldNames as |fieldName|}}
+    {{#each-in fieldNames as |fieldName fieldValue|}}
       <div class="field {{if (get parsingErrors fieldName) "error" ""}}">
-        <label>{{fieldName}}</label>
+        <label>{{fieldValue}}</label>
         {{#if (eq (get fieldTypes fieldName) "date")}}
           {{flexberry-datepicker
             value=(mut (get data fieldName))

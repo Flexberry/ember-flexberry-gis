@@ -20,6 +20,7 @@ import FlexberryMapInfoComponent from './components/flexberry-mapinfo';
 import FlexberryBoundingboxComponent from './components/flexberry-boundingbox';
 import FlexberryLayersAttributesPanel from './components/flexberry-layers-attributes-panel';
 import FlexberryEditCrsComponent from './components/flexberry-edit-crs';
+import GeometryAddModes from './components/geometry-add-modes';
 
 import LayersStyles from './layers-styles';
 import LayersStylesEditorComponent from './components/layers-styles-editor';
@@ -32,6 +33,7 @@ import MarkersStylesComponents from './components/markers-styles';
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
 import GISSearchForm from './forms/gis-search-form';
+import Charts from './components/charts';
 
 export default {
   'models': {
@@ -156,8 +158,12 @@ export default {
 
     'flexberry-boundingbox': FlexberryBoundingboxComponent,
 
+    'charts': Charts,
+
     'flexberry-layers-attributes-panel': FlexberryLayersAttributesPanel,
-    'flexberry-edit-crs': FlexberryEditCrsComponent
+    'flexberry-edit-crs': FlexberryEditCrsComponent,
+
+    'geometry-add-modes': GeometryAddModes,
   },
 
   'map-tools': {

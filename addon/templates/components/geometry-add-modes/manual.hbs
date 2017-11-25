@@ -1,5 +1,5 @@
 {{flexberry-button
-  tooltip="Add with coordinates"
+  tooltip=menuButtonTooltip
   click=(action "onButtonClick")
   iconClass="flexberry-map-command-icon location arrow icon"
 }}
@@ -10,9 +10,9 @@
 --}}
 {{#if _dialogHasBeenRequested}}
   {{#flexberry-dialog class=flexberryClassNames.dialog
-    caption="Add with coordinates"
-    approveButtonCaption="Ok"
-    denyButtonCaption="Cancel"
+    caption=menuButtonTooltip
+    approveButtonCaption=dialogApproveButtonCaption
+    denyButtonCaption=dialogDenyButtonCaption
     visible=_dialogVisible
     approve=(action "onApprove")
     deny=(action "onDeny")
@@ -21,23 +21,23 @@
     {{!-- currently disabled --}}
     <div class="field disabled">
       {{flexberry-edit-crs
-        crsCaption="Coordinate reference system"
+        crsCaption=crsFieldLabel
         coordinateReferenceSystem=settings.layerCRS
       }}
     </div>
     {{!-- currently disabled --}}
     <div class="field disabled">
-      <label>Geometry type</label>
+      <label>{{geometryFieldLabel}}</label>
       {{flexberry-dropdown
         items=settings.drawTools
         value="polygon"
       }}
     </div>
     <div class="field {{if _coordinatesWithError "error" ""}}">
-      <label>Coordinates to add</label>
+      <label>{{coordinatesFieldLabel}}</label>
       {{flexberry-textarea
         value=_coordinates
-        placeholder='Enter coordinates...'
+        placeholder=coordinatesFieldPlaceholder
       }}
     </div>
   </form>

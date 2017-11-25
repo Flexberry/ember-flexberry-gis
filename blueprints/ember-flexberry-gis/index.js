@@ -116,6 +116,12 @@ module.exports = {
       {
         name: 'leaflet-omnivore',
         target: '0.3.3'
+      },
+
+      // Load highcharts
+      {
+        name: 'highcharts',
+        target: '6.0.1'
       }
     ]).then(function () {
       return _this.addAddonsToProject({

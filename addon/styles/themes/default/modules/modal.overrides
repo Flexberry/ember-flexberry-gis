@@ -334,17 +334,30 @@
   .flexberry-dialog-content.content {
     min-height: 400px;
   }
+
+  .flexberry-boundingbox {
+    .flexberry-map {
+      max-height: 300px;
+    }
+  }
 }
 
 .ui.modal.flexberry-add-layer-dialog,
 .ui.modal.flexberry-edit-layer-dialog,
 .ui.modal.flexberry-edit-map-dialog,
 .ui.modal.flexberry-edit-layer-attributes-dialog,
-.ui.modal.flexberry-geometry-add-mode-manual-dialog,
-.ui.modal.flexberry-geometry-add-mode-geoprovider-dialog {
+.ui.modal.flexberry-geometry-add-mode-manual-dialog {
   &> .flexberry-dialog-content.content {
     // Same as dialog content's max-height in Semantic UI.
     height: 400px;
+    overflow: hidden !important;
+  }
+}
+
+.ui.modal.flexberry-geometry-add-mode-geoprovider-dialog {
+  &> .flexberry-dialog-content.content {
+    // Same as dialog content's max-height in Semantic UI.
+    height: 470px;
     overflow: hidden !important;
   }
 }
@@ -409,6 +422,22 @@ form.flexberry-geometry-add-mode-geoprovider-form {
     .flexberry-jsonarea {
       margin-top: 0px;
       margin-bottom: 0px;
+    }
+  }
+}
+
+form.flexberry-geometry-add-mode-geoprovider-form {
+  table.ui.table {
+    margin-top: 10px;
+    font-size: 12px;
+
+    th.narrow, td.narrow {
+      width: 80px;
+    }
+  }
+  .field.error {
+    table.ui.table {
+      border-color: @erroneousFieldColor;
     }
   }
 }

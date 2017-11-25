@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/geometry-add-modes/manual';
+import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -89,6 +90,20 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
   */
   _coordinatesWithError: false,
 
+  menuButtonTooltip: t('components.geometry-add-modes.manual.menu-button-tooltip'),
+
+  dialogApproveButtonCaption: t('components.geometry-add-modes.manual.dialog-approve-button-caption'),
+
+  dialogDenyButtonCaption: t('components.geometry-add-modes.manual.dialog-deny-button-caption'),
+
+  crsFieldLabel: t('components.geometry-add-modes.manual.crs-field-label'),
+
+  geometryFieldLabel: t('components.geometry-add-modes.manual.geometry-field-label'),
+
+  coordinatesFieldLabel: t('components.geometry-add-modes.manual.coordinates-field-label'),
+
+  coordinatesFieldPlaceholder: t('components.geometry-add-modes.manual.coordinates-field-placeholder'),
+
   actions: {
     /**
       Handles button click.
@@ -118,7 +133,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
       this.set('_coordinates', null);
       this.set('_coordinatesWithError', null);
 
-      this.sendAction('complete', addedLayer);
+      this.sendAction('complete', addedLayer, { panToAddedObject: true });
     },
 
     /**
@@ -170,6 +185,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
 
     @method sendingActions.complete
     @param {Object} addedLayer Added layer.
+    @param {Object} options Actions options.
+    @param {Boolean} options.panToAddedObject Flag indicating wheter to pan to added object.
   */
 });
 

@@ -400,6 +400,21 @@
     .ui.tab {
       padding: 10px;
       color: @darkbluecolor;
+      &.bottompanel-tab-data-panel {
+        padding: 0px;
+        .layers-attributes-tab-container {
+          overflow: visible;
+          .layers-attributes-grid {
+            margin: 0px;
+            & > .column {
+              padding: 0px;
+              & > .vertical.tabular.menu {
+                height: 100%;
+              }
+            }
+          }
+        }
+      }
     }
 
     &.folded {
@@ -440,7 +455,12 @@
 
     &.ui.attached:not(.top) {
       border: none;
-      border-top: 1px solid @dataPanelBorderColor;
+      &:not(.layers-attributes-segment) {
+        border-top: 1px solid @dataPanelBorderColor;
+      }
+      &.layers-attributes-segment {
+        overflow: visible;
+      }
     }
 
     .ui.table td, th {
