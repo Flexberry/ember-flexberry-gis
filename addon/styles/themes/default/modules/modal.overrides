@@ -365,6 +365,11 @@
             max-height: 250px;
           }
         }
+
+        .field {
+          width: 100%;
+          padding: 10px;
+        }
       }
     }
   }

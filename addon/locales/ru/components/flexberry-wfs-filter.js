@@ -22,6 +22,7 @@ export default {
     'clear': 'Очистить'
   },
   'geometry-filters': {
-    'caption': 'Пространственные фильтры'
+    'caption': 'Пространственные фильтры',
+    'geometry-field': 'Поле геометрии'
   },
 };

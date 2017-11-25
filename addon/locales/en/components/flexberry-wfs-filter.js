@@ -22,6 +22,7 @@ export default {
     'clear': 'Clear'
   },
   'geometry-filters': {
-    'caption': 'Geometry filters'
+    'caption': 'Geometry filters',
+    'geometry-field': 'Geometry field'
   },
 };

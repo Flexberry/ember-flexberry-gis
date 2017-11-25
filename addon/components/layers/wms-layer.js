@@ -16,7 +16,7 @@ export default TileLayer.extend({
     'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
     'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
     'zoomOffset', 'zoomReverse', 'opacity', 'zIndex', 'unloadInvisibleTiles',
-    'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds',
+    'updateWhenIdle', 'detectRetina', 'reuseTiles', 'bounds', 'filter',
     'layers', 'styles', 'format', 'transparent', 'version', 'crs', 'info_format', 'tiled'
   ],
 
@@ -80,7 +80,19 @@ export default TileLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
-    return L.tileLayer.wms(this.get('url'), this.get('options'));
+    let options = this.get('options') || {};
+    let filter = Ember.get(options, 'filter');
+    if (typeof filter === 'string') {
+      filter = Ember.getOwner(this).lookup('layer:wms').parseFilter(filter);
+    }
+
+    if (!Ember.isBlank(filter) && filter.toGml) {
+      filter = filter.toGml();
+    }
+
+    options = Ember.$.extend(true, {}, options, { filter: filter });
+
+    return L.tileLayer.wms(this.get('url'), options);
   },
 
   /**

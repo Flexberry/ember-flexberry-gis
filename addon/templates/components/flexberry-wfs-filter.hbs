@@ -138,6 +138,17 @@
     <div class="content">
       <div class="ui celled grid">
         <div class="row">
+          <div class="field">
+            <label>
+              {{t "components.flexberry-wfs-filter.geometry-filters.geometry-field"}}
+            </label>
+            {{flexberry-textbox
+              class="fluid"
+              value=geometryField
+            }}
+          </div>
+        </div>
+        <div class="row">
           {{#if boundingBoxComponentMap}}
             <div class = "fourteen wide column">
               {{flexberry-boundingbox
