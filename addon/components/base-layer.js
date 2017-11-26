@@ -193,6 +193,7 @@ export default Ember.Component.extend(
         leafletLayer
       }) => {
         this.set('_leafletObject', leafletLayer);
+
         if (Ember.isPresent(this.get('layerModel'))) {
           Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
           let _this = this;
@@ -245,7 +246,8 @@ export default Ember.Component.extend(
           object: this.get('_leafletObject'),
           settings: {
             readonly: true,
-            localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties')
+            localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties'),
+            excludedProperties: this.get('displaySettings.featuresPropertiesSettings.excludedProperties'),
           }
         });
       });

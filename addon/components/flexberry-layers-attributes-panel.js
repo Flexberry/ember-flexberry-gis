@@ -34,7 +34,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @private
     @readonly
   */
-  _tabModels: Ember.computed('items.[]', function () {
+  _tabModels: Ember.computed('items.[]', 'i18n.locale', function () {
     let editedLayers = this.get('items');
     if (Ember.isPresent(editedLayers)) {
       if (editedLayers.length === 1) {
@@ -52,17 +52,23 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let readonly = Ember.get(item, 'settings.readonly') || false;
 
         let getHeader = () => {
-          if (!Ember.isNone(Ember.get(item, 'settings.localizedProperties'))) {
-            let locale = this.get('i18n.locale');
-            return Ember.get(item, `settings.localizedProperties.${locale}`);
-          } else {
-            let result = {};
-            for (let p in Ember.get(leafletObject, 'readFormat.featureType.fields')) {
-              result[p] = p;
+          let result = {};
+          let locale = this.get('i18n.locale');
+          let localizedProperties = Ember.get(item, `settings.localizedProperties.${locale}`) || {};
+          let excludedProperties = Ember.get(item, `settings.excludedProperties`);
+          excludedProperties = Ember.isArray(excludedProperties) ? Ember.A(excludedProperties) : Ember.A();
+
+          for (let propertyName in Ember.get(leafletObject, 'readFormat.featureType.fields')) {
+            if (excludedProperties.contains(propertyName)) {
+              continue;
             }
 
-            return result;
+            let propertyCaption = Ember.get(localizedProperties, propertyName);
+
+            result[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
           }
+
+          return result;
         };
 
         let availableDrawTools = null;

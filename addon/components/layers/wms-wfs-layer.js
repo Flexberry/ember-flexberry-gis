@@ -28,14 +28,22 @@ export default WmsLayerComponent.extend({
     @private
   */
   _getAttributesOptions() {
-    let options = Ember.$.extend(this.get('_wfsLayer.options') || {}, { showExisting: true });
-    let innerLayer = this.get('_wfsLayer').createVectorLayer(options);
-    return Ember.RSVP.hash({
-      object: innerLayer,
-      settings: {
-        readonly: this.get('wfs.readonly'),
-        localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties')
-      }
+    let resultingAttribitesOptions;
+
+    return this._super(...arguments).then((attribitesOptions) => {
+      resultingAttribitesOptions = attribitesOptions;
+
+      return attribitesOptions;
+    }).then((attribitesOptions) => {
+      let options = Ember.$.extend(this.get('_wfsLayer.options') || {}, { showExisting: true, clusterize: false });
+      let wfsLayer = this.get('_wfsLayer').createVectorLayer(options);
+
+      return wfsLayer;
+    }).then((wfsLayer) => {
+      Ember.set(resultingAttribitesOptions, 'object', wfsLayer);
+      Ember.set(resultingAttribitesOptions, 'settings.readonly', this.get('wfs.readonly'));
+
+      return resultingAttribitesOptions;
     });
   },
 

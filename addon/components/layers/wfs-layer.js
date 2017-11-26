@@ -115,14 +115,10 @@ export default BaseVectorLayer.extend({
     @private
   */
   _getAttributesOptions() {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      resolve({
-        object: this.get('_leafletObject'),
-        settings: {
-          readonly: this.get('readonly') || false,
-          localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties')
-        }
-      });
+    return this._super(...arguments).then((attribitesOptions) => {
+      Ember.set(attribitesOptions, 'settings.readonly', this.get('readonly') || false);
+
+      return attribitesOptions;
     });
   },
 
@@ -172,21 +168,6 @@ export default BaseVectorLayer.extend({
           reject(e.error || e);
         });
     });
-  },
-
-  /**
-    Clusterizes created vector layer if 'clusterize' option is enabled.
-    @method createClusterLayer
-    @param {<a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>} vectorLayer Vector layer which must be clusterized.
-    @return {<a href="https://github.com/Leaflet/Leaflet.markercluster/blob/master/src/MarkerClusterGroup.js">L.MarkerClusterGroup</a>} Clusterized vector layer.
-  */
-  createClusterLayer(vectorLayer) {
-    let clusterLayer = this._super(...arguments);
-
-    // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
-    clusterLayer.readFormat = Ember.get(vectorLayer, 'readFormat');
-
-    return clusterLayer;
   },
 
   /**
