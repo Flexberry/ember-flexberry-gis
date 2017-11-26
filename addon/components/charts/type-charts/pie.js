@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../../templates/components/charts/type-charts/pie';
-import BaseChartType from './base-chart-type';
+import BaseChartType from '../base-chart-type';
 
 /**
   Component for type chart pie.
@@ -31,12 +31,11 @@ export default BaseChartType.extend({
     let propName = this.get('_valueName');
     let propVal = this.get('_valueValues');
 
-    for (var i in isObject)
-    {
+    isObject.forEach(obj => {
       let dsCopy = Ember.A([]);
-      dsCopy.push(isObject[i][propName], parseFloat(isObject[i][propVal]));
+      dsCopy.push(obj[propName], parseFloat(obj[propVal]));
       dataSeries.push(dsCopy);
-    }
+    });
 
     let chart = {
       plotBackgroundColor: null,

@@ -23,7 +23,7 @@ export default Ember.Component.extend({
   _activeTab: 'path-tab',
 
   /**
-    Reference to 'layers-styles-renderer' servie.
+    Reference to 'layers-styles-renderer' service.
 
     @property _layersStylesRenderer
     @type LayersStylesRendererService
@@ -32,13 +32,33 @@ export default Ember.Component.extend({
   _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
 
   /**
-    Reference to 'markers-styles-renderer' servie.
+    Reference to 'markers-styles-renderer' service.
 
     @property _markersStylesRenderer
     @type MarkersStylesRendererService
     @private
   */
   _markersStylesRenderer: Ember.inject.service('markers-styles-renderer'),
+
+  /**
+    Path stytle settings preview canvas.
+
+    @property _$pathPreviewCanvas
+    @type <a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>
+    @default null
+    @private
+  */
+  _pathPreviewCanvas: null,
+
+  /**
+    Marker stytle settings preview canvas.
+
+    @property _$markerPreviewCanvas
+    @type <a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>
+    @default null
+    @private
+  */
+  _markerPreviewCanvas: null,
 
   /**
     Reference to component's template.
@@ -64,17 +84,47 @@ export default Ember.Component.extend({
   styleSettings: null,
 
   /**
+    Renderes path style settings preview on canvas.
+
+    @method _renderPathPreviewOnCanvas
+    @private
+  */
+  _renderPathPreviewOnCanvas() {
+    this.get('_layersStylesRenderer').renderOnCanvas({
+      canvas: this.get('_pathPreviewCanvas'),
+      styleSettings: this.get('styleSettings'),
+      target: 'preview'
+    });
+  },
+
+  /**
+    Renderes marker style settings preview on canvas.
+
+    @method _renderMarkerPreviewOnCanvas
+    @private
+  */
+  _renderMarkerPreviewOnCanvas() {
+    this.get('_markersStylesRenderer').renderOnCanvas({
+      canvas: this.get('_markerPreviewCanvas'),
+      styleSettings: this.get('styleSettings.style.marker'),
+      target: 'preview'
+    });
+  },
+
+  /**
     Initializes DOM-related component's properties.
   */
   didInsertElement() {
     this._super(...arguments);
 
-    // TODO: Rerender on each change in styleSettings nested properties.
     let pathPreviewCanvas = this.$('.ui.tab.segment[data-tab=path-tab] canvas')[0];
-    this.get('_layersStylesRenderer').renderOnCanvas({ canvas: pathPreviewCanvas, styleSettings: this.get('styleSettings') });
+    this.set('_pathPreviewCanvas', pathPreviewCanvas);
 
     let markerPreviewCanvas = this.$('.ui.tab.segment[data-tab=marker-tab] canvas')[0];
-    this.get('_markersStylesRenderer').renderOnCanvas({ canvas: markerPreviewCanvas, style: this.get('styleSettings.style.marker') });
+    this.set('_markerPreviewCanvas', markerPreviewCanvas);
+
+    this._renderPathPreviewOnCanvas();
+    this._renderMarkerPreviewOnCanvas();
   },
 
   /**
@@ -82,6 +132,9 @@ export default Ember.Component.extend({
   */
   willDestroyElement() {
     this._super(...arguments);
+
+    this.set('_pathPreviewCanvas', null);
+    this.set('_markerPreviewCanvas', null);
   },
 
   actions: {
@@ -98,6 +151,24 @@ export default Ember.Component.extend({
       let clickedTabName = $clickedTab.attr('data-tab');
 
       this.set('_activeTab', clickedTabName);
+    },
+
+    /**
+      Handles changes in path style settings.
+
+      @method actions.onPathStyleSettingsChange
+    */
+    onPathStyleSettingsChange() {
+      this._renderPathPreviewOnCanvas();
+    },
+
+    /**
+      Handles changes in marker style settings.
+
+      @method actions.onMarkerStyleSettingsChange
+    */
+    onMarkerStyleSettingsChange() {
+      this._renderMarkerPreviewOnCanvas();
     }
   }
 });

@@ -1,0 +1,18 @@
+<input type="hidden" name="stroke-linecap">
+<div class="text">
+</div>
+<i class="dropdown icon"></i>
+<div class="menu">
+  {{#each _availableLineCaps as |lineCap|}}
+    <div class="item" data-value="{{lineCap}}">
+      <svg width="40" height="40" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <polyline stroke-linecap="{{lineCap}}"
+                  points="10,22 30,22"
+                  stroke="{{strokeColor}}"
+                  stroke-width="20"
+                  fill="none"/>
+        <path d="M10,22 30,22" stroke="#ffffff" fill="none"/>
+      </svg>
+    </div>
+  {{/each}}
+</div>

@@ -124,8 +124,11 @@ export default Ember.Service.extend({
     @param {Object} options Method options.
     @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which layer-style preview must be rendered.
     @param {Object} options.styleSettings Hash containing style settings.
+    @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, styleSettings }) {
+  renderOnCanvas({ canvas, styleSettings, target }) {
+    target = target || 'preview';
+
     let type = Ember.get(styleSettings, 'type');
     let style = Ember.get(styleSettings, 'style');
 
@@ -135,6 +138,6 @@ export default Ember.Service.extend({
       return;
     }
 
-    layerStyle.renderOnCanvas({ canvas, style });
+    layerStyle.renderOnCanvas({ canvas, style, target });
   }
 });

@@ -39,8 +39,9 @@ export default Ember.Object.extend({
     @param {Object} options Method options.
     @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which layer-style preview must be rendered.
     @param {Object} options.style Hash containing style settings.
+    @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style }) {
+  renderOnCanvas({ canvas, style, target }) {
     throw `Method 'renderOnCanvas' isn't implemented in 'base' layer-style`;
   }
 });
