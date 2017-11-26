@@ -27,6 +27,14 @@ export default Ember.Mixin.create({
   mapModelName: 'new-platform-flexberry-g-i-s-map',
 
   /**
+    Map id for boundingbox component.
+    @property boundingBoxComponentMapId
+    @type String
+    @default undefined
+  */
+  boundingBoxComponentMapId: undefined,
+
+  /**
     Gets map model to be displayed in `flexberry-boundingbox` component.
 
     @method getBoundingBoxComponentMapModel
@@ -34,7 +42,7 @@ export default Ember.Mixin.create({
   */
   getBoundingBoxComponentMapModel() {
     let config = Ember.getOwner(this).factoryFor('config:environment').class;
-    let mapId = Ember.get(config, 'APP.components.flexberryBoundingbox.mapId');
+    let mapId = this.get('boundingBoxComponentMapId') || Ember.get(config, 'APP.components.flexberryBoundingbox.mapId');
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (Ember.isBlank(mapId)) {
         resolve(this.getDefaultBoundingBoxComponentMapModel());

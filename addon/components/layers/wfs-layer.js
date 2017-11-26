@@ -28,7 +28,8 @@ export default BaseVectorLayer.extend({
     'maxFeatures',
     'showExisting',
     'style',
-    'filter'
+    'filter',
+    'forceMulti'
   ],
 
   /**
@@ -104,6 +105,24 @@ export default BaseVectorLayer.extend({
           reject(errorThrown);
         }
       );
+    });
+  },
+
+  /**
+    Returns promise with the layer properties object.
+
+    @method _getAttributesOptions
+    @private
+  */
+  _getAttributesOptions() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      resolve({
+        object: this.get('_leafletObject'),
+        settings: {
+          readonly: this.get('readonly') || false,
+          localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties')
+        }
+      });
     });
   },
 

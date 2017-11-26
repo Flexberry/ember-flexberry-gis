@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
 import BaseMarkerStyle from './-private/base';
 
 /**
@@ -11,6 +12,15 @@ import BaseMarkerStyle from './-private/base';
   @extends BaseMarkerStyle
 */
 export default BaseMarkerStyle.extend({
+  /**
+    Reference to 'markers-styles-renderer' service.
+
+    @property _markersStylesRenderer
+    @type MarkersStylesRendererService
+    @private
+  */
+  _markersStylesRenderer: Ember.inject.service('markers-styles-renderer'),
+
   /**
     Gets default style settings.
 
@@ -40,12 +50,13 @@ export default BaseMarkerStyle.extend({
     @param {Object} options Method options.
     @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which marker-style preview must be rendered.
     @param {Object} options.style Hash containing style settings.
+    @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style }) {
-    let context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.font = '24px Verdana';
-    context.strokeStyle = 'red';
-    context.strokeText('Default marker preview', 10, 20);
+  renderOnCanvas({ canvas, style, target }) {
+    // Default 'image' markers-style's settings are settings for leaflet default image icon (L.Icon.Default),
+    // so we can reuse 'image' markers-style here.
+    let markersStylesRenderer = this.get('_markersStylesRenderer');
+    let defaultMarkerStyleSettings = markersStylesRenderer.getDefaultStyleSettings('image');
+    markersStylesRenderer.renderOnCanvas({ canvas, styleSettings: defaultMarkerStyleSettings, target });
   }
 });

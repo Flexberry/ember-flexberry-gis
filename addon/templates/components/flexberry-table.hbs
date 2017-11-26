@@ -7,6 +7,7 @@
 {{#yield-slot "head-block"}}
   {{yield}}
 {{/yield-slot}}
+
 <table class={{concat "ui celled table flexberry-table" (if allowEdit " flexberry-table-fixed" "") (if model "" " flexberry-table-no-model")}}>
   <thead>
     <tr>

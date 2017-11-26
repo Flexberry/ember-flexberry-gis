@@ -248,14 +248,14 @@ export default Ember.Mixin.create({
     onAttributesEdit(layerPath, { itemsPath, selectedTabIndexPath, foldedPath }) {
       let layerModel = getRecord(this, layerPath);
       let name = Ember.get(layerModel, 'name');
-      let getAttributesObject = Ember.get(layerModel, '_attributesObject');
-      getAttributesObject().then((attributesObject) => {
+      let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
+      getAttributesOptions().then(({ object, settings }) => {
         let items = this.get(itemsPath) || Ember.A();
         let index = items.findIndex((item) => Ember.isEqual(item.name, name));
         if (index >= 0) {
           this.set(selectedTabIndexPath, index);
         } else {
-          items.addObject({ name: name, leafletObject: attributesObject });
+          items.addObject({ name: name, leafletObject: object, settings });
           this.set(itemsPath, items);
           this.set(selectedTabIndexPath, items.length - 1);
         }

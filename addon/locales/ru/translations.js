@@ -20,6 +20,7 @@ import FlexberryMapInfoComponent from './components/flexberry-mapinfo';
 import FlexberryBoundingboxComponent from './components/flexberry-boundingbox';
 import FlexberryLayersAttributesPanel from './components/flexberry-layers-attributes-panel';
 import FlexberryEditCrsComponent from './components/flexberry-edit-crs';
+import FlexberryWfsFilterComponent from './components/flexberry-wfs-filter';
 import GeometryAddModes from './components/geometry-add-modes';
 
 import LayersStyles from './layers-styles';
@@ -131,30 +132,7 @@ export default {
 
     'flexberry-mapinfo': FlexberryMapInfoComponent,
 
-    'flexberry-wfs-filter': {
-      'caption': 'Фильтры WFS-слоя',
-      'settings-not-set': 'Настройки не заданы',
-      'null-value': 'NULL',
-      'fields': 'Поля',
-      'values': 'Значения',
-      'operators': 'Операторы',
-      'filter-ok': 'OK',
-      'filter-error': 'Error',
-      'no-fields': 'Поля не загружены',
-      'no-values': 'Значения не загружены',
-      'buttons': {
-        'in': 'В',
-        'not-in': 'НЕ В',
-        'and': 'И',
-        'or': 'ИЛИ',
-        'not': 'НЕ',
-        'example': 'Образец',
-        'all': 'Все',
-        'apply': 'Применить',
-        'check': 'Проверить',
-        'clear': 'Очистить'
-      },
-    },
+    'flexberry-wfs-filter': FlexberryWfsFilterComponent,
 
     'flexberry-boundingbox': FlexberryBoundingboxComponent,
 

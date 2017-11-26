@@ -112,5 +112,33 @@ export default Ember.Mixin.create({
       case 'not':
         return `!(${properties[0]})`;
     }
-  }
+  },
+
+  /**
+    Parse filter geometry expression.
+    ('IN', 'NOT IN').
+
+    @method parseFilterGeometryExpression
+    @param {String} condition Filter condition
+    @param {Object} geoJSON Geometry
+    @returns {Object} Filter object
+  */
+  parseFilterGeometryExpression(condition, geoJSON) {
+    /*let bboxPolygon = `{type: 'Polygon', coordinates: [[[${coords.minLng}, ${coords.minLat}], [${coords.maxLng}, ` +
+      `${coords.minLat}], [${coords.maxLng}, ${coords.maxLat}], [${coords.minLng}, ${coords.maxLat}], [${coords.minLng}, ${coords.minLat}]]] }`;
+    let filter = `new Terraformer.Primitive(feature.geometry).within(${bboxPolygon})`;
+    switch (condition) {
+      case 'in':
+        return filter;
+      case 'not in':
+        return `!${filter}`;
+    }*/
+
+    /*
+      Geometry filters for geojson layers isn't implemented yet.
+      Terraformer's within/intersects methods aren't working with all geometry types
+      (for example with GeometryCollection).
+    */
+    return 'true';
+  },
 });

@@ -72,7 +72,7 @@ export default BaseLayerStyle.extend({
     @param {Object} options.style Hash containing style settings.
   */
   _renderOnLeafletMarker({ marker, style }) {
-    this.get('markersStylesRenderer').renderOnLeafletMarker({ marker, style: style.marker });
+    this.get('markersStylesRenderer').renderOnLeafletMarker({ marker, styleSettings: style.marker });
   },
 
   /**
@@ -101,20 +101,17 @@ export default BaseLayerStyle.extend({
 
         // A string that defines the stroke [dash pattern](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dasharray).
         // Doesn't work on `Canvas`-powered layers in [some old browsers](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility).
-        dashArray: null,
+        dashArray: '',
 
         // A string that defines the [distance into the dash pattern to start the dash](https://developer.mozilla.org/docs/Web/SVG/Attribute/stroke-dashoffset).
         // Doesn't work on `Canvas`-powered layers in [some old browsers](https://developer.mozilla.org/docs/Web/API/CanvasRenderingContext2D/setLineDash#Browser_compatibility).
-        dashOffset: null,
+        dashOffset: 0,
 
         // Whether to fill the path with color.
         fill: true,
 
         // Fill color.
-        fillColor: '#3388ff',
-
-        // A string that defines [how the inside of a shape](https://developer.mozilla.org/docs/Web/SVG/Attribute/fill-rule) is determined.
-        fillRule: 'evenodd'
+        fillColor: '#3388ff'
       },
       marker: this.get('markersStylesRenderer').getDefaultStyleSettings('default')
     };
@@ -140,12 +137,161 @@ export default BaseLayerStyle.extend({
     @param {Object} options Method options.
     @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which layer-style preview must be rendered.
     @param {Object} options.style Hash containing style settings.
+    @param {Object} [options.target = 'preview'] Render target ('preview' or 'legend').
   */
-  renderOnCanvas({ canvas, style }) {
-    let context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.font = '24px Verdana';
-    context.strokeStyle = 'red';
-    context.strokeText('Path preview', 10, 20);
+  renderOnCanvas({ canvas, style, target }) {
+    let width = canvas.width;
+    let height = canvas.height;
+    let ctx = canvas.getContext('2d');
+
+    // Clear canvas.
+    ctx.clearRect(0, 0, width, height);
+
+    // Set line dashig.
+    let pathStyle = Ember.get(style, 'path') || {};
+    let dashArray = Ember.get(pathStyle, 'dashArray');
+    let dashOffset = Ember.get(pathStyle, 'dashOffset');
+    if (!Ember.isBlank(dashArray)) {
+      dashArray = dashArray.split(',').map((value) => { return Number(value); });
+      dashOffset = Number(dashOffset);
+
+      ctx.setLineDash(dashArray);
+      ctx.lineDashOffset = dashOffset;
+    }
+
+    // Render sample geometry.
+    if (target === 'preview') {
+      this._renderPreviewGeometryOnCanvas({ canvas });
+    } else {
+      this._renderLegendGeometryOnCanvas({ canvas });
+    }
+
+    // Set fill style.
+    let fill = Ember.get(pathStyle, 'fill');
+    if (fill) {
+      // Fill opacity is always 1.
+      ctx.globalAlpha = 1;
+
+      let fillColor = Ember.get(pathStyle, 'fillColor');
+      ctx.fillStyle = fillColor;
+
+      ctx.fill();
+    }
+
+    // Set stroke style.
+    let stroke = Ember.get(pathStyle, 'stroke');
+    if (stroke) {
+      // Stroke oapcity is always 1.
+      ctx.globalAlpha = 1;
+
+      let strokeWeight = Number(Ember.get(pathStyle, 'weight'));
+      ctx.lineWidth = strokeWeight;
+
+      let strokeColor = Ember.get(pathStyle, 'color');
+      ctx.strokeStyle = strokeColor;
+
+      let strokeLineCap = Ember.get(pathStyle, 'lineCap');
+      ctx.lineCap = strokeLineCap;
+
+      let strokeLineJoin = Ember.get(pathStyle, 'lineJoin');
+      ctx.lineJoin = strokeLineJoin;
+
+      ctx.stroke();
+    }
+  },
+
+  /**
+    Renderes specific preview geometry on canvas.
+
+    @method _renderGeometryOnCanvas
+    @param {Object} options Method options.
+    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which geometry must be rendered.
+    @private
+  */
+  _renderPreviewGeometryOnCanvas({ canvas }) {
+    // Render sample polygon.
+    let polygon = {
+      type: 'Polygon',
+      viewport: { width: 150, height: 150 },
+      coordinates: [
+        { x: 10, y: 40 },
+        { x: 50, y: 20 },
+        { x: 90, y: 30 },
+        { x: 130, y: 10 },
+        { x: 110, y: 70 },
+        { x: 120, y: 100 },
+        { x: 90, y: 120 },
+        { x: 40, y: 110 }
+      ]
+    };
+    this._renderGeometryOnCanvas({ canvas, geometry: polygon });
+
+    // Render sample polyline.
+    let polyline = {
+      type: 'Polyline',
+      viewport: { width: 150, height: 150 },
+      coordinates: [
+        { x: 20, y: 130 },
+        { x: 130, y: 130 }
+      ]
+    };
+    this._renderGeometryOnCanvas({ canvas, geometry: polyline });
+  },
+
+  /**
+    Renderes specific legend geometry on canvas.
+
+    @method _renderGeometryOnCanvas
+    @param {Object} options Method options.
+    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which geometry must be rendered.
+    @private
+  */
+  _renderLegendGeometryOnCanvas({ canvas }) {
+    // Render full-size rectangle.
+    let rectangle = {
+      type: 'Polygon',
+      viewport: { width: 150, height: 150 },
+      coordinates: [
+        { x: 0, y: 0 },
+        { x: 150, y: 0 },
+        { x: 150, y: 150 },
+        { x: 0, y: 150 }
+      ]
+    };
+    this._renderGeometryOnCanvas({ canvas, geometry: rectangle });
+  },
+
+  /**
+    Renderes specified geometry on canvas.
+
+    @method _renderGeometryOnCanvas
+    @param {Object} options Method options.
+    @param {<a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>} options.canvas Canvas element on which geometry must be rendered.
+    @param {Object} options.geometry Hash containing geometry settings.
+    @private
+  */
+  _renderGeometryOnCanvas({ canvas, geometry }) {
+    let width = canvas.width;
+    let height = canvas.height;
+    let scale = Math.min(width / geometry.viewport.width, height / geometry.viewport.height);
+    let xOffset = (width - geometry.viewport.width * scale) / 2;
+    let yOffset = (height - geometry.viewport.height * scale) / 2;
+
+    let ctx = canvas.getContext('2d');
+    let type = geometry.type;
+    let coordinates = geometry.coordinates;
+    for (let i = 0, len = coordinates.length; i < len; i++) {
+      let point = coordinates[i];
+      let newPoint = { x: point.x * scale + xOffset, y: point.y * scale + yOffset };
+      if (i === 0) {
+        ctx.moveTo(newPoint.x, newPoint.y);
+      } else {
+        ctx.lineTo(newPoint.x, newPoint.y);
+      }
+    }
+
+    if (type === 'Polygon') {
+      ctx.closePath();
+    }
   }
 });

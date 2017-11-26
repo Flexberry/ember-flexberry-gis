@@ -68,6 +68,11 @@ export default Ember.Component.extend(PaginatedControllerMixin, SlotsMixin, {
   layout,
 
   /**
+    Component's additional class names.
+  */
+  class: null,
+
+  /**
     Flag that indicates whether cell editing is allowed.
 
     @property allowEdit

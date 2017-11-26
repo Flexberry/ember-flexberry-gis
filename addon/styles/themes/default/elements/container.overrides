@@ -958,21 +958,155 @@
 /************************************************************
     Simple layers-style (components/layers-styles/simple)
 ************************************************************/
-.simple-layers-style {
-  .ui.pointing.secondary.menu {
-    .item {
-      display: flex;
-      justify-content: center;
-      width: 50%;
+.ui.selection.dropdown {
+  &.simple-layers-style-stroke-linejoin-dropdown,
+  &.simple-layers-style-stroke-linecap-dropdown,
+  &.simple-layers-style-stroke-dasharray-dropdown {
+    min-width: 0;
+    padding-top: 3px;
+    padding-bottom: 3px;
+
+    >.dropdown.icon {
+      top: 1.5em;
+    }
+
+    .menu {
+      // About three items is enough.
+      max-height: 150px;
+
+      >.item {
+        // Impartans are needed here because of importants in original Semantic UI dropdown styles.
+        padding-top: 3px !important;
+        padding-bottom: 3px !important;
+      }
+    }
+  }
+}
+
+.image-markers-style-icon-editor {
+  // Relative position is necessary for inner loader.
+  position: relative;
+
+  .flexberry-file {
+    .ui.action.input {
+      .ui.icon.button {
+        border: none;
+        background: none;
+        position: absolute;
+
+        &.flexberry-file-add-button {
+          right: -5px;
+        }
+
+        &.flexberry-file-remove-button {
+          right: -45px;
+          // Remove button is unnecessary here, but flexberry-file component doesn't have an option to hide it.
+          display: none;
+        }
+      }
     }
   }
 
-  .ui.tab.segment {
-    border: none;
-  }
+  .icon-image-wrapper {
+    position: relative;
+    margin: 0 auto;
+    height: 150px;
+    width: 150px;
+    overflow: auto;
 
-  canvas {
-    width: 100%;
-    height: 200px;
+    .icon-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 4px;
+    }
+
+    .icon-anchor {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 4px;
+    }
+  }
+}
+
+form.flexberry-edit-layermap {
+  .simple-layers-style {
+    .ui.pointing.secondary.menu {
+      .item {
+        display: flex;
+        justify-content: center;
+        width: 50%;
+      }
+    }
+
+    .ui.tab.segment {
+      overflow: hidden;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+
+      .ui.grid.style-settings-with-preview {
+        margin: 0;
+        padding: 0;
+        padding-top: 1px;
+
+        >.column {
+          padding: 0;
+
+          &:last-child {
+            padding-left: 1rem;
+          }
+        }
+
+        canvas {
+          margin: 0 auto;
+          border: 1px solid rgba(34, 36, 38, 0.15);
+          border-radius: 0.285rem;
+        }
+
+        .flexberry-jsonarea {
+          margin-left: 1px;
+        }
+
+        .flexberry-colorpicker {
+          width: 40px;
+          border: 1px solid #b1cae8;
+          border-radius: 0.285rem;
+        }
+
+        .empty-space {
+          // It is needed to have enough space for colorpicker's sprite.
+          height: 150px;
+        }
+
+        .simple-layers-style-path-editor {
+          .ui.table {
+            margin-bottom: 1rem;
+
+            th:first-child {
+              width: 70px;
+            }
+
+            td {
+              &>input {
+                max-width: 60px;
+                height: 50px;
+              }
+
+              &>.ui.dropdown {
+                height: 50px;
+              }
+            }
+          }
+        }
+
+        .markers-styles-editor {
+          .ui.table {
+            margin-bottom: 1rem;
+          }
+        }
+      }
+    }
   }
 }

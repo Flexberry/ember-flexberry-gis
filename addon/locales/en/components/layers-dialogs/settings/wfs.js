@@ -41,4 +41,10 @@ export default {
   'clusterize': {
     'caption': 'Clusterize'
   },
+  'readonly': {
+    'caption': 'Read only'
+  },
+  'forceMulti': {
+    'caption': 'Create multi geometries'
+  }
 };

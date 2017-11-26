@@ -26,17 +26,17 @@
   </div>
   <div class="row">
     <div class="four wide column">
-      <div class="inline fields">
-        <div class="sixteen wide field">
-          <label>
-            {{t "components.flexberry-boundingbox.min-lng-caption"}}
-          </label>
-          {{flexberry-textbox
-            type="number"
-            value=_minLng
-            class=(if _minLngIsValid (if _coordinatesAreChanged "success" "") "error")
-          }}
-        </div>
+      <div class="sixteen wide field">
+        <label>
+          {{t "components.flexberry-boundingbox.min-lng-caption"}}
+        </label>
+      </div>
+      <div class="sixteen wide field">
+        {{flexberry-textbox
+          type="number"
+          value=_minLng
+          class=(if _minLngIsValid (if _coordinatesAreChanged "success" "") "error")
+        }}
       </div>
       {{#if (not _minLngIsValid)}}
         <div class="ui pointing red basic label">
@@ -67,17 +67,18 @@
       {{/flexberry-map}}
     </div>
     <div class="four wide column">
-      <div class="inline fields">
-        <div class="sixteen wide field">
-          <label>
-            {{t "components.flexberry-boundingbox.max-lng-caption"}}
-          </label>
-          {{flexberry-textbox
-            type="number"
-            value=_maxLng
-            class=(if _maxLngIsValid (if _coordinatesAreChanged "success" "") "error")
-          }}
-        </div>
+      <div class="sixteen wide field">
+        <label>
+          {{t "components.flexberry-boundingbox.max-lng-caption"}}
+        </label>
+      </div>
+      <div class="sixteen wide field">
+
+        {{flexberry-textbox
+          type="number"
+          value=_maxLng
+          class=(if _maxLngIsValid (if _coordinatesAreChanged "success" "") "error")
+        }}
       </div>
       {{#if (not _maxLngIsValid)}}
         <div class="ui pointing red basic label">

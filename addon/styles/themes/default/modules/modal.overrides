@@ -1,20 +1,3 @@
-/*******************************
-         Theme Overrides
-*******************************/
-
-.ui.modal {
-  .ui.icon.button {
-      box-shadow: none;
-      &.active,
-      &:hover {
-          background: @bluesky;
-      }
-  }
-  .ui.table {
-      margin-bottom: 0px;
-  }
-}
-
 /*************************************
             Popup window
 **************************************/
@@ -351,6 +334,27 @@
     // Same as dialog content's max-height in Semantic UI.
     height: 400px;
     overflow: hidden !important;
+  }
+
+  .row.ui.accordion.bbox-selector {
+    min-height: 31px;
+    & > .content {
+      padding: 0px;
+      width: 100%;
+      & > .ui.celled.grid {
+        margin: 0px;
+        .flexberry-boundingbox {
+          .flexberry-map {
+            max-height: 250px;
+          }
+        }
+
+        .field {
+          width: 100%;
+          padding: 10px;
+        }
+      }
+    }
   }
 }
 

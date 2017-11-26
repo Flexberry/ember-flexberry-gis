@@ -1,1 +1,18 @@
-{{flexberry-jsonarea value=styleSettings.style}}
+{{markers-styles/image/icon-editor
+  class="marker-icon-editor"
+  iconCaption=(t "components.markers-styles.image.marker-icon-editor.icon-caption")
+  anchorCaption=(t "components.markers-styles.image.marker-icon-editor.anchor-caption")
+  iconUrl=styleSettings.style.iconUrl
+  iconSize=styleSettings.style.iconSize
+  iconAnchor=styleSettings.style.iconAnchor
+  change=(action "onIconStyleSettingsChange")
+}}
+{{markers-styles/image/icon-editor
+  class="shadow-icon-editor"
+  iconCaption=(t "components.markers-styles.image.shadow-icon-editor.icon-caption")
+  anchorCaption=(t "components.markers-styles.image.shadow-icon-editor.anchor-caption")
+  iconUrl=styleSettings.style.shadowUrl
+  iconSize=styleSettings.style.shadowSize
+  iconAnchor=styleSettings.style.shadowAnchor
+  change=(action "onShadowStyleSettingsChange")
+}}

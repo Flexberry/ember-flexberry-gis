@@ -195,9 +195,15 @@ export default Ember.Component.extend(
         this.set('_leafletObject', leafletLayer);
         if (Ember.isPresent(this.get('layerModel'))) {
           Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
+          let _this = this;
+          this.getLeafletObjectForFilter().then(result => {
+            Ember.set(_this.get('layerModel'), '_leafletObjectForFilter', result);
+          });
 
-          // Save the reference to the instance method for getting attributes object.
-          Ember.set(this.get('layerModel'), '_attributesObject', this._getAttributesObject.bind(this));
+          // Save the reference to the instance method for getting attributes options.
+          if (Ember.isNone(this.get('layerModel._attributesOptions'))) {
+            Ember.set(this.get('layerModel'), '_attributesOptions', this._getAttributesOptions.bind(this));
+          }
         }
 
         return leafletLayer;
@@ -223,19 +229,25 @@ export default Ember.Component.extend(
       this.set('_leafletLayerPromise', null);
       if (Ember.isPresent(this.get('layerModel'))) {
         Ember.set(this.get('layerModel'), '_leafletObject', null);
-        Ember.set(this.get('layerModel'), '_attributesObject', null);
+        Ember.set(this.get('layerModel'), '_attributesOptions', null);
       }
     },
 
     /**
       Returns promise with the layer properties object.
 
-      @method _getAttributesObject
+      @method _getAttributesOptions
       @private
     */
-    _getAttributesObject() {
+    _getAttributesOptions() {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        resolve(this.get('_leafletObject'));
+        resolve({
+          object: this.get('_leafletObject'),
+          settings: {
+            readonly: true,
+            localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties')
+          }
+        });
       });
     },
 
@@ -564,6 +576,19 @@ export default Ember.Component.extend(
 
       // Destroy leaflet layer.
       this._destroyLayer();
+    },
+
+    /**
+      Returns leaflet layer for filter component.
+
+      @method getLeafletObjectForFilter
+      @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+      Leaflet layer or promise returning such layer.
+    */
+    getLeafletObjectForFilter() {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        resolve(this.get('_leafletObject'));
+      });
     },
 
     /**

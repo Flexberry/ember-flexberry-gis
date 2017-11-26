@@ -89,5 +89,29 @@ export default Ember.Mixin.create({
       case 'not':
         return new L.Filter.Not(properties[0]);
     }
-  }
+  },
+
+  /**
+    Parse filter geometry expression.
+    ('IN', 'NOT IN').
+
+    @method parseFilterGeometryExpression
+    @param {String} condition Filter condition
+    @param {Object} geoJSON Geometry
+    @param {String} geometryField Layer's geometry field
+    @returns {Object} Filter object
+  */
+  parseFilterGeometryExpression(condition, geoJSON, geometryField) {
+    switch (condition) {
+      case 'in':
+      case 'not in':
+        let bounds = new Terraformer.Primitive(geoJSON).bbox();
+        let filter = new L.Filter.BBox(
+          geometryField,
+          L.latLngBounds(L.latLng(bounds[1], bounds[0]), L.latLng(bounds[3], bounds[2])),
+          L.CRS.EPSG4326
+        );
+        return condition === 'in' ? filter : new L.Filter.Not(filter);
+    }
+  },
 });
