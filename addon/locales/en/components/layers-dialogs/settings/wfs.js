@@ -43,5 +43,8 @@ export default {
   },
   'readonly': {
     'caption': 'Read only'
+  },
+  'forceMulti': {
+    'caption': 'Create multi geometries'
   }
 };

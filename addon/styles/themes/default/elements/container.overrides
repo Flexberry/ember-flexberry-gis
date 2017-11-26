@@ -922,12 +922,26 @@
 /*********************************************
             Flexberry table
 *********************************************/
-.ui.table.flexberry-table-fixed {
-  table-layout: fixed;
+.ui.table.flexberry-table {
   font-size: 12px;
 
   th.narrow, td.narrow {
     width: 80px;
+    max-width: 80px;
+  }
+
+  th.checkbox, td.checkbox {
+    width: 17px;
+  }
+
+  th, td {
+    max-width: 200px;
+  }
+
+  td {
+    .ui.checkbox {
+      width: 17px;
+    }
   }
 
   td input[type="text"] {
@@ -935,6 +949,10 @@
     display: inline-block;
     max-width: 200px;
   }
+}
+
+.ui.table.flexberry-table-no-model {
+  width: inherit !important;
 }
 
 /************************************************************

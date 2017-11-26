@@ -40,6 +40,28 @@ export default WmsLayerComponent.extend({
   },
 
   /**
+    Sets wfs layer's filter, when wms filter was changed.
+  */
+  filterObserver: Ember.on('init', Ember.observer('options.filter', function() {
+    let filter = this.get('options.filter');
+    this.set('_wfsLayer.options.filter', filter);
+  })),
+
+  /**
+    Returns leaflet layer for filter component.
+
+    @method getLeafletObjectForFilter
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    Leaflet layer or promise returning such layer.
+  */
+  getLeafletObjectForFilter() {
+    let options = Ember.$.extend(this.get('_wfsLayer.options') || {}, { showExisting: true });
+    return this.get('_wfsLayer').createVectorLayer(options).then(layer => {
+      return layer;
+    });
+  },
+
+  /**
     Handles 'flexberry-map:identify' event of leaflet map.
 
     @method identify

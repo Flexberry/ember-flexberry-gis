@@ -538,8 +538,20 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} tabModel Related tab model.
     */
     onSaveChangesClick(tabModel) {
-      tabModel.leafletObject.save();
-      Ember.set(tabModel, 'leafletObject._wasChanged', false);
+      let leafletObject = tabModel.leafletObject;
+      let saveFailed = (data) => {
+        this.set('error', data);
+        leafletObject.off('save:success', saveSuccess);
+      };
+
+      let saveSuccess = (data) => {
+        Ember.set(tabModel, 'leafletObject._wasChanged', false);
+        leafletObject.off('save:failed', saveFailed);
+      };
+
+      leafletObject.once('save:failed', saveFailed);
+      leafletObject.once('save:success', saveSuccess);
+      leafletObject.save();
     },
 
     /**

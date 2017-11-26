@@ -335,6 +335,27 @@
     height: 400px;
     overflow: hidden !important;
   }
+
+  .row.ui.accordion.bbox-selector {
+    min-height: 31px;
+    & > .content {
+      padding: 0px;
+      width: 100%;
+      & > .ui.celled.grid {
+        margin: 0px;
+        .flexberry-boundingbox {
+          .flexberry-map {
+            max-height: 250px;
+          }
+        }
+
+        .field {
+          width: 100%;
+          padding: 10px;
+        }
+      }
+    }
+  }
 }
 
 .ui.modal.flexberry-geometry-add-mode-geoprovider-dialog {

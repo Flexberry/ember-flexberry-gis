@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../../templates/components/charts/type-charts/column';
-import BaseChartType from './base-chart-type';
+import BaseChartType from '../base-chart-type';
 
 /**
   Component for type chart column.
@@ -32,11 +32,10 @@ export default BaseChartType.extend({
     let propName = this.get('_valueName');
     let propVal = this.get('_valueValues');
 
-    for (var i in isObject)
-    {
-      xCategories.push(isObject[i][propName]);
-      dataSeries.push(parseFloat(isObject[i][propVal]));
-    }
+    isObject.forEach(obj => {
+      xCategories.push(obj[propName]);
+      dataSeries.push(parseFloat(obj[propVal]));
+    });
 
     let chart = {
       type: this.get('_chartType')

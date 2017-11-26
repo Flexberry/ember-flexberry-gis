@@ -484,6 +484,19 @@
     }
   }
 
+  .bottompanel-tab-data-panel {
+    .ui.tabular.menu .item {
+      line-height: 0px;
+      padding: 20px 22px;
+
+      .icon {
+        font-size: 1.1em !important;
+        padding-left: 0px !important;
+        margin-left: 0px !important;
+      }
+    }
+  }
+
   .bottompanel {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;

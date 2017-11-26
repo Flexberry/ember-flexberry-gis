@@ -28,7 +28,8 @@ export default BaseVectorLayer.extend({
     'maxFeatures',
     'showExisting',
     'style',
-    'filter'
+    'filter',
+    'forceMulti'
   ],
 
   /**
