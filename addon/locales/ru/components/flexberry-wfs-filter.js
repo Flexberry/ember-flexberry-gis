@@ -6,7 +6,7 @@ export default {
   'values': 'Значения',
   'operators': 'Операторы',
   'filter-ok': 'OK',
-  'filter-error': 'Error',
+  'filter-error': 'Ошибка',
   'no-fields': 'Поля не загружены',
   'no-values': 'Значения не загружены',
   'buttons': {
@@ -21,6 +21,7 @@ export default {
     'check': 'Проверить',
     'clear': 'Очистить'
   },
+  'attribute-filters-caption': 'Атрибутивные фильтры',
   'geometry-filters': {
     'caption': 'Пространственные фильтры',
     'geometry-field': 'Поле геометрии'

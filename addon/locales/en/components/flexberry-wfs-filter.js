@@ -21,6 +21,7 @@ export default {
     'check': 'Check',
     'clear': 'Clear'
   },
+  'attribute-filters-caption': 'Attribute filters',
   'geometry-filters': {
     'caption': 'Geometry filters',
     'geometry-field': 'Geometry field'

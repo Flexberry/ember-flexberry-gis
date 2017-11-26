@@ -110,7 +110,7 @@
         }
         &.filter-operator-button {
             margin: 5px;
-            width: 5em;
+            width: 6em;
         }
     }
 
