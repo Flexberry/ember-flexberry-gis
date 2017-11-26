@@ -1,15 +1,28 @@
-<div class="field">
-  <label>
-    {{t "components.markers-styles-editor.markers-styles-dropdown.caption"}}
-  </label>
-  {{flexberry-dropdown
-    class="fluid"
-    items=_availableMarkerStylesCaptions
-    value=_selectedMarkerStyleCaption
-  }}
-</div>
+<table class="ui small compact celled table markers-styles-selector">
+  <thead>
+    <tr>
+      <th class="sixteen wide">
+        {{t "components.markers-styles-editor.markers-styles-selector.caption"}}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableMarkerStylesCaptions
+          value=_selectedMarkerStyleCaption
+        }}
+      </td>
+    </tr>
+  </tbody>
+</table>
 {{#if (known-for-type "component" (concat "markers-styles/" styleSettings.type))}}
-  {{component (concat "markers-styles/" styleSettings.type) styleSettings=styleSettings}}
+  {{component (concat "markers-styles/" styleSettings.type)
+    styleSettings=styleSettings
+    change=(action "onStyleSettingsChange")
+  }}
 {{else}}
   {{ui-message
     type="error"
@@ -19,3 +32,5 @@
     )
   }}
 {{/if}}
+<div class="empty-space">
+</div>

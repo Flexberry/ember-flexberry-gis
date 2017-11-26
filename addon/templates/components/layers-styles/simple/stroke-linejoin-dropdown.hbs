@@ -1,0 +1,18 @@
+<input type="hidden" name="stroke-linejoin">
+<div class="text">
+</div>
+<i class="dropdown icon"></i>
+<div class="menu">
+  {{#each _availableLineJoins as |lineJoin|}}
+    <div class="item" data-value="{{lineJoin}}">
+      <svg width="50" height="40" viewBox="0 0 50 40" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <polyline stroke-linejoin="{{lineJoin}}"
+                  points="-15,50 25,15 65,50"
+                  stroke="{{strokeColor}}"
+                  stroke-width="20"
+                  fill="none"/>
+        <path d="M-15,50 L25,15 L65,50" stroke="#ffffff" fill="none"/>
+      </svg>
+    </div>
+  {{/each}}
+</div>

@@ -59,27 +59,6 @@
     .flexberry-dialog-content {
         padding: 0px 1.5rem !important;
     }
-    /* Кнопки с иконками */
-    .ui.icon.button:not(.fluid) {
-        font-weight: normal;
-        height: 36px;
-        width: 36px;
-        display: flex;
-        font-size: 15px;
-        margin: 0 2px;
-        border: none;
-        box-shadow: @darkBoxShadow;
-        &.active,
-        &:hover {
-            color: @darkbluecolor;
-            background: @lightbluecolor;
-            box-shadow: @darkBoxShadow;
-
-            &>i.icon:before {
-              color: @darkbluecolor;
-            }
-        }
-    }
     .ui.form .field {
         .button.flexberry-button {
           color: @darkbluecolor;
@@ -119,21 +98,11 @@
         }
     }
 
-    .ui.attached.tab.segment .flexberry-button {
-        background: @white !important;
-        box-shadow: @darkBoxShadow;
-        &:hover {
-            background: #f1f7ff !important;
-            color: @darkbluecolor;
-        }
-        &:not(.disabled) {
-            border: none;
-        }
-        &.filter-operator-button {
-            margin: 5px;
-            width: 5em;
-        }
+    .ui.attached.tab.segment .filter-operator-button {
+      margin: 5px;
+      width: 5em;
     }
+
     .ui.tab.segment,
     .ui.tabular.menu {
         margin-bottom: 0px !important;

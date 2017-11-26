@@ -18,6 +18,15 @@ export default Ember.Component.extend({
   layout,
 
   /**
+    Component's wrapping <div> CSS-classes names.
+
+    @property classNames
+    @type String[]
+    @default ['layers-styles-editor']
+  */
+  classNames: ['layers-styles-editor'],
+
+  /**
     Hash containing style settings.
 
     @property styleSettings

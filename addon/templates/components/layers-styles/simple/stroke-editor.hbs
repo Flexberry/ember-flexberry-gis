@@ -1,0 +1,71 @@
+<table class="ui small compact celled table">
+  <thead>
+    <tr>
+      <th>
+        {{t "components.layers-styles.simple.stroke-editor.stroke-presence"}}
+      </th>
+      <th>
+        {{t "components.layers-styles.simple.stroke-editor.stroke-color"}}
+      </th>
+      <th>
+        {{t "components.layers-styles.simple.stroke-editor.stroke-weight"}}
+      </th>
+      <th>
+        {{t "components.layers-styles.simple.stroke-editor.stroke-linecap"}}
+      </th>
+      <th>
+        {{t "components.layers-styles.simple.stroke-editor.stroke-linejoin"}}
+      </th>
+      <th>
+        {{t "components.layers-styles.simple.stroke-editor.stroke-dasharray"}}
+      </th>
+      <th>
+        {{t "components.layers-styles.simple.stroke-editor.stroke-dashoffset"}}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        {{flexberry-checkbox
+          value=styleSettings.stroke
+        }}
+      </td>
+      <td>
+        {{flexberry-colorpicker
+          value=styleSettings.color
+          change=(action "onStrokeColorChange" "styleSettings.color")
+        }}
+      </td>
+      <td>
+        {{input
+          type="number"
+          min="1"
+          value=styleSettings.weight
+        }}
+      </td>
+      <td>
+        {{layers-styles/simple/stroke-linecap-dropdown
+          value=styleSettings.lineCap
+        }}
+      </td>
+      <td>
+        {{layers-styles/simple/stroke-linejoin-dropdown
+          value=styleSettings.lineJoin
+        }}
+      </td>
+      <td>
+        {{layers-styles/simple/stroke-dasharray-dropdown
+          value=styleSettings.dashArray
+        }}
+      </td>
+      <td>
+        {{input
+          type="number"
+          min="0"
+          value=styleSettings.dashOffset
+        }}
+      </td>
+    </tr>
+  </tbody>
+</table>
