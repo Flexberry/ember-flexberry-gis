@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import WfsFilterParserMixin from '../mixins/wfs-filter-parser';
 import TileLayer from './tile';
 
 /**
@@ -11,15 +12,15 @@ import TileLayer from './tile';
   @class WmsLayer
   @extends TileLayer
 */
-export default TileLayer.extend({
+export default TileLayer.extend(WfsFilterParserMixin, {
   /**
     Permitted operations related to layer type.
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'legend']
+    @default ['edit', 'remove', 'identify', 'legend', 'filter']
   */
-  operations: ['edit', 'remove', 'identify', 'legend'],
+  operations: ['edit', 'remove', 'identify', 'legend', 'filter'],
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -37,6 +38,7 @@ export default TileLayer.extend({
       layers: undefined,
       format: undefined,
       transparent: undefined,
+      filter: '',
       legendSettings: {
         url: '',
         version: '',
@@ -67,5 +69,5 @@ export default TileLayer.extend({
     settings.transparent = true;
 
     return settings;
-  }
+  },
 });

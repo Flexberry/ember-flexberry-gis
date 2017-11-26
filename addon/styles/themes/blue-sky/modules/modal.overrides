@@ -98,9 +98,20 @@
         }
     }
 
-    .ui.attached.tab.segment .filter-operator-button {
-      margin: 5px;
-      width: 5em;
+    .ui.attached.tab.segment .flexberry-button:not(.success) {
+        background: @white !important;
+        box-shadow: @darkBoxShadow;
+        &:hover {
+            background: #f1f7ff !important;
+            color: @darkbluecolor;
+        }
+        &:not(.disabled) {
+            border: none;
+        }
+        &.filter-operator-button {
+            margin: 5px;
+            width: 6em;
+        }
     }
 
     .ui.tab.segment,
