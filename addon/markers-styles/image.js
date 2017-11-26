@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
 import BaseMarkerStyle from './-private/base';
 
 /**
@@ -35,7 +36,7 @@ export default BaseMarkerStyle.extend({
       shadowSize: [41, 41],
 
       // Shadow icon anchor relative to it's size.
-      shadowAnchor: null
+      shadowAnchor: [12, 41]
     };
   },
 
@@ -68,11 +69,11 @@ export default BaseMarkerStyle.extend({
     // Clear canvas.
     ctx.clearRect(0, 0, width, height);
 
-    var image = new Image();
-    image.onload = function() {
+    var iconImage = new Image();
+    iconImage.onload = function() {
       // Draw loaded image.
-      let iconWidth = style.iconSize[0] || this.width;
-      let iconHeight = style.iconSize[1] || this.height;
+      let iconWidth = style.iconSize[0] || iconImage.width;
+      let iconHeight = style.iconSize[1] || iconImage.height;
 
       let scale = iconWidth > width || iconHeight > height ?
         Math.min(width / iconWidth, height / iconHeight) :
@@ -80,10 +81,38 @@ export default BaseMarkerStyle.extend({
       let xOffset = (width - iconWidth * scale) / 2;
       let yOffset = (height - iconHeight * scale) / 2;
 
-      ctx.drawImage(this, xOffset, yOffset, iconWidth * scale, iconHeight * scale);
+      let drawIconImage = function() {
+        ctx.drawImage(iconImage, xOffset, yOffset, iconWidth * scale, iconHeight * scale);
+      };
+
+      if (Ember.isBlank(style.shadowUrl)) {
+        drawIconImage();
+      } else {
+        let shadowImage = new Image();
+        shadowImage.onload = function() {
+          // Draw shadow icon.
+          let shadowWidth = style.shadowSize[0] || shadowImage.width;
+          let sadowHeight = style.shadowSize[1] || shadowImage.height;
+
+          let xShadowOffset = style.iconAnchor[0] - style.shadowAnchor[0];
+          let yShadowOffset = style.iconAnchor[1] - style.shadowAnchor[1];
+          ctx.drawImage(shadowImage, xOffset + xShadowOffset, yOffset + yShadowOffset, shadowWidth * scale, sadowHeight * scale);
+
+          // Draw marker icon.
+          drawIconImage();
+        };
+
+        shadowImage.onerror = function() {
+          // Shadow is optional, so draw marker icon anyway.
+          drawIconImage();
+        };
+
+        // Set shadow image src to start loading.
+        shadowImage.src = style.shadowUrl;
+      }
     };
 
-    image.onerror = function() {
+    iconImage.onerror = function() {
       // Draw red cross instead of image.
       ctx.moveTo(0, 0);
       ctx.lineTo(width, height);
@@ -97,6 +126,6 @@ export default BaseMarkerStyle.extend({
     };
 
     // Set image src to start loading.
-    image.src = style.iconUrl;
+    iconImage.src = style.iconUrl;
   }
 });

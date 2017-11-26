@@ -27,25 +27,6 @@ export default Ember.Component.extend({
   styleSettings: null,
 
   /**
-    Observer changes in marker style settings.
-
-    @method _styleSettingsDidChange
-    @private
-  */
-  _styleSettingsDidChange: Ember.observer(
-    'styleSettings',
-    'styleSettings.iconUrl',
-    'styleSettings.iconSize',
-    'styleSettings.iconAnchor',
-    'styleSettings.shadowUrl',
-    'styleSettings.shadowSize',
-    'styleSettings.shadowAnchor',
-    function() {
-      Ember.run.once(this, '_sendChangeAction');
-    }
-  ),
-
-  /**
     Sends 'change' action to notify about changes in marker style settings.
 
     @method _sendChangeAction
@@ -54,4 +35,34 @@ export default Ember.Component.extend({
   _sendChangeAction() {
     this.sendAction('change', this.get('styleSettings'));
   },
+
+  actions: {
+    /**
+      Handles changes in icon style settings.
+
+      @method actions.onIconStyleSettingsChange
+      @param {Object} newIconStyleSettings New icon style settings.
+    */
+    onIconStyleSettingsChange(newIconStyleSettings) {
+      this.set('styleSettings.style.iconUrl', newIconStyleSettings.iconUrl);
+      this.set('styleSettings.style.iconSize', newIconStyleSettings.iconSize);
+      this.set('styleSettings.style.iconAnchor', newIconStyleSettings.iconAnchor);
+
+      this._sendChangeAction();
+    },
+
+    /**
+      Handles changes in shadow style settings.
+
+      @method actions.onShadowStyleSettingsChange
+      @param {Object} newIconStyleSettings New shadow style settings.
+    */
+    onShadowStyleSettingsChange(newShadowStyleSettings) {
+      this.set('styleSettings.style.shadowUrl', newShadowStyleSettings.iconUrl);
+      this.set('styleSettings.style.shadowSize', newShadowStyleSettings.iconSize);
+      this.set('styleSettings.style.shadowAnchor', newShadowStyleSettings.iconAnchor);
+
+      this._sendChangeAction();
+    }
+  }
 });

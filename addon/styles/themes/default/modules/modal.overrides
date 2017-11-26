@@ -1,20 +1,3 @@
-/*******************************
-         Theme Overrides
-*******************************/
-
-.ui.modal {
-  .ui.icon.button {
-      box-shadow: none;
-      &.active,
-      &:hover {
-          background: @bluesky;
-      }
-  }
-  .ui.table {
-      margin-bottom: 0px;
-  }
-}
-
 /*************************************
             Popup window
 **************************************/
