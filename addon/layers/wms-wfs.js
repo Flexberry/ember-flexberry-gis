@@ -26,9 +26,9 @@ export default WmsLayer.extend({
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'legend', 'attributes']
+    @default ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'legend', 'attributes'],
+  operations: ['edit', 'remove', 'identify', 'search', 'legend', 'attributes', 'filter'],
 
   /**
     Creates new settings object (with settings related to layer-type).

@@ -90,6 +90,10 @@ export default TileLayer.extend({
       filter = filter.toGml();
     }
 
+    if (filter instanceof Element) {
+      filter = L.XmlUtil.serializeXmlDocumentString(filter);
+    }
+
     options = Ember.$.extend(true, {}, options, { filter: filter });
 
     return L.tileLayer.wms(this.get('url'), options);

@@ -70,15 +70,4 @@ export default TileLayer.extend(WfsFilterParserMixin, {
 
     return settings;
   },
-
-  /**
-    Get properties names from leaflet layer object.
-
-    @method getLayerProperties
-    @param {Object} leafletObject Leaflet layer object
-    @returns {Array} Array with properties names
-  */
-  getLayerProperties(leafletObject) {
-    return Ember.A();
-  },
 });
