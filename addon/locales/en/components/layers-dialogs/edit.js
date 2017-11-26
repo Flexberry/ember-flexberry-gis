@@ -15,6 +15,9 @@ export default {
   'name-textbox': {
     'caption': 'Layer name'
   },
+  'scale-textbox': {
+    'caption': 'Scale'
+  },
   'description-textbox': {
     'caption': 'Layer description'
   },
@@ -52,27 +55,23 @@ export default {
       }
     }
   },
-  'crs': {
-    'caption': 'Layer coordinate reference system (CRS)',
-    'name-textbox': {
-      'caption': 'Projection name'
-    },
-    'code-textbox': {
-      'caption': 'Code'
-    },
-    'definition-textare': {
-      'caption': 'Definition'
+  'links-segment': {
+    'add-button': {
+      'caption': 'Add',
     }
   },
   'tabular-menu': {
     'main-tab': {
-      'caption': 'Main'
+      'caption': 'Main settings'
     },
     'crs-tab': {
       'caption': 'Coordinate system'
     },
     'settings-tab': {
       'caption': 'Layer settings'
+    },
+    'style-settings-tab': {
+      'caption': 'Style settings'
     },
     'identify-settings-tab': {
       'caption': 'Identification settings'
@@ -85,6 +84,26 @@ export default {
     },
     'legend-settings-tab': {
       'caption': 'Legend settings'
+    },
+    'wfs-filter-settings-tab': {
+      'caption': 'Filter settings'
+    },
+    'links-tab': {
+      'caption': 'Links settings'
+    },
+    'bbox-tab': {
+      'caption': 'Bounds'
+    }
+  },
+  'groups': {
+    'main-group': {
+      'caption': 'Main'
+    },
+    'display-group': {
+      'caption': 'Display'
+    },
+    'links-group': {
+      'caption': 'Links'
     }
   }
 };

@@ -38,17 +38,24 @@
     {{#each layers as |layer|}}
       {{#if (not layer.isDeleted)}}
         {{flexberry-maplayer
+          model=layer
           type=layer.type
           name=layer.name
+          description=layer.description
+          keyWords=layer.keyWords
+          scale=layer.scale
           coordinateReferenceSystem=layer.coordinateReferenceSystem
+          boundingBox=layer.boundingBox
           settings=layer.settings
           settingsAsObject=layer.settingsAsObject
           legendCanBeDisplayed=layer.legendCanBeDisplayed
           visibility=layer.visibility
           opacity=layer.settingsAsObject.opacity
+          _leafletObject=layer._leafletObject
           layers=layer.layers
           cswConnections=cswConnections
           leafletMap=leafletMap
+          layerModel=layer
           readonly=readonly
           dynamicProperties=layer.dynamicProperties
           dynamicActions=layer.dynamicActions

@@ -1625,8 +1625,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       $sheetOfPaper.appendTo($body[0]);
       $sheetOfPaper.attr('style', this.get('_sheetOfPaperRealStyle'));
       $sheetOfPaper.css('position', 'absolute');
-      $sheetOfPaper.css('left', `${$body.outerWidth() + 1}px`);
+      $sheetOfPaper.css('left', '0px');
       $sheetOfPaper.css('top', '0px');
+      $body.css('height', $sheetOfPaper.css('height'));
+      $body.css('width', $sheetOfPaper.css('width'));
 
       $legendControlMap.attr('style', this.get('_mapCaptionRealStyle'));
 
@@ -1759,6 +1761,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
       // Place sheet of papaer in the preview dialog again.
       $sheetOfPaper.appendTo($sheetOfPaperParent[0]);
+
+      let $body = $sheetOfPaper.closest('body');
+      $body.css('height', '');
+      $body.css('width', '');
 
       if (pageNumber === '2') {
         resolve();

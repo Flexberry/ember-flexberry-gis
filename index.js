@@ -10,6 +10,12 @@ module.exports = {
     // Import extensions for jQuery 'hasClass' method ($('...').hasClass(...)).
     app.import('vendor/jquery/jquery.hasClass.extensions.js');
 
+    // Import library allowing to detect DOM-elements resize.
+    app.import(app.bowerDirectory + '/javascript-detect-element-resize/jquery.resize.js');
+
+    // Import extensions for jQuery 'resize' method ($('...').resize(...)).
+    app.import('vendor/jquery/jquery.resize.extensions.js');
+
     // Import Leaflet library & it's resources.
     // Leaflet must be prepended (imported with prepend: true option),
     // because ember-addons depending on ember-flexberry-gis
@@ -41,23 +47,27 @@ module.exports = {
       destDir: appImagesDirectory
     });
 
-    // Import leaflet plugins
+    // Import leaflet plugins.
 
-    // Leaflet.Editable
+	  // leaflet-areaselect.
+    app.import(app.bowerDirectory + '/leaflet-areaselect/src/leaflet-areaselect.js');
+    app.import(app.bowerDirectory + '/leaflet-areaselect/src/leaflet-areaselect.css');
+
+    // Leaflet.Editable.
     app.import(app.bowerDirectory + '/leaflet.editable/src/Leaflet.Editable.js');
 
-    // Leaflet history
+    // Leaflet history.
     app.import(app.bowerDirectory + '/leaflet-history/dist/leaflet-history.css');
     app.import(app.bowerDirectory + '/leaflet-history/dist/leaflet-history.js');
 
-    // Leaflet.Editable.Measure
+    // Leaflet.Editable.Measure.
     app.import(app.bowerDirectory + '/leaflet-editable-measures/src/leaflet_measure.js');
     app.import(app.bowerDirectory + '/leaflet-editable-measures/src/leaflet_measure.css');
     app.import(app.bowerDirectory + '/leaflet-editable-measures/images/popupMarker.png', {
       destDir: appImagesDirectory
     });
 
-    // Leaflet.Export
+    // Leaflet.Export.
     app.import(app.bowerDirectory + '/html2canvas/dist/html2canvas.js');
     app.import(app.bowerDirectory + '/leaflet-export/leaflet_export.js');
 
@@ -81,6 +91,9 @@ module.exports = {
       destDir: appImagesDirectory
     });
 
+    // Leaflet-Omnivore.
+    app.import(app.bowerDirectory + '/leaflet-omnivore/leaflet-omnivore.js');
+
     // OSM to GeoJSON library (used to convert geocoder-osm-overpass-layer geocoding results into GeoJSON format).
     app.import(app.bowerDirectory + '/osmtogeojson/osmtogeojson.js');
 
@@ -93,12 +106,23 @@ module.exports = {
     // Leaflet.Util.CloneLayer.
     app.import('vendor/leaflet/utils/leaflet.util.cloneLayer.js');
 
-    // Leaflet switch scale control
+    // Leaflet switch scale control.
     app.import(app.bowerDirectory + '/leaflet-switch-scale-control/src/L.Control.SwitchScaleControl.js');
     app.import(app.bowerDirectory + '/leaflet-switch-scale-control/src/L.Control.SwitchScaleControl.css');
 
-    // Leaflet zoomslider control
+    // Leaflet zoomslider control.
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.js');
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.css');
+
+    // Load highcharts
+    app.import(app.bowerDirectory + '/highcharts/highcharts.js');
+
+    // ESRI.terraformer
+    app.import(app.bowerDirectory + '/terraformer/terraformer.js');
+
+    // Leaflet.markercluster
+    app.import(app.bowerDirectory + '/leaflet.markercluster/dist/leaflet.markercluster.js');
+    app.import(app.bowerDirectory + '/leaflet.markercluster/dist/MarkerCluster.css');
+    app.import(app.bowerDirectory + '/leaflet.markercluster/dist/MarkerCluster.Default.css');
   }
 };

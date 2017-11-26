@@ -3,7 +3,10 @@
     "document",
     "window",
     "-Promise",
-    "L"
+    "L",
+    "Highcharts",
+    "Terraformer",
+    "omnivore"
   ],
   "globals": {
     "moment": true

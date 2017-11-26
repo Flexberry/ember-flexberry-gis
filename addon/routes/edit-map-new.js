@@ -24,18 +24,29 @@ export default EditMapRoute.extend({
 
   /**
     [Model hook](http://emberjs.com/api/classes/Ember.Route.html#method_model) that returns a map project for current route.
+    Additionally loads layers according to metadata param.
 
     @method model
     @param {Object} params
     @param {Object} transition
     @return {*} Model of map project for current route.
   */
-  model() {
-    let mapProject = this.store.createRecord(this.get('modelName'));
+  model(params, transition) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let mapProject = this.store.createRecord(this.get('modelName'));
+      mapProject.set('mapLayer', Ember.A());
 
-    mapProject.set('mapLayer', Ember.A());
-
-    return mapProject;
+      if (Ember.isPresent(params.metadata)) {
+        this._getMetadata(params.metadata).then((metadata) => {
+          this._addMetadata(mapProject, metadata);
+          resolve(mapProject);
+        }).catch((error) => {
+          reject(error);
+        });
+      } else {
+        resolve(mapProject);
+      }
+    });
   },
 
   /**

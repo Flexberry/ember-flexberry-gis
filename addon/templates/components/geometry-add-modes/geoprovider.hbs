@@ -1,0 +1,72 @@
+{{flexberry-button
+  tooltip=menuButtonTooltip
+  click=(action "onButtonClick")
+  iconClass="world icon"
+}}
+
+{{!--
+  Semantic UI modal dialogs takes long time to be initialized
+  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+--}}
+{{#if _dialogHasBeenRequested}}
+  {{#flexberry-dialog class=flexberryClassNames.dialog
+    caption=menuButtonTooltip
+    approveButtonCaption=dialogApproveButtonCaption
+    denyButtonCaption=dialogDenyButtonCaption
+    visible=_dialogVisible
+    approve=(action "onApprove")
+    deny=(action "onDeny")
+  }}
+    <form class="ui form {{concat flexberryClassNames.form (if _loading " loading" "")}}" role="form">
+      <div class="field {{if (get _parsingErrors "address") "error" ""}}">
+        <label>{{addressLabel}}</label>
+        {{flexberry-textbox
+          value=address
+        }}
+      </div>
+      <div class="field {{if (get _parsingErrors "provider") "error" ""}}">
+        <label>{{providerLabel}}</label>
+        <div class="fields">
+          <div class="fourteen wide field">
+            {{flexberry-dropdown
+              items=_availableProviderNames
+              value=provider
+            }}
+          </div>
+          <div class="two wide field">
+            {{flexberry-button
+              caption=searchButtonCaption
+              click=(action "onSearchClick")
+              iconClass="search icon"
+              readonly=(not (get this 'provider'))
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="field {{if (get _parsingErrors "results") "error" ""}}">
+        <label>{{resultsLabel}}</label>
+        {{#flexberry-table
+          perPageAvailable=false
+          header=(hash
+            name=resultsHeaderName
+            position=resultsHeaderPosition
+          )
+          model=_queryResults
+          recordsTotalCount=_queryResultsTotalCount
+          getData=(action "onResultsTableGetData")
+        }}
+        {{#block-slot "column-header-head-0"}}
+          <th class="narrow">{{resultsHeaderSelect}}</th>
+        {{/block-slot}}
+        {{#block-slot "column-cell-head-0" as |row|}}
+          <td class="narrow">
+          {{flexberry-checkbox
+            value=(eq _selectedRow (ember-guid row))
+            onChange=(action "onRowSelect" (ember-guid row)) }}
+          </td>
+        {{/block-slot}}
+        {{/flexberry-table}}
+      </div>
+    </form>
+  {{/flexberry-dialog}}
+{{/if}}

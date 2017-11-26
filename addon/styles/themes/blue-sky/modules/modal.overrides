@@ -2,14 +2,24 @@
          Theme Overrides
 *******************************/
 
-.ui.modal.flexberry-edit-map-dialog,
+.ui.modal.flexberry-add-layer-dialog,
 .ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-edit-map-dialog,
+.ui.modal.flexberry-edit-layer-attributes-dialog,
+.ui.modal.flexberry-geometry-add-mode-manual-dialog,
+.ui.modal.flexberry-geometry-add-mode-geoprovider-dialog,
 .ui.modal.flexberry-export-map-command-dialog,
 .ui.modal.flexberry-search-map-command-dialog,
 .ui.modal.flexberry-go-to-map-command-dialog {
 
     .content {
         overflow: auto;
+        &.layers-fields-container {
+            border-radius: 0.5em;
+            border: 1px solid @paleBlue;
+            margin: 5px !important;
+            height: 200px;
+        }
     }
 
     .ui.attached.menu {
@@ -108,16 +118,20 @@
             opacity: 0.8;
         }
     }
-    .ui.attached.segment {
-      width: calc(100% + 2px) !important;
-    }
+
     .ui.attached.tab.segment .flexberry-button {
         background: @white !important;
-        border: none !important;
         box-shadow: @darkBoxShadow;
         &:hover {
             background: #f1f7ff !important;
             color: @darkbluecolor;
+        }
+        &:not(.disabled) {
+            border: none;
+        }
+        &.filter-operator-button {
+            margin: 5px;
+            width: 5em;
         }
     }
     .ui.tab.segment,
@@ -136,7 +150,11 @@
 
 
 .ui.modal.flexberry-add-layer-dialog,
-.ui.modal.flexberry-edit-layer-dialog {
+.ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-edit-map-dialog,
+.ui.modal.flexberry-edit-layer-attributes-dialog,
+.ui.modal.flexberry-geometry-add-mode-manual-dialog,
+.ui.modal.flexberry-geometry-add-mode-geoprovider-dialog {
     .ui.form {
         margin-top: 10px;
         margin-bottom: 10px;

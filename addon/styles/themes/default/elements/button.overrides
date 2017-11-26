@@ -6,6 +6,7 @@
   display: block;
 }
 
+
 .ui.icon.button {
     color: @uiIconButtonColor;
     background: @uiIconButtonBackground;

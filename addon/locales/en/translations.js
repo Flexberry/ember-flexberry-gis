@@ -14,12 +14,26 @@ import LayerResultListComponent from './components/layer-result-list';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import MapToolsComponents from './components/map-tools';
 import MapCommandsComponents from './components/map-commands';
+import FlexberryLinksEditorComponent from './components/flexberry-links-editor';
 import FlexberryTableComponents from './components/flexberry-table';
 import FlexberryMapInfoComponent from './components/flexberry-mapinfo';
+import FlexberryBoundingboxComponent from './components/flexberry-boundingbox';
+import FlexberryLayersAttributesPanel from './components/flexberry-layers-attributes-panel';
+import FlexberryEditCrsComponent from './components/flexberry-edit-crs';
+import GeometryAddModes from './components/geometry-add-modes';
+
+import LayersStyles from './layers-styles';
+import LayersStylesEditorComponent from './components/layers-styles-editor';
+import LayersStylesComponents from './components/layers-styles';
+
+import MarkersStyles from './markers-styles';
+import MarkersStylesEditorComponent from './components/markers-styles-editor';
+import MarkersStylesComponents from './components/markers-styles';
 
 import NewPlatformFlexberryGISLayerMetadataLForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-l';
 import NewPlatformFlexberryGISLayerMetadataEForm from './forms/new-platform-flexberry-g-i-s-layer-metadata-e';
 import GISSearchForm from './forms/gis-search-form';
+import Charts from './components/charts';
 
 export default {
   'models': {
@@ -39,10 +53,20 @@ export default {
     'gis-search-form': GISSearchForm
   },
 
+  'layers-styles': LayersStyles,
+  'markers-styles': MarkersStyles,
+
   'components': {
+    'layers-styles-editor': LayersStylesEditorComponent,
+    'layers-styles': LayersStylesComponents,
+
+    'markers-styles-editor': MarkersStylesEditorComponent,
+    'markers-styles': MarkersStylesComponents,
+
     'flexberry-table': FlexberryTableComponents,
 
     'feature-result-item': FeatureResultItemComponent,
+    'flexberry-links-editor': FlexberryLinksEditorComponent,
 
     'spatial-bookmarks': {
       'add-bookmark': 'Add new bookmark`',
@@ -100,14 +124,46 @@ export default {
       'opacity': 'Visibility'
     },
 
-    'flexberry-maptoolbar': {
-    },
+    'flexberry-maptoolbar': {},
 
     'map-tools': MapToolsComponents,
-
     'map-commands': MapCommandsComponents,
 
-    'flexberry-mapinfo': FlexberryMapInfoComponent
+    'flexberry-mapinfo': FlexberryMapInfoComponent,
+
+    'flexberry-wfs-filter': {
+      'caption': 'WFS layer filters',
+      'settings-not-set': 'Settings were not set',
+      'null-value': 'NULL',
+      'fields': 'Fields',
+      'values': 'Values',
+      'operators': 'Operators',
+      'filter-ok': 'OK',
+      'filter-error': 'Error',
+      'no-fields': 'Fields isn\'t loaded',
+      'no-values': 'Values isn\'t loaded',
+      'buttons': {
+        'in': 'IN',
+        'not-in': 'NOT IN',
+        'and': 'AND',
+        'or': 'OR',
+        'not': 'NOT',
+        'example': 'Example',
+        'all': 'All',
+        'apply': 'Apply',
+        'check': 'Check',
+        'clear': 'Clear'
+      },
+    },
+
+    'flexberry-boundingbox': FlexberryBoundingboxComponent,
+
+    'charts': Charts,
+
+    'flexberry-layers-attributes-panel': FlexberryLayersAttributesPanel,
+    'flexberry-edit-crs': FlexberryEditCrsComponent,
+
+    'geometry-add-modes': GeometryAddModes,
   },
 
   'map-tools': {
