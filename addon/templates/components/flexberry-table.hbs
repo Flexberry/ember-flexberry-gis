@@ -7,7 +7,8 @@
 {{#yield-slot "head-block"}}
   {{yield}}
 {{/yield-slot}}
-<table class={{concat "ui celled table " class}}>
+
+<table class={{concat "ui celled table flexberry-table" (if allowEdit " flexberry-table-fixed" "") (if model "" " flexberry-table-no-model")}}>
   <thead>
     <tr>
       {{#yield-slot "column-header-head-0"}}
@@ -41,6 +42,7 @@
                   {{flexberry-checkbox
                     value=(mut (get row fieldName))
                     onChange=(action "onCellCheckboxChange" row)
+                    title=(get row fieldName)
                   }}
                 {{else if (eq _selectedCellName (concat (ember-guid row) "_" fieldName))}}
                   {{input
@@ -48,15 +50,16 @@
                     value=(if (eq (get fieldTypes fieldName) "date") (moment-format (get row fieldName) allowEmpty=true) (get row fieldName))
                     key-down=(action "onCellInputKeyDown" (hash row=row fieldName=fieldName))
                     focus-out=(action "onCellInputFocusOut" (hash row=row fieldName=fieldName))
+                    title=(get row fieldName)
                   }}
                 {{else if (eq (get fieldTypes fieldName) "date")}}
-                  {{moment-format (get row fieldName) allowEmpty=true}}
+                  <span title={{get row fieldName}}>{{moment-format (get row fieldName) allowEmpty=true}}</span>
                 {{else}}
-                  {{get row fieldName}}
+                  <span title={{get row fieldName}}>{{get row fieldName}}</span>
                 {{/if}}
               </td>
             {{else}}
-              <td>{{get row fieldName}}</td>
+              <td><span title={{get row fieldName}}>{{get row fieldName}}</span></td>
             {{/if}}
           {{/each-in}}
           {{#yield-slot "column-cell-tail-0" (block-params row)}}

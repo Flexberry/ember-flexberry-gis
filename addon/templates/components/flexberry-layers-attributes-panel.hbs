@@ -30,10 +30,10 @@
         <div class="one wide column">
           <div class="ui vertical fluid tabular menu">
             <a class="tab item {{if (or (eq (get _activeTabs tabModel.name) "table-tab") (is-none (get _activeTabs tabModel.name))) "active"}}" data-tab="table-tab" onclick={{action "onTabClick" tabModel.name}}>
-              {{t "components.flexberry-layers-attributes-panel.table-tab"}}
+              <i class="datalist icon"></i>
             </a>
             <a class="tab item {{if (eq (get _activeTabs tabModel.name) "chart-tab") "active"}}" data-tab="chart-tab" onclick={{action "onTabClick" tabModel.name}}>
-              {{t "components.flexberry-layers-attributes-panel.diagram-tab"}}
+              <i class="pie icon"></i>
             </a>
           </div>
         </div>
@@ -72,7 +72,7 @@
                     {{flexberry-button
                       tooltip=(t "components.flexberry-layers-attributes-panel.clear-found")
                       click=(action "onClearFoundItemClick")
-                      iconClass="trash icon"
+                      iconClass="erase icon"
                     }}
                     {{#if tabModel.allowEdit}}
                       {{flexberry-button
@@ -104,7 +104,7 @@
               {{/block-slot}}
 
               {{#block-slot "column-header-head-0"}}
-                <th class="narrow">{{t "components.flexberry-layers-attributes-panel.select-item"}}</th>
+                <th class="checkbox"></th>
               {{/block-slot}}
 
               {{#if tabModel.allowEdit}}
@@ -114,16 +114,15 @@
               {{/if}}
 
               {{#block-slot "column-cell-head-0" as |row|}}
-                <td class="narrow">
+                <td class="checkbox">
                   {{flexberry-checkbox
                     value=(get tabModel._selectedRows (ember-guid row))
                     onChange=(action "onRowSelect" tabModel (ember-guid row)) }}
                 </td>
               {{/block-slot}}
-
               {{#if tabModel.allowEdit}}
                 {{#block-slot "column-cell-head-1" as |row|}}
-                  <td>
+                  <td class="narrow">
                     {{flexberry-button
                       class="small-button"
                       tooltip=(t "components.flexberry-layers-attributes-panel.edit-item")
