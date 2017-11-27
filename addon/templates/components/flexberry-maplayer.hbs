@@ -51,9 +51,6 @@
               click=(action "onBoundsButtonClick")
             }}
           {{/if}}
-        {{/if}}
-
-        {{#if (not readonly)}}
           {{#if _attributesOperationIsAvailable}}
             {{flexberry-button
               class=(concat flexberryClassNames.attributesButton " right floated " flexberryClassNames.preventExpandCollapse)
