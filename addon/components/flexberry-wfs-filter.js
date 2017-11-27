@@ -71,7 +71,17 @@ export default Ember.Component.extend({
   boundingBoxComponentMap: null,
 
   /**
-    Leaflet's wfs layer object.
+    Method for create leaflet's layer object.
+
+    @property _leafletObjectMethod
+    @type Function
+    @default null
+    @private
+  */
+  _leafletObjectMethod: null,
+
+  /**
+    Leaflet's layer object.
 
     @property _leafletObject
     @type Object
@@ -79,6 +89,16 @@ export default Ember.Component.extend({
     @private
   */
   _leafletObject: null,
+
+  /**
+    Indicates when leaflet's layer object is loading.
+
+    @property _leafletObjectIsLoading
+    @type Boolean
+    @default false
+    @private
+  */
+  _leafletObjectIsLoading: false,
 
   /**
     Contains selected field.
@@ -124,15 +144,6 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     this.set('filterStringValue', this.get('filter'));
-    let type = this.get('_layerType');
-    let leafletObject = this.get('_leafletObject');
-
-    if (!(Ember.isBlank(leafletObject) || Ember.isBlank(type))) {
-      let layerClass = Ember.getOwner(this).knownForType('layer', type);
-      if (!Ember.isNone(layerClass)) {
-        this.set('fields', Ember.A(layerClass.getLayerProperties(leafletObject)));
-      }
-    }
   },
 
   /**
@@ -142,7 +153,31 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     // Initialize Semantic UI accordion.
-    this.$('.ui.accordion').accordion();
+    this.$('.ui.accordion.bbox-selector').accordion();
+
+    let _this = this;
+    this.$('.ui.accordion.attribute-selector').accordion({
+      onOpening: () => {
+        let leafletObject = _this.get('_leafletObject');
+        if (Ember.isNone(leafletObject)) {
+          let type = _this.get('_layerType');
+          let leafletObjectMethod = _this.get('_leafletObjectMethod');
+          if (!(Ember.isBlank(leafletObjectMethod) || Ember.isBlank(type))) {
+            _this.set('_leafletObjectIsLoading', true);
+            leafletObjectMethod().then(leafletObject => {
+              _this.set('_leafletObject', leafletObject);
+              _this.set('_leafletObjectIsLoading', false);
+              let layerClass = Ember.getOwner(_this).knownForType('layer', type);
+              if (!Ember.isBlank(layerClass)) {
+                _this.set('fields', Ember.A(layerClass.getLayerProperties(leafletObject)));
+              }
+            }).catch(() => {
+              _this.set('_leafletObjectIsLoading', false);
+            });
+          }
+        }
+      }
+    });
   },
 
   /**
