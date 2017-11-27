@@ -16,11 +16,11 @@
     {{layers-styles/categorized/layer-property-dropdown
       displaySettings=displaySettings
       layerType=layerType
-      leafletLayer=leafletLayer
+      getLeafletLayer=getLeafletLayer
       value=styleSettings.style.propertyName
     }}
     {{flexberry-button
-      class="classify-button"
+      class=(concat "classify-button" (if _leafletLayerIsLoading " loading" ""))
       iconClass="play icon"
       caption=(t "components.layers-styles.unique.classify-button-caption")
       readonly=(not _classificationCanBePerformed)
