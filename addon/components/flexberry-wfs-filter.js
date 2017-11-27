@@ -140,6 +140,46 @@ export default Ember.Component.extend({
   */
   _currentSelectedBbox: undefined,
 
+  /**
+    Minimal latitude value.
+
+    @property _minLat
+    @type number
+    @default -90
+    @private
+  */
+  _minLat: -90,
+
+  /**
+    Minimal longitude value.
+
+    @property _minLng
+    @type number
+    @default -180
+    @private
+  */
+  _minLng: -180,
+
+  /**
+    Maximal latitude value.
+
+    @property _maxLat
+    @type number
+    @default 90
+    @private
+  */
+  _maxLat: 90,
+
+  /**
+    Maximal longitude value.
+
+    @property maxLng
+    @type number
+    @default 180
+    @private
+  */
+  _maxLng: 180,
+
   init() {
     this._super(...arguments);
 
