@@ -530,11 +530,27 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(leafletMap, 'editTools', editTools);
 
       if (edit) {
+        // If the layer is not on the map - add it
+        if (!leafletMap.hasLayer(layer)) {
+          let addedLayers = Ember.get(tabModel, '_addedLayers') || {};
+          addedLayers[Ember.guidFor(layer)] = layer;
+          leafletMap.addLayer(layer);
+          Ember.set(tabModel, '_addedLayers', addedLayers);
+        }
+
+        this._zoomToLayer(layer);
         layer.enableEdit(leafletMap);
         leafletMap.on('editable:editing', this._triggerChanged, [tabModel, layer, true]);
+
       } else {
         layer.disableEdit();
         leafletMap.off('editable:editing', this._triggerChanged, [tabModel, layer, true]);
+        let addedLayers = Ember.get(tabModel, '_addedLayers') || {};
+        if (!Ember.isNone(addedLayers[Ember.guidFor(layer)])) {
+          leafletMap.removeLayer(layer);
+          delete addedLayers[Ember.guidFor(layer)];
+          Ember.set(tabModel, '_addedLayers', addedLayers);
+        }
       }
     },
 
@@ -591,9 +607,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this._triggerChanged.call([tabModel, layer, false], { layer });
 
       if (this.get('_newRowPanToObject')) {
-        this.send('zoomTo', layer.feature);
+        this._zoomToLayer(layer);
         this.set('_newRowPanToObject', null);
-        this.send('onClearFoundItemClick');
       }
     },
 
@@ -726,5 +741,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         tabModel.leafletObject.editLayer(layer);
       }
     }
+  },
+
+  /**
+    Zooms map to the specified layer.
+
+    @param {Object} layer
+  */
+  _zoomToLayer(layer) {
+    this.send('zoomTo', [layer.feature]);
+    this.send('onClearFoundItemClick');
   }
 });
