@@ -524,6 +524,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(leafletMap, 'editTools', editTools);
 
       if (edit) {
+        // If the layer is not on the map - add it
+        if (!leafletMap.hasLayer(layer)) {
+          leafletMap.addLayer(layer);
+        }
+
         layer.enableEdit(leafletMap);
         leafletMap.on('editable:editing', this._triggerChanged, [tabModel, layer, true]);
       } else {
