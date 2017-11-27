@@ -225,6 +225,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   folded: false,
 
   /**
+    Flag indicates that the panel is loading or not.
+
+    @property loading
+    @type Boolean
+    @default false
+  */
+  loading: false,
+
+  /**
     Collection of tab items.
 
     @property items

@@ -245,10 +245,16 @@ export default Ember.Mixin.create({
       @param {String} attributesPanelSettingsPathes.selectedTabIndexPath path to property containing 'flexberry-layers-attributes-panel' selected tab index.
       @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
     */
-    onAttributesEdit(layerPath, { itemsPath, selectedTabIndexPath, foldedPath }) {
+    onAttributesEdit(layerPath, { itemsPath, selectedTabIndexPath, foldedPath, loadingPath }) {
       let layerModel = getRecord(this, layerPath);
       let name = Ember.get(layerModel, 'name');
       let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
+
+      this.set(loadingPath, true);
+      if (this.get(foldedPath)) {
+        this.set(foldedPath, false);
+      }
+
       getAttributesOptions().then(({ object, settings }) => {
         let items = this.get(itemsPath) || Ember.A();
         let index = items.findIndex((item) => Ember.isEqual(item.name, name));
@@ -259,12 +265,10 @@ export default Ember.Mixin.create({
           this.set(itemsPath, items);
           this.set(selectedTabIndexPath, items.length - 1);
         }
-
-        if (this.get(foldedPath)) {
-          this.set(foldedPath, false);
-        }
       }).catch((errorMessage) => {
         Ember.Logger.error(errorMessage);
+      }).finally(() => {
+        this.set(loadingPath, false);
       });
     },
 
