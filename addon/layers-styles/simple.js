@@ -6,15 +6,15 @@ import Ember from 'ember';
 import BaseLayerStyle from './-private/base';
 
 /**
-  Class implementing empty stylization for vector layers.
-  This style makes vector layers invisible on map.
+  Class implementing simple stylization for vector layers.
+  This style applies path and marker settings to vector layers.
 
   @class SimpleLayerStyle
   @extends BaseLayerStyle
 */
 export default BaseLayerStyle.extend({
   /**
-    Reference to 'markers-styles-renderer' servie.
+    Reference to 'markers-styles-renderer' service.
 
     @property markersStylesRenderer
     @type MarkersStylesRendererService

@@ -53,12 +53,6 @@ export default BaseLayer.extend({
     @private
   */
   _setLayerOpacity() {
-    // Layers with 'empty' layers-style always must have their opacity set to 0, so we don't change such layers opacity here.
-    let layerStyleType = this.get('styleSettings.type');
-    if (layerStyleType === 'empty') {
-      return;
-    }
-
     let opacity = this.get('opacity');
     if (Ember.isNone(opacity)) {
       return;
@@ -69,7 +63,35 @@ export default BaseLayer.extend({
       return;
     }
 
-    setLeafletLayerOpacity({ leafletLayer, opacity });
+    // Some layers-styles hide some of layers with their opacity set to 0, so we don't change such layers opacity here.
+    let layersStylesRenderer = this.get('_layersStylesRenderer');
+    let styleSettings = this.get('styleSettings');
+    let visibleLeafletLayers = Ember.isNone(styleSettings) ?
+      [leafletLayer] :
+      layersStylesRenderer.getVisibleLeafletLayers({ leafletLayer, styleSettings });
+
+    for (let i = 0, len = visibleLeafletLayers.length; i < len; i++) {
+      setLeafletLayerOpacity({ leafletLayer: visibleLeafletLayers[i], opacity });
+    }
+  },
+
+  /**
+    Returns promise with the layer properties object.
+
+    @method _getAttributesOptions
+    @private
+  */
+  _getAttributesOptions() {
+    return this._super(...arguments).then((attribitesOptions) => {
+      let leafletObject = Ember.get(attribitesOptions, 'object');
+
+      // Return original vector layer for 'flexberry-layers-attributes-panel' component instead of marker cluster group.
+      if (leafletObject instanceof L.MarkerClusterGroup) {
+        Ember.set(attribitesOptions, 'object', leafletObject._originalVectorLayer);
+      }
+
+      return attribitesOptions;
+    });
   },
 
   /**
@@ -85,6 +107,71 @@ export default BaseLayer.extend({
   },
 
   /**
+    Creates read format for the specified leaflet vector layer.
+
+    @method createReadFormat
+    @param {<a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>} Leaflet layer.
+    @returns {Object} Read format.
+  */
+  createReadFormat(vectorLayer) {
+    let crs = this.get('crs');
+    let geometryField = 'geometry';
+    let readFormat = new L.Format.GeoJSON({ crs, geometryField });
+
+    let layerPropertiesDescription = ``;
+    let layerClass = Ember.getOwner(this).lookup(`layer:${this.get('layerModel.type')}`);
+    let layerProperties = layerClass.getLayerProperties(vectorLayer);
+    for (let i = 0, len = layerProperties.length; i < len; i++) {
+      let layerProperty = layerProperties[i];
+      let layerPropertyValue = layerClass.getLayerPropertyValues(vectorLayer, layerProperty, 1)[0];
+
+      let layerPropertyType = typeof layerPropertyValue;
+      switch (layerPropertyType) {
+        case 'boolean':
+          layerPropertyType = 'boolean';
+          break;
+        case 'number':
+          layerPropertyType = 'decimal';
+          break;
+        case 'object':
+          layerPropertyType = layerPropertyValue instanceof Date ? 'date' : 'string';
+          break;
+        default:
+          layerPropertyType = 'string';
+      }
+
+      layerPropertiesDescription += `<xsd:element maxOccurs="1" minOccurs="0" name="${layerProperty}" nillable="true" type="xsd:${layerPropertyType}"/>`;
+    }
+
+    let describeFeatureTypeResponse = `` +
+      `<?xml version="1.0" encoding="UTF-8"?>` +
+      `<xsd:schema xmlns:gml="http://www.opengis.net/gml" ` +
+                  `xmlns:flexberry="http://flexberry.ru" ` +
+                  `xmlns:xsd="http://www.w3.org/2001/XMLSchema" ` +
+                  `elementFormDefault="qualified" ` +
+                  `targetNamespace="http://flexberry.ru">` +
+        `<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://flexberry.ru/schemas/gml/3.1.1/base/gml.xsd"/>` +
+          `<xsd:complexType name="layerType">` +
+            `<xsd:complexContent>` +
+              `<xsd:extension base="gml:AbstractFeatureType">` +
+                `<xsd:sequence>` +
+                  `${layerPropertiesDescription}` +
+                  `<xsd:element maxOccurs="1" minOccurs="0" name="${geometryField}" nillable="true" type="gml:GeometryPropertyType"/>` +
+                `</xsd:sequence>` +
+              `</xsd:extension>` +
+            `</xsd:complexContent>` +
+          `</xsd:complexType>` +
+        `<xsd:element name="layer" substitutionGroup="gml:_Feature" type="flexberry:layerType"/>` +
+      `</xsd:schema>`;
+
+    let describeFeatureTypeXml = L.XmlUtil.parseXml(describeFeatureTypeResponse);
+    let featureInfo = describeFeatureTypeXml.documentElement;
+    readFormat.setFeatureDescription(featureInfo);
+
+    return readFormat;
+  },
+
+  /**
     Clusterizes created vector layer if 'clusterize' option is enabled.
 
     @method createClusterLayer
@@ -97,6 +184,9 @@ export default BaseLayer.extend({
 
     clusterLayer._featureGroup.on('layeradd', this._setLayerOpacity, this);
     clusterLayer._featureGroup.on('layerremove', this._setLayerOpacity, this);
+
+    // Original vector layer is necessary for 'flexberry-layers-attributes-panel' component.
+    clusterLayer._originalVectorLayer = vectorLayer;
 
     return clusterLayer;
   },
@@ -123,6 +213,12 @@ export default BaseLayer.extend({
       Ember.RSVP.hash({
         vectorLayer: this.createVectorLayer()
       }).then(({ vectorLayer }) => {
+        // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
+        let readFormat = vectorLayer.readFormat;
+        if (Ember.isNone(readFormat)) {
+          vectorLayer.readFormat = this.createReadFormat(vectorLayer);
+        }
+
         if (this.get('clusterize')) {
           let clusterLayer = this.createClusterLayer(vectorLayer);
           resolve(clusterLayer);

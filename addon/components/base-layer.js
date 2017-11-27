@@ -193,6 +193,7 @@ export default Ember.Component.extend(
         leafletLayer
       }) => {
         this.set('_leafletObject', leafletLayer);
+
         if (Ember.isPresent(this.get('layerModel'))) {
           Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
 
@@ -245,7 +246,8 @@ export default Ember.Component.extend(
           object: this.get('_leafletObject'),
           settings: {
             readonly: true,
-            localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties')
+            localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties'),
+            excludedProperties: this.get('displaySettings.featuresPropertiesSettings.excludedProperties'),
           }
         });
       });
@@ -319,12 +321,6 @@ export default Ember.Component.extend(
       @private
     */
     _setLayerOpacity() {
-      // Layers with 'empty' layers-style always must have their opacity set to 0, so we don't change such layers opacity here.
-      let layerStyleType = this.get('styleSettings.type');
-      if (layerStyleType === 'empty') {
-        return;
-      }
-
       let leafletLayer = this.get('_leafletObject');
       if (Ember.isNone(leafletLayer) || Ember.typeOf(leafletLayer.setOpacity) !== 'function') {
         return;

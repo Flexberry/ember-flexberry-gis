@@ -40,7 +40,7 @@ export default Ember.Component.extend({
     Selected 'dash-array' value.
 
     @property value
-    @type Object
+    @type String
     @default ''
   */
   value: '',

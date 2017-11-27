@@ -213,6 +213,9 @@
         <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.display-group.activeTab "style-tab") "active"}}" data-tab="style-tab">
           {{layers-styles-editor
             styleSettings=_layer.settings.styleSettings
+            displaySettings=_layer.settings.displaySettings
+            layerType=_layer.type
+            leafletLayer=_leafletObjectForFilter
           }}
         </div>
       {{/if}}

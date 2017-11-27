@@ -24,6 +24,17 @@ export default BaseLayerStyle.extend({
   },
 
   /**
+    Gets visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
+
+    @method getVisibleLeafletLayers
+    @return {Object[]} Array containing visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
+  */
+  getVisibleLeafletLayers({ leafletLayer, style }) {
+    // There is no visible layers in 'empty' layers-style, all layer are hidden.
+    return [];
+  },
+
+  /**
     Applies layer-style to the specified leaflet layer.
 
     @method renderOnLeafletLayer

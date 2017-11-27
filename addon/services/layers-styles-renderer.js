@@ -96,6 +96,25 @@ export default Ember.Service.extend({
   },
 
   /**
+    Gets visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
+
+    @method getVisibleLeafletLayers
+    @return {Object[]} Array containing visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
+  */
+  getVisibleLeafletLayers({ leafletLayer, styleSettings }) {
+    let type = Ember.get(styleSettings, 'type');
+    let style = Ember.get(styleSettings, 'style');
+
+    let layerStyle = this._getLayerStyle(type);
+    if (Ember.isNone(layerStyle)) {
+      Ember.Logger.error(`Service 'layers-styles-renderer' can't get visible leaflet layers for  '${type}' layers-style.`);
+      return [];
+    }
+
+    return layerStyle.getVisibleLeafletLayers({ leafletLayer, style });
+  },
+
+  /**
     Applies layer-style to the specified leaflet layer.
 
     @method renderOnLeafletLayer

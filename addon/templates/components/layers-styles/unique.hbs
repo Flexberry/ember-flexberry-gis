@@ -1,0 +1,90 @@
+<div class="toolbar">
+  <div class="add-and-remove-categories-segment">
+    {{flexberry-button
+      class="add-category-button"
+      iconClass="plus icon"
+      click=(action "onAddCategoryButtonClick")
+    }}
+    {{flexberry-button
+      class="remove-category-button"
+      iconClass="minus icon"
+      readonly=(not _removeCanBePerformed)
+      click=(action "onRemoveSelectedCategoriesButtonClick")
+    }}
+  </div>
+  <div class="classify-categories-segment">
+    {{layers-styles/categorized/layer-property-dropdown
+      displaySettings=displaySettings
+      layerType=layerType
+      leafletLayer=leafletLayer
+      value=styleSettings.style.propertyName
+    }}
+    {{flexberry-button
+      class="classify-button"
+      iconClass="play icon"
+      caption=(t "components.layers-styles.unique.classify-button-caption")
+      readonly=(not _classificationCanBePerformed)
+      click=(action "onClassifyButtonClick")
+    }}
+  </div>
+</div>
+<table class="ui small compact celled table categories-table">
+  <thead>
+    <tr>
+      <th class="category-selection-column">
+        {{flexberry-checkbox
+          value=_allCategoriesAreSelected
+          onChange=(action "onSelectAllCategoriesCheckboxChange")
+        }}
+      </th>
+      <th class="category-symbol-column">
+        {{t "components.layers-styles.unique.category-symbol-caption"}}
+      </th>
+      <th class="category-name-column">
+        {{t "components.layers-styles.unique.category-name-caption"}}
+      </th>
+      <th class="category-value-column">
+        {{t "components.layers-styles.unique.property-value-caption"}}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each styleSettings.style.categories as |category categoryIndex|}}
+      <tr>
+        <td>
+          {{flexberry-checkbox
+            value=(mut (get _selectedCategories (concat categoryIndex "")))
+            onChange=(action "onSelectCategoryCheckboxChange" categoryIndex)
+          }}
+        </td>
+        <td>
+          <canvas class="category-symbol-canvas" category="{{categoryIndex}}" width="50" height="50"></canvas>
+        </td>
+        <td onclick={{action "onEditingCellClick" (concat "category-" categoryIndex "-name")}}>
+          {{#if (eq _editingCell (concat "category-" categoryIndex "-name"))}}
+            {{input
+              type="text"
+              value=category.name
+              focus-out=(action "onEditingCellFocusOut")
+              key-down=(action "onEditingCellKeyDown")
+            }}
+          {{else}}
+            {{category.name}}
+          {{/if}}
+        </td>
+        <td onclick={{action "onEditingCellClick" (concat "category-" categoryIndex "-value")}}>
+          {{#if (eq _editingCell (concat "category-" categoryIndex "-value"))}}
+            {{input
+              type="text"
+              value=category.value
+              focus-out=(action "onEditingCellFocusOut")
+              key-down=(action "onEditingCellKeyDown")
+            }}
+          {{else}}
+            {{category.value}}
+          {{/if}}
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
