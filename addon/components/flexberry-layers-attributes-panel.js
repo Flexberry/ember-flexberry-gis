@@ -538,7 +538,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           Ember.set(tabModel, '_addedLayers', addedLayers);
         }
 
-        this._panToLayer(layer);
+        this._zoomToLayer(layer);
         layer.enableEdit(leafletMap);
         leafletMap.on('editable:editing', this._triggerChanged, [tabModel, layer, true]);
 
@@ -607,7 +607,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this._triggerChanged.call([tabModel, layer, false], { layer });
 
       if (this.get('_newRowPanToObject')) {
-        this._panToLayer(layer);
+        this._zoomToLayer(layer);
         this.set('_newRowPanToObject', null);
       }
     },
@@ -748,7 +748,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     @param {Object} layer
   */
-  _panToLayer(layer) {
+  _zoomToLayer(layer) {
     this.send('zoomTo', [layer.feature]);
     this.send('onClearFoundItemClick');
   }
