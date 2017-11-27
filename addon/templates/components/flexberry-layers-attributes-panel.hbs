@@ -41,7 +41,6 @@
         <div class="fifteen wide stretched column">
           <div class="ui bottom attached tab segment layers-attributes-segment {{if (or (eq (get _activeTabs tabModel.name) "table-tab") (is-none (get _activeTabs tabModel.name))) "active"}}" data-tab="table-tab">
             {{#flexberry-table
-              class="flexberry-table-fixed"
               allowEdit=tabModel.allowEdit
               perPageAvailable=false
               model=tabModel.propertiesToShow
