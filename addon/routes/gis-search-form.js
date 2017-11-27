@@ -179,11 +179,7 @@ export default Ember.Route.extend(FlexberryBoundingboxMapLoaderMixin, {
       }
     }
 
-    if (searchConditions && !(
-      Ember.isNone(searchConditions.minLng) ||
-      Ember.isNone(searchConditions.minLat) ||
-      Ember.isNone(searchConditions.maxLng) ||
-      Ember.isNone(searchConditions.maxLat))) {
+    if (searchConditions && !Ember.isNone(searchConditions.boundingBoxEWKT)) {
 
       let boundingBoxIntersectionCondition = new Query.GeographyPredicate('boundingBox').intersects(searchConditions.boundingBoxEWKT);
       let boundingBoxIsNullCondition = new Query.SimplePredicate('boundingBox', Query.FilterOperator.Eq, null);
