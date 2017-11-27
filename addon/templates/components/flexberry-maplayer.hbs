@@ -53,17 +53,15 @@
           {{/if}}
         {{/if}}
 
-        {{!--
-          надо создать класс для flexberryClassNames.attributesButton
-        --}}
-        {{#if _attributesOperationIsAvailable}}
-          {{flexberry-button
-            class=(concat flexberryClassNames.attributesButton " right floated " flexberryClassNames.preventExpandCollapse)
-            iconClass="browser icon"
-            click=(action "onAttributesButtonClick")
-          }}
+        {{#if (not readonly)}}
+          {{#if _attributesOperationIsAvailable}}
+            {{flexberry-button
+              class=(concat flexberryClassNames.attributesButton " right floated " flexberryClassNames.preventExpandCollapse)
+              iconClass="browser icon"
+              click=(action "onAttributesButtonClick")
+            }}
+          {{/if}}
         {{/if}}
-
 
         {{#if _canChangeOpacity}}
           <label class="{{flexberryClassNames.opacityLabel}}" title="{{t "components.flexberry-maplayer.opacity" }}">
