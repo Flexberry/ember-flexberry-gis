@@ -21,6 +21,16 @@ export default Ember.Object.extend({
   },
 
   /**
+    Gets visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
+
+    @method getVisibleLeafletLayers
+    @return {Object[]} Array containing visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
+  */
+  getVisibleLeafletLayers({ leafletLayer, style }) {
+    return [leafletLayer];
+  },
+
+  /**
     Applies layer-style to the specified leaflet layer.
 
     @method renderOnLeafletLayer

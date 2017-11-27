@@ -40,7 +40,7 @@ export default Ember.Component.extend({
     Selected 'stroke-linecap' value.
 
     @property value
-    @type Object
+    @type String
     @default 'round'
   */
   value: 'round',

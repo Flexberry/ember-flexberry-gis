@@ -22,7 +22,9 @@ export default CategorizedLayerStyle.extend({
     @return {Boolean} Flag indicating whether specified category is relevant to the specified property value.
   */
   categoryIsRelevantToPropertyValue({ propertyValue, category }) {
-    let categoryValue = Ember.get(category, 'value');
+    propertyValue = propertyValue + '';
+    let categoryValue = Ember.get(category, 'value') + '';
+
     return propertyValue === categoryValue;
   }
 });

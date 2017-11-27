@@ -63,15 +63,16 @@ export default BaseLayerStyle.extend({
   */
   _getCategoryRelevantToLeafletLayer({ leafletLayer, style }) {
     style = style || {};
+    let propertyName = Ember.get(style, 'propertyName');
     let categories = Ember.get(style, 'categories');
-    if (!Ember.isArray(categories)) {
+    if (!Ember.isArray(categories) || Ember.isBlank(propertyName)) {
       return null;
     }
 
     let relevantCategory = null;
     for (let i = 0, len = categories.length; i < len; i++) {
       let category = categories[i];
-      if (this._categoryIsRelevantToLeafletLayer({ leafletLayer, category })) {
+      if (this._categoryIsRelevantToLeafletLayer({ leafletLayer, propertyName, category })) {
         relevantCategory = category;
         break;
       }
@@ -86,27 +87,20 @@ export default BaseLayerStyle.extend({
     @method _categoryIsRelevantForLeafletLayer
     @param {Object} options Method options.
     @param {<a =ref="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>} options.leafletLayer Leaflet layer.
+    @param {String} options.propertyName Layer property name.
     @param {Object} options.category Hash containing category settings.
     @return {Boolean} Flag indicating whether specified category is relevant to the specified laeflet layer.
   */
-  _categoryIsRelevantToLeafletLayer({ leafletLayer, category }) {
+  _categoryIsRelevantToLeafletLayer({ leafletLayer, propertyName, category }) {
     let featureProperties = Ember.get(leafletLayer, 'feature.properties');
     if (Ember.isNone(featureProperties)) {
       return false;
     }
 
-    let propertyName = Ember.get(category, 'propertyName');
-    if (Ember.isBlank(propertyName)) {
-      return false;
-    }
-
-    // Cast to string.
-    propertyName += '';
-
     // Get property value.
     let propertyValue = Ember.get(featureProperties, propertyName);
 
-    return this._categoryIsRelevantToPropertyValue({ propertyValue, category });
+    return this.categoryIsRelevantToPropertyValue({ propertyValue, category });
   },
 
   /**
@@ -139,22 +133,26 @@ export default BaseLayerStyle.extend({
   },
 
   /**
-    Gets default style settings.
+    Gets visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
 
-    @method getDefaultStyleSettings
-    @return {Object} Hash containing default style settings.
+    @method getVisibleLeafletLayers
+    @return {Object[]} Array containing visible leaflet layers (those nested layers which 'layers-style' doesn't hide).
   */
-  getDefaultCategorySettings() {
-    return {
-      // Category name.
-      name: null,
+  getVisibleLeafletLayers({ leafletLayer, style, visibleLeafletLayers }) {
+    visibleLeafletLayers = visibleLeafletLayers || [];
 
-      // Layer's property value related to category.
-      value: null,
+    if (leafletLayer instanceof L.LayerGroup) {
+      leafletLayer.eachLayer((layer) => {
+        this.getVisibleLeafletLayers({ leafletLayer: layer, style, visibleLeafletLayers });
+      });
+    } else {
+      let relevantCategory = this._getCategoryRelevantToLeafletLayer({ leafletLayer, style });
+      if (!Ember.isNone(relevantCategory)) {
+        visibleLeafletLayers.push(leafletLayer);
+      }
+    }
 
-      // Style settings related to category.
-      styleSettings: this.get('layersStylesRenderer').getDefaultStyleSettings('simple')
-    };
+    return visibleLeafletLayers;
   },
 
   /**

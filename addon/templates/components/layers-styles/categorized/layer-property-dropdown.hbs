@@ -1,0 +1,12 @@
+<input type="hidden" name="layer-property">
+<div class="default text">
+  {{t "components.layers-styles.categorized.layer-property-dropdown.placeholder"}}
+</div>
+<i class="dropdown icon"></i>
+<div class="menu">
+  {{#each-in _availableLayerProperties as |propertyName propertyCaption|}}
+    <div class="item" data-value="{{propertyName}}">
+      {{propertyCaption}}
+    </div>
+  {{/each-in}}
+</div>

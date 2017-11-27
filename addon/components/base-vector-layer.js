@@ -53,12 +53,6 @@ export default BaseLayer.extend({
     @private
   */
   _setLayerOpacity() {
-    // Layers with 'empty' layers-style always must have their opacity set to 0, so we don't change such layers opacity here.
-    let layerStyleType = this.get('styleSettings.type');
-    if (layerStyleType === 'empty') {
-      return;
-    }
-
     let opacity = this.get('opacity');
     if (Ember.isNone(opacity)) {
       return;
@@ -69,7 +63,16 @@ export default BaseLayer.extend({
       return;
     }
 
-    setLeafletLayerOpacity({ leafletLayer, opacity });
+    // Some layers-styles hide some of layers with their opacity set to 0, so we don't change such layers opacity here.
+    let layersStylesRenderer = this.get('_layersStylesRenderer');
+    let styleSettings = this.get('styleSettings');
+    let visibleLeafletLayers = Ember.isNone(styleSettings) ?
+      [leafletLayer] :
+      layersStylesRenderer.getVisibleLeafletLayers({ leafletLayer, styleSettings });
+
+    for (let i = 0, len = visibleLeafletLayers.length; i < len; i++) {
+      setLeafletLayerOpacity({ leafletLayer: visibleLeafletLayers[i], opacity });
+    }
   },
 
   /**
@@ -120,7 +123,7 @@ export default BaseLayer.extend({
     let layerProperties = layerClass.getLayerProperties(vectorLayer);
     for (let i = 0, len = layerProperties.length; i < len; i++) {
       let layerProperty = layerProperties[i];
-      let layerPropertyValue = layerClass.getLayerPropertyValues(vectorLayer, layerProperty, 1);
+      let layerPropertyValue = layerClass.getLayerPropertyValues(vectorLayer, layerProperty, 1)[0];
 
       let layerPropertyType = typeof layerPropertyValue;
       switch (layerPropertyType) {

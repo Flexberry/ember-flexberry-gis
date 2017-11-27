@@ -84,6 +84,33 @@ export default Ember.Component.extend({
   styleSettings: null,
 
   /**
+    Hash containing layer display settings.
+
+    @property displaySettings
+    @type Object
+    @default null
+  */
+  displaySettings: null,
+
+  /**
+    Related layer's type.
+
+    @property layerType
+    @type String
+    @default null
+  */
+  layerType: null,
+
+  /**
+    Related leaflet layer.
+
+    @property leafletLayer
+    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+    @default null
+  */
+  leafletLayer: null,
+
+  /**
     Renderes path style settings preview on canvas.
 
     @method _renderPathPreviewOnCanvas

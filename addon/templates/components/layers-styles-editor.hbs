@@ -9,7 +9,12 @@
   }}
 </div>
 {{#if (known-for-type "component" (concat "layers-styles/" styleSettings.type))}}
-  {{component (concat "layers-styles/" styleSettings.type) styleSettings=styleSettings}}
+  {{component (concat "layers-styles/" styleSettings.type)
+    styleSettings=styleSettings
+    displaySettings=displaySettings
+    layerType=layerType
+    leafletLayer=leafletLayer
+  }}
 {{else}}
   {{ui-message
     type="error"
