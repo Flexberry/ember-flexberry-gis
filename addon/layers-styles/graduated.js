@@ -48,6 +48,6 @@ export default CategorizedLayerStyle.extend({
       return false;
     }
 
-    return propertyValue >= endIntervalValue && propertyValue <= endIntervalValue;
+    return propertyValue >= startIntervalValue && propertyValue <= endIntervalValue;
   }
 });
