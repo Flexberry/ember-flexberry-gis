@@ -926,12 +926,12 @@
   font-size: 12px;
 
   th.narrow, td.narrow {
-    width: 80px;
-    max-width: 80px;
+    width: 90px;
+    max-width: 90px;
   }
 
   th.checkbox, td.checkbox {
-    width: 17px;
+    width: 26px;
   }
 
   th, td {
@@ -940,7 +940,7 @@
 
   td {
     .ui.checkbox {
-      width: 17px;
+      width: 26px;
     }
   }
 
