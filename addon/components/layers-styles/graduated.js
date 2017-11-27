@@ -86,6 +86,16 @@ export default Ember.Component.extend({
   _allCategoriesAreSelected: false,
 
   /**
+    Reference to active category.
+
+    @property _activeCategory
+    @type Object
+    @default null
+    @private
+  */
+  _activeCategory: null,
+
+  /**
     Name of currently active editing cell.
 
     @property _editingCell
@@ -94,6 +104,26 @@ export default Ember.Component.extend({
     @private
   */
   _editingCell: null,
+
+  /**
+    Flag: indicates whether leaflet layer is loading now.
+
+    @property _leafletLayerIsLoading
+    @type Boolean
+    @default false
+    @private
+  */
+  _leafletLayerIsLoading: false,
+
+  /**
+    Related leaflet layer.
+
+    @property _leafletLayer
+    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+    @default null
+    @private
+  */
+  _leafletLayer: null,
 
   /**
     Reference to component's template.
@@ -137,13 +167,47 @@ export default Ember.Component.extend({
   layerType: null,
 
   /**
-    Related leaflet layer.
+    Method returning related leaflet layer.
 
     @property leafletLayer
-    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+    @type Function
     @default null
   */
-  leafletLayer: null,
+  getLeafletLayer: null,
+
+  /**
+    Method returning promise which will be then resolved with leaflet layer (just loaded or already cached).
+
+    @method _getLeafletLayer
+    @private
+    @return {<a href="https://emberjs.com/api/ember/2.4/classes/RSVP.Promise">Ember.RSVP.Promise</a>}
+    Promise which will be then resolved with leaflet layer (just loaded or already cached).
+  */
+  _getLeafletLayer() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletLayer = this.get('_leafletLayer');
+      if (!Ember.isNone(leafletLayer)) {
+        resolve(leafletLayer);
+        return;
+      }
+
+      let getLeafletLayer = this.get('getLeafletLayer');
+      if (typeof getLeafletLayer !== 'function') {
+        reject('Property \'getLeafletLayer\' isn\'t a function');
+        return;
+      }
+
+      this.set('_leafletLayerIsLoading', true);
+      getLeafletLayer().then((leafletLayer) => {
+        this.set('_leafletLayer', leafletLayer);
+        resolve(leafletLayer);
+      }).catch((e) => {
+        reject(e);
+      }).finally(() => {
+        this.set('_leafletLayerIsLoading', false);
+      });
+    });
+  },
 
   /**
     Observers changes in categories.
@@ -160,24 +224,35 @@ export default Ember.Component.extend({
     Renderes categories symbols on canvases related to them.
 
     @method _renderCategorySymbolsOnCanvases
+    @param {Number} [categoryIndex] Index of category who's symbol must be rendered (if undefined then symbols for all categories will be rendered).
     @private
   */
-  _renderCategorySymbolsOnCanvases() {
+  _renderCategorySymbolsOnCanvases(categoryIndex) {
     let layersStylesRenderer = this.get('_layersStylesRenderer');
     let categories = this.get('styleSettings.style.categories');
     if (!Ember.isArray(categories) || categories.length === 0) {
       return;
     }
 
-    this.$('canvas.category-symbol-canvas').each(function() {
-      let canvas = this;
-      let $canvas = Ember.$(canvas);
-      let categoryIndex = Number($canvas.attr('category'));
+    if (categoryIndex >= 0 && categoryIndex < categories.length) {
+      // Render symbol for the specified category.
+      let canvas = this.$('canvas.category-symbol-preview[category=' + categoryIndex + ']')[0];
       let category = categories[categoryIndex];
       let categoryStyleSettings = Ember.get(category, 'styleSettings');
 
       layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
-    });
+    } else {
+      // Render symbols for all categories.
+      this.$('canvas.category-symbol-preview').each(function() {
+        let canvas = this;
+        let $canvas = Ember.$(canvas);
+        let categoryIndex = Number($canvas.attr('category'));
+        let category = categories[categoryIndex];
+        let categoryStyleSettings = Ember.get(category, 'styleSettings');
+
+        layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
+      });
+    }
   },
 
   /**
@@ -317,43 +392,86 @@ export default Ember.Component.extend({
       @param {Object} e Event object.
     */
     onClassifyButtonClick() {
-      let leafletLayer = this.get('leafletLayer');
-      let layerType = this.get('layerType');
-      if (Ember.isBlank(layerType) || Ember.isNone(leafletLayer)) {
-        return;
-      }
+      this._getLeafletLayer().then((leafletLayer) => {
+        let layerType = this.get('layerType');
+        if (Ember.isBlank(layerType) || Ember.isNone(leafletLayer)) {
+          return;
+        }
 
-      let layerClass = Ember.getOwner(this).lookup(`layer:${layerType}`);
-      let propertyName = this.get('styleSettings.style.propertyName');
+        let layerClass = Ember.getOwner(this).lookup(`layer:${layerType}`);
+        let propertyName = this.get('styleSettings.style.propertyName');
 
-      // Get distinct array of asc. sorted values.
-      let propertyValues = [...new Set(layerClass.getLayerPropertyValues(leafletLayer, propertyName))].sort((a, b) => { return a - b; });
-      let categoriesCount = Number(this.get('_classificationCategoriesCount'));
-      categoriesCount = isNaN(categoriesCount) ? 1 : categoriesCount;
-      categoriesCount = categoriesCount <= 0 ? 1 : categoriesCount;
-      categoriesCount = categoriesCount > propertyValues.length ? propertyValues.length : categoriesCount;
+        // Get distinct array of asc. sorted values.
+        let propertyValues = [...new Set(layerClass.getLayerPropertyValues(leafletLayer, propertyName))].sort((a, b) => { return a - b; });
+        let categoriesCount = Number(this.get('_classificationCategoriesCount'));
+        categoriesCount = isNaN(categoriesCount) ? 1 : categoriesCount;
+        categoriesCount = categoriesCount <= 0 ? 1 : categoriesCount;
+        categoriesCount = categoriesCount > propertyValues.length ? propertyValues.length : categoriesCount;
 
-      let categories = [];
-      let categoriesLength = (propertyValues.length - propertyValues.length % categoriesCount) / categoriesCount;
-      let layersStylesRenderer = this.get('_layersStylesRenderer');
+        let categories = [];
+        let categoriesLength = (propertyValues.length - propertyValues.length % categoriesCount) / categoriesCount;
+        let layersStylesRenderer = this.get('_layersStylesRenderer');
 
-      for (let i = 0; i < categoriesCount; i++) {
-        let intervalStartIndex = i * categoriesLength;
-        let intervalLastIndex = i === (categoriesCount - 1) ? propertyValues.length - 1 : (i + 1) * categoriesLength - 1;
-        categories.push({
-          name: i,
-          value: propertyValues[intervalStartIndex] + ' - ' + propertyValues[intervalLastIndex],
-          styleSettings: layersStylesRenderer.getDefaultStyleSettings('simple')
-        });
-      }
+        for (let i = 0; i < categoriesCount; i++) {
+          let intervalStartIndex = i * categoriesLength;
+          let intervalLastIndex = i === (categoriesCount - 1) ? propertyValues.length - 1 : (i + 1) * categoriesLength - 1;
+          categories.push({
+            name: i,
+            value: propertyValues[intervalStartIndex] + ' - ' + propertyValues[intervalLastIndex],
+            styleSettings: layersStylesRenderer.getDefaultStyleSettings('simple')
+          });
+        }
 
-      this.set('styleSettings.style.categories', categories);
+        this.set('styleSettings.style.categories', categories);
 
-      this.set('_selectedCategories', {});
-      this.set('_selectedCategoriesCount', 0);
-      this.set('_allCategoriesAreSelected', false);
+        this.set('_selectedCategories', {});
+        this.set('_selectedCategoriesCount', 0);
+        this.set('_allCategoriesAreSelected', false);
 
-      this.set('_classificationCategoriesCount', categoriesCount);
+        this.set('_classificationCategoriesCount', categoriesCount);
+      });
+    },
+
+    /**
+      Opens category style editor.
+
+      @method actions.onCategoryStyleEditorOpen
+      @param {Object} e Event object.
+    */
+    onCategoryStyleEditorOpen(categoryIndex, e) {
+      let categories = this.get('styleSettings.style.categories');
+      this.set('_activeCategory', categories[categoryIndex]);
+
+      let $categoryStyleEditor = this.$('.category-style-editor');
+      $categoryStyleEditor.attr('category', categoryIndex);
+      $categoryStyleEditor.addClass('active');
+
+      let $styleSettingsTab = $categoryStyleEditor.closest('.tab.segment');
+      $styleSettingsTab.attr('scrollTop', $styleSettingsTab.scrollTop());
+      $styleSettingsTab.scrollTop(0);
+      $styleSettingsTab.css('overflow', 'hidden');
+    },
+
+    /**
+      Closes category style editor.
+
+      @method actions.onCategoryStyleEditorClose
+      @param {Object} e Event object.
+    */
+    onCategoryStyleEditorClose(e) {
+      let $categoryStyleEditor = this.$('.category-style-editor');
+      let categoryIndex = Number($categoryStyleEditor.attr('category'));
+      $categoryStyleEditor.removeAttr('category');
+      $categoryStyleEditor.removeClass('active');
+
+      let $styleSettingsTab = $categoryStyleEditor.closest('.tab.segment');
+      $styleSettingsTab.css('overflow', 'auto');
+      $styleSettingsTab.scrollTop($styleSettingsTab.attr('scrollTop'));
+      $styleSettingsTab.removeAttr('scrollTop');
+
+      this.set('_activeCategory', null);
+
+      this._renderCategorySymbolsOnCanvases(categoryIndex);
     },
 
     /**

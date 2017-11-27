@@ -45,11 +45,11 @@ export default Ember.Component.extend({
   layerType: null,
 
   /**
-    Related leaflet layer.
+    Method returning related leaflet layer.
 
     @property leafletLayer
-    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+    @type Function
     @default null
   */
-  leafletLayer: null
+  getLeafletLayer: null
 });

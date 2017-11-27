@@ -16,11 +16,11 @@
     {{layers-styles/categorized/layer-property-dropdown
       displaySettings=displaySettings
       layerType=layerType
-      leafletLayer=leafletLayer
+      getLeafletLayer=getLeafletLayer
       value=styleSettings.style.propertyName
     }}
     {{flexberry-button
-      class="classify-button"
+      class=(concat "classify-button" (if _leafletLayerIsLoading " loading" ""))
       iconClass="play icon"
       caption=(t "components.layers-styles.unique.classify-button-caption")
       readonly=(not _classificationCanBePerformed)
@@ -57,8 +57,12 @@
             onChange=(action "onSelectCategoryCheckboxChange" categoryIndex)
           }}
         </td>
-        <td>
-          <canvas class="category-symbol-canvas" category="{{categoryIndex}}" width="50" height="50"></canvas>
+        <td onclick={{action "onCategoryStyleEditorOpen" categoryIndex}}>
+          <canvas class="category-symbol-preview"
+                  category="{{categoryIndex}}"
+                  width="50"
+                  height="50">
+          </canvas>
         </td>
         <td onclick={{action "onEditingCellClick" (concat "category-" categoryIndex "-name")}}>
           {{#if (eq _editingCell (concat "category-" categoryIndex "-name"))}}
@@ -88,3 +92,17 @@
     {{/each}}
   </tbody>
 </table>
+<div class="category-style-editor">
+  <div class="category-style-editor-content">
+    <i class="category-style-editor-close-button close icon"
+       onclick={{action "onCategoryStyleEditorClose"}}>
+    </i>
+    {{#if _activeCategory}}
+      {{layers-styles/simple
+        styleSettings=_activeCategory.styleSettings
+        displaySettings=displaySettings
+        leafletLayer=leafletLayer
+      }}
+    {{/if}}
+  </div>
+</div>
