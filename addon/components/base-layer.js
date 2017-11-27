@@ -195,10 +195,10 @@ export default Ember.Component.extend(
         this.set('_leafletObject', leafletLayer);
         if (Ember.isPresent(this.get('layerModel'))) {
           Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
-          let _this = this;
-          this.getLeafletObjectForFilter().then(result => {
-            Ember.set(_this.get('layerModel'), '_leafletObjectForFilter', result);
-          });
+
+          if (Ember.isNone(this.get('layerModel._leafletObjectForFilter'))) {
+            Ember.set(this.get('layerModel'), '_leafletObjectForFilter', this.getLeafletObjectForFilter.bind(this));
+          }
 
           // Save the reference to the instance method for getting attributes options.
           if (Ember.isNone(this.get('layerModel._attributesOptions'))) {
