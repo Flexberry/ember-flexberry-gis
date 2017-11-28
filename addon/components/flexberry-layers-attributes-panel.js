@@ -135,9 +135,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               this.set(`propertyLink.${propId}`, props);
 
               properties.pushObject(props);
-              this.set('properties', properties);
-
             });
+
+            this.set('properties', properties);
           },
 
           init() {
