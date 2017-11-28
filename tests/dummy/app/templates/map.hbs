@@ -134,7 +134,7 @@
       </div>
     </div>
   </div>
-  <div class={{concat "bottompanel-wrapper" (if (not (gt editedLayers.length 0)) " hidden" "")}}>
+  <div class={{concat "bottompanel-wrapper" (if (or (gt editedLayers.length 0) editedLayersPanelLoading) "" " hidden")}}>
     {{flexberry-layers-attributes-panel
       items=editedLayers
       serviceLayer=serviceLayer
