@@ -100,16 +100,18 @@
   </tbody>
 </table>
 <div class="category-style-editor">
-  <div class="category-style-editor-content">
-    <i class="category-style-editor-close-button close icon"
-       onclick={{action "onCategoryStyleEditorClose"}}>
-    </i>
-    {{#if _activeCategory}}
-      {{layers-styles/simple
-        styleSettings=_activeCategory.styleSettings
-        displaySettings=displaySettings
-        leafletLayer=leafletLayer
-      }}
-    {{/if}}
+  <i class="category-style-editor-close-button close icon"
+     onclick={{action "onCategoryStyleEditorClose"}}>
+  </i>
+  <div class="category-style-editor-content-wrapper">
+    <div class="category-style-editor-content">
+      {{#if _activeCategory}}
+        {{layers-styles/simple
+          styleSettings=_activeCategory.styleSettings
+          displaySettings=displaySettings
+          leafletLayer=leafletLayer
+        }}
+      {{/if}}
+    </div>
   </div>
 </div>
