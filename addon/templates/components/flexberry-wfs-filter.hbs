@@ -164,10 +164,10 @@
               {{flexberry-boundingbox
                 mapModel=boundingBoxComponentMap
                 boundingBoxChange=(action "onBoundingBoxChange")
-                minLat=_minLat
-                minLng=_minLng
-                maxLat=_maxLat
-                maxLng=_maxLng
+                minLat=(unbound _minLat)
+                minLng=(unbound _minLng)
+                maxLat=(unbound _maxLat)
+                maxLng=(unbound _maxLng)
               }}
             </div>
             <div class = "two wide column">
