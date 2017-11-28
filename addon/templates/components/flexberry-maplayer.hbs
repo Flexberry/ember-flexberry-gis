@@ -37,6 +37,11 @@
             iconClass="edit icon"
             click=(action "onEditButtonClick")
           }}
+          {{flexberry-button
+            class=(concat flexberryClassNames.copyButton " right floated " flexberryClassNames.preventExpandCollapse)
+            iconClass="copy icon"
+            click=(action "onCopyButtonClick")
+          }}
           {{#if _addOperationIsAvailable}}
             {{flexberry-button
               class=(concat flexberryClassNames.addButton " right floated " flexberryClassNames.preventExpandCollapse)
@@ -44,7 +49,7 @@
               click=(action "onAddButtonClick")
             }}
           {{/if}}
-          {{#if (or _hasLayers (not (eq type "group")))}}
+          {{#if _fitBoundsOperationIsAvailable}}
             {{flexberry-button
               class=(concat flexberryClassNames.boundsButton " right floated " flexberryClassNames.preventExpandCollapse)
               iconClass="maximize icon"
@@ -59,13 +64,11 @@
             }}
           {{/if}}
         {{/if}}
-
         {{#if _canChangeOpacity}}
           <label class="{{flexberryClassNames.opacityLabel}}" title="{{t "components.flexberry-maplayer.opacity" }}">
             {{_opacityDisplayValue}}
           </label>
         {{/if}}
-
       </div>
     </div>
     {{!--
@@ -82,6 +85,30 @@
         leafletMap=leafletMap
         typeIsReadonly=false
         approve=(action "onAddDialogApprove")
+      }}
+    {{/if}}
+    {{#if _copyDialogHasBeenRequested}}
+      {{component "layers-dialogs/edit"
+        caption=(t 'components.layers-dialogs.copy.caption')
+        model=model
+        class=flexberryClassNames.editDialog
+        visible=_copyDialogIsVisible
+        layer=(hash
+          type=type
+          name=name
+          description=description
+          keyWords=keyWords
+          scale=scale
+          coordinateReferenceSystem=coordinateReferenceSystem
+          boundingBox=boundingBox
+          settings=settings
+        )
+        _leafletObject=_leafletObject
+        _leafletObjectForFilter=_leafletObjectForFilter
+        cswConnections=cswConnections
+        leafletMap=leafletMap
+        typeIsReadonly=true
+        approve=(action "onCopyDialogApprove")
       }}
     {{/if}}
     {{#if _editDialogHasBeenRequested}}
