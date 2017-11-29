@@ -276,6 +276,7 @@ export default Ember.Mixin.create({
       @param {String} layerPath Path to a parent layers, to which new child layer must be added on action.
       @param {Object} e Action's event object.
       @param {Object} e.layerProperties Object containing properties of new child layer.
+      @param {Object} [e.layer] Object containing already created layer model with specified layer properties.
 
       @example
       templates/my-form.hbs
@@ -305,7 +306,8 @@ export default Ember.Mixin.create({
         Ember.typeOf(parentLayerPath) === 'string');
 
       let {
-        layerProperties
+        layerProperties,
+        layer
       } = args[args.length - 1];
       Ember.assert(
         `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
@@ -329,10 +331,10 @@ export default Ember.Mixin.create({
         `but \`Ember.NativeArray\` is expected`,
         Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
 
-      let childLayer = this.createLayer({
+      let childLayer = Ember.isNone(layer) ? this.createLayer({
         parentLayer: parentLayer,
         layerProperties: layerProperties
-      });
+      }) : layer;
 
       if (Ember.get(childLayer, 'type') === 'group' && !Ember.isArray(Ember.get(childLayer, 'layers'))) {
         Ember.set(childLayer, 'layers', Ember.A());
@@ -354,6 +356,7 @@ export default Ember.Mixin.create({
       @param {String} layerPath Path to a copied layer.
       @param {Object} e Action's event object.
       @param {Object} e.layerProperties Object containing properties of copied layer.
+      @param {Object} e.layer Object containing copied layer model.
 
       @example
       templates/my-form.hbs
@@ -374,9 +377,6 @@ export default Ember.Mixin.create({
       ```
     */
     onMapLayerCopy(...args) {
-      let { layerProperties } = args[args.length - 1];
-      Ember.set(layerProperties, 'name', `${Ember.get(layerProperties, 'name')} ${this.get('i18n').t('components.layers-dialogs.copy.layer-name-postfix')}`);
-
       this.send('onMapLayerAdd', ...args);
     },
 
@@ -515,15 +515,8 @@ export default Ember.Mixin.create({
     options = options || {};
     let layerProperties = Ember.get(options, 'layerProperties');
     let layer = Ember.get(options, 'layer');
+    layer.setProperties(layerProperties);
 
-    Ember.set(layer, 'type', Ember.get(layerProperties, 'type'));
-    Ember.set(layer, 'name', Ember.get(layerProperties, 'name'));
-    Ember.set(layer, 'description', Ember.get(layerProperties, 'description'));
-    Ember.set(layer, 'keyWords', Ember.get(layerProperties, 'keyWords'));
-    Ember.set(layer, 'scale', Ember.get(layerProperties, 'scale'));
-    Ember.set(layer, 'coordinateReferenceSystem', Ember.get(layerProperties, 'coordinateReferenceSystem'));
-    Ember.set(layer, 'settings', Ember.get(layerProperties, 'settings'));
-    Ember.set(layer, 'boundingBox', Ember.get(layerProperties, 'boundingBox'));
     return layer;
   },
 

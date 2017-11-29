@@ -373,6 +373,24 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     tagName: '',
 
     /**
+      Layer model.
+
+      @property model
+      @type {NewPlatformFlexberryGISMapLayerModel}
+      @default null
+    */
+    model: null,
+
+    /**
+      Layer model copy.
+
+      @property modelCopy
+      @type {NewPlatformFlexberryGISMapLayerModel}
+      @default null
+    */
+    modelCopy: null,
+
+    /**
       Layer's type (depending on it icon mark is selected).
 
       @property type
@@ -631,8 +649,26 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         // Include dialog to markup.
         this.set('_copyDialogHasBeenRequested', true);
 
-        // Show dialog.
-        this.set('_copyDialogIsVisible', true);
+        let layerModel = this.get('model');
+        if (Ember.isNone(layerModel)) {
+          Ember.Logger.error('Property \'model\' isn\'t defined in \'flexberry-maplayer\' component, so \'copy\' dialog can\'t be shown');
+          return;
+        }
+
+        if (Ember.typeOf(layerModel.copy) !== 'function') {
+          Ember.Logger.error('Property \'model\' in \'flexberry-maplayer\' component doesn\'t implement \'copy\' method, so \'copy\' dialog can\'t be shown');
+          return;
+        }
+
+        layerModel.copy().then((layerModelCopy) => {
+          this.set('modelCopy', layerModelCopy);
+
+          // Show dialog.
+          this.set('_copyDialogIsVisible', true);
+        }).catch((error) => {
+          let message = error.message || error + '';
+          Ember.Logger.error('Error happend while copying \'model\' in \'flexberry-maplayer\' component (' + message + '), so \'copy\' dialog can\'t be shown');
+        });
       },
 
       /**
@@ -644,8 +680,12 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         @param {Object} e.layerProperties Object containing properties of layer copy.
       */
       onCopyDialogApprove(...args) {
+        let { layerProperties } = args[args.length - 1];
+        let layer = this.get('modelCopy');
+        layer.setProperties(layerProperties);
+
         // Send outer 'copy' action.
-        this.sendAction('copy', ...args);
+        this.sendAction('copy', { layerProperties, layer });
       },
 
       /**
@@ -769,6 +809,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @method sendingActions.copy
       @param {Object} e Action's event object.
       @param {Object} e.layerProperties Object containing copied layer properties.
+      @param {Object} e.layer Object containing copied layer model.
     */
 
     /**

@@ -131,6 +131,9 @@ module.exports = {
           }, {
             name: 'ember-prop-types',
             target: '2.5.6'
+          }, {
+            name: 'ember-cli-copyable',
+            target: '0.9.6'
           }
         ]
       });

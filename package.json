@@ -59,7 +59,8 @@
     "moment-timezone": "0.5.0",
     "ui-ember-slider": "0.5.0",
     "ember-promise-helpers": "1.0.2",
-    "ember-prop-types": "2.5.6"
+    "ember-prop-types": "2.5.6",
+    "ember-cli-copyable": "0.9.6"
   },
   "dependencies": {
     "ember-cli-babel": "^5.1.6",

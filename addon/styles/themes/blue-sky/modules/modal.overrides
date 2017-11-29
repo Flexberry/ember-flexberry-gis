@@ -3,6 +3,7 @@
 *******************************/
 
 .ui.modal.flexberry-add-layer-dialog,
+.ui.modal.flexberry-copy-layer-dialog,
 .ui.modal.flexberry-edit-layer-dialog,
 .ui.modal.flexberry-edit-map-dialog,
 .ui.modal.flexberry-edit-layer-attributes-dialog,
@@ -130,6 +131,7 @@
 
 
 .ui.modal.flexberry-add-layer-dialog,
+.ui.modal.flexberry-copy-layer-dialog,
 .ui.modal.flexberry-edit-layer-dialog,
 .ui.modal.flexberry-edit-map-dialog,
 .ui.modal.flexberry-edit-layer-attributes-dialog,

@@ -88,14 +88,13 @@
       }}
     {{/if}}
     {{#if _copyDialogHasBeenRequested}}
-      {{component "layers-dialogs/edit"
-        caption=(t 'components.layers-dialogs.copy.caption')
-        model=model
-        class=flexberryClassNames.editDialog
+      {{component "layers-dialogs/copy"
+        model=modelCopy
+        class=flexberryClassNames.copyDialog
         visible=_copyDialogIsVisible
         layer=(hash
           type=type
-          name=name
+          name=(concat name " " (t "components.layers-dialogs.copy.layer-name-postfix"))
           description=description
           keyWords=keyWords
           scale=scale
