@@ -45,27 +45,6 @@
       z-index: 10000 !important;
     }
   }
-  .identify-popup {
-    .ui.accordion .item .title,
-    .ui.list .item {
-      cursor: pointer;
-    }
-    .item.active {
-      background: @flexberryMapIdentifyPopupBackground;
-      border: @flexberryMapIdentifyPopupBorder;
-      border-radius: @flexberryMapIdentifyPopupBorderRadius;
-    }
-    .leaflet-popup-content {
-      margin: 1.5em 1.5em;
-      .column {
-        overflow: auto;
-        max-height: 100%;
-      }
-    }
-    .ui.accordion .content .ui.list {
-      margin-left: 2em !important;
-    }
-  }
 }
 
 .flexberry-gis-map {

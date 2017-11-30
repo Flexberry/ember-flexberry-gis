@@ -96,18 +96,6 @@ Ember.$.extend(true, translations, {
               'caption': 'Пример работы компонента',
               'title': ''
             }
-          },
-          'geojson-layer': {
-            'caption': 'geojson-layer',
-            'title': 'Пример работы слоя GeoJSON'
-          },
-          'kml-layer': {
-            'caption': 'kml-layer',
-            'title': 'Пример работы слоя KML'
-          },
-          'chart-editor': {
-            'caption': 'chart-editor',
-            'title': 'Пример работы редактора диаграмм'
           }
         }
       }
@@ -123,14 +111,6 @@ Ember.$.extend(true, translations, {
     },
 
     'components-examples': {
-      'flexberry-maplayers': {
-        'settings-example': {
-          'caption': 'Пример работы с настройками flexberry-maplayers',
-          'json-layers-tab-caption': 'Дерево слоёв заданное JSON-объектом',
-          'json-layers-latest-clicked-layer-caption': 'Настройки последнего кликнутого слоя',
-          'json-layers-latest-clicked-layer-placeholder': 'Кликните на любой слой в дереве, чтобы отобразить его настройки'
-        }
-      },
       'flexberry-boundingbox': {
         'settings-example': {
           'caption': 'Тестовая форма flexberry-boundingbox'
@@ -159,18 +139,6 @@ Ember.$.extend(true, translations, {
         'xCaption': 'Широта',
         'yCaption': 'Долгота'
       }
-    }
-  },
-
-  'components': {
-    'settings-example': {
-      'component-template-caption': 'Шаблон компонента',
-      'component-settings-caption': '',
-      'component-settings-placeholder': 'Настройки компонента не заданы',
-      'controller-properties-caption': 'Свойства контроллера',
-      'component-current-settings-caption': 'Текущие настройки компонента',
-      'component-default-settings-caption': 'Настройки компонента по умолчанию',
-      'component-with-applied-settings-caption': 'Компонент с примененными текущими настройками'
     }
   }
 });

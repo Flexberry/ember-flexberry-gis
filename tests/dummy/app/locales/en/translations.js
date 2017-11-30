@@ -96,18 +96,6 @@ Ember.$.extend(true, translations, {
               'caption': 'Пример работы компонента',
               'title': ''
             }
-          },
-          'geojson-layer': {
-            'caption': 'geojson-layer',
-            'title': 'GeoJSON layer example'
-          },
-          'kml-layer': {
-            'caption': 'kml-layer',
-            'title': 'KML layer example'
-          },
-          'chart-editor': {
-            'caption': 'chart-editor',
-            'title': 'Example of the diagram editor'
           }
         }
       }
@@ -123,14 +111,6 @@ Ember.$.extend(true, translations, {
     },
 
     'components-examples': {
-      'flexberry-maplayers': {
-        'settings-example': {
-          'caption': 'Settings example for flexberry-maplayers',
-          'json-layers-tab-caption': 'JSON-object-defined layers tree',
-          'json-layers-latest-clicked-layer-caption': 'Latest clicked layer settings',
-          'json-layers-latest-clicked-layer-placeholder': 'Click on any layer to display it\'s settings'
-        }
-      },
       'flexberry-boundingbox': {
         'settings-example': {
           'caption': 'Flexberry-boundingbox testing form'
@@ -155,18 +135,6 @@ Ember.$.extend(true, translations, {
         'xCaption': 'Latitude',
         'yCaption': 'Longitude'
       }
-    }
-  },
-
-  'components': {
-    'settings-example': {
-      'component-template-caption': 'Component template',
-      'component-settings-caption': '',
-      'component-settings-placeholder': 'Component settings are not defined',
-      'controller-properties-caption': 'Controller properties',
-      'component-current-settings-caption': 'Component current settings values',
-      'component-default-settings-caption': 'Component default settings values',
-      'component-with-applied-settings-caption': 'Component with it\'s current settings applied'
     }
   }
 });
