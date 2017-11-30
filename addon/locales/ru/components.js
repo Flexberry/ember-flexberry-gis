@@ -26,6 +26,7 @@ import GeometryAddModesComponents from './components/geometry-add-modes';
 import ChartsComponents from './components/charts';
 import LayerResultListComponent from './components/layer-result-list';
 import FeatureResultItemComponent from './components/feature-result-item';
+import HistoryControlComponent from './components/history-control';
 
 export default {
   'layers-styles-editor': LayersStylesEditorComponent,
@@ -58,5 +59,6 @@ export default {
   'geometry-add-modes': GeometryAddModesComponents,
   'charts': ChartsComponents,
   'layer-result-list': LayerResultListComponent,
-  'feature-result-item': FeatureResultItemComponent
+  'feature-result-item': FeatureResultItemComponent,
+  'history-control': HistoryControlComponent
 };

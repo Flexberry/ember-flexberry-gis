@@ -1,7 +1,15 @@
 export default {
   'tooltip': 'Перейти к координатам',
-  'lat-caption': 'Широта',
-  'lng-caption': 'Долгота',
-  'x-caption': 'X',
-  'y-caption': 'Y'
+  'available-crs': {
+    'current': {
+      'name': 'В системе координат карты',
+      'xCaption': 'X',
+      'yCaption': 'Y'
+    },
+    'latlng': {
+      'name': 'Широта и долгота',
+      'xCaption': 'Широта',
+      'yCaption': 'Долгота'
+    }
+  }
 };

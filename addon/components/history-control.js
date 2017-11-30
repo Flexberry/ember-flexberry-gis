@@ -2,6 +2,7 @@
   @module ember-flexberry-gis
  */
 
+import Ember from 'ember';
 import BaseControl from 'ember-flexberry-gis/components/base-control';
 
 /**
@@ -49,9 +50,34 @@ export default BaseControl.extend({
     'forwardImageBeforeText',
     'orientation',
     'useExternalControls',
-    'shouldSaveMoveInHistory'],
+    'shouldSaveMoveInHistory'
+  ],
 
+  /**
+    Observes changhes in application's current locale, and refreshes some GUI related to it.
+
+    @method localeDidChange
+    @private
+  */
+  _localeDidChange: Ember.observer('i18n.locale', function() {
+    let i18n = this.get('i18n');
+    let $historyControl = Ember.$(this.get('map._container')).find('.leaflet-control-container .history-control');
+    let $historyBackButton = $historyControl.find('.history-back-button');
+    let $historyForwardButton = $historyControl.find('.history-forward-button');
+
+    $historyBackButton.attr('title', i18n.t('components.history-control.back-button.title'));
+    $historyForwardButton.attr('title', i18n.t('components.history-control.forward-button.title'));
+  }),
+
+  /**
+    Creates control instance, should be overridden in child classes.
+
+    @method createControl
+    @return {L.Control} Returns new created control
+  */
   createControl() {
+    Ember.run.scheduleOnce('afterRender', this, '_localeDidChange');
+
     return new L.HistoryControl(this.get('options')).addTo(this.get('map'));
   }
 });

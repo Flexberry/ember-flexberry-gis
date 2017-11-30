@@ -1,7 +1,15 @@
 export default {
   'tooltip': 'Go to coordinates',
-  'lat-caption': 'Latitude',
-  'lng-caption': 'Longitude',
-  'x-caption': 'X',
-  'y-caption': 'Y'
+  'available-crs': {
+    'current': {
+      'name': 'In map\'s coordinate system',
+      'xCaption': 'X',
+      'yCaption': 'Y'
+    },
+    'latlng': {
+      'name': 'Latitude and Longitude',
+      'xCaption': 'Latitude',
+      'yCaption': 'Longitude'
+    }
+  }
 };

@@ -152,7 +152,32 @@ let GoToMapCommandComponent = Ember.Component.extend({
       @property availableCRS
       @type Array
     */
-    availableCRS: null,
+    /**
+      Available coordinate reference systems metadata.
+
+      @property availableCRS
+      @type Object[]
+    */
+    availableCRS: Ember.computed('i18n.locale', function () {
+      let availableModes = Ember.A();
+      let i18n = this.get('i18n');
+      availableModes.push({
+        crs: this.get('model.crs'),
+        name: i18n.t('map-commands.go-to.available-crs.current.name').toString(),
+        xCaption: i18n.t('map-commands.go-to.available-crs.current.xCaption').toString(),
+        yCaption: i18n.t('map-commands.go-to.available-crs.current.yCaption').toString(),
+        latlng: false
+      });
+      availableModes.push({
+        crs: L.CRS.EPSG4326,
+        name: i18n.t('map-commands.go-to.available-crs.latlng.name').toString(),
+        xCaption: i18n.t('map-commands.go-to.available-crs.latlng.xCaption').toString(),
+        yCaption: i18n.t('map-commands.go-to.available-crs.latlng.yCaption').toString(),
+        isLatlng: true
+      });
+
+      return availableModes;
+    }),
 
     localeObserver: Ember.observer('i18n.locale', function() {
       this.set('_gotoDialogHasBeenRequested', false);
