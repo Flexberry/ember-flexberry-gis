@@ -71,6 +71,15 @@ export default Ember.Component.extend({
   boundingBoxComponentMap: null,
 
   /**
+    Properties settings.
+
+    @property featuresPropertiesSettings
+    @type Object
+    @default null
+  */
+  featuresPropertiesSettings: null,
+
+  /**
     Method for create leaflet's layer object.
 
     @property _leafletObjectMethod
@@ -179,6 +188,34 @@ export default Ember.Component.extend({
     @private
   */
   _maxLng: 180,
+
+  /**
+    Hash containing available layer's properties and their captions related to current locale an display settings.
+    @property _availableLayerProperties
+    @type Object
+    @private
+    @readOnly
+  */
+  _availableLayerProperties: Ember.computed('fields.[]', 'featuresPropertiesSettings', 'i18n.locale', function() {
+    let availableLayerProperties = {};
+
+    let layerProperties = this.get('fields');
+    let localizedProperties = this.get(`featuresPropertiesSettings.localizedProperties.${this.get('i18n.locale')}`) || {};
+    let excludedProperties = this.get(`featuresPropertiesSettings.excludedProperties`);
+    excludedProperties = Ember.isArray(excludedProperties) ? Ember.A(excludedProperties) : Ember.A();
+
+    for (let i = 0, len = layerProperties.length; i < len; i++) {
+      let propertyName = layerProperties[i];
+      if (excludedProperties.contains(propertyName)) {
+        continue;
+      }
+
+      let propertyCaption = Ember.get(localizedProperties, propertyName);
+      availableLayerProperties[propertyName] = !Ember.isBlank(propertyCaption) ? propertyCaption : propertyName;
+    }
+
+    return availableLayerProperties;
+  }),
 
   init() {
     this._super(...arguments);
@@ -364,13 +401,7 @@ export default Ember.Component.extend({
       @param {String} condition
     */
     pasteConditionExpression(condition) {
-      let operandBefore = this.get('_selectedField') || '';
-      let operandAfter = this.get('_selectedValue') || 'NULL';
-      if (operandAfter !== 'NULL') {
-        operandAfter = `'${operandAfter}'`;
-      }
-
-      let expressionString = `'${operandBefore}' ${condition} ${operandAfter}`;
+      let expressionString = ` ${condition} `;
       this._pasteIntoFilterString(expressionString);
     },
 
