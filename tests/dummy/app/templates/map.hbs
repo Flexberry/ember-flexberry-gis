@@ -81,6 +81,7 @@
                       itemsPath="editedLayers"
                       selectedTabIndexPath="editedLayersSelectedTabIndex"
                       foldedPath="editedLayersPanelFolded"
+                      loadingPath="editedLayersPanelLoading"
                     )
                   )
                 )
@@ -133,7 +134,7 @@
       </div>
     </div>
   </div>
-  <div class={{concat "bottompanel-wrapper" (if (not (gt editedLayers.length 0)) " hidden" "")}}>
+  <div class={{concat "bottompanel-wrapper" (if (or (gt editedLayers.length 0) editedLayersPanelLoading) "" " hidden")}}>
     {{flexberry-layers-attributes-panel
       items=editedLayers
       serviceLayer=serviceLayer
@@ -141,6 +142,7 @@
       selectedTabIndex=editedLayersSelectedTabIndex
       folded=editedLayersPanelFolded
       settings=editedLayersPanelSettings
+      loading=editedLayersPanelLoading
     }}
   </div>
   <div class="row">
