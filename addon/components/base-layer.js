@@ -21,12 +21,11 @@ const {
 export default Ember.Component.extend(
   DynamicPropertiesMixin,
   LeafletOptionsMixin, {
-
     /**
       Leaflet layer object init by settings from model.
 
       @property _leafletObject
-      @type L.Layer
+      @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
       @default null
       @private
      */
@@ -43,9 +42,53 @@ export default Ember.Component.extend(
     _leafletLayerPromise: null,
 
     /**
+      Reference to 'layers-styles-renderer' servie.
+
+      @property _layersStylesRenderer
+      @type LayersStylesRendererService
+      @private
+    */
+    _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
+
+    /**
       Overload wrapper tag name for disabling wrapper.
      */
     tagName: '',
+
+    /**
+      Array containing component's properties which are also leaflet layer options (see leaflet-options mixin).
+
+      @property leafletOptions
+      @type Stirng[]
+    */
+    leafletOptions: null,
+
+    /**
+      Array containing component's properties which are also leaflet layer options callbacks (see leaflet-options mixin).
+
+      @property leafletOptionsCallbacks
+      @type Stirng[]
+    */
+    leafletOptionsCallbacks: null,
+
+    /**
+      Hash containing default implementations for leaflet layer options callbacks (see leaflet-options mixin).
+
+      @property defaultLeafletOptionsCallbacks
+      @type Object
+    */
+    defaultLeafletOptionsCallbacks: {
+      coordsToLatLng: function(coords) {
+        let crs = this.get('crs');
+        let point = new L.Point(coords[0], coords[1]);
+        let latlng = crs.projection.unproject(point);
+        if (!Ember.isNone(coords[2])) {
+          latlng.alt = coords[2];
+        }
+
+        return latlng;
+      }
+    },
 
     /**
       Leaflet map.
@@ -102,6 +145,15 @@ export default Ember.Component.extend(
     opacity: null,
 
     /**
+      Hash containing layer's style settings.
+
+      @property styleSettings
+      @type Object
+      @default null
+     */
+    styleSettings: null,
+
+    /**
       Layer's coordinate reference system (CRS).
 
       @property crs
@@ -142,6 +194,19 @@ export default Ember.Component.extend(
       }) => {
         this.set('_leafletObject', leafletLayer);
 
+        if (Ember.isPresent(this.get('layerModel'))) {
+          Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
+
+          if (Ember.isNone(this.get('layerModel._leafletObjectForFilter'))) {
+            Ember.set(this.get('layerModel'), '_leafletObjectForFilter', this.getLeafletObjectForFilter.bind(this));
+          }
+
+          // Save the reference to the instance method for getting attributes options.
+          if (Ember.isNone(this.get('layerModel._attributesOptions'))) {
+            Ember.set(this.get('layerModel'), '_attributesOptions', this._getAttributesOptions.bind(this));
+          }
+        }
+
         return leafletLayer;
       }).catch((errorMessage) => {
         Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
@@ -155,10 +220,56 @@ export default Ember.Component.extend(
       @private
     */
     _destroyLayer() {
+      // Execute specific destroy logic related to layer's type.
+      this.destroyLayer();
+
+      // Now execute base destroy logic.
       this._removeLayerFromLeafletContainer();
 
       this.set('_leafletObject', null);
       this.set('_leafletLayerPromise', null);
+      if (Ember.isPresent(this.get('layerModel'))) {
+        Ember.set(this.get('layerModel'), '_leafletObject', null);
+        Ember.set(this.get('layerModel'), '_attributesOptions', null);
+      }
+    },
+
+    /**
+      Returns promise with the layer properties object.
+
+      @method _getAttributesOptions
+      @private
+    */
+    _getAttributesOptions() {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        resolve({
+          object: this.get('_leafletObject'),
+          settings: {
+            readonly: true,
+            localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties'),
+            excludedProperties: this.get('displaySettings.featuresPropertiesSettings.excludedProperties'),
+          }
+        });
+      });
+    },
+
+    /**
+      Resets leaflet layer related to layer type.
+
+      @method _resetLayer
+      @private
+    */
+    _resetLayer() {
+      // Destroy previously created leaflet layer (created with old settings).
+      this._destroyLayer();
+
+      // Create new leaflet layer (with new settings).
+      this._createLayer();
+
+      // Wait for the layer creation to be finished and set it's state related to new settings.
+      this.get('_leafletLayerPromise').then((leafletLayer) => {
+        this._setLayerState();
+      });
     },
 
     /**
@@ -170,6 +281,7 @@ export default Ember.Component.extend(
     _setLayerState() {
       this._setLayerVisibility();
       this._setLayerZIndex();
+      this._setLayerStyle();
       this._setLayerOpacity();
     },
 
@@ -215,6 +327,28 @@ export default Ember.Component.extend(
       }
 
       leafletLayer.setOpacity(this.get('opacity'));
+    },
+
+    /**
+      Sets leaflet layer's style.
+
+      @method _setLayerStyle
+      @private
+    */
+    _setLayerStyle() {
+      let leafletLayer = this.get('_leafletObject');
+
+      if (Ember.isNone(leafletLayer)) {
+        return;
+      }
+
+      let styleSettings = this.get('styleSettings');
+      if (Ember.isNone(styleSettings)) {
+        return;
+      }
+
+      let layersStylesRenderer = this.get('_layersStylesRenderer');
+      layersStylesRenderer.renderOnLeafletLayer({ leafletLayer, styleSettings });
     },
 
     /**
@@ -275,10 +409,25 @@ export default Ember.Component.extend(
       Observes and handles changes in {{#crossLink "BaseLayerComponent/opacity:property"}}'opacity' property{{/crossLink}}.
       Changes layer's opacity.
 
-      @method opacityDidChange
+      @method _opacityDidChange
       @private
     */
     _opacityDidChange: Ember.observer('opacity', function () {
+      this._setLayerOpacity();
+    }),
+
+    /**
+      Observes and handles changes in {{#crossLink "BaseLayerComponent/styleSettings:property"}}'styleSettings' property{{/crossLink}}.
+      Changes layer's style settings.
+
+      @method _styleSettingsDidChange
+      @private
+    */
+    _styleSettingsDidChange: Ember.observer('styleSettings', function () {
+      this._setLayerStyle();
+
+      // When we set new style it can change layer's opacity to style's default value,
+      // so we must restore opacity to user defined value.
       this._setLayerOpacity();
     }),
 
@@ -426,6 +575,19 @@ export default Ember.Component.extend(
     },
 
     /**
+      Returns leaflet layer for filter component.
+
+      @method getLeafletObjectForFilter
+      @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+      Leaflet layer or promise returning such layer.
+    */
+    getLeafletObjectForFilter() {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        resolve(this.get('_leafletObject'));
+      });
+    },
+
+    /**
       Creates leaflet layer related to layer type.
 
       @method createLayer
@@ -434,6 +596,14 @@ export default Ember.Component.extend(
     */
     createLayer() {
       assert('BaseLayer\'s \'createLayer\' should be overridden.');
+    },
+
+    /**
+      Destroys leaflet layer related to layer type.
+
+      @method destroyLayer
+    */
+    destroyLayer() {
     },
 
     /**
@@ -528,16 +698,7 @@ export default Ember.Component.extend(
         return;
       }
 
-      // Destroy previously created leaflet layer (created with old settings).
-      this._destroyLayer();
-
-      // Create new leaflet layer (with new settings).
-      this._createLayer();
-
-      // Wait for the layer creation to be finished and set it's state related to new settings.
-      this.get('_leafletLayerPromise').then((leafletLayer) => {
-        this._setLayerState();
-      });
+      this._resetLayer();
     },
 
     /**

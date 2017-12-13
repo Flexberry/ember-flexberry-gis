@@ -3,23 +3,24 @@
 */
 
 import Ember from 'ember';
-import BaseLayer from './-private/base';
+import WfsFilterParserMixin from '../mixins/wfs-filter-parser';
+import VectorLayer from './-private/vector';
 
 /**
   Class describing WFS layer metadata.
 
   @class WfsLayer
-  @extends BaseLayer
+  @extends VectorLayer
 */
-export default BaseLayer.extend({
+export default VectorLayer.extend(WfsFilterParserMixin, {
   /**
     Permitted operations related to layer type.
 
     @property operations
     @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'legend']
+    @default ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes']
   */
-  operations: ['edit', 'remove', 'identify', 'search', 'legend'],
+  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes'],
 
   /**
     Creates new settings object (with settings related to layer-type).
@@ -40,27 +41,9 @@ export default BaseLayer.extend({
       typeNSName: undefined,
       maxFeatures: undefined,
       format: undefined,
-      style: {
-        color: undefined,
-        weight: undefined
-      },
-      namespaceUri: undefined
-    });
-
-    return settings;
-  },
-
-  /**
-    Creates new search settings object (with search settings related to layer-type).
-
-    @method createSearchSettings
-    @returns {Object} New search settings object (with search settings related to layer-type).
-  */
-  createSearchSettings() {
-    let settings = this._super(...arguments);
-    Ember.$.extend(true, settings, {
-      queryString: '',
-      maxResultsCount: 10
+      namespaceUri: undefined,
+      readonly: undefined,
+      forceMulti: undefined
     });
 
     return settings;

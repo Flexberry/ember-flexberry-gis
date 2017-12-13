@@ -1,0 +1,226 @@
+<div class="ui grid">
+  <div class="row ui accordion attribute-selector form {{if _leafletObjectIsLoading "loading"}}">
+    <div class="ui top attached label title">
+      <i class="dropdown icon"></i>
+      {{t "components.flexberry-wfs-filter.attribute-filters-caption"}}
+    </div>
+    <div class="content">
+      <div class="ui celled grid">
+        <div class="row">
+          <div class = "eight wide column">
+            <h4>{{t "components.flexberry-wfs-filter.fields"}}</h4>
+            <div class = "ui container scrollable content layers-fields-container">
+              <div class="ui middle aligned selection list">
+                {{#each-in _availableLayerProperties as |key value|}}
+                  <div class="item {{if (eq _selectedField key) "active"}}" {{action "fieldClick" key}} {{action "pasteFieldValue" key on="doubleClick"}}>
+                    <div class="content unselectable">
+                      {{value}}
+                    </div>
+                  </div>
+                {{else}}
+                  <div class="item">
+                    {{t "components.flexberry-wfs-filter.no-fields"}}
+                  </div>
+                {{/each-in}}
+              </div>
+            </div>
+          </div>
+          <div class = "eight wide column">
+            <h4>{{t "components.flexberry-wfs-filter.values"}}</h4>
+            <div class = "ui container scrollable content layers-fields-container">
+              <div class="ui middle aligned selection list">
+                {{#each values as |value|}}
+                  <div class="item {{if (eq _selectedValue value) "active"}}" {{action "valueClick" value}} {{action "pasteFieldValue" value on="doubleClick"}}>
+                    <div class="content unselectable">
+                      {{#if (is-none value)}}
+                        {{t "components.flexberry-wfs-filter.null-value"}}
+                      {{else}}
+                        {{value}}
+                      {{/if}}
+                    </div>
+                  </div>
+                  {{else}}
+                <div class="item">
+                  {{t "components.flexberry-wfs-filter.no-values"}}
+                </div>
+              {{/each}}
+              </div>
+            </div>
+            {{flexberry-button
+              class=(if (is-none _selectedField) (concat operatorButtonClass ' disabled') operatorButtonClass)
+              caption=(t "components.flexberry-wfs-filter.buttons.example")
+              click=(action "showFieldValues" valuesCount)
+            }}
+            {{flexberry-button
+              class=(if (is-none _selectedField) (concat operatorButtonClass ' disabled') operatorButtonClass)
+              caption=(t "components.flexberry-wfs-filter.buttons.all")
+              click=(action "showFieldValues")
+            }}
+          </div>
+        </div>
+        <div class="row">
+          <div class = "sixteen wide column">
+          <h4>{{t "components.flexberry-wfs-filter.operators"}}</h4>
+            {{flexberry-button
+              class=operatorButtonClass
+              caption="="
+              readonly=readonly
+              click=(action "pasteConditionExpression" "=")
+            }}
+            {{flexberry-button
+              class=operatorButtonClass
+              caption="<"
+              readonly=readonly
+              click=(action "pasteConditionExpression" "<")
+            }}
+            {{flexberry-button
+              class=operatorButtonClass
+              caption=">"
+              readonly=readonly
+              click=(action "pasteConditionExpression" ">")
+            }}
+            {{flexberry-button
+              class=operatorButtonClass
+              caption="LIKE"
+              readonly=readonly
+              click=(action "pasteConditionExpression" "LIKE")
+            }}
+            {{flexberry-button
+              class=operatorButtonClass
+              caption=","
+              readonly=readonly
+              click=(action "pasteSymbol" ", ")
+            }}
+            {{flexberry-button
+              class=operatorButtonClass
+              caption=(t "components.flexberry-wfs-filter.buttons.not")
+              readonly=readonly
+              click=(action "pasteLogicalExpression" "NOT")
+            }}
+            <br>
+
+            {{flexberry-button
+              class=operatorButtonClass
+              caption="!="
+              readonly=readonly
+              click=(action "pasteConditionExpression" "!=")
+            }}
+            {{flexberry-button
+              class=operatorButtonClass
+              caption="<="
+              readonly=readonly
+              click=(action "pasteConditionExpression" "<=")
+            }}
+            {{flexberry-button
+              class=operatorButtonClass
+              caption=">="
+              readonly=readonly
+              click=(action "pasteConditionExpression" ">=")
+            }}
+            {{flexberry-button
+              class=operatorButtonClass
+              caption="ILIKE"
+              readonly=readonly
+              click=(action "pasteConditionExpression" "ILIKE")
+            }}
+            {{flexberry-button
+              class=operatorButtonClass
+              caption=(t "components.flexberry-wfs-filter.buttons.and")
+              readonly=readonly
+              click=(action "pasteLogicalExpression" "AND")
+            }}
+            {{flexberry-button
+              class=operatorButtonClass
+              caption=(t "components.flexberry-wfs-filter.buttons.or")
+              readonly=readonly
+              click=(action "pasteLogicalExpression" "OR")
+            }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row ui accordion bbox-selector">
+    <div class="ui top attached label title">
+      <i class="dropdown icon"></i>
+      {{t "components.flexberry-wfs-filter.geometry-filters.caption"}}
+    </div>
+    <div class="content">
+      <div class="ui celled grid">
+        <div class="row">
+          <div class="field">
+            <label>
+              {{t "components.flexberry-wfs-filter.geometry-filters.geometry-field"}}
+            </label>
+            {{flexberry-textbox
+              class="fluid"
+              value=geometryField
+            }}
+          </div>
+        </div>
+        <div class="row">
+          {{#if boundingBoxComponentMap}}
+            <div class = "fourteen wide column">
+              {{flexberry-boundingbox
+                mapModel=boundingBoxComponentMap
+                boundingBoxChange=(action "onBoundingBoxChange")
+                minLat=(unbound _minLat)
+                minLng=(unbound _minLng)
+                maxLat=(unbound _maxLat)
+                maxLng=(unbound _maxLng)
+              }}
+            </div>
+            <div class = "two wide column">
+              {{flexberry-button
+                class=operatorButtonClass
+                caption=(t "components.flexberry-wfs-filter.buttons.in")
+                readonly=readonly
+                click=(action "pasteBboxExpression" "IN")
+              }}
+              <br>
+              {{flexberry-button
+                class=operatorButtonClass
+                caption=(t "components.flexberry-wfs-filter.buttons.not-in")
+                readonly=readonly
+                click=(action "pasteBboxExpression" "NOT IN")
+              }}
+            </div>
+          {{else}}
+            <div class="ui form loading" style="height: 200px; width: 100%;">
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="sixteen wide column">
+      <div class="three top attached buttons">
+        {{flexberry-button
+          class=operatorButtonClass
+          caption=(t "components.flexberry-wfs-filter.buttons.apply")
+          readonly=readonly
+          click=(action "applyFilter")
+        }}
+        {{flexberry-button
+          class=operatorButtonClass
+          caption=(t "components.flexberry-wfs-filter.buttons.check")
+          readonly=readonly
+          click=(action "checkFilter")
+        }}
+        {{flexberry-button
+          class=operatorButtonClass
+          caption=(t "components.flexberry-wfs-filter.buttons.clear")
+          readonly=readonly
+          click=(action "clearFilter")
+        }}
+        {{#if _filterIsCorrect}}
+          <div class='ui green label'>{{t "components.flexberry-wfs-filter.filter-ok"}}</div>
+        {{else}}
+          <div class='ui red label'>{{t "components.flexberry-wfs-filter.filter-error"}}</div>
+        {{/if}}
+      </div>
+      {{textarea class="edit-filter-textarea" value=filterStringValue}}
+    </div>
+  </div>
+</div>

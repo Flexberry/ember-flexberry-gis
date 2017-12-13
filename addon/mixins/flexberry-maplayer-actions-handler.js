@@ -235,6 +235,44 @@ export default Ember.Mixin.create({
     },
 
     /**
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.attributesEdit:method"}}flexberry-maplayers component's 'attributesEdit' action{{/crossLink}}.
+      Opens {{#FlexberryLayersAttributesPanelComponent}}flexberry-layers-attributes-panel component to edit attributes of the selected layer.
+
+      @method actions.onAttributesEdit
+      @param {String} layerModelPath Path to a layer model, which value must be used within action.
+      @param {Object} attributesPanelSettingsPathes Object containing pathes to properties containing 'flexberry-layers-attributes-panel' settings.
+      @param {String} attributesPanelSettingsPathes.itemsPath path to property containing 'flexberry-layers-attributes-panel' items.
+      @param {String} attributesPanelSettingsPathes.selectedTabIndexPath path to property containing 'flexberry-layers-attributes-panel' selected tab index.
+      @param {String} attributesPanelSettingsPathes.foldedPath path to property containing flag indicating whether 'flexberry-layers-attributes-panel' is folded or not.
+    */
+    onAttributesEdit(layerPath, { itemsPath, selectedTabIndexPath, foldedPath, loadingPath }) {
+      let layerModel = getRecord(this, layerPath);
+      let name = Ember.get(layerModel, 'name');
+      let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
+
+      this.set(loadingPath, true);
+      if (this.get(foldedPath)) {
+        this.set(foldedPath, false);
+      }
+
+      getAttributesOptions().then(({ object, settings }) => {
+        let items = this.get(itemsPath) || Ember.A();
+        let index = items.findIndex((item) => Ember.isEqual(item.name, name));
+        if (index >= 0) {
+          this.set(selectedTabIndexPath, index);
+        } else {
+          items.addObject({ name: name, leafletObject: object, settings });
+          this.set(itemsPath, items);
+          this.set(selectedTabIndexPath, items.length - 1);
+        }
+      }).catch((errorMessage) => {
+        Ember.Logger.error(errorMessage);
+      }).finally(() => {
+        this.set(loadingPath, false);
+      });
+    },
+
+    /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.addChild:method"}}flexberry-maplayers component's 'addChild' action{{/crossLink}}.
       It adds new child layer.
 
@@ -450,8 +488,12 @@ export default Ember.Mixin.create({
 
     Ember.set(layer, 'type', Ember.get(layerProperties, 'type'));
     Ember.set(layer, 'name', Ember.get(layerProperties, 'name'));
+    Ember.set(layer, 'description', Ember.get(layerProperties, 'description'));
+    Ember.set(layer, 'keyWords', Ember.get(layerProperties, 'keyWords'));
+    Ember.set(layer, 'scale', Ember.get(layerProperties, 'scale'));
     Ember.set(layer, 'coordinateReferenceSystem', Ember.get(layerProperties, 'coordinateReferenceSystem'));
     Ember.set(layer, 'settings', Ember.get(layerProperties, 'settings'));
+    Ember.set(layer, 'boundingBox', Ember.get(layerProperties, 'boundingBox'));
     return layer;
   },
 

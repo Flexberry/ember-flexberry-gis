@@ -1,0 +1,26 @@
+<div class="field">
+  <label>
+    {{t "components.layers-styles-editor.layer-style-dropdown.caption"}}
+  </label>
+  {{flexberry-dropdown
+    class="fluid"
+    items=_availableLayerStylesCaptions
+    value=_selectedLayerStyleCaption
+  }}
+</div>
+{{#if (known-for-type "component" (concat "layers-styles/" styleSettings.type))}}
+  {{component (concat "layers-styles/" styleSettings.type)
+    styleSettings=styleSettings
+    displaySettings=displaySettings
+    layerType=layerType
+    getLeafletLayer=getLeafletLayer
+  }}
+{{else}}
+  {{ui-message
+    type="error"
+    message=(t
+      "components.layers-styles-editor.layer-style-component-not-implemented.message"
+      componentName=(concat "layers-styles/" styleSettings.type)
+    )
+  }}
+{{/if}}

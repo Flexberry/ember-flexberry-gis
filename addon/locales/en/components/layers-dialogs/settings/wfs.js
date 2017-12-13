@@ -37,5 +37,14 @@ export default {
     'weight-textbox': {
       'caption': 'Weight'
     }
+  },
+  'clusterize': {
+    'caption': 'Clusterize'
+  },
+  'readonly': {
+    'caption': 'Read only'
+  },
+  'forceMulti': {
+    'caption': 'Create multi geometries'
   }
 };

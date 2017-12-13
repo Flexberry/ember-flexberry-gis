@@ -1,0 +1,115 @@
+<div class="ui middle aligned centered grid">
+  <div class="row">
+    <div class="four wide column">
+    </div>
+    <div class="eight wide column">
+      <div class="inline fields">
+        <div class="sixteen wide field">
+          <label>
+            {{t "components.flexberry-boundingbox.max-lat-caption"}}
+          </label>
+          {{flexberry-textbox
+            type="number"
+            value=_maxLat
+            class=(if _maxLatIsValid (if _coordinatesAreChanged "success" "") "error")
+          }}
+          {{#if (not _maxLatIsValid)}}
+            <div class="ui left pointing red basic label">
+              {{t "components.flexberry-boundingbox.lat-error"}}
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    <div class="four wide column">
+    </div>
+  </div>
+  <div class="row">
+    <div class="four wide column">
+      <div class="sixteen wide field">
+        <label>
+          {{t "components.flexberry-boundingbox.min-lng-caption"}}
+        </label>
+      </div>
+      <div class="sixteen wide field">
+        {{flexberry-textbox
+          type="number"
+          value=_minLng
+          class=(if _minLngIsValid (if _coordinatesAreChanged "success" "") "error")
+        }}
+      </div>
+      {{#if (not _minLngIsValid)}}
+        <div class="ui pointing red basic label">
+          {{t "components.flexberry-boundingbox.lng-error"}}
+        </div>
+      {{/if}}
+    </div>
+    <div class="eight wide column">
+      {{flexberry-button
+        caption= (t "components.flexberry-boundingbox.button-caption")
+        class=(concat "fluid top attached" (if (and _coordinatesAreValid _coordinatesAreChanged) " success" " disabled"))
+        click=(action "onButtonClick")
+      }}
+      {{#flexberry-map
+        lat=mapModel.lat
+        lng=mapModel.lng
+        zoom=mapModel.zoom
+        zoomControl=zoomControl
+        attributionControl=attributionControl
+        leafletInit=(action "onMapLeafletInit" "_leafletMap")
+        leafletDestroy=(action "onMapLeafletDestroy" "_leafletMap")
+      }}
+        {{flexberry-layers
+          leafletMap=_leafletMap
+          leafletContainer=_leafletMap
+          layers=mapModel.mapLayer
+        }}
+      {{/flexberry-map}}
+    </div>
+    <div class="four wide column">
+      <div class="sixteen wide field">
+        <label>
+          {{t "components.flexberry-boundingbox.max-lng-caption"}}
+        </label>
+      </div>
+      <div class="sixteen wide field">
+
+        {{flexberry-textbox
+          type="number"
+          value=_maxLng
+          class=(if _maxLngIsValid (if _coordinatesAreChanged "success" "") "error")
+        }}
+      </div>
+      {{#if (not _maxLngIsValid)}}
+        <div class="ui pointing red basic label">
+          {{t "components.flexberry-boundingbox.lng-error"}}
+        </div>
+      {{/if}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="four wide column">
+    </div>
+    <div class="eight wide column">
+      <div class="inline fields">
+        <div class="sixteen wide field">
+          <label>
+            {{t "components.flexberry-boundingbox.min-lat-caption"}}
+          </label>
+          {{flexberry-textbox
+            type="number"
+            value=_minLat
+            class=(if _minLatIsValid (if _coordinatesAreChanged "success" "") "error")
+          }}
+          {{#if (not _minLatIsValid)}}
+            <div class="ui left pointing red basic label">
+              {{t "components.flexberry-boundingbox.lat-error"}}
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    <div class="four wide column">
+    </div>
+  </div>
+</div>

@@ -15,6 +15,9 @@ export default {
   'name-textbox': {
     'caption': 'Имя слоя'
   },
+  'scale-textbox': {
+    'caption': 'Масштаб'
+  },
   'description-textbox': {
     'caption': 'Описание слоя'
   },
@@ -52,27 +55,23 @@ export default {
       }
     },
   },
-  'crs': {
-    'caption': 'Система координат слоя (CRS)',
-    'name-textbox': {
-      'caption': 'Название проекции'
-    },
-    'code-textbox': {
-      'caption': 'Код'
-    },
-    'definition-textarea': {
-      'caption': 'Определение'
+  'links-segment': {
+    'add-button': {
+      'caption': 'Добавить',
     }
   },
   'tabular-menu': {
     'main-tab': {
-      'caption': 'Основное'
+      'caption': 'Основные настройки'
     },
     'crs-tab': {
       'caption': 'Система координат'
     },
     'settings-tab': {
       'caption': 'Настройки слоя'
+    },
+    'style-settings-tab': {
+      'caption': 'Настройки стиля'
     },
     'identify-settings-tab': {
       'caption': 'Настройки идентификации'
@@ -85,6 +84,26 @@ export default {
     },
     'legend-settings-tab': {
       'caption': 'Настройки легенды'
+    },
+    'wfs-filter-settings-tab': {
+      'caption': 'Настройки фильтра'
+    },
+    'links-tab': {
+      'caption': 'Настройки связей'
+    },
+    'bbox-tab': {
+      'caption': 'Границы'
+    }
+  },
+  'groups': {
+    'main-group': {
+      'caption': 'Основное'
+    },
+    'display-group': {
+      'caption': 'Отображение'
+    },
+    'links-group': {
+      'caption': 'Связи'
     }
   }
 };

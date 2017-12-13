@@ -22,6 +22,54 @@ export default WmsLayerComponent.extend({
   _wfsLayer: null,
 
   /**
+    Returns promise with the properties object of inner wfs layer.
+
+    @method _getAttributesOptions
+    @private
+  */
+  _getAttributesOptions() {
+    let resultingAttribitesOptions;
+
+    return this._super(...arguments).then((attribitesOptions) => {
+      resultingAttribitesOptions = attribitesOptions;
+
+      return attribitesOptions;
+    }).then((attribitesOptions) => {
+      let options = Ember.$.extend(this.get('_wfsLayer.options') || {}, { showExisting: true, clusterize: false });
+      let wfsLayer = this.get('_wfsLayer').createVectorLayer(options);
+
+      return wfsLayer;
+    }).then((wfsLayer) => {
+      Ember.set(resultingAttribitesOptions, 'object', wfsLayer);
+      Ember.set(resultingAttribitesOptions, 'settings.readonly', this.get('wfs.readonly'));
+
+      return resultingAttribitesOptions;
+    });
+  },
+
+  /**
+    Sets wfs layer's filter, when wms filter was changed.
+  */
+  filterObserver: Ember.on('init', Ember.observer('options.filter', function() {
+    let filter = this.get('options.filter');
+    this.set('_wfsLayer.options.filter', filter);
+  })),
+
+  /**
+    Returns leaflet layer for filter component.
+
+    @method getLeafletObjectForFilter
+    @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
+    Leaflet layer or promise returning such layer.
+  */
+  getLeafletObjectForFilter() {
+    let options = Ember.$.extend(this.get('_wfsLayer.options') || {}, { showExisting: true });
+    return this.get('_wfsLayer').createVectorLayer(options).then(layer => {
+      return layer;
+    });
+  },
+
+  /**
     Handles 'flexberry-map:identify' event of leaflet map.
 
     @method identify

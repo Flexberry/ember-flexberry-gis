@@ -6,6 +6,14 @@
     margin-top: 0px;
 }
 
+/*******************************
+          Flexbery lookup
+*******************************/
+.flexberry-lookup.fluid {
+  .flexberry-dropdown {
+    width: 100%;
+  }
+}
 
 /*******************************
           Flexberry Map
@@ -168,10 +176,7 @@
 *********************************************/
 
 .mappanel,
-.sidebar-wrapper,
-.flexberry-export-map-command-dialog,
-.flexberry-search-map-command-dialog,
-.flexberry-go-to-map-command-dialog {
+.sidebar-wrapper {
     /* Table */
     .ui.table {
         color: #6f9be3;
@@ -430,6 +435,11 @@
     /* отдалить на полную */
     i.icon.globe:before {
         content: "\e830";
+    }
+    /* геолокация */
+    i.icon.bullseye:before {
+        font-family: Icons;
+        content: "\f140";
     }
     /* поиск по адресу */
     .address.search i.icon.address:before {
@@ -775,5 +785,395 @@
   }
   .detail {
     font-size: 13px;
+  }
+}
+
+/*********************************************
+            Search form
+*********************************************/
+.gis-search-form {
+  // Alignment for 'anyText' input & its buttons.
+  .ui.action.input {
+    .search-button {
+      position: absolute;
+      right: 35px;
+      border: none;
+      height: 35px;
+    }
+
+    .clear-search-button {
+      position: absolute;
+      right: 0;
+      border: none;
+      height: 35px;
+    }
+  }
+
+  // Hide segments borders exept tabular menu segments.
+  .ui.segment:not(.tab), .ui.segments {
+    border: none;
+    box-shadow: none;
+  }
+
+  // Alignment for tabular menu.
+  .ui.tabular.fluid.menu {
+    width: 100% !important;
+    margin-top: 35px;
+  }
+
+  // Fix display of horizontal segments inside accordion content.
+  .ui.horizontal.segments.content {
+    min-width: 325px;
+    &.active, &.animating {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+
+  .advanced-search {
+    .ui.horizontal.segments {
+      &> .segment.advanced-search-what-segment {
+        width: 50%;
+      }
+
+      &> .segment.advanced-search-where-segment {
+        width: 50%;
+
+        .flexberry-boundingbox {
+          .flexberry-map {
+            max-height: 300px;
+          }
+        }
+      }
+    }
+  }
+
+  // Fix colors of labels inside accordion header.
+  .ui.label {
+    &.active {
+      background-color: #dcebfc;
+      border: 0px solid transparent;
+      background-image: none;
+      color: rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  // Hide icon in header of search-results segment.
+  .ui.segments:not(.horizontal) > .ui.segment.search-results {
+    margin-top: 1em;
+
+    .ui.label {
+      i {
+        opacity: 0;
+      }
+    }
+  }
+
+  // Alignment for results table top toolbar & its items.
+  .search-result-top-panel {
+    a {
+      line-height: 35px !important;
+    }
+    &-clear {
+      cursor: pointer;
+    }
+    &-item {
+      display: inline-block;
+      span {
+        margin: 5px;
+      }
+    }
+  }
+}
+
+.scale-filter {
+  margin: 0em 0em 0.5em;
+  white-space: nowrap;
+
+  .compact.selection {
+    width: 5%;
+  }
+
+  .scale-value {
+    &:not(.flexberry-dropdown) {
+      width: ~"calc(100% - 64px)";
+      display: inline-block;
+
+      .flexberry-dropdown {
+        i.dropdown.icon {
+          right: 32px;
+        }
+      }
+    }
+  }
+
+  .ui.button {
+    position: absolute;
+    right: 0;
+    border: none;
+    height: 35px;
+
+    .remove.icon:hover:before {
+      color: @red;
+    }
+  }
+}
+
+/*********************************************
+            Flexberry table
+*********************************************/
+.ui.table.flexberry-table {
+  font-size: 12px;
+
+  th.narrow, td.narrow {
+    width: 90px;
+    max-width: 90px;
+  }
+
+  th.checkbox, td.checkbox {
+    width: 26px;
+  }
+
+  th, td {
+    max-width: 200px;
+  }
+
+  td {
+    .ui.checkbox {
+      width: 26px;
+    }
+  }
+
+  td input[type="text"] {
+    padding: 0.3em 1em;
+    display: inline-block;
+    max-width: 200px;
+  }
+}
+
+.ui.table.flexberry-table-no-model {
+  width: inherit !important;
+}
+
+/************************************************************
+    Simple layers-style (components/layers-styles/simple)
+************************************************************/
+.ui.selection.dropdown {
+  &.simple-layers-style-stroke-linejoin-dropdown,
+  &.simple-layers-style-stroke-linecap-dropdown,
+  &.simple-layers-style-stroke-dasharray-dropdown {
+    min-width: 0;
+    padding-top: 3px;
+    padding-bottom: 3px;
+
+    >.dropdown.icon {
+      top: 1.5em;
+    }
+
+    .menu {
+      // About three items is enough.
+      max-height: 150px;
+
+      >.item {
+        // Impartans are needed here because of importants in original Semantic UI dropdown styles.
+        padding-top: 3px !important;
+        padding-bottom: 3px !important;
+      }
+    }
+  }
+}
+
+.image-markers-style-icon-editor {
+  // Relative position is necessary for inner loader.
+  position: relative;
+
+  .flexberry-file {
+    .ui.action.input {
+      .ui.icon.button {
+        border: none;
+        background: none;
+        position: absolute;
+
+        &.flexberry-file-add-button {
+          right: -5px;
+        }
+
+        &.flexberry-file-remove-button {
+          right: -45px;
+          // Remove button is unnecessary here, but flexberry-file component doesn't have an option to hide it.
+          display: none;
+        }
+      }
+    }
+  }
+
+  .icon-image-wrapper {
+    position: relative;
+    margin: 0 auto;
+    height: 150px;
+    width: 150px;
+    overflow: auto;
+
+    .icon-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 4px;
+    }
+
+    .icon-anchor {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 4px;
+    }
+  }
+}
+
+form.flexberry-edit-layermap {
+  .simple-layers-style {
+    .ui.pointing.secondary.menu {
+      .item {
+        display: flex;
+        justify-content: center;
+        width: 50%;
+      }
+    }
+
+    .ui.tab.segment {
+      overflow: hidden;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+
+      .ui.grid.style-settings-with-preview {
+        margin: 0;
+        padding: 0;
+        padding-top: 1px;
+
+        >.column {
+          padding: 0;
+
+          &:last-child {
+            padding-left: 1rem;
+          }
+        }
+
+        canvas {
+          margin: 0 auto;
+          border: 1px solid rgba(34, 36, 38, 0.15);
+          border-radius: 0.285rem;
+        }
+
+        .flexberry-jsonarea {
+          margin-left: 1px;
+        }
+
+        .flexberry-colorpicker {
+          width: 40px;
+          border: 1px solid #b1cae8;
+          border-radius: 0.285rem;
+        }
+
+        .empty-space {
+          // It is needed to have enough space for colorpicker's sprite.
+          height: 150px;
+        }
+
+        .simple-layers-style-path-editor {
+          .ui.table {
+            margin-bottom: 1rem;
+
+            th:first-child {
+              width: 70px;
+            }
+
+            td {
+              &>input {
+                max-width: 60px;
+                height: 50px;
+              }
+
+              &>.ui.dropdown {
+                height: 50px;
+              }
+            }
+          }
+        }
+
+        .markers-styles-editor {
+          .ui.table {
+            margin-bottom: 1rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+/*******************************************************************************************************************
+      Unique and graduated layers-styles (components/layers-styles/unique   components/layers-styles/graduated)
+*******************************************************************************************************************/
+.unique-layers-style, .graduated-layers-style {
+  .toolbar {
+    display: inline-block;
+    width: 100%;
+
+    .add-and-remove-categories-segment {
+      float: left;
+    }
+
+    .classify-categories-segment {
+      float: right;
+
+      input.categories-count {
+        width: 70px;
+        height: 38px;
+      }
+    }
+  }
+
+  .ui.table.categories-table {
+    th {
+      &.category-selection-column {
+        width: 5%;
+      }
+
+      &.category-symbol-column {
+        width: 15%;
+      }
+
+      &.category-name-column, &.category-value-column {
+        width: 40%;
+      }
+    }
+  }
+
+  .category-style-editor {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #ffffff;
+
+    &.active {
+      display: block;
+    }
+
+    .category-style-editor-close-button {
+      position: absolute;
+      top: 0.4rem;
+      right: 0.4rem;
+      cursor: pointer;
+    }
+
+    .category-style-editor-content {
+      overflow: auto;
+      width: 100%;
+      max-height: 100%;
+      padding: 1rem;
+    }
   }
 }

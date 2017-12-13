@@ -114,19 +114,25 @@
 </div>
 <div class="field">
   <label>
-    {{t "components.layers-dialogs.settings.wfs.style.color-textbox.caption"}}
+    {{t "components.layers-dialogs.settings.wfs.clusterize.caption"}}
   </label>
-  {{flexberry-textbox
-    class="fluid"
-    value=settings.style.color
+  {{flexberry-checkbox
+    value=settings.clusterize
   }}
 </div>
 <div class="field">
   <label>
-    {{t "components.layers-dialogs.settings.wfs.style.weight-textbox.caption"}}
+    {{t "components.layers-dialogs.settings.wfs.readonly.caption"}}
   </label>
-  {{flexberry-textbox
-    class="fluid"
-    value=settings.style.weight
+  {{flexberry-checkbox
+    value=settings.readonly
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.wfs.forceMulti.caption"}}
+  </label>
+  {{flexberry-checkbox
+    value=settings.forceMulti
   }}
 </div>

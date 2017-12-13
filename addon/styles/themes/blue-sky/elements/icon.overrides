@@ -111,3 +111,17 @@ i.icon.next-page:before {
   font-size: 14px;
   opacity: 1;
 }
+
+/*********************************************
+        Flexberry layers attributes panel
+*********************************************/
+
+i.icon.pie:before {
+  font-family: 'Crimean';
+  content: "\e80b";
+}
+
+i.icon.datalist:before {
+  font-family: 'Crimean';
+  content: "\e821";
+}

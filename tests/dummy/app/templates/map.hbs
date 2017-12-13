@@ -1,4 +1,4 @@
-<h3 class="ui header">{{t "forms.map.caption"}}</h3>
+﻿<h3 class="ui header">{{t "forms.map.caption"}}</h3>
 <form class="ui form flexberry-vertical-form" role="form">
   {{ui-message
     type="success"
@@ -9,15 +9,7 @@
     onShow=(action "onSuccessMessageShow")
     onHide=(action "onSuccessMessageHide")
   }}
-  {{ui-message
-    type="error"
-    closeable=true
-    visible=showFormErrorMessage
-    caption=formErrorMessageCaption
-    message=formErrorMessage
-    onShow=(action "onErrorMessageShow")
-    onHide=(action "onErrorMessageHide")
-  }}
+  {{flexberry-error error=error}}
   <div class="field">
     <div class="flexberry-edit-panel">
       {{#unless readonly}}
@@ -42,7 +34,7 @@
     <div class="ui very wide right sidebar pushable tabbar">
       <div data-tab="treeview" class="ui tab treeview">
         <h3>{{t "forms.map.tabbar.treeview.caption"}}</h3>
-        {{#if _showTree}}
+        {{#if showTree}}
           {{flexberry-maplayers
             class="styled"
             cswConnections=cswConnections
@@ -80,6 +72,18 @@
                   on="fitBounds"
                   actionName="onMapLayerFitBounds"
                   actionArguments=(array "{% layerPath %}.bounds")
+                )
+                (hash
+                  on="attributesEdit"
+                  actionName="onAttributesEdit"
+                  actionArguments=(array "{% layerPath %}"
+                    (hash
+                      itemsPath="editedLayers"
+                      selectedTabIndexPath="editedLayersSelectedTabIndex"
+                      foldedPath="editedLayersPanelFolded"
+                      loadingPath="editedLayersPanelLoading"
+                    )
+                  )
                 )
               )
             )
@@ -130,6 +134,17 @@
       </div>
     </div>
   </div>
+  <div class={{concat "bottompanel-wrapper" (if (or (gt editedLayers.length 0) editedLayersPanelLoading) "" " hidden")}}>
+    {{flexberry-layers-attributes-panel
+      items=editedLayers
+      serviceLayer=serviceLayer
+      leafletMap=leafletMap
+      selectedTabIndex=editedLayersSelectedTabIndex
+      folded=editedLayersPanelFolded
+      settings=editedLayersPanelSettings
+      loading=editedLayersPanelLoading
+    }}
+  </div>
   <div class="row">
     <div class="sixteen wide column">
       {{#flexberry-maptoolbar
@@ -160,7 +175,11 @@
         {{map-commands/go-to
           tooltip="Перейти к координатам"
           availableCRS=availableCRS
-          execute=(action "onMapCommandExecute" target=mapToolbar)}}
+          execute=(action "onMapCommandExecute" target=mapToolbar)
+        }}
+        {{map-commands/locate
+        	execute=(action "onMapCommandExecute" target=mapToolbar)
+        }}
         {{map-commands/search execute=(action "onMapCommandExecute" target=mapToolbar)}}
         {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
         {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
@@ -191,14 +210,14 @@
         zoomend=(action "onMapZoomend" "model.zoom")
       }}
         {{flexberry-layers
-            leafletMap=leafletMap
-            leafletContainer=leafletMap
-            layers=model.hierarchy
+          leafletMap=leafletMap
+          leafletContainer=leafletMap
+          layers=model.hierarchy
         }}
         {{switch-scale-control
           map=leafletMap
           updateWhenIdle=true
-          scales=_scales
+          scales=switchScaleControlScales
         }}
         {{#minimap-control
           minimized=true

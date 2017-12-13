@@ -3,6 +3,7 @@ import EditDialog from './layers-dialogs/edit';
 import AddDialog from './layers-dialogs/add';
 import SettingsDialogs from './layers-dialogs/settings';
 import EditModes from './layers-dialogs/edit-modes';
+import EditAttributes from './layers-dialogs/attributes/edit';
 
 export default {
   'remove': RemoveDialog,
@@ -13,5 +14,7 @@ export default {
 
   'settings': SettingsDialogs,
 
-  'edit-modes': EditModes
+  'edit-modes': EditModes,
+
+  'edit-attributes': EditAttributes,
 };

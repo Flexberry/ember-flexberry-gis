@@ -2,14 +2,24 @@
          Theme Overrides
 *******************************/
 
-.ui.modal.flexberry-edit-map-dialog,
+.ui.modal.flexberry-add-layer-dialog,
 .ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-edit-map-dialog,
+.ui.modal.flexberry-edit-layer-attributes-dialog,
+.ui.modal.flexberry-geometry-add-mode-manual-dialog,
+.ui.modal.flexberry-geometry-add-mode-geoprovider-dialog,
 .ui.modal.flexberry-export-map-command-dialog,
 .ui.modal.flexberry-search-map-command-dialog,
 .ui.modal.flexberry-go-to-map-command-dialog {
 
     .content {
         overflow: auto;
+        &.layers-fields-container {
+            border-radius: 0.5em;
+            border: 1px solid @paleBlue;
+            margin: 5px !important;
+            height: 200px;
+        }
     }
 
     .ui.attached.menu {
@@ -49,27 +59,6 @@
     .flexberry-dialog-content {
         padding: 0px 1.5rem !important;
     }
-    /* Кнопки с иконками */
-    .ui.icon.button:not(.fluid) {
-        font-weight: normal;
-        height: 36px;
-        width: 36px;
-        display: flex;
-        font-size: 15px;
-        margin: 0 2px;
-        border: none;
-        box-shadow: @darkBoxShadow;
-        &.active,
-        &:hover {
-            color: @darkbluecolor;
-            background: @lightbluecolor;
-            box-shadow: @darkBoxShadow;
-
-            &>i.icon:before {
-              color: @darkbluecolor;
-            }
-        }
-    }
     .ui.form .field {
         .button.flexberry-button {
           color: @darkbluecolor;
@@ -108,18 +97,23 @@
             opacity: 0.8;
         }
     }
-    .ui.attached.segment {
-      width: calc(100% + 2px) !important;
-    }
-    .ui.attached.tab.segment .flexberry-button {
+
+    .ui.attached.tab.segment .flexberry-button:not(.success) {
         background: @white !important;
-        border: none !important;
         box-shadow: @darkBoxShadow;
         &:hover {
             background: #f1f7ff !important;
             color: @darkbluecolor;
         }
+        &:not(.disabled) {
+            border: none;
+        }
+        &.filter-operator-button {
+            margin: 5px;
+            width: 6em;
+        }
     }
+
     .ui.tab.segment,
     .ui.tabular.menu {
         margin-bottom: 0px !important;
@@ -136,7 +130,11 @@
 
 
 .ui.modal.flexberry-add-layer-dialog,
-.ui.modal.flexberry-edit-layer-dialog {
+.ui.modal.flexberry-edit-layer-dialog,
+.ui.modal.flexberry-edit-map-dialog,
+.ui.modal.flexberry-edit-layer-attributes-dialog,
+.ui.modal.flexberry-geometry-add-mode-manual-dialog,
+.ui.modal.flexberry-geometry-add-mode-geoprovider-dialog {
     .ui.form {
         margin-top: 10px;
         margin-bottom: 10px;

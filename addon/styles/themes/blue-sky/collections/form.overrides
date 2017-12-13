@@ -1,31 +1,34 @@
-.ui.modal.flexberry-edit-layer-dialog,
-.ui.modal.flexberry-export-map-command-dialog,
-.ui.modal.flexberry-search-map-command-dialog,
-.ui.modal.flexberry-go-to-map-command-dialog {
+// Success and error classes for buttons, inputs, etc.
+.ui.input.error {
   input, input:focus {
-    color: @modalInputColor;
-    border: @modalInputBorder;
-    border-radius: @modalInputBorderRadius;
-    box-shadow: @modalInputBoxShadow;
+    border-color: #db2828;
+    color: #db2828;
+    box-shadow: none;
   }
-  label {
-    color: @modalLabelColor;
-  }
-  .flexberry-export-map-command-dialog-paging-column {
-    label {
-      &.flexberry-button {
-        background: @white;
-        border: none;
-        box-shadow: @darkBoxShadow;
-        padding: 0.9em;
+}
 
-        &:hover {
-            background: #f1f7ff;
-        }
-        &.active {
-            background: #f1f7ff;
-        }
-      }
-    }
+.ui.input.success {
+  input, input:focus {
+    border-color: #21ba45;
+    color: #21ba45;
+    box-shadow: none;
+  }
+}
+
+.ui.button.success {
+  color: #fff;
+  background: #21ba45;
+  border-color: #21ba45;
+  opacity: 0.75;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.ui.basic.label {
+  &.red {
+    color: #db2828 !important;
+    border-color: #db2828 !important;
   }
 }

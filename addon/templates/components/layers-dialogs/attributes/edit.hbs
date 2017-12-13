@@ -1,0 +1,34 @@
+{{#flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
+  caption=caption
+  approveButtonCaption=approveButtonCaption
+  denyButtonCaption=denyButtonCaption
+  visible=visible
+  approve=(action "onApprove")
+  deny=(action "onDeny")
+  beforeShow=(action "onBeforeShow")
+  beforeHide=(action "onBeforeHide")
+  show=(action "onShow")
+  hide=(action "onHide")
+}}
+  <form class="ui form {{flexberryClassNames.form}}" role="form">
+    {{#each-in fieldNames as |fieldName fieldValue|}}
+      <div class="field {{if (get parsingErrors fieldName) "error" ""}}">
+        <label>{{fieldValue}}</label>
+        {{#if (eq (get fieldTypes fieldName) "date")}}
+          {{flexberry-datepicker
+            value=(mut (get data fieldName))
+          }}
+        {{else if (eq (get fieldTypes fieldName) "boolean")}}
+          {{flexberry-checkbox
+            value=(mut (get data fieldName))
+          }}
+        {{else}}
+          {{input
+            type="text"
+            value=(mut (get data fieldName))
+          }}
+        {{/if}}
+      </div>
+    {{/each-in}}
+  </form>
+{{/flexberry-dialog}}

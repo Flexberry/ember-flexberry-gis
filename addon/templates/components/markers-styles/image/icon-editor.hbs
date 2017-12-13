@@ -1,0 +1,60 @@
+<table class="ui small compact celled table">
+  <thead>
+    <tr>
+      <th class="six wide column">
+        {{iconCaption}}
+      </th>
+      <th class="ten wide column">
+        {{anchorCaption}}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        {{#if _iconFileLoadingFailed}}
+          {{ui-message
+            type="error"
+            message=(t "components.markers-styles.image.icon-editor.icon-loading-failed-message")
+          }}
+        {{/if}}
+        {{flexberry-file
+          inputClass="fluid"
+          showUploadButton=false
+          showDownloadButton=false
+          showPreview=false
+          readonly=_iconFileIsLoading
+          relatedModel=_relatedModelStub
+          fileChange=(action "onIconFileChange")
+        }}
+      </td>
+      <td>
+        <div class="icon-image-wrapper">
+          {{#if _showIconImage}}
+            <img class="icon-image"
+              width="{{_iconSize.width}}"
+              height="{{_iconSize.height}}"
+              src="{{iconUrl}}"/>
+            <div class="icon-anchor" onclick={{action "onIconAnchorClick"}}>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   version="1.1"
+                   width="{{_iconSize.width}}"
+                   height="{{_iconSize.height}}"
+                   viewBox="0 0 {{_iconSize.width}} {{_iconSize.height}}">
+                <circle cx="{{_iconAnchor.x}}"
+                        cy="{{_iconAnchor.y}}"
+                        r="2"
+                        fill="#ff0000"
+                        stroke="black"
+                        stroke-width="1"/>
+              </svg>
+            </div>
+          {{/if}}
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="ui {{if (and _iconFileIsLoading _iconFileIsLoadingLongTime) "active" ""}} dimmer">
+  <div class="ui loader"></div>
+</div>

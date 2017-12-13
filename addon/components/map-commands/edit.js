@@ -163,6 +163,7 @@ let EditMapCommandComponent = Ember.Component.extend({
       model.set('keyWords', mapModel.keyWords);
       model.set('scale', mapModel.scale);
       model.set('coordinateReferenceSystem', mapModel.coordinateReferenceSystem);
+      model.set('boundingBox', mapModel.boundingBox);
     },
   },
 

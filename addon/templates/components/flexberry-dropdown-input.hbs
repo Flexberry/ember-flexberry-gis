@@ -1,0 +1,12 @@
+{{#flexberry-dropdown
+  class=class
+  direction=direction
+  items=items
+  value=value
+  needChecksOnValue=false
+}}
+  <div class="item hidden"></div>
+  <div class="custom-dropdown-input active" title={{inputTitle}}>
+    {{flexberry-textbox value=inputValue placeholder=inputPlaceholder keyDown=(action "inputKeyDown") class="fluid"}}
+  </div>
+{{/flexberry-dropdown}}

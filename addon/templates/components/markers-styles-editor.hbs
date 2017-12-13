@@ -1,0 +1,36 @@
+<table class="ui small compact celled table markers-styles-selector">
+  <thead>
+    <tr>
+      <th class="sixteen wide">
+        {{t "components.markers-styles-editor.markers-styles-selector.caption"}}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableMarkerStylesCaptions
+          value=_selectedMarkerStyleCaption
+        }}
+      </td>
+    </tr>
+  </tbody>
+</table>
+{{#if (known-for-type "component" (concat "markers-styles/" styleSettings.type))}}
+  {{component (concat "markers-styles/" styleSettings.type)
+    styleSettings=styleSettings
+    change=(action "onStyleSettingsChange")
+  }}
+{{else}}
+  {{ui-message
+    type="error"
+    message=(t
+      "components.markers-styles-editor.marker-style-component-not-implemented.message"
+      componentName=(concat "markers-styles/" styleSettings.type)
+    )
+  }}
+{{/if}}
+<div class="empty-space">
+</div>
