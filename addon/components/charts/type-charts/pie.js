@@ -28,8 +28,8 @@ export default BaseChartType.extend({
     let dataSeries = Ember.A([]);
     let isObject = this.get('_isObject');
 
-    let propName = this.get('_valueName');
-    let propVal = this.get('_valueValues');
+    let propName = this.get('_selectedXAxisProperty');
+    let propVal = this.get('_selectedYAxisProperty');
 
     isObject.forEach(obj => {
       let dsCopy = Ember.A([]);

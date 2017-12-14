@@ -40,6 +40,15 @@ export default Ember.Component.extend({
   _selectedModeType: 'pie',
 
   /**
+    Localized properties names.
+
+    @property _localizedProperties
+    @type Object
+    @default null
+  */
+  _localizedProperties: null,
+
+  /**
     Inner hash containing settings object.
 
     @property _isObjProperties

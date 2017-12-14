@@ -37,6 +37,7 @@
         {{#if _selectedModeType}}
           {{component (concat "charts/type-charts/" _selectedModeType)
             _isObject=_isObjProperties
+            _localizedProperties=_localizedProperties
             _titleChart=_captionChart
             _chartType=_selectedModeType
             onInit=(action "initJsonCharts")
