@@ -8,7 +8,6 @@ import { Projection } from 'ember-flexberry-data';
 import { Offline } from 'ember-flexberry-data';
 import LayerModelMixin from '../mixins/layer-model';
 import LeafletCrsMixin from '../mixins/leaflet-crs';
-import CopyableMixin from 'ember-cli-copyable';
 
 /**
   Map layer model.
@@ -19,9 +18,8 @@ import CopyableMixin from 'ember-cli-copyable';
   @uses NewPlatformFlexberryGISMapLayerModelMixin
   @uses LayerModelMixin
   @uses LeafletCrsMixin
-  @uses CopiableMixin
 */
-let Model = Projection.Model.extend(Offline.ModelMixin, MapLayerMixin, LayerModelMixin, LeafletCrsMixin, CopyableMixin, {
+let Model = Projection.Model.extend(Offline.ModelMixin, MapLayerMixin, LayerModelMixin, LeafletCrsMixin, {
   /**
     Leaflet layer related to layer model.
 

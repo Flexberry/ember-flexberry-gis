@@ -10,6 +10,7 @@ import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DomActionsMixin from 'ember-flexberry/mixins/dom-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
+import { copyLayer } from '../utils/copy-layer';
 
 import layout from '../templates/components/flexberry-maplayer';
 
@@ -655,20 +656,12 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
           return;
         }
 
-        if (Ember.typeOf(layerModel.copy) !== 'function') {
-          Ember.Logger.error('Property \'model\' in \'flexberry-maplayer\' component doesn\'t implement \'copy\' method, so \'copy\' dialog can\'t be shown');
-          return;
-        }
+        // Create layer copy.
+        let store = Ember.getOwner(this).lookup('service:store');
+        this.set('modelCopy', copyLayer(layerModel, store));
 
-        layerModel.copy().then((layerModelCopy) => {
-          this.set('modelCopy', layerModelCopy);
-
-          // Show dialog.
-          this.set('_copyDialogIsVisible', true);
-        }).catch((error) => {
-          let message = error.message || error + '';
-          Ember.Logger.error('Error happend while copying \'model\' in \'flexberry-maplayer\' component (' + message + '), so \'copy\' dialog can\'t be shown');
-        });
+        // Show dialog.
+        this.set('_copyDialogIsVisible', true);
       },
 
       /**
