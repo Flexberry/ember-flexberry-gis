@@ -64,7 +64,7 @@ export default BaseChartType.extend({
     };
     let series = [{
       type: this.get('_chartType'),
-      name: propVal,
+      name: this.get(`_localizedProperties.${propVal}`) || propVal,
       data: dataSeries
     }];
 
