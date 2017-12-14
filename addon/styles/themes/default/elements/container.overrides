@@ -1146,12 +1146,18 @@ form.flexberry-edit-layermap {
       top: 0.4rem;
       right: 0.4rem;
       cursor: pointer;
+      z-index: 100;
+    }
+
+    .category-style-editor-content-wrapper {
+      overflow: auto;
+      width: 100%;
+      max-height: 100%;
     }
 
     .category-style-editor-content {
       overflow: auto;
       width: 100%;
-      max-height: 100%;
       padding: 1rem;
     }
   }

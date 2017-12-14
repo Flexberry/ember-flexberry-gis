@@ -161,6 +161,15 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   editedLayersPanelFolded: true,
 
   /**
+    Flag indicates whether 'flexberry-layers-attributes-panel' is loading or not.
+
+    @property editedLayersPanelLoading
+    @type Boolean
+    @default false
+  */
+  editedLayersPanelLoading: false,
+
+  /**
     Hash containing settiings for 'flexberry-layers-attributes-panel'.
 
     @property editedLayersPanelSettings
