@@ -202,6 +202,15 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     }),
 
     /**
+      Reference to 'store' service.
+
+      @property _store
+      @type <a href="https://emberjs.com/api/ember-data/2.4/classes/DS.Store">DS.Store</a>
+      @private
+    */
+    _store: Ember.inject.service('store'),
+
+    /**
       Flag: indicates whether add dialog has been already requested by user or not.
 
       @property _addDialogHasBeenRequested
@@ -218,6 +227,15 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       @private
     */
     _addDialogIsVisible: false,
+
+    /**
+      Layer model for 'add' dialog.
+
+      @property _addDialogLayer
+      @type NewPlatformFlexberryGISMapLayerModel
+      @default null
+    */
+    _addDialogLayer: null,
 
     /**
       Reference to component's template.
@@ -372,6 +390,11 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
         which describes button's 'click' event.
       */
       onAddButtonClick(e) {
+        // Create empty layer model.
+        let store = this.get('_store');
+        let addDialogLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer');
+        this.set('_addDialogLayer', addDialogLayer);
+
         // Include dialog to markup.
         this.set('_addDialogHasBeenRequested', true);
 

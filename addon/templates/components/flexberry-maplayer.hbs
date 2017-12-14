@@ -15,7 +15,7 @@
       <div class="flexberry-treenode-caption-block">
         {{flexberry-ddau-checkbox
           class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
-          value=visibility
+          value=layer.visibility
           change=(action "onVisibilityCheckboxChange")
         }}
         {{flexberry-icon
@@ -83,10 +83,9 @@
     --}}
     {{#if _addDialogHasBeenRequested}}
       {{component "layers-dialogs/add"
-        model=model
         class=flexberryClassNames.addDialog
         visible=_addDialogIsVisible
-        layer=null
+        layer=_addDialogLayer
         cswConnections=cswConnections
         leafletMap=leafletMap
         typeIsReadonly=false
@@ -95,47 +94,23 @@
     {{/if}}
     {{#if _copyDialogHasBeenRequested}}
       {{component "layers-dialogs/copy"
-        model=modelCopy
         class=flexberryClassNames.copyDialog
         visible=_copyDialogIsVisible
-        layer=(hash
-          type=type
-          name=(concat name " " (t "components.layers-dialogs.copy.layer-name-postfix"))
-          description=description
-          keyWords=keyWords
-          scale=scale
-          coordinateReferenceSystem=coordinateReferenceSystem
-          boundingBox=boundingBox
-          settings=settings
-        )
-        _leafletObject=_leafletObject
-        _leafletObjectForFilter=_leafletObjectForFilter
+        layer=_copyDialogLayer
+        typeIsReadonly=true
         cswConnections=cswConnections
         leafletMap=leafletMap
-        typeIsReadonly=true
         approve=(action "onCopyDialogApprove")
       }}
     {{/if}}
     {{#if _editDialogHasBeenRequested}}
       {{component "layers-dialogs/edit"
-        model=model
         class=flexberryClassNames.editDialog
         visible=_editDialogIsVisible
-        layer=(hash
-          type=type
-          name=name
-          description=description
-          keyWords=keyWords
-          scale=scale
-          coordinateReferenceSystem=coordinateReferenceSystem
-          boundingBox=boundingBox
-          settings=settings
-        )
-        _leafletObject=_leafletObject
-        _leafletObjectForFilter=_leafletObjectForFilter
+        layer=_editDialogLayer
+        typeIsReadonly=true
         cswConnections=cswConnections
         leafletMap=leafletMap
-        typeIsReadonly=true
         approve=(action "onEditDialogApprove")
       }}
     {{/if}}
@@ -143,12 +118,7 @@
       {{component "layers-dialogs/remove"
         class=flexberryClassNames.removeDialog
         visible=_removeDialogIsVisible
-        layer=(hash
-          type=type
-          name=name
-          coordinateReferenceSystem=coordinateReferenceSystem
-          settings=settings
-        )
+        layer=_removeDialogLayer
         approve=(action "onRemoveDialogApprove")
       }}
     {{/if}}
@@ -161,10 +131,10 @@
   {{#block-slot "content"}}
     {{#if _hasLayers}}
       {{flexberry-maplayers
-        layers=layers
+        readonly=readonly
         cswConnections=cswConnections
         leafletMap=leafletMap
-        readonly=readonly
+        layers=layers
       }}
     {{/if}}
     {{#yield-slot "content"}}
@@ -172,18 +142,20 @@
       {{#if _canChangeOpacity}}
         {{flexberry-ddau-slider
           class=(concat flexberryClassNames.opacitySlider " " flexberryClassNames.preventExpandCollapse)
-          value=opacity
+          value=layer.settingsAsObject.opacity
           change=(action "onOpacitySliderChange")
         }}
       {{/if}}
-      {{#if (known-for-type 'component' (concat 'layer-treenode-contents/' type))}}
-        {{component (concat 'layer-treenode-contents/' type)
-          settingsAsObject=settingsAsObject
-          dynamicActions=dynamicActions
+      {{#if (known-for-type "component" (concat "layer-treenode-contents/" type))}}
+        {{component (concat "layer-treenode-contents/" type)
+          layer=layer
+          dynamicActions=layer.dynamicActions
         }}
       {{/if}}
       {{#if (and legendCanBeDisplayed hasBeenExpanded)}}
-        {{component (concat "legends/" type "-legend") layerName=name layerSettings=settingsAsObject}}
+        {{component (concat "legends/" type "-legend")
+          layer=layer
+        }}
       {{/if}}
     {{/yield-slot}}
   {{/block-slot}}

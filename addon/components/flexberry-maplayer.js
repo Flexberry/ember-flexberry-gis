@@ -173,9 +173,9 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @private
     */
 
-    _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'legendCanBeDisplayed', '_canChangeOpacity', function () {
+    _hasContent: Ember.computed('_slots.[]', '_hasLayers', 'layer.legendCanBeDisplayed', '_canChangeOpacity', function () {
       // Yielded {{block-slot "content"}} is defined or 'nodes' are defined.
-      return this._isRegistered('content') || this.get('_hasLayers') || this.get('legendCanBeDisplayed') || this.get('_canChangeOpacity');
+      return this._isRegistered('content') || this.get('_hasLayers') || this.get('layer.legendCanBeDisplayed') || this.get('_canChangeOpacity');
     }),
 
     /**
@@ -186,8 +186,8 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _canChangeOpacity: Ember.computed('_hasLayers', 'type', function () {
-      return this.get('_hasLayers') !== true && this.get('type') !== 'group';
+    _canChangeOpacity: Ember.computed('_hasLayers', 'layer.type', function () {
+      return this.get('_hasLayers') !== true && this.get('layer.type') !== 'group';
     }),
 
     /**
@@ -198,8 +198,8 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _opacityDisplayValue: Ember.computed('opacity', function () {
-      let opacity = this.get('opacity');
+    _opacityDisplayValue: Ember.computed('layer.settingsAsObject.opacity', function () {
+      let opacity = this.get('layer.settingsAsObject.opacity');
 
       let result = opacity !== 0 && opacity > 0.01 ? Math.round(opacity * 100) : 0;
       return result.toString() + '%';
@@ -213,8 +213,8 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _layerClassFactory: Ember.computed('type', function () {
-      return Ember.getOwner(this).knownForType('layer', this.get('type'));
+    _layerClassFactory: Ember.computed('layer.type', function () {
+      return Ember.getOwner(this).knownForType('layer', this.get('layer.type'));
     }),
 
     /**
@@ -253,8 +253,8 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _fitBoundsOperationIsAvailable: Ember.computed('_hasLayers', 'type', function () {
-      return this.get('_hasLayers') || this.get('type') !== 'group';
+    _fitBoundsOperationIsAvailable: Ember.computed('_hasLayers', 'layer.type', function () {
+      return this.get('_hasLayers') || this.get('layer.type') !== 'group';
     }),
 
     /**
@@ -270,6 +270,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
       return Ember.A(Ember.get(layerClassFactory, 'operations') || []).contains('attributes');
     }),
+
+    /**
+      Reference to 'store' service.
+
+      @property _store
+      @type <a href="https://emberjs.com/api/ember-data/2.4/classes/DS.Store">DS.Store</a>
+      @private
+    */
+    _store: Ember.inject.service('store'),
 
     /**
       Flag: indicates whether add dialog has been already requested by user or not.
@@ -344,13 +353,40 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     _removeDialogIsVisible: false,
 
     /**
-      Leaflet layer related to layer model.
+      Layer model for 'add' dialog.
 
-      @property _leafletObject
-      @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
-      @private
+      @property _addDialogLayer
+      @type NewPlatformFlexberryGISMapLayerModel
+      @default null
     */
-    _leafletObject: null,
+    _addDialogLayer: null,
+
+    /**
+      Layer model for 'copy' dialog.
+
+      @property _copyDialogLayer
+      @type NewPlatformFlexberryGISMapLayerModel
+      @default null
+    */
+    _copyDialogLayer: null,
+
+    /**
+      Layer model for 'edit' dialog.
+
+      @property _editDialogLayer
+      @type NewPlatformFlexberryGISMapLayerModel
+      @default null
+    */
+    _editDialogLayer: null,
+
+    /**
+      Layer model for 'remove' dialog.
+
+      @property _removeDialogLayer
+      @type NewPlatformFlexberryGISMapLayerModel
+      @default null
+    */
+    _removeDialogLayer: null,
 
     /**
       Reference to component's template.
@@ -372,117 +408,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @default ''
     */
     tagName: '',
-
-    /**
-      Layer model.
-
-      @property model
-      @type {NewPlatformFlexberryGISMapLayerModel}
-      @default null
-    */
-    model: null,
-
-    /**
-      Layer model copy.
-
-      @property modelCopy
-      @type {NewPlatformFlexberryGISMapLayerModel}
-      @default null
-    */
-    modelCopy: null,
-
-    /**
-      Layer's type (depending on it icon mark is selected).
-
-      @property type
-      @type String
-      @default null
-    */
-    type: null,
-
-    /**
-      Layer's name (will be displayed near node).
-
-      @property name
-      @type String
-      @default null
-    */
-    name: null,
-
-    /**
-      Layer's CRS (coordinate reference system).
-
-      @property coordinateReferenceSystem
-      @type String
-      @default null
-    */
-    coordinateReferenceSystem: null,
-
-    /**
-      Layer's bounding box.
-
-      @property boundingBox
-      @type Object
-      @default null
-    */
-    boundingBox: null,
-
-    /**
-      Layer's serialized type-related settings.
-
-      @property type
-      @type String
-      @default null
-    */
-    settings: null,
-
-    /**
-      Layer's settings as JSON-object.
-
-      @property settingsAsObject
-      @type String
-      @default null
-    */
-    settingsAsObject: null,
-
-    /**
-      Layer's visibility.
-
-      @property visibility
-      @type Boolean
-      @default false
-    */
-    visibility: false,
-
-    /**
-      Layer's opacity.
-
-      @property opacity
-      @type Number
-      @default 1
-    */
-    opacity: 1,
-
-    /**
-      Flag: indicates whether layer's legend can be displayed.
-
-      @property legendCanBeDisplayed
-      @type Boolean
-      @default false
-    */
-    legendCanBeDisplayed: false,
-
-    /**
-      Child layers.
-      This property is optional and must be used when there are too many child layers,
-      and you don't want to define them explicitly in the .hbs markup,
-      then you can define layers array somewhere in code & pass defined array to this component's property.
-
-      @property layers
-      @type NewPlatformFlexberryGISMapLayerModel[]
-      @default null
-    */
-    layers: null,
 
     /**
       Available CSW connections.
@@ -618,6 +543,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         which describes button's 'click' event.
       */
       onAddButtonClick(e) {
+        // Create empty layer.
+        let store = this.get('_store');
+        this.set('_addDialogLayer', store.createRecord('new-platform-flexberry-g-i-s-map-layer'));
+
         // Include dialog to markup.
         this.set('_addDialogHasBeenRequested', true);
 
@@ -647,18 +576,12 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         which describes button's 'click' event.
       */
       onCopyButtonClick(e) {
+        // Create layer copy.
+        let store = this.get('_store');
+        this.set('_copyDialogLayer', copyLayer(layer, store));
+
         // Include dialog to markup.
         this.set('_copyDialogHasBeenRequested', true);
-
-        let layerModel = this.get('model');
-        if (Ember.isNone(layerModel)) {
-          Ember.Logger.error('Property \'model\' isn\'t defined in \'flexberry-maplayer\' component, so \'copy\' dialog can\'t be shown');
-          return;
-        }
-
-        // Create layer copy.
-        let store = Ember.getOwner(this).lookup('service:store');
-        this.set('modelCopy', copyLayer(layerModel, store));
 
         // Show dialog.
         this.set('_copyDialogIsVisible', true);
@@ -674,7 +597,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onCopyDialogApprove(...args) {
         let { layerProperties } = args[args.length - 1];
-        let layer = this.get('modelCopy');
+        let layer = this.get('_copyDialogLayer');
         layer.setProperties(layerProperties);
 
         // Send outer 'copy' action.
@@ -690,6 +613,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         which describes button's 'click' event.
       */
       onEditButtonClick() {
+        // Create layer copy.
+        let store = this.get('_store');
+        this.set('_editDialogLayer', copyLayer(layer, store));
+
         // Include dialog to markup.
         this.set('_editDialogHasBeenRequested', true);
 
@@ -719,6 +646,10 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         which describes button's 'click' event.
       */
       onRemoveButtonClick() {
+        // Create layer copy.
+        let store = this.get('_store');
+        this.set('_removeDialogLayer', copyLayer(layer, store));
+
         // Include dialog to markup.
         this.set('_removeDialogHasBeenRequested', true);
 
