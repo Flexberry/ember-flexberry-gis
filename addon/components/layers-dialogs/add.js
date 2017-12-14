@@ -94,7 +94,7 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
     @type String
     @default t('components.layers-dialogs.add.crs-textarea.caption')
   */
-  crsTextareaCaption: t('components.layers-dialogs.add.crs-textarea.caption'),
+  crsTextareaCaption: t('components.layers-dialogs.add.crs-textarea.caption')
 });
 
 // Add component's CSS-class names as component's class static constants

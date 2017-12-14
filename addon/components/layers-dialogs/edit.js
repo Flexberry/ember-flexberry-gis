@@ -262,6 +262,8 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
       Component's action invoking when dialog is approved.
 
       @method sendingActions.approve
+      @param {Object} e Action's event object.
+      @param {Object} e.layerProperties Hash containing layer properties.
     */
 
     /**

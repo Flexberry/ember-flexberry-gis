@@ -273,13 +273,14 @@ export default Ember.Mixin.create({
     },
 
     /**
-      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.addChild:method"}}flexberry-maplayers component's 'addChild' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.add:method"}}flexberry-maplayers component's 'add' action{{/crossLink}}.
       It adds new child layer.
 
       @method actions.onMapLayerAdd
       @param {String} layerPath Path to a parent layers, to which new child layer must be added on action.
       @param {Object} e Action's event object.
       @param {Object} e.layerProperties Object containing properties of new child layer.
+      @param {Object} [e.layer] Object containing already created layer model with specified layer properties.
 
       @example
       templates/my-form.hbs
@@ -309,7 +310,8 @@ export default Ember.Mixin.create({
         Ember.typeOf(parentLayerPath) === 'string');
 
       let {
-        layerProperties
+        layerProperties,
+        layer
       } = args[args.length - 1];
       Ember.assert(
         `Wrong type of \`layerProperties\` property: actual type is \`${Ember.typeOf(layerProperties)}\`, ` +
@@ -333,10 +335,10 @@ export default Ember.Mixin.create({
         `but \`Ember.NativeArray\` is expected`,
         Ember.isArray(childLayers) && Ember.typeOf(childLayers.pushObject) === 'function');
 
-      let childLayer = this.createLayer({
+      let childLayer = Ember.isNone(layer) ? this.createLayer({
         parentLayer: parentLayer,
         layerProperties: layerProperties
-      });
+      }) : layer;
 
       if (Ember.get(childLayer, 'type') === 'group' && !Ember.isArray(Ember.get(childLayer, 'layers'))) {
         Ember.set(childLayer, 'layers', Ember.A());
@@ -348,6 +350,38 @@ export default Ember.Mixin.create({
       rootArray.pushObject(childLayer);
 
       this.setIndexes(rootArray);
+    },
+
+    /**
+      Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.copy:method"}}flexberry-maplayers component's 'copy' action{{/crossLink}}.
+      It adds new child layer.
+
+      @method actions.onMapLayerAdd
+      @param {String} layerPath Path to a copied layer.
+      @param {Object} e Action's event object.
+      @param {Object} e.layerProperties Object containing properties of copied layer.
+      @param {Object} e.layer Object containing copied layer model.
+
+      @example
+      templates/my-form.hbs
+      ```handlebars
+        {{flexberry-maplayer
+          name="Tree node with checkbox"
+          add=(action "onMapLayerCopy" "layers.0")
+        }}
+      ```
+
+      controllers/my-form.js
+      ```javascript
+        import Ember from 'ember';
+        import FlexberryMaplayerActionsHandlerMixin from 'ember-flexberry-gis/mixins/flexberry-maplayers-actions-handler';
+
+        export default Ember.Controller.extend(FlexberryMaplayerActionsHandlerMixin, {
+        });
+      ```
+    */
+    onMapLayerCopy(...args) {
+      this.send('onMapLayerAdd', ...args);
     },
 
     /**
@@ -485,15 +519,8 @@ export default Ember.Mixin.create({
     options = options || {};
     let layerProperties = Ember.get(options, 'layerProperties');
     let layer = Ember.get(options, 'layer');
+    layer.setProperties(layerProperties);
 
-    Ember.set(layer, 'type', Ember.get(layerProperties, 'type'));
-    Ember.set(layer, 'name', Ember.get(layerProperties, 'name'));
-    Ember.set(layer, 'description', Ember.get(layerProperties, 'description'));
-    Ember.set(layer, 'keyWords', Ember.get(layerProperties, 'keyWords'));
-    Ember.set(layer, 'scale', Ember.get(layerProperties, 'scale'));
-    Ember.set(layer, 'coordinateReferenceSystem', Ember.get(layerProperties, 'coordinateReferenceSystem'));
-    Ember.set(layer, 'settings', Ember.get(layerProperties, 'settings'));
-    Ember.set(layer, 'boundingBox', Ember.get(layerProperties, 'boundingBox'));
     return layer;
   },
 

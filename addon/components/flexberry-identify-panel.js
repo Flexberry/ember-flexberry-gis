@@ -99,9 +99,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @property allCaption
     @type String
-    @default t('components.map-tools.identify.identify-all.caption')
+    @default t('components.flexberry-identify-panel.identify-all.caption')
   */
-  allCaption: t('components.map-tools.identify.identify-all.caption'),
+  allCaption: t('components.flexberry-identify-panel.identify-all.caption'),
 
   /**
     layers option's 'all' mode's icon CSS-class names.
@@ -126,9 +126,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @property visibleCaption
     @type String
-    @default t('components.map-tools.idenify.identify-all-visible.caption')
+    @default t('components.flexberry-identify-panel.identify-all-visible.caption')
   */
-  visibleCaption: t('components.map-tools.identify.identify-all-visible.caption'),
+  visibleCaption: t('components.flexberry-identify-panel.identify-all-visible.caption'),
 
   /**
     layers option's 'visible' mode's icon CSS-class names.
@@ -153,9 +153,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @property topCaption
     @type String
-    @default t('components.map-tools.idenify.identify-top-visible.caption')
+    @default t('components.flexberry-identify-panel.identify-top-visible.caption')
   */
-  topCaption: t('components.map-tools.identify.identify-top-visible.caption'),
+  topCaption: t('components.flexberry-identify-panel.identify-top-visible.caption'),
 
   /**
     layers option's 'top' mode's icon CSS-class names.
@@ -214,9 +214,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @property rectangleCaption
     @type String
-    @default t('components.map-tools.idenify.rectangle.caption')
+    @default t('components.flexberry-identify-panel.rectangle.caption')
   */
-  rectangleCaption: t('components.map-tools.identify.rectangle.caption'),
+  rectangleCaption: t('components.flexberry-identify-panel.rectangle.caption'),
 
   /**
     tools option's 'rectangle' mode's icon CSS-class names.
@@ -241,9 +241,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @property polygonCaption
     @type String
-    @default t('components.map-tools.idenify.polygon.caption')
+    @default t('components.flexberry-identify-panel.polygon.caption')
   */
-  polygonCaption: t('components.map-tools.identify.polygon.caption'),
+  polygonCaption: t('components.flexberry-identify-panel.polygon.caption'),
 
   /**
     tools option's 'polygon' mode's icon CSS-class names.
@@ -268,9 +268,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @property clearCaption
     @type String
-    @default t('components.map-tools.idenify.rectangle.caption')
+    @default t('components.flexberry-identify-panel.clear.caption')
   */
-  clearCaption: t('components.map-tools.identify.clear.caption'),
+  clearCaption: t('components.flexberry-identify-panel.clear.caption'),
 
   /**
     clear button's icon CSS-class names.

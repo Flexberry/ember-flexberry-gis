@@ -1,8 +1,7 @@
-import typeCharts from './charts/type-charts';
-import indexCharts from './charts/index-chart';
+import IndexCharts from './charts/index-chart';
+import TypeCharts from './charts/type-charts';
 
 export default {
-  'index-chart': indexCharts,
-
-  'type-charts': typeCharts
+  'index-chart': IndexCharts,
+  'type-charts': TypeCharts
 };

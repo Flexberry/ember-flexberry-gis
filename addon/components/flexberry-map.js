@@ -394,6 +394,26 @@ let FlexberryMapComponent = Ember.Component.extend(
     },
 
     /**
+      Observes changhes in application's current locale, and refreshes some GUI related to it.
+
+      @method localeDidChange
+      @private
+    */
+    _localeDidChange: Ember.observer('i18n.locale', function() {
+      let i18n = this.get('i18n');
+
+      if (this.get('zoomControl')) {
+        let $leafletContainer = this.get('_$leafletContainer');
+        let $zoomControl = $leafletContainer.find('.leaflet-control-container .leaflet-control-zoom');
+        let $zoomInButton = $zoomControl.find('.leaflet-control-zoom-in');
+        let $zoomOutButton = $zoomControl.find('.leaflet-control-zoom-out');
+
+        $zoomInButton.attr('title', i18n.t('components.flexberry-map.zoom-control.zoom-in-button.title'));
+        $zoomOutButton.attr('title', i18n.t('components.flexberry-map.zoom-control.zoom-out-button.title'));
+      }
+    }),
+
+    /**
       Handles leaflet map container's resize.
 
       @property _onLeafletContainerResize
@@ -453,6 +473,8 @@ let FlexberryMapComponent = Ember.Component.extend(
           this._runQuery(queryFilter, mapObjectSetting);
         });
       }
+
+      Ember.run.scheduleOnce('afterRender', this, '_localeDidChange');
     },
 
     /**

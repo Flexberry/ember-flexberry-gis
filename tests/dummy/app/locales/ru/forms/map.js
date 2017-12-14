@@ -1,9 +1,9 @@
 export default {
   'caption': 'Карта',
-  'treeviewbuttontooltip': 'Показать дерево слоёв',
-  'searchbuttontooltip': 'Показать поиск',
+  'treeviewbuttontooltip': 'Список слоев',
+  'searchbuttontooltip': 'Поиск',
   'bookmarksbuttontooltip': 'Пространственные закладки',
-  'identifybuttontooltip': 'Показать идентификацию',
+  'identifybuttontooltip': 'Идентификация',
 
   'tabbar': {
     'treeview': {
@@ -13,10 +13,10 @@ export default {
       'caption': 'Поиск'
     },
     'identify': {
-      'caption': 'Идентификация'
+      'caption': 'Пространственные закалдки'
     },
     'bookmarks': {
-      'caption': 'Пространственные закладки'
+      'caption': 'Идентификация'
     }
   }
 };

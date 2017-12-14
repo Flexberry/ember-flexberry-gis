@@ -10,6 +10,7 @@ import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DomActionsMixin from 'ember-flexberry/mixins/dom-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
+import { copyLayer } from '../utils/copy-layer';
 
 import layout from '../templates/components/flexberry-maplayer';
 
@@ -41,6 +42,7 @@ const flexberryClassNames = {
   opacityLabel: flexberryClassNamesPrefix + '-opacity-label',
   typeIcon: flexberryClassNamesPrefix + '-type-icon',
   addButton: flexberryClassNamesPrefix + '-add-button',
+  copyButton: flexberryClassNamesPrefix + '-copy-button',
   editButton: flexberryClassNamesPrefix + '-edit-button',
   removeButton: flexberryClassNamesPrefix + '-remove-button',
   caption: flexberryClassNamesPrefix + '-caption-label',
@@ -141,9 +143,9 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
 
       @property _requiredActions
       @type String[]
-      @default ['changeVisibility', 'add', 'edit', 'remove']
+      @default ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds']
     */
-    _requiredActionNames: ['changeVisibility', 'add', 'edit', 'remove'],
+    _requiredActionNames: ['changeVisibility', 'changeOpacity', 'add', 'copy', 'edit', 'remove', 'fitBounds'],
 
     /**
       Flag: indicates whether some {{#crossLink "FlexberryMaplayerComponent/layers:property"}}'layers'{{/childNodes}} are defined.
@@ -244,6 +246,18 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
+      Flag: indicates whether fir bouds operation is allowed for layer.
+
+      @property _fitBoundsOperationIsAvailable
+      @type boolean
+      @readOnly
+      @private
+    */
+    _fitBoundsOperationIsAvailable: Ember.computed('_hasLayers', 'type', function () {
+      return this.get('_hasLayers') || this.get('type') !== 'group';
+    }),
+
+    /**
       Flag: indicates whether attributes operation is allowed for layer.
 
       @property _attributesOperationIsAvailable
@@ -276,6 +290,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     _editDialogHasBeenRequested: false,
 
     /**
+      Flag: indicates whether copy dialog has been already requested by user or not.
+
+      @property _copyDialogHasBeenRequested
+      @type boolean
+      @private
+    */
+    _copyDialogHasBeenRequested: false,
+
+    /**
       Flag: indicates whether remove dialog has been already requested by user or not.
 
       @property _removeDialogHasBeenRequested
@@ -301,6 +324,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @private
     */
     _editDialogIsVisible: false,
+
+    /**
+      Flag: indicates whether copy dialog is visible or not.
+
+      @property _copyDialogIsVisible
+      @type boolean
+      @private
+    */
+    _copyDialogIsVisible: false,
 
     /**
       Flag: indicates whether remove dialog is visible or not.
@@ -340,6 +372,24 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @default ''
     */
     tagName: '',
+
+    /**
+      Layer model.
+
+      @property model
+      @type {NewPlatformFlexberryGISMapLayerModel}
+      @default null
+    */
+    model: null,
+
+    /**
+      Layer model copy.
+
+      @property modelCopy
+      @type {NewPlatformFlexberryGISMapLayerModel}
+      @default null
+    */
+    modelCopy: null,
 
     /**
       Layer's type (depending on it icon mark is selected).
@@ -548,6 +598,18 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       },
 
       /**
+        Handles attributes button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.attributes:method"}}'attributes'{{/crossLink}} action.
+
+        @method actions.onAttributesButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onAttributesButtonClick(...args) {
+        this.sendAction('attributesEdit', ...args);
+      },
+
+      /**
         Handles add button's 'click' event.
         Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.add:method"}}'add'{{/crossLink}} action.
 
@@ -574,6 +636,49 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onAddDialogApprove(...args) {
         // Send outer 'add' action.
         this.sendAction('add', ...args);
+      },
+
+      /**
+        Handles copy button's 'click' event.
+        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.copy:method"}}'copy'{{/crossLink}} action.
+
+        @method actions.onCopyButtonClick
+        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
+        which describes button's 'click' event.
+      */
+      onCopyButtonClick(e) {
+        // Include dialog to markup.
+        this.set('_copyDialogHasBeenRequested', true);
+
+        let layerModel = this.get('model');
+        if (Ember.isNone(layerModel)) {
+          Ember.Logger.error('Property \'model\' isn\'t defined in \'flexberry-maplayer\' component, so \'copy\' dialog can\'t be shown');
+          return;
+        }
+
+        // Create layer copy.
+        let store = Ember.getOwner(this).lookup('service:store');
+        this.set('modelCopy', copyLayer(layerModel, store));
+
+        // Show dialog.
+        this.set('_copyDialogIsVisible', true);
+      },
+
+      /**
+        Handles copy dialog's 'approve' action.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.copy:method"}}'copy'{{/crossLink}} action.
+
+        @method actions.onCopyDialogApprove
+        @param {Object} e Action's event object.
+        @param {Object} e.layerProperties Object containing properties of layer copy.
+      */
+      onCopyDialogApprove(...args) {
+        let { layerProperties } = args[args.length - 1];
+        let layer = this.get('modelCopy');
+        layer.setProperties(layerProperties);
+
+        // Send outer 'copy' action.
+        this.sendAction('copy', { layerProperties, layer });
       },
 
       /**
@@ -630,18 +735,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onRemoveDialogApprove(...args) {
         // Send outer 'remove' action.
         this.sendAction('remove', ...args);
-      },
-
-      /**
-        Handles attributes button's 'click' event.
-        Invokes component's {{#crossLink "FlexberryMaplayersComponent/sendingActions.attributes:method"}}'attributes'{{/crossLink}} action.
-
-        @method actions.onAttributesButtonClick
-        @param {Object} e [jQuery event object](http://api.jquery.com/category/events/event-object/)
-        which describes button's 'click' event.
-      */
-      onAttributesButtonClick(...args) {
-        this.sendAction('attributesEdit', ...args);
       }
     },
 
@@ -701,6 +794,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @method sendingActions.add
       @param {Object} e Action's event object.
       @param {Object} e.layerProperties Object containing properties of new child layer.
+    */
+
+    /**
+      Component's action invoking when user wants to copy current layer.
+
+      @method sendingActions.copy
+      @param {Object} e Action's event object.
+      @param {Object} e.layerProperties Object containing copied layer properties.
+      @param {Object} e.layer Object containing copied layer model.
     */
 
     /**
