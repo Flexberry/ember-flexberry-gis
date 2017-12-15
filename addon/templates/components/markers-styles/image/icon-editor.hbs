@@ -2,15 +2,28 @@
   <thead>
     <tr>
       <th class="six wide column">
-        {{iconCaption}}
+        
+        {{iconCaption}}        
+        
+        {{#if allowDisabling}}
+        
+        {{flexberry-checkbox 
+        value=_disabled
+        class="rightFloated"
+        }}  
+              
+        {{/if}}
+        
       </th>
-      <th class="ten wide column">
+      <th class="ten wide column" {{action 'doSomething'}}>
         {{anchorCaption}}
       </th>
     </tr>
   </thead>
-  <tbody>
+  {{#if _disabledBody}}
+  <tbody>   
     <tr>
+      
       <td>
         {{#if _iconFileLoadingFailed}}
           {{ui-message
@@ -52,8 +65,10 @@
           {{/if}}
         </div>
       </td>
-    </tr>
+      
+    </tr>    
   </tbody>
+  {{/if}}
 </table>
 <div class="ui {{if (and _iconFileIsLoading _iconFileIsLoadingLongTime) "active" ""}} dimmer">
   <div class="ui loader"></div>

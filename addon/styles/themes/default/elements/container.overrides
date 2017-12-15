@@ -18,7 +18,9 @@
 /*******************************
           Flexberry Map
 *******************************/
-
+.rightFloated{
+	float:right;
+}
 .flexberry-map {
   font-family: inherit;
   width: @flexberryMapWidth;
@@ -958,6 +960,20 @@
 /************************************************************
     Simple layers-style (components/layers-styles/simple)
 ************************************************************/
+.sticky{
+    /* sticky */    
+    position: static;
+    position: -webkit-sticky !important;
+    position: -moz-sticky !important;
+    position: -ms-sticky !important;
+    position: -o-sticky !important;
+    position: sticky !important;
+    top: 10px;
+    
+}
+.scrol{
+    overflow: visible !important;
+}
 .ui.selection.dropdown {
   &.simple-layers-style-stroke-linejoin-dropdown,
   &.simple-layers-style-stroke-linecap-dropdown,

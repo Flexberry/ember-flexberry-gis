@@ -6,17 +6,17 @@
     {{t "components.layers-styles.simple.marker-tab.caption"}}
   </a>
 </div>
-<div class="ui tab segment {{if (eq _activeTab "path-tab") "active"}}" data-tab="path-tab">
-  <div class="ui centered grid style-settings-with-preview">
-    <div class="twelve wide column">
+<div class="scrol ui tab segment {{if (eq _activeTab "path-tab") "active"}}" data-tab="path-tab">  
+  <div class="ui centered grid style-settings-with-preview">    
+    <div class="twelve wide column">        
       {{layers-styles/simple/path-editor
         styleSettings=styleSettings.style.path
         change=(action "onPathStyleSettingsChange")
-      }}
+      }}        
     </div>
-    <div class="four wide center aligned column">
-      <canvas width="150" height="150"></canvas>
-    </div>
+    <div class="four wide center aligned column">      
+      <canvas width="150" height="150" class="sticky"></canvas>
+    </div>          
   </div>
 </div>
 <div class="ui tab segment {{if (eq _activeTab "marker-tab") "active"}}" data-tab="marker-tab">
