@@ -184,14 +184,13 @@ export default Ember.Component.extend({
     @type Boolean
     @private
     @default false
-  */  
-  _disabled: Ember.computed('iconUrl', function(){    
-    let iconUrl_ = this.get('iconUrl');    
-    
-    if(iconUrl_!=null){        
+  */
+  _disabled: Ember.computed('iconUrl', function() {
+    let iconUrl_ = this.get('iconUrl');
+
+    if (iconUrl_ != null) {
       return true;
-    }
-    else{                  
+    } else {
       this._clearIconFile();
       return false;
     }
@@ -204,16 +203,16 @@ export default Ember.Component.extend({
     @private
     @default true
   */
-  _disabledBody: Ember.computed('_disabled', 'allowDisabling', function(){
+  _disabledBody: Ember.computed('_disabled', 'allowDisabling', function() {
     let disabled_ = this.get('_disabled');
-    let allowDisabling_ = this.get('allowDisabling');    
-    if(!allowDisabling_){      
+    let allowDisabling_ = this.get('allowDisabling');
+    if (!allowDisabling_) {
       return true;
     }
-    if(allowDisabling_ && !disabled_){           
+
+    if (allowDisabling_ && !disabled_) {
       return false;
-    }
-    else{           
+    } else {
       return true;
     }
 
@@ -226,7 +225,7 @@ export default Ember.Component.extend({
     @type Boolean
     @default false
   */
-  allowDisabling: false,    
+  allowDisabling: false,
 
   /**
     Clears icon style settings and related component's properties.
@@ -244,7 +243,7 @@ export default Ember.Component.extend({
       _iconFileIsLoadingLongTime: false
     });
 
-    this.get('_iconImage').removeAttribute('src');    
+    this.get('_iconImage').removeAttribute('src');
   },
 
   /**
@@ -256,7 +255,7 @@ export default Ember.Component.extend({
   _styleSettingsDidChange: Ember.observer(
     'iconUrl',
     'iconSize',
-    'iconAnchor',    
+    'iconAnchor',
     function() {
       Ember.run.once(this, '_sendChangeAction');
     }
@@ -287,7 +286,7 @@ export default Ember.Component.extend({
 
     this.setProperties({
       _iconFileLoadingFailed: false,
-      _iconFileIsLoading: true,      
+      _iconFileIsLoading: true,
       _iconFileIsLoadingLongTime: false
     });
 
@@ -313,7 +312,7 @@ export default Ember.Component.extend({
     let iconUrl = e.target.result;
 
     // Image will start loading new file and then '_onLoadIconImageSuccess' or '_onLoadIconImageError' will be called.
-    this.get('_iconImage').setAttribute('src', iconUrl);          
+    this.get('_iconImage').setAttribute('src', iconUrl);
   },
 
   /**
@@ -353,7 +352,7 @@ export default Ember.Component.extend({
       iconAnchor: iconAnchor,
       _iconFileLoadingFailed: false,
       _iconFileIsLoading: false,
-      _iconFileIsLoadingLongTime: false,      
+      _iconFileIsLoadingLongTime: false,
     });
 
     iconImage.removeAttribute('src');
@@ -434,11 +433,10 @@ export default Ember.Component.extend({
       let iconFile = uploadData && uploadData.files && uploadData.files.length > 0 ?
         uploadData.files[0] :
         null;
-      if (Ember.isNone(iconFile)) {               
+      if (Ember.isNone(iconFile)) {
         this._clearIconFile();
-      } 
-      else {        
-        this._loadIconFile(iconFile);               
+      } else {
+        this._loadIconFile(iconFile);
       }
     },
 
@@ -452,6 +450,5 @@ export default Ember.Component.extend({
     onIconAnchorClick(e) {
       this.set('iconAnchor', [e.layerX, e.layerY]);
     }
-              
   }
 });

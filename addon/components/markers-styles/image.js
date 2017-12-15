@@ -46,8 +46,8 @@ export default Ember.Component.extend({
     onIconStyleSettingsChange(newIconStyleSettings) {
       this.set('styleSettings.style.iconUrl', newIconStyleSettings.iconUrl);
       this.set('styleSettings.style.iconSize', newIconStyleSettings.iconSize);
-      this.set('styleSettings.style.iconAnchor', newIconStyleSettings.iconAnchor); 
-           
+      this.set('styleSettings.style.iconAnchor', newIconStyleSettings.iconAnchor);
+
       this._sendChangeAction();
     },
 
