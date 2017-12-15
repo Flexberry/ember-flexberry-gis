@@ -37,7 +37,6 @@
         {{#if showTree}}
           {{flexberry-maplayers
             class="styled"
-            cswConnections=cswConnections
             leafletMap=leafletMap
             layers=(get-with-dynamic-actions this "model.hierarchy"
               hierarchyPropertyName="layers"

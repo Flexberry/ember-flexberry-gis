@@ -335,15 +335,6 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     layers: null,
 
     /**
-      Available CSW connections.
-
-      @property cswConnections
-      @type Object[]
-      @default null
-    */
-    cswConnections: null,
-
-    /**
       Leaflet map.
 
       @property leafletMap

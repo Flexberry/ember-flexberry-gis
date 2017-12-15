@@ -73,22 +73,22 @@ export default Ember.Component.extend({
   lazyLoaded: true,
 
   /**
-    Related layer's name.
+    Component's right pading.
 
-    @property layerName
-    @type String
+    @property rightPadding
+    @type Number
     @default null
   */
-  layerName: null,
+  rightPadding: null,
 
   /**
-    Related layer's settings as JSON object.
+    Component's height.
 
-    @property layerSettings
-    @type Object
+    @property height
+    @type Number
     @default null
   */
-  layerSettings: null,
+  height: null,
 
   /**
     Array of legend's for layer.
@@ -100,28 +100,43 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _legends: Ember.computed('layerSettings.legendSettings', function () {
+  _legends: Ember.computed('layer.settingsAsObject.legendSettings', function () {
     return Ember.A();
   }),
 
-  legendsObserver: Ember.on('init', Ember.observer('_legends', function() {
+  /**
+    Observes changes in legends array, and sends 'legendsLoaded' action notifying that legends are loaded.
+
+    @method _legendsDidChange
+    @private
+  */
+  _legendsDidChange: Ember.on('init', Ember.observer('_legends', function() {
     let legends = this.get('_legends');
     if (legends instanceof Ember.RSVP.Promise) {
       legends.then((result) => {
-        this.sendAction('legendsLoaded', this.get('layerName'), result);
+        this.sendAction('legendsLoaded', this.get('layer.name'), result);
       });
     } else {
-      this.sendAction('legendsLoaded', this.get('layerName'), this.get('_legends'));
+      this.sendAction('legendsLoaded', this.get('layer.name'), legends);
     }
   })),
 
-  rightPaddingObserver: Ember.observer('rightPadding', function() {
+  /**
+    Observes changes in right padding property, and changes it's value in the DOM.
+
+    @method _legendsDidChange
+    @private
+  */
+  _rightPaddingDidChange: Ember.observer('rightPadding', function() {
     let rightPadding = this.get('rightPadding');
     if (!Ember.isBlank(rightPadding)) {
       this.$(`.${this.flexberryClassNames.imageWrapper}`).css('padding-right', rightPadding + 'px');
     }
   }),
 
+  /**
+    Called after a component has been rendered, both on initial render and in subsequent rerenders.
+  */
   didRender() {
     this._super(...arguments);
 

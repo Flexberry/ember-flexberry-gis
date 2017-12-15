@@ -410,15 +410,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     tagName: '',
 
     /**
-      Available CSW connections.
-
-      @property cswConnections
-      @type Object[]
-      @default null
-    */
-    cswConnections: null,
-
-    /**
       Leaflet map.
 
       @property leafletMap
@@ -578,6 +569,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onCopyButtonClick(e) {
         // Create layer copy.
         let store = this.get('_store');
+        let layer = this.get('layer');
         this.set('_copyDialogLayer', copyLayer(layer, store));
 
         // Include dialog to markup.
@@ -615,6 +607,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onEditButtonClick() {
         // Create layer copy.
         let store = this.get('_store');
+        let layer = this.get('layer');
         this.set('_editDialogLayer', copyLayer(layer, store));
 
         // Include dialog to markup.
@@ -648,6 +641,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       onRemoveButtonClick() {
         // Create layer copy.
         let store = this.get('_store');
+        let layer = this.get('layer');
         this.set('_removeDialogLayer', copyLayer(layer, store));
 
         // Include dialog to markup.

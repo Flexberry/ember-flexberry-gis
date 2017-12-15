@@ -22,7 +22,7 @@
           class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
         }}
         <label class={{flexberryClassNames.caption}}>
-          {{name}}
+          {{layer.name}}
       </label>
       </div>
       <div class="flexberry-treenode-buttons-block">
@@ -86,7 +86,6 @@
         class=flexberryClassNames.addDialog
         visible=_addDialogIsVisible
         layer=_addDialogLayer
-        cswConnections=cswConnections
         leafletMap=leafletMap
         typeIsReadonly=false
         approve=(action "onAddDialogApprove")
@@ -98,7 +97,6 @@
         visible=_copyDialogIsVisible
         layer=_copyDialogLayer
         typeIsReadonly=true
-        cswConnections=cswConnections
         leafletMap=leafletMap
         approve=(action "onCopyDialogApprove")
       }}
@@ -109,7 +107,6 @@
         visible=_editDialogIsVisible
         layer=_editDialogLayer
         typeIsReadonly=true
-        cswConnections=cswConnections
         leafletMap=leafletMap
         approve=(action "onEditDialogApprove")
       }}
@@ -132,7 +129,6 @@
     {{#if _hasLayers}}
       {{flexberry-maplayers
         readonly=readonly
-        cswConnections=cswConnections
         leafletMap=leafletMap
         layers=layers
       }}

@@ -39,7 +39,6 @@
       {{#if (not layer.isDeleted)}}
         {{flexberry-maplayer
           readonly=readonly
-          cswConnections=cswConnections
           leafletMap=leafletMap
           layer=layer
           dynamicProperties=layer.dynamicProperties
@@ -72,7 +71,6 @@
     class=flexberryClassNames.addDialog
     visible=_addDialogIsVisible
     layer=_addDialogLayer
-    cswConnections=cswConnections
     leafletMap=leafletMap
     approve=(action "onAddDialogApprove")
   }}

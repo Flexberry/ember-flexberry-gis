@@ -67,34 +67,7 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
     @type String
     @default t('components.layers-dialogs.add.deny-button.caption')
   */
-  denyButtonCaption: t('components.layers-dialogs.add.deny-button.caption'),
-
-  /**
-    Dialog's 'type' dropdown caption.
-
-    @property typeDropdownCaption
-    @type String
-    @default t('components.layers-dialogs.add.type-dropdown.caption')
-  */
-  typeDropdownCaption: t('components.layers-dialogs.add.type-dropdown.caption'),
-
-  /**
-    Dialog's 'name' textbox caption.
-
-    @property nameTextboxCaption
-    @type String
-    @default t('components.layers-dialogs.add.name-textbox.caption')
-  */
-  nameTextboxCaption: t('components.layers-dialogs.add.name-textbox.caption'),
-
-  /**
-    Dialog's 'CRS' textarea caption.
-
-    @property crsTextareaCaption
-    @type String
-    @default t('components.layers-dialogs.add.crs-textarea.caption')
-  */
-  crsTextareaCaption: t('components.layers-dialogs.add.crs-textarea.caption')
+  denyButtonCaption: t('components.layers-dialogs.add.deny-button.caption')
 });
 
 // Add component's CSS-class names as component's class static constants

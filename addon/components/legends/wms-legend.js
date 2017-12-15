@@ -19,38 +19,44 @@ export default BaseLegendComponent.extend({
     @readOnly
   */
   _legends: Ember.computed(
-    'layerSettings.url',
-    'layerSettings.version',
-    'layerSettings.imageFormat',
-    'layerSettings.layers',
-    'layerSettings.legendSettings.url',
-    'layerSettings.legendSettings.version',
-    'layerSettings.legendSettings.format',
-    'layerSettings.legendSettings.layers', function() {
-    let legends = Ember.A();
+    'layer.settingsAsObject.url',
+    'layer.settingsAsObject.version',
+    'layer.settingsAsObject.imageFormat',
+    'layer.settingsAsObject.layers',
+    'layer.settingsAsObject.legendSettings.url',
+    'layer.settingsAsObject.legendSettings.version',
+    'layer.settingsAsObject.legendSettings.format',
+    'layer.settingsAsObject.legendSettings.layers',
+    function() {
+      let legends = Ember.A();
+      let layerSettings = this.get('layer.settingsAsObject') || {};
 
-    let url = this.get('layerSettings.legendSettings.url') || this.get('layerSettings.url');
-    if (Ember.isBlank(url)) {
-      Ember.Logger.error(`Unable to compute legends for '${this.get('name')}' layer, because both required settings 'url' and 'legendSettings.url' are blank`);
+      let url = Ember.get(layerSettings, 'url') || Ember.get(layerSettings, 'legendSettings.url');
+      if (Ember.isBlank(url)) {
+        Ember.Logger.error(
+          `Unable to compute legends for '${this.get('layer.name')}' layer, because both required settings 'url' and 'legendSettings.url' are blank`
+        );
+
+        return legends;
+      }
+
+      Ember.A((Ember.get(layerSettings, 'legendSettings.layers') || Ember.get(layerSettings, 'layers') || '').split(',')).forEach((layerName) => {
+        let parameters = {
+          service: 'WMS',
+          request: 'GetLegendGraphic',
+          version: Ember.get(layerSettings, 'legendSettings.version') || Ember.get(layerSettings, 'version') || '1.1.0',
+          format: Ember.get(layerSettings, 'legendSettings.format') || Ember.get(layerSettings, 'imageFormat') || 'image/png',
+          layer: layerName
+        };
+
+        legends.pushObject({
+          src: `${url}${L.Util.getParamString(parameters)}`,
+          layerName: layerName,
+          useLayerName: true
+        });
+      });
+
       return legends;
     }
-
-    Ember.A((this.get('layerSettings.legendSettings.layers') || this.get('layerSettings.layers') || '').split(',')).forEach((layerName) => {
-      let parameters = {
-        service: 'WMS',
-        request: 'GetLegendGraphic',
-        version: this.get('layerSettings.legendSettings.version') || this.get('layerSettings.version') || '1.1.0',
-        format: this.get('layerSettings.legendSettings.format') || this.get('layerSettings.format') || 'image/png',
-        layer: layerName
-      };
-
-      legends.pushObject({
-        src: `${url}${L.Util.getParamString(parameters)}`,
-        layerName: layerName,
-        useLayerName: true
-      });
-    });
-
-    return legends;
-  })
+  )
 });
