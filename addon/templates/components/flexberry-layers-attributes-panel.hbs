@@ -1,4 +1,7 @@
 <div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if folded " folded" "") (if settings.withToolbar " withToolbar" "") (if settings.sidebarOpened " sidebarOpened" "")}}>
+  <div class={{concat "ui inverted dimmer" (if loading " active" " disabled") }}>
+    <div class="ui loader"></div>
+  </div>
   <button class="bottompanel-tab-nav-button bottompanel-tab-nav-button-left"
     {{action "onTabMove" true}}>
     <i class="left arrow icon"></i>
@@ -143,6 +146,7 @@
           <div class="ui bottom attached tab segment layers-attributes-segment {{if (eq (get _activeTabs tabModel.name) "chart-tab") "active"}}" data-tab="chart-tab">
             {{charts/index-chart
               _isObjProperties=tabModel._selectedRowsProperties
+              _localizedProperties=tabModel.header
             }}
           </div>
         </div>

@@ -150,14 +150,19 @@ export default BaseLayerStyle.extend({
     // Set line dashig.
     let pathStyle = Ember.get(style, 'path') || {};
     let dashArray = Ember.get(pathStyle, 'dashArray');
-    let dashOffset = Ember.get(pathStyle, 'dashOffset');
-    if (!Ember.isBlank(dashArray)) {
-      dashArray = dashArray.split(',').map((value) => { return Number(value); });
-      dashOffset = Number(dashOffset);
+    dashArray = Ember.isBlank(dashArray) ?
+      [] :
+      dashArray.split(',').map((value) => {
+        return Number(value);
+      }).filter((value) => {
+        return !isNaN(value);
+      });
 
-      ctx.setLineDash(dashArray);
-      ctx.lineDashOffset = dashOffset;
-    }
+    let dashOffset = Number(Ember.get(pathStyle, 'dashOffset'));
+    dashOffset = isNaN(dashOffset) ? 0 : dashOffset;
+
+    ctx.setLineDash(dashArray);
+    ctx.lineDashOffset = dashOffset;
 
     // Render sample geometry.
     if (target === 'preview') {

@@ -30,24 +30,34 @@
           {{flexberry-button
             class=(concat flexberryClassNames.removeButton " right floated " flexberryClassNames.preventExpandCollapse)
             iconClass="trash icon"
+            tooltip=(t "components.flexberry-maplayer.remove-button.tooltip")
             click=(action "onRemoveButtonClick")
           }}
           {{flexberry-button
             class=(concat flexberryClassNames.editButton " right floated " flexberryClassNames.preventExpandCollapse)
             iconClass="edit icon"
+            tooltip=(t "components.flexberry-maplayer.edit-button.tooltip")
             click=(action "onEditButtonClick")
+          }}
+          {{flexberry-button
+            class=(concat flexberryClassNames.copyButton " right floated " flexberryClassNames.preventExpandCollapse)
+            iconClass="copy icon"
+            tooltip=(t "components.flexberry-maplayer.copy-button.tooltip")
+            click=(action "onCopyButtonClick")
           }}
           {{#if _addOperationIsAvailable}}
             {{flexberry-button
               class=(concat flexberryClassNames.addButton " right floated " flexberryClassNames.preventExpandCollapse)
               iconClass="plus icon"
+              tooltip=(t "components.flexberry-maplayer.add-button.tooltip")
               click=(action "onAddButtonClick")
             }}
           {{/if}}
-          {{#if (or _hasLayers (not (eq type "group")))}}
+          {{#if _fitBoundsOperationIsAvailable}}
             {{flexberry-button
               class=(concat flexberryClassNames.boundsButton " right floated " flexberryClassNames.preventExpandCollapse)
               iconClass="maximize icon"
+              tooltip=(t "components.flexberry-maplayer.bounds-button.tooltip")
               click=(action "onBoundsButtonClick")
             }}
           {{/if}}
@@ -55,17 +65,16 @@
             {{flexberry-button
               class=(concat flexberryClassNames.attributesButton " right floated " flexberryClassNames.preventExpandCollapse)
               iconClass="browser icon"
+              tooltip=(t "components.flexberry-maplayer.attributes-button.tooltip")
               click=(action "onAttributesButtonClick")
             }}
           {{/if}}
         {{/if}}
-
         {{#if _canChangeOpacity}}
-          <label class="{{flexberryClassNames.opacityLabel}}" title="{{t "components.flexberry-maplayer.opacity" }}">
+          <label class="{{flexberryClassNames.opacityLabel}}" title="{{t "components.flexberry-maplayer.opacity-label.tooltip"}}">
             {{_opacityDisplayValue}}
           </label>
         {{/if}}
-
       </div>
     </div>
     {{!--
@@ -82,6 +91,29 @@
         leafletMap=leafletMap
         typeIsReadonly=false
         approve=(action "onAddDialogApprove")
+      }}
+    {{/if}}
+    {{#if _copyDialogHasBeenRequested}}
+      {{component "layers-dialogs/copy"
+        model=modelCopy
+        class=flexberryClassNames.copyDialog
+        visible=_copyDialogIsVisible
+        layer=(hash
+          type=type
+          name=(concat name " " (t "components.layers-dialogs.copy.layer-name-postfix"))
+          description=description
+          keyWords=keyWords
+          scale=scale
+          coordinateReferenceSystem=coordinateReferenceSystem
+          boundingBox=boundingBox
+          settings=settings
+        )
+        _leafletObject=_leafletObject
+        _leafletObjectForFilter=_leafletObjectForFilter
+        cswConnections=cswConnections
+        leafletMap=leafletMap
+        typeIsReadonly=true
+        approve=(action "onCopyDialogApprove")
       }}
     {{/if}}
     {{#if _editDialogHasBeenRequested}}

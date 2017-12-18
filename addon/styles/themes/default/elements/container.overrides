@@ -57,27 +57,6 @@
       z-index: 10000 !important;
     }
   }
-  .identify-popup {
-    .ui.accordion .item .title,
-    .ui.list .item {
-      cursor: pointer;
-    }
-    .item.active {
-      background: @flexberryMapIdentifyPopupBackground;
-      border: @flexberryMapIdentifyPopupBorder;
-      border-radius: @flexberryMapIdentifyPopupBorderRadius;
-    }
-    .leaflet-popup-content {
-      margin: 1.5em 1.5em;
-      .column {
-        overflow: auto;
-        max-height: 100%;
-      }
-    }
-    .ui.accordion .content .ui.list {
-      margin-left: 2em !important;
-    }
-  }
 }
 
 .flexberry-gis-map {
@@ -1179,12 +1158,18 @@ form.flexberry-edit-layermap {
       top: 0.4rem;
       right: 0.4rem;
       cursor: pointer;
+      z-index: 100;
+    }
+
+    .category-style-editor-content-wrapper {
+      overflow: auto;
+      width: 100%;
+      max-height: 100%;
     }
 
     .category-style-editor-content {
       overflow: auto;
       width: 100%;
-      max-height: 100%;
       padding: 1rem;
     }
   }

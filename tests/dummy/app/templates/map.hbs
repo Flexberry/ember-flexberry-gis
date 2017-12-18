@@ -49,6 +49,11 @@
                   actionArguments=(array "{% layerPath %}")
                 )
                 (hash
+                  on="copy"
+                  actionName="onMapLayerCopy"
+                  actionArguments=(array "model.hierarchy")
+                )
+                (hash
                   on="edit"
                   actionName="onMapLayerEdit"
                   actionArguments=(array "{% layerPath %}")
@@ -81,6 +86,7 @@
                       itemsPath="editedLayers"
                       selectedTabIndexPath="editedLayersSelectedTabIndex"
                       foldedPath="editedLayersPanelFolded"
+                      loadingPath="editedLayersPanelLoading"
                     )
                   )
                 )
@@ -133,7 +139,7 @@
       </div>
     </div>
   </div>
-  <div class={{concat "bottompanel-wrapper" (if (not (gt editedLayers.length 0)) " hidden" "")}}>
+  <div class={{concat "bottompanel-wrapper" (if (or (gt editedLayers.length 0) editedLayersPanelLoading) "" " hidden")}}>
     {{flexberry-layers-attributes-panel
       items=editedLayers
       serviceLayer=serviceLayer
@@ -141,6 +147,7 @@
       selectedTabIndex=editedLayersSelectedTabIndex
       folded=editedLayersPanelFolded
       settings=editedLayersPanelSettings
+      loading=editedLayersPanelLoading
     }}
   </div>
   <div class="row">
@@ -171,8 +178,6 @@
           leafletMap=leafletMap
         }}
         {{map-commands/go-to
-          tooltip="Перейти к координатам"
-          availableCRS=availableCRS
           execute=(action "onMapCommandExecute" target=mapToolbar)
         }}
         {{map-commands/locate

@@ -134,33 +134,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   }),
 
   /**
-    Available coordinate reference systems metadata.
-
-    @property availableCRS
-    @type Object[]
-  */
-  availableCRS: Ember.computed('i18n.locale', function () {
-    let availableModes = Ember.A();
-    let i18n = this.get('i18n');
-    availableModes.push({
-      crs: this.get('model.crs'),
-      name: i18n.t('forms.crs.current.name').toString(),
-      xCaption: i18n.t('forms.crs.current.xCaption').toString(),
-      yCaption: i18n.t('forms.crs.current.yCaption').toString(),
-      latlng: false
-    });
-    availableModes.push({
-      crs: L.CRS.EPSG4326,
-      name: i18n.t('forms.crs.latlng.name').toString(),
-      xCaption: i18n.t('forms.crs.latlng.xCaption').toString(),
-      yCaption: i18n.t('forms.crs.latlng.yCaption').toString(),
-      isLatlng: true
-    });
-
-    return availableModes;
-  }),
-
-  /**
     Set of laeflet layers opened at 'flexberry-layers-attributes-panel'.
 
     @property editedLayers
@@ -186,6 +159,15 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @default true
   */
   editedLayersPanelFolded: true,
+
+  /**
+    Flag indicates whether 'flexberry-layers-attributes-panel' is loading or not.
+
+    @property editedLayersPanelLoading
+    @type Boolean
+    @default false
+  */
+  editedLayersPanelLoading: false,
 
   /**
     Hash containing settiings for 'flexberry-layers-attributes-panel'.

@@ -17,40 +17,22 @@ const {
 
 export default Ember.Component.extend({
   /**
-    Available field name xAxis chart.
-
-    @property _itemsName
-    @type Object[]
-    @default null
-  */
-  _itemsName: null,
-
-  /**
-    Available field value yAxis chart.
-
-    @property _itemsValues
-    @type Object[]
-    @default null
-  */
-  _itemsValues: null,
-
-  /**
     Selected field name xAxis chart.
 
-    @property _valueName
+    @property _selectedXAxisProperty
     @type string
     @default null
   */
-  _valueName: null,
+  _selectedXAxisProperty: null,
 
   /**
     Selected field value yAxis chart.
 
-    @property _valueValues
-    @type float
+    @property _selectedYAxisProperty
+    @type string
     @default null
   */
-  _valueValues: null,
+  _selectedYAxisProperty: null,
 
   /**
     Inner hash string chart title.
@@ -80,24 +62,62 @@ export default Ember.Component.extend({
   _isObject: null,
 
   /**
+    Localized properties names.
+
+    @property _localizedProperties
+    @type Object
+    @default null
+  */
+  _localizedProperties: null,
+
+  /**
+    Available field name xAxis chart.
+
+    @property _propertiesForXAxis
+    @type Object
+  */
+  _propertiesForXAxis: Ember.computed('_localizedProperties', function() {
+    let allProperties = {};
+    let isObject = this.get('_isObject');
+    let properties = Object.keys(isObject[0] || {});
+    let localizedProperties = this.get('_localizedProperties');
+
+    for (var i in properties)
+    {
+      allProperties[properties[i]] = localizedProperties[properties[i]] || properties[i];
+    }
+
+    return allProperties;
+  }),
+
+  /**
+    Available field value yAxis chart.
+
+    @property _propertiesForYAxis
+    @type Object
+  */
+  _propertiesForYAxis: Ember.computed('_localizedProperties', function() {
+    let numberProperties = {};
+    let isObject = this.get('_isObject');
+    let properties = Object.keys(isObject[0] || {});
+    let localizedProperties = this.get('_localizedProperties');
+
+    for (var i in properties)
+    {
+      if (isFinite(isObject[0][properties[i]])) {
+        numberProperties[properties[i]] = localizedProperties[properties[i]] || properties[i];
+      }
+    }
+
+    return numberProperties;
+  }),
+
+  /**
     Initializes component.
   */
   init() {
     this._super(...arguments);
 
-    let isObjectNumber = Ember.A([]);
-    let isObject = this.get('_isObject');
-    let propName = Object.keys(isObject[0] || {});
-
-    for (var i in propName)
-    {
-      if (isFinite(isObject[0][propName[i]])) {
-        isObjectNumber.pushObject(propName[i]);
-      }
-    }
-
-    this.set('_itemsName', propName);
-    this.set('_itemsValues', isObjectNumber);
     this.sendAction('onInit', this.getJsonCharts.bind(this));
   },
 
@@ -108,5 +128,25 @@ export default Ember.Component.extend({
   */
   getJsonCharts() {
     assert('BaseChartType\'s \'getJsonCharts\' should be overridden.');
+  },
+
+  actions: {
+    /**
+      Handles xAxis property change.
+
+      @method actions.onXAxisPropertyChange
+    */
+    onXAxisPropertyChange(item, key) {
+      this.set('_selectedXAxisProperty', key);
+    },
+
+    /**
+      Handles yAxis property change.
+
+      @method actions.onXAxisPropertyChange
+    */
+    onYAxisPropertyChange(item, key) {
+      this.set('_selectedYAxisProperty', key);
+    }
   }
 });

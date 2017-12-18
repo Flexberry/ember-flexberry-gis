@@ -23,7 +23,7 @@ export default {
     'selected-message': 'Выбрано элементов:',
     'reset': 'Сбросить',
     'open-into-map': 'Открыть на карте:',
-    'ok': 'Ok',
+    'ok': 'Ок',
     'new-map': '&lt;Новая карта&gt;',
     'select-a-map': 'Выберите карту...'
   },
