@@ -19,6 +19,18 @@
           Flexberry Map
 *******************************/
 
+.leftFloated {
+  float: left;
+}
+
+.leftFloated.p-70 {
+  width: 70%;
+}
+
+.leftFloated.p-25 {
+  width: 25%;
+}
+
 .flexberry-map {
   font-family: inherit;
   width: @flexberryMapWidth;

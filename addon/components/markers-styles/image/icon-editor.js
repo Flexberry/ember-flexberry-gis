@@ -44,6 +44,16 @@ export default Ember.Component.extend({
   _iconFileLoadingFailed: false,
 
   /**
+    Icon original aspect ratio.
+
+    @property _iconOrigAspectRatio
+    @type Number
+    @default 0
+    @private
+  */
+  _iconOrigAspectRatio: 0,
+
+  /**
     Icon file reader.
 
     @property _iconFileReader
@@ -74,7 +84,7 @@ export default Ember.Component.extend({
   _iconImage: null,
 
   /**
-    Hash cintaining icon size.
+    Hash containing icon size.
 
     @property _iconSize
     @type Object
@@ -144,7 +154,7 @@ export default Ember.Component.extend({
   /**
     Caption to be displayed in icon cell.
 
-    @property anchhorCaption
+    @property anchorCaption
     @type String
     @default t('components.markers-styles.image.icon-editor.anchor-caption')
   */
@@ -169,6 +179,35 @@ export default Ember.Component.extend({
   iconSize: null,
 
   /**
+    Value containing icon width after resizing.
+    [Array wasn't used because of its harder observation]
+
+    @property iconWidthNew
+    @type Number
+    @default 0
+  */
+  iconWidthNew: 0,
+
+  /**
+    Value containing icon height after resizing.
+    [Array wasn't used because of its harder observation]
+
+    @property iconHeightNew
+    @type Number
+    @default 0
+  */
+  iconHeightNew: 0,
+
+  /**
+    Flag: indicates whether loaded image should keep oiginal aspect ratio.
+
+    @property iconKeepOrigAspectRatio
+    @type Boolean
+    @default true
+  */
+  iconKeepOrigAspectRatio: true,
+
+  /**
     Array containing icon anchor coordinates.
 
     @property iconAnchor
@@ -187,7 +226,10 @@ export default Ember.Component.extend({
     this.setProperties({
       iconUrl: null,
       iconSize: [0, 0],
+      iconWidthNew: 0,
+      iconHeighthNew: 0,
       iconAnchor: [0, 0],
+      _iconOrigAspectRatio: 0,
       _iconFileLoadingFailed: false,
       _iconFileIsLoading: false,
       _iconFileIsLoadingLongTime: false
@@ -212,6 +254,21 @@ export default Ember.Component.extend({
   ),
 
   /**
+    Observer changes in fill style for resizing.
+
+    @method   _styleSettingsForResizingChanged
+    @private
+  */
+  _styleSettingsForResizingChanged: Ember.observer(
+    'iconKeepOrigAspectRatio',
+    'iconWidthNew',
+    'iconHeightNew',
+    function() {
+      Ember.run.once(this, '_setNewSize');
+    }
+  ),
+
+  /**
     Sends 'change' action to notify about changes in icon style.
 
     @method _sendChangeAction
@@ -219,6 +276,73 @@ export default Ember.Component.extend({
   */
   _sendChangeAction() {
     this.sendAction('change', this.getProperties('iconUrl', 'iconSize', 'iconAnchor'));
+  },
+
+  /**
+    Sets new size to icon image after resizing.
+
+    @method _setNewSize
+    @private
+  */
+  _setNewSize() {
+    let newWidth = parseInt(this.iconWidthNew);
+    let newHeight = parseInt(this.iconHeightNew);
+    let ratio = this.get('_iconOrigAspectRatio');
+    if (Ember.isNone(this.get('iconSize'))) {
+      return;
+    }
+    
+    let width = this.get('iconSize')[0];
+    let iconUrl = this.get('iconUrl');
+
+    if (this.get('iconKeepOrigAspectRatio')) {
+      if (newWidth !== width) {
+        newHeight = Math.round(newWidth / ratio);
+        this.set('iconHeightNew', newHeight);
+      } else {
+        newWidth = Math.round(newHeight * ratio);
+        this.set('iconWidthNew', newWidth);
+      }
+    }
+
+    let newSize = [newWidth, newHeight];
+    let iconAnchor = [Math.round(newWidth / 2), Math.round(newHeight / 2)];
+    this.set('iconSize', newSize);
+    this.set('iconAnchor', iconAnchor);
+
+    //Use in case of possible necessity of recalculating image 'src' attr
+    if (iconUrl !== "" && iconUrl) {
+      //this._imageToDataUri(iconUrl, newWidth, newHeight);
+    }
+  },
+
+  /**
+    Takes a data URI and returns the Data URI corresponding to the resized image.
+    @method _imageToDataUri
+    @param {String} img Image URL
+    @param {Number} width New width
+    @param {Number} height New height
+    @private
+  */
+  _imageToDataUri(img, width, height) {
+    var self = this;
+    let image = new Image();
+    let imageType = img.substring(5, img.indexOf(';base64'));
+
+    image.onload = function()
+    {
+       var canvas = document.createElement('canvas');
+       var ctx = canvas.getContext('2d');
+
+       canvas.width = width;
+       canvas.height = height;
+
+       ctx.drawImage(this, 0, 0, width, height);
+
+       let dataURI = canvas.toDataURL(imageType);
+       self.set('iconUrl', dataURI);
+    };
+    image.src = img;
   },
 
   /**
@@ -252,7 +376,7 @@ export default Ember.Component.extend({
   },
 
   /**
-    Handles icond file reader 'onload' event.
+    Handles icon file reader 'onload' event.
 
     @method _onLoadIconFileSuccess
     @param {Object} e Event object.
@@ -293,6 +417,9 @@ export default Ember.Component.extend({
     let iconImage = e.target;
     let iconUrl = iconImage.src;
     let iconSize = [iconImage.width, iconImage.height];
+    let iconWidthNew = iconImage.width;
+    let iconHeightNew = iconImage.height;
+    let iconOrigAspectRatio = iconImage.width / iconImage.height;
     let iconAnchor = [Math.round(iconImage.width / 2), Math.round(iconImage.height / 2)];
 
     // Remember loaded image original size, URL, and new anchor's coordanates.
@@ -300,6 +427,10 @@ export default Ember.Component.extend({
       iconUrl: iconUrl,
       iconSize: iconSize,
       iconAnchor: iconAnchor,
+      iconWidthNew: iconWidthNew,
+      iconHeightNew: iconHeightNew,
+      iconKeepOrigAspectRatio: true,
+      _iconOrigAspectRatio: iconOrigAspectRatio,
       _iconFileLoadingFailed: false,
       _iconFileIsLoading: false,
       _iconFileIsLoadingLongTime: false
@@ -329,6 +460,10 @@ export default Ember.Component.extend({
     if (Ember.isNone(iconSize)) {
       this.set('iconSize', [0, 0]);
     }
+
+    this.set('iconWidthNew', iconSize[0]);
+    this.set('iconHeightNew', iconSize[1]);
+    this.set('_iconOrigAspectRatio', iconSize[0] / iconSize[1]);
 
     let iconAnchor = this.get('iconAnchor');
     if (Ember.isNone(iconAnchor)) {

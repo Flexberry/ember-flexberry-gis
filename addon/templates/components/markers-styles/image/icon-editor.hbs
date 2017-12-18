@@ -29,27 +29,34 @@
         }}
       </td>
       <td>
-        <div class="icon-image-wrapper">
-          {{#if _showIconImage}}
-            <img class="icon-image"
-              width="{{_iconSize.width}}"
-              height="{{_iconSize.height}}"
-              src="{{iconUrl}}"/>
-            <div class="icon-anchor" onclick={{action "onIconAnchorClick"}}>
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   version="1.1"
-                   width="{{_iconSize.width}}"
-                   height="{{_iconSize.height}}"
-                   viewBox="0 0 {{_iconSize.width}} {{_iconSize.height}}">
-                <circle cx="{{_iconAnchor.x}}"
-                        cy="{{_iconAnchor.y}}"
-                        r="2"
-                        fill="#ff0000"
-                        stroke="black"
-                        stroke-width="1"/>
-              </svg>
-            </div>
-          {{/if}}
+        <div class="leftFloated p-70">
+          <div class="icon-image-wrapper">
+            {{#if _showIconImage}}
+              <img class="icon-image"
+                width="{{_iconSize.width}}"
+                height="{{_iconSize.height}}"
+                src="{{iconUrl}}"/>
+              <div class="icon-anchor" onclick={{action "onIconAnchorClick"}}>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     version="1.1"
+                     width="{{_iconSize.width}}"
+                     height="{{_iconSize.height}}"
+                     viewBox="0 0 {{_iconSize.width}} {{_iconSize.height}}">
+                  <circle cx="{{_iconAnchor.x}}"
+                          cy="{{_iconAnchor.y}}"
+                          r="2"
+                          fill="#ff0000"
+                          stroke="black"
+                          stroke-width="1"/>
+                </svg>
+              </div>
+            {{/if}}
+          </div>
+        </div>
+        <div class="leftFloated p-25">
+          {{input type="number" min=1 value=iconWidthNew disabled=(or (not _showIconImage) _disabled) }}
+          {{input type="checkbox" checked=iconKeepOrigAspectRatio disabled=(or (not _showIconImage) _disabled) }}
+          {{input type="number" min=1 value=iconHeightNew disabled=(or (not _showIconImage) _disabled) }}
         </div>
       </td>
     </tr>
