@@ -241,7 +241,7 @@ export default Ember.Component.extend({
     }
   ),
 
-/**
+  /**
     Sets new size to icon image after resizing.
 
     @method _setNewSize
@@ -270,9 +270,9 @@ export default Ember.Component.extend({
     this.set('iconAnchor', iconAnchor);
 
     //Use in case of possible necessity of recalculating image 'src' attr
-    if (iconUrl !== "" && iconUrl) {
-      //this._imageToDataUri(iconUrl, newWidth, newHeight);
-    }
+    /*if (iconUrl !== '' && iconUrl) {
+      this._imageToDataUri(iconUrl, newWidth, newHeight);
+    }*/
   },
 
   /**
@@ -315,17 +315,18 @@ export default Ember.Component.extend({
 
     image.onload = function()
     {
-       var canvas = document.createElement('canvas');
-       var ctx = canvas.getContext('2d');
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
 
-       canvas.width = width;
-       canvas.height = height;
+      canvas.width = width;
+      canvas.height = height;
 
-       ctx.drawImage(this, 0, 0, width, height);
+      ctx.drawImage(this, 0, 0, width, height);
 
-       let dataURI = canvas.toDataURL(imageType);
-       self.set('iconUrl', dataURI);
+      let dataURI = canvas.toDataURL(imageType);
+      self.set('iconUrl', dataURI);
     };
+
     image.src = img;
   },
 
