@@ -180,44 +180,13 @@ export default Ember.Component.extend({
   /**
     Flag: indicates whether to show editor shadow icon image or not.
 
-    @property _disabled
+    @property _enabled
     @type Boolean
     @private
     @default false
   */
-  _disabled: Ember.computed('iconUrl', function() {
-    let iconUrl_ = this.get('iconUrl');
-
-    if (iconUrl_ != null) {
-      return true;
-    } else {
-      this._clearIconFile();
-      return false;
-    }
-  }),
-
-  /**
-    Flag: indicates whether to show body of the component or not.
-    @property _disabledBody
-    @type Boolean
-    @private
-    @default true
-  */
-  _disabledBody: Ember.computed('_disabled', 'allowDisabling', function() {
-    let disabled_ = this.get('_disabled');
-    let allowDisabling_ = this.get('allowDisabling');
-    if (!allowDisabling_) {
-      return true;
-    }
-
-    if (allowDisabling_ && !disabled_) {
-      return false;
-    } else {
-      return true;
-    }
-
-  }),
-
+  _enabled: false,
+   
   /**
     Flag: indicates whether to show checkbox for shadow or not.
 
@@ -226,6 +195,19 @@ export default Ember.Component.extend({
     @default false
   */
   allowDisabling: false,
+
+  /**
+    Observer enabled did change.
+
+    @method _enabledDidChange
+    @private
+  */  
+  _enabledDidChange: Ember.observer(
+    '_enabled',
+    function() {
+      this._clearIconFile();
+    }
+  ),
 
   /**
     Clears icon style settings and related component's properties.
@@ -352,7 +334,7 @@ export default Ember.Component.extend({
       iconAnchor: iconAnchor,
       _iconFileLoadingFailed: false,
       _iconFileIsLoading: false,
-      _iconFileIsLoadingLongTime: false,
+      _iconFileIsLoadingLongTime: false
     });
 
     iconImage.removeAttribute('src');
@@ -400,6 +382,10 @@ export default Ember.Component.extend({
     // Evented stub for flexberry-file's 'relatedModel' property.
     let relatedModelStub = Ember.Object.extend(Ember.Evented, {}).create();
     this.set('_relatedModelStub', relatedModelStub);
+
+    if (this.get('allowDisabling') && Ember.isNone(this.get('iconUrl'))) {
+      this.set('_enabled', true);
+    }
   },
 
   /**

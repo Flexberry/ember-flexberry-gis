@@ -956,12 +956,10 @@
 .ui.table.flexberry-table-no-model {
   width: inherit !important;
 }
-
 /************************************************************
-    Simple layers-style (components/layers-styles/simple)
+    Sticky layers-style (components/layers-styles/simple)
 ************************************************************/
-.sticky{
-    /* sticky */    
+.sticky{      
     position: static;
     position: -webkit-sticky !important;
     position: -moz-sticky !important;
@@ -971,9 +969,11 @@
     top: 10px;
     
 }
-.scrol{
-    overflow: visible !important;
-}
+
+/************************************************************
+    Simple layers-style (components/layers-styles/simple)
+************************************************************/
+
 .ui.selection.dropdown {
   &.simple-layers-style-stroke-linejoin-dropdown,
   &.simple-layers-style-stroke-linecap-dropdown,
@@ -1061,6 +1061,7 @@ form.flexberry-edit-layermap {
       border: none;
       box-shadow: none;
       padding: 0;
+      overflow: visible !important; /* to work sticking preview */
 
       .ui.grid.style-settings-with-preview {
         margin: 0;
