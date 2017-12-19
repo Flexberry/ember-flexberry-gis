@@ -44,6 +44,16 @@ export default Ember.Component.extend({
   _iconFileLoadingFailed: false,
 
   /**
+    Flag: indicates whether image is being resized at the moment.
+
+    @property _isCurActionIsResizing
+    @type Boolean
+    @default false
+    @private
+  */
+  _isCurActionIsResizing: false,
+
+  /**
     Icon original aspect ratio.
 
     @property _iconOrigAspectRatio
@@ -259,14 +269,14 @@ export default Ember.Component.extend({
     @method   _styleSettingsForResizingChanged
     @private
   */
-  _styleSettingsForResizingChanged: Ember.observer(
+  /*_styleSettingsForResizingChanged: Ember.observer(
     'iconKeepOrigAspectRatio',
     'iconWidthNew',
     'iconHeightNew',
     function() {
       Ember.run.once(this, '_setNewSize');
     }
-  ),
+  ),*/
 
   /**
     Sends 'change' action to notify about changes in icon style.
@@ -275,7 +285,8 @@ export default Ember.Component.extend({
     @private
   */
   _sendChangeAction() {
-    this.sendAction('change', this.getProperties('iconUrl', 'iconSize', 'iconAnchor'));
+    this.sendAction('change', this.getProperties('iconUrl', 'iconSize', 'iconAnchor', 'isCurActionIsResizing'));
+    this.set('isCurActionIsResizing', false);
   },
 
   /**
@@ -285,6 +296,7 @@ export default Ember.Component.extend({
     @private
   */
   _setNewSize() {
+    this.set('isCurActionIsResizing', true);
     let newWidth = parseInt(this.iconWidthNew);
     let newHeight = parseInt(this.iconHeightNew);
     let ratio = this.get('_iconOrigAspectRatio');
@@ -464,6 +476,7 @@ export default Ember.Component.extend({
     this.set('iconWidthNew', iconSize[0]);
     this.set('iconHeightNew', iconSize[1]);
     this.set('_iconOrigAspectRatio', iconSize[0] / iconSize[1]);
+    this.set('_isCurActionIsResizing', false);
 
     let iconAnchor = this.get('iconAnchor');
     if (Ember.isNone(iconAnchor)) {
@@ -534,6 +547,36 @@ export default Ember.Component.extend({
     */
     onIconAnchorClick(e) {
       this.set('iconAnchor', [e.layerX, e.layerY]);
+    },
+
+    onResizeClick(e) {
+      console.log("fired!!!1");
+      this.set('isCurActionIsResizing', true);
+      let newWidth = parseInt(this.iconWidthNew);
+      let newHeight = parseInt(this.iconHeightNew);
+      let ratio = this.get('_iconOrigAspectRatio');
+      let width = this.get('iconSize')[0];
+      let iconUrl = this.get('iconUrl');
+
+      if (this.get('iconKeepOrigAspectRatio') || e.srcElement.checked) {
+        if (newWidth !== width) {
+          newHeight = Math.round(newWidth / ratio);
+          this.set('iconHeightNew', newHeight);
+        } else {
+          newWidth = Math.round(newHeight * ratio);
+          this.set('iconWidthNew', newWidth);
+        }
+      }
+
+      let newSize = [newWidth, newHeight];
+      let iconAnchor = [Math.round(newWidth / 2), Math.round(newHeight / 2)];
+      this.set('iconSize', newSize);
+      this.set('iconAnchor', iconAnchor);
+
+      //Use in case of possible necessity of recalculating image 'src' attr
+      if (iconUrl !== "" && iconUrl) {
+        //this._imageToDataUri(iconUrl, newWidth, newHeight);
+      }
     }
   }
 });
