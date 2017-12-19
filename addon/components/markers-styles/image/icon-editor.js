@@ -44,16 +44,6 @@ export default Ember.Component.extend({
   _iconFileLoadingFailed: false,
 
   /**
-    Flag: indicates whether image is being resized at the moment.
-
-    @property _isCurActionIsResizing
-    @type Boolean
-    @default false
-    @private
-  */
-  _isCurActionIsResizing: false,
-
-  /**
     Icon original aspect ratio.
 
     @property _iconOrigAspectRatio
@@ -189,24 +179,13 @@ export default Ember.Component.extend({
   iconSize: null,
 
   /**
-    Value containing icon width after resizing.
-    [Array wasn't used because of its harder observation]
+    Array containing icon size after resizing.
 
-    @property iconWidthNew
+    @property iconSizehNew
     @type Number
-    @default 0
+    @default null
   */
-  iconWidthNew: 0,
-
-  /**
-    Value containing icon height after resizing.
-    [Array wasn't used because of its harder observation]
-
-    @property iconHeightNew
-    @type Number
-    @default 0
-  */
-  iconHeightNew: 0,
+  iconSizeNew: null,
 
   /**
     Flag: indicates whether loaded image should keep oiginal aspect ratio.
@@ -236,8 +215,7 @@ export default Ember.Component.extend({
     this.setProperties({
       iconUrl: null,
       iconSize: [0, 0],
-      iconWidthNew: 0,
-      iconHeighthNew: 0,
+      iconSizeNew: [0, 0],
       iconAnchor: [0, 0],
       _iconOrigAspectRatio: 0,
       _iconFileLoadingFailed: false,
@@ -246,6 +224,55 @@ export default Ember.Component.extend({
     });
 
     this.get('_iconImage').removeAttribute('src');
+  },
+
+  /**
+    Observer changes in fill style for resizing.
+
+    @method   _styleSettingsForResizingChanged
+    @private
+  */
+  _styleSettingsForResizingChanged: Ember.observer(
+    'iconKeepOrigAspectRatio',
+    'iconSizeNew.0',
+    'iconSizeNew.1',
+    function() {
+      Ember.run.once(this, '_setNewSize');
+    }
+  ),
+
+/**
+    Sets new size to icon image after resizing.
+
+    @method _setNewSize
+    @private
+  */
+  _setNewSize() {
+    let newWidth = parseInt(this.iconSizeNew[0]);
+    let newHeight = parseInt(this.iconSizeNew[1]);
+    let ratio = this.get('_iconOrigAspectRatio');
+    let width = this.get('iconSize')[0];
+    let iconUrl = this.get('iconUrl');
+
+    if (this.get('iconKeepOrigAspectRatio')) {
+      if (newWidth !== width) {
+        newHeight = Math.round(newWidth / ratio);
+        this.set('iconSizeNew.1', newHeight);
+      } else {
+        newWidth = Math.round(newHeight * ratio);
+        this.set('iconSizeNew.0', newWidth);
+      }
+    }
+
+    let newSize = [newWidth, newHeight];
+    let iconAnchor = [Math.round(newWidth / 2), Math.round(newHeight / 2)];
+    this.set('iconSize', newSize);
+    this.set('iconAnchor', iconAnchor);
+
+    //Use in case of possible necessity of recalculating image 'src' attr
+    if (iconUrl !== "" && iconUrl) {
+      //this._imageToDataUri(iconUrl, newWidth, newHeight);
+    }
   },
 
   /**
@@ -264,68 +291,13 @@ export default Ember.Component.extend({
   ),
 
   /**
-    Observer changes in fill style for resizing.
-
-    @method   _styleSettingsForResizingChanged
-    @private
-  */
-  /*_styleSettingsForResizingChanged: Ember.observer(
-    'iconKeepOrigAspectRatio',
-    'iconWidthNew',
-    'iconHeightNew',
-    function() {
-      Ember.run.once(this, '_setNewSize');
-    }
-  ),*/
-
-  /**
-    Sends 'change' action to notify about changes in icon style.
+    Sends 'changeStyle' action to notify about changes in icon style.
 
     @method _sendChangeAction
     @private
   */
   _sendChangeAction() {
-    this.sendAction('change', this.getProperties('iconUrl', 'iconSize', 'iconAnchor', 'isCurActionIsResizing'));
-    this.set('isCurActionIsResizing', false);
-  },
-
-  /**
-    Sets new size to icon image after resizing.
-
-    @method _setNewSize
-    @private
-  */
-  _setNewSize() {
-    this.set('isCurActionIsResizing', true);
-    let newWidth = parseInt(this.iconWidthNew);
-    let newHeight = parseInt(this.iconHeightNew);
-    let ratio = this.get('_iconOrigAspectRatio');
-    if (Ember.isNone(this.get('iconSize'))) {
-      return;
-    }
-    
-    let width = this.get('iconSize')[0];
-    let iconUrl = this.get('iconUrl');
-
-    if (this.get('iconKeepOrigAspectRatio')) {
-      if (newWidth !== width) {
-        newHeight = Math.round(newWidth / ratio);
-        this.set('iconHeightNew', newHeight);
-      } else {
-        newWidth = Math.round(newHeight * ratio);
-        this.set('iconWidthNew', newWidth);
-      }
-    }
-
-    let newSize = [newWidth, newHeight];
-    let iconAnchor = [Math.round(newWidth / 2), Math.round(newHeight / 2)];
-    this.set('iconSize', newSize);
-    this.set('iconAnchor', iconAnchor);
-
-    //Use in case of possible necessity of recalculating image 'src' attr
-    if (iconUrl !== "" && iconUrl) {
-      //this._imageToDataUri(iconUrl, newWidth, newHeight);
-    }
+    this.sendAction('changeStyle', this.getProperties('iconUrl', 'iconSize', 'iconAnchor'));
   },
 
   /**
@@ -429,8 +401,7 @@ export default Ember.Component.extend({
     let iconImage = e.target;
     let iconUrl = iconImage.src;
     let iconSize = [iconImage.width, iconImage.height];
-    let iconWidthNew = iconImage.width;
-    let iconHeightNew = iconImage.height;
+    let iconSizeNew = [iconImage.width, iconImage.height];
     let iconOrigAspectRatio = iconImage.width / iconImage.height;
     let iconAnchor = [Math.round(iconImage.width / 2), Math.round(iconImage.height / 2)];
 
@@ -439,8 +410,7 @@ export default Ember.Component.extend({
       iconUrl: iconUrl,
       iconSize: iconSize,
       iconAnchor: iconAnchor,
-      iconWidthNew: iconWidthNew,
-      iconHeightNew: iconHeightNew,
+      iconSizeNew: iconSizeNew,
       iconKeepOrigAspectRatio: true,
       _iconOrigAspectRatio: iconOrigAspectRatio,
       _iconFileLoadingFailed: false,
@@ -473,10 +443,8 @@ export default Ember.Component.extend({
       this.set('iconSize', [0, 0]);
     }
 
-    this.set('iconWidthNew', iconSize[0]);
-    this.set('iconHeightNew', iconSize[1]);
+    this.set('iconSizeNew', iconSize);
     this.set('_iconOrigAspectRatio', iconSize[0] / iconSize[1]);
-    this.set('_isCurActionIsResizing', false);
 
     let iconAnchor = this.get('iconAnchor');
     if (Ember.isNone(iconAnchor)) {
@@ -547,36 +515,6 @@ export default Ember.Component.extend({
     */
     onIconAnchorClick(e) {
       this.set('iconAnchor', [e.layerX, e.layerY]);
-    },
-
-    onResizeClick(e) {
-      console.log("fired!!!1");
-      this.set('isCurActionIsResizing', true);
-      let newWidth = parseInt(this.iconWidthNew);
-      let newHeight = parseInt(this.iconHeightNew);
-      let ratio = this.get('_iconOrigAspectRatio');
-      let width = this.get('iconSize')[0];
-      let iconUrl = this.get('iconUrl');
-
-      if (this.get('iconKeepOrigAspectRatio') || e.srcElement.checked) {
-        if (newWidth !== width) {
-          newHeight = Math.round(newWidth / ratio);
-          this.set('iconHeightNew', newHeight);
-        } else {
-          newWidth = Math.round(newHeight * ratio);
-          this.set('iconWidthNew', newWidth);
-        }
-      }
-
-      let newSize = [newWidth, newHeight];
-      let iconAnchor = [Math.round(newWidth / 2), Math.round(newHeight / 2)];
-      this.set('iconSize', newSize);
-      this.set('iconAnchor', iconAnchor);
-
-      //Use in case of possible necessity of recalculating image 'src' attr
-      if (iconUrl !== "" && iconUrl) {
-        //this._imageToDataUri(iconUrl, newWidth, newHeight);
-      }
     }
   }
 });

@@ -53,10 +53,10 @@
             {{/if}}
           </div>
         </div>
-        <div class="leftFloated p-25" onclick={{action "onResizeClick"}}>
-          {{input type="number" min=1 value=iconWidthNew disabled=(or (not _showIconImage) _disabled) }}
+        <div class="leftFloated p-25">
+          {{input type="number" min=1 value=iconSizeNew.[0] disabled=(or (not _showIconImage) _disabled) }}
           {{input type="checkbox" checked=iconKeepOrigAspectRatio disabled=(or (not _showIconImage) _disabled) }}
-          {{input type="number" min=1 value=iconHeightNew disabled=(or (not _showIconImage) _disabled) }}
+          {{input type="number" min=1 value=iconSizeNew.[1] disabled=(or (not _showIconImage) _disabled) }}
         </div>
       </td>
     </tr>
