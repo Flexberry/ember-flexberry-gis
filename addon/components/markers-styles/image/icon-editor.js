@@ -186,7 +186,7 @@ export default Ember.Component.extend({
     @default false
   */
   _enabled: false,
-   
+
   /**
     Flag: indicates whether to show checkbox for shadow or not.
 
@@ -201,7 +201,7 @@ export default Ember.Component.extend({
 
     @method _enabledDidChange
     @private
-  */  
+  */
   _enabledDidChange: Ember.observer(
     '_enabled',
     function() {
