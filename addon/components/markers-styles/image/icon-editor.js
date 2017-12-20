@@ -252,8 +252,6 @@ export default Ember.Component.extend({
     let newHeight = parseInt(this.iconSizeNew[1]);
     let ratio = this.get('_iconOrigAspectRatio');
     let width = this.get('iconSize')[0];
-    
-    //let iconUrl = this.get('iconUrl');
 
     if (this.get('iconKeepOrigAspectRatio')) {
       if (newWidth !== width) {
@@ -271,7 +269,8 @@ export default Ember.Component.extend({
     this.set('iconAnchor', iconAnchor);
 
     //Use in case of possible necessity of recalculating image 'src' attr
-    /*if (iconUrl !== '' && iconUrl) {
+    /*let iconUrl = this.get('iconUrl');
+    if (iconUrl !== '' && iconUrl) {
       this._imageToDataUri(iconUrl, newWidth, newHeight);
     }*/
   },
