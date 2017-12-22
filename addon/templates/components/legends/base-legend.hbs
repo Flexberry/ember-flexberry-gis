@@ -2,8 +2,8 @@
   {{#each _legends as |legend|}}
     <div class="{{flexberryClassNames.imageWrapper}}">
       <img class="{{flexberryClassNames.image}}" src="{{legend.src}}" onerror='this.style.display = "none"'>
-      {{#if showLayerName}}
-        <label class="layer-legend-caption">{{layerName}}</label>
+      {{#if (or showLayerName legend.showLayerName)}}
+        <label class="layer-legend-caption">{{or legend.layerName layerName}}</label>
       {{/if}}
     </div>
   {{/each}}

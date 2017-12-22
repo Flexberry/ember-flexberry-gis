@@ -182,6 +182,7 @@
           dynamicActions=dynamicActions
         }}
       {{/if}}
+      {{legendCanBeDisplayed}}
       {{#if (and legendCanBeDisplayed hasBeenExpanded)}}
         {{component (concat "legends/" type "-legend") layerName=name layerSettings=settingsAsObject}}
       {{/if}}
