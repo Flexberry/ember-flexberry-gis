@@ -217,7 +217,7 @@ export default Ember.Component.extend({
     @default true
     @private
   */
-  _isResize: true, 
+  _isResize: true,
 
   /**
     Style position for icon image
@@ -232,7 +232,7 @@ export default Ember.Component.extend({
 
     let positionStyle = '';
     let top = (height / 2 - 71) * (-1);
-    let left = (width / 2 - 71) * (-1);    
+    let left = (width / 2 - 71) * (-1);
 
     positionStyle = 'position:relative;top:' + top + 'px;left:' + left + 'px;';
 
