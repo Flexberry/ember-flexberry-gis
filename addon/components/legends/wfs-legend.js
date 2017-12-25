@@ -18,17 +18,15 @@ export default BaseLegendComponent.extend({
   _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
 
   /**
-    Flag: indicates whether to show layer name or not.
+    Gets src of simple symbol.
 
-    @property showLayerName
-    @type Boolean
-    @default false
+    @method _getSimpleSymbolSrc
+    @param {Object} simple Hash containing style settings.
+    @private
   */
-  showLayerName: true,
-
-  _getSimpleStyleSrc (simple) {
-    var canvas = document.createElement('canvas');
-    canvas.width = canvas.height = 24;
+  _getSimpleSymbolSrc(simple) {
+    let canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 16;
 
     this.get('_layersStylesRenderer').renderOnCanvas({
       canvas: canvas,
@@ -50,26 +48,12 @@ export default BaseLegendComponent.extend({
     @readOnly
   */
   _legends: Ember.computed('layerSettings.legendSettings', function() {
-    // TODO: Implement client-side legends rendering for WFS-layers & extend.
-    
-    console.log(this.get('layerSettings.styleSettings'));
-
     let legends = Ember.A();
 
     let styleSettings = this.get('layerSettings.styleSettings');
-    if (styleSettings.type === 'graduated' || styleSettings.type === 'unique' ) {
+    if (styleSettings.type === 'graduated' || styleSettings.type === 'unique') {
       styleSettings.style.categories.forEach((simple) => {
-        /*var canvas = document.createElement('canvas');
-        canvas.width = canvas.height = 24;
-
-        this.get('_layersStylesRenderer').renderOnCanvas({
-          canvas: canvas,
-          styleSettings: simple.styleSettings,
-          target: 'legend'
-        });
-
-        var src = canvas.toDataURL(); */
-        var src = this._getSimpleStyleSrc(simple);
+        let src = this._getSimpleSymbolSrc(simple.styleSettings);
         legends.pushObject({
           src: src,
           showLayerName: true,
@@ -77,13 +61,7 @@ export default BaseLegendComponent.extend({
         });
       });
     } else {
-      /*this.get('_layersStylesRenderer').renderOnCanvas({
-        canvas: canvas,
-        styleSettings: styleSettings,
-        target: 'legend'
-      });*/
-
-      var src = this._getSimpleStyleSrc(styleSettings);
+      let src = this._getSimpleSymbolSrc(styleSettings);
       legends.pushObject({
         src: src
       });
