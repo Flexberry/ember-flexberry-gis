@@ -183,9 +183,9 @@ export default Ember.Component.extend({
     @property _enabled
     @type Boolean
     @private
-    @default false
+    @default true
   */
-  _enabled: false,
+  _enabled: true,
 
   /**
     Flag: indicates whether to show checkbox for shadow or not.
@@ -205,7 +205,9 @@ export default Ember.Component.extend({
   _enabledDidChange: Ember.observer(
     '_enabled',
     function() {
-      this._clearIconFile();
+      if (!this.get('_enabled')) {
+        this._clearIconFile();
+      }
     }
   ),
 
@@ -384,7 +386,7 @@ export default Ember.Component.extend({
     this.set('_relatedModelStub', relatedModelStub);
 
     if (this.get('allowDisabling') && Ember.isNone(this.get('iconUrl'))) {
-      this.set('_enabled', true);
+      this.set('_enabled', false);
     }
   },
 

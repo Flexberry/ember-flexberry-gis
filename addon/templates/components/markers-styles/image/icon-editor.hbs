@@ -1,23 +1,23 @@
 <table class="ui small compact celled table">
   <thead>
     <tr>
-      <th class="six wide column">        
-        {{iconCaption}}                
-        {{#if allowDisabling}}        
-          {{flexberry-checkbox 
+      <th class="six wide column">
+        {{iconCaption}}
+        {{#if allowDisabling}}
+          {{flexberry-checkbox
             value=_enabled
             class="rightFloated"
-          }}                
-        {{/if}}        
+          }}
+        {{/if}}
       </th>
       <th class="ten wide column">
         {{anchorCaption}}
       </th>
     </tr>
   </thead>
-  {{#if (not _enabled)}}
-  <tbody>   
-    <tr>      
+  {{#if _enabled}}
+  <tbody>
+    <tr>
       <td>
         {{#if _iconFileLoadingFailed}}
           {{ui-message
@@ -58,8 +58,8 @@
             </div>
           {{/if}}
         </div>
-      </td>      
-    </tr>    
+      </td>
+    </tr>
   </tbody>
   {{/if}}
 </table>
