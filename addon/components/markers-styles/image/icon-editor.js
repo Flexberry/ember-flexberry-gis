@@ -178,6 +178,40 @@ export default Ember.Component.extend({
   iconAnchor: null,
 
   /**
+    Flag: indicates whether to show editor shadow icon image or not.
+
+    @property _enabled
+    @type Boolean
+    @private
+    @default true
+  */
+  _enabled: true,
+
+  /**
+    Flag: indicates whether to show checkbox for shadow or not.
+
+    @property allowDisabling
+    @type Boolean
+    @default false
+  */
+  allowDisabling: false,
+
+  /**
+    Observer enabled did change.
+
+    @method _enabledDidChange
+    @private
+  */
+  _enabledDidChange: Ember.observer(
+    '_enabled',
+    function() {
+      if (!this.get('_enabled')) {
+        this._clearIconFile();
+      }
+    }
+  ),
+
+  /**
     Clears icon style settings and related component's properties.
 
     @method _clearIconFile
@@ -350,6 +384,10 @@ export default Ember.Component.extend({
     // Evented stub for flexberry-file's 'relatedModel' property.
     let relatedModelStub = Ember.Object.extend(Ember.Evented, {}).create();
     this.set('_relatedModelStub', relatedModelStub);
+
+    if (this.get('allowDisabling') && Ember.isNone(this.get('iconUrl'))) {
+      this.set('_enabled', false);
+    }
   },
 
   /**

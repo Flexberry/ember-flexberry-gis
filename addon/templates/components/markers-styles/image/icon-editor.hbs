@@ -3,12 +3,19 @@
     <tr>
       <th class="six wide column">
         {{iconCaption}}
+        {{#if allowDisabling}}
+          {{flexberry-checkbox
+            value=_enabled
+            class="rightFloated"
+          }}
+        {{/if}}
       </th>
       <th class="ten wide column">
         {{anchorCaption}}
       </th>
     </tr>
   </thead>
+  {{#if _enabled}}
   <tbody>
     <tr>
       <td>
@@ -54,6 +61,7 @@
       </td>
     </tr>
   </tbody>
+  {{/if}}
 </table>
 <div class="ui {{if (and _iconFileIsLoading _iconFileIsLoadingLongTime) "active" ""}} dimmer">
   <div class="ui loader"></div>
