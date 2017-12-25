@@ -9,5 +9,5 @@ import BaseEditMode from 'ember-flexberry-gis/edit-modes/-private/base';
 export default Object.assign(BaseEditMode, {
   requiredProperties: ['cswConnections', 'leafletMap'],
 
-  name: 'test-mode'
+  name: 'metadata-mode'
 });

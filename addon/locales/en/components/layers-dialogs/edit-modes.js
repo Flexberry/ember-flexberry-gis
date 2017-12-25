@@ -1,4 +1,4 @@
 export default {
   'new': 'New layer',
-  'test-mode': 'Test mode',
+  'metadata-mode': 'Use existing metadata',
 };

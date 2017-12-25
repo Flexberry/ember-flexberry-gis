@@ -3,7 +3,7 @@
 */
 import Ember from 'ember';
 import BaseModeComponent from 'ember-flexberry-gis/components/layers-dialogs/edit-modes/base';
-import layout from '../../../templates/components/layers-dialogs/edit-modes/test-mode';
+import layout from '../../../templates/components/layers-dialogs/edit-modes/metadata-mode';
 
 /**
   Component's CSS-classes names.
