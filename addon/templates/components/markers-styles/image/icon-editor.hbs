@@ -29,18 +29,39 @@
         }}
       </td>
       <td>
-        <div class="icon-image-wrapper">
-          {{#if _showIconImage}}
+      <div class="flexberry-maptoolbar ui menu">                     
+            {{flexberry-button
+              iconClass="zoom icon"
+              class="flexberry-map-tool item ui dropdown"              
+              click="onZoomInClick"
+              tooltip=(t "components.markers-styles.image.icon-editor.zoom-in-button")
+            }}            
+            {{flexberry-button
+              iconClass="zoom out icon"
+              class="flexberry-map-tool item ui dropdown"
+              click="onZoomOutClick"
+              tooltip=(t "components.markers-styles.image.icon-editor.zoom-out-button")
+            }}            
+            {{flexberry-button
+              iconClass="maximize icon"
+              class="flexberry-map-tool item ui dropdown"
+              tooltip=(t "components.markers-styles.image.icon-editor.resize-button")
+              click="onResizeClick"
+            }}            
+        </div>
+        <div class="icon-image-wrapper {{if _isResize "hiddenScroll"}}">
+          {{#if _showIconImage}}          
             <img class="icon-image"
+              style="transform:scale({{_zoomIcon}});{{_positionStyle}}"                         
               width="{{_iconSize.width}}"
               height="{{_iconSize.height}}"
               src="{{iconUrl}}"/>
-            <div class="icon-anchor" onclick={{action "onIconAnchorClick"}}>
-              <svg xmlns="http://www.w3.org/2000/svg"
+            <div class="icon-anchor " onclick={{action "onIconAnchorClick"}}>            
+              <svg xmlns="http://www.w3.org/2000/svg"                   
                    version="1.1"
-                   width="{{_iconSize.width}}"
-                   height="{{_iconSize.height}}"
-                   viewBox="0 0 {{_iconSize.width}} {{_iconSize.height}}">
+                   width="{{_iconAnchorSize.width}}"
+                   height="{{_iconAnchorSize.height}}"
+                   viewBox="0 0 {{_iconAnchorSize.width}} {{_iconAnchorSize.height}}">
                 <circle cx="{{_iconAnchor.x}}"
                         cy="{{_iconAnchor.y}}"
                         r="2"

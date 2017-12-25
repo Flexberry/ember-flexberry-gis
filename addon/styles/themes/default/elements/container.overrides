@@ -937,6 +937,9 @@
 /************************************************************
     Simple layers-style (components/layers-styles/simple)
 ************************************************************/
+.hiddenScroll{
+    overflow: hidden !important;
+}
 .ui.selection.dropdown {
   &.simple-layers-style-stroke-linejoin-dropdown,
   &.simple-layers-style-stroke-linecap-dropdown,

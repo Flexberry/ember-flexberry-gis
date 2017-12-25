@@ -89,6 +89,28 @@ export default Ember.Component.extend({
   }),
 
   /**
+    Hash containing svg size.
+
+    @property _iconAnchorSize
+    @type Object
+    @private
+    @readOnly
+  */
+  _iconAnchorSize: Ember.computed('iconSize.[]', function() {
+    let iconSize = this.get('iconSize');
+    let w = iconSize[0];
+    let h = iconSize[1];
+    if (iconSize[0] < 150 || iconSize[1] < 150) {
+      w = 150;
+      h = 150;
+    }
+
+    return Ember.isArray(iconSize) ?
+      { width: w, height: h } :
+      { width: 0, height: 0 };
+  }),
+
+  /**
     Hash containing icon anchor coordiantes.
 
     @property _iconAnchor
@@ -177,6 +199,46 @@ export default Ember.Component.extend({
   */
   iconAnchor: null,
 
+  allowDisabling: false,
+  /**
+    Hash containing icon's zoom.
+
+    @property _zoomIcon
+    @type Number
+    @default 1
+    @private
+  */
+  _zoomIcon: 1,
+
+  /**
+    Flag: indicates icon resize.
+    @property _isResize
+    @type boolean
+    @default true
+    @private
+  */
+  _isResize: true, 
+
+  /**
+    Style position for icon image
+    @property _positionStyle
+    @type string
+    @private
+  */
+  _positionStyle: Ember.computed('_iconSize', function() {
+    let iconImage = this.get('_iconSize');
+    let width = iconImage.width;
+    let height = iconImage.height;
+
+    let positionStyle = '';
+    let top = (height / 2 - 71) * (-1);
+    let left = (width / 2 - 71) * (-1);    
+
+    positionStyle = 'position:relative;top:' + top + 'px;left:' + left + 'px;';
+
+    return positionStyle;
+  }),
+
   /**
     Clears icon style settings and related component's properties.
 
@@ -194,6 +256,8 @@ export default Ember.Component.extend({
     });
 
     this.get('_iconImage').removeAttribute('src');
+    this.set('_zoomIcon', 1);
+    this.set('_isResize', false);
   },
 
   /**
@@ -237,7 +301,7 @@ export default Ember.Component.extend({
     this.setProperties({
       _iconFileLoadingFailed: false,
       _iconFileIsLoading: true,
-      _iconFileIsLoadingLongTime: false
+      _iconFileIsLoadingLongTime: false,
     });
 
     // Allow ember to render component's GUI before file read operation will be started.
@@ -306,6 +370,8 @@ export default Ember.Component.extend({
     });
 
     iconImage.removeAttribute('src');
+
+    this._onResizeIcon();
   },
 
   /**
@@ -371,6 +437,36 @@ export default Ember.Component.extend({
     this._super(...arguments);
   },
 
+  /**
+    Handles icon img element resize event.
+
+    @method _onResizeIcon
+    @private
+  */
+  _onResizeIcon() {
+    let iconImage = this.get('_iconSize');
+    let width = iconImage.width;
+    let height = iconImage.height;
+    let zoom = 1;
+    if (width > 150 && width <= height) {
+      zoom = 150 / width;
+    } else {
+      if (height > 150) {
+        zoom = 150 / height;
+      }
+    }
+
+    if (zoom !== 1) {
+      this.set('_isResize', true);
+    }
+
+    this.set('_zoomIcon', zoom);
+    let x = 71;
+    let y = 94;
+
+    this.set('iconAnchor', [x, y]);
+  },
+
   actions: {
     /**
       Handles flexberry-file's 'fileChange' action.
@@ -399,6 +495,91 @@ export default Ember.Component.extend({
     */
     onIconAnchorClick(e) {
       this.set('iconAnchor', [e.layerX, e.layerY]);
+    },
+
+    /**
+      Handles marker icon 'click' event.
+      Sets zoom in for marker.
+
+      @method actions.onZoomInClick
+      @param {Object} e Action's event object.
+    */
+    onZoomInClick(e) {
+      let zoom = this.get('_zoomIcon');
+      let step = 0;
+      if (zoom > 0.001) {
+        step = 0.001;
+      }
+
+      if (zoom > 0.01) {
+        step = 0.01;
+      }
+
+      if (zoom > 0.1) {
+        step = 0.1;
+      }
+
+      if (zoom > 1) {
+        step = 1;
+      }
+
+      zoom = zoom + step;
+      this.set('_zoomIcon', zoom);
+      this.set('_isResize', false);
+    },
+
+    /**
+      Handles marker icon 'click' event.
+      Sets zoom out for marker.
+
+      @method actions.onZoomOutClick
+      @param {Object} e Action's event object.
+    */
+    onZoomOutClick(e) {
+      let zoom = this.get('_zoomIcon');
+      let iconImage = this.get('_iconSize');
+      let width = iconImage.width;
+      let height = iconImage.height;
+      let step = 0;
+
+      if (width * zoom > 150 || height * zoom > 150) {
+        step = 1;
+      } else {
+        if (zoom > 0.001) {
+          step = 0.001;
+        }
+
+        if (zoom > 0.01) {
+          step = 0.01;
+        }
+
+        if (zoom > 0.1) {
+          step = 0.1;
+        }
+
+        if (zoom > 1) {
+          step = 1;
+        }
+      }
+
+      if (width * zoom < 20 || height * zoom < 20) {
+        step = 0;
+      }
+
+      zoom = zoom - step;
+      this.set('_zoomIcon', zoom);
+      this.set('_isResize', false);
+    },
+
+    /**
+      Handles marker icon 'click' event.
+      Sets resize for marker.
+
+      @method actions.onResizeClick
+      @param {Object} e Action's event object.
+    */
+    onResizeClick(e) {
+      this._onResizeIcon();
     }
   }
 });
