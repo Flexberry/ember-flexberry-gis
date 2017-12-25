@@ -18,7 +18,9 @@
 /*******************************
           Flexberry Map
 *******************************/
-
+.rightFloated{
+	float:right;
+}
 .flexberry-map {
   font-family: inherit;
   width: @flexberryMapWidth;
@@ -937,6 +939,7 @@
 /************************************************************
     Simple layers-style (components/layers-styles/simple)
 ************************************************************/
+
 .ui.selection.dropdown {
   &.simple-layers-style-stroke-linejoin-dropdown,
   &.simple-layers-style-stroke-linecap-dropdown,
@@ -1020,7 +1023,9 @@ form.flexberry-edit-layermap {
     }
 
     .ui.tab.segment {
-      overflow: hidden;
+      // Sticky canvas inside tab won't work without visible overflow.
+      overflow: visible;
+
       border: none;
       box-shadow: none;
       padding: 0;
@@ -1042,6 +1047,15 @@ form.flexberry-edit-layermap {
           margin: 0 auto;
           border: 1px solid rgba(34, 36, 38, 0.15);
           border-radius: 0.285rem;
+
+          // Force canvas to be sticky at the top of tab segment.
+          position: static;
+          position: -webkit-sticky !important;
+          position: -moz-sticky !important;
+          position: -ms-sticky !important;
+          position: -o-sticky !important;
+          position: sticky !important;
+          top: 10px;
         }
 
         .flexberry-jsonarea {
