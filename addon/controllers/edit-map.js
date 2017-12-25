@@ -33,7 +33,7 @@ export default EditFormController.extend(
     */
     leafletMap: null,
 
-    queryParams: ['geofilter', 'setting', 'zoom', 'lat', 'lng'],
+    queryParams: ['geofilter', 'setting', 'zoom', 'lat', 'lng', 'metadata'],
 
     /**
       Query parameter, contains json serialized object with property names and values
@@ -74,6 +74,15 @@ export default EditFormController.extend(
       @default null
     */
     lng: null,
+
+    /**
+      Query parameter, contains comma-separated ids
+      of selected layer metadata
+      @property metadata
+      @type String
+      @default null
+    */
+    metadata: null,
 
     /**
       Deserialized valued of filter property
