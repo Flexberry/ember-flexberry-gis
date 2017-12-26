@@ -1,11 +1,15 @@
 
-<div>
+<div class="field">
 
-    {{flexberry-dropdown
-      class="fluid"
-      items=_metadataRecordsNames
-      value=_metadataRecordsName
-      onChange=(action "createLayerFromMetadata")
-    }}
+  <label>
+    {{dropdownCaption}}
+  </label>
+
+  {{flexberry-dropdown
+    class="fluid"
+    items=_metadataRecordsNames
+    value=_metadataRecordsName
+    onChange=(action "createLayerFromMetadata")
+  }}
 
 </div>

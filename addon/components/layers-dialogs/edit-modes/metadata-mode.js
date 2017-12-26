@@ -4,45 +4,40 @@
 import Ember from 'ember';
 import BaseModeComponent from 'ember-flexberry-gis/components/layers-dialogs/edit-modes/base';
 import layout from '../../../templates/components/layers-dialogs/edit-modes/metadata-mode';
+import {
+  translationMacro as t
+} from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
   JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
   @property {Object} flexberryClassNames
-  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-edit-mode-csw').
+  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-edit-mode-metadata').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name (null, because component is tagless).
   @readonly
   @static
-  @for CswModeComponent
+  @for MetadataModeComponent
 */
-const flexberryClassNamesPrefix = 'flexberry-edit-mode-csw';
+const flexberryClassNamesPrefix = 'flexberry-edit-mode-metadata';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null
 };
 
 /**
-  @class CswModeComponent
+  @class MetadataModeComponent
   @extends BaseModeComponent
 */
-let CswModeComponent = BaseModeComponent.extend({
+let MetadataModeComponent = BaseModeComponent.extend({
 
   layout,
   /**
     Array of property names that will be bound from parentView.
     @property bindingProperties
     @type String[]
-    @default ['cswConnections', 'leafletMap']
+    @default ['leafletMap']
   */
-  bindingProperties: ['cswConnections', 'leafletMap'],
-
-  /**
-    Loaded CSW connections.
-    @property cswConnections
-    @type Object[]
-    @default null
-  */
-  cswConnections: null,
+  bindingProperties: ['leafletMap'],
 
   /**
     Leaflet map.
@@ -52,8 +47,16 @@ let CswModeComponent = BaseModeComponent.extend({
   */
   leafletMap: null,
 
+  /**
+    Dialog's dropdown caption.
+
+    @property dropdownCaption
+    @type String
+    @default t('components.layers-dialogs.edit-modes.metadata-mode.metadata-records-dropdown.caption')
+  */
+  dropdownCaption: t('components.layers-dialogs.edit-modes.metadata-records-dropdown.caption'),
+
   store: Ember.inject.service(),
-  metadataTestRecordCount:5,
   _metadataRecords:[],
   _metadataRecordsName:[],
 
@@ -84,12 +87,10 @@ let CswModeComponent = BaseModeComponent.extend({
       layerLink: []
     };
     this.addLinkMetadata(mapLayer, metadata.get('linkMetadata'));
-    console.log('Metadata Convert');
     return mapLayer;
   },
 
   addLinkMetadata(layerModel, linkMetadata) {
-    console.log('addLinkMetadata start');
     linkMetadata.forEach((item) => {
       let newLayerLink = {
         allowShow: item.get('allowShow'),
@@ -102,7 +103,6 @@ let CswModeComponent = BaseModeComponent.extend({
   },
 
   addLinkParametersMetadata(layerLinkModel, parameters) {
-    console.log('addParameters start');
     parameters.forEach((item) => {
       let newLinkParameter = {
         objectField: item.get('objectField'),
@@ -129,9 +129,9 @@ let CswModeComponent = BaseModeComponent.extend({
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
-CswModeComponent.reopenClass({
+MetadataModeComponent.reopenClass({
   flexberryClassNames,
   layout
 });
 
-export default CswModeComponent;
+export default MetadataModeComponent;
