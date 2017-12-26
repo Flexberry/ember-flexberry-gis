@@ -4,9 +4,8 @@
 import Ember from 'ember';
 import BaseModeComponent from 'ember-flexberry-gis/components/layers-dialogs/edit-modes/base';
 import layout from '../../../templates/components/layers-dialogs/edit-modes/metadata-mode';
-import {
-  translationMacro as t
-} from 'ember-i18n';
+import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
+import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -74,51 +73,10 @@ let MetadataModeComponent = BaseModeComponent.extend({
     Ember.set(this, '_metadataRecordsNames', metadataArrayNames);
   },
 
-  getLayerFromMetadata(metadata) {
-    let mapLayer = {
-      name: metadata.get('name'),
-      description: metadata.get('description'),
-      keyWords: metadata.get('keyWords'),
-      type: metadata.get('type'),
-      settings: metadata.get('settings'),
-      scale:metadata.get('scale'),
-      coordinateReferenceSystem:metadata.get('coordinateReferenceSystem'),
-      boundingBox:metadata.get('boundingBox'),
-      layerLink: []
-    };
-    this.addLinkMetadata(mapLayer, metadata.get('linkMetadata'));
-    return mapLayer;
-  },
-
-  addLinkMetadata(layerModel, linkMetadata) {
-    linkMetadata.forEach((item) => {
-      let newLayerLink = {
-        allowShow: item.get('allowShow'),
-        mapObjectSetting: item.get('mapObjectSetting'),
-        parameters:[{ name: 'test' }]
-      };
-      this.addLinkParametersMetadata(newLayerLink, item.get('parameters'));
-      layerModel.layerLink.push(newLayerLink);
-    });
-  },
-
-  addLinkParametersMetadata(layerLinkModel, parameters) {
-    parameters.forEach((item) => {
-      let newLinkParameter = {
-        objectField: item.get('objectField'),
-        layerField: item.get('layerField'),
-        expression: item.get('expression'),
-        queryKey: item.get('queryKey'),
-        linkField: item.get('linkField')
-      };
-      layerLinkModel.parameters.push(newLinkParameter);
-    });
-  },
-
   actions: {
 
     createLayerFromMetadata() {
-      let layer = this.getLayerFromMetadata(
+      let layer = createLayerFromMetadata(
         this._metadataRecords[this._metadataRecordsNames.indexOf(this._metadataRecordsName)]
       );
       this.sendAction('editingFinished', layer);
