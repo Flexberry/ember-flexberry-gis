@@ -933,7 +933,7 @@
 }
 
 .ui.table.flexberry-table-no-model {
-  width: inherit !important;
+  width: 100% !important;
 }
 
 /************************************************************
