@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
+import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
 
 const {
@@ -20,6 +21,7 @@ const {
  */
 export default Ember.Component.extend(
   DynamicPropertiesMixin,
+  DynamicActionsMixin,
   LeafletOptionsMixin, {
     /**
       Leaflet layer object init by settings from model.
@@ -207,6 +209,8 @@ export default Ember.Component.extend(
           }
         }
 
+        this.sendAction('layerInit', leafletLayer, this.get('layerModel'));
+
         return leafletLayer;
       }).catch((errorMessage) => {
         Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
@@ -220,6 +224,8 @@ export default Ember.Component.extend(
       @private
     */
     _destroyLayer() {
+      this.sendAction('layerDestroy', this.get('_leafletObject'), this.get('layerModel'));
+
       // Execute specific destroy logic related to layer's type.
       this.destroyLayer();
 
