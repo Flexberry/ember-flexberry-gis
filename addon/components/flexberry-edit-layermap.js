@@ -649,16 +649,8 @@ export default Ember.Component.extend(
         @param {Object} layer Modified layer model
       */
       onEditingFinished(layer) {
-        let _layerHash = this.get('_layer');
-        for (var propertyName in layer) {
-          if (layer.hasOwnProperty(propertyName) && _layerHash.hasOwnProperty(propertyName)) {
-            Ember.set(_layerHash, propertyName, Ember.get(layer, propertyName));
-          }
-        }
-
-        this.set('layer', _layerHash);
+        this.set('layer', layer);
         this._createInnerLayer();
-        this.set('_coordinateReferenceSystemCode', Ember.get(_layerHash, 'coordinateReferenceSystem.code'));
       },
 
       /**

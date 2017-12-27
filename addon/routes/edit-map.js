@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
+import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
 import { Query } from 'ember-flexberry-data';
 
 /**
@@ -197,22 +198,7 @@ export default EditFormRoute.extend({
     }
 
     metadata.forEach((item) => {
-      let newLayer = this.get('store').createRecord('new-platform-flexberry-g-i-s-map-layer', {
-        name: item.get('name'),
-        description: item.get('description'),
-        keyWords: item.get('keyWords'),
-        type: item.get('type'),
-        settings: item.get('settings'),
-        scale: item.get('scale'),
-        coordinateReferenceSystem: item.get('coordinateReferenceSystem'),
-        boundingBox: item.get('boundingBox'),
-
-        // If user has chosen to open metadata on map, then layer created on metadata basics must be visible by default.
-        visibility: true
-      });
-
-      this._addLinkMetadata(newLayer, item.get('linkMetadata'));
-
+      let newLayer = createLayerFromMetadata(item);
       model.get('mapLayer').pushObject(newLayer);
     });
   },

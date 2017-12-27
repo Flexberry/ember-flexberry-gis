@@ -11,7 +11,7 @@
 */
 
 let createLayerFromMetadata = function(metadata) {
-    let mapLayer = {
+  let mapLayer = {
       name: metadata.get('name'),
       description: metadata.get('description'),
       keyWords: metadata.get('keyWords'),
@@ -20,25 +20,24 @@ let createLayerFromMetadata = function(metadata) {
       scale:metadata.get('scale'),
       coordinateReferenceSystem:metadata.get('coordinateReferenceSystem'),
       boundingBox:metadata.get('boundingBox'),
-      layerLink: []
     };
-
-    addLinkMetadata(mapLayer, metadata.get('linkMetadata'));
-    return mapLayer;
+  addLinkMetadata(mapLayer, metadata.get('linkMetadata'));
+  return mapLayer;
 };
 
+// Add linked metadata from record to map layer
 let addLinkMetadata = function(layerModel, linkMetadata) {
   linkMetadata.forEach((item) => {
     let newLayerLink = {
       allowShow: item.get('allowShow'),
       mapObjectSetting: item.get('mapObjectSetting'),
-      parameters:[{ name: 'test' }]
     };
     addLinkParametersMetadata(newLayerLink, item.get('parameters'));
     layerModel.layerLink.push(newLayerLink);
   });
 };
 
+// Add parameters from record to map layer linked metadata
 let addLinkParametersMetadata = function(layerLinkModel, parameters) {
   parameters.forEach((item) => {
     let newLinkParameter = {

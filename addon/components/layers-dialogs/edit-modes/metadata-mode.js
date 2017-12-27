@@ -1,11 +1,13 @@
 /**
   @module ember-flexberry-gis
 */
+
 import Ember from 'ember';
 import BaseModeComponent from 'ember-flexberry-gis/components/layers-dialogs/edit-modes/base';
 import layout from '../../../templates/components/layers-dialogs/edit-modes/metadata-mode';
 import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
 import { translationMacro as t } from 'ember-i18n';
+import { Query } from 'ember-flexberry-data';
 
 /**
   Component's CSS-classes names.
@@ -59,12 +61,23 @@ let MetadataModeComponent = BaseModeComponent.extend({
   _metadataRecords:[],
   _metadataRecordsName:[],
 
+  // Get all existing metadata records and add it to array for dropdown list
   init: function() {
     this._super();
     let metadataArray = [];
     let metadataArrayNames = [];
     let store = this.get('store');
     let loadedMetadata = store.peekAll('new-platform-flexberry-g-i-s-layer-metadata');
+    /*
+    let queryBuilder = new Query.Builder(store)
+    .from('new-platform-flexberry-g-i-s-layer-metadata')
+    .selectByProjection('LayerMetadataE');
+
+    let recordsQuery =store.query('new-platform-flexberry-g-i-s-layer-metadata', queryBuilder.build());
+    recordsQuery.then( function(result) {
+      console.log("result", result);
+    });
+    */
     loadedMetadata.forEach((item, index) => {
       metadataArray.push(item);
       metadataArrayNames.push(item.get('name'));
@@ -75,6 +88,7 @@ let MetadataModeComponent = BaseModeComponent.extend({
 
   actions: {
 
+    // Create layer from selected metadata record
     createLayerFromMetadata() {
       let layer = createLayerFromMetadata(
         this._metadataRecords[this._metadataRecordsNames.indexOf(this._metadataRecordsName)]

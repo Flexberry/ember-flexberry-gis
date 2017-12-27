@@ -3,11 +3,11 @@
 */
 import BaseEditMode from 'ember-flexberry-gis/edit-modes/-private/base';
 /**
-  Csw based edit mode.
-  @class CswEditMode
+
+  Metadata based edit mode.
+  @class MetadataEditMode
 */
 export default Object.assign(BaseEditMode, {
-  requiredProperties: ['cswConnections', 'leafletMap'],
-
+  requiredProperties: ['leafletMap'],
   name: 'metadata-mode'
 });
