@@ -19,18 +19,6 @@
           Flexberry Map
 *******************************/
 
-.leftFloated {
-  float: left;
-}
-
-.leftFloated.p-70 {
-  width: 70%;
-}
-
-.leftFloated.p-25 {
-  width: 25%;
-}
-
 .rightFloated{
 	float:right;
 }
