@@ -85,27 +85,27 @@
             </div>
             <div class="row">
               <div class="eleven wide column">
-                <div class="ui icon fluid buttons">
+                <div class="ui small fluid buttons">
                   {{flexberry-button
                     iconClass="bold icon"
-                    class=(if (eq _options.captionFontWeight "bold") "active" "")
+                    class=(if (eq _options.captionFontWeight "bold") "active bold-caption" "bold-caption")
                     click=(action "onBoldFontButtonClick")
                   }}
                   {{flexberry-button
                     iconClass="italic icon"
-                    class=(if (eq _options.captionFontStyle "italic") "active" "")
+                    class=(if (eq _options.captionFontStyle "italic") "active italic-caption" "italic-caption")
                     click=(action "onItalicFontButtonClick")
                   }}
                   {{flexberry-button
                     iconClass="underline icon"
-                    class=(if (eq _options.captionFontDecoration "underline") "active" "")
+                    class=(if (eq _options.captionFontDecoration "underline") "active underline-caption" "underline-caption")
                     click=(action "onUnderlineFontButtonClick")
                   }}
                   {{flexberry-button
                     iconClass="strikethrough icon"
-                    class=(if (eq _options.captionFontDecoration "line-through") "active" "")
+                    class=(if (eq _options.captionFontDecoration "line-through") "active line-through-caption" "line-through-caption")
                     click=(action "onLinethroughFontButtonClick")
-                  }}
+                  }} 
                 </div>
               </div>
               <div class="five wide column">
@@ -138,8 +138,8 @@
               caption=(t "components.map-commands-dialogs.export.display-mode-settings-tab.display-mode-switcher.map-only-mode.caption")
               click=(action "onDisplayModeChange" "map-only-mode")
             }}
-          </div>
-        </div>
+          </div>          
+        </div>        
         <div class="field">
           <label>
             {{t "components.map-commands-dialogs.export.display-mode-settings-tab.map-controls-panel.caption"}}

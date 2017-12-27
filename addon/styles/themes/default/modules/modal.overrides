@@ -141,7 +141,7 @@
             width: 25%;
 
             &:last-child {
-              width: calc( 25% + 1px );
+              width: calc( 25% + 0.1% );
             }
           }
         }
@@ -165,8 +165,15 @@
 
       .ui.tab.segment {
         // Height is 100% minus height of tabular menu items related to their paddings, borders and font size.
-        height: calc( 100% - 24px - 1.2em );
+        height: calc( 100% - 10px - 1.2em );
         border-radius: 0;
+        width:100% !important;
+        margin: 0 !important;
+
+        .ui.button.active,
+          .ui.button:hover {            
+            background: @mediumbluycolor !important;           
+          }
 
         .flexberry-dropdown.ui.selection.dropdown .menu {
           // About 4 items is enough.
@@ -187,10 +194,46 @@
                 padding-right: 0;
               }
             }
+
+            .bold-caption,
+              .line-through-caption,
+              .italic-caption,
+              .underline-caption{
+                  border-right: none;
+                  border-left: none;
+                  border-radius: 0px;
+                  box-shadow: @darkBoxShadow;                                      
+                  margin: 0px;
+              }
+              
+              .bold-caption{  
+                  border-radius: 5px 0px 0px 5px !important;
+              }
+              .line-through-caption{
+                  border-radius: 0px 5px 5px 0px !important;
+                  border-right: solid 1px @lightgraycolor;                   
+                  width: 25% !important;
+                                   
+              }
+              .italic-caption,
+              .underline-caption{
+                  border-radius: 0px !important;           
+              }
+              .ui.icon.button.active,            
+              .ui.icon.button:hover {
+                color: @uiIconButtonHoveredColor !important;
+                background: @mediumbluycolor !important;                
+              }
           }
         }
       }
     }
+
+    .flexberry-export-map-command-dialog-paging-column{         
+            .ui.button.active{                
+                background: @mediumbluycolor !important;                             
+          }
+      }
 
     .flexberry-export-map-command-dialog-preview-column,
     .flexberry-export-map-command-dialog-paging-column  {

@@ -1057,7 +1057,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     */
     onBoldFontButtonClick() {
       let previousFontWeight = this.get('_options.captionFontWeight');
-      this.set('_options.captionFontWeight', previousFontWeight !== 'bold' ? 'bold' : 'normal');
+      this.set('_options.captionFontWeight', previousFontWeight !== 'bold' ? 'bold' : 'normal');      
     },
 
     /**
