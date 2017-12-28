@@ -765,4 +765,18 @@ export default Ember.Component.extend(
       return new L.GeoJSON(featureCollection, options);
     }
   }
+
+  /**
+    Component's action invoking on layer creation.
+    @method sendingActions.layerInit
+    @param {Object} leafletObject Created (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
+    @param {NewPlatformFlexberryGISMapLayerModel} layerModel Current layer model
+   */
+
+   /**
+    Component's action invoking before the layer destroying.
+    @method sendingActions.layerDestroy
+    @param {Object} leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
+    @param {NewPlatformFlexberryGISMapLayerModel} layerModel Current layer model
+   */
 );
