@@ -103,12 +103,8 @@ export default EditFormController.extend(EditFormControllerOperationsIndicationM
     let model = this.get('model');
     let layerProperties = this.get('getLayerProperties')();
 
-    model.set('type', layerProperties.type);
-    model.set('name', layerProperties.name);
-    model.set('description', layerProperties.description);
-    model.set('keyWords', layerProperties.keyWords);
-    model.set('scale', layerProperties.scale);
-    model.set('coordinateReferenceSystem', layerProperties.coordinateReferenceSystem);
-    model.set('settings', layerProperties.settings);
+    for (let [attr, value] of Object.entries(layerProperties)) {
+      model.set(attr, value);
+    };
   }
 });
