@@ -6,12 +6,17 @@
         {{#if allowDisabling}}
           {{flexberry-checkbox
             value=_enabled
-            class="rightFloated"
+            class="enable-icon-checkbox rightFloated"
           }}
         {{/if}}
       </th>
       <th class="four wide column">
         {{resizeCaption}}
+        <i
+          class="restore-original-icon-size-button undo icon rightFloated {{if (not (and _showIconImage _enabled)) "disabled"}}"
+          title={{t "components.markers-styles.image.icon-editor.setorigsize-caption"}}
+          {{action "setOrigIconSize" on="click"}}>
+        </i>
       </th>
       <th class="eight wide column">
         {{anchorCaption}}
@@ -74,15 +79,6 @@
             </div>
           </div>
         </div>
-        <div class="item">
-          {{flexberry-button
-            class="compact ui icon button"
-            iconClass="maximize icon"
-            tooltip=(t "components.markers-styles.image.icon-editor.setorigsize-caption")
-            disabled=(not (and _showIconImage _enabled))
-            click="setOrigIconSize"
-          }}
-        </div>
       </td>
       <td>
         <div class="icon-image-wrapper">
@@ -93,10 +89,10 @@
               src="{{iconUrl}}"/>
             <div class="icon-anchor" onclick={{action "onIconAnchorClick"}}>
               <svg xmlns="http://www.w3.org/2000/svg"
-                    version="1.1"
-                    width="{{_iconSize.width}}"
-                    height="{{_iconSize.height}}"
-                    viewBox="0 0 {{_iconSize.width}} {{_iconSize.height}}">
+                   version="1.1"
+                   width="{{_iconSize.width}}"
+                   height="{{_iconSize.height}}"
+                   viewBox="0 0 {{_iconSize.width}} {{_iconSize.height}}">
                 <circle cx="{{_iconAnchor.x}}"
                         cy="{{_iconAnchor.y}}"
                         r="2"

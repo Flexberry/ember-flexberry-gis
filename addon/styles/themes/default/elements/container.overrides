@@ -991,6 +991,11 @@
     }
   }
 
+  .enable-icon-checkbox,
+  .restore-original-icon-size-button {
+    cursor: pointer;
+  }
+
   .icon-image-wrapper {
     position: relative;
     margin: 0 auto;

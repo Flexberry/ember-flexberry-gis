@@ -301,12 +301,12 @@ export default Ember.Component.extend({
     @private
   */
   _setNewSize() {
-    let newWidth = parseInt(this.iconSizeNew[0]);
-    let newHeight = parseInt(this.iconSizeNew[1]);
     let ratio = this.get('_iconOrigAspectRatio');
-    let width = this.get('iconSize')[0];
-    let height = this.get('iconSize')[1];
     let iconAnchor = this.get('iconAnchor');
+    let [width, height] = this.get('iconSize');
+    let [newWidth, newHeight] = this.get('iconSizeNew');
+    newWidth = parseInt(newWidth);
+    newHeight = parseInt(newHeight);
 
     if (this.get('iconKeepOrigAspectRatio')) {
       if (newWidth !== width) {
@@ -322,12 +322,6 @@ export default Ember.Component.extend({
     let newSize = [newWidth, newHeight];
     this.set('iconSize', newSize);
     this.set('iconAnchor', [iconAnchor[0] * oldNewRatios[0], iconAnchor[1] * oldNewRatios[1]]);
-
-    //Use in case of possible necessity of recalculating image 'src' attr
-    /*let iconUrl = this.get('iconUrl');
-    if (iconUrl !== '' && iconUrl) {
-      this._imageToDataUri(iconUrl, newWidth, newHeight);
-    }*/
   },
 
   /**
@@ -353,36 +347,6 @@ export default Ember.Component.extend({
   */
   _sendChangeAction() {
     this.sendAction('changeStyle', this.getProperties('iconUrl', 'iconSize', 'iconAnchor'));
-  },
-
-  /**
-    Takes a data URI and returns the Data URI corresponding to the resized image.
-    @method _imageToDataUri
-    @param {String} img Image URL
-    @param {Number} width New width
-    @param {Number} height New height
-    @private
-  */
-  _imageToDataUri(img, width, height) {
-    var self = this;
-    let image = new Image();
-    let imageType = img.substring(5, img.indexOf(';base64'));
-
-    image.onload = function()
-    {
-      var canvas = document.createElement('canvas');
-      var ctx = canvas.getContext('2d');
-
-      canvas.width = width;
-      canvas.height = height;
-
-      ctx.drawImage(this, 0, 0, width, height);
-
-      let dataURI = canvas.toDataURL(imageType);
-      self.set('iconUrl', dataURI);
-    };
-
-    image.src = img;
   },
 
   /**
