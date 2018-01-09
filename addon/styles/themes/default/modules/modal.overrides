@@ -172,7 +172,7 @@
 
         .ui.button.active,
           .ui.button:hover {            
-            background: @mediumbluecolor !important;          
+            background: @mediumbluecolor !important;
           }
 
         .flexberry-dropdown.ui.selection.dropdown .menu {
@@ -202,7 +202,7 @@
                   border-right: none;
                   border-left: none;
                   border-radius: 0px;
-                  box-shadow: @darkBoxShadow;                                      
+                  box-shadow: @darkBoxShadow;
                   margin: 0px;
               }
               
@@ -211,27 +211,26 @@
               }
               .line-through-caption{
                   border-radius: 0px 5px 5px 0px;
-                  border-right: solid 1px @lightgraycolor;                   
-                  width: 25%;
-                                   
+                  border-right: solid 1px @lightgraycolor;
+                  width: 25%;                                   
               }
               .italic-caption,
               .underline-caption{
-                  border-radius: 0px;          
+                  border-radius: 0px;
               }
-              .ui.icon.button.active,            
+              .ui.icon.button.active,
               .ui.icon.button:hover {
                 color: @uiIconButtonHoveredColor;
-                background: @mediumbluecolor;               
+                background: @mediumbluecolor;
               }
           }
         }
       }
     }
 
-    .flexberry-export-map-command-dialog-paging-column{         
-            .ui.button.active{                
-                background: @mediumbluecolor;                            
+    .flexberry-export-map-command-dialog-paging-column{
+            .ui.button.active{
+                background: @mediumbluecolor;
           }
       }
 
