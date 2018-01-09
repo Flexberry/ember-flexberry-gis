@@ -18,9 +18,11 @@
 /*******************************
           Flexberry Map
 *******************************/
+
 .rightFloated{
 	float:right;
 }
+
 .flexberry-map {
   font-family: inherit;
   width: @flexberryMapWidth;
@@ -987,6 +989,11 @@
         }
       }
     }
+  }
+
+  .enable-icon-checkbox,
+  .restore-original-icon-size-button {
+    cursor: pointer;
   }
 
   .icon-image-wrapper {
