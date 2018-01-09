@@ -100,8 +100,18 @@ export default Ember.Component.extend({
     */
     onGenerateChart() {
       let json = this.get('getJsonCharts')();
-
-      this.$('.containerCR').highcharts(json);
+           
+      var ctx = document.getElementById("containerCR");
+      var chart = new Chart(ctx, json);     
+      chart.reset();
+      chart.clear();
+      chart.destroy();
+      var chart = new Chart(ctx, json); 
+    /*  chart.render({
+        duration: 800,
+        easing: 'easeOutBounce'    
+      });*/
+     // this.$('.containerCR').highcharts(json);
     },
 
     onModeTypeChange(item, key) {

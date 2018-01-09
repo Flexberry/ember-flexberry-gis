@@ -32,7 +32,101 @@ export default BaseChartType.extend({
     let propName = this.get('_selectedXAxisProperty');
     let propVal = this.get('_selectedYAxisProperty');
 
+
+    let dataLabels = Ember.A([]);
+    let datasetsLabel = Ember.A([]);
     isObject.forEach(obj => {
+      let dlCopy = Ember.A([]);
+      let dslCopy = Ember.A([]);
+      dlCopy.push(obj[propName]);
+      dataLabels.push(dlCopy);
+      dslCopy.push(obj[propVal]);
+      datasetsLabel.push(dslCopy);
+    });
+
+    let type = 'bar';//this.get('_chartType');
+    let options = {
+        title: {
+          display: true,
+          text: this.get('_titleChart')
+        },
+        tooltips: {
+          backgroundColor: '#F8F8F8',
+          bodyFontColor: '#000'
+        },
+        legend:{
+          display: false
+        }        
+    };
+
+    let data = {
+      labels: dataLabels,
+      datasets: [{
+        label: this.get(`_localizedProperties.${propVal}`) || propVal,
+        data: datasetsLabel,      
+        backgroundColor: '#7CB5EC'      
+      }]          
+    };
+
+    return {
+      type,
+      data,
+      options     
+    };
+
+    /*************   chartjs   **************      
+    let bgcolor = Ember.A(['#F15C80', '#E4D354', '#2B908F', '#F45B5B', '#91E8E1', '#7CB5EC']);
+    let bgColorPie = Ember.A([]);
+    var j=0;   
+    for(var i=0; i<isObject.length; i++){
+      bgColorPie[i]=bgcolor[j];
+      j++;       
+      if(j==6){
+        j=0;
+      }
+    }
+    
+    let dataLabels = Ember.A([]);
+    let datasetsLabel = Ember.A([]);
+    isObject.forEach(obj => {
+      let dlCopy = Ember.A([]);
+      let dslCopy = Ember.A([]);
+      dlCopy.push(obj[propName]);
+      dataLabels.push(dlCopy);
+      dslCopy.push(obj[propVal]);
+      datasetsLabel.push(dslCopy);
+    });
+    let type = 'bar';//this.get('_chartType');
+    let options = {
+        title: {
+          display: true,
+          text: this.get('_titleChart')
+        },
+        tooltips: {
+          backgroundColor: '#F8F8F8',
+          bodyFontColor: '#000'
+        },
+        legend:{
+          display: false
+        }        
+    };
+
+    let data = {
+      labels: dataLabels,
+      datasets: [{
+        label: this.get(`_localizedProperties.${propVal}`) || propVal,
+        data: datasetsLabel,
+        backgroundColor: bgColorPie,        
+      }]          
+    };
+
+    return {
+      type,
+      data,
+      options     
+    };
+
+   /* isObject.forEach(obj => {
       xCategories.push(obj[propName]);
       dataSeries.push(parseFloat(obj[propVal]));
     });
@@ -73,6 +167,6 @@ export default BaseChartType.extend({
       tooltip,
       plotOptions,
       series
-    };
+    };*/
   }
 });

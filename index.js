@@ -116,6 +116,9 @@ module.exports = {
 
     // Load highcharts
     app.import(app.bowerDirectory + '/highcharts/highcharts.js');
+	// Load chartjs
+   // app.import('/node_modules/chart.js/dist/Chart.js');
+    app.import(app.bowerDirectory + '/chart.js/dist/Chart.js');
 
     // ESRI.terraformer
     app.import(app.bowerDirectory + '/terraformer/terraformer.js');
