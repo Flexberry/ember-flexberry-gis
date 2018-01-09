@@ -209,7 +209,7 @@ export default Ember.Component.extend(
           }
         }
 
-        this.sendAction('layerInit', leafletLayer, this.get('layerModel'));
+        this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel') });
 
         return leafletLayer;
       }).catch((errorMessage) => {
@@ -224,7 +224,7 @@ export default Ember.Component.extend(
       @private
     */
     _destroyLayer() {
-      this.sendAction('layerDestroy', this.get('_leafletObject'), this.get('layerModel'));
+      this.sendAction('layerDestroy', { leafletObject: this.get('_leafletObject'), layerModel: this.get('layerModel') });
 
       // Execute specific destroy logic related to layer's type.
       this.destroyLayer();
@@ -769,14 +769,16 @@ export default Ember.Component.extend(
   /**
     Component's action invoking on layer creation.
     @method sendingActions.layerInit
-    @param {Object} leafletObject Created (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
-    @param {NewPlatformFlexberryGISMapLayerModel} layerModel Current layer model
+    @param {Object} eventObject Action param
+    @param {Object} eventObject.leafletObject Created (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
+    @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
    */
 
    /**
     Component's action invoking before the layer destroying.
     @method sendingActions.layerDestroy
-    @param {Object} leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
-    @param {NewPlatformFlexberryGISMapLayerModel} layerModel Current layer model
+    @param {Object} eventObject Action param
+    @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
+    @param {NewPlatformFlexberryGISMapLayerModel} eventObject.layerModel Current layer model
    */
 );

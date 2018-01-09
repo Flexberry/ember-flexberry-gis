@@ -39,12 +39,12 @@ test('layer component sends actions', function(assert) {
   }]));
   this.set('leafletContainer', L.layerGroup());
 
-  this.on('onLayerInit', (leafletObject, layerModel) => {
+  this.on('onLayerInit', ({ leafletObject, layerModel }) => {
     assert.ok(!Ember.isNone(leafletObject), 'leafletObject should not be null');
     assert.equal(Ember.get(layerModel, 'name'), 'test layer');
   });
 
-  this.on('onLayerDestroy', (leafletObject, layerModel) => {
+  this.on('onLayerDestroy', ({ leafletObject, layerModel }) => {
     assert.ok(!Ember.isNone(leafletObject), 'leafletObject should not be null');
     assert.equal(Ember.get(layerModel, 'name'), 'test layer');
   });
