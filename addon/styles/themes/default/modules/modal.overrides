@@ -141,7 +141,7 @@
             width: 25%;
 
             &:last-child {
-              width: calc( 25% + 0.1% );
+              width: 25.1%;
             }
           }
         }
@@ -167,12 +167,12 @@
         // Height is 100% minus height of tabular menu items related to their paddings, borders and font size.
         height: calc( 100% - 10px - 1.2em );
         border-radius: 0;
-        width:100% !important;
-        margin: 0 !important;
+        width:100%;
+        margin: 0;
 
         .ui.button.active,
           .ui.button:hover {            
-            background: @mediumbluycolor !important;           
+            background: @mediumbluecolor !important;          
           }
 
         .flexberry-dropdown.ui.selection.dropdown .menu {
@@ -207,22 +207,22 @@
               }
               
               .bold-caption{  
-                  border-radius: 5px 0px 0px 5px !important;
+                  border-radius: 5px 0px 0px 5px;
               }
               .line-through-caption{
-                  border-radius: 0px 5px 5px 0px !important;
+                  border-radius: 0px 5px 5px 0px;
                   border-right: solid 1px @lightgraycolor;                   
-                  width: 25% !important;
+                  width: 25%;
                                    
               }
               .italic-caption,
               .underline-caption{
-                  border-radius: 0px !important;           
+                  border-radius: 0px;          
               }
               .ui.icon.button.active,            
               .ui.icon.button:hover {
-                color: @uiIconButtonHoveredColor !important;
-                background: @mediumbluycolor !important;                
+                color: @uiIconButtonHoveredColor;
+                background: @mediumbluecolor;               
               }
           }
         }
@@ -231,7 +231,7 @@
 
     .flexberry-export-map-command-dialog-paging-column{         
             .ui.button.active{                
-                background: @mediumbluycolor !important;                             
+                background: @mediumbluecolor;                            
           }
       }
 
