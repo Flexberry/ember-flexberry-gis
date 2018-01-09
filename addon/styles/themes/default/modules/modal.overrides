@@ -195,34 +195,26 @@
               }
             }
 
-            .bold-caption,
-              .line-through-caption,
-              .italic-caption,
-              .underline-caption{
-                  border-right: none;
-                  border-left: none;
-                  border-radius: 0px;
-                  box-shadow: @darkBoxShadow;
-                  margin: 0px;
-              }
-              
-              .bold-caption{  
-                  border-radius: 5px 0px 0px 5px;
-              }
-              .line-through-caption{
-                  border-radius: 0px 5px 5px 0px;
-                  border-right: solid 1px @lightgraycolor;
-                  width: 25%;                                   
-              }
-              .italic-caption,
-              .underline-caption{
-                  border-radius: 0px;
-              }
-              .ui.icon.button.active,
-              .ui.icon.button:hover {
-                color: @uiIconButtonHoveredColor;
-                background: @mediumbluecolor;
-              }
+            .ui.icon.button{
+              border-right: none;
+              border-left: none;
+              border-radius: 0px;
+              box-shadow: @darkBoxShadow;
+              margin: 0px;
+            }
+            .ui.icon.button:first-child{
+              border-radius: 5px 0px 0px 5px;
+            }
+            .ui.icon.button:last-child{
+              border-radius: 0px 5px 5px 0px;
+              border-right: solid 1px @lightgraycolor;
+              width: 25%;
+            }
+            .ui.icon.button.active,
+            .ui.icon.button:hover {
+              color: @uiIconButtonHoveredColor;
+              background: @mediumbluecolor;
+            }
           }
         }
       }

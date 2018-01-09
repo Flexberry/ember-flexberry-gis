@@ -88,22 +88,22 @@
                 <div class="ui small fluid buttons">
                   {{flexberry-button
                     iconClass="bold icon"
-                    class=(if (eq _options.captionFontWeight "bold") "active bold-caption" "bold-caption")
+                    class=(if (eq _options.captionFontWeight "bold") "active" "")
                     click=(action "onBoldFontButtonClick")
                   }}
                   {{flexberry-button
                     iconClass="italic icon"
-                    class=(if (eq _options.captionFontStyle "italic") "active italic-caption" "italic-caption")
+                    class=(if (eq _options.captionFontStyle "italic") "active" "")
                     click=(action "onItalicFontButtonClick")
                   }}
                   {{flexberry-button
                     iconClass="underline icon"
-                    class=(if (eq _options.captionFontDecoration "underline") "active underline-caption" "underline-caption")
+                    class=(if (eq _options.captionFontDecoration "underline") "active" "")
                     click=(action "onUnderlineFontButtonClick")
                   }}
                   {{flexberry-button
                     iconClass="strikethrough icon"
-                    class=(if (eq _options.captionFontDecoration "line-through") "active line-through-caption" "line-through-caption")
+                    class=(if (eq _options.captionFontDecoration "line-through") "active" "")
                     click=(action "onLinethroughFontButtonClick")
                   }} 
                 </div>
