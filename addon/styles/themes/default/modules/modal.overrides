@@ -171,7 +171,7 @@
         margin: 0;
 
         .ui.button.active,
-          .ui.button:hover {            
+          .ui.button:hover {
             background: @mediumbluecolor !important;
           }
 
@@ -195,25 +195,29 @@
               }
             }
 
-            .ui.icon.button{
-              border-right: none;
-              border-left: none;
-              border-radius: 0px;
-              box-shadow: @darkBoxShadow;
-              margin: 0px;
-            }
-            .ui.icon.button:first-child{
-              border-radius: 5px 0px 0px 5px;
-            }
-            .ui.icon.button:last-child{
-              border-radius: 0px 5px 5px 0px;
-              border-right: solid 1px @lightgraycolor;
-              width: 25%;
-            }
-            .ui.icon.button.active,
-            .ui.icon.button:hover {
-              color: @uiIconButtonHoveredColor;
-              background: @mediumbluecolor;
+            .ui.buttons {
+              .ui.icon.button {
+                border-right: none;
+                border-left: none;
+                border-radius: 0px;
+                box-shadow: @darkBoxShadow;
+                margin: 0px;
+              }
+
+              .ui.icon.button:first-child{
+                border-radius: 5px 0px 0px 5px;
+              }
+
+              .ui.icon.button:last-child{
+                border-radius: 0px 5px 5px 0px;
+                border-right: solid 1px @lightgraycolor;
+              }
+
+              .ui.icon.button.active,
+              .ui.icon.button:hover {
+                color: @uiIconButtonHoveredColor;
+                background: @mediumbluecolor;
+              }
             }
           }
         }
