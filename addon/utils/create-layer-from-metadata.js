@@ -2,6 +2,8 @@
   @module ember-flexberry-gis
 */
 
+import Ember from 'ember';
+
 /**
   Create map layer from metadata
   @for Utils.LayerCreate
@@ -10,8 +12,8 @@
   @return {NewPlatformFlexberryGISMapLayer} Layer model.
 */
 
-let createLayerFromMetadata = function(metadata) {
-  let mapLayer = {
+let createLayerFromMetadata = function(metadata, store) {
+  let mapLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
       name: metadata.get('name'),
       description: metadata.get('description'),
       keyWords: metadata.get('keyWords'),
@@ -20,34 +22,48 @@ let createLayerFromMetadata = function(metadata) {
       scale:metadata.get('scale'),
       coordinateReferenceSystem:metadata.get('coordinateReferenceSystem'),
       boundingBox:metadata.get('boundingBox'),
-    };
-  addLinkMetadata(mapLayer, metadata.get('linkMetadata'));
+
+      // If user has chosen to open metadata on map, then layer created on metadata basics must be visible by default.
+      visibility: true
+    });
+
+  addLinkMetadata(mapLayer, metadata.get('linkMetadata'), store);
   return mapLayer;
 };
 
 // Add linked metadata from record to map layer
-let addLinkMetadata = function(layerModel, linkMetadata) {
+let addLinkMetadata = function(layerModel, linkMetadata, store) {
+  if (!Ember.isArray(linkMetadata)) {
+    return;
+  }
+
   linkMetadata.forEach((item) => {
-    let newLayerLink = {
+    let newLayerLink = store.createRecord('new-platform-flexberry-g-i-s-layer-link', {
       allowShow: item.get('allowShow'),
-      mapObjectSetting: item.get('mapObjectSetting'),
-    };
-    addLinkParametersMetadata(newLayerLink, item.get('parameters'));
-    layerModel.layerLink.push(newLayerLink);
+      mapObjectSetting: item.get('mapObjectSetting')
+    });
+
+    addLinkParametersMetadata(newLayerLink, item.get('parameters'), store);
+    layerModel.get('layerLink').pushObject(newLayerLink);
   });
 };
 
 // Add parameters from record to map layer linked metadata
-let addLinkParametersMetadata = function(layerLinkModel, parameters) {
+let addLinkParametersMetadata = function(layerLinkModel, parameters, store) {
+  if (!Ember.isArray(parameters)) {
+    return;
+  }
+
   parameters.forEach((item) => {
-    let newLinkParameter = {
+    let newLinkParameter = store.createRecord('new-platform-flexberry-g-i-s-link-parameter', {
       objectField: item.get('objectField'),
       layerField: item.get('layerField'),
       expression: item.get('expression'),
       queryKey: item.get('queryKey'),
       linkField: item.get('linkField')
-    };
-    layerLinkModel.parameters.push(newLinkParameter);
+    });
+
+    layerLinkModel.get('parameters').pushObject(newLinkParameter);
   });
 };
 

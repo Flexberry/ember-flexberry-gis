@@ -198,55 +198,8 @@ export default EditFormRoute.extend({
     }
 
     metadata.forEach((item) => {
-      let newLayer = createLayerFromMetadata(item);
+      let newLayer = createLayerFromMetadata(item, this.get('store'));
       model.get('mapLayer').pushObject(newLayer);
-    });
-  },
-
-  /**
-    Adds link metadata to the layer model.
-
-    @param {NewPlatformFlexberryGISMapLayer} layerModel Layer model.
-    @param {NewPlatformFlexberryGISLinkMetadata} linkMetadata Link metadata collection.
-  */
-  _addLinkMetadata(layerModel, linkMetadata) {
-    if (!Ember.isArray(linkMetadata)) {
-      return;
-    }
-
-    linkMetadata.forEach((item) => {
-      let newLayerLink = this.get('store').createRecord('new-platform-flexberry-g-i-s-layer-link', {
-        allowShow: item.get('allowShow'),
-        mapObjectSetting: item.get('mapObjectSetting')
-      });
-
-      this._addLinkParametersMetadata(newLayerLink, item.get('parameters'));
-
-      layerModel.get('layerLink').pushObject(newLayerLink);
-    });
-  },
-
-  /**
-    Adds link parameters metadata to the layer link model.
-
-    @param {NewPlatformFlexberryGISLayerLink} layerLinkModel Layer link model.
-    @param {NewPlatformFlexberryGISParameterMetadata} parameters Layer link parameters metadata collection.
-  */
-  _addLinkParametersMetadata(layerLinkModel, parameters) {
-    if (!Ember.isArray(parameters)) {
-      return;
-    }
-
-    parameters.forEach((item) => {
-      let newLinkParameter = this.get('store').createRecord('new-platform-flexberry-g-i-s-link-parameter', {
-        objectField: item.get('objectField'),
-        layerField: item.get('layerField'),
-        expression: item.get('expression'),
-        queryKey: item.get('queryKey'),
-        linkField: item.get('linkField')
-      });
-
-      layerLinkModel.get('parameters').pushObject(newLinkParameter);
     });
   },
 

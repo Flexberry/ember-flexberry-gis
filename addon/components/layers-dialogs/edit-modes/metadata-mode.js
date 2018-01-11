@@ -6,7 +6,6 @@ import Ember from 'ember';
 import BaseModeComponent from 'ember-flexberry-gis/components/layers-dialogs/edit-modes/base';
 import layout from '../../../templates/components/layers-dialogs/edit-modes/metadata-mode';
 import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
-import { translationMacro as t } from 'ember-i18n';
 import { Query } from 'ember-flexberry-data';
 
 /**
@@ -48,53 +47,63 @@ let MetadataModeComponent = BaseModeComponent.extend({
   */
   leafletMap: null,
 
-  /**
-    Dialog's dropdown caption.
-
-    @property dropdownCaption
-    @type String
-    @default t('components.layers-dialogs.edit-modes.metadata-mode.metadata-records-dropdown.caption')
-  */
-  dropdownCaption: t('components.layers-dialogs.edit-modes.metadata-records-dropdown.caption'),
-
   store: Ember.inject.service(),
   _metadataRecords:[],
-  _metadataRecordsName:[],
+  _chosenRecordName:'',
+  _errorMessage:'',
+  _metadataIsLoaded:false,
 
-  // Get all existing metadata records and add it to array for dropdown list
+  // Init Component
   init: function() {
     this._super();
-    let metadataArray = [];
-    let metadataArrayNames = [];
-    let store = this.get('store');
-    let loadedMetadata = store.peekAll('new-platform-flexberry-g-i-s-layer-metadata');
-    /*
-    let queryBuilder = new Query.Builder(store)
-    .from('new-platform-flexberry-g-i-s-layer-metadata')
-    .selectByProjection('LayerMetadataE');
+    this._loadMetadataRecords();
+  },
 
-    let recordsQuery =store.query('new-platform-flexberry-g-i-s-layer-metadata', queryBuilder.build());
-    recordsQuery.then( function(result) {
-      console.log("result", result);
+  // Load all existing metadata records and add it to array for dropdown list
+  _loadMetadataRecords() {
+    this.set('_errorMessage', '');
+    this.set('_metadataIsLoaded', false);
+    let store = this.get('store');
+    let queryBuilder = new Query.Builder(store)
+        .from('new-platform-flexberry-g-i-s-layer-metadata')
+        .selectByProjection('LayerMetadataE');
+
+    let recordsQuery = store.query('new-platform-flexberry-g-i-s-layer-metadata', queryBuilder.build());
+
+    recordsQuery.then((result) => {
+      let metadataArrayNames = [];
+      let loadedMetadata = result.toArray();
+      loadedMetadata.forEach((item, index) => {
+        metadataArrayNames.push(item.get('name'));
+      });
+
+      Ember.set(this, '_metadataRecords', loadedMetadata);
+      Ember.set(this, '_metadataRecordsNames', metadataArrayNames);
+    }).catch((error) => {
+      this.set('_errorMessage', error);
+    }).finally((result) => {
+      this.set('_metadataIsLoaded', true);
     });
-    */
-    loadedMetadata.forEach((item, index) => {
-      metadataArray.push(item);
-      metadataArrayNames.push(item.get('name'));
-    });
-    Ember.set(this, '_metadataRecords', metadataArray);
-    Ember.set(this, '_metadataRecordsNames', metadataArrayNames);
+
   },
 
   actions: {
 
     // Create layer from selected metadata record
     createLayerFromMetadata() {
+      let store = this.get('store');
       let layer = createLayerFromMetadata(
-        this._metadataRecords[this._metadataRecordsNames.indexOf(this._metadataRecordsName)]
+        this._metadataRecords[this._metadataRecordsNames.indexOf(this._chosenRecordName)],
+        store
       );
       this.sendAction('editingFinished', layer);
+    },
+
+    // Action for button "Reload metadata"
+    reloadMetadata() {
+      this._loadMetadataRecords();
     }
+
   }
 
 });
