@@ -1,9 +1,9 @@
 import VectorLegendComponent from './-private/vector-legend';
 
 /**
-  Component representing map layer's legend for WFS-layers.
+  Component representing map layer's legend for KML-layers.
 
-  @class WfsLegendComponent
+  @class KmlLegendComponent
   @extends VectorLegendComponent
 */
 export default VectorLegendComponent.extend({

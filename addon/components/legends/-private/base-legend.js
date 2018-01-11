@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import layout from '../../templates/components/legends/base-legend';
+import layout from '../../../templates/components/legends/-private/base-legend';
 
 /**
   Component's CSS-classes names.
@@ -11,6 +11,7 @@ import layout from '../../templates/components/legends/base-legend';
   @property {String} flexberryClassNames.imageWrapper Legend's image wrapping <div> CSS-class name ('layer-legend-image-wrapper').
   @property {String} flexberryClassNames.image Legend's image CSS-class name ('layer-legend-image').
   @property {String} flexberryClassNames.defaultImage Legend's image CSS-class name ('layer-legend-default-image').
+  @property {String} flexberryClassNames.caption Legend's caption CSS-class name ('layer-legend-caption').
   @readonly
   @static
 
@@ -22,7 +23,8 @@ const flexberryClassNames = {
   wrapper: flexberryClassNamesPrefix,
   imageWrapper: flexberryClassNamesPrefix + '-image-wrapper',
   image: flexberryClassNamesPrefix + '-image',
-  defaultImage: flexberryClassNamesPrefix + '-default-image'
+  defaultImage: flexberryClassNamesPrefix + '-default-image',
+  caption: flexberryClassNamesPrefix + '-caption'
 };
 
 /**
@@ -38,7 +40,7 @@ export default Ember.Component.extend({
   layout,
 
   /**
-    eference to component's CSS-classes names.
+    Reference to component's CSS-classes names.
     Must be also a component's instance property to be available from component's .hbs template.
   */
   flexberryClassNames,

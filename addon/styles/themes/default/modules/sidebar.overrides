@@ -329,42 +329,46 @@
                     }
                 }
             }
+
             .layer-legend {
-                margin-top: 8px;
-                .flexberry-progressbar {
-                    margin-right: .7em;
-                    div.bar {
-                        background: @layerLegendProgressbarBackground;
-                        &::after {
-                            background: @layerLegendProgressbarPseudoBackground;
-                        }
-                        &::before {
-                            background: @layerLegendProgressbarPseudoBackground;
-                        }
-                    }
-                    .label {
-                        color: @layerLegendProgressbarLabelColor;
-                    }
+              margin-top: 8px;
+              .flexberry-progressbar {
+                  margin-right: .7em;
+                  div.bar {
+                      background: @layerLegendProgressbarBackground;
+                      &::after {
+                          background: @layerLegendProgressbarPseudoBackground;
+                      }
+                      &::before {
+                          background: @layerLegendProgressbarPseudoBackground;
+                      }
+                  }
+                  .label {
+                      color: @layerLegendProgressbarLabelColor;
+                  }
+              }
+
+              .layer-legend-image-wrapper {
+                font-size: @layerLegendImageWrapperFontSize;
+                vertical-align: middle;
+                width: 100%;
+                display: flex;
+                margin-bottom: 5px;
+
+                .layer-legend-image,
+                .layer-legend-caption {
+                  display: block;
+                  float: left;
                 }
-                .layer-legend-image-wrapper {
-                    font-size: @layerLegendImageWrapperFontSize;
-                    vertical-align: middle;
-                    width: 100%;
-                    display: flex;
-                    .layer-legend-image,
-                    .layer-legend-caption {
-                        display: block;
-                        float: left;
-                    }
-                    .layer-legend-image {
-                    }
-                    .layer-legend-caption {
-                        color: @layerLegendCaptionColor;
-                        margin: @layerLegendCaptionMargin;
-                        max-width: @layerLegendCaptionMaxWidth;
-                        width: @layerLegendCaptionWidth;
-                    }
+                .layer-legend-image {
                 }
+                .layer-legend-caption {
+                  color: @layerLegendCaptionColor;
+                  margin: @layerLegendCaptionMargin;
+                  max-width: @layerLegendCaptionMaxWidth;
+                  width: @layerLegendCaptionWidth;
+                }
+              }
             }
         }
     }

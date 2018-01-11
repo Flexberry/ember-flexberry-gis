@@ -1177,7 +1177,8 @@ form.flexberry-edit-layermap {
     }
 
     .category-style-editor-content {
-      overflow: auto;
+      // Sticky canvas inside tab won't work without visible overflow.
+      overflow: visible;
       width: 100%;
       padding: 1rem;
     }
