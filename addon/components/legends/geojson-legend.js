@@ -1,4 +1,4 @@
-import VectorLegendComponent from '../legends/vector-legend';
+import VectorLegendComponent from './-private/vector-legend';
 
 /**
   Component representing map layer's legend for GeoJSON-layers.
