@@ -190,7 +190,7 @@ export default Ember.Component.extend({
     let iconSize = this.get('iconSize');
     let w = iconZoomSize[0];
     let h = iconZoomSize[1];
-    if (w == 0 && h == 0) {
+    if (w === 0 && h === 0) {
       w = iconSize[0];
       h = iconSize[1];
     } else {
