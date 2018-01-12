@@ -6,7 +6,8 @@
     "L",
     "Highcharts",
     "Terraformer",
-    "omnivore"
+    "omnivore",
+    "Chart"
   ],
   "globals": {
     "moment": true
