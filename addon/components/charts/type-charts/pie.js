@@ -25,24 +25,22 @@ export default BaseChartType.extend({
     @method getJsonCharts
   */
   getJsonCharts() {
-    let dataSeries = Ember.A([]);
     let isObject = this.get('_isObject');
 
     let propName = this.get('_selectedXAxisProperty');
     let propVal = this.get('_selectedYAxisProperty');
 
-    /*************   chartjs   ***************/      
     let bgcolor = Ember.A(['#F15C80', '#E4D354', '#2B908F', '#F45B5B', '#91E8E1', '#7CB5EC']);
     let bgColorPie = Ember.A([]);
-    var j=0;   
-    for(var i=0; i<isObject.length; i++){
-      bgColorPie[i]=bgcolor[j];
-      j++;       
-      if(j==6){
-        j=0;
+    var j = 0;
+    for (var i = 0; i < isObject.length; i++) {
+      bgColorPie[i] = bgcolor[j];
+      j++;
+      if  (j === 6) {
+        j = 0;
       }
     }
-    
+
     let dataLabels = Ember.A([]);
     let datasetsLabel = Ember.A([]);
     isObject.forEach(obj => {
@@ -55,17 +53,17 @@ export default BaseChartType.extend({
     });
     let type = this.get('_chartType');
     let options = {
-        title: {
-          display: true,
-          text: this.get('_titleChart')
-        },
-        tooltips: {
-          backgroundColor: '#F8F8F8',
-          bodyFontColor: '#000'
-        },
-        legend:{
-          display: false
-        }        
+      title: {
+        display: true,
+        text: this.get('_titleChart')
+      },
+      tooltips: {
+        backgroundColor: '#F8F8F8',
+        bodyFontColor: '#000'
+      },
+      legend:{
+        display: false
+      }
     };
 
     let data = {
@@ -73,61 +71,14 @@ export default BaseChartType.extend({
       datasets: [{
         label: this.get(`_localizedProperties.${propVal}`) || propVal,
         data: datasetsLabel,
-        backgroundColor: bgColorPie,        
-      }]          
+        backgroundColor: bgColorPie,
+      }]
     };
 
     return {
       type,
       data,
-      options     
+      options
     };
-   
-    /*************   hightcharts **************
-     isObject.forEach(obj => {
-      let dsCopy = Ember.A([]);
-      dsCopy.push(obj[propName], parseFloat(obj[propVal]));
-      dataSeries.push(dsCopy);
-    });
-
-    let chart = {
-      plotBackgroundColor: null,
-      plotBorderWidth: null,
-      plotShadow: false
-    };
-    let title = {
-      text: this.get('_titleChart')
-    };        
-    
-    let tooltip = {
-      pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
-    };
-    let plotOptions = {
-      pie: {
-        allowPointSelect: true,
-        cursor: 'pointer',
-
-        dataLabels: {
-          enabled: true,
-          format: '<b>{point.name}%</b>: {point.percentage:.1f} %',
-          style: {
-            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-          }
-        }
-      }
-    };
-    let series = [{
-      type: this.get('_chartType'),
-      name: this.get(`_localizedProperties.${propVal}`) || propVal,
-      data: dataSeries
-    }];
-
-    return {
-      chart,
-      title,
-      tooltip,
-      plotOptions,
-      series
-    };*/      
   }
 });

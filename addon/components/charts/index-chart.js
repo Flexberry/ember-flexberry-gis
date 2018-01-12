@@ -81,6 +81,58 @@ export default Ember.Component.extend({
     return result;
   }),
 
+  /**
+    Reference to 'charts-renderer' service.
+
+    @property _chartsRenderer
+    @type LayersStylesRendererService
+    @private
+  */
+  _chartsRenderer: Ember.inject.service('charts-render'),
+
+  /**
+    Canvas charts.
+
+    @property _chartsCanvas
+    @type <a =ref="https://developer.mozilla.org/ru/docs/Web/HTML/Element/canvas">Canvas</a>
+    @default null
+    @private
+  */
+  _chartsCanvas: null,
+
+  /**
+    Renderes charts preview on canvas.
+
+    @method _renderChartsCanvas
+    @private
+  */
+  _renderChartsCanvas() {
+    let json = this.get('getJsonCharts')();
+    let canvas = this.get('_chartsCanvas');
+    this.get('_chartsRenderer').renderOnChartsCanvas({
+      canvas: canvas,
+      json: json
+    });
+  },
+
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+    let chartsCanvas = document.getElementById("containerCR");
+    this.set('_chartsCanvas', chartsCanvas);
+  },
+
+  /**
+    Destroys DOM-related component's properties.
+  */
+  willDestroyElement() {
+    this._super(...arguments);
+
+    this.set('_chartsCanvas', null);
+  },
+
   actions: {
 
     /**
@@ -99,22 +151,11 @@ export default Ember.Component.extend({
       @method actions.onGenerateChart
     */
     onGenerateChart() {
-      let json = this.get('getJsonCharts')();
-           
-      var ctx = document.getElementById("containerCR");
-      var chart = new Chart(ctx, json);     
-      chart.reset();
-      chart.clear();
-      chart.destroy();
-      var chart = new Chart(ctx, json); 
-    /*  chart.render({
-        duration: 800,
-        easing: 'easeOutBounce'    
-      });*/
-     // this.$('.containerCR').highcharts(json);
+      this._renderChartsCanvas();
     },
 
     onModeTypeChange(item, key) {
+      this.get('_chartsRenderer').clearcharts()
       this.set('_selectedModeType', key);
     }
   }

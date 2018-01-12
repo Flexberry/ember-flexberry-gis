@@ -25,8 +25,6 @@ export default BaseChartType.extend({
     @method getJsonCharts
   */
   getJsonCharts() {
-    let xCategories = Ember.A([]);
-    let dataSeries = Ember.A([]);
     let isObject = this.get('_isObject');
 
     let propName = this.get('_selectedXAxisProperty');
@@ -45,77 +43,34 @@ export default BaseChartType.extend({
 
     let type = this.get('_chartType');
     let options = {
-        title: {
-          display: true,
-          text: this.get('_titleChart')
-        },
-        tooltips: {
-          backgroundColor: '#F8F8F8',
-          bodyFontColor: '#000'
-        },
-        legend:{
-          display: false
-        }        
+      title: {
+        display: true,
+        text: this.get('_titleChart')
+      },
+      tooltips: {
+        backgroundColor: '#F8F8F8',
+        bodyFontColor: '#000'
+      },
+      legend:{
+        display: false
+      }
     };
 
     let data = {
       labels: dataLabels,
       datasets: [{
         label: this.get(`_localizedProperties.${propVal}`) || propVal,
-        data: datasetsLabel,      
+        data: datasetsLabel,
         fill: false,
-        borderColor: '#7CB5EC',      
-        pointBackgroundColor: '#7CB5EC' 
-      }]          
+        borderColor: '#7CB5EC',
+        pointBackgroundColor: '#7CB5EC'
+      }]
     };
 
     return {
       type,
       data,
-      options     
+      options
     };
-
-   /* isObject.forEach(obj => {
-      xCategories.push(obj[propName]);
-      dataSeries.push(parseFloat(obj[propVal]));
-    });
-
-    let chart = {
-      type: this.get('_chartType')
-    };
-    let title = {
-      text: this.get('_titleChart')
-    };
-    let xAxis = {
-      categories: xCategories,
-      crosshair: true
-    };
-    let tooltip = {
-      headerFormat: '<span style = "font-size:10px">{point.key}</span><table>',
-      pointFormat: '<tr><td style = "color:{series.color};padding:0">{series.name}: </td>' +
-        '<td style = "padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-      footerFormat: '</table>',
-      shared: true,
-      useHTML: true
-    };
-    let plotOptions = {
-      column: {
-        pointPadding: 0.2,
-        borderWidth: 0
-      }
-    };
-    let series = [{
-      name: this.get(`_localizedProperties.${propVal}`) || propVal,
-      data: dataSeries
-    }];
-
-    return {
-      chart,
-      title,
-      xAxis,
-      tooltip,
-      plotOptions,
-      series
-    };*/
   }
 });
