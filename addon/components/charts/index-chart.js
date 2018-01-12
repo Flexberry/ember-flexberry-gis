@@ -120,7 +120,7 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this._super(...arguments);
-    let chartsCanvas = document.getElementById("containerCR");
+    let chartsCanvas = document.getElementById('containerCR');
     this.set('_chartsCanvas', chartsCanvas);
   },
 
@@ -155,7 +155,7 @@ export default Ember.Component.extend({
     },
 
     onModeTypeChange(item, key) {
-      this.get('_chartsRenderer').clearcharts()
+      this.get('_chartsRenderer').clearcharts();
       this.set('_selectedModeType', key);
     }
   }
