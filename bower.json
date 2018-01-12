@@ -34,7 +34,8 @@
     "highcharts":"6.0.1",
     "terraformer": "1.0.8",
     "leaflet.markercluster": "1.1.0",
-    "leaflet-omnivore": "0.3.3",	
+    "leaflet-omnivore": "0.3.3",
+    "chart.js": "chartjs/Chart.js#2.7.1",
     "javascript-detect-element-resize": "0.5.3"	
   },
   "resolutions": {
