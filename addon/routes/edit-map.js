@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import EditFormRoute from 'ember-flexberry/routes/edit-form';
+import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
 import { Query } from 'ember-flexberry-data';
 
 /**
@@ -197,70 +198,8 @@ export default EditFormRoute.extend({
     }
 
     metadata.forEach((item) => {
-      let newLayer = this.get('store').createRecord('new-platform-flexberry-g-i-s-map-layer', {
-        name: item.get('name'),
-        description: item.get('description'),
-        keyWords: item.get('keyWords'),
-        type: item.get('type'),
-        settings: item.get('settings'),
-        scale: item.get('scale'),
-        coordinateReferenceSystem: item.get('coordinateReferenceSystem'),
-        boundingBox: item.get('boundingBox'),
-
-        // If user has chosen to open metadata on map, then layer created on metadata basics must be visible by default.
-        visibility: true
-      });
-
-      this._addLinkMetadata(newLayer, item.get('linkMetadata'));
-
+      let newLayer = createLayerFromMetadata(item, this.get('store'));
       model.get('mapLayer').pushObject(newLayer);
-    });
-  },
-
-  /**
-    Adds link metadata to the layer model.
-
-    @param {NewPlatformFlexberryGISMapLayer} layerModel Layer model.
-    @param {NewPlatformFlexberryGISLinkMetadata} linkMetadata Link metadata collection.
-  */
-  _addLinkMetadata(layerModel, linkMetadata) {
-    if (!Ember.isArray(linkMetadata)) {
-      return;
-    }
-
-    linkMetadata.forEach((item) => {
-      let newLayerLink = this.get('store').createRecord('new-platform-flexberry-g-i-s-layer-link', {
-        allowShow: item.get('allowShow'),
-        mapObjectSetting: item.get('mapObjectSetting')
-      });
-
-      this._addLinkParametersMetadata(newLayerLink, item.get('parameters'));
-
-      layerModel.get('layerLink').pushObject(newLayerLink);
-    });
-  },
-
-  /**
-    Adds link parameters metadata to the layer link model.
-
-    @param {NewPlatformFlexberryGISLayerLink} layerLinkModel Layer link model.
-    @param {NewPlatformFlexberryGISParameterMetadata} parameters Layer link parameters metadata collection.
-  */
-  _addLinkParametersMetadata(layerLinkModel, parameters) {
-    if (!Ember.isArray(parameters)) {
-      return;
-    }
-
-    parameters.forEach((item) => {
-      let newLinkParameter = this.get('store').createRecord('new-platform-flexberry-g-i-s-link-parameter', {
-        objectField: item.get('objectField'),
-        layerField: item.get('layerField'),
-        expression: item.get('expression'),
-        queryKey: item.get('queryKey'),
-        linkField: item.get('linkField')
-      });
-
-      layerLinkModel.get('parameters').pushObject(newLinkParameter);
     });
   },
 

@@ -53,9 +53,9 @@
                 value=_selectedModeCaption
               }}
             </div>
-          {{/if}}
-          {{#if _selectedMode}}
-            {{component (concat "layers-dialogs/edit-modes/" _selectedMode.name) editingFinished=(action "onEditingFinished")}}
+            {{#if _selectedMode}}
+              {{component (concat "layers-dialogs/edit-modes/" _selectedMode.name) editingFinished=(action "onEditingFinished")}}
+            {{/if}}
           {{/if}}
           <div class="field">
             <label>
