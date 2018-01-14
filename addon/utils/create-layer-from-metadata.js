@@ -5,13 +5,13 @@
 import Ember from 'ember';
 
 /**
-  Create map layer from metadata
+  Creates map layer from metadata.
+
   @for Utils.LayerCreate
   @method createLayerFromMetadata
   @param {NewPlatformFlexberryGISMapLayer} layerModel
   @return {NewPlatformFlexberryGISMapLayer} Layer model.
 */
-
 let createLayerFromMetadata = function(metadata, store) {
   let mapLayer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', {
       name: metadata.get('name'),
@@ -31,7 +31,14 @@ let createLayerFromMetadata = function(metadata, store) {
   return mapLayer;
 };
 
-// Add linked metadata from record to map layer
+/**
+  Adds link metadata to the layer model.
+
+  @method addLinkMetadata
+  @param {NewPlatformFlexberryGISMapLayer} layerModel Layer model.
+  @param {NewPlatformFlexberryGISLinkMetadata} linkMetadata Link metadata collection.
+  @private
+*/
 let addLinkMetadata = function(layerModel, linkMetadata, store) {
   if (!Ember.isArray(linkMetadata)) {
     return;
@@ -48,7 +55,14 @@ let addLinkMetadata = function(layerModel, linkMetadata, store) {
   });
 };
 
-// Add parameters from record to map layer linked metadata
+/**
+  Adds link parameters metadata to the layer link model.
+
+  @method addLinkParametersMetadata
+  @param {NewPlatformFlexberryGISLayerLink} layerLinkModel Layer link model.
+  @param {NewPlatformFlexberryGISParameterMetadata} parameters Layer link parameters metadata collection.
+  @private
+*/
 let addLinkParametersMetadata = function(layerLinkModel, parameters, store) {
   if (!Ember.isArray(parameters)) {
     return;

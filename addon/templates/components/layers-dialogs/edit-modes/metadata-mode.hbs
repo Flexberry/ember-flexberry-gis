@@ -1,36 +1,23 @@
-
 <div class="field">
-
-  {{flexberry-button
-    class="fluid"
-    click=(action "reloadMetadata")
-    caption=(t "components.layers-dialogs.edit-modes.metadata-reload")
-  }}
-
-  <label>
-    {{t "components.layers-dialogs.edit-modes.metadata-records-dropdown.caption"}}
-  </label>
-
   {{#if _errorMessage}}
     {{ui-message
       type="error"
       closeable=true
       message=_errorMessage
     }}
-  {{else}}
-    {{#if _metadataIsLoaded}}
-      {{flexberry-dropdown
-        class="fluid"
-        items=_metadataRecordsNames
-        value=_chosenRecordName
-        onChange=(action "createLayerFromMetadata")
-      }}
-    {{else}}
-      {{ui-message
-        type="success"
-        message=(t "components.layers-dialogs.edit-modes.metadata-loading")
-      }}
-    {{/if}}
   {{/if}}
-
+  {{flexberry-button
+    class="fluid"
+    click=(action "reloadMetadata")
+    caption=(t "components.layers-dialogs.edit-modes.metadata-reload")
+  }}
+  <label>
+    {{t "components.layers-dialogs.edit-modes.metadata-records-dropdown.caption"}}
+  </label>
+  {{flexberry-dropdown
+    class=(concat "fluid" (if _metadataIsLoading " loading" ""))
+    items=_metadataRecordsNames
+    value=_selectedMetadataRecordName
+    onChange=(action "onSelectedMetadataRecordChanged")
+  }}
 </div>

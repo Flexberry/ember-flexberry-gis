@@ -13,7 +13,7 @@ import { Query } from 'ember-flexberry-data';
   JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-edit-mode-metadata').
-  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name (null, because component is tagless).
+  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-edit-mode-metadata').
   @readonly
   @static
   @for MetadataModeComponent
@@ -21,7 +21,7 @@ import { Query } from 'ember-flexberry-data';
 const flexberryClassNamesPrefix = 'flexberry-edit-mode-metadata';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: null
+  wrapper: flexberryClassNamesPrefix
 };
 
 /**
@@ -29,90 +29,160 @@ const flexberryClassNames = {
   @extends BaseModeComponent
 */
 let MetadataModeComponent = BaseModeComponent.extend({
+  /**
+    Loaded metadata records.
 
+    @property _metadataRecords
+    @type NewPlatformFlexberryGISLayerMetadataModel[]
+    @default null
+    @private
+  */
+  _metadataRecords: null,
+
+  /**
+    Loaded metadata records names.
+
+    @property _metadataRecordsNames
+    @type String[]
+    @default null
+    @private
+  */
+  _metadataRecordsNames: null,
+
+  /**
+    Selected metadata record name.
+
+    @property _selectedMetadataRecord
+    @type String
+    @default null
+    @private
+  */
+  _selectedMetadataRecordName: null,
+
+  /**
+    Metadata loading error message.
+
+    @property _errorMessage
+    @type String
+    @default ''
+    @private
+  */
+  _errorMessage: '',
+
+  /**
+    Flag indicating whether metadata is loading yet or not.
+
+    @property _metadataIsLoading
+    @type Boolean
+    @default false
+    @private
+  */
+  _metadataIsLoading: false,
+
+  /**
+    Reference to component's template.
+  */
   layout,
+
+  /**
+    Reference to component's CSS-classes names.
+    Must be also a component's instance property to be available from component's .hbs template.
+  */
+  flexberryClassNames,
+
   /**
     Array of property names that will be bound from parentView.
+
     @property bindingProperties
     @type String[]
-    @default ['leafletMap']
+    @default []
   */
-  bindingProperties: ['leafletMap'],
+  bindingProperties: [],
 
   /**
-    Leaflet map.
-    @property leafletMap
-    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
-    @default null
+    Reference to 'store' service.
+
+    @property store
+    @type <a href="https://emberjs.com/api/ember-data/2.4/classes/DS.Store">DS.Store</a>
+    @private
   */
-  leafletMap: null,
+  store: Ember.inject.service('store'),
 
-  store: Ember.inject.service(),
-  _metadataRecords:[],
-  _chosenRecordName:'',
-  _errorMessage:'',
-  _metadataIsLoaded:false,
-
-  // Init Component
+  /**
+    Initializes component.
+  */
   init: function() {
-    this._super();
+    this._super(...arguments);
+
     this._loadMetadataRecords();
   },
 
-  // Load all existing metadata records and add it to array for dropdown list
+  /**
+    Loads exisiting metadata records.
+
+    @method _loadMetadataRecords
+    @private
+  */
   _loadMetadataRecords() {
     this.set('_errorMessage', '');
-    this.set('_metadataIsLoaded', false);
+    this.set('_metadataIsLoading', true);
+
     let store = this.get('store');
     let queryBuilder = new Query.Builder(store)
-        .from('new-platform-flexberry-g-i-s-layer-metadata')
-        .selectByProjection('LayerMetadataE');
+      .from('new-platform-flexberry-g-i-s-layer-metadata')
+      .selectByProjection('LayerMetadataE');
 
-    let recordsQuery = store.query('new-platform-flexberry-g-i-s-layer-metadata', queryBuilder.build());
-
-    recordsQuery.then((result) => {
-      let metadataArrayNames = [];
-      let loadedMetadata = result.toArray();
-      loadedMetadata.forEach((item, index) => {
-        metadataArrayNames.push(item.get('name'));
+    store.query('new-platform-flexberry-g-i-s-layer-metadata', queryBuilder.build()).then((result) => {
+      let metadataRecords = result.toArray();
+      let metadataRecordsNames = metadataRecords.map((item) => {
+        return item.get('name');
       });
 
-      Ember.set(this, '_metadataRecords', loadedMetadata);
-      Ember.set(this, '_metadataRecordsNames', metadataArrayNames);
+      this.set('_metadataRecords', metadataRecords);
+      this.set('_metadataRecordsNames', metadataRecordsNames);
     }).catch((error) => {
       this.set('_errorMessage', error);
     }).finally((result) => {
-      this.set('_metadataIsLoaded', true);
+      this.set('_metadataIsLoading', false);
     });
-
   },
 
   actions: {
+    /**
+      Handles changing of the selected matedata record and creates new layer form it.
 
-    // Create layer from selected metadata record
-    createLayerFromMetadata() {
+      @method actions.onSelectedMetadataRecordChanged
+    */
+    onSelectedMetadataRecordChanged() {
+      let metadataRecords = this.get('_metadataRecords');
+      if (!Ember.isArray(metadataRecords)) {
+        return;
+      }
+
       let store = this.get('store');
-      let layer = createLayerFromMetadata(
-        this._metadataRecords[this._metadataRecordsNames.indexOf(this._chosenRecordName)],
-        store
-      );
+      let metadataRecordsNames = this.get('_metadataRecordsNames');
+      let selectedMetadataRecordName = this.get('_selectedMetadataRecordName');
+      let selectedMetadataRecord = metadataRecords[metadataRecordsNames.indexOf(selectedMetadataRecordName)];
+
+      let layer = createLayerFromMetadata(selectedMetadataRecord, store);
       this.sendAction('editingFinished', layer);
     },
 
-    // Action for button "Reload metadata"
+    /**
+      Handles clicks on "Reload metadata" button and reloads metadata records.
+
+      @method actions.reloadMetadata
+    */
     reloadMetadata() {
       this._loadMetadataRecords();
     }
-
   }
-
 });
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
 MetadataModeComponent.reopenClass({
-  flexberryClassNames,
-  layout
+  flexberryClassNames
 });
 
 export default MetadataModeComponent;
