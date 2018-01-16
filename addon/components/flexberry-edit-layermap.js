@@ -614,10 +614,11 @@ export default Ember.Component.extend(
       @type Boolean
       @readonly
     */
-    _modesAreAvailable: Ember.computed('_availableModes', function () {
+    _modesAreAvailable: Ember.computed('_availableModes', '_typeIsReadonly', function () {
+      let newLayerIsExpectedToBeCreated = !this.get('_typeIsReadonly');
       let _availableModes = this.get('_availableModes');
 
-      return Ember.isArray(_availableModes) && !Ember.isBlank(_availableModes);
+      return newLayerIsExpectedToBeCreated && Ember.isArray(_availableModes) && !Ember.isBlank(_availableModes);
     }),
 
     /**
@@ -646,19 +647,11 @@ export default Ember.Component.extend(
         Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-edit-mode' components 'editingFinished' action {{/crossLink}}.
 
         @method actions.onEditingFinished
-        @param {Object} layer Modified layer model
+        @param {Object} layer Prototype layer model.
       */
       onEditingFinished(layer) {
-        let _layerHash = this.get('_layer');
-
-        for (var propertyName in layer) {
-          if (layer.hasOwnProperty(propertyName) && _layerHash.hasOwnProperty(propertyName)) {
-            Ember.set(_layerHash, propertyName, Ember.get(layer, propertyName));
-          }
-        }
-
-        this.set('_layer', _layerHash);
-        this.set('_coordinateReferenceSystemCode', Ember.get(_layerHash, 'coordinateReferenceSystem.code'));
+        this.set('layer', layer);
+        this._createInnerLayer();
       },
 
       /**
@@ -928,6 +921,7 @@ export default Ember.Component.extend(
       });
 
       let owner = Ember.getOwner(this);
+      let i18n = this.get('i18n');
 
       // Initialize available layers types for related dropdown.
       this.set('_availableTypes', owner.knownNamesForType('layer'));
@@ -943,6 +937,7 @@ export default Ember.Component.extend(
         }
       });
       this.set('_availableModes', availableEditModes);
+      this.set('_selectedModeCaption', i18n.t('components.layers-dialogs.edit-modes.new'));
 
       this.sendAction('onInit', this.getLayerProperties.bind(this));
     },

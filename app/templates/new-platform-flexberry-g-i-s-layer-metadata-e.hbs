@@ -38,6 +38,14 @@
     )
     leafletMap=leafletMap
     _typeIsReadonly=(not model.isNew)
+    links=(get this linksPropertyPath)
+    linksPropertyPath=linksPropertyPath
+    linksModelName=linksModelName
+    parametersModelName=linksParametersModelName
+    parametersModelProjection=linksParametersModelProjection
     onInit=(action "initLayerProperties")
+    addLayerLink=(action "addLayerLink")
+    removeLayerLink=(action "removeLayerLink")
+    allowShowLayerLinkCheckboxChange=(action "onLayerLinkChangeVisibility")
   }}
 </form>
