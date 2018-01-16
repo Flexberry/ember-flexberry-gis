@@ -304,7 +304,8 @@ export default Ember.Component.extend({
     @private
   */
   _containerSize: 140, // that fits without scroll
-/**
+
+  /**
     Flag: indicates whether to show editor shadow icon image or not.
 
     @property _enabled
@@ -337,7 +338,6 @@ export default Ember.Component.extend({
       }
     }
   ),
-
 
   /**
     Clears icon style settings and related component's properties.
@@ -598,7 +598,6 @@ export default Ember.Component.extend({
     // Evented stub for flexberry-file's 'relatedModel' property.
     let relatedModelStub = Ember.Object.extend(Ember.Evented, {}).create();
     this.set('_relatedModelStub', relatedModelStub);
-
 
     if (this.get('allowDisabling') && Ember.isNone(this.get('iconUrl'))) {
       this.set('_enabled', false);
