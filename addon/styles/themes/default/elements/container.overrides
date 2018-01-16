@@ -414,12 +414,16 @@
     /* отдалить на полную */
     i.icon.globe:before {
         content: "\e830";
+    }     
+    i.icon.resize:before {
+        font-family: Icons;
+        content: "\f0b2";
     }
     /* геолокация */
     i.icon.bullseye:before {
         font-family: Icons;
         content: "\f140";
-    }
+    }    
     /* поиск по адресу */
     .address.search i.icon.address:before {
         font-family: Icons;
@@ -529,7 +533,7 @@
             font-family: FontAwesome;
             content: "\f114";
         }
-    }
+    }    
 }
 
 /*********************************************
@@ -937,8 +941,8 @@
 /************************************************************
     Simple layers-style (components/layers-styles/simple)
 ************************************************************/
-.hiddenScroll{
-    overflow: hidden !important;
+.hiddenAnchor{
+  display: none;
 }
 .ui.selection.dropdown {
   &.simple-layers-style-stroke-linejoin-dropdown,

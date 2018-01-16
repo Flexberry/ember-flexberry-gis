@@ -43,13 +43,13 @@
               tooltip=(t "components.markers-styles.image.icon-editor.zoom-out-button")
             }}
             {{flexberry-button
-              iconClass="maximize icon"
+              iconClass="resize icon"
               class="flexberry-map-tool item ui dropdown"
               tooltip=(t "components.markers-styles.image.icon-editor.resize-button")
               click="onResizeClick"
             }}
         </div>
-        <div class="icon-image-wrapper {{if _isResize "hiddenScroll"}}">
+        <div class="icon-image-wrapper">
           {{#if _showIconImage}}
             <img class="icon-image"
               style="width:{{_iconZoomSize.width}}px;height:{{_iconZoomSize.height}}px"
@@ -58,12 +58,26 @@
               src="{{iconUrl}}"/>
             <div class="icon-anchor " onclick={{action "onIconAnchorClick"}}>
               <svg xmlns="http://www.w3.org/2000/svg"
+                   class="{{if _isZoom "hiddenAnchor"}}"
+                   version="1.1"
+                   width="{{_iconSize.width}}"
+                   height="{{_iconSize.height}}"
+                   viewBox="0 0 {{_iconSize.width}} {{_iconSize.height}}">
+                <circle cx="{{_iconAnchor.x}}"
+                        cy="{{_iconAnchor.y}}"
+                        r="2"
+                        fill="#ff0000"
+                        stroke="black"
+                        stroke-width="1"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   class="{{if (not _isZoom) "hiddenAnchor"}}"
                    version="1.1"
                    width="{{_iconZoomSize.width}}"
                    height="{{_iconZoomSize.height}}"
                    viewBox="0 0 {{_iconZoomSize.width}} {{_iconZoomSize.height}}">
-                <circle cx="{{_iconAnchor.x}}"
-                        cy="{{_iconAnchor.y}}"
+                <circle cx="{{_iconZoomAnchor.x}}"
+                        cy="{{_iconZoomAnchor.y}}"
                         r="2"
                         fill="#ff0000"
                         stroke="black"
