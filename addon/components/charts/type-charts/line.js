@@ -53,6 +53,9 @@ export default BaseChartType.extend({
       },
       legend:{
         display: false
+      },
+      animation: {
+        duration: 0
       }
     };
 

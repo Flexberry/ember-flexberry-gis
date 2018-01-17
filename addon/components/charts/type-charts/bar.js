@@ -3,7 +3,7 @@
 */
 
 import Ember from 'ember';
-import layout from '../../../templates/components/charts/type-charts/column';
+import layout from '../../../templates/components/charts/type-charts/bar';
 import BaseChartType from '../base-chart-type';
 
 /**
@@ -41,7 +41,7 @@ export default BaseChartType.extend({
       datasetsLabel.push(dslCopy);
     });
 
-    let type = 'bar';//this.get('_chartType');
+    let type = this.get('_chartType');
     let options = {
       title: {
         display: true,
@@ -53,6 +53,9 @@ export default BaseChartType.extend({
       },
       legend:{
         display: false
+      },
+      animation: {
+        duration: 0
       }
     };
 
