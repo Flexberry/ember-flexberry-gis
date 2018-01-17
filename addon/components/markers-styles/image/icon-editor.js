@@ -256,12 +256,13 @@ export default Ember.Component.extend({
     @private
     @readOnly
   */
-  _iconZoomSize: Ember.computed('iconZoomSize.[]', 'iconSize.[]', function() {
+  _iconZoomSize: Ember.computed('iconZoomSize.[]', 'iconSize.[]', 'iconSizeNew', function() {
     let iconZoomSize = this.get('iconZoomSize');
     let iconSize = this.get('iconSize');
 
     let w = iconZoomSize[0];
     let h = iconZoomSize[1];
+
     if (w === 0 && h === 0) {
       w = iconSize[0];
       h = iconSize[1];
@@ -409,6 +410,8 @@ export default Ember.Component.extend({
     let newSize = [newWidth, newHeight];
     this.set('iconSize', newSize);
     this.set('iconAnchor', [iconAnchor[0] * oldNewRatios[0], iconAnchor[1] * oldNewRatios[1]]);
+
+    this._onResizeIcon();
   },
 
   /**
@@ -435,9 +438,7 @@ export default Ember.Component.extend({
     @private
   */
   _sendChangeAction() {
-
-    this.sendAction('change', this.getProperties('iconUrl', 'iconSize', 'iconAnchor', 'iconZoomSize', 'iconZoomAnchor'));
-
+    this.sendAction('changeStyle', this.getProperties('iconUrl', 'iconSize', 'iconAnchor', 'iconZoomSize', 'iconZoomAnchor'));
   },
 
   /**
@@ -602,7 +603,6 @@ export default Ember.Component.extend({
     if (this.get('allowDisabling') && Ember.isNone(this.get('iconUrl'))) {
       this.set('_enabled', false);
     }
-
   },
 
   /**
@@ -642,21 +642,25 @@ export default Ember.Component.extend({
     let iconZoomSize = this.get('_iconZoomSize');
     let w = iconZoomSize.width;
     let h = iconZoomSize.height;
+
     if (iconZoomSize.width > containerSize || iconZoomSize.height > containerSize) {
       w = containerSize;
       h = containerSize;
       x = Math.round(containerSize / 2);
       y = Math.round(containerSize / 2);
       this.set('_isZoom', true);
+      this.set('iconZoomAnchor', [x, y]);
+      this.set('iconZoomSize', [w, h]);
     }
 
-    if (iconZoomSize.width <= containerSize || iconZoomSize.height <= containerSize) {
+    if (iconZoomSize.width < containerSize || iconZoomSize.height < containerSize) {
       w = width;
       h = height;
+      x = Math.round(width / 2);
+      y = Math.round(height / 2);
+      this.set('iconZoomSize', [w, h]);
+      this.set('iconZoomAnchor', [x, y]);
     }
-
-    this.set('iconZoomSize', [w, h]);
-    this.set('iconZoomAnchor', [x, y]);
   },
 
   actions: {
