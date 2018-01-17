@@ -8,6 +8,7 @@ import SpatialBookmarksComponent from './components/spatial-bookmarks';
 import MapDialogsComponents from './components/map-dialogs';
 import LayersDialogsComponents from './components/layers-dialogs';
 import MapCommandsDialogsComponents from './components/map-commands-dialogs';
+import LegendsComponents from './components/legends';
 
 import FlexberryMapInfoComponent from './components/flexberry-mapinfo';
 import FlexberryMapToolbarComponent from './components/flexberry-maptoolbar';
@@ -42,6 +43,8 @@ export default {
   'map-dialogs': MapDialogsComponents,
   'layers-dialogs': LayersDialogsComponents,
   'map-commands-dialogs': MapCommandsDialogsComponents,
+
+  'legends': LegendsComponents,
 
   'flexberry-mapinfo': FlexberryMapInfoComponent,
   'flexberry-maptoolbar': FlexberryMapToolbarComponent,

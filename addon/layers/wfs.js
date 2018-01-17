@@ -14,15 +14,6 @@ import VectorLayer from './-private/vector';
 */
 export default VectorLayer.extend(WfsFilterParserMixin, {
   /**
-    Permitted operations related to layer type.
-
-    @property operations
-    @type String[]
-    @default ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes']
-  */
-  operations: ['edit', 'remove', 'identify', 'search', 'query', 'filter', 'attributes'],
-
-  /**
     Creates new settings object (with settings related to layer-type).
 
     @method createSettings

@@ -18,9 +18,11 @@
 /*******************************
           Flexberry Map
 *******************************/
+
 .rightFloated{
 	float:right;
 }
+
 .flexberry-map {
   font-family: inherit;
   width: @flexberryMapWidth;
@@ -933,7 +935,7 @@
 }
 
 .ui.table.flexberry-table-no-model {
-  width: inherit !important;
+  width: 100% !important;
 }
 
 /************************************************************
@@ -987,6 +989,11 @@
         }
       }
     }
+  }
+
+  .enable-icon-checkbox,
+  .restore-original-icon-size-button {
+    cursor: pointer;
   }
 
   .icon-image-wrapper {
@@ -1170,7 +1177,8 @@ form.flexberry-edit-layermap {
     }
 
     .category-style-editor-content {
-      overflow: auto;
+      // Sticky canvas inside tab won't work without visible overflow.
+      overflow: visible;
       width: 100%;
       padding: 1rem;
     }
