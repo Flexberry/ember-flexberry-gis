@@ -182,11 +182,20 @@ let ExportMapCommandComponent = Ember.Component.extend({
     /**
       Map command's 'export-download' mode's caption.
 
-      @property caption
+      @property exportDownloadCaption
       @type String
       @default t('components.map-commands.export.export-download.caption')
     */
     exportDownloadCaption: t('components.map-commands.export.export-download.caption'),
+
+    /**
+      Map command's 'export-download' mode's tooltip.
+
+      @property exportDownloadTooltip
+      @type String
+      @default t('components.map-commands.export.export-download.tooltip')
+    */
+    exportDownloadTooltip: t('components.map-commands.export.export-download.tooltip'),
 
     /**
       Map command's 'export-download' mode's icon CSS-class names.
@@ -214,6 +223,15 @@ let ExportMapCommandComponent = Ember.Component.extend({
       @default t('components.map-commands.export.export-print.caption')
     */
     exportPrintCaption: t('components.map-commands.export.export-print.caption'),
+
+    /**
+      Map command's 'export-print' mode's tooltip.
+
+      @property exportPrintTooltip
+      @type String
+      @default t('components.map-commands.export.export-print.tooltip')
+    */
+    exportPrintTooltip: t('components.map-commands.export.export-print.tooltip'),
 
     /**
       Map command's 'export-download' mode's icon CSS-class names.
