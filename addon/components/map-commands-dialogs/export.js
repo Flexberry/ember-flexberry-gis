@@ -1817,8 +1817,9 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     // Same situation with available font sizes.
     this.set('_availableFontSizes', Ember.A(['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '26', '28', '36', '48', '72']));
 
-    // Image formats supported by canvas.toDataURL method (see https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL).
-    this.set('_availableFileTypes', Ember.A(['PNG', 'JPEG', 'JPG', 'GIF', 'BMP', 'TIFF', 'XICON', 'SVG', 'WEBP']));
+    // Image formats supported by canvas.toDataURL method (see https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL)
+    // except XICON, SVG, and WEBP which aren't suitable for the high resolution raster images representing exported map.
+    this.set('_availableFileTypes', Ember.A(['PNG', 'JPEG', 'JPG', 'GIF', 'BMP', 'TIFF']));
 
     this.set('_availablePaperFormats', Ember.A(Object.keys(paperFormatsInMillimeters)));
 

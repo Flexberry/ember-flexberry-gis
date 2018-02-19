@@ -118,7 +118,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     leafletOptions: [
 
       // Map state options.
-      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs',
+      'center', 'zoom', 'minZoom', 'maxZoom', 'maxBounds', 'maxBoundsViscosity', 'crs', 'preferCanvas',
 
       // Interaction options.
       'dragging', 'touchZoom', 'scrollWheelZoom', 'doubleClickZoom', 'boxZoom',
@@ -200,6 +200,15 @@ let FlexberryMapComponent = Ember.Component.extend(
       @default 0.25
     */
     zoomDelta: 0.25,
+
+    /**
+      Flag: indicates whether all paths should be rendered on a 'Canvas' renderer instead of 'SVG'.
+
+      @property preferCanvas
+      @type Boolean
+      @default true
+    */
+    preferCanvas: true,
 
     /**
       Array of map layers.
