@@ -3,13 +3,13 @@
 */
 
 import Ember from 'ember';
-import layout from '../../../templates/components/charts/type-charts/pie';
+import layout from '../../../templates/components/charts/type-charts/bar';
 import BaseChartType from '../base-chart-type';
 
 /**
-  Component for type chart pie.
+  Component for type chart column.
 
-  @class PieComponent
+  @class ColumnComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 
@@ -30,17 +30,6 @@ export default BaseChartType.extend({
     let propName = this.get('_selectedXAxisProperty');
     let propVal = this.get('_selectedYAxisProperty');
 
-    let bgcolor = Ember.A(['#F15C80', '#E4D354', '#2B908F', '#F45B5B', '#91E8E1', '#7CB5EC']);
-    let bgColorPie = Ember.A([]);
-    var j = 0;
-    for (var i = 0; i < isObject.length; i++) {
-      bgColorPie[i] = bgcolor[j];
-      j++;
-      if (j === 6) {
-        j = 0;
-      }
-    }
-
     let dataLabels = Ember.A([]);
     let datasetsLabel = Ember.A([]);
     isObject.forEach(obj => {
@@ -51,6 +40,7 @@ export default BaseChartType.extend({
       dslCopy.push(obj[propVal]);
       datasetsLabel.push(dslCopy);
     });
+
     let type = this.get('_chartType');
     let options = {
       title: {
@@ -74,7 +64,7 @@ export default BaseChartType.extend({
       datasets: [{
         label: this.get(`_localizedProperties.${propVal}`) || propVal,
         data: datasetsLabel,
-        backgroundColor: bgColorPie,
+        backgroundColor: '#7CB5EC'
       }]
     };
 

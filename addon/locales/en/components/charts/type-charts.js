@@ -5,7 +5,7 @@ export default {
     'value': 'Field for sector values'
   },
 
-  'column': {
+  'bar': {
     'name': 'column',
     'caption':'Field for signing the axis "x"',
     'value': 'The field for the values ​​of the axis "y"'

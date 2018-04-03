@@ -25,54 +25,55 @@ export default BaseChartType.extend({
     @method getJsonCharts
   */
   getJsonCharts() {
-    let xCategories = Ember.A([]);
-    let dataSeries = Ember.A([]);
     let isObject = this.get('_isObject');
 
     let propName = this.get('_selectedXAxisProperty');
     let propVal = this.get('_selectedYAxisProperty');
 
+    let dataLabels = Ember.A([]);
+    let datasetsLabel = Ember.A([]);
     isObject.forEach(obj => {
-      xCategories.push(obj[propName]);
-      dataSeries.push(parseFloat(obj[propVal]));
+      let dlCopy = Ember.A([]);
+      let dslCopy = Ember.A([]);
+      dlCopy.push(obj[propName]);
+      dataLabels.push(dlCopy);
+      dslCopy.push(obj[propVal]);
+      datasetsLabel.push(dslCopy);
     });
 
-    let chart = {
-      type: this.get('_chartType')
-    };
-    let title = {
-      text: this.get('_titleChart')
-    };
-    let xAxis = {
-      categories: xCategories,
-      crosshair: true
-    };
-    let tooltip = {
-      headerFormat: '<span style = "font-size:10px">{point.key}</span><table>',
-      pointFormat: '<tr><td style = "color:{series.color};padding:0">{series.name}: </td>' +
-        '<td style = "padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-      footerFormat: '</table>',
-      shared: true,
-      useHTML: true
-    };
-    let plotOptions = {
-      column: {
-        pointPadding: 0.2,
-        borderWidth: 0
+    let type = this.get('_chartType');
+    let options = {
+      title: {
+        display: true,
+        text: this.get('_titleChart').toString()
+      },
+      tooltips: {
+        backgroundColor: '#F8F8F8',
+        bodyFontColor: '#000'
+      },
+      legend:{
+        display: false
+      },
+      animation: {
+        duration: 0
       }
     };
-    let series = [{
-      name: this.get(`_localizedProperties.${propVal}`) || propVal,
-      data: dataSeries
-    }];
+
+    let data = {
+      labels: dataLabels,
+      datasets: [{
+        label: this.get(`_localizedProperties.${propVal}`) || propVal,
+        data: datasetsLabel,
+        fill: false,
+        borderColor: '#7CB5EC',
+        pointBackgroundColor: '#7CB5EC'
+      }]
+    };
 
     return {
-      chart,
-      title,
-      xAxis,
-      tooltip,
-      plotOptions,
-      series
+      type,
+      data,
+      options
     };
   }
 });
