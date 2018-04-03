@@ -1711,20 +1711,46 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let $leafletMapWrapper = $leafletMap.parent();
     let leafletMapWrapperBackground = $leafletMapWrapper.css(`background`);
 
-    // To achieve the correct image export must be divided into two steps.
-    // First we export only map.
+    let $leafletMarkers = Ember.$('.leaflet-pane.leaflet-marker-pane', $leafletMap);
+    let $leafletShadows = Ember.$('.leaflet-pane.leaflet-shadow-pane', $leafletMap);
+    $leafletMarkers.attr('data-html2canvas-ignore', 'true');
+    $leafletMarkers.css({ 'width': $leafletMap.css('width'), 'height': $leafletMap.css('height') });
+    $leafletShadows.attr('data-html2canvas-ignore', 'true');
+    $leafletShadows.css({ 'width': $leafletMap.css('width'), 'height': $leafletMap.css('height') });
+
+    // Export only map without markers.
     return window.html2canvas($leafletMap[0], {
       useCORS: true
     }).then((canvas) => {
-      // Then we hide map container.
-      $leafletMap.hide();
-      $leafletMap.attr('data-html2canvas-ignore', 'true');
+      $leafletShadows.removeAttr('data-html2canvas-ignore');
+      let drawContext = canvas.getContext('2d');
 
-      // And set exported map's DataURL as map wrapper's background image.
-      $leafletMapWrapper.css(`background`, `url(${canvas.toDataURL('image/png')})`);
+      // Export marker's shadows.
+      return window.html2canvas($leafletShadows[0], {
+        useCORS: true
+      }).then((shadowsCanvas) => {
+        drawContext.drawImage(shadowsCanvas, 0, 0);
+        $leafletMarkers.removeAttr('data-html2canvas-ignore');
+        $leafletShadows.css({ 'width': 0, 'height': 0 });
 
-      // Now we export whole sheet of paper (with caption and already exported map).
-      return exportSheetOfPaper();
+        // Export markers.
+        return window.html2canvas($leafletMarkers[0], {
+          useCORS: true
+        }).then((markersCanvas) => {
+          drawContext.drawImage(markersCanvas, 0, 0);
+          $leafletMarkers.css({ 'width': 0, 'height': 0 });
+
+          // Then we hide map container.
+          $leafletMap.hide();
+          $leafletMap.attr('data-html2canvas-ignore', 'true');
+
+          // And set exported map's DataURL as map wrapper's background image.
+          $leafletMapWrapper.css(`background`, `url(${canvas.toDataURL('image/png')})`);
+
+          // Now we export whole sheet of paper (with caption and already exported map).
+          return exportSheetOfPaper();
+        });
+      });
     }).then((exportedSheetOfPaper) => {
       // Restore map wrapper's original background.
       $leafletMapWrapper.css(`background`, leafletMapWrapperBackground);
@@ -1817,8 +1843,9 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     // Same situation with available font sizes.
     this.set('_availableFontSizes', Ember.A(['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '26', '28', '36', '48', '72']));
 
-    // Image formats supported by canvas.toDataURL method (see https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL).
-    this.set('_availableFileTypes', Ember.A(['PNG', 'JPEG', 'JPG', 'GIF', 'BMP', 'TIFF', 'XICON', 'SVG', 'WEBP']));
+    // Image formats supported by canvas.toDataURL method (see https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL)
+    // except XICON, SVG, and WEBP which aren't suitable for the high resolution raster images representing exported map.
+    this.set('_availableFileTypes', Ember.A(['PNG', 'JPEG', 'JPG', 'GIF', 'BMP', 'TIFF']));
 
     this.set('_availablePaperFormats', Ember.A(Object.keys(paperFormatsInMillimeters)));
 

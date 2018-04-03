@@ -268,7 +268,7 @@ export default BaseVectorLayer.extend({
   */
   query(layerLinks, e) {
     let queryFilter = e.queryFilter;
-    let equals = [];
+    let equals = Ember.A();
     layerLinks.forEach((link) => {
       let parameters = link.get('parameters');
 
@@ -276,8 +276,16 @@ export default BaseVectorLayer.extend({
         parameters.forEach(linkParam => {
           let property = linkParam.get('layerField');
           let propertyValue = queryFilter[linkParam.get('queryKey')];
+          if (Ember.isArray(propertyValue)) {
+            let propertyEquals = Ember.A();
+            propertyValue.forEach((value) => {
+              propertyEquals.pushObject(new L.Filter.EQ(property, value));
+            });
 
-          equals.push(new L.Filter.EQ(property, propertyValue));
+            equals.pushObject(new L.Filter.Or(...propertyEquals));
+          } else {
+            equals.pushObject(new L.Filter.EQ(property, propertyValue));
+          }
         });
       }
     });

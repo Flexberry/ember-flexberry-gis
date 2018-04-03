@@ -22,10 +22,12 @@ export default {
     'caption': 'Экспортировать',
     'tooltip': 'Экспортировать',
     'export-download': {
-      'caption': 'В изображение'
+      'caption': 'В изображение',
+      'tooltip': 'Сохранить карту в файл изображения'
     },
     'export-print': {
-      'caption': 'Напечатать'
+      'caption': 'Напечатать',
+      'tooltip': 'Вывести карту на печать'
     }
   },
   'search': {
