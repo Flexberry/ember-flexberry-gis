@@ -114,8 +114,6 @@ module.exports = {
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.js');
     app.import(app.bowerDirectory + '/leaflet.zoomslider/src/L.Control.Zoomslider.css');
 
-    // Load highcharts
-    app.import(app.bowerDirectory + '/highcharts/highcharts.js');
     // Load chartjs
     app.import(app.bowerDirectory + '/chart.js/dist/Chart.js');
 

@@ -45,7 +45,7 @@ export default BaseChartType.extend({
     let options = {
       title: {
         display: true,
-        text: this.get('_titleChart')
+        text: this.get('_titleChart').toString()
       },
       tooltips: {
         backgroundColor: '#F8F8F8',

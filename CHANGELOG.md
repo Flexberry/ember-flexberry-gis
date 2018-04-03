@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Changed
+* Change chart's library from `highcharts` to `chart.js`.
 
 ## [0.4.0.beta.x] - 26.10.2017
 ### Added
