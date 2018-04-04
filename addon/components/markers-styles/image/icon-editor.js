@@ -287,6 +287,10 @@ export default Ember.Component.extend({
   */
   _isZoom: false,
 
+  invalidWidth: false,
+
+  invalidHeight: false,
+
   /**
     Array containing icon zoom size.
 
@@ -294,7 +298,7 @@ export default Ember.Component.extend({
     @type Number[]
     @default null
   */
-  iconZoomSize:null,
+  iconZoomSize: null,
 
   /**
     Hash containing size of container.
@@ -389,12 +393,24 @@ export default Ember.Component.extend({
     @private
   */
   _setNewSize() {
+    this.set('invalidWidth', false);
+    this.set('invalidHeight', false);
     let ratio = this.get('_iconOrigAspectRatio');
     let iconAnchor = this.get('iconAnchor');
     let [width, height] = this.get('iconSize');
     let [newWidth, newHeight] = this.get('iconSizeNew');
     newWidth = parseInt(newWidth);
     newHeight = parseInt(newHeight);
+
+    if (isNaN(newWidth)) {
+      this.set('invalidWidth', true);
+      return;
+    }
+
+    if (isNaN(newHeight)) {
+      this.set('invalidHeight', true);
+      return;
+    }
 
     if (this.get('iconKeepOrigAspectRatio')) {
       if (newWidth !== width) {
@@ -488,7 +504,7 @@ export default Ember.Component.extend({
   /**
     Handles icond file reader 'onerror' event.
 
-    @method _onLoadIConFileError
+    @method _onLoadIconFileError
     @param {Object} e Event object.
     @private
   */

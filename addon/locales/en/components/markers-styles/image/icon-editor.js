@@ -9,5 +9,6 @@ export default {
   'width-caption': 'Width',
   'height-caption': 'Height',
   'aspectratio-caption': 'Keep aspect ratio',
-  'setorigsize-caption': 'Set original size'
+  'setorigsize-caption': 'Set original size',
+  'enter-number': 'Enter number'
 };

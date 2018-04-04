@@ -45,6 +45,13 @@
       </td>
       <td class="ui relaxed list">
         <div class="item">
+          {{#if invalidWidth}}
+            <div class="ui tiny red label">
+              {{t "components.markers-styles.image.icon-editor.enter-number"}}
+            </div>
+          {{/if}}
+        </div>
+        <div class="item">
           <div class="fluid ui right labeled input">
             {{input
               type="number"
@@ -65,6 +72,13 @@
               label=(t "components.markers-styles.image.icon-editor.aspectratio-caption")
             }}
           </div>
+        </div>
+        <div class="item">
+          {{#if invalidHeight}}
+            <div class="ui tiny red label">
+              {{t "components.markers-styles.image.icon-editor.enter-number"}}
+            </div>
+          {{/if}}
         </div>
         <div class="item">
           <div class="fluid ui right labeled input">
