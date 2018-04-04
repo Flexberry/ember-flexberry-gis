@@ -649,6 +649,7 @@ export default Ember.Component.extend({
   _onResizeIcon() {
     let iconImage = this.get('_iconSize');
     let containerSize = this.get('_containerSize');
+    let iconZoomAnchor = this.get('_iconZoomAnchor');
     let width = iconImage.width;
     let height = iconImage.height;
 
@@ -660,22 +661,26 @@ export default Ember.Component.extend({
     let h = iconZoomSize.height;
 
     if (iconZoomSize.width > containerSize || iconZoomSize.height > containerSize) {
+      let ratio = w / width;
       w = containerSize;
       h = containerSize;
       x = Math.round(containerSize / 2);
       y = Math.round(containerSize / 2);
       this.set('_isZoom', true);
-      this.set('iconZoomAnchor', [x, y]);
+      this.set('iconZoomAnchor', [iconZoomAnchor.x * ratio, iconZoomAnchor.y * ratio]);
       this.set('iconZoomSize', [w, h]);
     }
 
     if (iconZoomSize.width < containerSize || iconZoomSize.height < containerSize) {
+      let ratio = width / w;
       w = width;
       h = height;
       x = Math.round(width / 2);
       y = Math.round(height / 2);
       this.set('iconZoomSize', [w, h]);
-      this.set('iconZoomAnchor', [x, y]);
+      this.set('iconZoomAnchor', [iconZoomAnchor.x * ratio, iconZoomAnchor.y * ratio]);
+
+      //this.set('iconZoomAnchor', [x, y]);
     }
   },
 
@@ -738,13 +743,19 @@ export default Ember.Component.extend({
     */
     onZoomInClick(e) {
       let iconZoomSize = this.get('_iconZoomSize');
+      let iconZoomAnchor = this.get('_iconZoomAnchor');
+      let newZoomAncor = [0, 0];
       let width = iconZoomSize.width;
       let height = iconZoomSize.height;
       let iconImage = this.get('_iconSize');
       let step = 10;
       let isZoom = false;
+      let ratio;
 
       if (iconZoomSize !== iconImage) {
+        ratio = (width + step) / width;
+        newZoomAncor[0] = parseInt(iconZoomAnchor.x * ratio);
+        newZoomAncor[1] = parseInt(iconZoomAnchor.y * ratio);
         width = width + step;
         height = height + step;
         isZoom = true;
@@ -752,6 +763,7 @@ export default Ember.Component.extend({
         isZoom = false;
       }
 
+      this.set('iconZoomAnchor', newZoomAncor);
       this.set('_isZoom', isZoom);
       this.set('iconZoomSize', [width, height]);
     },
@@ -764,13 +776,20 @@ export default Ember.Component.extend({
       @param {Object} e Action's event object.
     */
     onZoomOutClick(e) {
+      let iconZoomAnchor = this.get('_iconZoomAnchor');
+      let newZoomAncor = [0, 0];
       let iconZoomSize = this.get('_iconZoomSize');
       let width = iconZoomSize.width;
       let height = iconZoomSize.height;
       let iconImage = this.get('_iconSize');
       let step = 10;
       let isZoom = false;
+      let ratio;
+
       if (iconZoomSize !== iconImage && width - step > 20 && height - step > 20) {
+        ratio = (width - step) / width;
+        newZoomAncor[0] = parseInt(iconZoomAnchor.x * ratio);
+        newZoomAncor[1] = parseInt(iconZoomAnchor.y * ratio);
         width = width - step;
         height = height - step;
         isZoom = true;
@@ -778,6 +797,7 @@ export default Ember.Component.extend({
         isZoom = false;
       }
 
+      this.set('iconZoomAnchor', newZoomAncor);
       this.set('_isZoom', isZoom);
       this.set('iconZoomSize', [width, height]);
     },
