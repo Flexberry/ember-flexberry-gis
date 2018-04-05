@@ -648,7 +648,6 @@ export default Ember.Component.extend({
   */
   _onResizeIcon() {
     let iconImage = this.get('_iconSize');
-    let containerSize = this.get('_containerSize');
     let iconZoomAnchor = this.get('_iconZoomAnchor');
     let width = iconImage.width;
     let height = iconImage.height;
@@ -736,7 +735,6 @@ export default Ember.Component.extend({
       let height = iconZoomSize.height;
       let iconImage = this.get('_iconSize');
       let step = 10;
-      let isZoom = false;
       let ratio;
 
       if (iconZoomSize !== iconImage) {
@@ -745,11 +743,9 @@ export default Ember.Component.extend({
         newZoomAncor[1] = parseInt(iconZoomAnchor.y * ratio);
         width = width + step;
         height = height + step;
-        isZoom = true;
-        this.set('_isZoom', isZoom);
+        this.set('_isZoom', true);
       } else {
-        isZoom = false;
-        this.set('_isZoom', isZoom);
+        this.set('_isZoom', false);
         return;
       }
 
