@@ -667,7 +667,6 @@ export default Ember.Component.extend({
     @private
   */
   _onResizeIcon() {
-    let iconImage = this.get('_iconSize');
     let iconZoomAnchor = this.get('_iconZoomAnchor');
     let container = this.get('_containerSize');
     if (iconZoomAnchor.x === 0 && iconZoomAnchor.y === 0) {
