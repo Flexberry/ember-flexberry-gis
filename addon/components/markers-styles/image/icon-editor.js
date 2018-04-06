@@ -435,9 +435,17 @@ export default Ember.Component.extend({
     if (this.get('iconKeepOrigAspectRatio')) {
       if (newWidth !== width) {
         newHeight = Math.round(newWidth / ratio);
+        if (newWidth === 0) {
+          newWidth = 1;
+        }
+
         this.set('iconSizeNew.1', newHeight);
       } else {
         newWidth = Math.round(newHeight * ratio);
+        if (newHeight === 0) {
+          newHeight = 1;
+        }
+
         this.set('iconSizeNew.0', newWidth);
       }
     }
@@ -817,7 +825,9 @@ export default Ember.Component.extend({
         this.set('_isZoom', true);
         this.set('iconZoomAnchor', newZoomAncor);
         this.set('iconZoomSize', [width, height]);
-      } else {
+      }
+
+      if (iconZoomSize === iconImage) {
         this.set('_isZoom', false);
         this.set('iconZoomAnchor', this.get('_iconAnchor'));
       }
