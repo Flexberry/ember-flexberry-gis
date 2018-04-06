@@ -122,7 +122,7 @@
               width="{{_iconSize.width}}"
               height="{{_iconSize.height}}"
               src="{{iconUrl}}"/>
-            <div class="icon-anchor " onclick={{action "onIconAnchorClick"}}>
+            <div class="icon-anchor" onclick={{action "onIconAnchorClick"}}>
               <svg xmlns="http://www.w3.org/2000/svg"
                    class="{{if _isZoom "hiddenAnchor"}}"
                    version="1.1"
@@ -131,8 +131,8 @@
                    viewBox="0 0 {{_iconSize.width}} {{_iconSize.height}}">
                 <circle cx="{{_iconAnchor.x}}"
                         cy="{{_iconAnchor.y}}"
-                        r="2"
-                        fill="#ff0000"
+                        r="{{_circleRadius}}"
+                        fill="{{_circleColor}}"
                         stroke="black"
                         stroke-width="1"/>
               </svg>
@@ -144,8 +144,8 @@
                    viewBox="0 0 {{_iconZoomSize.width}} {{_iconZoomSize.height}}">
                 <circle cx="{{_iconZoomAnchor.x}}"
                         cy="{{_iconZoomAnchor.y}}"
-                        r="2"
-                        fill="#ff0000"
+                        r="{{_circleRadius}}"
+                        fill="{{_circleColor}}"
                         stroke="black"
                         stroke-width="1"/>
               </svg>

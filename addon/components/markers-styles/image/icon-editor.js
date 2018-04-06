@@ -14,6 +14,26 @@ import { translationMacro as t } from 'ember-i18n';
 */
 export default Ember.Component.extend({
   /**
+
+    Array containing icon zoom anchor coordinates.
+
+    @property _circleColor
+    @type String
+    @default #ff0000
+  */
+  _circleColor: '#ff0000',
+
+  /**
+
+    Array containing icon zoom anchor coordinates.
+
+    @property _circleRadius
+    @type Number
+    @default 2
+  */
+  _circleRadius: 2,
+
+  /**
     Flag: indicates whether icon file is loading.
 
     @property _iconFileIsLoading
