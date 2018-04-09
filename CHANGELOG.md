@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ### Changed
 * Change chart's library from `highcharts` to `chart.js`.
 
+### Fixed
+* Fix `bboxEWKT` in `flexberry-boundingbox` component.
+
 ## [0.4.0.beta.x] - 26.10.2017
 ### Added
 * Add base class for vector layers.
