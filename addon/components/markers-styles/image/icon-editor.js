@@ -15,7 +15,7 @@ import { translationMacro as t } from 'ember-i18n';
 export default Ember.Component.extend({
   /**
 
-    Array containing icon zoom anchor coordinates.
+    Property containing color of ancor-picker circle.
 
     @property _circleColor
     @type String
@@ -25,7 +25,7 @@ export default Ember.Component.extend({
 
   /**
 
-    Array containing icon zoom anchor coordinates.
+    Property containing radius of ancor-picker circle.
 
     @property _circleRadius
     @type Number
@@ -342,7 +342,7 @@ export default Ember.Component.extend({
   iconZoomSize: null,
 
   /**
-    Hash containing size of container.
+    Property containing container size.
 
     @property _containerSize
     @type Number
