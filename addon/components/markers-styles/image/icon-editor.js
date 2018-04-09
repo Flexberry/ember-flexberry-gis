@@ -686,22 +686,33 @@ export default Ember.Component.extend({
     let iconZoomSize = this.get('_iconZoomSize');
     let w = iconZoomSize.width;
     let h = iconZoomSize.height;
+    let coeff = w / h;
     let oldW = w;
 
     if (w < container && h < container) {
       if (w > h) {
-        while (w + step <= container) {
-          w += step;
+        while (w + step * coeff <= container) {
+          w += step * coeff;
           h += step;
         }
       } else {
         while (h + step <= container) {
-          w += step;
+          w += step * coeff;
           h += step;
         }
       }
     } else {
-      return;
+      if (w > h) {
+        while (w - step * coeff >= container) {
+          w -= step * coeff;
+          h -= step;
+        }
+      } else {
+        while (h - step >= container) {
+          w -= step * coeff;
+          h -= step;
+        }
+      }
     }
 
     let ratio = w / oldW;
@@ -779,13 +790,14 @@ export default Ember.Component.extend({
       let height = iconZoomSize.height;
       let iconImage = this.get('_iconSize');
       let step = 10;
+      let coeff = width / height;
       let ratio;
 
       if (iconZoomSize !== iconImage) {
-        ratio = (width + step) / width;
+        ratio = (height + step) / height;
         newZoomAncor[0] = Math.round(iconZoomAnchor.x * ratio);
         newZoomAncor[1] = Math.round(iconZoomAnchor.y * ratio);
-        width = width + step;
+        width = width + step * coeff;
         height = height + step;
         this.set('_isZoom', true);
         this.set('iconZoomAnchor', newZoomAncor);
@@ -814,13 +826,14 @@ export default Ember.Component.extend({
       let height = iconZoomSize.height;
       let iconImage = this.get('_iconSize');
       let step = 10;
+      let coeff = width / height;
       let ratio;
 
-      if (iconZoomSize !== iconImage && width - step > 20 && height - step > 20) {
-        ratio = (width - step) / width;
+      if (iconZoomSize !== iconImage && width - step * coeff > 20 && height - step > 20) {
+        ratio = (height - step) / height;
         newZoomAncor[0] = Math.round(iconZoomAnchor.x * ratio);
         newZoomAncor[1] = Math.round(iconZoomAnchor.y * ratio);
-        width = width - step;
+        width = width - step * coeff;
         height = height - step;
         this.set('_isZoom', true);
         this.set('iconZoomAnchor', newZoomAncor);
