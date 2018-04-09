@@ -307,8 +307,20 @@ export default Ember.Component.extend({
   */
   _isZoom: false,
 
+  /**
+    Flag: indicates if Width input is valid.
+    @property invalidWidth
+    @type boolean
+    @default false
+  */
   invalidWidth: false,
 
+  /**
+    Flag: indicates if Height input is valid.
+    @property invalidHeight
+    @type boolean
+    @default false
+  */
   invalidHeight: false,
 
   /**
@@ -422,12 +434,12 @@ export default Ember.Component.extend({
     newWidth = parseInt(newWidth);
     newHeight = parseInt(newHeight);
 
-    if (isNaN(newWidth)) {
+    if (isNaN(newWidth) || newWidth === 0) {
       this.set('invalidWidth', true);
       return;
     }
 
-    if (isNaN(newHeight)) {
+    if (isNaN(newHeight) || newHeight === 0) {
       this.set('invalidHeight', true);
       return;
     }
@@ -435,15 +447,15 @@ export default Ember.Component.extend({
     if (this.get('iconKeepOrigAspectRatio')) {
       if (newWidth !== width) {
         newHeight = Math.round(newWidth / ratio);
-        if (newWidth === 0) {
-          newWidth = 1;
+        if (newHeight === 0) {
+          newHeight = 1;
         }
 
         this.set('iconSizeNew.1', newHeight);
       } else {
         newWidth = Math.round(newHeight * ratio);
-        if (newHeight === 0) {
-          newHeight = 1;
+        if (newWidth === 0) {
+          newWidth = 1;
         }
 
         this.set('iconSizeNew.0', newWidth);
@@ -647,6 +659,14 @@ export default Ember.Component.extend({
     if (this.get('allowDisabling') && Ember.isNone(this.get('iconUrl'))) {
       this.set('_enabled', false);
     }
+  },
+
+  /**
+    Lifecycle hook working after element was inserted into DOM.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+    this._onResizeIcon();
   },
 
   /**
@@ -855,7 +875,6 @@ export default Ember.Component.extend({
     */
     onResizeClick(e) {
       this._onResizeIcon();
-
     },
 
     /**
