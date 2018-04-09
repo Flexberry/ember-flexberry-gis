@@ -34,6 +34,15 @@ export default Ember.Component.extend({
   _circleRadius: 2,
 
   /**
+    A value of pixels to add / substract when scaling.
+
+    @property _scalingStep
+    @type Number
+    @default 10
+  */
+  _scalingStep: 10,
+
+  /**
     Flag: indicates whether icon file is loading.
 
     @property _iconFileIsLoading
@@ -701,7 +710,7 @@ export default Ember.Component.extend({
       iconZoomAnchor = this.get('_iconAnchor');
     }
 
-    let step = 10;
+    let step = this.get('_scalingStep');
 
     let iconZoomSize = this.get('_iconZoomSize');
     let w = iconZoomSize.width;
@@ -809,7 +818,7 @@ export default Ember.Component.extend({
       let width = iconZoomSize.width;
       let height = iconZoomSize.height;
       let iconImage = this.get('_iconSize');
-      let step = 10;
+      let step = this.get('_scalingStep');
       let coeff = width / height;
       let ratio;
 
@@ -845,7 +854,7 @@ export default Ember.Component.extend({
       let width = iconZoomSize.width;
       let height = iconZoomSize.height;
       let iconImage = this.get('_iconSize');
-      let step = 10;
+      let step = this.get('_scalingStep');
       let coeff = width / height;
       let ratio;
 
