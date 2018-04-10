@@ -343,12 +343,14 @@ export default Ember.Component.extend(
       '_crsSettingsAreAvailableForType',
       '_layerSettingsAreAvailableForType',
       '_bboxSettingsAreAvailableForType',
+      '_pmodesAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
         return this.get('_mainSettingsAreAvailableForType') ||
           this.get('_crsSettingsAreAvailableForType') ||
           this.get('_layerSettingsAreAvailableForType') ||
-          this.get('_bboxSettingsAreAvailableForType');
+          this.get('_bboxSettingsAreAvailableForType') ||
+          this.get('_pmodesAreAvailableForType');
       }
     ),
 
@@ -592,7 +594,6 @@ export default Ember.Component.extend(
     */
     _availableModesCaptions: Ember.computed('_availableModes', 'i18n.locale', function () {
       let _availableModes = this.get('_availableModes');
-
       let modes = Ember.A();
       if (Ember.isArray(_availableModes) && _availableModes.length !== 0) {
         let i18n = this.get('i18n');
@@ -608,13 +609,13 @@ export default Ember.Component.extend(
     }),
 
     /**
-      Flag: indicates whether modes are available.
+      Flag: indicates whether prototyping modes are available.
 
-      @property _modesAreAvailable
+      @property _pmodesAreAvailableForType
       @type Boolean
       @readonly
     */
-    _modesAreAvailable: Ember.computed('_availableModes', '_typeIsReadonly', function () {
+    _pmodesAreAvailableForType: Ember.computed('_availableModes', '_typeIsReadonly', function () {
       let newLayerIsExpectedToBeCreated = !this.get('_typeIsReadonly');
       let _availableModes = this.get('_availableModes');
 
@@ -853,6 +854,7 @@ export default Ember.Component.extend(
     */
     _destroyInnerLayer() {
       this.set('_layer', null);
+      this.set('_selectedModeCaption', null);
       this._destroyInnerSettings();
     },
 
