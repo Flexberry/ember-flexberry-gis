@@ -598,10 +598,10 @@ export default Ember.Component.extend(
       if (Ember.isArray(_availableModes) && _availableModes.length !== 0) {
         let i18n = this.get('i18n');
 
-        modes.pushObject(i18n.t('components.layers-dialogs.edit-modes.new'));
+        modes.pushObject(i18n.t('components.layers-dialogs.layers-prototyping-modes.new'));
 
         modes.pushObjects(_availableModes.map((editMode) => {
-          return i18n.t('components.layers-dialogs.edit-modes.' + editMode.name);
+          return i18n.t('components.layers-dialogs.layers-prototyping-modes.' + editMode.name);
         }));
       }
 
@@ -645,7 +645,7 @@ export default Ember.Component.extend(
 
     actions: {
       /**
-        Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-edit-mode' components 'editingFinished' action {{/crossLink}}.
+        Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-layers-prototyping-mode' components 'editingFinished' action {{/crossLink}}.
 
         @method actions.onEditingFinished
         @param {Object} layer Prototype layer model.
@@ -930,16 +930,16 @@ export default Ember.Component.extend(
 
       // Initialize available edit modes.
       let availableEditModes = Ember.A();
-      let editModesNames = owner.knownNamesForType('edit-mode');
+      let editModesNames = owner.knownNamesForType('layers-prototyping-mode');
       editModesNames.forEach((modeName) => {
-        let editModeFactory = owner.knownForType('edit-mode', modeName);
+        let editModeFactory = owner.knownForType('layers-prototyping-mode', modeName);
         let isAvailable = editModeFactory.componentCanBeInserted(this);
         if (isAvailable) {
           availableEditModes.pushObject(editModeFactory);
         }
       });
       this.set('_availableModes', availableEditModes);
-      this.set('_selectedModeCaption', i18n.t('components.layers-dialogs.edit-modes.new'));
+      this.set('_selectedModeCaption', i18n.t('components.layers-dialogs.layers-prototyping-modes.new'));
 
       this.sendAction('onInit', this.getLayerProperties.bind(this));
     },

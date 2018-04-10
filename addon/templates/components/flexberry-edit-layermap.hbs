@@ -145,7 +145,7 @@
             }}
           </div>
           {{#if _selectedMode}}
-            {{component (concat "layers-dialogs/edit-modes/" _selectedMode.name) editingFinished=(action "onEditingFinished")}}
+            {{component (concat "layers-dialogs/layers-prototyping-modes/" _selectedMode.name) editingFinished=(action "onEditingFinished")}}
           {{/if}}
         </div>
       {{/if}}
