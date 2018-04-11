@@ -95,11 +95,4 @@
           }
       }
     }
-    .field {
-        .button.flexberry-button {
-            &:hover {
-                color: @whitecolor !important;
-            }
-        }
-    }
 }
