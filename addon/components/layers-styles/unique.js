@@ -174,6 +174,8 @@ export default Ember.Component.extend({
     Promise which will be then resolved with leaflet layer (just loaded or already cached).
   */
   _getLeafletLayer() {
+
+    console.log('GET LAYERRR');
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletLayer = this.get('_leafletLayer');
       if (!Ember.isNone(leafletLayer)) {
@@ -417,6 +419,7 @@ export default Ember.Component.extend({
       @param {Object} e Event object.
     */
     onCategoryStyleEditorOpen(categoryIndex, e) {
+      console.log('111111111');
       let categories = this.get('styleSettings.style.categories');
       this.set('_activeCategory', categories[categoryIndex]);
 

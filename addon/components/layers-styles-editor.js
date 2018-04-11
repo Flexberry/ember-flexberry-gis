@@ -179,6 +179,8 @@ export default Ember.Component.extend({
     @private
   */
   _selectedLayerStyleDidChange: Ember.observer('styleSettings.type', function() {
+    console.log('CHANGE');
+    console.log(this.get('styleSettings.type'));
     Ember.run.once(this, '_setSelectedLayerStyleDefaultSettings');
   }),
 
@@ -218,5 +220,6 @@ export default Ember.Component.extend({
     this.set('_previouslySelectedLayerStyle', this.get('styleSettings.type'));
     this.set('_availableLayerStyles', this.get('_layersStylesRenderer').getAvailableLayerStylesTypes());
     this._availableLayerStylesCaptionsOrSelectedLayerStyleDidChange();
+    console.log(this.get('styleSettings.type'));
   }
 });

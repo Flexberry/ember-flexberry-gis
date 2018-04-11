@@ -45,6 +45,7 @@ export default Ember.Component.extend({
 
     let propertyType = this.get('propertyType');
     let layerFieldTypes = this.get('_leafletLayer.readFormat.featureType.fieldTypes');
+    console.log('11111');
     if (Ember.isNone(layerFieldTypes)) {
       return availableLayerProperties;
     }
