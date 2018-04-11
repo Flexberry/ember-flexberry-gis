@@ -2,6 +2,8 @@
          Theme Overrides
 *******************************/
 
+.ui.modal.flexberry-remove-layer-dialog,
+.ui.modal.flexberry-mapinfo-dialog,
 .ui.modal.flexberry-add-layer-dialog,
 .ui.modal.flexberry-copy-layer-dialog,
 .ui.modal.flexberry-edit-layer-dialog,
