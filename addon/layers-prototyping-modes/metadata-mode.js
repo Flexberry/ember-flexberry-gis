@@ -1,10 +1,10 @@
 /**
   @module ember-flexberry-gis-csw
 */
-import BaseEditMode from 'ember-flexberry-gis/edit-modes/-private/base';
+import BaseEditMode from 'ember-flexberry-gis/layers-prototyping-modes/-private/base';
 
 /**
-  Metadata based edit mode.
+  Metadata based layers-prototyping-modes.
 
   @class MetadataEditMode
 */

@@ -3,8 +3,8 @@
 */
 
 import Ember from 'ember';
-import BaseModeComponent from 'ember-flexberry-gis/components/layers-dialogs/edit-modes/base';
-import layout from '../../../templates/components/layers-dialogs/edit-modes/metadata-mode';
+import BaseModeComponent from 'ember-flexberry-gis/components/layers-dialogs/layers-prototyping-modes/base';
+import layout from '../../../templates/components/layers-dialogs/layers-prototyping-modes/metadata-mode';
 import { createLayerFromMetadata } from 'ember-flexberry-gis/utils/create-layer-from-metadata';
 import { Query } from 'ember-flexberry-data';
 

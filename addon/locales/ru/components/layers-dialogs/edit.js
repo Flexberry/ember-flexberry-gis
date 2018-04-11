@@ -93,6 +93,9 @@ export default {
     },
     'bbox-tab': {
       'caption': 'Границы'
+    },
+    'pmodes-tab': {
+      'caption': 'Создание на основе'
     }
   },
   'groups': {
