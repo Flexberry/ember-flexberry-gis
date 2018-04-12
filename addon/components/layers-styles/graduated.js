@@ -392,7 +392,10 @@ export default Ember.Component.extend({
       @param {Object} e Event object.
     */
     onClassifyButtonClick() {
-      this._getLeafletLayer().then((leafletLayer) => {
+
+        console.log(this.get('promiss'));
+        
+        this.get('promiss').then((leafletLayer) => {
         let layerType = this.get('layerType');
         if (Ember.isBlank(layerType) || Ember.isNone(leafletLayer)) {
           return;

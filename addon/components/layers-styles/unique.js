@@ -165,6 +165,8 @@ export default Ember.Component.extend({
   */
   getLeafletLayer: null,
 
+  promiss: null,
+
   /**
     Method returning promise which will be then resolved with leaflet layer (just loaded or already cached).
 
@@ -173,33 +175,6 @@ export default Ember.Component.extend({
     @return {<a href="https://emberjs.com/api/ember/2.4/classes/RSVP.Promise">Ember.RSVP.Promise</a>}
     Promise which will be then resolved with leaflet layer (just loaded or already cached).
   */
-  _getLeafletLayer() {
-
-    console.log('GET LAYERRR');
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      let leafletLayer = this.get('_leafletLayer');
-      if (!Ember.isNone(leafletLayer)) {
-        resolve(leafletLayer);
-        return;
-      }
-
-      let getLeafletLayer = this.get('getLeafletLayer');
-      if (typeof getLeafletLayer !== 'function') {
-        reject('Property \'getLeafletLayer\' isn\'t a function');
-        return;
-      }
-
-      this.set('_leafletLayerIsLoading', true);
-      getLeafletLayer().then((leafletLayer) => {
-        this.set('_leafletLayer', leafletLayer);
-        resolve(leafletLayer);
-      }).catch((e) => {
-        reject(e);
-      }).finally(() => {
-        this.set('_leafletLayerIsLoading', false);
-      });
-    });
-  },
 
   /**
     Observers changes in categories.
@@ -384,15 +359,15 @@ export default Ember.Component.extend({
       @param {Object} e Event object.
     */
     onClassifyButtonClick() {
-      this._getLeafletLayer().then((leafletLayer) => {
+        console.log(this.get('_leafletLayer'));
         let layerType = this.get('layerType');
-        if (Ember.isBlank(layerType) || Ember.isNone(leafletLayer)) {
+        if (Ember.isBlank(layerType) || Ember.isNone(this.get('_leafletLayer'))) {
           return;
         }
 
         let layerClass = Ember.getOwner(this).lookup(`layer:${layerType}`);
         let propertyName = this.get('styleSettings.style.propertyName');
-        let propertyValues = layerClass.getLayerPropertyValues(leafletLayer, propertyName);
+        let propertyValues = layerClass.getLayerPropertyValues(this.get('_leafletLayer'), propertyName);
 
         let categories = [];
         let layersStylesRenderer = this.get('_layersStylesRenderer');
@@ -409,7 +384,7 @@ export default Ember.Component.extend({
         this.set('_selectedCategories', {});
         this.set('_selectedCategoriesCount', 0);
         this.set('_allCategoriesAreSelected', false);
-      });
+
     },
 
     /**

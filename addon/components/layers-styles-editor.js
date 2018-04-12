@@ -62,6 +62,8 @@ export default Ember.Component.extend({
   */
   getLeafletLayer: null,
 
+  promiss:null,
+
   /**
     Reference to 'layers-styles-renderer' service.
 
@@ -81,6 +83,16 @@ export default Ember.Component.extend({
     @private
   */
   _availableLayerStyles: null,
+
+  /**
+    Related leaflet layer.
+
+    @property _leafletLayer
+    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+    @default null
+    @private
+  */
+  _leafletLayer: null,
 
   /**
     Available layer styles captions.
@@ -145,6 +157,32 @@ export default Ember.Component.extend({
   _selectedLayerStyleCaptionDidChange: Ember.observer('_selectedLayerStyleCaption', function () {
     Ember.run.once(this, '_setSelectedLayerStyle');
   }),
+
+  _getLeafletLayer() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletLayer = this.get('_leafletLayer');
+      if (!Ember.isNone(leafletLayer)) {
+        resolve(leafletLayer);
+        return;
+      }
+
+      let getLeafletLayer = this.get('getLeafletLayer');
+      if (typeof getLeafletLayer !== 'function') {
+        reject('Property \'getLeafletLayer\' isn\'t a function');
+        return;
+      }
+
+      this.set('_leafletLayerIsLoading', true);
+      getLeafletLayer().then((leafletLayer) => {
+        this.set('_leafletLayer', leafletLayer);
+        resolve(leafletLayer);
+      }).catch((e) => {
+        reject(e);
+      }).finally(() => {
+        this.set('_leafletLayerIsLoading', false);
+      });
+    });
+  },
 
   /**
     Sets selected layer style by its i18n-ed caption.
@@ -221,5 +259,10 @@ export default Ember.Component.extend({
     this.set('_availableLayerStyles', this.get('_layersStylesRenderer').getAvailableLayerStylesTypes());
     this._availableLayerStylesCaptionsOrSelectedLayerStyleDidChange();
     console.log(this.get('styleSettings.type'));
+    this._getLeafletLayer().then((leafletLayer) => {
+        this.set("_leafletLayer",leafletLayer);
+    });
+    this.set('promiss',this._getLeafletLayer());
+
   }
 });

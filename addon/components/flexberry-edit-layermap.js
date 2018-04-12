@@ -684,6 +684,8 @@ export default Ember.Component.extend(
         let relatedGroupName = $relatedGroup.attr('data-tab');
 
         this.set(`_tabularMenuState.groups.${relatedGroupName}.activeTab`, clickedTabName);
+
+        console.log(this.get('_leafletObjectForFilter'));
       },
 
       /**
