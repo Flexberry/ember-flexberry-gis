@@ -18,6 +18,47 @@ export default Ember.Component.extend({
   layout,
 
   /**
+    Flag: indicates whether leaflet layer is loading now.
+
+    @property _leafletLayerIsLoading
+    @type Boolean
+    @default false
+    @private
+  */
+  _leafletLayerIsLoading: false,
+
+  /**
+    Flag: indicates leaflet layer loading error.
+
+    @property _leafletLayerLoadingIsError
+    @type Boolean
+    @default false
+    @private
+  */
+  _leafletLayerLoadingIsError: false,
+
+  /**
+    Flag: indicates that style-editor is checked on flexberry-edit-layermap
+    and leaflet layer must be load.
+
+    @property layerLoaderIsReady
+    @type Boolean
+    @default false
+    @private
+  */
+  layerLoaderIsReady: false,
+
+  /**
+    Related leaflet layer.
+
+    @property _leafletLayer
+    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+    @default null
+    @private
+  */
+  _leafletLayer: null,
+
+  /**
     Component's wrapping <div> CSS-classes names.
 
     @property classNames
@@ -53,16 +94,54 @@ export default Ember.Component.extend({
   */
   layerType: null,
 
+  _layerLoader: Ember.observer('layerLoaderIsReady', function () {
+    Ember.run.once(this, '_loadLeafletLayer');
+  }),
+
+  _loadLeafletLayer() {
+    this.set('_leafletLayerLoadingIsError', false);
+    if (this.get('layerLoaderIsReady')) {
+      this._getLeafletLayer().then((leafletLayer) => {
+        this.set('_leafletLayer', leafletLayer);
+      });
+    }
+  },
+
   /**
-    Method returning related leaflet layer.
+    Method returning promise which will be then resolved with leaflet layer (just loaded or already cached).
 
-    @property leafletLayer
-    @type Function
-    @default null
+    @method _getLeafletLayer
+    @private
+    @return {<a href="https://emberjs.com/api/ember/2.4/classes/RSVP.Promise">Ember.RSVP.Promise</a>}
+    Promise which will be then resolved with leaflet layer (just loaded or already cached).
   */
-  getLeafletLayer: null,
+  _getLeafletLayer() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletLayer = this.get('_leafletLayer');
+      if (!Ember.isNone(leafletLayer)) {
+        resolve(leafletLayer);
+        return;
+      }
 
-  promiss:null,
+      let getLeafletLayer = this.get('getLeafletLayer');
+      if (typeof getLeafletLayer !== 'function') {
+        reject('Property \'getLeafletLayer\' isn\'t a function');
+        return;
+      }
+
+      this.set('_leafletLayerIsLoading', true);
+      getLeafletLayer().then((leafletLayer) => {
+        this.set('_leafletLayer', leafletLayer);
+        resolve(leafletLayer);
+      }).catch((e) => {
+        this.set('_leafletLayerLoadingIsError', true);
+        this.set('_leafletLayerIsLoading', false);
+        reject(e);
+      }).finally(() => {
+        this.set('_leafletLayerIsLoading', false);
+      });
+    });
+  },
 
   /**
     Reference to 'layers-styles-renderer' service.
@@ -83,16 +162,6 @@ export default Ember.Component.extend({
     @private
   */
   _availableLayerStyles: null,
-
-  /**
-    Related leaflet layer.
-
-    @property _leafletLayer
-    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
-    @default null
-    @private
-  */
-  _leafletLayer: null,
 
   /**
     Available layer styles captions.
@@ -158,32 +227,6 @@ export default Ember.Component.extend({
     Ember.run.once(this, '_setSelectedLayerStyle');
   }),
 
-  _getLeafletLayer() {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      let leafletLayer = this.get('_leafletLayer');
-      if (!Ember.isNone(leafletLayer)) {
-        resolve(leafletLayer);
-        return;
-      }
-
-      let getLeafletLayer = this.get('getLeafletLayer');
-      if (typeof getLeafletLayer !== 'function') {
-        reject('Property \'getLeafletLayer\' isn\'t a function');
-        return;
-      }
-
-      this.set('_leafletLayerIsLoading', true);
-      getLeafletLayer().then((leafletLayer) => {
-        this.set('_leafletLayer', leafletLayer);
-        resolve(leafletLayer);
-      }).catch((e) => {
-        reject(e);
-      }).finally(() => {
-        this.set('_leafletLayerIsLoading', false);
-      });
-    });
-  },
-
   /**
     Sets selected layer style by its i18n-ed caption.
 
@@ -217,8 +260,6 @@ export default Ember.Component.extend({
     @private
   */
   _selectedLayerStyleDidChange: Ember.observer('styleSettings.type', function() {
-    console.log('CHANGE');
-    console.log(this.get('styleSettings.type'));
     Ember.run.once(this, '_setSelectedLayerStyleDefaultSettings');
   }),
 
@@ -258,11 +299,6 @@ export default Ember.Component.extend({
     this.set('_previouslySelectedLayerStyle', this.get('styleSettings.type'));
     this.set('_availableLayerStyles', this.get('_layersStylesRenderer').getAvailableLayerStylesTypes());
     this._availableLayerStylesCaptionsOrSelectedLayerStyleDidChange();
-    console.log(this.get('styleSettings.type'));
-    this._getLeafletLayer().then((leafletLayer) => {
-        this.set("_leafletLayer",leafletLayer);
-    });
-    this.set('promiss',this._getLeafletLayer());
+  },
 
-  }
 });

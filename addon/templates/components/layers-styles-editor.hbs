@@ -1,28 +1,38 @@
-<div class="field">
-  <label>
-    {{t "components.layers-styles-editor.layer-style-dropdown.caption"}}
-  </label>
-  {{flexberry-dropdown
-    class="fluid"
-    items=_availableLayerStylesCaptions
-    value=_selectedLayerStyleCaption
-  }}
-</div>
-{{#if (known-for-type "component" (concat "layers-styles/" styleSettings.type))}}
-  {{component (concat "layers-styles/" styleSettings.type)
-    styleSettings=styleSettings
-    displaySettings=displaySettings
-    layerType=layerType
-    getLeafletLayer=getLeafletLayer
-    _leafletLayer = _leafletLayer
-    promiss=promiss
-  }}
-{{else}}
-  {{ui-message
-    type="error"
-    message=(t
-      "components.layers-styles-editor.layer-style-component-not-implemented.message"
-      componentName=(concat "layers-styles/" styleSettings.type)
-    )
-  }}
-{{/if}}
+  {{#unless _leafletLayerLoadingIsError}}
+    {{#unless _leafletLayerIsLoading}}
+      <div class="field">
+        <label>
+          {{t "components.layers-styles-editor.layer-style-dropdown.caption"}}
+        </label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableLayerStylesCaptions
+          value=_selectedLayerStyleCaption
+        }}
+      </div>
+      {{#if (known-for-type "component" (concat "layers-styles/" styleSettings.type))}}
+        {{component (concat "layers-styles/" styleSettings.type)
+          styleSettings=styleSettings
+          displaySettings=displaySettings
+          layerType=layerType
+          leafletLayer = _leafletLayer
+        }}
+      {{else}}
+        {{ui-message
+          type="error"
+          message=(t
+            "components.layers-styles-editor.layer-style-component-not-implemented.message"
+            componentName=(concat "layers-styles/" styleSettings.type)
+          )
+        }}
+      {{/if}}
+    {{else}}
+      <div class="field">
+          {{t "components.layers-styles-editor.layer-style-layer-is-loading.caption"}}
+      </div>
+    {{/unless}}
+  {{else}}
+    <div class="field">
+      {{t "components.layers-styles-editor.layer-style-layer-loading-error.caption"}}
+    </div>
+  {{/unless}}

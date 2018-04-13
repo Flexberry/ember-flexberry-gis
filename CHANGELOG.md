@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Changed
 * Change chart's library from `highcharts` to `chart.js`.
+* Change leafletLayer loading, moved from layer-styles to `layers-styles-editor` component.
 
 ### Fixed
 * Fix `bboxEWKT` in `flexberry-boundingbox` component.
