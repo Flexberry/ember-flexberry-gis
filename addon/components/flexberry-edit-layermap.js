@@ -646,8 +646,8 @@ export default Ember.Component.extend(
 
     actions: {
 
-        /**
-        Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-edit-mode' components 'editingFinished' action {{/crossLink}}.
+      /**
+      Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-edit-mode' components 'editingFinished' action {{/crossLink}}.
 
         @method actions.onEditingFinished
         @param {Object} layer Prototype layer model.
@@ -687,7 +687,7 @@ export default Ember.Component.extend(
         let relatedGroupName = $relatedGroup.attr('data-tab');
 
         this.set(`_tabularMenuState.groups.${relatedGroupName}.activeTab`, clickedTabName);
-        this.set('_tess',true);
+        this.set('_tess', true);
       },
 
       /**

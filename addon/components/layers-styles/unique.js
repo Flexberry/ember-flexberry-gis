@@ -329,32 +329,29 @@ export default Ember.Component.extend({
       @param {Object} e Event object.
     */
     onClassifyButtonClick() {
-        let layerType = this.get('layerType');
-        let leafletLayer = this.get('leafletLayer');
+      let layerType = this.get('layerType');
+      let leafletLayer = this.get('leafletLayer');
+      if (Ember.isBlank(layerType) || Ember.isNone(leafletLayer)) {
+        return;
+      }
 
-        if (Ember.isBlank(layerType) || Ember.isNone(leafletLayer)) {
-          return;
-        }
+      let layerClass = Ember.getOwner(this).lookup(`layer:${layerType}`);
+      let propertyName = this.get('styleSettings.style.propertyName');
+      let propertyValues = layerClass.getLayerPropertyValues(leafletLayer, propertyName);
+      let categories = [];
+      let layersStylesRenderer = this.get('_layersStylesRenderer');
+      for (let i = 0, len = propertyValues.length; i < len; i++) {
+        categories.push({
+          name: i,
+          value: propertyValues[i],
+          styleSettings: layersStylesRenderer.getDefaultStyleSettings('simple')
+        });
+      }
 
-        let layerClass = Ember.getOwner(this).lookup(`layer:${layerType}`);
-        let propertyName = this.get('styleSettings.style.propertyName');
-        let propertyValues = layerClass.getLayerPropertyValues(leafletLayer, propertyName);
-
-        let categories = [];
-        let layersStylesRenderer = this.get('_layersStylesRenderer');
-        for (let i = 0, len = propertyValues.length; i < len; i++) {
-          categories.push({
-            name: i,
-            value: propertyValues[i],
-            styleSettings: layersStylesRenderer.getDefaultStyleSettings('simple')
-          });
-        }
-
-        this.set('styleSettings.style.categories', categories);
-        this.set('_selectedCategories', {});
-        this.set('_selectedCategoriesCount', 0);
-        this.set('_allCategoriesAreSelected', false);
-
+      this.set('styleSettings.style.categories', categories);
+      this.set('_selectedCategories', {});
+      this.set('_selectedCategoriesCount', 0);
+      this.set('_allCategoriesAreSelected', false);
     },
 
     /**
