@@ -18,6 +18,14 @@ export default Ember.Component.extend({
   layout,
 
   /**
+    Method returning related leaflet layer.
+    @property leafletLayer
+    @type Function
+    @default null
+  */
+  getLeafletLayer: null,
+
+  /**
     Flag: indicates whether leaflet layer is loading now.
 
     @property _leafletLayerIsLoading

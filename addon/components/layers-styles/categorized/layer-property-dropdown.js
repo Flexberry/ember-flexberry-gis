@@ -178,9 +178,7 @@ export default Ember.Component.extend({
   willDestroyElement() {
     let $dropdown = this.get('_$dropdown');
     $dropdown.dropdown('destroy');
-
     this.set('_$dropdown', null);
-    this.set('leafletLayer', null);
 
     this._super(...arguments);
   }

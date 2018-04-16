@@ -321,8 +321,6 @@ export default Ember.Component.extend(
     */
     parametersModelName: '',
 
-    _tess:false,
-
     /**
       Layer's links' parameters model projection.
 
@@ -687,7 +685,6 @@ export default Ember.Component.extend(
         let relatedGroupName = $relatedGroup.attr('data-tab');
 
         this.set(`_tabularMenuState.groups.${relatedGroupName}.activeTab`, clickedTabName);
-        this.set('_tess', true);
       },
 
       /**

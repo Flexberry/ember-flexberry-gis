@@ -2,9 +2,6 @@ export default {
   'layer-style-dropdown': {
     'caption': 'Symbol type'
   },
-  'layer-style-layer-is-loading': {
-    'caption': 'Leaflet layer is loading'
-  },
   'layer-style-layer-loading-error': {
     'caption': 'Leaflet layer cant be load'
   },
