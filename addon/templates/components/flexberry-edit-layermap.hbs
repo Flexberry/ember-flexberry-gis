@@ -39,24 +39,14 @@
             {{t "components.layers-dialogs.edit.tabular-menu.bbox-tab.caption"}}
           </a>
         {{/if}}
+        {{#if _pmodesAreAvailableForType}}
+          <a class="tab item {{if (eq _tabularMenuState.groups.main-group.activeTab "pmodes-tab") "active"}}" data-tab="pmodes-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.pmodes-tab.caption"}}
+          </a>
+        {{/if}}
       </div>
       {{#if _mainSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.main-group.activeTab "main-tab") "active"}}" data-tab="main-tab">
-          {{#if _modesAreAvailable}}
-            <div class="field">
-              <label>
-                {{t "components.layers-dialogs.edit.mode-dropdown.caption"}}
-              </label>
-              {{flexberry-dropdown
-                class="fluid"
-                items=_availableModesCaptions
-                value=_selectedModeCaption
-              }}
-            </div>
-            {{#if _selectedMode}}
-              {{component (concat "layers-dialogs/edit-modes/" _selectedMode.name) editingFinished=(action "onEditingFinished")}}
-            {{/if}}
-          {{/if}}
           <div class="field">
             <label>
               {{typeDropdownCaption}}
@@ -139,6 +129,23 @@
               maxLng=_layer.bboxCoords.maxLng
               boundingBoxChange=(action "onBoundingBoxChange")
             }}
+          {{/if}}
+        </div>
+      {{/if}}
+      {{#if _pmodesAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _tabularMenuState.groups.main-group.activeTab "pmodes-tab") "active"}}" data-tab="pmodes-tab">
+          <div class="field">
+            <label>
+              {{t "components.layers-dialogs.edit.mode-dropdown.caption"}}
+            </label>
+            {{flexberry-dropdown
+              class="fluid"
+              items=_availableModesCaptions
+              value=_selectedModeCaption
+            }}
+          </div>
+          {{#if _selectedMode}}
+            {{component (concat "layers-dialogs/layers-prototyping-modes/" _selectedMode.name) editingFinished=(action "onEditingFinished")}}
           {{/if}}
         </div>
       {{/if}}
