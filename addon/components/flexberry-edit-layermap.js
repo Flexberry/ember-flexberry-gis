@@ -644,6 +644,7 @@ export default Ember.Component.extend(
     }),
 
     actions: {
+
       /**
         Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-layers-prototyping-mode' components 'editingFinished' action {{/crossLink}}.
 
