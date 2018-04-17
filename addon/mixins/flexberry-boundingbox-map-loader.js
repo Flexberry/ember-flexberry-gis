@@ -3,11 +3,6 @@
 */
 
 import Ember from 'ember';
-import { Query } from 'ember-flexberry-data';
-
-const {
-  Builder
-} = Query;
 
 /**
   Mixin containing method for loading flexberry-boundingbox component's map.
@@ -17,6 +12,11 @@ const {
 */
 export default Ember.Mixin.create({
   store: Ember.inject.service(),
+
+  /**
+   Service for Map loading from store
+  */
+  _mapStore: Ember.inject.service('map-store'),
 
   /**
     Map model name.
@@ -43,29 +43,26 @@ export default Ember.Mixin.create({
   getBoundingBoxComponentMapModel() {
     let config = Ember.getOwner(this).factoryFor('config:environment').class;
     let mapId = this.get('boundingBoxComponentMapId') || Ember.get(config, 'APP.components.flexberryBoundingbox.mapId');
+    this.mapStore = this.get('_mapStore');
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (Ember.isBlank(mapId)) {
-        resolve(this.getDefaultBoundingBoxComponentMapModel());
+        resolve(this.mapStore.findMapInStore('defaultOSMMap'));
       } else {
-        let builder = new Builder(this.get('store'))
-          .from(this.get('mapModelName'))
-          .selectByProjection('MapE')
-          .byId(mapId);
-        this.get('store').queryRecord(this.get('mapModelName'), builder.build()).then(record => {
-          resolve(Ember.isNone(record) ? this.getDefaultBoundingBoxComponentMapModel() : record);
+        this.mapStore.getMapById(mapId).then(record => {
+          resolve(Ember.isNone(record) ? this.mapStore.findMapInStore('defaultOSMMap') : record);
         }).catch(() => {
-          resolve(this.getDefaultBoundingBoxComponentMapModel());
+          resolve(this.mapStore.findMapInStore('defaultOSMMap'));
         });
       }
     });
-  },
+  }
 
   /**
     Gets default map model to be displayed in `flexberry-boundingbox` component.
 
     @method getDefaultBoundingBoxComponentMapModel
     @return {Promise} Promise, that returning map model.
-  */
+
   getDefaultBoundingBoxComponentMapModel() {
     // Create map model to be displayed in `flexberry-boundingbox` component.
     let mapModel = this.get('store').createRecord(this.get('mapModelName'), {
@@ -90,4 +87,5 @@ export default Ember.Mixin.create({
 
     return mapModel;
   }
+  */
 });

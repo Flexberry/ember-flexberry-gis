@@ -13,7 +13,7 @@ export default Ember.Service.extend({
     this._super(...arguments);
     let store = this.get('store');
     let mapModel = store.createRecord(this._mapModelName, {
-      name: 'zeroOSMMap',
+      name: 'defaultOSMMap',
       lat: 0,
       lng: 0,
       zoom: 0,
