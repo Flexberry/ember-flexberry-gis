@@ -101,7 +101,8 @@ export default EditFormRoute.extend({
   model(params, transition) {
     let mapStore = this.get('_mapStore');
     let mapId = arguments[0].id;
-    let modelQuery = mapStore.getMapPromiseById(mapId);
+    let zeroMap =  mapStore.findMapInStore('zeroOSMMap');
+    let modelQuery = mapStore.getMapById(mapId);
     let metadataQuery = this._getMetadata(params.metadata);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
