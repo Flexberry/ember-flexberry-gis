@@ -102,9 +102,9 @@ export default Ember.Component.extend({
   */
   layerType: null,
 
-  _layerLoader: Ember.observer('layerLoaderIsReady', function () {
+  _layerLoader: Ember.on('init', Ember.observer('layerLoaderIsReady', function () {
     Ember.run.once(this, '_loadLeafletLayer');
-  }),
+  })),
 
   _loadLeafletLayer() {
     this.set('_leafletLayerLoadingIsError', false);
