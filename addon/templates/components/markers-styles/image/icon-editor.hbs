@@ -45,6 +45,13 @@
       </td>
       <td class="ui relaxed list">
         <div class="item">
+          {{#if invalidWidth}}
+            <div class="ui tiny red label">
+              {{t "components.markers-styles.image.icon-editor.enter-number"}}
+            </div>
+          {{/if}}
+        </div>
+        <div class="item">
           <div class="fluid ui right labeled input">
             {{input
               type="number"
@@ -67,6 +74,13 @@
           </div>
         </div>
         <div class="item">
+          {{#if invalidHeight}}
+            <div class="ui tiny red label">
+              {{t "components.markers-styles.image.icon-editor.enter-number"}}
+            </div>
+          {{/if}}
+        </div>
+        <div class="item">
           <div class="fluid ui right labeled input">
             {{input
               type="number"
@@ -81,22 +95,57 @@
         </div>
       </td>
       <td>
+      <div class="flexberry-maptoolbar ui menu">
+            {{flexberry-button
+              iconClass="zoom icon"
+              class="flexberry-map-tool item ui dropdown"
+              click="onZoomInClick"
+              tooltip=(t "components.markers-styles.image.icon-editor.zoom-in-button")
+            }}
+            {{flexberry-button
+              iconClass="zoom out icon"
+              class="flexberry-map-tool item ui dropdown"
+              click="onZoomOutClick"
+              tooltip=(t "components.markers-styles.image.icon-editor.zoom-out-button")
+            }}
+            {{flexberry-button
+              iconClass="resize icon"
+              class="flexberry-map-tool item ui dropdown"
+              tooltip=(t "components.markers-styles.image.icon-editor.resize-button")
+              click="onResizeClick"
+            }}
+        </div>
         <div class="icon-image-wrapper">
           {{#if _showIconImage}}
             <img class="icon-image"
+              style="width:{{_iconZoomSize.width}}px;height:{{_iconZoomSize.height}}px"
               width="{{_iconSize.width}}"
               height="{{_iconSize.height}}"
               src="{{iconUrl}}"/>
             <div class="icon-anchor" onclick={{action "onIconAnchorClick"}}>
               <svg xmlns="http://www.w3.org/2000/svg"
+                   class="{{if _isZoom "hiddenAnchor"}}"
                    version="1.1"
                    width="{{_iconSize.width}}"
                    height="{{_iconSize.height}}"
                    viewBox="0 0 {{_iconSize.width}} {{_iconSize.height}}">
                 <circle cx="{{_iconAnchor.x}}"
                         cy="{{_iconAnchor.y}}"
-                        r="2"
-                        fill="#ff0000"
+                        r="{{_circleRadius}}"
+                        fill="{{_circleColor}}"
+                        stroke="black"
+                        stroke-width="1"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   class="{{if (not _isZoom) "hiddenAnchor"}}"
+                   version="1.1"
+                   width="{{_iconZoomSize.width}}"
+                   height="{{_iconZoomSize.height}}"
+                   viewBox="0 0 {{_iconZoomSize.width}} {{_iconZoomSize.height}}">
+                <circle cx="{{_iconZoomAnchor.x}}"
+                        cy="{{_iconZoomAnchor.y}}"
+                        r="{{_circleRadius}}"
+                        fill="{{_circleColor}}"
                         stroke="black"
                         stroke-width="1"/>
               </svg>

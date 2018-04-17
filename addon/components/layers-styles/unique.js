@@ -101,7 +101,6 @@ export default Ember.Component.extend({
     @property leafletLayer
     @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
     @default null
-    @public
   */
   leafletLayer: null,
 

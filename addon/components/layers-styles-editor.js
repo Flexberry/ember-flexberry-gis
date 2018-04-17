@@ -309,4 +309,12 @@ export default Ember.Component.extend({
     this._availableLayerStylesCaptionsOrSelectedLayerStyleDidChange();
   },
 
+  /**
+    Deinitializes component's DOM-related properties.
+  */
+  willDestroyElement() {
+    this.set('_leafletLayer', null);
+
+    this._super(...arguments);
+  }
 });
