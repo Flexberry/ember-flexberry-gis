@@ -5,9 +5,9 @@
 import Ember from 'ember';
 
 /**
-  Component containing GUI for custom layers-styles (unique, graduated)
+  Component containing GUI for categorized layers-styles (unique, graduated)
 
-  @class CategorizedLayersStyleLayerBaseCustomLayerStyleComponent
+  @class CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 export default Ember.Component.extend({
@@ -384,7 +384,7 @@ export default Ember.Component.extend({
     onEditingCellFocusOut(inputText, e) {
       this.set('_editingCell', null);
     },
-    
+
     /**
       Handles editing cell 'keydown' event.
 

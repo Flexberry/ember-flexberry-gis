@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/layers-styles/unique';
-import BaseCustomStyle from './categorized/base-custom-layer-style';
+import BaseCustomStyle from './categorized/base-categorized-layer-style';
 
 /**
   Component containing GUI for 'unique' layers-style

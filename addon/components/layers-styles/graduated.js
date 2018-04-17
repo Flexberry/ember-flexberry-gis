@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/layers-styles/graduated';
-import BaseCustomStyle from './categorized/base-custom-layer-style';
+import BaseCustomStyle from './categorized/base-categorized-layer-style';
 
 /**
   Component containing GUI for 'graduated' layers-style
