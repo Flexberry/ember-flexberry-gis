@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+### Added
+* Add base component for graduated and unique layers-styles.
+
 ### Changed
 * Change chart's library from `highcharts` to `chart.js`.
 * Change leafletLayer loading, moved from layer-styles to `layers-styles-editor` component.
