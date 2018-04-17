@@ -389,7 +389,7 @@ export default Ember.Component.extend(
         null :
         Ember.getOwner(this).knownForType('layer', className);
 
-        return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
+      return !Ember.isNone(layerClass) && Ember.A(Ember.get(layerClass, 'operations') || []).contains('legend');
     }),
 
     /**

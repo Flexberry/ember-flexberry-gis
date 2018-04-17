@@ -96,13 +96,13 @@ export default Ember.Component.extend(
   */
   init() {
     this._super(...arguments);
-  
+
     let _this = this;
     this.getBoundingBoxComponentMapModel().then(result => {
-    _this.set('boundingBoxComponentMap', result);
+      _this.set('boundingBoxComponentMap', result);
     });
 
-    this.set('_activeTab','display-tab');
+    this.set('_activeTab', 'display-tab');
   },
 
   actions: {

@@ -4,7 +4,6 @@ import {
   translationMacro as t
 } from 'ember-i18n';
 
-
 export default Ember.Component.extend({
   /**
     Reference to component's template.

@@ -24,9 +24,9 @@ export default Ember.Component.extend(
   */
   _activeTab: 'links-tab',
 
-  init(){
+  init() {
     this._super(...arguments);
-    this.set('_activeTab','links-tab');
+    this.set('_activeTab', 'links-tab');
   },
 
   actions: {

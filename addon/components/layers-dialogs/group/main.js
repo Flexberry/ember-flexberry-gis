@@ -94,7 +94,7 @@ export default Ember.Component.extend(
   /**
     Initializes component.
   */
-  init(){
+  init() {
     this._super(...arguments);
     this.set('_mainGroupIsAvailableForType', this.get('mainGroupIsAvailableForType'));
     let _this = this;
@@ -104,7 +104,7 @@ export default Ember.Component.extend(
       _this.set('boundingBoxComponentMap', result);
       _this.set('_bboxMapIsLoading', false);
     });
-    this.set('_activeTab','main-tab');
+    this.set('_activeTab', 'main-tab');
   },
 
   actions: {
