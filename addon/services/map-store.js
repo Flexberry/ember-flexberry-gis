@@ -1,5 +1,11 @@
 import Ember from 'ember';
 
+import { Query } from 'ember-flexberry-data';
+
+const {
+  Builder
+} = Query;
+
 export default Ember.Service.extend({
   store: Ember.inject.service(),
 
@@ -7,13 +13,15 @@ export default Ember.Service.extend({
 
   _layerModelname: 'new-platform-flexberry-g-i-s-map-layer',
 
-  _modelProjName: 'MapE',
+  _defaultMapName: 'defaultOSMMap',
+
+  _defaultModelProjName: 'MapE',
 
   init() {
     this._super(...arguments);
     let store = this.get('store');
     let mapModel = store.createRecord(this._mapModelName, {
-      name: 'defaultOSMMap',
+      name: this._defaultMapName,
       lat: 0,
       lng: 0,
       zoom: 0,
@@ -32,16 +40,21 @@ export default Ember.Service.extend({
   },
 
   findMapInStore(mapName) {
+    mapName = Ember.isNone(mapName) ? this._defaultMapName : mapName;
     let store = this.get('store');
     let maps = store.peekAll(this._mapModelName);
     let map = maps.findBy('name', mapName);
     return map;
   },
 
-  getMapById(mapId) {
-    let findRecordParameters = { reload: true, projection: this._modelProjName };
+  getMapById(mapId, modelProjName) {
+    modelProjName = Ember.isNone(modelProjName) ? this._defaultModelProjName : modelProjName;
     let store = this.get('store');
-    let ret = store.findRecord(this._mapModelName, mapId, findRecordParameters);
+    let builder = new Builder(store)
+    .from(this._mapModelName)
+    .selectByProjection(modelProjName)
+    .byId(mapId);
+    let ret = store.queryRecord(this._mapModelName, builder.build());
     return ret;
   }
 
