@@ -343,12 +343,14 @@ export default Ember.Component.extend(
       '_crsSettingsAreAvailableForType',
       '_layerSettingsAreAvailableForType',
       '_bboxSettingsAreAvailableForType',
+      '_pmodesAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
         return this.get('_mainSettingsAreAvailableForType') ||
           this.get('_crsSettingsAreAvailableForType') ||
           this.get('_layerSettingsAreAvailableForType') ||
-          this.get('_bboxSettingsAreAvailableForType');
+          this.get('_bboxSettingsAreAvailableForType') ||
+          this.get('_pmodesAreAvailableForType');
       }
     ),
 
@@ -592,15 +594,14 @@ export default Ember.Component.extend(
     */
     _availableModesCaptions: Ember.computed('_availableModes', 'i18n.locale', function () {
       let _availableModes = this.get('_availableModes');
-
       let modes = Ember.A();
       if (Ember.isArray(_availableModes) && _availableModes.length !== 0) {
         let i18n = this.get('i18n');
 
-        modes.pushObject(i18n.t('components.layers-dialogs.edit-modes.new'));
+        modes.pushObject(i18n.t('components.layers-dialogs.layers-prototyping-modes.new'));
 
         modes.pushObjects(_availableModes.map((editMode) => {
-          return i18n.t('components.layers-dialogs.edit-modes.' + editMode.name);
+          return i18n.t('components.layers-dialogs.layers-prototyping-modes.' + editMode.name);
         }));
       }
 
@@ -608,13 +609,13 @@ export default Ember.Component.extend(
     }),
 
     /**
-      Flag: indicates whether modes are available.
+      Flag: indicates whether prototyping modes are available.
 
-      @property _modesAreAvailable
+      @property _pmodesAreAvailableForType
       @type Boolean
       @readonly
     */
-    _modesAreAvailable: Ember.computed('_availableModes', '_typeIsReadonly', function () {
+    _pmodesAreAvailableForType: Ember.computed('_availableModes', '_typeIsReadonly', function () {
       let newLayerIsExpectedToBeCreated = !this.get('_typeIsReadonly');
       let _availableModes = this.get('_availableModes');
 
@@ -645,7 +646,7 @@ export default Ember.Component.extend(
     actions: {
 
       /**
-      Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-edit-mode' components 'editingFinished' action {{/crossLink}}.
+        Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-layers-prototyping-mode' components 'editingFinished' action {{/crossLink}}.
 
         @method actions.onEditingFinished
         @param {Object} layer Prototype layer model.
@@ -854,6 +855,7 @@ export default Ember.Component.extend(
     */
     _destroyInnerLayer() {
       this.set('_layer', null);
+      this.set('_selectedModeCaption', null);
       this._destroyInnerSettings();
     },
 
@@ -929,16 +931,16 @@ export default Ember.Component.extend(
 
       // Initialize available edit modes.
       let availableEditModes = Ember.A();
-      let editModesNames = owner.knownNamesForType('edit-mode');
+      let editModesNames = owner.knownNamesForType('layers-prototyping-mode');
       editModesNames.forEach((modeName) => {
-        let editModeFactory = owner.knownForType('edit-mode', modeName);
+        let editModeFactory = owner.knownForType('layers-prototyping-mode', modeName);
         let isAvailable = editModeFactory.componentCanBeInserted(this);
         if (isAvailable) {
           availableEditModes.pushObject(editModeFactory);
         }
       });
       this.set('_availableModes', availableEditModes);
-      this.set('_selectedModeCaption', i18n.t('components.layers-dialogs.edit-modes.new'));
+      this.set('_selectedModeCaption', i18n.t('components.layers-dialogs.layers-prototyping-modes.new'));
 
       this.sendAction('onInit', this.getLayerProperties.bind(this));
     },

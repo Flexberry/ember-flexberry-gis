@@ -419,6 +419,10 @@
     i.icon.globe:before {
         content: "\e830";
     }
+    i.icon.resize:before {
+        font-family: Icons;
+        content: "\f0b2";
+    }
     /* геолокация */
     i.icon.bullseye:before {
         font-family: Icons;
@@ -941,6 +945,10 @@
 /************************************************************
     Simple layers-style (components/layers-styles/simple)
 ************************************************************/
+
+.hiddenAnchor{
+  display: none;
+}
 
 .ui.selection.dropdown {
   &.simple-layers-style-stroke-linejoin-dropdown,

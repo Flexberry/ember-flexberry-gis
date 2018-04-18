@@ -102,9 +102,9 @@ export default Ember.Component.extend({
   */
   layerType: null,
 
-  _layerLoader: Ember.observer('layerLoaderIsReady', function () {
+  _layerLoader: Ember.on('init', Ember.observer('layerLoaderIsReady', function () {
     Ember.run.once(this, '_loadLeafletLayer');
-  }),
+  })),
 
   _loadLeafletLayer() {
     this.set('_leafletLayerLoadingIsError', false);
@@ -309,4 +309,12 @@ export default Ember.Component.extend({
     this._availableLayerStylesCaptionsOrSelectedLayerStyleDidChange();
   },
 
+  /**
+    Deinitializes component's DOM-related properties.
+  */
+  willDestroyElement() {
+    this.set('_leafletLayer', null);
+
+    this._super(...arguments);
+  }
 });

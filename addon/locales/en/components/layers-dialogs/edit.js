@@ -93,6 +93,9 @@ export default {
     },
     'bbox-tab': {
       'caption': 'Bounds'
+    },
+    'pmodes-tab': {
+      'caption': 'Creation by prototype'
     }
   },
   'groups': {
