@@ -468,6 +468,7 @@ export default Ember.Component.extend(
     _selectedModeCaption: null,
 
     actions: {
+
       /**
         Handles clicks on groups.
 
