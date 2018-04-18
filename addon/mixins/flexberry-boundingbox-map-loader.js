@@ -57,35 +57,4 @@ export default Ember.Mixin.create({
     });
   }
 
-  /**
-    Gets default map model to be displayed in `flexberry-boundingbox` component.
-
-    @method getDefaultBoundingBoxComponentMapModel
-    @return {Promise} Promise, that returning map model.
-
-  getDefaultBoundingBoxComponentMapModel() {
-    // Create map model to be displayed in `flexberry-boundingbox` component.
-    let mapModel = this.get('store').createRecord(this.get('mapModelName'), {
-      name: 'testmap',
-      lat: 0,
-      lng: 0,
-      zoom: 0,
-      public: true,
-      coordinateReferenceSystem: '{"code":"EPSG:4326"}'
-    });
-
-    // Create layer model & add to map model.
-    let openStreetMapLayer = this.get('store').createRecord('new-platform-flexberry-g-i-s-map-layer', {
-      name: 'OSM',
-      type: 'tile',
-      visibility: true,
-      index: 0,
-      coordinateReferenceSystem: '{"code":"EPSG:3857","definition":null}',
-      settings: '{"opacity": 1, "url":"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}'
-    });
-    mapModel.get('mapLayer').pushObject(openStreetMapLayer);
-
-    return mapModel;
-  }
-  */
 });
