@@ -1,0 +1,29 @@
+<div class="ui top attached fluid tabular menu">
+  {{#if _linksSettingsAreAvailableForType}}
+    <a class="tab item {{if (eq _activeTab "links-tab") "active"}}" data-tab="links-tab" onclick={{action "onTabClick"}}>
+      {{t "components.layers-dialogs.edit.tabular-menu.links-tab.caption"}}
+    </a>
+  {{/if}}
+</div>
+{{#if _linksSettingsAreAvailableForType}}
+  <div class="ui bottom attached tab segment {{if (eq _activeTab "links-tab") "active"}}" data-tab="links-tab">    
+    {{#each links as |link index|}}
+      {{#unless link.isDeleted}}
+        {{flexberry-links-editor
+          model=link
+          changeVisibility=(action "allowShowCheckboxChange" (concat linksPropertyPath "." index ".allowShow"))
+          remove=(action removeLink)
+          modelName=parametersModelName
+          modelProjection=parametersModelProjection
+        }}
+      {{/unless}}
+    {{/each}}
+    <div class="field">
+      {{flexberry-button
+        class="fluid"
+        click=(action addLink)
+        caption=(t "components.layers-dialogs.edit.links-segment.add-button.caption")
+      }}
+    </div>
+  </div>
+{{/if}}
