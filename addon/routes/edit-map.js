@@ -100,7 +100,7 @@ export default EditFormRoute.extend({
   */
   model(params, transition) {
     let mapStore = this.get('_mapStore');
-    let mapId = arguments[0].id;
+    let mapId = params.id;
     let modelQuery = mapStore.getMapById(mapId);
     let metadataQuery = this._getMetadata(params.metadata);
 

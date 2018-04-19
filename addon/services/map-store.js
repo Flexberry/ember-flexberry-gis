@@ -13,15 +13,15 @@ export default Ember.Service.extend({
 
   _layerModelname: 'new-platform-flexberry-g-i-s-map-layer',
 
-  _defaultMapName: 'defaultOSMMap',
-
   _defaultModelProjName: 'MapE',
+
+  defaultOSMMap: null,
 
   init() {
     this._super(...arguments);
     let store = this.get('store');
     let mapModel = store.createRecord(this._mapModelName, {
-      name: this._defaultMapName,
+      name: 'defaultOSMMap',
       lat: 0,
       lng: 0,
       zoom: 0,
@@ -37,15 +37,9 @@ export default Ember.Service.extend({
       settings: '{"opacity": 1, "url":"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}'
     });
     mapModel.get('mapLayer').pushObject(openStreetMapLayer);
+    this.set('defaultOSMMap', mapModel);
   },
 
-  findMapInStore(mapName) {
-    mapName = Ember.isNone(mapName) ? this._defaultMapName : mapName;
-    let store = this.get('store');
-    let maps = store.peekAll(this._mapModelName);
-    let map = maps.findBy('name', mapName);
-    return map;
-  },
 
   getMapById(mapId, modelProjName) {
     modelProjName = Ember.isNone(modelProjName) ? this._defaultModelProjName : modelProjName;
