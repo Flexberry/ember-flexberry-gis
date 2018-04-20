@@ -6,6 +6,9 @@ import Kml from './settings/kml';
 
 export default {
   'group': {
+    'tab': {
+      'identification-settings': 'Может быть идентифицирован'
+    }
   },
 
   'tile': {
