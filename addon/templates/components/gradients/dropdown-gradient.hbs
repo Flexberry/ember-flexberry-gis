@@ -1,0 +1,28 @@
+<div class="ui centered grid">
+  <div class="center aligned sixteen wide column">
+    {{#ui-dropdown class="search selection" onChange=(action "onChangeGradient")}}
+      <i class="dropdown icon"></i>
+        <div class="default text">
+          {{t "components.gradients.dropdown-gradient.default-text"}}
+        </div>
+        <div class="menu">
+          {{#each _isGradientList as |gradient|}}
+            <div class="item" data-value="{{gradient.name}}">
+              <canvas class = "flag {{gradient.canName}}"></canvas>
+              {{gradient.name}}
+            </div>
+          {{/each}}
+        </div>
+    {{/ui-dropdown}}
+  </div>
+  <div class="sixteen wide column">
+    {{#if _gradientColorStart}}
+      {{#if _gradientColorEnd}}
+        {{gradients/gradient-edit
+          _gradientColorStart = _gradientColorStart
+          _gradientColorEnd = _gradientColorEnd
+        }}
+      {{/if}}
+    {{/if}}
+  </div>
+</div>

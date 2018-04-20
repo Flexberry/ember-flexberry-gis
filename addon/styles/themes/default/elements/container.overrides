@@ -1192,3 +1192,18 @@ form.flexberry-edit-layermap {
     }
   }
 }
+
+/*********************************************
+            Gradient component
+*********************************************/
+.gradient-edit {
+  .flexberry-colorpicker {
+    border: 1px solid #7a7878;
+  }
+
+  .flag {
+    border: 1px solid #7a7878;
+    width: 24px;
+    height: 14px;
+  }
+}
