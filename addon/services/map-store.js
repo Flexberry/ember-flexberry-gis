@@ -40,7 +40,6 @@ export default Ember.Service.extend({
     this.set('defaultOSMMap', mapModel);
   },
 
-
   getMapById(mapId, modelProjName) {
     modelProjName = Ember.isNone(modelProjName) ? this._defaultModelProjName : modelProjName;
     let store = this.get('store');
