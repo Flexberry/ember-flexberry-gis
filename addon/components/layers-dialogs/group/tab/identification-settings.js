@@ -2,17 +2,47 @@ import Ember from 'ember';
 import layout from '../../../../templates/components/layers-dialogs/group/tab/identification-settings';
 
 export default Ember.Component.extend({
+
   /**
     Reference to component's template.
   */
   layout,
 
+  /**
+    Message locale key.
+
+    @property label
+    @type String
+    @default 'components.layers-dialogs.settings.group.tab.identification-settings'
+  */
   label: 'components.layers-dialogs.settings.group.tab.identification-settings',
 
+  /**
+    Style class for checkbox component.
+
+    @property class
+    @type String
+    @default 'toggle'
+  */
   class: 'toggle',
 
+  /**
+    Current object with canBeIdentified property.
+
+    @property value
+    @type Object
+    @default undefined
+  */
   value: undefined,
 
+  /**
+    Current checkbox value.
+
+    @property _checkboxValue
+    @type Boolean
+    @default undefined
+    @private
+  */
   _checkboxValue: undefined,
 
   _checkboxDidChange: Ember.observer('_checkboxValue', function() {
@@ -22,6 +52,9 @@ export default Ember.Component.extend({
     this.set('value', obj);
   }),
 
+  /**
+    Initializes component.
+  */
   init() {
     this._super(...arguments);
     let value = this.get('value');
