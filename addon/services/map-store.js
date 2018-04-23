@@ -32,7 +32,7 @@ export default Ember.Service.extend({
       lng: 0,
       zoom: 0,
       public: true,
-        coordinateReferenceSystem: '{"code":"EPSG:4326"}'
+      coordinateReferenceSystem: '{"code":"EPSG:4326"}'
     });
     let openStreetMapLayer = store.createRecord(this._layerModelname, {
       name: 'OSM',
