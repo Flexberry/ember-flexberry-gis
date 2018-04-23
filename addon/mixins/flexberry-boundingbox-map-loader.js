@@ -46,12 +46,12 @@ export default Ember.Mixin.create({
     this.mapStore = this.get('_mapStore');
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (Ember.isBlank(mapId)) {
-        resolve(this.mapStore.findMapInStore('defaultOSMMap'));
+        resolve(this.mapStore.get('defaultOSMMap'));
       } else {
         this.mapStore.getMapById(mapId).then(record => {
-          resolve(Ember.isNone(record) ? this.mapStore.findMapInStore('defaultOSMMap') : record);
+          resolve(Ember.isNone(record) ? this.mapStore.get('defaultOSMMap') : record);
         }).catch(() => {
-          resolve(this.mapStore.findMapInStore('defaultOSMMap'));
+          resolve(this.mapStore.get('defaultOSMMap'));
         });
       }
     });
