@@ -1,7 +1,13 @@
 import Ember from 'ember';
 import layout from '../../../../templates/components/layers-dialogs/group/tab/identification-settings';
 
-export default Ember.Component.extend({
+/**
+  Component for identification settings tab in layer settings.
+
+  @class FlexberryIdentificationSettingsComponent
+  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+*/
+let FlexberryIdentificationSettingsComponent = Ember.Component.extend({
 
   /**
     Reference to component's template.
@@ -61,3 +67,5 @@ export default Ember.Component.extend({
     this.set('_checkboxValue', value.canBeIdentified);
   }
 });
+
+export default FlexberryIdentificationSettingsComponent;
