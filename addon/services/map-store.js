@@ -6,6 +6,8 @@ const {
   Builder
 } = Query;
 
+const defaultMapName = 'defaultOSMMap';
+
 export default Ember.Service.extend({
   store: Ember.inject.service(),
 
@@ -19,14 +21,18 @@ export default Ember.Service.extend({
 
   init() {
     this._super(...arguments);
+    this.setupCustomMaps();
+  },
+
+  setupCustomMaps() {
     let store = this.get('store');
     let mapModel = store.createRecord(this._mapModelName, {
-      name: 'defaultOSMMap',
+      name: defaultMapName,
       lat: 0,
       lng: 0,
       zoom: 0,
       public: true,
-      coordinateReferenceSystem: '{"code":"EPSG:4326"}'
+        coordinateReferenceSystem: '{"code":"EPSG:4326"}'
     });
     let openStreetMapLayer = store.createRecord(this._layerModelname, {
       name: 'OSM',

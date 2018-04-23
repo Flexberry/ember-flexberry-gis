@@ -51,7 +51,7 @@ export default EditFormRoute.extend({
   /**
    Service for Map loading from store
    */
-  _mapStore: Ember.inject.service('map-store'),
+  mapStore: Ember.inject.service(),
 
   /**
     Name of model projection to be used as record's properties limitation.
@@ -99,9 +99,8 @@ export default EditFormRoute.extend({
     @return {*} Model of map project for current route.
   */
   model(params, transition) {
-    let mapStore = this.get('_mapStore');
     let mapId = params.id;
-    let modelQuery = mapStore.getMapById(mapId);
+    let modelQuery = this.get('mapStore').getMapById(mapId);
     let metadataQuery = this._getMetadata(params.metadata);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
