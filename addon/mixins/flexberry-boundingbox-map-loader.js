@@ -16,7 +16,7 @@ export default Ember.Mixin.create({
   /**
    Service for Map loading from store
   */
-  _mapStore: Ember.inject.service('map-store'),
+  mapStore: Ember.inject.service(),
 
   /**
     Map model name.
@@ -43,15 +43,14 @@ export default Ember.Mixin.create({
   getBoundingBoxComponentMapModel() {
     let config = Ember.getOwner(this).factoryFor('config:environment').class;
     let mapId = this.get('boundingBoxComponentMapId') || Ember.get(config, 'APP.components.flexberryBoundingbox.mapId');
-    this.mapStore = this.get('_mapStore');
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (Ember.isBlank(mapId)) {
-        resolve(this.mapStore.get('defaultOSMMap'));
+        resolve(this.get('mapStore').get('defaultOSMMap'));
       } else {
-        this.mapStore.getMapById(mapId).then(record => {
-          resolve(Ember.isNone(record) ? this.mapStore.get('defaultOSMMap') : record);
+        this.get('mapStore').getMapById(mapId).then(record => {
+          resolve(Ember.isNone(record) ? this.get('mapStore').get('defaultOSMMap') : record);
         }).catch(() => {
-          resolve(this.mapStore.get('defaultOSMMap'));
+          resolve(this.get('mapStore').get('defaultOSMMap'));
         });
       }
     });

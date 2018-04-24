@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 import { Query } from 'ember-flexberry-data';
+import coordinateReferenceSystems  from '../coordinate-reference-systems/epsg-3857';
 
 const {
   Builder
@@ -26,20 +27,21 @@ export default Ember.Service.extend({
 
   setupCustomMaps() {
     let store = this.get('store');
+    let CRS = JSON.stringify(coordinateReferenceSystems);
     let mapModel = store.createRecord(this._mapModelName, {
       name: defaultMapName,
       lat: 0,
       lng: 0,
       zoom: 0,
       public: true,
-      coordinateReferenceSystem: '{"code":"EPSG:4326"}'
+      coordinateReferenceSystem: CRS
     });
     let openStreetMapLayer = store.createRecord(this._layerModelname, {
       name: 'OSM',
       type: 'tile',
       visibility: true,
       index: 0,
-      coordinateReferenceSystem: '{"code":"EPSG:3857","definition":null}',
+      coordinateReferenceSystem: CRS,
       settings: '{"opacity": 1, "url":"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}'
     });
     mapModel.get('mapLayer').pushObject(openStreetMapLayer);
