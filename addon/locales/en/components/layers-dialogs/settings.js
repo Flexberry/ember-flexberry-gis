@@ -6,6 +6,12 @@ import Kml from './settings/kml';
 
 export default {
   'group': {
+    'tab': {
+      'search-settings': {
+        'can-be-context-searched-label': 'Can be context-searched',
+        'can-be-searched-label': 'Can be searched'
+      }
+    }
   },
 
   'tile': {
