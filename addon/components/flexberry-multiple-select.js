@@ -4,18 +4,38 @@ import layout from '../templates/components/flexberry-multiple-select';
 export default Ember.Component.extend({
   layout,
 
-  items: [],
+  items: ['test1', 'test2', 'test3'],
 
   selectedItems: [],
 
-  heading: undefined,
+  heading: 'Test combobox',
 
   useValueText: false,
 
+  selectorName: 'fb-selector',
+
   init() {
     this._super(...arguments);
-    this.set('heading', 'heading');
-    let test = ['test1', 'test2', 'test3'];
-    this.set('items', test);
+    let items = this.get('items');
+    let heading = this.get('heading');
+
+    this.set('heading', heading);
+    this.set('items', items);
+  },
+
+  didInsertElement() {
+    let selName = this.get('selectorName');
+    this.$('#' + selName)
+    .dropdown({
+      onChange: this.onSelectorChange
+    });
+  },
+
+  onSelectorChange(e) {
+    //не прорабатывает. как заменить?
+
+    Ember.set('selectedItems', e);
+
+    console.log(Ember.get('selectedItems'));
   }
 });
