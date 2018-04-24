@@ -4,10 +4,22 @@
   readonly=readonly
   class=checkboxClass
 }}
+<br>
 {{flexberry-checkbox
   value=_canBeContextSearchedCheckBox
   label=('t' _canBeContextSearchedCheckBoxLabel)
   readonly=readonly
   class=checkboxClass
 }}
-{{flexberry-multiple-select}}
+<br>
+{{flexberry-multiple-select
+  selectedItems=value.searchFields
+  heading=_searchFieldsSelectorLabel
+  allowAdditions=true
+  onChange=(action "test")
+}}
+<br>
+{{flexberry-multiple-select
+  selectedItems=value.contextSearchFields
+  heading=_contextSearchFieldsSelectorLabel
+}}

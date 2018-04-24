@@ -1,12 +1,6 @@
 <select class="ui fluid search dropdown" multiple="" id={{selectorName}}>
   <option value="">{{heading}}</option>
-  {{#if useValueText}}
-    {{#each items as |item|}}
-      <option value="{{item.value}}">{{item.text}}</option>
-    {{/each}}
-  {{else}}
-    {{#each items as |item|}}
-      <option value="{{item}}">{{item}}</option>
-    {{/each}}
-  {{/if}}
+  {{#each items as |item|}}
+    <option value="{{item}}">{{item}}</option>
+  {{/each}}
 </select>
