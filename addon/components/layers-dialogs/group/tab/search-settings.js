@@ -60,15 +60,6 @@ export default Ember.Component.extend({
   },
 
   /**
-    Current layer.
-
-    @property _layer
-    @type Object
-    @default undefined
-  */
-  _layer: undefined,
-
-  /**
     Current can be searched checkbox value.
 
     @property _canBeSearchedCheckBox
@@ -108,8 +99,6 @@ export default Ember.Component.extend({
     let value = this.get('value');
     this.set('_canBeSearchedCheckBox', value.canBeSearched);
     this.set('_canBeContextSearchedCheckBox', value.canBeContextSearched);
-
-    console.log(this.get('_layer'));
   },
 
   actions: {

@@ -42,7 +42,7 @@
       {{/if}}
       {{#if _searchSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "search-tab") "active"}}" data-tab="search-tab">
-          {{layers-dialogs/group/tab/search-settings value=_layer.settings.searchSettings _layer=_layer}}
+          {{layers-dialogs/group/tab/search-settings value=_layer.settings.searchSettings}}
         </div>
       {{/if}}
       {{#if _legendSettingsAreAvailableForType}}
