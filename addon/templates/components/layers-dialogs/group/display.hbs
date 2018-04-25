@@ -42,8 +42,7 @@
       {{/if}}
       {{#if _searchSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "search-tab") "active"}}" data-tab="search-tab">
-          {{flexberry-jsonarea value=_layer.settings.searchSettings}}
-          {{layers-dialogs/group/tab/search-settings value=_layer.settings.searchSettings}}
+          {{layers-dialogs/group/tab/search-settings value=_layer.settings.searchSettings _layer=_layer}}
         </div>
       {{/if}}
       {{#if _legendSettingsAreAvailableForType}}

@@ -1,6 +1,11 @@
-<select class="ui fluid search dropdown" multiple="" id={{selectorName}}>
-  <option value="">{{heading}}</option>
-  {{#each items as |item|}}
-    <option value="{{item}}">{{item}}</option>
-  {{/each}}
-</select>
+<label>{{heading}}</label>
+<div class="ui fluid multiple search selection dropdown {{selectorName}}">
+  <input name="{{selectorName}}" type="hidden" value={{selectedItems}}>
+  <i class="dropdown icon"></i>
+  <div class="default text">{{heading}}</div>
+  <div class="menu">
+    {{#each items as |item|}}
+      <div class="item" data-value="{{item}}">{{item}}</div>
+    {{/each}}
+  </div>
+</div>

@@ -9,7 +9,9 @@ export default {
     'tab': {
       'search-settings': {
         'can-be-context-searched-label': 'Может быть найдено в контексте',
-        'can-be-searched-label': 'Может быть найдено'
+        'can-be-searched-label': 'Может быть найдено',
+        'search-fields-selector': 'Поля для поиска',
+        'context-search-fields-selector': 'Поля для контекстного поиска'
       }
     }
   },

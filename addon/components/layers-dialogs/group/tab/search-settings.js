@@ -32,9 +32,9 @@ export default Ember.Component.extend({
   */
   _canBeContextSearchedCheckBoxLabel: 'components.layers-dialogs.settings.group.tab.search-settings.can-be-context-searched-label',
 
-  _contextSearchFieldsSelectorLabel: 'contextSearchLabel',
+  _contextSearchFieldsSelectorLabel: 'components.layers-dialogs.settings.group.tab.search-settings.context-search-fields-selector',
 
-  _searchFieldsSelectorLabel: 'searchLabel',
+  _searchFieldsSelectorLabel: 'components.layers-dialogs.settings.group.tab.search-settings.search-fields-selector',
 
   /**
     Style class for checkbox component.
@@ -58,6 +58,15 @@ export default Ember.Component.extend({
     'contextSearchFields': undefined,
     'searchFields': undefined
   },
+
+  /**
+    Current layer.
+
+    @property _layer
+    @type Object
+    @default undefined
+  */
+  _layer: undefined,
 
   /**
     Current can be searched checkbox value.
@@ -99,11 +108,10 @@ export default Ember.Component.extend({
     let value = this.get('value');
     this.set('_canBeSearchedCheckBox', value.canBeSearched);
     this.set('_canBeContextSearchedCheckBox', value.canBeContextSearched);
+
+    console.log(this.get('_layer'));
   },
 
   actions: {
-    test(e) {
-      console.log(e);
-    }
   }
 });
