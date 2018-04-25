@@ -127,7 +127,7 @@ module.exports = function (environment) {
 
     // Change base URL to force paths to application assets be relative.
     ENV.baseURL = '/' + ENV.repositoryName + '/' + brunch + '/';
-    ENV.locationType = 'none';
+    ENV.locationType = 'hash';
   }
 
   return ENV;
