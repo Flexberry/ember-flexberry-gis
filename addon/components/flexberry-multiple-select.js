@@ -28,11 +28,11 @@ export default Ember.Component.extend({
   /**
     Dropdown title.
 
-    @property heading
+    @property title
     @type String
     @default undefined
   */
-  heading: undefined,
+  title: undefined,
 
   /**
     Flag, allows or forbids manual addition.
@@ -44,13 +44,6 @@ export default Ember.Component.extend({
   allowAdditions: false,
 
   selectorName: 'fb-selector',
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-  },
 
   /**
     Hook, working after element insertion
@@ -68,8 +61,10 @@ export default Ember.Component.extend({
           itemArray = null;
         }
 
-        this.set('selectedItems', itemArray);
-        this.sendAction('onChange', itemArray);
+        Ember.run(() => {
+          this.set('selectedItems', itemArray);
+          this.sendAction('onChange', itemArray);
+        });
       }
     });
   }

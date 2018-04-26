@@ -57,50 +57,5 @@ export default Ember.Component.extend({
     'canBeContextSearched': undefined,
     'contextSearchFields': undefined,
     'searchFields': undefined
-  },
-
-  /**
-    Current can be searched checkbox value.
-
-    @property _canBeSearchedCheckBox
-    @type Boolean
-    @default undefined
-    @private
-  */
-  _canBeSearchedCheckBox: undefined,
-
-  /**
-    Current can be context-searched checkbox value.
-
-    @property _canBeContextSearchedCheckBox
-    @type Boolean
-    @default undefined
-    @private
-  */
-  _canBeContextSearchedCheckBox: undefined,
-
-  /**
-    Modifies `value` when `_canBeSearchedCheckBox` or `_canBeContextSearchedCheckBox` changes.
-
-    @method _checkboxDidChange
-  */
-  _checkboxDidChange: Ember.observer('_canBeSearchedCheckBox', '_canBeContextSearchedCheckBox', 'value', function() {
-    let val = this.get('value');
-    val.canBeSearched = this.get('_canBeSearchedCheckBox');
-    val.canBeContextSearched = this.get('_canBeContextSearchedCheckBox');
-    this.set('value', val);
-  }),
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-    let value = this.get('value');
-    this.set('_canBeSearchedCheckBox', value.canBeSearched);
-    this.set('_canBeContextSearchedCheckBox', value.canBeContextSearched);
-  },
-
-  actions: {
   }
 });

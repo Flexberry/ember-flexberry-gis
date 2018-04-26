@@ -2,7 +2,7 @@
   <div class="row">
     <div class="column">
       {{flexberry-checkbox
-        value=_canBeSearchedCheckBox
+        value=value.canBeSearched
         label=('t' _canBeSearchedCheckBoxLabel)
         readonly=readonly
         class=checkboxClass
@@ -12,7 +12,7 @@
   <div class="row">
     <div class="column">
       {{flexberry-checkbox
-        value=_canBeContextSearchedCheckBox
+        value=value.canBeContextSearched
         label=('t' _canBeContextSearchedCheckBoxLabel)
         readonly=readonly
         class=checkboxClass
@@ -22,6 +22,7 @@
   <div class="row">
     <div class="column">
       {{flexberry-multiple-select
+        items=_availableLayerFields
         selectedItems=value.searchFields
         heading=('t' _searchFieldsSelectorLabel)
         allowAdditions=true
@@ -31,6 +32,7 @@
   <div class="row">
     <div class="column">
       {{flexberry-multiple-select
+        items=_availableLayerFields
         selectedItems=value.contextSearchFields
         heading=('t' _contextSearchFieldsSelectorLabel)
         allowAdditions=true
