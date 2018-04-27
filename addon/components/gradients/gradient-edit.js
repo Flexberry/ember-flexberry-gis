@@ -19,7 +19,7 @@ export default Ember.Component.extend({
     @type string
     @default null
   */
-  _gradientColorStart: null,
+  _gradientColorStart: "#ff0000",
 
   /**
     The final color of the gradient.
@@ -27,7 +27,7 @@ export default Ember.Component.extend({
     @type string
     @default null
   */
-  _gradientColorEnd: null,
+  _gradientColorEnd: "#ffff00",
 
   /**
       Reference to component's template.
@@ -41,6 +41,14 @@ export default Ember.Component.extend({
     @default 'New gradient'
   */
   _nameGradient: 'New gradient',
+
+  /**
+    The class name of preview canvas gradient.
+    @property _previewCanvasName
+    @type string
+    @default 'null'
+  */
+  _previewCanvasName: null,
 
   /**
     Injected param-gradient-service.
@@ -82,14 +90,14 @@ export default Ember.Component.extend({
   */
   _gradientDrawing() {
     let paramGrad = this.get('service');
-    paramGrad.gradientDrawing('myCanvas', this.get('_gradientColorStart'), this.get('_gradientColorEnd'));
+    paramGrad.gradientDrawing(this.get('_previewCanvasName'), this.get('_gradientColorStart'), this.get('_gradientColorEnd'));
   },
   /**
     Initializes DOM-related component's properties.
   */
   didInsertElement() {
     let paramGrad = this.get('service');
-    paramGrad.gradientDrawing('myCanvas', this.get('_gradientColorStart'), this.get('_gradientColorEnd'));
+    paramGrad.gradientDrawing(this.get('_previewCanvasName'), this.get('_gradientColorStart'), this.get('_gradientColorEnd'));
   },
 
   actions: {

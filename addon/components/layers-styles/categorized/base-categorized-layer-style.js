@@ -141,6 +141,56 @@ export default Ember.Component.extend({
   layerType: null,
 
   /**
+    Flag indicates when stroke gradient enable.
+
+    @property _strokeGradientEnable
+    @type Boolean
+    @default false
+    @private
+  */
+  _strokeGradientEnable: false,
+
+  /**
+    Flag indicates when fill gradient enable.
+
+    @property _fillGradientEnable
+    @type Boolean
+    @default false
+    @private
+  */
+  _fillGradientEnable: false,
+
+  /**
+    First stroke color of automatic set color range. in HEX
+
+    @property _strokeGradientColorStart
+    @type String
+    @default null
+    @private
+  */
+  _strokeGradientColorStart: null,
+
+  /**
+    Last stroke color of automatic set color range. in HEX
+
+    @property _strokeGradientColorEnd
+    @type String
+    @default null
+    @private
+  */
+  _strokeGradientColorEnd: null,
+
+  /**
+    First fill color of automatic set color range. in HEX
+
+    @property _fillGradientColorStart
+    @type String
+    @default null
+    @private
+  */
+  _fillGradientColorStart: null,
+
+  /**
     Observers changes in categories.
     Renderes symbols related to them.
 
@@ -399,6 +449,6 @@ export default Ember.Component.extend({
         e.preventDefault();
         this.send('onEditingCellFocusOut', inputText, e);
       }
-    }
+    },
   }
 });

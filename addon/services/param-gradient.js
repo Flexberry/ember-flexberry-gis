@@ -29,9 +29,20 @@ export default Ember.Service.extend({
   */
   addGradientList(name, colorS, colorE){
     let gradient = this.get('_isGradientList');
-    gradient.push({ 'name': name, 'colorS': colorS, 'colorE': colorE, 'canName': 'grad'+ gradient.length });
+    let existingGradientItem = null;
 
-    this.set('_isGradientList', gradient);
+    if (gradient!=null){
+      for (let i in gradient) {
+        if (gradient[i].name === name) {
+          existingGradientItem = name;
+        }
+      }
+    }
+
+    if (existingGradientItem === null){
+      gradient.push({ 'name': name, 'colorS': colorS, 'colorE': colorE, 'canName': name });
+      this.set('_isGradientList', gradient);
+    }
   },
 
   /**
@@ -43,15 +54,19 @@ export default Ember.Service.extend({
     @param {Boolean} editGradient Forms edit gradient.
   */
   gradientDrawing(classCanvas, colorStart, colorEnd) {
-    let ctx = Ember.$('.'+ classCanvas)[0].getContext('2d');
-    let w = 300;
-    let h = 150;
+    let canvases = Ember.$('.'+ classCanvas);
+    for (let i = 0 ; i < canvases.length; i++)  {
+      let ctx = canvases[i].getContext('2d');
+      let w = 150;
+      let h = 75;
+      let grd = ctx.createLinearGradient(0, 0, w, 0);
 
-    let grd = ctx.createLinearGradient(0, 0, w, 0);
-    grd.addColorStop(0, colorStart);
-    grd.addColorStop(1, colorEnd);
+      grd.addColorStop(0, colorStart);
+      grd.addColorStop(1, colorEnd);
 
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, w, h);
+    }
+    
   },
 });

@@ -1,0 +1,47 @@
+<div class="toolbar">
+
+  {{flexberry-checkbox
+    label= "градиент заливки"
+    value=fillGradientEnable
+  }}
+  {{#if fillGradientEnable}}
+    {{gradients/dropdown-gradient
+      _gradientColorStart = fillGradientColorStart
+      _gradientColorEnd = fillGradientColorEnd
+      _previewCanvasName=_fillGradientPreviewName
+      onChangeGradient = (action "fillGradientPreviewSwitch")
+    }}
+    <canvas class="{{_fillGradientPreviewName}}" {{action 'fillGradientPreviewSwitch'}}>
+    </canvas>
+    {{#if _showFillGradientEdit}}
+      {{gradients/gradient-edit
+        _gradientColorStart = fillGradientColorStart
+        _gradientColorEnd = fillGradientColorEnd
+        _previewCanvasName=_fillGradientPreviewName
+      }}
+    {{/if}}
+  {{/if}}
+
+  {{flexberry-checkbox
+    label= "градиент обводки"
+    value=strokeGradientEnable
+  }}
+  {{#if strokeGradientEnable}}
+    {{gradients/dropdown-gradient
+      _gradientColorStart = strokeGradientColorStart
+      _gradientColorEnd = strokeGradientColorEnd
+      _previewCanvasName=_strokeGradientPreviewName
+      onChangeGradient = (action "strokeGradientPreviewSwitch")
+    }}
+    <canvas class="{{_strokeGradientPreviewName}}" {{action 'strokeGradientPreviewSwitch'}} >
+    </canvas>
+    {{#if _showStrokeGradientEdit}}
+      {{gradients/gradient-edit
+        _gradientColorStart = strokeGradientColorStart
+        _gradientColorEnd = strokeGradientColorEnd
+        _previewCanvasName=_strokeGradientPreviewName
+      }}
+    {{/if}}
+  {{/if}}
+
+</div>

@@ -7,7 +7,6 @@ import layout from '../templates/components/layers-styles-editor';
 
 /**
   Component containing GUI for layers-styles editor.
-
   @class LayersStylesEditorComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
@@ -27,7 +26,6 @@ export default Ember.Component.extend({
 
   /**
     Flag: indicates whether leaflet layer is loading now.
-
     @property _leafletLayerIsLoading
     @type Boolean
     @default false
@@ -37,7 +35,6 @@ export default Ember.Component.extend({
 
   /**
     Flag: indicates leaflet layer loading error.
-
     @property _leafletLayerLoadingIsError
     @type Boolean
     @default false
@@ -48,7 +45,6 @@ export default Ember.Component.extend({
   /**
     Flag: indicates that style-editor is checked on flexberry-edit-layermap
     and leaflet layer must be load.
-
     @property layerLoaderIsReady
     @type Boolean
     @default false
@@ -58,7 +54,6 @@ export default Ember.Component.extend({
 
   /**
     Related leaflet layer.
-
     @property _leafletLayer
     @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
     @default null
@@ -68,7 +63,6 @@ export default Ember.Component.extend({
 
   /**
     Component's wrapping <div> CSS-classes names.
-
     @property classNames
     @type String[]
     @default ['layers-styles-editor']
@@ -77,7 +71,6 @@ export default Ember.Component.extend({
 
   /**
     Hash containing style settings.
-
     @property styleSettings
     @type Object
     @default null
@@ -86,7 +79,6 @@ export default Ember.Component.extend({
 
   /**
     Hash containing layer display settings.
-
     @property displaySettings
     @type Object
     @default null
@@ -95,7 +87,6 @@ export default Ember.Component.extend({
 
   /**
     Related layer's type.
-
     @property layerType
     @type String
     @default null
@@ -117,7 +108,6 @@ export default Ember.Component.extend({
 
   /**
     Method returning promise which will be then resolved with leaflet layer (just loaded or already cached).
-
     @method _getLeafletLayer
     @private
     @return {<a href="https://emberjs.com/api/ember/2.4/classes/RSVP.Promise">Ember.RSVP.Promise</a>}
@@ -153,7 +143,6 @@ export default Ember.Component.extend({
 
   /**
     Reference to 'layers-styles-renderer' service.
-
     @property _layersStylesRenderer
     @type LayersStylesRendererService
     @private
@@ -163,7 +152,6 @@ export default Ember.Component.extend({
   /**
     Available layer styles.
     Initializes in component's 'init' method.
-
     @property _availableLayerStyles
     @type Object[]
     @default null
@@ -173,7 +161,6 @@ export default Ember.Component.extend({
 
   /**
     Available layer styles captions.
-
     @property _availableLayerStylesCaptions
     @type String[]
     @readonly
@@ -194,7 +181,6 @@ export default Ember.Component.extend({
 
   /**
     Selected layer style caption.
-
     @property _selectedLayerStyleCaption
     @type String
     @default null
@@ -204,7 +190,6 @@ export default Ember.Component.extend({
 
   /**
     Observes changes in '_availableLayerStylesCaptions' or '_layer.settings.styleSettings.type' and computes '_selectedLayerStyleCaption'.
-
     @method _availableLayerStylesCaptionsOrSelectedLayerStyleDidChange
     @private
   */
@@ -227,7 +212,6 @@ export default Ember.Component.extend({
 
   /**
     Observes changes in '_selectedLayerStyleCaption' property and changes style type in related layer settings hash.
-
     @method _selectedLayerStyleCaptionDidChange
     @private
   */
@@ -237,7 +221,6 @@ export default Ember.Component.extend({
 
   /**
     Sets selected layer style by its i18n-ed caption.
-
     @method _setSelectedLayerStyle
     @private
   */
@@ -263,7 +246,6 @@ export default Ember.Component.extend({
 
   /**
     Observes changes in '_layer.settings.styleSettings.type' and computes default style setings.
-
     @method _selectedLayerStyleDidChange
     @private
   */
@@ -273,7 +255,6 @@ export default Ember.Component.extend({
 
   /**
     Previosly selected layer style.
-
     @property _previouslySelectedLayerStyle
     @type string
     @private
@@ -282,7 +263,6 @@ export default Ember.Component.extend({
 
   /**
     Sets default style settings withrespect to '_layer.settings.styleSettings.type'.
-
     @method _setSelectedLayerStyleDefaultSettings
     @private
   */

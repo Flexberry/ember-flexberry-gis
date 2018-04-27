@@ -2,7 +2,7 @@
   <div class="six wide column">
     <div class="field">
       <label>
-        {{t "components.gradients.gradient-edit.gradientColorStart"}}
+        {{t "gradients.gradient-edit.gradientColorStart"}}
       </label>
       {{flexberry-colorpicker
         value=_gradientColorStart
@@ -11,16 +11,12 @@
     </div>
     <div class="field">
       <label>
-        {{t "components.gradients.gradient-edit.gradientColorEnd"}}
+        {{t "gradients.gradient-edit.gradientColorEnd"}}
       </label>
       {{flexberry-colorpicker
         value=_gradientColorEnd
         change=(action "onGradientColorEndChange")
       }}
     </div>
-  </div>
-  <div class="three wide column">
-    <canvas class="myCanvas" >
-    </canvas>
   </div>
 </div>

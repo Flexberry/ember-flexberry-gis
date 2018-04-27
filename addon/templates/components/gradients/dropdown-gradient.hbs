@@ -3,7 +3,7 @@
     {{#ui-dropdown class="search selection" onChange=(action "onChangeGradient")}}
       <i class="dropdown icon"></i>
         <div class="default text">
-          {{t "components.gradients.dropdown-gradient.default-text"}}
+          {{t "gradients.dropdown-gradient.default-text"}}
         </div>
         <div class="menu">
           {{#each _isGradientList as |gradient|}}
@@ -14,15 +14,5 @@
           {{/each}}
         </div>
     {{/ui-dropdown}}
-  </div>
-  <div class="sixteen wide column">
-    {{#if _gradientColorStart}}
-      {{#if _gradientColorEnd}}
-        {{gradients/gradient-edit
-          _gradientColorStart = _gradientColorStart
-          _gradientColorEnd = _gradientColorEnd
-        }}
-      {{/if}}
-    {{/if}}
   </div>
 </div>

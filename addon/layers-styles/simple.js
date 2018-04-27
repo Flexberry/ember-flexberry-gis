@@ -39,7 +39,7 @@ export default BaseLayerStyle.extend({
         this._renderOnLeafletLayer({ leafletLayer: layer, style });
       });
     } else if (leafletLayer instanceof L.Path) {
-      this._renderOnLeafletPath({ path: leafletLayer, style });
+          this._renderOnLeafletPath({ path: leafletLayer, style });
     } else if (leafletLayer instanceof L.Marker) {
       this._renderOnLeafletMarker({ marker: leafletLayer, style });
     }

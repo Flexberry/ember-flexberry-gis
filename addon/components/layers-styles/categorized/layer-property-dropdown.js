@@ -154,7 +154,6 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this._super(...arguments);
-
     let $dropdown = this.$().dropdown({
       onChange: (newValue) => {
         this.set('value', newValue);

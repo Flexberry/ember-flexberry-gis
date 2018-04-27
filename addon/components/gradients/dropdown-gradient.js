@@ -43,6 +43,14 @@ export default Ember.Component.extend({
   _gradientColorEnd: null,
 
   /**
+    The class name of preview canvas gradient.
+    @property _previewCanvasName
+    @type string
+    @default 'null'
+  */
+  _previewCanvasName:null,
+
+  /**
     Injected param-gradient-service.
 
     @property service
@@ -63,7 +71,7 @@ export default Ember.Component.extend({
     let owner = Ember.getOwner(this);
     let isGradients = owner.knownForType('gradient');
     for (let i in isGradients) {
-      paramGrad.addGradientList(isGradients[i]['name'], isGradients[i]['colorS'], isGradients[i]['colorE']);
+      paramGrad.addGradientList(isGradients[i].name, isGradients[i].colorS, isGradients[i].colorE);
     }
   },
 
@@ -90,7 +98,7 @@ export default Ember.Component.extend({
 
     for (let i in isGradients)
     {
-      paramGrad.gradientDrawing(isGradients[i]['canName'], isGradients[i]['colorS'], isGradients[i]['colorE']);
+      paramGrad.gradientDrawing(isGradients[i].canName, isGradients[i].colorS, isGradients[i].colorE);
     }
   },
 
@@ -106,7 +114,7 @@ export default Ember.Component.extend({
     let paramGrad = this.get('service');
     let isGradients = paramGrad.getGradientList();
 
-    isGradients.forEach(function(item){
+    isGradients.forEach(function(item) {
       if (item.name === search) {
         colorsGradient.push(item.canName, item.colorS, item.colorE);
       }
@@ -124,8 +132,8 @@ export default Ember.Component.extend({
     onChangeGradient(element, value) {
       let paramGrad = this.get('service');
       let gradientColor = this.getColorGradient(value);
-
       paramGrad.gradientDrawing(gradientColor[0], gradientColor[1], gradientColor[2]);
+      paramGrad.gradientDrawing(this.get('_previewCanvasName'), gradientColor[1], gradientColor[2]);
 
       this.set('_gradientColorStart', gradientColor[1]);
       this.set('_gradientColorEnd', gradientColor[2]);

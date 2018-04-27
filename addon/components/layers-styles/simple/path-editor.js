@@ -7,7 +7,6 @@ import layout from '../../../templates/components/layers-styles/simple/path-edit
 
 /**
   Component containing GUI for 'simple' layers-style 'path' style settings.
-
   @class SimpleLayersStylePathEditorComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
@@ -19,7 +18,6 @@ export default Ember.Component.extend({
 
   /**
     Component's wrapping <div> CSS-classes names.
-
     @property classNames
     @type String[]
     @default ['simple-layers-style-path-editor']
@@ -28,7 +26,6 @@ export default Ember.Component.extend({
 
   /**
     Hash containing path style settings.
-
     @property styleSettings
     @type Object
     @default null
@@ -38,7 +35,6 @@ export default Ember.Component.extend({
   actions: {
     /**
       Handles changes in style settings.
-
       @method actions.onStyleSettingsChange
     */
     onStyleSettingsChange() {

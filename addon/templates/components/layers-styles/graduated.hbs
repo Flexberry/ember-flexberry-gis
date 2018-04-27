@@ -1,5 +1,4 @@
 <div class="toolbar">
-  {{gradients/dropdown-gradient}}
   <div class="add-and-remove-categories-segment">
     {{flexberry-button
       class="add-category-button"
@@ -14,6 +13,14 @@
     }}
   </div>
   <div class="classify-categories-segment">
+    {{layers-styles/categorized/gradient-tools
+      strokeGradientEnable=_strokeGradientEnable
+      fillGradientEnable=_fillGradientEnable
+      strokeGradientColorStart=_strokeGradientColorStart
+      strokeGradientColorEnd=_strokeGradientColorEnd
+      fillGradientColorStart=_fillGradientColorStart
+      fillGradientColorEnd=_fillGradientColorEnd
+    }}
     {{layers-styles/categorized/layer-property-dropdown
       displaySettings=displaySettings
       propertyType="number"
