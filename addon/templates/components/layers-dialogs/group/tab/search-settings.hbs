@@ -1,4 +1,4 @@
-<div class="ui grid">
+<div class="ui grid  {{if _leafletObjectIsLoading "loading"}}">
   <div class="row">
     <div class="column">
       {{flexberry-checkbox
@@ -22,7 +22,7 @@
   <div class="row">
     <div class="column">
       {{flexberry-multiple-select
-        items=_availableLayerFields
+        items=fields
         selectedItems=value.searchFields
         heading=('t' _searchFieldsSelectorLabel)
         allowAdditions=true
@@ -32,7 +32,7 @@
   <div class="row">
     <div class="column">
       {{flexberry-multiple-select
-        items=_availableLayerFields
+        items=fields
         selectedItems=value.contextSearchFields
         heading=('t' _contextSearchFieldsSelectorLabel)
         allowAdditions=true

@@ -32,9 +32,71 @@ export default Ember.Component.extend({
   */
   _canBeContextSearchedCheckBoxLabel: 'components.layers-dialogs.settings.group.tab.search-settings.can-be-context-searched-label',
 
+  /**
+    Label for context-searched fields selector.
+
+    @property _contextSearchFieldsSelectorLabel
+    @type String
+    @default 'components.layers-dialogs.settings.group.tab.search-settings.context-search-fields-selector'
+  */
   _contextSearchFieldsSelectorLabel: 'components.layers-dialogs.settings.group.tab.search-settings.context-search-fields-selector',
 
+  /**
+    Label for searched fields selector.
+
+    @property _searchFieldsSelectorLabel
+    @type String
+    @default 'components.layers-dialogs.settings.group.tab.search-settings.search-fields-selector'
+  */
   _searchFieldsSelectorLabel: 'components.layers-dialogs.settings.group.tab.search-settings.search-fields-selector',
+
+  /**
+  Leaflet's layer type.
+  @property _layerType
+  @type Object
+  @default undefined
+  @private
+*/
+  _layerType: undefined,
+
+  /**
+    Leaflet's layer object.
+
+    @property _leafletObject
+    @type Object
+    @default undefined
+    @private
+  */
+  _leafletObject: undefined,
+
+  /**
+    Method to create leaflet's layer object.
+
+    @property _leafletObjectMethod
+    @type Function
+    @default undefined
+    @private
+  */
+  _leafletObjectMethod: undefined,
+
+  /**
+    Indicates when leaflet's layer object is loading.
+
+    @property _leafletObjectIsLoading
+    @type Boolean
+    @default false
+    @private
+  */
+  _leafletObjectIsLoading: false,
+
+  /**
+    Array containing Fields in current leaflet object.
+
+    @property fields
+    @type Array
+    @default Ember.A()
+  */
+  fields: Ember.A(),
 
   /**
     Style class for checkbox component.
@@ -57,5 +119,30 @@ export default Ember.Component.extend({
     'canBeContextSearched': undefined,
     'contextSearchFields': undefined,
     'searchFields': undefined
+  },
+
+  /**
+    Initializes page's DOM-related properties.
+  */
+  didInsertElement() {
+    let _this = this;
+    let leafletObject = _this.get('_leafletObject');
+    if (Ember.isNone(leafletObject)) {
+      let type = _this.get('_layerType');
+      let leafletObjectMethod = _this.get('_leafletObjectMethod');
+      if (!(Ember.isBlank(leafletObjectMethod) || Ember.isBlank(type))) {
+        _this.set('_leafletObjectIsLoading', true);
+        leafletObjectMethod().then(leafletObject => {
+          _this.set('_leafletObject', leafletObject);
+          _this.set('_leafletObjectIsLoading', false);
+          let layerClass = Ember.getOwner(_this).knownForType('layer', type);
+          if (!Ember.isBlank(layerClass)) {
+            _this.set('fields', Ember.A(layerClass.getLayerProperties(leafletObject)));
+          }
+        }).catch(() => {
+          _this.set('_leafletObjectIsLoading', false);
+        });
+      }
+    }
   }
 });

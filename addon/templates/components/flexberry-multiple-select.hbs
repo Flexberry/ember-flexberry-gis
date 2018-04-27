@@ -4,7 +4,7 @@
   <i class="dropdown icon"></i>
   <div class="default text">{{title}}</div>
   <div class="menu">
-    {{#each items as |item|}}
+    {{#each _usedItems as |item|}}
       <div class="item" data-value="{{item}}">{{item}}</div>
     {{/each}}
   </div>
