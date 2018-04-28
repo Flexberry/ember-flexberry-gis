@@ -25,7 +25,7 @@ export default Ember.Component.extend({
   layout,
 
   /**
-    Array with dropdown items.
+    Array with all dropdown items.
 
     @property items
     @type Object
@@ -60,8 +60,22 @@ export default Ember.Component.extend({
   */
   allowAdditions: false,
 
+  /**
+    Classname.
+
+    @property selectorName
+    @type String
+    @default 'fb-selector'
+  */
   selectorName: 'fb-selector',
 
+  /**
+    Array with not-selected dropdown items.
+
+    @property _usedItems
+    @type Object
+    @readonly
+  */
   _usedItems: Ember.computed('items', 'selectedItems', function() {
     let items = this.get('items');
     let selectedItems = this.get('selectedItems');
@@ -69,15 +83,14 @@ export default Ember.Component.extend({
       return items;
     }
 
-    return items.removeObjects(selectedItems);
+    let ret = Ember.A();
+    items.forEach((item, i, items) => {
+      if (selectedItems.indexOf(item) === -1) {
+        ret.push(item);
+      }
+    });
+    return ret;
   }),
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-
-  },
 
   /**
     Hook, working after element insertion
