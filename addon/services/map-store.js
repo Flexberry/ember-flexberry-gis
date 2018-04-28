@@ -1,7 +1,6 @@
 import Ember from 'ember';
-
 import { Query } from 'ember-flexberry-data';
-import coordinateReferenceSystems  from '../coordinate-reference-systems/epsg-3857';
+import epsg3857 from '../coordinate-reference-systems/epsg-3857';
 
 const {
   Builder
@@ -27,21 +26,21 @@ export default Ember.Service.extend({
 
   setupCustomMaps() {
     let store = this.get('store');
-    let CRS = JSON.stringify(coordinateReferenceSystems);
-    let mapModel = store.createRecord(this._mapModelName, {
+    let crs = JSON.stringify(epsg3857);
+    let mapModel = store.createRecord(this.get('_mapModelName'), {
       name: defaultMapName,
       lat: 0,
       lng: 0,
       zoom: 0,
       public: true,
-      coordinateReferenceSystem: CRS
+      coordinateReferenceSystem: crs
     });
-    let openStreetMapLayer = store.createRecord(this._layerModelname, {
+    let openStreetMapLayer = store.createRecord(this.get('_layerModelname'), {
       name: 'OSM',
       type: 'tile',
       visibility: true,
       index: 0,
-      coordinateReferenceSystem: CRS,
+      coordinateReferenceSystem: crs,
       settings: '{"opacity": 1, "url":"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}'
     });
     mapModel.get('mapLayer').pushObject(openStreetMapLayer);
@@ -49,14 +48,12 @@ export default Ember.Service.extend({
   },
 
   getMapById(mapId, modelProjName) {
-    modelProjName = Ember.isNone(modelProjName) ? this._defaultModelProjName : modelProjName;
+    modelProjName = Ember.isNone(modelProjName) ? this.get('_defaultModelProjName') : modelProjName;
     let store = this.get('store');
     let builder = new Builder(store)
-    .from(this._mapModelName)
-    .selectByProjection(modelProjName)
-    .byId(mapId);
-    let ret = store.queryRecord(this._mapModelName, builder.build());
-    return ret;
+      .from(this.get('_mapModelName'))
+      .selectByProjection(modelProjName)
+      .byId(mapId);
+    return store.queryRecord(this.this.get('_mapModelName'), builder.build());
   }
-
 });
