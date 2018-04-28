@@ -11,20 +11,10 @@ import Ember from 'ember';
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
 export default Ember.Mixin.create({
-  store: Ember.inject.service(),
-
   /**
    Service for Map loading from store
   */
   mapStore: Ember.inject.service(),
-
-  /**
-    Map model name.
-    @property mapModelName
-    @type String
-    @default 'new-platform-flexberry-g-i-s-map'
-  */
-  mapModelName: 'new-platform-flexberry-g-i-s-map',
 
   /**
     Map id for boundingbox component.
@@ -44,16 +34,16 @@ export default Ember.Mixin.create({
     let config = Ember.getOwner(this).factoryFor('config:environment').class;
     let mapId = this.get('boundingBoxComponentMapId') || Ember.get(config, 'APP.components.flexberryBoundingbox.mapId');
     return new Ember.RSVP.Promise((resolve, reject) => {
+      let osmmap = this.get('mapStore.osmmap');
       if (Ember.isBlank(mapId)) {
-        resolve(this.get('mapStore').get('defaultOSMMap'));
+        resolve(osmmap);
       } else {
         this.get('mapStore').getMapById(mapId).then(record => {
-          resolve(Ember.isNone(record) ? this.get('mapStore').get('defaultOSMMap') : record);
+          resolve(Ember.isNone(record));
         }).catch(() => {
-          resolve(this.get('mapStore').get('defaultOSMMap'));
+          resolve(osmmap);
         });
       }
     });
   }
-
 });

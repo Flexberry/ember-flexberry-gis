@@ -6,47 +6,85 @@ const {
   Builder
 } = Query;
 
-const defaultMapName = 'defaultOSMMap';
+/**
+  Service for interact with maps
 
+  @class MapStoreService
+  @extends Ember.Service
+*/
 export default Ember.Service.extend({
-  store: Ember.inject.service(),
 
+  /**
+   Model name for store operations with Map
+
+   @property _mapModelName
+   @private
+   */
   _mapModelName: 'new-platform-flexberry-g-i-s-map',
 
+  /**
+   Model name for store operations with MapLayer
+
+   @property _layerModelName
+   @private
+   */
   _layerModelname: 'new-platform-flexberry-g-i-s-map-layer',
 
+  /**
+   Default projection for Map loading
+   */
   _defaultModelProjName: 'MapE',
 
-  defaultOSMMap: null,
+  store: Ember.inject.service(),
+
+  /**
+   Map stub with one layer based on OSM public tile service
+   @property osmmap
+   */
+  osmmap: null,
 
   init() {
     this._super(...arguments);
     this.setupCustomMaps();
   },
 
+  /**
+   Create stubs for quick map access
+
+   @method setupCustomMaps
+   */
   setupCustomMaps() {
     let store = this.get('store');
     let crs = JSON.stringify(epsg3857);
     let mapModel = store.createRecord(this.get('_mapModelName'), {
-      name: defaultMapName,
+      name: 'OSM',
       lat: 0,
       lng: 0,
       zoom: 0,
       public: true,
       coordinateReferenceSystem: crs
     });
+
     let openStreetMapLayer = store.createRecord(this.get('_layerModelname'), {
       name: 'OSM',
-      type: 'tile',
+      type: 'osm',
       visibility: true,
       index: 0,
       coordinateReferenceSystem: crs,
-      settings: '{"opacity": 1, "url":"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}'
+      opacity: 1
     });
+
     mapModel.get('mapLayer').pushObject(openStreetMapLayer);
-    this.set('defaultOSMMap', mapModel);
+    this.set('osmmap', mapModel);
   },
 
+  /**
+    Get map from store based on Id and specified projection name
+
+    @method getMapById
+    @param {ID} mapId
+    @param {string} modelProjName
+   */
   getMapById(mapId, modelProjName) {
     modelProjName = Ember.isNone(modelProjName) ? this.get('_defaultModelProjName') : modelProjName;
     let store = this.get('store');
@@ -54,6 +92,6 @@ export default Ember.Service.extend({
       .from(this.get('_mapModelName'))
       .selectByProjection(modelProjName)
       .byId(mapId);
-    return store.queryRecord(this.this.get('_mapModelName'), builder.build());
+    return store.queryRecord(this.get('_mapModelName'), builder.build());
   }
 });

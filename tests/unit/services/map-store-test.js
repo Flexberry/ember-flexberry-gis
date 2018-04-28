@@ -36,3 +36,14 @@ test('it exists', function(assert) {
     assert.ok(service);
   });
 });
+
+test('it should have property osmmap after init', function(assert) {
+  Ember.run(() => {
+    assert.expect(3);
+    let service = this.subject();
+    let defaultMap = service.get('osmmap');
+    assert.ok(defaultMap, 'Map created');
+    assert.equal(defaultMap.get('mapLayer').length, 1, 'it have one map layer');
+    assert.equal(defaultMap.get('mapLayer').objectAt(0).get('type'), 'osm', 'and this layer of type osm');
+  });
+});
