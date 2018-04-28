@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 * Fix `bboxEWKT` in `flexberry-boundingbox` component.
+* Identification on `geojson` layers, when them contains multigeometries or collections.
 
 ## [0.4.0.beta.x] - 26.10.2017
 ### Added
