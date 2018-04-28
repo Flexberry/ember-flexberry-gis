@@ -11,7 +11,7 @@ import layout from '../templates/components/flexberry-multiple-select';
   {{flexberry-multiple-select
     items=fields
     selectedItems=value.searchFields
-    heading=('t' _searchFieldsSelectorLabel)
+    title=('t' _searchFieldsSelectorLabel)
     allowAdditions=true
   }}
   ```
