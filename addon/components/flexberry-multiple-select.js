@@ -98,9 +98,19 @@ export default Ember.Component.extend({
   didInsertElement() {
     let selName = this.get('selectorName');
     let allowAdditions = this.get('allowAdditions');
+    let addResultCaption = '';
+    console.log(this.get('i18n.locale'));
+    if (this.get('i18n.locale') === 'ru') {
+      addResultCaption = 'Добавить <b>{term}</b>';
+    } else {
+      addResultCaption = 'Add <b>{term}</b>';
+    }
 
     this.$('.' + selName)
     .dropdown({
+      message: {
+        addResult: addResultCaption,
+      },
       allowAdditions: allowAdditions,
       onChange: (e) => {
         let itemArray = e.split(',');
