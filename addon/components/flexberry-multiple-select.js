@@ -99,7 +99,7 @@ export default Ember.Component.extend({
     let selName = this.get('selectorName');
     let allowAdditions = this.get('allowAdditions');
     let addResultCaption = '';
-    console.log(this.get('i18n.locale'));
+
     if (this.get('i18n.locale') === 'ru') {
       addResultCaption = 'Добавить <b>{term}</b>';
     } else {
