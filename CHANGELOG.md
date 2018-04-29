@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Added
 * Add base component for graduated and unique layers-styles.
+* Geometry filters on `geojson` layers.
 
 ### Changed
 * Change chart's library from `highcharts` to `chart.js`.

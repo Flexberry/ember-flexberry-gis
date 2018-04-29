@@ -46,7 +46,7 @@ export default Ember.Mixin.create({
   parseFilter(filter, isInnerExpression) {
     let result = this._super(...arguments);
 
-    return Ember.isBlank(result) || isInnerExpression ? result : `function(feature) { return ${result}; }`;
+    return Ember.isBlank(result) || isInnerExpression ? result : `function(feature) {${result}}`;
   },
 
   /**
@@ -121,24 +121,20 @@ export default Ember.Mixin.create({
     @method parseFilterGeometryExpression
     @param {String} condition Filter condition
     @param {Object} geoJSON Geometry
-    @returns {Object} Filter object
+    @return {String} Body of filter function.
   */
   parseFilterGeometryExpression(condition, geoJSON) {
-    /*let bboxPolygon = `{type: 'Polygon', coordinates: [[[${coords.minLng}, ${coords.minLat}], [${coords.maxLng}, ` +
-      `${coords.minLat}], [${coords.maxLng}, ${coords.maxLat}], [${coords.minLng}, ${coords.maxLat}], [${coords.minLng}, ${coords.minLat}]]] }`;
-    let filter = `new Terraformer.Primitive(feature.geometry).within(${bboxPolygon})`;
-    switch (condition) {
-      case 'in':
-        return filter;
-      case 'not in':
-        return `!${filter}`;
-    }*/
-
-    /*
-      Geometry filters for geojson layers isn't implemented yet.
-      Terraformer's within/intersects methods aren't working with all geometry types
-      (for example with GeometryCollection).
-    */
-    return 'true';
+    return `\nvar within = true;\n` +
+      `var bounds = new Terraformer.Polygon([[\n  [${geoJSON.coordinates[0].join('],\n  [')}]\n]]);\n` +
+      `var primitive = new Terraformer.Primitive(feature.geometry);\n` +
+      `if (typeof primitive.forEach === 'function') {\n` +
+      `  primitive.forEach(function(geometry, index) {\n` +
+      `    var primitive = this.get(index);\n` +
+      `    within = within && primitive.within(bounds);\n` +
+      `  });\n` +
+      `} else {\n` +
+      `  within = primitive.within(bounds);\n` +
+      `}\n\n` +
+      `return ${condition === 'not in' ? '!' : ''}within;\n`;
   },
 });
