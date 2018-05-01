@@ -13,6 +13,7 @@ const {
 
 /**
   BaseLayer component for other flexberry-gis layers.
+
   @class BaseLayerComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @uses DynamicPropertiesMixin

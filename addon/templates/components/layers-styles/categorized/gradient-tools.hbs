@@ -1,47 +1,71 @@
-<div class="toolbar">
+<table class="ui small compact celled table">
+  <tbody>
 
-  {{flexberry-checkbox
-    label= "градиент заливки"
-    value=fillGradientEnable
-  }}
-  {{#if fillGradientEnable}}
-    {{gradients/dropdown-gradient
-      _gradientColorStart = fillGradientColorStart
-      _gradientColorEnd = fillGradientColorEnd
-      _previewCanvasName=_fillGradientPreviewName
-      onChangeGradient = (action "fillGradientPreviewSwitch")
-    }}
-    <canvas class="{{_fillGradientPreviewName}}" {{action 'fillGradientPreviewSwitch'}}>
-    </canvas>
-    {{#if _showFillGradientEdit}}
-      {{gradients/gradient-edit
-        _gradientColorStart = fillGradientColorStart
-        _gradientColorEnd = fillGradientColorEnd
-        _previewCanvasName=_fillGradientPreviewName
+    <tr>
+      <td>
+        {{flexberry-checkbox
+          label= (t "layers-styles.gradient-tools.fill-gradient")
+          value=fillGradientEnable
+        }}
+      </td>
+      <td class = "ui horizontal list">
+        {{#if fillGradientEnable}}
+          <div class="item">
+            {{gradients/dropdown-gradient
+              _gradientColorStart = fillGradientColorStart
+              _gradientColorEnd = fillGradientColorEnd
+              _previewCanvasName=_fillGradientPreview
+            }}
+          </div>
+          <div class="item">
+            <canvas class="{{_fillGradientPreview}}" width="100" height="50" {{action 'fillGradientEditSwitch'}}>
+            </canvas>
+          </div>
+          <div class="item">
+            {{#if _showFillGradientEdit}}
+              {{gradients/gradient-edit
+                _gradientColorStart = fillGradientColorStart
+                _gradientColorEnd = fillGradientColorEnd
+                _previewCanvasName=_fillGradientPreview
+              }}
+            {{/if}}
+          </div>
+      {{/if}}
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      {{flexberry-checkbox
+        label= (t "layers-styles.gradient-tools.stroke-gradient")
+        value=strokeGradientEnable
       }}
+    </td>
+    <td class = "ui horizontal list">
+      {{#if strokeGradientEnable}}
+        <div class="item">
+          {{gradients/dropdown-gradient
+            _gradientColorStart = strokeGradientColorStart
+            _gradientColorEnd = strokeGradientColorEnd
+            _previewCanvasName=_strokeGradientPreview
+          }}
+        </div>
+        <div class="item">
+          <canvas class="{{_strokeGradientPreview}}" width="100" height="50" {{action 'strokeGradientEditSwitch'}}>
+          </canvas>
+        </div>
+        <div class="item">
+          {{#if _showStrokeGradientEdit}}
+            {{gradients/gradient-edit
+              _gradientColorStart = strokeGradientColorStart
+              _gradientColorEnd = strokeGradientColorEnd
+              _previewCanvasName=_strokeGradientPreview
+            }}
+          {{/if}}
+        </div>
     {{/if}}
-  {{/if}}
+  </td>
+</tr>
 
-  {{flexberry-checkbox
-    label= "градиент обводки"
-    value=strokeGradientEnable
-  }}
-  {{#if strokeGradientEnable}}
-    {{gradients/dropdown-gradient
-      _gradientColorStart = strokeGradientColorStart
-      _gradientColorEnd = strokeGradientColorEnd
-      _previewCanvasName=_strokeGradientPreviewName
-      onChangeGradient = (action "strokeGradientPreviewSwitch")
-    }}
-    <canvas class="{{_strokeGradientPreviewName}}" {{action 'strokeGradientPreviewSwitch'}} >
-    </canvas>
-    {{#if _showStrokeGradientEdit}}
-      {{gradients/gradient-edit
-        _gradientColorStart = strokeGradientColorStart
-        _gradientColorEnd = strokeGradientColorEnd
-        _previewCanvasName=_strokeGradientPreviewName
-      }}
-    {{/if}}
-  {{/if}}
-
-</div>
+  </tbody>
+</table>

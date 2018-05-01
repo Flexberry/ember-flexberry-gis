@@ -1,13 +1,5 @@
 <div class="toolbar">
   <div class="add-and-remove-categories-segment">
-    {{layers-styles/categorized/gradient-tools
-      strokeGradientEnable=_strokeGradientEnable
-      fillGradientEnable=_fillGradientEnable
-      strokeGradientColorStart=_strokeGradientColorStart
-      strokeGradientColorEnd=_strokeGradientColorEnd
-      fillGradientColorStart=_fillGradientColorStart
-      fillGradientColorEnd=_fillGradientColorEnd
-    }}
     {{flexberry-button
       class="add-category-button"
       iconClass="plus icon"
@@ -18,6 +10,16 @@
       iconClass="minus icon"
       readonly=(not _removeCanBePerformed)
       click=(action "onRemoveSelectedCategoriesButtonClick")
+    }}
+  </div>
+  <div class="gradient-tools-segment">
+    {{layers-styles/categorized/gradient-tools
+      strokeGradientEnable=_strokeGradientEnable
+      fillGradientEnable=_fillGradientEnable
+      strokeGradientColorStart=_strokeGradientColorStart
+      strokeGradientColorEnd=_strokeGradientColorEnd
+      fillGradientColorStart=_fillGradientColorStart
+      fillGradientColorEnd=_fillGradientColorEnd
     }}
   </div>
   <div class="classify-categories-segment">

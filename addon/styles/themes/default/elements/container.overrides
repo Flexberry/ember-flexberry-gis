@@ -1131,6 +1131,12 @@ form.flexberry-edit-layermap {
       float: left;
     }
 
+    .gradient-tools-segment{
+      float: left;
+      margin-left: 1rem;
+      border: 1px solid #7a7878;
+    }
+
     .classify-categories-segment {
       float: right;
 

@@ -7,6 +7,7 @@ import layout from '../../../templates/components/layers-styles/simple/stroke-ed
 
 /**
   Component containing GUI for 'simple' layers-style 'path' stroke style settings.
+
   @class SimpleLayersStyleStrokeEditorComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */

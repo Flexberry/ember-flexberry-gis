@@ -7,6 +7,7 @@ import layout from '../../../templates/components/layers-styles/simple/fill-edit
 
 /**
   Component containing GUI for 'simple' layers-style 'path' fill style settings.
+
   @class SimpleLayersStyleFillEditorComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */

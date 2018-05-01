@@ -19,7 +19,7 @@ export default Ember.Component.extend({
     @type string
     @default null
   */
-  _gradientColorStart: "#ff0000",
+  _gradientColorStart: null,
 
   /**
     The final color of the gradient.
@@ -27,7 +27,7 @@ export default Ember.Component.extend({
     @type string
     @default null
   */
-  _gradientColorEnd: "#ffff00",
+  _gradientColorEnd: null,
 
   /**
       Reference to component's template.

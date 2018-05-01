@@ -45,7 +45,7 @@ export default Ember.Component.extend({
     @default null
     @public
   */
-  strokeGradientColorStart: null,
+  strokeGradientColorStart: '#000',
 
   /**
     Last stroke color of automatic set color gradient range. in HEX
@@ -55,7 +55,7 @@ export default Ember.Component.extend({
     @default null
     @public
   */
-  strokeGradientColorEnd: null,
+  strokeGradientColorEnd: '#FFF',
 
   /**
     First fill color of automatic set color gradient range. in HEX
@@ -65,7 +65,7 @@ export default Ember.Component.extend({
     @default null
     @public
   */
-  fillGradientColorStart: null,
+  fillGradientColorStart: '#000',
 
   /**
     Last fill color of automatic set color gradient range. in HEX
@@ -75,7 +75,7 @@ export default Ember.Component.extend({
     @default '#FFF'
     @public
   */
-  fillGradientColorEnd: null,
+  fillGradientColorEnd: '#FFF',
 
   /**
     Canvas name of preview stroke gradient
@@ -85,7 +85,7 @@ export default Ember.Component.extend({
     @default "strokeGradientCanvas"
     @private
   */
-  _strokeGradientPreviewName: "strokeGradientCanvas",
+  _strokeGradientPreview: 'strokeGradientCanvas',
 
   /**
     Canvas name of preview fill gradient
@@ -95,7 +95,7 @@ export default Ember.Component.extend({
     @default "fillGradientCanvas"
     @private
   */
-  _fillGradientPreviewName: "fillGradientCanvas",
+  _fillGradientPreview: 'fillGradientCanvas',
 
   /**
     Flag indicate stroke gradient enable
@@ -118,11 +118,11 @@ export default Ember.Component.extend({
   _showFillGradientEdit: false,
 
   actions: {
-    strokeGradientPreviewSwitch() {
+    strokeGradientEditSwitch() {
       this.toggleProperty('_showStrokeGradientEdit');
     },
 
-    fillGradientPreviewSwitch() {
+    fillGradientEditSwitch() {
       this.toggleProperty('_showFillGradientEdit');
     }
   }

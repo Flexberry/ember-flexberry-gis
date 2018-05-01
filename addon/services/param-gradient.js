@@ -9,13 +9,23 @@ export default Ember.Service.extend({
   */
   _isGradientList: [],
 
+  init() {
+    this._super(...arguments);
+
+    let owner = Ember.getOwner(this);
+    let isGradients = owner.knownForType('gradient');
+    for (let i in isGradients) {
+      this.addGradientList(isGradients[i].name, isGradients[i].colorS, isGradients[i].colorE);
+    }
+  },
+
   /**
     Returns collection of object gradien list.
 
     @method getGradientList
     @returns Object[] collection
   */
-  getGradientList(){
+  getGradientList() {
     return this.get('_isGradientList');
   },
 
@@ -27,11 +37,11 @@ export default Ember.Service.extend({
     @param {String} colorStart Initial Color.
     @param {String} colorEnd End color.
   */
-  addGradientList(name, colorS, colorE){
+  addGradientList(name, colorS, colorE) {
     let gradient = this.get('_isGradientList');
-    let existingGradientItem = null;
+    let existingGradientItem;
 
-    if (gradient!=null){
+    if (!Ember.isNone(gradient)) {
       for (let i in gradient) {
         if (gradient[i].name === name) {
           existingGradientItem = name;
@@ -39,7 +49,7 @@ export default Ember.Service.extend({
       }
     }
 
-    if (existingGradientItem === null){
+    if (Ember.isNone(existingGradientItem)) {
       gradient.push({ 'name': name, 'colorS': colorS, 'colorE': colorE, 'canName': name });
       this.set('_isGradientList', gradient);
     }
@@ -54,11 +64,11 @@ export default Ember.Service.extend({
     @param {Boolean} editGradient Forms edit gradient.
   */
   gradientDrawing(classCanvas, colorStart, colorEnd) {
-    let canvases = Ember.$('.'+ classCanvas);
-    for (let i = 0 ; i < canvases.length; i++)  {
+    let canvases = Ember.$('.' + classCanvas);
+    for (let i = 0; i < canvases.length; i++)  {
       let ctx = canvases[i].getContext('2d');
-      let w = 150;
-      let h = 75;
+      let w = canvases[i].width;
+      let h = canvases[i].height;
       let grd = ctx.createLinearGradient(0, 0, w, 0);
 
       grd.addColorStop(0, colorStart);
@@ -67,6 +77,6 @@ export default Ember.Service.extend({
       ctx.fillStyle = grd;
       ctx.fillRect(0, 0, w, h);
     }
-    
+
   },
 });

@@ -7,6 +7,7 @@ import layout from '../templates/components/layers-styles-editor';
 
 /**
   Component containing GUI for layers-styles editor.
+
   @class LayersStylesEditorComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */

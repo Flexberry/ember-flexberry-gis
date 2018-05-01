@@ -47,8 +47,12 @@ export default BaseCustomStyle.extend({
       let propertyValues = layerClass.getLayerPropertyValues(leafletLayer, propertyName);
       let categories = [];
       let layersStylesRenderer = this.get('_layersStylesRenderer');
-      let fillGradientColors =  this.get('_fillGradientEnable') ? getGradientColors(this.get('_fillGradientColorStart'), this.get('_fillGradientColorEnd'), propertyValues.length) : [];
-      let strokeGradientColors =  this.get('_strokeGradientEnable') ? getGradientColors(this.get('_strokeGradientColorStart'), this.get('_strokeGradientColorEnd'), propertyValues.length) : [];
+
+      let fillGradientColors =  this.get('_fillGradientEnable') ?
+       getGradientColors(this.get('_fillGradientColorStart'), this.get('_fillGradientColorEnd'), propertyValues.length) : [];
+
+      let strokeGradientColors =  this.get('_strokeGradientEnable') ?
+       getGradientColors(this.get('_strokeGradientColorStart'), this.get('_strokeGradientColorEnd'), propertyValues.length) : [];
 
       for (let i = 0, len = propertyValues.length; i < len; i++) {
         let styleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');

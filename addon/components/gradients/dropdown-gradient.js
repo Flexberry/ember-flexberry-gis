@@ -64,15 +64,8 @@ export default Ember.Component.extend({
   */
   init() {
     this._super(...arguments);
-
     let paramGrad = this.get('service');
     this.set('_isGradientList', paramGrad.getGradientList());
-
-    let owner = Ember.getOwner(this);
-    let isGradients = owner.knownForType('gradient');
-    for (let i in isGradients) {
-      paramGrad.addGradientList(isGradients[i].name, isGradients[i].colorS, isGradients[i].colorE);
-    }
   },
 
   /**
@@ -121,6 +114,29 @@ export default Ember.Component.extend({
     });
 
     return colorsGradient;
+  },
+
+  /**
+    Initializes component when it show. Set firs dropdown item
+    as default checked element if element not checked
+  */
+
+  didRender() {
+    this._super(...arguments);
+    if (Ember.isNone(this.get('_gradientColorStart')) && Ember.isNone(this.get('_gradientColorEnd'))) {
+      let dropdown = this.$('.ui.dropdown');
+      dropdown.dropdown('set selected', this.get('_isGradientList')[0].name);
+    }
+  },
+
+  /**
+    Clear colors start and stop values, when dropdown hide
+  */
+
+  willClearRender() {
+    this._super(...arguments);
+    this.set('_gradientColorStart',null);
+    this.set('_gradientColorEnd',null);
   },
 
   actions: {

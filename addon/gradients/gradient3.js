@@ -2,9 +2,9 @@
   @module ember-flexberry-gis
 */
 export default Object({
-  name: "grad3",
+  name: 'grad3',
 
-  colorS: "#00ff00",
+  colorS: '#00ff00',
 
-  colorE: "#0000ff"
+  colorE: '#0000ff'
 });

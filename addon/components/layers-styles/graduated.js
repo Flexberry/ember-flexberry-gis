@@ -64,8 +64,12 @@ export default BaseCustomStyle.extend({
       let categories = [];
       let categoriesLength = (propertyValues.length - propertyValues.length % categoriesCount) / categoriesCount;
       let layersStylesRenderer = this.get('_layersStylesRenderer');
-      let fillGradientColors =  this.get('_fillGradientEnable') ? getGradientColors(this.get('_fillGradientColorStart'), this.get('_fillGradientColorEnd'), categoriesCount) : [];
-      let strokeGradientColors =  this.get('_strokeGradientEnable') ? getGradientColors(this.get('_strokeGradientColorStart'), this.get('_strokeGradientColorEnd'), categoriesCount) : [];
+
+      let fillGradientColors =  this.get('_fillGradientEnable') ?
+       getGradientColors(this.get('_fillGradientColorStart'), this.get('_fillGradientColorEnd'), categoriesCount) : [];
+
+      let strokeGradientColors =  this.get('_strokeGradientEnable') ?
+       getGradientColors(this.get('_strokeGradientColorStart'), this.get('_strokeGradientColorEnd'), categoriesCount) : [];
 
       for (let i = 0; i < categoriesCount; i++) {
         let intervalStartIndex = i * categoriesLength;

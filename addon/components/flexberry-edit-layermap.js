@@ -12,6 +12,7 @@ import {
 /**
   Component's CSS-classes names.
   JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
+
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-edit-layer-dialog').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name (null, because component is tagless).
