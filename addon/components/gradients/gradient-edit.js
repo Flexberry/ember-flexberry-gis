@@ -19,15 +19,15 @@ export default Ember.Component.extend({
     @type string
     @default null
   */
-  _gradientColorStart: null,
+  gradientColorStart: null,
 
   /**
     The final color of the gradient.
-    @property _gradientColorEnd
+    @property gradientColorEnd
     @type string
     @default null
   */
-  _gradientColorEnd: null,
+  gradientColorEnd: null,
 
   /**
       Reference to component's template.
@@ -35,20 +35,12 @@ export default Ember.Component.extend({
   layout,
 
   /**
-    The name of the gradient.
-    @property _nameGradient
-    @type string
-    @default 'New gradient'
-  */
-  _nameGradient: 'New gradient',
-
-  /**
     The class name of preview canvas gradient.
     @property _previewCanvasName
     @type string
     @default 'null'
   */
-  _previewCanvasName: null,
+  previewCanvasName: null,
 
   /**
     Injected param-gradient-service.
@@ -80,7 +72,7 @@ export default Ember.Component.extend({
     @method _gradientColorStartChange
     @private
   */
-  _gradientColorStartChange: Ember.observer('_gradientColorStart', '_gradientColorEnd', function() {
+  _gradientColorStartChange: Ember.observer('gradientColorStart', 'gradientColorEnd', function() {
     Ember.run.once(this, '_gradientDrawing');
   }),
 
@@ -90,14 +82,14 @@ export default Ember.Component.extend({
   */
   _gradientDrawing() {
     let paramGrad = this.get('service');
-    paramGrad.gradientDrawing(this.get('_previewCanvasName'), this.get('_gradientColorStart'), this.get('_gradientColorEnd'));
+    paramGrad.gradientDrawing(this.get('previewCanvasName'), this.get('gradientColorStart'), this.get('gradientColorEnd'));
   },
   /**
     Initializes DOM-related component's properties.
   */
   didInsertElement() {
     let paramGrad = this.get('service');
-    paramGrad.gradientDrawing(this.get('_previewCanvasName'), this.get('_gradientColorStart'), this.get('_gradientColorEnd'));
+    paramGrad.gradientDrawing(this.get('previewCanvasName'), this.get('gradientColorStart'), this.get('gradientColorEnd'));
   },
 
   actions: {
@@ -107,7 +99,7 @@ export default Ember.Component.extend({
       @method actions.onGradientColorStartChange
     */
     onGradientColorStartChange(e) {
-      this.set('_gradientColorStart', e.newValue);
+      this.set('gradientColorStart', e.newValue);
     },
 
     /**
@@ -116,7 +108,7 @@ export default Ember.Component.extend({
       @method actions.onGradientColorEndChange
     */
     onGradientColorEndChange(e) {
-      this.set('_gradientColorEnd', e.newValue);
+      this.set('gradientColorEnd', e.newValue);
     }
   }
 });

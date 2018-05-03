@@ -32,23 +32,23 @@ export default Ember.Component.extend({
     @type string
     @default null
   */
-  _gradientColorStart: null,
+  gradientColorStart: null,
 
   /**
     The final color of the gradient.
-    @property _gradientColorEnd
+    @property gradientColorEnd
     @type string
     @default null
   */
-  _gradientColorEnd: null,
+  gradientColorEnd: null,
 
   /**
     The class name of preview canvas gradient.
-    @property _previewCanvasName
+    @property previewCanvasName
     @type string
     @default 'null'
   */
-  _previewCanvasName:null,
+  previewCanvasName:null,
 
   /**
     Injected param-gradient-service.
@@ -123,7 +123,7 @@ export default Ember.Component.extend({
 
   didRender() {
     this._super(...arguments);
-    if (Ember.isNone(this.get('_gradientColorStart')) && Ember.isNone(this.get('_gradientColorEnd'))) {
+    if (Ember.isNone(this.get('gradientColorStart')) && Ember.isNone(this.get('gradientColorEnd'))) {
       let dropdown = this.$('.ui.dropdown');
       dropdown.dropdown('set selected', this.get('_isGradientList')[0].name);
     }
@@ -135,8 +135,8 @@ export default Ember.Component.extend({
 
   willClearRender() {
     this._super(...arguments);
-    this.set('_gradientColorStart',null);
-    this.set('_gradientColorEnd',null);
+    this.set('gradientColorStart', null);
+    this.set('gradientColorEnd', null);
   },
 
   actions: {
@@ -149,10 +149,11 @@ export default Ember.Component.extend({
       let paramGrad = this.get('service');
       let gradientColor = this.getColorGradient(value);
       paramGrad.gradientDrawing(gradientColor[0], gradientColor[1], gradientColor[2]);
-      paramGrad.gradientDrawing(this.get('_previewCanvasName'), gradientColor[1], gradientColor[2]);
+      paramGrad.gradientDrawing(this.get('previewCanvasName'), gradientColor[1], gradientColor[2]);
 
-      this.set('_gradientColorStart', gradientColor[1]);
-      this.set('_gradientColorEnd', gradientColor[2]);
+      this.set('gradientColorStart', gradientColor[1]);
+      this.set('gradientColorEnd', gradientColor[2]);
+      this.sendAction('gradientChange');
     }
   }
 });
