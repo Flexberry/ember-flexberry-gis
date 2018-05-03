@@ -72,6 +72,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "FlexberryGeometryAddModeGeoProviderComponent",
         "FlexberryGeometryAddModeManualComponent",
         "FlexberryGoToMapCommandDialogComponent",
+        "FlexberryIdentificationSettingsComponent",
         "FlexberryIdentifyPanelComponent",
         "FlexberryLayersAttributesPanelComponent",
         "FlexberryLayersComponent",
