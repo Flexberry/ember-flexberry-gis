@@ -139,6 +139,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "addon/components/layers/osm-layer.js": {
+            "name": "addon/components/layers/osm-layer.js",
+            "modules": {},
+            "classes": {
+                "OSMLayerComponent": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/components/layers/tile-layer.js": {
             "name": "addon/components/layers/tile-layer.js",
             "modules": {},
@@ -2728,6 +2737,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "addon/services/map-store.js": {
+            "name": "addon/services/map-store.js",
+            "modules": {},
+            "classes": {
+                "MapStoreService": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/services/markers-styles-renderer.js": {
             "name": "addon/services/markers-styles-renderer.js",
             "modules": {},
@@ -2838,6 +2856,7 @@
                 "GeoJSONLayerComponent": 1,
                 "GroupLayerComponent": 1,
                 "KmlLayerComponent": 1,
+                "OSMLayerComponent": 1,
                 "TileLayerComponent": 1,
                 "WfsLayerComponent": 1,
                 "WMSLayerComponent": 1,
@@ -3092,6 +3111,7 @@
                 "ChartsRendererService": 1,
                 "LayersStylesRendererService": 1,
                 "LocalStorageService": 1,
+                "MapStoreService": 1,
                 "MarkersStylesRendererService": 1,
                 "JsonTransform": 1,
                 "Utils.LayerCopy": 1,
@@ -3412,6 +3432,21 @@
             "line": 8,
             "description": "Kml layer component for leaflet map.",
             "extends": "BaseVectorLayerComponent"
+        },
+        "OSMLayerComponent": {
+            "name": "OSMLayerComponent",
+            "shortname": "OSMLayerComponent",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": "",
+            "file": "addon/components/layers/osm-layer.js",
+            "line": 3,
+            "description": "OSM layer component for leaflet map.",
+            "extends": "TileLayerComponent"
         },
         "TileLayerComponent": {
             "name": "TileLayerComponent",
@@ -6737,7 +6772,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/mixins/flexberry-boundingbox-map-loader.js",
-            "line": 12,
+            "line": 7,
             "description": "Mixin containing method for loading flexberry-boundingbox component's map.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Mixin.html\">Ember.Mixin</a>"
         },
@@ -7573,6 +7608,21 @@
             "file": "addon/services/local-storage.js",
             "line": 7,
             "description": "Local storage service.\nInteracts with local storage to save and load data using key-value pairs.",
+            "extends": "Ember.Service"
+        },
+        "MapStoreService": {
+            "name": "MapStoreService",
+            "shortname": "MapStoreService",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": "",
+            "file": "addon/services/map-store.js",
+            "line": 9,
+            "description": "Service for interact with maps",
             "extends": "Ember.Service"
         },
         "MarkersStylesRendererService": {
@@ -34440,18 +34490,14 @@
         },
         {
             "file": "addon/mixins/flexberry-boundingbox-map-loader.js",
-            "line": 21,
-            "description": "Map model name.",
-            "itemtype": "property",
-            "name": "mapModelName",
-            "type": "String",
-            "default": "'new-platform-flexberry-g-i-s-map'",
+            "line": 14,
+            "description": "Service for Map loading from store",
             "class": "FlexberryBoundingboxMapLoaderMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-boundingbox-map-loader.js",
-            "line": 29,
+            "line": 19,
             "description": "Map id for boundingbox component.",
             "itemtype": "property",
             "name": "boundingBoxComponentMapId",
@@ -34462,23 +34508,10 @@
         },
         {
             "file": "addon/mixins/flexberry-boundingbox-map-loader.js",
-            "line": 37,
+            "line": 27,
             "description": "Gets map model to be displayed in `flexberry-boundingbox` component.",
             "itemtype": "method",
             "name": "getBoundingBoxComponentMapModel",
-            "return": {
-                "description": "Promise, that returning map model.",
-                "type": "Promise"
-            },
-            "class": "FlexberryBoundingboxMapLoaderMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-boundingbox-map-loader.js",
-            "line": 63,
-            "description": "Gets default map model to be displayed in `flexberry-boundingbox` component.",
-            "itemtype": "method",
-            "name": "getDefaultBoundingBoxComponentMapModel",
             "return": {
                 "description": "Promise, that returning map model.",
                 "type": "Promise"
@@ -36107,6 +36140,13 @@
         {
             "file": "addon/routes/edit-map.js",
             "line": 51,
+            "description": "Service for Map loading from store",
+            "class": "MapRoute",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/routes/edit-map.js",
+            "line": 56,
             "description": "Name of model projection to be used as record's properties limitation.",
             "itemtype": "property",
             "name": "modelProjection",
@@ -36117,7 +36157,7 @@
         },
         {
             "file": "addon/routes/edit-map.js",
-            "line": 60,
+            "line": 65,
             "description": "Name of model to be used as form's record type.",
             "itemtype": "property",
             "name": "modelName",
@@ -36128,7 +36168,7 @@
         },
         {
             "file": "addon/routes/edit-map.js",
-            "line": 69,
+            "line": 74,
             "description": "Name of metadata model projection to be used as layer metadata properties limitation.",
             "itemtype": "property",
             "name": "metadataProjection",
@@ -36139,7 +36179,7 @@
         },
         {
             "file": "addon/routes/edit-map.js",
-            "line": 78,
+            "line": 83,
             "description": "Name of metadata model to be used as layer metadata record type.",
             "itemtype": "property",
             "name": "metadataModelName",
@@ -36150,7 +36190,7 @@
         },
         {
             "file": "addon/routes/edit-map.js",
-            "line": 87,
+            "line": 92,
             "description": "[Model hook](http://emberjs.com/api/classes/Ember.Route.html#method_model) that returns a map project for current route.\nAdditionally loads layers according to metadata param.",
             "itemtype": "method",
             "name": "model",
@@ -36175,7 +36215,7 @@
         },
         {
             "file": "addon/routes/edit-map.js",
-            "line": 111,
+            "line": 117,
             "description": "Setups controller for the current route.\n[More info](http://emberjs.com/api/classes/Ember.Route.html#method_setupController).",
             "itemtype": "method",
             "name": "setupController",
@@ -36196,7 +36236,7 @@
         },
         {
             "file": "addon/routes/edit-map.js",
-            "line": 145,
+            "line": 151,
             "description": "A hook you can use to reset controller values either when the model changes or the route is exiting.\n[More info](http://emberjs.com/api/classes/Ember.Route.html#method_resetController).",
             "itemtype": "method",
             "name": "resetController",
@@ -36217,7 +36257,7 @@
         },
         {
             "file": "addon/routes/edit-map.js",
-            "line": 163,
+            "line": 169,
             "description": "Produces metadata loading request.",
             "params": [
                 {
@@ -36231,7 +36271,7 @@
         },
         {
             "file": "addon/routes/edit-map.js",
-            "line": 189,
+            "line": 195,
             "description": "Adds metadata to the model mapLayer collection.",
             "params": [
                 {
@@ -36250,7 +36290,7 @@
         },
         {
             "file": "addon/routes/edit-map.js",
-            "line": 206,
+            "line": 212,
             "description": "Recursively creates layers hierarchy.",
             "itemtype": "method",
             "name": "sortLayersByIndex",
@@ -36828,6 +36868,74 @@
                 }
             ],
             "class": "LocalStorageService",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/services/map-store.js",
+            "line": 17,
+            "description": "Model name for store operations with Map",
+            "itemtype": "property",
+            "name": "_mapModelName",
+            "access": "private",
+            "tagname": "",
+            "class": "MapStoreService",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/services/map-store.js",
+            "line": 25,
+            "description": "Model name for store operations with MapLayer",
+            "itemtype": "property",
+            "name": "_layerModelName",
+            "access": "private",
+            "tagname": "",
+            "class": "MapStoreService",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/services/map-store.js",
+            "line": 33,
+            "description": "Default projection for Map loading",
+            "class": "MapStoreService",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/services/map-store.js",
+            "line": 40,
+            "description": "Map stub with one layer based on OSM public tile service",
+            "itemtype": "property",
+            "name": "osmmap",
+            "class": "MapStoreService",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/services/map-store.js",
+            "line": 51,
+            "description": "Create stubs for quick map access",
+            "itemtype": "method",
+            "name": "setupCustomMaps",
+            "class": "MapStoreService",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/services/map-store.js",
+            "line": 81,
+            "description": "Get map from store based on Id and specified projection name",
+            "itemtype": "method",
+            "name": "getMapById",
+            "params": [
+                {
+                    "name": "mapId",
+                    "description": "",
+                    "type": "ID"
+                },
+                {
+                    "name": "modelProjName",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "MapStoreService",
             "module": "ember-flexberry-gis"
         },
         {
@@ -37631,7 +37739,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/routes/edit-map.js:206"
+            "line": " addon/routes/edit-map.js:212"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -38794,6 +38902,10 @@
             "line": " addon/mixins/dynamic-properties.js:257"
         },
         {
+            "message": "Missing item type\nService for Map loading from store",
+            "line": " addon/mixins/flexberry-boundingbox-map-loader.js:14"
+        },
+        {
             "message": "Missing item type\nRemoves attached event listeners on destroy.",
             "line": " addon/mixins/leaflet-events.js:98"
         },
@@ -38810,12 +38922,16 @@
             "line": " addon/mixins/leaflet-zoom-to-feature.js:119"
         },
         {
+            "message": "Missing item type\nService for Map loading from store",
+            "line": " addon/routes/edit-map.js:51"
+        },
+        {
             "message": "Missing item type\nProduces metadata loading request.",
-            "line": " addon/routes/edit-map.js:163"
+            "line": " addon/routes/edit-map.js:169"
         },
         {
             "message": "Missing item type\nAdds metadata to the model mapLayer collection.",
-            "line": " addon/routes/edit-map.js:189"
+            "line": " addon/routes/edit-map.js:195"
         },
         {
             "message": "Missing item type\nQuery settings for layer metadata loading.",
@@ -38864,6 +38980,10 @@
         {
             "message": "Missing item type\nInitializes storage.",
             "line": " addon/services/local-storage.js:38"
+        },
+        {
+            "message": "Missing item type\nDefault projection for Map loading",
+            "line": " addon/services/map-store.js:33"
         },
         {
             "message": "Missing item type\nInitializes service.",
