@@ -1,0 +1,42 @@
+<div class="ui grid  {{if _leafletObjectIsLoading "loading"}}">
+  <div class="row">
+    <div class="column">
+      {{flexberry-checkbox
+        value=value.canBeSearched
+        label=('t' _canBeSearchedCheckBoxLabel)
+        readonly=readonly
+        class=checkboxClass
+      }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      {{flexberry-checkbox
+        value=value.canBeContextSearched
+        label=('t' _canBeContextSearchedCheckBoxLabel)
+        readonly=readonly
+        class=checkboxClass
+      }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      {{flexberry-multiple-select
+        items=fields
+        selectedItems=value.searchFields
+        title=('t' _searchFieldsSelectorLabel)
+        allowAdditions=true
+      }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      {{flexberry-multiple-select
+        items=fields
+        selectedItems=value.contextSearchFields
+        title=('t' _contextSearchFieldsSelectorLabel)
+        allowAdditions=true
+      }}
+    </div>
+  </div>
+</div>
