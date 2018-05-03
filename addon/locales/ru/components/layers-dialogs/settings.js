@@ -12,6 +12,12 @@ export default {
         'can-be-searched-label': 'Может быть найдено',
         'search-fields-selector': 'Поля для поиска',
         'context-search-fields-selector': 'Поля для контекстного поиска'
+      },
+      'display-settings': {
+        'date-format-label': 'Формат даты',
+        'display-property-is-callback-label': 'Отображаемое свойство – callback',
+        'display-property-label': 'Отображаемое свойство',
+        'excluded-properties-label': 'Исключаемые свойства'
       }
     }
   },

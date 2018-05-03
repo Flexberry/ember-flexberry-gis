@@ -1,0 +1,44 @@
+<div class="ui grid  {{if _leafletObjectIsLoading "loading"}}">
+  <div class="row">
+    <div class="column">
+      <label>{{t dateFormatLabel}}</label>
+      {{flexberry-textbox
+        value=value.dateFormat
+        placeholder=dateFormatPlaceholder
+        readonly=dateFormatReadonly
+        class=dateFormatClass
+      }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      {{flexberry-checkbox
+        value=value.featuresPropertiesSettings.displayPropertyIsCallback
+        label=(t displayPropertyIsCallbackLabel)
+        readonly=displayPropertyIsCallbackReadonly
+        class=displayPropertyIsCallbackClass
+      }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      <label>{{t displayPropertyLabel}}</label>
+      {{flexberry-textbox
+        value=value.featuresPropertiesSettings.displayProperty
+        placeholder=displayPropertyPlaceholder
+        readonly=displayPropertyReadonly
+        class=displayPropertyClass
+      }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      {{flexberry-multiple-select
+        items=allProperties
+        selectedItems=value.featuresPropertiesSettings.excludedProperties
+        title=('t' excludedPropertiesLabel)
+        allowAdditions=excludedPropertiesAllowAdditions
+      }}
+    </div>
+  </div>
+</div>

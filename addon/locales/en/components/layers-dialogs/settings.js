@@ -12,6 +12,12 @@ export default {
         'can-be-searched-label': 'Can be searched',
         'search-fields-selector': 'Fields to search within',
         'context-search-fields-selector': 'Fields to context-search within'
+      },
+      'display-settings': {
+        'date-format-label': 'Date format',
+        'display-property-is-callback-label': 'Display property is callback',
+        'display-property-label': 'A property to display',
+        'excluded-properties-label': 'Excluded properties'
       }
     }
   },
