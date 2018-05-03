@@ -39,7 +39,7 @@ export default Ember.Mixin.create({
         resolve(osmmap);
       } else {
         this.get('mapStore').getMapById(mapId).then(record => {
-          resolve(Ember.isNone(record));
+          resolve(record);
         }).catch(() => {
           resolve(osmmap);
         });
