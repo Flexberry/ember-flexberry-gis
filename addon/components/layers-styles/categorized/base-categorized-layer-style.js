@@ -161,7 +161,7 @@ export default Ember.Component.extend({
   _fillGradientEnable: false,
 
   /**
-    First stroke color of automatic set color range. in HEX
+    First stroke color of automatic set color range. In HEX.
 
     @property _strokeGradientColorStart
     @type String
@@ -171,7 +171,7 @@ export default Ember.Component.extend({
   _strokeGradientColorStart: null,
 
   /**
-    Last stroke color of automatic set color range. in HEX
+    Last stroke color of automatic set color range. In HEX.
 
     @property _strokeGradientColorEnd
     @type String
@@ -181,7 +181,7 @@ export default Ember.Component.extend({
   _strokeGradientColorEnd: null,
 
   /**
-    First fill color of automatic set color range. in HEX
+    First fill color of automatic set color range. In HEX.
 
     @property _fillGradientColorStart
     @type String

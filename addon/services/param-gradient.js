@@ -1,6 +1,7 @@
 /**
   @module ember-flexberry-gis
 */
+
 import Ember from 'ember';
 
 /**
@@ -12,6 +13,7 @@ import Ember from 'ember';
 export default Ember.Service.extend({
   /**
     Inner hash containing settings gradient object.
+
     @property _isGradientList
     @type Object[]
     @default []
@@ -69,6 +71,7 @@ export default Ember.Service.extend({
 
   /**
     Gradient display.
+
     @method gradientDrawing
     @param {String} classCanvas The canvas class to apply a gradient.
     @param {String} colorStart Initial Color.

@@ -19,6 +19,7 @@ export default Ember.Component.extend({
 
   /**
     Component's wrapping <div> CSS-classes names.
+
     @property classNames
     @type String[]
     @default ['simple-layers-style-path-editor']
@@ -27,6 +28,7 @@ export default Ember.Component.extend({
 
   /**
     Hash containing path style settings.
+
     @property styleSettings
     @type Object
     @default null
@@ -36,6 +38,7 @@ export default Ember.Component.extend({
   actions: {
     /**
       Handles changes in style settings.
+
       @method actions.onStyleSettingsChange
     */
     onStyleSettingsChange() {

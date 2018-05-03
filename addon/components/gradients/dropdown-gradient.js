@@ -14,12 +14,13 @@ import layout from '../../templates/components/gradients/dropdown-gradient';
 
 export default Ember.Component.extend({
   /**
-      Reference to component's template.
+    Reference to component's template.
   */
   layout,
 
   /**
     Inner hash containing settings gradient object.
+
     @property _isGradientList
     @type Object[]
     @default null
@@ -28,6 +29,7 @@ export default Ember.Component.extend({
 
   /**
     Initial gradient color.
+
     @property _gradientColorStart
     @type string
     @default null
@@ -36,6 +38,7 @@ export default Ember.Component.extend({
 
   /**
     The final color of the gradient.
+
     @property gradientColorEnd
     @type string
     @default null
@@ -44,6 +47,7 @@ export default Ember.Component.extend({
 
   /**
     The class name of preview canvas gradient.
+
     @property previewCanvasName
     @type string
     @default 'null'
@@ -120,7 +124,6 @@ export default Ember.Component.extend({
     Initializes component when it show. Set firs dropdown item
     as default checked element if element not checked
   */
-
   didRender() {
     this._super(...arguments);
     if (Ember.isNone(this.get('gradientColorStart')) && Ember.isNone(this.get('gradientColorEnd'))) {
@@ -132,7 +135,6 @@ export default Ember.Component.extend({
   /**
     Clear colors start and stop values, when dropdown hide
   */
-
   willClearRender() {
     this._super(...arguments);
     this.set('gradientColorStart', null);

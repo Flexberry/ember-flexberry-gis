@@ -19,6 +19,7 @@ export default Ember.Component.extend({
 
   /**
     Component's wrapping <div> CSS-classes names.
+
     @property classNames
     @type String[]
     @default ['simple-layers-style-fill-editor']
@@ -27,6 +28,7 @@ export default Ember.Component.extend({
 
   /**
     Hash containing path style settings.
+
     @property styleSettings
     @type Object
     @default null
@@ -35,6 +37,7 @@ export default Ember.Component.extend({
 
   /**
     Observer changes in fill style.
+
     @method _styleSettingsDidChange
     @private
   */
@@ -49,6 +52,7 @@ export default Ember.Component.extend({
 
   /**
     Sends 'change' action to notify about changes in fill style.
+
     @method _sendChangeAction
     @private
   */
@@ -60,6 +64,7 @@ export default Ember.Component.extend({
     /**
       Handles flexberry-colorpicker's 'change' action.
       Changes fill color with respect to the specified property path.
+
       @method actions.onFillColorChange
       @param {String} fillColorPath Fill color property path.
       @param {Object} e Action's event object.

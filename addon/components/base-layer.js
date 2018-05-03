@@ -25,6 +25,7 @@ export default Ember.Component.extend(
   LeafletOptionsMixin, {
     /**
       Leaflet layer object init by settings from model.
+
       @property _leafletObject
       @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
       @default null
@@ -34,6 +35,7 @@ export default Ember.Component.extend(
 
     /**
       Promise returning Leaflet layer.
+
       @property leafletLayerPromise
       @type <a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
       @default null
@@ -43,6 +45,7 @@ export default Ember.Component.extend(
 
     /**
       Reference to 'layers-styles-renderer' servie.
+
       @property _layersStylesRenderer
       @type LayersStylesRendererService
       @private
@@ -51,11 +54,12 @@ export default Ember.Component.extend(
 
     /**
       Overload wrapper tag name for disabling wrapper.
-     */
+    */
     tagName: '',
 
     /**
       Array containing component's properties which are also leaflet layer options (see leaflet-options mixin).
+
       @property leafletOptions
       @type Stirng[]
     */
@@ -63,6 +67,7 @@ export default Ember.Component.extend(
 
     /**
       Array containing component's properties which are also leaflet layer options callbacks (see leaflet-options mixin).
+
       @property leafletOptionsCallbacks
       @type Stirng[]
     */
@@ -70,6 +75,7 @@ export default Ember.Component.extend(
 
     /**
       Hash containing default implementations for leaflet layer options callbacks (see leaflet-options mixin).
+
       @property defaultLeafletOptionsCallbacks
       @type Object
     */
@@ -88,6 +94,7 @@ export default Ember.Component.extend(
 
     /**
       Leaflet map.
+
       @property leafletMap
       @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
       @default null
@@ -96,6 +103,7 @@ export default Ember.Component.extend(
 
     /**
       Leaflet container for layers.
+
       @property leafletContainer
       @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>|<a href="http://leafletjs.com/reference-1.0.0.html#layergroup">L.LayerGroup</a>
       @default null
@@ -104,6 +112,7 @@ export default Ember.Component.extend(
 
     /**
       Layer metadata.
+
       @property layerModel
       @type Object
       @default null
@@ -112,38 +121,43 @@ export default Ember.Component.extend(
 
     /**
       This layer index, used for layer ordering in Map.
+
       @property index
       @type Number
       @default null
-     */
+    */
     index: null,
 
     /**
       Flag, indicates visible or not current layer on map.
+
       @property visibility
       @type Boolean
       @default null
-     */
+    */
     visibility: null,
 
     /**
       This layer opacity.
+
       @property opacity
       @type Number
       @default null
-     */
+    */
     opacity: null,
 
     /**
       Hash containing layer's style settings.
+
       @property styleSettings
       @type Object
       @default null
-     */
+    */
     styleSettings: null,
 
     /**
       Layer's coordinate reference system (CRS).
+
       @property crs
       @type <a href="http://leafletjs.com/reference-1.0.0.html#crs">L.CRS</a>
       @readOnly
@@ -159,6 +173,7 @@ export default Ember.Component.extend(
 
     /**
       This layer bounding box.
+
       @property bounds
       @type <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
       @readonly
@@ -167,6 +182,7 @@ export default Ember.Component.extend(
 
     /**
       Creates leaflet layer related to layer type.
+
       @method _createLayer
       @private
     */
@@ -203,6 +219,7 @@ export default Ember.Component.extend(
 
     /**
       Destroys leaflet layer related to layer type.
+
       @method _destroyLayer
       @private
     */
@@ -225,6 +242,7 @@ export default Ember.Component.extend(
 
     /**
       Returns promise with the layer properties object.
+
       @method _getAttributesOptions
       @private
     */
@@ -243,6 +261,7 @@ export default Ember.Component.extend(
 
     /**
       Resets leaflet layer related to layer type.
+
       @method _resetLayer
       @private
     */
@@ -261,6 +280,7 @@ export default Ember.Component.extend(
 
     /**
       Sets leaflet layer's state related to actual settings.
+
       @method _setLayerState
       @private
     */
@@ -273,6 +293,7 @@ export default Ember.Component.extend(
 
     /**
       Sets leaflet layer's zindex.
+
       @method _setLayerZIndex
       @private
     */
@@ -287,6 +308,7 @@ export default Ember.Component.extend(
 
     /**
       Sets leaflet layer's visibility.
+
       @method _setLayerVisibility
       @private
     */
@@ -300,6 +322,7 @@ export default Ember.Component.extend(
 
     /**
       Sets leaflet layer's visibility.
+
       @method _setLayerOpacity
       @private
     */
@@ -314,6 +337,7 @@ export default Ember.Component.extend(
 
     /**
       Sets leaflet layer's style.
+
       @method _setLayerStyle
       @private
     */
@@ -335,6 +359,7 @@ export default Ember.Component.extend(
 
     /**
       Adds layer to it's leaflet container.
+
       @method _addLayerToLeafletContainer
       @private
     */
@@ -350,6 +375,7 @@ export default Ember.Component.extend(
 
     /**
       Removes layer from it's leaflet container.
+
       @method _removeLayerFromLeafletContainer
       @private
     */
@@ -366,6 +392,7 @@ export default Ember.Component.extend(
     /**
       Observes and handles changes in JSON-string with layer settings.
       Performs layer's recreation with new settings.
+
       @method visibilityDidChange
       @private
     */
@@ -376,6 +403,7 @@ export default Ember.Component.extend(
     /**
       Observes and handles changes in {{#crossLink "BaseLayerComponent/visibility:property"}}'visibility' property{{/crossLink}}.
       Switches layer's visibility.
+
       @method visibilityDidChange
       @private
     */
@@ -386,6 +414,7 @@ export default Ember.Component.extend(
     /**
       Observes and handles changes in {{#crossLink "BaseLayerComponent/opacity:property"}}'opacity' property{{/crossLink}}.
       Changes layer's opacity.
+
       @method _opacityDidChange
       @private
     */
@@ -396,6 +425,7 @@ export default Ember.Component.extend(
     /**
       Observes and handles changes in {{#crossLink "BaseLayerComponent/styleSettings:property"}}'styleSettings' property{{/crossLink}}.
       Changes layer's style settings.
+
       @method _styleSettingsDidChange
       @private
     */
@@ -409,6 +439,7 @@ export default Ember.Component.extend(
 
     /**
       Handles 'flexberry-map:identify' event of leaflet map.
+
       @method _identify
       @param {Object} e Event object.
       @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.boundingBox Leaflet layer
@@ -437,6 +468,7 @@ export default Ember.Component.extend(
 
     /**
       Handles 'flexberry-map:search' event of leaflet map.
+
       @method search
       @param {Object} e Event object.
       @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
@@ -460,7 +492,8 @@ export default Ember.Component.extend(
     },
 
     /**
-     Handles 'flexberry-map:query' event of leaflet map.
+      Handles 'flexberry-map:query' event of leaflet map.
+
      @method query
      @param {Object} e Event object.
      @param {Object} queryFilter Object with query filter parameters
@@ -490,6 +523,7 @@ export default Ember.Component.extend(
 
     /**
       Returns leaflet layer's bounding box.
+
       @method _getBoundingBox
       @private
       @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
@@ -548,6 +582,7 @@ export default Ember.Component.extend(
 
     /**
       Returns leaflet layer for filter component.
+
       @method getLeafletObjectForFilter
       @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
       Leaflet layer or promise returning such layer.
@@ -560,6 +595,7 @@ export default Ember.Component.extend(
 
     /**
       Creates leaflet layer related to layer type.
+
       @method createLayer
       @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
       Leaflet layer or promise returning such layer.
@@ -570,6 +606,7 @@ export default Ember.Component.extend(
 
     /**
       Destroys leaflet layer related to layer type.
+
       @method destroyLayer
     */
     destroyLayer() {
@@ -577,6 +614,7 @@ export default Ember.Component.extend(
 
     /**
       Identifies layer's objects inside specified bounding box.
+
       @method identify
       @param {Object} e Event object.
       @param {<a href="http://leafletjs.com/reference-1.0.0.html#rectangle">L.Rectangle</a>} e.boundingBox Leaflet layer
@@ -595,6 +633,7 @@ export default Ember.Component.extend(
 
     /**
       Handles 'flexberry-map:search' event of leaflet map.
+
       @method search
       @param {Object} e Event object.
       @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
@@ -610,6 +649,7 @@ export default Ember.Component.extend(
 
     /**
       Handles 'flexberry-map:query' event of leaflet map.
+
       @method _query
       @param {Object[]} layerLinks Array containing metadata for query
       @param {Object} e Event object.
@@ -623,6 +663,7 @@ export default Ember.Component.extend(
 
     /**
       Returns leaflet layer's bounding box.
+
       @method getBoundingBox
       @return <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
     */
@@ -644,6 +685,7 @@ export default Ember.Component.extend(
       Observes and handles changes in layer's properties marked as leaflet options.
       Performs layer's recreation with new options.
       Note: it is overridden method from 'leaflet-options' mixin.
+
       @method leafletOptionsDidChange
       @param {String[]} changedOptions Array containing names of all changed options.
     */
@@ -668,6 +710,7 @@ export default Ember.Component.extend(
     /**
       Injects (leafelt GeoJSON layers)[http://leafletjs.com/reference-1.0.0.html#geojson] according to current CRS
       into specified (GeoJSON)[http://geojson.org/geojson-spec] feature, features, or featureCollection
+
       @method injectLeafletLayersIntoGeoJSON
       @param {Object} geojson (GeoJSON)[http://geojson.org/geojson-spec] feature, features, or featureCollection.
       @param {Object} [options] Options of (leafelt GeoJSON layer)[http://leafletjs.com/reference-1.0.0.html#geojson].
@@ -725,6 +768,7 @@ export default Ember.Component.extend(
 
   /**
     Component's action invoking on layer creation.
+
     @method sendingActions.layerInit
     @param {Object} eventObject Action param
     @param {Object} eventObject.leafletObject Created (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
@@ -733,6 +777,7 @@ export default Ember.Component.extend(
 
    /**
     Component's action invoking before the layer destroying.
+
     @method sendingActions.layerDestroy
     @param {Object} eventObject Action param
     @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]

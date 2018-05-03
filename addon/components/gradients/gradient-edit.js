@@ -15,6 +15,7 @@ import layout from '../../templates/components/gradients/gradient-edit';
 export default Ember.Component.extend({
   /**
     Initial gradient color.
+
     @property _gradientColorStart
     @type string
     @default null
@@ -23,6 +24,7 @@ export default Ember.Component.extend({
 
   /**
     The final color of the gradient.
+
     @property gradientColorEnd
     @type string
     @default null
@@ -30,12 +32,13 @@ export default Ember.Component.extend({
   gradientColorEnd: null,
 
   /**
-      Reference to component's template.
+    Reference to component's template.
   */
   layout,
 
   /**
     The class name of preview canvas gradient.
+
     @property _previewCanvasName
     @type string
     @default 'null'
@@ -78,12 +81,14 @@ export default Ember.Component.extend({
 
   /**
     Gradient display.
+
     @method gradientDrawing
   */
   _gradientDrawing() {
     let paramGrad = this.get('service');
     paramGrad.gradientDrawing(this.get('previewCanvasName'), this.get('gradientColorStart'), this.get('gradientColorEnd'));
   },
+
   /**
     Initializes DOM-related component's properties.
   */

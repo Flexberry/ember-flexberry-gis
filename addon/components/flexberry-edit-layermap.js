@@ -18,6 +18,7 @@ import {
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name (null, because component is tagless).
   @readonly
   @static
+
   @for FlexberryEditLayerDialogComponent
 */
 const flexberryClassNamesPrefix = 'flexberry-edit-layermap';
@@ -44,6 +45,7 @@ export default Ember.Component.extend(
     /**
       Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
       is empty to disable component's wrapping <div>.
+
       @property tagName
       @type String
       @default ''
@@ -52,6 +54,7 @@ export default Ember.Component.extend(
 
     /**
       Component's additional CSS-class names.
+
       @property class
       @type String
       @default null
@@ -60,6 +63,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether layer type is in readonly mode.
+
       @property _typeIsReadonly
       @type Boolean
       @default true
@@ -69,6 +73,7 @@ export default Ember.Component.extend(
 
     /**
       Hash containing editing layer.
+
       @property layer
       @type Object
       @default null
@@ -78,6 +83,7 @@ export default Ember.Component.extend(
     /**
       Flag: indicates whether dialog is visible or not.
       If true, then dialog will be shown, otherwise dialog will be closed.
+
       @property visible
       @type Boolean
       @default false
@@ -86,6 +92,7 @@ export default Ember.Component.extend(
 
     /**
       Array containing available layers types.
+
       @property _availableTypes
       @type String[]
       @default null
@@ -95,6 +102,7 @@ export default Ember.Component.extend(
 
     /**
       Inner hash containing editing layer.
+
       @property layer
       @type Object
       @default null
@@ -103,6 +111,7 @@ export default Ember.Component.extend(
 
     /**
       Inner hash containing type-related settings mapped by available layer types.
+
       @property _settings
       @type Object
       @default null
@@ -112,6 +121,7 @@ export default Ember.Component.extend(
 
     /**
       Inner hash containing coordinate reference systems settings mapped by available codes.
+
       @property _coordinateReferenceSystems
       @type Object
       @default null
@@ -121,6 +131,7 @@ export default Ember.Component.extend(
 
     /**
       Tabular menu state.
+
       @property _tabularMenuState
       @type Object
       @private
@@ -129,6 +140,7 @@ export default Ember.Component.extend(
 
     /**
       Leaflet layer related to layer model.
+
       @property _leafletObject
       @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
       @private
@@ -137,6 +149,7 @@ export default Ember.Component.extend(
 
     /**
       Leaflet map.
+
       @property leafletMap
       @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
       @default null
@@ -145,6 +158,7 @@ export default Ember.Component.extend(
 
     /**
       Layer's links.
+
       @property links
       @type Array
       @default null
@@ -153,6 +167,7 @@ export default Ember.Component.extend(
 
     /**
       Layer's links property path.
+
       @property linksPropertyPath
       @type String
       @default ''
@@ -161,6 +176,7 @@ export default Ember.Component.extend(
 
     /**
       Dialog's 'Links' segment caption.
+
       @property linksCaption
       @type String
       @default t('components.layers-dialogs.edit.links.caption')
@@ -169,6 +185,7 @@ export default Ember.Component.extend(
 
     /**
       Layer's links' parameters model name.
+
       @property parametersModelName
       @type String
       @default ''
@@ -177,6 +194,7 @@ export default Ember.Component.extend(
 
     /**
       Layer's links' parameters model projection.
+
       @property parametersModelProjection
       @type String
       @default ''
@@ -186,6 +204,7 @@ export default Ember.Component.extend(
     /**
       Available modes.
       Initializes in component's 'init' method.
+
       @property _availableModes
       @type Object[]
       @default null
@@ -194,7 +213,8 @@ export default Ember.Component.extend(
     _availableModes: null,
 
     /**
-    Flag: indicates whether 'main-group' of settings is available for the selected layer type.
+      Flag: indicates whether 'main-group' of settings is available for the selected layer type.
+
       @property mainGroupIsAvailableForType
       @type Boolean
       @private
@@ -218,6 +238,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether scale settings are available for the selected layer type.
+
       @property _scaleSettingsAreAvailableForType
       @type Boolean
       @private
@@ -228,6 +249,7 @@ export default Ember.Component.extend(
     }),
     /**
       Flag: indicates whether CRS is available for the selected layer type.
+
       @property _crsSettingsAreAvailableForType
       @type Boolean
       @private
@@ -241,6 +263,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether type-related settings are available for the selected layer type.
+
       @property _layerSettingsAreAvailableForType
       @type Boolean
       @private
@@ -254,6 +277,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether prototyping modes are available.
+
       @property _pmodesAreAvailableForType
       @type Boolean
       @readonly
@@ -267,6 +291,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether bbox settings are available for the selected layer type.
+
       @property _bboxSettingsAreAvailableForType
       @type Boolean
       @private
@@ -278,6 +303,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether 'display-group' of settings is available for the selected layer type.
+
       @property _displayGroupIsAvailableForType
       @type Boolean
       @private
@@ -302,7 +328,8 @@ export default Ember.Component.extend(
     ),
 
     /**
-    Flag: indicates whether 'display' operation settings are available for the selected layer type.
+      Flag: indicates whether 'display' operation settings are available for the selected layer type.
+
       @property _displaySettingsAreAvailableForType
       @type Boolean
       @private
@@ -316,6 +343,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether 'identify' operation settings are available for the selected layer type.
+
       @property _identifySettingsAreAvailableForType
       @type Boolean
       @private
@@ -332,6 +360,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether 'search' operation settings are available for the selected layer type.
+
       @property _searchSettingsAreAvailableForType
       @type Boolean
       @private
@@ -348,6 +377,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether 'legend' operation settings are available for the selected layer type.
+
       @property _legendSettingsAreAvailableForType
       @type Boolean
       @private
@@ -364,6 +394,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether 'filter' operation settings are available for the selected layer type. TODO!
+
       @property _filterSettingsAreAvailableForType
       @type Boolean
       @private
@@ -380,6 +411,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether 'style' settings are available for the selected layer type.
+
       @property _styleSettingsAreAvailableForType
       @type Boolean
       @private
@@ -397,6 +429,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether 'links-group' of settings is available for the selected layer type.
+
       @property _linksGroupIsAvailableForType
       @type Boolean
       @private
@@ -412,6 +445,7 @@ export default Ember.Component.extend(
 
     /**
       Flag: indicates whether layer links settings are available for the selected layer type.
+
       @property _linksSettingsAreAvailableForType
       @type Boolean
       @private
@@ -425,6 +459,7 @@ export default Ember.Component.extend(
 
     /**
       Selected mode.
+
       @property _selectedModeCaption
       @type String
       @default null
@@ -436,6 +471,7 @@ export default Ember.Component.extend(
 
       /**
         Handles clicks on groups.
+
         @method actions.onGroupClick
         @param {Object} e Click event object.
       */
@@ -449,6 +485,7 @@ export default Ember.Component.extend(
 
       /**
         Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.remove:method"}}'flexberry-links-editor' component's 'remove' action{{/crossLink}}.
+
         @method actions.removeLayerLink
         @param {Object} model Ember Model to be removed.
       */
@@ -458,6 +495,7 @@ export default Ember.Component.extend(
 
       /**
         Add new layer link model to relation.
+
         @method actions.addLayerLink
       */
       addLayerLink() {
@@ -466,6 +504,7 @@ export default Ember.Component.extend(
 
       /**
         Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-layers-prototyping-mode' components 'editingFinished' action {{/crossLink}}.
+
         @method actions.onEditingFinished
         @param {Object} layer Prototype layer model.
       */
@@ -477,6 +516,7 @@ export default Ember.Component.extend(
 
     /**
       Creates inner hash containing layer settings for different layer types.
+
       @method _createInnerSettings
       @private
     */
@@ -492,6 +532,7 @@ export default Ember.Component.extend(
 
     /**
       Destroys inner hash containing layer settings.
+
       @method _destroyInnerSettings
       @private
     */
@@ -501,6 +542,7 @@ export default Ember.Component.extend(
 
     /**
       Creates inner hash containing layer copy.
+
       @method _createInnerLayer
       @private
     */
@@ -549,6 +591,7 @@ export default Ember.Component.extend(
 
     /**
       Destroys inner hash containing layer copy.
+
       @method _destroyInnerLayer
       @private
     */
@@ -561,6 +604,7 @@ export default Ember.Component.extend(
 
     /**
       Observes visibility changes & creates/destroys inner hash containing layer copy.
+
       @method _visibleDidChange
       @private
     */
@@ -576,6 +620,7 @@ export default Ember.Component.extend(
 
     /**
       Observes type changes & changes link to object containing type-related settings.
+
       @method _innerLayerTypeDidChange
       @private
     */
@@ -638,6 +683,7 @@ export default Ember.Component.extend(
 
     /**
       Applies data from controls to layer hash.
+
       @method getLayerProperties
     */
     getLayerProperties() {
@@ -667,11 +713,13 @@ export default Ember.Component.extend(
     /**
       Component's action invoking init hook is finished.
       Provides binding for {{#crossLink "FlexberryEditLayerComponent/sendingActions.onInit:method"}}'flexberry-edit-layer' component's 'getLayerProperties' method{{/crossLink}}.
+
       @method sendingActions.onInit
     */
 
     /**
       Component's action invoking to remove model from store.
+
       @method sendingActions.removeLayerLink
       @param {Object} model Ember Model to be removed.
       {{#crossLink "FlexberryLinksEditorComponent/sendingActions.remove:method"}}flexberry-links-editor 'remove' action{{/crossLink}}.
@@ -679,6 +727,7 @@ export default Ember.Component.extend(
 
     /**
       Component's action invoking to add model to store.
+
       @method sendingActions.addLayerLink
     */
   });

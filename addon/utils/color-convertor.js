@@ -3,15 +3,13 @@
 */
 
 /**
-  Creates copy of the specified map layer.
+  Convert color HEX -> RGB
 
-  @for Utils.LayerCopy
-  @method copyLayer
-  @param {NewPlatformFlexberryGISMapLayer} layerModel
-  @param {DS.Store} store Ember data store.
-  @return {NewPlatformFlexberryGISMapLayer} Layer model copy.
+  @for Utils.Convertor
+  @method hexToRgb
+  @param String hex
+  @return [] rgb
 */
-
 let hexToRgb = function(hex) {
   let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ? [
@@ -21,6 +19,14 @@ let hexToRgb = function(hex) {
   ] : null;
 };
 
+/**
+  Convert color RGB -> HEX
+
+  @for Utils.Convertor
+  @method hexToRgb
+  @param [] rgb
+  @return String hex
+*/
 let rgbToHex = function(rgb) {
   let result = '#' + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
   return result;

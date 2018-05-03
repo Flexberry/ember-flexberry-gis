@@ -6,13 +6,14 @@ import { hexToRgb } from 'ember-flexberry-gis/utils/color-convertor';
 import { rgbToHex } from 'ember-flexberry-gis/utils/color-convertor';
 
 /**
-  Creates copy of the specified map layer.
+  Get color range between start and end colors
 
-  @for Utils.LayerCopy
-  @method copyLayer
-  @param {NewPlatformFlexberryGISMapLayer} layerModel
-  @param {DS.Store} store Ember data store.
-  @return {NewPlatformFlexberryGISMapLayer} Layer model copy.
+  @for Utils.Interpolator
+  @method getGradientColors
+  @param String colorStart
+  @param String colorEnd
+  @param int steps
+  @return [] hexArray
 */
 let getGradientColors = function(colorStart, colorEnd, steps) {
   let interpolatedColorArray = [];
