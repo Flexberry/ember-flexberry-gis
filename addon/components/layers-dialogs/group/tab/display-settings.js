@@ -69,9 +69,9 @@ export default Ember.Component.extend({
 
     @property dateFormatLabel
     @type String
-    @default 'components.layers-dialogs.settings.group.tab.search-settings.can-be-searched-label'
+    @default 'components.layers-dialogs.settings.group.tab.display-settings.date-format-label'
   */
-  dateFormatLabel: 'components.layers-dialogs.settings.group.tab.search-settings.can-be-searched-label',
+  dateFormatLabel: 'components.layers-dialogs.settings.group.tab.display-settings.date-format-label',
 
   /**
     "Date format" placeholder locale key.
