@@ -322,6 +322,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     querySearch(queryString) {
       let leafletMap = this.get('leafletMap');
       let e = {
+        context: true,
         latlng: leafletMap.getCenter(),
         searchOptions: {
           queryString,
