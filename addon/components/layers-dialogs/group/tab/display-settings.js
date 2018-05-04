@@ -186,6 +186,12 @@ export default Ember.Component.extend({
   */
   allProperties: undefined,
 
+  _selectedProperty: {
+    'key': '',
+    'ru': '',
+    'en': ''
+  },
+
   /**
     Allows/disallows manually add items to multiple-select.
 
@@ -229,5 +235,13 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this.getAllProperties();
+  },
+
+  actions: {
+    test(e) {
+      console.log(e);
+      let _selectedProperty = this.get('_selectedProperty');
+      Ember.set(this, '_selectedProperty.key', e);
+    }
   }
 });

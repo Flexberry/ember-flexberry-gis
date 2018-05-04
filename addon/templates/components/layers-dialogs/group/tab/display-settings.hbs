@@ -41,4 +41,25 @@
       }}
     </div>
   </div>
+  <div class="row">
+    <div class="eight wide column">
+      <div class="ui selection list">
+        {{#each allProperties as |property|}}
+          <div class="item {{if (eq _selectedProperty.key property) "active"}}" {{action "test" property}}>
+            <div class="content">
+              {{property}}
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+    <div class="eight wide column">
+      {{flexberry-textbox
+        value=selectedProperty.ru
+      }}
+      {{flexberry-textbox
+        value=selectedProperty.en
+      }}
+    </div>
+  </div>
 </div>
