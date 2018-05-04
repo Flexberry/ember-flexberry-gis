@@ -5,6 +5,26 @@
 import Ember from 'ember';
 
 /**
+    Max opacity value for geometries
+
+    @for Utils.LeafletOpacity
+    @property maxGeometryOpacity
+    @type Number
+    @default 0.65
+*/
+let maxGeometryOpacity = 0.65;
+
+/**
+    Max fill opacity value for geometries 
+
+    @for Utils.LeafletOpacity
+    @property maxGeometryFillOpacity
+    @type Number
+    @default 0.2
+*/
+let maxGeometryFillOpacity = 0.2;
+
+/**
   Sets specified opacity for the specified leaflet layer.
 
   @for Utils.LeafletOpacity
@@ -19,9 +39,30 @@ let setLeafletLayerOpacity = function({ leafletLayer, opacity }) {
   } else if (typeof leafletLayer.setStyle === 'function') {
     let oldStyle = Ember.get(leafletLayer, 'options.style') || {};
     if (typeof oldStyle === 'function') {
-      Ember.Logger.error(
-        `Option 'style' of the specified leaflet layer is a callback function, ` +
-        `so it's opacity can't be simply changed through call to 'setStyle' method.`);
+
+      // Option 1: set opacity directly
+      leafletLayer.options.opacity = opacity * maxGeometryOpacity;
+      leafletLayer.options.fillOpacity = opacity * maxGeometryFillOpacity;
+      leafletLayer.redraw();
+            
+      // Option 2: set opacity with layer.setStyle
+      /*
+      oldStyle = {};
+      
+      // layer.options properties that are not Path options 
+      // https://leafletjs.com/reference-1.3.0.html#path-option 
+      let propertiesToExclude = ['onEachFeature', 'coordsToLatLng', 'crs', 'filter', 'geojson', 'style'];
+      
+      for (let [key, value] of Object.entries(leafletLayer.options)) {
+        if (!propertiesToExclude.includes(key)) {
+          oldStyle[key] = value;
+        }
+      }
+
+      let newStyle = Ember.$.extend(true, {}, oldStyle, 
+        { opacity: opacity * maxGeometryOpacity, fillOpacity: opacity * maxGeometryFillOpacity });
+      leafletLayer.setStyle(newStyle);
+      */
     } else {
       let newStyle = Ember.$.extend(true, {}, oldStyle, { opacity: opacity, fillOpacity: opacity });
       leafletLayer.setStyle(newStyle);
