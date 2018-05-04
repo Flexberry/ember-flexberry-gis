@@ -15,7 +15,7 @@ import Ember from 'ember';
 let maxGeometryOpacity = 0.65;
 
 /**
-    Max fill opacity value for geometries 
+    Max fill opacity value for geometries
 
     @for Utils.LeafletOpacity
     @property maxGeometryFillOpacity
@@ -44,22 +44,22 @@ let setLeafletLayerOpacity = function({ leafletLayer, opacity }) {
       leafletLayer.options.opacity = opacity * maxGeometryOpacity;
       leafletLayer.options.fillOpacity = opacity * maxGeometryFillOpacity;
       leafletLayer.redraw();
-            
+
       // Option 2: set opacity with layer.setStyle
       /*
       oldStyle = {};
-      
-      // layer.options properties that are not Path options 
-      // https://leafletjs.com/reference-1.3.0.html#path-option 
+
+      // layer.options properties that are not Path options
+      // https://leafletjs.com/reference-1.3.0.html#path-option
       let propertiesToExclude = ['onEachFeature', 'coordsToLatLng', 'crs', 'filter', 'geojson', 'style'];
-      
+
       for (let [key, value] of Object.entries(leafletLayer.options)) {
         if (!propertiesToExclude.includes(key)) {
           oldStyle[key] = value;
         }
       }
 
-      let newStyle = Ember.$.extend(true, {}, oldStyle, 
+      let newStyle = Ember.$.extend(true, {}, oldStyle,
         { opacity: opacity * maxGeometryOpacity, fillOpacity: opacity * maxGeometryFillOpacity });
       leafletLayer.setStyle(newStyle);
       */
