@@ -1,8 +1,5 @@
 import Ember from 'ember';
 import layout from '../../../../templates/components/layers-dialogs/group/tab/display-settings';
-import {
-  translationMacro as t
-} from 'ember-i18n';
 
 /**
   Component for display settings tab in layer settings.
@@ -75,8 +72,6 @@ export default Ember.Component.extend({
 
   /**
     "Date format" placeholder locale key.
-
-    TODO: make it locale key
 
     @property dateFormatPlaceholder
     @type String
@@ -177,6 +172,77 @@ export default Ember.Component.extend({
   excludedPropertiesLabel: 'components.layers-dialogs.settings.group.tab.display-settings.excluded-properties-label',
 
   /**
+    `Apply` button label locale key.
+
+    @property applyButtonLabel
+    @type String
+    @default 'components.layers-dialogs.settings.group.tab.display-settings.apply-button-label'
+  */
+  applyButtonLabel: 'components.layers-dialogs.settings.group.tab.display-settings.apply-button-label',
+
+  /**
+    "English translation" textbox label locale key.
+
+    @property enTranslationLabel
+    @type String
+    @default 'components.layers-dialogs.settings.group.tab.display-settings.en-translation-label'
+  */
+  enTranslationLabel: 'components.layers-dialogs.settings.group.tab.display-settings.en-translation-label',
+
+  /**
+    "Russian translation" textbox label locale key.
+
+    @property ruTranslationLabel
+    @type String
+    @default 'components.layers-dialogs.settings.group.tab.display-settings.ru-translation-label'
+  */
+  ruTranslationLabel: 'components.layers-dialogs.settings.group.tab.display-settings.ru-translation-label',
+
+  /**
+    "Ru string" placeholder locale key.
+
+    @property ruTranslationPlaceholder
+    @type String
+    @default 'components.layers-dialogs.settings.group.tab.display-settings.en-translation-ph'
+  */
+  ruTranslationPlaceholder: 'components.layers-dialogs.settings.group.tab.display-settings.en-translation-ph',
+
+  /**
+    "En string" placeholder locale key.
+
+    @property enTranslationPlaceholder
+    @type String
+    @default 'components.layers-dialogs.settings.group.tab.display-settings.en-translation-ph'
+  */
+  enTranslationPlaceholder: 'components.layers-dialogs.settings.group.tab.display-settings.en-translation-ph',
+
+  /**
+    Properties list header locale key.
+
+    @property listHeadingLabel
+    @type String
+    @default 'components.layers-dialogs.settings.group.tab.display-settings.list-heading-label'
+  */
+  listHeadingLabel: 'components.layers-dialogs.settings.group.tab.display-settings.list-heading-label',
+
+  /**
+    Locale key of a message shown when there are no properties in a layer.
+
+    @property noItemsAvaliableLabel
+    @type String
+    @default 'components.layers-dialogs.settings.group.tab.display-settings.no-items-label'
+  */
+  noItemsAvaliableLabel: 'components.layers-dialogs.settings.group.tab.display-settings.no-items-label',
+
+  /**
+    Locks/unlocks interface when there is or there is no selection.
+
+    @property isNotSelected
+    @type Boolean
+    @default true
+  */
+  isNotSelected: true,
+  /**
     All items to select from in multiple-select.
     All layer's properties.
 
@@ -186,6 +252,13 @@ export default Ember.Component.extend({
   */
   allProperties: undefined,
 
+  /**
+    Localization setting of a selected property
+
+    @property _selectedProperty
+    @type Object
+    @default Object
+  */
   _selectedProperty: {
     'key': '',
     'ru': '',
@@ -235,13 +308,36 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this.getAllProperties();
+    this.set('isNotSelected', true);
+    Ember.set(this, '_selectedProperty.ru', '');
+    Ember.set(this, '_selectedProperty.en', '');
   },
 
   actions: {
-    test(e) {
-      console.log(e);
-      let _selectedProperty = this.get('_selectedProperty');
+    /**
+      Action, triggered by selection of a property.
+
+      @method actions.onPropertySelected
+    */
+    onPropertySelected(e) {
+      let localizedPropertiesRu = this.get('value.featuresPropertiesSettings.localizedProperties.ru');
+      let localizedPropertiesEn = this.get('value.featuresPropertiesSettings.localizedProperties.en');
       Ember.set(this, '_selectedProperty.key', e);
+
+      Ember.set(this, '_selectedProperty.ru', localizedPropertiesRu[e]);
+      Ember.set(this, '_selectedProperty.en', localizedPropertiesEn[e]);
+      Ember.set(this, 'isNotSelected', false);
+    },
+
+    /**
+      Action, triggered by `apply` button click.
+
+      @method actions.onButtonClick
+    */
+    onButtonClick() {
+      let _selectedProperty = this.get('_selectedProperty');
+      Ember.set(this, `value.featuresPropertiesSettings.localizedProperties.ru.${_selectedProperty.key}`, _selectedProperty.ru);
+      Ember.set(this, `value.featuresPropertiesSettings.localizedProperties.en.${_selectedProperty.key}`, _selectedProperty.en);
     }
   }
 });

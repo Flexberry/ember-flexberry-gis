@@ -32,7 +32,6 @@
       </div>
       {{#if _displaySettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "display-tab") "active"}}" data-tab="display-tab">
-          {{flexberry-jsonarea value=_layer.settings.displaySettings}}
           {{layers-dialogs/group/tab/display-settings
             value=_layer.settings.displaySettings
             _layerType=_layer.type

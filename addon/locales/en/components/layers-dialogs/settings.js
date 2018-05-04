@@ -17,7 +17,14 @@ export default {
         'date-format-label': 'Date format',
         'display-property-is-callback-label': 'Display property is callback',
         'display-property-label': 'A property to display',
-        'excluded-properties-label': 'Excluded properties'
+        'excluded-properties-label': 'Excluded properties',
+        'apply-button-label': 'Apply',
+        'en-translation-label': 'English locale string',
+        'ru-translation-label': 'Russian locale string',
+        'en-translation-ph': 'English locale string',
+        'ru-translation-ph': 'Russian locale string',
+        'list-heading-label': 'Avaliable properties',
+        'no-items-label': 'No properties avaliable'
       }
     }
   },

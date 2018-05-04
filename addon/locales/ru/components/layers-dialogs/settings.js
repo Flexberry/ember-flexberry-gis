@@ -11,7 +11,14 @@ export default {
         'can-be-context-searched-label': 'Может быть найдено в контексте',
         'can-be-searched-label': 'Может быть найдено',
         'search-fields-selector': 'Поля для поиска',
-        'context-search-fields-selector': 'Поля для контекстного поиска'
+        'context-search-fields-selector': 'Поля для контекстного поиска',
+        'apply-button-label': 'Применить',
+        'en-translation-label': 'Локализованная строка (англ.)',
+        'ru-translation-label': 'Локализованная строка (рус.)',
+        'en-translation-ph': 'Локализованная строка (англ.)',
+        'ru-translation-ph': 'Локализованная строка (рус.)',
+        'list-heading-label': 'Доступные свойства',
+        'no-items-label': 'Нет доступных свойств'
       },
       'display-settings': {
         'date-format-label': 'Формат даты',

@@ -43,23 +43,45 @@
   </div>
   <div class="row">
     <div class="eight wide column">
+      <label>{{t listHeadingLabel}}</label>
       <div class="ui selection list">
         {{#each allProperties as |property|}}
-          <div class="item {{if (eq _selectedProperty.key property) "active"}}" {{action "test" property}}>
+          <div class="item {{if (eq _selectedProperty.key property) "active"}}" {{action "onPropertySelected" property}}>
             <div class="content">
               {{property}}
             </div>
+          </div>
+        {{else}}
+          <div class="item">
+            {{t noItemsAvaliableLabel}}
           </div>
         {{/each}}
       </div>
     </div>
     <div class="eight wide column">
-      {{flexberry-textbox
-        value=selectedProperty.ru
-      }}
-      {{flexberry-textbox
-        value=selectedProperty.en
-      }}
+      <div class="field">
+        <label>{{t ruTranslationLabel}}</label>
+        {{flexberry-textbox
+          value=_selectedProperty.ru
+          readonly=isNotSelected
+          placeholder=(t ruTranslationPlaceholder)
+        }}
+      </div>
+      <div class="field">
+        <label>{{t enTranslationLabel}}</label>
+        {{flexberry-textbox
+          value=_selectedProperty.en
+          readonly=isNotSelected
+          placeholder=(t enTranslationPlaceholder)
+        }}
+      </div>
+      <div class="field">
+        {{flexberry-button
+          caption=(t applyButtonLabel)
+          readonly=isNotSelected
+          click=(action "onButtonClick")
+        }}
+      </div>
     </div>
   </div>
 </div>
