@@ -25,8 +25,20 @@ export default {
         'display-property-is-callback-label': 'Отображаемое свойство – callback',
         'display-property-label': 'Отображаемое свойство',
         'excluded-properties-label': 'Исключаемые свойства'
-      }
-    }
+      },
+
+      'identification-settings': 'Может быть идентифицирован',
+
+      'context-search-fields-selector': 'Поля для контекстного поиска',
+
+      'legend-settings': {
+        'legend-can-be-displayed': 'Отображать легенду',
+        'url': 'URL',
+        'version': 'Версия',
+        'format': 'Формат',
+        'layers': 'Слои'
+      },
+    },
   },
 
   'tile': {

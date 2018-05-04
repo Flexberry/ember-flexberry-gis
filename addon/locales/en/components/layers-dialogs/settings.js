@@ -25,6 +25,16 @@ export default {
         'ru-translation-ph': 'Russian locale string',
         'list-heading-label': 'Avaliable properties',
         'no-items-label': 'No properties avaliable'
+      },
+
+      'identification-settings': 'Can be identified',
+
+      'legend-settings': {
+        'legend-can-be-displayed': 'Legend can be displayed',
+        'url': 'URL',
+        'version': 'Version',
+        'format': 'Format',
+        'layers': 'Layers'
       }
     }
   },
