@@ -37,7 +37,7 @@
       {{/if}}
       {{#if _identifySettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "identify-tab") "active"}}" data-tab="identify-tab">
-          {{flexberry-jsonarea value=_layer.settings.identifySettings}}
+          {{layers-dialogs/group/tab/identification-settings value=_layer.settings.identifySettings}}
         </div>
       {{/if}}
       {{#if _searchSettingsAreAvailableForType}}
@@ -51,7 +51,10 @@
       {{/if}}
       {{#if _legendSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "legend-tab") "active"}}" data-tab="legend-tab">
-          {{flexberry-jsonarea value=_layer.settings.legendSettings}}
+          {{layers-dialogs/group/tab/legend-settings
+            value=_layer.settings.legendSettings
+            type=_layer.type
+          }}
         </div>
       {{/if}}
       {{#if _filterSettingsAreAvailableForType}}

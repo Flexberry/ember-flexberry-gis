@@ -55,13 +55,6 @@ module.exports = function (environment) {
         // This let user to continue work without online connection.
         syncDownWhenOnlineEnabled: false,
       },
-
-      components: {
-        flexberryBoundingbox: {
-          // Map id, that must be shown in this component.
-          mapId: '0248624e-ba4a-4fce-a524-48e385d33f41',
-        }
-      }
     }
   };
 
@@ -127,7 +120,7 @@ module.exports = function (environment) {
 
     // Change base URL to force paths to application assets be relative.
     ENV.baseURL = '/' + ENV.repositoryName + '/' + brunch + '/';
-    ENV.locationType = 'none';
+    ENV.locationType = 'hash';
   }
 
   return ENV;

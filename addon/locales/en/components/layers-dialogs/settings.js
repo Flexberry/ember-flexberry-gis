@@ -12,7 +12,17 @@ export default {
         'can-be-searched-label': 'Can be searched',
         'search-fields-selector': 'Fields to search within',
         'context-search-fields-selector': 'Fields to context-search within'
-      }
+      },
+
+      'legend-settings':{
+        'legend-can-be-displayed': 'Legend can be displayed',
+        'url': 'URL',
+        'version': 'Version',
+        'format': 'Format',
+        'layers': 'Layers'
+      },
+
+      'identification-settings': 'Can be identified'
     }
   },
 

@@ -12,7 +12,17 @@ export default {
         'can-be-searched-label': 'Может быть найдено',
         'search-fields-selector': 'Поля для поиска',
         'context-search-fields-selector': 'Поля для контекстного поиска'
-      }
+      },
+
+      'legend-settings':{
+        'legend-can-be-displayed': 'Отображать легенду',
+        'url': 'URL',
+        'version': 'Версия',
+        'format': 'Формат',
+        'layers': 'Слои'
+      },
+
+      'identification-settings': 'Может быть идентифицирован'
     }
   },
 
