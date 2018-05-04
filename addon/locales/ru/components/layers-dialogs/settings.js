@@ -13,7 +13,9 @@ export default {
         'version': 'Версия',
         'format': 'Формат',
         'layers': 'Слои'
-      }
+      },
+
+      'identification-settings': 'Может быть идентифицирован'
     }
   },
 
