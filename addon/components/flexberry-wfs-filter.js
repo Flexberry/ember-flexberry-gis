@@ -80,7 +80,7 @@ export default Ember.Component.extend({
   featuresPropertiesSettings: null,
 
   /**
-    Method for create leaflet's layer object.
+    Method to create leaflet's layer object.
 
     @property _leafletObjectMethod
     @type Function
