@@ -24,12 +24,12 @@ export default Ember.Component.extend({
     Style class for checkbox component.
 
     @property classNames
-    @type String 
+    @type String
     @default 'toggle'
   */
   classNames: 'toggle',
 
-  /** 
+  /**
     Current object with settings
 
     @property value
@@ -42,9 +42,9 @@ export default Ember.Component.extend({
     Current checkbox value.
 
     @property _canBeDisplayed
-    @type Boolean  
+    @type Boolean
     @default true
-    @private 
+    @private
   */
   _canBeDisplayed: undefined,
 
@@ -64,7 +64,7 @@ export default Ember.Component.extend({
 
       let obj = null;
 
-      if(this.get('_isWmsType')){
+      if (this.get('_isWmsType')) {
         obj = {
           legendCanBeDisplayed: this.get('_canBeDisplayed'),
           url: this.get('_url'),
@@ -77,6 +77,7 @@ export default Ember.Component.extend({
           legendCanBeDisplayed: this.get('_canBeDisplayed')
         };
       }
+
       this.set('value', obj);
     }
   ),
@@ -85,14 +86,14 @@ export default Ember.Component.extend({
     Flag: indicates whether  layer's type is wms.
 
     @property _isWmsType
-    @type Boolean  
+    @type Boolean
     @default false
-    @private 
+    @private
   */
   _isWmsType: Ember.computed('type', function () {
-    let type=this.get('type');
+    let type = this.get('type');
 
-    if(!Ember.isNone(type) && type.indexOf('wms') > -1){
+    if (!Ember.isNone(type) && type.indexOf('wms') > -1) {
       return true;
     } else {
       return false;
