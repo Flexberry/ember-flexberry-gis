@@ -13,7 +13,9 @@ export default {
         'version': 'Version',
         'format': 'Format',
         'layers': 'Layers'
-      }
+      },
+
+      'identification-settings': 'Can be identified'
     }
   },
 
