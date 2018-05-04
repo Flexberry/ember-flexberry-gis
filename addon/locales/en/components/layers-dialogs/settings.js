@@ -7,6 +7,14 @@ import Kml from './settings/kml';
 export default {
   'group': {
     'tab': {
+      'legend-settings':{
+        'legend-can-be-displayed': 'Legend can be displayed',
+        'url': 'URL',
+        'version': 'Version',
+        'format': 'Format',
+        'layers': 'Layers'
+      },
+
       'identification-settings': 'Can be identified'
     }
   },
