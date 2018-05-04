@@ -88,6 +88,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "FlexberryMaplayersComponent",
         "FlexberryMaptoolbarComponent",
         "FlexberryMaptoolbarComponet",
+        "FlexberryMultipleSelectComponent",
         "FlexberryRemoveLayerDialogComponent",
         "FlexberrySearchComponent",
         "FlexberrySearchMapCommandDialogComponent",

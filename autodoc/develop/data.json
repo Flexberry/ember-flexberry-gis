@@ -205,9 +205,7 @@
         "addon/components/layers-dialogs/group/tab/identification-settings.js": {
             "name": "addon/components/layers-dialogs/group/tab/identification-settings.js",
             "modules": {},
-            "classes": {
-                "FlexberryIdentificationSettingsComponent": 1
-            },
+            "classes": {},
             "fors": {},
             "namespaces": {}
         },
@@ -229,6 +227,15 @@
             "name": "addon/components/layers-dialogs/group/tab/prototyping-modes.js",
             "modules": {},
             "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/layers-dialogs/group/tab/search-settings.js": {
+            "name": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "modules": {},
+            "classes": {
+                "FlexberryIdentificationSettingsComponent": 1
+            },
             "fors": {},
             "namespaces": {}
         },
@@ -1101,6 +1108,15 @@
             "fors": {
                 "FlexberryMaptoolbarComponent": 1
             },
+            "namespaces": {}
+        },
+        "addon/components/flexberry-multiple-select.js": {
+            "name": "addon/components/flexberry-multiple-select.js",
+            "modules": {},
+            "classes": {
+                "FlexberryMultipleSelectComponent": 1
+            },
+            "fors": {},
             "namespaces": {}
         },
         "addon/components/flexberry-search.js": {
@@ -2965,6 +2981,7 @@
                 "FlexberryMaplayersComponent": 1,
                 "FlexberryMaptoolbarComponent": 1,
                 "FlexberryMaptoolbarComponet": 1,
+                "FlexberryMultipleSelectComponent": 1,
                 "FlexberrySearchComponent": 1,
                 "FlexberryTableComponent": 1,
                 "HistoryControlComponent": 1,
@@ -3561,7 +3578,7 @@
             "extension_for": [],
             "module": "ember-flexberry-gis",
             "namespace": "",
-            "file": "addon/components/layers-dialogs/group/tab/identification-settings.js",
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
             "line": 4,
             "description": "Component for identification settings tab in layer settings.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
@@ -4915,6 +4932,21 @@
             "file": "addon/components/flexberry-maptoolbar.js",
             "line": 29,
             "description": "Map toolbar component.\nComponent must be used in combination with any map tool components as a wrapper for them.\n\nUsage:\ntemplates/my-map-form.hbs\n```handlebars\n{{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}\n  {{map-tools/base name=\"my-map-tool\" activate=(action \"onMapToolActivate\" target=maptoolbar)}}\n{{/flexberry-maptoolbar}}\n```",
+            "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
+        },
+        "FlexberryMultipleSelectComponent": {
+            "name": "FlexberryMultipleSelectComponent",
+            "shortname": "FlexberryMultipleSelectComponent",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": "",
+            "file": "addon/components/flexberry-multiple-select.js",
+            "line": 4,
+            "description": "Flexberry multiple select component.\nUsage example:\n\ntemplates/my-form.hbs\n\n```handlebars\n{{flexberry-multiple-select\n  items=fields\n  selectedItems=value.searchFields\n  title=('t' _searchFieldsSelectorLabel)\n  allowAdditions=true\n}}\n```",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
         },
         "FlexberrySearchComponent": {
@@ -10321,14 +10353,14 @@
             "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
             "line": 5,
             "description": "Component for legend settings tab in layer settings.",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
             "line": 9,
             "description": "Reference to component's template.",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10339,7 +10371,7 @@
             "name": "canBeDisplayedCaption",
             "type": "String",
             "default": "t('components.layers-dialogs.settings.group.tab.legend-settings.legend-can-be-displayed')",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10350,7 +10382,7 @@
             "name": "checkboxClass",
             "type": "String",
             "default": "'toggle'",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10361,7 +10393,7 @@
             "name": "value",
             "type": "Object",
             "default": "undefined",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10374,7 +10406,7 @@
             "default": "true",
             "access": "private",
             "tagname": "",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10385,7 +10417,7 @@
             "name": "_settingsForChanged",
             "access": "private",
             "tagname": "",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10398,7 +10430,7 @@
             "default": "false",
             "access": "private",
             "tagname": "",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10411,7 +10443,7 @@
             "default": "''",
             "access": "private",
             "tagname": "",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10424,7 +10456,7 @@
             "default": "''",
             "access": "private",
             "tagname": "",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10437,7 +10469,7 @@
             "default": "''",
             "access": "private",
             "tagname": "",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10450,21 +10482,21 @@
             "default": "''",
             "access": "private",
             "tagname": "",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
             "line": 143,
             "description": "Initializes component.",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers-dialogs/group/tab/main-settings.js",
             "line": 8,
             "description": "Reference to component's template.",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10475,7 +10507,7 @@
             "name": "typeDropdownCaption",
             "type": "String",
             "default": "t('components.layers-dialogs.edit.type-dropdown.caption')",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10486,7 +10518,7 @@
             "name": "nameTextboxCaption",
             "type": "String",
             "default": "t('components.layers-dialogs.edit.name-textbox.caption')",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10497,7 +10529,7 @@
             "name": "descriptionTextboxCaption",
             "type": "String",
             "default": "t('components.layers-dialogs.edit.description-textbox.caption')",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10508,7 +10540,7 @@
             "name": "keyWordsTextboxCaption",
             "type": "String",
             "default": "t('components.layers-dialogs.edit.keywords-textbox.caption')",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10519,7 +10551,7 @@
             "name": "scaleTextboxCaption",
             "type": "String",
             "default": "t('components.layers-dialogs.edit.name-textbox.caption')",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10530,7 +10562,7 @@
             "name": "scales",
             "type": "Array",
             "default": "[500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10543,7 +10575,7 @@
             "access": "private",
             "tagname": "",
             "readonly": "",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10552,14 +10584,14 @@
             "description": "Handles scale input keyDown action.",
             "itemtype": "method",
             "name": "actions.scaleInputKeyDown",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers-dialogs/group/tab/prototyping-modes.js",
             "line": 11,
             "description": "Reference to component's template.",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10570,7 +10602,7 @@
             "name": "_availableModesCaptions",
             "type": "String[]",
             "readonly": "",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -10581,7 +10613,150 @@
             "name": "_selectedMode",
             "type": "Object",
             "readonly": "",
-            "class": "BaseModeComponent",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 12,
+            "description": "Reference to component's template.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 17,
+            "description": "\"Can be searched\" checkbox label locale key.",
+            "itemtype": "property",
+            "name": "_canBeSearchedCheckBoxLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.search-settings.can-be-searched-label'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 26,
+            "description": "\"Can be context-searched\" checkbox label locale key.",
+            "itemtype": "property",
+            "name": "_canBeContextSearchedCheckBoxLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.search-settings.can-be-context-searched-label'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 35,
+            "description": "Label for context-searched fields selector.",
+            "itemtype": "property",
+            "name": "_contextSearchFieldsSelectorLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.search-settings.context-search-fields-selector'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 44,
+            "description": "Label for searched fields selector.",
+            "itemtype": "property",
+            "name": "_searchFieldsSelectorLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.search-settings.search-fields-selector'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 53,
+            "description": "Leaflet's layer type.",
+            "itemtype": "property",
+            "name": "_layerType",
+            "type": "Object",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 62,
+            "description": "Leaflet's layer object.",
+            "itemtype": "property",
+            "name": "_leafletObject",
+            "type": "Object",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 72,
+            "description": "Method to create leaflet's layer object.",
+            "itemtype": "property",
+            "name": "_leafletObjectMethod",
+            "type": "Function",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 82,
+            "description": "Indicates when leaflet's layer object is loading.",
+            "itemtype": "property",
+            "name": "_leafletObjectIsLoading",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 92,
+            "description": "Array containing Fields in current leaflet object.",
+            "itemtype": "property",
+            "name": "fields",
+            "type": "Array",
+            "default": "Ember.A()",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 101,
+            "description": "Style class for checkbox component.",
+            "itemtype": "property",
+            "name": "checkboxClass",
+            "type": "String",
+            "default": "'toggle'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 110,
+            "description": "Current object with search settings.",
+            "itemtype": "property",
+            "name": "value",
+            "type": "Object",
+            "default": "Object",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
+            "line": 124,
+            "description": "Initializes page's DOM-related properties.",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -27925,6 +28100,86 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/components/flexberry-multiple-select.js",
+            "line": 22,
+            "description": "Reference to component's template.",
+            "class": "FlexberryMultipleSelectComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-multiple-select.js",
+            "line": 27,
+            "description": "Array with all dropdown items.",
+            "itemtype": "property",
+            "name": "items",
+            "type": "Object",
+            "default": "Ember.A()",
+            "class": "FlexberryMultipleSelectComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-multiple-select.js",
+            "line": 36,
+            "description": "Array with selected dropdown items.",
+            "itemtype": "property",
+            "name": "selectedItems",
+            "type": "Object",
+            "default": "Ember.A()",
+            "class": "FlexberryMultipleSelectComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-multiple-select.js",
+            "line": 45,
+            "description": "Dropdown title.",
+            "itemtype": "property",
+            "name": "title",
+            "type": "String",
+            "default": "undefined",
+            "class": "FlexberryMultipleSelectComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-multiple-select.js",
+            "line": 54,
+            "description": "Flag, allows or forbids manual addition.",
+            "itemtype": "property",
+            "name": "allowAdditions",
+            "type": "Boolean",
+            "default": "false",
+            "class": "FlexberryMultipleSelectComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-multiple-select.js",
+            "line": 63,
+            "description": "Classname.",
+            "itemtype": "property",
+            "name": "selectorName",
+            "type": "String",
+            "default": "'fb-selector'",
+            "class": "FlexberryMultipleSelectComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-multiple-select.js",
+            "line": 72,
+            "description": "Array with not-selected dropdown items.",
+            "itemtype": "property",
+            "name": "_usedItems",
+            "type": "Object",
+            "readonly": "",
+            "class": "FlexberryMultipleSelectComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-multiple-select.js",
+            "line": 95,
+            "description": "Hook, working after element insertion",
+            "class": "FlexberryMultipleSelectComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/components/flexberry-search.js",
             "line": 9,
             "description": "Component's CSS-classes names.\nJSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.",
@@ -28586,7 +28841,7 @@
         {
             "file": "addon/components/flexberry-wfs-filter.js",
             "line": 82,
-            "description": "Method for create leaflet's layer object.",
+            "description": "Method to create leaflet's layer object.",
             "itemtype": "property",
             "name": "_leafletObjectMethod",
             "type": "Function",
@@ -38171,6 +38426,14 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/layers-dialogs/group/tab/search-settings.js:12"
+        },
+        {
+            "message": "Missing item type\nInitializes page's DOM-related properties.",
+            "line": " addon/components/layers-dialogs/group/tab/search-settings.js:124"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
             "line": " addon/components/layers-dialogs/group/display.js:16"
         },
         {
@@ -38996,6 +39259,14 @@
         {
             "message": "Missing item type\nDestroys component.",
             "line": " addon/components/flexberry-maptoolbar.js:254"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/flexberry-multiple-select.js:22"
+        },
+        {
+            "message": "Missing item type\nHook, working after element insertion",
+            "line": " addon/components/flexberry-multiple-select.js:95"
         },
         {
             "message": "Missing item type\nReference to component's template.",
