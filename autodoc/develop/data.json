@@ -211,6 +211,13 @@
             "fors": {},
             "namespaces": {}
         },
+        "addon/components/layers-dialogs/group/tab/legend-settings.js": {
+            "name": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/components/layers-dialogs/group/tab/main-settings.js": {
             "name": "addon/components/layers-dialogs/group/tab/main-settings.js",
             "modules": {},
@@ -10264,7 +10271,7 @@
             "line": 26,
             "description": "Style class for checkbox component.",
             "itemtype": "property",
-            "name": "class",
+            "name": "checkboxClass",
             "type": "String",
             "default": "'toggle'",
             "class": "FlexberryIdentificationSettingsComponent",
@@ -10308,6 +10315,149 @@
             "line": 66,
             "description": "Initializes component.",
             "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 5,
+            "description": "Component for legend settings tab in layer settings.",
+            "class": "BaseModeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 9,
+            "description": "Reference to component's template.",
+            "class": "BaseModeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 14,
+            "description": "Caption to be displayed in checkbox",
+            "itemtype": "property",
+            "name": "canBeDisplayedCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.settings.group.tab.legend-settings.legend-can-be-displayed')",
+            "class": "BaseModeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 23,
+            "description": "Style class for checkbox component.",
+            "itemtype": "property",
+            "name": "checkboxClass",
+            "type": "String",
+            "default": "'toggle'",
+            "class": "BaseModeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 32,
+            "description": "Current object with settings",
+            "itemtype": "property",
+            "name": "value",
+            "type": "Object",
+            "default": "undefined",
+            "class": "BaseModeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 41,
+            "description": "Current checkbox value.",
+            "itemtype": "property",
+            "name": "_canBeDisplayed",
+            "type": "Boolean",
+            "default": "true",
+            "access": "private",
+            "tagname": "",
+            "class": "BaseModeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 51,
+            "description": "Observer changes settings for legend.",
+            "itemtype": "method",
+            "name": "_settingsForChanged",
+            "access": "private",
+            "tagname": "",
+            "class": "BaseModeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 85,
+            "description": "Flag: indicates whether  layer's type is wms.",
+            "itemtype": "property",
+            "name": "_isWmsType",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "BaseModeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 103,
+            "description": "Property containing url.",
+            "itemtype": "property",
+            "name": "_url",
+            "type": "String",
+            "default": "''",
+            "access": "private",
+            "tagname": "",
+            "class": "BaseModeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 113,
+            "description": "Property containing version.",
+            "itemtype": "property",
+            "name": "_version",
+            "type": "String",
+            "default": "''",
+            "access": "private",
+            "tagname": "",
+            "class": "BaseModeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 123,
+            "description": "Property containing format.",
+            "itemtype": "property",
+            "name": "_format",
+            "type": "String",
+            "default": "''",
+            "access": "private",
+            "tagname": "",
+            "class": "BaseModeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 133,
+            "description": "Property containing layers.",
+            "itemtype": "property",
+            "name": "_layers",
+            "type": "String",
+            "default": "''",
+            "access": "private",
+            "tagname": "",
+            "class": "BaseModeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
+            "line": 143,
+            "description": "Initializes component.",
+            "class": "BaseModeComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -37998,6 +38148,18 @@
         {
             "message": "Missing item type\nInitializes component.",
             "line": " addon/components/layers-dialogs/group/tab/identification-settings.js:66"
+        },
+        {
+            "message": "Missing item type\nComponent for legend settings tab in layer settings.",
+            "line": " addon/components/layers-dialogs/group/tab/legend-settings.js:5"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/layers-dialogs/group/tab/legend-settings.js:9"
+        },
+        {
+            "message": "Missing item type\nInitializes component.",
+            "line": " addon/components/layers-dialogs/group/tab/legend-settings.js:143"
         },
         {
             "message": "Missing item type\nReference to component's template.",
