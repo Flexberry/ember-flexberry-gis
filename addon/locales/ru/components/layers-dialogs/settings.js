@@ -8,7 +8,7 @@ export default {
   'group': {
     'tab': {
       'legend-settings':{
-        'legendCanBeDisplayed': 'Показывать',
+        'legend-can-be-displayed': 'Отображать легенду',
         'url': 'URL',
         'version': 'Версия',
         'format': 'Формат',

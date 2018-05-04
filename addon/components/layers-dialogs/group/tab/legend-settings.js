@@ -16,18 +16,18 @@ export default Ember.Component.extend({
 
     @property canBeDisplayedCaption
     @type String
-    @default t('components.layers-dialogs.settings.group.tab.legend-settings.legendCanBeDisplayed')
+    @default t('components.layers-dialogs.settings.group.tab.legend-settings.legend-can-be-displayed')
   */
-  canBeDisplayedLabel: t('components.layers-dialogs.settings.group.tab.legend-settings.legendCanBeDisplayed'),
+  canBeDisplayedLabel: t('components.layers-dialogs.settings.group.tab.legend-settings.legend-can-be-displayed'),
 
   /**
     Style class for checkbox component.
 
-    @property classNames
+    @property checkboxClass
     @type String
     @default 'toggle'
   */
-  classNames: 'toggle',
+  checkboxClass: 'toggle',
 
   /**
     Current object with settings

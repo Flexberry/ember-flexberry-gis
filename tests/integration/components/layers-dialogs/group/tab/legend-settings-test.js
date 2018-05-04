@@ -39,5 +39,5 @@ test('it renders', function(assert) {
                     type=_layer.type
                   }}`);
 
-  assert.equal(this.$().text().trim(), 'Показывать');
+  assert.equal(this.$().text().trim(), 'Отображать легенду');
 });
