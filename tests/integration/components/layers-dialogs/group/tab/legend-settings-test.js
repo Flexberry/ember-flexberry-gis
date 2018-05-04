@@ -17,7 +17,6 @@ moduleForComponent('layers-dialogs/group/tab/legend-settings', 'Integration | Co
     });
 
     this.set('i18n.locale', 'ru');
-    this.set('type', 'geojson');
 
     let obj = {
       settings: {
