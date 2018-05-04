@@ -20,7 +20,7 @@ moduleForComponent('layers-dialogs/group/tab/legend-settings', 'Integration | Co
 
     let obj = {
       settings: {
-        displaySettings: {
+        legendSettings: {
           legendCanBeDisplayed: true
         }
       }
@@ -39,5 +39,5 @@ test('it renders', function(assert) {
                     type=_layer.type
                   }}`);
 
-  assert.equal(this.$().text().trim(), '');
+  assert.equal(this.$().text().trim(), 'Показывать');
 });
