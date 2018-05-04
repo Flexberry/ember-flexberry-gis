@@ -47,7 +47,10 @@
       {{/if}}
       {{#if _legendSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "legend-tab") "active"}}" data-tab="legend-tab">
-          {{flexberry-jsonarea value=_layer.settings.legendSettings}}
+          {{layers-dialogs/group/tab/legend-settings
+            value=_layer.settings.legendSettings
+            type=_layer.type
+          }}
         </div>
       {{/if}}
       {{#if _filterSettingsAreAvailableForType}}

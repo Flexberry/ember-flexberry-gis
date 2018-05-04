@@ -6,6 +6,15 @@ import Kml from './settings/kml';
 
 export default {
   'group': {
+    'tab': {
+      'legend-settings':{
+        'legendCanBeDisplayed': 'Can be displayed',
+        'url': 'URL',
+        'version': 'Version',
+        'format': 'Format',
+        'layers': 'Layers'
+      }
+    }
   },
 
   'tile': {
