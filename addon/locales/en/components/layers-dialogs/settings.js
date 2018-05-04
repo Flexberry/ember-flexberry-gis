@@ -15,7 +15,7 @@ export default {
         'layers': 'Layers'
       },
 
-      'identification-settings': 'Can be identified' 
+      'identification-settings': 'Can be identified'
     }
   },
 
