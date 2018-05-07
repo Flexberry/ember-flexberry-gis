@@ -13,16 +13,29 @@ export default {
         'search-fields-selector': 'Fields to search within',
         'context-search-fields-selector': 'Fields to context-search within'
       },
+      'display-settings': {
+        'date-format-label': 'Date format',
+        'display-property-is-callback-label': 'Display property is callback',
+        'display-property-label': 'A property to display',
+        'excluded-properties-label': 'Excluded properties',
+        'apply-button-label': 'Apply',
+        'en-translation-label': 'English locale string',
+        'ru-translation-label': 'Russian locale string',
+        'en-translation-ph': 'English locale string',
+        'ru-translation-ph': 'Russian locale string',
+        'list-heading-label': 'Avaliable properties',
+        'no-items-label': 'No properties avaliable'
+      },
 
-      'legend-settings':{
+      'identification-settings': 'Can be identified',
+
+      'legend-settings': {
         'legend-can-be-displayed': 'Legend can be displayed',
         'url': 'URL',
         'version': 'Version',
         'format': 'Format',
         'layers': 'Layers'
-      },
-
-      'identification-settings': 'Can be identified'
+      }
     }
   },
 
