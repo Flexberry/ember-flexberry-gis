@@ -16,17 +16,17 @@ export default Ember.Component.extend(
   /**
     Available modes captions.
 
-    @property _availableModesCaptions
+    @property availableModesCaptions
     @type String[]
     @readonly
   */
-  _availableModesCaptions: Ember.computed('_availableModes', 'i18n.locale', function () {
-    let _availableModes = this.get('_availableModes');
+  availableModesCaptions: Ember.computed('availableModes', 'i18n.locale', function () {
+    let availableModes = this.get('availableModes');
     let modes = Ember.A();
-    if (Ember.isArray(_availableModes) && _availableModes.length !== 0) {
+    if (Ember.isArray(availableModes) && availableModes.length !== 0) {
       let i18n = this.get('i18n');
       modes.pushObject(i18n.t('components.layers-dialogs.layers-prototyping-modes.new'));
-      modes.pushObjects(_availableModes.map((editMode) => {
+      modes.pushObjects(availableModes.map((editMode) => {
         return i18n.t('components.layers-dialogs.layers-prototyping-modes.' + editMode.name);
       }));
     }
@@ -41,17 +41,17 @@ export default Ember.Component.extend(
     @type Object
     @readonly
   */
-  _selectedMode: Ember.computed('_selectedModeCaption', function () {
-    let _availableModes = this.get('_availableModes');
-    let _availableModesCaptions = this.get('_availableModesCaptions');
-    let _selectedModeCaption = this.get('_selectedModeCaption');
+  _selectedMode: Ember.computed('selectedModeCaption', function () {
+    let availableModes = this.get('availableModes');
+    let availableModesCaptions = this.get('availableModesCaptions');
+    let selectedModeCaption = this.get('selectedModeCaption');
 
-    if (!Ember.isArray(_availableModes) || !Ember.isArray(_availableModesCaptions) || Ember.isBlank(_selectedModeCaption)) {
+    if (!Ember.isArray(availableModes) || !Ember.isArray(availableModesCaptions) || Ember.isBlank(selectedModeCaption)) {
       return null;
     }
 
-    let modeIndex = _availableModesCaptions.findIndex(item => item.string === _selectedModeCaption) - 1;
+    let modeIndex = availableModesCaptions.findIndex(item => item.string === selectedModeCaption) - 1;
 
-    return modeIndex > -1 ? _availableModes.objectAt(modeIndex) : null;
+    return modeIndex > -1 ? availableModes.objectAt(modeIndex) : null;
   })
 });

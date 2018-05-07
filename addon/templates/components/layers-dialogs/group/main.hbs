@@ -28,9 +28,9 @@
       {{#if _mainSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "main-tab") "active"}}" data-tab="main-tab">
           {{layers-dialogs/group/tab/main-settings
-            _availableTypes=_availableTypes
-            _layer=_layer
-            _typeIsReadonly=_typeIsReadonly
+            availableTypes=_availableTypes
+            layer=_layer
+            typeIsReadonly=_typeIsReadonly
           }}
         </div>
       {{/if}}
@@ -68,8 +68,8 @@
           {{layers-dialogs/group/tab/prototyping-modes
             editingFinished=(action layerEditingFinished)
             layerEditingFinished=layerEditingFinished
-            _availableModes=_availableModes
-            _selectedModeCaption=_selectedModeCaption
+            availableModes=_availableModes
+            selectedModeCaption=_selectedModeCaption
           }}
         </div>
       {{/if}}

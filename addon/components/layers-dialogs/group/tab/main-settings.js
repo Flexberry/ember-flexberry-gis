@@ -72,8 +72,8 @@ export default Ember.Component.extend({
     @private
     @readonly
   */
-  _scaleSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
-    let className = this.get('_layer.type');
+  _scaleSettingsAreAvailableForType: Ember.computed('layer.type', function () {
+    let className = this.get('layer.type');
 
     return Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
   }),
