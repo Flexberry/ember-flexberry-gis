@@ -15,12 +15,12 @@ export default Ember.Component.extend({
 
   /**
   Leaflet's layer type.
-  @property _layerType
+  @property layerType
   @type Object
   @default undefined
   @private
   */
-  _layerType: undefined,
+  layerType: undefined,
 
   /**
     Leaflet's layer object.
@@ -35,12 +35,12 @@ export default Ember.Component.extend({
   /**
     Method to create leaflet's layer object.
 
-    @property _leafletObjectMethod
+    @property leafletObjectMethod
     @type Function
     @default undefined
     @private
   */
-  _leafletObjectMethod: undefined,
+  leafletObjectMethod: undefined,
 
   /**
     Indicates when leaflet's layer object is loading.
@@ -283,8 +283,8 @@ export default Ember.Component.extend({
     let _this = this;
     let leafletObject = _this.get('_leafletObject');
     if (Ember.isNone(leafletObject)) {
-      let type = _this.get('_layerType');
-      let leafletObjectMethod = _this.get('_leafletObjectMethod');
+      let type = _this.get('layerType');
+      let leafletObjectMethod = _this.get('leafletObjectMethod');
       if (!(Ember.isBlank(leafletObjectMethod) || Ember.isBlank(type))) {
         _this.set('_leafletObjectIsLoading', true);
         leafletObjectMethod().then(leafletObject => {

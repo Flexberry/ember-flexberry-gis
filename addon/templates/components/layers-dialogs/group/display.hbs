@@ -34,22 +34,24 @@
         <div class="ui bottom attached tab segment {{if (eq _activeTab "display-tab") "active"}}" data-tab="display-tab">
           {{layers-dialogs/group/tab/display-settings
             value=_layer.settings.displaySettings
-            _layerType=_layer.type
-            _leafletObjectMethod=_leafletObjectForFilter
+            layerType=_layer.type
+            leafletObjectMethod=_leafletObjectForFilter
           }}
         </div>
       {{/if}}
       {{#if _identifySettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "identify-tab") "active"}}" data-tab="identify-tab">
-          {{layers-dialogs/group/tab/identification-settings value=_layer.settings.identifySettings}}
+          {{layers-dialogs/group/tab/identification-settings
+            value=_layer.settings.identifySettings
+          }}
         </div>
       {{/if}}
       {{#if _searchSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "search-tab") "active"}}" data-tab="search-tab">
           {{layers-dialogs/group/tab/search-settings
             value=_layer.settings.searchSettings
-            _layerType=_layer.type
-            _leafletObjectMethod=_leafletObjectForFilter
+            layerType=_layer.type
+            leafletObjectMethod=_leafletObjectForFilter
           }}
         </div>
       {{/if}}
