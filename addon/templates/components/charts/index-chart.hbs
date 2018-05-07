@@ -36,7 +36,7 @@
       <div class="column">
         {{#if _selectedModeType}}
           {{component (concat "charts/type-charts/" _selectedModeType)
-            _isObject=_isObjProperties
+            _isObject=_isObjPropertiesComputed
             _localizedProperties=_localizedProperties
             _titleChart=_captionChart
             _chartType=_selectedModeType
@@ -45,6 +45,32 @@
         {{/if}}
       </div>
     </div>
+    <div class="field">
+      {{flexberry-checkbox
+        value=_classifyProperty
+        label=(t "components.charts.index-chart.classify-checkbox")
+      }}
+    </div>
+    {{#if _classifyProperty}}
+      <div class="field">
+        <label>
+          {{t "components.charts.index-chart.classify-property-checkbox"}}
+        </label>
+        {{flexberry-dropdown
+            items=_localizedProperties
+            value=_propertyForClassifyValue
+        }}
+      </div>
+      <div class="field {{if _propertyForClassifyValue "" " disabled"}}">
+        <label>
+          {{t "components.charts.index-chart.unique-symbol-checkbox"}}
+        </label>
+        {{flexberry-dropdown
+            items=_uniqueSymbolClassifyPropertyItems
+            value=_uniqueSymbolClassifyPropertyValue
+        }}
+      </div>
+    {{/if}}
   </div>
   <div class="nine wide column">
     <canvas id="containerCR"></canvas>
