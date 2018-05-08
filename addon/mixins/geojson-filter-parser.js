@@ -40,13 +40,32 @@ export default Ember.Mixin.create({
 
     @method parseFilterExpression
     @param {String} expression Filter string
+    @param {String} geometryField Name of the layer's geometry field
     @param {Boolean} isInnerExpression Indicates it's inner expression or not
     @returns {Object} Filter object for layer
   */
-  parseFilter(filter, isInnerExpression) {
+  parseFilter(filter, geometryField, isInnerExpression) {
     let result = this._super(...arguments);
 
-    return Ember.isBlank(result) || isInnerExpression ? result : `function(feature) {${result}}`;
+    if (!(Ember.isBlank(result) || isInnerExpression)) {
+      let intersectFunction = `\nvar intersectCheck = function(condition, geoJSON) {` +
+        `var intersects = true;\n` +
+        `var bounds = new Terraformer.Polygon(geoJSON);\n` +
+        `var primitive = new Terraformer.Primitive(feature.geometry);\n` +
+        `if (typeof primitive.forEach === 'function') {\n` +
+        `  primitive.forEach(function(geometry, index) {\n` +
+        `    var primitive = this.get(index);\n` +
+        `    intersects = intersects && (primitive.within(bounds) || primitive.intersects(bounds));\n` +
+        `  });\n` +
+        `} else {\n` +
+        `  intersects = primitive.within(bounds) || primitive.intersects(bounds);\n` +
+        `}\n` +
+        `return condition === 'not in' ? !intersects : intersects;\n` +
+        `};\n`;
+      return `function(feature) {${intersectFunction} return ${result}}`;
+    }
+
+    return result;
   },
 
   /**
@@ -124,17 +143,6 @@ export default Ember.Mixin.create({
     @return {String} Body of filter function.
   */
   parseFilterGeometryExpression(condition, geoJSON) {
-    return `\nvar within = true;\n` +
-      `var bounds = new Terraformer.Polygon([[\n  [${geoJSON.coordinates[0].join('],\n  [')}]\n]]);\n` +
-      `var primitive = new Terraformer.Primitive(feature.geometry);\n` +
-      `if (typeof primitive.forEach === 'function') {\n` +
-      `  primitive.forEach(function(geometry, index) {\n` +
-      `    var primitive = this.get(index);\n` +
-      `    within = within && primitive.within(bounds);\n` +
-      `  });\n` +
-      `} else {\n` +
-      `  within = primitive.within(bounds);\n` +
-      `}\n\n` +
-      `return ${condition === 'not in' ? '!' : ''}within;\n`;
+    return `intersectCheck('${condition}', ${JSON.stringify(geoJSON)})`;
   },
 });
