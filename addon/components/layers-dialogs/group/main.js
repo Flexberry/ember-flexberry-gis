@@ -129,7 +129,7 @@ export default Ember.Component.extend(
       @method actions.onBoundingBoxChange
     */
     onBoundingBoxChange(e) {
-      this.set('_layer.boundingBox', e.bboxGeoJSON);
+      this.set('layer.boundingBox', e.bboxGeoJSON);
     }
   }
 });

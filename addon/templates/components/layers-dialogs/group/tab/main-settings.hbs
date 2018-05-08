@@ -4,9 +4,9 @@
   </label>
   {{flexberry-dropdown
     class="fluid"
-    items=_availableTypes
-    value=_layer.type
-    readonly=_typeIsReadonly
+    items=availableTypes
+    value=layer.type
+    readonly=typeIsReadonly
   }}
 </div>
 <div class="field">
@@ -15,7 +15,7 @@
   </label>
   {{flexberry-textbox
     class="fluid"
-    value=_layer.name
+    value=layer.name
   }}
 </div>
 <div class="field">
@@ -24,7 +24,7 @@
   </label>
   {{flexberry-textbox
     class="fluid"
-    value=_layer.description
+    value=layer.description
   }}
 </div>
 <div class="field">
@@ -33,7 +33,7 @@
   </label>
   {{flexberry-textbox
     class="fluid"
-    value=_layer.keyWords
+    value=layer.keyWords
   }}
 </div>
 {{#if _scaleSettingsAreAvailableForType}}
@@ -45,7 +45,7 @@
       class="scale-value fluid"
       direction="upward"
       items=scales
-      value=_layer.scale
+      value=layer.scale
       onKeyDown=(action "scaleInputKeyDown")
       inputPlaceholder=(t "forms.gis-search-form.scale-dropdown-input-placeholder")
       inputTitle=(t "forms.gis-search-form.scale-dropdown-input-title")
