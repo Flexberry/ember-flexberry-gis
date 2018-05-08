@@ -2,7 +2,7 @@
             Container
 *******************************/
 
-
+@gradientToolsCompoentsBorder: 1px solid gray;
 @inputColor: @darkbluecolor;
 @borderRadius: 5px;
 @borderBottom: 0px;

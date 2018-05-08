@@ -1062,6 +1062,8 @@ form.flexberry-edit-layermap {
           margin: 0 auto;
           border: 1px solid rgba(34, 36, 38, 0.15);
           border-radius: 0.285rem;
+          width: 240px;
+          height: 160px;
 
           // Force canvas to be sticky at the top of tab segment.
           position: static;
@@ -1131,9 +1133,14 @@ form.flexberry-edit-layermap {
       float: left;
     }
 
-    .gradient-tools-segment{
+    .gradient-tools-segment {
       float: left;
       margin-left: 1rem;
+
+      .preview-canvas {
+        width: 110px;
+        height: 60px;
+      }
     }
 
     .classify-categories-segment {
@@ -1203,11 +1210,11 @@ form.flexberry-edit-layermap {
 *********************************************/
 .gradient-edit {
   .flexberry-colorpicker {
-    border: 1px solid #7a7878;
+    border: @gradientToolsCompoentsBorder;
   }
 
   .flag {
-    border: 1px solid #7a7878;
+    border: @gradientToolsCompoentsBorder;
     width: 24px;
     height: 14px;
   }

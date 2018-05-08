@@ -13,6 +13,26 @@ import layout from '../../../templates/components/layers-styles/categorized/grad
 */
 export default Ember.Component.extend({
   /**
+    Flag indicate stroke gradient enable
+
+    @property _showStrokeGradientEdit
+    @type Boolean
+    @default false
+    @private
+  */
+  _showStrokeGradientEdit: false,
+
+  /**
+    Flag indicate fill gradient enable.
+
+    @property _showFillGradientEdit
+    @type Boolean
+    @default false
+    @private
+  */
+  _showFillGradientEdit: false,
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -97,39 +117,39 @@ export default Ember.Component.extend({
   */
   fillGradientPreview: 'fillGradientCanvas',
 
-  /**
-    Flag indicate stroke gradient enable
-
-    @property _showStrokeGradientEdit
-    @type Boolean
-    @default false
-    @private
-  */
-  _showStrokeGradientEdit: false,
-
-  /**
-    Flag indicate fill gradient enable.
-
-    @property _showFillGradientEdit
-    @type Boolean
-    @default false
-    @private
-  */
-  _showFillGradientEdit: false,
-
   actions: {
+    /**
+      Handles on stroke gradient previewCanvas click event.
+
+      @method actions.strokeGradientEditSwitch
+    */
     strokeGradientEditSwitch() {
       this.toggleProperty('_showStrokeGradientEdit');
     },
 
+    /**
+      Handles on fill gradient previewCanvas click event.
+
+      @method actions.fillGradientEditSwitch
+    */
     fillGradientEditSwitch() {
       this.toggleProperty('_showFillGradientEdit');
     },
 
+    /**
+      Handles changes selected item in stroke gradien dropdown.
+
+      @method actions.hideStrokeGradientEdit
+    */
     hideStrokeGradientEdit() {
       this.set('_showStrokeGradientEdit', false);
     },
 
+    /**
+      Handles changes selected item in fill gradien dropdown.
+
+      @method actions.hideFillGradientEdit
+    */
     hideFillGradientEdit() {
       this.set('_showFillGradientEdit', false);
     }

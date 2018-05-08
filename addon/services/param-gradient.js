@@ -44,14 +44,14 @@ export default Ember.Service.extend({
   },
 
   /**
-    Returns collection of object gradien list.
+    Add gradient to collection of object gradien list.
 
-    @method getGradientList
+    @method addGradientList
     @param {String} name The name for gradient.
     @param {String} colorStart Initial Color.
     @param {String} colorEnd End color.
   */
-  addGradientList(name, colorS, colorE) {
+  addGradientList(name, colorStart, colorEnd) {
     let gradient = this.get('_isGradientList');
     let existingGradientItem;
 
@@ -64,7 +64,7 @@ export default Ember.Service.extend({
     }
 
     if (Ember.isNone(existingGradientItem)) {
-      gradient.push({ 'name': name, 'colorS': colorS, 'colorE': colorE, 'canName': name });
+      gradient.push({ 'name': name, 'colorS': colorStart, 'colorE': colorEnd, 'canName': name });
       this.set('_isGradientList', gradient);
     }
   },
@@ -78,9 +78,8 @@ export default Ember.Service.extend({
     @param {String} colorEnd End color.
     @param {Boolean} editGradient Forms edit gradient.
   */
-  gradientDrawing(classCanvas, colorStart, colorEnd) {
-    let canvases = Ember.$('.' + classCanvas);
-    for (let i = 0; i < canvases.length; i++)  {
+  gradientDrawing(canvases, colorStart, colorEnd) {
+    for (let i = 0; i < canvases.length; i++) {
       let ctx = canvases[i].getContext('2d');
       let w = canvases[i].width;
       let h = canvases[i].height;

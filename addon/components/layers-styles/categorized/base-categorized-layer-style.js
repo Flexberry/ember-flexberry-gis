@@ -95,52 +95,6 @@ export default Ember.Component.extend({
   _editingCell: null,
 
   /**
-    Related leaflet layer.
-
-    @property leafletLayer
-    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
-    @default null
-    @public
-  */
-  leafletLayer: null,
-
-  /**
-    Component's wrapping <div> CSS-classes names.
-
-    @property classNames
-    @type String[]
-    @default null
-  */
-  classNames: null,
-
-  /**
-    Hash containing style settings.
-
-    @property styleSettings
-    @type Object
-    @default null
-  */
-  styleSettings: null,
-
-  /**
-    Hash containing layer display settings.
-
-    @property displaySettings
-    @type Object
-    @default null
-  */
-  displaySettings: null,
-
-  /**
-    Related layer's type.
-
-    @property layerType
-    @type String
-    @default null
-  */
-  layerType: null,
-
-  /**
     Flag indicates when stroke gradient enable.
 
     @property _strokeGradientEnable
@@ -202,66 +156,50 @@ export default Ember.Component.extend({
   }),
 
   /**
-    Renderes categories symbols on canvases related to them.
+    Related leaflet layer.
 
-    @method _renderCategorySymbolsOnCanvases
-    @param {Number} [categoryIndex] Index of category who's symbol must be rendered (if undefined then symbols for all categories will be rendered).
-    @private
+    @property leafletLayer
+    @type <a href="http://leafletjs.com/reference-1.2.0.html#layer">L.Layer</a>
+    @default null
+    @public
   */
-  _renderCategorySymbolsOnCanvases(categoryIndex) {
-    let layersStylesRenderer = this.get('_layersStylesRenderer');
-    let categories = this.get('styleSettings.style.categories');
-    if (!Ember.isArray(categories) || categories.length === 0) {
-      return;
-    }
-
-    if (categoryIndex >= 0 && categoryIndex < categories.length) {
-      // Render symbol for the specified category.
-      let canvas = this.$('canvas.category-symbol-preview[category=' + categoryIndex + ']')[0];
-      let category = categories[categoryIndex];
-      let categoryStyleSettings = Ember.get(category, 'styleSettings');
-
-      layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
-    } else {
-      // Render symbols for all categories.
-      this.$('canvas.category-symbol-preview').each(function() {
-        let canvas = this;
-        let $canvas = Ember.$(canvas);
-        let categoryIndex = Number($canvas.attr('category'));
-        let category = categories[categoryIndex];
-        let categoryStyleSettings = Ember.get(category, 'styleSettings');
-
-        layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
-      });
-    }
-  },
+  leafletLayer: null,
 
   /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
+    Component's wrapping <div> CSS-classes names.
 
-    this.set('_selectedCategories', {});
-  },
+    @property classNames
+    @type String[]
+    @default null
+  */
+  classNames: null,
 
   /**
-    Initializes component's DOM-related properties.
-  */
-  didInsertElement() {
-    this._super(...arguments);
+    Hash containing style settings.
 
-    this._categoriesDidChange();
-  },
+    @property styleSettings
+    @type Object
+    @default null
+  */
+  styleSettings: null,
 
   /**
-    Deinitializes component.
-  */
-  willDestroy() {
-    this.set('_selectedCategories', null);
+    Hash containing layer display settings.
 
-    this._super(...arguments);
-  },
+    @property displaySettings
+    @type Object
+    @default null
+  */
+  displaySettings: null,
+
+  /**
+    Related layer's type.
+
+    @property layerType
+    @type String
+    @default null
+  */
+  layerType: null,
 
   actions: {
     /**
@@ -449,6 +387,68 @@ export default Ember.Component.extend({
         e.preventDefault();
         this.send('onEditingCellFocusOut', inputText, e);
       }
-    },
+    }
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this.set('_selectedCategories', {});
+  },
+
+  /**
+    Initializes component's DOM-related properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+
+    this._categoriesDidChange();
+  },
+
+  /**
+    Deinitializes component.
+  */
+  willDestroy() {
+    this.set('_selectedCategories', null);
+
+    this._super(...arguments);
+  },
+
+  /**
+    Renderes categories symbols on canvases related to them.
+
+    @method _renderCategorySymbolsOnCanvases
+    @param {Number} [categoryIndex] Index of category who's symbol must be rendered (if undefined then symbols for all categories will be rendered).
+    @private
+  */
+  _renderCategorySymbolsOnCanvases(categoryIndex) {
+    let layersStylesRenderer = this.get('_layersStylesRenderer');
+    let categories = this.get('styleSettings.style.categories');
+    if (!Ember.isArray(categories) || categories.length === 0) {
+      return;
+    }
+
+    if (categoryIndex >= 0 && categoryIndex < categories.length) {
+      // Render symbol for the specified category.
+      let canvas = this.$('canvas.category-symbol-preview[category=' + categoryIndex + ']')[0];
+      let category = categories[categoryIndex];
+      let categoryStyleSettings = Ember.get(category, 'styleSettings');
+
+      layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
+    } else {
+      // Render symbols for all categories.
+      this.$('canvas.category-symbol-preview').each(function() {
+        let canvas = this;
+        let $canvas = Ember.$(canvas);
+        let categoryIndex = Number($canvas.attr('category'));
+        let category = categories[categoryIndex];
+        let categoryStyleSettings = Ember.get(category, 'styleSettings');
+
+        layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
+      });
+    }
   }
 });
