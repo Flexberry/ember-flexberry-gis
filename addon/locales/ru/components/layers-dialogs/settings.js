@@ -12,19 +12,20 @@ export default {
         'can-be-searched-label': 'Может быть найдено',
         'search-fields-selector': 'Поля для поиска',
         'context-search-fields-selector': 'Поля для контекстного поиска',
-        'apply-button-label': 'Применить',
-        'en-translation-label': 'Локализованная строка (англ.)',
-        'ru-translation-label': 'Локализованная строка (рус.)',
-        'en-translation-ph': 'Локализованная строка (англ.)',
-        'ru-translation-ph': 'Локализованная строка (рус.)',
-        'list-heading-label': 'Доступные свойства',
-        'no-items-label': 'Нет доступных свойств'
       },
       'display-settings': {
         'date-format-label': 'Формат даты',
+        'date-format-ph': 'DD.MM.YYYY',
         'display-property-is-callback-label': 'Отображаемое свойство – callback',
         'display-property-label': 'Отображаемое свойство',
-        'excluded-properties-label': 'Исключаемые свойства'
+        'display-property-ph': 'Отображаемое свойство',
+        'excluded-properties-label': 'Исключаемые свойства',
+        'apply-button-label': 'Применить',
+        'translation-label': 'Локализованная строка',
+        'translation-ph': 'Локализованная строка',
+        'properties-list-heading': 'Доступные свойства',
+        'locales-list-heading': 'Доступные локали',
+        'no-items-label': 'Нечего показать'
       },
 
       'identification-settings': 'Может быть идентифицирован',

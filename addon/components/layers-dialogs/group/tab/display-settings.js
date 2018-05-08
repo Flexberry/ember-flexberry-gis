@@ -75,18 +75,9 @@ export default Ember.Component.extend({
 
     @property dateFormatPlaceholder
     @type String
-    @default 'example: DD.MM.YYYY'
+    @default 'components.layers-dialogs.settings.group.tab.display-settings.date-format-ph'
   */
-  dateFormatPlaceholder: 'example: DD.MM.YYYY',
-
-  /**
-    Is dateFormat textbox readonly.
-
-    @property dateFormatReadonly
-    @type Boolean
-    @default false
-  */
-  dateFormatReadonly: false,
+  dateFormatPlaceholder: 'components.layers-dialogs.settings.group.tab.display-settings.date-format-ph',
 
   /**
     DateFormat textbox css class.
@@ -105,15 +96,6 @@ export default Ember.Component.extend({
     @default 'components.layers-dialogs.settings.group.tab.display-settings.display-property-is-callback-label'
   */
   displayPropertyIsCallbackLabel: 'components.layers-dialogs.settings.group.tab.display-settings.display-property-is-callback-label',
-
-  /**
-    Is displayPropertyIsCallback checkbox readonly.
-
-    @property displayPropertyIsCallbackReadonly
-    @type Boolean
-    @default false
-  */
-  displayPropertyIsCallbackReadonly: false,
 
   /**
     displayPropertyIsCallback textbox css class.
@@ -136,22 +118,11 @@ export default Ember.Component.extend({
   /**
     "Display property" placeholder locale key.
 
-    TODO: make it locale key
-
     @property displayPropertyPlaceholder
     @type String
     @default 'displayPropertyPlaceholder'
   */
-  displayPropertyPlaceholder: 'displayPropertyPlaceholder',
-
-  /**
-    Is displayProperty textbox readonly.
-
-    @property displayPropertyReadonly
-    @type Boolean
-    @default false
-  */
-  displayPropertyReadonly: false,
+  displayPropertyPlaceholder: 'components.layers-dialogs.settings.group.tab.display-settings.display-property-ph',
 
   /**
     displayProperty textbox css class.
@@ -187,16 +158,7 @@ export default Ember.Component.extend({
     @type String
     @default 'components.layers-dialogs.settings.group.tab.display-settings.en-translation-label'
   */
-  enTranslationLabel: 'components.layers-dialogs.settings.group.tab.display-settings.en-translation-label',
-
-  /**
-    "Russian translation" textbox label locale key.
-
-    @property ruTranslationLabel
-    @type String
-    @default 'components.layers-dialogs.settings.group.tab.display-settings.ru-translation-label'
-  */
-  ruTranslationLabel: 'components.layers-dialogs.settings.group.tab.display-settings.ru-translation-label',
+  translationLabel: 'components.layers-dialogs.settings.group.tab.display-settings.translation-label',
 
   /**
     "Ru string" placeholder locale key.
@@ -205,25 +167,25 @@ export default Ember.Component.extend({
     @type String
     @default 'components.layers-dialogs.settings.group.tab.display-settings.en-translation-ph'
   */
-  ruTranslationPlaceholder: 'components.layers-dialogs.settings.group.tab.display-settings.en-translation-ph',
-
-  /**
-    "En string" placeholder locale key.
-
-    @property enTranslationPlaceholder
-    @type String
-    @default 'components.layers-dialogs.settings.group.tab.display-settings.en-translation-ph'
-  */
-  enTranslationPlaceholder: 'components.layers-dialogs.settings.group.tab.display-settings.en-translation-ph',
+  translationPlaceholder: 'components.layers-dialogs.settings.group.tab.display-settings.translation-ph',
 
   /**
     Properties list header locale key.
 
-    @property listHeadingLabel
+    @property propertiesListHeading
     @type String
-    @default 'components.layers-dialogs.settings.group.tab.display-settings.list-heading-label'
+    @default 'components.layers-dialogs.settings.group.tab.display-settings.properties-list-heading'
   */
-  listHeadingLabel: 'components.layers-dialogs.settings.group.tab.display-settings.list-heading-label',
+  propertiesListHeading: 'components.layers-dialogs.settings.group.tab.display-settings.properties-list-heading',
+
+  /**
+    Locales list header locale key.
+
+    @property localesListHeading
+    @type String
+    @default 'components.layers-dialogs.settings.group.tab.display-settings.locales-list-heading'
+  */
+  localesListHeading: 'components.layers-dialogs.settings.group.tab.display-settings.locales-list-heading',
 
   /**
     Locale key of a message shown when there are no properties in a layer.
@@ -240,8 +202,30 @@ export default Ember.Component.extend({
     @property isNotSelected
     @type Boolean
     @default true
+    @readonly
   */
-  isNotSelected: true,
+  isNotSelected: Ember.computed('_selectedLocale', '_selectedProperty', function() {
+    return Ember.isEmpty(this.get('_selectedLocale')) || Ember.isEmpty(this.get('_selectedProperty'));
+  }),
+
+  /**
+    Sets translation string for current locale-property combination.
+
+    @method onKeyAndLocaleSelected
+  */
+  onKeyAndLocaleSelected: Ember.observer('_selectedLocale', '_selectedProperty', function() {
+    let _selectedLocale = this.get('_selectedLocale');
+    let _selectedProperty = this.get('_selectedProperty');
+    if (Ember.isBlank(_selectedLocale) || Ember.isBlank(_selectedProperty)) {
+      this.set('_translationString', '');
+      return;
+    }
+
+    this.set(
+      '_translationString',
+      this.get(`value.featuresPropertiesSettings.localizedProperties.${this.get('_selectedLocale')}.${this.get('_selectedProperty')}`)
+    );
+  }),
   /**
     All items to select from in multiple-select.
     All layer's properties.
@@ -253,17 +237,33 @@ export default Ember.Component.extend({
   allProperties: undefined,
 
   /**
+    All app's locales.
+
+    @property allLocales
+    @type Object
+    @default undefined
+  */
+  allLocales: undefined,
+
+  /**
+    Selected locale (from locales lists).
+
+    @property _selectedLocale
+    @type String
+    @default undefined
+  */
+  _selectedLocale: undefined,
+
+  /**
     Localization setting of a selected property
 
     @property _selectedProperty
     @type Object
     @default Object
   */
-  _selectedProperty: {
-    'key': '',
-    'ru': '',
-    'en': ''
-  },
+  _selectedProperty: undefined,
+
+  _translationString: '',
 
   /**
     Allows/disallows manually add items to multiple-select.
@@ -308,9 +308,18 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this.getAllProperties();
-    this.set('isNotSelected', true);
-    Ember.set(this, '_selectedProperty.ru', '');
-    Ember.set(this, '_selectedProperty.en', '');
+    Ember.set(this, '_selectedProperty', '');
+    Ember.set(this, '_selectedLocale', '');
+    Ember.set(this, '_translationString', '');
+
+    let obj = {};
+    let arr = Ember.get(this, 'i18n.locales');
+    for (var i = 0; i < arr.length; i++) {
+      var key = arr[i];
+      obj[key] = true;
+    }
+
+    this.set('allLocales', Object.keys(obj));
   },
 
   actions: {
@@ -320,13 +329,16 @@ export default Ember.Component.extend({
       @method actions.onPropertySelected
     */
     onPropertySelected(e) {
-      let localizedPropertiesRu = this.get('value.featuresPropertiesSettings.localizedProperties.ru');
-      let localizedPropertiesEn = this.get('value.featuresPropertiesSettings.localizedProperties.en');
-      Ember.set(this, '_selectedProperty.key', e);
+      Ember.set(this, '_selectedProperty', e);
+    },
 
-      Ember.set(this, '_selectedProperty.ru', localizedPropertiesRu[e]);
-      Ember.set(this, '_selectedProperty.en', localizedPropertiesEn[e]);
-      Ember.set(this, 'isNotSelected', false);
+    /**
+      Action, triggered by selection of a locale.
+
+      @method actions.onLocaleSelected
+    */
+    onLocaleSelected(e) {
+      this.set('_selectedLocale', e);
     },
 
     /**
@@ -336,8 +348,9 @@ export default Ember.Component.extend({
     */
     onButtonClick() {
       let _selectedProperty = this.get('_selectedProperty');
-      Ember.set(this, `value.featuresPropertiesSettings.localizedProperties.ru.${_selectedProperty.key}`, _selectedProperty.ru);
-      Ember.set(this, `value.featuresPropertiesSettings.localizedProperties.en.${_selectedProperty.key}`, _selectedProperty.en);
+      let _selectedLocale = this.get('_selectedLocale');
+      let _translationString = this.get('_translationString');
+      Ember.set(this, `value.featuresPropertiesSettings.localizedProperties.${_selectedLocale}.${_selectedProperty}`, _translationString);
     }
   }
 });

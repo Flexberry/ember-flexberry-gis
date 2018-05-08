@@ -14,17 +14,18 @@ export default {
         'context-search-fields-selector': 'Fields to context-search within'
       },
       'display-settings': {
-        'date-format-label': 'Date format',
+        'date-format-label': 'Data format',
+        'date-format-ph': 'DD.MM.YYYY',
         'display-property-is-callback-label': 'Display property is callback',
-        'display-property-label': 'A property to display',
+        'display-property-label': 'Display property',
+        'display-property-ph': 'Display property',
         'excluded-properties-label': 'Excluded properties',
         'apply-button-label': 'Apply',
-        'en-translation-label': 'English locale string',
-        'ru-translation-label': 'Russian locale string',
-        'en-translation-ph': 'English locale string',
-        'ru-translation-ph': 'Russian locale string',
-        'list-heading-label': 'Avaliable properties',
-        'no-items-label': 'No properties avaliable'
+        'translation-label': 'Localized string',
+        'translation-ph': 'Localized string',
+        'properties-list-heading': 'Avaliable properties',
+        'locales-list-heading': 'Avaliable locales',
+        'no-items-label': 'Nothing to show'
       },
 
       'identification-settings': 'Can be identified',
