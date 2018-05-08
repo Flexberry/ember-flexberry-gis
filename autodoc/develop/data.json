@@ -35748,6 +35748,11 @@
                     "type": "String"
                 },
                 {
+                    "name": "geometryField",
+                    "description": "Name of the layer's geometry field",
+                    "type": "String"
+                },
+                {
                     "name": "isInnerExpression",
                     "description": "Indicates it's inner expression or not",
                     "type": "Boolean"
@@ -35762,7 +35767,7 @@
         },
         {
             "file": "addon/mixins/geojson-filter-parser.js",
-            "line": 52,
+            "line": 71,
             "description": "Parse filter condition expression ('=', '!=', '<', '<=', '>', '>=', 'LIKE', 'ILIKE').",
             "itemtype": "method",
             "name": "parseFilterConditionExpression",
@@ -35792,7 +35797,7 @@
         },
         {
             "file": "addon/mixins/geojson-filter-parser.js",
-            "line": 98,
+            "line": 117,
             "description": "Parse filter logical expression ('AND', 'OR', 'NOT').",
             "itemtype": "method",
             "name": "parseFilterLogicalExpression",
@@ -35817,7 +35822,7 @@
         },
         {
             "file": "addon/mixins/geojson-filter-parser.js",
-            "line": 117,
+            "line": 136,
             "description": "Parse filter geometry expression.\n('IN', 'NOT IN').",
             "itemtype": "method",
             "name": "parseFilterGeometryExpression",
@@ -35834,8 +35839,8 @@
                 }
             ],
             "return": {
-                "description": "Filter object",
-                "type": "Object"
+                "description": "Body of filter function.",
+                "type": "String"
             },
             "class": "GeoJsonFilterParserMixin",
             "module": "ember-flexberry-gis"
@@ -38206,11 +38211,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/geojson-filter-parser.js:52"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/geojson-filter-parser.js:98"
+            "line": " addon/mixins/geojson-filter-parser.js:71"
         },
         {
             "message": "replacing incorrect tag: returns with return",
