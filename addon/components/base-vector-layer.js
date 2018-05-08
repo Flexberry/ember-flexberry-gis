@@ -261,12 +261,12 @@ export default BaseLayer.extend({
       let satisfiesBounds = false;
 
       if (typeof primitive.forEach === 'function') {
-        primitive.forEach((nestedGeometry) => {
+        primitive.forEach(function (nestedGeometry, index) {
           if (satisfiesBounds) {
             return;
           }
 
-          let nestedPrimitive = new Terraformer.Primitive(nestedGeometry);
+          let nestedPrimitive = this.get(index);
           satisfiesBounds = primitiveSatisfiesBounds(nestedPrimitive, bounds);
         });
       } else {
