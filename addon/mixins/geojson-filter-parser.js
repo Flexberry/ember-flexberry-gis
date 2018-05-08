@@ -55,7 +55,7 @@ export default Ember.Mixin.create({
         `if (typeof primitive.forEach === 'function') {\n` +
         `  primitive.forEach(function(geometry, index) {\n` +
         `    var primitive = this.get(index);\n` +
-        `    intersects = intersects && (primitive.within(bounds) || primitive.intersects(bounds));\n` +
+        `    intersects = intersects || primitive.within(bounds) || primitive.intersects(bounds);\n` +
         `  });\n` +
         `} else {\n` +
         `  intersects = primitive.within(bounds) || primitive.intersects(bounds);\n` +
