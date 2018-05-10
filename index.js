@@ -124,5 +124,8 @@ module.exports = {
     app.import(app.bowerDirectory + '/leaflet.markercluster/dist/leaflet.markercluster.js');
     app.import(app.bowerDirectory + '/leaflet.markercluster/dist/MarkerCluster.css');
     app.import(app.bowerDirectory + '/leaflet.markercluster/dist/MarkerCluster.Default.css');
+
+    // Turf.js
+    app.import(app.bowerDirectory + '/turf/packages/turf/index.js');
   }
 };

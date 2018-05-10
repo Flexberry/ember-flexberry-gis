@@ -122,6 +122,12 @@ module.exports = {
       {
         name: 'chart.js',
         target: '2.7.1'
+      },
+
+      // Load turf
+      {
+        name: 'turf',
+        target: '5.1.6'
       }
     ]).then(function () {
       return _this.addAddonsToProject({
