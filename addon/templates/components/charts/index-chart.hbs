@@ -36,10 +36,10 @@
       <div class="column">
         {{#if _selectedModeType}}
           {{component (concat "charts/type-charts/" _selectedModeType)
-            _isObject=_isObjPropertiesComputed
-            _localizedProperties=_localizedProperties
-            _titleChart=_captionChart
-            _chartType=_selectedModeType
+            isObject=_isObjPropertiesComputed
+            localizedProperties=_localizedProperties
+            titleChart=_captionChart
+            chartType=_selectedModeType
             onInit=(action "initJsonCharts")
           }}
         {{/if}}
@@ -73,6 +73,6 @@
     {{/if}}
   </div>
   <div class="nine wide column">
-    <canvas id="containerCR"></canvas>
+    <canvas class="chart-canvas"></canvas>
   </div>
 </div>

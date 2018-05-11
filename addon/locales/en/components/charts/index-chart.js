@@ -6,6 +6,6 @@ export default {
   'caption-charts': 'Сhart title',
   'create-button': 'Create diagram',
   'classify-checkbox': 'Classify by property value',
-  'classify-property-checkbox': 'Property for classify',
+  'classify-property-checkbox': 'Classification property',
   'unique-symbol-checkbox': 'Unique symbol'
 };

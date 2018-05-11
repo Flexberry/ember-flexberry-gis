@@ -17,6 +17,42 @@ const {
 
 export default Ember.Component.extend({
   /**
+    Inner hash string chart title.
+
+    @property titleChart
+    @type string
+    @default null
+  */
+  titleChart: null,
+
+  /**
+    Inner hash string chart type.
+
+    @property chartType
+    @type string
+    @default null
+  */
+  chartType: null,
+
+  /**
+    Inner hash containing settings object.
+
+    @property isObject
+    @type Object[]
+    @default null
+  */
+  isObject: null,
+
+  /**
+    Localized properties names.
+
+    @property localizedProperties
+    @type Object
+    @default null
+  */
+  localizedProperties: null,
+
+  /**
     Selected field name xAxis chart.
 
     @property _selectedXAxisProperty
@@ -35,52 +71,16 @@ export default Ember.Component.extend({
   _selectedYAxisProperty: null,
 
   /**
-    Inner hash string chart title.
-
-    @property _titleChart
-    @type string
-    @default null
-  */
-  _titleChart: null,
-
-  /**
-    Inner hash string chart type.
-
-    @property _chartType
-    @type string
-    @default null
-  */
-  _chartType: null,
-
-  /**
-    Inner hash containing settings object.
-
-    @property _isObject
-    @type Object[]
-    @default null
-  */
-  _isObject: null,
-
-  /**
-    Localized properties names.
-
-    @property _localizedProperties
-    @type Object
-    @default null
-  */
-  _localizedProperties: null,
-
-  /**
     Available field name xAxis chart.
 
     @property _propertiesForXAxis
     @type Object
   */
-  _propertiesForXAxis: Ember.computed('_localizedProperties', function() {
+  _propertiesForXAxis: Ember.computed('localizedProperties', function() {
     let allProperties = {};
-    let isObject = this.get('_isObject');
+    let isObject = this.get('isObject');
     let properties = Object.keys(isObject[0] || {});
-    let localizedProperties = this.get('_localizedProperties');
+    let localizedProperties = this.get('localizedProperties');
 
     for (var i in properties)
     {
@@ -96,11 +96,11 @@ export default Ember.Component.extend({
     @property _propertiesForYAxis
     @type Object
   */
-  _propertiesForYAxis: Ember.computed('_localizedProperties', function() {
+  _propertiesForYAxis: Ember.computed('localizedProperties', function() {
     let numberProperties = {};
-    let isObject = this.get('_isObject');
+    let isObject = this.get('isObject');
     let properties = Object.keys(isObject[0] || {});
-    let localizedProperties = this.get('_localizedProperties');
+    let localizedProperties = this.get('localizedProperties');
 
     for (var i in properties)
     {

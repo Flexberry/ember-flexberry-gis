@@ -266,7 +266,7 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this._super(...arguments);
-    let chartsCanvas = document.getElementById('containerCR');
+    let chartsCanvas = this.$('.chart-canvas')[0];
     this.set('_chartsCanvas', chartsCanvas);
   },
 
