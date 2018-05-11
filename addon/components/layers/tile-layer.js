@@ -20,6 +20,16 @@ export default BaseLayer.extend({
   */
   url: null,
 
+  /**
+    Whether the layer is wrapped around the antimeridian.
+    (not wrapped if true)
+
+    @property noWrap
+    @type Boolean
+    @default true
+  */
+  noWrap: true,
+
   leafletOptions: [
     'minZoom', 'maxZoom', 'maxNativeZoom', 'tileSize', 'subdomains',
     'errorTileUrl', 'attribution', 'tms', 'continuousWorld', 'noWrap',
