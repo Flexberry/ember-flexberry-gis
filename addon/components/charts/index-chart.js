@@ -162,15 +162,14 @@ export default Ember.Component.extend({
 
     let propertyValues = this.get('_isObjProperties');
     let values = Ember.A();
-    for (let i = 0; i < propertyValues.length; i++) {
-      let index = i.toString();
-      let property = Ember.get(propertyValues, `${index}.${propertyName}`);
+    propertyValues.forEach((prop) => {
+      let property = Ember.get(prop, `${propertyName}`);
       if (Ember.isNone(property)) {
         property = 'undefined';
       }
 
       values.addObject(property);
-    }
+    });
 
     this.set('_uniqueSymbolClassifyPropertyItems', values);
   }),
@@ -188,17 +187,16 @@ export default Ember.Component.extend({
     let propertyValues = this.get('_isObjProperties');
     let chosenClassifyPropertyObjProperties = Ember.A();
 
-    for (let i = 0; i < propertyValues.length; i++) {
-      let index = i.toString();
-      let property = Ember.get(propertyValues, `${index}.${propertyName}`);
+    propertyValues.forEach((prop) => {
+      let property = Ember.get(prop, `${propertyName}`);
       if (Ember.isNone(property)) {
         property = 'undefined';
       }
 
       if (property.toString() === uniqueSymbolClassifyPropertyValue) {
-        chosenClassifyPropertyObjProperties.pushObject(Ember.get(propertyValues, `${index}`));
+        chosenClassifyPropertyObjProperties.pushObject(prop);
       }
-    }
+    });
 
     this.set('_chosenClassifyPropertyObjProperties', chosenClassifyPropertyObjProperties);
   }),
