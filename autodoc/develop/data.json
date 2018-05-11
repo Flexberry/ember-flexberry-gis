@@ -7820,6 +7820,50 @@
         {
             "file": "addon/components/charts/base-chart-type.js",
             "line": 19,
+            "description": "Inner hash string chart title.",
+            "itemtype": "property",
+            "name": "titleChart",
+            "type": "string",
+            "default": "null",
+            "class": "BaseChartTypeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/base-chart-type.js",
+            "line": 28,
+            "description": "Inner hash string chart type.",
+            "itemtype": "property",
+            "name": "chartType",
+            "type": "string",
+            "default": "null",
+            "class": "BaseChartTypeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/base-chart-type.js",
+            "line": 37,
+            "description": "Inner hash containing settings object.",
+            "itemtype": "property",
+            "name": "isObject",
+            "type": "Object[]",
+            "default": "null",
+            "class": "BaseChartTypeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/base-chart-type.js",
+            "line": 46,
+            "description": "Localized properties names.",
+            "itemtype": "property",
+            "name": "localizedProperties",
+            "type": "Object",
+            "default": "null",
+            "class": "BaseChartTypeComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/base-chart-type.js",
+            "line": 55,
             "description": "Selected field name xAxis chart.",
             "itemtype": "property",
             "name": "_selectedXAxisProperty",
@@ -7830,55 +7874,11 @@
         },
         {
             "file": "addon/components/charts/base-chart-type.js",
-            "line": 28,
+            "line": 64,
             "description": "Selected field value yAxis chart.",
             "itemtype": "property",
             "name": "_selectedYAxisProperty",
             "type": "string",
-            "default": "null",
-            "class": "BaseChartTypeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/charts/base-chart-type.js",
-            "line": 37,
-            "description": "Inner hash string chart title.",
-            "itemtype": "property",
-            "name": "_titleChart",
-            "type": "string",
-            "default": "null",
-            "class": "BaseChartTypeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/charts/base-chart-type.js",
-            "line": 46,
-            "description": "Inner hash string chart type.",
-            "itemtype": "property",
-            "name": "_chartType",
-            "type": "string",
-            "default": "null",
-            "class": "BaseChartTypeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/charts/base-chart-type.js",
-            "line": 55,
-            "description": "Inner hash containing settings object.",
-            "itemtype": "property",
-            "name": "_isObject",
-            "type": "Object[]",
-            "default": "null",
-            "class": "BaseChartTypeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/charts/base-chart-type.js",
-            "line": 64,
-            "description": "Localized properties names.",
-            "itemtype": "property",
-            "name": "_localizedProperties",
-            "type": "Object",
             "default": "null",
             "class": "BaseChartTypeComponent",
             "module": "ember-flexberry-gis"
@@ -7990,7 +7990,116 @@
         },
         {
             "file": "addon/components/charts/index-chart.js",
-            "line": 65,
+            "line": 60,
+            "description": "Data for drawing a diagram.",
+            "itemtype": "property",
+            "name": "_isObjPropertiesComputed",
+            "type": "Object[]",
+            "class": "IndexChartComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/index-chart.js",
+            "line": 74,
+            "description": "Flag: indicates whether to classify by property value.",
+            "itemtype": "property",
+            "name": "_classifyProperty",
+            "type": "boolean",
+            "default": "false",
+            "class": "IndexChartComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/index-chart.js",
+            "line": 83,
+            "description": "Key properties for classification.",
+            "itemtype": "property",
+            "name": "_keyChosenClassifyProperty",
+            "type": "string",
+            "default": "null",
+            "class": "IndexChartComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/index-chart.js",
+            "line": 92,
+            "description": "Inner hash containing settings object for the selected group.",
+            "itemtype": "property",
+            "name": "_chosenClassifyPropertyObjProperties",
+            "type": "Object[]",
+            "default": "null",
+            "class": "IndexChartComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/index-chart.js",
+            "line": 101,
+            "description": "Property value for classification.",
+            "itemtype": "property",
+            "name": "_propertyForClassifyValue",
+            "type": "string",
+            "default": "null",
+            "class": "IndexChartComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/index-chart.js",
+            "line": 110,
+            "description": "List of groups resulting from classification.",
+            "itemtype": "property",
+            "name": "_uniqueSymbolClassifyPropertyItems",
+            "type": "Object[]",
+            "default": "null",
+            "class": "IndexChartComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/index-chart.js",
+            "line": 119,
+            "description": "Name of the selected classification group.",
+            "itemtype": "property",
+            "name": "_uniqueSymbolClassifyPropertyValue",
+            "type": "string",
+            "default": "null",
+            "class": "IndexChartComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/index-chart.js",
+            "line": 128,
+            "description": "Observes and handles changes in _classifyProperty.\nClears list of groups classification.",
+            "itemtype": "method",
+            "name": "_classifyPropertyObserver",
+            "access": "private",
+            "tagname": "",
+            "class": "IndexChartComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/index-chart.js",
+            "line": 143,
+            "description": "Observes and handles changes in _propertyForClassifyValue.\nСomputes list of groups classification.",
+            "itemtype": "method",
+            "name": "_propertyForClassifyValueObserver",
+            "access": "private",
+            "tagname": "",
+            "class": "IndexChartComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/index-chart.js",
+            "line": 177,
+            "description": "Observes and handles changes in _uniqueSymbolClassifyPropertyValue.\nСomputes inner hash containing settings object for the selected group.",
+            "itemtype": "method",
+            "name": "_uniqueSymbolClassifyPropertyObserver",
+            "access": "private",
+            "tagname": "",
+            "class": "IndexChartComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/charts/index-chart.js",
+            "line": 209,
             "description": "Available chart type.",
             "itemtype": "property",
             "name": "_availableTypes",
@@ -8000,7 +8109,7 @@
         },
         {
             "file": "addon/components/charts/index-chart.js",
-            "line": 84,
+            "line": 228,
             "description": "Reference to 'charts-renderer' service.",
             "itemtype": "property",
             "name": "_chartsRenderer",
@@ -8012,7 +8121,7 @@
         },
         {
             "file": "addon/components/charts/index-chart.js",
-            "line": 93,
+            "line": 237,
             "description": "Canvas charts.",
             "itemtype": "property",
             "name": "_chartsCanvas",
@@ -8025,7 +8134,7 @@
         },
         {
             "file": "addon/components/charts/index-chart.js",
-            "line": 103,
+            "line": 247,
             "description": "Renderes charts preview on canvas.",
             "itemtype": "method",
             "name": "_renderChartsCanvas",
@@ -8036,21 +8145,21 @@
         },
         {
             "file": "addon/components/charts/index-chart.js",
-            "line": 118,
+            "line": 262,
             "description": "Initializes DOM-related component's properties.",
             "class": "IndexChartComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/charts/index-chart.js",
-            "line": 127,
+            "line": 271,
             "description": "Destroys DOM-related component's properties.",
             "class": "IndexChartComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/charts/index-chart.js",
-            "line": 138,
+            "line": 282,
             "description": "Handles {{#crossLink \"type-chart/sendingActions.onInit:method\"}}'pie/column/line' component's 'onInit' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.initJsonCharts",
@@ -8059,7 +8168,7 @@
         },
         {
             "file": "addon/components/charts/index-chart.js",
-            "line": 147,
+            "line": 291,
             "description": "Handles clicks on button.\nInvokes {{#crossLink \"type-chart/sendingActions.onGenerateChart:method\"}}'onGenerateChart' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onGenerateChart",
@@ -38275,11 +38384,11 @@
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/charts/index-chart.js:118"
+            "line": " addon/components/charts/index-chart.js:262"
         },
         {
             "message": "Missing item type\nDestroys DOM-related component's properties.",
-            "line": " addon/components/charts/index-chart.js:127"
+            "line": " addon/components/charts/index-chart.js:271"
         },
         {
             "message": "Missing item type\nReference to component's template.",

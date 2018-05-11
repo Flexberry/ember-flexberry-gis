@@ -442,6 +442,150 @@ export default Ember.Component.extend({
   */
   _isObjProperties: null,
 
+  /**
+    Data for drawing a diagram.
+
+    @property _isObjPropertiesComputed
+    @type Object[]
+  */
+  _isObjPropertiesComputed: Ember.computed(&#x27;_chosenClassifyPropertyObjProperties&#x27;, function() {
+    if (!Ember.isNone(this.get(&#x27;_chosenClassifyPropertyObjProperties&#x27;))) {
+      return this.get(&#x27;_chosenClassifyPropertyObjProperties&#x27;);
+    }
+
+    return this.get(&#x27;_isObjProperties&#x27;);
+  }),
+
+  /**
+    Flag: indicates whether to classify by property value.
+
+    @property _classifyProperty
+    @type boolean
+    @default false
+  */
+  _classifyProperty: false,
+
+  /**
+    Key properties for classification.
+
+    @property _keyChosenClassifyProperty
+    @type string
+    @default null
+  */
+  _keyChosenClassifyProperty: null,
+
+  /**
+    Inner hash containing settings object for the selected group.
+
+    @property _chosenClassifyPropertyObjProperties
+    @type Object[]
+    @default null
+  */
+  _chosenClassifyPropertyObjProperties: null,
+
+  /**
+    Property value for classification.
+
+    @property _propertyForClassifyValue
+    @type string
+    @default null
+  */
+  _propertyForClassifyValue: null,
+
+  /**
+    List of groups resulting from classification.
+
+    @property _uniqueSymbolClassifyPropertyItems
+    @type Object[]
+    @default null
+  */
+  _uniqueSymbolClassifyPropertyItems: null,
+
+  /**
+    Name of the selected classification group.
+
+    @property _uniqueSymbolClassifyPropertyValue
+    @type string
+    @default null
+  */
+  _uniqueSymbolClassifyPropertyValue: null,
+
+  /**
+    Observes and handles changes in _classifyProperty.
+    Clears list of groups classification.
+
+    @method _classifyPropertyObserver
+    @private
+  */
+  _classifyPropertyObserver: Ember.observer(&#x27;_classifyProperty&#x27;, function() {
+    if (!this.get(&#x27;_classifyProperty&#x27;)) {
+      this.set(&#x27;_propertyForClassifyValue&#x27;, null);
+      this.set(&#x27;_uniqueSymbolClassifyPropertyValue&#x27;, null);
+      this.set(&#x27;_chosenClassifyPropertyObjProperties&#x27;, null);
+    }
+  }),
+
+  /**
+    Observes and handles changes in _propertyForClassifyValue.
+    Сomputes list of groups classification.
+
+    @method _propertyForClassifyValueObserver
+    @private
+  */
+  _propertyForClassifyValueObserver: Ember.observer(&#x27;_propertyForClassifyValue&#x27;, function() {
+    this.set(&#x27;_uniqueSymbolClassifyPropertyValue&#x27;, null);
+    this.set(&#x27;_chosenClassifyPropertyObjProperties&#x27;, null);
+
+    let propertyName = null;
+    let properties = this.get(&#x27;_localizedProperties&#x27;);
+    for (var key in properties) {
+      if (this.get(&#x27;_propertyForClassifyValue&#x27;) === properties[key]) {
+        propertyName = key;
+        this.set(&#x27;_keyChosenClassifyProperty&#x27;, key);
+      }
+    }
+
+    let propertyValues = this.get(&#x27;_isObjProperties&#x27;);
+    let values = Ember.A();
+    propertyValues.forEach((prop) =&gt; {
+      let property = Ember.get(prop, &#x60;${propertyName}&#x60;);
+      if (Ember.isNone(property)) {
+        property = &#x27;undefined&#x27;;
+      }
+
+      values.addObject(property);
+    });
+
+    this.set(&#x27;_uniqueSymbolClassifyPropertyItems&#x27;, values);
+  }),
+
+  /**
+    Observes and handles changes in _uniqueSymbolClassifyPropertyValue.
+    Сomputes inner hash containing settings object for the selected group.
+
+    @method _uniqueSymbolClassifyPropertyObserver
+    @private
+  */
+  _uniqueSymbolClassifyPropertyObserver: Ember.observer(&#x27;_uniqueSymbolClassifyPropertyValue&#x27;, function() {
+    let uniqueSymbolClassifyPropertyValue = this.get(&#x27;_uniqueSymbolClassifyPropertyValue&#x27;);
+    let propertyName = this.get(&#x27;_keyChosenClassifyProperty&#x27;);
+    let propertyValues = this.get(&#x27;_isObjProperties&#x27;);
+    let chosenClassifyPropertyObjProperties = Ember.A();
+
+    propertyValues.forEach((prop) =&gt; {
+      let property = Ember.get(prop, &#x60;${propertyName}&#x60;);
+      if (Ember.isNone(property)) {
+        property = &#x27;undefined&#x27;;
+      }
+
+      if (property.toString() === uniqueSymbolClassifyPropertyValue) {
+        chosenClassifyPropertyObjProperties.pushObject(prop);
+      }
+    });
+
+    this.set(&#x27;_chosenClassifyPropertyObjProperties&#x27;, chosenClassifyPropertyObjProperties);
+  }),
+
   selectedModeType: Ember.computed(&#x27;i18n.locale&#x27;, &#x27;_selectedModeType&#x27;, function() {
     let type = this.get(&#x27;_selectedModeType&#x27;);
     return this.get(&#x27;i18n&#x27;).t(&#x60;components.charts.type-charts.${type}.name&#x60;).toString();
@@ -505,7 +649,7 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this._super(...arguments);
-    let chartsCanvas = document.getElementById(&#x27;containerCR&#x27;);
+    let chartsCanvas = this.$(&#x27;.chart-canvas&#x27;)[0];
     this.set(&#x27;_chartsCanvas&#x27;, chartsCanvas);
   },
 
