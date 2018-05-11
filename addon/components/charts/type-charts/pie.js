@@ -25,7 +25,7 @@ export default BaseChartType.extend({
     @method getJsonCharts
   */
   getJsonCharts() {
-    let isObject = this.get('_isObject');
+    let isObject = this.get('isObject');
 
     let propName = this.get('_selectedXAxisProperty');
     let propVal = this.get('_selectedYAxisProperty');
@@ -51,11 +51,11 @@ export default BaseChartType.extend({
       dslCopy.push(obj[propVal]);
       datasetsLabel.push(dslCopy);
     });
-    let type = this.get('_chartType');
+    let type = this.get('chartType');
     let options = {
       title: {
         display: true,
-        text: this.get('_titleChart').toString()
+        text: this.get('titleChart').toString()
       },
       tooltips: {
         backgroundColor: '#F8F8F8',
@@ -72,7 +72,7 @@ export default BaseChartType.extend({
     let data = {
       labels: dataLabels,
       datasets: [{
-        label: this.get(`_localizedProperties.${propVal}`) || propVal,
+        label: this.get(`localizedProperties.${propVal}`) || propVal,
         data: datasetsLabel,
         backgroundColor: bgColorPie,
       }]
