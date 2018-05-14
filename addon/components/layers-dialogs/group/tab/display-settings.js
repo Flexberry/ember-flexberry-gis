@@ -197,36 +197,6 @@ export default Ember.Component.extend({
   noItemsAvaliableLabel: 'components.layers-dialogs.settings.group.tab.display-settings.no-items-label',
 
   /**
-    Locks/unlocks interface when there is or there is no selection.
-
-    @property isNotSelected
-    @type Boolean
-    @default true
-    @readonly
-  */
-  isNotSelected: Ember.computed('_selectedLocale', '_selectedProperty', function() {
-    return Ember.isEmpty(this.get('_selectedLocale')) || Ember.isEmpty(this.get('_selectedProperty'));
-  }),
-
-  /**
-    Sets translation string for current locale-property combination.
-
-    @method onKeyAndLocaleSelected
-  */
-  onKeyAndLocaleSelected: Ember.observer('_selectedLocale', '_selectedProperty', function() {
-    let _selectedLocale = this.get('_selectedLocale');
-    let _selectedProperty = this.get('_selectedProperty');
-    if (Ember.isBlank(_selectedLocale) || Ember.isBlank(_selectedProperty)) {
-      this.set('_translationString', '');
-      return;
-    }
-
-    this.set(
-      '_translationString',
-      this.get(`value.featuresPropertiesSettings.localizedProperties.${this.get('_selectedLocale')}.${this.get('_selectedProperty')}`)
-    );
-  }),
-  /**
     All items to select from in multiple-select.
     All layer's properties.
 
@@ -254,16 +224,11 @@ export default Ember.Component.extend({
   */
   _selectedLocale: undefined,
 
-  /**
-    Localization setting of a selected property
+  _showableItems: {},
 
-    @property _selectedProperty
-    @type Object
-    @default Object
-  */
-  _selectedProperty: undefined,
-
-  _translationString: '',
+  _defaultLocale: Ember.computed(function() {
+    return this.get('i18n.locale');
+  }),
 
   /**
     Allows/disallows manually add items to multiple-select.
@@ -292,7 +257,21 @@ export default Ember.Component.extend({
           _this.set('_leafletObjectIsLoading', false);
           let layerClass = Ember.getOwner(_this).knownForType('layer', type);
           if (!Ember.isBlank(layerClass)) {
-            _this.set('allProperties', Ember.A(layerClass.getLayerProperties(leafletObject)));
+            let allProperties = Ember.A(layerClass.getLayerProperties(leafletObject));
+            _this.set('allProperties', allProperties);
+
+            let _showableItems = _this.get('_showableItems');
+            for (var prop in allProperties) {
+              _showableItems[prop] = true;
+            }
+
+            for (var item in _showableItems) {
+              if (value.featuresPropertiesSettings.excludedProperties.indexOf(item) !== -1) {
+                _showableItems[item] = false;
+              }
+            }
+
+            this.set('_showableItems', _showableItems);
           }
         }).catch(() => {
           _this.set('_leafletObjectIsLoading', false);
@@ -308,12 +287,12 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this.getAllProperties();
-    Ember.set(this, '_selectedProperty', '');
-    Ember.set(this, '_selectedLocale', '');
-    Ember.set(this, '_translationString', '');
+    let value = this.get('value');
 
     let obj = {};
     let arr = Ember.get(this, 'i18n.locales');
+    Ember.set(this, '_selectedLocale', arr[0]);
+
     for (var i = 0; i < arr.length; i++) {
       var key = arr[i];
       obj[key] = true;
@@ -323,38 +302,21 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    /**
-      Action, triggered by selection of a property.
 
-      @method actions.onPropertySelected
-    */
-    onPropertySelected(e) {
-      Ember.set(this, '_selectedProperty', e);
-    },
-
-    /**
-      Action, triggered by selection of a locale.
-
-      @method actions.onLocaleSelected
-    */
-    onLocaleSelected(e) {
-      this.set('_selectedLocale', e);
-    },
-
-    /**
-      Action, triggered by `apply` button click.
-
-      @method actions.onButtonClick
-    */
-    onButtonClick() {
-      let _selectedProperty = this.get('_selectedProperty');
-      let _selectedLocale = this.get('_selectedLocale');
-      let _translationString = this.get('_translationString');
-      Ember.set(this, `value.featuresPropertiesSettings.localizedProperties.${_selectedLocale}.${_selectedProperty}`, _translationString);
-    },
-
-    checkboxDidChange() {
+    isCallbackCheckboxDidChange() {
       this.set('value.featuresPropertiesSettings.displayProperty', '');
+    },
+
+    showCheckboxDidChange() {
+      let _showableItems = this.get('_showableItems');
+      let excluded = [];
+      for (var prop in _showableItems) {
+        if (!_showableItems[prop]) {
+          excluded.push(prop);
+        }
+      }
+
+      this.set('value.featuresPropertiesSettings.excludedProperties', excluded);
     }
   }
 });

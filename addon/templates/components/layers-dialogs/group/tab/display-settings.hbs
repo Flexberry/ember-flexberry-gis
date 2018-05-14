@@ -18,7 +18,7 @@
           value=value.featuresPropertiesSettings.displayPropertyIsCallback
           label=(t displayPropertyIsCallbackLabel)
           class=displayPropertyIsCallbackClass
-          change=(action "checkboxDidChange")
+          change=(action "isCallbackCheckboxDidChange")
         }}
       </div>
     </div>
@@ -34,11 +34,13 @@
             class=displayPropertyClass
           }}
         {{else}}
-        {{flexberry-dropdown
-          items=allProperties
-          value=value.featuresPropertiesSettings.displayProperty
-          placeholder=(t displayPropertyLabel)
-        }}
+          {{#if allProperties}}
+            {{flexberry-dropdown
+              items=allProperties
+              value=value.featuresPropertiesSettings.displayProperty
+              placeholder=(t displayPropertyLabel)
+            }}
+          {{/if}}
         {{/if}}
       </div>
     </div>
@@ -55,59 +57,54 @@
       </div>
     </div>
   </div>
-   <div class="equal width row">
-    <div class="column">
-      <div class="field">
-        <label>{{t propertiesListHeading}}</label>
-        <div class="ui selection list">
-          {{#each allProperties as |property|}}
-            <div class="item {{if (eq _selectedProperty property) "active"}}" {{action "onPropertySelected" property}}>
-              <div class="content">
-                {{property}}
+
+  <div class="row">
+    <table class="ui compact celled definition table">
+      <thead class="full-width">
+        <tr>
+          <th>Отображать?</th>
+          <th>{{t propertiesListHeading}}</th>
+          <th>{{_defaultLocale}}</th>
+          <th>
+            {{flexberry-dropdown
+              items=allLocales
+              value=_selectedLocale
+              placeholder=(t localesListHeading)
+            }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each allProperties as |property|}}
+          <tr>
+            <td class="collapsing">
+              <div class="ui fitted slider checkbox">
+                {{flexberry-checkbox
+                  value=(mut (get this (concat "_showableItems." property)))
+                  change=(action "showCheckboxDidChange")
+                }}
               </div>
-            </div>
+            </td>
+            <td>{{property}}</td>
+            <td>
+              {{flexberry-textbox
+                value=(mut (get this (concat "value.featuresPropertiesSettings.localizedProperties" "." _defaultLocale "." property)))
+                placeholder=(t translationPlaceholder)
+              }}
+            </td>
+            <td>
+              {{flexberry-textbox
+                value=(mut (get this (concat "value.featuresPropertiesSettings.localizedProperties" "." _selectedLocale "." property)))
+                placeholder=(t translationPlaceholder)
+              }}
+            </td>
+          </tr>
           {{else}}
-            <div class="item">
-              {{t noItemsAvaliableLabel}}
-            </div>
+            <tr colspan="4">
+              <td> {{t noItemsAvaliableLabel}} </td>
+            </tr>
           {{/each}}
-        </div>
-      </div>
-    </div>
-    <div class="column">
-      <div class="field">
-        <label>{{t localesListHeading}}</label>
-        <div class="ui selection list">
-          {{#each allLocales as |locale|}}
-            <div class="item {{if (eq _selectedLocale locale) "active"}}" {{action "onLocaleSelected" locale}}>
-              <div class="content">
-                {{locale}}
-              </div>
-            </div>
-          {{else}}
-            <div class="item">
-              {{t noItemsAvaliableLabel}}
-            </div>
-          {{/each}}
-        </div>
-      </div>
-    </div>
-    <div class="column">
-      <div class="field">
-        <label>{{t translationLabel}}</label>
-        {{flexberry-textbox
-          value=_translationString
-          readonly=isNotSelected
-          placeholder=(t translationPlaceholder)
-        }}
-      </div>
-      <div class="field">
-        {{flexberry-button
-          caption=(t applyButtonLabel)
-          readonly=isNotSelected
-          click=(action "onButtonClick")
-        }}
-      </div>
-    </div>
+      </tbody>
+    </table>
   </div>
 </div>
