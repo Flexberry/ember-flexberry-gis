@@ -142,14 +142,14 @@
           change=(action "onOpacitySliderChange")
         }}
       {{/if}}
-      {{#if (known-for-type "component" (concat "layer-treenode-contents/" type))}}
-        {{component (concat "layer-treenode-contents/" type)
+      {{#if (known-for-type "component" (concat "layer-treenode-contents/" layer.type))}}
+        {{component (concat "layer-treenode-contents/" layer.type)
           layer=layer
           dynamicActions=layer.dynamicActions
         }}
       {{/if}}
-      {{#if (and legendCanBeDisplayed hasBeenExpanded)}}
-        {{component (concat "legends/" type "-legend")
+      {{#if (and layer.legendCanBeDisplayed hasBeenExpanded)}}
+        {{component (concat "legends/" layer.type "-legend")
           layer=layer
         }}
       {{/if}}
