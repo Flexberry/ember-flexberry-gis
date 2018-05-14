@@ -59,8 +59,7 @@
     "moment-timezone": "0.5.0",
     "ui-ember-slider": "0.5.0",
     "ember-promise-helpers": "1.0.2",
-    "ember-prop-types": "2.5.6",
-    "leaflet.path.drag": "git://github.com/Leaflet/Path.Drag.js.git"
+    "ember-prop-types": "2.5.6"
   },
   "dependencies": {
     "ember-cli-babel": "^5.1.6",
@@ -71,7 +70,8 @@
     "ember-truth-helpers": "1.2.0",
     "ember-validations": "~2.0.0-alpha.4",
     "lodash": "^4.4.0",
-    "strip-bom": "^2.0.0"
+    "strip-bom": "^2.0.0",
+    "leaflet.path.drag":"^0.0.6"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
