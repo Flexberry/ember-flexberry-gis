@@ -118,10 +118,10 @@ module.exports = {
         target: '0.3.3'
       },
 
-      // Load highcharts
+      // Load chart.js
       {
-        name: 'highcharts',
-        target: '6.0.1'
+        name: 'chart.js',
+        target: '2.7.1'
       }
     ]).then(function () {
       return _this.addAddonsToProject({

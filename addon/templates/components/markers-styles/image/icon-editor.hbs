@@ -1,14 +1,29 @@
 <table class="ui small compact celled table">
   <thead>
     <tr>
-      <th class="six wide column">
+      <th class="four wide column">
         {{iconCaption}}
+        {{#if allowDisabling}}
+          {{flexberry-checkbox
+            value=_enabled
+            class="enable-icon-checkbox rightFloated"
+          }}
+        {{/if}}
       </th>
-      <th class="ten wide column">
+      <th class="four wide column">
+        {{resizeCaption}}
+        <i
+          class="restore-original-icon-size-button undo icon rightFloated {{if (not (and _showIconImage _enabled)) "disabled"}}"
+          title={{t "components.markers-styles.image.icon-editor.setorigsize-caption"}}
+          {{action "setOrigIconSize" on="click"}}>
+        </i>
+      </th>
+      <th class="eight wide column">
         {{anchorCaption}}
       </th>
     </tr>
   </thead>
+  {{#if _enabled}}
   <tbody>
     <tr>
       <td>
@@ -28,23 +43,109 @@
           fileChange=(action "onIconFileChange")
         }}
       </td>
+      <td class="ui relaxed list">
+        <div class="item">
+          {{#if invalidWidth}}
+            <div class="ui tiny red label">
+              {{t "components.markers-styles.image.icon-editor.enter-number"}}
+            </div>
+          {{/if}}
+        </div>
+        <div class="item">
+          <div class="fluid ui right labeled input">
+            {{input
+              type="number"
+              min=1
+              value=iconSizeNew.[0]
+              disabled=(not (and _showIconImage  _enabled))
+            }}
+            <div class="ui basic label">
+              {{t "components.markers-styles.image.icon-editor.width-caption"}}
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="fluid ui checkbox">
+            {{flexberry-checkbox
+              value=iconKeepOrigAspectRatio
+              disabled=(not (and _showIconImage _enabled))
+              label=(t "components.markers-styles.image.icon-editor.aspectratio-caption")
+            }}
+          </div>
+        </div>
+        <div class="item">
+          {{#if invalidHeight}}
+            <div class="ui tiny red label">
+              {{t "components.markers-styles.image.icon-editor.enter-number"}}
+            </div>
+          {{/if}}
+        </div>
+        <div class="item">
+          <div class="fluid ui right labeled input">
+            {{input
+              type="number"
+              min=1
+              value=iconSizeNew.[1]
+              disabled=(not (and _showIconImage _enabled))
+            }}
+            <div class="ui basic label">
+              {{t "components.markers-styles.image.icon-editor.height-caption"}}
+            </div>
+          </div>
+        </div>
+      </td>
       <td>
+      <div class="flexberry-maptoolbar ui menu">
+            {{flexberry-button
+              iconClass="zoom icon"
+              class="flexberry-map-tool item ui dropdown"
+              click="onZoomInClick"
+              tooltip=(t "components.markers-styles.image.icon-editor.zoom-in-button")
+            }}
+            {{flexberry-button
+              iconClass="zoom out icon"
+              class="flexberry-map-tool item ui dropdown"
+              click="onZoomOutClick"
+              tooltip=(t "components.markers-styles.image.icon-editor.zoom-out-button")
+            }}
+            {{flexberry-button
+              iconClass="resize icon"
+              class="flexberry-map-tool item ui dropdown"
+              tooltip=(t "components.markers-styles.image.icon-editor.resize-button")
+              click="onResizeClick"
+            }}
+        </div>
         <div class="icon-image-wrapper">
           {{#if _showIconImage}}
             <img class="icon-image"
+              style="width:{{_iconZoomSize.width}}px;height:{{_iconZoomSize.height}}px"
               width="{{_iconSize.width}}"
               height="{{_iconSize.height}}"
               src="{{iconUrl}}"/>
             <div class="icon-anchor" onclick={{action "onIconAnchorClick"}}>
               <svg xmlns="http://www.w3.org/2000/svg"
+                   class="{{if _isZoom "hiddenAnchor"}}"
                    version="1.1"
                    width="{{_iconSize.width}}"
                    height="{{_iconSize.height}}"
                    viewBox="0 0 {{_iconSize.width}} {{_iconSize.height}}">
                 <circle cx="{{_iconAnchor.x}}"
                         cy="{{_iconAnchor.y}}"
-                        r="2"
-                        fill="#ff0000"
+                        r="{{_circleRadius}}"
+                        fill="{{_circleColor}}"
+                        stroke="black"
+                        stroke-width="1"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   class="{{if (not _isZoom) "hiddenAnchor"}}"
+                   version="1.1"
+                   width="{{_iconZoomSize.width}}"
+                   height="{{_iconZoomSize.height}}"
+                   viewBox="0 0 {{_iconZoomSize.width}} {{_iconZoomSize.height}}">
+                <circle cx="{{_iconZoomAnchor.x}}"
+                        cy="{{_iconZoomAnchor.y}}"
+                        r="{{_circleRadius}}"
+                        fill="{{_circleColor}}"
                         stroke="black"
                         stroke-width="1"/>
               </svg>
@@ -54,6 +155,7 @@
       </td>
     </tr>
   </tbody>
+  {{/if}}
 </table>
 <div class="ui {{if (and _iconFileIsLoading _iconFileIsLoadingLongTime) "active" ""}} dimmer">
   <div class="ui loader"></div>

@@ -3,7 +3,7 @@ import EditDialog from './layers-dialogs/edit';
 import CopyDialog from './layers-dialogs/copy';
 import AddDialog from './layers-dialogs/add';
 import SettingsDialogs from './layers-dialogs/settings';
-import EditModes from './layers-dialogs/edit-modes';
+import EditModes from './layers-dialogs/layers-prototyping-modes';
 import EditAttributes from './layers-dialogs/attributes/edit';
 
 export default {
@@ -12,6 +12,6 @@ export default {
   'copy': CopyDialog,
   'add': AddDialog,
   'settings': SettingsDialogs,
-  'edit-modes': EditModes,
+  'layers-prototyping-modes': EditModes,
   'edit-attributes': EditAttributes
 };

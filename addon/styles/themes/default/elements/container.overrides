@@ -19,6 +19,10 @@
           Flexberry Map
 *******************************/
 
+.rightFloated{
+	float:right;
+}
+
 .flexberry-map {
   font-family: inherit;
   width: @flexberryMapWidth;
@@ -414,6 +418,10 @@
     /* отдалить на полную */
     i.icon.globe:before {
         content: "\e830";
+    }
+    i.icon.resize:before {
+        font-family: Icons;
+        content: "\f0b2";
     }
     /* геолокация */
     i.icon.bullseye:before {
@@ -931,12 +939,17 @@
 }
 
 .ui.table.flexberry-table-no-model {
-  width: inherit !important;
+  width: 100% !important;
 }
 
 /************************************************************
     Simple layers-style (components/layers-styles/simple)
 ************************************************************/
+
+.hiddenAnchor{
+  display: none;
+}
+
 .ui.selection.dropdown {
   &.simple-layers-style-stroke-linejoin-dropdown,
   &.simple-layers-style-stroke-linecap-dropdown,
@@ -986,6 +999,11 @@
     }
   }
 
+  .enable-icon-checkbox,
+  .restore-original-icon-size-button {
+    cursor: pointer;
+  }
+
   .icon-image-wrapper {
     position: relative;
     margin: 0 auto;
@@ -1020,7 +1038,9 @@ form.flexberry-edit-layermap {
     }
 
     .ui.tab.segment {
-      overflow: hidden;
+      // Sticky canvas inside tab won't work without visible overflow.
+      overflow: visible;
+
       border: none;
       box-shadow: none;
       padding: 0;
@@ -1042,6 +1062,15 @@ form.flexberry-edit-layermap {
           margin: 0 auto;
           border: 1px solid rgba(34, 36, 38, 0.15);
           border-radius: 0.285rem;
+
+          // Force canvas to be sticky at the top of tab segment.
+          position: static;
+          position: -webkit-sticky !important;
+          position: -moz-sticky !important;
+          position: -ms-sticky !important;
+          position: -o-sticky !important;
+          position: sticky !important;
+          top: 10px;
         }
 
         .flexberry-jsonarea {
@@ -1156,7 +1185,8 @@ form.flexberry-edit-layermap {
     }
 
     .category-style-editor-content {
-      overflow: auto;
+      // Sticky canvas inside tab won't work without visible overflow.
+      overflow: visible;
       width: 100%;
       padding: 1rem;
     }

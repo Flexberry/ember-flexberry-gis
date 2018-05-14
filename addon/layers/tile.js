@@ -39,7 +39,8 @@ export default BaseLayer.extend({
   createSettings() {
     let settings = this._super(...arguments);
     Ember.$.extend(true, settings, {
-      url: undefined
+      url: undefined,
+      noWrap: true
     });
 
     return settings;

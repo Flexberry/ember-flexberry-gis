@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import BaseLegendComponent from '../legends/base-legend';
+import BaseLegendComponent from './-private/base-legend';
 
 /**
   Component representing map layer's legend for WMS-layers.

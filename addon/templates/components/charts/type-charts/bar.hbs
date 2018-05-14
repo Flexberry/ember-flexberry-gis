@@ -1,0 +1,32 @@
+<div class="field">
+  <label>
+    {{t "components.charts.type-charts.bar.caption"}}
+  </label>
+  {{#ui-dropdown class="compact selection" onChange=(action "onXAxisPropertyChange")}}
+    <i class="dropdown icon"></i>
+    <div class="text">
+      {{get localizedProperties _selectedXAxisProperty}}
+    </div>
+    <div class="menu">
+      {{#each-in _propertiesForXAxis as |key value|}}
+        <div class="item" data-value="{{key}}">{{value}}</div>
+      {{/each-in}}
+    </div>
+  {{/ui-dropdown}}
+</div>
+<div class="field">
+  <label>
+    {{t "components.charts.type-charts.bar.value"}}
+  </label>
+  {{#ui-dropdown class="compact selection" onChange=(action "onYAxisPropertyChange")}}
+    <i class="dropdown icon"></i>
+    <div class="text">
+      {{get localizedProperties _selectedYAxisProperty}}
+    </div>
+    <div class="menu">
+      {{#each-in _propertiesForYAxis as |key value|}}
+        <div class="item" data-value="{{key}}">{{value}}</div>
+      {{/each-in}}
+    </div>
+  {{/ui-dropdown}}
+</div>

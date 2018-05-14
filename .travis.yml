@@ -25,7 +25,7 @@ addons:
 before_install:
   - npm config set spin false
   - npm install -g npm@^2
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+  - google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost &
 
 install:
   - npm install -g bower
@@ -42,10 +42,6 @@ after_success:
     && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_BRANCH == "develop")
     && ember build -prod --gh-pages --brunch=$TRAVIS_BRANCH
     && bash scripts/deploy-to-gh-pages.sh
-  - test $EMBER_TRY_SCENARIO == "default"
-    && test $TRAVIS_PULL_REQUEST == "false"
-    && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_BRANCH == "develop")
-    && bash scripts/update-docs.sh
 
 deploy:
   provider: npm

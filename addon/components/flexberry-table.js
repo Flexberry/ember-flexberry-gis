@@ -12,6 +12,7 @@ import SlotsMixin from 'ember-block-slots';
 
   @class FlexberryTableComponent
   @uses PaginatedControllerMixin
+  @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
   @extends <a href="https://github.com/ciena-blueplanet/ember-block-slots">Ember block slots</a>
 */

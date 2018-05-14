@@ -1,0 +1,17 @@
+{{#if (gt _legends.length 0)}}
+  {{#each _legends as |legend|}}
+    <div class="{{flexberryClassNames.imageWrapper}}">
+      <img class="{{flexberryClassNames.image}}" src="{{legend.src}}" onerror='this.style.display = "none"'>
+      {{#if showLayerName}}
+        <label class="layer-legend-caption">{{layer.name}}</label>
+      {{/if}}
+    </div>
+  {{/each}}
+{{else}}
+  <div class="{{flexberryClassNames.imageWrapper}}">
+    <i class="{{flexberryClassNames.image}} {{flexberryClassNames.defaultImage}} help icon"></i>
+    {{#if showLayerName}}
+      <label class="{{flexberryClassNames.caption}}">{{layer.name}}</label>
+    {{/if}}
+  </div>
+{{/if}}

@@ -40,13 +40,32 @@ export default Ember.Mixin.create({
 
     @method parseFilterExpression
     @param {String} expression Filter string
+    @param {String} geometryField Name of the layer's geometry field
     @param {Boolean} isInnerExpression Indicates it's inner expression or not
     @returns {Object} Filter object for layer
   */
-  parseFilter(filter, isInnerExpression) {
+  parseFilter(filter, geometryField, isInnerExpression) {
     let result = this._super(...arguments);
 
-    return Ember.isBlank(result) || isInnerExpression ? result : `function(feature) { return ${result}; }`;
+    if (!(Ember.isBlank(result) || isInnerExpression)) {
+      let intersectFunction = `\nvar intersectCheck = function(condition, geoJSON) {` +
+        `var intersects = true;\n` +
+        `var bounds = new Terraformer.Polygon(geoJSON);\n` +
+        `var primitive = new Terraformer.Primitive(feature.geometry);\n` +
+        `if (typeof primitive.forEach === 'function') {\n` +
+        `  primitive.forEach(function(geometry, index) {\n` +
+        `    var primitive = this.get(index);\n` +
+        `    intersects = intersects || primitive.within(bounds) || primitive.intersects(bounds);\n` +
+        `  });\n` +
+        `} else {\n` +
+        `  intersects = primitive.within(bounds) || primitive.intersects(bounds);\n` +
+        `}\n` +
+        `return condition === 'not in' ? !intersects : intersects;\n` +
+        `};\n`;
+      return `function(feature) {${intersectFunction} return ${result}}`;
+    }
+
+    return result;
   },
 
   /**
@@ -121,24 +140,9 @@ export default Ember.Mixin.create({
     @method parseFilterGeometryExpression
     @param {String} condition Filter condition
     @param {Object} geoJSON Geometry
-    @returns {Object} Filter object
+    @return {String} Body of filter function.
   */
   parseFilterGeometryExpression(condition, geoJSON) {
-    /*let bboxPolygon = `{type: 'Polygon', coordinates: [[[${coords.minLng}, ${coords.minLat}], [${coords.maxLng}, ` +
-      `${coords.minLat}], [${coords.maxLng}, ${coords.maxLat}], [${coords.minLng}, ${coords.maxLat}], [${coords.minLng}, ${coords.minLat}]]] }`;
-    let filter = `new Terraformer.Primitive(feature.geometry).within(${bboxPolygon})`;
-    switch (condition) {
-      case 'in':
-        return filter;
-      case 'not in':
-        return `!${filter}`;
-    }*/
-
-    /*
-      Geometry filters for geojson layers isn't implemented yet.
-      Terraformer's within/intersects methods aren't working with all geometry types
-      (for example with GeometryCollection).
-    */
-    return 'true';
+    return `intersectCheck('${condition}', ${JSON.stringify(geoJSON)})`;
   },
 });

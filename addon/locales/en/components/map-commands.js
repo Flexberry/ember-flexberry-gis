@@ -22,10 +22,12 @@ export default {
     'caption': 'Export',
     'tooltip': 'Export',
     'export-download': {
-      'caption': 'Into image'
+      'caption': 'Into image',
+      'tooltip': 'Save the map into image file'
     },
     'export-print': {
-      'caption': 'Print'
+      'caption': 'Print',
+      'tooltip': 'Print the map'
     }
   },
   'search': {

@@ -432,13 +432,13 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
     // Workaround is to make each edge shorter (add additional points into polygon's edges).
     let bboxEWKT = `SRID=4326;POLYGON((` +
       `${minLng} ${minLat},` +
-      `${minLng} ${minLat + (maxLat - minLat) * 0.5},` +
-      `${minLng} ${maxLat},` +
-      `${minLng + (maxLng - minLng) * 0.5} ${maxLat},` +
-      `${maxLng} ${maxLat},` +
-      `${maxLng} ${minLat + (maxLat - minLat) * 0.5},` +
-      `${maxLng} ${minLat},` +
       `${minLng + (maxLng - minLng) * 0.5} ${minLat},` +
+      `${maxLng} ${minLat},` +
+      `${maxLng} ${minLat + (maxLat - minLat) * 0.5},` +
+      `${maxLng} ${maxLat},` +
+      `${minLng + (maxLng - minLng) * 0.5} ${maxLat},` +
+      `${minLng} ${maxLat},` +
+      `${minLng} ${minLat + (maxLat - minLat) * 0.5},` +
       `${minLng} ${minLat}))`;
 
     // Send 'boundingBoxChange' action to report about changes in bounds.

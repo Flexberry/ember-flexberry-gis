@@ -1,0 +1,11 @@
+<label>{{title}}</label>
+<div class="ui fluid multiple search selection dropdown {{selectorName}}">
+  <input name="{{selectorName}}" type="hidden" value={{selectedItems}}>
+  <i class="dropdown icon"></i>
+  <div class="default text">{{title}}</div>
+  <div class="menu">
+    {{#each _usedItems as |item|}}
+      <div class="item" data-value="{{item}}">{{item}}</div>
+    {{/each}}
+  </div>
+</div>
