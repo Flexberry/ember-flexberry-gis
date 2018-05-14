@@ -10,4 +10,13 @@ export default {
   'save-changes': 'Сохранить изменения',
   'table-tab': 'Таблица',
   'diagram-tab': 'График',
+  'move-dialog': 'Переместить объект',
+  'move': {
+    'dragNdrop': {
+      'caption': 'Перетаскивание'
+    },
+    'offset': {
+      'caption': 'Смещение'
+    }
+  }
 };

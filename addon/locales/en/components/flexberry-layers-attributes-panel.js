@@ -10,4 +10,13 @@ export default {
   'save-changes': 'Save changes',
   'table-tab': 'Table',
   'diagram-tab': 'Chart',
+  'move-dialog': 'Move feature',
+  'move': {
+    'dragNdrop': {
+      'caption': 'Drag and drop'
+    },
+    'offset': {
+      'caption': 'Offset'
+    }
+  }
 };

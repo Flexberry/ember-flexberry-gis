@@ -108,5 +108,9 @@ export default {
     'links-group': {
       'caption': 'Связи'
     }
+  },
+  'move': {
+    'moveX': 'Смещение по X',
+    'moveY': 'Смещение по Y',
   }
 };

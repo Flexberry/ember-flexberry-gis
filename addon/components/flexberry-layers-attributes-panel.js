@@ -275,6 +275,34 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   availableGeometryAddModes: ['draw', 'manual', 'geoprovider'],
 
   /**
+    Flag: indicates whether moveDialog has been requested
+
+    @property _moveDialogHasBeenRequested
+    @type boolean
+    @default false
+  */
+  _moveDialogHasBeenRequested: false,
+
+  /**
+    Flag: indicates activate drag and drop
+
+    @property _isDrag
+    @type boolean
+    @default false
+  */
+  _isDrag: false,
+
+  /**
+    Flag: indicates whether moveDialog is visible
+
+    @property _moveDialogIsVisible
+    @type boolean
+    @default false
+  */
+
+  _moveDialogIsVisible: false,
+
+  /**
     Initializes component.
   */
   init() {
@@ -660,6 +688,116 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       this._showNewRowDialog(tabModel, addedLayer);
+    },
+
+    /**
+      Handles move layer's object.
+
+      @param {Object} tabModel Related tab model.
+    */
+    onMoveSelect(modes, tabModel) {
+      switch (modes) {
+        case 'dragNdrop':
+          this._dragAndDrop(tabModel);
+          break;
+        case 'offset':
+          this._showMoveDialog(tabModel);
+          break;
+      }
+    },
+
+    /**
+      Handles move dialog's 'approve' action.
+
+      @param {Number} moveX A hash containing move by X.
+      @param {Number} moveY A hash containing move by Y.
+    */
+    onMoveDialogApprove(moveX, moveY) {
+
+      let tabModel = this.get('_moveTabModel');
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let _moveX = parseFloat(this.get('_moveX')) ? parseFloat(this.get('_moveX')) : 0;
+      let _moveY = parseFloat(this.get('_moveY')) ? parseFloat(this.get('_moveY')) : 0;
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+      .map((key) => {
+        return tabModel.featureLink[key].feature;
+      });
+      this.send('onClearFoundItemClick');
+      selectedFeatures.forEach((feature) => {
+        var i = 0;
+        if (Ember.isArray(feature.leafletLayer._latlngs[0])) {
+          if (Ember.isArray(feature.leafletLayer._latlngs[0][0])) {
+            for (i = 0; i < feature.leafletLayer._latlngs[0][0].length; i++) {
+              feature.leafletLayer._latlngs[0][0][i].lat = feature.leafletLayer._latlngs[0][0][i].lat + _moveY;
+              feature.leafletLayer._latlngs[0][0][i].lng = feature.leafletLayer._latlngs[0][0][i].lng + _moveX;
+            }
+          } else {
+            for (i = 0; i < feature.leafletLayer._latlngs[0].length; i++) {
+              feature.leafletLayer._latlngs[0][i].lat = feature.leafletLayer._latlngs[0][i].lat + _moveY;
+              feature.leafletLayer._latlngs[0][i].lng = feature.leafletLayer._latlngs[0][i].lng + _moveX;
+            }
+          }
+        } else {
+          for (i = 0; i < feature.leafletLayer._latlngs.length; i++) {
+            feature.leafletLayer._latlngs[i].lat = feature.leafletLayer._latlngs[i].lat + _moveY;
+            feature.leafletLayer._latlngs[i].lng = feature.leafletLayer._latlngs[i].lng + _moveX;
+          }
+        }
+      });
+      this.send('onFindItemClick', tabModel);
+    },
+
+    /**
+      Handles move dialog's 'deny' action.
+
+    */
+    onMoveDialogDeny() {
+      this.set('_moveTabModel', null);
+    }
+  },
+
+  /**
+    Shows a dialog for entering the attributes  move of layer's feature.
+
+    @param {Object} tabModel Related tab model.
+  */
+  _showMoveDialog(tabModel) {
+    this.set('_moveTabModel', tabModel);
+
+    // Include dialog to markup.
+    this.set('_moveDialogHasBeenRequested', true);
+
+    // Show dialog.
+    this.set('_moveDialogIsVisible', true);
+  },
+
+  /**
+    Drag and drop.
+
+    @param {Object} data A hash containing added feature properties.
+  */
+  _dragAndDrop(tabModel) {
+    this.send('onClearFoundItemClick');
+    let selectedRows = Ember.get(tabModel, '_selectedRows');
+    let selectedLayer = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+    .map((key) => {
+      return tabModel.featureLink[key];
+    });
+    this.send('onFindItemClick', tabModel);
+    let isDrag = !this.get('_isDrag');
+    var i = 0;
+    if (isDrag) {
+      this.set('_isDrag', true);
+      for (i = 0; i < selectedLayer.length; i++) {
+        selectedLayer[i].dragging.enable();
+      }
+    } else {
+      this.set('_isDrag', false);
+      for (i = 0; i < selectedLayer.length; i++) {
+        selectedLayer[i].dragging.disable();
+      }
+
+      this.send('onClearFoundItemClick');
     }
   },
 

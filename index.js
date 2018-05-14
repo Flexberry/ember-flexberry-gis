@@ -116,6 +116,7 @@ module.exports = {
 
     // Load chartjs
     app.import(app.bowerDirectory + '/chart.js/dist/Chart.js');
+    app.import('vendor/leaflet/utils/Path.Drag.js');
 
     // ESRI.terraformer
     app.import(app.bowerDirectory + '/terraformer/terraformer.js');
