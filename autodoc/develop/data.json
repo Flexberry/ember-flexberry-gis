@@ -9434,7 +9434,18 @@
         },
         {
             "file": "addon/components/layers/tile-layer.js",
-            "line": 30,
+            "line": 23,
+            "description": "Whether the layer is wrapped around the antimeridian.\n(not wrapped if true)",
+            "itemtype": "property",
+            "name": "noWrap",
+            "type": "Boolean",
+            "default": "true",
+            "class": "TileLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers/tile-layer.js",
+            "line": 40,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -9446,7 +9457,7 @@
         },
         {
             "file": "addon/components/layers/tile-layer.js",
-            "line": 41,
+            "line": 51,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "identify",
@@ -9484,7 +9495,7 @@
         },
         {
             "file": "addon/components/layers/tile-layer.js",
-            "line": 59,
+            "line": 69,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -38060,7 +38071,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/tile-layer.js:30"
+            "line": " addon/components/layers/tile-layer.js:40"
         },
         {
             "message": "replacing incorrect tag: returns with return",
