@@ -18,6 +18,7 @@
           value=value.featuresPropertiesSettings.displayPropertyIsCallback
           label=(t displayPropertyIsCallbackLabel)
           class=displayPropertyIsCallbackClass
+          change=(action "checkboxDidChange")
         }}
       </div>
     </div>
@@ -26,22 +27,32 @@
     <div class="column">
       <div class="field">
         <label>{{t displayPropertyLabel}}</label>
-        {{flexberry-textbox
+        {{#if value.featuresPropertiesSettings.displayPropertyIsCallback}}
+          {{flexberry-textbox
+            value=value.featuresPropertiesSettings.displayProperty
+            placeholder=(t displayPropertyPlaceholder)
+            class=displayPropertyClass
+          }}
+        {{else}}
+        {{flexberry-dropdown
+          items=allProperties
           value=value.featuresPropertiesSettings.displayProperty
-          placeholder=(t displayPropertyPlaceholder)
-          class=displayPropertyClass
+          placeholder=(t displayPropertyLabel)
         }}
+        {{/if}}
       </div>
     </div>
   </div>
   <div class="row">
     <div class="column">
+      <div class="field">
         {{flexberry-multiple-select
           items=allProperties
           selectedItems=value.featuresPropertiesSettings.excludedProperties
           title=('t' excludedPropertiesLabel)
           allowAdditions=excludedPropertiesAllowAdditions
         }}
+      </div>
     </div>
   </div>
    <div class="equal width row">

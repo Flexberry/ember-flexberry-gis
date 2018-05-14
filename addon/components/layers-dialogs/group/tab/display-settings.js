@@ -351,6 +351,10 @@ export default Ember.Component.extend({
       let _selectedLocale = this.get('_selectedLocale');
       let _translationString = this.get('_translationString');
       Ember.set(this, `value.featuresPropertiesSettings.localizedProperties.${_selectedLocale}.${_selectedProperty}`, _translationString);
+    },
+
+    checkboxDidChange() {
+      this.set('value.featuresPropertiesSettings.displayProperty', '');
     }
   }
 });
