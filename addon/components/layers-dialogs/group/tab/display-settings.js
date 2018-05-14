@@ -260,9 +260,19 @@ export default Ember.Component.extend({
             let allProperties = Ember.A(layerClass.getLayerProperties(leafletObject));
             _this.set('allProperties', allProperties);
 
-            let _showableItems = _this.get('_showableItems');
+            let value = _this.get('value');
+
+            let _showableItems = {};
             for (var prop in allProperties) {
-              _showableItems[prop] = true;
+              if (!allProperties.hasOwnProperty(prop)) {
+                continue;
+              }
+
+              if (typeof (allProperties[prop]) === 'function') {
+                continue;
+              }
+
+              _showableItems[allProperties[prop]] = true;
             }
 
             for (var item in _showableItems) {
@@ -287,7 +297,6 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this.getAllProperties();
-    let value = this.get('value');
 
     let obj = {};
     let arr = Ember.get(this, 'i18n.locales');
@@ -307,8 +316,9 @@ export default Ember.Component.extend({
       this.set('value.featuresPropertiesSettings.displayProperty', '');
     },
 
-    showCheckboxDidChange() {
+    showCheckboxDidChange(e) {
       let _showableItems = this.get('_showableItems');
+      Ember.set(this, '_showableItems[e]', !_showableItems[e]);
       let excluded = [];
       for (var prop in _showableItems) {
         if (!_showableItems[prop]) {
