@@ -15,6 +15,11 @@ fi
 
 # Clone project into 'repository' subfolder && move to it.
 echo "Prepare for deploy to gh-pages."
+if [ -d /repository ]
+then
+  rm -rf "repository"
+fi
+
 echo "Clone ${repositoryRelativeGitHubAddress} repository & checkout latest version of gh-pages branch."
 git clone --depth=50 --branch=gh-pages "https://github.com/${repositoryRelativeGitHubAddress}.git" repository
 cd repository
