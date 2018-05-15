@@ -15,7 +15,7 @@ fi
 
 # Clone project into 'repository' subfolder && move to it.
 echo "Prepare for deploy to gh-pages."
-if [ -d /repository ]
+if [ -d repository ]
 then
   rm -rf "repository"
 fi
