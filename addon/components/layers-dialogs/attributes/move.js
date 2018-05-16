@@ -18,7 +18,7 @@ export default Ember.Component.extend({
     Move X.
 
     @property moveX
-    @type Object
+    @type Numeric
     @default null
   */
   moveX: null,
@@ -27,7 +27,7 @@ export default Ember.Component.extend({
     Move y.
 
     @property moveY
-    @type Object
+    @type Numeric
     @default null
   */
   moveY: null,

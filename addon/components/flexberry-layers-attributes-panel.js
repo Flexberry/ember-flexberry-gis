@@ -301,6 +301,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
 
   _moveDialogIsVisible: false,
+
+  /**
+    Flag: indicates that move was with error
+
+    @property _moveWithError
+    @type boolean
+    @default false
+  */
   _moveWithError: false,
 
   /**
@@ -758,13 +766,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let point = crs.project(latlngs);
       point.x += x;
       point.y += y;
-      latlngs.lat = crs.unproject(point).lat;
-      latlngs.lng = crs.unproject(point).lng;
-      if (latlngs.lat > 90 || latlngs.lat < -90) {
-        this.set('_moveWithError', true);
-      }
-
-      if (latlngs.lng > 180 || latlngs.lng < -180) {
+      let ll = crs.unproject(point);
+      latlngs.lat = ll.lat;
+      latlngs.lng = ll.lng;
+      if (latlngs.lat > 90 || latlngs.lat < -90 || latlngs.lng > 180 || latlngs.lng < -180) {
         this.set('_moveWithError', true);
       }
     }
@@ -798,17 +803,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     });
     this.send('onFindItemClick', tabModel);
     let isDrag = !this.get('_isDrag');
-    if (isDrag) {
-      this.set('_isDrag', true);
-      for (let i = 0; i < selectedLayer.length; i++) {
+    for (let i = 0; i < selectedLayer.length; i++) {
+      if (isDrag) {
+        this.set('_isDrag', true);
         selectedLayer[i].dragging.enable();
-      }
-    } else {
-      this.set('_isDrag', false);
-      for (let i = 0; i < selectedLayer.length; i++) {
+      } else {
+        this.set('_isDrag', false);
         selectedLayer[i].dragging.disable();
       }
+    }
 
+    if (!isDrag) {
       this.send('onClearFoundItemClick');
     }
   },

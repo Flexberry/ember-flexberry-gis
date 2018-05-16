@@ -116,15 +116,14 @@
                       </div>
                     {{/if}}
                   </div>
-                   <div class="field">
-                     {{#if _moveWithError}}
-                        {{ui-message
-                          type="error"
-                          message=(t "components.flexberry-layers-attributes-panel.move.move-error")
-                        }}
-                      {{/if}}
-                   </div>
-
+                  <div class="field">
+                    {{#if _moveWithError}}
+                      {{ui-message
+                        type="error"
+                        message=(t "components.flexberry-layers-attributes-panel.move.move-error")
+                      }}
+                    {{/if}}
+                  </div>
                 </div>
               {{/block-slot}}
 
