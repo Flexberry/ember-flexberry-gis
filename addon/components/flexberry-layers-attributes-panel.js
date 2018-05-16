@@ -805,14 +805,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     let isDrag = !this.get('_isDrag');
     for (let i = 0; i < selectedLayer.length; i++) {
       if (isDrag) {
-        this.set('_isDrag', true);
         selectedLayer[i].dragging.enable();
       } else {
-        this.set('_isDrag', false);
         selectedLayer[i].dragging.disable();
       }
     }
 
+    this.set('_isDrag', isDrag);
     if (!isDrag) {
       this.send('onClearFoundItemClick');
     }
