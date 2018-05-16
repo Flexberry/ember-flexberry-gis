@@ -15,7 +15,7 @@ export default Ember.Component.extend({
   layout,
 
   /**
-    move X.
+    Move X.
 
     @property moveX
     @type Object
@@ -24,13 +24,22 @@ export default Ember.Component.extend({
   moveX: null,
 
   /**
-    move X.
+    Move y.
 
-    @property moveX
+    @property moveY
     @type Object
     @default null
   */
   moveY: null,
+
+  /**
+    Label for crs field
+
+    @property crsFieldLabel
+    @type Object
+    @default null
+  */
+  crsFieldLabel: t('components.geometry-add-modes.manual.crs-field-label'),
 
   /**
     Dialog's 'approve' button caption.
@@ -49,13 +58,6 @@ export default Ember.Component.extend({
     @default t('components.layers-dialogs.edit.deny-button.caption')
   */
   denyButtonCaption: t('components.layers-dialogs.edit.deny-button.caption'),
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-  },
 
   actions: {
     /**

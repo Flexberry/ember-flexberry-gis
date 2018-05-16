@@ -301,6 +301,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
 
   _moveDialogIsVisible: false,
+  _moveWithError: false,
 
   /**
     Initializes component.
@@ -713,35 +714,21 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Number} moveY A hash containing move by Y.
     */
     onMoveDialogApprove(moveX, moveY) {
-
       let tabModel = this.get('_moveTabModel');
       let selectedRows = Ember.get(tabModel, '_selectedRows');
-      let _moveX = parseFloat(this.get('_moveX')) ? parseFloat(this.get('_moveX')) : 0;
-      let _moveY = parseFloat(this.get('_moveY')) ? parseFloat(this.get('_moveY')) : 0;
-      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+      let _moveX = parseFloat(this.get('_moveX')) || 0;
+      let _moveY = parseFloat(this.get('_moveY')) || 0;
+      let selectedFeatures = Object.keys(selectedRows)
       .map((key) => {
         return tabModel.featureLink[key].feature;
       });
+      let crs = tabModel.leafletObject.options.crs;
       this.send('onClearFoundItemClick');
+      this.set('_moveWithError', false);
       selectedFeatures.forEach((feature) => {
-        var i = 0;
-        if (Ember.isArray(feature.leafletLayer._latlngs[0])) {
-          if (Ember.isArray(feature.leafletLayer._latlngs[0][0])) {
-            for (i = 0; i < feature.leafletLayer._latlngs[0][0].length; i++) {
-              feature.leafletLayer._latlngs[0][0][i].lat = feature.leafletLayer._latlngs[0][0][i].lat + _moveY;
-              feature.leafletLayer._latlngs[0][0][i].lng = feature.leafletLayer._latlngs[0][0][i].lng + _moveX;
-            }
-          } else {
-            for (i = 0; i < feature.leafletLayer._latlngs[0].length; i++) {
-              feature.leafletLayer._latlngs[0][i].lat = feature.leafletLayer._latlngs[0][i].lat + _moveY;
-              feature.leafletLayer._latlngs[0][i].lng = feature.leafletLayer._latlngs[0][i].lng + _moveX;
-            }
-          }
-        } else {
-          for (i = 0; i < feature.leafletLayer._latlngs.length; i++) {
-            feature.leafletLayer._latlngs[i].lat = feature.leafletLayer._latlngs[i].lat + _moveY;
-            feature.leafletLayer._latlngs[i].lng = feature.leafletLayer._latlngs[i].lng + _moveX;
-          }
+        this.move(feature.leafletLayer._latlngs, _moveX, _moveY, crs);
+        if (this.get('_moveWithError')) {
+          this.move(feature.leafletLayer._latlngs, -_moveX, -_moveY, crs);
         }
       });
       this.send('onFindItemClick', tabModel);
@@ -753,6 +740,33 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     */
     onMoveDialogDeny() {
       this.set('_moveTabModel', null);
+    }
+  },
+
+  /**
+    Calculates new coordinates layer's feature after the move
+
+    @param {Arrey} latlngs A hash containing  coordinates.
+    @param {Number} x A hash containing move by X.
+    @param {Number} y A hash containing move by Y.
+    @param {Object} crs A hash containing crs layer.
+   */
+  move(latlngs, x, y, crs) {
+    if (Ember.isArray(latlngs)) {
+      latlngs.forEach(ll => this.move(ll, x, y, crs));
+    } else {
+      let point = crs.project(latlngs);
+      point.x += x;
+      point.y += y;
+      latlngs.lat = crs.unproject(point).lat;
+      latlngs.lng = crs.unproject(point).lng;
+      if (latlngs.lat > 90 || latlngs.lat < -90) {
+        this.set('_moveWithError', true);
+      }
+
+      if (latlngs.lng > 180 || latlngs.lng < -180) {
+        this.set('_moveWithError', true);
+      }
     }
   },
 
@@ -774,26 +788,24 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   /**
     Drag and drop.
 
-    @param {Object} data A hash containing added feature properties.
+    @param {Object} tabModel Related tab model.
   */
   _dragAndDrop(tabModel) {
     this.send('onClearFoundItemClick');
     let selectedRows = Ember.get(tabModel, '_selectedRows');
-    let selectedLayer = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
-    .map((key) => {
+    let selectedLayer = Object.keys(selectedRows).map((key) => {
       return tabModel.featureLink[key];
     });
     this.send('onFindItemClick', tabModel);
     let isDrag = !this.get('_isDrag');
-    var i = 0;
     if (isDrag) {
       this.set('_isDrag', true);
-      for (i = 0; i < selectedLayer.length; i++) {
+      for (let i = 0; i < selectedLayer.length; i++) {
         selectedLayer[i].dragging.enable();
       }
     } else {
       this.set('_isDrag', false);
-      for (i = 0; i < selectedLayer.length; i++) {
+      for (let i = 0; i < selectedLayer.length; i++) {
         selectedLayer[i].dragging.disable();
       }
 

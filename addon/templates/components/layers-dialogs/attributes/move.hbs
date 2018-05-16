@@ -11,6 +11,12 @@
   hide=(action "onHide")
 }}
   <form class="ui form {{flexberryClassNames.form}}" role="form">
+    <div class="field disabled">
+      {{flexberry-edit-crs
+        crsCaption=crsFieldLabel
+        coordinateReferenceSystem=layerCRS
+      }}
+    </div>
     <div class="field">
       <label>
         {{t "components.layers-dialogs.edit.move.moveX"}}

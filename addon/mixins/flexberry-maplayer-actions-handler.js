@@ -249,7 +249,7 @@ export default Ember.Mixin.create({
       let layerModel = getRecord(this, layerPath);
       let name = Ember.get(layerModel, 'name');
       let getAttributesOptions = Ember.get(layerModel, '_attributesOptions');
-
+  
       this.set(loadingPath, true);
       if (this.get(foldedPath)) {
         this.set(foldedPath, false);

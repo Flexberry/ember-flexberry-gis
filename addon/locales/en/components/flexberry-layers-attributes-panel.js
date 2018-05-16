@@ -17,6 +17,7 @@ export default {
     },
     'offset': {
       'caption': 'Offset'
-    }
+    },
+    'move-error': 'As you move, the latitude and/or longitude is out of range'
   }
 };
