@@ -9,7 +9,7 @@
   @method copyLayer
   @param {NewPlatformFlexberryGISMapLayer} layerModel
   @param {DS.Store} store Ember data store.
-  @param {Boolean} ignoreLinks Indicate wheter copying links.
+  @param {Boolean} ignoreLinks Indicate whether copying links.
   @return {NewPlatformFlexberryGISMapLayer} Layer model copy.
 */
 let copyLayer = function(layerModel, store, ignoreLinks) {

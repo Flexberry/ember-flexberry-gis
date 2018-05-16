@@ -286,11 +286,11 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     /**
       Reference to 'store' service.
 
-      @property _store
+      @property store
       @type <a href="https://emberjs.com/api/ember-data/2.4/classes/DS.Store">DS.Store</a>
       @private
     */
-    _store: Ember.inject.service('store'),
+    store: Ember.inject.service('store'),
 
     /**
       Flag: indicates whether add dialog has been already requested by user or not.
@@ -547,7 +547,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onAddButtonClick(e) {
         // Create empty layer.
-        let store = this.get('_store');
+        let store = this.get('store');
         this.set('_addDialogLayer', store.createRecord('new-platform-flexberry-g-i-s-map-layer'));
 
         // Include dialog to markup.
@@ -580,9 +580,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onCopyButtonClick(e) {
         // Create layer copy.
-        let store = this.get('_store');
-        let layer = this.get('layer');
-        this.set('_copyDialogLayer', copyLayer(layer, store));
+        this.createLayerCopy('_copyDialogLayer');
         this.set('_copyDialogLayer.name', `${this.get('_copyDialogLayer.name')} ${this.get('copyPostfix')}`);
 
         // Include dialog to markup.
@@ -619,9 +617,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onEditButtonClick() {
         // Create layer copy.
-        let store = this.get('_store');
-        let layer = this.get('layer');
-        this.set('_editDialogLayer', copyLayer(layer, store, true));
+        this.createLayerCopy('_editDialogLayer', true);
 
         // Include dialog to markup.
         this.set('_editDialogHasBeenRequested', true);
@@ -653,9 +649,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onRemoveButtonClick() {
         // Create layer copy.
-        let store = this.get('_store');
-        let layer = this.get('layer');
-        this.set('_removeDialogLayer', copyLayer(layer, store, true));
+        this.createLayerCopy('_removeDialogLayer', true);
 
         // Include dialog to markup.
         this.set('_removeDialogHasBeenRequested', true);
@@ -674,6 +668,20 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         // Send outer 'remove' action.
         this.sendAction('remove', ...args);
       }
+    },
+
+    /**
+      Creates layer's copy.
+
+      @method createLayerCopy
+      @param {String} resultPropertyName Property name for layer's copy.
+      @param {Boolean} ignoreLinks Indicates whether copying links.
+    */
+    createLayerCopy(resultPropertyName, ignoreLinks) {
+      let store = this.get('store');
+      let layer = this.get('layer');
+
+      this.set(resultPropertyName, copyLayer(layer, store, ignoreLinks));
     },
 
     /**
