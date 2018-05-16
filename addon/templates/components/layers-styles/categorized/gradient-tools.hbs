@@ -10,26 +10,20 @@
       </td>
       <td class="ui horizontal list">
         {{#if fillGradientEnable}}
-          <div class="item">
+          <div class="item dropdown-gradient">
             {{gradients/dropdown-gradient
               gradientColorStart=fillGradientColorStart
               gradientColorEnd=fillGradientColorEnd
-              previewCanvasName=fillGradientPreview
-              gradientChange=(action "hideFillGradientEdit")
+              customGradientColorStart=customFillGradientColorStart
+              customGradientColorEnd=customFillGradientColorEnd
             }}
           </div>
           <div class="item">
-            <canvas class="{{fillGradientPreview}} preview-canvas" {{action 'fillGradientEditSwitch'}}>
-            </canvas>
-          </div>
-          <div class="item">
-            {{#if _showFillGradientEdit}}
-              {{gradients/gradient-edit
-                gradientColorStart=fillGradientColorStart
-                gradientColorEnd=fillGradientColorEnd
-                previewCanvasName=fillGradientPreview
-              }}
-            {{/if}}
+            {{gradients/gradient-edit
+              gradientColorStart=fillGradientColorStart
+              gradientColorEnd=fillGradientColorEnd
+              onGradientEdited=(action "onFillGradientEdited")
+            }}
           </div>
         {{/if}}
       </td>
@@ -44,30 +38,23 @@
       </td>
       <td class="ui horizontal list">
         {{#if strokeGradientEnable}}
-          <div class="item">
+          <div class="item dropdown-gradient">
             {{gradients/dropdown-gradient
               gradientColorStart=strokeGradientColorStart
               gradientColorEnd=strokeGradientColorEnd
-              previewCanvasName=strokeGradientPreview
-              gradientChange=(action "hideStrokeGradientEdit")
+              customGradientColorStart=customStrokeGradientColorStart
+              customGradientColorEnd=customStrokeGradientColorEnd
             }}
           </div>
           <div class="item">
-            <canvas class="{{strokeGradientPreview}} preview-canvas" {{action 'strokeGradientEditSwitch'}}>
-            </canvas>
+            {{gradients/gradient-edit
+              gradientColorStart=strokeGradientColorStart
+              gradientColorEnd=strokeGradientColorEnd
+              onGradientEdited=(action "onStrokeGradientEdited")
+            }}
           </div>
-          <div class="item">
-            {{#if _showStrokeGradientEdit}}
-              {{gradients/gradient-edit
-                gradientColorStart=strokeGradientColorStart
-                gradientColorEnd=strokeGradientColorEnd
-                previewCanvasName=strokeGradientPreview
-              }}
-              {{/if}}
-            </div>
           {{/if}}
         </td>
       </tr>
-
   </tbody>
 </table>

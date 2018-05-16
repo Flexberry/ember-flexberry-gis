@@ -5,12 +5,16 @@
           {{t "gradients.dropdown-gradient.default-text"}}
         </div>
         <div class="menu">
-          {{#each _isGradientList as |gradient|}}
+          {{#each _gradientList as |gradient|}}
             <div class="item" data-value="{{gradient.name}}">
-              <canvas class = "flag {{gradient.canName}}"></canvas>
-              {{gradient.name}}
+              <canvas class = "flag {{gradient.name}}"></canvas>
             </div>
           {{/each}}
+          {{#if _customGradient}}
+            <div class="item" data-value="{{_customGradient.name}}">
+              <canvas class = "flag {{_customGradient.name}}"></canvas>
+            </div>
+          {{/if}}
         </div>
     {{/ui-dropdown}}
   </div>

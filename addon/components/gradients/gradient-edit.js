@@ -13,26 +13,6 @@ import layout from '../../templates/components/gradients/gradient-edit';
 */
 
 export default Ember.Component.extend({
-  /**
-    Injected param-gradient-service.
-
-    @property _paramGradient
-    @type <a href="http://emberjs.com/api/classes/Ember.Service.html">Ember.Service</a>
-    @default service:param-gradient
-    @private
-  */
-  _paramGradient: Ember.inject.service('param-gradient'),
-
-  /**
-    Observes changes in Observes changes in the choice of gradient colors.
-    Initializes area select color in flexberry-colorpicker.
-
-    @method _gradientColorStartChange
-    @private
-  */
-  _gradientColorStartChange: Ember.observer('gradientColorStart', 'gradientColorEnd', function() {
-    Ember.run.once(this, '_gradientDrawing');
-  }),
 
   /**
     Initial gradient color.
@@ -88,6 +68,7 @@ export default Ember.Component.extend({
     */
     onGradientColorStartChange(e) {
       this.set('gradientColorStart', e.newValue);
+      this.sendAction('onGradientEdited');
     },
 
     /**
@@ -97,28 +78,8 @@ export default Ember.Component.extend({
     */
     onGradientColorEndChange(e) {
       this.set('gradientColorEnd', e.newValue);
+      this.sendAction('onGradientEdited');
     }
-  },
-
-  /**
-    Initializes DOM-related component's properties.
-  */
-  didInsertElement() {
-    this._super(...arguments);
-
-    let paramGrad = this.get('_paramGradient');
-    let previewCanvas = Ember.$('.' + this.get('previewCanvasName'));
-    paramGrad.gradientDrawing(previewCanvas, this.get('gradientColorStart'), this.get('gradientColorEnd'));
-  },
-
-  /**
-    Gradient display.
-
-    @method gradientDrawing
-  */
-  _gradientDrawing() {
-    let paramGrad = this.get('_paramGradient');
-    let previewCanvas = Ember.$('.' + this.get('previewCanvasName'));
-    paramGrad.gradientDrawing(previewCanvas, this.get('gradientColorStart'), this.get('gradientColorEnd'));
   }
+
 });

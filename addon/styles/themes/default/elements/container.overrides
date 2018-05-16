@@ -1136,11 +1136,6 @@ form.flexberry-edit-layermap {
     .gradient-tools-segment {
       float: left;
       margin-left: 1rem;
-
-      .preview-canvas {
-        width: 110px;
-        height: 60px;
-      }
     }
 
     .classify-categories-segment {
@@ -1216,6 +1211,15 @@ form.flexberry-edit-layermap {
   .flag {
     border: @gradientToolsCompoentsBorder;
     width: 24px;
+    height: 14px;
+  }
+}
+
+.dropdown-gradient {
+
+  .flag {
+    border: @gradientToolsCompoentsBorder;
+    width: 110px;
     height: 14px;
   }
 }

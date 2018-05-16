@@ -98,33 +98,49 @@ export default Ember.Component.extend({
   fillGradientColorEnd: null,
 
   /**
-    Canvas name of preview stroke gradient.
+    First stroke color of automatic set color gradient range. In HEX.
 
-    @property strokeGradientPreviewName
+    @property strokeGradientColorStart
     @type String
-    @default "strokeGradientCanvas"
+    @default null
     @public
   */
-  strokeGradientPreview: 'strokeGradientCanvas',
+  editStrokeGradientColorStart: null,
 
   /**
-    Canvas name of preview fill gradient.
+    Last stroke color of automatic set color gradient range. In HEX.
 
-    @property fillGradientPreviewName
+    @property strokeGradientColorEnd
     @type String
-    @default "fillGradientCanvas"
+    @default null
     @public
   */
-  fillGradientPreview: 'fillGradientCanvas',
+  editStrokeGradientColorEnd: null,
+
+  /**
+    First fill color of automatic set color gradient range. In HEX.
+
+    @property fillGradientColorStart
+    @type String
+    @default null
+    @public
+  */
+  editFillGradientColorStart: null,
+
+  /**
+    Last fill color of automatic set color gradient range. In HEX.
+
+    @property fillGradientColorStart
+    @type String
+    @default null
+    @public
+  */
+  editFillGradientColorEnd: null,
 
   actions: {
-    /**
-      Handles on stroke gradient previewCanvas click event.
 
-      @method actions.strokeGradientEditSwitch
-    */
-    strokeGradientEditSwitch() {
-      this.toggleProperty('_showStrokeGradientEdit');
+    onGradientChange() {
+      this.sendAction('gradientChange');
     },
 
     /**
@@ -132,26 +148,25 @@ export default Ember.Component.extend({
 
       @method actions.fillGradientEditSwitch
     */
-    fillGradientEditSwitch() {
-      this.toggleProperty('_showFillGradientEdit');
+    onFillGradientEdited() {
+      let colorStart = this.get('fillGradientColorStart');
+      this.set('customFillGradientColorStart',colorStart);
+
+      let colorEnd = this.get('fillGradientColorEnd');
+      this.set('customFillGradientColorEnd',colorEnd);
     },
 
     /**
-      Handles changes selected item in stroke gradien dropdown.
+      Handles on fill gradient previewCanvas click event.
 
-      @method actions.hideStrokeGradientEdit
+      @method actions.fillGradientEditSwitch
     */
-    hideStrokeGradientEdit() {
-      this.set('_showStrokeGradientEdit', false);
-    },
+    onStrokeGradientEdited() {
+      let colorStart = this.get('strokeGradientColorStart');
+      this.set('customStrokeGradientColorStart',colorStart);
 
-    /**
-      Handles changes selected item in fill gradien dropdown.
-
-      @method actions.hideFillGradientEdit
-    */
-    hideFillGradientEdit() {
-      this.set('_showFillGradientEdit', false);
+      let colorEnd = this.get('strokeGradientColorEnd');
+      this.set('customStrokeGradientColorEnd',colorEnd);
     }
   }
 });

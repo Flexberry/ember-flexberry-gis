@@ -4,7 +4,7 @@
 export default Object({
   name: 'grad4',
 
-  colorS: '#6464c8',
+  colorStart: '#6464c8',
 
-  colorE: '#ff9616'
+  colorEnd: '#ff9616'
 });

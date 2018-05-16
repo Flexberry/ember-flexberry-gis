@@ -397,6 +397,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     this.set('_selectedCategories', {});
+    this._loadGradientSettings();
   },
 
   /**
@@ -415,6 +416,30 @@ export default Ember.Component.extend({
     this.set('_selectedCategories', null);
 
     this._super(...arguments);
+  },
+
+  _loadGradientSettings() {
+    let existPathSettings = this.get('styleSettings').style.path;
+    let existCategories = this.get('styleSettings').style.categories;
+
+    if (existCategories.length !== 0) {
+      if (existPathSettings.fillGradientEnable) {
+        this.set('_fillGradientEnable', true);
+        let colorStart = existCategories[0].styleSettings.style.path.fillColor;
+        let colorEnd = existCategories[existCategories.length-1].styleSettings.style.path.fillColor;
+        this.set('_fillGradientColorStart', colorStart);
+        this.set('_fillGradientColorEnd', colorEnd);
+      }
+
+      if (existPathSettings.strokeGradientEnable) {
+        this.set('_strokeGradientEnable', true);
+        let colorStart = existCategories[0].styleSettings.style.path.color;
+        let colorEnd = existCategories[existCategories.length-1].styleSettings.style.path.color;
+        this.set('_strokeGradientColorStart', colorStart);
+        this.set('_strokeGradientColorEnd', colorEnd);
+      }
+
+    }
   },
 
   /**
