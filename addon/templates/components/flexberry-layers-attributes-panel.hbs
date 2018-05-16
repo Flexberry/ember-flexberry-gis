@@ -68,6 +68,11 @@
                   <div class="buttons">
                     {{flexberry-button
                       tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
+                      click=(action "drawBuffer" tabModel)
+                      iconClass="dot circle icon"
+                      readonly=(eq tabModel._selectedRowsCount 0) }}
+                    {{flexberry-button
+                      tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
                       click=(action "onFindItemClick" tabModel)
                       iconClass="marker icon"
                       readonly=(eq tabModel._selectedRowsCount 0) }}
