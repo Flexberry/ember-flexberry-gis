@@ -13,6 +13,9 @@ import DynamicPropertiesMixin from '../mixins/dynamic-properties';
 import { copyLayer } from '../utils/copy-layer';
 
 import layout from '../templates/components/flexberry-maplayer';
+import {
+  translationMacro as t
+} from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -135,6 +138,15 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
   DomActionsMixin,
   DynamicActionsMixin,
   DynamicPropertiesMixin, {
+
+    /**
+      Layer copy's name postfix
+
+      @property copyPostfix
+      @type String
+      @default t('components.layers-dialogs.copy.layer-name-postfix')
+    */
+    copyPostfix: t('components.layers-dialogs.copy.layer-name-postfix'),
 
     /**
       Component's required actions names.
@@ -571,6 +583,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         let store = this.get('_store');
         let layer = this.get('layer');
         this.set('_copyDialogLayer', copyLayer(layer, store));
+        this.set('_copyDialogLayer.name', `${this.get('_copyDialogLayer.name')} ${this.get('copyPostfix')}`);
 
         // Include dialog to markup.
         this.set('_copyDialogHasBeenRequested', true);
@@ -608,7 +621,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         // Create layer copy.
         let store = this.get('_store');
         let layer = this.get('layer');
-        this.set('_editDialogLayer', copyLayer(layer, store));
+        this.set('_editDialogLayer', copyLayer(layer, store, true));
 
         // Include dialog to markup.
         this.set('_editDialogHasBeenRequested', true);
@@ -642,7 +655,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
         // Create layer copy.
         let store = this.get('_store');
         let layer = this.get('layer');
-        this.set('_removeDialogLayer', copyLayer(layer, store));
+        this.set('_removeDialogLayer', copyLayer(layer, store, true));
 
         // Include dialog to markup.
         this.set('_removeDialogHasBeenRequested', true);

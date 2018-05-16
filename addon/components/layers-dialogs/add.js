@@ -67,7 +67,22 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
     @type String
     @default t('components.layers-dialogs.add.deny-button.caption')
   */
-  denyButtonCaption: t('components.layers-dialogs.add.deny-button.caption')
+  denyButtonCaption: t('components.layers-dialogs.add.deny-button.caption'),
+
+  actions: {
+    /**
+      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
+      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
+
+      @method actions.onApprove
+    */
+    onApprove() {
+      this.sendAction('approve', {
+        layerProperties: this.get('getLayerProperties')(),
+        layer: this.get('layer')
+      });
+    },
+  }
 });
 
 // Add component's CSS-class names as component's class static constants
