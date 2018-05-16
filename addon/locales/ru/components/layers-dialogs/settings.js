@@ -24,6 +24,7 @@ export default {
         'translation-label': 'Локализованная строка',
         'translation-ph': 'Локализованная строка',
         'properties-list-heading': 'Доступные свойства',
+        'show-prop-heading': 'Показывать?',
         'locales-list-heading': 'Доступные локали',
         'no-items-label': 'Нечего показать'
       },

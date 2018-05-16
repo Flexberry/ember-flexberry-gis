@@ -46,23 +46,10 @@
     </div>
   </div>
   <div class="row">
-    <div class="column">
-      <div class="field">
-        {{flexberry-multiple-select
-          items=allProperties
-          selectedItems=value.featuresPropertiesSettings.excludedProperties
-          title=('t' excludedPropertiesLabel)
-          allowAdditions=excludedPropertiesAllowAdditions
-        }}
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
     <table class="ui compact celled definition table">
       <thead class="full-width">
         <tr>
-          <th>Отображать?</th>
+          <th>{{t showPropertyHeading}}</th>
           <th>{{t propertiesListHeading}}</th>
           <th>{{_defaultLocale}}</th>
           <th>
@@ -78,9 +65,9 @@
         {{#each allProperties as |property|}}
           <tr>
             <td class="collapsing">
-              <div class="ui fitted slider checkbox">
+              <div class="ui fitted">
                 {{flexberry-checkbox
-                  value=(mut (get this (concat "_showableItems." property)))
+                  value=(get this (concat "_showableItems." property))
                   change=(action "showCheckboxDidChange" property)
                 }}
               </div>

@@ -179,6 +179,15 @@ export default Ember.Component.extend({
   propertiesListHeading: 'components.layers-dialogs.settings.group.tab.display-settings.properties-list-heading',
 
   /**
+    Show property column header.
+
+    @property showPropertyHeading
+    @type String
+    @default 'components.layers-dialogs.settings.group.tab.display-settings.show-prop-heading''
+  */
+  showPropertyHeading: 'components.layers-dialogs.settings.group.tab.display-settings.show-prop-heading',
+
+  /**
     Locales list header locale key.
 
     @property localesListHeading
@@ -224,8 +233,22 @@ export default Ember.Component.extend({
   */
   _selectedLocale: undefined,
 
+  /**
+    Contains properties with flag showing whether they are showable.
+
+    @property _showableItems
+    @type Object
+    @default {}
+  */
   _showableItems: {},
 
+  /**
+    Returns default locale.
+
+    @property _defaultLocale
+    @type String
+    @default 'en'
+  */
   _defaultLocale: Ember.computed(function() {
     return this.get('i18n.locale');
   }),
@@ -240,7 +263,7 @@ export default Ember.Component.extend({
   excludedPropertiesAllowAdditions: true,
 
   /**
-    Gets all layers's properties
+    Gets all layers's properties, makes some initializations.
 
     @method getAllProperties
   */
@@ -263,17 +286,9 @@ export default Ember.Component.extend({
             let value = _this.get('value');
 
             let _showableItems = {};
-            for (var prop in allProperties) {
-              if (!allProperties.hasOwnProperty(prop)) {
-                continue;
-              }
-
-              if (typeof (allProperties[prop]) === 'function') {
-                continue;
-              }
-
-              _showableItems[allProperties[prop]] = true;
-            }
+            allProperties.forEach(function(item, i, allProperties) {
+              _showableItems[item] = true;
+            });
 
             for (var item in _showableItems) {
               if (value.featuresPropertiesSettings.excludedProperties.indexOf(item) !== -1) {
@@ -311,14 +326,23 @@ export default Ember.Component.extend({
   },
 
   actions: {
-
+    /**
+      Handles callback-checkbox change.
+      @method actions.isCallbackCheckboxDidChange
+    */
     isCallbackCheckboxDidChange() {
       this.set('value.featuresPropertiesSettings.displayProperty', '');
     },
 
+    /**
+      Handles show checkbox change
+      @method actions.showCheckboxDidChange
+      @param {Object} e Click event object.
+    */
     showCheckboxDidChange(e) {
       let _showableItems = this.get('_showableItems');
-      Ember.set(this, '_showableItems[e]', !_showableItems[e]);
+      Ember.set(this, `_showableItems.${e}`, !_showableItems[e]);
+
       let excluded = [];
       for (var prop in _showableItems) {
         if (!_showableItems[prop]) {

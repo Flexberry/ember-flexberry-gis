@@ -24,6 +24,7 @@ export default {
         'translation-label': 'Localized string',
         'translation-ph': 'Localized string',
         'properties-list-heading': 'Avaliable properties',
+        'show-prop-heading': 'Show?',
         'locales-list-heading': 'Avaliable locales',
         'no-items-label': 'Nothing to show'
       },
