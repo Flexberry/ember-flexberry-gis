@@ -281,7 +281,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "WmsSingleTileLegendComponent",
         "WmsWfsLayer",
         "WmsWfsLayerComponent",
-        "WmsWfsLegendComponent",
         "YandexMapsGeoCoder",
         "ZoomInMapTool",
         "ZoomInMapToolComponent",
