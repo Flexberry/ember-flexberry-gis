@@ -66,11 +66,22 @@
                     class=(if (eq tabModel.properties.length 0) "disabled")
                   }}
                   <div class="buttons">
-                    {{flexberry-button
-                      tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
-                      click=(action "drawBuffer" tabModel)
-                      iconClass="dot circle icon"
-                      readonly=(eq tabModel._selectedRowsCount 0) }}
+                    <div class="ember-view flexberry-geometry-add-mode-draw">
+                      <div class="ui simple dropdown item">
+                        <i class="dot circle icon"></i>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                          <a class="item" onclick={{action "drawBuffer" tabModel}}>
+                            <i class="dot circle icon"></i>
+                            Draw
+                          </a>
+                          <a class="item" onclick={{action "deleteBuffer"}}>
+                            <i class="erase icon"></i>
+                            Erase
+                          </a>
+                        </div>
+                      </div>
+                    </div>
                     {{flexberry-button
                       tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
                       click=(action "onFindItemClick" tabModel)

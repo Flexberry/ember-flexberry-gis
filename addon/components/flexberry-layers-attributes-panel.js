@@ -15,6 +15,8 @@ import * as buffer from 'npm:@turf/buffer';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
+
+  _bufferLayer: null,
   /**
     Leaflet.Editable drawing tools instance.
 
@@ -371,6 +373,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     drawBuffer(tabModel) {
+      let radius = 1000;
+      let unit = 'meters';
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
         .map((key) => {
@@ -378,9 +382,23 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         });
 
       let leafletMap = this.get('leafletMap');
+      let featureCollection =
+        {
+          type: 'FeatureCollection',
+          features: selectedFeatures
+        };
 
-      let buf = buffer.default(selectedFeatures[0], 1000, { units: 'meters' });
-      L.geoJSON(buf).addTo(leafletMap);
+      let buf = buffer.default(featureCollection, radius, { units: unit });
+      let _bufferLayer = this.get('_bufferLayer');
+      _bufferLayer = L.geoJSON(buf);
+      _bufferLayer.addTo(leafletMap);
+      this.set('_bufferLayer', _bufferLayer);
+    },
+
+    deleteBuffer() {
+      let leafletMap = this.get('leafletMap');
+      leafletMap.removeLayer(this.get('_bufferLayer'));
+      this.set('_bufferLayer', null);
     },
 
     /**
