@@ -679,10 +679,10 @@ export default Ember.Component.extend(
       let availableEditModes = Ember.A();
       let editModesNames = owner.knownNamesForType('layers-prototyping-mode');
       editModesNames.forEach((modeName) => {
-        let editModeFactory = owner.knownForType('layers-prototyping-mode', modeName);
-        let isAvailable = editModeFactory.componentCanBeInserted(this);
+        let editMode = owner.knownForType('layers-prototyping-mode', modeName).create();
+        let isAvailable = editMode.componentCanBeInserted(this);
         if (isAvailable) {
-          availableEditModes.pushObject(editModeFactory);
+          availableEditModes.pushObject(editMode);
         }
       });
       this.set('_availableModes', availableEditModes);
