@@ -13,26 +13,6 @@ import layout from '../../../templates/components/layers-styles/categorized/grad
 */
 export default Ember.Component.extend({
   /**
-    Flag indicate stroke gradient enable
-
-    @property _showStrokeGradientEdit
-    @type Boolean
-    @default false
-    @private
-  */
-  _showStrokeGradientEdit: false,
-
-  /**
-    Flag indicate fill gradient enable.
-
-    @property _showFillGradientEdit
-    @type Boolean
-    @default false
-    @private
-  */
-  _showFillGradientEdit: false,
-
-  /**
     Reference to component's template.
   */
   layout,
@@ -98,75 +78,70 @@ export default Ember.Component.extend({
   fillGradientColorEnd: null,
 
   /**
-    First stroke color of automatic set color gradient range. In HEX.
+    First stroke custom color of automatic set color gradient range. In HEX.
 
-    @property strokeGradientColorStart
+    @property customStrokeGradientColorStart
     @type String
     @default null
     @public
   */
-  editStrokeGradientColorStart: null,
+  customStrokeGradientColorStart: null,
 
   /**
-    Last stroke color of automatic set color gradient range. In HEX.
+    Last stroke custom color of automatic set color gradient range. In HEX.
 
-    @property strokeGradientColorEnd
+    @property customStrokeGradientColorEnd
     @type String
     @default null
     @public
   */
-  editStrokeGradientColorEnd: null,
+  customStrokeGradientColorEnd: null,
 
   /**
-    First fill color of automatic set color gradient range. In HEX.
+    First fill custom color of automatic set color gradient range. In HEX.
 
-    @property fillGradientColorStart
+    @property customFillGradientColorStart
     @type String
     @default null
     @public
   */
-  editFillGradientColorStart: null,
+  customFillGradientColorStart: null,
 
   /**
-    Last fill color of automatic set color gradient range. In HEX.
+    Last fill custom color of automatic set color gradient range. In HEX.
 
-    @property fillGradientColorStart
+    @property customFillGradientColorEnd
     @type String
     @default null
     @public
   */
-  editFillGradientColorEnd: null,
+  customFillGradientColorEnd: null,
 
   actions: {
-
-    onGradientChange() {
-      this.sendAction('gradientChange');
-    },
-
     /**
-      Handles on fill gradient previewCanvas click event.
+      Handles on fill gradient edit by gradient-edit.
 
-      @method actions.fillGradientEditSwitch
+      @method actions.onFillGradientEdited
     */
     onFillGradientEdited() {
       let colorStart = this.get('fillGradientColorStart');
-      this.set('customFillGradientColorStart',colorStart);
+      this.set('customFillGradientColorStart', colorStart);
 
       let colorEnd = this.get('fillGradientColorEnd');
-      this.set('customFillGradientColorEnd',colorEnd);
+      this.set('customFillGradientColorEnd', colorEnd);
     },
 
     /**
-      Handles on fill gradient previewCanvas click event.
+      Handles on stroke gradient edit by gradient-edit.
 
-      @method actions.fillGradientEditSwitch
+      @method actions.onStrokeGradientEdited
     */
     onStrokeGradientEdited() {
       let colorStart = this.get('strokeGradientColorStart');
-      this.set('customStrokeGradientColorStart',colorStart);
+      this.set('customStrokeGradientColorStart', colorStart);
 
       let colorEnd = this.get('strokeGradientColorEnd');
-      this.set('customStrokeGradientColorEnd',colorEnd);
+      this.set('customStrokeGradientColorEnd', colorEnd);
     }
   }
 });

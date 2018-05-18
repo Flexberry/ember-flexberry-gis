@@ -68,16 +68,15 @@ export default BaseCustomStyle.extend({
       let path = mainStyleSettings.style.path;
 
       let fillGradientColors = Ember.A();
-      if(this.get('_fillGradientEnable')) {
+      if (this.get('_fillGradientEnable')) {
         fillGradientColors = getGradientColors(this.get('_fillGradientColorStart'), this.get('_fillGradientColorEnd'), categoriesCount);
-        console.log(fillGradientColors);
         path.fillGradientEnable = true;
       } else {
         path.fillGradientEnable = false;
       }
 
       let strokeGradientColors = Ember.A();
-      if(this.get('_strokeGradientEnable')) {
+      if (this.get('_strokeGradientEnable')) {
         strokeGradientColors = getGradientColors(this.get('_strokeGradientColorStart'), this.get('_strokeGradientColorEnd'), categoriesCount);
         path.strokeGradientEnable = true;
       } else {
@@ -96,6 +95,7 @@ export default BaseCustomStyle.extend({
           styleSettings: catStyleSettings
         });
       }
+
       this.set('styleSettings.style.path', path);
       this.set('styleSettings.style.categories', categories);
       this.set('_selectedCategories', {});

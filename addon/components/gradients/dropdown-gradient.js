@@ -20,11 +20,28 @@ export default Ember.Component.extend({
     @property _gradientList
     @type Object[]
     @default []
+    @private
   */
   _gradientList: [],
 
+  /**
+    Custom gradient element for dropdown list.
+
+    @property _customGradient
+    @type Object
+    @default null
+    @private
+  */
   _customGradient: null,
 
+  /**
+    Name for custom gradient element in dropdown list.
+
+    @property _customGradientName
+    @type String
+    @default 'custom'
+    @private
+  */
   _customGradientName: 'custom',
 
   /**
@@ -32,7 +49,13 @@ export default Ember.Component.extend({
   */
   layout,
 
-  isGradientCustomized: Ember.observer('customGradientColorStart', 'customGradientColorEnd', function () {
+  /**
+    Observes gradient customization from gradient-edit component.
+
+    @method _isGradientCustomized
+    @private
+  */
+  _isGradientCustomized: Ember.observer('customGradientColorStart', 'customGradientColorEnd', function () {
     let colorStart = this.get('customGradientColorStart');
     let colorEnd = this.get('customGradientColorEnd');
 
@@ -112,11 +135,17 @@ export default Ember.Component.extend({
     */
     onChangeGradient(element, value) {
       let customGradientName = this.get('_customGradientName');
-      if(value !== customGradientName) {
+      if (value !== customGradientName) {
         let gradientColor = this.getColorGradient(value);
         this.gradientDrawing(gradientColor[0], gradientColor[1], gradientColor[2]);
         this.set('gradientColorStart', gradientColor[1]);
         this.set('gradientColorEnd', gradientColor[2]);
+      } else {
+        let colorStart = this.get('customGradientColorStart');
+        let colorEnd = this.get('customGradientColorEnd');
+        this.set('gradientColorStart', colorStart);
+        this.set('gradientColorEnd', colorEnd);
+        this.gradientDrawing(customGradientName, colorStart, colorEnd);
       }
     }
 
@@ -137,10 +166,10 @@ export default Ember.Component.extend({
     let colorStart = this.get('gradientColorStart');
     let colorEnd = this.get('gradientColorEnd');
 
-    if(Ember.isNone(colorStart) || Ember.isNone(colorEnd)) {
+    if (Ember.isNone(colorStart) || Ember.isNone(colorEnd)) {
       Ember.run.scheduleOnce('afterRender', this, '_showDefaultItem');
     } else {
-      Ember.run.scheduleOnce('afterRender', this, '_applyExistGradientSettings',colorStart,colorEnd);
+      Ember.run.scheduleOnce('afterRender', this, '_applyExistGradientSettings', colorStart, colorEnd);
     }
 
   },
@@ -166,41 +195,73 @@ export default Ember.Component.extend({
     this.set('_customGradient', null);
   },
 
+  /**
+    Show first item in gradient dropdown as default
+
+    @method _showDefaultItem
+    @private
+  */
   _showDefaultItem() {
-    if (Ember.isNone(this.get('gradientColorStart')) && Ember.isNone(this.get('gradientColorEnd'))) {
-      let gradientName = this.get('_gradientList')[0].name;
-      this._showDropdownItem(gradientName);
-    }
+    let gradientName = this.get('_gradientList')[0].name;
+    let colorStart = this.get('_gradientList')[0].colorStart;
+    let colorEnd = this.get('_gradientList')[0].colorEnd;
+    this._showItem(gradientName, colorStart, colorEnd);
   },
 
+  /**
+    Show custom gradient item in dropdown when user change gradient in
+    gradient-edit component
+
+    @method _showCustomGradientItem
+    @param {String} colorStart first color value in HEX
+    @param {String} colorEnd last color value in HEX
+    @private
+  */
   _showCustomGradientItem(colorStart, colorEnd) {
     let customGradientName = this.get('_customGradientName');
-    let customGradient = { 'name': customGradientName, 'colorStart': colorStart, 'colorEnd': colorEnd}
-    this.set('_customGradient',customGradient);
-    this._showDropdownItem(customGradient.name);
-    this.gradientDrawing(customGradient.name, customGradient.colorStart, customGradient.colorEnd);
+    let customGradient = { 'name': customGradientName, 'colorStart': colorStart, 'colorEnd': colorEnd };
+    this.set('_customGradient', customGradient);
+    this._showItem(customGradient.name, customGradient.colorStart, customGradient.colorEnd);
   },
 
+  /**
+    Set selected any gradient item in dropdown by gradient name
+
+    @method _showItem
+    @param {String} itemName name of selectable item
+    @param {String} colorStart first color value in HEX
+    @param {String} colorEnd last color value in HEX
+    @private
+  */
+  _showItem(itemName, colorStart, colorEnd) {
+    Ember.run.later(() => {
+      let gradientDropdown = this.$('.ui.dropdown');
+      gradientDropdown.dropdown('set selected', itemName);
+      this.gradientDrawing(itemName, colorStart, colorEnd);
+    }, 100);
+  },
+
+  /**
+    Apply existing gradient parameters on gradient-tools user interface form
+
+    @method _applyExistGradientSettings
+    @param {String} colorStart first color value in HEX
+    @param {String} colorEnd last color value in HEX
+    @private
+  */
   _applyExistGradientSettings(colorStart, colorEnd) {
     let gradientList = this.get('_gradientList');
     let findedItemIdex = gradientList.findIndex((item) =>
       Ember.isEqual(item.colorStart, colorStart) &&
       Ember.isEqual(item.colorEnd, colorEnd)
     );
-    if (findedItemIdex >=0) {
+    if (findedItemIdex >= 0) {
       let gradientListItem = this.get('_gradientList')[findedItemIdex];
-      this._showDropdownItem(gradientListItem.name);
-      this.gradientDrawing(gradientListItem.name, gradientListItem.colorStart, gradientListItem.colorEnd);
+      this._showItem(gradientListItem.name, gradientListItem.colorStart, gradientListItem.colorEnd);
     } else {
-      this._showCustomGradientItem(colorStart, colorEnd)
+      this.set('customGradientColorStart', colorStart);
+      this.set('customGradientColorEnd', colorEnd);
     }
-  },
-
-  _showDropdownItem(itemName) {
-    Ember.run(() => {
-      let gradientDropdown = this.$('.ui.dropdown');
-      gradientDropdown.dropdown('set selected', itemName);
-    });
   },
 
   /**
@@ -214,7 +275,7 @@ export default Ember.Component.extend({
     let colorsGradient = Ember.A([]);
     let gradientList = this.get('_gradientList');
 
-    gradientList .forEach(function(item) {
+    gradientList.forEach(function(item) {
       if (item.name === search) {
         colorsGradient.push(item.name, item.colorStart, item.colorEnd);
       }
@@ -244,8 +305,8 @@ export default Ember.Component.extend({
     }
 
     if (Ember.isNone(existingGradientItem)) {
-      gradientList.push({ 'name': name, 'colorStart': colorStart, 'colorEnd': colorEnd});
-      this.set ('_gradientList', gradientList);
+      gradientList.push({ 'name': name, 'colorStart': colorStart, 'colorEnd': colorEnd });
+      this.set('_gradientList', gradientList);
     }
   },
 

@@ -38,15 +38,6 @@ export default Ember.Component.extend({
   layout,
 
   /**
-    The class name of preview canvas gradient.
-
-    @property _previewCanvasName
-    @type string
-    @default 'null'
-  */
-  previewCanvasName: null,
-
-  /**
     Component's wrapping <div> CSS-classes names.
 
     Any other CSS-class names can be added through component's 'class' property.
@@ -62,7 +53,7 @@ export default Ember.Component.extend({
 
   actions: {
     /**
-      Handler for font colorpicker's 'change' action.
+      Handler for colorpicker's 'change' action.
 
       @method actions.onGradientColorStartChange
     */
@@ -72,7 +63,7 @@ export default Ember.Component.extend({
     },
 
     /**
-      Handler for font colorpicker's 'change' action.
+      Handler for colorpicker's 'change' action.
 
       @method actions.onGradientColorEndChange
     */
@@ -82,4 +73,9 @@ export default Ember.Component.extend({
     }
   }
 
+  /**
+    Gradient-tool component's action invoking when gradient edit .
+
+    @method sendingActions.onGradientEdited
+  */
 });
