@@ -392,7 +392,7 @@ import BaseEditMode from &#x27;ember-flexberry-gis/layers-prototyping-modes/-pri
 
   @class MetadataEditMode
 */
-export default Object.assign(BaseEditMode, {
+export default BaseEditMode.extend({
   requiredProperties: [&#x27;leafletMap&#x27;],
   name: &#x27;metadata-mode&#x27;
 });
