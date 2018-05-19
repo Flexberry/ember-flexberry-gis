@@ -10,4 +10,8 @@ export default {
   'save-changes': 'Сохранить изменения',
   'table-tab': 'Таблица',
   'diagram-tab': 'График',
+  'erase': 'Очистить',
+  'buffer': 'Буфер',
+  'goto': 'Перейти',
+  'units': 'Единицы'
 };

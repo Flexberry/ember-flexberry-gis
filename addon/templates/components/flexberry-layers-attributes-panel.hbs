@@ -71,27 +71,46 @@
                         <i class="dot circle icon"></i>
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                          <a class="item" onclick={{action "drawBuffer" tabModel}}>
+                          <a class="item" readonly={{eq tabModel._selectedRowsCount 0}} onclick={{action "drawBuffer" tabModel}}>
                             <i class="dot circle icon"></i>
-                            Draw
+                            {{t "components.flexberry-layers-attributes-panel.buffer"}}
                           </a>
                           <a class="item" onclick={{action "deleteBuffer"}}>
                             <i class="erase icon"></i>
-                            Erase
+                            {{t "components.flexberry-layers-attributes-panel.erase"}}
+                          </a>
+                          {{flexberry-dropdown
+                            items=_turfUnits
+                            value=_selectedUnit
+                            placeholder=(t "components.flexberry-layers-attributes-panel.units")
+                            class="compact"
+                          }}
+                          <br>
+                          {{flexberry-field
+                            value=_radius
+                            label=label
+                            type=number
+                            class="mini input"
+                          }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ember-view flexberry-geometry-add-mode-draw">
+                      <div class="ui simple dropdown item">
+                        <i class="marker icon"></i>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                          <a class="item" readonly={{eq tabModel._selectedRowsCount 0}} onclick={{action "onFindItemClick" tabModel}}>
+                            <i class="marker icon"></i>
+                            {{t "components.flexberry-layers-attributes-panel.goto"}}
+                          </a>
+                          <a class="item" onclick={{action "onClearFoundItemClick"}}>
+                            <i class="erase icon"></i>
+                            {{t "components.flexberry-layers-attributes-panel.erase"}}
                           </a>
                         </div>
                       </div>
                     </div>
-                    {{flexberry-button
-                      tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
-                      click=(action "onFindItemClick" tabModel)
-                      iconClass="marker icon"
-                      readonly=(eq tabModel._selectedRowsCount 0) }}
-                    {{flexberry-button
-                      tooltip=(t "components.flexberry-layers-attributes-panel.clear-found")
-                      click=(action "onClearFoundItemClick")
-                      iconClass="erase icon"
-                    }}
                     {{#if tabModel.allowEdit}}
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")

@@ -10,4 +10,8 @@ export default {
   'save-changes': 'Save changes',
   'table-tab': 'Table',
   'diagram-tab': 'Chart',
+  'erase': 'Erase',
+  'buffer': 'Buffer',
+  'goto': 'Go to',
+  'units': 'Units'
 };

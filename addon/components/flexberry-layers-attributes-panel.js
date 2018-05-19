@@ -16,6 +16,20 @@ import * as buffer from 'npm:@turf/buffer';
  */
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
+  _turfUnits: {
+    miles: 'miles',
+    nauticalmiles: 'nauticalmiles',
+    yards: 'yards',
+    meters: 'meters',
+    kilometers: 'kilometers',
+    centimeters: 'centimeters',
+    feet: 'feet'
+  },
+
+  _selectedUnit: undefined,
+
+  _radius: 500,
+
   _bufferLayer: null,
   /**
     Leaflet.Editable drawing tools instance.
@@ -291,6 +305,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       };
 
       this.set('settings', settings);
+
+      this.set('_selectedUnit', this.get('_turfUnits').meters);
     }
   },
 
@@ -373,8 +389,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     drawBuffer(tabModel) {
-      let radius = 1000;
-      let unit = 'meters';
+      let radius = this.get('_radius');
+      let unit = this.get('_selectedUnit');
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
         .map((key) => {
