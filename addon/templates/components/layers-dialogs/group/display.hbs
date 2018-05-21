@@ -42,12 +42,19 @@
       {{/if}}
       {{#if _searchSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "search-tab") "active"}}" data-tab="search-tab">
-          {{flexberry-jsonarea value=_layer.settings.searchSettings}}
+          {{layers-dialogs/group/tab/search-settings
+            value=_layer.settings.searchSettings
+            _layerType=_layer.type
+            _leafletObjectMethod=_layer.leafletObjectGetter
+          }}
         </div>
       {{/if}}
       {{#if _legendSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "legend-tab") "active"}}" data-tab="legend-tab">
-          {{flexberry-jsonarea value=_layer.settings.legendSettings}}
+          {{layers-dialogs/group/tab/legend-settings
+            value=_layer.settings.legendSettings
+            type=_layer.type
+          }}
         </div>
       {{/if}}
       {{#if _filterSettingsAreAvailableForType}}
@@ -56,7 +63,7 @@
             boundingBoxComponentMap=boundingBoxComponentMap
             filter=_layer.settings.filter
             geometryField=_layer.settings.geometryField
-            _leafletObjectMethod=_leafletObjectForFilter
+            _leafletObjectMethod=_layer.leafletObjectGetter
             _layerType=_layer.type
             featuresPropertiesSettings=_layer.settings.displaySettings.featuresPropertiesSettings
             _minLat=(unbound _layer.bboxCoords.minLat)
@@ -72,7 +79,7 @@
             styleSettings=_layer.settings.styleSettings
             displaySettings=_layer.settings.displaySettings
             layerType=_layer.type
-            getLeafletLayer=_leafletObjectForFilter
+            getLeafletLayer=_layer.leafletObjectGetter
             layerLoaderIsReady=(eq _activeTab "style-tab")
           }}
         </div>

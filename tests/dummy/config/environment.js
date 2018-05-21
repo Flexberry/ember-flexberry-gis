@@ -1,11 +1,22 @@
 /* jshint node: true */
 
 module.exports = function (environment) {
-  var backendUrl = 'https://flexberry-ember-gis.azurewebsites.net';
+  var backendUrl = 'http://bi-vm1.cloudapp.net:12001';
 
   if (environment === 'development-loc') {
     // Use `ember server --environment=development-loc` command for local backend usage.
     backendUrl = 'http://localhost:63138';
+  }
+
+  if (environment === 'mssql-backend') {
+    // Use `ember server --environment=mssql-backend` command for mssql backend usage.
+    backendUrl = 'https://flexberry-ember-gis.azurewebsites.net';
+  }
+
+  if (environment === 'production') {
+    if (process.argv.indexOf('--postfix=-mssql') >= 0) {
+      backendUrl = 'https://flexberry-ember-gis.azurewebsites.net';
+    }
   }
 
   var ENV = {
@@ -109,17 +120,23 @@ module.exports = function (environment) {
   // ember build --gh-pages --brunch=<brunch-to-publish-on-gh-pages>.
   if (process.argv.indexOf('--gh-pages') >= 0) {
     var brunch;
+    var postfix = "";
 
-    // Retrieve brunch name from process arguments.
+    // Retrieve brunch name and postfix from process arguments.
     process.argv.forEach(function(value, index) {
       if (value.indexOf('--brunch=') >=0) {
         brunch=value.split('=')[1];
         return;
       }
+
+      if (value.indexOf('--postfix=') >=0) {
+        postfix=value.split('=')[1];
+        return;
+      }
     });
 
     // Change base URL to force paths to application assets be relative.
-    ENV.baseURL = '/' + ENV.repositoryName + '/' + brunch + '/';
+    ENV.baseURL = '/' + ENV.repositoryName + '/' + brunch + postfix + '/';
     ENV.locationType = 'hash';
   }
 

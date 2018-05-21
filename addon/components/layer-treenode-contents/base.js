@@ -11,7 +11,15 @@ import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 
   @class BaseLayerTreenodeContentComponent
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+  @uses DynamicActionsMixin
  */
 export default Ember.Component.extend(DynamicActionsMixin, {
-  settingsAsObject: null
+  /**
+    Map layer model.
+
+    @property layer
+    @type NewPlatformFlexberryGISMapLayerModel
+    @default null
+  */
+  layer: null
 });

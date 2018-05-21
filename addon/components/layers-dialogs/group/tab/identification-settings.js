@@ -26,11 +26,11 @@ export default Ember.Component.extend({
   /**
     Style class for checkbox component.
 
-    @property class
+    @property checkboxClass
     @type String
     @default 'toggle'
   */
-  class: 'toggle',
+  checkboxClass: 'toggle',
 
   /**
     Current object with canBeIdentified property.
