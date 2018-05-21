@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
+import * as union from 'npm:@turf/union';
 
 /**
   The component for editing layers attributes.
@@ -273,6 +274,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default ['draw', 'manual', 'geoprovider']
   */
   availableGeometryAddModes: ['draw', 'manual', 'geoprovider'],
+
+  /**
+    Flag indicates that union operation success.
+
+    @property createCombinedPolygon
+    @type Boolean
+    @default false
+  */
+  createCombinedPolygon: false,
 
   /**
     Initializes component.
@@ -609,6 +619,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let tabModel = this.get('_newRowTabModel');
       let layer = this.get('_newRowLayer');
 
+      if (this.get('createCombinedPolygon')) {
+        this.send('onDeleteItemClick', tabModel);
+        this.set('createCombinedPolygon', false);
+      }
+
       Ember.set(layer, 'feature', { type: 'Feature' });
       Ember.set(layer.feature, 'properties', data);
       Ember.set(layer.feature, 'leafletLayer', layer);
@@ -640,6 +655,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Handles new row attributes dialog's 'deny' action.
     */
     onNewRowDialogDeny() {
+      if (this.get('createCombinedPolygon')) {
+        this.set('createCombinedPolygon', false);
+      }
+
       let layer = this.get('_newRowLayer');
       this.get('leafletMap').removeLayer(layer);
 
@@ -660,6 +679,35 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       this._showNewRowDialog(tabModel, addedLayer);
+    },
+
+    /**
+      Handles click on 'Union polygon' button.
+
+      @method actions.doCombinedPolygon
+      @param {Object} tabModel Related tab.
+    */
+    doCombinedPolygon(tabModel) {
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+        .map((key) => {
+          let feature = tabModel.featureLink[key].feature;
+          let geometry = feature.leafletLayer._latlngs;
+          if (geometry && geometry.length > 0 && geometry[0].length) {
+            return feature.leafletLayer.toGeoJSON();
+          }
+
+          delete selectedRows[key];
+        }).filter((item) => !Ember.isNone(item));
+
+      if (selectedFeatures.length > 1) {
+        let combinedPolygon = union.default(...selectedFeatures);
+        let lefletLayers = L.geoJSON(combinedPolygon);
+        let polygonLayers = lefletLayers.getLayers();
+
+        this.set('createCombinedPolygon', true);
+        this.send('onGeometryAddComplete', tabModel, polygonLayers[0]);
+      }
     }
   },
 

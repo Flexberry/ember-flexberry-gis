@@ -95,6 +95,12 @@
                         }}
                       {{/each}}
                       {{flexberry-button
+                        tooltip=(t "components.flexberry-layers-attributes-panel.combined-polygon")
+                        click=(action "doCombinedPolygon" tabModel)
+                        iconClass="group icon"
+                        readonly=(eq tabModel._selectedRowsCount 0)
+                      }}
+                      {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
                         click=(action "onSaveChangesClick" tabModel)
                         iconClass="save icon"
