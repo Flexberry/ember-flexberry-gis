@@ -9,7 +9,7 @@ import Ember from 'ember';
 
   @class BaseEditMode
 */
-export default {
+export default Ember.Object.extend({
   name: null,
 
   componentCanBeInserted(parentView) {
@@ -26,4 +26,4 @@ export default {
 
     return true;
   }
-};
+});

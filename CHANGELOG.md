@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 * Add base component for graduated and unique layers-styles.
 * Add automatic set fill and stroke color from gradient range to symbols in graduated and unique layers-styles.
+* Geometry filters on `geojson` layers.
 
 ### Changed
 * Change chart's library from `highcharts` to `chart.js`.
@@ -12,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 * Fix `bboxEWKT` in `flexberry-boundingbox` component.
+* Identification on `geojson` layers, when them contains multigeometries or collections.
 
 ## [0.4.0.beta.x] - 26.10.2017
 ### Added

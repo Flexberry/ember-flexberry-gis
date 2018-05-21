@@ -199,8 +199,8 @@ export default Ember.Component.extend(
         if (Ember.isPresent(this.get('layerModel'))) {
           Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
 
-          if (Ember.isNone(this.get('layerModel._leafletObjectForFilter'))) {
-            Ember.set(this.get('layerModel'), '_leafletObjectForFilter', this.getLeafletObjectForFilter.bind(this));
+          if (Ember.isNone(this.get('layerModel.leafletObjectGetter'))) {
+            Ember.set(this.get('layerModel'), 'leafletObjectGetter', this.getLeafletObject.bind(this));
           }
 
           // Save the reference to the instance method for getting attributes options.
@@ -581,13 +581,13 @@ export default Ember.Component.extend(
     },
 
     /**
-      Returns leaflet layer for filter component.
+      Returns leaflet layer.
 
-      @method getLeafletObjectForFilter
+      @method getLeafletObject
       @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
       Leaflet layer or promise returning such layer.
     */
-    getLeafletObjectForFilter() {
+    getLeafletObject() {
       return new Ember.RSVP.Promise((resolve, reject) => {
         resolve(this.get('_leafletObject'));
       });

@@ -1,0 +1,46 @@
+<div class="field">
+  {{flexberry-checkbox
+    value=_canBeDisplayed
+    readonly=readonly
+    class=checkboxClass
+    label=canBeDisplayedLabel
+  }}
+</div>
+{{#if _isWmsType}}
+  <div class="field">
+    <label>
+      {{t "components.layers-dialogs.settings.group.tab.legend-settings.url"}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_url
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{t "components.layers-dialogs.settings.group.tab.legend-settings.version"}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_version
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{t "components.layers-dialogs.settings.group.tab.legend-settings.format"}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_format
+    }}
+  </div>
+  <div class="field">
+    <label>
+      {{t "components.layers-dialogs.settings.group.tab.legend-settings.layers"}}
+    </label>
+    {{flexberry-textbox
+      class="fluid"
+      value=_layers
+    }}
+  </div>
+{{/if}}

@@ -62,7 +62,7 @@ export default Ember.Component.extend(
       @param {Object} e eventObject Event object from {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
     */
     allowShowCheckboxChange(...args) {
-      this.sendAction('allowShowLayerLinkCheckboxChange', ...args);
+      this.sendAction('allowShowCheckboxChange', ...args);
     }
   }
 
