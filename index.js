@@ -124,5 +124,9 @@ module.exports = {
     app.import(app.bowerDirectory + '/leaflet.markercluster/dist/leaflet.markercluster.js');
     app.import(app.bowerDirectory + '/leaflet.markercluster/dist/MarkerCluster.css');
     app.import(app.bowerDirectory + '/leaflet.markercluster/dist/MarkerCluster.Default.css');
+
+    // Leaflet.Snap
+    app.import(app.bowerDirectory + '/Leaflet.Snap/leaflet.snap.js');
+    app.import(app.bowerDirectory + '/Leaflet.GeometryUtil/src/leaflet.geometryutil.js');
   }
 };

@@ -565,6 +565,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         layer.enableEdit(leafletMap);
         leafletMap.on('editable:editing', this._triggerChanged, [tabModel, layer, true]);
 
+        this._snapping(tabModel, layer);
+
       } else {
         layer.disableEdit();
         leafletMap.off('editable:editing', this._triggerChanged, [tabModel, layer, true]);
@@ -775,5 +777,66 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _zoomToLayer(layer) {
     this.send('zoomTo', [layer.feature]);
     this.send('onClearFoundItemClick');
+  },
+
+  /**
+    Snapping
+
+     @param {Object} tabModel
+     @param {Object} marker Layer to adjust marker snapping
+  */
+  _snapping(tabModel, marker) {
+    let selectedRows = Object.assign(...Object.keys(Ember.get(tabModel, 'propertyLink')).map(k => ({
+      [k]: true
+    })));
+    let allLayers = Object.keys(selectedRows).map((key) => {
+      return tabModel.featureLink[key];
+    });
+
+    let leafletMap = this.get('leafletMap');
+
+    if (marker._icon !== undefined) {
+      marker.snapediting = new L.Handler.MarkerSnap(leafletMap, marker);
+      allLayers.forEach((layer) => {
+        marker.snapediting.addGuideLayer(layer);
+      });
+      marker.snapediting.enable();
+    } else {
+      let snap = new L.Handler.MarkerSnap(leafletMap);
+      allLayers.forEach((layer) => {
+        snap.addGuideLayer(layer);
+      });
+
+      let snapMarker = L.marker(leafletMap.getCenter());
+      snap.watchMarker(snapMarker);
+
+      leafletMap.on('editable:vertex:dragstart', function (e) {
+        snap.watchMarker(e.vertex);
+      });
+      leafletMap.on('editable:vertex:dragend', function (e) {
+        snap.unwatchMarker(e.vertex);
+      });
+      leafletMap.on('editable:drawing:start', function () {
+        this.on('mousemove', followMouse);
+      });
+      leafletMap.on('editable:drawing:end', function () {
+        this.off('mousemove', followMouse);
+        snapMarker.remove();
+      });
+      leafletMap.on('editable:drawing:click', function (e) {
+        let latlng = snapMarker.getLatLng();
+        e.latlng.lat = latlng.lat;
+        e.latlng.lng = latlng.lng;
+      });
+      snapMarker.on('snap', function (e) {
+        snapMarker.addTo(leafletMap);
+      });
+      snapMarker.on('unsnap', function (e) {
+        snapMarker.remove();
+      });
+      let followMouse = function (e) {
+        snapMarker.setLatLng(e.latlng);
+      };
+    }
   }
 });
