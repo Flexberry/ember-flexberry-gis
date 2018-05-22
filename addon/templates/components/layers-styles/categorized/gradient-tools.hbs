@@ -12,6 +12,7 @@
         {{#if fillGradientEnable}}
           <div class="item dropdown-gradient">
             {{gradients/dropdown-gradient
+              gradientList = gradientList
               gradientColorStart=fillGradientColorStart
               gradientColorEnd=fillGradientColorEnd
               customGradientColorStart=customFillGradientColorStart
@@ -40,6 +41,7 @@
         {{#if strokeGradientEnable}}
           <div class="item dropdown-gradient">
             {{gradients/dropdown-gradient
+              gradientList = gradientList
               gradientColorStart=strokeGradientColorStart
               gradientColorEnd=strokeGradientColorEnd
               customGradientColorStart=customStrokeGradientColorStart

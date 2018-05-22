@@ -18,6 +18,15 @@ export default Ember.Component.extend({
   layout,
 
   /**
+    Injected param-gradient-service.
+
+    @property service
+    @type <a href="http://emberjs.com/api/classes/Ember.Service.html">Ember.Service</a>
+    @default service:param-gradient
+  */
+  paramGradient: Ember.inject.service('param-gradient'),
+
+  /**
     Flag indicates when stroke gradient enable.
 
     @property strokeGradientEnable
@@ -117,6 +126,16 @@ export default Ember.Component.extend({
   */
   customFillGradientColorEnd: null,
 
+  /**
+    Inner hash containing settings gradient object.
+
+    @property gradientList
+    @type Object[]
+    @default []
+    @public
+  */
+  gradientList: [],
+
   actions: {
     /**
       Handles on fill gradient edit by gradient-edit.
@@ -143,5 +162,16 @@ export default Ember.Component.extend({
       let colorEnd = this.get('strokeGradientColorEnd');
       this.set('customStrokeGradientColorEnd', colorEnd);
     }
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    let paramGradient = this.get('paramGradient');
+    let listOfGradients = paramGradient.getGradientList();
+    this.set('gradientList', listOfGradients);
   }
 });

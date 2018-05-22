@@ -13,17 +13,6 @@ import layout from '../../templates/components/gradients/dropdown-gradient';
 */
 
 export default Ember.Component.extend({
-
-  /**
-    Inner hash containing settings gradient object.
-
-    @property _gradientList
-    @type Object[]
-    @default []
-    @private
-  */
-  _gradientList: [],
-
   /**
     Custom gradient element for dropdown list.
 
@@ -45,11 +34,6 @@ export default Ember.Component.extend({
   _customGradientName: 'custom',
 
   /**
-    Reference to component's template.
-  */
-  layout,
-
-  /**
     Observes gradient customization from gradient-edit component.
 
     @method _isGradientCustomized
@@ -69,6 +53,21 @@ export default Ember.Component.extend({
 
     this._showCustomGradientItem(colorStart, colorEnd);
   }),
+
+  /**
+    Reference to component's template.
+  */
+  layout,
+
+  /**
+    Inner hash containing settings gradient object.
+
+    @property gradientList
+    @type Object[]
+    @default []
+    @public
+  */
+  gradientList: [],
 
   /**
     Initial gradient color.
@@ -178,7 +177,7 @@ export default Ember.Component.extend({
     Initializes DOM-related component's properties.
   */
   didInsertElement() {
-    let gradientList = this.get('_gradientList');
+    let gradientList = this.get('gradientList');
     for (let i in gradientList) {
       this.gradientDrawing(gradientList[i].name, gradientList[i].colorStart, gradientList[i].colorEnd);
     }
@@ -202,9 +201,9 @@ export default Ember.Component.extend({
     @private
   */
   _showDefaultItem() {
-    let gradientName = this.get('_gradientList')[0].name;
-    let colorStart = this.get('_gradientList')[0].colorStart;
-    let colorEnd = this.get('_gradientList')[0].colorEnd;
+    let gradientName = this.get('gradientList')[0].name;
+    let colorStart = this.get('gradientList')[0].colorStart;
+    let colorEnd = this.get('gradientList')[0].colorEnd;
     this._showItem(gradientName, colorStart, colorEnd);
   },
 
@@ -250,13 +249,13 @@ export default Ember.Component.extend({
     @private
   */
   _applyExistGradientSettings(colorStart, colorEnd) {
-    let gradientList = this.get('_gradientList');
+    let gradientList = this.get('gradientList');
     let findedItemIdex = gradientList.findIndex((item) =>
       Ember.isEqual(item.colorStart, colorStart) &&
       Ember.isEqual(item.colorEnd, colorEnd)
     );
     if (findedItemIdex >= 0) {
-      let gradientListItem = this.get('_gradientList')[findedItemIdex];
+      let gradientListItem = this.get('gradientList')[findedItemIdex];
       this._showItem(gradientListItem.name, gradientListItem.colorStart, gradientListItem.colorEnd);
     } else {
       this.set('customGradientColorStart', colorStart);
@@ -273,7 +272,7 @@ export default Ember.Component.extend({
   */
   getColorGradient(search) {
     let colorsGradient = Ember.A([]);
-    let gradientList = this.get('_gradientList');
+    let gradientList = this.get('gradientList');
 
     gradientList.forEach(function(item) {
       if (item.name === search) {
@@ -285,39 +284,12 @@ export default Ember.Component.extend({
   },
 
   /**
-    Add gradient to collection of object gradien list.
-
-    @method addGradientList
-    @param {String} name The name for gradient.
-    @param {String} colorStart Initial Color.
-    @param {String} colorEnd End color.
-  */
-  addGradientList(name, colorStart, colorEnd) {
-    let gradientList = this.get('_gradientList');
-    let existingGradientItem;
-
-    if (!Ember.isNone(gradientList)) {
-      for (let i in gradientList) {
-        if (gradientList[i].name === name) {
-          existingGradientItem = name;
-        }
-      }
-    }
-
-    if (Ember.isNone(existingGradientItem)) {
-      gradientList.push({ 'name': name, 'colorStart': colorStart, 'colorEnd': colorEnd });
-      this.set('_gradientList', gradientList);
-    }
-  },
-
-  /**
     Gradient display.
 
     @method gradientDrawing
     @param {String} classCanvas The canvas class to apply a gradient.
     @param {String} colorStart Initial Color.
     @param {String} colorEnd End color.
-    @param {Boolean} editGradient Forms edit gradient.
   */
   gradientDrawing(canvasName, colorStart, colorEnd) {
     let dropdownCanvases = this.$('.' + canvasName);
