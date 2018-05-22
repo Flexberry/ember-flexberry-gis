@@ -33,6 +33,24 @@ export default Ember.Component.extend({
   gradientColorEnd: null,
 
   /**
+    Gradient start color picker class.
+
+    @property gradientStartPickerClass
+    @type string
+    @default 'gradient-start-picker'
+  */
+  gradientStartPickerClass: 'gradient-start-picker',
+
+  /**
+    Gradient end color picker class.
+
+    @property gradientEndPickerClass
+    @type string
+    @default 'gradient-end-picker'
+  */
+  gradientEndPickerClass: 'gradient-end-picker',
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -50,6 +68,28 @@ export default Ember.Component.extend({
     @default ['gradient-edit']
   */
   classNames: ['gradient-edit'],
+
+  /**
+    Observes gradient color start changes.
+
+    @method gradientColorStartObserver
+  */
+  gradientColorStartObserver: Ember.observer('gradientColorStart', function() {
+    let startPickerClass = this.get('gradientStartPickerClass');
+    let gradientColorStart = this.get('gradientColorStart');
+    this.$(`.${startPickerClass} input`).minicolors('value', { color: gradientColorStart });
+  }),
+
+  /**
+    Observes gradient color end changes.
+
+    @method gradientColorEndObserver
+  */
+  gradientColorEndObserver: Ember.observer('gradientColorEnd', function() {
+    let endPickerClass = this.get('gradientEndPickerClass');
+    let gradientColorEnd = this.get('gradientColorEnd');
+    this.$(`.${endPickerClass} input`).minicolors('value', { color: gradientColorEnd });
+  }),
 
   actions: {
     /**
