@@ -1,6 +1,6 @@
 {
   "name": "ember-flexberry-gis",
-  "version": "0.6.0-beta.2",
+  "version": "0.5.0-beta.13",
   "description": "Ember Flexberry GIS Addon",
   "license": "MIT",
   "author": {
@@ -25,6 +25,7 @@
     "node": ">= 0.10.0"
   },
   "devDependencies": {
+    "@turf/kinks": "^5.1.5",
     "ember-cli": "2.4.3",
     "ember-cli-app-version": "^1.0.0",
     "ember-cli-dependency-checker": "^1.2.0",
