@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
+import { checkIntersect } from '../utils/polygon-intersect-check';
 
 /**
   The component for editing layers attributes.
@@ -362,6 +363,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     */
     onFindItemClick(tabModel) {
       let selectedRows = Ember.get(tabModel, '_selectedRows');
+      console.log(selectedRows);
       let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
         .map((key) => {
           return tabModel.featureLink[key].feature;
@@ -377,6 +379,29 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     onClearFoundItemClick() {
       let serviceLayer = this.get('serviceLayer');
       serviceLayer.clearLayers();
+    },
+
+    /**
+      Handles find intersecting polygons.
+
+      @method actions.onFindIntersectPolygons
+    */
+    onFindIntersectPolygons(tabModel) {
+
+      let keys = Ember.keys(tabModel.featureLink);
+      let selectedFeatures = Ember.A();
+      keys.forEach((item, index) => {
+        let currentFeature = tabModel.featureLink[item].feature;
+          //console.log(currentFeature.geometry);
+           //let latlngs = [[37, -109.05],[41, -109.03],[41, -102.05],[37, -102.04]];
+          //let polygon = L.polygon(latlngs, {color: 'red'});
+          //let isIntersect = checkIntersect(polygon);
+          let isIntersect = checkIntersect(currentFeature.geometry);
+          if(isIntersect) {
+            selectedFeatures.push(currentFeature);
+          }
+      });
+      this.send('zoomTo', selectedFeatures);
     },
 
     /**
@@ -651,7 +676,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles a new geometry adding completion.
 
-      @param {Object} tabModel Related tab model.
+      @param {Object} polygons Related tab model.
       @param {Object} addedLayer Added layer.
     */
     onGeometryAddComplete(tabModel, addedLayer, options) {
