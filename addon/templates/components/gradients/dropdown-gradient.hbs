@@ -5,7 +5,7 @@
           {{t "gradients.dropdown-gradient.default-text"}}
         </div>
         <div class="menu">
-          {{#each _gradientList as |gradient|}}
+          {{#each gradientList as |gradient|}}
             <div class="item" data-value="{{gradient.name}}">
               <canvas class = "flag {{gradient.name}}"></canvas>
             </div>

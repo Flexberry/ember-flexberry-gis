@@ -156,12 +156,6 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
 
-    let owner = Ember.getOwner(this);
-    let isGradients = owner.knownForType('gradient');
-    for (let i in isGradients) {
-      this.addGradientList(isGradients[i].name, isGradients[i].colorStart, isGradients[i].colorEnd);
-    }
-
     let colorStart = this.get('gradientColorStart');
     let colorEnd = this.get('gradientColorEnd');
 
