@@ -195,9 +195,9 @@ export default Ember.Component.extend({
     @private
   */
   _showDefaultItem() {
-    let gradientName = this.get('gradientList')[0].name;
-    let colorStart = this.get('gradientList')[0].colorStart;
-    let colorEnd = this.get('gradientList')[0].colorEnd;
+    let gradientName = this.get('gradientList.0.name');
+    let colorStart = this.get('gradientList.0.colorStart');
+    let colorEnd = this.get('gradientList.0.colorEnd');
     this._showItem(gradientName, colorStart, colorEnd);
   },
 
@@ -289,15 +289,15 @@ export default Ember.Component.extend({
     let dropdownCanvases = this.$('.' + canvasName);
     for (let i = 0; i < dropdownCanvases.length; i++) {
       let ctx = dropdownCanvases[i].getContext('2d');
-      let w = dropdownCanvases[i].width;
-      let h = dropdownCanvases[i].height;
-      let grd = ctx.createLinearGradient(0, 0, w, 0);
+      let width = dropdownCanvases[i].width;
+      let height = dropdownCanvases[i].height;
+      let grd = ctx.createLinearGradient(0, 0, width, 0);
 
       grd.addColorStop(0, colorStart);
       grd.addColorStop(1, colorEnd);
 
       ctx.fillStyle = grd;
-      ctx.fillRect(0, 0, w, h);
+      ctx.fillRect(0, 0, width, height);
     }
   }
 });

@@ -20,27 +20,27 @@ export default Ember.Service.extend({
   */
   gradientList: [
     {
-      'name': 'grad1',
+      'name': 'redYellowGradient',
       'colorStart': '#ff0000',
       'colorEnd': '#ffff00'
     },
     {
-      'name': 'grad2',
+      'name': 'blackWhiteGradient',
       'colorStart': '#000000',
       'colorEnd': '#ffffff'
     },
     {
-      'name': 'grad3',
+      'name': 'greenBlueGradient',
       'colorStart': '#00ff00',
       'colorEnd': '#0000ff'
     },
     {
-      'name': 'grad4',
+      'name': 'violetOrangeGradient',
       'colorStart': '#6464c8',
       'colorEnd': '#ff9616'
     },
     {
-      'name': 'grad5',
+      'name': 'brownVioletGradient',
       'colorStart': '#8e707d',
       'colorEnd': '#b992e0'
     }
