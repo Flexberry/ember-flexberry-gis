@@ -76,6 +76,22 @@
             },
             "namespaces": {}
         },
+        "addon/components/gradients/dropdown-gradient.js": {
+            "name": "addon/components/gradients/dropdown-gradient.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/gradients/gradient-edit.js": {
+            "name": "addon/components/gradients/gradient-edit.js",
+            "modules": {},
+            "classes": {
+                "GradientEditComponent": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/components/layer-treenode-contents/base.js": {
             "name": "addon/components/layer-treenode-contents/base.js",
             "modules": {},
@@ -417,6 +433,15 @@
             "modules": {},
             "classes": {
                 "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/layers-styles/categorized/gradient-tools.js": {
+            "name": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "modules": {},
+            "classes": {
+                "CategorizedLayersStyleGradientToolsComponent": 1
             },
             "fors": {},
             "namespaces": {}
@@ -2778,6 +2803,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "addon/services/param-gradient.js": {
+            "name": "addon/services/param-gradient.js",
+            "modules": {},
+            "classes": {
+                "GradientStylesLoadRendererService": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/transforms/json.js": {
             "name": "addon/transforms/json.js",
             "modules": {},
@@ -2785,6 +2819,24 @@
                 "JsonTransform": 1
             },
             "fors": {},
+            "namespaces": {}
+        },
+        "addon/utils/color-convertor.js": {
+            "name": "addon/utils/color-convertor.js",
+            "modules": {},
+            "classes": {},
+            "fors": {
+                "Utils.Convertor": 1
+            },
+            "namespaces": {}
+        },
+        "addon/utils/color-interpolation.js": {
+            "name": "addon/utils/color-interpolation.js",
+            "modules": {},
+            "classes": {},
+            "fors": {
+                "Utils.Interpolator": 1
+            },
             "namespaces": {}
         },
         "addon/utils/copy-layer.js": {
@@ -2872,6 +2924,7 @@
                 "FlexberryGeometryAddModeDrawComponent": 1,
                 "FlexberryGeometryAddModeGeoProviderComponent": 1,
                 "FlexberryGeometryAddModeManualComponent": 1,
+                "GradientEditComponent": 1,
                 "BaseLayerTreenodeContentComponent": 1,
                 "GeocoderBaseLayerComponent": 1,
                 "GeocoderOsmOverpassLayerComponent": 1,
@@ -2903,6 +2956,7 @@
                 "FlexberryEditLayerDialogComponent": 1,
                 "FlexberryRemoveLayerDialogComponent": 1,
                 "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent": 1,
+                "CategorizedLayersStyleGradientToolsComponent": 1,
                 "CategorizedLayersStyleLayerPropertyDropdownComponent": 1,
                 "SimpleLayersStyleFillEditorComponent": 1,
                 "SimpleLayersStylePathEditorComponent": 1,
@@ -3137,7 +3191,10 @@
                 "LocalStorageService": 1,
                 "MapStoreService": 1,
                 "MarkersStylesRendererService": 1,
+                "GradientStylesLoadRendererService": 1,
                 "JsonTransform": 1,
+                "Utils.Convertor": 1,
+                "Utils.Interpolator": 1,
                 "Utils.LayerCopy": 1,
                 "Utils.LayerCreate": 1,
                 "Utils.Layers": 1,
@@ -3185,6 +3242,8 @@
                 "FlexberrySearchComponent": 1,
                 "ApplicationInitializer": 1,
                 "ApplicationInstanceInitializer": 1,
+                "Utils.Convertor": 1,
+                "Utils.Interpolator": 1,
                 "Utils.LayerCopy": 1,
                 "Utils.LayerCreate": 1,
                 "Utils.Layers": 1,
@@ -3351,6 +3410,21 @@
             "extension_for": [],
             "module": "ember-flexberry-gis",
             "namespace": ""
+        },
+        "GradientEditComponent": {
+            "name": "GradientEditComponent",
+            "shortname": "GradientEditComponent",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": "",
+            "file": "addon/components/gradients/gradient-edit.js",
+            "line": 8,
+            "description": "Component for gradient editing.",
+            "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
         },
         "BaseLayerTreenodeContentComponent": {
             "name": "BaseLayerTreenodeContentComponent",
@@ -3826,6 +3900,21 @@
             "description": "Component containing GUI for categorized layers-styles (unique, graduated)",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
         },
+        "CategorizedLayersStyleGradientToolsComponent": {
+            "name": "CategorizedLayersStyleGradientToolsComponent",
+            "shortname": "CategorizedLayersStyleGradientToolsComponent",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": "",
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 8,
+            "description": "Component containing GUI for automatic set categorized layers-styles colors from gradient range",
+            "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
+        },
         "CategorizedLayersStyleLayerPropertyDropdownComponent": {
             "name": "CategorizedLayersStyleLayerPropertyDropdownComponent",
             "shortname": "CategorizedLayersStyleLayerPropertyDropdownComponent",
@@ -3957,7 +4046,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/layers-styles/graduated.js",
-            "line": 9,
+            "line": 10,
             "description": "Component containing GUI for 'graduated' layers-style",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
         },
@@ -3987,7 +4076,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/layers-styles/unique.js",
-            "line": 9,
+            "line": 10,
             "description": "Component containing GUI for 'unique' layers-style",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
         },
@@ -7682,6 +7771,21 @@
             "description": "Markers styles renderer service.",
             "extends": "Ember.Service"
         },
+        "GradientStylesLoadRendererService": {
+            "name": "GradientStylesLoadRendererService",
+            "shortname": "GradientStylesLoadRendererService",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": "",
+            "file": "addon/services/param-gradient.js",
+            "line": 7,
+            "description": "Gradient styles load and renderer service.",
+            "extends": "Ember.Service"
+        },
         "JsonTransform": {
             "name": "JsonTransform",
             "shortname": "JsonTransform",
@@ -7699,6 +7803,28 @@
             "example": [
                 "\n```\nimport DS from 'ember-data';\nexport default DS.Model.extend({\n  externaJson: DS.attr('json')\n});\n```"
             ]
+        },
+        "Utils.Convertor": {
+            "name": "Utils.Convertor",
+            "shortname": "Utils.Convertor",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": ""
+        },
+        "Utils.Interpolator": {
+            "name": "Utils.Interpolator",
+            "shortname": "Utils.Interpolator",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": ""
         },
         "Utils.LayerCopy": {
             "name": "Utils.LayerCopy",
@@ -8717,6 +8843,395 @@
                 }
             ],
             "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 16,
+            "description": "Custom gradient element for dropdown list.",
+            "itemtype": "property",
+            "name": "_customGradient",
+            "type": "Object",
+            "default": "null",
+            "access": "private",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 26,
+            "description": "Name for custom gradient element in dropdown list.",
+            "itemtype": "property",
+            "name": "_customGradientName",
+            "type": "String",
+            "default": "'custom'",
+            "access": "private",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 36,
+            "description": "Observes gradient customization from gradient-edit component.",
+            "itemtype": "method",
+            "name": "_isGradientCustomized",
+            "access": "private",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 57,
+            "description": "Reference to component's template.",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 62,
+            "description": "Inner hash containing settings gradient object.",
+            "itemtype": "property",
+            "name": "gradientList",
+            "type": "Object[]",
+            "default": "[]",
+            "access": "public",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 72,
+            "description": "Initial gradient color.",
+            "itemtype": "property",
+            "name": "gradientColorStart",
+            "type": "string",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 82,
+            "description": "The final color of the gradient.",
+            "itemtype": "property",
+            "name": "gradientColorEnd",
+            "type": "string",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 92,
+            "description": "Initial gradient color.",
+            "itemtype": "property",
+            "name": "gradientColorStart",
+            "type": "string",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 102,
+            "description": "The final color of the gradient.",
+            "itemtype": "property",
+            "name": "gradientColorEnd",
+            "type": "string",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 112,
+            "description": "Component's wrapping <div> CSS-classes names.\n\nAny other CSS-class names can be added through component's 'class' property.\n```handlebars\n{{feature-result-item class=\"my-class\"}}\n```",
+            "itemtype": "property",
+            "name": "classNames",
+            "type": "String[]",
+            "default": "['gradient-edit', 'flexberry-colorpicker']",
+            "access": "public",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 128,
+            "description": "The handler for the selected value in dropdown.\nInvokes component's `#crossLink \"gradient-tools/sendingActions.gradientChange:\nmethod\"`'hideStrokeGradientEdit','hideFillGradientEdit' `/crossLink` action.",
+            "itemtype": "method",
+            "name": "actions.onChangeGradient",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 153,
+            "description": "Initializes component.",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 170,
+            "description": "Initializes DOM-related component's properties.",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 181,
+            "description": "Clear colors start and stop values, when dropdown hide",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 191,
+            "description": "Show first item in gradient dropdown as default",
+            "itemtype": "method",
+            "name": "_showDefaultItem",
+            "access": "private",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 204,
+            "description": "Show custom gradient item in dropdown when user change gradient in\ngradient-edit component",
+            "itemtype": "method",
+            "name": "_showCustomGradientItem",
+            "params": [
+                {
+                    "name": "colorStart",
+                    "description": "first color value in HEX",
+                    "type": "String"
+                },
+                {
+                    "name": "colorEnd",
+                    "description": "last color value in HEX",
+                    "type": "String"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 220,
+            "description": "Set selected any gradient item in dropdown by gradient name",
+            "itemtype": "method",
+            "name": "_showItem",
+            "params": [
+                {
+                    "name": "itemName",
+                    "description": "name of selectable item",
+                    "type": "String"
+                },
+                {
+                    "name": "colorStart",
+                    "description": "first color value in HEX",
+                    "type": "String"
+                },
+                {
+                    "name": "colorEnd",
+                    "description": "last color value in HEX",
+                    "type": "String"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 237,
+            "description": "Apply existing gradient parameters on gradient-tools user interface form",
+            "itemtype": "method",
+            "name": "_applyExistGradientSettings",
+            "params": [
+                {
+                    "name": "colorStart",
+                    "description": "first color value in HEX",
+                    "type": "String"
+                },
+                {
+                    "name": "colorEnd",
+                    "description": "last color value in HEX",
+                    "type": "String"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 260,
+            "description": "Search for the start and end colors of the selected gradient.",
+            "itemtype": "method",
+            "name": "getColorGradient",
+            "params": [
+                {
+                    "name": "search",
+                    "description": "The name of the selected gradient.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Object[] color list gradient."
+            },
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/dropdown-gradient.js",
+            "line": 280,
+            "description": "Gradient display.",
+            "itemtype": "method",
+            "name": "gradientDrawing",
+            "params": [
+                {
+                    "name": "classCanvas",
+                    "description": "The canvas class to apply a gradient.",
+                    "type": "String"
+                },
+                {
+                    "name": "colorStart",
+                    "description": "Initial Color.",
+                    "type": "String"
+                },
+                {
+                    "name": "colorEnd",
+                    "description": "End color.",
+                    "type": "String"
+                }
+            ],
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/gradient-edit.js",
+            "line": 17,
+            "description": "Initial gradient color.",
+            "itemtype": "property",
+            "name": "_gradientColorStart",
+            "type": "string",
+            "default": "null",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/gradient-edit.js",
+            "line": 26,
+            "description": "The final color of the gradient.",
+            "itemtype": "property",
+            "name": "gradientColorEnd",
+            "type": "string",
+            "default": "null",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/gradient-edit.js",
+            "line": 35,
+            "description": "Gradient start color picker class.",
+            "itemtype": "property",
+            "name": "gradientStartPickerClass",
+            "type": "string",
+            "default": "'gradient-start-picker'",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/gradient-edit.js",
+            "line": 44,
+            "description": "Gradient end color picker class.",
+            "itemtype": "property",
+            "name": "gradientEndPickerClass",
+            "type": "string",
+            "default": "'gradient-end-picker'",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/gradient-edit.js",
+            "line": 53,
+            "description": "Reference to component's template.",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/gradient-edit.js",
+            "line": 58,
+            "description": "Component's wrapping <div> CSS-classes names.\n\nAny other CSS-class names can be added through component's 'class' property.\n```handlebars\n{{feature-result-item class=\"my-class\"}}\n```",
+            "itemtype": "property",
+            "name": "classNames",
+            "type": "String[]",
+            "default": "['gradient-edit']",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/gradient-edit.js",
+            "line": 72,
+            "description": "Observes gradient color start changes.",
+            "itemtype": "method",
+            "name": "gradientColorStartObserver",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/gradient-edit.js",
+            "line": 83,
+            "description": "Observes gradient color end changes.",
+            "itemtype": "method",
+            "name": "gradientColorEndObserver",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/gradient-edit.js",
+            "line": 95,
+            "description": "Handler for colorpicker's 'change' action.",
+            "itemtype": "method",
+            "name": "actions.onGradientColorStartChange",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/gradient-edit.js",
+            "line": 105,
+            "description": "Handler for colorpicker's 'change' action.",
+            "itemtype": "method",
+            "name": "actions.onGradientColorEndChange",
+            "class": "GradientEditComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/gradients/gradient-edit.js",
+            "line": 116,
+            "description": "Gradient-tool component's action invoking when gradient edit .",
+            "itemtype": "method",
+            "name": "sendingActions.onGradientEdited",
+            "class": "GradientEditComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -12665,6 +13180,82 @@
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
             "line": 97,
+            "description": "Flag indicates when stroke gradient enable.",
+            "itemtype": "property",
+            "name": "_strokeGradientEnable",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
+            "line": 107,
+            "description": "Flag indicates when fill gradient enable.",
+            "itemtype": "property",
+            "name": "_fillGradientEnable",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
+            "line": 117,
+            "description": "First stroke color of automatic set color range. In HEX.",
+            "itemtype": "property",
+            "name": "_strokeGradientColorStart",
+            "type": "String",
+            "default": "null",
+            "access": "private",
+            "tagname": "",
+            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
+            "line": 127,
+            "description": "Last stroke color of automatic set color range. In HEX.",
+            "itemtype": "property",
+            "name": "_strokeGradientColorEnd",
+            "type": "String",
+            "default": "null",
+            "access": "private",
+            "tagname": "",
+            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
+            "line": 137,
+            "description": "First fill color of automatic set color range. In HEX.",
+            "itemtype": "property",
+            "name": "_fillGradientColorStart",
+            "type": "String",
+            "default": "null",
+            "access": "private",
+            "tagname": "",
+            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
+            "line": 147,
+            "description": "Observers changes in categories.\nRenderes symbols related to them.",
+            "itemtype": "method",
+            "name": "_categoriesDidChange",
+            "access": "private",
+            "tagname": "",
+            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
+            "line": 158,
             "description": "Related leaflet layer.",
             "itemtype": "property",
             "name": "leafletLayer",
@@ -12677,7 +13268,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 107,
+            "line": 168,
             "description": "Component's wrapping <div> CSS-classes names.",
             "itemtype": "property",
             "name": "classNames",
@@ -12688,7 +13279,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 116,
+            "line": 177,
             "description": "Hash containing style settings.",
             "itemtype": "property",
             "name": "styleSettings",
@@ -12699,7 +13290,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 125,
+            "line": 186,
             "description": "Hash containing layer display settings.",
             "itemtype": "property",
             "name": "displaySettings",
@@ -12710,7 +13301,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 134,
+            "line": 195,
             "description": "Related layer's type.",
             "itemtype": "property",
             "name": "layerType",
@@ -12721,58 +13312,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 143,
-            "description": "Observers changes in categories.\nRenderes symbols related to them.",
-            "itemtype": "method",
-            "name": "_categoriesDidChange",
-            "access": "private",
-            "tagname": "",
-            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 154,
-            "description": "Renderes categories symbols on canvases related to them.",
-            "itemtype": "method",
-            "name": "_renderCategorySymbolsOnCanvases",
-            "params": [
-                {
-                    "name": "categoryIndex",
-                    "description": "Index of category who's symbol must be rendered (if undefined then symbols for all categories will be rendered).",
-                    "type": "Number",
-                    "optional": true
-                }
-            ],
-            "access": "private",
-            "tagname": "",
-            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 189,
-            "description": "Initializes component.",
-            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 198,
-            "description": "Initializes component's DOM-related properties.",
-            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 207,
-            "description": "Deinitializes component.",
-            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 217,
+            "line": 205,
             "description": "Handles 'add category' button click event.",
             "itemtype": "method",
             "name": "actions.onSelectAllCategoriesCheckboxChange",
@@ -12795,7 +13335,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 241,
+            "line": 229,
             "description": "Handles 'add category' button click event.",
             "itemtype": "method",
             "name": "actions.onSelectCategoryCheckboxChange",
@@ -12818,7 +13358,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 272,
+            "line": 260,
             "description": "Handles 'add category' button click event.",
             "itemtype": "method",
             "name": "actions.onAddCategoryButtonClick",
@@ -12834,7 +13374,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 291,
+            "line": 279,
             "description": "Handles 'remove selected categories' button click event.",
             "itemtype": "method",
             "name": "actions.onRemoveSelectedCategoriesButtonClick",
@@ -12850,7 +13390,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 319,
+            "line": 307,
             "description": "Opens category style editor.",
             "itemtype": "method",
             "name": "actions.onCategoryStyleEditorOpen",
@@ -12866,7 +13406,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 339,
+            "line": 327,
             "description": "Closes category style editor.",
             "itemtype": "method",
             "name": "actions.onCategoryStyleEditorClose",
@@ -12882,7 +13422,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 361,
+            "line": 349,
             "description": "Handles editing cell 'click' event.",
             "itemtype": "method",
             "name": "actions.onEditingCellClick",
@@ -12898,7 +13438,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 377,
+            "line": 365,
             "description": "Handles editing cell 'focusout' event.",
             "itemtype": "method",
             "name": "actions.onEditingCellFocusOut",
@@ -12919,7 +13459,7 @@
         },
         {
             "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
-            "line": 388,
+            "line": 376,
             "description": "Handles editing cell 'keydown' event.",
             "itemtype": "method",
             "name": "actions.onEditingCellKeyDown",
@@ -12936,6 +13476,243 @@
                 }
             ],
             "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
+            "line": 393,
+            "description": "Initializes component.",
+            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
+            "line": 403,
+            "description": "Initializes component's DOM-related properties.",
+            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
+            "line": 412,
+            "description": "Deinitializes component.",
+            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
+            "line": 421,
+            "description": "Check saved gradient settings in layer styleSettings and sets them\nas current",
+            "itemtype": "method",
+            "name": "_loadGradientSettings",
+            "access": "private",
+            "tagname": "",
+            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/base-categorized-layer-style.js",
+            "line": 451,
+            "description": "Renderes categories symbols on canvases related to them.",
+            "itemtype": "method",
+            "name": "_renderCategorySymbolsOnCanvases",
+            "params": [
+                {
+                    "name": "categoryIndex",
+                    "description": "Index of category who's symbol must be rendered (if undefined then symbols for all categories will be rendered).",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 15,
+            "description": "Reference to component's template.",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 20,
+            "description": "Injected param-gradient-service.",
+            "itemtype": "property",
+            "name": "service",
+            "type": "<a href=\"http://emberjs.com/api/classes/Ember.Service.html\">Ember.Service</a>",
+            "default": "service:param-gradient",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 29,
+            "description": "Flag indicates when stroke gradient enable.",
+            "itemtype": "property",
+            "name": "strokeGradientEnable",
+            "type": "Boolean",
+            "default": "false",
+            "access": "public",
+            "tagname": "",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 39,
+            "description": "Flag indicates when fill gradient enable.",
+            "itemtype": "property",
+            "name": "fillGradientEnable",
+            "type": "Boolean",
+            "default": "false",
+            "access": "public",
+            "tagname": "",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 49,
+            "description": "First stroke color of automatic set color gradient range. In HEX.",
+            "itemtype": "property",
+            "name": "strokeGradientColorStart",
+            "type": "String",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 59,
+            "description": "Last stroke color of automatic set color gradient range. In HEX.",
+            "itemtype": "property",
+            "name": "strokeGradientColorEnd",
+            "type": "String",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 69,
+            "description": "First fill color of automatic set color gradient range. In HEX.",
+            "itemtype": "property",
+            "name": "fillGradientColorStart",
+            "type": "String",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 79,
+            "description": "Last fill color of automatic set color gradient range. In HEX.",
+            "itemtype": "property",
+            "name": "fillGradientColorStart",
+            "type": "String",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 89,
+            "description": "First stroke custom color of automatic set color gradient range. In HEX.",
+            "itemtype": "property",
+            "name": "customStrokeGradientColorStart",
+            "type": "String",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 99,
+            "description": "Last stroke custom color of automatic set color gradient range. In HEX.",
+            "itemtype": "property",
+            "name": "customStrokeGradientColorEnd",
+            "type": "String",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 109,
+            "description": "First fill custom color of automatic set color gradient range. In HEX.",
+            "itemtype": "property",
+            "name": "customFillGradientColorStart",
+            "type": "String",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 119,
+            "description": "Last fill custom color of automatic set color gradient range. In HEX.",
+            "itemtype": "property",
+            "name": "customFillGradientColorEnd",
+            "type": "String",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 129,
+            "description": "Inner hash containing settings gradient object.",
+            "itemtype": "property",
+            "name": "gradientList",
+            "type": "Object[]",
+            "default": "[]",
+            "access": "public",
+            "tagname": "",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 140,
+            "description": "Handles on fill gradient edit by gradient-edit.",
+            "itemtype": "method",
+            "name": "actions.onFillGradientEdited",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 153,
+            "description": "Handles on stroke gradient edit by gradient-edit.",
+            "itemtype": "method",
+            "name": "actions.onStrokeGradientEdited",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-styles/categorized/gradient-tools.js",
+            "line": 167,
+            "description": "Initializes component.",
+            "class": "CategorizedLayersStyleGradientToolsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -13517,7 +14294,7 @@
         },
         {
             "file": "addon/components/layers-styles/graduated.js",
-            "line": 16,
+            "line": 17,
             "description": "Count of categories to which layer's features must be classified.",
             "itemtype": "property",
             "name": "_classificationCategoriesCount",
@@ -13530,14 +14307,14 @@
         },
         {
             "file": "addon/components/layers-styles/graduated.js",
-            "line": 26,
+            "line": 27,
             "description": "Reference to component's template.",
             "class": "GraduatedLayersStyleComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers-styles/graduated.js",
-            "line": 31,
+            "line": 32,
             "description": "Component's wrapping <div> CSS-classes names.",
             "itemtype": "property",
             "name": "classNames",
@@ -13548,7 +14325,7 @@
         },
         {
             "file": "addon/components/layers-styles/graduated.js",
-            "line": 41,
+            "line": 42,
             "description": "Handles 'classify' button click event.",
             "itemtype": "method",
             "name": "actions.onClassifyButtonClick",
@@ -13759,14 +14536,14 @@
         },
         {
             "file": "addon/components/layers-styles/unique.js",
-            "line": 16,
+            "line": 17,
             "description": "Reference to component's template.",
             "class": "UniqueLayersStyleComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers-styles/unique.js",
-            "line": 21,
+            "line": 22,
             "description": "Component's wrapping <div> CSS-classes names.",
             "itemtype": "property",
             "name": "classNames",
@@ -13777,7 +14554,7 @@
         },
         {
             "file": "addon/components/layers-styles/unique.js",
-            "line": 31,
+            "line": 32,
             "description": "Handles 'classify' button click event.",
             "itemtype": "method",
             "name": "actions.onClassifyButtonClick",
@@ -22121,7 +22898,7 @@
                 },
                 {
                     "name": "results",
-                    "description": "Objects describing query results.\nEvery result-object has the following structure: { layer: ..., features: [...] },\nwhere 'layer' is metadata of layer related to query result, features is array\ncontaining (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]\nor a promise returning such array.",
+                    "description": "Objects describing query results.\n     Every result-object has the following structure: { layer: ..., features: [...] },\n     where 'layer' is metadata of layer related to query result, features is array\n     containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]\n     or a promise returning such array.",
                     "type": "Object[]"
                 }
             ],
@@ -22393,7 +23170,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 777,
+            "line": 778,
             "description": "Component's action invoking before the layer destroying.",
             "itemtype": "method",
             "name": "sendingActions.layerDestroy",
@@ -24241,7 +25018,7 @@
         },
         {
             "file": "addon/components/flexberry-edit-layermap.js",
-            "line": 739,
+            "line": 740,
             "description": "Component's action invoking to add model to store.",
             "itemtype": "method",
             "name": "sendingActions.addLayerLink",
@@ -29512,7 +30289,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 28,
+            "line": 29,
             "description": "Flag: indicates whether leaflet layer is loading now.",
             "itemtype": "property",
             "name": "_leafletLayerIsLoading",
@@ -29525,7 +30302,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 38,
+            "line": 39,
             "description": "Flag: indicates leaflet layer loading error.",
             "itemtype": "property",
             "name": "_leafletLayerLoadingIsError",
@@ -29538,7 +30315,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 48,
+            "line": 49,
             "description": "Flag: indicates that style-editor is checked on flexberry-edit-layermap\nand leaflet layer must be load.",
             "itemtype": "property",
             "name": "layerLoaderIsReady",
@@ -29551,7 +30328,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 59,
+            "line": 60,
             "description": "Related leaflet layer.",
             "itemtype": "property",
             "name": "_leafletLayer",
@@ -29564,7 +30341,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 69,
+            "line": 70,
             "description": "Component's wrapping <div> CSS-classes names.",
             "itemtype": "property",
             "name": "classNames",
@@ -29575,7 +30352,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 78,
+            "line": 79,
             "description": "Hash containing style settings.",
             "itemtype": "property",
             "name": "styleSettings",
@@ -29586,7 +30363,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 87,
+            "line": 88,
             "description": "Hash containing layer display settings.",
             "itemtype": "property",
             "name": "displaySettings",
@@ -29597,7 +30374,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 96,
+            "line": 97,
             "description": "Related layer's type.",
             "itemtype": "property",
             "name": "layerType",
@@ -29608,7 +30385,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 118,
+            "line": 119,
             "description": "Method returning promise which will be then resolved with leaflet layer (just loaded or already cached).",
             "itemtype": "method",
             "name": "_getLeafletLayer",
@@ -29623,7 +30400,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 154,
+            "line": 155,
             "description": "Reference to 'layers-styles-renderer' service.",
             "itemtype": "property",
             "name": "_layersStylesRenderer",
@@ -29635,7 +30412,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 163,
+            "line": 164,
             "description": "Available layer styles.\nInitializes in component's 'init' method.",
             "itemtype": "property",
             "name": "_availableLayerStyles",
@@ -29648,7 +30425,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 174,
+            "line": 175,
             "description": "Available layer styles captions.",
             "itemtype": "property",
             "name": "_availableLayerStylesCaptions",
@@ -29659,7 +30436,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 195,
+            "line": 196,
             "description": "Selected layer style caption.",
             "itemtype": "property",
             "name": "_selectedLayerStyleCaption",
@@ -29672,7 +30449,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 205,
+            "line": 206,
             "description": "Observes changes in '_availableLayerStylesCaptions' or '_layer.settings.styleSettings.type' and computes '_selectedLayerStyleCaption'.",
             "itemtype": "method",
             "name": "_availableLayerStylesCaptionsOrSelectedLayerStyleDidChange",
@@ -29683,7 +30460,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 228,
+            "line": 229,
             "description": "Observes changes in '_selectedLayerStyleCaption' property and changes style type in related layer settings hash.",
             "itemtype": "method",
             "name": "_selectedLayerStyleCaptionDidChange",
@@ -29694,7 +30471,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 238,
+            "line": 239,
             "description": "Sets selected layer style by its i18n-ed caption.",
             "itemtype": "method",
             "name": "_setSelectedLayerStyle",
@@ -29705,7 +30482,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 264,
+            "line": 265,
             "description": "Observes changes in '_layer.settings.styleSettings.type' and computes default style setings.",
             "itemtype": "method",
             "name": "_selectedLayerStyleDidChange",
@@ -29716,7 +30493,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 274,
+            "line": 275,
             "description": "Previosly selected layer style.",
             "itemtype": "property",
             "name": "_previouslySelectedLayerStyle",
@@ -29728,7 +30505,7 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 283,
+            "line": 284,
             "description": "Sets default style settings withrespect to '_layer.settings.styleSettings.type'.",
             "itemtype": "method",
             "name": "_setSelectedLayerStyleDefaultSettings",
@@ -29739,14 +30516,14 @@
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 300,
+            "line": 301,
             "description": "Initializes component.",
             "class": "LayersStylesEditorComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layers-styles-editor.js",
-            "line": 312,
+            "line": 313,
             "description": "Deinitializes component's DOM-related properties.",
             "class": "LayersStylesEditorComponent",
             "module": "ember-flexberry-gis"
@@ -32975,7 +33752,7 @@
         },
         {
             "file": "addon/layers-styles/simple.js",
-            "line": 120,
+            "line": 124,
             "description": "Applies layer-style to the specified leaflet layer.",
             "itemtype": "method",
             "name": "renderOnLeafletLayer",
@@ -33003,7 +33780,7 @@
         },
         {
             "file": "addon/layers-styles/simple.js",
-            "line": 133,
+            "line": 137,
             "description": "Renderes layer-style preview on the specified canvas element.",
             "itemtype": "method",
             "name": "renderOnCanvas",
@@ -33038,7 +33815,7 @@
         },
         {
             "file": "addon/layers-styles/simple.js",
-            "line": 208,
+            "line": 212,
             "description": "Renderes specific preview geometry on canvas.",
             "itemtype": "method",
             "name": "_renderGeometryOnCanvas",
@@ -33063,7 +33840,7 @@
         },
         {
             "file": "addon/layers-styles/simple.js",
-            "line": 246,
+            "line": 250,
             "description": "Renderes specific legend geometry on canvas.",
             "itemtype": "method",
             "name": "_renderGeometryOnCanvas",
@@ -33088,7 +33865,7 @@
         },
         {
             "file": "addon/layers-styles/simple.js",
-            "line": 269,
+            "line": 273,
             "description": "Renderes specified geometry on canvas.",
             "itemtype": "method",
             "name": "_renderGeometryOnCanvas",
@@ -37689,6 +38466,29 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/services/param-gradient.js",
+            "line": 14,
+            "description": "Inner hash containing settings gradient object.",
+            "itemtype": "property",
+            "name": "gradientList",
+            "type": "Object[]",
+            "default": "[]",
+            "class": "GradientStylesLoadRendererService",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/services/param-gradient.js",
+            "line": 49,
+            "description": "Returns collection of object gradien list.",
+            "itemtype": "method",
+            "name": "getGradientList",
+            "return": {
+                "description": "Object[] collection"
+            },
+            "class": "GradientStylesLoadRendererService",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/transforms/json.js",
             "line": 17,
             "description": "Deserializes serialized attribute value.",
@@ -37700,6 +38500,97 @@
             "line": 24,
             "description": "Serializes deserialized attribute value.",
             "class": "JsonTransform",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/utils/color-convertor.js",
+            "line": 5,
+            "description": "Convert color HEX -> RGB",
+            "itemtype": "method",
+            "name": "hexToRgb",
+            "params": [
+                {
+                    "name": "String",
+                    "description": "hex"
+                }
+            ],
+            "return": {
+                "description": "[] rgb"
+            },
+            "class": "Utils.Convertor",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/utils/color-convertor.js",
+            "line": 22,
+            "description": "Convert color RGB -> HEX",
+            "itemtype": "method",
+            "name": "hexToRgb",
+            "params": [
+                {
+                    "name": "",
+                    "description": "rgb",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "String hex"
+            },
+            "class": "Utils.Convertor",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/utils/color-interpolation.js",
+            "line": 8,
+            "description": "Get color range between start and end colors",
+            "itemtype": "method",
+            "name": "getGradientColors",
+            "params": [
+                {
+                    "name": "String",
+                    "description": "colorStart in HEX"
+                },
+                {
+                    "name": "String",
+                    "description": "colorEnd in HEX"
+                },
+                {
+                    "name": "int",
+                    "description": "steps"
+                }
+            ],
+            "return": {
+                "description": "[] hexArray"
+            },
+            "class": "Utils.Interpolator",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/utils/color-interpolation.js",
+            "line": 39,
+            "description": "Return interpolated colors.",
+            "itemtype": "method",
+            "name": "interpolateColor",
+            "params": [
+                {
+                    "name": "String",
+                    "description": "color1 in HEX"
+                },
+                {
+                    "name": "String",
+                    "description": "color2 in HEX"
+                },
+                {
+                    "name": "int",
+                    "description": "factor"
+                }
+            ],
+            "return": {
+                "description": "[] rgbArray"
+            },
+            "access": "private",
+            "tagname": "",
+            "class": "Utils.Interpolator",
             "module": "ember-flexberry-gis"
         },
         {
@@ -37975,6 +38866,10 @@
         }
     ],
     "warnings": [
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/components/gradients/dropdown-gradient.js:260"
+        },
         {
             "message": "replacing incorrect tag: returns with return",
             "line": " addon/components/layers/geocoder-base-layer.js:33"
@@ -38344,6 +39239,10 @@
             "line": " addon/services/local-storage.js:75"
         },
         {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/services/param-gradient.js:49"
+        },
+        {
             "message": "Missing item type\nReference to component's template.",
             "line": " addon/components/charts/type-charts/bar.js:17"
         },
@@ -38442,6 +39341,26 @@
         {
             "message": "Missing item type\nHandles button click.",
             "line": " addon/components/geometry-add-modes/manual.js:108"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/gradients/dropdown-gradient.js:57"
+        },
+        {
+            "message": "Missing item type\nInitializes component.",
+            "line": " addon/components/gradients/dropdown-gradient.js:153"
+        },
+        {
+            "message": "Missing item type\nInitializes DOM-related component's properties.",
+            "line": " addon/components/gradients/dropdown-gradient.js:170"
+        },
+        {
+            "message": "Missing item type\nClear colors start and stop values, when dropdown hide",
+            "line": " addon/components/gradients/dropdown-gradient.js:181"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/gradients/gradient-edit.js:53"
         },
         {
             "message": "Missing item type\nSets z-index for layer.",
@@ -38653,15 +39572,23 @@
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/layers-styles/categorized/base-categorized-layer-style.js:189"
+            "line": " addon/components/layers-styles/categorized/base-categorized-layer-style.js:393"
         },
         {
             "message": "Missing item type\nInitializes component's DOM-related properties.",
-            "line": " addon/components/layers-styles/categorized/base-categorized-layer-style.js:198"
+            "line": " addon/components/layers-styles/categorized/base-categorized-layer-style.js:403"
         },
         {
             "message": "Missing item type\nDeinitializes component.",
-            "line": " addon/components/layers-styles/categorized/base-categorized-layer-style.js:207"
+            "line": " addon/components/layers-styles/categorized/base-categorized-layer-style.js:412"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/layers-styles/categorized/gradient-tools.js:15"
+        },
+        {
+            "message": "Missing item type\nInitializes component.",
+            "line": " addon/components/layers-styles/categorized/gradient-tools.js:167"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -38733,7 +39660,7 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/layers-styles/graduated.js:26"
+            "line": " addon/components/layers-styles/graduated.js:27"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -38749,7 +39676,7 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/layers-styles/unique.js:16"
+            "line": " addon/components/layers-styles/unique.js:17"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -39421,11 +40348,11 @@
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/layers-styles-editor.js:300"
+            "line": " addon/components/layers-styles-editor.js:301"
         },
         {
             "message": "Missing item type\nDeinitializes component's DOM-related properties.",
-            "line": " addon/components/layers-styles-editor.js:312"
+            "line": " addon/components/layers-styles-editor.js:313"
         },
         {
             "message": "Missing item type\nReference to component's template.",
