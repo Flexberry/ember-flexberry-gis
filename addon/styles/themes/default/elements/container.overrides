@@ -1205,11 +1205,11 @@ form.flexberry-edit-layermap {
 *********************************************/
 .gradient-edit {
   .flexberry-colorpicker {
-    border: @gradientToolsCompoentsBorder;
+    border: @gradientToolsComponentsBorder;
   }
 
   .flag {
-    border: @gradientToolsCompoentsBorder;
+    border: @gradientToolsComponentsBorder;
     width: 24px;
     height: 14px;
   }
@@ -1218,7 +1218,7 @@ form.flexberry-edit-layermap {
 .dropdown-gradient {
 
   .flag {
-    border: @gradientToolsCompoentsBorder;
+    border: @gradientToolsComponentsBorder;
     width: 110px;
     height: 14px;
   }
