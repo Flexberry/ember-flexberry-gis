@@ -76,12 +76,6 @@
                       click=(action "onClearFoundItemClick")
                       iconClass="erase icon"
                     }}
-                    {{flexberry-button
-                      tooltip=(t "components.flexberry-layers-attributes-panel.find-intersection")
-                      click=(action "onFindIntersectPolygons" tabModel)
-                      iconClass="erase icon"
-                    }}
-
                     {{#if tabModel.allowEdit}}
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
@@ -100,6 +94,12 @@
                           complete=(action "onGeometryAddComplete" tabModel)
                         }}
                       {{/each}}
+                      {{flexberry-button
+                        tooltip=(t "components.flexberry-layers-attributes-panel.find-intersection")
+                        click=(action "onFindIntersectPolygons" tabModel)
+                        iconClass="group icon"
+                        readonly=(eq tabModel._selectedRowsCount 0)
+                      }}
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
                         click=(action "onSaveChangesClick" tabModel)

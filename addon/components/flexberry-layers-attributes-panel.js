@@ -387,21 +387,25 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.onFindIntersectPolygons
     */
     onFindIntersectPolygons(tabModel) {
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+        .map((key) => {
+          return tabModel.featureLink[key].feature;
+        });
+      let intersectPolygonFeatures = Ember.A();
+      selectedFeatures.forEach((item, index) => {
+        let currentFeature = item;
+        let currentFeatureGeometry = item.geometry;
+        let isIntersect = checkIntersect(currentFeatureGeometry);
 
-      let keys = Ember.keys(tabModel.featureLink);
-      let selectedFeatures = Ember.A();
-      keys.forEach((item, index) => {
-        let currentFeature = tabModel.featureLink[item].feature;
-          //console.log(currentFeature.geometry);
-           //let latlngs = [[37, -109.05],[41, -109.03],[41, -102.05],[37, -102.04]];
-          //let polygon = L.polygon(latlngs, {color: 'red'});
-          //let isIntersect = checkIntersect(polygon);
-          let isIntersect = checkIntersect(currentFeature.geometry);
-          if(isIntersect) {
-            selectedFeatures.push(currentFeature);
-          }
+        if(isIntersect) {
+          intersectPolygonFeatures.push(currentFeature);
+        }
       });
-      this.send('zoomTo', selectedFeatures);
+
+      if(intersectPolygonFeatures.length != 0) {
+        this.send('zoomTo', intersectPolygonFeatures);
+      }
     },
 
     /**

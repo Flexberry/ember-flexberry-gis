@@ -17,10 +17,11 @@ _multiPolygonTypeName: 'MultiPolygon';
 */
 let checkIntersect = function(polygon) {
   let workingPolygon;
-  if(checkGeoJSON(polygon)) {
+
+  if(checkForGeoJSON(polygon)) {
     workingPolygon = polygon;
   } else {
-    workingPolygon = polygonConvertor(polygon);
+    workingPolygon = polygonConvert(polygon);
   }
 
   let intersectPoints = Ember.A();
@@ -35,36 +36,46 @@ let checkIntersect = function(polygon) {
   return isIntersect;
 };
 
-let checkGeoJSON = function(polygon) {
+let checkForGeoJSON = function(polygon) {
   let checkResult = false;
   if( (polygon.type === 'MultiPolygon' || polygon.type === 'Polygon') ) {
-    console.log('ISGEOJSON  '+polygon.type);
     checkResult = true;
   }
 
   return checkResult;
-}
+};
 
-let polygonConvertor = function(polygon) {
+let polygonConvert = function(polygon) {
+  let convertedPolygon;
+
+  if (polygon instanceof L.Polygon) {
+    convertedPolygon = polygon.toGeoJSON();
+  }
+
+  if (polygon instanceof Array) {
+    let coordinatesArray = polygon;
+    convertedPolygon = arrayToGeoJSON(coordinatesArray);
+  }
+
+  return convertedPolygon;
+
+};
+
+let arrayToGeoJSON = function(array) {
   let geoJsonPolygon = {
     type: 'undefined',
     coordinates: null
   };
 
-  if (polygon instanceof L.Polygon) {
-    console.log('ISPOLYGON')
-    let latLng = polygon.getLatLngs()[0];
-    let type = chooseTypeForCoordinates(latLng);
-    geoJsonPolygon.type = type;
-    geoJsonPolygon.coordinates = latLng;
-  } else if(polygon instanceof Array) {
-    let type = chooseObjectType(polygon);
-    geoJsonPolygon.type = type;
-    geoJsonPolygon.coordinates = polygon;
+  let type = chooseObjectType(polygon);
+  if(type === 'undefined') {
+    return null;
   }
+  geoJsonPolygon.type = type;
+  geoJsonPolygon.coordinates = polygon;
 
-  return (geoJsonPolygon.type != 'undefined') ? geoJsonPolygon : null;
-}
+  return geoJsonPolygon;
+};
 
 let chooseTypeForCoordinates = function(array) {
   let arrayDepth = 0;
