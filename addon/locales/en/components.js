@@ -11,6 +11,7 @@ import MapCommandsDialogsComponents from './components/map-commands-dialogs';
 import LegendsComponents from './components/legends';
 
 import FlexberryMapInfoComponent from './components/flexberry-mapinfo';
+import FlexberryMultipleSelectComponent from './components/flexberry-multiple-select';
 import FlexberryMapToolbarComponent from './components/flexberry-maptoolbar';
 import FlexberryMapComponent from './components/flexberry-map';
 import FlexberryMapLayersComponent from './components/flexberry-maplayers';
@@ -59,6 +60,7 @@ export default {
   'flexberry-edit-crs': FlexberryEditCrsComponent,
   'flexberry-identify-panel': FlexberryIdentifyPanel,
   'flexberry-layers-attributes-panel': FlexberryLayersAttributesPanel,
+  'flexberry-multiple-select': FlexberryMultipleSelectComponent,
   'geometry-add-modes': GeometryAddModesComponents,
   'charts': ChartsComponents,
   'layer-result-list': LayerResultListComponent,

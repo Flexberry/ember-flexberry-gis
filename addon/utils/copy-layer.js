@@ -9,17 +9,23 @@
   @method copyLayer
   @param {NewPlatformFlexberryGISMapLayer} layerModel
   @param {DS.Store} store Ember data store.
+  @param {Boolean} ignoreLinks Indicate whether copying links.
   @return {NewPlatformFlexberryGISMapLayer} Layer model copy.
 */
-let copyLayer = function(layerModel, store) {
+let copyLayer = function(layerModel, store, ignoreLinks) {
   // Create empty layer model.
   let layerModelCopy = store.createRecord('new-platform-flexberry-g-i-s-map-layer');
 
   // Copy attibutes values into created empty model.
   copyAttributes(layerModel, layerModelCopy);
 
-  // Copy 'layerLink' details into created empty model.
-  copyLayerLinks(layerModel, layerModelCopy, store);
+  if (!ignoreLinks) {
+    // Copy 'layerLink' details into created empty model.
+    copyLayerLinks(layerModel, layerModelCopy, store);
+  }
+
+  // Copy 'leafletObjectGetter' function into created empty model.
+  copyLeafletObjectGetter(layerModel, layerModelCopy);
 
   return layerModelCopy;
 };
@@ -66,6 +72,12 @@ let copyLinkParameters = function(linkModel, linkModelCopy, store) {
     // Push created empty model into related details array.
     parameterModelsCopies.pushObject(parameterModelCopy);
   });
+};
+
+let copyLeafletObjectGetter = function(layerModel, layerModelCopy) {
+  let leafletObjectGetter = layerModel.get('leafletObjectGetter');
+
+  layerModelCopy.set('leafletObjectGetter', leafletObjectGetter);
 };
 
 export {

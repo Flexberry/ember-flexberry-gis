@@ -117,9 +117,9 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
 
       @property linksPropertyPath
       @type String
-      @default 'model.layerLink'
+      @default 'layer.layerLink'
     */
-    linksPropertyPath: 'model.layerLink',
+    linksPropertyPath: 'layer.layerLink',
 
     /**
       Layer's links' model name.

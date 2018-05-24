@@ -90,6 +90,10 @@ export default BaseLayerStyle.extend({
         // Stroke color
         color: '#3388ff',
 
+        fillGradientEnable: false,
+
+        strokeGradientEnable: false,
+
         // Stroke width in pixels
         weight: 3,
 
