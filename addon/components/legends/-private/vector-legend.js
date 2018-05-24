@@ -22,7 +22,7 @@ export default BaseLegendComponent.extend({
     @private
     @readOnly
   */
-  _styleSettingsRelatedComponentName: Ember.computed('layerSettings.styleSettings.type', function() {
-    return `legends/layers-styles/${this.get('layerSettings.styleSettings.type')}`;
+  _styleSettingsRelatedComponentName: Ember.computed('layer.settingsAsObject.styleSettings.type', function() {
+    return `legends/layers-styles/${this.get('layer.settingsAsObject.styleSettings.type')}`;
   })
 });

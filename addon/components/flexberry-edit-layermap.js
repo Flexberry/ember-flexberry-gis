@@ -213,7 +213,7 @@ export default Ember.Component.extend(
     _availableModes: null,
 
     /**
-    Flag: indicates whether 'main-group' of settings is available for the selected layer type.
+      Flag: indicates whether 'main-group' of settings is available for the selected layer type.
 
       @property mainGroupIsAvailableForType
       @type Boolean
@@ -328,7 +328,7 @@ export default Ember.Component.extend(
     ),
 
     /**
-    Flag: indicates whether 'display' operation settings are available for the selected layer type.
+      Flag: indicates whether 'display' operation settings are available for the selected layer type.
 
       @property _displaySettingsAreAvailableForType
       @type Boolean
@@ -503,6 +503,16 @@ export default Ember.Component.extend(
       },
 
       /**
+        Handles {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
+
+        @method actions.allowShowCheckboxChange
+        @param {Object} e eventObject Event object from {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
+      */
+      allowShowCheckboxChange(...args) {
+        this.sendAction('allowShowLayerLinkCheckboxChange', ...args);
+      },
+
+      /**
         Handles {{#crossLink "BaseEditModeComponent/sendingActions.editingFinished:method"}}'base-layers-prototyping-mode' components 'editingFinished' action {{/crossLink}}.
 
         @method actions.onEditingFinished
@@ -553,6 +563,7 @@ export default Ember.Component.extend(
       let description = this.get('layer.description');
       let keyWords = this.get('layer.keyWords');
       let boundingBox = this.get('layer.boundingBox');
+      let leafletObjectGetter = this.get('layer.leafletObjectGetter');
       let bounds = getBounds(boundingBox);
 
       let crs = this.get('layer.coordinateReferenceSystem');
@@ -586,6 +597,7 @@ export default Ember.Component.extend(
           maxLat: bounds.maxLat,
           maxLng: bounds.maxLng,
         },
+        leafletObjectGetter: leafletObjectGetter
       });
     },
 
@@ -667,10 +679,10 @@ export default Ember.Component.extend(
       let availableEditModes = Ember.A();
       let editModesNames = owner.knownNamesForType('layers-prototyping-mode');
       editModesNames.forEach((modeName) => {
-        let editModeFactory = owner.knownForType('layers-prototyping-mode', modeName);
-        let isAvailable = editModeFactory.componentCanBeInserted(this);
+        let editMode = owner.knownForType('layers-prototyping-mode', modeName).create();
+        let isAvailable = editMode.componentCanBeInserted(this);
         if (isAvailable) {
-          availableEditModes.pushObject(editModeFactory);
+          availableEditModes.pushObject(editMode);
         }
       });
       this.set('_availableModes', availableEditModes);
@@ -719,6 +731,7 @@ export default Ember.Component.extend(
 
     /**
       Component's action invoking to remove model from store.
+
       @method sendingActions.removeLayerLink
       @param {Object} model Ember Model to be removed.
       {{#crossLink "FlexberryLinksEditorComponent/sendingActions.remove:method"}}flexberry-links-editor 'remove' action{{/crossLink}}.
@@ -726,6 +739,7 @@ export default Ember.Component.extend(
 
     /**
       Component's action invoking to add model to store.
+
       @method sendingActions.addLayerLink
     */
   });

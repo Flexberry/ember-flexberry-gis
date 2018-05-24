@@ -1,0 +1,62 @@
+<table class="ui small compact celled table">
+  <tbody>
+
+    <tr>
+      <td>
+        {{flexberry-checkbox
+          label=(t "layers-styles.gradient-tools.fill-gradient")
+          value=fillGradientEnable
+        }}
+      </td>
+      <td class="ui horizontal list">
+        {{#if fillGradientEnable}}
+          <div class="item dropdown-gradient">
+            {{gradients/dropdown-gradient
+              gradientList = gradientList
+              gradientColorStart=fillGradientColorStart
+              gradientColorEnd=fillGradientColorEnd
+              customGradientColorStart=customFillGradientColorStart
+              customGradientColorEnd=customFillGradientColorEnd
+            }}
+          </div>
+          <div class="item">
+            {{gradients/gradient-edit
+              gradientColorStart=fillGradientColorStart
+              gradientColorEnd=fillGradientColorEnd
+              onGradientEdited=(action "onFillGradientEdited")
+            }}
+          </div>
+        {{/if}}
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        {{flexberry-checkbox
+          label=(t "layers-styles.gradient-tools.stroke-gradient")
+          value=strokeGradientEnable
+        }}
+      </td>
+      <td class="ui horizontal list">
+        {{#if strokeGradientEnable}}
+          <div class="item dropdown-gradient">
+            {{gradients/dropdown-gradient
+              gradientList = gradientList
+              gradientColorStart=strokeGradientColorStart
+              gradientColorEnd=strokeGradientColorEnd
+              customGradientColorStart=customStrokeGradientColorStart
+              customGradientColorEnd=customStrokeGradientColorEnd
+            }}
+          </div>
+          <div class="item">
+            {{gradients/gradient-edit
+              gradientColorStart=strokeGradientColorStart
+              gradientColorEnd=strokeGradientColorEnd
+              onGradientEdited=(action "onStrokeGradientEdited")
+            }}
+          </div>
+          {{/if}}
+        </td>
+      </tr>
+  </tbody>
+</table>

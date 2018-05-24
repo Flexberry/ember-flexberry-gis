@@ -1,8 +1,8 @@
 {{#if (known-for-type "component" _styleSettingsRelatedComponentName)}}
   {{component _styleSettingsRelatedComponentName
-    styleSettings=layerSettings.styleSettings
+    styleSettings=layer.settingsAsObject.styleSettings
     showCaption=showLayerName
-    caption=layerName
+    caption=layer.name
   }}
 {{else}}
   {{t "components.legends.vector-legend.legend-component-not-implemented.message" componentName=_styleSettingsRelatedComponentName}}
