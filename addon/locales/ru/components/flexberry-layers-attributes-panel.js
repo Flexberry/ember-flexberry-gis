@@ -10,4 +10,5 @@ export default {
   'save-changes': 'Сохранить изменения',
   'table-tab': 'Таблица',
   'diagram-tab': 'График',
+  'split-geometry': 'Разбить геометрию'
 };

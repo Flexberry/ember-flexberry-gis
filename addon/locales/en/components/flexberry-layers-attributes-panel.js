@@ -10,4 +10,5 @@ export default {
   'save-changes': 'Save changes',
   'table-tab': 'Table',
   'diagram-tab': 'Chart',
+  'split-geometry': 'Split geometry',
 };
