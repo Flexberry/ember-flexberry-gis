@@ -395,8 +395,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let intersectPolygonFeatures = Ember.A();
       selectedFeatures.forEach((item, index) => {
         let currentFeature = item;
-        let currentFeatureGeometry = item.geometry;
-        let isIntersect = checkIntersect(currentFeatureGeometry);
+        let currentFeatureGeoJson = currentFeature.leafletLayer.toGeoJSON();
+        let currentFeatureGeometry = currentFeatureGeoJson.geometry;
+        let isIntersect = !Ember.isNone(currentFeatureGeometry) ? checkIntersect(currentFeatureGeometry) : false;
 
         if(isIntersect) {
           intersectPolygonFeatures.push(currentFeature);

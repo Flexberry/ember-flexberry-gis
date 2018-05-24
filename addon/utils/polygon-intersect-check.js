@@ -18,7 +18,7 @@ _multiPolygonTypeName: 'MultiPolygon';
 let checkIntersect = function(polygon) {
   let workingPolygon;
 
-  if(checkForGeoJSON(polygon)) {
+  if(checkOnGeoJsonPolygon(polygon)) {
     workingPolygon = polygon;
   } else {
     workingPolygon = polygonConvert(polygon);
@@ -36,7 +36,7 @@ let checkIntersect = function(polygon) {
   return isIntersect;
 };
 
-let checkForGeoJSON = function(polygon) {
+let checkOnGeoJsonPolygon = function(polygon) {
   let checkResult = false;
   if( (polygon.type === 'MultiPolygon' || polygon.type === 'Polygon') ) {
     checkResult = true;
