@@ -754,7 +754,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let lefletLayers = L.geoJSON(combinedPolygon);
         let polygonLayers = lefletLayers.getLayers();
 
-        let layerProperties =[];
+        let layerProperties = [];
         selectedFeatures.forEach((layer) => {
           layerProperties.push(Object.assign({}, layer.properties));
         });
