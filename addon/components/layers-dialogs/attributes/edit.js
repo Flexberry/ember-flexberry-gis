@@ -142,6 +142,73 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
   parsingErrors: null,
 
   /**
+    Flag: indicates whether to display dropdown with choice value.
+
+    @property choiceValueMode
+    @type Boolean
+    @default false
+  */
+  choiceValueMode: false,
+
+  /**
+    Name of the selected group value.
+
+    @property choiceValue
+    @type Boolean
+    @default null
+  */
+  choiceValue: null,
+
+  /**
+    List of groups value.
+
+    @property choiceItems
+    @type Object[]
+    @default null
+  */
+  choiceItems: null,
+
+  /**
+    Array editing objects value.
+
+    @property choiceValueData
+    @type Object[]
+    @default null
+  */
+  choiceValueData: null,
+
+  /**
+    Observes and handles changes in choiceValue.
+    Сomputes editing object.
+
+    @method choiceValueObserver
+    @private
+  */
+  choiceValueObserver: Ember.observer('choiceValue', function() {
+    let choiceValueData = this.get('choiceValueData');
+    let choiceValue = this.get('choiceValue');
+    if (!Ember.isNone(choiceValue)) {
+      this.set('data', choiceValueData[`${choiceValue}` - 1]);
+    }
+  }),
+
+  /**
+    Observes and handles changes in choiceValueData.
+    Сomputes list 'choiceItems' name editing objects.
+
+    @method choiceValueDataObserver
+    @private
+  */
+  choiceValueDataObserver: Ember.observer('choiceValueData', function() {
+    let choiceValueData = this.get('choiceValueData');
+    if (!Ember.isNone(choiceValueData)) {
+      this.set('choiceItems', Object.keys(choiceValueData).map((index) => {
+        return Number(index) + 1;
+      }));
+    }
+  }),
+
+  /**
     Parses data.
 
     @method parseData
@@ -183,6 +250,9 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
   */
   init() {
     this._super(...arguments);
+    if (this.get('choiceValueMode')) {
+      this.choiceValueDataObserver();
+    }
 
     this.set('parsingErrors', {});
   },
@@ -196,6 +266,7 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
     */
     onBeforeShow() {
       this.parseData();
+      this.set('choiceValue', null);
 
       this.sendAction('beforeShow');
     },
