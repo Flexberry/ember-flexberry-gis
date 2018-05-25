@@ -874,6 +874,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         startPoint = point;
         waitEndPoint = false;
       }
+
       i++;
     }
 
