@@ -84,6 +84,40 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
           }),
 
+          _typeSelectedRows: Ember.computed('_selectedRows', function() {
+            let typeElements = {
+              point: 0,
+              line: 0,
+              polygon: 0,
+              multiLine: 0,
+              multiPolygon: 0
+            };
+            let selectedRows = Ember.get(this, '_selectedRows');
+            Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+            .map((key) => {
+              let feature = this.get('featureLink')[key].feature;
+              let layer = feature.leafletLayer.toGeoJSON();
+              switch (layer.geometry.type) {
+                case 'Point':
+                  typeElements.point++;
+                  break;
+                case 'LineString':
+                  typeElements.line++;
+                  break;
+                case 'MultiLineString':
+                  typeElements.multiLine++;
+                  break;
+                case 'Polygon':
+                  typeElements.polygon++;
+                  break;
+                case 'MultiPolygon':
+                  typeElements.multiPolygon++;
+                  break;
+              }
+            });
+            return typeElements;
+          }),
+
           _selectedRowsProperties: Ember.computed('_selectedRows', 'featureLink', function () {
             let selectedRows = Ember.get(this, '_selectedRows');
             let featureLink = Ember.get(this, 'featureLink');
@@ -622,6 +656,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       if (this.get('createCombinedPolygon')) {
         this.send('onDeleteItemClick', tabModel);
         this.set('createCombinedPolygon', false);
+        this.set('_newRowСhoiceValueMode', false);
+        this.set('_newRowСhoiceValueData', null);
       }
 
       Ember.set(layer, 'feature', { type: 'Feature' });
@@ -657,6 +693,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     onNewRowDialogDeny() {
       if (this.get('createCombinedPolygon')) {
         this.set('createCombinedPolygon', false);
+        this.set('_newRowСhoiceValueMode', false);
+        this.set('_newRowСhoiceValueData', null);
       }
 
       let layer = this.get('_newRowLayer');
@@ -665,6 +703,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_newRowTabModel', null);
       this.set('_newRowLayer', null);
       this.set('_newRowPanToObject', null);
+    },
+
+    /**
+      Handles new row attributes dialog's 'hide' action.
+    */
+    onNewRowDialogHide() {
+      if (this.get('createCombinedPolygon')) {
+        this.set('createCombinedPolygon', false);
+        this.set('_newRowСhoiceValueMode', false);
+        this.set('_newRowСhoiceValueData', null);
+      }
     },
 
     /**
@@ -692,9 +741,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
         .map((key) => {
           let feature = tabModel.featureLink[key].feature;
-          let geometry = feature.leafletLayer._latlngs;
-          if (geometry && geometry.length > 0 && geometry[0].length) {
-            return feature.leafletLayer.toGeoJSON();
+          let layer = feature.leafletLayer.toGeoJSON();
+          if ((layer.geometry.type === 'Polygon') || (layer.geometry.type === 'MultiPolygon')) {
+            return layer;
           }
 
           delete selectedRows[key];
@@ -705,7 +754,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let lefletLayers = L.geoJSON(combinedPolygon);
         let polygonLayers = lefletLayers.getLayers();
 
+        let layerProperties =[];
+        selectedFeatures.forEach((layer) => {
+          layerProperties.push(Object.assign({}, layer.properties));
+        });
+
         this.set('createCombinedPolygon', true);
+        this.set('_newRowСhoiceValueMode', true);
+        this.set('_newRowСhoiceValueData', layerProperties);
         this.send('onGeometryAddComplete', tabModel, polygonLayers[0]);
       }
     }

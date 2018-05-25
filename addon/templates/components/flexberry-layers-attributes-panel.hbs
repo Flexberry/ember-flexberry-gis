@@ -98,7 +98,9 @@
                         tooltip=(t "components.flexberry-layers-attributes-panel.combined-polygon")
                         click=(action "doCombinedPolygon" tabModel)
                         iconClass="group icon"
-                        readonly=(eq tabModel._selectedRowsCount 0)
+                        readonly=(and
+                          (eq tabModel._typeSelectedRows.polygon 0)
+                          (eq tabModel._typeSelectedRows.multiPolygon 0))
                       }}
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
@@ -184,12 +186,15 @@
     class=flexberryClassNames.addDialog
     visible=_newRowDialogIsVisible
     data=_newRowData
+    choiceValueData=_newRowСhoiceValueData
+    choiceValueMode=_newRowСhoiceValueMode
     fieldNames=(get _newRowTabModel "header")
     fieldTypes=(get _newRowTabModel "leafletObject.readFormat.featureType.fieldTypes")
     fieldParsers=(get _newRowTabModel "leafletObject.readFormat.featureType.fields")
     fieldValidators=(get _newRowTabModel "leafletObject.readFormat.featureType.fieldValidators")
     approve=(action "onNewRowDialogApprove")
     deny=(action "onNewRowDialogDeny")
+    hide=(action "onNewRowDialogHide")
   }}
 {{/if}}
 {{flexberry-error error=error}}
