@@ -2,23 +2,20 @@
   @module ember-flexberry-gis
 */
 import kinks from 'npm:@turf/kinks';
-
-_polygonTypeName: 'Polygon';
-
-_multiPolygonTypeName: 'MultiPolygon';
+import Ember from 'ember';
 
 /**
   Creates copy of the specified map layer.
 
   @for Utils.CheckIntersect
   @method checkIntersect
-  @param {Polygon} polygon
+  @param {Polygon} polygon L.Polygon, latLngs array or GeoJson Polygon/Multipolygon
   @return Boolean isIntersect
 */
 let checkIntersect = function(polygon) {
   let workingPolygon;
 
-  if(checkOnGeoJsonPolygon(polygon)) {
+  if (checkOnGeoJsonPolygon(polygon)) {
     workingPolygon = polygon;
   } else {
     workingPolygon = polygonConvert(polygon);
@@ -27,8 +24,8 @@ let checkIntersect = function(polygon) {
   let intersectPoints = Ember.A();
   let isIntersect = false;
   if (!Ember.isNone(workingPolygon)) {
-    intersectPoints = kinks(workingPolygon)
-    isIntersect = (intersectPoints.features.length != 0) ? true : false;
+    intersectPoints = kinks(workingPolygon);
+    isIntersect = (intersectPoints.features.length !== 0) ? true : false;
   } else {
     isIntersect = false;
   }
@@ -36,72 +33,57 @@ let checkIntersect = function(polygon) {
   return isIntersect;
 };
 
+/**
+  Check polygon on GeoJson type.
+
+  @method checkOnGeoJsonPolygon
+  @param {Polygon} polygon
+  @return Boolean checkResult
+*/
 let checkOnGeoJsonPolygon = function(polygon) {
   let checkResult = false;
-  if( (polygon.type === 'MultiPolygon' || polygon.type === 'Polygon') ) {
+  if ((polygon.type === 'MultiPolygon' || polygon.type === 'Polygon')) {
     checkResult = true;
   }
 
   return checkResult;
 };
 
+/**
+  Convert polygon to GeoJson
+
+  @method polygonConvert
+  @param {Polygon} polygon
+  @return {GeoJson} convertedPolygon
+*/
 let polygonConvert = function(polygon) {
   let convertedPolygon;
-
-  if (polygon instanceof L.Polygon) {
-    convertedPolygon = polygon.toGeoJSON();
+  let currentPolygon = polygon;
+  if (currentPolygon instanceof Array) {
+    currentPolygon = arrayToPolygon(currentPolygon);
   }
 
-  if (polygon instanceof Array) {
-    let coordinatesArray = polygon;
-    convertedPolygon = arrayToGeoJSON(coordinatesArray);
+  if (currentPolygon instanceof L.Polygon) {
+    convertedPolygon = currentPolygon.toGeoJSON();
   }
 
   return convertedPolygon;
 
 };
 
-let arrayToGeoJSON = function(array) {
-  let geoJsonPolygon = {
-    type: 'undefined',
-    coordinates: null
-  };
+/**
+  Convert latlngs array to L.polygon
 
-  let type = chooseObjectType(polygon);
-  if(type === 'undefined') {
-    return null;
-  }
-  geoJsonPolygon.type = type;
-  geoJsonPolygon.coordinates = polygon;
+  @method arrayToPolygon
+  @param [] array
+  @return L.polygon convertedPolygon
+*/
+let arrayToPolygon = function(array) {
+  let latlngs = array;
+  let polygon = L.polygon(latlngs);
 
-  return geoJsonPolygon;
+  return polygon;
 };
-
-let chooseTypeForCoordinates = function(array) {
-  let arrayDepth = 0;
-  for (let i = 0; i < array.length; i++) {
-    if (array[i] instanceof Array ) {
-      arrayDepth = 1;
-      for (let j = 0; j < array[i].length; j++) {
-        if (array[i][j] instanceof Array ) {
-          arrayDepth = 2;
-        }
-      }
-    }
-  }
-
-  switch(arrayDepth) {
-    case 0:
-      return 'undefined';
-      break;
-    case 1:
-      return _polygonTypeName;
-      break;
-    case 1:
-      return _multiPolygonTypeName;
-      break;
-  }
-}
 
 export {
   checkIntersect
