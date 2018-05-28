@@ -35,7 +35,7 @@ let maxGeometryFillOpacity = 0.2;
   @param {Number} [options.maxGeomOpacity] Max opacity value for geometries.
   @param {Number} [options.maxGeomFillOpacity] Max fill opacity value for geometries.
 */
-let setLeafletLayerOpacity = function({ leafletLayer, opacity, 
+let setLeafletLayerOpacity = function({ leafletLayer, opacity,
   maxGeomOpacity = maxGeometryOpacity, maxGeomFillOpacity = maxGeometryFillOpacity }) {
   if (typeof leafletLayer.setOpacity === 'function') {
     leafletLayer.setOpacity(opacity);
