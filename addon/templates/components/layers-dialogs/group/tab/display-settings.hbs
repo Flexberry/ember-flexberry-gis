@@ -28,9 +28,10 @@
       <div class="field">
         <label>{{t displayPropertyLabel}}</label>
         {{#if value.featuresPropertiesSettings.displayPropertyIsCallback}}
-          {{flexberry-textbox
+          {{textarea
             value=value.featuresPropertiesSettings.displayProperty
             placeholder=(t displayPropertyPlaceholder)
+            readonly=readonly
             class=displayPropertyClass
           }}
         {{else}}

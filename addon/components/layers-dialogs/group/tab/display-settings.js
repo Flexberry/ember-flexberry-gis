@@ -315,7 +315,18 @@ export default Ember.Component.extend({
 
     let obj = {};
     let arr = Ember.get(this, 'i18n.locales');
-    Ember.set(this, '_selectedLocale', arr[0]);
+    if (arr.length > 1) {
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i] != this.get('_defaultLocale')) {
+          Ember.set(this, '_selectedLocale', arr[i]);
+          break;
+        }
+
+        Ember.set(this, '_selectedLocale', arr[0]);
+      }
+    } else {
+      Ember.set(this, '_selectedLocale', arr[0]);
+    }
 
     for (var i = 0; i < arr.length; i++) {
       var key = arr[i];
