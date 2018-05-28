@@ -406,15 +406,18 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       let buf = buffer.default(featureCollection, radius, { units: unit });
       let _bufferLayer = this.get('_bufferLayer');
-      _bufferLayer = L.geoJSON(buf);
-      _bufferLayer.addTo(leafletMap);
+      if (Ember.isNone(_bufferLayer)) {
+        _bufferLayer = L.featureGroup();
+        leafletMap.addLayer(_bufferLayer);
+      }
+
+      _bufferLayer.addLayer(L.geoJSON(buf));
       this.set('_bufferLayer', _bufferLayer);
     },
 
     deleteBuffer() {
-      let leafletMap = this.get('leafletMap');
-      leafletMap.removeLayer(this.get('_bufferLayer'));
-      this.set('_bufferLayer', null);
+      let _bufferLayer = this.get('_bufferLayer');
+      _bufferLayer.clearLayers();
     },
 
     /**
