@@ -4,24 +4,8 @@
 
 import Ember from 'ember';
 
-/**
-    Max opacity value for geometries
-
-    @for Utils.LeafletOpacity
-    @property maxGeometryOpacity
-    @type Number
-    @default 0.65
-*/
 let maxGeometryOpacity = 0.65;
 
-/**
-    Max fill opacity value for geometries
-
-    @for Utils.LeafletOpacity
-    @property maxGeometryFillOpacity
-    @type Number
-    @default 0.2
-*/
 let maxGeometryFillOpacity = 0.2;
 
 /**
