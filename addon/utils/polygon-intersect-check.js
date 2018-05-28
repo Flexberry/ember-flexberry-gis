@@ -5,7 +5,7 @@ import kinks from 'npm:@turf/kinks';
 import Ember from 'ember';
 
 /**
-  Creates copy of the specified map layer.
+  Check polygons on intersection.
 
   @for Utils.CheckIntersect
   @method checkIntersect
