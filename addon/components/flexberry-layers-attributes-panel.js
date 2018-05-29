@@ -5,6 +5,11 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
+import * as difference from 'npm:@turf/difference';
+import * as lineIntersect from 'npm:@turf/line-intersect';
+import * as invariant from 'npm:@turf/invariant';
+import * as helper from 'npm:@turf/helpers';
+import * as booleanEqual from 'npm:@turf/boolean-equal';
 
 /**
   The component for editing layers attributes.
@@ -81,6 +86,40 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           _selectedRowsCount: Ember.computed('_selectedRows', function () {
             let selectedRows = Ember.get(this, '_selectedRows');
             return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
+          }),
+
+          _typeSelectedRows: Ember.computed('_selectedRows', function() {
+            let typeElements = {
+              point: 0,
+              line: 0,
+              polygon: 0,
+              multiLine: 0,
+              multiPolygon: 0
+            };
+            let selectedRows = Ember.get(this, '_selectedRows');
+            Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+            .map((key) => {
+              let feature = this.get('featureLink')[key].feature;
+              let layer = feature.leafletLayer.toGeoJSON();
+              switch (layer.geometry.type) {
+                case 'Point':
+                  typeElements.point++;
+                  break;
+                case 'LineString':
+                  typeElements.line++;
+                  break;
+                case 'MultiLineString':
+                  typeElements.multiLine++;
+                  break;
+                case 'Polygon':
+                  typeElements.polygon++;
+                  break;
+                case 'MultiPolygon':
+                  typeElements.multiPolygon++;
+                  break;
+              }
+            });
+            return typeElements;
           }),
 
           _selectedRowsProperties: Ember.computed('_selectedRows', 'featureLink', function () {
@@ -214,6 +253,16 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @private
   */
   _editRowDataCopy: null,
+
+  /**
+    Data for 'onDifferenceClick'.
+
+    @property _dataForDifference
+    @type Array
+    @default null
+    @private
+  */
+  _dataForDifference: null,
 
   /**
     Reference to component's template.
@@ -660,6 +709,86 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       this._showNewRowDialog(tabModel, addedLayer);
+    },
+
+    /**
+      Handles click on 'Difference polygon' button.
+
+      @param {Object} tabModel Related tab model.
+    */
+    onDifferenceClick(tabModel) {
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+      .map((key) => {
+        let feature = tabModel.featureLink[key].feature;
+        let layer = feature.leafletLayer.toGeoJSON();
+        if ((layer.geometry.type === 'Polygon') || (layer.geometry.type === 'MultiPolygon')) {
+          return layer;
+        }
+
+        delete selectedRows[key];
+      }).filter((item) => !Ember.isNone(item));
+
+      if (selectedFeatures.length < 1) {
+        return;
+      }
+
+      if (Ember.isNone(this.get('_dataForDifference'))) {
+        this.set('_dataForDifference', selectedRows);
+        Ember.set(tabModel, '_selectedRows', {});
+
+        // Create function for observer.
+        let _this = this;
+        tabModel._typeSelectedRowsObserverForDifference = function() {
+          let typeSelectedRows = this.get('_typeSelectedRows');
+          if (typeSelectedRows.polygon > 0 || typeSelectedRows.multiPolygon > 0) {
+            _this.send('onDifferenceClick', tabModel);
+          }
+        };
+
+        Ember.addObserver(tabModel, '_typeSelectedRows', null, tabModel._typeSelectedRowsObserverForDifference);
+      } else {
+        // Remove observer and function.
+        Ember.removeObserver(tabModel, '_typeSelectedRows', null, tabModel._typeSelectedRowsObserverForDifference);
+        tabModel._typeSelectedRowsObserverForDifference = undefined;
+
+        // Find intersecting polygons with splitter.
+        let dataForDifference = this.get('_dataForDifference');
+        let intersectingPolygon = Object.keys(dataForDifference).filter((item) => Ember.get(dataForDifference, item))
+        .map((key) => {
+          let feature = tabModel.featureLink[key].feature;
+          let layer = feature.leafletLayer.toGeoJSON();
+          if (!booleanEqual.default(layer, selectedFeatures[0]) && lineIntersect.default(layer, selectedFeatures[0]).features.length > 0) {
+            return layer;
+          }
+
+          delete dataForDifference[key];
+        }).filter((item) => !Ember.isNone(item));
+
+        intersectingPolygon.forEach((polygon) => {
+          let differenceResult = difference.default(polygon, selectedFeatures[0]);
+
+          if (polygon.geometry.type !== differenceResult.geometry.type) {
+            invariant.default.getCoords(differenceResult).forEach((polygonCoords) => {
+              let lefletLayer = L.geoJSON(helper.default.polygon(polygonCoords)).getLayers();
+              this.set('_newRowTabModel', tabModel);
+              this.set('_newRowLayer', lefletLayer[0]);
+              this.send('onNewRowDialogApprove', Object.assign({}, polygon.properties));
+            });
+          } else {
+            let lefletLayer = L.geoJSON(differenceResult).getLayers();
+            this.set('_newRowTabModel', tabModel);
+            this.set('_newRowLayer', lefletLayer[0]);
+            this.send('onNewRowDialogApprove', Object.assign({}, polygon.properties));
+          }
+        });
+
+        Ember.set(tabModel, '_selectedRows', dataForDifference);
+        this.send('onDeleteItemClick', tabModel);
+
+        this.set('_dataForDifference', null);
+        this.send('onRowSelect', tabModel, Object.keys(selectedRows)[0], { checked:false });
+      }
     }
   },
 

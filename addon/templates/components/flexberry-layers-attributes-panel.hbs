@@ -100,6 +100,19 @@
                         iconClass="save icon"
                         readonly=(not (get tabModel "leafletObject._wasChanged"))
                       }}
+                      {{flexberry-button
+                        tooltip=(t "components.flexberry-layers-attributes-panel.difference")
+                        click=(action "onDifferenceClick" tabModel)
+                        iconClass="minus icon"
+                        readonly=(and
+                        (eq tabModel._typeSelectedRows.polygon 0)
+                        (eq tabModel._typeSelectedRows.multiPolygon 0))
+                      }}
+                      {{#if (not (is-none _dataForDifference))}}
+                        <label>
+                          {{t "components.flexberry-layers-attributes-panel.choice-spliter"}}
+                        </label>
+                      {{/if}}
                     {{/if}}
                   </div>
                 </div>

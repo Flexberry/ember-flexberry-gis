@@ -10,4 +10,6 @@ export default {
   'save-changes': 'Сохранить изменения',
   'table-tab': 'Таблица',
   'diagram-tab': 'График',
+  'difference': 'Вычитание полигонов',
+  'choice-spliter': 'Выберите полигон, который будет вычитаться',
 };
