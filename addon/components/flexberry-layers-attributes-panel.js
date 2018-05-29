@@ -5,7 +5,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
-import { checkIntersect } from '../utils/polygon-intersect-check';
+import checkIntersect from '../utils/polygon-intersect-check';
 
 /**
   The component for editing layers attributes.

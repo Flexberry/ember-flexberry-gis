@@ -12,7 +12,7 @@ import Ember from 'ember';
   @param {Polygon} polygon L.Polygon, latLngs array or GeoJson Polygon/Multipolygon
   @return Boolean isIntersect
 */
-let checkIntersect = function(polygon) {
+export default function checkIntersect(polygon) {
   let workingPolygon;
 
   if (checkOnGeoJsonPolygon(polygon)) {
@@ -31,7 +31,7 @@ let checkIntersect = function(polygon) {
   }
 
   return isIntersect;
-};
+}
 
 /**
   Check polygon on GeoJson type.
@@ -40,14 +40,14 @@ let checkIntersect = function(polygon) {
   @param {Polygon} polygon
   @return Boolean checkResult
 */
-let checkOnGeoJsonPolygon = function(polygon) {
+function checkOnGeoJsonPolygon(polygon) {
   let checkResult = false;
   if ((polygon.type === 'MultiPolygon' || polygon.type === 'Polygon')) {
     checkResult = true;
   }
 
   return checkResult;
-};
+}
 
 /**
   Convert polygon to GeoJson
@@ -56,7 +56,7 @@ let checkOnGeoJsonPolygon = function(polygon) {
   @param {Polygon} polygon
   @return {GeoJson} convertedPolygon
 */
-let polygonConvert = function(polygon) {
+function polygonConvert(polygon) {
   let convertedPolygon;
   let currentPolygon = polygon;
   if (currentPolygon instanceof Array) {
@@ -68,8 +68,7 @@ let polygonConvert = function(polygon) {
   }
 
   return convertedPolygon;
-
-};
+}
 
 /**
   Convert latlngs array to L.polygon
@@ -78,13 +77,9 @@ let polygonConvert = function(polygon) {
   @param [] array
   @return L.polygon convertedPolygon
 */
-let arrayToPolygon = function(array) {
+function arrayToPolygon(array) {
   let latlngs = array;
   let polygon = L.polygon(latlngs);
 
   return polygon;
-};
-
-export {
-  checkIntersect
-};
+}
