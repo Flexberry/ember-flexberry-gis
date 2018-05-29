@@ -95,6 +95,16 @@
                         }}
                       {{/each}}
                       {{flexberry-button
+                        tooltip=(t "components.flexberry-layers-attributes-panel.split-geometry")
+                        click=(action "onSplitGeometry" tabModel)
+                        iconClass="cut icon"
+                        readonly=(and
+                          (eq tabModel._typeSelectedRows.polygon 0)
+                          (eq tabModel._typeSelectedRows.line 0)
+                          (eq tabModel._typeSelectedRows.multiLine 0)
+                          (eq tabModel._typeSelectedRows.multiPolygon 0))
+                      }}
+                      {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
                         click=(action "onSaveChangesClick" tabModel)
                         iconClass="save icon"

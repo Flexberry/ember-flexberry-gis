@@ -12,4 +12,5 @@ export default {
   'diagram-tab': 'Chart',
   'difference': 'Difference polygon',
   'choice-spliter': 'Select a polygon that will be subtracted',
+  'split-geometry': 'Split geometry',
 };

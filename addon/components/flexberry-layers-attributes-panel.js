@@ -6,10 +6,18 @@ import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import * as difference from 'npm:@turf/difference';
-import * as lineIntersect from 'npm:@turf/line-intersect';
-import * as invariant from 'npm:@turf/invariant';
-import * as helper from 'npm:@turf/helpers';
 import * as booleanEqual from 'npm:@turf/boolean-equal';
+import * as lineSplit from 'npm:@turf/line-split';
+import * as polygonToLine from 'npm:@turf/polygon-to-line';
+import * as lineToPolygon from 'npm:@turf/line-to-polygon';
+import * as booleanWithin from 'npm:@turf/boolean-within';
+import * as kinks from 'npm:@turf/kinks';
+import * as helper from 'npm:@turf/helpers';
+import * as lineIntersect from 'npm:@turf/line-intersect';
+import * as lineSlice from 'npm:@turf/line-slice';
+import * as invariant from 'npm:@turf/invariant';
+import * as distance from 'npm:@turf/distance';
+import * as midpoint from 'npm:@turf/midpoint';
 
 /**
   The component for editing layers attributes.
@@ -789,7 +797,256 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.set('_dataForDifference', null);
         this.send('onRowSelect', tabModel, Object.keys(selectedRows)[0], { checked:false });
       }
+    },
+
+    /**
+      Handles click on 'Split geometry' button.
+
+      @param {Object} tabModel Related tab model.
+    */
+    onSplitGeometry(tabModel) {
+      let editTools = this._getEditTools();
+      editTools.on('editable:drawing:end', this._disableDrawSplitGeometry, [tabModel, this]);
+      editTools.startPolyline();
     }
+  },
+
+  /**
+    Disables tool and split geometry.
+
+    @param {Object} e Event object.
+  */
+  _disableDrawSplitGeometry(e) {
+    let [tabModel, _this] = this;
+
+    let selectedRows = Ember.get(tabModel, '_selectedRows');
+    let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+    .map((key) => {
+      let feature = tabModel.featureLink[key].feature;
+      let layer = feature.leafletLayer.toGeoJSON();
+      if ((layer.geometry.type !== 'LineString') && (layer.geometry.type !== 'MultiLineString') &&
+          (layer.geometry.type !== 'Polygon') && (layer.geometry.type !== 'MultiPolygon')) {
+        delete selectedRows[key];
+        return;
+      }
+
+      return layer;
+    }).filter((item) => !Ember.isNone(item));
+
+    let editTools = _this.get('_editTools');
+    editTools.off('editable:drawing:end', _this._disableDrawSplitGeometry, _this);
+    editTools.stopDrawing();
+
+    // Delete split line from layer.
+    let editLayer = _this.get('_editTools.editLayer');
+    if (!Ember.isNone(editLayer)) {
+      editLayer.clearLayers();
+    }
+
+    let featuresLayer = _this.get('_editTools.featuresLayer');
+    if (!Ember.isNone(featuresLayer)) {
+      featuresLayer.clearLayers();
+    }
+
+    let splitLine = e.layer.toGeoJSON();
+    let kinksPoint = kinks.default(splitLine);
+    if (kinksPoint.features.length !== 0) {
+      _this.set('error', new Error('Splitting line has self-intersections'));
+      return;
+    }
+
+    let newLayerCreate = false;
+    selectedFeatures.forEach((layer) => {
+      let split = helper.default.featureCollection([]);
+      switch (layer.geometry.type) {
+        case 'LineString':
+          split = lineSplit.default(layer, splitLine);
+          break;
+        case 'MultiLineString': //TODO Need TEST!!!!!
+          let arrayLineString = layer.geometry.coordinates;
+          let resultLineString = [];
+          arrayLineString.forEach((line) => {
+            let lineSplitResult = lineSplit.default(helper.default.lineString(line), splitLine);
+            resultLineString = resultLineString.concat(lineSplitResult.features);
+          });
+
+          split = helper.default.featureCollection(resultLineString);
+          break;
+        case 'Polygon':
+          let resultSplit = _this._polygonSplit(layer, splitLine);
+          if (resultSplit.length > 1) {
+            split = helper.default.featureCollection(resultSplit);
+          }
+
+          break;
+        case 'MultiPolygon':
+          let arrayPolygons = layer.geometry.coordinates;
+          let resultPolygonSplit = [];
+          arrayPolygons.forEach((polygon) => {
+            resultPolygonSplit = resultPolygonSplit.concat(_this._polygonSplit(helper.default.polygon(polygon), splitLine));
+          });
+
+          if (arrayPolygons.length < resultPolygonSplit.length) {
+            split = helper.default.featureCollection(resultPolygonSplit);
+          }
+
+          break;
+      }
+
+      if (split.features.length === 0) {
+        let selectedRows = Ember.get(tabModel, '_selectedRows');
+        let key = Ember.guidFor(layer.properties);
+        delete selectedRows[key];
+      }
+
+      split.features.forEach((splitResult) => {
+        let lefletLayer = L.geoJSON(splitResult).getLayers();
+        _this.set('_newRowTabModel', tabModel);
+        _this.set('_newRowLayer', lefletLayer[0]);
+        newLayerCreate = true;
+        _this.send('onNewRowDialogApprove', Object.assign({}, layer.properties));
+      });
+    });
+
+    if (newLayerCreate) {
+      _this.send('onDeleteItemClick', tabModel);
+    }
+  },
+
+  /**
+    Split splitter and split polygon each part splitter.
+
+    @param {Object} layer polygon.
+    @param {Object} laysplitLineer splitter.
+  */
+  _polygonSplit(layer, splitLine) {
+    let arraySplitLine = [];
+    let i = 0;
+    let waitEndPoint = false;
+    let startPoint;
+
+    // We divide line of the user.
+    // If used lineSplit, resulting lines will not cross the polygon line, so we use while.
+    while (i !== splitLine.geometry.coordinates.length) {
+      let point = helper.default.point(splitLine.geometry.coordinates[i]);
+      if (!booleanWithin.default(point, layer) && !waitEndPoint) {
+        if (!Ember.isNone(startPoint) && lineIntersect.default(layer, lineSlice.default(startPoint, point, splitLine)).features.length > 0) {
+          let resultlineIntersect = lineIntersect.default(layer, lineSlice.default(startPoint, point, splitLine));
+          if (resultlineIntersect.features.length === 2) {
+            arraySplitLine.push(lineSlice.default(startPoint, point, splitLine));
+          } else {
+            for (let j = 1; j < resultlineIntersect.features.length - 1; j = j + 2) {
+              let intersectPointStart = resultlineIntersect.features[j];
+              let intersectPointEnd = resultlineIntersect.features[j + 1];
+              let intersectMidPoint = midpoint.default(intersectPointStart, intersectPointEnd);
+              arraySplitLine.push(lineSlice.default(startPoint, intersectMidPoint, splitLine));
+              startPoint = intersectMidPoint;
+            }
+
+            arraySplitLine.push(lineSlice.default(startPoint, point, splitLine));
+          }
+        }
+
+        startPoint = point;
+      } else if (booleanWithin.default(point, layer)) {
+        waitEndPoint = true;
+      } else if (waitEndPoint) {
+        let resultlineIntersect = lineIntersect.default(layer, lineSlice.default(startPoint, point, splitLine));
+        if (resultlineIntersect.features.length > 2) {
+          for (let j = 1; j < resultlineIntersect.features.length - 1; j = j + 2) {
+            let intersectPointStart = resultlineIntersect.features[j];
+            let intersectPointEnd = resultlineIntersect.features[j + 1];
+            let intersectMidPoint = midpoint.default(intersectPointStart, intersectPointEnd);
+            arraySplitLine.push(lineSlice.default(startPoint, intersectMidPoint, splitLine));
+            startPoint = intersectMidPoint;
+          }
+        }
+
+        arraySplitLine.push(lineSlice.default(startPoint, point, splitLine));
+        startPoint = point;
+        waitEndPoint = false;
+      }
+
+      i++;
+    }
+
+    let arrayPolygon = [layer];
+    arraySplitLine.forEach((line) => {
+      let intersectingPolygon = arrayPolygon.filter((item) => lineIntersect.default(item, line).features.length > 1);
+      intersectingPolygon.forEach((polygon) => {
+        let arraySplitPolygon = this._lineSplitPolygon(polygon, line);
+        let position = arrayPolygon.indexOf(polygon);
+        arrayPolygon.splice(position, 1);
+        arrayPolygon = arrayPolygon.concat(arraySplitPolygon);
+      });
+    });
+
+    return arrayPolygon;
+  },
+
+  /**
+    Split polygon.
+
+    @param {Object} polygon polygon to split.
+    @param {Object} line splitter.
+  */
+  _lineSplitPolygon(polygon, line) {
+    let lineFromPolygon = polygonToLine.default(polygon);
+    let startPolygonPoint = helper.default.point(lineFromPolygon.geometry.coordinates[0]);
+    let splitByPoint = booleanWithin.default(startPolygonPoint, line);
+    let arraySplitLine = lineSplit.default(lineFromPolygon, line);
+
+    if (!splitByPoint) {
+      let firstPartLine = invariant.default.getCoords(arraySplitLine.features[0]);
+      let secondPartLine = invariant.default.getCoords(arraySplitLine.features[arraySplitLine.features.length - 1]);
+      firstPartLine.shift();
+      arraySplitLine.features.shift();
+      arraySplitLine.features.pop();
+      let combinePolygonLine = secondPartLine.concat(firstPartLine);
+      arraySplitLine.features.push(helper.default.lineString(combinePolygonLine));
+    }
+
+    // Intersection points of the polygon and the line of division.
+    let intersectingPoints = lineIntersect.default(line, lineFromPolygon);
+    let polygonSide = lineSlice.default(intersectingPoints.features[0], intersectingPoints.features[1], line);
+    let polygonSideCoords = invariant.default.getCoords(polygonSide);
+
+    // Delete duplicates point.
+    let uniqueValue = [];
+    polygonSideCoords.forEach((polygonLine) => {
+      if (!uniqueValue.includes(polygonLine)) {
+        uniqueValue.push(polygonLine);
+      }
+    });
+
+    // Because lineSlice not include intersection points. We replace start and end point.
+    uniqueValue.splice(0, 1, invariant.default.getCoords(intersectingPoints.features[0]));
+    uniqueValue.splice(uniqueValue.length - 1, 1, invariant.default.getCoords(intersectingPoints.features[1]));
+
+    let polygons = [];
+    arraySplitLine.features.forEach((polygonLine) => {
+
+      // Add line points to polygon.
+      let coordsSide = uniqueValue;
+      let coordsPolygonLine = invariant.default.getCoords(polygonLine);
+      let startPointPolygonLine = helper.default.point(coordsPolygonLine[0]);
+      let endPointPolygonLine = helper.default.point(coordsPolygonLine[coordsPolygonLine.length - 1]);
+      let pointSide = helper.default.point(coordsSide[0]);
+      let distanceSideAndStartPoint = distance.default(startPointPolygonLine, pointSide);
+      let distanceSideAndEndPoint = distance.default(endPointPolygonLine, pointSide);
+
+      if (distanceSideAndEndPoint > distanceSideAndStartPoint) {
+        coordsPolygonLine = coordsSide.reverse().concat(coordsPolygonLine);
+      }
+
+      if (distanceSideAndEndPoint < distanceSideAndStartPoint) {
+        coordsPolygonLine = coordsPolygonLine.concat(coordsSide);
+      }
+
+      polygons.push(lineToPolygon.default(helper.default.lineString(coordsPolygonLine)));
+    });
+
+    return polygons;
   },
 
   /**
