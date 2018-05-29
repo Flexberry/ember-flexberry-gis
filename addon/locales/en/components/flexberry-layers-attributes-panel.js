@@ -13,4 +13,5 @@ export default {
   'difference': 'Difference polygon',
   'choice-spliter': 'Select a polygon that will be subtracted',
   'split-geometry': 'Split geometry',
+  'combined-polygon': 'Union polygon',
 };

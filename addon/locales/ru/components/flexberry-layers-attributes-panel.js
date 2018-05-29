@@ -12,5 +12,6 @@ export default {
   'diagram-tab': 'График',
   'difference': 'Вычитание полигонов',
   'choice-spliter': 'Выберите полигон, который будет вычитаться',
-  'split-geometry': 'Разбить геометрию'
+  'split-geometry': 'Разбить геометрию',
+  'combined-polygon': 'Объединить полигоны',
 };

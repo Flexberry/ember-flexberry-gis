@@ -18,6 +18,7 @@ import * as lineSlice from 'npm:@turf/line-slice';
 import * as invariant from 'npm:@turf/invariant';
 import * as distance from 'npm:@turf/distance';
 import * as midpoint from 'npm:@turf/midpoint';
+import * as union from 'npm:@turf/union';
 
 /**
   The component for editing layers attributes.
@@ -330,6 +331,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default ['draw', 'manual', 'geoprovider']
   */
   availableGeometryAddModes: ['draw', 'manual', 'geoprovider'],
+
+  /**
+    Flag indicates that union operation success.
+
+    @property createCombinedPolygon
+    @type Boolean
+    @default false
+  */
+  createCombinedPolygon: false,
 
   /**
     Initializes component.
@@ -666,6 +676,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let tabModel = this.get('_newRowTabModel');
       let layer = this.get('_newRowLayer');
 
+      if (this.get('createCombinedPolygon')) {
+        this.send('onDeleteItemClick', tabModel);
+        this.set('createCombinedPolygon', false);
+        this.set('_newRowСhoiceValueMode', false);
+        this.set('_newRowСhoiceValueData', null);
+      }
+
       Ember.set(layer, 'feature', { type: 'Feature' });
       Ember.set(layer.feature, 'properties', data);
       Ember.set(layer.feature, 'leafletLayer', layer);
@@ -697,12 +714,29 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Handles new row attributes dialog's 'deny' action.
     */
     onNewRowDialogDeny() {
+      if (this.get('createCombinedPolygon')) {
+        this.set('createCombinedPolygon', false);
+        this.set('_newRowСhoiceValueMode', false);
+        this.set('_newRowСhoiceValueData', null);
+      }
+
       let layer = this.get('_newRowLayer');
       this.get('leafletMap').removeLayer(layer);
 
       this.set('_newRowTabModel', null);
       this.set('_newRowLayer', null);
       this.set('_newRowPanToObject', null);
+    },
+
+    /**
+      Handles new row attributes dialog's 'hide' action.
+    */
+    onNewRowDialogHide() {
+      if (this.get('createCombinedPolygon')) {
+        this.set('createCombinedPolygon', false);
+        this.set('_newRowСhoiceValueMode', false);
+        this.set('_newRowСhoiceValueData', null);
+      }
     },
 
     /**
@@ -808,6 +842,42 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let editTools = this._getEditTools();
       editTools.on('editable:drawing:end', this._disableDrawSplitGeometry, [tabModel, this]);
       editTools.startPolyline();
+    },
+
+    /**
+      Handles click on 'Union polygon' button.
+
+      @method actions.doCombinedPolygon
+      @param {Object} tabModel Related tab.
+    */
+    doCombinedPolygon(tabModel) {
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+        .map((key) => {
+          let feature = tabModel.featureLink[key].feature;
+          let layer = feature.leafletLayer.toGeoJSON();
+          if ((layer.geometry.type === 'Polygon') || (layer.geometry.type === 'MultiPolygon')) {
+            return layer;
+          }
+
+          delete selectedRows[key];
+        }).filter((item) => !Ember.isNone(item));
+
+      if (selectedFeatures.length > 1) {
+        let combinedPolygon = union.default(...selectedFeatures);
+        let lefletLayers = L.geoJSON(combinedPolygon);
+        let polygonLayers = lefletLayers.getLayers();
+
+        let layerProperties = [];
+        selectedFeatures.forEach((layer) => {
+          layerProperties.push(Object.assign({}, layer.properties));
+        });
+
+        this.set('createCombinedPolygon', true);
+        this.set('_newRowСhoiceValueMode', true);
+        this.set('_newRowСhoiceValueData', layerProperties);
+        this.send('onGeometryAddComplete', tabModel, polygonLayers[0]);
+      }
     }
   },
 
