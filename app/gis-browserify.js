@@ -3,3 +3,4 @@
 // them from somewhere in /app directory.
 // See: https://github.com/ef4/ember-browserify#using-ember-browserify-in-addons
 import * as buffer from 'npm:@turf/buffer';
+import * as thelpers from 'npm:@turf/helpers';

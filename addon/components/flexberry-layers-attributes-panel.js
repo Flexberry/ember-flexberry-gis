@@ -6,6 +6,7 @@ import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import * as buffer from 'npm:@turf/buffer';
+import * as thelpers from 'npm:@turf/helpers';
 
 /**
   The component for editing layers attributes.
@@ -394,15 +395,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
         .map((key) => {
-          return tabModel.featureLink[key].feature;
+          return tabModel.featureLink[key].feature.leafletLayer.toGeoJSON();
         });
 
       let leafletMap = this.get('leafletMap');
-      let featureCollection =
-        {
-          type: 'FeatureCollection',
-          features: selectedFeatures
-        };
+      let featureCollection = thelpers.default.featureCollection(selectedFeatures);
 
       let buf = buffer.default(featureCollection, radius, { units: unit });
       let _bufferLayer = this.get('_bufferLayer');
