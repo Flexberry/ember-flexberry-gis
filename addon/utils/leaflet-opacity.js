@@ -26,7 +26,13 @@ let setLeafletLayerOpacity = function({ leafletLayer, opacity,
   } else if (typeof leafletLayer.setStyle === 'function') {
     let style = Ember.get(leafletLayer, 'options.style') || {};
     if (typeof style === 'function') {
-      leafletLayer.setStyle({ opacity: opacity * maxGeomOpacity, fillOpacity: opacity * maxGeomFillOpacity });
+      let opacityFromFunction = 1;
+      if (leafletLayer.feature) {
+        let styleFromFunction = style(leafletLayer.feature) || {};
+        opacityFromFunction = styleFromFunction.opacity || 1;
+      }
+
+      leafletLayer.setStyle({ opacity: opacity * maxGeomOpacity * opacityFromFunction, fillOpacity: opacity * maxGeomFillOpacity * opacityFromFunction });
     } else {
       leafletLayer.setStyle({ opacity: opacity, fillOpacity: opacity });
     }
