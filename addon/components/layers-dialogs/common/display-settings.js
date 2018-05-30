@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import layout from '../../../../templates/components/layers-dialogs/group/tab/display-settings';
+import layout from '../../../templates/components/layers-dialogs/common/display-settings';
 
 /**
   Component for display settings tab in layer settings.
@@ -225,6 +225,14 @@ export default Ember.Component.extend({
   allLocales: undefined,
 
   /**
+    Flag showing if there is more than one locale available.
+
+    @property isMoreThanOne
+    @type Boolean
+    @default false
+  */
+  isMoreThanOne: false,
+  /**
     Selected locale (from locales lists).
 
     @property _selectedLocale
@@ -313,27 +321,30 @@ export default Ember.Component.extend({
   didInsertElement() {
     this.getAllProperties();
 
-    let obj = {};
-    let arr = Ember.get(this, 'i18n.locales');
-    if (arr.length > 1) {
-      for (var i = 0; i < arr.length; i++) {
-        if (arr[i] != this.get('_defaultLocale')) {
-          Ember.set(this, '_selectedLocale', arr[i]);
+    let localesObj = {};
+    let allLocales = Ember.get(this, 'i18n.locales');
+
+    for (let i = 0; i < allLocales.length; i++) {
+      var key = allLocales[i];
+      localesObj[key] = true;
+    }
+
+    let allLocalesObj = Object.keys(localesObj);
+    this.set('allLocales', allLocalesObj);
+
+    if (allLocalesObj.length > 1) {
+      for (var i = 0; i < allLocales.length; i++) {
+        if (allLocales[i] !== this.get('_defaultLocale')) {
+          Ember.set(this, '_selectedLocale', allLocales[i]);
           break;
         }
-
-        Ember.set(this, '_selectedLocale', arr[0]);
       }
+
+      this.set('isMoreThanOne', true);
     } else {
-      Ember.set(this, '_selectedLocale', arr[0]);
+      Ember.set(this, '_selectedLocale', allLocales[0]);
+      this.set('isMoreThanOne', false);
     }
-
-    for (var i = 0; i < arr.length; i++) {
-      var key = arr[i];
-      obj[key] = true;
-    }
-
-    this.set('allLocales', Object.keys(obj));
   },
 
   actions: {

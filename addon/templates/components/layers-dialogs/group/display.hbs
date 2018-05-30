@@ -32,7 +32,7 @@
       </div>
       {{#if _displaySettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "display-tab") "active"}}" data-tab="display-tab">
-          {{layers-dialogs/group/tab/display-settings
+          {{layers-dialogs/common/display-settings
             value=_layer.settings.displaySettings
             layerType=_layer.type
             leafletObjectMethod=_leafletObjectForFilter

@@ -53,13 +53,15 @@
           <th>{{t showPropertyHeading}}</th>
           <th>{{t propertiesListHeading}}</th>
           <th>{{_defaultLocale}}</th>
-          <th>
-            {{flexberry-dropdown
-              items=allLocales
-              value=_selectedLocale
-              placeholder=(t localesListHeading)
-            }}
-          </th>
+          {{#if isMoreThanOne}}
+            <th>
+              {{flexberry-dropdown
+                items=allLocales
+                value=_selectedLocale
+                placeholder=(t localesListHeading)
+              }}
+            </th>
+          {{/if}}
         </tr>
       </thead>
       <tbody>
@@ -80,12 +82,14 @@
                 placeholder=(t translationPlaceholder)
               }}
             </td>
-            <td>
-              {{flexberry-textbox
-                value=(mut (get this (concat "value.featuresPropertiesSettings.localizedProperties" "." _selectedLocale "." property)))
-                placeholder=(t translationPlaceholder)
-              }}
-            </td>
+            {{#if isMoreThanOne}}
+              <td>
+                {{flexberry-textbox
+                  value=(mut (get this (concat "value.featuresPropertiesSettings.localizedProperties" "." _selectedLocale "." property)))
+                  placeholder=(t translationPlaceholder)
+                }}
+              </td>
+            {{/if}}
           </tr>
           {{else}}
             <tr colspan="4">
