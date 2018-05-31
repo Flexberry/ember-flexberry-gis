@@ -79,18 +79,22 @@
                             <i class="erase icon"></i>
                             {{t "components.flexberry-layers-attributes-panel.erase"}}
                           </a>
-                          {{flexberry-dropdown
-                            items=_turfUnits
-                            value=_selectedUnit
-                            placeholder=(t "components.flexberry-layers-attributes-panel.units")
-                            class="item compact"
-                          }}
-                          <br>
+                          {{#ui-dropdown class="item compact selection" onChange=(action "onUnitSelected")}}
+                            <i class="dropdown icon"></i>
+                            <div class="text">
+                              {{t _selectedUnitShown}}
+                            </div>
+                            <div class="menu">
+                              {{#each-in _turfUnits as |key value|}}
+                                <div class="item" data-value="{{key}}">{{t value}}</div>
+                              {{/each-in}}
+                            </div>
+                          {{/ui-dropdown}}
                           {{flexberry-field
                             value=_radius
                             label=label
-                            type=number
-                            class="mini input"
+                            type="number"
+                            class="small input"
                           }}
                         </div>
                       </div>

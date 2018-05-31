@@ -13,5 +13,15 @@ export default {
   'erase': 'Очистить',
   'buffer': 'Буфер',
   'goto': 'Перейти',
-  'units': 'Единицы'
+  'units': {
+    'units': 'Единицы',
+    'miles': 'Мили',
+    'nauticalmiles': 'Морские мили',
+    'inches': 'Дюймы',
+    'yards': 'Ярды',
+    'meters': 'Метры',
+    'kilometers': 'Километры',
+    'centimeters': 'Сантиметры',
+    'feet': 'Футы'
+  }
 };

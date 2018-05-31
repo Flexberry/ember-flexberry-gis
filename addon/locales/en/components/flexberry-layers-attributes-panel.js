@@ -13,5 +13,15 @@ export default {
   'erase': 'Erase',
   'buffer': 'Buffer',
   'goto': 'Go to',
-  'units': 'Units'
+  'units': {
+    'units': 'Units',
+    'miles': 'Miles',
+    'nauticalmiles': 'Nautical miles',
+    'inches': 'Inches',
+    'yards': 'Yards',
+    'meters': 'Meters',
+    'kilometers': 'Kilometers',
+    'centimeters': 'Centimeters',
+    'feet': 'Feet'
+  }
 };

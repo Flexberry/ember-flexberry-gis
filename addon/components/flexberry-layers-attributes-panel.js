@@ -18,16 +18,19 @@ import * as thelpers from 'npm:@turf/helpers';
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   _turfUnits: {
-    miles: 'miles',
-    nauticalmiles: 'nauticalmiles',
-    yards: 'yards',
-    meters: 'meters',
-    kilometers: 'kilometers',
-    centimeters: 'centimeters',
-    feet: 'feet'
+    miles: 'components.flexberry-layers-attributes-panel.units.miles',
+    nauticalmiles: 'components.flexberry-layers-attributes-panel.units.nauticalmiles',
+    inches: 'components.flexberry-layers-attributes-panel.units.inches',
+    yards: 'components.flexberry-layers-attributes-panel.units.yards',
+    meters: 'components.flexberry-layers-attributes-panel.units.meters',
+    kilometers: 'components.flexberry-layers-attributes-panel.units.kilometers',
+    centimeters: 'components.flexberry-layers-attributes-panel.units.centimeters',
+    feet: 'components.flexberry-layers-attributes-panel.units.feet'
   },
 
   _selectedUnit: undefined,
+
+  _selectedUnitShown: undefined,
 
   _radius: 500,
 
@@ -307,7 +310,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       this.set('settings', settings);
 
-      this.set('_selectedUnit', this.get('_turfUnits').meters);
+      this.set('_selectedUnitShown', this.get('_turfUnits').meters);
+      this.set('_selectedUnit', 'meters');
     }
   },
 
@@ -387,6 +391,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           return tabModel.featureLink[key].feature;
         });
       this.send('zoomTo', selectedFeatures);
+    },
+
+    onUnitSelected(item, key) {
+      this.set('_selectedUnit', key);
+      this.set('_selectedUnitShown', item);
     },
 
     drawBuffer(tabModel) {
