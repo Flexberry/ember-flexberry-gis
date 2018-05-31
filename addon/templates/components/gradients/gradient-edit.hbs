@@ -1,0 +1,24 @@
+<div>
+  <div class="ui horizontal list">
+    <div class="item">
+      <label>
+        {{t "gradients.gradient-edit.gradientColorStart"}}
+      </label>
+      {{flexberry-colorpicker
+        value=gradientColorStart
+        class=gradientStartPickerClass
+        change=(action "onGradientColorStartChange")
+      }}
+    </div>
+    <div class="item">
+      <label>
+        {{t "gradients.gradient-edit.gradientColorEnd"}}
+      </label>
+      {{flexberry-colorpicker
+        value=gradientColorEnd
+        class=gradientEndPickerClass
+        change=(action "onGradientColorEndChange")
+      }}
+    </div>
+  </div>
+</div>

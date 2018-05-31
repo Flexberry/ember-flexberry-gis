@@ -48,8 +48,8 @@
         <div class="ui bottom attached tab segment {{if (eq _activeTab "search-tab") "active"}}" data-tab="search-tab">
           {{layers-dialogs/tabs/search-settings
             value=_layer.settings.searchSettings
-            layerType=_layer.type
-            leafletObjectMethod=_leafletObjectForFilter
+            _layerType=_layer.type
+            _leafletObjectMethod=_layer.leafletObjectGetter
           }}
         </div>
       {{/if}}
@@ -67,7 +67,7 @@
             boundingBoxComponentMap=boundingBoxComponentMap
             filter=_layer.settings.filter
             geometryField=_layer.settings.geometryField
-            _leafletObjectMethod=_leafletObjectForFilter
+            _leafletObjectMethod=_layer.leafletObjectGetter
             _layerType=_layer.type
             featuresPropertiesSettings=_layer.settings.displaySettings.featuresPropertiesSettings
             _minLat=(unbound _layer.bboxCoords.minLat)
@@ -83,7 +83,7 @@
             styleSettings=_layer.settings.styleSettings
             displaySettings=_layer.settings.displaySettings
             layerType=_layer.type
-            getLeafletLayer=_leafletObjectForFilter
+            getLeafletLayer=_layer.leafletObjectGetter
             layerLoaderIsReady=(eq _activeTab "style-tab")
           }}
         </div>

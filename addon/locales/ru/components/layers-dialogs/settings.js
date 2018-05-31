@@ -46,6 +46,9 @@ export default {
   'tile': {
     'url-textbox': {
       'caption': 'Url'
+    },
+    'no-wrap-checkbox': {
+      'caption': 'Свойство слоя noWrap'
     }
   },
 
