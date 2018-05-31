@@ -1,8 +1,8 @@
 import Ember from 'ember';
-import layout from '../../../../templates/components/layers-dialogs/group/tab/prototyping-modes';
+import layout from '../../../templates/components/layers-dialogs/tabs/prototyping-modes';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
-import DynamicPropertiesMixin from '../../../../mixins/dynamic-properties';
+import DynamicPropertiesMixin from '../../../mixins/dynamic-properties';
 
 export default Ember.Component.extend(
   RequiredActionsMixin,

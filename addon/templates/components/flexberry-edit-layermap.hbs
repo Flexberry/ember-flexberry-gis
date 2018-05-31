@@ -18,7 +18,7 @@
   </div>
   {{#if _mainGroupIsAvailableForType}}
     <div class="ui group tab segment {{if (eq _tabularMenuState.activeGroup "main-group") "active"}}" data-tab="main-group">
-      {{layers-dialogs/group/main
+      {{layers-dialogs/tabs/main
         _mainSettingsAreAvailableForType=_mainSettingsAreAvailableForType
         _crsSettingsAreAvailableForType=_crsSettingsAreAvailableForType
         _layerSettingsAreAvailableForType=_layerSettingsAreAvailableForType
@@ -36,7 +36,7 @@
   {{/if}}
   {{#if _displayGroupIsAvailableForType}}
     <div class="ui group tab segment {{if (eq _tabularMenuState.activeGroup "display-group") "active"}}" data-tab="display-group">
-      {{layers-dialogs/group/display
+      {{layers-dialogs/tabs/display
         _layer=_layer
         _displaySettingsAreAvailableForType=_displaySettingsAreAvailableForType
         _identifySettingsAreAvailableForType=_identifySettingsAreAvailableForType
@@ -51,7 +51,7 @@
   {{/if}}
   {{#if _linksGroupIsAvailableForType}}
     <div class="ui group tab segment {{if (eq _tabularMenuState.activeGroup "links-group") "active"}}" data-tab="links-group">
-      {{layers-dialogs/group/links
+      {{layers-dialogs/tabs/links
         _linksSettingsAreAvailableForType=_linksSettingsAreAvailableForType
         links=links
         linksPropertyPath=linksPropertyPath

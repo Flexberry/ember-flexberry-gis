@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import layout from '../../../../templates/components/layers-dialogs/group/tab/identification-settings';
+import layout from '../../../templates/components/layers-dialogs/tabs/identification-settings';
 
 /**
   Component for identification settings tab in layer settings.

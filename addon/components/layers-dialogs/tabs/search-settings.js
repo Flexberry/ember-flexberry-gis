@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import layout from '../../../../templates/components/layers-dialogs/group/tab/search-settings';
+import layout from '../../../templates/components/layers-dialogs/tabs/search-settings';
 
 /**
   Component for identification settings tab in layer settings.

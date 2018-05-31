@@ -2,7 +2,7 @@ import Ember from 'ember';
 import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../../mixins/dynamic-properties';
-import layout from '../../../templates/components/layers-dialogs/group/links';
+import layout from '../../../templates/components/layers-dialogs/tabs/links';
 
 export default Ember.Component.extend(
   RequiredActionsMixin,
