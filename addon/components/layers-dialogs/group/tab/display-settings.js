@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import layout from '../../../templates/components/layers-dialogs/common/display-settings';
+import layout from '../../../../templates/components/layers-dialogs/group/tab/display-settings';
 
 /**
   Component for display settings tab in layer settings.
