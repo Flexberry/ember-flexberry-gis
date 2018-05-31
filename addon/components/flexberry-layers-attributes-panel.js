@@ -275,6 +275,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   availableGeometryAddModes: ['draw', 'manual', 'geoprovider'],
 
   /**
+    Collection L.Handler.MarkerSnap object.
+
+    @property leafletMarkerSnap
+    @type Object
+    @default {}
+  */
+  leafletMarkerSnap: {},
+
+  /**
     Initializes component.
   */
   init() {
@@ -352,6 +361,30 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(selectedRows, rowId, options.checked);
       Ember.set(tabModel, '_selectedRows', selectedRows);
       tabModel.notifyPropertyChange('_selectedRows');
+
+      // For snapping.
+      let editedRows = Ember.get(tabModel, '_editedRows');
+      let editedFeatures = Object.keys(editedRows).filter((item) => Ember.get(editedRows, item));
+      if (editedFeatures.length > 0 && !editedFeatures.includes(rowId)) {
+        let leafletMarkerSnapObject = this.get('leafletMarkerSnap');
+        Object.keys(leafletMarkerSnapObject).forEach((key) => {
+          let snap = Ember.get(leafletMarkerSnapObject, `${key}`);
+          if (options.checked) {
+            snap.addGuideLayer(Ember.get(tabModel, `featureLink.${rowId}`));
+          } else {
+            let leafletMarkerSnapArray = snap._guides;
+            let newLeafletMarkerSnapArray = [];
+            leafletMarkerSnapArray.forEach((layer) => {
+              let props = Ember.get(layer, 'feature.properties');
+              let propId = Ember.guidFor(props);
+              if (propId !== rowId) {
+                newLeafletMarkerSnapArray.push(layer);
+              }
+            });
+            Ember.set(leafletMarkerSnapObject, `${key}._guides`, newLeafletMarkerSnapArray);
+          }
+        });
+      }
     },
 
     /**
@@ -397,6 +430,26 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       tabModel.notifyPropertyChange('_selectedRows');
+
+      // For snapping.
+      let allSelectedRows = Ember.get(tabModel, '_selectedRows');
+      let editedRows = Ember.get(tabModel, '_editedRows');
+      let editedFeatures = Object.keys(editedRows).filter((item) => Ember.get(editedRows, item));
+      if (editedFeatures.length > 0) {
+        let leafletMarkerSnapObject = this.get('leafletMarkerSnap');
+        Object.keys(leafletMarkerSnapObject).forEach((key) => {
+          let snap = Ember.get(leafletMarkerSnapObject, `${key}`);
+          if (selectAll) {
+            Object.keys(allSelectedRows).forEach((selectedRow) => {
+              if (!editedFeatures.includes(selectedRow)) {
+                snap.addGuideLayer(Ember.get(tabModel, `featureLink.${selectedRow}`));
+              }
+            });
+          } else {
+            Ember.set(snap, `_guides`, []);
+          }
+        });
+      }
     },
 
     /**
@@ -565,10 +618,24 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         layer.enableEdit(leafletMap);
         leafletMap.on('editable:editing', this._triggerChanged, [tabModel, layer, true]);
 
-        this._snapping(tabModel, layer);
+        this._snapping(tabModel, rowId);
 
       } else {
         layer.disableEdit();
+
+        // For snapping.
+        this.get(`leafletMarkerSnap.${rowId}`)._guides = [];
+        let selectedRows = Ember.get(tabModel, '_selectedRows');
+        let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
+        let editedFeatures = Object.keys(editedRows).filter((item) => Ember.get(editedRows, item));
+        if (editedFeatures.length > 0 && selectedFeatures.includes(rowId)) {
+          let leafletMarkerSnapObject = this.get('leafletMarkerSnap');
+          Object.keys(leafletMarkerSnapObject).forEach((key) => {
+            let snap = Ember.get(leafletMarkerSnapObject, `${key}`);
+            snap.addGuideLayer(Ember.get(tabModel, `featureLink.${rowId}`));
+          });
+        }
+
         leafletMap.off('editable:editing', this._triggerChanged, [tabModel, layer, true]);
         let addedLayers = Ember.get(tabModel, '_addedLayers') || {};
         if (!Ember.isNone(addedLayers[Ember.guidFor(layer)])) {
@@ -783,26 +850,72 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     Snapping
 
      @param {Object} tabModel
-     @param {Object} marker Layer to adjust marker snapping
+     @param {Object} rowId Id layer to adjust marker snapping
   */
-  _snapping(tabModel, marker) {
-    let selectedRows = Object.assign(...Object.keys(Ember.get(tabModel, 'propertyLink')).map(k => ({
-      [k]: true
-    })));
-    let allLayers = Object.keys(selectedRows).map((key) => {
+  _snapping(tabModel, rowId) {
+    let marker = Ember.get(tabModel, `featureLink.${rowId}`);
+
+    // Find layers for snap.
+    let editedRows = Ember.get(tabModel, '_editedRows');
+    let editedFeatures = Object.keys(editedRows).filter((item) => Ember.get(editedRows, item));
+
+    let selectedRows = Ember.get(tabModel, '_selectedRows');
+    let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).map(k => {
+      if (!editedFeatures.includes(k)) {
+        return ({
+          [k]: true
+        });
+      }
+    }).filter((item) => !Ember.isNone(item));
+
+    let lauyersName = {};
+    if (selectedFeatures.length > 0) {
+      lauyersName = Object.assign(...selectedFeatures);
+    }
+
+    let allLayers = Object.keys(lauyersName).map((key) => {
       return tabModel.featureLink[key];
     });
 
+    // Change snap layers.
+    let leafletMarkerSnapObject = this.get('leafletMarkerSnap');
+    Object.keys(leafletMarkerSnapObject).forEach((key) => {
+      let leafletMarkerSnapArray = Ember.get(leafletMarkerSnapObject, `${key}`)._guides;
+      let newLeafletMarkerSnapArray = [];
+      leafletMarkerSnapArray.forEach((layer) => {
+        let props = Ember.get(layer, 'feature.properties');
+        let propId = Ember.guidFor(props);
+        if (propId !== rowId) {
+          newLeafletMarkerSnapArray.push(layer);
+        }
+      });
+      Ember.set(leafletMarkerSnapObject, `${key}._guides`, newLeafletMarkerSnapArray);
+    });
+
     let leafletMap = this.get('leafletMap');
+    let markerSnap = this.get(`leafletMarkerSnap.${rowId}`);
 
     if (marker._icon !== undefined) {
-      marker.snapediting = new L.Handler.MarkerSnap(leafletMap, marker);
+      if (Ember.isNone(markerSnap)) {
+        marker.snapediting = new L.Handler.MarkerSnap(leafletMap, marker);
+        this.set(`leafletMarkerSnap.${rowId}`, marker.snapediting);
+      } else {
+        marker.snapediting = markerSnap;
+      }
+
       allLayers.forEach((layer) => {
         marker.snapediting.addGuideLayer(layer);
       });
       marker.snapediting.enable();
     } else {
-      let snap = new L.Handler.MarkerSnap(leafletMap);
+      let snap;
+      if (Ember.isNone(markerSnap)) {
+        snap = new L.Handler.MarkerSnap(leafletMap);
+        this.set(`leafletMarkerSnap.${rowId}`, snap);
+      } else {
+        snap = markerSnap;
+      }
+
       allLayers.forEach((layer) => {
         snap.addGuideLayer(layer);
       });
