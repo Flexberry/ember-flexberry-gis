@@ -17,6 +17,13 @@ import * as thelpers from 'npm:@turf/helpers';
  */
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
+  /**
+    Measure units supported by turfjs
+
+    @property _turfUnits
+    @type Object
+    @private
+  */
   _turfUnits: {
     miles: 'components.flexberry-layers-attributes-panel.units.miles',
     nauticalmiles: 'components.flexberry-layers-attributes-panel.units.nauticalmiles',
@@ -28,12 +35,44 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     feet: 'components.flexberry-layers-attributes-panel.units.feet'
   },
 
+  /**
+    Selected mesure unit.
+
+    @property _selectedUnit
+    @type String
+    @default undefined
+    @private
+  */
   _selectedUnit: undefined,
 
+  /**
+    Selected mesure unit translation key.
+
+    @property _selectedUnitShown
+    @type String
+    @default undefined
+    @private
+  */
   _selectedUnitShown: undefined,
 
+  /**
+    Buffer radius.
+
+    @property _radius
+    @type Number
+    @default 500
+    @private
+  */
   _radius: 500,
 
+  /**
+    Layer with buffer.
+
+    @property _bufferLayer
+    @type <a href="http://leaflet.github.io/Leaflet.Editable/doc/api.html">L.Layer</a>
+    @default null
+    @private
+  */
   _bufferLayer: null,
   /**
     Leaflet.Editable drawing tools instance.
@@ -393,11 +432,24 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.send('zoomTo', selectedFeatures);
     },
 
+    /**
+      Handles units dropdown clicks.
+
+      @method actions.onUnitSelected
+      @param {String} item Clicked item locale key.
+      @param {String} key Clicked item value.
+    */
     onUnitSelected(item, key) {
       this.set('_selectedUnit', key);
       this.set('_selectedUnitShown', item);
     },
 
+    /**
+      Handles 'Draw buffer' button click.
+
+      @method actions.drawBuffer
+      @param {Object} tabModel Related tab.
+    */
     drawBuffer(tabModel) {
       let radius = this.get('_radius');
       let unit = this.get('_selectedUnit');
@@ -421,6 +473,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_bufferLayer', _bufferLayer);
     },
 
+    /**
+      Handles 'Delete buffer' button click.
+
+      @method actions.deleteBuffer
+    */
     deleteBuffer() {
       let _bufferLayer = this.get('_bufferLayer');
       _bufferLayer.clearLayers();
