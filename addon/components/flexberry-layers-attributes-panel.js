@@ -722,11 +722,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Number} moveY A hash containing move by Y.
     */
     onMoveDialogApprove(moveX, moveY) {
-      let tabModel = this.get('_moveTabModel');
+      let indexTabModel = this.get('selectedTabIndex');
+      let tabModel = this.get(`_tabModels.${indexTabModel}`);
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       let _moveX = parseFloat(this.get('_moveX')) || 0;
       let _moveY = parseFloat(this.get('_moveY')) || 0;
-      let selectedFeatures = Object.keys(selectedRows)
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
       .map((key) => {
         return tabModel.featureLink[key].feature;
       });
@@ -734,20 +735,22 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.send('onClearFoundItemClick');
       this.set('_moveWithError', false);
       selectedFeatures.forEach((feature) => {
-        this.move(feature.leafletLayer._latlngs, _moveX, _moveY, crs);
-        if (this.get('_moveWithError')) {
-          this.move(feature.leafletLayer._latlngs, -_moveX, -_moveY, crs);
+        let coords = feature.leafletLayer._latlngs;
+        if (Ember.isNone(coords)) {
+          coords = feature.leafletLayer._latlng;
         }
+
+        this.move(coords, _moveX, _moveY, crs);
+        if (this.get('_moveWithError')) {
+          this.move(coords, -_moveX, -_moveY, crs);
+        }
+        this._triggerChanged.call([tabModel, feature.leafletLayer, true], { layer: feature.leafletLayer });
+
       });
-      this.send('onFindItemClick', tabModel);
-    },
 
-    /**
-      Handles move dialog's 'deny' action.
-
-    */
-    onMoveDialogDeny() {
-      this.set('_moveTabModel', null);
+      if (selectedFeatures.length > 0) {
+        this.send('onFindItemClick', tabModel);
+      }
     }
   },
 
@@ -763,12 +766,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     if (Ember.isArray(latlngs)) {
       latlngs.forEach(ll => this.move(ll, x, y, crs));
     } else {
-      let point = crs.project(latlngs);
-      point.x += x;
-      point.y += y;
-      let ll = crs.unproject(point);
-      latlngs.lat = ll.lat;
-      latlngs.lng = ll.lng;
+
+      let pointO = crs.unproject(L.point(0, 0));
+      let pointOX = crs.unproject(L.point(x, 0));
+      let pointOY = crs.unproject(L.point(0, y));
+      latlngs.lat += (pointOY.lat - pointO.lat);
+      latlngs.lng += (pointOX.lng - pointO.lng);
+
       if (latlngs.lat > 90 || latlngs.lat < -90 || latlngs.lng > 180 || latlngs.lng < -180) {
         this.set('_moveWithError', true);
       }
@@ -780,9 +784,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     @param {Object} tabModel Related tab model.
   */
-  _showMoveDialog(tabModel) {
-    this.set('_moveTabModel', tabModel);
-
+  _showMoveDialog() {
     // Include dialog to markup.
     this.set('_moveDialogHasBeenRequested', true);
 

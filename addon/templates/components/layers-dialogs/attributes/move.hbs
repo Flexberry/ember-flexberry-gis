@@ -12,9 +12,12 @@
 }}
   <form class="ui form {{flexberryClassNames.form}}" role="form">
     <div class="field disabled">
-      {{flexberry-edit-crs
-        crsCaption=crsFieldLabel
-        coordinateReferenceSystem=layerCRS
+      <label>
+        {{crsFieldLabel}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=layerCRS
       }}
     </div>
     <div class="field">

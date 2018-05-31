@@ -214,9 +214,8 @@
     visible=_moveDialogIsVisible
     moveX=_moveX
     moveY=_moveY
-    layerCRS=(get _moveTabModel "leafletObject.options.crs")
+    layerCRS=(get _tabModels (concat selectedTabIndex ".leafletObject.options.crs.code"))
     approve=(action "onMoveDialogApprove")
-    deny=(action "onMoveDialogDeny")
   }}
 {{/if}}
 {{flexberry-error error=error}}
