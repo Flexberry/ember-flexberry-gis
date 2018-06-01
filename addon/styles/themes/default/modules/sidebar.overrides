@@ -564,7 +564,8 @@
         display: inline-block;
       }
 
-      .flexberry-geometry-add-mode-draw {
+      .flexberry-geometry-add-mode-draw, .flexberry-geometry-buffer,
+      .flexberry-geometry-tools {
         height: 35px;
         color: #7ba7d9;
         background: #fff;

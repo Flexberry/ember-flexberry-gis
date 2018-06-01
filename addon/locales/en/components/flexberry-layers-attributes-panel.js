@@ -21,8 +21,18 @@ export default {
     },
     'move-error': 'As you move, the latitude and/or longitude is out of range'
   },
+  'goto': 'Go to',
   'difference': 'Difference polygon',
   'choice-spliter': 'Select a polygon that will be subtracted',
   'split-geometry': 'Split geometry',
   'combined-polygon': 'Union polygon',
+  'buffer': {
+    'create': 'Create buffer',
+    'clear': 'Delete buffer',
+    'radius': 'Radius',
+    'units': {
+      'meters': 'Meters',
+      'kilometers': 'Kilometers'
+    }
+  }
 };

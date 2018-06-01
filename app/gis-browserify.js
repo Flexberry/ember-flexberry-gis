@@ -2,6 +2,8 @@
 // In order to use NPM pacakges inside the addon, we have to import
 // them from somewhere in /app directory.
 // See: https://github.com/ef4/ember-browserify#using-ember-browserify-in-addons
+import * as buffer from 'npm:@turf/buffer';
+import * as thelpers from 'npm:@turf/helpers';
 import * as difference from 'npm:@turf/difference';
 import * as booleanEqual from 'npm:@turf/boolean-equal';
 import * as lineSplit from 'npm:@turf/line-split';

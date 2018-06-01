@@ -94,7 +94,7 @@
                           complete=(action "onGeometryAddComplete" tabModel)
                         }}
                       {{/each}}
-                      <div class="flexberry-geometry-add-mode-draw">
+                      <div class="flexberry-geometry-tools">
                         <div class="ui simple dropdown item">
                           <i class="cut icon"></i>
                           <i class="dropdown icon"></i>
@@ -116,6 +116,39 @@
                               (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "onDifferenceClick" tabModel}}>
                               {{t "components.flexberry-layers-attributes-panel.difference"}}
                             </a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="ember-view flexberry-geometry-buffer">
+                        <div class="ui simple dropdown item">
+                          <i class="dot circle icon"></i>
+                          <i class="dropdown icon"></i>
+                          <div class="menu">
+                            <a class="item" readonly={{eq tabModel._selectedRowsCount 0}} onclick={{action "drawBuffer" tabModel}}>
+                              <i class="dot circle icon"></i>
+                              {{t "components.flexberry-layers-attributes-panel.buffer.create"}}
+                            </a>
+                            <a class="item" onclick={{action "deleteBuffer"}}>
+                              <i class="erase icon"></i>
+                              {{t "components.flexberry-layers-attributes-panel.buffer.clear"}}
+                            </a>
+                            {{flexberry-field
+                              value=_radius
+                              label=(t "components.flexberry-layers-attributes-panel.buffer.radius")
+                              type="number"
+                              class="small input"
+                            }}
+                            {{#ui-dropdown class="item compact selection" onChange=(action "onUnitSelected")}}
+                              <i class="dropdown icon"></i>
+                              <div class="text">
+                                {{t (get bufferUnits _selectedUnit)}}
+                              </div>
+                              <div class="menu">
+                                {{#each-in bufferUnits as |key value|}}
+                                  <div class="item" data-value="{{key}}">{{t value}}</div>
+                                {{/each-in}}
+                              </div>
+                            {{/ui-dropdown}}
                           </div>
                         </div>
                       </div>
