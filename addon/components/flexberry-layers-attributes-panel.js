@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
+import checkIntersect from '../utils/polygon-intersect-check';
 import * as difference from 'npm:@turf/difference';
 import * as booleanEqual from 'npm:@turf/boolean-equal';
 import * as lineSplit from 'npm:@turf/line-split';
@@ -447,6 +448,40 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     /**
+      Handles find intersecting polygons.
+
+      @method actions.onFindIntersectPolygons
+    */
+    onFindIntersectPolygons(tabModel) {
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let selectedFeaturesKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
+      let intersectPolygonFeatures = Ember.A();
+      let intersectPolygonFeaturesKeys = Ember.A();
+      selectedFeaturesKeys.forEach((item, index) => {
+        let currentFeature = tabModel.featureLink[item].feature;
+        let currentFeatureGeoJson = currentFeature.leafletLayer.toGeoJSON();
+        let currentFeatureGeometry = currentFeatureGeoJson.geometry;
+        let isIntersect = !Ember.isNone(currentFeatureGeometry) ? checkIntersect(currentFeatureGeometry) : false;
+
+        if (isIntersect) {
+          intersectPolygonFeaturesKeys.push(item);
+          intersectPolygonFeatures.push(currentFeature);
+        }
+      });
+
+      if (intersectPolygonFeatures.length !== 0) {
+        Ember.set(tabModel, '_selectedRows', {});
+        Ember.set(tabModel, 'selectAll', false);
+        let selectedInterctItemsRows = Ember.get(tabModel, '_selectedRows');
+        intersectPolygonFeaturesKeys.forEach((item, index) => {
+          Ember.set(selectedInterctItemsRows, item, true);
+        });
+        Ember.set(tabModel, '_selectedRows', selectedInterctItemsRows);
+        this.send('zoomTo', intersectPolygonFeatures);
+      }
+    },
+
+    /**
       Handles 'Select all' checkbox click.
 
       @method actions.onSelectAllClick
@@ -742,7 +777,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles a new geometry adding completion.
 
-      @param {Object} tabModel Related tab model.
+      @param {Object} polygons Related tab model.
       @param {Object} addedLayer Added layer.
     */
     onGeometryAddComplete(tabModel, addedLayer, options) {

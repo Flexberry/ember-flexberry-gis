@@ -80,7 +80,7 @@
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
                         click=(action "onDeleteItemClick" tabModel)
-                        iconClass="remove icon"
+                        iconClass="trash icon"
                         readonly=(eq tabModel._selectedRowsCount 0)
                       }}
                       {{!-- available geometry adding tools --}}
@@ -119,6 +119,12 @@
                           </div>
                         </div>
                       </div>
+                      {{flexberry-button
+                        tooltip=(t "components.flexberry-layers-attributes-panel.find-intersection")
+                        click=(action "onFindIntersectPolygons" tabModel)
+                        iconClass="close icon"
+                        readonly=(eq tabModel._selectedRowsCount 0)
+                      }}
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
                         click=(action "onSaveChangesClick" tabModel)

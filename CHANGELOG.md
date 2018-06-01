@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 * Add base component for graduated and unique layers-styles.
 * Add automatic set fill and stroke color from gradient range to symbols in graduated and unique layers-styles.
 * Geometry filters on `geojson` layers.
+* Check layer polygons on intersection
 
 ### Changed
 * Change chart's library from `highcharts` to `chart.js`.
