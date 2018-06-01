@@ -15,38 +15,19 @@ import Ember from 'ember';
 export default function checkIntersect(polygon) {
   let workingPolygon;
 
-  if (checkOnGeoJsonPolygon(polygon)) {
+  if (polygon.type === 'MultiPolygon' || polygon.type === 'Polygon') {
     workingPolygon = polygon;
   } else {
     workingPolygon = polygonConvert(polygon);
   }
 
-  let intersectPoints = Ember.A();
   let isIntersect = false;
   if (!Ember.isNone(workingPolygon)) {
-    intersectPoints = kinks(workingPolygon);
-    isIntersect = (intersectPoints.features.length !== 0) ? true : false;
-  } else {
-    isIntersect = false;
+    let intersectPoints = kinks(workingPolygon);
+    isIntersect = intersectPoints.features.length > 0;
   }
 
   return isIntersect;
-}
-
-/**
-  Check polygon on GeoJson type.
-
-  @method checkOnGeoJsonPolygon
-  @param {Polygon} polygon
-  @return Boolean checkResult
-*/
-function checkOnGeoJsonPolygon(polygon) {
-  let checkResult = false;
-  if ((polygon.type === 'MultiPolygon' || polygon.type === 'Polygon')) {
-    checkResult = true;
-  }
-
-  return checkResult;
 }
 
 /**
@@ -60,7 +41,7 @@ function polygonConvert(polygon) {
   let convertedPolygon;
   let currentPolygon = polygon;
   if (currentPolygon instanceof Array) {
-    currentPolygon = arrayToPolygon(currentPolygon);
+    currentPolygon = L.polygon(currentPolygon);
   }
 
   if (currentPolygon instanceof L.Polygon) {
@@ -68,18 +49,4 @@ function polygonConvert(polygon) {
   }
 
   return convertedPolygon;
-}
-
-/**
-  Convert latlngs array to L.polygon
-
-  @method arrayToPolygon
-  @param [] array
-  @return L.polygon convertedPolygon
-*/
-function arrayToPolygon(array) {
-  let latlngs = array;
-  let polygon = L.polygon(latlngs);
-
-  return polygon;
 }

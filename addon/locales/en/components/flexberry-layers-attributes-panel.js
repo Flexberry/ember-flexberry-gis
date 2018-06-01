@@ -11,4 +11,8 @@ export default {
   'save-changes': 'Save changes',
   'table-tab': 'Table',
   'diagram-tab': 'Chart',
+  'difference': 'Difference polygon',
+  'choice-spliter': 'Select a polygon that will be subtracted',
+  'split-geometry': 'Split geometry',
+  'combined-polygon': 'Union polygon',
 };

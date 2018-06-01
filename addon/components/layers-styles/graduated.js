@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import layout from '../../templates/components/layers-styles/graduated';
 import BaseCustomStyle from './categorized/base-categorized-layer-style';
+import { getGradientColors } from 'ember-flexberry-gis/utils/color-interpolation';
 
 /**
   Component containing GUI for 'graduated' layers-style
@@ -60,20 +61,42 @@ export default BaseCustomStyle.extend({
       categoriesCount = isNaN(categoriesCount) ? 1 : categoriesCount;
       categoriesCount = categoriesCount <= 0 ? 1 : categoriesCount;
       categoriesCount = categoriesCount > propertyValues.length ? propertyValues.length : categoriesCount;
-      let categories = [];
+      let categories = Ember.A();
       let categoriesLength = (propertyValues.length - propertyValues.length % categoriesCount) / categoriesCount;
       let layersStylesRenderer = this.get('_layersStylesRenderer');
+      let mainStyleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
+      let path = mainStyleSettings.style.path;
+
+      let fillGradientColors = Ember.A();
+      if (this.get('_fillGradientEnable')) {
+        fillGradientColors = getGradientColors(this.get('_fillGradientColorStart'), this.get('_fillGradientColorEnd'), categoriesCount);
+        path.fillGradientEnable = true;
+      } else {
+        path.fillGradientEnable = false;
+      }
+
+      let strokeGradientColors = Ember.A();
+      if (this.get('_strokeGradientEnable')) {
+        strokeGradientColors = getGradientColors(this.get('_strokeGradientColorStart'), this.get('_strokeGradientColorEnd'), categoriesCount);
+        path.strokeGradientEnable = true;
+      } else {
+        path.strokeGradientEnable = false;
+      }
 
       for (let i = 0; i < categoriesCount; i++) {
         let intervalStartIndex = i * categoriesLength;
         let intervalLastIndex = i === (categoriesCount - 1) ? propertyValues.length - 1 : (i + 1) * categoriesLength - 1;
+        let catStyleSettings = layersStylesRenderer.getDefaultStyleSettings('simple');
+        catStyleSettings.style.path.fillColor = (fillGradientColors[i] != null) ? fillGradientColors[i] : catStyleSettings.style.path.fillColor;
+        catStyleSettings.style.path.color = (strokeGradientColors[i] != null) ? strokeGradientColors[i] : catStyleSettings.style.path.color;
         categories.push({
           name: i,
           value: propertyValues[intervalStartIndex] + ' - ' + propertyValues[intervalLastIndex],
-          styleSettings: layersStylesRenderer.getDefaultStyleSettings('simple')
+          styleSettings: catStyleSettings
         });
       }
 
+      this.set('styleSettings.style.path', path);
       this.set('styleSettings.style.categories', categories);
       this.set('_selectedCategories', {});
       this.set('_selectedCategoriesCount', 0);

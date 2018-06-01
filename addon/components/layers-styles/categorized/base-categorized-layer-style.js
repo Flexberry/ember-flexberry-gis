@@ -95,6 +95,67 @@ export default Ember.Component.extend({
   _editingCell: null,
 
   /**
+    Flag indicates when stroke gradient enable.
+
+    @property _strokeGradientEnable
+    @type Boolean
+    @default false
+    @private
+  */
+  _strokeGradientEnable: false,
+
+  /**
+    Flag indicates when fill gradient enable.
+
+    @property _fillGradientEnable
+    @type Boolean
+    @default false
+    @private
+  */
+  _fillGradientEnable: false,
+
+  /**
+    First stroke color of automatic set color range. In HEX.
+
+    @property _strokeGradientColorStart
+    @type String
+    @default null
+    @private
+  */
+  _strokeGradientColorStart: null,
+
+  /**
+    Last stroke color of automatic set color range. In HEX.
+
+    @property _strokeGradientColorEnd
+    @type String
+    @default null
+    @private
+  */
+  _strokeGradientColorEnd: null,
+
+  /**
+    First fill color of automatic set color range. In HEX.
+
+    @property _fillGradientColorStart
+    @type String
+    @default null
+    @private
+  */
+  _fillGradientColorStart: null,
+
+  /**
+    Observers changes in categories.
+    Renderes symbols related to them.
+
+    @method _categoriesDidChange
+    @private
+  */
+  _categoriesDidChange: Ember.observer('styleSettings.style.categories.[]', function() {
+    Ember.run.scheduleOnce('afterRender', this, '_renderCategorySymbolsOnCanvases');
+  }),
+
+  /**
     Related leaflet layer.
 
     @property leafletLayer
@@ -139,79 +200,6 @@ export default Ember.Component.extend({
     @default null
   */
   layerType: null,
-
-  /**
-    Observers changes in categories.
-    Renderes symbols related to them.
-
-    @method _categoriesDidChange
-    @private
-  */
-  _categoriesDidChange: Ember.observer('styleSettings.style.categories.[]', function() {
-    Ember.run.scheduleOnce('afterRender', this, '_renderCategorySymbolsOnCanvases');
-  }),
-
-  /**
-    Renderes categories symbols on canvases related to them.
-
-    @method _renderCategorySymbolsOnCanvases
-    @param {Number} [categoryIndex] Index of category who's symbol must be rendered (if undefined then symbols for all categories will be rendered).
-    @private
-  */
-  _renderCategorySymbolsOnCanvases(categoryIndex) {
-    let layersStylesRenderer = this.get('_layersStylesRenderer');
-    let categories = this.get('styleSettings.style.categories');
-    if (!Ember.isArray(categories) || categories.length === 0) {
-      return;
-    }
-
-    if (categoryIndex >= 0 && categoryIndex < categories.length) {
-      // Render symbol for the specified category.
-      let canvas = this.$('canvas.category-symbol-preview[category=' + categoryIndex + ']')[0];
-      let category = categories[categoryIndex];
-      let categoryStyleSettings = Ember.get(category, 'styleSettings');
-
-      layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
-    } else {
-      // Render symbols for all categories.
-      this.$('canvas.category-symbol-preview').each(function() {
-        let canvas = this;
-        let $canvas = Ember.$(canvas);
-        let categoryIndex = Number($canvas.attr('category'));
-        let category = categories[categoryIndex];
-        let categoryStyleSettings = Ember.get(category, 'styleSettings');
-
-        layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
-      });
-    }
-  },
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-
-    this.set('_selectedCategories', {});
-  },
-
-  /**
-    Initializes component's DOM-related properties.
-  */
-  didInsertElement() {
-    this._super(...arguments);
-
-    this._categoriesDidChange();
-  },
-
-  /**
-    Deinitializes component.
-  */
-  willDestroy() {
-    this.set('_selectedCategories', null);
-
-    this._super(...arguments);
-  },
 
   actions: {
     /**
@@ -399,6 +387,99 @@ export default Ember.Component.extend({
         e.preventDefault();
         this.send('onEditingCellFocusOut', inputText, e);
       }
+    }
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+
+    this.set('_selectedCategories', {});
+    this._loadGradientSettings();
+  },
+
+  /**
+    Initializes component's DOM-related properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+
+    this._categoriesDidChange();
+  },
+
+  /**
+    Deinitializes component.
+  */
+  willDestroy() {
+    this.set('_selectedCategories', null);
+
+    this._super(...arguments);
+  },
+
+  /**
+    Check saved gradient settings in layer styleSettings and sets them
+    as current
+
+    @method _loadGradientSettings
+    @private
+  */
+  _loadGradientSettings() {
+    let existPathSettings = this.get('styleSettings').style.path;
+    let existCategories = this.get('styleSettings').style.categories;
+
+    if (existCategories.length !== 0) {
+      if (existPathSettings.fillGradientEnable) {
+        this.set('_fillGradientEnable', true);
+        let colorStart = existCategories[0].styleSettings.style.path.fillColor;
+        let colorEnd = existCategories[existCategories.length - 1].styleSettings.style.path.fillColor;
+        this.set('_fillGradientColorStart', colorStart);
+        this.set('_fillGradientColorEnd', colorEnd);
+      }
+
+      if (existPathSettings.strokeGradientEnable) {
+        this.set('_strokeGradientEnable', true);
+        let colorStart = existCategories[0].styleSettings.style.path.color;
+        let colorEnd = existCategories[existCategories.length - 1].styleSettings.style.path.color;
+        this.set('_strokeGradientColorStart', colorStart);
+        this.set('_strokeGradientColorEnd', colorEnd);
+      }
+    }
+  },
+
+  /**
+    Renderes categories symbols on canvases related to them.
+
+    @method _renderCategorySymbolsOnCanvases
+    @param {Number} [categoryIndex] Index of category who's symbol must be rendered (if undefined then symbols for all categories will be rendered).
+    @private
+  */
+  _renderCategorySymbolsOnCanvases(categoryIndex) {
+    let layersStylesRenderer = this.get('_layersStylesRenderer');
+    let categories = this.get('styleSettings.style.categories');
+    if (!Ember.isArray(categories) || categories.length === 0) {
+      return;
+    }
+
+    if (categoryIndex >= 0 && categoryIndex < categories.length) {
+      // Render symbol for the specified category.
+      let canvas = this.$('canvas.category-symbol-preview[category=' + categoryIndex + ']')[0];
+      let category = categories[categoryIndex];
+      let categoryStyleSettings = Ember.get(category, 'styleSettings');
+
+      layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
+    } else {
+      // Render symbols for all categories.
+      this.$('canvas.category-symbol-preview').each(function() {
+        let canvas = this;
+        let $canvas = Ember.$(canvas);
+        let categoryIndex = Number($canvas.attr('category'));
+        let category = categories[categoryIndex];
+        let categoryStyleSettings = Ember.get(category, 'styleSettings');
+
+        layersStylesRenderer.renderOnCanvas({ canvas, styleSettings: categoryStyleSettings, target: 'legend' });
+      });
     }
   }
 });

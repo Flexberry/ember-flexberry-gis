@@ -213,7 +213,7 @@ export default Ember.Component.extend(
     _availableModes: null,
 
     /**
-    Flag: indicates whether 'main-group' of settings is available for the selected layer type.
+      Flag: indicates whether 'main-group' of settings is available for the selected layer type.
 
       @property mainGroupIsAvailableForType
       @type Boolean
@@ -328,7 +328,7 @@ export default Ember.Component.extend(
     ),
 
     /**
-    Flag: indicates whether 'display' operation settings are available for the selected layer type.
+      Flag: indicates whether 'display' operation settings are available for the selected layer type.
 
       @property _displaySettingsAreAvailableForType
       @type Boolean
@@ -731,6 +731,7 @@ export default Ember.Component.extend(
 
     /**
       Component's action invoking to remove model from store.
+
       @method sendingActions.removeLayerLink
       @param {Object} model Ember Model to be removed.
       {{#crossLink "FlexberryLinksEditorComponent/sendingActions.remove:method"}}flexberry-links-editor 'remove' action{{/crossLink}}.
@@ -738,6 +739,7 @@ export default Ember.Component.extend(
 
     /**
       Component's action invoking to add model to store.
+
       @method sendingActions.addLayerLink
     */
   });

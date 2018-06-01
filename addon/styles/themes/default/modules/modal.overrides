@@ -467,6 +467,10 @@ form.flexberry-geometry-add-mode-geoprovider-form {
       margin-top: 0px;
       margin-bottom: 0px;
     }
+
+    .layers-dialogs-data-tabs {
+      height: 100%;
+    }
   }
 }
 
