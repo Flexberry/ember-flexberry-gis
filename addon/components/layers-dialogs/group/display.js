@@ -19,6 +19,15 @@ export default Ember.Component.extend(
   layout,
 
   /**
+    See [EmberJS API](https://emberjs.com/api/).
+
+    @property classNames
+    @type Array
+    @default ['layers-dialogs-data-tabs']
+  */
+  classNames: ['layers-dialogs-data-tabs'],
+
+  /**
     Currently active tab name.
 
     @property _activeTab

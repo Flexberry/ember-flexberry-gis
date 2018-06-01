@@ -54,7 +54,7 @@ export default Ember.Component.extend(
 
     /**
       Overload wrapper tag name for disabling wrapper.
-     */
+    */
     tagName: '',
 
     /**
@@ -125,7 +125,7 @@ export default Ember.Component.extend(
       @property index
       @type Number
       @default null
-     */
+    */
     index: null,
 
     /**
@@ -134,7 +134,7 @@ export default Ember.Component.extend(
       @property visibility
       @type Boolean
       @default null
-     */
+    */
     visibility: null,
 
     /**
@@ -143,7 +143,7 @@ export default Ember.Component.extend(
       @property opacity
       @type Number
       @default null
-     */
+    */
     opacity: null,
 
     /**
@@ -152,7 +152,7 @@ export default Ember.Component.extend(
       @property styleSettings
       @type Object
       @default null
-     */
+    */
     styleSettings: null,
 
     /**
@@ -199,8 +199,8 @@ export default Ember.Component.extend(
         if (Ember.isPresent(this.get('layerModel'))) {
           Ember.set(this.get('layerModel'), '_leafletObject', leafletLayer);
 
-          if (Ember.isNone(this.get('layerModel._leafletObjectForFilter'))) {
-            Ember.set(this.get('layerModel'), '_leafletObjectForFilter', this.getLeafletObjectForFilter.bind(this));
+          if (Ember.isNone(this.get('layerModel.leafletObjectGetter'))) {
+            Ember.set(this.get('layerModel'), 'leafletObjectGetter', this.getLeafletObject.bind(this));
           }
 
           // Save the reference to the instance method for getting attributes options.
@@ -492,7 +492,7 @@ export default Ember.Component.extend(
     },
 
     /**
-     Handles 'flexberry-map:query' event of leaflet map.
+      Handles 'flexberry-map:query' event of leaflet map.
 
      @method query
      @param {Object} e Event object.
@@ -581,13 +581,13 @@ export default Ember.Component.extend(
     },
 
     /**
-      Returns leaflet layer for filter component.
+      Returns leaflet layer.
 
-      @method getLeafletObjectForFilter
+      @method getLeafletObject
       @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
       Leaflet layer or promise returning such layer.
     */
-    getLeafletObjectForFilter() {
+    getLeafletObject() {
       return new Ember.RSVP.Promise((resolve, reject) => {
         resolve(this.get('_leafletObject'));
       });
@@ -768,6 +768,7 @@ export default Ember.Component.extend(
 
   /**
     Component's action invoking on layer creation.
+
     @method sendingActions.layerInit
     @param {Object} eventObject Action param
     @param {Object} eventObject.leafletObject Created (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]
@@ -776,6 +777,7 @@ export default Ember.Component.extend(
 
    /**
     Component's action invoking before the layer destroying.
+
     @method sendingActions.layerDestroy
     @param {Object} eventObject Action param
     @param {Object} eventObject.leafletObject Destroying (leaflet layer)[http://leafletjs.com/reference-1.2.0.html#layer]

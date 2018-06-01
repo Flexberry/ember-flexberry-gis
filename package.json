@@ -1,6 +1,6 @@
 {
   "name": "ember-flexberry-gis",
-  "version": "0.5.0-beta.13",
+  "version": "0.6.0-beta.2",
   "description": "Ember Flexberry GIS Addon",
   "license": "MIT",
   "author": {
@@ -26,6 +26,20 @@
   },
   "devDependencies": {
     "@turf/buffer": "^5.1.5",
+    "@turf/boolean-equal": "^5.1.5",
+    "@turf/difference": "^5.1.5",
+    "@turf/boolean-within": "^5.1.5",
+    "@turf/kinks": "^5.1.5",
+    "@turf/line-intersect": "^5.1.5",
+    "@turf/line-slice": "^5.1.5",
+    "@turf/line-split": "^5.1.5",
+    "@turf/line-to-polygon": "^5.1.5",
+    "@turf/midpoint": "^5.1.5",
+    "@turf/polygon-to-line": "^5.1.5",
+    "@turf/union": "^5.1.5",
+    "@turf/distance": "^5.1.5",
+    "@turf/helpers": "^5.1.5",
+    "@turf/invariant": "^5.1.5",
     "broccoli-asset-rev": "^2.4.2",
     "broccoli-jscs": "1.2.2",
     "dexie": "^1.4.2",
@@ -59,11 +73,10 @@
     "moment": "2.11.2",
     "moment-timezone": "0.5.0",
     "node-uuid": "^1.4.7",
-    "semantic-ui-ember": "git://github.com/Flexberry/Semantic-UI-Ember.git#version-0.9.3",
+    "semantic-ui-ember": "git+https://github.com/Flexberry/Semantic-UI-Ember.git#version-0.9.3",
     "ui-ember-slider": "0.5.0"
   },
   "dependencies": {
-    "@turf/helpers": "^6.1.4",
     "ember-cli-babel": "^5.1.6",
     "ember-cli-htmlbars": "^1.0.3",
     "ember-flexberry": "0.9.2-beta.4",

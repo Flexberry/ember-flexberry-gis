@@ -49,7 +49,25 @@ let FlexberryCopyLayerDialogComponent = FlexberryEditLayerDialogComponent.extend
     @type String
     @default t('components.layers-dialogs.copy.caption')
   */
-  caption: t('components.layers-dialogs.copy.caption')
+  caption: t('components.layers-dialogs.copy.caption'),
+
+  /**
+    Dialog's 'approve' button caption.
+
+    @property approveButtonCaption
+    @type String
+    @default t('components.layers-dialogs.copy.approve-button.caption')
+  */
+  approveButtonCaption: t('components.layers-dialogs.copy.approve-button.caption'),
+
+  /**
+    Dialog's 'deny' button caption.
+
+    @property denyButtonCaption
+    @type String
+    @default t('components.layers-dialogs.copy.deny-button.caption')
+  */
+  denyButtonCaption: t('components.layers-dialogs.copy.deny-button.caption')
 });
 
 // Add component's CSS-class names as component's class static constants

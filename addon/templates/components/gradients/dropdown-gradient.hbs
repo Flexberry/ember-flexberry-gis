@@ -1,0 +1,20 @@
+<div class="two wide column">
+    {{#ui-dropdown class="search selection" onChange=(action "onChangeGradient")}}
+      <i class="dropdown icon"></i>
+        <div class="default text">
+          {{t "gradients.dropdown-gradient.default-text"}}
+        </div>
+        <div class="menu">
+          {{#each gradientList as |gradient|}}
+            <div class="item" data-value="{{gradient.name}}">
+              <canvas class = "flag {{gradient.name}}"></canvas>
+            </div>
+          {{/each}}
+          {{#if _customGradient}}
+            <div class="item" data-value="{{_customGradient.name}}">
+              <canvas class = "flag {{_customGradient.name}}"></canvas>
+            </div>
+          {{/if}}
+        </div>
+    {{/ui-dropdown}}
+  </div>

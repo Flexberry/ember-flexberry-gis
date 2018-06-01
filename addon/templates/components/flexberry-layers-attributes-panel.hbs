@@ -66,6 +66,16 @@
                     class=(if (eq tabModel.properties.length 0) "disabled")
                   }}
                   <div class="buttons">
+                    {{flexberry-button
+                      tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
+                      click=(action "onFindItemClick" tabModel)
+                      iconClass="marker icon"
+                      readonly=(eq tabModel._selectedRowsCount 0) }}
+                    {{flexberry-button
+                      tooltip=(t "components.flexberry-layers-attributes-panel.clear-found")
+                      click=(action "onClearFoundItemClick")
+                      iconClass="erase icon"
+                    }}
                     <div class="ember-view flexberry-geometry-add-mode-draw">
                       <div class="ui simple dropdown item">
                         <i class="dot circle icon"></i>
@@ -99,27 +109,11 @@
                         </div>
                       </div>
                     </div>
-                    <div class="ember-view flexberry-geometry-add-mode-draw">
-                      <div class="ui simple dropdown item">
-                        <i class="marker icon"></i>
-                        <i class="dropdown icon"></i>
-                        <div class="menu">
-                          <a class="item" readonly={{eq tabModel._selectedRowsCount 0}} onclick={{action "onFindItemClick" tabModel}}>
-                            <i class="marker icon"></i>
-                            {{t "components.flexberry-layers-attributes-panel.goto"}}
-                          </a>
-                          <a class="item" onclick={{action "onClearFoundItemClick"}}>
-                            <i class="erase icon"></i>
-                            {{t "components.flexberry-layers-attributes-panel.erase"}}
-                          </a>
-                        </div>
-                      </div>
-                    </div>
                     {{#if tabModel.allowEdit}}
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
                         click=(action "onDeleteItemClick" tabModel)
-                        iconClass="remove icon"
+                        iconClass="trash icon"
                         readonly=(eq tabModel._selectedRowsCount 0)
                       }}
                       {{!-- available geometry adding tools --}}
@@ -133,12 +127,48 @@
                           complete=(action "onGeometryAddComplete" tabModel)
                         }}
                       {{/each}}
+                      <div class="flexberry-geometry-add-mode-draw">
+                        <div class="ui simple dropdown item">
+                          <i class="cut icon"></i>
+                          <i class="dropdown icon"></i>
+                          <div class="menu">
+                            <a class="item {{if (and
+                              (eq tabModel._typeSelectedRows.polygon 0)
+                              (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "doCombinedPolygon" tabModel}}>
+                              {{t "components.flexberry-layers-attributes-panel.combined-polygon"}}
+                            </a>
+                            <a class="item {{if (and
+                              (eq tabModel._typeSelectedRows.polygon 0)
+                              (eq tabModel._typeSelectedRows.line 0)
+                              (eq tabModel._typeSelectedRows.multiLine 0)
+                              (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "onSplitGeometry" tabModel}}>
+                              {{t "components.flexberry-layers-attributes-panel.split-geometry"}}
+                            </a>
+                            <a class="item {{if (and
+                              (eq tabModel._typeSelectedRows.polygon 0)
+                              (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "onDifferenceClick" tabModel}}>
+                              {{t "components.flexberry-layers-attributes-panel.difference"}}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                      {{flexberry-button
+                        tooltip=(t "components.flexberry-layers-attributes-panel.find-intersection")
+                        click=(action "onFindIntersectPolygons" tabModel)
+                        iconClass="close icon"
+                        readonly=(eq tabModel._selectedRowsCount 0)
+                      }}
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
                         click=(action "onSaveChangesClick" tabModel)
                         iconClass="save icon"
                         readonly=(not (get tabModel "leafletObject._wasChanged"))
                       }}
+                      {{#if (not (is-none _dataForDifference))}}
+                        <label>
+                          {{t "components.flexberry-layers-attributes-panel.choice-spliter"}}
+                        </label>
+                      {{/if}}
                     {{/if}}
                   </div>
                 </div>
@@ -217,12 +247,15 @@
     class=flexberryClassNames.addDialog
     visible=_newRowDialogIsVisible
     data=_newRowData
+    choiceValueData=_newRowСhoiceValueData
+    choiceValueMode=_newRowСhoiceValueMode
     fieldNames=(get _newRowTabModel "header")
     fieldTypes=(get _newRowTabModel "leafletObject.readFormat.featureType.fieldTypes")
     fieldParsers=(get _newRowTabModel "leafletObject.readFormat.featureType.fields")
     fieldValidators=(get _newRowTabModel "leafletObject.readFormat.featureType.fieldValidators")
     approve=(action "onNewRowDialogApprove")
     deny=(action "onNewRowDialogDeny")
+    hide=(action "onNewRowDialogHide")
   }}
 {{/if}}
 {{flexberry-error error=error}}

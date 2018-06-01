@@ -5,8 +5,23 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
+import checkIntersect from '../utils/polygon-intersect-check';
 import * as buffer from 'npm:@turf/buffer';
 import * as thelpers from 'npm:@turf/helpers';
+import * as difference from 'npm:@turf/difference';
+import * as booleanEqual from 'npm:@turf/boolean-equal';
+import * as lineSplit from 'npm:@turf/line-split';
+import * as polygonToLine from 'npm:@turf/polygon-to-line';
+import * as lineToPolygon from 'npm:@turf/line-to-polygon';
+import * as booleanWithin from 'npm:@turf/boolean-within';
+import * as kinks from 'npm:@turf/kinks';
+import * as helper from 'npm:@turf/helpers';
+import * as lineIntersect from 'npm:@turf/line-intersect';
+import * as lineSlice from 'npm:@turf/line-slice';
+import * as invariant from 'npm:@turf/invariant';
+import * as distance from 'npm:@turf/distance';
+import * as midpoint from 'npm:@turf/midpoint';
+import * as union from 'npm:@turf/union';
 
 /**
   The component for editing layers attributes.
@@ -143,6 +158,40 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
           }),
 
+          _typeSelectedRows: Ember.computed('_selectedRows', function() {
+            let typeElements = {
+              point: 0,
+              line: 0,
+              polygon: 0,
+              multiLine: 0,
+              multiPolygon: 0
+            };
+            let selectedRows = Ember.get(this, '_selectedRows');
+            Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+            .map((key) => {
+              let feature = this.get('featureLink')[key].feature;
+              let layer = feature.leafletLayer.toGeoJSON();
+              switch (layer.geometry.type) {
+                case 'Point':
+                  typeElements.point++;
+                  break;
+                case 'LineString':
+                  typeElements.line++;
+                  break;
+                case 'MultiLineString':
+                  typeElements.multiLine++;
+                  break;
+                case 'Polygon':
+                  typeElements.polygon++;
+                  break;
+                case 'MultiPolygon':
+                  typeElements.multiPolygon++;
+                  break;
+              }
+            });
+            return typeElements;
+          }),
+
           _selectedRowsProperties: Ember.computed('_selectedRows', 'featureLink', function () {
             let selectedRows = Ember.get(this, '_selectedRows');
             let featureLink = Ember.get(this, 'featureLink');
@@ -276,6 +325,16 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _editRowDataCopy: null,
 
   /**
+    Data for 'onDifferenceClick'.
+
+    @property _dataForDifference
+    @type Array
+    @default null
+    @private
+  */
+  _dataForDifference: null,
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -333,6 +392,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default ['draw', 'manual', 'geoprovider']
   */
   availableGeometryAddModes: ['draw', 'manual', 'geoprovider'],
+
+  /**
+    Flag indicates that union operation success.
+
+    @property createCombinedPolygon
+    @type Boolean
+    @default false
+  */
+  createCombinedPolygon: false,
 
   /**
     Initializes component.
@@ -491,6 +559,40 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     onClearFoundItemClick() {
       let serviceLayer = this.get('serviceLayer');
       serviceLayer.clearLayers();
+    },
+
+    /**
+      Handles find intersecting polygons.
+
+      @method actions.onFindIntersectPolygons
+    */
+    onFindIntersectPolygons(tabModel) {
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let selectedFeaturesKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
+      let intersectPolygonFeatures = Ember.A();
+      let intersectPolygonFeaturesKeys = Ember.A();
+      selectedFeaturesKeys.forEach((item, index) => {
+        let currentFeature = tabModel.featureLink[item].feature;
+        let currentFeatureGeoJson = currentFeature.leafletLayer.toGeoJSON();
+        let currentFeatureGeometry = currentFeatureGeoJson.geometry;
+        let isIntersect = !Ember.isNone(currentFeatureGeometry) ? checkIntersect(currentFeatureGeometry) : false;
+
+        if (isIntersect) {
+          intersectPolygonFeaturesKeys.push(item);
+          intersectPolygonFeatures.push(currentFeature);
+        }
+      });
+
+      if (intersectPolygonFeatures.length !== 0) {
+        Ember.set(tabModel, '_selectedRows', {});
+        Ember.set(tabModel, 'selectAll', false);
+        let selectedInterctItemsRows = Ember.get(tabModel, '_selectedRows');
+        intersectPolygonFeaturesKeys.forEach((item, index) => {
+          Ember.set(selectedInterctItemsRows, item, true);
+        });
+        Ember.set(tabModel, '_selectedRows', selectedInterctItemsRows);
+        this.send('zoomTo', intersectPolygonFeatures);
+      }
     },
 
     /**
@@ -723,6 +825,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let tabModel = this.get('_newRowTabModel');
       let layer = this.get('_newRowLayer');
 
+      if (this.get('createCombinedPolygon')) {
+        this.send('onDeleteItemClick', tabModel);
+        this.set('createCombinedPolygon', false);
+        this.set('_newRowСhoiceValueMode', false);
+        this.set('_newRowСhoiceValueData', null);
+      }
+
       Ember.set(layer, 'feature', { type: 'Feature' });
       Ember.set(layer.feature, 'properties', data);
       Ember.set(layer.feature, 'leafletLayer', layer);
@@ -754,6 +863,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Handles new row attributes dialog's 'deny' action.
     */
     onNewRowDialogDeny() {
+      if (this.get('createCombinedPolygon')) {
+        this.set('createCombinedPolygon', false);
+        this.set('_newRowСhoiceValueMode', false);
+        this.set('_newRowСhoiceValueData', null);
+      }
+
       let layer = this.get('_newRowLayer');
       this.get('leafletMap').removeLayer(layer);
 
@@ -763,9 +878,20 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     /**
+      Handles new row attributes dialog's 'hide' action.
+    */
+    onNewRowDialogHide() {
+      if (this.get('createCombinedPolygon')) {
+        this.set('createCombinedPolygon', false);
+        this.set('_newRowСhoiceValueMode', false);
+        this.set('_newRowСhoiceValueData', null);
+      }
+    },
+
+    /**
       Handles a new geometry adding completion.
 
-      @param {Object} tabModel Related tab model.
+      @param {Object} polygons Related tab model.
       @param {Object} addedLayer Added layer.
     */
     onGeometryAddComplete(tabModel, addedLayer, options) {
@@ -774,7 +900,372 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       this._showNewRowDialog(tabModel, addedLayer);
+    },
+
+    /**
+      Handles click on 'Difference polygon' button.
+
+      @param {Object} tabModel Related tab model.
+    */
+    onDifferenceClick(tabModel) {
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+      .map((key) => {
+        let feature = tabModel.featureLink[key].feature;
+        let layer = feature.leafletLayer.toGeoJSON();
+        if ((layer.geometry.type === 'Polygon') || (layer.geometry.type === 'MultiPolygon')) {
+          return layer;
+        }
+
+        delete selectedRows[key];
+      }).filter((item) => !Ember.isNone(item));
+
+      if (selectedFeatures.length < 1) {
+        return;
+      }
+
+      if (Ember.isNone(this.get('_dataForDifference'))) {
+        this.set('_dataForDifference', selectedRows);
+        Ember.set(tabModel, '_selectedRows', {});
+
+        // Create function for observer.
+        let _this = this;
+        tabModel._typeSelectedRowsObserverForDifference = function() {
+          let typeSelectedRows = this.get('_typeSelectedRows');
+          if (typeSelectedRows.polygon > 0 || typeSelectedRows.multiPolygon > 0) {
+            _this.send('onDifferenceClick', tabModel);
+          }
+        };
+
+        Ember.addObserver(tabModel, '_typeSelectedRows', null, tabModel._typeSelectedRowsObserverForDifference);
+      } else {
+        // Remove observer and function.
+        Ember.removeObserver(tabModel, '_typeSelectedRows', null, tabModel._typeSelectedRowsObserverForDifference);
+        tabModel._typeSelectedRowsObserverForDifference = undefined;
+
+        // Find intersecting polygons with splitter.
+        let dataForDifference = this.get('_dataForDifference');
+        let intersectingPolygon = Object.keys(dataForDifference).filter((item) => Ember.get(dataForDifference, item))
+        .map((key) => {
+          let feature = tabModel.featureLink[key].feature;
+          let layer = feature.leafletLayer.toGeoJSON();
+          if (!booleanEqual.default(layer, selectedFeatures[0]) && lineIntersect.default(layer, selectedFeatures[0]).features.length > 0) {
+            return layer;
+          }
+
+          delete dataForDifference[key];
+        }).filter((item) => !Ember.isNone(item));
+
+        intersectingPolygon.forEach((polygon) => {
+          let differenceResult = difference.default(polygon, selectedFeatures[0]);
+
+          if (polygon.geometry.type !== differenceResult.geometry.type) {
+            invariant.default.getCoords(differenceResult).forEach((polygonCoords) => {
+              let lefletLayer = L.geoJSON(helper.default.polygon(polygonCoords)).getLayers();
+              this.set('_newRowTabModel', tabModel);
+              this.set('_newRowLayer', lefletLayer[0]);
+              this.send('onNewRowDialogApprove', Object.assign({}, polygon.properties));
+            });
+          } else {
+            let lefletLayer = L.geoJSON(differenceResult).getLayers();
+            this.set('_newRowTabModel', tabModel);
+            this.set('_newRowLayer', lefletLayer[0]);
+            this.send('onNewRowDialogApprove', Object.assign({}, polygon.properties));
+          }
+        });
+
+        Ember.set(tabModel, '_selectedRows', dataForDifference);
+        this.send('onDeleteItemClick', tabModel);
+
+        this.set('_dataForDifference', null);
+        this.send('onRowSelect', tabModel, Object.keys(selectedRows)[0], { checked:false });
+      }
+    },
+
+    /**
+      Handles click on 'Split geometry' button.
+
+      @param {Object} tabModel Related tab model.
+    */
+    onSplitGeometry(tabModel) {
+      let editTools = this._getEditTools();
+      editTools.on('editable:drawing:end', this._disableDrawSplitGeometry, [tabModel, this]);
+      editTools.startPolyline();
+    },
+
+    /**
+      Handles click on 'Union polygon' button.
+
+      @method actions.doCombinedPolygon
+      @param {Object} tabModel Related tab.
+    */
+    doCombinedPolygon(tabModel) {
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+        .map((key) => {
+          let feature = tabModel.featureLink[key].feature;
+          let layer = feature.leafletLayer.toGeoJSON();
+          if ((layer.geometry.type === 'Polygon') || (layer.geometry.type === 'MultiPolygon')) {
+            return layer;
+          }
+
+          delete selectedRows[key];
+        }).filter((item) => !Ember.isNone(item));
+
+      if (selectedFeatures.length > 1) {
+        let combinedPolygon = union.default(...selectedFeatures);
+        let lefletLayers = L.geoJSON(combinedPolygon);
+        let polygonLayers = lefletLayers.getLayers();
+
+        let layerProperties = [];
+        selectedFeatures.forEach((layer) => {
+          layerProperties.push(Object.assign({}, layer.properties));
+        });
+
+        this.set('createCombinedPolygon', true);
+        this.set('_newRowСhoiceValueMode', true);
+        this.set('_newRowСhoiceValueData', layerProperties);
+        this.send('onGeometryAddComplete', tabModel, polygonLayers[0]);
+      }
     }
+  },
+
+  /**
+    Disables tool and split geometry.
+
+    @param {Object} e Event object.
+  */
+  _disableDrawSplitGeometry(e) {
+    let [tabModel, _this] = this;
+
+    let selectedRows = Ember.get(tabModel, '_selectedRows');
+    let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+    .map((key) => {
+      let feature = tabModel.featureLink[key].feature;
+      let layer = feature.leafletLayer.toGeoJSON();
+      if ((layer.geometry.type !== 'LineString') && (layer.geometry.type !== 'MultiLineString') &&
+          (layer.geometry.type !== 'Polygon') && (layer.geometry.type !== 'MultiPolygon')) {
+        delete selectedRows[key];
+        return;
+      }
+
+      return layer;
+    }).filter((item) => !Ember.isNone(item));
+
+    let editTools = _this.get('_editTools');
+    editTools.off('editable:drawing:end', _this._disableDrawSplitGeometry, _this);
+    editTools.stopDrawing();
+
+    // Delete split line from layer.
+    let editLayer = _this.get('_editTools.editLayer');
+    if (!Ember.isNone(editLayer)) {
+      editLayer.clearLayers();
+    }
+
+    let featuresLayer = _this.get('_editTools.featuresLayer');
+    if (!Ember.isNone(featuresLayer)) {
+      featuresLayer.clearLayers();
+    }
+
+    let splitLine = e.layer.toGeoJSON();
+    let kinksPoint = kinks.default(splitLine);
+    if (kinksPoint.features.length !== 0) {
+      _this.set('error', new Error('Splitting line has self-intersections'));
+      return;
+    }
+
+    let newLayerCreate = false;
+    selectedFeatures.forEach((layer) => {
+      let split = helper.default.featureCollection([]);
+      switch (layer.geometry.type) {
+        case 'LineString':
+          split = lineSplit.default(layer, splitLine);
+          break;
+        case 'MultiLineString': //TODO Need TEST!!!!!
+          let arrayLineString = layer.geometry.coordinates;
+          let resultLineString = [];
+          arrayLineString.forEach((line) => {
+            let lineSplitResult = lineSplit.default(helper.default.lineString(line), splitLine);
+            resultLineString = resultLineString.concat(lineSplitResult.features);
+          });
+
+          split = helper.default.featureCollection(resultLineString);
+          break;
+        case 'Polygon':
+          let resultSplit = _this._polygonSplit(layer, splitLine);
+          if (resultSplit.length > 1) {
+            split = helper.default.featureCollection(resultSplit);
+          }
+
+          break;
+        case 'MultiPolygon':
+          let arrayPolygons = layer.geometry.coordinates;
+          let resultPolygonSplit = [];
+          arrayPolygons.forEach((polygon) => {
+            resultPolygonSplit = resultPolygonSplit.concat(_this._polygonSplit(helper.default.polygon(polygon), splitLine));
+          });
+
+          if (arrayPolygons.length < resultPolygonSplit.length) {
+            split = helper.default.featureCollection(resultPolygonSplit);
+          }
+
+          break;
+      }
+
+      if (split.features.length === 0) {
+        let selectedRows = Ember.get(tabModel, '_selectedRows');
+        let key = Ember.guidFor(layer.properties);
+        delete selectedRows[key];
+      }
+
+      split.features.forEach((splitResult) => {
+        let lefletLayer = L.geoJSON(splitResult).getLayers();
+        _this.set('_newRowTabModel', tabModel);
+        _this.set('_newRowLayer', lefletLayer[0]);
+        newLayerCreate = true;
+        _this.send('onNewRowDialogApprove', Object.assign({}, layer.properties));
+      });
+    });
+
+    if (newLayerCreate) {
+      _this.send('onDeleteItemClick', tabModel);
+    }
+  },
+
+  /**
+    Split splitter and split polygon each part splitter.
+
+    @param {Object} layer polygon.
+    @param {Object} laysplitLineer splitter.
+  */
+  _polygonSplit(layer, splitLine) {
+    let arraySplitLine = [];
+    let i = 0;
+    let waitEndPoint = false;
+    let startPoint;
+
+    // We divide line of the user.
+    // If used lineSplit, resulting lines will not cross the polygon line, so we use while.
+    while (i !== splitLine.geometry.coordinates.length) {
+      let point = helper.default.point(splitLine.geometry.coordinates[i]);
+      if (!booleanWithin.default(point, layer) && !waitEndPoint) {
+        if (!Ember.isNone(startPoint) && lineIntersect.default(layer, lineSlice.default(startPoint, point, splitLine)).features.length > 0) {
+          let resultlineIntersect = lineIntersect.default(layer, lineSlice.default(startPoint, point, splitLine));
+          if (resultlineIntersect.features.length === 2) {
+            arraySplitLine.push(lineSlice.default(startPoint, point, splitLine));
+          } else {
+            for (let j = 1; j < resultlineIntersect.features.length - 1; j = j + 2) {
+              let intersectPointStart = resultlineIntersect.features[j];
+              let intersectPointEnd = resultlineIntersect.features[j + 1];
+              let intersectMidPoint = midpoint.default(intersectPointStart, intersectPointEnd);
+              arraySplitLine.push(lineSlice.default(startPoint, intersectMidPoint, splitLine));
+              startPoint = intersectMidPoint;
+            }
+
+            arraySplitLine.push(lineSlice.default(startPoint, point, splitLine));
+          }
+        }
+
+        startPoint = point;
+      } else if (booleanWithin.default(point, layer)) {
+        waitEndPoint = true;
+      } else if (waitEndPoint) {
+        let resultlineIntersect = lineIntersect.default(layer, lineSlice.default(startPoint, point, splitLine));
+        if (resultlineIntersect.features.length > 2) {
+          for (let j = 1; j < resultlineIntersect.features.length - 1; j = j + 2) {
+            let intersectPointStart = resultlineIntersect.features[j];
+            let intersectPointEnd = resultlineIntersect.features[j + 1];
+            let intersectMidPoint = midpoint.default(intersectPointStart, intersectPointEnd);
+            arraySplitLine.push(lineSlice.default(startPoint, intersectMidPoint, splitLine));
+            startPoint = intersectMidPoint;
+          }
+        }
+
+        arraySplitLine.push(lineSlice.default(startPoint, point, splitLine));
+        startPoint = point;
+        waitEndPoint = false;
+      }
+
+      i++;
+    }
+
+    let arrayPolygon = [layer];
+    arraySplitLine.forEach((line) => {
+      let intersectingPolygon = arrayPolygon.filter((item) => lineIntersect.default(item, line).features.length > 1);
+      intersectingPolygon.forEach((polygon) => {
+        let arraySplitPolygon = this._lineSplitPolygon(polygon, line);
+        let position = arrayPolygon.indexOf(polygon);
+        arrayPolygon.splice(position, 1);
+        arrayPolygon = arrayPolygon.concat(arraySplitPolygon);
+      });
+    });
+
+    return arrayPolygon;
+  },
+
+  /**
+    Split polygon.
+
+    @param {Object} polygon polygon to split.
+    @param {Object} line splitter.
+  */
+  _lineSplitPolygon(polygon, line) {
+    let lineFromPolygon = polygonToLine.default(polygon);
+    let startPolygonPoint = helper.default.point(lineFromPolygon.geometry.coordinates[0]);
+    let splitByPoint = booleanWithin.default(startPolygonPoint, line);
+    let arraySplitLine = lineSplit.default(lineFromPolygon, line);
+
+    if (!splitByPoint) {
+      let firstPartLine = invariant.default.getCoords(arraySplitLine.features[0]);
+      let secondPartLine = invariant.default.getCoords(arraySplitLine.features[arraySplitLine.features.length - 1]);
+      firstPartLine.shift();
+      arraySplitLine.features.shift();
+      arraySplitLine.features.pop();
+      let combinePolygonLine = secondPartLine.concat(firstPartLine);
+      arraySplitLine.features.push(helper.default.lineString(combinePolygonLine));
+    }
+
+    // Intersection points of the polygon and the line of division.
+    let intersectingPoints = lineIntersect.default(line, lineFromPolygon);
+    let polygonSide = lineSlice.default(intersectingPoints.features[0], intersectingPoints.features[1], line);
+    let polygonSideCoords = invariant.default.getCoords(polygonSide);
+
+    // Delete duplicates point.
+    let uniqueValue = [];
+    polygonSideCoords.forEach((polygonLine) => {
+      if (!uniqueValue.includes(polygonLine)) {
+        uniqueValue.push(polygonLine);
+      }
+    });
+
+    // Because lineSlice not include intersection points. We replace start and end point.
+    uniqueValue.splice(0, 1, invariant.default.getCoords(intersectingPoints.features[0]));
+    uniqueValue.splice(uniqueValue.length - 1, 1, invariant.default.getCoords(intersectingPoints.features[1]));
+
+    let polygons = [];
+    arraySplitLine.features.forEach((polygonLine) => {
+
+      // Add line points to polygon.
+      let coordsSide = uniqueValue;
+      let coordsPolygonLine = invariant.default.getCoords(polygonLine);
+      let startPointPolygonLine = helper.default.point(coordsPolygonLine[0]);
+      let endPointPolygonLine = helper.default.point(coordsPolygonLine[coordsPolygonLine.length - 1]);
+      let pointSide = helper.default.point(coordsSide[0]);
+      let distanceSideAndStartPoint = distance.default(startPointPolygonLine, pointSide);
+      let distanceSideAndEndPoint = distance.default(endPointPolygonLine, pointSide);
+
+      if (distanceSideAndEndPoint > distanceSideAndStartPoint) {
+        coordsPolygonLine = coordsSide.reverse().concat(coordsPolygonLine);
+      }
+
+      if (distanceSideAndEndPoint < distanceSideAndStartPoint) {
+        coordsPolygonLine = coordsPolygonLine.concat(coordsSide);
+      }
+
+      polygons.push(lineToPolygon.default(helper.default.lineString(coordsPolygonLine)));
+    });
+
+    return polygons;
   },
 
   /**

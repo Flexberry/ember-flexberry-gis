@@ -3,6 +3,7 @@ export default {
   'select-all': 'Выбрать все',
   'select-feature': 'Найти элемент на карте',
   'clear-found': 'Очистить найденные элементы',
+  'find-intersection': 'Найти пересекающиеся полигоны',
   'delete-selected': 'Удалить выбранные элементы',
   'select-item': 'Выбрать',
   'edit-item': 'Редактировать',
@@ -13,6 +14,10 @@ export default {
   'erase': 'Очистить',
   'buffer': 'Буфер',
   'goto': 'Перейти',
+  'difference': 'Вычитание полигонов',
+  'choice-spliter': 'Выберите полигон, который будет вычитаться',
+  'split-geometry': 'Разбить геометрию',
+  'combined-polygon': 'Объединить полигоны',
   'units': {
     'units': 'Единицы',
     'miles': 'Мили',

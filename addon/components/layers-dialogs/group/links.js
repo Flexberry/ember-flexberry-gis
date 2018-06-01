@@ -15,6 +15,15 @@ export default Ember.Component.extend(
   layout,
 
   /**
+    See [EmberJS API](https://emberjs.com/api/).
+
+    @property classNames
+    @type Array
+    @default ['layers-dialogs-data-tabs']
+  */
+  classNames: ['layers-dialogs-data-tabs'],
+
+  /**
     Currently active tab name.
 
     @property _activeTab
@@ -62,7 +71,7 @@ export default Ember.Component.extend(
       @param {Object} e eventObject Event object from {{#crossLink "FlexberryLinksEditorComponent/sendingActions.changeVisibility:method"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.
     */
     allowShowCheckboxChange(...args) {
-      this.sendAction('allowShowLayerLinkCheckboxChange', ...args);
+      this.sendAction('allowShowCheckboxChange', ...args);
     }
   }
 
