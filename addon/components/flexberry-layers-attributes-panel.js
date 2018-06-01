@@ -33,21 +33,14 @@ import * as union from 'npm:@turf/union';
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   /**
-    Measure units supported by turfjs
+    Measure units for buffer tool.
 
-    @property _turfUnits
+    @property bufferUnits
     @type Object
-    @private
   */
-  _turfUnits: {
-    miles: 'components.flexberry-layers-attributes-panel.units.miles',
-    nauticalmiles: 'components.flexberry-layers-attributes-panel.units.nauticalmiles',
-    inches: 'components.flexberry-layers-attributes-panel.units.inches',
-    yards: 'components.flexberry-layers-attributes-panel.units.yards',
-    meters: 'components.flexberry-layers-attributes-panel.units.meters',
-    kilometers: 'components.flexberry-layers-attributes-panel.units.kilometers',
-    centimeters: 'components.flexberry-layers-attributes-panel.units.centimeters',
-    feet: 'components.flexberry-layers-attributes-panel.units.feet'
+  bufferUnits: {
+    meters: 'components.flexberry-layers-attributes-panel.buffer.units.meters',
+    kilometers: 'components.flexberry-layers-attributes-panel.buffer.units.kilometers'
   },
 
   /**
@@ -59,16 +52,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @private
   */
   _selectedUnit: undefined,
-
-  /**
-    Selected mesure unit translation key.
-
-    @property _selectedUnitShown
-    @type String
-    @default undefined
-    @private
-  */
-  _selectedUnitShown: undefined,
 
   /**
     Buffer radius.
@@ -417,7 +400,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       this.set('settings', settings);
 
-      this.set('_selectedUnitShown', this.get('_turfUnits').meters);
       this.set('_selectedUnit', 'meters');
     }
   },
@@ -509,7 +491,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     */
     onUnitSelected(item, key) {
       this.set('_selectedUnit', key);
-      this.set('_selectedUnitShown', item);
     },
 
     /**

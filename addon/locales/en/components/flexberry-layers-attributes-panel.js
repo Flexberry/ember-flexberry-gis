@@ -11,22 +11,18 @@ export default {
   'save-changes': 'Save changes',
   'table-tab': 'Table',
   'diagram-tab': 'Chart',
-  'erase': 'Erase',
-  'buffer': 'Buffer',
   'goto': 'Go to',
   'difference': 'Difference polygon',
   'choice-spliter': 'Select a polygon that will be subtracted',
   'split-geometry': 'Split geometry',
   'combined-polygon': 'Union polygon',
-  'units': {
-    'units': 'Units',
-    'miles': 'Miles',
-    'nauticalmiles': 'Nautical miles',
-    'inches': 'Inches',
-    'yards': 'Yards',
-    'meters': 'Meters',
-    'kilometers': 'Kilometers',
-    'centimeters': 'Centimeters',
-    'feet': 'Feet'
+  'buffer': {
+    'create': 'Create buffer',
+    'clear': 'Delete buffer',
+    'radius': 'Radius',
+    'units': {
+      'meters': 'Meters',
+      'kilometers': 'Kilometers'
+    }
   }
 };

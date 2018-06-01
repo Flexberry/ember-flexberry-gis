@@ -11,22 +11,18 @@ export default {
   'save-changes': 'Сохранить изменения',
   'table-tab': 'Таблица',
   'diagram-tab': 'График',
-  'erase': 'Очистить',
-  'buffer': 'Буфер',
   'goto': 'Перейти',
   'difference': 'Вычитание полигонов',
   'choice-spliter': 'Выберите полигон, который будет вычитаться',
   'split-geometry': 'Разбить геометрию',
   'combined-polygon': 'Объединить полигоны',
-  'units': {
-    'units': 'Единицы',
-    'miles': 'Мили',
-    'nauticalmiles': 'Морские мили',
-    'inches': 'Дюймы',
-    'yards': 'Ярды',
-    'meters': 'Метры',
-    'kilometers': 'Километры',
-    'centimeters': 'Сантиметры',
-    'feet': 'Футы'
+  'buffer': {
+    'create': 'Построить буфер',
+    'clear': 'Удалить буфер',
+    'radius': 'Радиус',
+    'units': {
+      'meters': 'Метры',
+      'kilometers': 'Километры'
+    }
   }
 };
