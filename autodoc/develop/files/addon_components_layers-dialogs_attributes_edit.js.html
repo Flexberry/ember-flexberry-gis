@@ -531,6 +531,73 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
   parsingErrors: null,
 
   /**
+    Flag: indicates whether to display dropdown with choice value.
+
+    @property choiceValueMode
+    @type Boolean
+    @default false
+  */
+  choiceValueMode: false,
+
+  /**
+    Name of the selected group value.
+
+    @property choiceValue
+    @type Boolean
+    @default null
+  */
+  choiceValue: null,
+
+  /**
+    List of groups value.
+
+    @property choiceItems
+    @type Object[]
+    @default null
+  */
+  choiceItems: null,
+
+  /**
+    Array editing objects value.
+
+    @property choiceValueData
+    @type Object[]
+    @default null
+  */
+  choiceValueData: null,
+
+  /**
+    Observes and handles changes in choiceValue.
+    Сomputes editing object.
+
+    @method choiceValueObserver
+    @private
+  */
+  choiceValueObserver: Ember.observer(&#x27;choiceValue&#x27;, function() {
+    let choiceValueData = this.get(&#x27;choiceValueData&#x27;);
+    let choiceValue = this.get(&#x27;choiceValue&#x27;);
+    if (!Ember.isNone(choiceValue)) {
+      this.set(&#x27;data&#x27;, choiceValueData[&#x60;${choiceValue}&#x60; - 1]);
+    }
+  }),
+
+  /**
+    Observes and handles changes in choiceValueData.
+    Сomputes list &#x27;choiceItems&#x27; name editing objects.
+
+    @method choiceValueDataObserver
+    @private
+  */
+  choiceValueDataObserver: Ember.observer(&#x27;choiceValueData&#x27;, function() {
+    let choiceValueData = this.get(&#x27;choiceValueData&#x27;);
+    if (!Ember.isNone(choiceValueData)) {
+      this.set(&#x27;choiceItems&#x27;, Object.keys(choiceValueData).map((index) =&gt; {
+        return Number(index) + 1;
+      }));
+    }
+  }),
+
+  /**
     Parses data.
 
     @method parseData
@@ -572,6 +639,9 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
   */
   init() {
     this._super(...arguments);
+    if (this.get(&#x27;choiceValueMode&#x27;)) {
+      this.choiceValueDataObserver();
+    }
 
     this.set(&#x27;parsingErrors&#x27;, {});
   },
@@ -585,6 +655,7 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
     */
     onBeforeShow() {
       this.parseData();
+      this.set(&#x27;choiceValue&#x27;, null);
 
       this.sendAction(&#x27;beforeShow&#x27;);
     },

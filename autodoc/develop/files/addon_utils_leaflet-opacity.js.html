@@ -393,6 +393,10 @@
 
 import Ember from &#x27;ember&#x27;;
 
+let maxGeometryOpacity = 0.65;
+
+let maxGeometryFillOpacity = 0.2;
+
 /**
   Sets specified opacity for the specified leaflet layer.
 
@@ -401,35 +405,41 @@ import Ember from &#x27;ember&#x27;;
   @param {Object} options Method options.
   @param {&lt;a href=&quot;http://leafletjs.com/reference-1.2.0.html#layer&quot;&gt;L.Layer&lt;/a&gt;} options.leafletLayer Leaflet layer which opacity must be changed.
   @param {Number} options.opacity Opacity value.
+  @param {Number} [options.maxGeomOpacity] Max opacity value for geometries.
+  @param {Number} [options.maxGeomFillOpacity] Max fill opacity value for geometries.
 */
-let setLeafletLayerOpacity = function({ leafletLayer, opacity }) {
+let setLeafletLayerOpacity = function({ leafletLayer, opacity,
+  maxGeomOpacity = maxGeometryOpacity, maxGeomFillOpacity = maxGeometryFillOpacity }) {
   if (typeof leafletLayer.setOpacity === &#x27;function&#x27;) {
     leafletLayer.setOpacity(opacity);
   } else if (typeof leafletLayer.setStyle === &#x27;function&#x27;) {
-    let oldStyle = Ember.get(leafletLayer, &#x27;options.style&#x27;) || {};
-    if (typeof oldStyle === &#x27;function&#x27;) {
-      Ember.Logger.error(
-        &#x60;Option &#x27;style&#x27; of the specified leaflet layer is a callback function, &#x60; +
-        &#x60;so it&#x27;s opacity can&#x27;t be simply changed through call to &#x27;setStyle&#x27; method.&#x60;);
+    let style = Ember.get(leafletLayer, &#x27;options.style&#x27;) || {};
+    if (typeof style === &#x27;function&#x27;) {
+      let opacityFromFunction = 1;
+      if (leafletLayer.feature) {
+        let styleFromFunction = style(leafletLayer.feature) || {};
+        opacityFromFunction = styleFromFunction.opacity || 1;
+      }
+
+      leafletLayer.setStyle({ opacity: opacity * maxGeomOpacity * opacityFromFunction, fillOpacity: opacity * maxGeomFillOpacity * opacityFromFunction });
     } else {
-      let newStyle = Ember.$.extend(true, {}, oldStyle, { opacity: opacity, fillOpacity: opacity });
-      leafletLayer.setStyle(newStyle);
+      leafletLayer.setStyle({ opacity: opacity, fillOpacity: opacity });
     }
   }
 
   if (leafletLayer instanceof L.MarkerClusterGroup) {
-    setLeafletLayerOpacity({ leafletLayer: Ember.get(leafletLayer, &#x27;_featureGroup&#x27;), opacity });
+    setLeafletLayerOpacity({ leafletLayer: Ember.get(leafletLayer, &#x27;_featureGroup&#x27;), opacity, maxGeomOpacity, maxGeomFillOpacity });
   }
 
   if (typeof leafletLayer.eachLayer === &#x27;function&#x27;) {
     leafletLayer.eachLayer((nestedLeafletLayer) =&gt; {
-      setLeafletLayerOpacity({ leafletLayer: nestedLeafletLayer, opacity });
+      setLeafletLayerOpacity({ leafletLayer: nestedLeafletLayer, opacity, maxGeomOpacity, maxGeomFillOpacity });
     });
   }
 };
 
 export {
-  setLeafletLayerOpacity
+  setLeafletLayerOpacity, maxGeometryOpacity
 };
 
     </pre>

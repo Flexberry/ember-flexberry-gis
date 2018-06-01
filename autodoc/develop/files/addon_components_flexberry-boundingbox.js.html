@@ -816,6 +816,19 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
       this.set(&#x27;_needToUpdateAreaSelect&#x27;, true);
     }
 
+    let coordinatesBounds = [
+      [minLng, minLat],
+      [maxLng, minLat],
+      [maxLng, maxLat],
+      [minLng, maxLat],
+      [minLng, minLat]
+    ];
+
+    if (minLat === -90 &amp;&amp; maxLat === 90) {
+      coordinatesBounds.splice(2, 0, [maxLng, 0]);
+      coordinatesBounds.splice(5, 0, [minLng, 0]);
+    }
+
     // If some of polygon&#x27;s edges have length of 180 (for example from latitude -90 till latitude 90)
     // then PostGIS will throw an exception &quot;Antipodal (180 degrees long) edge detected&quot;.
     // Workaround is to make each edge shorter (add additional points into polygon&#x27;s edges).
@@ -841,13 +854,7 @@ export default Ember.Component.extend(FlexberryMapActionsHandlerMixin, {
       bboxGeoJSON: {
         type: &#x27;Polygon&#x27;,
         coordinates: [
-          [
-            [minLng, minLat],
-            [maxLng, minLat],
-            [maxLng, maxLat],
-            [minLng, maxLat],
-            [minLng, minLat]
-          ]
+          coordinatesBounds
         ],
         crs: {
           type: &#x27;name&#x27;,
