@@ -262,6 +262,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "UniqueLayerStyle",
         "UniqueLayerStyleLegendComponent",
         "UniqueLayersStyleComponent",
+        "Utils.CheckIntersect",
         "Utils.Convertor",
         "Utils.Interpolator",
         "Utils.LayerCopy",
