@@ -66,6 +66,12 @@ module.exports = function (environment) {
         // This let user to continue work without online connection.
         syncDownWhenOnlineEnabled: false,
       },
+    }, 
+
+    userSettings: {
+      // Max opacity values for geometries
+      maxGeometryOpacity: 0.65,
+      maxGeometryFillOpacity: 0.2
     }
   };
 

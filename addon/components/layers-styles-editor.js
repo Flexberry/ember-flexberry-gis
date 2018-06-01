@@ -19,6 +19,7 @@ export default Ember.Component.extend({
 
   /**
     Method returning related leaflet layer.
+
     @property leafletLayer
     @type Function
     @default null
