@@ -25,6 +25,7 @@
     "node": ">= 0.10.0"
   },
   "devDependencies": {
+    "@turf/buffer": "^5.1.5",
     "@turf/boolean-equal": "^5.1.5",
     "@turf/difference": "^5.1.5",
     "@turf/boolean-within": "^5.1.5",

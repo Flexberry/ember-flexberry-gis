@@ -11,8 +11,18 @@ export default {
   'save-changes': 'Save changes',
   'table-tab': 'Table',
   'diagram-tab': 'Chart',
+  'goto': 'Go to',
   'difference': 'Difference polygon',
   'choice-spliter': 'Select a polygon that will be subtracted',
   'split-geometry': 'Split geometry',
   'combined-polygon': 'Union polygon',
+  'buffer': {
+    'create': 'Create buffer',
+    'clear': 'Delete buffer',
+    'radius': 'Radius',
+    'units': {
+      'meters': 'Meters',
+      'kilometers': 'Kilometers'
+    }
+  }
 };

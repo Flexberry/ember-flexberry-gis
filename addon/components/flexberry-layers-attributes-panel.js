@@ -6,6 +6,8 @@ import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import checkIntersect from '../utils/polygon-intersect-check';
+import * as buffer from 'npm:@turf/buffer';
+import * as thelpers from 'npm:@turf/helpers';
 import * as difference from 'npm:@turf/difference';
 import * as booleanEqual from 'npm:@turf/boolean-equal';
 import * as lineSplit from 'npm:@turf/line-split';
@@ -29,6 +31,47 @@ import * as union from 'npm:@turf/union';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
+
+  /**
+    Measure units for buffer tool.
+
+    @property bufferUnits
+    @type Object
+  */
+  bufferUnits: {
+    meters: 'components.flexberry-layers-attributes-panel.buffer.units.meters',
+    kilometers: 'components.flexberry-layers-attributes-panel.buffer.units.kilometers'
+  },
+
+  /**
+    Selected mesure unit.
+
+    @property _selectedUnit
+    @type String
+    @default undefined
+    @private
+  */
+  _selectedUnit: undefined,
+
+  /**
+    Buffer radius.
+
+    @property _radius
+    @type Number
+    @default 500
+    @private
+  */
+  _radius: 500,
+
+  /**
+    Layer with buffer.
+
+    @property _bufferLayer
+    @type <a href="http://leaflet.github.io/Leaflet.Editable/doc/api.html">L.Layer</a>
+    @default null
+    @private
+  */
+  _bufferLayer: null,
   /**
     Leaflet.Editable drawing tools instance.
 
@@ -356,6 +399,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       };
 
       this.set('settings', settings);
+
+      this.set('_selectedUnit', 'meters');
     }
   },
 
@@ -435,6 +480,56 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           return tabModel.featureLink[key].feature;
         });
       this.send('zoomTo', selectedFeatures);
+    },
+
+    /**
+      Handles units dropdown clicks.
+
+      @method actions.onUnitSelected
+      @param {String} item Clicked item locale key.
+      @param {String} key Clicked item value.
+    */
+    onUnitSelected(item, key) {
+      this.set('_selectedUnit', key);
+    },
+
+    /**
+      Handles 'Draw buffer' button click.
+
+      @method actions.drawBuffer
+      @param {Object} tabModel Related tab.
+    */
+    drawBuffer(tabModel) {
+      let radius = this.get('_radius');
+      let unit = this.get('_selectedUnit');
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+        .map((key) => {
+          return tabModel.featureLink[key].feature.leafletLayer.toGeoJSON();
+        });
+
+      let leafletMap = this.get('leafletMap');
+      let featureCollection = thelpers.default.featureCollection(selectedFeatures);
+
+      let buf = buffer.default(featureCollection, radius, { units: unit });
+      let _bufferLayer = this.get('_bufferLayer');
+      if (Ember.isNone(_bufferLayer)) {
+        _bufferLayer = L.featureGroup();
+        leafletMap.addLayer(_bufferLayer);
+      }
+
+      _bufferLayer.addLayer(L.geoJSON(buf));
+      this.set('_bufferLayer', _bufferLayer);
+    },
+
+    /**
+      Handles 'Delete buffer' button click.
+
+      @method actions.deleteBuffer
+    */
+    deleteBuffer() {
+      let _bufferLayer = this.get('_bufferLayer');
+      _bufferLayer.clearLayers();
     },
 
     /**
