@@ -3,6 +3,7 @@ export default {
   'select-all': 'Select all',
   'select-feature': 'Find an item on the map',
   'clear-found': 'Clear the found items',
+  'find-intersection': 'Find intersecting polygons',
   'delete-selected': 'Delete the selected items',
   'select-item': 'Select',
   'edit-item': 'Edit',
@@ -10,4 +11,18 @@ export default {
   'save-changes': 'Save changes',
   'table-tab': 'Table',
   'diagram-tab': 'Chart',
+  'goto': 'Go to',
+  'difference': 'Difference polygon',
+  'choice-spliter': 'Select a polygon that will be subtracted',
+  'split-geometry': 'Split geometry',
+  'combined-polygon': 'Union polygon',
+  'buffer': {
+    'create': 'Create buffer',
+    'clear': 'Delete buffer',
+    'radius': 'Radius',
+    'units': {
+      'meters': 'Meters',
+      'kilometers': 'Kilometers'
+    }
+  }
 };

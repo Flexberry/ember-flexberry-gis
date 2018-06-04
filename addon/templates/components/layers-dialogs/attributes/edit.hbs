@@ -11,6 +11,15 @@
   hide=(action "onHide")
 }}
   <form class="ui form {{flexberryClassNames.form}}" role="form">
+    {{#if choiceValueMode}}
+      <label>
+        {{t "components.layers-dialogs.edit-attributes.template"}}
+      </label>
+      {{flexberry-dropdown
+        items=choiceItems
+        value=choiceValue
+      }}
+    {{/if}}
     {{#each-in fieldNames as |fieldName fieldValue|}}
       <div class="field {{if (get parsingErrors fieldName) "error" ""}}">
         <label>{{fieldValue}}</label>
