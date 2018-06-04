@@ -218,64 +218,6 @@
             },
             "namespaces": {}
         },
-        "addon/components/layers-dialogs/group/tab/identification-settings.js": {
-            "name": "addon/components/layers-dialogs/group/tab/identification-settings.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "addon/components/layers-dialogs/group/tab/legend-settings.js": {
-            "name": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "addon/components/layers-dialogs/group/tab/main-settings.js": {
-            "name": "addon/components/layers-dialogs/group/tab/main-settings.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "addon/components/layers-dialogs/group/tab/prototyping-modes.js": {
-            "name": "addon/components/layers-dialogs/group/tab/prototyping-modes.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "addon/components/layers-dialogs/group/tab/search-settings.js": {
-            "name": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "modules": {},
-            "classes": {
-                "FlexberryIdentificationSettingsComponent": 1
-            },
-            "fors": {},
-            "namespaces": {}
-        },
-        "addon/components/layers-dialogs/group/display.js": {
-            "name": "addon/components/layers-dialogs/group/display.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "addon/components/layers-dialogs/group/links.js": {
-            "name": "addon/components/layers-dialogs/group/links.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "addon/components/layers-dialogs/group/main.js": {
-            "name": "addon/components/layers-dialogs/group/main.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
         "addon/components/layers-dialogs/layers-prototyping-modes/base.js": {
             "name": "addon/components/layers-dialogs/layers-prototyping-modes/base.js",
             "modules": {},
@@ -380,6 +322,73 @@
             "modules": {},
             "classes": {
                 "WmsLayerSettingsComponent": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/layers-dialogs/tabs/display-settings.js": {
+            "name": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "modules": {},
+            "classes": {
+                "FlexberryDisplaySettingsComponent": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/layers-dialogs/tabs/display.js": {
+            "name": "addon/components/layers-dialogs/tabs/display.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/layers-dialogs/tabs/identification-settings.js": {
+            "name": "addon/components/layers-dialogs/tabs/identification-settings.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/layers-dialogs/tabs/legend-settings.js": {
+            "name": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/layers-dialogs/tabs/links.js": {
+            "name": "addon/components/layers-dialogs/tabs/links.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/layers-dialogs/tabs/main-settings.js": {
+            "name": "addon/components/layers-dialogs/tabs/main-settings.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/layers-dialogs/tabs/main.js": {
+            "name": "addon/components/layers-dialogs/tabs/main.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/layers-dialogs/tabs/prototyping-modes.js": {
+            "name": "addon/components/layers-dialogs/tabs/prototyping-modes.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/layers-dialogs/tabs/search-settings.js": {
+            "name": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "modules": {},
+            "classes": {
+                "FlexberryIdentificationSettingsComponent": 1
             },
             "fors": {},
             "namespaces": {}
@@ -2948,7 +2957,6 @@
                 "WMSSingleTileLayerComponent": 1,
                 "WmsWfsLayerComponent": 1,
                 "FlexberryEditLayerAttributesDialogComponent": 1,
-                "FlexberryIdentificationSettingsComponent": 1,
                 "BaseModeComponent": 1,
                 "MetadataModeComponent": 1,
                 "GeocoderOsmOverpassLayerSettingsComponent": 1,
@@ -2960,6 +2968,8 @@
                 "WfsLayerSettingsComponent": 1,
                 "WmsSingleTileLayerSettingsComponent": 1,
                 "WmsLayerSettingsComponent": 1,
+                "FlexberryDisplaySettingsComponent": 1,
+                "FlexberryIdentificationSettingsComponent": 1,
                 "FlexberryAddLayerDialogComponent": 1,
                 "FlexberryCopyLayerDialogComponent": 1,
                 "FlexberryEditLayerDialogComponent": 1,
@@ -3646,21 +3656,6 @@
             "module": "ember-flexberry-gis",
             "namespace": ""
         },
-        "FlexberryIdentificationSettingsComponent": {
-            "name": "FlexberryIdentificationSettingsComponent",
-            "shortname": "FlexberryIdentificationSettingsComponent",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "ember-flexberry-gis",
-            "namespace": "",
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 4,
-            "description": "Component for identification settings tab in layer settings.",
-            "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
-        },
         "BaseModeComponent": {
             "name": "BaseModeComponent",
             "shortname": "BaseModeComponent",
@@ -3823,6 +3818,36 @@
             "file": "addon/components/layers-dialogs/settings/wms.js",
             "line": 11,
             "description": "Settings-part of WMS layer modal dialog.",
+            "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
+        },
+        "FlexberryDisplaySettingsComponent": {
+            "name": "FlexberryDisplaySettingsComponent",
+            "shortname": "FlexberryDisplaySettingsComponent",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": "",
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 4,
+            "description": "Component for display settings tab in layer settings.",
+            "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
+        },
+        "FlexberryIdentificationSettingsComponent": {
+            "name": "FlexberryIdentificationSettingsComponent",
+            "shortname": "FlexberryIdentificationSettingsComponent",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": "",
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 4,
+            "description": "Component for identification settings tab in layer settings.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
         },
         "FlexberryAddLayerDialogComponent": {
@@ -10993,885 +11018,6 @@
             "module": "ember-flexberry-gis"
         },
         {
-            "file": "addon/components/layers-dialogs/group/tab/identification-settings.js",
-            "line": 12,
-            "description": "Reference to component's template.",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/identification-settings.js",
-            "line": 17,
-            "description": "Message locale key.",
-            "itemtype": "property",
-            "name": "label",
-            "type": "String",
-            "default": "'components.layers-dialogs.settings.group.tab.identification-settings'",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/identification-settings.js",
-            "line": 26,
-            "description": "Style class for checkbox component.",
-            "itemtype": "property",
-            "name": "checkboxClass",
-            "type": "String",
-            "default": "'toggle'",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/identification-settings.js",
-            "line": 35,
-            "description": "Current object with canBeIdentified property.",
-            "itemtype": "property",
-            "name": "value",
-            "type": "Object",
-            "default": "undefined",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/identification-settings.js",
-            "line": 44,
-            "description": "Current checkbox value.",
-            "itemtype": "property",
-            "name": "_checkboxValue",
-            "type": "Boolean",
-            "default": "undefined",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/identification-settings.js",
-            "line": 54,
-            "description": "Modifies `value` when `_checkboxValue` changes.",
-            "itemtype": "method",
-            "name": "_checkboxDidChange",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/identification-settings.js",
-            "line": 66,
-            "description": "Initializes component.",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 5,
-            "description": "Component for legend settings tab in layer settings.",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 9,
-            "description": "Reference to component's template.",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 14,
-            "description": "Caption to be displayed in checkbox",
-            "itemtype": "property",
-            "name": "canBeDisplayedCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.settings.group.tab.legend-settings.legend-can-be-displayed')",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 23,
-            "description": "Style class for checkbox component.",
-            "itemtype": "property",
-            "name": "checkboxClass",
-            "type": "String",
-            "default": "'toggle'",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 32,
-            "description": "Current object with settings",
-            "itemtype": "property",
-            "name": "value",
-            "type": "Object",
-            "default": "undefined",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 41,
-            "description": "Current checkbox value.",
-            "itemtype": "property",
-            "name": "_canBeDisplayed",
-            "type": "Boolean",
-            "default": "true",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 51,
-            "description": "Observer changes settings for legend.",
-            "itemtype": "method",
-            "name": "_settingsForChanged",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 85,
-            "description": "Flag: indicates whether  layer's type is wms.",
-            "itemtype": "property",
-            "name": "_isWmsType",
-            "type": "Boolean",
-            "default": "false",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 103,
-            "description": "Property containing url.",
-            "itemtype": "property",
-            "name": "_url",
-            "type": "String",
-            "default": "''",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 113,
-            "description": "Property containing version.",
-            "itemtype": "property",
-            "name": "_version",
-            "type": "String",
-            "default": "''",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 123,
-            "description": "Property containing format.",
-            "itemtype": "property",
-            "name": "_format",
-            "type": "String",
-            "default": "''",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 133,
-            "description": "Property containing layers.",
-            "itemtype": "property",
-            "name": "_layers",
-            "type": "String",
-            "default": "''",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/legend-settings.js",
-            "line": 143,
-            "description": "Initializes component.",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/main-settings.js",
-            "line": 8,
-            "description": "Reference to component's template.",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/main-settings.js",
-            "line": 13,
-            "description": "Dialog's 'type' dropdown caption.",
-            "itemtype": "property",
-            "name": "typeDropdownCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.edit.type-dropdown.caption')",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/main-settings.js",
-            "line": 22,
-            "description": "Dialog's 'name' textbox caption.",
-            "itemtype": "property",
-            "name": "nameTextboxCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.edit.name-textbox.caption')",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/main-settings.js",
-            "line": 31,
-            "description": "Dialog's 'description' textbox caption.",
-            "itemtype": "property",
-            "name": "descriptionTextboxCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.edit.description-textbox.caption')",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/main-settings.js",
-            "line": 40,
-            "description": "Dialog's 'keyWords' textbox caption.",
-            "itemtype": "property",
-            "name": "keyWordsTextboxCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.edit.keywords-textbox.caption')",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/main-settings.js",
-            "line": 49,
-            "description": "Dialog's 'scale' textbox caption.",
-            "itemtype": "property",
-            "name": "scaleTextboxCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.edit.name-textbox.caption')",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/main-settings.js",
-            "line": 58,
-            "description": "Array of posible scale values.",
-            "itemtype": "property",
-            "name": "scales",
-            "type": "Array",
-            "default": "[500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/main-settings.js",
-            "line": 67,
-            "description": "Flag: indicates whether scale settings are available for the selected layer type.",
-            "itemtype": "property",
-            "name": "_scaleSettingsAreAvailableForType",
-            "type": "Boolean",
-            "access": "private",
-            "tagname": "",
-            "readonly": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/main-settings.js",
-            "line": 82,
-            "description": "Handles scale input keyDown action.",
-            "itemtype": "method",
-            "name": "actions.scaleInputKeyDown",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/prototyping-modes.js",
-            "line": 11,
-            "description": "Reference to component's template.",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/prototyping-modes.js",
-            "line": 16,
-            "description": "Available modes captions.",
-            "itemtype": "property",
-            "name": "_availableModesCaptions",
-            "type": "String[]",
-            "readonly": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/prototyping-modes.js",
-            "line": 37,
-            "description": "Selected mode.",
-            "itemtype": "property",
-            "name": "_selectedMode",
-            "type": "Object",
-            "readonly": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 12,
-            "description": "Reference to component's template.",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 17,
-            "description": "\"Can be searched\" checkbox label locale key.",
-            "itemtype": "property",
-            "name": "_canBeSearchedCheckBoxLabel",
-            "type": "String",
-            "default": "'components.layers-dialogs.settings.group.tab.search-settings.can-be-searched-label'",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 26,
-            "description": "\"Can be context-searched\" checkbox label locale key.",
-            "itemtype": "property",
-            "name": "_canBeContextSearchedCheckBoxLabel",
-            "type": "String",
-            "default": "'components.layers-dialogs.settings.group.tab.search-settings.can-be-context-searched-label'",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 35,
-            "description": "Label for context-searched fields selector.",
-            "itemtype": "property",
-            "name": "_contextSearchFieldsSelectorLabel",
-            "type": "String",
-            "default": "'components.layers-dialogs.settings.group.tab.search-settings.context-search-fields-selector'",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 44,
-            "description": "Label for searched fields selector.",
-            "itemtype": "property",
-            "name": "_searchFieldsSelectorLabel",
-            "type": "String",
-            "default": "'components.layers-dialogs.settings.group.tab.search-settings.search-fields-selector'",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 53,
-            "description": "Leaflet's layer type.",
-            "itemtype": "property",
-            "name": "_layerType",
-            "type": "Object",
-            "default": "undefined",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 62,
-            "description": "Leaflet's layer object.",
-            "itemtype": "property",
-            "name": "_leafletObject",
-            "type": "Object",
-            "default": "undefined",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 72,
-            "description": "Method to create leaflet's layer object.",
-            "itemtype": "property",
-            "name": "_leafletObjectMethod",
-            "type": "Function",
-            "default": "undefined",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 82,
-            "description": "Indicates when leaflet's layer object is loading.",
-            "itemtype": "property",
-            "name": "_leafletObjectIsLoading",
-            "type": "Boolean",
-            "default": "false",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 92,
-            "description": "Array containing Fields in current leaflet object.",
-            "itemtype": "property",
-            "name": "fields",
-            "type": "Array",
-            "default": "Ember.A()",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 101,
-            "description": "Style class for checkbox component.",
-            "itemtype": "property",
-            "name": "checkboxClass",
-            "type": "String",
-            "default": "'toggle'",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 110,
-            "description": "Current object with search settings.",
-            "itemtype": "property",
-            "name": "value",
-            "type": "Object",
-            "default": "Object",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/tab/search-settings.js",
-            "line": 124,
-            "description": "Initializes page's DOM-related properties.",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 16,
-            "description": "Reference to component's template.",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 21,
-            "description": "See [EmberJS API](https://emberjs.com/api/).",
-            "itemtype": "property",
-            "name": "classNames",
-            "type": "Array",
-            "default": "['layers-dialogs-data-tabs']",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 30,
-            "description": "Currently active tab name.",
-            "itemtype": "property",
-            "name": "_activeTab",
-            "type": "String",
-            "default": "'links-tab'",
-            "access": "private",
-            "tagname": "",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 40,
-            "description": "Map model fot bounding box component.",
-            "itemtype": "property",
-            "name": "boundingBoxComponentMap",
-            "type": "Object",
-            "default": "null",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 49,
-            "description": "Indicates that boundingBox component's map is loading.",
-            "itemtype": "property",
-            "name": "_bboxMapIsLoading",
-            "type": "Boolean",
-            "default": "false",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 58,
-            "description": "Dialog's 'Bounds' segment's caption.",
-            "itemtype": "property",
-            "name": "boundsSegmentCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.edit.bounds-segment.caption')",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 67,
-            "description": "Dialog's 'Bounds' segment's WGS84 option caption.",
-            "itemtype": "property",
-            "name": "wgs84bboxCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption')",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 76,
-            "description": "Dialog's 'Bounds' segment's BBOX option caption.",
-            "itemtype": "property",
-            "name": "bboxCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.edit.bounds-segment.options.bbox.caption')",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 85,
-            "description": "Dialog's 'Bounds' segment's mode.",
-            "itemtype": "property",
-            "name": "boundsMode",
-            "type": "String",
-            "default": "\"wgs84bbox\"",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 94,
-            "description": "Flag: indicates whether to show bounds error message or not.",
-            "itemtype": "property",
-            "name": "_showBoundsErrorMessage",
-            "type": "Boolean",
-            "readonly": "",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 103,
-            "description": "Initializes component.",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 118,
-            "description": "Handles clicks on tabs.",
-            "itemtype": "method",
-            "name": "actions.onTabClick",
-            "params": [
-                {
-                    "name": "e",
-                    "description": "Click event object.",
-                    "type": "Object"
-                }
-            ],
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 133,
-            "description": "Handles bounding box changes.",
-            "itemtype": "method",
-            "name": "actions.onBoundingBoxChange",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/display.js",
-            "line": 142,
-            "description": "Handles coordinate input textboxes keyPress events.",
-            "itemtype": "method",
-            "name": "actions.coordsInputKeyPress",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/links.js",
-            "line": 12,
-            "description": "Reference to component's template.",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/links.js",
-            "line": 17,
-            "description": "See [EmberJS API](https://emberjs.com/api/).",
-            "itemtype": "property",
-            "name": "classNames",
-            "type": "Array",
-            "default": "['layers-dialogs-data-tabs']",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/links.js",
-            "line": 26,
-            "description": "Currently active tab name.",
-            "itemtype": "property",
-            "name": "_activeTab",
-            "type": "String",
-            "default": "'links-tab'",
-            "access": "private",
-            "tagname": "",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/links.js",
-            "line": 42,
-            "description": "Handles clicks on tabs.",
-            "itemtype": "method",
-            "name": "actions.onTabClick",
-            "params": [
-                {
-                    "name": "e",
-                    "description": "Click event object.",
-                    "type": "Object"
-                }
-            ],
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/links.js",
-            "line": 57,
-            "description": "Handles {{#crossLink \"FlexberryLinksEditorComponent/sendingActions.updateLookupValue:method\"}}'flexberry-links-editor' component's 'updateLookupValue' action{{/crossLink}}.",
-            "itemtype": "method",
-            "name": "actions.updateLookupValue",
-            "params": [
-                {
-                    "name": "updateData",
-                    "description": "Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.",
-                    "type": "Object"
-                }
-            ],
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/links.js",
-            "line": 67,
-            "description": "Handles {{#crossLink \"FlexberryLinksEditorComponent/sendingActions.changeVisibility:method\"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.",
-            "itemtype": "method",
-            "name": "actions.allowShowCheckboxChange",
-            "params": [
-                {
-                    "name": "e",
-                    "description": "eventObject Event object from {{#crossLink \"FlexberryLinksEditorComponent/sendingActions.changeVisibility:method\"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.",
-                    "type": "Object"
-                }
-            ],
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/links.js",
-            "line": 78,
-            "description": "Component's action invoking to update relation value at model.",
-            "itemtype": "method",
-            "name": "sendingActions.updateLookupValue",
-            "params": [
-                {
-                    "name": "updateData",
-                    "description": "Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.\n{{#crossLink \"FlexberryLinksEditorComponent/sendingActions.updateLookupValue:method\"}}flexberry-links-editor 'updateLookupValue' action{{/crossLink}}.",
-                    "type": "Object"
-                }
-            ],
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/links.js",
-            "line": 85,
-            "description": "Component's action invoking when model's 'allowShow' state changed.",
-            "itemtype": "method",
-            "name": "sendingActions.allowShowLayerLinkCheckboxChange",
-            "params": [
-                {
-                    "name": "e",
-                    "description": "Event object from\n{{#crossLink \"FlexberryDdauCheckboxComponent/sendingActions.change:method\"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.",
-                    "type": "Object"
-                }
-            ],
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 16,
-            "description": "Reference to component's template.",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 21,
-            "description": "See [EmberJS API](https://emberjs.com/api/).",
-            "itemtype": "property",
-            "name": "classNames",
-            "type": "Array",
-            "default": "['layers-dialogs-data-tabs']",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 30,
-            "description": "Indicates that boundingBox component's map is loading.",
-            "itemtype": "property",
-            "name": "_bboxMapIsLoading",
-            "type": "Boolean",
-            "default": "false",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 39,
-            "description": "Map model fot bounding box component.",
-            "itemtype": "property",
-            "name": "boundingBoxComponentMap",
-            "type": "Object",
-            "default": "null",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 48,
-            "description": "Dialog's 'Bounds' segment's caption.",
-            "itemtype": "property",
-            "name": "boundsSegmentCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.edit.bounds-segment.caption')",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 57,
-            "description": "Dialog's 'Bounds' segment's WGS84 option caption.",
-            "itemtype": "property",
-            "name": "wgs84bboxCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption')",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 66,
-            "description": "Dialog's 'Bounds' segment's BBOX option caption.",
-            "itemtype": "property",
-            "name": "bboxCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.edit.bounds-segment.options.bbox.caption')",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 75,
-            "description": "Dialog's 'Bounds' segment's mode.",
-            "itemtype": "property",
-            "name": "boundsMode",
-            "type": "String",
-            "default": "\"wgs84bbox\"",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 84,
-            "description": "Flag: indicates whether to show bounds error message or not.",
-            "itemtype": "property",
-            "name": "_showBoundsErrorMessage",
-            "type": "Boolean",
-            "readonly": "",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 93,
-            "description": "Currently active tab name.",
-            "itemtype": "property",
-            "name": "_activeTab",
-            "type": "String",
-            "default": "'links-tab'",
-            "access": "private",
-            "tagname": "",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 103,
-            "description": "Initializes component.",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 120,
-            "description": "Handles clicks on tabs.",
-            "itemtype": "method",
-            "name": "actions.onTabClick",
-            "params": [
-                {
-                    "name": "e",
-                    "description": "Click event object.",
-                    "type": "Object"
-                }
-            ],
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/group/main.js",
-            "line": 135,
-            "description": "Handles bounding box changes.",
-            "itemtype": "method",
-            "name": "actions.onBoundingBoxChange",
-            "class": "BaseModeComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
             "file": "addon/components/layers-dialogs/layers-prototyping-modes/base.js",
             "line": 17,
             "description": "Initialize DOM-related properties.",
@@ -12517,6 +11663,1251 @@
             "line": 256,
             "description": "Initializes component.",
             "class": "WmsLayerSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 11,
+            "description": "Reference to component's template.",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 16,
+            "description": "Leaflet's layer type.",
+            "itemtype": "property",
+            "name": "layerType",
+            "type": "Object",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 25,
+            "description": "Leaflet's layer object.",
+            "itemtype": "property",
+            "name": "_leafletObject",
+            "type": "Object",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 35,
+            "description": "Method to create leaflet's layer object.",
+            "itemtype": "property",
+            "name": "leafletObjectMethod",
+            "type": "Function",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 45,
+            "description": "Indicates when leaflet's layer object is loading.",
+            "itemtype": "property",
+            "name": "_leafletObjectIsLoading",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 55,
+            "description": "Current object with display settings.",
+            "itemtype": "property",
+            "name": "value",
+            "type": "Object",
+            "default": "Object",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 64,
+            "description": "\"Date format\" textbox label locale key.",
+            "itemtype": "property",
+            "name": "dateFormatLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.display-settings.date-format-label'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 73,
+            "description": "\"Date format\" placeholder locale key.",
+            "itemtype": "property",
+            "name": "dateFormatPlaceholder",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.display-settings.date-format-ph'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 82,
+            "description": "DateFormat textbox css class.",
+            "itemtype": "property",
+            "name": "dateFormatClass",
+            "type": "String",
+            "default": "'fluid input'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 91,
+            "description": "\"displayPropertyIsCallback\" checkbox label locale key.",
+            "itemtype": "property",
+            "name": "displayPropertyIsCallbackLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.display-settings.display-property-is-callback-label'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 100,
+            "description": "displayPropertyIsCallback textbox css class.",
+            "itemtype": "property",
+            "name": "displayPropertyIsCallbackClass",
+            "type": "String",
+            "default": "'toggle'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 109,
+            "description": "\"displayProperty\" textbox label locale key.",
+            "itemtype": "property",
+            "name": "displayPropertyLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.display-settings.display-property-label'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 118,
+            "description": "\"Display property\" placeholder locale key.",
+            "itemtype": "property",
+            "name": "displayPropertyPlaceholder",
+            "type": "String",
+            "default": "'displayPropertyPlaceholder'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 127,
+            "description": "displayProperty textbox css class.",
+            "itemtype": "property",
+            "name": "displayPropertyClass",
+            "type": "String",
+            "default": "'fluid input'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 136,
+            "description": "excludedProperties multiple-select label locale key.",
+            "itemtype": "property",
+            "name": "excludedPropertiesLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.display-settings.excluded-properties-label'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 145,
+            "description": "`Apply` button label locale key.",
+            "itemtype": "property",
+            "name": "applyButtonLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.display-settings.apply-button-label'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 154,
+            "description": "\"English translation\" textbox label locale key.",
+            "itemtype": "property",
+            "name": "enTranslationLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.display-settings.en-translation-label'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 163,
+            "description": "\"Ru string\" placeholder locale key.",
+            "itemtype": "property",
+            "name": "ruTranslationPlaceholder",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.display-settings.en-translation-ph'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 172,
+            "description": "Properties list header locale key.",
+            "itemtype": "property",
+            "name": "propertiesListHeading",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.display-settings.properties-list-heading'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 181,
+            "description": "Show property column header.",
+            "itemtype": "property",
+            "name": "showPropertyHeading",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.display-settings.show-prop-heading''",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 190,
+            "description": "Locales list header locale key.",
+            "itemtype": "property",
+            "name": "localesListHeading",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.display-settings.locales-list-heading'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 199,
+            "description": "Locale key of a message shown when there are no properties in a layer.",
+            "itemtype": "property",
+            "name": "noItemsAvaliableLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.display-settings.no-items-label'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 208,
+            "description": "All items to select from in multiple-select.\nAll layer's properties.",
+            "itemtype": "property",
+            "name": "allProperties",
+            "type": "Object",
+            "default": "undefined",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 218,
+            "description": "All app's locales.",
+            "itemtype": "property",
+            "name": "allLocales",
+            "type": "Object",
+            "default": "undefined",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 227,
+            "description": "Flag showing if there is more than one locale available.",
+            "itemtype": "property",
+            "name": "isMoreThanOne",
+            "type": "Boolean",
+            "default": "false",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 235,
+            "description": "Selected locale (from locales lists).",
+            "itemtype": "property",
+            "name": "_selectedLocale",
+            "type": "String",
+            "default": "undefined",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 244,
+            "description": "Contains properties with flag showing whether they are showable.",
+            "itemtype": "property",
+            "name": "_showableItems",
+            "type": "Object",
+            "default": "{}",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 253,
+            "description": "Returns default locale.",
+            "itemtype": "property",
+            "name": "_defaultLocale",
+            "type": "String",
+            "default": "'en'",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 264,
+            "description": "Allows/disallows manually add items to multiple-select.",
+            "itemtype": "property",
+            "name": "excludedPropertiesAllowAdditions",
+            "type": "Boolean",
+            "default": "true",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 273,
+            "description": "Gets all layers's properties, makes some initializations.",
+            "itemtype": "method",
+            "name": "getAllProperties",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 316,
+            "description": "Hook, working after element was inserted.",
+            "itemtype": "method",
+            "name": "didInsertElement",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 351,
+            "description": "Handles callback-checkbox change.",
+            "itemtype": "method",
+            "name": "actions.isCallbackCheckboxDidChange",
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display-settings.js",
+            "line": 359,
+            "description": "Handles show checkbox change",
+            "itemtype": "method",
+            "name": "actions.showCheckboxDidChange",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Click event object.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryDisplaySettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 16,
+            "description": "Reference to component's template.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 21,
+            "description": "See [EmberJS API](https://emberjs.com/api/).",
+            "itemtype": "property",
+            "name": "classNames",
+            "type": "Array",
+            "default": "['layers-dialogs-data-tabs']",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 30,
+            "description": "Currently active tab name.",
+            "itemtype": "property",
+            "name": "_activeTab",
+            "type": "String",
+            "default": "'links-tab'",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 40,
+            "description": "Map model fot bounding box component.",
+            "itemtype": "property",
+            "name": "boundingBoxComponentMap",
+            "type": "Object",
+            "default": "null",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 49,
+            "description": "Indicates that boundingBox component's map is loading.",
+            "itemtype": "property",
+            "name": "_bboxMapIsLoading",
+            "type": "Boolean",
+            "default": "false",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 58,
+            "description": "Dialog's 'Bounds' segment's caption.",
+            "itemtype": "property",
+            "name": "boundsSegmentCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.edit.bounds-segment.caption')",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 67,
+            "description": "Dialog's 'Bounds' segment's WGS84 option caption.",
+            "itemtype": "property",
+            "name": "wgs84bboxCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption')",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 76,
+            "description": "Dialog's 'Bounds' segment's BBOX option caption.",
+            "itemtype": "property",
+            "name": "bboxCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.edit.bounds-segment.options.bbox.caption')",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 85,
+            "description": "Dialog's 'Bounds' segment's mode.",
+            "itemtype": "property",
+            "name": "boundsMode",
+            "type": "String",
+            "default": "\"wgs84bbox\"",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 94,
+            "description": "Flag: indicates whether to show bounds error message or not.",
+            "itemtype": "property",
+            "name": "_showBoundsErrorMessage",
+            "type": "Boolean",
+            "readonly": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 103,
+            "description": "Initializes component.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 118,
+            "description": "Handles clicks on tabs.",
+            "itemtype": "method",
+            "name": "actions.onTabClick",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Click event object.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 133,
+            "description": "Handles bounding box changes.",
+            "itemtype": "method",
+            "name": "actions.onBoundingBoxChange",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/display.js",
+            "line": 142,
+            "description": "Handles coordinate input textboxes keyPress events.",
+            "itemtype": "method",
+            "name": "actions.coordsInputKeyPress",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/identification-settings.js",
+            "line": 12,
+            "description": "Reference to component's template.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/identification-settings.js",
+            "line": 17,
+            "description": "Message locale key.",
+            "itemtype": "property",
+            "name": "label",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.identification-settings'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/identification-settings.js",
+            "line": 26,
+            "description": "Style class for checkbox component.",
+            "itemtype": "property",
+            "name": "checkboxClass",
+            "type": "String",
+            "default": "'toggle'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/identification-settings.js",
+            "line": 35,
+            "description": "Current object with canBeIdentified property.",
+            "itemtype": "property",
+            "name": "value",
+            "type": "Object",
+            "default": "undefined",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/identification-settings.js",
+            "line": 44,
+            "description": "Current checkbox value.",
+            "itemtype": "property",
+            "name": "_checkboxValue",
+            "type": "Boolean",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/identification-settings.js",
+            "line": 54,
+            "description": "Modifies `value` when `_checkboxValue` changes.",
+            "itemtype": "method",
+            "name": "_checkboxDidChange",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/identification-settings.js",
+            "line": 66,
+            "description": "Initializes component.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 5,
+            "description": "Component for legend settings tab in layer settings.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 9,
+            "description": "Reference to component's template.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 14,
+            "description": "Caption to be displayed in checkbox",
+            "itemtype": "property",
+            "name": "canBeDisplayedCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.settings.group.tab.legend-settings.legend-can-be-displayed')",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 23,
+            "description": "Style class for checkbox component.",
+            "itemtype": "property",
+            "name": "checkboxClass",
+            "type": "String",
+            "default": "'toggle'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 32,
+            "description": "Current object with settings",
+            "itemtype": "property",
+            "name": "value",
+            "type": "Object",
+            "default": "undefined",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 41,
+            "description": "Current checkbox value.",
+            "itemtype": "property",
+            "name": "_canBeDisplayed",
+            "type": "Boolean",
+            "default": "true",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 51,
+            "description": "Observer changes settings for legend.",
+            "itemtype": "method",
+            "name": "_settingsForChanged",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 85,
+            "description": "Flag: indicates whether  layer's type is wms.",
+            "itemtype": "property",
+            "name": "_isWmsType",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 103,
+            "description": "Property containing url.",
+            "itemtype": "property",
+            "name": "_url",
+            "type": "String",
+            "default": "''",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 113,
+            "description": "Property containing version.",
+            "itemtype": "property",
+            "name": "_version",
+            "type": "String",
+            "default": "''",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 123,
+            "description": "Property containing format.",
+            "itemtype": "property",
+            "name": "_format",
+            "type": "String",
+            "default": "''",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 133,
+            "description": "Property containing layers.",
+            "itemtype": "property",
+            "name": "_layers",
+            "type": "String",
+            "default": "''",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
+            "line": 143,
+            "description": "Initializes component.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/links.js",
+            "line": 12,
+            "description": "Reference to component's template.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/links.js",
+            "line": 17,
+            "description": "See [EmberJS API](https://emberjs.com/api/).",
+            "itemtype": "property",
+            "name": "classNames",
+            "type": "Array",
+            "default": "['layers-dialogs-data-tabs']",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/links.js",
+            "line": 26,
+            "description": "Currently active tab name.",
+            "itemtype": "property",
+            "name": "_activeTab",
+            "type": "String",
+            "default": "'links-tab'",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/links.js",
+            "line": 42,
+            "description": "Handles clicks on tabs.",
+            "itemtype": "method",
+            "name": "actions.onTabClick",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Click event object.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/links.js",
+            "line": 57,
+            "description": "Handles {{#crossLink \"FlexberryLinksEditorComponent/sendingActions.updateLookupValue:method\"}}'flexberry-links-editor' component's 'updateLookupValue' action{{/crossLink}}.",
+            "itemtype": "method",
+            "name": "actions.updateLookupValue",
+            "params": [
+                {
+                    "name": "updateData",
+                    "description": "Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/links.js",
+            "line": 67,
+            "description": "Handles {{#crossLink \"FlexberryLinksEditorComponent/sendingActions.changeVisibility:method\"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.",
+            "itemtype": "method",
+            "name": "actions.allowShowCheckboxChange",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "eventObject Event object from {{#crossLink \"FlexberryLinksEditorComponent/sendingActions.changeVisibility:method\"}}'flexberry-links-editor' component's 'changeVisibility' action{{/crossLink}}.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/links.js",
+            "line": 78,
+            "description": "Component's action invoking to update relation value at model.",
+            "itemtype": "method",
+            "name": "sendingActions.updateLookupValue",
+            "params": [
+                {
+                    "name": "updateData",
+                    "description": "Lookup parameters to update data at model: { relationName, newRelationValue, modelToLookup }.\n{{#crossLink \"FlexberryLinksEditorComponent/sendingActions.updateLookupValue:method\"}}flexberry-links-editor 'updateLookupValue' action{{/crossLink}}.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/links.js",
+            "line": 85,
+            "description": "Component's action invoking when model's 'allowShow' state changed.",
+            "itemtype": "method",
+            "name": "sendingActions.allowShowLayerLinkCheckboxChange",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Event object from\n{{#crossLink \"FlexberryDdauCheckboxComponent/sendingActions.change:method\"}}flexberry-ddau-checkbox 'change' action{{/crossLink}}.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main-settings.js",
+            "line": 8,
+            "description": "Reference to component's template.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main-settings.js",
+            "line": 13,
+            "description": "Dialog's 'type' dropdown caption.",
+            "itemtype": "property",
+            "name": "typeDropdownCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.edit.type-dropdown.caption')",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main-settings.js",
+            "line": 22,
+            "description": "Dialog's 'name' textbox caption.",
+            "itemtype": "property",
+            "name": "nameTextboxCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.edit.name-textbox.caption')",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main-settings.js",
+            "line": 31,
+            "description": "Dialog's 'description' textbox caption.",
+            "itemtype": "property",
+            "name": "descriptionTextboxCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.edit.description-textbox.caption')",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main-settings.js",
+            "line": 40,
+            "description": "Dialog's 'keyWords' textbox caption.",
+            "itemtype": "property",
+            "name": "keyWordsTextboxCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.edit.keywords-textbox.caption')",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main-settings.js",
+            "line": 49,
+            "description": "Dialog's 'scale' textbox caption.",
+            "itemtype": "property",
+            "name": "scaleTextboxCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.edit.name-textbox.caption')",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main-settings.js",
+            "line": 58,
+            "description": "Array of posible scale values.",
+            "itemtype": "property",
+            "name": "scales",
+            "type": "Array",
+            "default": "[500, 1000, 2000, 5000, 10000, 25000, 50000, 100000, 200000, 500000, 1000000, 2500000, 5000000, 10000000]",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main-settings.js",
+            "line": 67,
+            "description": "Flag: indicates whether scale settings are available for the selected layer type.",
+            "itemtype": "property",
+            "name": "_scaleSettingsAreAvailableForType",
+            "type": "Boolean",
+            "access": "private",
+            "tagname": "",
+            "readonly": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main-settings.js",
+            "line": 82,
+            "description": "Handles scale input keyDown action.",
+            "itemtype": "method",
+            "name": "actions.scaleInputKeyDown",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 16,
+            "description": "Reference to component's template.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 21,
+            "description": "See [EmberJS API](https://emberjs.com/api/).",
+            "itemtype": "property",
+            "name": "classNames",
+            "type": "Array",
+            "default": "['layers-dialogs-data-tabs']",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 30,
+            "description": "Indicates that boundingBox component's map is loading.",
+            "itemtype": "property",
+            "name": "_bboxMapIsLoading",
+            "type": "Boolean",
+            "default": "false",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 39,
+            "description": "Map model fot bounding box component.",
+            "itemtype": "property",
+            "name": "boundingBoxComponentMap",
+            "type": "Object",
+            "default": "null",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 48,
+            "description": "Dialog's 'Bounds' segment's caption.",
+            "itemtype": "property",
+            "name": "boundsSegmentCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.edit.bounds-segment.caption')",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 57,
+            "description": "Dialog's 'Bounds' segment's WGS84 option caption.",
+            "itemtype": "property",
+            "name": "wgs84bboxCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption')",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 66,
+            "description": "Dialog's 'Bounds' segment's BBOX option caption.",
+            "itemtype": "property",
+            "name": "bboxCaption",
+            "type": "String",
+            "default": "t('components.layers-dialogs.edit.bounds-segment.options.bbox.caption')",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 75,
+            "description": "Dialog's 'Bounds' segment's mode.",
+            "itemtype": "property",
+            "name": "boundsMode",
+            "type": "String",
+            "default": "\"wgs84bbox\"",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 84,
+            "description": "Flag: indicates whether to show bounds error message or not.",
+            "itemtype": "property",
+            "name": "_showBoundsErrorMessage",
+            "type": "Boolean",
+            "readonly": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 93,
+            "description": "Currently active tab name.",
+            "itemtype": "property",
+            "name": "_activeTab",
+            "type": "String",
+            "default": "'links-tab'",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 103,
+            "description": "Initializes component.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 120,
+            "description": "Handles clicks on tabs.",
+            "itemtype": "method",
+            "name": "actions.onTabClick",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Click event object.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/main.js",
+            "line": 135,
+            "description": "Handles bounding box changes.",
+            "itemtype": "method",
+            "name": "actions.onBoundingBoxChange",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/prototyping-modes.js",
+            "line": 11,
+            "description": "Reference to component's template.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/prototyping-modes.js",
+            "line": 16,
+            "description": "Available modes captions.",
+            "itemtype": "property",
+            "name": "_availableModesCaptions",
+            "type": "String[]",
+            "readonly": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/prototyping-modes.js",
+            "line": 37,
+            "description": "Selected mode.",
+            "itemtype": "property",
+            "name": "_selectedMode",
+            "type": "Object",
+            "readonly": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 12,
+            "description": "Reference to component's template.",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 17,
+            "description": "\"Can be searched\" checkbox label locale key.",
+            "itemtype": "property",
+            "name": "_canBeSearchedCheckBoxLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.search-settings.can-be-searched-label'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 26,
+            "description": "\"Can be context-searched\" checkbox label locale key.",
+            "itemtype": "property",
+            "name": "_canBeContextSearchedCheckBoxLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.search-settings.can-be-context-searched-label'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 35,
+            "description": "Label for context-searched fields selector.",
+            "itemtype": "property",
+            "name": "_contextSearchFieldsSelectorLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.search-settings.context-search-fields-selector'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 44,
+            "description": "Label for searched fields selector.",
+            "itemtype": "property",
+            "name": "_searchFieldsSelectorLabel",
+            "type": "String",
+            "default": "'components.layers-dialogs.settings.group.tab.search-settings.search-fields-selector'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 53,
+            "description": "Leaflet's layer type.",
+            "itemtype": "property",
+            "name": "layerType",
+            "type": "Object",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 62,
+            "description": "Leaflet's layer object.",
+            "itemtype": "property",
+            "name": "_leafletObject",
+            "type": "Object",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 72,
+            "description": "Method to create leaflet's layer object.",
+            "itemtype": "property",
+            "name": "leafletObjectMethod",
+            "type": "Function",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 82,
+            "description": "Indicates when leaflet's layer object is loading.",
+            "itemtype": "property",
+            "name": "_leafletObjectIsLoading",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 92,
+            "description": "Array containing Fields in current leaflet object.",
+            "itemtype": "property",
+            "name": "fields",
+            "type": "Array",
+            "default": "Ember.A()",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 101,
+            "description": "Style class for checkbox component.",
+            "itemtype": "property",
+            "name": "checkboxClass",
+            "type": "String",
+            "default": "'toggle'",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 110,
+            "description": "Current object with search settings.",
+            "itemtype": "property",
+            "name": "value",
+            "type": "Object",
+            "default": "Object",
+            "class": "FlexberryIdentificationSettingsComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers-dialogs/tabs/search-settings.js",
+            "line": 124,
+            "description": "Initializes page's DOM-related properties.",
+            "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -39811,62 +40202,6 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/layers-dialogs/group/tab/identification-settings.js:12"
-        },
-        {
-            "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/layers-dialogs/group/tab/identification-settings.js:66"
-        },
-        {
-            "message": "Missing item type\nComponent for legend settings tab in layer settings.",
-            "line": " addon/components/layers-dialogs/group/tab/legend-settings.js:5"
-        },
-        {
-            "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/layers-dialogs/group/tab/legend-settings.js:9"
-        },
-        {
-            "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/layers-dialogs/group/tab/legend-settings.js:143"
-        },
-        {
-            "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/layers-dialogs/group/tab/main-settings.js:8"
-        },
-        {
-            "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/layers-dialogs/group/tab/prototyping-modes.js:11"
-        },
-        {
-            "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/layers-dialogs/group/tab/search-settings.js:12"
-        },
-        {
-            "message": "Missing item type\nInitializes page's DOM-related properties.",
-            "line": " addon/components/layers-dialogs/group/tab/search-settings.js:124"
-        },
-        {
-            "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/layers-dialogs/group/display.js:16"
-        },
-        {
-            "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/layers-dialogs/group/display.js:103"
-        },
-        {
-            "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/layers-dialogs/group/links.js:12"
-        },
-        {
-            "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/layers-dialogs/group/main.js:16"
-        },
-        {
-            "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/layers-dialogs/group/main.js:103"
-        },
-        {
-            "message": "Missing item type\nReference to component's template.",
             "line": " addon/components/layers-dialogs/layers-prototyping-modes/metadata-mode.js:82"
         },
         {
@@ -39940,6 +40275,66 @@
         {
             "message": "Missing item type\nInitializes component.",
             "line": " addon/components/layers-dialogs/settings/wms.js:256"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/layers-dialogs/tabs/display-settings.js:11"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/layers-dialogs/tabs/display.js:16"
+        },
+        {
+            "message": "Missing item type\nInitializes component.",
+            "line": " addon/components/layers-dialogs/tabs/display.js:103"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/layers-dialogs/tabs/identification-settings.js:12"
+        },
+        {
+            "message": "Missing item type\nInitializes component.",
+            "line": " addon/components/layers-dialogs/tabs/identification-settings.js:66"
+        },
+        {
+            "message": "Missing item type\nComponent for legend settings tab in layer settings.",
+            "line": " addon/components/layers-dialogs/tabs/legend-settings.js:5"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/layers-dialogs/tabs/legend-settings.js:9"
+        },
+        {
+            "message": "Missing item type\nInitializes component.",
+            "line": " addon/components/layers-dialogs/tabs/legend-settings.js:143"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/layers-dialogs/tabs/links.js:12"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/layers-dialogs/tabs/main-settings.js:8"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/layers-dialogs/tabs/main.js:16"
+        },
+        {
+            "message": "Missing item type\nInitializes component.",
+            "line": " addon/components/layers-dialogs/tabs/main.js:103"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/layers-dialogs/tabs/prototyping-modes.js:11"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/layers-dialogs/tabs/search-settings.js:12"
+        },
+        {
+            "message": "Missing item type\nInitializes page's DOM-related properties.",
+            "line": " addon/components/layers-dialogs/tabs/search-settings.js:124"
         },
         {
             "message": "Missing item type\nReference to component's template.",

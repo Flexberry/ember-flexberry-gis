@@ -65,6 +65,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "FlexberryBoundingboxComponent",
         "FlexberryBoundingboxMapLoaderMixin",
         "FlexberryCopyLayerDialogComponent",
+        "FlexberryDisplaySettingsComponent",
         "FlexberryEditLayerAttributesDialogComponent",
         "FlexberryEditLayerDialogComponent",
         "FlexberryEditMapDialogComponent",
