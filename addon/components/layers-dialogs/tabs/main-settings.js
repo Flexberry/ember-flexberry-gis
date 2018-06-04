@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import layout from '../../../../templates/components/layers-dialogs/group/tab/main-settings';
+import layout from '../../../templates/components/layers-dialogs/tabs/main-settings';
 import {
   translationMacro as t
 } from 'ember-i18n';

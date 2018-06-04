@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import layout from '../../../../templates/components/layers-dialogs/group/tab/legend-settings';
+import layout from '../../../templates/components/layers-dialogs/tabs/legend-settings';
 import { translationMacro as t } from 'ember-i18n';
 
 /**

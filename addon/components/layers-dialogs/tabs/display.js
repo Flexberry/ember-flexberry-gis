@@ -3,7 +3,7 @@ import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../../../mixins/dynamic-properties';
 import FlexberryBoundingboxMapLoaderMixin from '../../../mixins/flexberry-boundingbox-map-loader';
-import layout from '../../../templates/components/layers-dialogs/group/main';
+import layout from '../../../templates/components/layers-dialogs/tabs/display';
 import {
   translationMacro as t
 } from 'ember-i18n';
@@ -27,14 +27,15 @@ export default Ember.Component.extend(
   */
   classNames: ['layers-dialogs-data-tabs'],
 
-  /***
-    Indicates that boundingBox component's map is loading.
+  /**
+    Currently active tab name.
 
-    @property _bboxMapIsLoading
-    @type Boolean
-    @default false
+    @property _activeTab
+    @type String
+    @default 'links-tab'
+    @private
   */
-  _bboxMapIsLoading: false,
+  _activeTab: 'display-tab',
 
   /**
     Map model fot bounding box component.
@@ -44,6 +45,15 @@ export default Ember.Component.extend(
     @default null
   */
   boundingBoxComponentMap: null,
+
+  /**
+    Indicates that boundingBox component's map is loading.
+
+    @property _bboxMapIsLoading
+    @type Boolean
+    @default false
+  */
+  _bboxMapIsLoading: false,
 
   /**
     Dialog's 'Bounds' segment's caption.
@@ -91,29 +101,17 @@ export default Ember.Component.extend(
   _showBoundsErrorMessage: false,
 
   /**
-    Currently active tab name.
-
-    @property _activeTab
-    @type String
-    @default 'links-tab'
-    @private
-  */
-  _activeTab: 'main-tab',
-
-  /**
     Initializes component.
   */
   init() {
     this._super(...arguments);
-    this.set('_mainGroupIsAvailableForType', this.get('mainGroupIsAvailableForType'));
-    let _this = this;
-    this.set('_bboxMapIsLoading', true);
 
+    let _this = this;
     this.getBoundingBoxComponentMapModel().then(result => {
       _this.set('boundingBoxComponentMap', result);
-      _this.set('_bboxMapIsLoading', false);
     });
-    this.set('_activeTab', 'main-tab');
+
+    this.set('_activeTab', 'display-tab');
   },
 
   actions: {
@@ -139,6 +137,18 @@ export default Ember.Component.extend(
     */
     onBoundingBoxChange(e) {
       this.set('_layer.boundingBox', e.bboxGeoJSON);
+    },
+
+    /**
+      Handles coordinate input textboxes keyPress events.
+
+      @method actions.coordsInputKeyPress
+    */
+    coordsInputKeyPress(e) {
+      // Allow only numeric (with dot) and Delete, Insert, Print screen buttons.
+      if (e.which !== 45 && e.which !== 44 && e.which !== 46 && (e.which < 48 || e.which > 57)) {
+        return false;
+      }
     }
   }
 });

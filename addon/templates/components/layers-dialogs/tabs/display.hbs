@@ -32,17 +32,21 @@
       </div>
       {{#if _displaySettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "display-tab") "active"}}" data-tab="display-tab">
-          {{flexberry-jsonarea value=_layer.settings.displaySettings}}
+          {{layers-dialogs/tabs/display-settings
+            value=_layer.settings.displaySettings
+            layerType=_layer.type
+            leafletObjectMethod=_layer.leafletObjectGetter
+          }}
         </div>
       {{/if}}
       {{#if _identifySettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "identify-tab") "active"}}" data-tab="identify-tab">
-          {{layers-dialogs/group/tab/identification-settings value=_layer.settings.identifySettings}}
+          {{layers-dialogs/tabs/identification-settings value=_layer.settings.identifySettings}}
         </div>
       {{/if}}
       {{#if _searchSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "search-tab") "active"}}" data-tab="search-tab">
-          {{layers-dialogs/group/tab/search-settings
+          {{layers-dialogs/tabs/search-settings
             value=_layer.settings.searchSettings
             _layerType=_layer.type
             _leafletObjectMethod=_layer.leafletObjectGetter
@@ -51,7 +55,7 @@
       {{/if}}
       {{#if _legendSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "legend-tab") "active"}}" data-tab="legend-tab">
-          {{layers-dialogs/group/tab/legend-settings
+          {{layers-dialogs/tabs/legend-settings
             value=_layer.settings.legendSettings
             type=_layer.type
           }}

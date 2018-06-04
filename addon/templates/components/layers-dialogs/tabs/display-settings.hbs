@@ -1,0 +1,102 @@
+<div class="ui grid  {{if _leafletObjectIsLoading "loading"}}">
+  <div class="row">
+    <div class="column">
+      <div class="field">
+        <label>{{t dateFormatLabel}}</label>
+        {{flexberry-textbox
+          value=value.dateFormat
+          placeholder=(t dateFormatPlaceholder)
+          class=dateFormatClass
+        }}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      <div class="field">
+        {{flexberry-checkbox
+          value=value.featuresPropertiesSettings.displayPropertyIsCallback
+          label=(t displayPropertyIsCallbackLabel)
+          class=displayPropertyIsCallbackClass
+          change=(action "isCallbackCheckboxDidChange")
+        }}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      <div class="field">
+        <label>{{t displayPropertyLabel}}</label>
+        {{#if value.featuresPropertiesSettings.displayPropertyIsCallback}}
+          {{textarea
+            value=value.featuresPropertiesSettings.displayProperty
+            placeholder=(t displayPropertyPlaceholder)
+            readonly=readonly
+            class=displayPropertyClass
+          }}
+        {{else}}
+          {{#if allProperties}}
+            {{flexberry-dropdown
+              items=allProperties
+              value=value.featuresPropertiesSettings.displayProperty
+              placeholder=(t displayPropertyLabel)
+            }}
+          {{/if}}
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <table class="ui compact celled definition table">
+      <thead class="full-width">
+        <tr>
+          <th>{{t showPropertyHeading}}</th>
+          <th>{{t propertiesListHeading}}</th>
+          <th>{{_defaultLocale}}</th>
+          {{#if isMoreThanOne}}
+            <th>
+              {{flexberry-dropdown
+                items=allLocales
+                value=_selectedLocale
+                placeholder=(t localesListHeading)
+              }}
+            </th>
+          {{/if}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each allProperties as |property|}}
+          <tr>
+            <td class="collapsing">
+              <div class="ui fitted">
+                {{flexberry-checkbox
+                  value=(get this (concat "_showableItems." property))
+                  change=(action "showCheckboxDidChange" property)
+                }}
+              </div>
+            </td>
+            <td>{{property}}</td>
+            <td>
+              {{flexberry-textbox
+                value=(mut (get this (concat "value.featuresPropertiesSettings.localizedProperties" "." _defaultLocale "." property)))
+                placeholder=(t translationPlaceholder)
+              }}
+            </td>
+            {{#if isMoreThanOne}}
+              <td>
+                {{flexberry-textbox
+                  value=(mut (get this (concat "value.featuresPropertiesSettings.localizedProperties" "." _selectedLocale "." property)))
+                  placeholder=(t translationPlaceholder)
+                }}
+              </td>
+            {{/if}}
+          </tr>
+          {{else}}
+            <tr colspan="4">
+              <td> {{t noItemsAvaliableLabel}} </td>
+            </tr>
+          {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>

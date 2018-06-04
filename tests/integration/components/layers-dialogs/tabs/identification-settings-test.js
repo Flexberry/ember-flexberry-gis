@@ -5,7 +5,7 @@ import I18nService from 'ember-i18n/services/i18n';
 import I18nRuLocale from 'ember-flexberry-gis/locales/ru/translations';
 import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
 
-moduleForComponent('layers-dialogs/group/tab/legend-settings', 'Integration | Component | layers dialogs/group/tab/legend settings', {
+moduleForComponent('identification-settings', 'Integration | Component | identification settings', {
   beforeEach: function (assert) {
     this.register('locale:ru/translations', I18nRuLocale);
     this.register('locale:en/translations', I18nEnLocale);
@@ -20,24 +20,20 @@ moduleForComponent('layers-dialogs/group/tab/legend-settings', 'Integration | Co
 
     let obj = {
       settings: {
-        legendSettings: {
-          legendCanBeDisplayed: true
+        displaySettings: {
+          canBeIdentified: true
         }
       }
     };
+
     this.set('_layer', obj);
   },
   integration: true
 });
 
 test('it renders', function(assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
 
-  this.render(hbs`{{layers-dialogs/group/tab/legend-settings
-                    value=_layer.settings.legendSettings
-                    type=_layer.type
-                  }}`);
+  this.render(hbs`{{layers-dialogs/tabs/identification-settings value=_layer.settings.displaySettings}}`);
 
-  assert.equal(this.$().text().trim(), 'Отображать легенду');
+  assert.equal(this.$().text().trim(), 'Может быть идентифицирован');
 });
