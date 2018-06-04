@@ -35,7 +35,7 @@
           {{layers-dialogs/tabs/display-settings
             value=_layer.settings.displaySettings
             layerType=_layer.type
-            leafletObjectMethod=_leafletObjectForFilter
+            leafletObjectMethod=_layer.leafletObjectGetter
           }}
         </div>
       {{/if}}
