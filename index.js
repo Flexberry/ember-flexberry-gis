@@ -116,8 +116,6 @@ module.exports = {
 
     // Load chartjs
     app.import(app.bowerDirectory + '/chart.js/dist/Chart.js');
-    // Load leaflet/path.drag.js     !!!After update ember - remove!!!
-    app.import('vendor/leaflet/utils/Path.Drag.js');
 
     // ESRI.terraformer
     app.import(app.bowerDirectory + '/terraformer/terraformer.js');

@@ -14,12 +14,12 @@ export default {
   'move-dialog': 'Move feature',
   'move': {
     'dragNdrop': {
-      'caption': 'Drag and drop'
+      'caption': 'Group drag and drop'
     },
     'offset': {
       'caption': 'Offset'
     },
-    'move-error': 'As you move, the latitude and/or longitude is out of range'
+    'move-error': 'The latitude and/or longitude is out of range'
   },
   'goto': 'Go to',
   'difference': 'Difference polygon',

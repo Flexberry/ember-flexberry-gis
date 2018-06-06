@@ -94,6 +94,20 @@
                           complete=(action "onGeometryAddComplete" tabModel)
                         }}
                       {{/each}}
+                      <div class="flexberry-geometry-move {{if tabModel.groupDraggable "active"}}">
+                        <div class="ui simple dropdown item">
+                          <i class="move icon"></i>
+                          <i class="dropdown icon"></i>
+                          <div class="menu">
+                              <a class="item" onclick={{action "onMoveSelect" "dragNdrop" tabModel}}>
+                                {{t "components.flexberry-layers-attributes-panel.move.dragNdrop.caption"}}
+                              </a>
+                              <a class="item" onclick={{action "onMoveSelect" "offset" tabModel}}>
+                                {{t "components.flexberry-layers-attributes-panel.move.offset.caption"}}
+                              </a>
+                          </div>
+                        </div>
+                      </div>
                       <div class="flexberry-geometry-tools">
                         <div class="ui simple dropdown item">
                           <i class="cut icon"></i>
@@ -164,20 +178,6 @@
                         iconClass="save icon"
                         readonly=(not (get tabModel "leafletObject._wasChanged"))
                       }}
-                      <div class="flexberry-geometry-add-mode-draw">
-                        <div class="ui simple dropdown item">
-                          <i class="move icon"></i>
-                          <i class="dropdown icon"></i>
-                          <div class="menu">
-                              <a class="item" onclick={{action "onMoveSelect" "dragNdrop" tabModel}}>
-                                {{t "components.flexberry-layers-attributes-panel.move.dragNdrop.caption"}}
-                              </a>
-                              <a class="item" onclick={{action "onMoveSelect" "offset" tabModel}}>
-                                {{t "components.flexberry-layers-attributes-panel.move.offset.caption"}}
-                              </a>
-                          </div>
-                        </div>
-                      </div>
                     {{/if}}
                   </div>
                   <div class="field">
