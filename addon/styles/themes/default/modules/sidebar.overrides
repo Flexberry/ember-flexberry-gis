@@ -565,13 +565,16 @@
       }
 
       .flexberry-geometry-add-mode-draw, .flexberry-geometry-buffer,
-      .flexberry-geometry-tools {
+      .flexberry-geometry-tools, .flexberry-geometry-move {
         height: 35px;
         color: #7ba7d9;
         background: #fff;
         border-radius: 5px;
         border: 1px solid #7ba7d9;
         display: inline-block;
+        &.active {
+          background: #d2e2fb;
+        }
 
         .ui.dropdown.item {
           line-height: 30px;

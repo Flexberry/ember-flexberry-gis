@@ -94,6 +94,20 @@
                           complete=(action "onGeometryAddComplete" tabModel)
                         }}
                       {{/each}}
+                      <div class="flexberry-geometry-move {{if tabModel.groupDraggable "active"}}">
+                        <div class="ui simple dropdown item">
+                          <i class="move icon"></i>
+                          <i class="dropdown icon"></i>
+                          <div class="menu">
+                              <a class="item" onclick={{action "onMoveSelect" "dragNdrop" tabModel}}>
+                                {{t "components.flexberry-layers-attributes-panel.move.dragNdrop.caption"}}
+                              </a>
+                              <a class="item" onclick={{action "onMoveSelect" "offset" tabModel}}>
+                                {{t "components.flexberry-layers-attributes-panel.move.offset.caption"}}
+                              </a>
+                          </div>
+                        </div>
+                      </div>
                       <div class="flexberry-geometry-tools">
                         <div class="ui simple dropdown item">
                           <i class="cut icon"></i>
@@ -164,11 +178,19 @@
                         iconClass="save icon"
                         readonly=(not (get tabModel "leafletObject._wasChanged"))
                       }}
-                      {{#if (not (is-none _dataForDifference))}}
-                        <label>
-                          {{t "components.flexberry-layers-attributes-panel.choice-spliter"}}
-                        </label>
-                      {{/if}}
+                    {{/if}}
+                  </div>
+                  <div class="field">
+                    {{#if _moveWithError}}
+                      {{ui-message
+                        type="error"
+                        message=(t "components.flexberry-layers-attributes-panel.move.move-error")
+                      }}
+                    {{/if}}
+                    {{#if (not (is-none _dataForDifference))}}
+                      <label>
+                        {{t "components.flexberry-layers-attributes-panel.choice-spliter"}}
+                      </label>
                     {{/if}}
                   </div>
                 </div>
@@ -256,6 +278,16 @@
     approve=(action "onNewRowDialogApprove")
     deny=(action "onNewRowDialogDeny")
     hide=(action "onNewRowDialogHide")
+  }}
+{{/if}}
+{{#if _moveDialogHasBeenRequested}}
+  {{component "layers-dialogs/attributes/move"
+    caption=(t "components.flexberry-layers-attributes-panel.move-dialog")
+    visible=_moveDialogIsVisible
+    moveX=_moveX
+    moveY=_moveY
+    layerCRS=(get _tabModels (concat selectedTabIndex ".leafletObject.options.crs.code"))
+    approve=(action "onMoveDialogApprove")
   }}
 {{/if}}
 {{flexberry-error error=error}}

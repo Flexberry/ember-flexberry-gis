@@ -108,5 +108,9 @@ export default {
     'links-group': {
       'caption': 'Links'
     }
+  },
+  'move': {
+    'moveX': 'Move by X',
+    'moveY': 'Move by Y',
   }
 };

@@ -11,6 +11,16 @@ export default {
   'save-changes': 'Save changes',
   'table-tab': 'Table',
   'diagram-tab': 'Chart',
+  'move-dialog': 'Move feature',
+  'move': {
+    'dragNdrop': {
+      'caption': 'Group drag and drop'
+    },
+    'offset': {
+      'caption': 'Offset'
+    },
+    'move-error': 'The latitude and/or longitude is out of range'
+  },
   'goto': 'Go to',
   'difference': 'Difference polygon',
   'choice-spliter': 'Select a polygon that will be subtracted',

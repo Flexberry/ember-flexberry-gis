@@ -1,0 +1,42 @@
+{{#flexberry-dialog class=(concat class " " flexberryClassNames.prefix)
+  caption=caption
+  approveButtonCaption=approveButtonCaption
+  denyButtonCaption=denyButtonCaption
+  visible=visible
+  approve=(action "onApprove")
+  deny=(action "onDeny")
+  beforeShow=(action "onBeforeShow")
+  beforeHide=(action "onBeforeHide")
+  show=(action "onShow")
+  hide=(action "onHide")
+}}
+  <form class="ui form {{flexberryClassNames.form}}" role="form">
+    <div class="field disabled">
+      <label>
+        {{crsFieldLabel}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=layerCRS
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{t "components.layers-dialogs.edit.move.moveX"}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=moveX
+      }}
+    </div>
+    <div class="field">
+      <label>
+        {{t "components.layers-dialogs.edit.move.moveY"}}
+      </label>
+      {{flexberry-textbox
+        class="fluid"
+        value=moveY
+      }}
+    </div>
+  </form>
+{{/flexberry-dialog}}

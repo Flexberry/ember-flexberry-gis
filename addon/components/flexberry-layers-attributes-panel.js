@@ -31,6 +31,13 @@ import * as union from 'npm:@turf/union';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
+  /**
+    Reference to 'layers-styles-renderer' servie.
+
+    @property layersStylesRenderer
+    @type LayersStylesRendererService
+  */
+  layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
 
   /**
     Measure units for buffer tool.
@@ -85,6 +92,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _activeTabs: {},
 
   /**
+    Cache for tab models.
+
+    @property _tabModelsCache
+    @type Array
+    @private
+  */
+  _tabModelsCache: Ember.A(),
+
+  /**
     Computed property that builds tab models collection from items.
 
     @property _tabModels
@@ -105,6 +121,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
         let leafletObject = Ember.get(item, 'leafletObject');
         let readonly = Ember.get(item, 'settings.readonly') || false;
+        let styleSettings = Ember.get(item, 'settings.styleSettings') || {};
 
         let getHeader = () => {
           let result = {};
@@ -134,8 +151,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let tabModel = Ember.Object.extend({
           _top: 5,
           _skip: 0,
+          groupDraggable: false,
+          _saveDragState: true,
+          _tempCoords: undefined,
+          _nowDragging: false,
           _selectedRows: {},
           _editedRows: {},
+          _draggableRows: {},
           _selectedRowsCount: Ember.computed('_selectedRows', function () {
             let selectedRows = Ember.get(this, '_selectedRows');
             return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
@@ -232,6 +254,181 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             this.set('properties', properties);
           },
 
+          /**
+            Handles mouse down event when dragging.
+
+            @param {Object} e Event object.
+          */
+          _dragOnMouseDown(e) {
+            // cancel if mouse button is NOT the left button
+            if (e.originalEvent.button > 0) {
+              return;
+            }
+
+            let saveDragState = this.get('_saveDragState');
+            if (saveDragState) {
+              this.set('_tempCoords', e.latlng);
+              this.set('_saveDragState', false);
+              this.set('_dragLayer', e.target);
+              let editedRows = this.get('_editedRows');
+              let draggableRows = this.get('_draggableRows');
+              let currentLayers = Object.keys(draggableRows).filter((key) => draggableRows[key] && editedRows[key]).map((key) => {
+                return this.get(`featureLink.${key}`);
+              });
+
+              currentLayers.forEach((layer) => {
+                layer.disableEdit();
+              });
+
+              if (e.target.bringToFront) {
+                e.target.bringToFront();
+              }
+
+              e.target.on('mouseup', this._dragOnMouseUp, this);
+              e.target._map.on('mousemove', this._dragOnMouseMove, this);
+              e.target._map.dragging.disable();
+            }
+          },
+
+          /**
+            Handles mouse move event when dragging.
+
+            @param {Object} e Event object.
+          */
+          _dragOnMouseMove(e) {
+            if (!this.get('_nowDragging')) {
+              this.set('_nowDragging', true);
+            }
+
+            this._onLayerDrag(e);
+          },
+
+          /**
+            Handles mouse up event when dragging.
+
+            @param {Object} e Event object.
+          */
+          _dragOnMouseUp() {
+            let dragLayer = this.get('_dragLayer');
+
+            dragLayer._map.dragging.enable();
+            this.set('_saveDragState', true);
+
+            // clear up mousemove event
+            dragLayer._map.off('mousemove', this._dragOnMouseMove, this);
+
+            // clear up mouseup event
+            dragLayer.off('mouseup', this._dragOnMouseUp, this);
+
+            let editedRows = this.get('_editedRows');
+            let draggableRows = this.get('_draggableRows');
+            let currentLayers = Object.keys(draggableRows).filter((key) => draggableRows[key] && editedRows[key]).map((key) => {
+              return this.get(`featureLink.${key}`);
+            });
+
+            currentLayers.forEach((layer) => {
+              layer.enableEdit();
+            });
+
+            let selectedRows = this.get('_selectedRows');
+            let selectedLayer = Object.keys(selectedRows).filter((key) => selectedRows[key]).map((key) => {
+              return this.get(`featureLink.${key}`);
+            });
+
+            if (this.get('groupDraggable') && selectedLayer.indexOf(dragLayer) > -1) {
+              selectedLayer.forEach((layer) => {
+                this._triggerChanged.call([this, layer, true], { layer: layer });
+              });
+            } else {
+              this._triggerChanged.call([this, dragLayer, true], { layer: dragLayer });
+            }
+
+            this.set('_nowDragging', false);
+          },
+
+          /**
+            Handles layer dragging with mouse.
+
+            @param {Object} e Event object.
+          */
+          _onLayerDrag(e) {
+            // latLng of mouse event
+            let { latlng } = e;
+
+            // delta coords (how far was dragged)
+            let deltaLatLng = {
+              lat: latlng.lat - this.get('_tempCoords.lat'),
+              lng: latlng.lng - this.get('_tempCoords.lng'),
+            };
+
+            // move the coordinates by the delta
+            let moveCoords = coords => {
+              if (Ember.isArray(coords)) {
+                return coords.map((currentLatLng) => {
+                  return moveCoords(currentLatLng);
+                });
+              }
+
+              let res = {
+                lat: coords.lat + deltaLatLng.lat,
+                lng: coords.lng + deltaLatLng.lng,
+              };
+
+              return res;
+            };
+
+            // create the new coordinates array
+            let newCoords;
+            let selectedRows = this.get('_selectedRows');
+            let dragLayer = this.get('_dragLayer');
+            let currentLayers = Object.keys(selectedRows).filter((key) => selectedRows[key]).map((key) => {
+              return this.get(`featureLink.${key}`);
+            });
+
+            let moveLayer = (layer) => {
+              if (layer instanceof L.Marker) {
+                newCoords = moveCoords(layer._latlng);
+              } else {
+                newCoords = moveCoords(layer._latlngs);
+              }
+
+              // set new coordinates and redraw
+              if (layer.setLatLngs) {
+                layer.setLatLngs(newCoords).redraw();
+              } else {
+                layer.setLatLng(newCoords);
+              }
+            };
+
+            if (this.get('groupDraggable') && currentLayers.indexOf(dragLayer) > -1) {
+              currentLayers.forEach((layer) => {
+                moveLayer(layer);
+              });
+            } else {
+              moveLayer(dragLayer);
+            }
+
+            // save current latlng for next delta calculation
+            this.set('_tempCoords', latlng);
+          },
+
+          /**
+            Mark layer as changed.
+
+            @param {Object} e Event object.
+          */
+          _triggerChanged(e) {
+            let [tabModel, layer, setEdited] = this;
+            if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(layer))) {
+              Ember.set(tabModel, 'leafletObject._wasChanged', true);
+              tabModel.notifyPropertyChange('leafletObject._wasChanged');
+
+              if (setEdited) {
+                tabModel.leafletObject.editLayer(layer);
+              }
+            }
+          },
+
           init() {
             this.get('i18n.locale');
             this._reload();
@@ -241,17 +438,60 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             this.set('featureLink', null);
             this.set('propertyLink', null);
             this.set('properties', null);
+          },
+
+          /**
+            Enable dragging for specified layers.
+
+            @param {Array/String} layerIds Array of layers ids or single id.
+          */
+          enableDragging(layerIds) {
+            let ids = layerIds instanceof Array ? layerIds : Ember.A([layerIds]);
+            ids.forEach((id) => {
+              this.set(`_draggableRows.${id}`, true);
+              let layer = this.get(`featureLink.${id}`);
+              layer.on('mousedown', this._dragOnMouseDown, this);
+              if (layer.bringToFront) {
+                layer.bringToFront();
+              }
+            });
+          },
+
+          /**
+            Disable dragging for specified layers.
+
+            @param {Array/String} layerIds Array of layers ids or single id.
+          */
+          disableDragging(layerIds) {
+            let ids = layerIds instanceof Array ? layerIds : Ember.A([layerIds]);
+            ids.forEach((id) => {
+              this.set(`_draggableRows.${id}`, false);
+              let layer = this.get(`featureLink.${id}`);
+              layer.off('mousedown', this._dragOnMouseDown, this);
+            });
           }
         });
-        return tabModel.create(
+        let cachedTab = this.get('_tabModelsCache').find((tab) => Ember.isEqual(tab.get('leafletObject'), leafletObject));
+        if (!Ember.isNone(cachedTab)) {
+          cachedTab.set('name', name);
+
+          return cachedTab;
+        }
+
+        let newTab = tabModel.create(
           Ember.getOwner(this).ownerInjection(),
           {
             name,
             allowEdit: !readonly,
             leafletObject,
-            availableDrawTools
+            availableDrawTools,
+            styleSettings
           }
         );
+
+        this.get('_tabModelsCache').addObject(newTab);
+
+        return newTab;
       });
     }
   }),
@@ -377,6 +617,34 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   availableGeometryAddModes: ['draw', 'manual', 'geoprovider'],
 
   /**
+    Flag: indicates whether moveDialog has been requested
+
+    @property _moveDialogHasBeenRequested
+    @type boolean
+    @default false
+  */
+  _moveDialogHasBeenRequested: false,
+
+  /**
+    Flag: indicates whether moveDialog is visible
+
+    @property _moveDialogIsVisible
+    @type boolean
+    @default false
+  */
+
+  _moveDialogIsVisible: false,
+
+  /**
+    Flag: indicates that move was with error
+
+    @property _moveWithError
+    @type boolean
+    @default false
+  */
+  _moveWithError: false,
+
+  /*
     Flag indicates that union operation success.
 
     @property createCombinedPolygon
@@ -437,14 +705,34 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Number} index closed tab index.
     */
     closeTab(index) {
+      let tabModel = this.get(`_tabModels.${index}`);
+      let editedRows = Ember.get(tabModel, '_editedRows');
+      Object.keys(editedRows).filter((key) => editedRows[key]).forEach((key) => {
+        let layer = tabModel.get(`featureLink.${key}`);
+        layer.disableEdit();
+      });
+
+      if (tabModel.get('groupDraggable')) {
+        let draggableRows = Ember.get(tabModel, '_draggableRows');
+        tabModel.disableDragging(Object.keys(draggableRows).filter((key) => draggableRows[key]));
+      }
+
       let editedLayers = this.get('items');
       let selectedTabIndex = this.get('selectedTabIndex');
+      this.get('_tabModelsCache').removeObject(tabModel);
       editedLayers.removeAt(index);
       if (selectedTabIndex >= index && selectedTabIndex - 1 >= 0) {
         this.set('selectedTabIndex', selectedTabIndex - 1);
       }
     },
 
+    /**
+      Handles click on tab.
+
+      @method actions.onTabClick
+      @param {String} tabModelName Tab's model name.
+      @param {Object} e Event object.
+    */
     onTabClick(tabModelName, e) {
       e = Ember.$.event.fix(e);
       let clickedTabName = Ember.$(e.currentTarget).attr('data-tab');
@@ -465,6 +753,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(selectedRows, rowId, options.checked);
       Ember.set(tabModel, '_selectedRows', selectedRows);
       tabModel.notifyPropertyChange('_selectedRows');
+
+      if (tabModel.get('groupDraggable')) {
+        let editedRows = Ember.get(tabModel, '_editedRows');
+        if (!editedRows[rowId]) {
+          if (options.checked) {
+            tabModel.enableDragging(rowId);
+          } else {
+            tabModel.disableDragging(rowId);
+          }
+        }
+      }
     },
 
     /**
@@ -583,17 +882,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} tabModel Related tab.
     */
     onSelectAllClick(tabModel) {
-      let selectAll = Ember.get(tabModel, 'selectAll');
-      if (!selectAll) {
-        Ember.set(tabModel, '_selectedRows', {});
-      } else {
-        let selectedRows = Object.assign(...Object.keys(Ember.get(tabModel, 'propertyLink')).map(k => ({
-          [k]: true
-        })));
-        Ember.set(tabModel, '_selectedRows', selectedRows);
-      }
-
-      tabModel.notifyPropertyChange('_selectedRows');
+      this.changeSelectedAll(tabModel);
     },
 
     /**
@@ -661,10 +950,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           delete editedRows[key];
           editedRowsChange = true;
           layer.disableEdit();
-          this.get('leafletMap').off('editable:editing', this._triggerChanged, [tabModel, layer, true]);
+          this.get('leafletMap').off('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
         }
 
-        this._triggerChanged.call([tabModel, layer, false], { layer });
+        tabModel._triggerChanged.call([tabModel, layer, false], { layer });
       });
       Ember.set(tabModel, '_selectedRows', selectedRows);
       tabModel.notifyPropertyChange('_selectedRows');
@@ -710,7 +999,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             this.set(`_editRowData.${key}`, element);
             let tabModel = this.get('_editRowTabModel');
             let layer = this.get('_editRowLayer');
-            this._triggerChanged.call([tabModel, layer, true], { layer });
+            tabModel._triggerChanged.call([tabModel, layer, true], { layer });
           }
         }
       }
@@ -724,7 +1013,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     */
     onTableRowEdited(tabModel, rowId) {
       let layer = tabModel.featureLink[rowId];
-      this._triggerChanged.call([tabModel, layer, true], { layer });
+      tabModel._triggerChanged.call([tabModel, layer, true], { layer });
     },
 
     /**
@@ -759,12 +1048,18 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         }
 
         this._zoomToLayer(layer);
+        tabModel.enableDragging(rowId);
+        if (layer.bringToFront) {
+          layer.bringToFront();
+        }
+
         layer.enableEdit(leafletMap);
-        leafletMap.on('editable:editing', this._triggerChanged, [tabModel, layer, true]);
+        leafletMap.on('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
 
       } else {
+        tabModel.disableDragging(rowId);
         layer.disableEdit();
-        leafletMap.off('editable:editing', this._triggerChanged, [tabModel, layer, true]);
+        leafletMap.off('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
         let addedLayers = Ember.get(tabModel, '_addedLayers') || {};
         if (!Ember.isNone(addedLayers[Ember.guidFor(layer)])) {
           leafletMap.removeLayer(layer);
@@ -820,6 +1115,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         layer.setStyle(Ember.get(tabModel, 'leafletObject.options.style'));
       }
 
+      this.get('layersStylesRenderer').renderOnLeafletLayer({ leafletLayer: layer, styleSettings: tabModel.get('styleSettings') });
+
       tabModel.leafletObject.addLayer(layer);
       layer.disableEdit();
 
@@ -832,7 +1129,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(tabModel, `propertyLink.${propId}`, data);
       tabModel.properties.pushObject(data);
 
-      this._triggerChanged.call([tabModel, layer, false], { layer });
+      tabModel._triggerChanged.call([tabModel, layer, false], { layer });
 
       if (this.get('_newRowPanToObject')) {
         this._zoomToLayer(layer);
@@ -907,7 +1204,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       if (Ember.isNone(this.get('_dataForDifference'))) {
         this.set('_dataForDifference', selectedRows);
-        Ember.set(tabModel, '_selectedRows', {});
+        this.changeSelectedAll(tabModel, false);
 
         // Create function for observer.
         let _this = this;
@@ -959,7 +1256,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.send('onDeleteItemClick', tabModel);
 
         this.set('_dataForDifference', null);
-        this.send('onRowSelect', tabModel, Object.keys(selectedRows)[0], { checked:false });
+        this.changeSelectedAll(tabModel, false);
       }
     },
 
@@ -1007,6 +1304,98 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.set('_newRowСhoiceValueMode', true);
         this.set('_newRowСhoiceValueData', layerProperties);
         this.send('onGeometryAddComplete', tabModel, polygonLayers[0]);
+      }
+    },
+
+    /**
+      Handles move layer's object.
+
+      @param {Object} tabModel Related tab model.
+    */
+    onMoveSelect(modes, tabModel) {
+      switch (modes) {
+        case 'dragNdrop':
+          this._dragAndDrop(tabModel);
+          break;
+        case 'offset':
+          this._showMoveDialog(tabModel);
+          break;
+      }
+    },
+
+    /**
+      Handles move dialog's 'approve' action.
+
+      @param {Number} moveX A hash containing move by X.
+      @param {Number} moveY A hash containing move by Y.
+    */
+    onMoveDialogApprove(moveX, moveY) {
+      let indexTabModel = this.get('selectedTabIndex');
+      let tabModel = this.get(`_tabModels.${indexTabModel}`);
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let _moveX = parseFloat(this.get('_moveX')) || 0;
+      let _moveY = parseFloat(this.get('_moveY')) || 0;
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+      .map((key) => {
+        return tabModel.featureLink[key].feature;
+      });
+      let crs = tabModel.leafletObject.options.crs;
+      this.send('onClearFoundItemClick');
+      this.set('_moveWithError', false);
+      selectedFeatures.forEach((feature) => {
+        let coords = feature.leafletLayer._latlngs;
+        if (Ember.isNone(coords)) {
+          coords = feature.leafletLayer._latlng;
+        }
+
+        this.move(coords, _moveX, _moveY, crs);
+        if (this.get('_moveWithError')) {
+          this.move(coords, -_moveX, -_moveY, crs);
+        }
+
+        if (feature.leafletLayer.redraw) {
+          feature.leafletLayer.redraw();
+        }
+
+        tabModel._triggerChanged.call([tabModel, feature.leafletLayer, true], { layer: feature.leafletLayer });
+      });
+    }
+  },
+
+  /**
+    Selected or deselected all objects.
+
+    @param {Object} tabModel Tab model.
+    @param {Boolean} selectedFlag Indicates select or deselect objects.
+  */
+  changeSelectedAll(tabModel, selectedFlag) {
+    let selectAll = Ember.get(tabModel, 'selectAll');
+    if (!Ember.isNone(selectedFlag)) {
+      Ember.set(tabModel, 'selectAll', selectedFlag);
+      selectAll = selectedFlag;
+    }
+
+    if (!selectAll) {
+      Ember.set(tabModel, '_selectedRows', {});
+    } else {
+      let selectedRows = Object.assign(...Object.keys(Ember.get(tabModel, 'propertyLink')).map(k => ({
+        [k]: true
+      })));
+      Ember.set(tabModel, '_selectedRows', selectedRows);
+    }
+
+    tabModel.notifyPropertyChange('_selectedRows');
+    if (tabModel.get('groupDraggable')) {
+      let editedRows = Ember.get(tabModel, '_editedRows');
+      let featureLink = Ember.get(tabModel, 'featureLink');
+      for (let rowId in featureLink) {
+        if (!editedRows[rowId]) {
+          if (selectAll) {
+            tabModel.enableDragging(rowId);
+          } else {
+            tabModel.disableDragging(rowId);
+          }
+        }
       }
     }
   },
@@ -1250,6 +1639,63 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   },
 
   /**
+    Calculates new coordinates layer's feature after the move
+
+    @param {Arrey} latlngs A hash containing  coordinates.
+    @param {Number} x A hash containing move by X.
+    @param {Number} y A hash containing move by Y.
+    @param {Object} crs A hash containing layer's crs.
+  */
+  move(latlngs, x, y, crs) {
+    if (Ember.isArray(latlngs)) {
+      latlngs.forEach(ll => this.move(ll, x, y, crs));
+    } else {
+      let pointO = crs.unproject(L.point(0, 0));
+      let pointOX = crs.unproject(L.point(x, 0));
+      let pointOY = crs.unproject(L.point(0, y));
+      latlngs.lat += (pointOY.lat - pointO.lat);
+      latlngs.lng += (pointOX.lng - pointO.lng);
+
+      if (latlngs.lat > 90 || latlngs.lat < -90 || latlngs.lng > 180 || latlngs.lng < -180) {
+        this.set('_moveWithError', true);
+      }
+    }
+  },
+
+  /**
+    Shows a dialog for entering the attributes  move of layer's feature.
+
+    @param {Object} tabModel Related tab model.
+  */
+  _showMoveDialog() {
+    // Include dialog to markup.
+    this.set('_moveDialogHasBeenRequested', true);
+
+    // Show dialog.
+    this.set('_moveDialogIsVisible', true);
+  },
+
+  /**
+    Drag and drop.
+
+    @param {Object} tabModel Related tab model.
+  */
+  _dragAndDrop(tabModel) {
+    this.send('onClearFoundItemClick');
+    tabModel.toggleProperty('groupDraggable');
+
+    let selectedRows = Ember.get(tabModel, '_selectedRows');
+    let editedRows = Ember.get(tabModel, '_editedRows');
+    let currentRows = Object.keys(selectedRows).filter((key) => selectedRows[key] && !editedRows[key]);
+
+    if (tabModel.get('groupDraggable')) {
+      tabModel.enableDragging(currentRows);
+    } else {
+      tabModel.disableDragging(currentRows);
+    }
+  },
+
+  /**
     Returns Leaflet.Editable instance.
   */
   _getEditTools() {
@@ -1334,23 +1780,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     }
 
     return ['marker', 'circle', 'polyline', 'rectangle', 'polygon'];
-  },
-
-  /**
-    Mark layer as changed.
-
-    @param {Object} e Event object.
-  */
-  _triggerChanged(e) {
-    let [tabModel, layer, setEdited] = this;
-    if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(layer))) {
-      Ember.set(tabModel, 'leafletObject._wasChanged', true);
-      tabModel.notifyPropertyChange('leafletObject._wasChanged');
-
-      if (setEdited) {
-        tabModel.leafletObject.editLayer(layer);
-      }
-    }
   },
 
   /**
