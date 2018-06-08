@@ -485,8 +485,10 @@ export default BaseLayer.extend({
         Ember.set(attribitesOptions, &#x27;object&#x27;, leafletObject._originalVectorLayer);
       }
 
+      Ember.set(attribitesOptions, &#x27;settings.styleSettings&#x27;, this.get(&#x27;styleSettings&#x27;));
+
       return attribitesOptions;
-    });
+    }.bind(this));
   },
 
   /**
