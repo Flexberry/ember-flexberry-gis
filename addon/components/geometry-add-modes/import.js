@@ -221,6 +221,26 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
   */
   _errorMessage: undefined,
 
+  /**
+    Connection between imported and layer properties.
+
+    @property _propertiesConnection
+    @type Object
+    @default undefined
+    @private
+  */
+  _propertiesConnection: undefined,
+
+  /**
+    Layer properties, that isn't connected to any of imported properties.
+
+    @property _notConnectedProperties
+    @type Array
+    @default undefined
+    @private
+  */
+  _notConnectedProperties: undefined,
+
   menuButtonTooltip: t('components.geometry-add-modes.import.menu-button-tooltip'),
 
   dialogApproveButtonCaption: t('components.geometry-add-modes.import.dialog-approve-button-caption'),
@@ -265,11 +285,40 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
 
     let defaultCrs = factories.filter((crs) => crs.crs.code === defaultCrsCode);
     if (defaultCrs.length > 0) {
-      defaultCrsName = defaultCrs[0].name;
+      defaultCrsName = Ember.get(defaultCrs, '0.name');
     }
 
     this.set('availableCRSNames', availableCRSNames);
     this.set('selectedCRSName', defaultCrsName);
+  },
+
+  /**
+    Handles response from backend with features from file.
+
+    @method handleImportResponse
+    @param {Object} response Features from file.
+  */
+  handleImportResponse(response) {
+    this.set('responseJSON', response);
+    let importedProperties = Ember.get(response, 'features.0.properties');
+    if (importedProperties) {
+      this.set('headersTable', Object.keys(importedProperties));
+
+      let layerProperties = Ember.A(Object.keys(this.get('settings.layerFields') || {}));
+      let propertiesConnection = {};
+      for (let property in importedProperties) {
+        if (layerProperties.contains(property)) {
+          propertiesConnection[property] = property;
+          layerProperties.removeObject(property);
+        }
+      }
+
+      layerProperties.unshiftObject('');
+      this.set('_propertiesConnection', propertiesConnection);
+      this.set('_notConnectedProperties', layerProperties);
+    }
+
+    this.set('_resultDialogVisible', true);
   },
 
   actions: {
@@ -295,9 +344,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
         processData: false
       }).done((response) => {
         if (response && response.features) {
-          _this.set('responseJSON', response);
-          _this.set('headersTable', Object.keys(response.features[0].properties));
-          _this.set('_resultDialogVisible', true);
+          _this.handleImportResponse(response);
         } else {
           _this.set('_errorCaption', this.get('emptyErrorCaption'));
           _this.set('_errorMessage', this.get('emptyErrorMessage'));
@@ -372,16 +419,14 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
       newLayers.forEach((layer) => {
         this.sendAction('importComplete', layer);
       }, this);
-
-      this.set('selectedJSON', undefined);
     },
 
     /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
+      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.hide:method"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.
 
-      @method actions.onDeny
+      @method actions.onHide
     */
-    onDeny(e) {
+    onHide(e) {
       this.set('selectedJSON', undefined);
       this.set('_showError', false);
       this.set('_importInProcess', false);
@@ -398,36 +443,68 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
 
       if (responseJSON.features.length > 0) {
         this.set('selectedJSON', { type: 'FeatureCollection' });
-        this.set('selectedJSON.features', responseJSON.features.filter((feature) => feature.selected).map((feature) => {
+
+        let propertiesConnection = this.get('_propertiesConnection') || {};
+        let selectedFeatures = responseJSON.features.filter((feature) => feature.selected).map((feature) => {
           delete feature.selected;
+          Object.keys(feature.properties).forEach((property) => {
+            let connectedProperty = Ember.get(propertiesConnection, `${property}`);
+            if (connectedProperty !== property) {
+              if (connectedProperty) {
+                Ember.set(feature, `properties.${connectedProperty}`, Ember.get(feature, `properties.${property}`));
+              }
+
+              delete feature.properties[property];
+            }
+          });
+
           return feature;
-        }));
+        });
+
+        this.set('selectedJSON.features', selectedFeatures);
       } else {
         this.set('selectedJSON', undefined);
       }
+    },
 
-      this.set('_resultDialogVisible', false);
+    /**
+      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.hide:method"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.
+
+      @method actions.onHideImportDialog
+    */
+    onHideImportDialog(e) {
       this.set('_dialogHasBeenRequested', true);
       this.set('_dialogVisible', true);
 
+      this.set('_resultDialogVisible', false);
+      this.set('responseJSON', undefined);
+      this.set('_propertiesConnection', undefined);
+      this.set('_notConnectedProperties', undefined);
       if (this.get('fileControl')) {
         this.get('fileControl').val('');
       }
     },
 
     /**
-      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
+      Handles changing in properties connections.
 
-      @method actions.onDenyImportDialog
+      @method actions.onPropertyConnectionChange
+      @param {String} property Imported property name.
+      @param {String} newValue New value of connected property name.
     */
-    onDenyImportDialog(e) {
-      this.set('_dialogHasBeenRequested', true);
-      this.set('_dialogVisible', true);
-
-      this.set('_resultDialogVisible', false);
-      if (this.get('fileControl')) {
-        this.get('fileControl').val('');
+    onPropertyConnectionChange(property, newValue) {
+      if (Ember.isBlank(newValue)) {
+        newValue = undefined;
       }
+
+      let currentValue = this.get(`_propertiesConnection.${property}`);
+      let notConnectedProperties = this.get('_notConnectedProperties');
+      if (currentValue) {
+        notConnectedProperties.pushObject(currentValue);
+      }
+
+      this.set(`_propertiesConnection.${property}`, newValue);
+      notConnectedProperties.removeObject(newValue);
     }
   },
 

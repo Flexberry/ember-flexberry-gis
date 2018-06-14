@@ -414,6 +414,12 @@
   }
 }
 
+.ui.modal.flexberry-geometry-add-mode-import-result {
+  .ui.table.import-table .import-column {
+    min-width: 170px;
+  }
+}
+
 form.flexberry-edit-layermap,
 form.flexberry-edit-map,
 form.flexberry-edit-layer-attributes,

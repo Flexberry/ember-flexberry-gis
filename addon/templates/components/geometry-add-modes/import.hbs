@@ -15,7 +15,7 @@
     denyButtonCaption=dialogDenyButtonCaption
     visible=_dialogVisible
     approve=(action "onApprove")
-    hide=(action "onDeny")
+    hide=(action "onHide")
   }}
     <form class="ui form {{flexberryClassNames.form}} {{if _importInProcess "loading"}}" role="form">
       {{ui-message
@@ -48,17 +48,30 @@
     visible=_resultDialogVisible
     approveButtonCaption=dialogApproveButtonCaption
     denyButtonCaption=dialogDenyButtonCaption
-    hide=(action "onDenyImportDialog")
+    hide=(action "onHideImportDialog")
     approve=(action "onApproveImportDialog")
   }}
     <form class="ui form" role="form">
       <div class="wolv-data-wrapper tab segment layers-attributes-segment active">
         {{#if responseJSON}}
-          <table class='ui celled table flexberry-table flexberry-table-fixed'>
+          <table class='ui celled table flexberry-table import-table flexberry-table-fixed'>
             <thead>
               <tr><th class='checkbox'></th>
                 {{#each headersTable as | head |}}
-                  <th class="narrow">{{head}}</th>
+                  <th class="import-column">
+                    {{flexberry-dropdown
+                      value=(get _propertiesConnection head)
+                      items=_notConnectedProperties
+                      class="fluid"
+                      onChange=(action "onPropertyConnectionChange" head)
+                      needChecksOnValue=false
+                    }}
+                  </th>
+                {{/each}}
+              </tr>
+              <tr><th class='checkbox'></th>
+                {{#each headersTable as | head |}}
+                  <th class="import-column">{{head}}</th>
                 {{/each}}
               </tr>
             </thead>
