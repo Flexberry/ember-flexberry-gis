@@ -92,6 +92,7 @@
                             layerCRS=(get tabModel "leafletObject.options.crs")
                           )
                           complete=(action "onGeometryAddComplete" tabModel)
+                          importComplete=(action "onImportComplete" tabModel)
                         }}
                       {{/each}}
                       <div class="flexberry-geometry-move {{if tabModel.groupDraggable "active"}}">
