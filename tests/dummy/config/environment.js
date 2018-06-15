@@ -1,8 +1,9 @@
 /* jshint node: true */
 
 module.exports = function (environment) {
-  var backendUrl = 'http://bi-vm1.cloudapp.net:12001';
-
+ // var backendUrl = 'http://bi-vm1.cloudapp.net:12001';
+  var backendUrl = 'https://flexberry-ember-gis.azurewebsites.net';
+  
   if (environment === 'development-loc') {
     // Use `ember server --environment=development-loc` command for local backend usage.
     backendUrl = 'http://localhost:63138';

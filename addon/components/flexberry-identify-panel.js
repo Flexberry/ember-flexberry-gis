@@ -305,6 +305,40 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type {String}
    */
   toolMode: 'rectangle',
+  
+  /**
+    Flag indicates is buffer active
+
+    @property bufferActive
+    @type Boolean
+    @default false
+  */
+  bufferActive: true,
+
+ /**
+   Buffer radius units
+
+   @property bufferUnits
+   @type String
+   @default 'kilometers'
+ */
+  bufferUnits: 'kilometers',
+
+ /**
+   Buffer radius in selected units
+
+   @property bufferRadius
+   @type Number
+   @default 0
+ */
+  bufferRadius: 10,
+
+  bufferObserver: Ember.observer('bufferActive', 'bufferUnits', 'bufferRadius', function () {
+    let bufferActive = this.get('bufferActive');
+    let bufferUnits = this.get('bufferUnits');
+    let bufferRadius = this.get('bufferRadius');
+    this.sendAction('onBufferActive', bufferActive, bufferUnits, bufferRadius);
+  }),
 
   /**
     Leaflet map.

@@ -172,6 +172,47 @@ let IdentifyMapToolComponent = Ember.Component.extend({
     if (!toolMode) {
       this.set('toolMode', 'rectangle');
     }
+
+    this.createMapTool();
+  },
+
+  /**
+      Handles DOM-related component's properties after each render.
+    */
+   didRender() {
+    this._super(...arguments);
+
+     this.destroyMapTool();
+    this.createMapTool();
+  },
+
+  createMapTool() {
+    let mapToolName = this.get('name');
+    if (Ember.isBlank(mapToolName)) {
+      return;
+    }
+
+    let mapTool = Ember.getOwner(this).lookup(`map-tool:${mapToolName}`);
+    Ember.assert(
+      `Can't lookup \`map-tool:${mapToolName}\` such map-tool doesn\`t exist`, !Ember.isNone(mapTool));
+
+    let mapToolProperties = this.get('mapToolProperties');
+    if (!Ember.isNone(mapToolProperties)) {
+      Ember.A(Object.keys(mapToolProperties)).forEach((propertyName) => {
+        Ember.set(mapTool, propertyName, Ember.get(mapToolProperties, propertyName));
+      });
+    }
+
+    Ember.set(mapTool, 'name', mapToolName);
+
+    this.set('_mapTool', mapTool);
+
+    // delayed activation of maptool
+    if (this.get('activated')) {
+      this.activateMapTool({
+        mapToolName
+      });
+    }
   },
 
   /**
