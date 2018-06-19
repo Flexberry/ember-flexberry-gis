@@ -80,10 +80,7 @@ let BaseMapToolComponent = Ember.Component.extend(
       @private
     */
     _bufferObserver: Ember.observer('bufferActive', 'bufferRadius', 'bufferUnits', function () {
-      let tool = this.get('_mapTool');
-      tool.set('bufferActive', this.get('bufferActive'));
-      tool.set('bufferRadius', this.get('bufferRadius'));
-      tool.set('bufferUnits', this.get('bufferUnits'));
+      this._applyBufferSettings();
     }),
 
     /**
@@ -337,6 +334,23 @@ let BaseMapToolComponent = Ember.Component.extend(
     },
 
     /**
+      Apply buffer settings to existing mapTool
+
+      @method _applyBufferSettings
+      @private
+    */
+    _applyBufferSettings() {
+      let bufferActive = this.get('bufferActive');
+      let bufferRadius = this.get('bufferRadius');
+      let bufferUnits = this.get('bufferUnits');
+      let tool = this.get('_mapTool');
+
+      tool.set('bufferActive', bufferActive);
+      tool.set('bufferRadius', bufferRadius);
+      tool.set('bufferUnits', bufferUnits);
+    },
+
+    /**
       Invokes {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}'activate' action{{/crossLink}}.
 
       @method activateMapTool
@@ -377,6 +391,8 @@ let BaseMapToolComponent = Ember.Component.extend(
       Ember.set(mapTool, 'name', mapToolName);
 
       this.set('_mapTool', mapTool);
+
+      this._applyBufferSettings();
 
       // delayed activation of maptool
       if (this.get('activated')) {

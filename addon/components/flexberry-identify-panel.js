@@ -377,7 +377,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type String[]
     @default 'kilometers'
   */
-  bufferUnitsList: ['kilometers', 'miles'],
+  bufferUnitsList: ['kilometers', 'meters'],
 
   /**
     Buffer radius in selected units
