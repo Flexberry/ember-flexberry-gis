@@ -85,7 +85,7 @@ let BaseMapToolComponent = Ember.Component.extend(
       tool.set('bufferRadius', this.get('bufferRadius'));
       tool.set('bufferUnits', this.get('bufferUnits'));
     }),
-  
+
     /**
       Flag: indicates whether some nested content for submenu is defined
       (some yield markup for 'submenu' block-slot).
@@ -152,7 +152,7 @@ let BaseMapToolComponent = Ember.Component.extend(
 
     /**
       Flag indicates is buffer active
-      
+
       @property bufferActive
       @type Boolean
       @default false
@@ -161,7 +161,7 @@ let BaseMapToolComponent = Ember.Component.extend(
 
     /**
       Buffer radius units
-      
+
       @property bufferUnits
       @type String
       @default 'kilometers'
@@ -170,7 +170,7 @@ let BaseMapToolComponent = Ember.Component.extend(
 
     /**
       Buffer radius in selected units
-      
+
       @property bufferRadius
       @type Number
       @default 0

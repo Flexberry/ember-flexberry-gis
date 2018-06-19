@@ -351,7 +351,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @default t('components.flexberry-identify-panel.buffer-units-select.caption')
   */
   bufferUnitsCaption: t('components.flexberry-identify-panel.buffer-units-select.caption'),
-  
+
   /**
     Flag indicates is buffer active
 
@@ -372,20 +372,20 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
   /**
     Buffer radius units list for dropdown select
-    
+
     @property bufferUnitsList
     @type String[]
     @default 'kilometers'
   */
   bufferUnitsList: ['kilometers', 'miles'],
 
- /**
-   Buffer radius in selected units
+  /**
+    Buffer radius in selected units
 
-   @property bufferRadius
-   @type Number
-   @default 0
- */
+    @property bufferRadius
+    @type Number
+    @default 0
+  */
   bufferRadius: 10,
 
   /**
