@@ -16,5 +16,14 @@ export default {
   },
   'clear': {
     'caption': 'Clear'
+  },
+  'buffer-active': {
+    'caption': 'Buffer'
+  },
+  'buffer-radius': {
+    'caption': 'Set buffer radius'
+  },
+  'buffer-units-select': {
+    'caption': 'Select radius units'
   }
 };

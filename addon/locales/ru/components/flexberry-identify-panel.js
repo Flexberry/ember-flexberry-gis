@@ -16,5 +16,14 @@ export default {
   },
   'clear': {
     'caption': 'Очистить'
+  },
+  'buffer-active': {
+    'caption': 'Буфер'
+  },
+  'buffer-radius': {
+    'caption': 'Задайте радиус'
+  },
+  'buffer-units-select': {
+    'caption': 'Выберите единицы'
   }
 };

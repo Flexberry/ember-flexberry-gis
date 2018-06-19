@@ -56,6 +56,25 @@ const flexberryClassNames = {
 */
 let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   /**
+    Observes changes buffer parameters in flexberry-identify-panel.
+
+    @method _bufferObserver
+    @type Observer
+    @private
+  */
+  _bufferObserver: Ember.observer('bufferActive', 'bufferUnits', 'bufferRadius', function () {
+    let bufferActive = this.get('bufferActive');
+    let bufferUnits = this.get('bufferUnits');
+    let bufferRadius = this.get('bufferRadius');
+    let bufferParameters = {
+      active: bufferActive,
+      units: bufferUnits,
+      radius: bufferRadius
+    };   
+    this.sendAction('onBufferSet', bufferParameters);
+  }),
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -280,7 +299,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @default 'remove icon'
   */
   clearIconClass: 'remove icon',
-
+  
   /**
     Flag: is tools option 'rectangle' enable
 
@@ -307,13 +326,40 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   toolMode: 'rectangle',
   
   /**
+    Active buffer caption.
+
+    @property bufferActiveCaption
+    @type String
+    @default t('components.flexberry-identify-panel.buffer-active.caption')
+  */
+  bufferActiveCaption: t('components.flexberry-identify-panel.buffer-active.caption'),
+
+  /**
+    Buffer radius caption.
+
+    @property bufferRadiusCaption
+    @type String
+    @default t('components.flexberry-identify-panel.buffer-radius.caption')
+  */
+  bufferRadiusCaption: t('components.flexberry-identify-panel.buffer-radius.caption'),
+
+  /**
+    Buffer units caption.
+
+    @property bufferUnitsCaption
+    @type String
+    @default t('components.flexberry-identify-panel.buffer-units-select.caption')
+  */
+  bufferUnitsCaption: t('components.flexberry-identify-panel.buffer-units-select.caption'),
+  
+  /**
     Flag indicates is buffer active
 
     @property bufferActive
     @type Boolean
     @default false
   */
-  bufferActive: true,
+  bufferActive: false,
 
  /**
    Buffer radius units
@@ -323,6 +369,15 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
    @default 'kilometers'
  */
   bufferUnits: 'kilometers',
+  
+  /**
+   Buffer radius units list for dropdown select
+
+   @property bufferUnitsList
+   @type String[]
+   @default 'kilometers'
+ */
+  bufferUnitsList: ['kilometers', 'miles'],
 
  /**
    Buffer radius in selected units
@@ -332,14 +387,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
    @default 0
  */
   bufferRadius: 10,
-
-  bufferObserver: Ember.observer('bufferActive', 'bufferUnits', 'bufferRadius', function () {
-    let bufferActive = this.get('bufferActive');
-    let bufferUnits = this.get('bufferUnits');
-    let bufferRadius = this.get('bufferRadius');
-    this.sendAction('onBufferActive', bufferActive, bufferUnits, bufferRadius);
-  }),
-
+  
   /**
     Leaflet map.
 
@@ -477,6 +525,11 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     leafletMap.fire('flexberry-map:identificationOptionChanged', {
       mapToolName
     });
+  },
+
+  onRender() {
+    this.set('bufferActive', true);
+    this.set('bufferActive', false);
   },
 
   /**

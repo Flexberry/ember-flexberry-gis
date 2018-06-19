@@ -43,26 +43,10 @@
             }}
         {{/if}}
         {{flexberry-checkbox
-            label="Use buffer (!!!!!!!!!!!!!CHANGE)"
+            label=bufferActiveCaption
             value= bufferActive
-        }}
-        {{#if bufferActive}}
-            <div class="ember-view flexberry-geometry-buffer">
-                        <div class="ui simple dropdown item">
-                          <i class="dot circle icon"></i>
-                          <i class="dropdown icon"></i>
-                          <div class="menu">
-                            {{flexberry-field
-                              value=bufferRadius
-                              label=(t "components.flexberry-layers-attributes-panel.buffer.radius")
-                              type="number"
-                              class="small input"
-                            }}
-                          </div>
-                        </div>
-                      </div>
-       {{/if}}
-    </div>
+        }}        
+    </div>    
     <div class="{{concat "ui four wide column" flexberryClassName.otherOptions}}">
         {{flexberry-button
             class=(concat flexberryClassNames.clearButton " " clearClass)
@@ -71,4 +55,23 @@
             click=(action "clear")
         }}
     </div>
+    {{#if bufferActive}}
+        <div class="ui one wide row">
+            {{flexberry-field
+                value=bufferRadius
+                label=bufferRadiusCaption
+                type="number"
+                class="small input"
+            }}
+        </div>
+        <div class="ui one wide row">
+            <label>{{bufferUnitsCaption}}</label>
+            {{flexberry-dropdown
+                class="fluid"
+                items=bufferUnitsList
+                value=bufferUnits
+            }}
+        </div>
+    {{/if}}
+    
 </div>

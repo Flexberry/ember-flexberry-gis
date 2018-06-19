@@ -607,6 +607,9 @@
   i.icon.remove:before {
     content: "\e814";
   }
+  .buffer-tools {
+    margin-top: 10px;
+  }
 }
 
 

@@ -22,11 +22,7 @@ export default BaseNonclickableMapTool.extend({
     @private
   */
   _editTools: null,
-
-  bufferObserver: Ember.observer('bufferActive', function () {
-    console.log(this.get('bufferActive'));    
-  }),
-
+  
   /**
     Flag indicates is buffer active
 
@@ -34,7 +30,7 @@ export default BaseNonclickableMapTool.extend({
     @type Boolean
     @default false
   */
- activatebufferActive: false,
+  bufferActive: false,
 
   /**
     Buffer radius units
@@ -174,7 +170,6 @@ export default BaseNonclickableMapTool.extend({
       }
 
       promises.pushObject(features);
-
     });
 
     // Wait for all promises to be settled & call '_finishIdentification' hook.
@@ -250,7 +245,7 @@ export default BaseNonclickableMapTool.extend({
     let workingPolygon;
     let bufferedMainPolygon;
     let isBufferActive = this.get('bufferActive');
-
+    
     if (isBufferActive) {
       let buffer = this._drawBuffer(layer.toGeoJSON());
       workingPolygon = buffer.getLayers()[0];
@@ -258,7 +253,7 @@ export default BaseNonclickableMapTool.extend({
     } else {      
       workingPolygon = layer;
     }
-    console.log(this.get('leafletMap').get(''));
+
     let latlng = workingPolygon.getCenter();
     let boundingBox = workingPolygon.getBounds();
     if (boundingBox.getSouthWest().equals(boundingBox.getNorthEast())) {

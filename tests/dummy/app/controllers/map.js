@@ -84,7 +84,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @type Boolean
     @default false
   */
-  bufferActive: true,
+  bufferActive: false,
 
   /**
     Buffer radius units
@@ -375,10 +375,16 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this.set('searchResults', e.results);
     },
 
-    onBufferActive(bufferActive, bufferUnits, bufferRadius) {
-      this.set('bufferActive', bufferActive);
-      this.set('bufferUnits', bufferUnits);
-      this.set('bufferRadius', bufferRadius);
+    /**
+      Handles 'flexberry-identify-panel:onBufferSet' event of leaflet map.
+
+      @method onBufferSet
+      @param {Object} bufferParameters all bufffer parameters.
+    */
+    onBufferSet(bufferParameters) {
+      this.set('bufferActive', bufferParameters.active);
+      this.set('bufferUnits', bufferParameters.units);
+      this.set('bufferRadius', bufferParameters.radius);
     },
 
     /**
@@ -443,12 +449,12 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         polygonLayer.disableEdit();
         polygonLayer.remove();
       }
-      
+
       let bufferedMainPolygon = this.get('bufferedMainPolygonLayer');
       if (bufferedMainPolygon) {
         bufferedMainPolygon.remove();
       }
-    
+
     }
   }
 });
