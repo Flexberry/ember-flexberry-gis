@@ -22,7 +22,7 @@ export default BaseNonclickableMapTool.extend({
     @private
   */
   _editTools: null,
-  
+
   /**
     Flag indicates is buffer active
 
@@ -224,7 +224,7 @@ export default BaseNonclickableMapTool.extend({
     this.set('polygonLayer', polygonLayer);
 
     // Assign current tool's boundingBoxLayer
-    let bufferedLayer= Ember.get(e, 'bufferedMainPolygonLayer');
+    let bufferedLayer = Ember.get(e, 'bufferedMainPolygonLayer');
     this.set('bufferedMainPolygonLayer', bufferedLayer);
 
     // Fire custom event on leaflet map.
@@ -245,12 +245,12 @@ export default BaseNonclickableMapTool.extend({
     let workingPolygon;
     let bufferedMainPolygon;
     let isBufferActive = this.get('bufferActive');
-    
+
     if (isBufferActive) {
       let buffer = this._drawBuffer(layer.toGeoJSON());
       workingPolygon = buffer.getLayers()[0];
       bufferedMainPolygon = layer;
-    } else {      
+    } else {
       workingPolygon = layer;
     }
 
@@ -277,7 +277,7 @@ export default BaseNonclickableMapTool.extend({
     if (this.get('hidePreviousOnDrawingEnd')) {
       this._clearPolygonLayer();
     }
-    
+
     // Show map loader.
     let i18n = this.get('i18n');
     let leafletMap = this.get('leafletMap');
@@ -308,7 +308,7 @@ export default BaseNonclickableMapTool.extend({
     let _bufferLayer = L.geoJSON(buf).addTo(leafletMap);
     return _bufferLayer;
   },
-  
+
   /**
     Enables tool.
 
@@ -325,7 +325,7 @@ export default BaseNonclickableMapTool.extend({
       });
       this.set('_editTools', editTools);
     }
-    
+
     editTools.on('editable:drawing:end', this._drawingDidEnd, this);
   },
 

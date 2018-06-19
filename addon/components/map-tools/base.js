@@ -31,8 +31,6 @@ const flexberryClassNames = {
   submenuIcon: flexberryClassNamesPrefix + '-submenu-icon'
 };
 
-
-
 /**
   Flexberry map tool component.
   Component must be used in combination with {{#crossLink "FlexberryMaptoolbarComponent"}}flexberry-maptoolbar component{{/crossLink}}
@@ -83,11 +81,11 @@ let BaseMapToolComponent = Ember.Component.extend(
     */
     _bufferObserver: Ember.observer('bufferActive', 'bufferRadius', 'bufferUnits', function () {
       let tool = this.get('_mapTool');
-      tool.set('bufferActive',this.get('bufferActive'));
-      tool.set('bufferRadius',this.get('bufferRadius'));
-      tool.set('bufferUnits',this.get('bufferUnits'));
+      tool.set('bufferActive', this.get('bufferActive'));
+      tool.set('bufferRadius', this.get('bufferRadius'));
+      tool.set('bufferUnits', this.get('bufferUnits'));
     }),
-    
+  
     /**
       Flag: indicates whether some nested content for submenu is defined
       (some yield markup for 'submenu' block-slot).
@@ -153,31 +151,31 @@ let BaseMapToolComponent = Ember.Component.extend(
     }),
 
     /**
-    Flag indicates is buffer active
+      Flag indicates is buffer active
+      
+      @property bufferActive
+      @type Boolean
+      @default false
+    */
+    bufferActive: true,
 
-    @property bufferActive
-    @type Boolean
-    @default false
-  */
- bufferActive: true,
+    /**
+      Buffer radius units
+      
+      @property bufferUnits
+      @type String
+      @default 'kilometers'
+    */
+    bufferUnits: 'kilometers',
 
- /**
-   Buffer radius units
-
-   @property bufferUnits
-    @type String
-   @default 'kilometers'
- */
- bufferUnits: 'kilometers',
-
- /**
-   Buffer radius in selected units
-
-    @property bufferRadius
-    @type Number
-   @default 0
- */
- bufferRadius: 10,
+    /**
+      Buffer radius in selected units
+      
+      @property bufferRadius
+      @type Number
+      @default 0
+    */
+    bufferRadius: 10,
 
     /**
       Reference to component's template.

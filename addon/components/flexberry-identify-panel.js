@@ -70,7 +70,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       active: bufferActive,
       units: bufferUnits,
       radius: bufferRadius
-    };   
+    };
     this.sendAction('onBufferSet', bufferParameters);
   }),
 
@@ -299,7 +299,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @default 'remove icon'
   */
   clearIconClass: 'remove icon',
-  
+
   /**
     Flag: is tools option 'rectangle' enable
 
@@ -324,7 +324,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type {String}
    */
   toolMode: 'rectangle',
-  
+
   /**
     Active buffer caption.
 
@@ -361,22 +361,22 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   */
   bufferActive: false,
 
- /**
-   Buffer radius units
-
-   @property bufferUnits
-   @type String
-   @default 'kilometers'
- */
-  bufferUnits: 'kilometers',
-  
   /**
-   Buffer radius units list for dropdown select
+    Buffer radius units
 
-   @property bufferUnitsList
-   @type String[]
-   @default 'kilometers'
- */
+    @property bufferUnits
+    @type String
+    @default 'kilometers'
+  */
+  bufferUnits: 'kilometers',
+
+  /**
+    Buffer radius units list for dropdown select
+    
+    @property bufferUnitsList
+    @type String[]
+    @default 'kilometers'
+  */
   bufferUnitsList: ['kilometers', 'miles'],
 
  /**
@@ -387,7 +387,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
    @default 0
  */
   bufferRadius: 10,
-  
+
   /**
     Leaflet map.
 

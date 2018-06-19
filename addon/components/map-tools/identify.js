@@ -199,9 +199,9 @@ let IdentifyMapToolComponent = Ember.Component.extend({
     if (!toolMode) {
       this.set('toolMode', 'rectangle');
     }
-    
-  }
   
+  }
+
   /**
     Component's action invoking when map-tool must be activated.
 
