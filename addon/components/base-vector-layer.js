@@ -53,6 +53,10 @@ export default BaseLayer.extend({
     @private
   */
   _setLayerOpacity() {
+    let config = Ember.getOwner(this).resolveRegistration('config:environment');
+    let maxGeomOpacity = Number(config.userSettings.maxGeometryOpacity);
+    let maxGeomFillOpacity = Number(config.userSettings.maxGeometryFillOpacity);
+
     let opacity = this.get('opacity');
     if (Ember.isNone(opacity)) {
       return;
@@ -71,7 +75,7 @@ export default BaseLayer.extend({
       layersStylesRenderer.getVisibleLeafletLayers({ leafletLayer, styleSettings });
 
     for (let i = 0, len = visibleLeafletLayers.length; i < len; i++) {
-      setLeafletLayerOpacity({ leafletLayer: visibleLeafletLayers[i], opacity });
+      setLeafletLayerOpacity({ leafletLayer: visibleLeafletLayers[i], opacity, maxGeomOpacity, maxGeomFillOpacity });
     }
   },
 
@@ -90,8 +94,10 @@ export default BaseLayer.extend({
         Ember.set(attribitesOptions, 'object', leafletObject._originalVectorLayer);
       }
 
+      Ember.set(attribitesOptions, 'settings.styleSettings', this.get('styleSettings'));
+
       return attribitesOptions;
-    });
+    }.bind(this));
   },
 
   /**

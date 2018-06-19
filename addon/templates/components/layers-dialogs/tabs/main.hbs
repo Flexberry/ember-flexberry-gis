@@ -1,0 +1,75 @@
+      <div class="ui top attached fluid tabular menu">
+        {{#if _mainSettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _activeTab "main-tab") "active"}}" data-tab="main-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.main-tab.caption"}}
+          </a>
+        {{/if}}
+        {{#if _crsSettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _activeTab "crs-tab") "active"}}" data-tab="crs-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.crs-tab.caption"}}
+          </a>
+        {{/if}}
+        {{#if _layerSettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _activeTab "settings-tab") "active"}}" data-tab="settings-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.settings-tab.caption"}}
+          </a>
+        {{/if}}
+        {{#if _bboxSettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _activeTab "bbox-tab") "active"}}" data-tab="bbox-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.bbox-tab.caption"}}
+          </a>
+        {{/if}}
+        {{#if _pmodesAreAvailableForType}}
+          <a class="tab item {{if (eq _activeTab "pmodes-tab") "active"}}" data-tab="pmodes-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.pmodes-tab.caption"}}
+          </a>
+        {{/if}}
+      </div>
+      {{#if _mainSettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _activeTab "main-tab") "active"}}" data-tab="main-tab">
+          {{layers-dialogs/tabs/main-settings
+            availableTypes=_availableTypes
+            layer=_layer
+            typeIsReadonly=_typeIsReadonly
+          }}
+        </div>
+      {{/if}}
+      {{#if _crsSettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _activeTab "crs-tab") "active"}}" data-tab="crs-tab">
+          {{flexberry-edit-crs
+            coordinateReferenceSystem=_layer.coordinateReferenceSystem
+          }}
+        </div>
+      {{/if}}
+      {{#if _layerSettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _activeTab "settings-tab") "active"}}" data-tab="settings-tab">
+          {{component (concat "layers-dialogs/settings/" _layer.type) settings=_layer.settings bounds=_layer.settings.wgs84bbox}}
+        </div>
+      {{/if}}
+      {{#if _bboxSettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _activeTab "bbox-tab") "active"}}" data-tab="bbox-tab">
+          {{#if (or _bboxMapIsLoading _hideBbox)}}
+            <div class="ui form loading" style="height: 100%;">
+            </div>
+          {{else}}
+            {{flexberry-boundingbox
+              mapModel=boundingBoxComponentMap
+              minLat=_layer.bboxCoords.minLat
+              minLng=_layer.bboxCoords.minLng
+              maxLat=_layer.bboxCoords.maxLat
+              maxLng=_layer.bboxCoords.maxLng
+              boundingBoxChange=(action "onBoundingBoxChange")
+            }}
+          {{/if}}
+        </div>
+      {{/if}}
+      {{#if _pmodesAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _activeTab "pmodes-tab") "active"}}" data-tab="pmodes-tab">
+          {{layers-dialogs/tabs/prototyping-modes
+            editingFinished=(action layerEditingFinished)
+            layerEditingFinished=layerEditingFinished
+            availableModes=_availableModes
+            selectedModeCaption=_selectedModeCaption
+          }}
+        </div>
+      {{/if}}

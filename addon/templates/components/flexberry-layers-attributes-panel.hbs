@@ -80,7 +80,7 @@
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
                         click=(action "onDeleteItemClick" tabModel)
-                        iconClass="remove icon"
+                        iconClass="trash icon"
                         readonly=(eq tabModel._selectedRowsCount 0)
                       }}
                       {{!-- available geometry adding tools --}}
@@ -94,12 +94,103 @@
                           complete=(action "onGeometryAddComplete" tabModel)
                         }}
                       {{/each}}
+                      <div class="flexberry-geometry-move {{if tabModel.groupDraggable "active"}}">
+                        <div class="ui simple dropdown item">
+                          <i class="move icon"></i>
+                          <i class="dropdown icon"></i>
+                          <div class="menu">
+                              <a class="item" onclick={{action "onMoveSelect" "dragNdrop" tabModel}}>
+                                {{t "components.flexberry-layers-attributes-panel.move.dragNdrop.caption"}}
+                              </a>
+                              <a class="item" onclick={{action "onMoveSelect" "offset" tabModel}}>
+                                {{t "components.flexberry-layers-attributes-panel.move.offset.caption"}}
+                              </a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="flexberry-geometry-tools">
+                        <div class="ui simple dropdown item">
+                          <i class="cut icon"></i>
+                          <i class="dropdown icon"></i>
+                          <div class="menu">
+                            <a class="item {{if (and
+                              (eq tabModel._typeSelectedRows.polygon 0)
+                              (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "doCombinedPolygon" tabModel}}>
+                              {{t "components.flexberry-layers-attributes-panel.combined-polygon"}}
+                            </a>
+                            <a class="item {{if (and
+                              (eq tabModel._typeSelectedRows.polygon 0)
+                              (eq tabModel._typeSelectedRows.line 0)
+                              (eq tabModel._typeSelectedRows.multiLine 0)
+                              (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "onSplitGeometry" tabModel}}>
+                              {{t "components.flexberry-layers-attributes-panel.split-geometry"}}
+                            </a>
+                            <a class="item {{if (and
+                              (eq tabModel._typeSelectedRows.polygon 0)
+                              (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "onDifferenceClick" tabModel}}>
+                              {{t "components.flexberry-layers-attributes-panel.difference"}}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="ember-view flexberry-geometry-buffer">
+                        <div class="ui simple dropdown item">
+                          <i class="dot circle icon"></i>
+                          <i class="dropdown icon"></i>
+                          <div class="menu">
+                            <a class="item" readonly={{eq tabModel._selectedRowsCount 0}} onclick={{action "drawBuffer" tabModel}}>
+                              <i class="dot circle icon"></i>
+                              {{t "components.flexberry-layers-attributes-panel.buffer.create"}}
+                            </a>
+                            <a class="item" onclick={{action "deleteBuffer"}}>
+                              <i class="erase icon"></i>
+                              {{t "components.flexberry-layers-attributes-panel.buffer.clear"}}
+                            </a>
+                            {{flexberry-field
+                              value=_radius
+                              label=(t "components.flexberry-layers-attributes-panel.buffer.radius")
+                              type="number"
+                              class="small input"
+                            }}
+                            {{#ui-dropdown class="item compact selection" onChange=(action "onUnitSelected")}}
+                              <i class="dropdown icon"></i>
+                              <div class="text">
+                                {{t (get bufferUnits _selectedUnit)}}
+                              </div>
+                              <div class="menu">
+                                {{#each-in bufferUnits as |key value|}}
+                                  <div class="item" data-value="{{key}}">{{t value}}</div>
+                                {{/each-in}}
+                              </div>
+                            {{/ui-dropdown}}
+                          </div>
+                        </div>
+                      </div>
+                      {{flexberry-button
+                        tooltip=(t "components.flexberry-layers-attributes-panel.find-intersection")
+                        click=(action "onFindIntersectPolygons" tabModel)
+                        iconClass="close icon"
+                        readonly=(eq tabModel._selectedRowsCount 0)
+                      }}
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
                         click=(action "onSaveChangesClick" tabModel)
                         iconClass="save icon"
                         readonly=(not (get tabModel "leafletObject._wasChanged"))
                       }}
+                    {{/if}}
+                  </div>
+                  <div class="field">
+                    {{#if _moveWithError}}
+                      {{ui-message
+                        type="error"
+                        message=(t "components.flexberry-layers-attributes-panel.move.move-error")
+                      }}
+                    {{/if}}
+                    {{#if (not (is-none _dataForDifference))}}
+                      <label>
+                        {{t "components.flexberry-layers-attributes-panel.choice-spliter"}}
+                      </label>
                     {{/if}}
                   </div>
                 </div>
@@ -178,12 +269,25 @@
     class=flexberryClassNames.addDialog
     visible=_newRowDialogIsVisible
     data=_newRowData
+    choiceValueData=_newRowСhoiceValueData
+    choiceValueMode=_newRowСhoiceValueMode
     fieldNames=(get _newRowTabModel "header")
     fieldTypes=(get _newRowTabModel "leafletObject.readFormat.featureType.fieldTypes")
     fieldParsers=(get _newRowTabModel "leafletObject.readFormat.featureType.fields")
     fieldValidators=(get _newRowTabModel "leafletObject.readFormat.featureType.fieldValidators")
     approve=(action "onNewRowDialogApprove")
     deny=(action "onNewRowDialogDeny")
+    hide=(action "onNewRowDialogHide")
+  }}
+{{/if}}
+{{#if _moveDialogHasBeenRequested}}
+  {{component "layers-dialogs/attributes/move"
+    caption=(t "components.flexberry-layers-attributes-panel.move-dialog")
+    visible=_moveDialogIsVisible
+    moveX=_moveX
+    moveY=_moveY
+    layerCRS=(get _tabModels (concat selectedTabIndex ".leafletObject.options.crs.code"))
+    approve=(action "onMoveDialogApprove")
   }}
 {{/if}}
 {{flexberry-error error=error}}

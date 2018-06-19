@@ -15,7 +15,7 @@ test('it renders', function(assert) {
     }
   });
 
-  this.render(hbs`{{legends/wms-legend layerSettings=testLayer.settingsAsObject}}`);
+  this.render(hbs`{{legends/wms-legend layer=testLayer}}`);
 
   let $images = this.$('img');
   let expectedSrc = 'http://212.192.76.235:8080/geoserver/wms?service=WMS&request=GetLegendGraphic&version=1.1.0&format=image%2Fpng&layer=lesonas1969%3Agoszem';

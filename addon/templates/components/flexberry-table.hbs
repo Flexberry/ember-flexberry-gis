@@ -84,10 +84,10 @@
               </button>
               {{#each pages as |page|}}
                 {{#if page.isEllipsis}}
-                  <button class="ui button">...</button>
+                  <button class="ui button disabled">...</button>
                 {{else}}
                   {{#if page.isCurrent}}
-                    <button class="ui active button">
+                    <button class="ui active button disabled">
                       {{page.number}}
                     </button>
                   {{else}}

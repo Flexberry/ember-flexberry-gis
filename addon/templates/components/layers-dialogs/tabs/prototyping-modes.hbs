@@ -1,0 +1,15 @@
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.edit.mode-dropdown.caption"}}
+  </label>
+  {{flexberry-dropdown
+    class="fluid"
+    items=_availableModesCaptions
+    value=selectedModeCaption
+  }}
+</div>
+{{#if _selectedMode}}
+  {{component (concat "layers-dialogs/layers-prototyping-modes/" _selectedMode.name)
+    editingFinished=(action layerEditingFinished)
+  }}
+{{/if}}

@@ -69,32 +69,20 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
   */
   denyButtonCaption: t('components.layers-dialogs.add.deny-button.caption'),
 
-  /**
-    Dialog's 'type' dropdown caption.
+  actions: {
+    /**
+      Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
+      Invokes {{#crossLink "FlexberryEditLayerDialogComponent/sendingActions.approve:method"}}'approve' action{{/crossLink}}.
 
-    @property typeDropdownCaption
-    @type String
-    @default t('components.layers-dialogs.add.type-dropdown.caption')
-  */
-  typeDropdownCaption: t('components.layers-dialogs.add.type-dropdown.caption'),
-
-  /**
-    Dialog's 'name' textbox caption.
-
-    @property nameTextboxCaption
-    @type String
-    @default t('components.layers-dialogs.add.name-textbox.caption')
-  */
-  nameTextboxCaption: t('components.layers-dialogs.add.name-textbox.caption'),
-
-  /**
-    Dialog's 'CRS' textarea caption.
-
-    @property crsTextareaCaption
-    @type String
-    @default t('components.layers-dialogs.add.crs-textarea.caption')
-  */
-  crsTextareaCaption: t('components.layers-dialogs.add.crs-textarea.caption')
+      @method actions.onApprove
+    */
+    onApprove() {
+      this.sendAction('approve', {
+        layerProperties: this.get('getLayerProperties')(),
+        layer: this.get('layer')
+      });
+    },
+  }
 });
 
 // Add component's CSS-class names as component's class static constants
