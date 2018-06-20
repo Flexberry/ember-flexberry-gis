@@ -56,6 +56,25 @@ const flexberryClassNames = {
 */
 let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   /**
+    Observes changes buffer parameters in flexberry-identify-panel.
+
+    @method _bufferObserver
+    @type Observer
+    @private
+  */
+  _bufferObserver: Ember.observer('bufferActive', 'bufferUnits', 'bufferRadius', function () {
+    let bufferActive = this.get('bufferActive');
+    let bufferUnits = this.get('bufferUnits');
+    let bufferRadius = this.get('bufferRadius');
+    let bufferParameters = {
+      active: bufferActive,
+      units: bufferUnits,
+      radius: bufferRadius
+    };
+    this.sendAction('onBufferSet', bufferParameters);
+  }),
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -305,6 +324,60 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type {String}
    */
   toolMode: 'rectangle',
+
+  /**
+    Active buffer caption.
+
+    @property bufferActiveCaption
+    @type String
+    @default t('components.flexberry-identify-panel.buffer-active.caption')
+  */
+  bufferActiveCaption: t('components.flexberry-identify-panel.buffer-active.caption'),
+
+  /**
+    Buffer radius caption.
+
+    @property bufferRadiusCaption
+    @type String
+    @default t('components.flexberry-identify-panel.buffer-radius.caption')
+  */
+  bufferRadiusCaption: t('components.flexberry-identify-panel.buffer-radius.caption'),
+
+  /**
+    Flag indicates is buffer active
+
+    @property bufferActive
+    @type Boolean
+    @default false
+  */
+  bufferActive: false,
+
+  /**
+    Buffer radius units
+
+    @property bufferUnits
+    @type String
+    @default 'kilometers'
+  */
+  bufferUnits: 'kilometers',
+
+  /**
+    Buffer radius units list for dropdown select
+
+    @property bufferUnitsList
+    @type String[]
+    @default 'kilometers'
+  */
+  bufferUnitsList: ['kilometers', 'meters'],
+
+  /**
+    Buffer radius in selected units
+
+    @property bufferRadius
+    @type Number
+    @default 0
+  */
+  bufferRadius: 0,
 
   /**
     Leaflet map.

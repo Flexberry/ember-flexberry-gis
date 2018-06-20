@@ -13,10 +13,10 @@ export default {
       'caption': 'Поиск'
     },
     'identify': {
-      'caption': 'Пространственные закалдки'
+      'caption': 'Идентификация'
     },
     'bookmarks': {
-      'caption': 'Идентификация'
+      'caption': 'Пространственные закладки'
     }
   }
 };

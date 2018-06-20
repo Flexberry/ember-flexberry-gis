@@ -16,5 +16,11 @@ export default {
   },
   'clear': {
     'caption': 'Clear'
-  }
+  },
+  'buffer-active': {
+    'caption': 'Buffer'
+  },
+  'buffer-radius': {
+    'caption': 'Radius'
+  },
 };

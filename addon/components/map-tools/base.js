@@ -73,6 +73,17 @@ let BaseMapToolComponent = Ember.Component.extend(
     _mapTool: null,
 
     /**
+      Observes changes buffer parameters.
+
+      @method _bufferObserver
+      @type Observer
+      @private
+    */
+    _bufferObserver: Ember.observer('bufferActive', 'bufferRadius', 'bufferUnits', function () {
+      this._applyBufferSettings();
+    }),
+
+    /**
       Flag: indicates whether some nested content for submenu is defined
       (some yield markup for 'submenu' block-slot).
 
@@ -135,6 +146,33 @@ let BaseMapToolComponent = Ember.Component.extend(
     _isActive: Ember.computed('_mapTool._enabled', function () {
       return this.get('_mapTool._enabled') === true;
     }),
+
+    /**
+      Flag indicates is buffer active
+
+      @property bufferActive
+      @type Boolean
+      @default false
+    */
+    bufferActive: true,
+
+    /**
+      Buffer radius units
+
+      @property bufferUnits
+      @type String
+      @default 'kilometers'
+    */
+    bufferUnits: 'kilometers',
+
+    /**
+      Buffer radius in selected units
+
+      @property bufferRadius
+      @type Number
+      @default 0
+    */
+    bufferRadius: 0,
 
     /**
       Reference to component's template.
@@ -296,6 +334,26 @@ let BaseMapToolComponent = Ember.Component.extend(
     },
 
     /**
+      Apply buffer settings to existing mapTool
+
+      @method _applyBufferSettings
+      @private
+    */
+    _applyBufferSettings() {
+      let tool = this.get('_mapTool');
+
+      if (!Ember.isNone(tool)) {
+        let bufferActive = this.get('bufferActive');
+        let bufferRadius = this.get('bufferRadius');
+        let bufferUnits = this.get('bufferUnits');
+
+        tool.set('bufferActive', bufferActive);
+        tool.set('bufferRadius', bufferRadius);
+        tool.set('bufferUnits', bufferUnits);
+      }
+    },
+
+    /**
       Invokes {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}'activate' action{{/crossLink}}.
 
       @method activateMapTool
@@ -336,6 +394,8 @@ let BaseMapToolComponent = Ember.Component.extend(
       Ember.set(mapTool, 'name', mapToolName);
 
       this.set('_mapTool', mapTool);
+
+      this._applyBufferSettings();
 
       // delayed activation of maptool
       if (this.get('activated')) {

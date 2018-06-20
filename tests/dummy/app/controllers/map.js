@@ -69,6 +69,42 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   polygonLayer: null,
 
   /**
+    Main polygon around which the buffer is drawn
+
+    @property bufferedMainPolygonLayer
+    @type {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>}
+    @default null
+  */
+  bufferedMainPolygonLayer: null,
+
+  /**
+    Flag indicates is buffer active
+
+    @property bufferActive
+    @type Boolean
+    @default false
+  */
+  bufferActive: false,
+
+  /**
+    Buffer radius units
+
+    @property bufferUnits
+     @type String
+    @default 'kilometers'
+  */
+  bufferUnits: 'kilometers',
+
+  /**
+    Buffer radius in selected units
+
+     @property bufferRadius
+     @type Number
+    @default 0
+  */
+  bufferRadius: 0,
+
+  /**
     Flag: indicates whether to show layer tree or not.
 
     @property showTree
@@ -340,6 +376,18 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     },
 
     /**
+      Handles 'flexberry-identify-panel:onBufferSet' event of leaflet map.
+
+      @method onBufferSet
+      @param {Object} bufferParameters all bufffer parameters.
+    */
+    onBufferSet(bufferParameters) {
+      this.set('bufferActive', bufferParameters.active);
+      this.set('bufferUnits', bufferParameters.units);
+      this.set('bufferRadius', bufferParameters.radius);
+    },
+
+    /**
       Clears search results.
 
       @method actions.clearSearch
@@ -367,6 +415,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       }
 
       this.set('polygonLayer', e.polygonLayer);
+      this.set('bufferedMainPolygonLayer', e.bufferedMainPolygonLayer);
       this.set('identifyResults', e.results);
 
       // Below is kind of madness, but if you want sidebar to move on identification finish - do that.
@@ -400,6 +449,12 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         polygonLayer.disableEdit();
         polygonLayer.remove();
       }
-    },
+
+      let bufferedMainPolygon = this.get('bufferedMainPolygonLayer');
+      if (bufferedMainPolygon) {
+        bufferedMainPolygon.remove();
+      }
+
+    }
   }
 });

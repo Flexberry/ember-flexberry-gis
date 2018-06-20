@@ -46,6 +46,33 @@ const flexberryClassNames = {
 let IdentifyMapToolComponent = Ember.Component.extend({
 
   /**
+    Flag indicates is buffer active
+
+    @property bufferActive
+    @type Boolean
+    @default false
+  */
+  bufferActive: false,
+
+  /**
+    Buffer radius units
+
+    @property bufferUnits
+    @type String
+    @default 'kilometers'
+  */
+  bufferUnits: 'kilometers',
+
+  /**
+    Buffer radius in selected units
+
+    @property bufferRadius
+    @type Number
+    @default 0
+  */
+  bufferRadius: 0,
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -172,7 +199,7 @@ let IdentifyMapToolComponent = Ember.Component.extend({
     if (!toolMode) {
       this.set('toolMode', 'rectangle');
     }
-  },
+  }
 
   /**
     Component's action invoking when map-tool must be activated.
