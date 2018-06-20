@@ -340,14 +340,17 @@ let BaseMapToolComponent = Ember.Component.extend(
       @private
     */
     _applyBufferSettings() {
-      let bufferActive = this.get('bufferActive');
-      let bufferRadius = this.get('bufferRadius');
-      let bufferUnits = this.get('bufferUnits');
       let tool = this.get('_mapTool');
 
-      tool.set('bufferActive', bufferActive);
-      tool.set('bufferRadius', bufferRadius);
-      tool.set('bufferUnits', bufferUnits);
+      if (!Ember.isNone(tool)) {
+        let bufferActive = this.get('bufferActive');
+        let bufferRadius = this.get('bufferRadius');
+        let bufferUnits = this.get('bufferUnits');
+
+        tool.set('bufferActive', bufferActive);
+        tool.set('bufferRadius', bufferRadius);
+        tool.set('bufferUnits', bufferUnits);
+      }
     },
 
     /**
@@ -392,9 +395,7 @@ let BaseMapToolComponent = Ember.Component.extend(
 
       this.set('_mapTool', mapTool);
 
-      if (!Ember.isNone(mapTool)) {
-        this._applyBufferSettings();
-      }
+      this._applyBufferSettings();
 
       // delayed activation of maptool
       if (this.get('activated')) {
