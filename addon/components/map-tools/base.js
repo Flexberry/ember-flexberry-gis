@@ -172,7 +172,7 @@ let BaseMapToolComponent = Ember.Component.extend(
       @type Number
       @default 0
     */
-    bufferRadius: 10,
+    bufferRadius: 0,
 
     /**
       Reference to component's template.
@@ -392,7 +392,9 @@ let BaseMapToolComponent = Ember.Component.extend(
 
       this.set('_mapTool', mapTool);
 
-      this._applyBufferSettings();
+      if (!Ember.isNone(mapTool)) {
+        this._applyBufferSettings();
+      }
 
       // delayed activation of maptool
       if (this.get('activated')) {

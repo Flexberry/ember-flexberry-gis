@@ -41,8 +41,8 @@
                 tooltip=polygonCaption
                 click=(action "onToolOptionChange" "polygon")
             }}
-        {{/if}}  
-    </div>    
+        {{/if}}
+    </div>
     <div class="{{concat "ui four wide column" flexberryClassName.otherOptions}}">
         {{flexberry-button
             class=(concat flexberryClassNames.clearButton " " clearClass)
@@ -54,8 +54,8 @@
     <div class="buffer-tools">
         {{flexberry-checkbox
             label=bufferActiveCaption
-            value= bufferActive
-        }} 
+            value=bufferActive
+        }}
     </div>
     {{#if bufferActive}}
         <div class="buffer-tools">
@@ -67,17 +67,16 @@
                     {{input
                         type="number"
                         value=bufferRadius
-                     }}
+                    }}
                 </div>
                 <div class="ui seven wide column">
                     {{flexberry-dropdown
                         items=bufferUnitsList
                         value=bufferUnits
-                        class = "fluid"
+                        class="fluid"
                     }}
                 </div>
             </div>
         </div>
     {{/if}}
-    
 </div>

@@ -377,7 +377,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type Number
     @default 0
   */
-  bufferRadius: 10,
+  bufferRadius: 0,
 
   /**
     Leaflet map.
@@ -516,11 +516,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     leafletMap.fire('flexberry-map:identificationOptionChanged', {
       mapToolName
     });
-  },
-
-  onRender() {
-    this.set('bufferActive', true);
-    this.set('bufferActive', false);
   },
 
   /**

@@ -70,7 +70,7 @@ let IdentifyMapToolComponent = Ember.Component.extend({
     @type Number
     @default 0
   */
-  bufferRadius: 10,
+  bufferRadius: 0,
 
   /**
     Reference to component's template.
@@ -199,7 +199,6 @@ let IdentifyMapToolComponent = Ember.Component.extend({
     if (!toolMode) {
       this.set('toolMode', 'rectangle');
     }
-
   }
 
   /**

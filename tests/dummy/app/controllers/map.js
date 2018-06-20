@@ -102,7 +102,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
      @type Number
     @default 0
   */
-  bufferRadius: 10,
+  bufferRadius: 0,
 
   /**
     Flag: indicates whether to show layer tree or not.

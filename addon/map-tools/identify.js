@@ -48,7 +48,7 @@ export default BaseNonclickableMapTool.extend({
     @type Number
     @default 0
   */
-  bufferRadius: 10,
+  bufferRadius: 0,
 
   /**
     Tool's cursor CSS-class.
