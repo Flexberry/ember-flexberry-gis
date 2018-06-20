@@ -429,6 +429,10 @@ templates/my-map-form.hbs</p>
 
                     <ul class="index-list methods extends">
                             <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__bufferObserver" data-tablink="_bufferObserver">_bufferObserver</a>
+
+                            </li>
+                            <li class="index-item method private">
                                 <a href="#" data-tabid="#methods" data-anchor="#method__leafletMapDidChange" data-tablink="_leafletMapDidChange">_leafletMapDidChange</a>
 
                             </li>
@@ -496,6 +500,30 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                             </li>
                             <li class="index-item property">
                                 <a href="#" data-tabid="#properties" data-anchor="#property_allIconClass" data-tablink="allIconClass">allIconClass</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_bufferActive" data-tablink="bufferActive">bufferActive</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_bufferActiveCaption" data-tablink="bufferActiveCaption">bufferActiveCaption</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_bufferRadius" data-tablink="bufferRadius">bufferRadius</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_bufferRadiusCaption" data-tablink="bufferRadiusCaption">bufferRadiusCaption</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_bufferUnits" data-tablink="bufferUnits">bufferUnits</a>
+
+                            </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_bufferUnitsList" data-tablink="bufferUnitsList">bufferUnitsList</a>
 
                             </li>
                             <li class="index-item property">
@@ -608,6 +636,37 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
             <div id="methods" class="tab-pane">
                 <h2 class="off-left">Methods</h2>
 
+                    <div id="method__bufferObserver" class="method item private">
+                        <h3 class="name"><code>_bufferObserver</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l58"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:58</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Observes changes buffer parameters in flexberry-identify-panel.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
                     <div id="method__leafletMapDidChange" class="method item private">
                         <h3 class="name"><code>_leafletMapDidChange</code></h3>
                     
@@ -624,7 +683,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l318"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:318</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l391"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:391</code></a>
                             </p>
                     
                     
@@ -658,7 +717,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l420"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:420</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l493"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:493</code></a>
                             </p>
                     
                     
@@ -669,57 +728,6 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                             
                         </div>
                     
-                    
-                    
-                    </div>
-                    <div id="method__switchActiveLayer" class="method item">
-                        <h3 class="name"><code>_switchActiveLayer</code></h3>
-                    
-                            <div class="args">
-                                <span class="paren">(</span><ul class="args-list inline commas">
-                                    <li class="arg">
-                                            <code>selectedLayerOption</code>
-                                    </li>
-                                </ul><span class="paren">)</span>
-                            </div>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l397"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:397</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            
-                        </div>
-                    
-                            <div class="params">
-                                <h4>Parameters:</h4>
-                    
-                                <ul class="params-list">
-                                    <li class="param">
-                                            <code class="param-name">selectedLayerOption</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                             
-                                        </div>
-                    
-                                    </li>
-                                </ul>
-                            </div>
                     
                     
                     </div>
@@ -744,7 +752,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l409"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:409</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l482"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:482</code></a>
                             </p>
                     
                     
@@ -774,6 +782,57 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                     
                     
                     </div>
+                    <div id="method__switchActiveLayer" class="method item">
+                        <h3 class="name"><code>_switchActiveLayer</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>selectedLayerOption</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l470"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:470</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">selectedLayerOption</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                             
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
                     <div id="method_actions.clear" class="method item">
                         <h3 class="name"><code>actions.clear</code></h3>
                     
@@ -789,7 +848,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l362"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:362</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l435"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:435</code></a>
                             </p>
                     
                     
@@ -819,7 +878,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l338"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:338</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l411"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:411</code></a>
                             </p>
                     
                     
@@ -849,7 +908,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l350"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:350</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l423"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:423</code></a>
                             </p>
                     
                     
@@ -888,7 +947,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l372"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:372</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l445"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:445</code></a>
                             </p>
                     
                     
@@ -959,7 +1018,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l462"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:462</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l535"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:535</code></a>
                             </p>
                     
                     
@@ -989,7 +1048,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l448"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:448</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l521"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:521</code></a>
                             </p>
                     
                     
@@ -1019,7 +1078,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l455"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:455</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l528"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:528</code></a>
                             </p>
                     
                     
@@ -1050,7 +1109,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l169"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:169</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l188"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:188</code></a>
                             </p>
                     
                     
@@ -1076,7 +1135,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l97"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:97</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l116"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:116</code></a>
                             </p>
                     
                     
@@ -1102,7 +1161,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l88"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:88</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l107"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:107</code></a>
                             </p>
                     
                     
@@ -1128,7 +1187,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l106"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:106</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l125"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:125</code></a>
                             </p>
                     
                     
@@ -1143,6 +1202,162 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                     
                     
                     </div>
+                    <div id="property_bufferActive" class="property item">
+                        <h3 class="name"><code>bufferActive</code></h3>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l346"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:346</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Flag indicates is buffer active</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> false</p>
+                    
+                    
+                    </div>
+                    <div id="property_bufferActiveCaption" class="property item">
+                        <h3 class="name"><code>bufferActiveCaption</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l328"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:328</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Active buffer caption.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> t(&#x27;components.flexberry-identify-panel.buffer-active.caption&#x27;)</p>
+                    
+                    
+                    </div>
+                    <div id="property_bufferRadius" class="property item">
+                        <h3 class="name"><code>bufferRadius</code></h3>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l373"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:373</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Buffer radius in selected units</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> 0</p>
+                    
+                    
+                    </div>
+                    <div id="property_bufferRadiusCaption" class="property item">
+                        <h3 class="name"><code>bufferRadiusCaption</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l337"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:337</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Buffer radius caption.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> t(&#x27;components.flexberry-identify-panel.buffer-radius.caption&#x27;)</p>
+                    
+                    
+                    </div>
+                    <div id="property_bufferUnits" class="property item">
+                        <h3 class="name"><code>bufferUnits</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l355"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:355</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Buffer radius units</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;kilometers&#x27;</p>
+                    
+                    
+                    </div>
+                    <div id="property_bufferUnitsList" class="property item">
+                        <h3 class="name"><code>bufferUnitsList</code></h3>
+                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String[]</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l364"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:364</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Buffer radius units list for dropdown select</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> &#x27;kilometers&#x27;</p>
+                    
+                    
+                    </div>
                     <div id="property_class" class="property item">
                         <h3 class="name"><code>class</code></h3>
                         <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
@@ -1154,7 +1369,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l79"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:79</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l98"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:98</code></a>
                             </p>
                     
                     
@@ -1180,7 +1395,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l266"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:266</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l285"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:285</code></a>
                             </p>
                     
                     
@@ -1206,7 +1421,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l257"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:257</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l276"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:276</code></a>
                             </p>
                     
                     
@@ -1232,7 +1447,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l275"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:275</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l294"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:294</code></a>
                             </p>
                     
                     
@@ -1389,7 +1604,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l196"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:196</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l215"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:215</code></a>
                             </p>
                     
                     
@@ -1414,7 +1629,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l309"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:309</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l382"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:382</code></a>
                             </p>
                     
                     
@@ -1440,7 +1655,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l293"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:293</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l312"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:312</code></a>
                             </p>
                     
                     
@@ -1466,7 +1681,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l239"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:239</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l258"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:258</code></a>
                             </p>
                     
                     
@@ -1492,7 +1707,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l230"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:230</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l249"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:249</code></a>
                             </p>
                     
                     
@@ -1518,7 +1733,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l248"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:248</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l267"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:267</code></a>
                             </p>
                     
                     
@@ -1544,7 +1759,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l284"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:284</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l303"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:303</code></a>
                             </p>
                     
                     
@@ -1570,7 +1785,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l212"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:212</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l231"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:231</code></a>
                             </p>
                     
                     
@@ -1596,7 +1811,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l203"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:203</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l222"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:222</code></a>
                             </p>
                     
                     
@@ -1622,7 +1837,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l221"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:221</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l240"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:240</code></a>
                             </p>
                     
                     
@@ -1648,7 +1863,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l69"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:69</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l88"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:88</code></a>
                             </p>
                     
                     
@@ -1675,7 +1890,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l302"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:302</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l321"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:321</code></a>
                             </p>
                     
                     
@@ -1700,7 +1915,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l187"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:187</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l206"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:206</code></a>
                             </p>
                     
                     
@@ -1726,7 +1941,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l151"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:151</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l170"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:170</code></a>
                             </p>
                     
                     
@@ -1752,7 +1967,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l142"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:142</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l161"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:161</code></a>
                             </p>
                     
                     
@@ -1778,7 +1993,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l160"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:160</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l179"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:179</code></a>
                             </p>
                     
                     
@@ -1804,7 +2019,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l178"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:178</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l197"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:197</code></a>
                             </p>
                     
                     
@@ -1830,7 +2045,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l124"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:124</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l143"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:143</code></a>
                             </p>
                     
                     
@@ -1856,7 +2071,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l115"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:115</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l134"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:134</code></a>
                             </p>
                     
                     
@@ -1882,7 +2097,7 @@ handles changes in layer and tools options and fires &#x27;flexberry-map:identif
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l133"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:133</code></a>
+                            <a href="../files/addon_components_flexberry-identify-panel.js.html#l152"><code>addon&#x2F;components&#x2F;flexberry-identify-panel.js:152</code></a>
                             </p>
                     
                     

@@ -464,6 +464,17 @@ let BaseMapToolComponent = Ember.Component.extend(
     _mapTool: null,
 
     /**
+      Observes changes buffer parameters.
+
+      @method _bufferObserver
+      @type Observer
+      @private
+    */
+    _bufferObserver: Ember.observer(&#x27;bufferActive&#x27;, &#x27;bufferRadius&#x27;, &#x27;bufferUnits&#x27;, function () {
+      this._applyBufferSettings();
+    }),
+
+    /**
       Flag: indicates whether some nested content for submenu is defined
       (some yield markup for &#x27;submenu&#x27; block-slot).
 
@@ -526,6 +537,33 @@ let BaseMapToolComponent = Ember.Component.extend(
     _isActive: Ember.computed(&#x27;_mapTool._enabled&#x27;, function () {
       return this.get(&#x27;_mapTool._enabled&#x27;) === true;
     }),
+
+    /**
+      Flag indicates is buffer active
+
+      @property bufferActive
+      @type Boolean
+      @default false
+    */
+    bufferActive: true,
+
+    /**
+      Buffer radius units
+
+      @property bufferUnits
+      @type String
+      @default &#x27;kilometers&#x27;
+    */
+    bufferUnits: &#x27;kilometers&#x27;,
+
+    /**
+      Buffer radius in selected units
+
+      @property bufferRadius
+      @type Number
+      @default 0
+    */
+    bufferRadius: 0,
 
     /**
       Reference to component&#x27;s template.
@@ -687,6 +725,26 @@ let BaseMapToolComponent = Ember.Component.extend(
     },
 
     /**
+      Apply buffer settings to existing mapTool
+
+      @method _applyBufferSettings
+      @private
+    */
+    _applyBufferSettings() {
+      let tool = this.get(&#x27;_mapTool&#x27;);
+
+      if (!Ember.isNone(tool)) {
+        let bufferActive = this.get(&#x27;bufferActive&#x27;);
+        let bufferRadius = this.get(&#x27;bufferRadius&#x27;);
+        let bufferUnits = this.get(&#x27;bufferUnits&#x27;);
+
+        tool.set(&#x27;bufferActive&#x27;, bufferActive);
+        tool.set(&#x27;bufferRadius&#x27;, bufferRadius);
+        tool.set(&#x27;bufferUnits&#x27;, bufferUnits);
+      }
+    },
+
+    /**
       Invokes {{#crossLink &quot;BaseMapToolComponent/sendingActions.activate:method&quot;}}&#x27;activate&#x27; action{{/crossLink}}.
 
       @method activateMapTool
@@ -727,6 +785,8 @@ let BaseMapToolComponent = Ember.Component.extend(
       Ember.set(mapTool, &#x27;name&#x27;, mapToolName);
 
       this.set(&#x27;_mapTool&#x27;, mapTool);
+
+      this._applyBufferSettings();
 
       // delayed activation of maptool
       if (this.get(&#x27;activated&#x27;)) {

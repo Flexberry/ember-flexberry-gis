@@ -395,6 +395,7 @@
 
 import Ember from &#x27;ember&#x27;;
 import BaseNonclickableMapTool from &#x27;./base-nonclickable&#x27;;
+import * as buffer from &#x27;npm:@turf/buffer&#x27;;
 
 /**
   Identify map-tool.
@@ -414,6 +415,33 @@ export default BaseNonclickableMapTool.extend({
   _editTools: null,
 
   /**
+    Flag indicates is buffer active
+
+    @property bufferActive
+    @type Boolean
+    @default false
+  */
+  bufferActive: false,
+
+  /**
+    Buffer radius units
+
+    @property bufferUnits
+    @type String
+    @default &#x27;kilometers&#x27;
+  */
+  bufferUnits: &#x27;kilometers&#x27;,
+
+  /**
+    Buffer radius in selected units
+
+    @property bufferRadius
+    @type Number
+    @default 0
+  */
+  bufferRadius: 0,
+
+  /**
     Tool&#x27;s cursor CSS-class.
 
     @property cursor
@@ -430,6 +458,15 @@ export default BaseNonclickableMapTool.extend({
     @default null
   */
   polygonLayer: null,
+
+  /**
+    Main polygon around which the buffer is drawn
+
+    @property bufferedMainPolygonLayer
+    @type {&lt;a href=&quot;http://leafletjs.com/reference.html#polygon&quot;&gt;L.Polygon&lt;/a&gt;}
+    @default null
+  */
+  bufferedMainPolygonLayer: null,
 
   /**
     Flag: indicates whether to hide figure on drawing end or not.
@@ -484,6 +521,7 @@ export default BaseNonclickableMapTool.extend({
   */
   _startIdentification({
     polygonLayer,
+    bufferedMainPolygonLayer,
     latlng,
     excludedLayers
   }) {
@@ -492,6 +530,7 @@ export default BaseNonclickableMapTool.extend({
     let e = {
       latlng: latlng,
       polygonLayer: polygonLayer,
+      bufferedMainPolygonLayer: bufferedMainPolygonLayer,
       excludedLayers: Ember.A(excludedLayers || []),
       layers: this._getLayersToIdentify({
         excludedLayers
@@ -522,7 +561,6 @@ export default BaseNonclickableMapTool.extend({
       }
 
       promises.pushObject(features);
-
     });
 
     // Wait for all promises to be settled &amp; call &#x27;_finishIdentification&#x27; hook.
@@ -576,6 +614,10 @@ export default BaseNonclickableMapTool.extend({
     let polygonLayer = Ember.get(e, &#x27;polygonLayer&#x27;);
     this.set(&#x27;polygonLayer&#x27;, polygonLayer);
 
+    // Assign current tool&#x27;s boundingBoxLayer
+    let bufferedLayer = Ember.get(e, &#x27;bufferedMainPolygonLayer&#x27;);
+    this.set(&#x27;bufferedMainPolygonLayer&#x27;, bufferedLayer);
+
     // Fire custom event on leaflet map.
     leafletMap.fire(&#x27;flexberry-map:identificationFinished&#x27;, e);
   },
@@ -591,8 +633,21 @@ export default BaseNonclickableMapTool.extend({
   _drawingDidEnd({
     layer
   }) {
-    let latlng = layer.getCenter();
-    let boundingBox = layer.getBounds();
+    let workingPolygon;
+    let bufferedMainPolygon;
+    let isBufferActive = this.get(&#x27;bufferActive&#x27;);
+    let bufferRadius = this.get(&#x27;bufferRadius&#x27;);
+
+    if (isBufferActive &amp;&amp; bufferRadius &gt; 0) {
+      let buffer = this._drawBuffer(layer.toGeoJSON());
+      workingPolygon = buffer.getLayers()[0];
+      bufferedMainPolygon = layer;
+    } else {
+      workingPolygon = layer;
+    }
+
+    let latlng = workingPolygon.getCenter();
+    let boundingBox = workingPolygon.getBounds();
     if (boundingBox.getSouthWest().equals(boundingBox.getNorthEast())) {
       // Identification area is point.
       // Identification can be incorrect or even failed in such situation,
@@ -607,7 +662,7 @@ export default BaseNonclickableMapTool.extend({
 
       // Bounding box around specified point with radius of current scale * 0.05.
       boundingBox = boundingBox.getSouthWest().toBounds(maxMeters * 0.05);
-      layer.setLatLngs([boundingBox.getNorthWest(), boundingBox.getNorthEast(), boundingBox.getSouthEast(), boundingBox.getSouthWest()]);
+      workingPolygon.setLatLngs([boundingBox.getNorthWest(), boundingBox.getNorthEast(), boundingBox.getSouthEast(), boundingBox.getSouthWest()]);
     }
 
     // Remove previously drawn rectangle
@@ -623,9 +678,27 @@ export default BaseNonclickableMapTool.extend({
 
     // Start identification.
     this._startIdentification({
-      polygonLayer: layer,
+      polygonLayer: workingPolygon,
+      bufferedMainPolygonLayer: bufferedMainPolygon,
       latlng: latlng
     });
+  },
+
+  /**
+    Draw buffer around selected area
+
+    @method _drawBuffer
+    @param {&lt;a href=&quot;http://leafletjs.com/reference-1.0.0.html#polygon&quot;&gt;L.Polygon&lt;/a&gt;} layer Leaflet polygon layer
+    @private
+  */
+  _drawBuffer(layer) {
+    let radius = this.get(&#x27;bufferRadius&#x27;);
+    let units = this.get(&#x27;bufferUnits&#x27;);
+
+    let buf = buffer.default(layer, radius, { units: units });
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    let _bufferLayer = L.geoJSON(buf).addTo(leafletMap);
+    return _bufferLayer;
   },
 
   /**
@@ -699,6 +772,12 @@ export default BaseNonclickableMapTool.extend({
       polygonLayer.disableEdit();
       polygonLayer.remove();
     }
+
+    let bufferedMainPolygon = this.get(&#x27;bufferedMainPolygonLayer&#x27;);
+    if (bufferedMainPolygon) {
+      bufferedMainPolygon.remove();
+    }
+
   }
 });
 

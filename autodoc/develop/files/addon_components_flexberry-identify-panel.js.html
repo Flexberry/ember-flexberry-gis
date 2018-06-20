@@ -447,6 +447,25 @@ const flexberryClassNames = {
 */
 let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   /**
+    Observes changes buffer parameters in flexberry-identify-panel.
+
+    @method _bufferObserver
+    @type Observer
+    @private
+  */
+  _bufferObserver: Ember.observer(&#x27;bufferActive&#x27;, &#x27;bufferUnits&#x27;, &#x27;bufferRadius&#x27;, function () {
+    let bufferActive = this.get(&#x27;bufferActive&#x27;);
+    let bufferUnits = this.get(&#x27;bufferUnits&#x27;);
+    let bufferRadius = this.get(&#x27;bufferRadius&#x27;);
+    let bufferParameters = {
+      active: bufferActive,
+      units: bufferUnits,
+      radius: bufferRadius
+    };
+    this.sendAction(&#x27;onBufferSet&#x27;, bufferParameters);
+  }),
+
+  /**
     Reference to component&#x27;s template.
   */
   layout,
@@ -696,6 +715,60 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type {String}
    */
   toolMode: &#x27;rectangle&#x27;,
+
+  /**
+    Active buffer caption.
+
+    @property bufferActiveCaption
+    @type String
+    @default t(&#x27;components.flexberry-identify-panel.buffer-active.caption&#x27;)
+  */
+  bufferActiveCaption: t(&#x27;components.flexberry-identify-panel.buffer-active.caption&#x27;),
+
+  /**
+    Buffer radius caption.
+
+    @property bufferRadiusCaption
+    @type String
+    @default t(&#x27;components.flexberry-identify-panel.buffer-radius.caption&#x27;)
+  */
+  bufferRadiusCaption: t(&#x27;components.flexberry-identify-panel.buffer-radius.caption&#x27;),
+
+  /**
+    Flag indicates is buffer active
+
+    @property bufferActive
+    @type Boolean
+    @default false
+  */
+  bufferActive: false,
+
+  /**
+    Buffer radius units
+
+    @property bufferUnits
+    @type String
+    @default &#x27;kilometers&#x27;
+  */
+  bufferUnits: &#x27;kilometers&#x27;,
+
+  /**
+    Buffer radius units list for dropdown select
+
+    @property bufferUnitsList
+    @type String[]
+    @default &#x27;kilometers&#x27;
+  */
+  bufferUnitsList: [&#x27;kilometers&#x27;, &#x27;meters&#x27;],
+
+  /**
+    Buffer radius in selected units
+
+    @property bufferRadius
+    @type Number
+    @default 0
+  */
+  bufferRadius: 0,
 
   /**
     Leaflet map.
