@@ -21,9 +21,6 @@ export default {
     'caption': 'Buffer'
   },
   'buffer-radius': {
-    'caption': 'Set buffer radius'
+    'caption': 'Radius'
   },
-  'buffer-units-select': {
-    'caption': 'Select radius units'
-  }
 };

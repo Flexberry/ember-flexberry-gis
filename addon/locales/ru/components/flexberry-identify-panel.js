@@ -21,9 +21,6 @@ export default {
     'caption': 'Буфер'
   },
   'buffer-radius': {
-    'caption': 'Задайте радиус'
-  },
-  'buffer-units-select': {
-    'caption': 'Выберите единицы'
+    'caption': 'Радиус'
   }
 };

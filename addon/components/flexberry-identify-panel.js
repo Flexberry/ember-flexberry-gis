@@ -344,15 +344,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   bufferRadiusCaption: t('components.flexberry-identify-panel.buffer-radius.caption'),
 
   /**
-    Buffer units caption.
-
-    @property bufferUnitsCaption
-    @type String
-    @default t('components.flexberry-identify-panel.buffer-units-select.caption')
-  */
-  bufferUnitsCaption: t('components.flexberry-identify-panel.buffer-units-select.caption'),
-
-  /**
     Flag indicates is buffer active
 
     @property bufferActive
