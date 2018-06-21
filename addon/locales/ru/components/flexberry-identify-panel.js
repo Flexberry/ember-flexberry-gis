@@ -14,6 +14,12 @@ export default {
   'polygon': {
     'caption': 'Многоугольник'
   },
+  'marker': {
+    'caption': 'Точка'
+  },
+  'polyline': {
+    'caption': 'Линия'
+  },
   'clear': {
     'caption': 'Очистить'
   },

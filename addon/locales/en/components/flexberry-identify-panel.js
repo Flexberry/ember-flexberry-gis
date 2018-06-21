@@ -14,6 +14,12 @@ export default {
   'polygon': {
     'caption': 'Polygon'
   },
+  'marker': {
+    'caption': 'Point'
+  },
+  'polyline': {
+    'caption': 'Line'
+  },
   'clear': {
     'caption': 'Clear'
   },

@@ -42,6 +42,22 @@
                 click=(action "onToolOptionChange" "polygon")
             }}
         {{/if}}
+        {{#if marker}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifyMarker " " markerClass)
+                iconClass=markerIconClass
+                tooltip=markerCaption
+                click=(action "onToolOptionChange" "marker")
+            }}
+        {{/if}}
+        {{#if polyline}}
+            {{flexberry-button
+                class=(concat flexberryClassNames.identifyPolyline " " polylineClass)
+                iconClass=polylineIconClass
+                tooltip=polylineCaption
+                click=(action "onToolOptionChange" "polyline")
+            }}
+        {{/if}}
     </div>
     <div class="{{concat "ui four wide column" flexberryClassName.otherOptions}}">
         {{flexberry-button

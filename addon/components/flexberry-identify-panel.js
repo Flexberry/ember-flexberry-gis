@@ -22,6 +22,8 @@ import {
   @property {String} flexberryClassNames.identifyTopVisible Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-top-visible-layers-option').
   @property {String} flexberryClassNames.identifyRectangle Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-rectangle-tools-option').
   @property {String} flexberryClassNames.identifyPolygon Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-polygon-tools-option').
+  @property {String} flexberryClassNames.identifyMarke Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-marker-tools-option').
+  @property {String} flexberryClassNames.identifyPolyline Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-polyline-tools-option').
   @property {String} flexberryClassNames.otherOptions Component's options div CSS-class name ('flexberry-identify-panel-options').
   @readonly
   @static
@@ -39,6 +41,8 @@ const flexberryClassNames = {
   toolsOptions: flexberryClassNamesPrefix + '-tools-options',
   identifyRectangle: flexberryClassNamesPrefix + '-rectangle-tools-option',
   identifyPolygon: flexberryClassNamesPrefix + '-polygon-tools-option',
+  identifyMarker: flexberryClassNamesPrefix + '-marker-tools-option',
+  identifyPolyline: flexberryClassNamesPrefix + '-polyline-tools-option',
   otherOptions: flexberryClassNamesPrefix + '-options'
 };
 
@@ -71,6 +75,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       units: bufferUnits,
       radius: bufferRadius
     };
+
     this.sendAction('onBufferSet', bufferParameters);
   }),
 
@@ -274,6 +279,60 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polygonIconClass: 'star icon',
 
   /**
+    tools option's 'marker' mode CSS-class.
+
+    @property markerClass
+    @type String
+    @default null
+  */
+  markerClass: null,
+
+  /**
+    tools option's 'marker' mode's caption.
+
+    @property markerCaption
+    @type String
+    @default t('components.flexberry-identify-panel.marker.caption')
+  */
+  markerCaption: t('components.flexberry-identify-panel.marker.caption'),
+
+  /**
+     tools option's 'marker' mode's icon CSS-class names.
+
+    @property markerIconClass
+    @type String
+    @default 'dot circle outline icon'
+  */
+  markerIconClass: 'dot circle outline icon',
+
+  /**
+    tools option's 'polyline' mode CSS-class.
+
+    @property polylineClass
+    @type String
+    @default null
+  */
+  polylineClass: null,
+
+  /**
+    tools option's 'polyline' mode's caption.
+
+    @property polylineCaption
+    @type String
+    @default t('components.flexberry-identify-panel.polyline.caption')
+  */
+  polylineCaption: t('components.flexberry-identify-panel.polyline.caption'),
+
+  /**
+    tools option's 'polyline' mode's icon CSS-class names.
+
+     @property polylineIconClass
+     @type String
+     @default 'line graph icon'
+  */
+  polylineIconClass: 'line graph icon',
+
+  /**
     clear button's CSS-class.
 
     @property clearClass
@@ -317,6 +376,24 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type Boolean
   */
   polygon: true,
+
+  /**
+    Flag: is tools option 'marker' enable
+
+    @property marker
+    @default true
+    @type Boolean
+  */
+  marker: true,
+
+  /**
+    Flag: is tools option 'polyline' enable
+
+    @property polyline
+    @default true
+    @type Boolean
+  */
+  polyline: true,
 
   /**
     @property toolMode
