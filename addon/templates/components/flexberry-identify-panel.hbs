@@ -1,5 +1,5 @@
 <div class="{{concat "ui celled grid" " " flexberryClassNames.wrapper}}">
-    <div class="{{concat "ui eight wide column" " " flexberryClassNames.layersOptions}}">
+    <div class="{{concat "ui six wide column" " " flexberryClassNames.layersOptions}}">
         {{#if all}}
             {{flexberry-button
                 class=(concat flexberryClassNames.identifyAll " " allClass)
@@ -25,7 +25,7 @@
             }}
         {{/if}}
     </div>
-    <div class="{{concat "ui four wide column" " " flexberryClassNames.toolsOptions}}">
+    <div class="{{concat "ui seven wide column" " " flexberryClassNames.toolsOptions}}">
         {{#if rectangle}}
             {{flexberry-button
                 class=(concat flexberryClassNames.identifyRectangle " " rectangleClass)
@@ -59,7 +59,7 @@
             }}
         {{/if}}
     </div>
-    <div class="{{concat "ui four wide column" flexberryClassName.otherOptions}}">
+    <div class="{{concat "ui three wide column" flexberryClassName.otherOptions}}">
         {{flexberry-button
             class=(concat flexberryClassNames.clearButton " " clearClass)
             iconClass=clearIconClass

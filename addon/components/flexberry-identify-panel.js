@@ -301,9 +301,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
     @property markerIconClass
     @type String
-    @default 'dot circle outline icon'
+    @default 'bullseye icon'
   */
-  markerIconClass: 'dot circle outline icon',
+  markerIconClass: 'bullseye icon',
 
   /**
     tools option's 'polyline' mode CSS-class.
@@ -328,9 +328,9 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
 
      @property polylineIconClass
      @type String
-     @default 'line graph icon'
+     @default 'minus icon'
   */
-  polylineIconClass: 'line graph icon',
+  polylineIconClass: 'minus icon',
 
   /**
     clear button's CSS-class.

@@ -600,15 +600,7 @@
     /* линейка */
     i.icon.star:before {
       font-family: Crimean;
-      content: "\f248";
-    }
-    i.icon.dot.circle.outline:before {
-      font-family: Crimean;
-      content: "\f192";
-    }
-    i.icon.line.graph:before {
-      font-family: Crimean;
-      content: "\f248";
+      content: "\e802";
     }
   }
   /* удаление */
