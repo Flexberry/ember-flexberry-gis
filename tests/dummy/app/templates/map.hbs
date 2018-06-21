@@ -119,6 +119,7 @@
           leafletMap=leafletMap
           layerMode=identifyLayersOption
           toolMode=identifyToolOption
+          onBufferSet=(action "onBufferSet")
           identificationFinished=(action 'onIdentificationFinished')
           clear=(action 'clearIdentification')
         }}
@@ -172,6 +173,9 @@
         {{map-tools/zoom-out activate=(action "onMapToolActivate" target=mapToolbar)}}
         {{map-tools/identify
           activate=(action "onMapToolActivate" target=mapToolbar)
+          bufferActive=bufferActive
+          bufferUnits=bufferUnits
+          bufferRadius=bufferRadius          
           layerMode=identifyLayersOption
           toolMode=identifyToolOption
           leafletMap=leafletMap

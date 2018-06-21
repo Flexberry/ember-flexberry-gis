@@ -16,5 +16,11 @@ export default {
   },
   'clear': {
     'caption': 'Очистить'
+  },
+  'buffer-active': {
+    'caption': 'Буфер'
+  },
+  'buffer-radius': {
+    'caption': 'Радиус'
   }
 };

@@ -51,4 +51,32 @@
             click=(action "clear")
         }}
     </div>
+    <div class="buffer-tools">
+        {{flexberry-checkbox
+            label=bufferActiveCaption
+            value=bufferActive
+        }}
+    </div>
+    {{#if bufferActive}}
+        <div class="buffer-tools">
+            <div class="ui grid">
+                <div class="buffer-tools ui three wide column">
+                    <label>{{bufferRadiusCaption}}</label>
+                </div>
+                <div class="ui five wide column">
+                    {{input
+                        type="number"
+                        value=bufferRadius
+                    }}
+                </div>
+                <div class="ui seven wide column">
+                    {{flexberry-dropdown
+                        items=bufferUnitsList
+                        value=bufferUnits
+                        class="fluid"
+                    }}
+                </div>
+            </div>
+        </div>
+    {{/if}}
 </div>
