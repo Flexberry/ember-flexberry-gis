@@ -37767,7 +37767,7 @@
         },
         {
             "file": "addon/mixins/flexberry-maplayer-actions-handler.js",
-            "line": 355,
+            "line": 358,
             "description": "Handles {{#crossLink \"FlexberryMaplayerComponent/sendingActions.copy:method\"}}flexberry-maplayers component's 'copy' action{{/crossLink}}.\nIt adds new child layer.",
             "itemtype": "method",
             "name": "actions.onMapLayerAdd",
@@ -37803,7 +37803,7 @@
         },
         {
             "file": "addon/mixins/flexberry-maplayer-actions-handler.js",
-            "line": 387,
+            "line": 390,
             "description": "Handles {{#crossLink \"FlexberryMaplayerComponent/sendingActions.edit:method\"}}flexberry-maplayers component's 'edit' action{{/crossLink}}.\nIt edits existing layer.",
             "itemtype": "method",
             "name": "actions.onMapLayerEdit",
@@ -37834,7 +37834,7 @@
         },
         {
             "file": "addon/mixins/flexberry-maplayer-actions-handler.js",
-            "line": 441,
+            "line": 444,
             "description": "Handles {{#crossLink \"FlexberryMaplayerComponent/sendingActions.remove:method\"}}flexberry-maplayers component's 'remove' action{{/crossLink}}.\nIt removes specified layer.",
             "itemtype": "method",
             "name": "actions.onMapLayerRemove",
@@ -37858,7 +37858,7 @@
         },
         {
             "file": "addon/mixins/flexberry-maplayer-actions-handler.js",
-            "line": 491,
+            "line": 494,
             "description": "Creates new layer as specified layer's child.",
             "itemtype": "method",
             "name": "createLayer",
@@ -37892,7 +37892,7 @@
         },
         {
             "file": "addon/mixins/flexberry-maplayer-actions-handler.js",
-            "line": 508,
+            "line": 511,
             "description": "Updates specified layer in hierarchy with given properties.",
             "itemtype": "method",
             "name": "editLayer",
@@ -37926,7 +37926,7 @@
         },
         {
             "file": "addon/mixins/flexberry-maplayer-actions-handler.js",
-            "line": 527,
+            "line": 530,
             "description": "Removes specified layer from layers hierarchy.",
             "itemtype": "method",
             "name": "removeLayer",
@@ -37955,7 +37955,7 @@
         },
         {
             "file": "addon/mixins/flexberry-maplayer-actions-handler.js",
-            "line": 554,
+            "line": 557,
             "description": "Sets indexes for layers hierarchy.",
             "itemtype": "method",
             "name": "setIndexes",
@@ -37971,7 +37971,7 @@
         },
         {
             "file": "addon/mixins/flexberry-maplayer-actions-handler.js",
-            "line": 569,
+            "line": 572,
             "description": "Sets indexes for layers hierarchy.",
             "itemtype": "method",
             "name": "_setIndexes",
@@ -40630,19 +40630,19 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-maplayer-actions-handler.js:491"
+            "line": " addon/mixins/flexberry-maplayer-actions-handler.js:494"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-maplayer-actions-handler.js:508"
+            "line": " addon/mixins/flexberry-maplayer-actions-handler.js:511"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-maplayer-actions-handler.js:527"
+            "line": " addon/mixins/flexberry-maplayer-actions-handler.js:530"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-maplayer-actions-handler.js:569"
+            "line": " addon/mixins/flexberry-maplayer-actions-handler.js:572"
         },
         {
             "message": "replacing incorrect tag: returns with return",

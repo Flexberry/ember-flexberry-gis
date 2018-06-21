@@ -726,10 +726,13 @@ export default Ember.Mixin.create({
         &#x60;but \&#x60;Ember.NativeArray\&#x60; is expected&#x60;,
         Ember.isArray(childLayers) &amp;&amp; Ember.typeOf(childLayers.pushObject) === &#x27;function&#x27;);
 
-      let childLayer = Ember.isNone(layer) ? this.createLayer({
-        parentLayer: parentLayer,
-        layerProperties: layerProperties
-      }) : layer;
+      let childLayer;
+      if (Ember.isNone(layer)) {
+        childLayer = this.createLayer({ parentLayer: parentLayer, layerProperties: layerProperties });
+      } else {
+        layer.setProperties(layerProperties);
+        childLayer = layer;
+      }
 
       if (Ember.get(childLayer, &#x27;type&#x27;) === &#x27;group&#x27; &amp;&amp; !Ember.isArray(Ember.get(childLayer, &#x27;layers&#x27;))) {
         Ember.set(childLayer, &#x27;layers&#x27;, Ember.A());
