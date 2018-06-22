@@ -6,6 +6,8 @@ export default {
   'coordinates-field-label': 'Координаты',
   'coordinates-field-placeholder': 'Добавьте координаты',
   'load-button-caption': 'Загрузить из файла',
+  'check-all-title': 'Выбрать все',
+  'uncheck-all-title': 'Снять выделение',
   'import-error': {
     'caption': 'Во время импорта произошла ошибка',
     'message': 'Сервер недоступен или импортируемый файл некорректен'

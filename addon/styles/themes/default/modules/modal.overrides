@@ -415,8 +415,23 @@
 }
 
 .ui.modal.flexberry-geometry-add-mode-import-result {
-  .ui.table.import-table .import-column {
-    min-width: 170px;
+  .ui.table.import-table {
+    .import-column {
+      min-width: 170px;
+    }
+
+    .ui.check-all-button.button {
+      padding: 0px;
+      height: 25px;
+      width: 25px;
+      text-align: center;
+      border: 0px;
+      background: none;
+      margin: 0 0 0 0px;
+      &.activated i.icon:before {
+        color: #a0a0a0;
+      }
+    }
   }
 }
 

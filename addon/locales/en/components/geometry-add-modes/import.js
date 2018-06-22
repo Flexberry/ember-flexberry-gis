@@ -6,6 +6,8 @@ export default {
   'coordinates-field-label': 'Coordinates to add',
   'coordinates-field-placeholder': 'Enter the coordinates',
   'load-button-caption': 'Load from file',
+  'check-all-title': 'Check all',
+  'uncheck-all-title': 'Uncheck all',
   'import-error': {
     'caption': 'Import failed',
     'message': 'Server unavailable or imported file is incorrrect'

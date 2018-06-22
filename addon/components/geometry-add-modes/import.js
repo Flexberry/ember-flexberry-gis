@@ -88,6 +88,15 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
   fileControl: undefined,
 
   /**
+    Flag indicates when all imported features was selected..
+
+    @property importAllSelect
+    @type Boolean
+    @default false
+  */
+  importAllSelect: false,
+
+  /**
     List of available CRS for import.
 
     @property availableCRS
@@ -256,6 +265,10 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
   coordinatesFieldPlaceholder: t('components.geometry-add-modes.import.coordinates-field-placeholder'),
 
   loadButtonCaption: t('components.geometry-add-modes.import.load-button-caption'),
+
+  checkAllTitle: t('components.geometry-add-modes.import.check-all-title'),
+
+  uncheckAllTitle: t('components.geometry-add-modes.import.uncheck-all-title'),
 
   importError: t('components.geometry-add-modes.import.import-error'),
 
@@ -478,11 +491,29 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
 
       this.set('_resultDialogVisible', false);
       this.set('responseJSON', undefined);
+      this.set('importAllSelect', false);
       this.set('_propertiesConnection', undefined);
       this.set('_notConnectedProperties', undefined);
       if (this.get('fileControl')) {
         this.get('fileControl').val('');
       }
+    },
+
+
+    /**
+      Handles selectAll button click on import result dialog.
+
+      @method actions.onImportAllSelect
+    */
+    onImportAllSelect() {
+      let importedFeatures = this.get('responseJSON.features') || [];
+      let importAllSelect = this.get('importAllSelect');
+
+      importedFeatures.forEach((feature) => {
+        Ember.set(feature, 'selected', !importAllSelect);
+      });
+
+      this.toggleProperty('importAllSelect');
     },
 
     /**

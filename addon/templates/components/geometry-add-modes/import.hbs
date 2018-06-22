@@ -69,7 +69,15 @@
                   </th>
                 {{/each}}
               </tr>
-              <tr><th class='checkbox'></th>
+              <tr>
+                <th class='checkbox'>
+                  <button
+                    class="ui check-all-button {{if importAllSelect "activated"}} button"
+                    title={{if importAllSelect uncheckAllTitle checkAllTitle}}
+                    {{action "onImportAllSelect"}}>
+                      <i class="check icon"></i>
+                  </button>
+                </th>
                 {{#each headersTable as | head |}}
                   <th class="import-column">{{head}}</th>
                 {{/each}}
