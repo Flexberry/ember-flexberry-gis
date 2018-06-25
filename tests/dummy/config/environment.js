@@ -5,17 +5,17 @@ module.exports = function (environment) {
 
   if (environment === 'development-loc') {
     // Use `ember server --environment=development-loc` command for local backend usage.
-    backendUrl = 'http://localhost:63138';
+    backendUrl = 'http://localhost:6500';
   }
 
   if (environment === 'mssql-backend') {
     // Use `ember server --environment=mssql-backend` command for mssql backend usage.
-    backendUrl = 'https://flexberry-ember-gis.azurewebsites.net';
+    backendUrl = 'https://flexberry-gis-test-stand.azurewebsites.net';
   }
 
   if (environment === 'production') {
     if (process.argv.indexOf('--postfix=-mssql') >= 0) {
-      backendUrl = 'https://flexberry-ember-gis.azurewebsites.net';
+      backendUrl = 'https://flexberry-gis-test-stand.azurewebsites.net';
     }
   }
 
@@ -66,7 +66,7 @@ module.exports = function (environment) {
         // This let user to continue work without online connection.
         syncDownWhenOnlineEnabled: false,
       },
-    }, 
+    },
 
     userSettings: {
       // Max opacity values for geometries
