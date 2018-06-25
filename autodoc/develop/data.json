@@ -67,6 +67,15 @@
             },
             "namespaces": {}
         },
+        "addon/components/geometry-add-modes/import.js": {
+            "name": "addon/components/geometry-add-modes/import.js",
+            "modules": {},
+            "classes": {},
+            "fors": {
+                "FlexberryGeometryAddModeManualComponent": 1
+            },
+            "namespaces": {}
+        },
         "addon/components/geometry-add-modes/manual.js": {
             "name": "addon/components/geometry-add-modes/manual.js",
             "modules": {},
@@ -8920,6 +8929,417 @@
                 }
             ],
             "class": "FlexberryGeometryAddModeGeoProviderComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 9,
+            "description": "Component's CSS-classes names.\nJSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.",
+            "itemtype": "property",
+            "name": "flexberryClassNames",
+            "type": "Object",
+            "readonly": "",
+            "static": 1,
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis",
+            "subprops": [
+                {
+                    "name": "prefix",
+                    "description": "Component's CSS-class names prefix ('flexberry-geometry-add-mode-manual').",
+                    "type": "String"
+                },
+                {
+                    "name": "wrapper",
+                    "description": "Component's wrapping <div> CSS-class name ('flexberry-geometry-add-mode-manual').",
+                    "type": "String"
+                },
+                {
+                    "name": "dialog",
+                    "description": "Component's inner dialog CSS-class name ('flexberry-geometry-add-mode-manual').",
+                    "type": "String"
+                },
+                {
+                    "name": "form",
+                    "description": "Component's inner <form> CSS-class name ('flexberry-geometry-add-mode-manual').",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 33,
+            "description": "Reference to component's template.",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 38,
+            "description": "Reference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 44,
+            "description": "Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)\nis empty to disable component's wrapping <div>.",
+            "itemtype": "property",
+            "name": "tagName",
+            "type": "String",
+            "default": "''",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 54,
+            "description": "JSON with all objects from file.",
+            "itemtype": "property",
+            "name": "responseJson",
+            "type": "Object",
+            "default": "undefined",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 63,
+            "description": "JSON with objects selected by user.",
+            "itemtype": "property",
+            "name": "selectedJSON",
+            "type": "Object",
+            "default": "undefined",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 72,
+            "description": "Table headers for import result dialog.",
+            "itemtype": "property",
+            "name": "headersTable",
+            "type": "Array",
+            "default": "undefined",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 81,
+            "description": "File control.",
+            "itemtype": "property",
+            "name": "fileControl",
+            "type": "Object",
+            "default": "undefined",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 90,
+            "description": "Flag indicates when all imported features was selected..",
+            "itemtype": "property",
+            "name": "importAllSelect",
+            "type": "Boolean",
+            "default": "false",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 99,
+            "description": "List of available CRS for import.",
+            "itemtype": "property",
+            "name": "availableCRS",
+            "type": "Array",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 117,
+            "description": "Current selected CRS for import.",
+            "itemtype": "property",
+            "name": "selectedCRS",
+            "type": "Object",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 127,
+            "description": "Maximum latitude for imported objects.",
+            "itemtype": "property",
+            "name": "maxLat",
+            "type": "Number",
+            "default": "90",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 136,
+            "description": "Minimum latitude for imported objects.",
+            "itemtype": "property",
+            "name": "minLat",
+            "type": "Number",
+            "default": "-90",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 145,
+            "description": "Maximum longitude for imported objects.",
+            "itemtype": "property",
+            "name": "maxLng",
+            "type": "Number",
+            "default": "180",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 154,
+            "description": "Minimum longitude for imported objects.",
+            "itemtype": "property",
+            "name": "minLng",
+            "type": "Number",
+            "default": "-180",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 163,
+            "description": "Flag indicates whether import dialog has been already requested by user or not.",
+            "itemtype": "property",
+            "name": "_dialogHasBeenRequested",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 173,
+            "description": "Flag indicates whether to show import dialog.",
+            "itemtype": "property",
+            "name": "_dialogVisible",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 183,
+            "description": "Flag indicates whether to show import result dialog.",
+            "itemtype": "property",
+            "name": "_resultDialogVisible",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 193,
+            "description": "Flag indicates whether import is in process or not.",
+            "itemtype": "property",
+            "name": "_importInProcess",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 203,
+            "description": "Flag indicates whether to show error.",
+            "itemtype": "property",
+            "name": "_showError",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 213,
+            "description": "Current error caption.",
+            "itemtype": "property",
+            "name": "_errorCaption",
+            "type": "String",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 223,
+            "description": "Current error message.",
+            "itemtype": "property",
+            "name": "_errorMessage",
+            "type": "String",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 233,
+            "description": "Connection between imported and layer properties.",
+            "itemtype": "property",
+            "name": "_propertiesConnection",
+            "type": "Object",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 243,
+            "description": "Layer properties, that isn't connected to any of imported properties.",
+            "itemtype": "property",
+            "name": "_notConnectedProperties",
+            "type": "Array",
+            "default": "undefined",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 308,
+            "description": "Handles response from backend with features from file.",
+            "itemtype": "method",
+            "name": "handleImportResponse",
+            "params": [
+                {
+                    "name": "response",
+                    "description": "Features from file.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 338,
+            "description": "Handles uploadFile.",
+            "itemtype": "method",
+            "name": "actions.uploadFile",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 375,
+            "description": "Handles button click.",
+            "itemtype": "method",
+            "name": "actions.onButtonClick",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 385,
+            "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGeometryAddModeManualComponent/sendingActions.complete:method\"}}'complete' action{{/crossLink}}.",
+            "itemtype": "method",
+            "name": "actions.onApprove",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 437,
+            "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.hide:method\"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.",
+            "itemtype": "method",
+            "name": "actions.onHide",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 448,
+            "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGeometryAddModeManualComponent/sendingActions.complete:method\"}}'complete' action{{/crossLink}}.",
+            "itemtype": "method",
+            "name": "actions.onApproveImportDialog",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 483,
+            "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.hide:method\"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.",
+            "itemtype": "method",
+            "name": "actions.onHideImportDialog",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 502,
+            "description": "Handles selectAll button click on import result dialog.",
+            "itemtype": "method",
+            "name": "actions.onImportAllSelect",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 518,
+            "description": "Handles changing in properties connections.",
+            "itemtype": "method",
+            "name": "actions.onPropertyConnectionChange",
+            "params": [
+                {
+                    "name": "property",
+                    "description": "Imported property name.",
+                    "type": "String"
+                },
+                {
+                    "name": "newValue",
+                    "description": "New value of connected property name.",
+                    "type": "String"
+                }
+            ],
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/import.js",
+            "line": 541,
+            "description": "Component's action invoking when new geometry was added.",
+            "itemtype": "method",
+            "name": "sendingActions.importComplete",
+            "params": [
+                {
+                    "name": "addedLayer",
+                    "description": "Added layer.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryGeometryAddModeManualComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -27476,7 +27896,7 @@
             "description": "Handles a new geometry adding completion.",
             "params": [
                 {
-                    "name": "polygons",
+                    "name": "tabModel",
                     "description": "Related tab model.",
                     "type": "Object"
                 },
@@ -27492,6 +27912,25 @@
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
             "line": 1183,
+            "description": "Handles a new geometry adding by import completion.",
+            "params": [
+                {
+                    "name": "tabModel",
+                    "description": "Related tab model.",
+                    "type": "Object"
+                },
+                {
+                    "name": "addedLayer",
+                    "description": "Added layer.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryLayersAttributesPanelComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-layers-attributes-panel.js",
+            "line": 1195,
             "description": "Handles click on 'Difference polygon' button.",
             "params": [
                 {
@@ -27505,7 +27944,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1263,
+            "line": 1275,
             "description": "Handles click on 'Split geometry' button.",
             "params": [
                 {
@@ -27519,7 +27958,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1274,
+            "line": 1286,
             "description": "Handles click on 'Union polygon' button.",
             "itemtype": "method",
             "name": "actions.doCombinedPolygon",
@@ -27535,7 +27974,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1310,
+            "line": 1322,
             "description": "Handles move layer's object.",
             "params": [
                 {
@@ -27549,7 +27988,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1326,
+            "line": 1338,
             "description": "Handles move dialog's 'approve' action.",
             "params": [
                 {
@@ -27568,7 +28007,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1365,
+            "line": 1377,
             "description": "Selected or deselected all objects.",
             "params": [
                 {
@@ -27587,7 +28026,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1403,
+            "line": 1415,
             "description": "Disables tool and split geometry.",
             "params": [
                 {
@@ -27601,7 +28040,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1505,
+            "line": 1517,
             "description": "Split splitter and split polygon each part splitter.",
             "params": [
                 {
@@ -27620,7 +28059,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1576,
+            "line": 1588,
             "description": "Split polygon.",
             "params": [
                 {
@@ -27639,7 +28078,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1641,
+            "line": 1653,
             "description": "Calculates new coordinates layer's feature after the move",
             "params": [
                 {
@@ -27668,7 +28107,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1665,
+            "line": 1677,
             "description": "Shows a dialog for entering the attributes  move of layer's feature.",
             "params": [
                 {
@@ -27682,7 +28121,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1678,
+            "line": 1690,
             "description": "Drag and drop.",
             "params": [
                 {
@@ -27696,14 +28135,14 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1698,
+            "line": 1710,
             "description": "Returns Leaflet.Editable instance.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1713,
+            "line": 1725,
             "description": "Overrides {{#crosslink \"LeafletZoomToFeatureMixin/_prepareLayer:method\"}} to make a copy of passed layer\nand apply a style to the layer to make it more visible.",
             "itemtype": "method",
             "name": "_prepareLayer",
@@ -27725,7 +28164,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1731,
+            "line": 1743,
             "description": "Shows a dialog for entering the attributes of the newly added layer.",
             "params": [
                 {
@@ -27744,7 +28183,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1758,
+            "line": 1770,
             "description": "Returns the available drawing tools according to the type of layer geometry.",
             "params": [
                 {
@@ -27758,7 +28197,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1785,
+            "line": 1797,
             "description": "Zooms map to the specified layer.",
             "params": [
                 {
@@ -41187,6 +41626,14 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/geometry-add-modes/import.js:33"
+        },
+        {
+            "message": "Missing item type\nReference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
+            "line": " addon/components/geometry-add-modes/import.js:38"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
             "line": " addon/components/geometry-add-modes/manual.js:32"
         },
         {
@@ -42066,64 +42513,68 @@
             "line": " addon/components/flexberry-layers-attributes-panel.js:1169"
         },
         {
-            "message": "Missing item type\nHandles click on 'Difference polygon' button.",
+            "message": "Missing item type\nHandles a new geometry adding by import completion.",
             "line": " addon/components/flexberry-layers-attributes-panel.js:1183"
         },
         {
+            "message": "Missing item type\nHandles click on 'Difference polygon' button.",
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1195"
+        },
+        {
             "message": "Missing item type\nHandles click on 'Split geometry' button.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1263"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1275"
         },
         {
             "message": "Missing item type\nHandles move layer's object.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1310"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1322"
         },
         {
             "message": "Missing item type\nHandles move dialog's 'approve' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1326"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1338"
         },
         {
             "message": "Missing item type\nSelected or deselected all objects.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1365"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1377"
         },
         {
             "message": "Missing item type\nDisables tool and split geometry.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1403"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1415"
         },
         {
             "message": "Missing item type\nSplit splitter and split polygon each part splitter.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1505"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1517"
         },
         {
             "message": "Missing item type\nSplit polygon.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1576"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1588"
         },
         {
             "message": "Missing item type\nCalculates new coordinates layer's feature after the move",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1641"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1653"
         },
         {
             "message": "Missing item type\nShows a dialog for entering the attributes  move of layer's feature.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1665"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1677"
         },
         {
             "message": "Missing item type\nDrag and drop.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1678"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1690"
         },
         {
             "message": "Missing item type\nReturns Leaflet.Editable instance.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1698"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1710"
         },
         {
             "message": "Missing item type\nShows a dialog for entering the attributes of the newly added layer.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1731"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1743"
         },
         {
             "message": "Missing item type\nReturns the available drawing tools according to the type of layer geometry.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1758"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1770"
         },
         {
             "message": "Missing item type\nZooms map to the specified layer.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1785"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1797"
         },
         {
             "message": "Missing item type\nReference to component's template.",

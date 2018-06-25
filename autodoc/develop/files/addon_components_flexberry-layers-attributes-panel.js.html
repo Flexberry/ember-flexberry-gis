@@ -1013,7 +1013,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @type Array
     @default [&#x27;draw&#x27;, &#x27;manual&#x27;, &#x27;geoprovider&#x27;]
   */
-  availableGeometryAddModes: [&#x27;draw&#x27;, &#x27;manual&#x27;, &#x27;geoprovider&#x27;],
+  availableGeometryAddModes: [&#x27;draw&#x27;, &#x27;manual&#x27;, &#x27;geoprovider&#x27;, &#x27;import&#x27;],
 
   /**
     Flag: indicates whether moveDialog has been requested
@@ -1568,7 +1568,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles a new geometry adding completion.
 
-      @param {Object} polygons Related tab model.
+      @param {Object} tabModel Related tab model.
       @param {Object} addedLayer Added layer.
     */
     onGeometryAddComplete(tabModel, addedLayer, options) {
@@ -1577,6 +1577,18 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       this._showNewRowDialog(tabModel, addedLayer);
+    },
+
+    /**
+      Handles a new geometry adding by import completion.
+
+      @param {Object} tabModel Related tab model.
+      @param {Object} addedLayer Added layer.
+    */
+    onImportComplete(tabModel, addedLayer) {
+      this.set(&#x27;_newRowTabModel&#x27;, tabModel);
+      this.set(&#x27;_newRowLayer&#x27;, addedLayer);
+      this.send(&#x27;onNewRowDialogApprove&#x27;, Object.assign({}, addedLayer.feature.properties));
     },
 
     /**
