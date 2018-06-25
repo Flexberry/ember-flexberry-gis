@@ -91,6 +91,7 @@
                             drawTools=(get tabModel "availableDrawTools")
                             layerCRS=(get tabModel "leafletObject.options.crs")
                             layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
+                            layersFieldsCaptions=(get tabModel "header")
                           )
                           complete=(action "onGeometryAddComplete" tabModel)
                           importComplete=(action "onImportComplete" tabModel)

@@ -35,12 +35,14 @@
       <div class="field">
         {{flexberry-jsonarea value=selectedJSON}}
       </div>
-      <div class="ui action input">
-        <label class="import-from-file">
-          <span class="button flexberry-import-from-file-button ui icon">{{loadButtonCaption}}</span>
-          <input onchange={{action "uploadFile"}} type="file"/>
-        </label>
-      </div>
+      {{#if (not _importInProcess)}}
+        <div class="ui action input">
+          <label class="import-from-file">
+            <span class="button flexberry-import-from-file-button ui icon">{{loadButtonCaption}}</span>
+            <input onchange={{action "uploadFile"}} type="file"/>
+          </label>
+        </div>
+      {{/if}}
     </form>
   {{/flexberry-dialog}}
   {{#flexberry-dialog class=flexberryClassNames.result
@@ -59,13 +61,17 @@
               <tr><th class='checkbox'></th>
                 {{#each headersTable as | head |}}
                   <th class="import-column">
-                    {{flexberry-dropdown
-                      value=(get _propertiesConnection head)
-                      items=_notConnectedProperties
-                      class="fluid"
-                      onChange=(action "onPropertyConnectionChange" head)
-                      needChecksOnValue=false
-                    }}
+                    {{#ui-dropdown class="item fluid selection" onChange=(action "onPropertyConnectionChange" head)}}
+                      <i class="dropdown icon"></i>
+                      <div class="text">
+                        {{get _propertiesConnection head}}
+                      </div>
+                      <div class="menu">
+                        {{#each _notConnectedProperties as | property |}}
+                          <div class="item" data-value="{{property}}">{{get settings.layersFieldsCaptions property}}</div>
+                        {{/each}}
+                      </div>
+                    {{/ui-dropdown}}
                   </th>
                 {{/each}}
               </tr>

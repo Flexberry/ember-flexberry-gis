@@ -439,7 +439,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
 
       @method actions.onHide
     */
-    onHide(e) {
+    onHide() {
       this.set('selectedJSON', undefined);
       this.set('_showError', false);
       this.set('_importInProcess', false);
@@ -499,7 +499,6 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
       }
     },
 
-
     /**
       Handles selectAll button click on import result dialog.
 
@@ -523,7 +522,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
       @param {String} property Imported property name.
       @param {String} newValue New value of connected property name.
     */
-    onPropertyConnectionChange(property, newValue) {
+    onPropertyConnectionChange(property, component, newValue) {
       if (Ember.isBlank(newValue)) {
         newValue = undefined;
       }
