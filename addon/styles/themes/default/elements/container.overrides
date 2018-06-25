@@ -563,6 +563,9 @@
   }
   i.icon {
     font-family: rgis;
+    &.map.marker {
+      font-family: 'Icons';
+    }
   }
   &,
   &-layers-options,
