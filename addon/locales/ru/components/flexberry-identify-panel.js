@@ -18,15 +18,17 @@ export default {
     'caption': 'Точка'
   },
   'polyline': {
-    'caption': 'Линия'
+    'caption': 'Ломаная'
   },
   'clear': {
     'caption': 'Очистить'
   },
-  'buffer-active': {
-    'caption': 'Буфер'
-  },
-  'buffer-radius': {
-    'caption': 'Радиус'
+  'buffer': {
+    'active-caption': 'Буфер',
+    'radius-caption': 'Радиус',
+    'units': {
+      'meters': 'Метры',
+      'kilometers': 'Километры'
+    }
   }
 };

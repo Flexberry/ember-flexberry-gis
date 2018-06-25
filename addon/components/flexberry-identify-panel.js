@@ -66,13 +66,13 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @type Observer
     @private
   */
-  _bufferObserver: Ember.observer('bufferActive', 'bufferUnits', 'bufferRadius', function () {
+  _bufferObserver: Ember.observer('bufferActive', '_selectedBufferUnits', 'bufferRadius', function () {
     let bufferActive = this.get('bufferActive');
-    let bufferUnits = this.get('bufferUnits');
+    let selectedUnits = this.get('_selectedBufferUnits');
     let bufferRadius = this.get('bufferRadius');
     let bufferParameters = {
       active: bufferActive,
-      units: bufferUnits,
+      units: selectedUnits,
       radius: bufferRadius
     };
 
@@ -225,7 +225,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   layerMode: 'visible',
 
   /**
-    tools option's 'rectangle' mode CSS-class.
+    Tools option's 'rectangle' mode CSS-class.
 
     @property rectangleClass
     @type String
@@ -234,7 +234,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   rectangleClass: null,
 
   /**
-    tools option's 'rectangle' mode's caption.
+    Tools option's 'rectangle' mode's caption.
 
     @property rectangleCaption
     @type String
@@ -243,7 +243,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   rectangleCaption: t('components.flexberry-identify-panel.rectangle.caption'),
 
   /**
-    tools option's 'rectangle' mode's icon CSS-class names.
+    Tools option's 'rectangle' mode's icon CSS-class names.
 
     @property rectangleIconClass
     @type String
@@ -252,7 +252,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   rectangleIconClass: 'square outline icon',
 
   /**
-    tools option's 'polygon' mode CSS-class.
+    Tools option's 'polygon' mode CSS-class.
 
     @property polygonClass
     @type String
@@ -261,7 +261,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polygonClass: null,
 
   /**
-    tools option's 'polygon' mode's caption.
+    Tools option's 'polygon' mode's caption.
 
     @property polygonCaption
     @type String
@@ -270,7 +270,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polygonCaption: t('components.flexberry-identify-panel.polygon.caption'),
 
   /**
-    tools option's 'polygon' mode's icon CSS-class names.
+    Tools option's 'polygon' mode's icon CSS-class names.
 
     @property polygonIconClass
     @type String
@@ -279,7 +279,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polygonIconClass: 'star icon',
 
   /**
-    tools option's 'marker' mode CSS-class.
+    Tools option's 'marker' mode CSS-class.
 
     @property markerClass
     @type String
@@ -288,7 +288,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   markerClass: null,
 
   /**
-    tools option's 'marker' mode's caption.
+    Tools option's 'marker' mode's caption.
 
     @property markerCaption
     @type String
@@ -297,16 +297,16 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   markerCaption: t('components.flexberry-identify-panel.marker.caption'),
 
   /**
-     tools option's 'marker' mode's icon CSS-class names.
+    Tools option's 'marker' mode's icon CSS-class names.
 
     @property markerIconClass
     @type String
-    @default 'bullseye icon'
+    @default 'map marker icon'
   */
-  markerIconClass: 'bullseye icon',
+  markerIconClass: 'map marker icon',
 
   /**
-    tools option's 'polyline' mode CSS-class.
+    Tools option's 'polyline' mode CSS-class.
 
     @property polylineClass
     @type String
@@ -315,7 +315,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polylineClass: null,
 
   /**
-    tools option's 'polyline' mode's caption.
+    Tools option's 'polyline' mode's caption.
 
     @property polylineCaption
     @type String
@@ -324,7 +324,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polylineCaption: t('components.flexberry-identify-panel.polyline.caption'),
 
   /**
-    tools option's 'polyline' mode's icon CSS-class names.
+    Tools option's 'polyline' mode's icon CSS-class names.
 
      @property polylineIconClass
      @type String
@@ -396,29 +396,38 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polyline: true,
 
   /**
+    Flag: is tools option 'buffer' enabled.
+
+    @property polyline
+    @default true
+    @type Boolean
+  */
+  buffer: true,
+
+  /**
     @property toolMode
-    @default 'rectangle'
+    @default 'marker'
     @type {String}
    */
-  toolMode: 'rectangle',
+  toolMode: 'marker',
 
   /**
     Active buffer caption.
 
     @property bufferActiveCaption
     @type String
-    @default t('components.flexberry-identify-panel.buffer-active.caption')
+    @default t('components.flexberry-identify-panel.buffer.active-caption')
   */
-  bufferActiveCaption: t('components.flexberry-identify-panel.buffer-active.caption'),
+  bufferActiveCaption: t('components.flexberry-identify-panel.buffer.active-caption'),
 
   /**
     Buffer radius caption.
 
     @property bufferRadiusCaption
     @type String
-    @default t('components.flexberry-identify-panel.buffer-radius.caption')
+    @default t('components.flexberry-identify-panel.buffer.radius-caption')
   */
-  bufferRadiusCaption: t('components.flexberry-identify-panel.buffer-radius.caption'),
+  bufferRadiusCaption: t('components.flexberry-identify-panel.buffer.radius-caption'),
 
   /**
     Flag indicates is buffer active
@@ -432,20 +441,22 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   /**
     Buffer radius units
 
-    @property bufferUnits
+    @property _selectedBufferUnits
     @type String
     @default 'kilometers'
   */
-  bufferUnits: 'kilometers',
+  _selectedBufferUnits: 'kilometers',
 
   /**
-    Buffer radius units list for dropdown select
+    Buffer radius units with locale.
 
     @property bufferUnitsList
-    @type String[]
-    @default 'kilometers'
+    @type Object
   */
-  bufferUnitsList: ['kilometers', 'meters'],
+  bufferUnitsList: {
+    meters: 'components.flexberry-identify-panel.buffer.units.meters',
+    kilometers: 'components.flexberry-identify-panel.buffer.units.kilometers'
+  },
 
   /**
     Buffer radius in selected units
@@ -510,6 +521,17 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     },
 
     /**
+      Handles buffer units dropdown value change.
+
+      @method actions.onBufferUnitSelected
+      @param {String} item Clicked item locale key.
+      @param {String} key Clicked item value.
+    */
+    onBufferUnitSelected(item, key) {
+      this.set('_selectedBufferUnits', key);
+    },
+
+    /**
       Handles inner clear button's 'click' action.
 
       @method actions.clear
@@ -563,6 +585,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   _switchActiveTool(selectedToolOption) {
     this.set('rectangleClass', null);
     this.set('polygonClass', null);
+    this.set('markerClass', null);
+    this.set('polylineClass', null);
 
     this.set(selectedToolOption + 'Class', 'active');
   },

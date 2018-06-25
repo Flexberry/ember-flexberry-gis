@@ -37,9 +37,9 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
     @property identifyToolOption
     @type String
-    @default ''
+    @default 'marker'
   */
-  identifyToolOption: 'rectangle',
+  identifyToolOption: 'marker',
 
   /**
     Leaflet layer group for temporal layers.
