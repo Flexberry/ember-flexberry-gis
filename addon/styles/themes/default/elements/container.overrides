@@ -563,6 +563,9 @@
   }
   i.icon {
     font-family: rgis;
+    &.map.marker {
+      font-family: 'Icons';
+    }
   }
   &,
   &-layers-options,
@@ -606,6 +609,9 @@
   /* удаление */
   i.icon.remove:before {
     content: "\e814";
+  }
+  .buffer-tools {
+    margin-top: 8px;
   }
 }
 

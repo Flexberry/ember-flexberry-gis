@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import BaseNonclickableMapTool from './base-nonclickable';
+import * as buffer from 'npm:@turf/buffer';
 
 /**
   Identify map-tool.
@@ -23,6 +24,33 @@ export default BaseNonclickableMapTool.extend({
   _editTools: null,
 
   /**
+    Flag indicates is buffer active
+
+    @property bufferActive
+    @type Boolean
+    @default false
+  */
+  bufferActive: false,
+
+  /**
+    Buffer radius units
+
+    @property bufferUnits
+    @type String
+    @default 'kilometers'
+  */
+  bufferUnits: 'kilometers',
+
+  /**
+    Buffer radius in selected units
+
+    @property bufferRadius
+    @type Number
+    @default 0
+  */
+  bufferRadius: 0,
+
+  /**
     Tool's cursor CSS-class.
 
     @property cursor
@@ -39,6 +67,15 @@ export default BaseNonclickableMapTool.extend({
     @default null
   */
   polygonLayer: null,
+
+  /**
+    Main polygon around which the buffer is drawn
+
+    @property bufferedMainPolygonLayer
+    @type {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>}
+    @default null
+  */
+  bufferedMainPolygonLayer: null,
 
   /**
     Flag: indicates whether to hide figure on drawing end or not.
@@ -93,6 +130,7 @@ export default BaseNonclickableMapTool.extend({
   */
   _startIdentification({
     polygonLayer,
+    bufferedMainPolygonLayer,
     latlng,
     excludedLayers
   }) {
@@ -101,6 +139,7 @@ export default BaseNonclickableMapTool.extend({
     let e = {
       latlng: latlng,
       polygonLayer: polygonLayer,
+      bufferedMainPolygonLayer: bufferedMainPolygonLayer,
       excludedLayers: Ember.A(excludedLayers || []),
       layers: this._getLayersToIdentify({
         excludedLayers
@@ -131,7 +170,6 @@ export default BaseNonclickableMapTool.extend({
       }
 
       promises.pushObject(features);
-
     });
 
     // Wait for all promises to be settled & call '_finishIdentification' hook.
@@ -185,6 +223,10 @@ export default BaseNonclickableMapTool.extend({
     let polygonLayer = Ember.get(e, 'polygonLayer');
     this.set('polygonLayer', polygonLayer);
 
+    // Assign current tool's boundingBoxLayer
+    let bufferedLayer = Ember.get(e, 'bufferedMainPolygonLayer');
+    this.set('bufferedMainPolygonLayer', bufferedLayer);
+
     // Fire custom event on leaflet map.
     leafletMap.fire('flexberry-map:identificationFinished', e);
   },
@@ -200,23 +242,44 @@ export default BaseNonclickableMapTool.extend({
   _drawingDidEnd({
     layer
   }) {
-    let latlng = layer.getCenter();
-    let boundingBox = layer.getBounds();
-    if (boundingBox.getSouthWest().equals(boundingBox.getNorthEast())) {
-      // Identification area is point.
-      // Identification can be incorrect or even failed in such situation,
-      // so extend identification area a little (around specified point).
-      let leafletMap = this.get('leafletMap');
-      let y = leafletMap.getSize().y / 2;
-      let a = leafletMap.containerPointToLatLng([0, y]);
-      let b = leafletMap.containerPointToLatLng([100, y]);
+    let workingPolygon;
+    let bufferedMainPolygon;
+    let isBufferActive = this.get('bufferActive');
+    let bufferRadius = this.get('bufferRadius');
 
-      // Current scale (related to current zoom level).
-      let maxMeters = leafletMap.distance(a, b);
+    if (isBufferActive && bufferRadius > 0) {
+      let buffer = this._drawBuffer(layer.toGeoJSON());
+      workingPolygon = buffer.getLayers()[0];
+      bufferedMainPolygon = layer;
+    } else {
+      workingPolygon = layer;
+    }
 
-      // Bounding box around specified point with radius of current scale * 0.05.
-      boundingBox = boundingBox.getSouthWest().toBounds(maxMeters * 0.05);
-      layer.setLatLngs([boundingBox.getNorthWest(), boundingBox.getNorthEast(), boundingBox.getSouthEast(), boundingBox.getSouthWest()]);
+    let latlng;
+    let boundingBox;
+    let workingPolygonType = workingPolygon.toGeoJSON().geometry.type;
+
+    if (workingPolygonType !== 'Point') {
+      latlng = workingPolygon.getCenter();
+      boundingBox = workingPolygon.getBounds();
+      if (boundingBox.getSouthWest().equals(boundingBox.getNorthEast())) {
+        // Identification area is point.
+        // Identification can be incorrect or even failed in such situation,
+        // so extend identification area a little (around specified point).
+        let leafletMap = this.get('leafletMap');
+        let y = leafletMap.getSize().y / 2;
+        let a = leafletMap.containerPointToLatLng([0, y]);
+        let b = leafletMap.containerPointToLatLng([100, y]);
+
+        // Current scale (related to current zoom level).
+        let maxMeters = leafletMap.distance(a, b);
+
+        // Bounding box around specified point with radius of current scale * 0.05.
+        boundingBox = boundingBox.getSouthWest().toBounds(maxMeters * 0.05);
+        workingPolygon.setLatLngs([boundingBox.getNorthWest(), boundingBox.getNorthEast(), boundingBox.getSouthEast(), boundingBox.getSouthWest()]);
+      }
+    } else {
+      latlng = workingPolygon._latLngs;
     }
 
     // Remove previously drawn rectangle
@@ -232,9 +295,27 @@ export default BaseNonclickableMapTool.extend({
 
     // Start identification.
     this._startIdentification({
-      polygonLayer: layer,
+      polygonLayer: workingPolygon,
+      bufferedMainPolygonLayer: bufferedMainPolygon,
       latlng: latlng
     });
+  },
+
+  /**
+    Draw buffer around selected area
+
+    @method _drawBuffer
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#polygon">L.Polygon</a>} layer Leaflet polygon layer
+    @private
+  */
+  _drawBuffer(layer) {
+    let radius = this.get('bufferRadius');
+    let units = this.get('bufferUnits');
+
+    let buf = buffer.default(layer, radius, { units: units });
+    let leafletMap = this.get('leafletMap');
+    let _bufferLayer = L.geoJSON(buf).addTo(leafletMap);
+    return _bufferLayer;
   },
 
   /**
@@ -308,5 +389,11 @@ export default BaseNonclickableMapTool.extend({
       polygonLayer.disableEdit();
       polygonLayer.remove();
     }
+
+    let bufferedMainPolygon = this.get('bufferedMainPolygonLayer');
+    if (bufferedMainPolygon) {
+      bufferedMainPolygon.remove();
+    }
+
   }
 });

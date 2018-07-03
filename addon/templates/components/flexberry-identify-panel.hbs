@@ -1,5 +1,5 @@
 <div class="{{concat "ui celled grid" " " flexberryClassNames.wrapper}}">
-    <div class="{{concat "ui eight wide column" " " flexberryClassNames.layersOptions}}">
+    <div class="{{concat "ui six wide column" " " flexberryClassNames.layersOptions}}">
         {{#if all}}
             {{flexberry-button
                 class=(concat flexberryClassNames.identifyAll " " allClass)
@@ -25,25 +25,41 @@
             }}
         {{/if}}
     </div>
-    <div class="{{concat "ui four wide column" " " flexberryClassNames.toolsOptions}}">
-        {{#if rectangle}}
-            {{flexberry-button
-                class=(concat flexberryClassNames.identifyRectangle " " rectangleClass)
-                iconClass=rectangleIconClass
-                tooltip=rectangleCaption
-                click=(action "onToolOptionChange" "rectangle")
-            }}
-        {{/if}}
-        {{#if polygon}}
-            {{flexberry-button
+    <div class="{{concat "ui seven wide column" " " flexberryClassNames.toolsOptions}}">
+      {{#if marker}}
+          {{flexberry-button
+              class=(concat flexberryClassNames.identifyMarker " " markerClass)
+              iconClass=markerIconClass
+              tooltip=markerCaption
+              click=(action "onToolOptionChange" "marker")
+          }}
+      {{/if}}
+      {{#if polyline}}
+          {{flexberry-button
+              class=(concat flexberryClassNames.identifyPolyline " " polylineClass)
+              iconClass=polylineIconClass
+              tooltip=polylineCaption
+              click=(action "onToolOptionChange" "polyline")
+          }}
+      {{/if}}
+      {{#if rectangle}}
+          {{flexberry-button
+              class=(concat flexberryClassNames.identifyRectangle " " rectangleClass)
+              iconClass=rectangleIconClass
+              tooltip=rectangleCaption
+              click=(action "onToolOptionChange" "rectangle")
+          }}
+      {{/if}}
+      {{#if polygon}}
+          {{flexberry-button
                 class=(concat flexberryClassNames.identifyPolygon " " polygonClass)
-                iconClass=polygonIconClass
-                tooltip=polygonCaption
-                click=(action "onToolOptionChange" "polygon")
-            }}
-        {{/if}}
+              iconClass=polygonIconClass
+              tooltip=polygonCaption
+              click=(action "onToolOptionChange" "polygon")
+          }}
+      {{/if}}
     </div>
-    <div class="{{concat "ui four wide column" flexberryClassName.otherOptions}}">
+    <div class="{{concat "ui two wide column" flexberryClassNames.toolsOptions}}">
         {{flexberry-button
             class=(concat flexberryClassNames.clearButton " " clearClass)
             iconClass=clearIconClass
@@ -51,4 +67,40 @@
             click=(action "clear")
         }}
     </div>
+    {{#if buffer}}
+      <div class="buffer-tools">
+          {{flexberry-checkbox
+              label=bufferActiveCaption
+              value=bufferActive
+          }}
+      </div>
+      {{#if bufferActive}}
+          <div class="buffer-tools">
+              <div class="ui grid">
+                  <div class="buffer-tools ui three wide column">
+                      <label>{{bufferRadiusCaption}}</label>
+                  </div>
+                  <div class="ui five wide column">
+                      {{input
+                          type="number"
+                          value=bufferRadius
+                      }}
+                  </div>
+                  <div class="ui seven wide column">
+                      {{#ui-dropdown class="item fluid selection" onChange=(action "onBufferUnitSelected")}}
+                        <i class="dropdown icon"></i>
+                        <div class="text">
+                          {{t (get bufferUnitsList _selectedBufferUnits)}}
+                        </div>
+                        <div class="menu">
+                          {{#each-in bufferUnitsList as |key value|}}
+                            <div class="item" data-value="{{key}}">{{t value}}</div>
+                          {{/each-in}}
+                        </div>
+                      {{/ui-dropdown}}
+                  </div>
+              </div>
+          </div>
+      {{/if}}
+    {{/if}}
 </div>

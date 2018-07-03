@@ -614,7 +614,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @type Array
     @default ['draw', 'manual', 'geoprovider']
   */
-  availableGeometryAddModes: ['draw', 'manual', 'geoprovider'],
+  availableGeometryAddModes: ['draw', 'manual', 'geoprovider', 'import'],
 
   /**
     Minimum distance for snapping in pixels.
@@ -1185,7 +1185,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Handles a new geometry adding completion.
 
-      @param {Object} polygons Related tab model.
+      @param {Object} tabModel Related tab model.
       @param {Object} addedLayer Added layer.
     */
     onGeometryAddComplete(tabModel, addedLayer, options) {
@@ -1213,8 +1213,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let leafletMap = this.get('leafletMap');
       let editTools = this._getEditTools();
       Ember.set(leafletMap, 'editTools', editTools);
-      this.set('snapMarker', L.marker(leafletMap.getCenter() , {
-        icon: leafletMap.editTools.createVertexIcon({className: 'leaflet-div-icon leaflet-drawing-icon'}),
+      this.set('snapMarker', L.marker(leafletMap.getCenter(), {
+        icon: leafletMap.editTools.createVertexIcon({ className: 'leaflet-div-icon leaflet-drawing-icon' }),
         opacity: 1,
         zIndexOffset: 1000
       }));
@@ -1227,6 +1227,18 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       leafletMap.off('editable:drawing:click', this._drawClick, this);
       leafletMap.on('editable:drawing:click', this._drawClick, this);
+    },
+
+    /**
+      Handles a new geometry adding by import completion.
+
+      @param {Object} tabModel Related tab model.
+      @param {Object} addedLayer Added layer.
+    */
+    onImportComplete(tabModel, addedLayer) {
+      this.set('_newRowTabModel', tabModel);
+      this.set('_newRowLayer', addedLayer);
+      this.send('onNewRowDialogApprove', Object.assign({}, addedLayer.feature.properties));
     },
 
     /**

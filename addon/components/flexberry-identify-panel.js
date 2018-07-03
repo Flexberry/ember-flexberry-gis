@@ -22,6 +22,8 @@ import {
   @property {String} flexberryClassNames.identifyTopVisible Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-top-visible-layers-option').
   @property {String} flexberryClassNames.identifyRectangle Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-rectangle-tools-option').
   @property {String} flexberryClassNames.identifyPolygon Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-polygon-tools-option').
+  @property {String} flexberryClassNames.identifyMarke Component's identify-all-visible mode's CSS-class name ('flexberry-identify-panel-marker-tools-option').
+  @property {String} flexberryClassNames.identifyPolyline Component's identify-top-visible mode's CSS-class name ('flexberry-identify-panel-polyline-tools-option').
   @property {String} flexberryClassNames.otherOptions Component's options div CSS-class name ('flexberry-identify-panel-options').
   @readonly
   @static
@@ -39,6 +41,8 @@ const flexberryClassNames = {
   toolsOptions: flexberryClassNamesPrefix + '-tools-options',
   identifyRectangle: flexberryClassNamesPrefix + '-rectangle-tools-option',
   identifyPolygon: flexberryClassNamesPrefix + '-polygon-tools-option',
+  identifyMarker: flexberryClassNamesPrefix + '-marker-tools-option',
+  identifyPolyline: flexberryClassNamesPrefix + '-polyline-tools-option',
   otherOptions: flexberryClassNamesPrefix + '-options'
 };
 
@@ -55,6 +59,26 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 let FlexberryIdentifyPanelComponent = Ember.Component.extend({
+  /**
+    Observes changes buffer parameters in flexberry-identify-panel.
+
+    @method _bufferObserver
+    @type Observer
+    @private
+  */
+  _bufferObserver: Ember.observer('bufferActive', '_selectedBufferUnits', 'bufferRadius', function () {
+    let bufferActive = this.get('bufferActive');
+    let selectedUnits = this.get('_selectedBufferUnits');
+    let bufferRadius = this.get('bufferRadius');
+    let bufferParameters = {
+      active: bufferActive,
+      units: selectedUnits,
+      radius: bufferRadius
+    };
+
+    this.sendAction('onBufferSet', bufferParameters);
+  }),
+
   /**
     Reference to component's template.
   */
@@ -201,7 +225,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   layerMode: 'visible',
 
   /**
-    tools option's 'rectangle' mode CSS-class.
+    Tools option's 'rectangle' mode CSS-class.
 
     @property rectangleClass
     @type String
@@ -210,7 +234,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   rectangleClass: null,
 
   /**
-    tools option's 'rectangle' mode's caption.
+    Tools option's 'rectangle' mode's caption.
 
     @property rectangleCaption
     @type String
@@ -219,7 +243,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   rectangleCaption: t('components.flexberry-identify-panel.rectangle.caption'),
 
   /**
-    tools option's 'rectangle' mode's icon CSS-class names.
+    Tools option's 'rectangle' mode's icon CSS-class names.
 
     @property rectangleIconClass
     @type String
@@ -228,7 +252,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   rectangleIconClass: 'square outline icon',
 
   /**
-    tools option's 'polygon' mode CSS-class.
+    Tools option's 'polygon' mode CSS-class.
 
     @property polygonClass
     @type String
@@ -237,7 +261,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polygonClass: null,
 
   /**
-    tools option's 'polygon' mode's caption.
+    Tools option's 'polygon' mode's caption.
 
     @property polygonCaption
     @type String
@@ -246,13 +270,67 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polygonCaption: t('components.flexberry-identify-panel.polygon.caption'),
 
   /**
-    tools option's 'polygon' mode's icon CSS-class names.
+    Tools option's 'polygon' mode's icon CSS-class names.
 
     @property polygonIconClass
     @type String
     @default 'star icon'
   */
   polygonIconClass: 'star icon',
+
+  /**
+    Tools option's 'marker' mode CSS-class.
+
+    @property markerClass
+    @type String
+    @default null
+  */
+  markerClass: null,
+
+  /**
+    Tools option's 'marker' mode's caption.
+
+    @property markerCaption
+    @type String
+    @default t('components.flexberry-identify-panel.marker.caption')
+  */
+  markerCaption: t('components.flexberry-identify-panel.marker.caption'),
+
+  /**
+    Tools option's 'marker' mode's icon CSS-class names.
+
+    @property markerIconClass
+    @type String
+    @default 'map marker icon'
+  */
+  markerIconClass: 'map marker icon',
+
+  /**
+    Tools option's 'polyline' mode CSS-class.
+
+    @property polylineClass
+    @type String
+    @default null
+  */
+  polylineClass: null,
+
+  /**
+    Tools option's 'polyline' mode's caption.
+
+    @property polylineCaption
+    @type String
+    @default t('components.flexberry-identify-panel.polyline.caption')
+  */
+  polylineCaption: t('components.flexberry-identify-panel.polyline.caption'),
+
+  /**
+    Tools option's 'polyline' mode's icon CSS-class names.
+
+     @property polylineIconClass
+     @type String
+     @default 'minus icon'
+  */
+  polylineIconClass: 'minus icon',
 
   /**
     clear button's CSS-class.
@@ -300,11 +378,94 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polygon: true,
 
   /**
+    Flag: is tools option 'marker' enable
+
+    @property marker
+    @default true
+    @type Boolean
+  */
+  marker: true,
+
+  /**
+    Flag: is tools option 'polyline' enable
+
+    @property polyline
+    @default true
+    @type Boolean
+  */
+  polyline: true,
+
+  /**
+    Flag: is tools option 'buffer' enabled.
+
+    @property polyline
+    @default true
+    @type Boolean
+  */
+  buffer: true,
+
+  /**
     @property toolMode
-    @default 'rectangle'
+    @default 'marker'
     @type {String}
    */
-  toolMode: 'rectangle',
+  toolMode: 'marker',
+
+  /**
+    Active buffer caption.
+
+    @property bufferActiveCaption
+    @type String
+    @default t('components.flexberry-identify-panel.buffer.active-caption')
+  */
+  bufferActiveCaption: t('components.flexberry-identify-panel.buffer.active-caption'),
+
+  /**
+    Buffer radius caption.
+
+    @property bufferRadiusCaption
+    @type String
+    @default t('components.flexberry-identify-panel.buffer.radius-caption')
+  */
+  bufferRadiusCaption: t('components.flexberry-identify-panel.buffer.radius-caption'),
+
+  /**
+    Flag indicates is buffer active
+
+    @property bufferActive
+    @type Boolean
+    @default false
+  */
+  bufferActive: false,
+
+  /**
+    Buffer radius units
+
+    @property _selectedBufferUnits
+    @type String
+    @default 'kilometers'
+  */
+  _selectedBufferUnits: 'kilometers',
+
+  /**
+    Buffer radius units with locale.
+
+    @property bufferUnitsList
+    @type Object
+  */
+  bufferUnitsList: {
+    meters: 'components.flexberry-identify-panel.buffer.units.meters',
+    kilometers: 'components.flexberry-identify-panel.buffer.units.kilometers'
+  },
+
+  /**
+    Buffer radius in selected units
+
+    @property bufferRadius
+    @type Number
+    @default 0
+  */
+  bufferRadius: 0,
 
   /**
     Leaflet map.
@@ -357,6 +518,17 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       this._switch(false, true);
 
       this.sendAction('onToolOptionChange', ...args);
+    },
+
+    /**
+      Handles buffer units dropdown value change.
+
+      @method actions.onBufferUnitSelected
+      @param {String} item Clicked item locale key.
+      @param {String} key Clicked item value.
+    */
+    onBufferUnitSelected(item, key) {
+      this.set('_selectedBufferUnits', key);
     },
 
     /**
@@ -413,6 +585,8 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   _switchActiveTool(selectedToolOption) {
     this.set('rectangleClass', null);
     this.set('polygonClass', null);
+    this.set('markerClass', null);
+    this.set('polylineClass', null);
 
     this.set(selectedToolOption + 'Class', 'active');
   },

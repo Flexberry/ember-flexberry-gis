@@ -1,0 +1,111 @@
+{{flexberry-button
+  tooltip=menuButtonTooltip
+  click=(action "onButtonClick")
+  iconClass="flexberry-map-command-icon folder open icon"
+}}
+
+{{!--
+  Semantic UI modal dialogs takes long time to be initialized
+  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+--}}
+{{#if _dialogHasBeenRequested}}
+  {{#flexberry-dialog class=flexberryClassNames.dialog
+    caption=menuButtonTooltip
+    approveButtonCaption=dialogApproveButtonCaption
+    denyButtonCaption=dialogDenyButtonCaption
+    visible=_dialogVisible
+    approve=(action "onApprove")
+    hide=(action "onHide")
+  }}
+    <form class="ui form {{flexberryClassNames.form}} {{if _importInProcess "loading"}}" role="form">
+      {{ui-message
+        type="error"
+        closeable=true
+        visible=_showError
+        caption=_errorCaption
+        message=_errorMessage
+      }}
+      <div class="field">
+        {{flexberry-dropdown
+         class="fluid"
+         items=availableCRSNames
+         value=selectedCRSName
+       }}
+      </div>
+      <div class="field">
+        {{flexberry-jsonarea value=selectedJSON}}
+      </div>
+      {{#if (not _importInProcess)}}
+        <div class="ui action input">
+          <label class="import-from-file">
+            <span class="button flexberry-import-from-file-button ui icon">{{loadButtonCaption}}</span>
+            <input onchange={{action "uploadFile"}} type="file"/>
+          </label>
+        </div>
+      {{/if}}
+    </form>
+  {{/flexberry-dialog}}
+  {{#flexberry-dialog class=flexberryClassNames.result
+    caption=menuButtonTooltip
+    visible=_resultDialogVisible
+    approveButtonCaption=dialogApproveButtonCaption
+    denyButtonCaption=dialogDenyButtonCaption
+    hide=(action "onHideImportDialog")
+    approve=(action "onApproveImportDialog")
+  }}
+    <form class="ui form" role="form">
+      <div class="wolv-data-wrapper tab segment layers-attributes-segment active">
+        {{#if responseJSON}}
+          <table class='ui celled table flexberry-table import-table flexberry-table-fixed'>
+            <thead>
+              <tr><th class='checkbox'></th>
+                {{#each headersTable as | head |}}
+                  <th class="import-column">
+                    {{#ui-dropdown class="item fluid selection" onChange=(action "onPropertyConnectionChange" head)}}
+                      <i class="dropdown icon"></i>
+                      <div class="text">
+                        {{get _propertiesConnection head}}
+                      </div>
+                      <div class="menu">
+                        {{#each _notConnectedProperties as | property |}}
+                          <div class="item" data-value="{{property}}">{{get settings.layersFieldsCaptions property}}</div>
+                        {{/each}}
+                      </div>
+                    {{/ui-dropdown}}
+                  </th>
+                {{/each}}
+              </tr>
+              <tr>
+                <th class='checkbox'>
+                  <button
+                    class="ui check-all-button {{if importAllSelect "activated"}} button"
+                    title={{if importAllSelect uncheckAllTitle checkAllTitle}}
+                    {{action "onImportAllSelect"}}>
+                      <i class="check icon"></i>
+                  </button>
+                </th>
+                {{#each headersTable as | head |}}
+                  <th class="import-column">{{head}}</th>
+                {{/each}}
+              </tr>
+            </thead>
+            <tbody>
+              {{#each responseJSON.features as |feature|}}
+                <tr>
+                  <td>
+                    {{flexberry-checkbox
+                      value=feature.selected
+                    }}
+                  </td>
+                  {{#each-in feature.properties as |key value|}}
+                    <td><span title="{{value}}">{{value}}</span></td>
+                  {{/each-in}}
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        {{/if}}
+      </div>
+    </form>
+  {{/flexberry-dialog}}
+{{/if}}
