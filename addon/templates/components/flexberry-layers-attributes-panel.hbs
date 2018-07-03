@@ -92,6 +92,7 @@
                             layerCRS=(get tabModel "leafletObject.options.crs")
                           )
                           complete=(action "onGeometryAddComplete" tabModel)
+                          drawStart=(action "onAddDrawStart" tabModel)
                         }}
                       {{/each}}
                       <div class="flexberry-geometry-move {{if tabModel.groupDraggable "active"}}">
@@ -115,15 +116,15 @@
                           <div class="menu">
                             <a class="item {{if (and
                               (eq tabModel._typeSelectedRows.polygon 0)
-                              (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "doCombinedPolygon" tabModel}}>
-                              {{t "components.flexberry-layers-attributes-panel.combined-polygon"}}
-                            </a>
-                            <a class="item {{if (and
-                              (eq tabModel._typeSelectedRows.polygon 0)
                               (eq tabModel._typeSelectedRows.line 0)
                               (eq tabModel._typeSelectedRows.multiLine 0)
                               (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "onSplitGeometry" tabModel}}>
                               {{t "components.flexberry-layers-attributes-panel.split-geometry"}}
+                            </a>
+                            <a class="item {{if (and
+                              (eq tabModel._typeSelectedRows.polygon 0)
+                              (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "doCombinedPolygon" tabModel}}>
+                              {{t "components.flexberry-layers-attributes-panel.combined-polygon"}}
                             </a>
                             <a class="item {{if (and
                               (eq tabModel._typeSelectedRows.polygon 0)

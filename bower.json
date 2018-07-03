@@ -35,9 +35,7 @@
     "leaflet.markercluster": "1.1.0",
     "leaflet-omnivore": "0.3.3",
     "chart.js": "v2.7.1",
-    "javascript-detect-element-resize": "0.5.3",
-    "Leaflet.Snap": "https://github.com/makinacorpus/Leaflet.Snap.git#0.4.0",
-    "Leaflet.GeometryUtil": "https://github.com/makinacorpus/Leaflet.GeometryUtil.git#0.7.2"
+    "javascript-detect-element-resize": "0.5.3"
   },
   "resolutions": {
     "ember": "2.4.3",
