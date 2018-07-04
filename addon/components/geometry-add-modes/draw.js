@@ -55,6 +55,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       @param {String} geometryType Selected geometry type.
     */
     onGeometryTypeSelect(geometryType) {
+      this.sendAction('drawStart', geometryType);
       let editTools = this._getEditTools();
       Ember.set(this.get('leafletMap'), 'drawTools', editTools);
 

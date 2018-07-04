@@ -94,6 +94,7 @@
                             layersFieldsCaptions=(get tabModel "header")
                           )
                           complete=(action "onGeometryAddComplete" tabModel)
+                          drawStart=(action "onAddDrawStart" tabModel)
                           importComplete=(action "onImportComplete" tabModel)
                         }}
                       {{/each}}
@@ -118,15 +119,15 @@
                           <div class="menu">
                             <a class="item {{if (and
                               (eq tabModel._typeSelectedRows.polygon 0)
-                              (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "doCombinedPolygon" tabModel}}>
-                              {{t "components.flexberry-layers-attributes-panel.combined-polygon"}}
-                            </a>
-                            <a class="item {{if (and
-                              (eq tabModel._typeSelectedRows.polygon 0)
                               (eq tabModel._typeSelectedRows.line 0)
                               (eq tabModel._typeSelectedRows.multiLine 0)
                               (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "onSplitGeometry" tabModel}}>
                               {{t "components.flexberry-layers-attributes-panel.split-geometry"}}
+                            </a>
+                            <a class="item {{if (and
+                              (eq tabModel._typeSelectedRows.polygon 0)
+                              (eq tabModel._typeSelectedRows.multiPolygon 0)) "disabled"}}" onclick={{action "doCombinedPolygon" tabModel}}>
+                              {{t "components.flexberry-layers-attributes-panel.combined-polygon"}}
                             </a>
                             <a class="item {{if (and
                               (eq tabModel._typeSelectedRows.polygon 0)
