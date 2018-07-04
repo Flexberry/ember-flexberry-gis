@@ -1016,6 +1016,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   availableGeometryAddModes: [&#x27;draw&#x27;, &#x27;manual&#x27;, &#x27;geoprovider&#x27;, &#x27;import&#x27;],
 
   /**
+    Minimum distance for snapping in pixels.
+
+    @property snapDistance
+    @type Number
+    @default 20
+  */
+  snapDistance: 20,
+
+  /**
     Flag: indicates whether moveDialog has been requested
 
     @property _moveDialogHasBeenRequested
@@ -1436,6 +1445,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       let editTools = this._getEditTools();
       Ember.set(leafletMap, &#x27;editTools&#x27;, editTools);
+      let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
 
       if (edit) {
         // If the layer is not on the map - add it
@@ -1447,18 +1457,24 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         }
 
         this._zoomToLayer(layer);
-        tabModel.enableDragging(rowId);
-        if (layer.bringToFront) {
-          layer.bringToFront();
+        if (!isMarker) {
+          tabModel.enableDragging(rowId);
+          if (layer.bringToFront) {
+            layer.bringToFront();
+          }
         }
 
         layer.enableEdit(leafletMap);
         leafletMap.on(&#x27;editable:editing&#x27;, tabModel._triggerChanged, [tabModel, layer, true]);
-
+        leafletMap.on(&#x27;editable:vertex:dragstart&#x27;, this._startSnapping, this);
       } else {
-        tabModel.disableDragging(rowId);
+        if (!isMarker) {
+          tabModel.disableDragging(rowId);
+        }
+
         layer.disableEdit();
         leafletMap.off(&#x27;editable:editing&#x27;, tabModel._triggerChanged, [tabModel, layer, true]);
+
         let addedLayers = Ember.get(tabModel, &#x27;_addedLayers&#x27;) || {};
         if (!Ember.isNone(addedLayers[Ember.guidFor(layer)])) {
           leafletMap.removeLayer(layer);
@@ -1577,6 +1593,39 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       this._showNewRowDialog(tabModel, addedLayer);
+    },
+
+    /**
+      Handles a new geometry draw start.
+
+      @param {Object} tabModel Related tab model.
+      @param {Object} geometryType Type of geometry to be drawn.
+    */
+    onAddDrawStart(tabModel, geometryType) {
+      if (geometryType === &#x27;circle&#x27; || geometryType === &#x27;rectangle&#x27;) {
+        return;
+      }
+
+      let featureLink = Ember.get(tabModel, &#x27;featureLink&#x27;);
+      let allLayers = Object.keys(featureLink).map((key) =&gt; featureLink[key]);
+      this.set(&#x27;_snapLayers&#x27;, allLayers);
+      let leafletMap = this.get(&#x27;leafletMap&#x27;);
+      let editTools = this._getEditTools();
+      Ember.set(leafletMap, &#x27;editTools&#x27;, editTools);
+      this.set(&#x27;snapMarker&#x27;, L.marker(leafletMap.getCenter(), {
+        icon: leafletMap.editTools.createVertexIcon({ className: &#x27;leaflet-div-icon leaflet-drawing-icon&#x27; }),
+        opacity: 1,
+        zIndexOffset: 1000
+      }));
+
+      leafletMap.off(&#x27;editable:drawing:move&#x27;, this._handleSnapping, this);
+      leafletMap.on(&#x27;editable:drawing:move&#x27;, this._handleSnapping, this);
+
+      leafletMap.off(&#x27;editable:drawing:end&#x27;, this._cleanupSnapping, this);
+      leafletMap.on(&#x27;editable:drawing:end&#x27;, this._cleanupSnapping, this);
+
+      leafletMap.off(&#x27;editable:drawing:click&#x27;, this._drawClick, this);
+      leafletMap.on(&#x27;editable:drawing:click&#x27;, this._drawClick, this);
     },
 
     /**
@@ -2201,6 +2250,270 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _zoomToLayer(layer) {
     this.send(&#x27;zoomTo&#x27;, [layer.feature]);
     this.send(&#x27;onClearFoundItemClick&#x27;);
+  },
+
+  /**
+    Initializes snapping for edited vertex.
+
+    @method _startSnapping
+    @param {Object} e Event object.
+    @private
+  */
+  _startSnapping(e) {
+    if (e.layer instanceof L.Rectangle || e.layer instanceof L.Circle) {
+      return;
+    }
+
+    let tabLayer = e.layer._eventParents || {};
+    tabLayer = tabLayer[Object.keys(tabLayer)[0]];
+    if (!tabLayer) {
+      return;
+    }
+
+    this.set(&#x27;_snapLayers&#x27;, tabLayer.getLayers().filter((layer) =&gt; layer !== e.layer));
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+
+    leafletMap.off(&#x27;editable:vertex:drag&#x27;, this._handleSnapping, this);
+    leafletMap.on(&#x27;editable:vertex:drag&#x27;, this._handleSnapping, this);
+
+    leafletMap.off(&#x27;editable:vertex:dragend&#x27;, this._cleanupSnapping, this);
+    leafletMap.on(&#x27;editable:vertex:dragend&#x27;, this._cleanupSnapping, this);
+  },
+
+  /**
+    Cleaning after snapping.
+
+    @method _cleanupSnapping
+    @private
+  */
+  _cleanupSnapping() {
+    this.set(&#x27;_snapLayers&#x27;, undefined);
+    let snapMarker = this.get(&#x27;snapMarker&#x27;);
+    if (snapMarker) {
+      snapMarker.remove();
+    }
+  },
+
+  /**
+    Handles snapping.
+
+    @method _handleSnapping
+    @param {Object} e Event object.
+    @private
+  */
+  _handleSnapping(e) {
+    let snapList = this.get(&#x27;_snapLayers&#x27;);
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+
+    if (!(snapList instanceof Array) || snapList.length === 0) {
+      return;
+    }
+
+    let isDraw = Ember.isNone(e.vertex);
+    let snapMarker = e.vertex || this.get(&#x27;snapMarker&#x27;);
+
+    let closestLayer = this._findClosestLayer(e.latlng, snapList);
+
+    let isMarker = closestLayer.layer instanceof L.Marker || closestLayer.layer instanceof L.CircleMarker;
+    let currentSnap = (isMarker ? closestLayer.latlng : this._checkSnapToVertex(closestLayer)) || {};
+    let previousSnap = this.get(&#x27;_snapLatLng&#x27;) || {};
+    let snapDistance = this.get(&#x27;snapDistance&#x27;);
+
+    if (closestLayer.distance &lt; snapDistance) {
+      // snap the marker
+      snapMarker.setLatLng(currentSnap);
+
+      if (previousSnap.lat !== currentSnap.lat || previousSnap.lng !== currentSnap.lng) {
+        this.set(&#x27;_snapLatLng&#x27;, currentSnap);
+        if (isDraw) {
+          snapMarker.addTo(leafletMap);
+        }
+      }
+    } else if (previousSnap) {
+      this.set(&#x27;_snapLatLng&#x27;, undefined);
+      if (isDraw) {
+        snapMarker.remove();
+      }
+    }
+  },
+
+  /**
+    Handles clicks when drawing new geometry.
+
+    @method _drawClick
+    @param {Object} e Event object.
+    @private
+  */
+  _drawClick(e) {
+    let snapMarker = this.get(&#x27;snapMarker&#x27;);
+    let isSnap = !Ember.isNone(Ember.get(snapMarker, &#x27;_map&#x27;));
+    if (isSnap) {
+      var latlng = snapMarker.getLatLng();
+      e.latlng.lat = latlng.lat;
+      e.latlng.lng = latlng.lng;
+    }
+  },
+
+  /**
+    Check if vertex is in snap distance.
+
+    @method _checkSnapToVertex
+    @param {Object} closestLayer Snap layer.
+    @private
+  */
+  _checkSnapToVertex(closestLayer) {
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    let segmentPointA = closestLayer.segment[0];
+    let segmentPointB = closestLayer.segment[1];
+
+    let snapPoint = closestLayer.latlng;
+    let distanceA = this._getPixelDistance(leafletMap, segmentPointA, snapPoint);
+    let distanceB = this._getPixelDistance(leafletMap, segmentPointB, snapPoint);
+
+    let closestVertex = distanceA &lt; distanceB ? segmentPointA : segmentPointB;
+    let shortestDistance = distanceA &lt; distanceB ? distanceA : distanceB;
+
+    let priorityDistance = this.get(&#x27;snapDistance&#x27;);
+
+    // The latlng we need to snap to.
+    let snapResult = shortestDistance &lt; priorityDistance ? closestVertex : snapPoint;
+
+    return Object.assign({}, snapResult);
+  },
+
+  /**
+    Finds closest layer to the specified point.
+
+    @method _findClosestLayer
+    @param {Object} latlng Point&#x27;s coordinates
+    @param {Array} layers Array of layers for snapping.
+    @private
+  */
+  _findClosestLayer(latlng, layers) {
+    let closestLayer = {};
+
+    layers.forEach((layer, index) =&gt; {
+      let layerDistance = this._calculateDistance(latlng, layer);
+
+      if (Ember.isNone(closestLayer.distance) || layerDistance.distance &lt; closestLayer.distance) {
+        closestLayer = layerDistance;
+        closestLayer.layer = layer;
+      }
+    });
+
+    return closestLayer;
+  },
+
+  /**
+    Calculates distance between layer and point.
+
+    @method _calculateDistance
+    @param {Object} latlng Point&#x27;s coordinates
+    @param {Object} layer Leaflet layer.
+    @private
+  */
+  _calculateDistance(latlng, layer) {
+    let map = this.get(&#x27;leafletMap&#x27;);
+    let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
+    let isPolygon = layer instanceof L.Polygon;
+
+    // The coords of the layer.
+    let latlngs = isMarker ? layer.getLatLng() : layer.getLatLngs();
+
+    if (isMarker) {
+      return {
+        latlng: Object.assign({}, latlngs),
+        distance: this._getPixelDistance(map, latlngs, latlng),
+      };
+    }
+
+    let closestSegment;
+    let shortestDistance;
+
+    let loopThroughCoords = (coords) =&gt; {
+      coords.forEach((coord, index) =&gt; {
+        if (coord instanceof Array) {
+          loopThroughCoords(coord);
+          return;
+        }
+
+        let segmentPointA = coord;
+        let nextIndex = index + 1 === coords.length ? (isPolygon ? 0 : undefined) : index + 1;
+        let segmentPointB = coords[nextIndex];
+
+        if (segmentPointB) {
+          let distance = this._getPixelDistanceToSegment(map, latlng, segmentPointA, segmentPointB);
+
+          if (shortestDistance === undefined || distance &lt; shortestDistance) {
+            shortestDistance = distance;
+            closestSegment = [segmentPointA, segmentPointB];
+          }
+        }
+      });
+    };
+
+    loopThroughCoords(latlngs);
+
+    let closestSegmentPoint = this._getClosestPointOnSegment(map, latlng, closestSegment[0], closestSegment[1]);
+
+    return {
+      latlng: Object.assign({}, closestSegmentPoint),
+      segment: closestSegment,
+      distance: shortestDistance,
+    };
+  },
+
+  /**
+    Finds point on segment closest to the specified point.
+
+    @method _getClosestPointOnSegment
+    @param {Object} map Leaflet map.
+    @param {Object} latlng Point&#x27;s coordinates.
+    @param {Object} firstlatlng Coordinates of first segment&#x27;s point.
+    @param {Object} secondlatlng Coordinates of second segment&#x27;s point.
+    @private
+  */
+  _getClosestPointOnSegment(map, latlng, firstlatlng, secondlatlng) {
+    let maxzoom = map.getMaxZoom();
+    if (maxzoom === Infinity) {
+      maxzoom = map.getZoom();
+    }
+
+    let point = map.project(latlng, maxzoom);
+    let segmentPointA = map.project(firstlatlng, maxzoom);
+    let segmentPointB = map.project(secondlatlng, maxzoom);
+    let closest = L.LineUtil.closestPointOnSegment(point, segmentPointA, segmentPointB);
+    return map.unproject(closest, maxzoom);
+  },
+
+  /**
+    Calculates distance in pixels between point and segment.
+
+    @method _getPixelDistanceToSegment
+    @param {Object} map Leaflet map.
+    @param {Object} latlng Point&#x27;s coordinates.
+    @param {Object} firstlatlng Coordinates of first segment&#x27;s point.
+    @param {Object} secondlatlng Coordinates of second segment&#x27;s point.
+    @private
+  */
+  _getPixelDistanceToSegment(map, latlng, firstlatlng, secondlatlng) {
+    let point = map.latLngToLayerPoint(latlng);
+    let segmentPointA = map.latLngToLayerPoint(firstlatlng);
+    let segmentPointB = map.latLngToLayerPoint(secondlatlng);
+    return L.LineUtil.pointToSegmentDistance(point, segmentPointA, segmentPointB);
+  },
+
+  /**
+    Calculates distance in pixels between two points.
+
+    @method _getPixelDistance
+    @param {Object} map Leaflet map.
+    @param {Object} firstlatlng Coordinates of first segment&#x27;s point.
+    @param {Object} secondlatlng Coordinates of second segment&#x27;s point.
+    @private
+  */
+  _getPixelDistance(map, firstlatlng, secondlatlng) {
+    return map.latLngToLayerPoint(firstlatlng).distanceTo(map.latLngToLayerPoint(secondlatlng));
   }
 });
 

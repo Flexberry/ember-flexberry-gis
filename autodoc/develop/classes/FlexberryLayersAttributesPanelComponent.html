@@ -439,11 +439,51 @@
 
                     <ul class="index-list methods extends">
                             <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__calculateDistance" data-tablink="_calculateDistance">_calculateDistance</a>
+
+                            </li>
+                            <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__checkSnapToVertex" data-tablink="_checkSnapToVertex">_checkSnapToVertex</a>
+
+                            </li>
+                            <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__cleanupSnapping" data-tablink="_cleanupSnapping">_cleanupSnapping</a>
+
+                            </li>
+                            <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__drawClick" data-tablink="_drawClick">_drawClick</a>
+
+                            </li>
+                            <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__findClosestLayer" data-tablink="_findClosestLayer">_findClosestLayer</a>
+
+                            </li>
+                            <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__getClosestPointOnSegment" data-tablink="_getClosestPointOnSegment">_getClosestPointOnSegment</a>
+
+                            </li>
+                            <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__getPixelDistance" data-tablink="_getPixelDistance">_getPixelDistance</a>
+
+                            </li>
+                            <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__getPixelDistanceToSegment" data-tablink="_getPixelDistanceToSegment">_getPixelDistanceToSegment</a>
+
+                            </li>
+                            <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__handleSnapping" data-tablink="_handleSnapping">_handleSnapping</a>
+
+                            </li>
+                            <li class="index-item method private">
                                 <a href="#" data-tabid="#methods" data-anchor="#method__prepareLayer" data-tablink="_prepareLayer">_prepareLayer</a>
 
                             </li>
                             <li class="index-item method private inherited">
                                 <a href="#" data-tabid="#methods" data-anchor="#method__selectFeature" data-tablink="_selectFeature">_selectFeature</a>
+
+                            </li>
+                            <li class="index-item method private">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__startSnapping" data-tablink="_startSnapping">_startSnapping</a>
 
                             </li>
                             <li class="index-item method">
@@ -629,6 +669,10 @@
                                 <a href="#" data-tabid="#properties" data-anchor="#property_settings" data-tablink="settings">settings</a>
 
                             </li>
+                            <li class="index-item property">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_snapDistance" data-tablink="snapDistance">snapDistance</a>
+
+                            </li>
                     </ul>
                 </div>
 
@@ -638,6 +682,609 @@
             <div id="methods" class="tab-pane">
                 <h2 class="off-left">Methods</h2>
 
+                    <div id="method__calculateDistance" class="method item private">
+                        <h3 class="name"><code>_calculateDistance</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>latlng</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>layer</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l2008"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:2008</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Calculates distance between layer and point.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">latlng</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Point's coordinates</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">layer</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Leaflet layer.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
+                    <div id="method__checkSnapToVertex" class="method item private">
+                        <h3 class="name"><code>_checkSnapToVertex</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>closestLayer</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l1958"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:1958</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Check if vertex is in snap distance.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">closestLayer</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Snap layer.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
+                    <div id="method__cleanupSnapping" class="method item private">
+                        <h3 class="name"><code>_cleanupSnapping</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l1884"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:1884</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Cleaning after snapping.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+                    <div id="method__drawClick" class="method item private">
+                        <h3 class="name"><code>_drawClick</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>e</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l1941"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:1941</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Handles clicks when drawing new geometry.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">e</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Event object.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
+                    <div id="method__findClosestLayer" class="method item private">
+                        <h3 class="name"><code>_findClosestLayer</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>latlng</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>layers</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l1985"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:1985</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Finds closest layer to the specified point.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">latlng</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Point's coordinates</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">layers</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Array of layers for snapping.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
+                    <div id="method__getClosestPointOnSegment" class="method item private">
+                        <h3 class="name"><code>_getClosestPointOnSegment</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>map</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>latlng</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>firstlatlng</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>secondlatlng</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l2067"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:2067</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Finds point on segment closest to the specified point.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">map</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Leaflet map.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">latlng</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Point's coordinates.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">firstlatlng</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Coordinates of first segment's point.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">secondlatlng</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Coordinates of second segment's point.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
+                    <div id="method__getPixelDistance" class="method item private">
+                        <h3 class="name"><code>_getPixelDistance</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>map</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>firstlatlng</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>secondlatlng</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l2107"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:2107</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Calculates distance in pixels between two points.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">map</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Leaflet map.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">firstlatlng</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Coordinates of first segment's point.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">secondlatlng</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Coordinates of second segment's point.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
+                    <div id="method__getPixelDistanceToSegment" class="method item private">
+                        <h3 class="name"><code>_getPixelDistanceToSegment</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>map</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>latlng</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>firstlatlng</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>secondlatlng</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l2090"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:2090</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Calculates distance in pixels between point and segment.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">map</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Leaflet map.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">latlng</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Point's coordinates.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">firstlatlng</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Coordinates of first segment's point.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">secondlatlng</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Coordinates of second segment's point.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
+                    <div id="method__handleSnapping" class="method item private">
+                        <h3 class="name"><code>_handleSnapping</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>e</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l1898"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:1898</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Handles snapping.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">e</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Event object.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
                     <div id="method__prepareLayer" class="method item private">
                         <h3 class="name"><code>_prepareLayer</code></h3>
                     
@@ -663,7 +1310,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l1725"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:1725</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l1774"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:1774</code></a>
                             </p>
                     
                     
@@ -756,6 +1403,60 @@
                     
                     
                     </div>
+                    <div id="method__startSnapping" class="method item private">
+                        <h3 class="name"><code>_startSnapping</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>e</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l1856"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:1856</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Initializes snapping for edited vertex.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">e</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Event object.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
                     <div id="method_actions.closeTab" class="method item">
                         <h3 class="name"><code>actions.closeTab</code></h3>
                     
@@ -777,7 +1478,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l701"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:701</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l710"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:710</code></a>
                             </p>
                     
                     
@@ -824,7 +1525,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l824"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:824</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l833"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:833</code></a>
                             </p>
                     
                     
@@ -860,7 +1561,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l1286"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:1286</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l1335"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:1335</code></a>
                             </p>
                     
                     
@@ -913,7 +1614,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l795"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:795</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l804"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:804</code></a>
                             </p>
                     
                     
@@ -960,7 +1661,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l834"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:834</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l843"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:843</code></a>
                             </p>
                     
                     
@@ -996,7 +1697,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l930"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:930</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l939"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:939</code></a>
                             </p>
                     
                     
@@ -1049,7 +1750,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l988"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:988</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l997"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:997</code></a>
                             </p>
                     
                     
@@ -1096,7 +1797,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l844"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:844</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l853"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:853</code></a>
                             </p>
                     
                     
@@ -1132,7 +1833,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l769"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:769</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l778"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:778</code></a>
                             </p>
                     
                     
@@ -1188,7 +1889,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l966"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:966</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l975"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:975</code></a>
                             </p>
                     
                     
@@ -1258,7 +1959,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l743"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:743</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l752"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:752</code></a>
                             </p>
                     
                     
@@ -1333,7 +2034,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l878"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:878</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l887"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:887</code></a>
                             </p>
                     
                     
@@ -1389,7 +2090,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l729"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:729</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l738"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:738</code></a>
                             </p>
                     
                     
@@ -1456,7 +2157,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l888"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:888</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l897"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:897</code></a>
                             </p>
                     
                     
@@ -1518,7 +2219,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l900"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:900</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l909"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:909</code></a>
                             </p>
                     
                     
@@ -1571,7 +2272,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l676"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:676</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l685"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:685</code></a>
                             </p>
                     
                     
@@ -1627,7 +2328,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l784"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:784</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l793"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:793</code></a>
                             </p>
                     
                     
@@ -2080,7 +2781,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l619"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:619</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l628"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:628</code></a>
                             </p>
                     
                     
@@ -2106,7 +2807,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l628"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:628</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l637"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:637</code></a>
                             </p>
                     
                     
@@ -2132,7 +2833,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l638"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:638</code></a>
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l647"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:647</code></a>
                             </p>
                     
                     
@@ -2483,6 +3184,32 @@
                         </div>
                     
                             <p><strong>Default:</strong> null</p>
+                    
+                    
+                    </div>
+                    <div id="property_snapDistance" class="property item">
+                        <h3 class="name"><code>snapDistance</code></h3>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_flexberry-layers-attributes-panel.js.html#l619"><code>addon&#x2F;components&#x2F;flexberry-layers-attributes-panel.js:619</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Minimum distance for snapping in pixels.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> 20</p>
                     
                     
                     </div>
