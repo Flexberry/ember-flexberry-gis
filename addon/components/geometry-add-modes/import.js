@@ -201,6 +201,16 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
   _importInProcess: false,
 
   /**
+    Indicates that the import executes from the clipboard.
+
+    @private
+    @property _importFromClipboard
+    @type Boolean
+    @default false
+  */
+  _importFromClipboard: false,
+
+  /**
     Flag indicates whether to show error.
 
     @property _showError
@@ -250,6 +260,15 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
   */
   _notConnectedProperties: undefined,
 
+  /**
+    Selected objects to import from the clipboard.
+
+    @private
+    @property _clipboardSelected
+    @type Array
+  */
+  _clipboardSelected: undefined,
+
   menuButtonTooltip: t('components.geometry-add-modes.import.menu-button-tooltip'),
 
   dialogApproveButtonCaption: t('components.geometry-add-modes.import.dialog-approve-button-caption'),
@@ -283,6 +302,14 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
   emptyErrorCaption: t('components.geometry-add-modes.import.empty-error.caption'),
 
   emptyErrorMessage: t('components.geometry-add-modes.import.empty-error.message'),
+
+  /**
+    Clipboard service.
+
+    @property clipboard
+    @type GeoObjectsClipboardService
+  */
+  clipboard: Ember.inject.service('geo-objects-clipboard'),
 
   init() {
     this._super(...arguments);
@@ -373,6 +400,16 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
     },
 
     /**
+      Prepares the data to be imported from the contents of the clipboard.
+
+      @method actions.pasteFromClipboard
+    */
+    pasteFromClipboard() {
+      this.set('_importFromClipboard', true);
+      this.handleImportResponse({ features: this.get('clipboard.content') });
+    },
+
+    /**
       Handles button click.
 
       @method actions.onButtonClick
@@ -429,6 +466,12 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
         return;
       }
 
+      let clipboardSelected = this.get('_clipboardSelected');
+      if (clipboardSelected) {
+        let clipboard = this.get('clipboard');
+        clipboardSelected.forEach(clipboard.paste, clipboard);
+      }
+
       newLayers.forEach((layer) => {
         this.sendAction('importComplete', layer);
       }, this);
@@ -456,6 +499,10 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
 
       if (responseJSON.features.length > 0) {
         this.set('selectedJSON', { type: 'FeatureCollection' });
+
+        if (this.get('_importFromClipboard')) {
+          this.set('_clipboardSelected', responseJSON.features.filter(feature => feature.selected));
+        }
 
         let propertiesConnection = this.get('_propertiesConnection') || {};
         let selectedFeatures = responseJSON.features.filter((feature) => feature.selected).map((feature) => {
@@ -492,6 +539,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
       this.set('_resultDialogVisible', false);
       this.set('responseJSON', undefined);
       this.set('importAllSelect', false);
+      this.set('_importFromClipboard', false);
       this.set('_propertiesConnection', undefined);
       this.set('_notConnectedProperties', undefined);
       if (this.get('fileControl')) {

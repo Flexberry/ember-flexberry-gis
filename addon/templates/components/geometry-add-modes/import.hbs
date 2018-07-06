@@ -41,6 +41,11 @@
             <span class="button flexberry-import-from-file-button ui icon">{{loadButtonCaption}}</span>
             <input onchange={{action "uploadFile"}} type="file"/>
           </label>
+          <label class="import-from-clipboard">
+            <button class="ui icon button" disabled={{clipboard.isEmpty}} {{action "pasteFromClipboard"}}>
+              {{t "components.geometry-add-modes.import.paste-from-clipboard"}}
+            </button>
+          </label>
         </div>
       {{/if}}
     </form>
