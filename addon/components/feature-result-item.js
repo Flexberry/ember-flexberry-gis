@@ -141,6 +141,14 @@ export default Ember.Component.extend({
   */
   selectedFeature: null,
 
+  /**
+    Clipboard service.
+
+    @property clipboard
+    @type GeoObjectsClipboardService
+  */
+  clipboard: Ember.inject.service('geo-objects-clipboard'),
+
   actions: {
 
     /**
@@ -168,6 +176,22 @@ export default Ember.Component.extend({
     },
 
     /**
+      Copy this feature to clipboard.
+      @method actions.copy
+    */
+    copy() {
+      this.get('clipboard').copy(this.get('feature'));
+    },
+
+    /**
+      Cut this feature to clipboard.
+      @method actions.cut
+    */
+    cut() {
+      this.get('clipboard').cut(this.get('feature'));
+    },
+
+    /**
       Show\hide detailed feature info
       @method actions.showInfo
      */
@@ -183,7 +207,36 @@ export default Ember.Component.extend({
     toggleLinks() {
       this.set('_linksExpanded', !this.get('_linksExpanded'));
     }
-  }
+  },
+
+  /**
+    Initializes component.
+  */
+  init() {
+    this._super(...arguments);
+    this.get('clipboard').on('paste', this, this._paste);
+  },
+
+  /**
+    Destroys component.
+  */
+  willDestroy() {
+    this._super(...arguments);
+    this.get('clipboard').off('paste', this, this._paste);
+  },
+
+  /**
+    Handles the insertion of a previously cut object.
+
+    @private
+    @method _paste
+    @param {Object} geoObject The geo object that was pasted.
+  */
+  _paste(geoObject) {
+    if (this.get('feature') === geoObject) {
+      throw new Error('Not implemented.');
+    }
+  },
 
   /**
     Component's action invoking for select feature
