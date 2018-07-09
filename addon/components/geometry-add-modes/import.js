@@ -501,6 +501,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
         this.set('selectedJSON', { type: 'FeatureCollection' });
 
         if (this.get('_importFromClipboard')) {
+          this.set('selectedCRSName', 'EPSG:4326');
           this.set('_clipboardSelected', responseJSON.features.filter(feature => feature.selected));
         }
 
