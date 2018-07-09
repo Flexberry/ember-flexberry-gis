@@ -9,6 +9,12 @@
     <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
       <i class="hand paper icon"></i>
     </a>
+    <a class="icon item" title="{{t "components.feature-result-item.copy-caption"}}" {{action "copy" on="click"}}>
+      <i class="copy icon"></i>
+    </a>
+    <a class="icon item" title="{{t "components.feature-result-item.cut-caption"}}" {{action "cut" on="click"}}>
+      <i class="cut icon"></i>
+    </a>
       {{#if (gt feature.editForms.length 0)}}
         {{#if (eq feature.editForms.length 1)}}
           <a class="feature-result-item-object icon item"
