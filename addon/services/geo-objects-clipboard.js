@@ -86,11 +86,7 @@ export default Ember.Service.extend(Ember.Evented, {
     index = this.get('__copy').indexOf(geoObject);
     if (index === -1) {
       let length = this.get('__copy.length');
-      let geoJSON = geoObject.leafletLayer.toGeoJSON();
-      let type = geoObject.type || geoJSON.type;
-      let geometry = geoObject.geometry || geoJSON.geometry;
-      let properties = geoObject.properties || geoJSON.properties;
-
+      let { type, geometry, properties } = geoObject.leafletLayer.toGeoJSON();
       this.get('_copy').insertAt(length, { type, geometry, properties });
       this.get('__copy').insertAt(length, geoObject);
     }
@@ -112,11 +108,7 @@ export default Ember.Service.extend(Ember.Evented, {
     index = this.get('__cut').indexOf(geoObject);
     if (index === -1) {
       let length = this.get('__cut.length');
-      let geoJSON = geoObject.leafletLayer.toGeoJSON();
-      let type = geoObject.type || geoJSON.type;
-      let geometry = geoObject.geometry || geoJSON.geometry;
-      let properties = geoObject.properties || geoJSON.properties;
-
+      let { type, geometry, properties } = geoObject.leafletLayer.toGeoJSON();
       this.get('_cut').insertAt(length, { type, geometry, properties });
       this.get('__cut').insertAt(length, geoObject);
     }
