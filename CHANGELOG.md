@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 * Add automatic set fill and stroke color from gradient range to symbols in graduated and unique layers-styles.
 * Geometry filters on `geojson` layers.
 * Check layer polygons on intersection
+* The operation of copying to the clipboard on `WFS` layers.
+* The operation of pasting from the clipboard in the `geometry-add-modes\import` component.
 
 ### Changed
 * Change chart's library from `highcharts` to `chart.js`.

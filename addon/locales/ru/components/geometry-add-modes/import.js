@@ -1,11 +1,12 @@
 export default {
-  'menu-button-tooltip': 'Добавить из файла',
+  'menu-button-tooltip': 'Импорт',
   'dialog-approve-button-caption': 'Ok',
   'dialog-deny-button-caption': 'Отмена',
   'crs-field-label': 'Система координат',
   'coordinates-field-label': 'Координаты',
   'coordinates-field-placeholder': 'Добавьте координаты',
   'load-button-caption': 'Загрузить из файла',
+  'paste-from-clipboard': 'Вставить из буфера',
   'check-all-title': 'Выбрать все',
   'uncheck-all-title': 'Снять выделение',
   'import-error': {

@@ -1,11 +1,12 @@
 export default {
-  'menu-button-tooltip': 'Add from file',
+  'menu-button-tooltip': 'Import',
   'dialog-approve-button-caption': 'Ok',
   'dialog-deny-button-caption': 'Cancel',
   'crs-field-label': 'Coordinate reference system',
   'coordinates-field-label': 'Coordinates to add',
   'coordinates-field-placeholder': 'Enter the coordinates',
   'load-button-caption': 'Load from file',
+  'paste-from-clipboard': 'Paste from clipboard',
   'check-all-title': 'Check all',
   'uncheck-all-title': 'Uncheck all',
   'import-error': {

@@ -183,7 +183,7 @@ export default Ember.Component.extend({
     toggleLinks() {
       this.set('_linksExpanded', !this.get('_linksExpanded'));
     }
-  }
+  },
 
   /**
     Component's action invoking for select feature
