@@ -167,8 +167,8 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasLayers: Ember.computed('layers.[]', 'layers.@each.isDeleted', function () {
-      let layers = this.get('layers');
+    _hasLayers: Ember.computed('layer.layers.[]', 'layer.layers.@each.isDeleted', function () {
+      let layers = this.get('layer.layers');
 
       return Ember.isArray(layers) && layers.filter((layer) => {
         return !Ember.isNone(layer) && Ember.get(layer, 'isDeleted') !== true;
@@ -258,7 +258,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
-      Flag: indicates whether fir bouds operation is allowed for layer.
+      Flag: indicates whether fir bounds operation is allowed for layer.
 
       @property _fitBoundsOperationIsAvailable
       @type boolean
