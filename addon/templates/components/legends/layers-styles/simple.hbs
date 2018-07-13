@@ -1,5 +1,10 @@
 <div class="{{flexberryClassNames.imageWrapper}}">
-  <canvas class="{{flexberryClassNames.image}}"></canvas>
+  {{#if _geometriesCanBeDisplayed}}
+    <canvas class="{{flexberryClassNames.image}} geometries"></canvas>
+  {{/if}}
+  {{#if _markersCanBeDisplayed}}
+    <canvas class="{{flexberryClassNames.image}} markers"></canvas>
+  {{/if}}
   {{#if showCaption}}
     <label class="{{flexberryClassNames.caption}}">{{caption}}</label>
   {{/if}}

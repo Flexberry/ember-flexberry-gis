@@ -37,6 +37,15 @@ export default Ember.Component.extend({
   _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
 
   /**
+    Reference to 'markers-styles-renderer' service.
+
+    @property _markersStylesRenderer
+    @type MarkersStylesRendererService
+    @private
+  */
+  _markersStylesRenderer: Ember.inject.service('markers-styles-renderer'),
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -55,6 +64,15 @@ export default Ember.Component.extend({
     @default null
   */
   styleSettings: null,
+
+  /**
+    Hash containing legend settings.
+
+    @property legendSettings
+    @type Object
+    @default null
+  */
+  legendSettings: null,
 
   /**
     Flag: idnicates whether to show caption or not.

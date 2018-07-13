@@ -1,6 +1,7 @@
 {{#if (known-for-type "component" _styleSettingsRelatedComponentName)}}
   {{component _styleSettingsRelatedComponentName
     styleSettings=layer.settingsAsObject.styleSettings
+    legendSettings=layer.settingsAsObject.legendSettings
     showCaption=showLayerName
     caption=layer.name
   }}
