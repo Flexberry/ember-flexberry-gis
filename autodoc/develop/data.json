@@ -30079,7 +30079,7 @@
         {
             "file": "addon/components/flexberry-maplayer.js",
             "line": 260,
-            "description": "Flag: indicates whether fir bouds operation is allowed for layer.",
+            "description": "Flag: indicates whether fir bounds operation is allowed for layer.",
             "itemtype": "property",
             "name": "_fitBoundsOperationIsAvailable",
             "type": "boolean",

@@ -566,8 +566,8 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       @readOnly
       @private
     */
-    _hasLayers: Ember.computed(&#x27;layers.[]&#x27;, &#x27;layers.@each.isDeleted&#x27;, function () {
-      let layers = this.get(&#x27;layers&#x27;);
+    _hasLayers: Ember.computed(&#x27;layer.layers.[]&#x27;, &#x27;layer.layers.@each.isDeleted&#x27;, function () {
+      let layers = this.get(&#x27;layer.layers&#x27;);
 
       return Ember.isArray(layers) &amp;&amp; layers.filter((layer) =&gt; {
         return !Ember.isNone(layer) &amp;&amp; Ember.get(layer, &#x27;isDeleted&#x27;) !== true;
@@ -657,7 +657,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     }),
 
     /**
-      Flag: indicates whether fir bouds operation is allowed for layer.
+      Flag: indicates whether fir bounds operation is allowed for layer.
 
       @property _fitBoundsOperationIsAvailable
       @type boolean
