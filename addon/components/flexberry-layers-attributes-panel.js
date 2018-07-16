@@ -1328,6 +1328,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     */
     onSplitGeometry(tabModel) {
       let editTools = this._getEditTools();
+      this.get('leafletMap').fire('flexberry-map:switchToDefaultMapTool');
       editTools.on('editable:drawing:end', this._disableDrawSplitGeometry, [tabModel, this]);
       editTools.startPolyline();
     },

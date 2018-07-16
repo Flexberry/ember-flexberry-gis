@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 * Fix `bboxEWKT` in `flexberry-boundingbox` component.
 * Identification on `geojson` layers, when them contains multigeometries or collections.
+* Fix not reseting map tool when draw new geometry from attributes table.
 
 ## [0.4.0.beta.x] - 26.10.2017
 ### Added
