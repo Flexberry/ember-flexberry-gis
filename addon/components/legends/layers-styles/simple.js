@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import BaseLayerStyleLegendComponent from './-private/base';
 import layout from '../../../templates/components/legends/layers-styles/simple';
 
@@ -8,6 +9,30 @@ import layout from '../../../templates/components/legends/layers-styles/simple';
   @extends BaseLayerStyleLegendComponent
 */
 export default BaseLayerStyleLegendComponent.extend({
+  /**
+    Flag: indicates whether to show linear & polygonal objects on legend or not.
+
+    @property _geometriesCanBeDisplayed
+    @type Boolean
+    @private
+    @readOnly
+  */
+  _geometriesCanBeDisplayed: Ember.computed('legendSettings.geometriesCanBeDisplayed', function() {
+    return this.get('legendSettings.geometriesCanBeDisplayed') !== false;
+  }),
+
+  /**
+    Flag: indicates whether to show point objects on legend or not.
+
+    @property _markersCanBeDisplayed
+    @type Boolean
+    @private
+    @readOnly
+  */
+  _markersCanBeDisplayed: Ember.computed('legendSettings.markersCanBeDisplayed', function() {
+    return this.get('legendSettings.markersCanBeDisplayed') !== false;
+  }),
+
   /**
     Reference to component's template.
   */
@@ -34,21 +59,33 @@ export default BaseLayerStyleLegendComponent.extend({
   height: 24,
 
   /**
-    Initializes component's DOM.
+    Renderes legends each time component gets rendered.
   */
-  didInsertElement() {
+  didRender() {
     this._super(...arguments);
 
-    let styleSettings = this.get('styleSettings');
-    let canvas = this.$('canvas')[0];
-    canvas.width = this.get('width');
-    canvas.height = this.get('height');
+    if (this.get('_geometriesCanBeDisplayed')) {
+      let styleSettings = this.get('styleSettings');
+      let canvas = this.$('canvas.geometries')[0];
 
-    let layersStylesRenderer = this.get('_layersStylesRenderer');
-    layersStylesRenderer.renderOnCanvas({
-      styleSettings: styleSettings,
-      canvas: canvas,
-      target: 'legend'
-    });
+      let layersStylesRenderer = this.get('_layersStylesRenderer');
+      layersStylesRenderer.renderOnCanvas({
+        styleSettings: styleSettings,
+        canvas: canvas,
+        target: 'legend'
+      });
+    }
+
+    if (this.get('_markersCanBeDisplayed')) {
+      let styleSettings = this.get('styleSettings.style.marker');
+      let canvas = this.$('canvas.markers')[0];
+
+      let markersStylesRenderer = this.get('_markersStylesRenderer');
+      markersStylesRenderer.renderOnCanvas({
+        styleSettings: styleSettings,
+        canvas: canvas,
+        target: 'legend'
+      });
+    }
   }
 });

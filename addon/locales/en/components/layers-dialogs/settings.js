@@ -32,7 +32,9 @@ export default {
       'identification-settings': 'Can be identified',
 
       'legend-settings': {
-        'legend-can-be-displayed': 'Legend can be displayed',
+        'legend-can-be-displayed': 'Display legend',
+        'geometries-can-be-displayed': 'Display linear & polygonal objects on legend',
+        'markers-can-be-displayed': 'Display point objects on legend',
         'url': 'URL',
         'version': 'Version',
         'format': 'Format',

@@ -1,6 +1,7 @@
 {{#each layer.settingsAsObject.style.categories as |category|}}
   {{legends/layers-styles/simple
     styleSettings=category.styleSettings
+    legendSettings=layer.settingsAsObject.legendSettings
     showCaption=true
     caption=category.name
   }}

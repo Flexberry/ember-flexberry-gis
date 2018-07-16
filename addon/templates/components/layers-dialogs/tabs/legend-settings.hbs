@@ -1,11 +1,29 @@
 <div class="field">
   {{flexberry-checkbox
-    value=_canBeDisplayed
+    class='toggle'
+    label=(t 'components.layers-dialogs.settings.group.tab.legend-settings.legend-can-be-displayed')
+    value=value.legendCanBeDisplayed
     readonly=readonly
-    class=checkboxClass
-    label=canBeDisplayedLabel
   }}
 </div>
+{{#if _isVectorType}}
+  <div class="field">
+    {{flexberry-checkbox
+      class='toggle'
+      label=(t 'components.layers-dialogs.settings.group.tab.legend-settings.geometries-can-be-displayed')
+      value=value.geometriesCanBeDisplayed
+      readonly=readonly
+    }}
+  </div>
+  <div class="field">
+    {{flexberry-checkbox
+      class='toggle'
+      label=(t 'components.layers-dialogs.settings.group.tab.legend-settings.markers-can-be-displayed')
+      value=value.markersCanBeDisplayed
+      readonly=readonly
+    }}
+  </div>
+{{/if}}
 {{#if _isWmsType}}
   <div class="field">
     <label>
@@ -13,7 +31,7 @@
     </label>
     {{flexberry-textbox
       class="fluid"
-      value=_url
+      value=value.url
     }}
   </div>
   <div class="field">
@@ -22,7 +40,7 @@
     </label>
     {{flexberry-textbox
       class="fluid"
-      value=_version
+      value=value.version
     }}
   </div>
   <div class="field">
@@ -31,7 +49,7 @@
     </label>
     {{flexberry-textbox
       class="fluid"
-      value=_format
+      value=value.format
     }}
   </div>
   <div class="field">
@@ -40,7 +58,7 @@
     </label>
     {{flexberry-textbox
       class="fluid"
-      value=_layers
+      value=value.layers
     }}
   </div>
 {{/if}}

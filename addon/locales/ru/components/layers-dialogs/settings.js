@@ -35,6 +35,8 @@ export default {
 
       'legend-settings': {
         'legend-can-be-displayed': 'Отображать легенду',
+        'geometries-can-be-displayed': 'Отображать на легенде линейные и полигональные объекты',
+        'markers-can-be-displayed': 'Отображать на легенде точечные объекты',
         'url': 'URL',
         'version': 'Версия',
         'format': 'Формат',

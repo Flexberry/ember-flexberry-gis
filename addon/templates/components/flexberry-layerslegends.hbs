@@ -1,8 +1,7 @@
 {{#each visibleLayers as |layerModel|}}
   {{#if layerModel.legendCanBeDisplayed}}
     {{component (concat "legends/" layerModel.type "-legend")
-      layerName=layerModel.name
-      layerSettings=layerModel.settingsAsObject
+      layer=layerModel
       showLayerName=true
       lazyLoaded=false
       height=height
