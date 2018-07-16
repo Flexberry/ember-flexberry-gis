@@ -59,16 +59,14 @@ export default BaseLayerStyleLegendComponent.extend({
   height: 24,
 
   /**
-    Initializes component's DOM.
+    Renderes legends each time component gets rendered.
   */
-  didInsertElement() {
+  didRender() {
     this._super(...arguments);
 
     if (this.get('_geometriesCanBeDisplayed')) {
       let styleSettings = this.get('styleSettings');
       let canvas = this.$('canvas.geometries')[0];
-      canvas.width = this.get('width');
-      canvas.height = this.get('height');
 
       let layersStylesRenderer = this.get('_layersStylesRenderer');
       layersStylesRenderer.renderOnCanvas({
@@ -81,8 +79,6 @@ export default BaseLayerStyleLegendComponent.extend({
     if (this.get('_markersCanBeDisplayed')) {
       let styleSettings = this.get('styleSettings.style.marker');
       let canvas = this.$('canvas.markers')[0];
-      canvas.width = this.get('width');
-      canvas.height = this.get('height');
 
       let markersStylesRenderer = this.get('_markersStylesRenderer');
       markersStylesRenderer.renderOnCanvas({
