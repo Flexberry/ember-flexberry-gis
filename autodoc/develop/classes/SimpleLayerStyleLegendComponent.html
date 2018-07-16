@@ -402,7 +402,7 @@
         </div>
 
         <div class="foundat">
-            Defined in: <a href="../files/addon_components_legends_layers-styles_simple.js.html#l4"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;simple.js:4</code></a>
+            Defined in: <a href="../files/addon_components_legends_layers-styles_simple.js.html#l5"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;simple.js:5</code></a>
         </div>
 
             Module: <a href="../modules/ember-flexberry-gis.html">ember-flexberry-gis</a>
@@ -432,8 +432,20 @@
                     <h3>Properties</h3>
 
                     <ul class="index-list properties extends">
+                            <li class="index-item property private">
+                                <a href="#" data-tabid="#properties" data-anchor="#property__geometriesCanBeDisplayed" data-tablink="_geometriesCanBeDisplayed">_geometriesCanBeDisplayed</a>
+
+                            </li>
                             <li class="index-item property private inherited">
                                 <a href="#" data-tabid="#properties" data-anchor="#property__layersStylesRenderer" data-tablink="_layersStylesRenderer">_layersStylesRenderer</a>
+
+                            </li>
+                            <li class="index-item property private">
+                                <a href="#" data-tabid="#properties" data-anchor="#property__markersCanBeDisplayed" data-tablink="_markersCanBeDisplayed">_markersCanBeDisplayed</a>
+
+                            </li>
+                            <li class="index-item property private inherited">
+                                <a href="#" data-tabid="#properties" data-anchor="#property__markersStylesRenderer" data-tablink="_markersStylesRenderer">_markersStylesRenderer</a>
 
                             </li>
                             <li class="index-item property inherited">
@@ -442,6 +454,10 @@
                             </li>
                             <li class="index-item property">
                                 <a href="#" data-tabid="#properties" data-anchor="#property_height" data-tablink="height">height</a>
+
+                            </li>
+                            <li class="index-item property inherited">
+                                <a href="#" data-tabid="#properties" data-anchor="#property_legendSettings" data-tablink="legendSettings">legendSettings</a>
 
                             </li>
                             <li class="index-item property inherited">
@@ -466,6 +482,32 @@
             <div id="properties" class="tab-pane">
                 <h2 class="off-left">Properties</h2>
 
+                    <div id="property__geometriesCanBeDisplayed" class="property item private">
+                        <h3 class="name"><code>_geometriesCanBeDisplayed</code></h3>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_legends_layers-styles_simple.js.html#l12"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;simple.js:12</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Flag: indicates whether to show linear &amp; polygonal objects on legend or not.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
                     <div id="property__layersStylesRenderer" class="property item private inherited">
                         <h3 class="name"><code>_layersStylesRenderer</code></h3>
                         <span class="type"><a href="../classes/LayersStylesRendererService.html" class="crosslink">LayersStylesRendererService</a></span>
@@ -492,6 +534,58 @@
                     
                     
                     </div>
+                    <div id="property__markersCanBeDisplayed" class="property item private">
+                        <h3 class="name"><code>_markersCanBeDisplayed</code></h3>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_legends_layers-styles_simple.js.html#l24"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;simple.js:24</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Flag: indicates whether to show point objects on legend or not.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
+                    <div id="property__markersStylesRenderer" class="property item private inherited">
+                        <h3 class="name"><code>_markersStylesRenderer</code></h3>
+                        <span class="type"><a href="../classes/MarkersStylesRendererService.html" class="crosslink">MarkersStylesRendererService</a></span>
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/BaseLayerStyleLegendComponent.html#property__markersStylesRenderer">BaseLayerStyleLegendComponent</a>:
+                            <a href="../files/addon_components_legends_layers-styles_-private_base.js.html#l39"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;-private&#x2F;base.js:39</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Reference to 'markers-styles-renderer' service.</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
                     <div id="property_caption" class="property item inherited">
                         <h3 class="name"><code>caption</code></h3>
                         <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
@@ -503,7 +597,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerStyleLegendComponent.html#property_caption">BaseLayerStyleLegendComponent</a>:
-                            <a href="../files/addon_components_legends_layers-styles_-private_base.js.html#l68"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;-private&#x2F;base.js:68</code></a>
+                            <a href="../files/addon_components_legends_layers-styles_-private_base.js.html#l86"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;-private&#x2F;base.js:86</code></a>
                             </p>
                     
                     
@@ -529,7 +623,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_legends_layers-styles_simple.js.html#l25"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;simple.js:25</code></a>
+                            <a href="../files/addon_components_legends_layers-styles_simple.js.html#l50"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;simple.js:50</code></a>
                             </p>
                     
                     
@@ -545,6 +639,32 @@
                     
                     
                     </div>
+                    <div id="property_legendSettings" class="property item inherited">
+                        <h3 class="name"><code>legendSettings</code></h3>
+                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/BaseLayerStyleLegendComponent.html#property_legendSettings">BaseLayerStyleLegendComponent</a>:
+                            <a href="../files/addon_components_legends_layers-styles_-private_base.js.html#l68"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;-private&#x2F;base.js:68</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Hash containing legend settings.</p>
+                    
+                        </div>
+                    
+                            <p><strong>Default:</strong> null</p>
+                    
+                    
+                    </div>
                     <div id="property_showCaption" class="property item inherited">
                         <h3 class="name"><code>showCaption</code></h3>
                         <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
@@ -556,7 +676,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerStyleLegendComponent.html#property_showCaption">BaseLayerStyleLegendComponent</a>:
-                            <a href="../files/addon_components_legends_layers-styles_-private_base.js.html#l59"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;-private&#x2F;base.js:59</code></a>
+                            <a href="../files/addon_components_legends_layers-styles_-private_base.js.html#l77"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;-private&#x2F;base.js:77</code></a>
                             </p>
                     
                     
@@ -582,7 +702,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerStyleLegendComponent.html#property_styleSettings">BaseLayerStyleLegendComponent</a>:
-                            <a href="../files/addon_components_legends_layers-styles_-private_base.js.html#l50"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;-private&#x2F;base.js:50</code></a>
+                            <a href="../files/addon_components_legends_layers-styles_-private_base.js.html#l59"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;-private&#x2F;base.js:59</code></a>
                             </p>
                     
                     
@@ -608,7 +728,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_legends_layers-styles_simple.js.html#l16"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;simple.js:16</code></a>
+                            <a href="../files/addon_components_legends_layers-styles_simple.js.html#l41"><code>addon&#x2F;components&#x2F;legends&#x2F;layers-styles&#x2F;simple.js:41</code></a>
                             </p>
                     
                     

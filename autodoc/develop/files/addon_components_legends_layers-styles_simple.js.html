@@ -397,6 +397,7 @@
 
 <div class="file">
     <pre class="prettyprint linenums">
+import Ember from &#x27;ember&#x27;;
 import BaseLayerStyleLegendComponent from &#x27;./-private/base&#x27;;
 import layout from &#x27;../../../templates/components/legends/layers-styles/simple&#x27;;
 
@@ -407,6 +408,30 @@ import layout from &#x27;../../../templates/components/legends/layers-styles/sim
   @extends BaseLayerStyleLegendComponent
 */
 export default BaseLayerStyleLegendComponent.extend({
+  /**
+    Flag: indicates whether to show linear &amp; polygonal objects on legend or not.
+
+    @property _geometriesCanBeDisplayed
+    @type Boolean
+    @private
+    @readOnly
+  */
+  _geometriesCanBeDisplayed: Ember.computed(&#x27;legendSettings.geometriesCanBeDisplayed&#x27;, function() {
+    return this.get(&#x27;legendSettings.geometriesCanBeDisplayed&#x27;) !== false;
+  }),
+
+  /**
+    Flag: indicates whether to show point objects on legend or not.
+
+    @property _markersCanBeDisplayed
+    @type Boolean
+    @private
+    @readOnly
+  */
+  _markersCanBeDisplayed: Ember.computed(&#x27;legendSettings.markersCanBeDisplayed&#x27;, function() {
+    return this.get(&#x27;legendSettings.markersCanBeDisplayed&#x27;) !== false;
+  }),
+
   /**
     Reference to component&#x27;s template.
   */
@@ -433,22 +458,34 @@ export default BaseLayerStyleLegendComponent.extend({
   height: 24,
 
   /**
-    Initializes component&#x27;s DOM.
+    Renderes legends each time component gets rendered.
   */
-  didInsertElement() {
+  didRender() {
     this._super(...arguments);
 
-    let styleSettings = this.get(&#x27;styleSettings&#x27;);
-    let canvas = this.$(&#x27;canvas&#x27;)[0];
-    canvas.width = this.get(&#x27;width&#x27;);
-    canvas.height = this.get(&#x27;height&#x27;);
+    if (this.get(&#x27;_geometriesCanBeDisplayed&#x27;)) {
+      let styleSettings = this.get(&#x27;styleSettings&#x27;);
+      let canvas = this.$(&#x27;canvas.geometries&#x27;)[0];
 
-    let layersStylesRenderer = this.get(&#x27;_layersStylesRenderer&#x27;);
-    layersStylesRenderer.renderOnCanvas({
-      styleSettings: styleSettings,
-      canvas: canvas,
-      target: &#x27;legend&#x27;
-    });
+      let layersStylesRenderer = this.get(&#x27;_layersStylesRenderer&#x27;);
+      layersStylesRenderer.renderOnCanvas({
+        styleSettings: styleSettings,
+        canvas: canvas,
+        target: &#x27;legend&#x27;
+      });
+    }
+
+    if (this.get(&#x27;_markersCanBeDisplayed&#x27;)) {
+      let styleSettings = this.get(&#x27;styleSettings.style.marker&#x27;);
+      let canvas = this.$(&#x27;canvas.markers&#x27;)[0];
+
+      let markersStylesRenderer = this.get(&#x27;_markersStylesRenderer&#x27;);
+      markersStylesRenderer.renderOnCanvas({
+        styleSettings: styleSettings,
+        canvas: canvas,
+        target: &#x27;legend&#x27;
+      });
+    }
   }
 });
 

@@ -4313,7 +4313,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/legends/layers-styles/simple.js",
-            "line": 4,
+            "line": 5,
             "description": "Component representing legend for vector layer with 'simple' style.",
             "extends": "BaseLayerStyleLegendComponent"
         },
@@ -13063,28 +13063,6 @@
         {
             "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
             "line": 14,
-            "description": "Caption to be displayed in checkbox",
-            "itemtype": "property",
-            "name": "canBeDisplayedCaption",
-            "type": "String",
-            "default": "t('components.layers-dialogs.settings.group.tab.legend-settings.legend-can-be-displayed')",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
-            "line": 23,
-            "description": "Style class for checkbox component.",
-            "itemtype": "property",
-            "name": "checkboxClass",
-            "type": "String",
-            "default": "'toggle'",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
-            "line": 32,
             "description": "Current object with settings",
             "itemtype": "property",
             "name": "value",
@@ -13095,32 +13073,8 @@
         },
         {
             "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
-            "line": 41,
-            "description": "Current checkbox value.",
-            "itemtype": "property",
-            "name": "_canBeDisplayed",
-            "type": "Boolean",
-            "default": "true",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
-            "line": 51,
-            "description": "Observer changes settings for legend.",
-            "itemtype": "method",
-            "name": "_settingsForChanged",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
-            "line": 85,
-            "description": "Flag: indicates whether  layer's type is wms.",
+            "line": 23,
+            "description": "Flag: indicates whether layer's type is wms.",
             "itemtype": "property",
             "name": "_isWmsType",
             "type": "Boolean",
@@ -13132,60 +13086,14 @@
         },
         {
             "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
-            "line": 103,
-            "description": "Property containing url.",
+            "line": 41,
+            "description": "Flag: indicates whether related layer is vector layer.",
             "itemtype": "property",
-            "name": "_url",
-            "type": "String",
-            "default": "''",
+            "name": "_isVectorType",
+            "type": "Boolean",
+            "default": "false",
             "access": "private",
             "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
-            "line": 113,
-            "description": "Property containing version.",
-            "itemtype": "property",
-            "name": "_version",
-            "type": "String",
-            "default": "''",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
-            "line": 123,
-            "description": "Property containing format.",
-            "itemtype": "property",
-            "name": "_format",
-            "type": "String",
-            "default": "''",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
-            "line": 133,
-            "description": "Property containing layers.",
-            "itemtype": "property",
-            "name": "_layers",
-            "type": "String",
-            "default": "''",
-            "access": "private",
-            "tagname": "",
-            "class": "FlexberryIdentificationSettingsComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers-dialogs/tabs/legend-settings.js",
-            "line": 143,
-            "description": "Initializes component.",
             "class": "FlexberryIdentificationSettingsComponent",
             "module": "ember-flexberry-gis"
         },
@@ -16096,20 +16004,32 @@
         {
             "file": "addon/components/legends/layers-styles/-private/base.js",
             "line": 39,
+            "description": "Reference to 'markers-styles-renderer' service.",
+            "itemtype": "property",
+            "name": "_markersStylesRenderer",
+            "type": "MarkersStylesRendererService",
+            "access": "private",
+            "tagname": "",
+            "class": "BaseLayerStyleLegendComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/legends/layers-styles/-private/base.js",
+            "line": 48,
             "description": "Reference to component's template.",
             "class": "BaseLayerStyleLegendComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/legends/layers-styles/-private/base.js",
-            "line": 44,
+            "line": 53,
             "description": "Reference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
             "class": "BaseLayerStyleLegendComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/legends/layers-styles/-private/base.js",
-            "line": 50,
+            "line": 59,
             "description": "Hash containing 'simple' style settings.",
             "itemtype": "property",
             "name": "styleSettings",
@@ -16120,7 +16040,18 @@
         },
         {
             "file": "addon/components/legends/layers-styles/-private/base.js",
-            "line": 59,
+            "line": 68,
+            "description": "Hash containing legend settings.",
+            "itemtype": "property",
+            "name": "legendSettings",
+            "type": "Object",
+            "default": "null",
+            "class": "BaseLayerStyleLegendComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/legends/layers-styles/-private/base.js",
+            "line": 77,
             "description": "Flag: idnicates whether to show caption or not.",
             "itemtype": "property",
             "name": "showCaption",
@@ -16131,7 +16062,7 @@
         },
         {
             "file": "addon/components/legends/layers-styles/-private/base.js",
-            "line": 68,
+            "line": 86,
             "description": "Legend caption.",
             "itemtype": "property",
             "name": "caption",
@@ -16156,14 +16087,40 @@
         },
         {
             "file": "addon/components/legends/layers-styles/simple.js",
-            "line": 11,
+            "line": 12,
+            "description": "Flag: indicates whether to show linear & polygonal objects on legend or not.",
+            "itemtype": "property",
+            "name": "_geometriesCanBeDisplayed",
+            "type": "Boolean",
+            "access": "private",
+            "tagname": "",
+            "readonly": "",
+            "class": "SimpleLayerStyleLegendComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/legends/layers-styles/simple.js",
+            "line": 24,
+            "description": "Flag: indicates whether to show point objects on legend or not.",
+            "itemtype": "property",
+            "name": "_markersCanBeDisplayed",
+            "type": "Boolean",
+            "access": "private",
+            "tagname": "",
+            "readonly": "",
+            "class": "SimpleLayerStyleLegendComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/legends/layers-styles/simple.js",
+            "line": 36,
             "description": "Reference to component's template.",
             "class": "SimpleLayerStyleLegendComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/legends/layers-styles/simple.js",
-            "line": 16,
+            "line": 41,
             "description": "Legend width (for image only, without label).",
             "itemtype": "property",
             "name": "width",
@@ -16174,7 +16131,7 @@
         },
         {
             "file": "addon/components/legends/layers-styles/simple.js",
-            "line": 25,
+            "line": 50,
             "description": "Legend height (for image only, without label).",
             "itemtype": "property",
             "name": "height",
@@ -16185,8 +16142,8 @@
         },
         {
             "file": "addon/components/legends/layers-styles/simple.js",
-            "line": 36,
-            "description": "Initializes component's DOM.",
+            "line": 61,
+            "description": "Renderes legends each time component gets rendered.",
             "class": "SimpleLayerStyleLegendComponent",
             "module": "ember-flexberry-gis"
         },
@@ -35285,7 +35242,7 @@
         },
         {
             "file": "addon/layers/-private/vector.js",
-            "line": 54,
+            "line": 59,
             "description": "Creates new search settings object (with search settings related to layer-type).",
             "itemtype": "method",
             "name": "createSearchSettings",
@@ -41662,7 +41619,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/layers/-private/vector.js:54"
+            "line": " addon/layers/-private/vector.js:59"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -42081,10 +42038,6 @@
             "line": " addon/components/layers-dialogs/tabs/legend-settings.js:9"
         },
         {
-            "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/layers-dialogs/tabs/legend-settings.js:143"
-        },
-        {
             "message": "Missing item type\nReference to component's template.",
             "line": " addon/components/layers-dialogs/tabs/links.js:12"
         },
@@ -42270,11 +42223,11 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/legends/layers-styles/-private/base.js:39"
+            "line": " addon/components/legends/layers-styles/-private/base.js:48"
         },
         {
             "message": "Missing item type\nReference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
-            "line": " addon/components/legends/layers-styles/-private/base.js:44"
+            "line": " addon/components/legends/layers-styles/-private/base.js:53"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -42286,11 +42239,11 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/legends/layers-styles/simple.js:11"
+            "line": " addon/components/legends/layers-styles/simple.js:36"
         },
         {
-            "message": "Missing item type\nInitializes component's DOM.",
-            "line": " addon/components/legends/layers-styles/simple.js:36"
+            "message": "Missing item type\nRenderes legends each time component gets rendered.",
+            "line": " addon/components/legends/layers-styles/simple.js:61"
         },
         {
             "message": "Missing item type\nReference to component's template.",

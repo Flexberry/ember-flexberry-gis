@@ -398,8 +398,8 @@
 <div class="file">
     <pre class="prettyprint linenums">
 import Ember from &#x27;ember&#x27;;
+import VectorLayer from &#x27;../../../layers/-private/vector&#x27;;
 import layout from &#x27;../../../templates/components/layers-dialogs/tabs/legend-settings&#x27;;
-import { translationMacro as t } from &#x27;ember-i18n&#x27;;
 
 /**
  Component for legend settings tab in layer settings.
@@ -411,24 +411,6 @@ export default Ember.Component.extend({
   layout,
 
   /**
-    Caption to be displayed in checkbox
-
-    @property canBeDisplayedCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.settings.group.tab.legend-settings.legend-can-be-displayed&#x27;)
-  */
-  canBeDisplayedLabel: t(&#x27;components.layers-dialogs.settings.group.tab.legend-settings.legend-can-be-displayed&#x27;),
-
-  /**
-    Style class for checkbox component.
-
-    @property checkboxClass
-    @type String
-    @default &#x27;toggle&#x27;
-  */
-  checkboxClass: &#x27;toggle&#x27;,
-
-  /**
     Current object with settings
 
     @property value
@@ -438,51 +420,7 @@ export default Ember.Component.extend({
   value: undefined,
 
   /**
-    Current checkbox value.
-
-    @property _canBeDisplayed
-    @type Boolean
-    @default true
-    @private
-  */
-  _canBeDisplayed: undefined,
-
-  /**
-    Observer changes settings for legend.
-
-    @method _settingsForChanged
-    @private
-  */
-  _settingsForChanged: Ember.observer(
-    &#x27;_canBeDisplayed&#x27;,
-    &#x27;_url&#x27;,
-    &#x27;_version&#x27;,
-    &#x27;_format&#x27;,
-    &#x27;_layers&#x27;,
-    function() {
-
-      let obj = null;
-
-      if (this.get(&#x27;_isWmsType&#x27;)) {
-        obj = {
-          legendCanBeDisplayed: this.get(&#x27;_canBeDisplayed&#x27;),
-          url: this.get(&#x27;_url&#x27;),
-          version: this.get(&#x27;_version&#x27;),
-          format: this.get(&#x27;_format&#x27;),
-          layers: this.get(&#x27;_layers&#x27;)
-        };
-      } else {
-        obj = {
-          legendCanBeDisplayed: this.get(&#x27;_canBeDisplayed&#x27;)
-        };
-      }
-
-      this.set(&#x27;value&#x27;, obj);
-    }
-  ),
-
-  /**
-    Flag: indicates whether  layer&#x27;s type is wms.
+    Flag: indicates whether layer&#x27;s type is wms.
 
     @property _isWmsType
     @type Boolean
@@ -500,57 +438,21 @@ export default Ember.Component.extend({
   }),
 
   /**
-    Property containing url.
+    Flag: indicates whether related layer is vector layer.
 
-    @property _url
-    @type String
-    @default &#x27;&#x27;
+    @property _isVectorType
+    @type Boolean
+    @default false
     @private
   */
-  _url:&#x27;&#x27;,
+  _isVectorType: Ember.computed(&#x27;type&#x27;, function() {
+    let className = this.get(&#x27;type&#x27;);
+    let layerClass = Ember.isNone(className) ?
+      null :
+      Ember.getOwner(this).knownForType(&#x27;layer&#x27;, className);
 
-  /**
-    Property containing version.
-
-    @property _version
-    @type String
-    @default &#x27;&#x27;
-    @private
-  */
-  _version:&#x27;&#x27;,
-
-  /**
-    Property containing format.
-
-    @property _format
-    @type String
-    @default &#x27;&#x27;
-    @private
-  */
-  _format:&#x27;&#x27;,
-
-  /**
-    Property containing layers.
-
-    @property _layers
-    @type String
-    @default &#x27;&#x27;
-    @private
-  */
-  _layers:&#x27;&#x27;,
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-    let value = this.get(&#x27;value&#x27;);
-    this.set(&#x27;_canBeDisplayed&#x27;, value.legendCanBeDisplayed);
-    this.set(&#x27;_url&#x27;, value.url);
-    this.set(&#x27;_version&#x27;, value.version);
-    this.set(&#x27;_format&#x27;, value.format);
-    this.set(&#x27;_layers&#x27;, value.layers);
-  }
+    return !Ember.isNone(layerClass) &amp;&amp; layerClass instanceof VectorLayer;
+  })
 });
 
     </pre>
