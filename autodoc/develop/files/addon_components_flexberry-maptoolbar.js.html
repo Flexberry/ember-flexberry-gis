@@ -634,6 +634,24 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
   },
 
   /**
+    Switching to default map-tool.
+
+    @method _switchToDefaultMapTool
+    @private
+  */
+  _switchToDefaultMapTool() {
+    let activeMapTool = this.get(&#x27;_activeMapTool&#x27;);
+
+    if (!Ember.isNone(activeMapTool)) {
+      activeMapTool.off(&#x27;disable&#x27;, this, this._activateDefaultMapTool);
+      activeMapTool.disable();
+      this.set(&#x27;_activeMapTool&#x27;, null);
+    }
+
+    this._activateDefaultMapTool();
+  },
+
+  /**
     Observes changes in {{#crossLink &quot;FlexberryMaptoolbarComponent/leafletMap:propery&quot;}}&#x27;leafletMap&#x27; property{{/crossLink}}.
     Activates default map-tool when leafletMap initialized and subscribes on flexberry-map:identificationFinished event.
 
@@ -647,6 +665,8 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
       return;
     }
 
+    leafletMap.on(&#x27;flexberry-map:switchToDefaultMapTool&#x27;, this._switchToDefaultMapTool, this);
+
     this._activateDefaultMapTool();
   })),
 
@@ -655,6 +675,11 @@ let FlexberryMaptoolbarComponent = Ember.Component.extend({
   */
   willDestroy() {
     this._super(...arguments);
+
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.off(&#x27;flexberry-map:switchToDefaultMapTool&#x27;, this._switchToDefaultMapTool, this);
+    }
 
     let activeMapTool = this.get(&#x27;_activeMapTool&#x27;);
     if (!Ember.isNone(activeMapTool)) {

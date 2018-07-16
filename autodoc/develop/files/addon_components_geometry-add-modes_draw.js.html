@@ -460,6 +460,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
       // let that = { component: this, tabModel: tabModel };
       editTools.on(&#x27;editable:drawing:end&#x27;, this._disableDraw, this);
+      this.get(&#x27;leafletMap&#x27;).fire(&#x27;flexberry-map:switchToDefaultMapTool&#x27;);
       this.$().closest(&#x27;body&#x27;).on(&#x27;keydown&#x27;, ((e) =&gt; {
         // Esc was pressed
         if (e.which === 27) {
