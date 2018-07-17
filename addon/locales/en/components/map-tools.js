@@ -72,6 +72,16 @@ export default {
     },
     'draw-clear': {
       'caption': 'Clear'
+    },
+    'dialog-label':{
+      'label': 'Label',
+      'color': 'Color',
+      'sizeText': 'Size',
+      'caption': 'Description',
+      'signWithCoord': 'Sign with coordinates'
+    },
+    'draw-label':{
+      'caption': 'Label'
     }
   }
 };

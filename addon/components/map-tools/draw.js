@@ -30,7 +30,8 @@ const flexberryClassNames = {
   drawPolyline: 'flexberry-draw-polyline-map-tool',
   drawCircle: 'flexberry-draw-circle-map-tool',
   drawRectangle: 'flexberry-draw-rectangle-map-tool',
-  drawPolygon: 'flexberry-draw-polygon-map-tool'
+  drawPolygon: 'flexberry-draw-polygon-map-tool',
+  drawLabel: 'flexberry-draw-label-map-tool'
 };
 
 /**
@@ -134,6 +135,33 @@ let DrawMapToolComponent = Ember.Component.extend({
       @default t('components.map-tools.draw.draw-marker.caption')
     */
     drawMarkerCaption: t('components.map-tools.draw.draw-marker.caption'),
+
+    /**
+      Map tool's 'draw-label' mode's caption.
+
+      @property drawLabelCaption
+      @type String
+      @default t('components.map-tools.draw.draw-label.caption')
+    */
+    drawLabelCaption: t('components.map-tools.draw.draw-label.caption'),
+
+    /**
+      Map tool's 'draw-label' mode's icon CSS-class names.
+
+      @property drawLabelIconClass
+      @type String
+      @default 'square outline icon'
+    */
+    drawLabelIconClass: 'label icon',
+
+    /**
+      Map tool's 'draw-label' mode's additional CSS-class.
+
+      @property drawLabelClass
+      @type String
+      @default null
+    */
+    drawLabelClass: null,
 
     /**
       Map tool's 'draw-marker' mode's icon CSS-class names.
@@ -289,6 +317,15 @@ let DrawMapToolComponent = Ember.Component.extend({
     drawMarker: true,
 
     /**
+      Flag: is map tool 'draw-label' enable
+
+      @property drawLabel
+      @default true
+      @type Boolean
+    */
+    drawLabel: true,
+
+    /**
       Flag: is map tool 'draw-polyline' enable
 
       @property drawPolyline
@@ -333,6 +370,90 @@ let DrawMapToolComponent = Ember.Component.extend({
     */
     drawClear: true,
 
+    /**
+      Flag: indicates whether labelDialog has been requested
+
+      @property _labelDialogHasBeenRequested
+      @type boolean
+      @default false
+    */
+    _labelDialogHasBeenRequested: false,
+
+    /**
+      Flag: indicates whether labelDialog is visible
+
+      @property _labelDialogIsVisible
+      @type boolean
+      @default false
+    */
+    _labelDialogIsVisible: false,
+
+    /**
+      Label dialog caption.
+
+      @property labelDialogCaption
+      @type String
+      @default t('components.map-tools.draw.dialog-label.caption')
+    */
+    _labelDialogCaption: t('components.map-tools.draw.dialog-label.caption'),
+
+    /**
+      Flag: indicates whether has been chosen drawing map-tool.
+
+      @property _isDraw
+      @type Boolean
+      @default
+    */
+    _isDraw: false,
+
+    /**
+      Tooltip's options.
+
+      @property tooltipOptions
+      @type {Object}
+      @default
+    */
+    tooltipOptions: {
+      direction: 'top',
+      permanent: true
+    },
+
+    /**
+      Layer.
+
+      @property _layer
+      @type <a href="http://leaflet.github.io/Leaflet.Editable/doc/api.html">L.Layer</a>
+      @default
+    */
+    _layer: null,
+
+    /**
+      Tool's coordinate reference system (CRS).
+
+      @property crs
+      @type <a href="http://leafletjs.com/reference-1.0.0.html#crs">L.CRS</a>
+      @default null
+    */
+    crs: null,
+
+    /**
+      Coordinates tool's results precision
+
+      @property precision
+      @type Number
+      @default 5
+    */
+    _precision: 5,
+
+    /**
+      Count objects layer
+
+      @property _countLayer
+      @type Number
+      @default 0
+    */
+    _countLayer: 0,
+
     actions: {
       /**
         Handles {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
@@ -343,8 +464,95 @@ let DrawMapToolComponent = Ember.Component.extend({
       */
       onMapToolActivate(...args) {
         this.sendAction('activate', ...args);
-      }
+        this.set('_isDraw', true);
+
+        let e = args[args.length - 1] || {};
+        let mapTool = Ember.get(e, 'mapTool');
+        if (mapTool.name === 'draw-marker') {
+          this.set('_forMarkerIsVisible', true);
+        } else {
+          this.set('_forMarkerIsVisible', false);
+        }
+
+        let leafletMap = Ember.get(mapTool, 'leafletMap');
+
+        if (Ember.isNone(leafletMap)) {
+          return;
+        } else {
+          leafletMap.on('editable:drawing:end', this._showLabelDialog, this);
+        }
+      },
+
+      /**
+        Handles label dialog's 'approve' action.
+
+        @param {Number} _label A hash containing label options.
+        @param {Number} _signWithCoord A hash containing parameter to sign with coordinates.
+      */
+      onLabelDialogApprove(_label, _signWithCoord) {
+        if (!Ember.isNone(_label)) {
+          let featuresLayer = this.get('_drawToolProperties.featuresLayer');
+          let tooltipOptions = this.get('tooltipOptions');
+          let text = _label.labelText;
+
+          if (Ember.isNone(text)) {
+            text = '';
+          }
+
+          let style = _label.style;
+          let layer = this.get('_layer');
+          this.set('_layer', null);
+
+          if (Ember.isNone(layer)) {
+            let layers = featuresLayer.getLayers();
+            layer = layers[layers.length - 1];
+          }
+
+          let tooltip = layer.getTooltip();
+          if (Ember.isNone(tooltip)) {
+            tooltip = L.tooltip(tooltipOptions);
+            layer.bindTooltip(tooltip, tooltipOptions);
+          }
+
+          let coord = '';
+          if (_signWithCoord) {
+            let br = '';
+            if (!Ember.isBlank(text)) {
+              br = '</br>';
+            }
+
+            coord = br + this._getLabelCoord(layer);
+          }
+
+          tooltip.setContent("<p style='" + style + "'>" + text + coord + '</p>');
+          layer.on('click', this._changeLabel, [_label, _signWithCoord, this.get('_forMarkerIsVisible'), this]);
+
+          if (layer instanceof L.Marker && _signWithCoord) {
+            layer.on('editable:drag', this._changeLabelCoordForMarker, [layer, this]);
+          }
+
+          if (!(layer instanceof L.Marker)) {
+            layer.on('editable:editing', this._moveTooltip, [layer, this]);
+          }
+        } else {
+          console.log('qwe');
+        }
+      },
+
+      /**
+        Handles label dialog's 'deny' action.
+
+        @param {Number} _label A hash containing label options.
+        @param {Number} _signWithCoord A hash containing parameter to sign with coordinates.
+      */
+      onLabelDialogDeny(_label, _signWithCoord) {
+        let featuresLayer = this.get('_drawToolProperties.featuresLayer');
+        let layers = featuresLayer.getLayers();
+        let layer = layers[layers.length - 1];
+        layer.on('click', this._changeLabel, [_label, _signWithCoord, this.get('_forMarkerIsVisible'), this]);
+      },
     },
+
 
     /**
       Initializes component.
@@ -356,7 +564,92 @@ let DrawMapToolComponent = Ember.Component.extend({
         editLayer: new L.LayerGroup(),
         featuresLayer: new L.LayerGroup()
       });
-    }
+    },
+
+    /**
+      Shows a dialog for entering the attributes label.
+
+      @param {Boolean} isClick Containing 'true' if open dialog to edit label.
+    */
+    _showLabelDialog(isClick) {
+      let featuresLayer = this.get('_drawToolProperties.featuresLayer');
+      let count = featuresLayer.getLayers().length;
+
+      if (Ember.isNone(this.get('_countLayer')) || this.get('_countLayer') !== count || isClick === true) {
+        this.set('_countLayer', count);
+
+        if (this.get('_isDraw')) {
+          // Include dialog to markup.
+          this.set('_labelDialogHasBeenRequested', true);
+
+          // Show dialog.
+          this.set('_labelDialogIsVisible', true);
+          this.set('_isDraw', false);
+        }
+      }
+    },
+
+    /**
+      Shows a dialog for change the attributes label.
+    */
+    _changeLabel(e) {
+      let [label, signWithCoord, forMarkerIsVisible, _this] = this;
+      _this.set('_forMarkerIsVisible', forMarkerIsVisible);
+      _this.set('_layer', e.target);
+      _this.set('_label', label);
+      _this.set('_signWithCoord', signWithCoord);
+      _this.set('_isDraw', true);
+      _this._showLabelDialog(true);
+    },
+
+    /**
+      Move tooltip when object is edited.
+    */
+    _moveTooltip() {
+      let [_layer] = this;
+      let latlng = _layer.getCenter ? _layer.getCenter() : _layer.getLatLng();
+      let tooltip = _layer.getTooltip();
+      tooltip.setLatLng(latlng);
+    },
+
+    _changeLabelCoordForMarker() {
+      let [_layer, _this] = this;
+      let tooltip = _layer.getTooltip();
+      let text = tooltip.getContent();
+      let pos = text.indexOf('</br>');
+      let begStr = '';
+      if (pos !== -1) {
+        begStr = text.substring(0, pos + 5);
+      } else {
+        begStr = text.substring(0, text.indexOf('>') + 1);
+      }
+
+      let coord = begStr + _this._getLabelCoord(_layer) + '</p>';
+      _layer.setTooltipContent(coord);
+    },
+
+    /**
+      Get label coordinates
+
+      @param {Object} layer
+     */
+    _getLabelCoord(layer) {
+      let fixedLatLng = L.Measure.Mixin.Marker.getFixedLatLng(layer.getLatLng());
+      let crs = this.get('crs');
+      let precision = this.get('_precision');
+      let coordCaption = L.Measure.MarkerBase.prototype.basePopupText;
+
+      if (crs) {
+        let point = crs.project(fixedLatLng);
+        if (point) {
+          return Math.abs(point.y).toFixed(precision) + (point.y >= 0 ? coordCaption.northLatitude : coordCaption.southLatitude) +
+            Math.abs(point.x).toFixed(precision) + (point.x >= 0 ? coordCaption.eastLongitude : coordCaption.westLongitude);
+        }
+      }
+
+      return Math.abs(fixedLatLng.lat).toFixed(precision) + (fixedLatLng.lat >= 0 ? coordCaption.northLatitude : coordCaption.southLatitude) +
+        Math.abs(fixedLatLng.lng).toFixed(precision) + (fixedLatLng.lng >= 0 ? coordCaption.eastLongitude : coordCaption.westLongitude);
+    },
 
     /**
       Component's action invoking when map-tool must be activated.

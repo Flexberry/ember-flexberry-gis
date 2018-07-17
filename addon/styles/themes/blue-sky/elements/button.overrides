@@ -80,6 +80,7 @@
 
 
 /* Flexberry Rdit Layermap Segment */
+.flexberry-dialog-content, 
 .flexberry-edit-layermap {
     .ui.small.fluid.buttons:not(.basic):not(.inverted) {
       &>.button.flexberry-button {

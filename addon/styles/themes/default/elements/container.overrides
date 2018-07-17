@@ -471,6 +471,13 @@
     i.icon.circle:before {
         content: "\e82b";
     }
+    /* надпись */
+    i.icon.label:before {
+        font-family: Icons;
+        content: "\f27a";
+        margin-left: -8.75px;
+        background: @whitecolor !important;
+    }
     /* расстояние */
     i.icon.empty.star:before {
         font-family: Icons;
