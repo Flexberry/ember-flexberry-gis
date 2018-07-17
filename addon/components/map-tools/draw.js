@@ -553,7 +553,6 @@ let DrawMapToolComponent = Ember.Component.extend({
       },
     },
 
-
     /**
       Initializes component.
     */

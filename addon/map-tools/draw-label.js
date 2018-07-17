@@ -19,7 +19,7 @@ export default DrawMapTool.extend({
   */
   _enable() {
     this._super(...arguments);
-    var myIcon = L.divIcon({className: 'flexberry-draw-marker-map-tool'});
-    this.get('_editTools').startMarker(undefined, {icon: myIcon});
+    var myIcon = L.divIcon({ className: 'flexberry-draw-marker-map-tool' });
+    this.get('_editTools').startMarker(undefined, { icon: myIcon });
   }
 });

@@ -83,7 +83,7 @@ export default Ember.Component.extend({
     @default t('components.layers-dialogs.edit.approve-button.caption')
   */
   approveButtonCaption: t('components.layers-dialogs.edit.approve-button.caption'),
-  
+
   /**
     Dialog's 'deny' button caption.
 
@@ -105,7 +105,7 @@ export default Ember.Component.extend({
     this.set('signWithCoord', false);
   },
 
-  didUpdateAttrs(){
+  didUpdateAttrs() {
     //Need, when first time click checkbox, because label becomes underfined.
     if (Ember.isNone(this.get('label'))) {
       this.set('label', this.get('_tempLabel'));
@@ -113,7 +113,7 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    showCheckboxDidChange(e){
+    showCheckboxDidChange(e) {
       //Need, when first time click checkbox, because label becomes underfined.
       this.set('_tempLabel', this.get('label'));
     },
