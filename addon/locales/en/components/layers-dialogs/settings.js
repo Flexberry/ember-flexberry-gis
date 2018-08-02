@@ -39,6 +39,21 @@ export default {
         'version': 'Version',
         'format': 'Format',
         'layers': 'Layers'
+      },
+
+      'labels-settings':{
+        'sign-map-objects-label': 'Sign map objects',
+        'field-caption': 'Layer\'s attributes',
+        'no-fields': 'Fields isn\'t loaded',
+        'label': 'Label',
+        'font-caption': 'Font',
+        'location-caption': 'Location',
+        'scale-range-caption': 'Visibility within scale',
+        'availableLineLocation': {
+          'above': 'Over the line',
+          'over': 'Along the line',
+          'under': 'Under the line'
+        }
       }
     }
   },

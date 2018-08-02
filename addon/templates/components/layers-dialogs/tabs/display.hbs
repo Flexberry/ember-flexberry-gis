@@ -29,6 +29,11 @@
             {{t "components.layers-dialogs.edit.tabular-menu.style-settings-tab.caption"}}
           </a>
         {{/if}}
+        {{#if _labelsSettingsAreAvailableForType}}
+          <a class="tab item {{if (eq _activeTab "label-tab") "active"}}" data-tab="label-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.label-settings-tab.caption"}}
+          </a>
+        {{/if}}
       </div>
       {{#if _displaySettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "display-tab") "active"}}" data-tab="display-tab">
@@ -85,6 +90,16 @@
             layerType=_layer.type
             getLeafletLayer=_layer.leafletObjectGetter
             layerLoaderIsReady=(eq _activeTab "style-tab")
+          }}
+        </div>
+      {{/if}}
+      {{#if _labelsSettingsAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _activeTab "label-tab") "active"}}" data-tab="label-tab">
+          {{layers-dialogs/tabs/labels-settings
+            value=_layer.settings.displaySettings
+            layerType=_layer.type
+            leafletObjectMethod=_layer.leafletObjectGetter
+            leafletMap = leafletMap
           }}
         </div>
       {{/if}}

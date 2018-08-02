@@ -316,6 +316,7 @@ export default Ember.Component.extend(
       '_legendSettingsAreAvailableForType',
       '_filterSettingsAreAvailableForType',
       '_styleSettingsAreAvailableForType',
+      '_labelsSettingsAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
         return this.get('_displaySettingsAreAvailableForType') ||
@@ -323,7 +324,8 @@ export default Ember.Component.extend(
           this.get('_searchSettingsAreAvailableForType') ||
           this.get('_legendSettingsAreAvailableForType') ||
           this.get('_filterSettingsAreAvailableForType') ||
-          this.get('_styleSettingsAreAvailableForType');
+          this.get('_styleSettingsAreAvailableForType') ||
+          this.get('_labelsSettingsAreAvailableForType');
       }
     ),
 
@@ -425,6 +427,20 @@ export default Ember.Component.extend(
 
       // Style settings are available only for vector layers.
       return !Ember.isNone(layerClass) && layerClass instanceof VectorLayer;
+    }),
+
+    /**
+      Flag: indicates whether 'display labels' operation settings are available for the selected layer type.
+
+      @property _labelsSettingsAreAvailableForType
+      @type Boolean
+      @private
+      @readonly
+    */
+    _labelsSettingsAreAvailableForType: Ember.computed('_layer.type', function () {
+      let className = this.get('_layer.type');
+
+      return Ember.getOwner(this).isKnownNameForType('layer', className) && className !== 'group';
     }),
 
     /**

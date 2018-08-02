@@ -96,6 +96,9 @@ export default {
     },
     'pmodes-tab': {
       'caption': 'Creation by prototype'
+    },
+    'label-settings-tab': {
+      'caption': 'Labels settings'
     }
   },
   'groups': {
