@@ -509,7 +509,7 @@ let DrawMapToolComponent = Ember.Component.extend({
             let layers = featuresLayer.getLayers();
             layer = layers[layers.length - 1];
           }
-          
+
           let tooltip = layer.getTooltip();
           if (Ember.isNone(tooltip)) {
             tooltip = L.tooltip(tooltipOptions);
@@ -614,6 +614,7 @@ let DrawMapToolComponent = Ember.Component.extend({
       if (!Ember.isNone(layer.layer)) {
         _layer = layer.layer;
       }
+
       let latlng = _layer.getCenter ? _layer.getCenter() : _layer.getLatLng();
       let type = _layer.toGeoJSON().geometry;
       let isIntersect = !Ember.isNone(type) ? checkIntersect(type) : false;
@@ -626,9 +627,10 @@ let DrawMapToolComponent = Ember.Component.extend({
         } else {
           latlng = _layer.getBounds().getCenter();
         }
+
       }
       let tooltip = _layer.getTooltip();
-      tooltip.setLatLng(latlng); 
+      tooltip.setLatLng(latlng);
     },
 
     _changeLabelCoordForMarker() {
