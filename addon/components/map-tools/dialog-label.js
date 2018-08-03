@@ -21,21 +21,6 @@ const defaultLabel = {
 
 export default Ember.Component.extend({
   /**
-    Reference to component's template.
-  */
-  layout,
-
-  /**
-    Hash containing label text and options.
-
-    @property label
-    @type Object
-    @default null
-    @private
-  */
-  label: null,
-
-  /**
     Hash containing temporary label. Need, when first time click checkbox, because label becomes underfined.
 
     @property label
@@ -54,6 +39,31 @@ export default Ember.Component.extend({
     @private
   */
   _availableFontSizes: null,
+
+  /**
+    Class for label color picker.
+
+    @property _labelColorPickerClass
+    @type String
+    @default 'minicolors-swatch-color'
+    @private
+  */
+  _labelColorPickerClass: 'minicolors-swatch-color',
+
+  /**
+    Reference to component's template.
+  */
+  layout,
+
+  /**
+    Hash containing label text and options.
+
+    @property label
+    @type Object
+    @default null
+    @private
+  */
+  label: null,
 
   /**
     Flag: indicates whether to sign with coordinates
@@ -92,6 +102,19 @@ export default Ember.Component.extend({
     @default t('components.layers-dialogs.edit.deny-button.caption')
   */
   denyButtonCaption: t('components.layers-dialogs.edit.deny-button.caption'),
+
+  /**
+    Observer label color change
+
+    @method labelColorObserver
+  */
+  labelColorObserver: Ember.observer('label.labelColor', function() {
+    let labelColor = this.get('label.labelColor');
+    let labelColorPickerClass = this.get('_labelColorPickerClass');
+    // because 'this' indicates unclear that
+    let elem = document.getElementsByClassName(`${labelColorPickerClass}`);
+    elem[0].style.backgroundColor  = labelColor;
+  }),
 
   /**
     Initializes component.

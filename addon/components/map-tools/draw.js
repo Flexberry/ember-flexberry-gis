@@ -4,6 +4,8 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/map-tools/draw';
+import checkIntersect from '../../utils/polygon-intersect-check';
+import kinks from 'npm:@turf/kinks';
 import { translationMacro as t } from 'ember-i18n';
 
 /**
@@ -60,6 +62,69 @@ let DrawMapToolComponent = Ember.Component.extend({
       @default null
     */
     _drawToolProperties: null,
+
+    /**
+      Flag: indicates whether labelDialog has been requested
+
+      @property _labelDialogHasBeenRequested
+      @type boolean
+      @default false
+    */
+    _labelDialogHasBeenRequested: false,
+
+    /**
+      Flag: indicates whether labelDialog is visible
+
+      @property _labelDialogIsVisible
+      @type boolean
+      @default false
+    */
+    _labelDialogIsVisible: false,
+
+    /**
+      Label dialog caption.
+
+      @property labelDialogCaption
+      @type String
+      @default t('components.map-tools.draw.dialog-label.caption')
+    */
+    _labelDialogCaption: t('components.map-tools.draw.dialog-label.caption'),
+
+    /**
+      Flag: indicates whether has been chosen drawing map-tool.
+
+      @property _isDraw
+      @type Boolean
+      @default
+    */
+    _isDraw: false,
+
+    /**
+      Layer.
+
+      @property _layer
+      @type <a href="http://leaflet.github.io/Leaflet.Editable/doc/api.html">L.Layer</a>
+      @default
+    */
+    _layer: null,
+
+    /**
+      Coordinates tool's results precision
+
+      @property precision
+      @type Number
+      @default 5
+    */
+    _precision: 5,
+
+    /**
+      Count objects layer
+
+      @property _countLayer
+      @type Number
+      @default 0
+    */
+    _countLayer: 0,
 
     /**
       Reference to component's template.
@@ -371,42 +436,6 @@ let DrawMapToolComponent = Ember.Component.extend({
     drawClear: true,
 
     /**
-      Flag: indicates whether labelDialog has been requested
-
-      @property _labelDialogHasBeenRequested
-      @type boolean
-      @default false
-    */
-    _labelDialogHasBeenRequested: false,
-
-    /**
-      Flag: indicates whether labelDialog is visible
-
-      @property _labelDialogIsVisible
-      @type boolean
-      @default false
-    */
-    _labelDialogIsVisible: false,
-
-    /**
-      Label dialog caption.
-
-      @property labelDialogCaption
-      @type String
-      @default t('components.map-tools.draw.dialog-label.caption')
-    */
-    _labelDialogCaption: t('components.map-tools.draw.dialog-label.caption'),
-
-    /**
-      Flag: indicates whether has been chosen drawing map-tool.
-
-      @property _isDraw
-      @type Boolean
-      @default
-    */
-    _isDraw: false,
-
-    /**
       Tooltip's options.
 
       @property tooltipOptions
@@ -419,15 +448,6 @@ let DrawMapToolComponent = Ember.Component.extend({
     },
 
     /**
-      Layer.
-
-      @property _layer
-      @type <a href="http://leaflet.github.io/Leaflet.Editable/doc/api.html">L.Layer</a>
-      @default
-    */
-    _layer: null,
-
-    /**
       Tool's coordinate reference system (CRS).
 
       @property crs
@@ -435,24 +455,6 @@ let DrawMapToolComponent = Ember.Component.extend({
       @default null
     */
     crs: null,
-
-    /**
-      Coordinates tool's results precision
-
-      @property precision
-      @type Number
-      @default 5
-    */
-    _precision: 5,
-
-    /**
-      Count objects layer
-
-      @property _countLayer
-      @type Number
-      @default 0
-    */
-    _countLayer: 0,
 
     actions: {
       /**
@@ -507,12 +509,14 @@ let DrawMapToolComponent = Ember.Component.extend({
             let layers = featuresLayer.getLayers();
             layer = layers[layers.length - 1];
           }
-
+          
           let tooltip = layer.getTooltip();
           if (Ember.isNone(tooltip)) {
             tooltip = L.tooltip(tooltipOptions);
             layer.bindTooltip(tooltip, tooltipOptions);
           }
+
+          this._setLatLngTooltip(layer);
 
           let coord = '';
           if (_signWithCoord) {
@@ -532,10 +536,8 @@ let DrawMapToolComponent = Ember.Component.extend({
           }
 
           if (!(layer instanceof L.Marker)) {
-            layer.on('editable:editing', this._moveTooltip, [layer, this]);
+            layer.on('editable:editing', this._setLatLngTooltip, [layer, this]);
           }
-        } else {
-          console.log('qwe');
         }
       },
 
@@ -602,13 +604,31 @@ let DrawMapToolComponent = Ember.Component.extend({
     },
 
     /**
-      Move tooltip when object is edited.
+      Set latlng for label
+
+      @param {Object} layer
     */
-    _moveTooltip() {
-      let [_layer] = this;
+    _setLatLngTooltip(layer) {
+      let _layer = layer;
+
+      if (!Ember.isNone(layer.layer)) {
+        _layer = layer.layer;
+      }
       let latlng = _layer.getCenter ? _layer.getCenter() : _layer.getLatLng();
+      let type = _layer.toGeoJSON().geometry;
+      let isIntersect = !Ember.isNone(type) ? checkIntersect(type) : false;
+      if (isIntersect) {
+        let polygon = _layer.toGeoJSON();
+        let kinksPoint = kinks.default(polygon);
+        if (kinksPoint.features.length !== 0) {
+          let coordinates = kinksPoint.features[0].geometry.coordinates;
+          latlng = L.latLng(coordinates[1], coordinates[0]);
+        } else {
+          latlng = _layer.getBounds().getCenter();
+        }
+      }
       let tooltip = _layer.getTooltip();
-      tooltip.setLatLng(latlng);
+      tooltip.setLatLng(latlng); 
     },
 
     _changeLabelCoordForMarker() {
