@@ -111,6 +111,7 @@ export default Ember.Component.extend({
   labelColorObserver: Ember.observer('label.labelColor', function() {
     let labelColor = this.get('label.labelColor');
     let labelColorPickerClass = this.get('_labelColorPickerClass');
+
     // because 'this' indicates unclear that
     let elem = document.getElementsByClassName(`${labelColorPickerClass}`);
     elem[0].style.backgroundColor  = labelColor;

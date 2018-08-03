@@ -629,6 +629,7 @@ let DrawMapToolComponent = Ember.Component.extend({
         }
 
       }
+
       let tooltip = _layer.getTooltip();
       tooltip.setLatLng(latlng);
     },
