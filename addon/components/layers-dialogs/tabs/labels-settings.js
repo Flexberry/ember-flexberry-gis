@@ -1,36 +1,11 @@
 import Ember from 'ember';
 import layout from '../../../templates/components/layers-dialogs/tabs/labels-settings';
-import {
-  translationMacro as t
-} from 'ember-i18n';
-
-/**
-  Constants representing default print/eport options.
-*/
-const defaultOptions = {
-  captionFontFamily: 'Times New Roman',
-  captionFontSize: '12',
-  captionFontColor: '#000000',
-  captionFontWeight: 'normal',
-  captionFontStyle: 'normal',
-  captionFontDecoration: 'none',
-  captionFontAlign: 'left'
-};
 
 export default Ember.Component.extend({
   /**
     Reference to component's template.
   */
   layout,
-
-  /**
-    Flag: indicates whether to sign map objects or not.
-
-    @property _signMapObjects
-    @type Boolean
-    @default false
-  */
-  _signMapObjects: false,
 
   /**
     "signMapObjectsLabel" checkbox label locale key.
@@ -108,16 +83,6 @@ export default Ember.Component.extend({
   _selectedField: undefined,
 
   /**
-    Contains label settings string.
-
-    @property _labelSettingsString
-    @type String
-    @default undefined
-    @private
-  */
-  _labelSettingsString: undefined,
-
-  /**
     Label
 
     @property _label
@@ -165,16 +130,6 @@ export default Ember.Component.extend({
   _availableFontSizes: null,
 
   /**
-    Hash containing font options.
-
-    @property _options
-    @type Object
-    @default null
-    @private
-  */
-  _options: null,
-
-  /**
     Hash containing location label.
 
     @property _locationCaption
@@ -195,16 +150,6 @@ export default Ember.Component.extend({
   _layerType: null,
 
   /**
-    Hash containing location of the point layer.
-
-    @property _layerType
-    @type String
-    @default '3'
-    @private
-  */
-  _locationPoint: '3',
-
-  /**
     Hash containing location label.
 
     @property _scaleRangeCaption
@@ -215,26 +160,6 @@ export default Ember.Component.extend({
   _scaleRangeCaption: 'components.layers-dialogs.settings.group.tab.labels-settings.scale-range-caption',
 
   /**
-    Hash containing min scale value.
-
-    @property _minScaleRange
-    @type String
-    @default null
-    @private
-  */
-  _minScaleRange: null,
-
-  /**
-    Hash containing max scale value.
-
-    @property _maxScaleRange
-    @type String
-    @default null
-    @private
-  */
-  _maxScaleRange: null,
-
-  /**
     Containing available location of the line layer.
 
     @property _availableLineLocation
@@ -242,28 +167,35 @@ export default Ember.Component.extend({
     @default null
     @private
   */
-  _availableLineLocation: null,
+  _availableLineLocation: Ember.computed('i18n.locale', function() {
+    let result = [];
+    let i18n = this.get('i18n');
+    let over = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.over`).toString();
+    let along = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.along`).toString();
+    let under = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.under`).toString();
+    result = Ember.A([over, along, under]);
+    return result;
+  }),
 
   /**
-    Containing selecting location of the line layer.
+    Containing labels layer.
 
-    @property _lineLocationSelect
-    @type String
+    @property _labelsLayer
+    @type Object[]
     @default null
     @private
   */
-  _lineLocationSelect: 'over',
-
   _labelsLayer: null,
 
   /**
-    Flag, indicates visible or not current labels on map.
+    Containing array of strings and feature properies.
 
-    @property visibility
-    @type Boolean
+    @property _arrLabelString
+    @type Object[]
     @default null
+    @private
   */
-  _visib: null,
+  _arrLabelString: null,
 
   /**
     Initializes component.
@@ -291,14 +223,6 @@ export default Ember.Component.extend({
 
     // Same situation with available font sizes.
     this.set('_availableFontSizes', Ember.A(['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '26', '28', '36', '48', '72']));
-
-    this.set('_options', Ember.$.extend(true, {}, defaultOptions));
-
-    let above = t('components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.along');
-    let over = t('components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.over').toString();
-    let under = t('components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.under');
-
-    this.set('_availableLineLocation', Ember.A(['over', 'along', 'under']));
   },
 
   /**
@@ -362,7 +286,7 @@ export default Ember.Component.extend({
   */
   _pasteIntoLabelString(pasteString, caretShift) {
     let textarea = this.$('.edit-label-textarea')[0];
-    let labelString = this.get('_labelSettingsString') || '';
+    let labelString = this.get('value.labelSettingsString') || '';
     let newLabelString = '';
     let caretPosition = 0;
     if (labelString.length > 0) {
@@ -374,7 +298,7 @@ export default Ember.Component.extend({
     }
 
     caretPosition = caretPosition + (caretShift || 0);
-    this.set('_labelSettingsString', newLabelString);
+    this.set('value.labelSettingsString', newLabelString);
     Ember.run.scheduleOnce('afterRender', this, function () {
       textarea.focus();
       textarea.setSelectionRange(caretPosition, caretPosition);
@@ -390,6 +314,12 @@ export default Ember.Component.extend({
     this.getAllProperties();
   },
 
+  /**
+    Create array of strings and feature properies.
+
+    @method _parseString
+    @param {String} expression String for parsing
+  */
   _parseString(expression) {
     if (Ember.isBlank(expression)) {
       return null;
@@ -401,36 +331,60 @@ export default Ember.Component.extend({
     return expResult ?  expResult : null;
   },
 
+  /**
+    Create label string for every object of layer.
+
+    @method _createStringLabel
+    @param {Array} expResult Create array of strings and feature properies
+    @param {Object} labelsLayer Labels layer
+  */
   _createStringLabel(expResult, labelsLayer) {
     let _availableLayerProperties = this.get('_availableLayerProperties');
     let isProp = false;
     var self = this;
     let leafletObject = this.get('_leafletObject');
     let style = Ember.String.htmlSafe(
-      `font-family: ${this.get('_options.captionFontFamily')}; ` +
-      `font-size: ${this.get('_options.captionFontSize')}px; ` +
-      `font-weight: ${this.get('_options.captionFontWeight')}; ` +
-      `font-style: ${this.get('_options.captionFontStyle')}; ` +
-      `text-decoration: ${this.get('_options.captionFontDecoration')}; ` +
-      `color: ${this.get('_options.captionFontColor')}; ` +
-      `text-align: ${this.get('_options.captionFontAlign')}; `);
+      `font-family: ${this.get('value.options.captionFontFamily')}; ` +
+      `font-size: ${this.get('value.options.captionFontSize')}px; ` +
+      `font-weight: ${this.get('value.options.captionFontWeight')}; ` +
+      `font-style: ${this.get('value.options.captionFontStyle')}; ` +
+      `text-decoration: ${this.get('value.options.captionFontDecoration')}; ` +
+      `color: ${this.get('value.options.captionFontColor')}; ` +
+      `text-align: ${this.get('value.options.captionFontAlign')}; `);
 
+    let leafletMap = this.get('leafletMap');
+    let bbox = leafletMap.getBounds();
     leafletObject.eachLayer(function(layer) {
-      let label = '';
-      expResult.forEach(function(element) {
-        for (let key in _availableLayerProperties) {
-          if (key === element && !Ember.isNone(layer.feature.properties[key]) && !Ember.isBlank(layer.feature.properties[key])) {
-            label += layer.feature.properties[key];
-            isProp = true;
+      if (!layer._layers && !layer._label && bbox.contains(layer.getBounds ? layer.getBounds() : layer.getLatLng())) {
+        let label = '';
+        expResult.forEach(function(element) {
+          for (let key in _availableLayerProperties) {
+            if (key === element && !Ember.isNone(layer.feature.properties[key]) && !Ember.isBlank(layer.feature.properties[key])) {
+              label += layer.feature.properties[key];
+              isProp = true;
+            }
           }
-        }
-        !isProp ? label += element : '';
-        isProp = false;
-      });
-      self._createLabel(label, layer, style, labelsLayer);
+          label += !isProp ?  element : '';
+          isProp = false;
+        });
+        self._createLabel(label, layer, style, labelsLayer);
+      }
+      if (!layer._layers && layer._label && !bbox.contains(layer.getBounds ? layer.getBounds() : layer.getLatLng())) {
+        labelsLayer.removeLayer(layer._label);
+        layer._label = null;
+      }
     });
   },
 
+  /**
+    Create label for object of layer.
+
+    @method _createLabel
+    @param {String} text
+    @param {Object} layer
+    @param {String} style
+    @param {Object} labelsLayer
+  */
   _createLabel(text, layer, style, labelsLayer) {
     let _layerType = this.get('_layerType');
     let lType = layer.toGeoJSON().geometry.type;
@@ -466,8 +420,8 @@ export default Ember.Component.extend({
     if(_layerType === 'line') {
       latlng = L.latLng(layer._bounds._northEast.lat, layer._bounds._southWest.lng);
       let options = {
-        fillColor: this.get('_options.captionFontColor'),
-        align: this.get('_options.captionFontAlign')
+        fillColor: this.get('value.options.captionFontColor'),
+        align: this.get('value.options.captionFontAlign')
       };
       this._addTextForLine(layer, text, options, style);
       iconWidth = 12;
@@ -484,14 +438,21 @@ export default Ember.Component.extend({
       zIndexOffset: 1000
     });
     labelsLayer.addLayer(label);
+    layer._label = label;
   },
 
+  /**
+    Set position for point.
+
+    @method _setPositionPoint
+    @param {Number} width
+  */
   _setPositionPoint(width) {
     let stylePoint = '';
     let shiftHor = Math.round(width / 2);
     let shiftVerTop = '-60px;';
     let shiftVerBottom = '30px;';
-    switch (this.get('_locationPoint')) {
+    switch (this.get('value.location.locationPoint')) {
       case '1':
         stylePoint = 'margin-right: ' + shiftHor + 'px; margin-top: ' + shiftVerTop;
         break;
@@ -526,6 +487,17 @@ export default Ember.Component.extend({
     return stylePoint;
   },
 
+  /**
+    Get text width for line object.
+
+    @method _getWidthText
+    @param {String} text
+    @param {String} font
+    @param {String} fontSize
+    @param {String} fontWeight
+    @param {String} fontStyle
+    @param {String} textDecoration
+  */
   _getWidthText(text, font, fontSize, fontWeight, fontStyle, textDecoration) {
     let div = document.createElement('div');
     div.style.position = 'absolute';
@@ -547,6 +519,13 @@ export default Ember.Component.extend({
     return clientWidth;
   },
 
+  /**
+    Set label for line object
+
+    @method _setLabelLine
+    @param {Object} layer
+    @param {Object} svg
+  */
   _setLabelLine(layer, svg) {
     let latlngArr = layer.getLatLngs();
     let begCoord = layer._map.latLngToLayerPoint(latlngArr[0]);
@@ -593,15 +572,22 @@ export default Ember.Component.extend({
     svg.setAttribute('height', maxY+'px');
   },
 
+  /**
+    Set align for line object's label
+
+    @method _setAlignForLine
+    @param {Object} layer
+    @param {Object} svg
+  */
   _setAlignForLine(layer, text, align, textNode) {
     let pathLength = layer._path.getTotalLength();
     let textLength = this._getWidthText(
       text, 
-      this.get('_options.captionFontFamily'),
-      this.get('_options.captionFontSize'),
-      this.get('_options.captionFontWeight'),
-      this.get('_options.captionFontStyle'),
-      this.get('_options.captionFontDecoration')
+      this.get('value.options.captionFontFamily'),
+      this.get('value.options.captionFontSize'),
+      this.get('value.options.captionFontWeight'),
+      this.get('value.options.captionFontStyle'),
+      this.get('value.options.captionFontDecoration')
     );
 
     if (align === 'center') {
@@ -617,6 +603,15 @@ export default Ember.Component.extend({
     }
   },
 
+  /**
+    Add text for line object
+
+    @method _addTextForLine
+    @param {Object} layer
+    @param {String} text
+    @param {Object} options
+    @param {String} style
+  */
   _addTextForLine(layer, text, options, style) {
     let lsvg = L.svg();
     lsvg._initContainer();
@@ -649,12 +644,15 @@ export default Ember.Component.extend({
     let textNode = L.SVG.create('text'),
         textPath = L.SVG.create('textPath');
     let dy =  0;
-    let sizeFont = parseInt(this.get('_options.captionFontSize'));
-    let _lineLocationSelect = this.get('_lineLocationSelect');
-    if (_lineLocationSelect === 'along') {
+    let sizeFont = parseInt(this.get('value.options.captionFontSize'));
+    let i18n = this.get('i18n');
+    let along = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.along`).toString();
+    let under = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.under`).toString();
+    let _lineLocationSelect = this.get('value.location.lineLocationSelect');
+    if (_lineLocationSelect === along) {
       dy = Math.ceil(sizeFont/4) - parseInt(layer._path.getAttribute('stroke-width')) || 0;
     }
-    if (_lineLocationSelect === 'under') {
+    if (_lineLocationSelect === under) {
       dy = Math.ceil(sizeFont/2);
     }
 
@@ -681,6 +679,11 @@ export default Ember.Component.extend({
     this._setAlignForLine(layer, text, options.align, textNode);
   },
 
+  /**
+    Update position for line object's label 
+
+    @method _updatePositionLabelForLine
+  */
   _updatePositionLabelForLine() {
     let _this = this;
     let leafletObject = _this.get('_leafletObject');
@@ -692,6 +695,7 @@ export default Ember.Component.extend({
         let path = svg.firstChild.firstChild;
         path.setAttribute('d', d);
         let id = path.getAttribute('id');
+
         $('path#'+id).attr('d', d);
         $('svg#svg-'+id).attr('width', svg.getAttribute('width'));
         $('svg#svg-'+id).attr('height', svg.getAttribute('height'));
@@ -706,46 +710,51 @@ export default Ember.Component.extend({
     });
   },
 
-  _setVisibilityScaleRange() {
-    //let _this = this;
-    let scale = parseInt($('.map-control-scalebar-ratiomenu>text')[0].innerHTML.split(':')[1]);
-    let minScaleRange = this.get('_minScaleRange');
-    let maxScaleRange = this.get('_maxScaleRange');
-    let visibility = true;
-    if (Ember.isBlank(minScaleRange) && Ember.isNone(minScaleRange)
-        && Ember.isBlank(maxScaleRange) && Ember.isNone(maxScaleRange)) visibility = true;
-    else {
-      if (!Ember.isBlank(minScaleRange) && !Ember.isNone(minScaleRange)
-          && !Ember.isBlank(maxScaleRange) && !Ember.isNone(maxScaleRange)
-          && scale >= minScaleRange && scale < maxScaleRange) visibility = true;
-      if (!Ember.isBlank(minScaleRange) && !Ember.isNone(minScaleRange)
-          && Ember.isBlank(maxScaleRange) && Ember.isNone(maxScaleRange)
-          && scale >= minScaleRange) visibility = true;
-      if (!Ember.isBlank(maxScaleRange) && !Ember.isNone(maxScaleRange)
-          && Ember.isBlank(minScaleRange) && Ember.isNone(minScaleRange)
-          && scale < maxScaleRange) visibility = true;
-      else visibility = false;
-    }
-    console.log('_setVisibilityScaleRange');
-    console.log(visibility);
-    
-    console.log(this.get('_visib'));
-    let leafletObject = this.get('_leafletObject');
-    leafletObject._isVisibleLabel = visibility;
-    console.log(this.get('_leafletObject'));
-    if (this.get('_visib') !== visibility) {
-      this.set('_visib', visibility);
-    }
-    console.log('set');
-    console.log(this.get('_visib'));
-  },
-  
-  _showLabels() {
-    let labelSettingsString = this.get('_labelSettingsString');
-    let arr = this._parseString(labelSettingsString);
-    let leafletMap = this.get('leafletMap');
+  /**
+    Set visibility for scale range
 
-    if (!Ember.isNone(arr)) {
+    @method _setVisibilityScaleRange
+  */
+  _setVisibilityScaleRange() {
+    let _this = this;
+    let scale = parseInt($('.map-control-scalebar-ratiomenu>text')[0].innerHTML.split(':')[1]);
+    let minScaleRange = _this.get('value.scaleRange.minScaleRange');
+    let maxScaleRange = _this.get('value.scaleRange.maxScaleRange');
+    let visibility = false;
+    if ((Ember.isBlank(minScaleRange) || Ember.isNone(minScaleRange)) && (Ember.isBlank(maxScaleRange) || Ember.isNone(maxScaleRange))) {
+      visibility = true;
+    }
+    else {
+      if (!Ember.isBlank(minScaleRange) && !Ember.isNone(minScaleRange) && !Ember.isBlank(maxScaleRange) && !Ember.isNone(maxScaleRange) && scale >= minScaleRange && scale < maxScaleRange) {
+        visibility = true;
+      }
+      if (!Ember.isBlank(minScaleRange) && !Ember.isNone(minScaleRange) && (Ember.isBlank(maxScaleRange) || Ember.isNone(maxScaleRange)) && scale >= minScaleRange) {
+        visibility = true;
+      }
+      if (!Ember.isBlank(maxScaleRange) && !Ember.isNone(maxScaleRange) && (Ember.isBlank(minScaleRange) || Ember.isNone(minScaleRange)) && scale < maxScaleRange) {
+        visibility = true;
+      }
+    }
+
+    if (visibility) {
+      _this._addLabelsToLeafletContainer();
+    } else {
+      _this._removeLabelsFromLeafletContainer();
+    }
+
+  },
+
+  /**
+    Show lables
+
+    @method _showLabels
+  */
+  _showLabels() {
+    let labelSettingsString = this.get('value.labelSettingsString');
+    let arrLabelString = this._parseString(labelSettingsString);
+    this.set('_arrLabelString', arrLabelString);
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(arrLabelString)) {
       let labelsLayer =  this.get('_labelsLayer');
       let leafletObject = this.get('_leafletObject');
 
@@ -754,29 +763,11 @@ export default Ember.Component.extend({
       }
 
       labelsLayer = new L.LayerGroup();
-      this._createStringLabel(arr, labelsLayer);
+      this._createStringLabel(arrLabelString, labelsLayer);
       this.set('_labelsLayer', labelsLayer);
-      console.log('_showLabels');
-      console.log(labelsLayer);
-      //leafletObject.addLayer(labelsLayer);
       if (this.get('_layerType') === 'line') {
         leafletMap.on('zoomend', this._updatePositionLabelForLine, this);
       }
-    }
-  },
-
-  /**
-    Sets labels's visibility.
-
-    @method _setLabelsVisibility
-    @private
-  */
-  _setLabelsVisibility() {
-    console.log('_setLabelsVisibility');
-    if (this.get('_visib')) {
-      this._addLabelsToLeafletContainer();
-    } else {
-      this._removeLabelsFromLeafletContainer();
     }
   },
 
@@ -789,21 +780,18 @@ export default Ember.Component.extend({
   _addLabelsToLeafletContainer() {
     let labelsLayer = this.get('_labelsLayer');
     let leafletObject = this.get('_leafletObject');
-    console.log('Do');
-    console.log(labelsLayer);
-    console.log(leafletObject);
     if (Ember.isNone(leafletObject) || leafletObject.hasLayer(labelsLayer)) {
-      console.log('est');
       return;
     }
     if (Ember.isNone(labelsLayer) && !Ember.isNone(leafletObject)) {
       this._showLabels();
       labelsLayer = this.get('_labelsLayer');
-      
     }
-    console.log('Posle');
-    console.log(labelsLayer);
+
     leafletObject.addLayer(labelsLayer);
+    if (this.get('_layerType') === 'line') {
+      this._updatePositionLabelForLine();
+    }
   },
 
   /**
@@ -816,35 +804,27 @@ export default Ember.Component.extend({
     let labelsLayer = this.get('_labelsLayer');
     let leafletObject = this.get('_leafletObject');
     if (Ember.isNone(leafletObject) || Ember.isNone(labelsLayer) || !leafletObject.hasLayer(labelsLayer)) {
-      console.log('net');
       return;
     }
-    console.log('remove');
-    console.log(labelsLayer);
+
     leafletObject.removeLayer(labelsLayer);
   },
 
   /**
-    Observes and handles changes in 'visibility' property.
-    Switches labels's visibility.
+    Show labels when map moving
 
-    @method visibilityDidChange
-    @private
+    @method _showLabelsMovingMap
   */
-  _visibilityDidChange: Ember.observer('_visib', function () {
-    console.log('_visibilityDidChange');
-    this._setLabelsVisibility();
-  }),
+  _showLabelsMovingMap() {
+    let _this = this;
+    let labelsLayer = _this.get('_labelsLayer');
+    let arrLabelString = this.get('_arrLabelString');
+
+    _this._createStringLabel(arrLabelString, labelsLayer);
+    _this._setVisibilityScaleRange();
+  },
 
   actions: {
-    /**
-      Handles callback-checkbox change.
-      @method actions.isCallbackCheckboxDidChange
-    */
-    signMapObjectsDidChange() {
-      //this.set('signMapObjects', 'value.featuresPropertiesSettings.signMapObjects', );
-    },
-
     /**
       This action is called when an item in Fields list is pressed.
 
@@ -852,7 +832,7 @@ export default Ember.Component.extend({
       @param {String} text Selected field
     */
     fieldClick(text) {
-      if (this.get('_selectedField') !== text && this.get('_signMapObjects')) {
+      if (this.get('_selectedField') !== text && this.get('value.signMapObjects')) {
         this.set('values', Ember.A());
         this.set('_selectedField', text);
       }
@@ -865,7 +845,7 @@ export default Ember.Component.extend({
       @param {String} value
     */
     pasteFieldValue(value) {
-      if (this.get('_signMapObjects')) {
+      if (this.get('value.signMapObjects')) {
         if (Ember.isNone(value)) {
           this._pasteIntoLabelString('NULL');
           return;
@@ -883,19 +863,17 @@ export default Ember.Component.extend({
     */
     applyLabel() {
       let leafletMap = this.get('leafletMap');
+      this._showLabels();
       this._setVisibilityScaleRange();
-      //this._showLabels();
-      leafletMap.on('zoomend', this._setVisibilityScaleRange, this);
-     /* if (!this._setScaleRange()) {
-        leafletMap.on('zoomend', this._showLabels, this);
-      }*/
-      /*if (this.get('_layerType') === 'line') {
-        if (Ember.isNone(labelsLayer)) {
+      leafletMap.on('moveend', this._showLabelsMovingMap, this);
+      let minScaleRange = this.get('value.scaleRange.minScaleRange');
+      let maxScaleRange = this.get('value.scaleRange.maxScaleRange');
+      if ((Ember.isBlank(minScaleRange) || Ember.isNone(minScaleRange)) && (Ember.isBlank(maxScaleRange) || Ember.isNone(maxScaleRange))) {
+        return;
+      } else {
+        leafletMap.on('zoom', this._setVisibilityScaleRange, this);
+      }
 
-        } else {
-          leafletMap.on('zoomend', this._updatePositionLabelForLine, this);
-        }
-      }*/
     },
 
     /**
@@ -904,7 +882,7 @@ export default Ember.Component.extend({
       @method actions.clearLabel
     */
     clearLabel() {
-      this.set('_labelSettingsString', undefined);
+      this.set('value.labelSettingsString', undefined);
     },
 
     /**
@@ -913,8 +891,8 @@ export default Ember.Component.extend({
       @method actions.onBoldFontButtonClick
     */
     onBoldFontButtonClick() {
-      let previousFontWeight = this.get('_options.captionFontWeight');
-      this.set('_options.captionFontWeight', previousFontWeight !== 'bold' ? 'bold' : 'normal');
+      let previousFontWeight = this.get('value.options.captionFontWeight');
+      this.set('value.options.captionFontWeight', previousFontWeight !== 'bold' ? 'bold' : 'normal');
     },
 
     /**
@@ -923,8 +901,8 @@ export default Ember.Component.extend({
       @method actions.onItalicFontButtonClick
     */
     onItalicFontButtonClick() {
-      let previousFontWeight = this.get('_options.captionFontStyle');
-      this.set('_options.captionFontStyle', previousFontWeight !== 'italic' ? 'italic' : 'normal');
+      let previousFontWeight = this.get('value.options.captionFontStyle');
+      this.set('value.options.captionFontStyle', previousFontWeight !== 'italic' ? 'italic' : 'normal');
     },
 
     /**
@@ -933,8 +911,8 @@ export default Ember.Component.extend({
       @method actions.onUnderlineFontButtonClick
     */
     onUnderlineFontButtonClick() {
-      let previousFontWeight = this.get('_options.captionFontDecoration');
-      this.set('_options.captionFontDecoration', previousFontWeight !== 'underline' ? 'underline' : 'none');
+      let previousFontWeight = this.get('value.options.captionFontDecoration');
+      this.set('value.options.captionFontDecoration', previousFontWeight !== 'underline' ? 'underline' : 'none');
     },
 
     /**
@@ -943,8 +921,8 @@ export default Ember.Component.extend({
       @method actions.onLeftFontButtonClick
     */
     onLeftFontButtonClick() {
-      let previousFontWeight = this.get('_options.captionFontAlign');
-      this.set('_options.captionFontAlign', previousFontWeight !== 'left' ? 'left' : 'auto');
+      let previousFontWeight = this.get('value.options.captionFontAlign');
+      this.set('value.options.captionFontAlign', previousFontWeight !== 'left' ? 'left' : 'auto');
     },
 
     /**
@@ -953,8 +931,8 @@ export default Ember.Component.extend({
       @method actions.onCenterFontButtonClick
     */
     onCenterFontButtonClick() {
-      let previousFontWeight = this.get('_options.captionFontAlign');
-      this.set('_options.captionFontAlign', previousFontWeight !== 'center' ? 'center' : 'auto');
+      let previousFontWeight = this.get('value.options.captionFontAlign');
+      this.set('value.options.captionFontAlign', previousFontWeight !== 'center' ? 'center' : 'auto');
     },
 
     /**
@@ -963,8 +941,8 @@ export default Ember.Component.extend({
       @method actions.onRightFontButtonClick
     */
     onRightFontButtonClick() {
-      let previousFontWeight = this.get('_options.captionFontAlign');
-      this.set('_options.captionFontAlign', previousFontWeight !== 'right' ? 'right' : 'auto');
+      let previousFontWeight = this.get('value.options.captionFontAlign');
+      this.set('value.options.captionFontAlign', previousFontWeight !== 'right' ? 'right' : 'auto');
     },
 
     /**
@@ -973,7 +951,7 @@ export default Ember.Component.extend({
       @method actions.onCaptionFontColorChange
     */
     onCaptionFontColorChange(e) {
-      this.set('_options.captionFontColor', e.newValue);
+      this.set('value.options.captionFontColor', e.newValue);
     },
 
     /**
@@ -982,7 +960,7 @@ export default Ember.Component.extend({
       @method actions.onCaptionFontColorChange
     */
     onLocationPointButtonClick(num) {
-      this.set('_locationPoint', num);
+      this.set('value.location.locationPoint', num);
     }
   }
 });

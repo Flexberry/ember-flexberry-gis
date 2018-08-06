@@ -50,8 +50,8 @@ export default {
         'location-caption': 'Location',
         'scale-range-caption': 'Visibility within scale',
         'availableLineLocation': {
-          'above': 'Over the line',
-          'over': 'Along the line',
+          'over': 'Over the line',
+          'along': 'Along the line',
           'under': 'Under the line'
         }
       }

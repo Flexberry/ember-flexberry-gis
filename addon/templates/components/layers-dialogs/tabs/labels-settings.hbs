@@ -1,9 +1,8 @@
 <div class="field">
   {{flexberry-checkbox
-    value=_signMapObjects
+    value=value.signMapObjects
     label=(t _signMapObjectsLabel)
     class=_signMapObjectsClass
-    change=(action "signMapObjectsDidChange")
   }}
 </div>
 <div class="{{if _leafletObjectIsLoading "loading"}}">
@@ -31,7 +30,7 @@
 <div class="field">
   <label>{{t _label}}</label>
   {{textarea
-    value=_labelSettingsString
+    value=value.labelSettingsString
     class="fluid edit-label-textarea"
   }}
 </div>
@@ -55,38 +54,38 @@
         {{flexberry-dropdown
           class="fluid"
           items=_availableFontFamilies
-          value=_options.captionFontFamily
+          value=value.options.captionFontFamily
         }}
       </div>
       <div class="two wide column">
         {{flexberry-dropdown
           class="fluid"
           items=_availableFontSizes
-          value=_options.captionFontSize
+          value=value.options.captionFontSize
         }}
       </div>
       <div class="three wide column">
         <div class="ui small fluid buttons">
           {{flexberry-button
             iconClass="bold icon"
-            class=(if (eq _options.captionFontWeight "bold") "active" "")
+            class=(if (eq value.options.captionFontWeight "bold") "active" "")
             click=(action "onBoldFontButtonClick")
           }}
           {{flexberry-button
             iconClass="italic icon"
-            class=(if (eq _options.captionFontStyle "italic") "active" "")
+            class=(if (eq value.options.captionFontStyle "italic") "active" "")
             click=(action "onItalicFontButtonClick")
           }}
           {{flexberry-button
             iconClass="underline icon"
-            class=(if (eq _options.captionFontDecoration "underline") "active" "")
+            class=(if (eq value.options.captionFontDecoration "underline") "active" "")
             click=(action "onUnderlineFontButtonClick")
           }}
         </div>
       </div>
       <div class="two wide column">
         {{flexberry-colorpicker
-          value=_options.captionFontColor
+          value=value.options.captionFontColor
           change=(action "onCaptionFontColorChange")
         }}
       </div>
@@ -94,17 +93,17 @@
         <div class="ui small fluid buttons">
           {{flexberry-button
             iconClass="align left icon"
-            class=(if (eq _options.captionFontAlign "left") "active" "")
+            class=(if (eq value.options.captionFontAlign "left") "active" "")
             click=(action "onLeftFontButtonClick")
           }}
           {{flexberry-button
             iconClass="align center icon"
-            class=(if (eq _options.captionFontAlign "center") "active" "")
+            class=(if (eq value.options.captionFontAlign "center") "active" "")
             click=(action "onCenterFontButtonClick")
           }}
           {{flexberry-button
             iconClass="align right icon"
-            class=(if (eq _options.captionFontAlign "right") "active" "")
+            class=(if (eq value.options.captionFontAlign "right") "active" "")
             click=(action "onRightFontButtonClick")
           }}
         </div>
@@ -118,17 +117,17 @@
     <div class="row ui small buttons">
       {{flexberry-button
         iconClass="closed captioning icon"
-        class=(if (eq _locationPoint "1") "active" "")
+        class=(if (eq value.location.locationPoint "1") "active" "")
         click=(action "onLocationPointButtonClick" "1")
       }}
       {{flexberry-button
         iconClass="closed captioning icon"
-        class=(if (eq _locationPoint "2") "active" "")
+        class=(if (eq value.location.locationPoint "2") "active" "")
         click=(action "onLocationPointButtonClick" "2")
       }}
       {{flexberry-button
         iconClass="closed captioning icon"
-        class=(if (eq _locationPoint "3") "active" "")
+        class=(if (eq value.location.locationPoint "3") "active" "")
         click=(action "onLocationPointButtonClick" "3")
       }}
     </div>
@@ -136,17 +135,17 @@
       <div class="ui small buttons">
       {{flexberry-button
         iconClass="closed captioning icon"
-        class=(if (eq _locationPoint "4") "active" "")
+        class=(if (eq value.location.locationPoint "4") "active" "")
         click=(action "onLocationPointButtonClick" "4")
       }}
       {{flexberry-button
         iconClass="circle icon"
-        class=(if (eq _locationPoint "5") "active" "")
+        class=(if (eq value.location.locationPoint "5") "active" "")
         click=(action "onLocationPointButtonClick" "5")
       }}
       {{flexberry-button
         iconClass="closed captioning icon"
-        class=(if (eq _locationPoint "6") "active" "")
+        class=(if (eq value.location.locationPoint "6") "active" "")
         click=(action "onLocationPointButtonClick" "6")
       }}
       </div>
@@ -154,17 +153,17 @@
     <div class="row ui small buttons">
       {{flexberry-button
         iconClass="closed captioning icon"
-        class=(if (eq _locationPoint "7") "active" "")
+        class=(if (eq value.location.locationPoint "7") "active" "")
         click=(action "onLocationPointButtonClick" "7")
       }}
       {{flexberry-button
         iconClass="closed captioning icon"
-        class=(if (eq _locationPoint "8") "active" "")
+        class=(if (eq value.location.locationPoint "8") "active" "")
         click=(action "onLocationPointButtonClick" "8")
       }}
       {{flexberry-button
         iconClass="closed captioning icon"
-        class=(if (eq _locationPoint "9") "active" "")
+        class=(if (eq value.location.locationPoint "9") "active" "")
         click=(action "onLocationPointButtonClick" "9")
       }}
     </div>
@@ -175,7 +174,7 @@
     <label>{{t _locationCaption}}</label>
     {{flexberry-dropdown
       items=_availableLineLocation
-      value=_lineLocationSelect
+      value=value.location.lineLocationSelect
     }}
   </div>
 {{/if}}
@@ -187,14 +186,14 @@
         <label>Min</label>
         {{flexberry-textbox
           class="fluid"
-          value=_minScaleRange
+          value=value.scaleRange.minScaleRange
         }}
       </div>
       <div class="eight wide column">
         <label>Max</label>
         {{flexberry-textbox
           class="fluid"
-          value=_maxScaleRange
+          value=value.scaleRange.maxScaleRange
         }}
       </div>
     </div>

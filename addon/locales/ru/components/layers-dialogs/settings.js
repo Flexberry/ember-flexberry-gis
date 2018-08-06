@@ -52,8 +52,8 @@ export default {
         'location-caption': 'Расположение',
         'scale-range-caption': 'Видимость в пределах масштаба',
         'availableLineLocation': {
-          'above': 'Над линией',
-          'over': 'Поверх линии',
+          'over': 'Над линией',
+          'along': 'Поверх линии',
           'under': 'Под линией'
         }
       }

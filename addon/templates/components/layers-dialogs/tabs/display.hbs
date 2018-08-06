@@ -96,7 +96,7 @@
       {{#if _labelsSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "label-tab") "active"}}" data-tab="label-tab">
           {{layers-dialogs/tabs/labels-settings
-            value=_layer.settings.displaySettings
+            value=_layer.settings.labelSettings
             layerType=_layer.type
             leafletObjectMethod=_layer.leafletObjectGetter
             leafletMap = leafletMap
