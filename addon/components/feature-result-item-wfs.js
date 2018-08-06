@@ -1,3 +1,7 @@
+/**
+  @module ember-flexberry-gis
+*/
+
 import Ember from 'ember';
 import FeatureResultItemComponent from './feature-result-item';
 import layout from '../templates/components/feature-result-item-wfs';
