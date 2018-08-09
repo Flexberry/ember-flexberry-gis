@@ -98,7 +98,7 @@ export default Ember.Component.extend({
     @type String
     @default 'filter-operator-button'
   */
-  operatorButtonClass: 'filter-operator-button',
+  _operatorButtonClass: 'filter-operator-button',
 
   /**
     Class for operator buttons.
@@ -196,6 +196,12 @@ export default Ember.Component.extend({
     @private
   */
   _arrLabelString: null,
+
+  _error: Ember.computed('_leafletObject', 'leafletMap', function() {
+    let leafletObject = this.get('_leafletObject');
+    let leafletMap = this.get('leafletMap');
+    return !leafletMap.hasLayer(leafletObject);
+  }),
 
   /**
     Initializes component.
@@ -312,6 +318,11 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this.getAllProperties();
+    if (this.get('value.signMapObjects')) {
+      this.$('textarea').removeAttr('readonly');
+    } else {
+      this.$('textarea').attr('readonly', true);
+    }
   },
 
   /**
@@ -342,7 +353,7 @@ export default Ember.Component.extend({
     let _availableLayerProperties = this.get('_availableLayerProperties');
     let isProp = false;
     var self = this;
-    let leafletObject = this.get('_leafletObject');
+    let leafletObject = this.get('_leafletObject') || this._targetObject._leafletObject;
     let style = Ember.String.htmlSafe(
       `font-family: ${this.get('value.options.captionFontFamily')}; ` +
       `font-size: ${this.get('value.options.captionFontSize')}px; ` +
@@ -352,10 +363,10 @@ export default Ember.Component.extend({
       `color: ${this.get('value.options.captionFontColor')}; ` +
       `text-align: ${this.get('value.options.captionFontAlign')}; `);
 
-    let leafletMap = this.get('leafletMap');
+    let leafletMap = this.get('leafletMap') || this._targetObject.leafletMap;
     let bbox = leafletMap.getBounds();
     leafletObject.eachLayer(function(layer) {
-      if (!layer._layers && !layer._label && bbox.contains(layer.getBounds ? layer.getBounds() : layer.getLatLng())) {
+      if (!layer._layers && !layer._label && bbox.contains(layer.getBounds ? layer.getBounds() : layer.getLatLng()) && leafletMap.hasLayer(layer)) {
         let label = '';
         expResult.forEach(function(element) {
           for (let key in _availableLayerProperties) {
@@ -364,11 +375,13 @@ export default Ember.Component.extend({
               isProp = true;
             }
           }
+
           label += !isProp ?  element : '';
           isProp = false;
         });
         self._createLabel(label, layer, style, labelsLayer);
       }
+
       if (!layer._layers && layer._label && !bbox.contains(layer.getBounds ? layer.getBounds() : layer.getLatLng())) {
         labelsLayer.removeLayer(layer._label);
         layer._label = null;
@@ -388,19 +401,22 @@ export default Ember.Component.extend({
   _createLabel(text, layer, style, labelsLayer) {
     let _layerType = this.get('_layerType');
     let lType = layer.toGeoJSON().geometry.type;
+
     // because sometimes it happens, although it should not be
     if ((lType === 'Point' || lType === 'MultiPoint') && _layerType !== 'point') {
       _layerType = 'point';
     }
+
     if ((lType === 'LineString' || lType === 'MultiLineString') && _layerType !== 'line') {
       _layerType = 'line';
     }
+
     if (lType === 'Polygon' || lType === 'MultiPolygon') {
       _layerType = 'polygon';
     }
 
     let latlng = null;
-    let ctx = layer._renderer ? layer._renderer._ctx : document.getElementsByTagName('canvas')[0].getContext('2d');    
+    let ctx = layer._renderer ? layer._renderer._ctx : document.getElementsByTagName('canvas')[0].getContext('2d');
     let widthText = ctx ? ctx.measureText(text).width : 100;
     let iconWidth = widthText;
 
@@ -412,12 +428,14 @@ export default Ember.Component.extend({
       latlng = layer.getCenter();
       html = '<p style="' + style + '">' + text + '</p>';
     }
+
     if (_layerType === 'point') {
       latlng = layer.getLatLng();
       positionPoint = this._setPositionPoint(iconWidth);
       html = '<p style="' + style + positionPoint + '">' + text + '</p>';
     }
-    if(_layerType === 'line') {
+
+    if (_layerType === 'line') {
       latlng = L.latLng(layer._bounds._northEast.lat, layer._bounds._southWest.lng);
       let options = {
         fillColor: this.get('value.options.captionFontColor'),
@@ -426,7 +444,7 @@ export default Ember.Component.extend({
       this._addTextForLine(layer, text, options, style);
       iconWidth = 12;
       iconHeight = 12;
-      html = $(layer._svgConteiner).html();
+      html = Ember.$(layer._svgConteiner).html();
     }
 
     let label = L.marker(latlng, {
@@ -452,6 +470,7 @@ export default Ember.Component.extend({
     let shiftHor = Math.round(width / 2);
     let shiftVerTop = '-60px;';
     let shiftVerBottom = '30px;';
+
     switch (this.get('value.location.locationPoint')) {
       case '1':
         stylePoint = 'margin-right: ' + shiftHor + 'px; margin-top: ' + shiftVerTop;
@@ -506,14 +525,14 @@ export default Ember.Component.extend({
     div.style.width = 'auto';
     div.style.whiteSpace = 'nowrap';
     div.style.fontFamily = font;
-    div.style.fontSize = fontSize; 
+    div.style.fontSize = fontSize;
     div.style.fontWeight = fontWeight;
     div.style.fontStyle = fontStyle;
     div.style.textDecoration = textDecoration;
     div.innerHTML = text;
     document.body.appendChild(div);
 
-    let clientWidth = div.clientWidth;            
+    let clientWidth = div.clientWidth;
     document.body.removeChild(div);
 
     return clientWidth;
@@ -527,13 +546,18 @@ export default Ember.Component.extend({
     @param {Object} svg
   */
   _setLabelLine(layer, svg) {
+    let leafletMap = this.get('leafletMap') || this._targetObject.leafletMap;
     let latlngArr = layer.getLatLngs();
-    let begCoord = layer._map.latLngToLayerPoint(latlngArr[0]);
-    let endCoord = layer._map.latLngToLayerPoint(latlngArr[latlngArr.length-1]);
+    let begCoord = leafletMap.latLngToLayerPoint(latlngArr[0]);
+    let endCoord = leafletMap.latLngToLayerPoint(latlngArr[latlngArr.length - 1]);
 
-    let rings = layer._rings[0].concat([]);
+    let rings = [];
+    for (let i = 0; i < latlngArr.length; i++) {
+      rings[i] = leafletMap.latLngToLayerPoint(latlngArr[i]);
+    }
+
     if (begCoord.x > endCoord.x || begCoord.y > endCoord.y) {
-        rings.reverse();
+      rings.reverse();
     }
 
     let minX = 10000000;
@@ -541,35 +565,37 @@ export default Ember.Component.extend({
     let maxX = 600;
     let maxY = 600;
     for (let i = 0; i < rings.length; i++) {
-        if (rings[i].x < minX) {
-            minX = rings[i].x;
-        }
+      if (rings[i].x < minX) {
+        minX = rings[i].x;
+      }
 
-        if (rings[i].y < minY) {
-            minY = rings[i].y;
-        }
+      if (rings[i].y < minY) {
+        minY = rings[i].y;
+      }
     }
 
-    let d='';
+    let d = '';
     let kx = minX - 6;
     let ky = minY - 6;
 
-    for (let i = 0;i < rings.length; i++) {
-        d += i === 0 ? 'M' : 'L';
-        let x = rings[i].x - kx;
-        let y = rings[i].y - ky;
-        if (x > maxX) {
-            maxX = x;
-        }
-        if (y > maxY) {
-            maxY = y;
-        }
-        d += x + ' ' + y;
+    for (let i = 0; i < rings.length; i++) {
+      d += i === 0 ? 'M' : 'L';
+      let x = rings[i].x - kx;
+      let y = rings[i].y - ky;
+      if (x > maxX) {
+        maxX = x;
+      }
+
+      if (y > maxY) {
+        maxY = y;
+      }
+
+      d += x + ' ' + y;
     }
 
     layer._path.setAttribute('d', d);
-    svg.setAttribute('width', maxX+'px');
-    svg.setAttribute('height', maxY+'px');
+    svg.setAttribute('width', maxX + 'px');
+    svg.setAttribute('height', maxY + 'px');
   },
 
   /**
@@ -582,7 +608,7 @@ export default Ember.Component.extend({
   _setAlignForLine(layer, text, align, textNode) {
     let pathLength = layer._path.getTotalLength();
     let textLength = this._getWidthText(
-      text, 
+      text,
       this.get('value.options.captionFontFamily'),
       this.get('value.options.captionFontSize'),
       this.get('value.options.captionFontWeight'),
@@ -591,15 +617,15 @@ export default Ember.Component.extend({
     );
 
     if (align === 'center') {
-        textNode.setAttribute('dx', ((pathLength / 2) - (textLength / 2)));
+      textNode.setAttribute('dx', ((pathLength / 2) - (textLength / 2)));
     }
 
     if (align === 'left') {
-        textNode.setAttribute('dx', 0);
+      textNode.setAttribute('dx', 0);
     }
 
-    if (align ==='right') {
-        textNode.setAttribute('dx', (pathLength - textLength - 8));
+    if (align === 'right') {
+      textNode.setAttribute('dx', (pathLength - textLength - 8));
     }
   },
 
@@ -620,46 +646,48 @@ export default Ember.Component.extend({
 
     layer._text = text;
 
-    let defaults = {    
-        fillColor: 'black',
-        align: 'left',
-        location: 'over'
+    let defaults = {
+      fillColor: 'black',
+      align: 'left',
+      location: 'over'
     };
     options = L.Util.extend(defaults, options);
 
     layer._textOptions = options;
 
     if (!text) {
-        if (layer._textNode && layer._textNode.parentNode) {
-            svg.removeChild(layer._textNode);
-            delete layer._text;
-        }
+      if (layer._textNode && layer._textNode.parentNode) {
+        svg.removeChild(layer._textNode);
+        delete layer._text;
+      }
 
-        return;
+      return;
     }
 
     let id = 'pathdef-' + L.Util.stamp(layer);
     layer._path.setAttribute('id', id);
 
-    let textNode = L.SVG.create('text'),
-        textPath = L.SVG.create('textPath');
+    let textNode = L.SVG.create('text');
+    let textPath = L.SVG.create('textPath');
     let dy =  0;
     let sizeFont = parseInt(this.get('value.options.captionFontSize'));
     let i18n = this.get('i18n');
     let along = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.along`).toString();
     let under = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.under`).toString();
     let _lineLocationSelect = this.get('value.location.lineLocationSelect');
+
     if (_lineLocationSelect === along) {
-      dy = Math.ceil(sizeFont/4) - parseInt(layer._path.getAttribute('stroke-width')) || 0;
-    }
-    if (_lineLocationSelect === under) {
-      dy = Math.ceil(sizeFont/2);
+      dy = Math.ceil(sizeFont / 4);
     }
 
-    textPath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", '#'+id);
+    if (_lineLocationSelect === under) {
+      dy = Math.ceil(sizeFont / 2);
+    }
+
+    textPath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + id);
     textNode.setAttribute('fill', options.fillColor);
     textNode.setAttribute('style', style);
-    textNode.setAttribute('id', id);
+    textNode.setAttribute('id', 'text-' + id);
     textNode.setAttribute('dy', dy);
     textNode.setAttribute('alignment-baseline', 'baseline');
     textPath.appendChild(document.createTextNode(text));
@@ -669,7 +697,7 @@ export default Ember.Component.extend({
     layer._path.setAttribute('stroke-opacity', 0);
     layer._textNode = textNode;
     svg.firstChild.appendChild(layer._path);
-    svg.setAttribute('id', 'svg-'+id);
+    svg.setAttribute('id', 'svg-' + id);
     svg.appendChild(textNode);
     layer._svg = svg;
     let div = L.DomUtil.create('div');
@@ -680,34 +708,36 @@ export default Ember.Component.extend({
   },
 
   /**
-    Update position for line object's label 
+    Update position for line object's label
 
     @method _updatePositionLabelForLine
   */
   _updatePositionLabelForLine() {
     let _this = this;
-    let leafletObject = _this.get('_leafletObject');
-    leafletObject.eachLayer(function(layer) {
-      if (!Ember.isNone(layer._path)) {
-        let svg = layer._svg;
-        _this._setLabelLine(layer, svg);
-        let d = layer._path.getAttribute('d');
-        let path = svg.firstChild.firstChild;
-        path.setAttribute('d', d);
-        let id = path.getAttribute('id');
+    let leafletObject = _this.get('_leafletObject') || _this._targetObject._leafletObject;
+    if (!Ember.isNone(leafletObject)) {
+      leafletObject.eachLayer(function(layer) {
+        if (!Ember.isNone(layer._path)) {
+          let svg = layer._svg;
+          _this._setLabelLine(layer, svg);
+          let d = layer._path.getAttribute('d');
+          let path = svg.firstChild.firstChild;
+          path.setAttribute('d', d);
+          let id = path.getAttribute('id');
 
-        $('path#'+id).attr('d', d);
-        $('svg#svg-'+id).attr('width', svg.getAttribute('width'));
-        $('svg#svg-'+id).attr('height', svg.getAttribute('height'));
+          Ember.$('path#' + id).attr('d', d);
+          Ember.$('svg#svg-' + id).attr('width', svg.getAttribute('width'));
+          Ember.$('svg#svg-' + id).attr('height', svg.getAttribute('height'));
 
-        let options = layer._textOptions;
-        let text = layer._text;
-        let textNode = layer._textNode;
+          let options = layer._textOptions;
+          let text = layer._text;
+          let textNode = layer._textNode;
 
-        _this._setAlignForLine(layer, text, options.align, textNode);
-        $('text#'+id).attr('dx', textNode.getAttribute('dx'));
-      }
-    });
+          _this._setAlignForLine(layer, text, options.align, textNode);
+          Ember.$('text#text-' + id).attr('dx', textNode.getAttribute('dx'));
+        }
+      });
+    }
   },
 
   /**
@@ -717,21 +747,25 @@ export default Ember.Component.extend({
   */
   _setVisibilityScaleRange() {
     let _this = this;
-    let scale = parseInt($('.map-control-scalebar-ratiomenu>text')[0].innerHTML.split(':')[1]);
+    let scale = parseInt(Ember.$('.map-control-scalebar-ratiomenu>text')[0].innerHTML.split(':')[1]);
     let minScaleRange = _this.get('value.scaleRange.minScaleRange');
     let maxScaleRange = _this.get('value.scaleRange.maxScaleRange');
     let visibility = false;
     if ((Ember.isBlank(minScaleRange) || Ember.isNone(minScaleRange)) && (Ember.isBlank(maxScaleRange) || Ember.isNone(maxScaleRange))) {
       visibility = true;
-    }
-    else {
-      if (!Ember.isBlank(minScaleRange) && !Ember.isNone(minScaleRange) && !Ember.isBlank(maxScaleRange) && !Ember.isNone(maxScaleRange) && scale >= minScaleRange && scale < maxScaleRange) {
+    } else {
+      if (!Ember.isBlank(minScaleRange) && !Ember.isNone(minScaleRange) && !Ember.isBlank(maxScaleRange) && !Ember.isNone(maxScaleRange) && 
+          scale >= minScaleRange && scale < maxScaleRange) {
         visibility = true;
       }
-      if (!Ember.isBlank(minScaleRange) && !Ember.isNone(minScaleRange) && (Ember.isBlank(maxScaleRange) || Ember.isNone(maxScaleRange)) && scale >= minScaleRange) {
+
+      if (!Ember.isBlank(minScaleRange) && !Ember.isNone(minScaleRange) && 
+          (Ember.isBlank(maxScaleRange) || Ember.isNone(maxScaleRange)) && scale >= minScaleRange) {
         visibility = true;
       }
-      if (!Ember.isBlank(maxScaleRange) && !Ember.isNone(maxScaleRange) && (Ember.isBlank(minScaleRange) || Ember.isNone(minScaleRange)) && scale < maxScaleRange) {
+
+      if (!Ember.isBlank(maxScaleRange) && !Ember.isNone(maxScaleRange) && 
+          (Ember.isBlank(minScaleRange) || Ember.isNone(minScaleRange)) && scale < maxScaleRange) {
         visibility = true;
       }
     }
@@ -753,18 +787,31 @@ export default Ember.Component.extend({
     let labelSettingsString = this.get('value.labelSettingsString');
     let arrLabelString = this._parseString(labelSettingsString);
     this.set('_arrLabelString', arrLabelString);
-    let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(arrLabelString)) {
-      let labelsLayer =  this.get('_labelsLayer');
+      let leafletMap = this.get('leafletMap');
       let leafletObject = this.get('_leafletObject');
-
-      if (!Ember.isNone(labelsLayer)) {
-        leafletObject.removeLayer(labelsLayer);
+      let labelsLayer = this.get('_labelsLayer');
+      if (Ember.isNone(labelsLayer)) {
+        labelsLayer = L.featureGroup();
+        labelsLayer._idLeafletObject = leafletObject._leaflet_id;
+        labelsLayer._this = this;
+      } else {
+        labelsLayer.clearLayers();
       }
 
-      labelsLayer = new L.LayerGroup();
       this._createStringLabel(arrLabelString, labelsLayer);
       this.set('_labelsLayer', labelsLayer);
+
+      this.set('value.labelsLayer', leafletObject._leaflet_id);
+      this._setVisibilityScaleRange();
+      leafletMap.on('moveend', this._showLabelsMovingMap, this);
+      let minScaleRange = this.get('value.scaleRange.minScaleRange');
+      let maxScaleRange = this.get('value.scaleRange.maxScaleRange');
+      if ((Ember.isBlank(minScaleRange) || Ember.isNone(minScaleRange)) && (Ember.isBlank(maxScaleRange) || Ember.isNone(maxScaleRange))) {
+        return;
+      } else {
+        leafletMap.on('zoomend', this._setVisibilityScaleRange, this);
+      }
       if (this.get('_layerType') === 'line') {
         leafletMap.on('zoomend', this._updatePositionLabelForLine, this);
       }
@@ -779,16 +826,15 @@ export default Ember.Component.extend({
   */
   _addLabelsToLeafletContainer() {
     let labelsLayer = this.get('_labelsLayer');
-    let leafletObject = this.get('_leafletObject');
-    if (Ember.isNone(leafletObject) || leafletObject.hasLayer(labelsLayer)) {
-      return;
-    }
-    if (Ember.isNone(labelsLayer) && !Ember.isNone(leafletObject)) {
+
+    if (Ember.isNone(labelsLayer)) {
       this._showLabels();
       labelsLayer = this.get('_labelsLayer');
     }
 
-    leafletObject.addLayer(labelsLayer);
+    let leafletMap = this.get('leafletMap') || this._targetObject.leafletMap;
+    leafletMap.addLayer(labelsLayer);
+
     if (this.get('_layerType') === 'line') {
       this._updatePositionLabelForLine();
     }
@@ -802,12 +848,12 @@ export default Ember.Component.extend({
   */
   _removeLabelsFromLeafletContainer() {
     let labelsLayer = this.get('_labelsLayer');
-    let leafletObject = this.get('_leafletObject');
-    if (Ember.isNone(leafletObject) || Ember.isNone(labelsLayer) || !leafletObject.hasLayer(labelsLayer)) {
+
+    if (Ember.isNone(labelsLayer)) {
       return;
     }
-
-    leafletObject.removeLayer(labelsLayer);
+    let leafletMap = this.get('leafletMap') || this._targetObject.leafletMap;
+    leafletMap.removeLayer(labelsLayer);
   },
 
   /**
@@ -825,6 +871,18 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    /**
+      Handles signMapObjects-checkbox change.
+      @method actions.signMapObjectsCheckboxDidChange
+    */
+    signMapObjectsCheckboxDidChange() {
+      if (!this.get('value.signMapObjects')) {
+        this.$('textarea').removeAttr('readonly');
+      } else {
+        this.$('textarea').attr('readonly', true);
+      }
+    },
+
     /**
       This action is called when an item in Fields list is pressed.
 
@@ -863,17 +921,33 @@ export default Ember.Component.extend({
     */
     applyLabel() {
       let leafletMap = this.get('leafletMap');
-      this._showLabels();
-      this._setVisibilityScaleRange();
-      leafletMap.on('moveend', this._showLabelsMovingMap, this);
-      let minScaleRange = this.get('value.scaleRange.minScaleRange');
-      let maxScaleRange = this.get('value.scaleRange.maxScaleRange');
-      if ((Ember.isBlank(minScaleRange) || Ember.isNone(minScaleRange)) && (Ember.isBlank(maxScaleRange) || Ember.isNone(maxScaleRange))) {
-        return;
-      } else {
-        leafletMap.on('zoom', this._setVisibilityScaleRange, this);
-      }
+      let leafletObject = this.get('_leafletObject');
+      if (this.get('value.signMapObjects') && leafletMap.hasLayer(leafletObject)) {
+        let labelsLayer = this.get('_labelsLayer');
 
+        this.set('_labelsLayer', labelsLayer);
+        let idlabelsLayer = this.get('value.labelsLayer');
+
+        if (!Ember.isNone(idlabelsLayer)) {
+          leafletMap.eachLayer(function(layer) {
+            if (layer._idLeafletObject === idlabelsLayer) {
+              var self = layer._this;
+              leafletMap.off('moveend', self._showLabelsMovingMap, self);
+              leafletMap.off('zoomend', self._setVisibilityScaleRange, self);
+              if (self.get('_layerType') === 'line') {
+                leafletMap.off('zoomend', self._updatePositionLabelForLine, self);
+              }
+              leafletMap.removeLayer(layer);
+            }
+
+            if (layer._label) {
+              layer._label = null;
+            }
+          });
+        }
+
+        this._showLabels();
+      }
     },
 
     /**

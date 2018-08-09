@@ -1,8 +1,17 @@
 <div class="field">
+  {{#if _error}}
+    {{ui-message
+      type="error"
+      message=(t "components.layers-dialogs.settings.group.tab.labels-settings.error")
+    }}
+  {{/if}}
+</div>
+<div class="field">
   {{flexberry-checkbox
     value=value.signMapObjects
     label=(t _signMapObjectsLabel)
     class=_signMapObjectsClass
+    change=(action "signMapObjectsCheckboxDidChange")
   }}
 </div>
 <div class="{{if _leafletObjectIsLoading "loading"}}">
@@ -36,12 +45,13 @@
 </div>
 <div class='row'>
   {{flexberry-button
-    class=operatorButtonClass
+    class=_operatorButtonClass
     caption=(t "components.flexberry-wfs-filter.buttons.apply")
     click=(action "applyLabel")
+    readonly=_error
   }}
   {{flexberry-button
-    class=operatorButtonClass
+    class=_operatorButtonClass
     caption=(t "components.flexberry-wfs-filter.buttons.clear")
     click=(action "clearLabel")
   }}
@@ -55,6 +65,7 @@
           class="fluid"
           items=_availableFontFamilies
           value=value.options.captionFontFamily
+          readonly=(not value.signMapObjects)
         }}
       </div>
       <div class="two wide column">
@@ -62,6 +73,7 @@
           class="fluid"
           items=_availableFontSizes
           value=value.options.captionFontSize
+          readonly=(not value.signMapObjects)
         }}
       </div>
       <div class="three wide column">
@@ -70,16 +82,19 @@
             iconClass="bold icon"
             class=(if (eq value.options.captionFontWeight "bold") "active" "")
             click=(action "onBoldFontButtonClick")
+            readonly=(not value.signMapObjects)
           }}
           {{flexberry-button
             iconClass="italic icon"
             class=(if (eq value.options.captionFontStyle "italic") "active" "")
             click=(action "onItalicFontButtonClick")
+            readonly=(not value.signMapObjects)
           }}
           {{flexberry-button
             iconClass="underline icon"
             class=(if (eq value.options.captionFontDecoration "underline") "active" "")
             click=(action "onUnderlineFontButtonClick")
+            readonly=(not value.signMapObjects)
           }}
         </div>
       </div>
@@ -87,6 +102,7 @@
         {{flexberry-colorpicker
           value=value.options.captionFontColor
           change=(action "onCaptionFontColorChange")
+          readonly=(not value.signMapObjects)
         }}
       </div>
       <div class="three wide column">
@@ -95,16 +111,19 @@
             iconClass="align left icon"
             class=(if (eq value.options.captionFontAlign "left") "active" "")
             click=(action "onLeftFontButtonClick")
+            readonly=(not value.signMapObjects)
           }}
           {{flexberry-button
             iconClass="align center icon"
             class=(if (eq value.options.captionFontAlign "center") "active" "")
             click=(action "onCenterFontButtonClick")
+            readonly=(not value.signMapObjects)
           }}
           {{flexberry-button
             iconClass="align right icon"
             class=(if (eq value.options.captionFontAlign "right") "active" "")
             click=(action "onRightFontButtonClick")
+            readonly=(not value.signMapObjects)
           }}
         </div>
       </div>
@@ -114,58 +133,79 @@
 {{#if (eq _layerType "point")}}
   <div class="field">
     <label>{{t _locationCaption}}</label>
-    <div class="row ui small buttons">
-      {{flexberry-button
-        iconClass="closed captioning icon"
-        class=(if (eq value.location.locationPoint "1") "active" "")
-        click=(action "onLocationPointButtonClick" "1")
-      }}
-      {{flexberry-button
-        iconClass="closed captioning icon"
-        class=(if (eq value.location.locationPoint "2") "active" "")
-        click=(action "onLocationPointButtonClick" "2")
-      }}
-      {{flexberry-button
-        iconClass="closed captioning icon"
-        class=(if (eq value.location.locationPoint "3") "active" "")
-        click=(action "onLocationPointButtonClick" "3")
-      }}
-    </div>
-    <div class="row">
-      <div class="ui small buttons">
-      {{flexberry-button
-        iconClass="closed captioning icon"
-        class=(if (eq value.location.locationPoint "4") "active" "")
-        click=(action "onLocationPointButtonClick" "4")
-      }}
-      {{flexberry-button
-        iconClass="circle icon"
-        class=(if (eq value.location.locationPoint "5") "active" "")
-        click=(action "onLocationPointButtonClick" "5")
-      }}
-      {{flexberry-button
-        iconClass="closed captioning icon"
-        class=(if (eq value.location.locationPoint "6") "active" "")
-        click=(action "onLocationPointButtonClick" "6")
-      }}
+    <div class="ui grid">
+      <div class="row location">
+        <div class="two wide column">
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "1") "active" "")
+              click=(action "onLocationPointButtonClick" "1")
+              readonly=(not value.signMapObjects)
+            }}
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "2") "active" "")
+              click=(action "onLocationPointButtonClick" "2")
+              readonly=(not value.signMapObjects)
+            }}
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "3") "active" "")
+              click=(action "onLocationPointButtonClick" "3")
+              readonly=(not value.signMapObjects)
+            }}
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="row ui small buttons">
-      {{flexberry-button
-        iconClass="closed captioning icon"
-        class=(if (eq value.location.locationPoint "7") "active" "")
-        click=(action "onLocationPointButtonClick" "7")
-      }}
-      {{flexberry-button
-        iconClass="closed captioning icon"
-        class=(if (eq value.location.locationPoint "8") "active" "")
-        click=(action "onLocationPointButtonClick" "8")
-      }}
-      {{flexberry-button
-        iconClass="closed captioning icon"
-        class=(if (eq value.location.locationPoint "9") "active" "")
-        click=(action "onLocationPointButtonClick" "9")
-      }}
+      <div class="row location">
+        <div class="two wide column">
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "4") "active" "")
+              click=(action "onLocationPointButtonClick" "4")
+              readonly=(not value.signMapObjects)
+            }}
+            {{flexberry-button
+              iconClass="circle icon"
+              class=(if (eq value.location.locationPoint "5") "active" "")
+              click=(action "onLocationPointButtonClick" "5")
+              readonly=(not value.signMapObjects)
+            }}
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "6") "active" "")
+              click=(action "onLocationPointButtonClick" "6")
+              readonly=(not value.signMapObjects)
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="row location">
+        <div class="two wide column">
+          <div class="ui small fluid buttons">
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "7") "active" "")
+              click=(action "onLocationPointButtonClick" "7")
+              readonly=(not value.signMapObjects)
+            }}
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "8") "active" "")
+              click=(action "onLocationPointButtonClick" "8")
+              readonly=(not value.signMapObjects)
+            }}
+            {{flexberry-button
+              iconClass="closed captioning icon"
+              class=(if (eq value.location.locationPoint "9") "active" "")
+              click=(action "onLocationPointButtonClick" "9")
+              readonly=(not value.signMapObjects)
+            }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 {{/if}}
@@ -175,6 +215,7 @@
     {{flexberry-dropdown
       items=_availableLineLocation
       value=value.location.lineLocationSelect
+      readonly=(not value.signMapObjects)
     }}
   </div>
 {{/if}}
@@ -187,6 +228,7 @@
         {{flexberry-textbox
           class="fluid"
           value=value.scaleRange.minScaleRange
+          readonly=(not value.signMapObjects)
         }}
       </div>
       <div class="eight wide column">
@@ -194,6 +236,7 @@
         {{flexberry-textbox
           class="fluid"
           value=value.scaleRange.maxScaleRange
+          readonly=(not value.signMapObjects)
         }}
       </div>
     </div>

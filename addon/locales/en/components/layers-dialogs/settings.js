@@ -53,7 +53,8 @@ export default {
           'over': 'Over the line',
           'along': 'Along the line',
           'under': 'Under the line'
-        }
+        },
+        'error': 'The layer must be added to the map'
       }
     }
   },
