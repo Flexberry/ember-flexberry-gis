@@ -524,6 +524,7 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
               if (self.get('_layerType') === 'line') {
                 leafletMap.off('zoomend', self._updatePositionLabelForLine, self);
               }
+
               leafletMap.removeLayer(layer);
             }
           });

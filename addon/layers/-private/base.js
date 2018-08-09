@@ -62,7 +62,7 @@ const createcommonLabelSettings = function () {
       captionFontAlign: 'left'
     },
     location: {
-      locationPoint: "3",
+      locationPoint: '3',
       lineLocationSelect: null
     },
     scaleRange: {

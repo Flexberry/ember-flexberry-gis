@@ -754,17 +754,17 @@ export default Ember.Component.extend({
     if ((Ember.isBlank(minScaleRange) || Ember.isNone(minScaleRange)) && (Ember.isBlank(maxScaleRange) || Ember.isNone(maxScaleRange))) {
       visibility = true;
     } else {
-      if (!Ember.isBlank(minScaleRange) && !Ember.isNone(minScaleRange) && !Ember.isBlank(maxScaleRange) && !Ember.isNone(maxScaleRange) && 
+      if (!Ember.isBlank(minScaleRange) && !Ember.isNone(minScaleRange) && !Ember.isBlank(maxScaleRange) && !Ember.isNone(maxScaleRange) &&
           scale >= minScaleRange && scale < maxScaleRange) {
         visibility = true;
       }
 
-      if (!Ember.isBlank(minScaleRange) && !Ember.isNone(minScaleRange) && 
+      if (!Ember.isBlank(minScaleRange) && !Ember.isNone(minScaleRange) &&
           (Ember.isBlank(maxScaleRange) || Ember.isNone(maxScaleRange)) && scale >= minScaleRange) {
         visibility = true;
       }
 
-      if (!Ember.isBlank(maxScaleRange) && !Ember.isNone(maxScaleRange) && 
+      if (!Ember.isBlank(maxScaleRange) && !Ember.isNone(maxScaleRange) &&
           (Ember.isBlank(minScaleRange) || Ember.isNone(minScaleRange)) && scale < maxScaleRange) {
         visibility = true;
       }
@@ -812,6 +812,7 @@ export default Ember.Component.extend({
       } else {
         leafletMap.on('zoomend', this._setVisibilityScaleRange, this);
       }
+
       if (this.get('_layerType') === 'line') {
         leafletMap.on('zoomend', this._updatePositionLabelForLine, this);
       }
@@ -852,6 +853,7 @@ export default Ember.Component.extend({
     if (Ember.isNone(labelsLayer)) {
       return;
     }
+
     let leafletMap = this.get('leafletMap') || this._targetObject.leafletMap;
     leafletMap.removeLayer(labelsLayer);
   },
@@ -937,6 +939,7 @@ export default Ember.Component.extend({
               if (self.get('_layerType') === 'line') {
                 leafletMap.off('zoomend', self._updatePositionLabelForLine, self);
               }
+
               leafletMap.removeLayer(layer);
             }
 

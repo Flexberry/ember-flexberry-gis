@@ -42,7 +42,7 @@ export default {
         'format': 'Формат',
         'layers': 'Слои'
       },
-      
+
       'labels-settings':{
         'sign-map-objects-label': 'Подписывать объекты карты',
         'field-caption': 'Атрибуты слоя',
