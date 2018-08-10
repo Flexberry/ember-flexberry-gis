@@ -943,7 +943,8 @@ export default Ember.Component.extend({
           }
         });
       }
-      if (this.get('value.signMapObjects') && leafletMap.hasLayer(leafletObject)) {  
+
+      if (this.get('value.signMapObjects') && leafletMap.hasLayer(leafletObject)) {
         this._showLabels();
       }
     },
