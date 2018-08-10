@@ -321,6 +321,24 @@ export default Ember.Component.extend({
       this._parseFilter();
       if (this.get('_filterIsCorrect')) {
         this.set('filter', this.get('filterStringValue'));
+        if (!Ember.isNone(this.get('filterStringValue'))) {
+          let leafletMap = this._targetObject.leafletMap;
+          let idlabelsLayer = this._targetObject._layer.settings.labelSettings.labelsLayer;
+          if (!Ember.isNone(idlabelsLayer)) {
+            leafletMap.eachLayer(function(layer) {
+              if (layer._idLeafletObject === idlabelsLayer) {
+                var self = layer._this;
+                leafletMap.off('moveend', self._showLabelsMovingMap, self);
+                leafletMap.off('zoomend', self._setVisibilityScaleRange, self);
+                if (self.get('_layerType') === 'line') {
+                  leafletMap.off('zoomend', self._updatePositionLabelForLine, self);
+                }
+
+                leafletMap.removeLayer(layer);
+              }
+            });
+          }
+        }
       }
     },
 

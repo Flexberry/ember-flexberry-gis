@@ -366,7 +366,7 @@ export default Ember.Component.extend({
     let leafletMap = this.get('leafletMap') || this._targetObject.leafletMap;
     let bbox = leafletMap.getBounds();
     leafletObject.eachLayer(function(layer) {
-      if (!layer._layers && !layer._label && bbox.contains(layer.getBounds ? layer.getBounds() : layer.getLatLng()) && leafletMap.hasLayer(layer)) {
+      if (!layer._layers && !layer._label && bbox.contains(layer.getBounds ? layer.getBounds() : layer.getLatLng())) {
         let label = '';
         expResult.forEach(function(element) {
           for (let key in _availableLayerProperties) {
@@ -425,7 +425,7 @@ export default Ember.Component.extend({
     let html = '';
 
     if (_layerType !== 'point' && _layerType !== 'line') {
-      latlng = layer.getCenter();
+      latlng = layer.getBounds().getCenter();
       html = '<p style="' + style + '">' + text + '</p>';
     }
 
@@ -472,30 +472,30 @@ export default Ember.Component.extend({
     let shiftVerBottom = '30px;';
 
     switch (this.get('value.location.locationPoint')) {
-      case '1':
+      case 'overLeft':
         stylePoint = 'margin-right: ' + shiftHor + 'px; margin-top: ' + shiftVerTop;
         break;
-      case '2':
+      case 'overMiddle':
         stylePoint = 'margin-top: ' + shiftVerTop;
         break;
-      case '3':
+      case 'overRight':
         stylePoint = 'margin-left: ' + shiftHor + 'px; margin-top: ' + shiftVerTop;
         break;
-      case '4':
+      case 'alongLeft':
         stylePoint = 'margin-right: ' + shiftHor + 'px;';
         break;
-      case '5':
+      case 'alongMidle':
         break;
-      case '6':
+      case 'alongRight':
         stylePoint = 'margin-left: ' + shiftHor + 'px;';
         break;
-      case '7':
+      case 'underLeft':
         stylePoint = 'margin-right: ' + shiftHor + 'px; margin-top: ' + shiftVerBottom;
         break;
-      case '8':
+      case 'underMiddle':
         stylePoint = 'margin-top: ' + shiftVerBottom;
         break;
-      case '9':
+      case 'underRight':
         stylePoint = 'margin-left: ' + shiftHor + 'px; margin-top: ' + shiftVerBottom;
         break;
       default:
@@ -807,9 +807,7 @@ export default Ember.Component.extend({
       leafletMap.on('moveend', this._showLabelsMovingMap, this);
       let minScaleRange = this.get('value.scaleRange.minScaleRange');
       let maxScaleRange = this.get('value.scaleRange.maxScaleRange');
-      if ((Ember.isBlank(minScaleRange) || Ember.isNone(minScaleRange)) && (Ember.isBlank(maxScaleRange) || Ember.isNone(maxScaleRange))) {
-        return;
-      } else {
+      if (!((Ember.isBlank(minScaleRange) || Ember.isNone(minScaleRange)) && (Ember.isBlank(maxScaleRange) || Ember.isNone(maxScaleRange)))) {
         leafletMap.on('zoomend', this._setVisibilityScaleRange, this);
       }
 
@@ -924,31 +922,28 @@ export default Ember.Component.extend({
     applyLabel() {
       let leafletMap = this.get('leafletMap');
       let leafletObject = this.get('_leafletObject');
-      if (this.get('value.signMapObjects') && leafletMap.hasLayer(leafletObject)) {
-        let labelsLayer = this.get('_labelsLayer');
-
-        this.set('_labelsLayer', labelsLayer);
-        let idlabelsLayer = this.get('value.labelsLayer');
-
-        if (!Ember.isNone(idlabelsLayer)) {
-          leafletMap.eachLayer(function(layer) {
-            if (layer._idLeafletObject === idlabelsLayer) {
-              var self = layer._this;
-              leafletMap.off('moveend', self._showLabelsMovingMap, self);
-              leafletMap.off('zoomend', self._setVisibilityScaleRange, self);
-              if (self.get('_layerType') === 'line') {
-                leafletMap.off('zoomend', self._updatePositionLabelForLine, self);
-              }
-
-              leafletMap.removeLayer(layer);
+      let labelsLayer = this.get('_labelsLayer');
+      this.set('_labelsLayer', labelsLayer);
+      let idlabelsLayer = this.get('value.labelsLayer');
+      if (!Ember.isNone(idlabelsLayer)) {
+        leafletMap.eachLayer(function(layer) {
+          if (layer._idLeafletObject === idlabelsLayer) {
+            var self = layer._this;
+            leafletMap.off('moveend', self._showLabelsMovingMap, self);
+            leafletMap.off('zoomend', self._setVisibilityScaleRange, self);
+            if (self.get('_layerType') === 'line') {
+              leafletMap.off('zoomend', self._updatePositionLabelForLine, self);
             }
 
-            if (layer._label) {
-              layer._label = null;
-            }
-          });
-        }
+            leafletMap.removeLayer(layer);
+          }
 
+          if (layer._label) {
+            layer._label = null;
+          }
+        });
+      }
+      if (this.get('value.signMapObjects') && leafletMap.hasLayer(leafletObject)) {  
         this._showLabels();
       }
     },

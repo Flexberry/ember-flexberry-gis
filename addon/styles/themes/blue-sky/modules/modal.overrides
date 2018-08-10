@@ -181,13 +181,18 @@
          flexberry-edit-layer-dialog label-settings
          override styles for Row
 *******************************************************************/
-.location {
-    padding-bottom: 0px !important;
-    padding-top: 0px !important;
+.ui.grid > .location:last-child {
+    padding-bottom: 1rem;
 }
-.location:last-child {
-    padding-bottom: 14px !important;
+.ui.grid > .location:first-child {
+    padding-top: 1rem;
 }
-.location:first-child {
-    padding-top: 14px !important;
+.ui.grid > .location {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
