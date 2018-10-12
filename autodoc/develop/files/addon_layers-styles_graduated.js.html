@@ -427,27 +427,91 @@ export default CategorizedLayerStyle.extend({
       return false;
     }
 
-    // Category value is serialized interval in format &#x27;1 - 10&#x27;.
+    // Category value is serialized interval in format &#x27;&lt; 10&#x27; or &#x27;&gt; 1&#x27; or &#x27;&lt;= 10&#x27; or &#x27;&lt;= 10&#x27; or &#x27;1 - 10&#x27;.
     let categoryInterval = Ember.get(category, &#x27;value&#x27;);
     if (Ember.isBlank(categoryInterval)) {
       return false;
     }
 
-    // Cast to string and check if interval has format of &#x27;1 - 10&#x27;.
+    // Cast to string.
     categoryInterval += &#x27;&#x27;;
-    if (categoryInterval.indexOf(&#x27;-&#x27;) === -1) {
-      return false;
+
+    // Check if interval has format of &#x27;&lt;= 10&#x27;.
+    if (categoryInterval.indexOf(&#x27;&lt;=&#x27;) &gt;= 0) {
+      let interval = categoryInterval.split(&#x27;&lt;=&#x27;);
+      let endIntervalValue = Number(interval[1]);
+      if (isNaN(endIntervalValue)) {
+        return false;
+      }
+
+      return propertyValue &lt;= endIntervalValue;
     }
 
-    // Parse interval&#x27;s start and end values.
-    let interval = categoryInterval.split(&#x27;-&#x27;);
-    let startIntervalValue = Number(interval[0]);
-    let endIntervalValue = Number(interval[1]);
-    if (isNaN(startIntervalValue) || isNaN(endIntervalValue)) {
-      return false;
+    // Check if interval has format of &#x27;&gt;= 1&#x27;.
+    if (categoryInterval.indexOf(&#x27;&gt;=&#x27;) &gt;= 0) {
+      let interval = categoryInterval.split(&#x27;&gt;=&#x27;);
+      let startIntervalValue = Number(interval[1]);
+      if (isNaN(startIntervalValue)) {
+        return false;
+      }
+
+      return propertyValue &gt;= startIntervalValue;
     }
 
-    return propertyValue &gt;= startIntervalValue &amp;&amp; propertyValue &lt;= endIntervalValue;
+    // Check if interval has format of &#x27;&lt; 10&#x27;.
+    if (categoryInterval.indexOf(&#x27;&lt;&#x27;) &gt;= 0) {
+      let interval = categoryInterval.split(&#x27;&lt;&#x27;);
+      let endIntervalValue = Number(interval[1]);
+      if (isNaN(endIntervalValue)) {
+        return false;
+      }
+
+      return propertyValue &lt; endIntervalValue;
+    }
+
+    // Check if interval has format of &#x27;&gt; 1&#x27;.
+    if (categoryInterval.indexOf(&#x27;&gt;&#x27;) &gt;= 0) {
+      let interval = categoryInterval.split(&#x27;&gt;&#x27;);
+      let startIntervalValue = Number(interval[1]);
+      if (isNaN(startIntervalValue)) {
+        return false;
+      }
+
+      return propertyValue &gt; startIntervalValue;
+    }
+
+    // Check if interval has format of &#x27;1 - 10&#x27;.
+    if (categoryInterval.indexOf(&#x27;-&#x27;) &gt;= 0) {
+      let interval = categoryInterval.split(&#x27;-&#x27;);
+
+      let i = 0;
+      let startIntervalValue = interval[i].trim();
+      if (Ember.isBlank(startIntervalValue)) {
+        // Blank string after split(&#x27;-&#x27;) means that there was negative number.
+        i++;
+        startIntervalValue = &#x27;-&#x27; + interval[i];
+      }
+
+      startIntervalValue = Number(startIntervalValue);
+      if (isNaN(startIntervalValue)) {
+        return false;
+      }
+
+      i++;
+      let endIntervalValue = interval[i].trim();
+      if (Ember.isBlank(endIntervalValue)) {
+        // Blank string after split(&#x27;-&#x27;) means that there was negative number.
+        i++;
+        endIntervalValue = &#x27;-&#x27; + interval[i];
+      }
+
+      endIntervalValue = Number(endIntervalValue);
+      if (isNaN(endIntervalValue)) {
+        return false;
+      }
+
+      return propertyValue &gt;= startIntervalValue &amp;&amp; propertyValue &lt;= endIntervalValue;
+    }
   }
 });
 
