@@ -28,26 +28,90 @@ export default CategorizedLayerStyle.extend({
       return false;
     }
 
-    // Category value is serialized interval in format '1 - 10'.
+    // Category value is serialized interval in format '< 10' or '> 1' or '<= 10' or '<= 10' or '1 - 10'.
     let categoryInterval = Ember.get(category, 'value');
     if (Ember.isBlank(categoryInterval)) {
       return false;
     }
 
-    // Cast to string and check if interval has format of '1 - 10'.
+    // Cast to string.
     categoryInterval += '';
-    if (categoryInterval.indexOf('-') === -1) {
-      return false;
+
+    // Check if interval has format of '<= 10'.
+    if (categoryInterval.indexOf('<=') >= 0) {
+      let interval = categoryInterval.split('<=');
+      let endIntervalValue = Number(interval[1]);
+      if (isNaN(endIntervalValue)) {
+        return false;
+      }
+
+      return propertyValue <= endIntervalValue;
     }
 
-    // Parse interval's start and end values.
-    let interval = categoryInterval.split('-');
-    let startIntervalValue = Number(interval[0]);
-    let endIntervalValue = Number(interval[1]);
-    if (isNaN(startIntervalValue) || isNaN(endIntervalValue)) {
-      return false;
+    // Check if interval has format of '>= 1'.
+    if (categoryInterval.indexOf('>=') >= 0) {
+      let interval = categoryInterval.split('>=');
+      let startIntervalValue = Number(interval[1]);
+      if (isNaN(startIntervalValue)) {
+        return false;
+      }
+
+      return propertyValue >= startIntervalValue;
     }
 
-    return propertyValue >= startIntervalValue && propertyValue <= endIntervalValue;
+    // Check if interval has format of '< 10'.
+    if (categoryInterval.indexOf('<') >= 0) {
+      let interval = categoryInterval.split('<');
+      let endIntervalValue = Number(interval[1]);
+      if (isNaN(endIntervalValue)) {
+        return false;
+      }
+
+      return propertyValue < endIntervalValue;
+    }
+
+    // Check if interval has format of '> 1'.
+    if (categoryInterval.indexOf('>') >= 0) {
+      let interval = categoryInterval.split('>');
+      let startIntervalValue = Number(interval[1]);
+      if (isNaN(startIntervalValue)) {
+        return false;
+      }
+
+      return propertyValue > startIntervalValue;
+    }
+
+    // Check if interval has format of '1 - 10'.
+    if (categoryInterval.indexOf('-') >= 0) {
+      let interval = categoryInterval.split('-');
+
+      let i = 0;
+      let startIntervalValue = interval[i].trim();
+      if (Ember.isBlank(startIntervalValue)) {
+        // Blank string after split('-') means that there was negative number.
+        i++;
+        startIntervalValue = '-' + interval[i];
+      }
+
+      startIntervalValue = Number(startIntervalValue);
+      if (isNaN(startIntervalValue)) {
+        return false;
+      }
+
+      i++;
+      let endIntervalValue = interval[i].trim();
+      if (Ember.isBlank(endIntervalValue)) {
+        // Blank string after split('-') means that there was negative number.
+        i++;
+        endIntervalValue = '-' + interval[i];
+      }
+
+      endIntervalValue = Number(endIntervalValue);
+      if (isNaN(endIntervalValue)) {
+        return false;
+      }
+
+      return propertyValue >= startIntervalValue && propertyValue <= endIntervalValue;
+    }
   }
 });
