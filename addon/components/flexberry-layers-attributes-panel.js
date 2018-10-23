@@ -101,6 +101,33 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _tabModelsCache: Ember.A(),
 
   /**
+    Model object for some layer types.
+
+    @property _layerModel
+    @type <a href="https://www.emberjs.com/api/ember-data/release/classes/DS.Model">Model</a>
+    @default null
+   */
+  layerModel: null,
+
+  /**
+   Component name for rendering edit dialog.
+
+   @property _editComponentName
+   @type String
+   @default 'layers-dialogs/attributes/edit'
+   */
+  _editComponentName: 'layers-dialogs/attributes/edit',
+
+  /**
+   Flag indicates whether to enable attributes values editing on panel or not
+
+   @property _isPanelEditable
+   @type Boolean
+   @default true
+   */
+  _isPanelEdiable: true,
+
+  /**
     Computed property that builds tab models collection from items.
 
     @property _tabModels
@@ -122,6 +149,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let leafletObject = Ember.get(item, 'leafletObject');
         let readonly = Ember.get(item, 'settings.readonly') || false;
         let styleSettings = Ember.get(item, 'settings.styleSettings') || {};
+        if (Ember.get(leafletObject, 'editformname')) {
+          this.set('_editComponentName', Ember.get(leafletObject, 'editformname'));
+          this.set('_isPanelEditable', false);
+        }
 
         let getHeader = () => {
           let result = {};
@@ -986,6 +1017,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_editRowDataCopy', Ember.copy(editedProperty, false));
       this.set('_editRowTabModel', tabModel);
       this.set('_editRowLayer', tabModel.featureLink[rowId]);
+
+      if (this.get('_editRowLayer.model')) {
+        this.set('layerModel', this.get('_editRowLayer.model'));
+      }
 
       // Include dialog to markup.
       this.set('_editRowDialogHasBeenRequested', true);

@@ -256,7 +256,7 @@
   so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
 --}}
 {{#if _editRowDialogHasBeenRequested}}
-  {{component "layers-dialogs/attributes/edit"
+  {{component _editComponentName
     class=flexberryClassNames.addDialog
     visible=_onEditRowDialogIsVisible
     fieldNames=(get _editRowTabModel "header")
@@ -264,6 +264,7 @@
     fieldParsers=(get _editRowTabModel "leafletObject.readFormat.featureType.fields")
     fieldValidators=(get _editRowTabModel "leafletObject.readFormat.featureType.fieldValidators")
     data=_editRowDataCopy
+    model=layerModel
     approve=(action "onEditRowDialogApprove")
   }}
 {{/if}}
