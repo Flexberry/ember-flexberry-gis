@@ -36,7 +36,7 @@
             {{yield}}
           {{/yield-slot}}
           {{#each-in header as |fieldName value|}}
-            {{#if allowEdit}}
+            {{#if allowEditOnList}}
               <td onclick={{action "onCellClick" (concat (ember-guid row) "_" fieldName)}}>
                 {{#if (eq (get fieldTypes fieldName) "boolean")}}
                   {{flexberry-checkbox

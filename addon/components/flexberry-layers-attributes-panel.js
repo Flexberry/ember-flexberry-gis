@@ -101,13 +101,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _tabModelsCache: Ember.A(),
 
   /**
-    Model object for some layer types.
-
-    @property _layerModel
-    @type <a href="https://www.emberjs.com/api/ember-data/release/classes/DS.Model">Model</a>
-    @default null
+   Object contains extra data for OData layer
+   @type Object
+   @param {Model} model Model object for OData layer.
+   @param {Projection} modelProj Projection object for OData layer.
+   @param {String} modelName Layer's model name
+   @param {String} projectionName Layer's projection name
    */
-  layerModel: null,
+  extraLayerData: Ember.Object.extend({
+    model: null,
+    modelProj: null,
+    modelName: null,
+    projectionName: null
+  }),
 
   /**
    Component name for rendering edit dialog.
@@ -125,7 +131,36 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
    @type Boolean
    @default true
    */
-  _isPanelEdiable: true,
+  _isPanelEditable: true,
+
+  /**
+   Projects geometry from latlng to required CRS
+
+   @method latlngToPoint
+   @param {Leaflet Object} geometry
+   @param {L.CRS} crs
+   @returns coordinates in GeoJSON
+   */
+  latlngToPoint(geometry, crs) {
+    let coords = geometry.coordinates[0];
+    if (geometry.type === 'MultiPolygon') {
+      for (let i = 0; i < coords.length; i++) {
+        for (let j = 0; j < coords[i].length; j++) {
+          coords[i][j] = crs.project(L.latLng(coords[i][j]));
+          coords[i][j] = [coords[i][j].y, coords[i][j].x];
+        }
+      }
+    }
+
+    if (geometry.type === 'Polygon' || geometry.type === 'MultiLineString' || geometry.type === 'LineString') {
+      for (let i = 0; i < coords.length; i++) {
+        coords[i] = crs.project(L.latLng(coords[i]));
+        coords[i] = [coords[i].y, coords[i].x];
+      }
+    }
+
+    return coords;
+  },
 
   /**
     Computed property that builds tab models collection from items.
@@ -152,6 +187,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         if (Ember.get(leafletObject, 'editformname')) {
           this.set('_editComponentName', Ember.get(leafletObject, 'editformname'));
           this.set('_isPanelEditable', false);
+          this.set('extraLayerData.modelName', Ember.get(leafletObject, 'modelName'));
+          this.set('extraLayerData.projectionName', Ember.get(leafletObject, 'projectionName'));
         }
 
         let getHeader = () => {
@@ -514,6 +551,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           {
             name,
             allowEdit: !readonly,
+            allowEditOnList: this.get('_isPanelEditable'),
             leafletObject,
             availableDrawTools,
             styleSettings
@@ -1019,7 +1057,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_editRowLayer', tabModel.featureLink[rowId]);
 
       if (this.get('_editRowLayer.model')) {
-        this.set('layerModel', this.get('_editRowLayer.model'));
+        this.set('extraLayerData.model', this.get('_editRowLayer.model'));
+        this.set('extraLayerData.modelProj', this.get('_editRowLayer.modelProj'));
       }
 
       // Include dialog to markup.
@@ -1036,6 +1075,26 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} data Hash cantaining edited data.
     */
     onEditRowDialogApprove(data) {
+      let isModel = Ember.get(data, 'isModel');
+      if (isModel) {
+        if (!Ember.get(data, 'hasChanged')) {
+          return;
+        }
+
+        let tabModel = this.get('_editRowTabModel');
+        let layer = this.get('_editRowLayer');
+        Ember.set(layer, 'model', data);
+        tabModel._triggerChanged.call([tabModel, layer, true], { layer });
+        data = data.data;
+
+        for (let key in data) {
+          if (data.hasOwnProperty(key)) {
+            let element = data[key];
+            this.set(`_editRowData.${key}`, element);
+          }
+        }
+      }
+
       for (var key in data) {
         if (data.hasOwnProperty(key)) {
           var element = data[key];
@@ -1149,6 +1208,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} data A hash containing added feature properties.
     */
     onNewRowDialogApprove(data) {
+      let isModel = Ember.get(data, 'isModel');
       let tabModel = this.get('_newRowTabModel');
       let layer = this.get('_newRowLayer');
 
@@ -1157,6 +1217,23 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.set('createCombinedPolygon', false);
         this.set('_newRowСhoiceValueMode', false);
         this.set('_newRowСhoiceValueData', null);
+      }
+
+      if (isModel) {
+        let geometry = layer.toGeoJSON().geometry;
+        let crs = Ember.get(tabModel, 'leafletObject.crs');
+        geometry.coordinates[0] = this.latlngToPoint(geometry, crs);
+        data.set('geometry', geometry);
+        let crsObj = {
+          type: 'name',
+          properties: {
+            name: crs.code
+          }
+        };
+        data.set('geometry.crs', crsObj);
+        Ember.set(layer, 'model', data);
+        Ember.set(layer, 'hasChanged', true);
+        data = data.data;
       }
 
       Ember.set(layer, 'feature', { type: 'Feature' });
@@ -1844,6 +1921,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     this.set('_newRowTabModel', tabModel);
     this.set('_newRowLayer', addedLayer);
     this.set('_newRowData', data);
+    this.set('extraLayerData.model', null);
 
     // Include dialog to markup.
     this.set('_newRowDialogHasBeenRequested', true);

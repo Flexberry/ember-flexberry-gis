@@ -45,6 +45,7 @@
           <div class="ui bottom attached tab segment layers-attributes-segment {{if (or (eq (get _activeTabs tabModel.name) "table-tab") (is-none (get _activeTabs tabModel.name))) "active"}}" data-tab="table-tab">
             {{#flexberry-table
               allowEdit=tabModel.allowEdit
+              allowEditOnList=tabModel.allowEditOnList
               perPageAvailable=false
               model=tabModel.propertiesToShow
               header=tabModel.header
@@ -264,16 +265,17 @@
     fieldParsers=(get _editRowTabModel "leafletObject.readFormat.featureType.fields")
     fieldValidators=(get _editRowTabModel "leafletObject.readFormat.featureType.fieldValidators")
     data=_editRowDataCopy
-    model=layerModel
+    layerData=extraLayerData
     approve=(action "onEditRowDialogApprove")
   }}
 {{/if}}
 {{#if _newRowDialogHasBeenRequested}}
-  {{component "layers-dialogs/attributes/edit"
+  {{component _editComponentName
     caption=(t "components.layers-dialogs.edit-attributes.add")
     class=flexberryClassNames.addDialog
     visible=_newRowDialogIsVisible
     data=_newRowData
+    layerData=extraLayerData
     choiceValueData=_newRowСhoiceValueData
     choiceValueMode=_newRowСhoiceValueMode
     fieldNames=(get _newRowTabModel "header")
