@@ -134,32 +134,24 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _isPanelEditable: true,
 
   /**
-   Projects geometry from latlng to required CRS
+   Projects geometry from latlng to coords in layer's CRS
 
    @method latlngToPoint
    @param {Leaflet Object} geometry
    @param {L.CRS} crs
    @returns coordinates in GeoJSON
    */
-  latlngToPoint(geometry, crs) {
-    let coords = geometry.coordinates[0];
-    if (geometry.type === 'MultiPolygon') {
-      for (let i = 0; i < coords.length; i++) {
-        for (let j = 0; j < coords[i].length; j++) {
-          coords[i][j] = crs.project(L.latLng(coords[i][j]));
-          coords[i][j] = [coords[i][j].y, coords[i][j].x];
-        }
+  transform(latlngs, options) {
+    if (Array.isArray(latlngs[0])) {
+      let coords = [];
+      for (let i = 0; i < latlngs.length; i++) {
+        coords.push(this.transform(latlngs[i], options));
       }
+
+      return coords;
     }
 
-    if (geometry.type === 'Polygon' || geometry.type === 'MultiLineString' || geometry.type === 'LineString') {
-      for (let i = 0; i < coords.length; i++) {
-        coords[i] = crs.project(L.latLng(coords[i]));
-        coords[i] = [coords[i].y, coords[i].x];
-      }
-    }
-
-    return coords;
+    return options.latLngToCoords(latlngs);
   },
 
   /**
@@ -1018,6 +1010,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
       selectedFeatureKeys.forEach((key) => {
         let layer = tabModel.featureLink[key];
+        if (Ember.get(layer, 'model')) {
+          layer.model.deleteRecord();
+          layer.model.set('hasChanged', true);
+        }
         tabModel.leafletObject.removeLayer(layer);
         tabModel.properties.removeObject(tabModel.propertyLink[key]);
         delete selectedRows[key];
@@ -1221,18 +1217,23 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       if (isModel) {
         let geometry = layer.toGeoJSON().geometry;
-        let crs = Ember.get(tabModel, 'leafletObject.crs');
-        geometry.coordinates[0] = this.latlngToPoint(geometry, crs);
+        let options = Ember.get(tabModel, 'leafletObject.options');
+        try {
+          geometry.coordinates = this.transform(geometry.coordinates, options);
+        }
+        catch(err) {
+          console.log(err);
+          layer.disableEdit();
+        }
         data.set('geometry', geometry);
         let crsObj = {
           type: 'name',
           properties: {
-            name: crs.code
+            name: options.crs.code
           }
         };
         data.set('geometry.crs', crsObj);
         Ember.set(layer, 'model', data);
-        Ember.set(layer, 'hasChanged', true);
         data = data.data;
       }
 
