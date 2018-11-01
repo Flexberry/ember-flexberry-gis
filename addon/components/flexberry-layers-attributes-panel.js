@@ -1013,8 +1013,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         if (Ember.get(layer, 'model')) {
           layer.model.deleteRecord();
           layer.model.set('hasChanged', true);
+        } else {
+          tabModel.leafletObject.removeLayer(layer);
         }
-        tabModel.leafletObject.removeLayer(layer);
+
         tabModel.properties.removeObject(tabModel.propertyLink[key]);
         delete selectedRows[key];
         delete tabModel.featureLink[key];
@@ -1221,10 +1223,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         try {
           geometry.coordinates = this.transform(geometry.coordinates, options);
         }
-        catch(err) {
+        catch (err) {
           console.log(err);
           layer.disableEdit();
         }
+
         data.set('geometry', geometry);
         let crsObj = {
           type: 'name',
