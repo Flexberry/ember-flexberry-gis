@@ -69,8 +69,6 @@ export default WmsLayerComponent.extend({
     });
   },
 
-
-
   /**
     Handles 'flexberry-map:identify' event of leaflet map.
 
