@@ -5074,7 +5074,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 56,
+            "line": 58,
             "description": "Flexberry layers tree component with [Semantic UI accordion](http://semantic-ui.com/modules/accordion.html) style.\nand [\"Data Down Actions Up (DDAU)\" pattern](https://emberway.io/ember-js-goodbye-mvc-part-1-21777ecfd708) one way bindings.\nComponent doesn't mutate passed data by its own, it only invokes actions,\nwhich signalizes to the route, controller, or another component, that passed data should be mutated.\nComponent must be used in combination with {{#crossLink \"FlexberryMaplayersComponent\"}}'flexberry-maplayers' component{{/crossLink}}\nas a wrapper for those layers, which are placed on the same tree level.\n\nUsage with layers explicitly defined in hbs-markup:\ntemplates/my-form.hbs\n```handlebars\n{{#flexberry-maplayers}}\n  {{#flexberry-maplayer\n    name=hbsTreeNodes.0.name\n    type=hbsTreeNodes.0.type\n    visibility=hbsTreeNodes.0.visibility\n    headerClick=(action \"onMapLayerHeaderClick\" \"hbsTreeNodes.0\")\n    visibilityChange=(action \"onMaplayerVisibilityChange\" \"hbsTreeNodes.0.visibility\")\n  }}\n    {{#flexberry-maplayers}}\n      {{#flexberry-maplayer\n        name=hbsTreeNodes.0.layers.0.name\n        type=hbsTreeNodes.0.layers.0.type\n        visibility=hbsTreeNodes.0.layers.0.visibility\n        headerClick=(action \"onMapLayerHeaderClick\" \"hbsTreeNodes.0.layers.0\")\n        visibilityChange=(action \"onMaplayerVisibilityChange\" \"hbsTreeNodes.0.layers.0.visibility\")\n      }}\n        {{#flexberry-maplayers}}\n          {{flexberry-maplayer\n            name=hbsTreeNodes.0.layers.0.layers.0.name\n            type=hbsTreeNodes.0.layers.0.layers.0.type\n            visibility=hbsTreeNodes.0.layers.0.layers.0.visibility\n            headerClick=(action \"onMapLayerHeaderClick\" \"hbsTreeNodes.0.layers.0.layers.0\")\n            visibilityChange=(action \"onMaplayerVisibilityChange\" \"hbsTreeNodes.0.layers.0.layers.0.visibility\")\n          }}\n        {{/flexberry-maplayers}}\n      {{/flexberry-maplayer}}\n      {{flexberry-maplayer\n        name=hbsTreeNodes.0.layers.1.name\n        type=hbsTreeNodes.0.layers.1.type\n        visibility=hbsTreeNodes.0.layers.1.visibility\n        headerClick=(action \"onMapLayerHeaderClick\" \"hbsTreeNodes.0.layers.1\")\n        visibilityChange=(action \"onMaplayerVisibilityChange\" \"hbsTreeNodes.0.layers.1.visibility\")\n      }}\n    {{/flexberry-maplayers}}\n  {{/flexberry-maplayer}}\n{{/flexberry-maplayers}}\n```\n\nUsage with layers defined as JSON-object:\ntemplates/my-form.hbs\n```handlebars\n{{flexberry-maplayers\n  layers=(get-with-dynamic-actions this \"jsonLayers\"\n    hierarchyPropertyName=\"layers\"\n    dynamicActions=(array\n      (hash\n        on=\"visibilityChange\"\n        actionName=\"onMaplayerVisibilityChange\"\n        actionArguments=(array \"{% propertyPath %}.visibility\")\n      )\n      (hash\n        on=\"headerClick\"\n        actionName=\"onMapLayerHeaderClick\"\n        actionArguments=(array \"{% propertyPath %}\")\n      )\n    )\n  )\n}}\n```",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>",
             "uses": [
@@ -29922,7 +29922,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 142,
+            "line": 144,
             "description": "Layer copy's name postfix",
             "itemtype": "property",
             "name": "copyPostfix",
@@ -29933,7 +29933,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 151,
+            "line": 153,
             "description": "Component's required actions names.\nFor actions enumerated in this array an assertion exceptions will be thrown,\nif actions handlers are not defined for them.",
             "itemtype": "property",
             "name": "_requiredActions",
@@ -29944,7 +29944,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 162,
+            "line": 164,
             "description": "Flag: indicates whether some {{#crossLink \"FlexberryMaplayerComponent/layers:property\"}}'layers'{{/childNodes}} are defined.",
             "itemtype": "property",
             "name": "_hasLayers",
@@ -29957,7 +29957,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 178,
+            "line": 180,
             "description": "Flag: indicates whether some nested content is defined.\n(some yield markup or {{#crossLink \"FlexberryMaplayersComponent/layers:property\"}}'layers'{{/crossLink}} are defined).",
             "itemtype": "property",
             "name": "_hasContent",
@@ -29970,7 +29970,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 193,
+            "line": 195,
             "description": "Flag: displays whether layer's opacity can be changed",
             "itemtype": "property",
             "name": "_canChangeOpacity",
@@ -29983,7 +29983,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 205,
+            "line": 207,
             "description": "Formatted layer's opacity display value.",
             "itemtype": "property",
             "name": "_opacityDisplayValue",
@@ -29996,7 +29996,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 220,
+            "line": 222,
             "description": "Layer class factory related to current layer type.",
             "itemtype": "property",
             "name": "_layerClassFactory",
@@ -30009,7 +30009,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 232,
+            "line": 234,
             "description": "CSS-class name for layer type related icon.",
             "itemtype": "property",
             "name": "_typeIconClass",
@@ -30022,7 +30022,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 246,
+            "line": 248,
             "description": "Flag: indicates whether add operation is allowed for layer.",
             "itemtype": "property",
             "name": "_addOperationIsAvailable",
@@ -30035,7 +30035,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 260,
+            "line": 262,
             "description": "Flag: indicates whether fir bounds operation is allowed for layer.",
             "itemtype": "property",
             "name": "_fitBoundsOperationIsAvailable",
@@ -30048,7 +30048,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 272,
+            "line": 274,
             "description": "Flag: indicates whether attributes operation is allowed for layer.",
             "itemtype": "property",
             "name": "_attributesOperationIsAvailable",
@@ -30061,7 +30061,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 286,
+            "line": 288,
             "description": "Reference to 'store' service.",
             "itemtype": "property",
             "name": "store",
@@ -30073,7 +30073,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 295,
+            "line": 297,
             "description": "Flag: indicates whether add dialog has been already requested by user or not.",
             "itemtype": "property",
             "name": "_addDialogHasBeenRequested",
@@ -30085,7 +30085,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 304,
+            "line": 306,
             "description": "Flag: indicates whether edit dialog has been already requested by user or not.",
             "itemtype": "property",
             "name": "_editDialogHasBeenRequested",
@@ -30097,7 +30097,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 313,
+            "line": 315,
             "description": "Flag: indicates whether copy dialog has been already requested by user or not.",
             "itemtype": "property",
             "name": "_copyDialogHasBeenRequested",
@@ -30109,7 +30109,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 322,
+            "line": 324,
             "description": "Flag: indicates whether remove dialog has been already requested by user or not.",
             "itemtype": "property",
             "name": "_removeDialogHasBeenRequested",
@@ -30121,7 +30121,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 331,
+            "line": 333,
             "description": "Flag: indicates whether add dialog is visible or not.",
             "itemtype": "property",
             "name": "_addDialogIsVisible",
@@ -30133,7 +30133,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 340,
+            "line": 342,
             "description": "Flag: indicates whether edit dialog is visible or not.",
             "itemtype": "property",
             "name": "_editDialogIsVisible",
@@ -30145,7 +30145,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 349,
+            "line": 351,
             "description": "Flag: indicates whether copy dialog is visible or not.",
             "itemtype": "property",
             "name": "_copyDialogIsVisible",
@@ -30157,7 +30157,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 358,
+            "line": 360,
             "description": "Flag: indicates whether remove dialog is visible or not.",
             "itemtype": "property",
             "name": "_removeDialogIsVisible",
@@ -30169,7 +30169,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 367,
+            "line": 369,
             "description": "Layer model for 'add' dialog.",
             "itemtype": "property",
             "name": "_addDialogLayer",
@@ -30180,7 +30180,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 376,
+            "line": 378,
             "description": "Layer model for 'copy' dialog.",
             "itemtype": "property",
             "name": "_copyDialogLayer",
@@ -30191,7 +30191,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 385,
+            "line": 387,
             "description": "Layer model for 'edit' dialog.",
             "itemtype": "property",
             "name": "_editDialogLayer",
@@ -30202,7 +30202,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 394,
+            "line": 396,
             "description": "Layer model for 'remove' dialog.",
             "itemtype": "property",
             "name": "_removeDialogLayer",
@@ -30213,21 +30213,21 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 403,
+            "line": 405,
             "description": "Reference to component's template.",
             "class": "FlexberryMaplayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 408,
+            "line": 410,
             "description": "Reference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's hbs-markup.",
             "class": "FlexberryMaplayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 414,
+            "line": 416,
             "description": "Overridden ['tagName' property](http://emberjs.com/api/classes/Ember.Component.html#property_tagName).\nIs blank to disable component's wrapping <div>.",
             "itemtype": "property",
             "name": "tagName",
@@ -30238,7 +30238,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 424,
+            "line": 426,
             "description": "Leaflet map.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -30249,7 +30249,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 433,
+            "line": 435,
             "description": "Flag: indicates whether layer node is in readonly mode.\nIf true, layer node's data-related UI will be in readonly mode.",
             "itemtype": "property",
             "name": "readonly",
@@ -30260,7 +30260,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 443,
+            "line": 445,
             "description": "Flag: indicates whether layer node has been expanded once.",
             "itemtype": "property",
             "name": "hasBeenExpanded",
@@ -30271,7 +30271,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 453,
+            "line": 455,
             "description": "Handles {{#crossLink \"FlexberryTreenodeComponent/sendingActions.headerClick:method\"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.headerClick:method\"}}'headerClick' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHeaderClick",
@@ -30287,7 +30287,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 465,
+            "line": 467,
             "description": "Handles {{#crossLink \"FlexberryTreenodeComponent/sendingActions.beforeExpand:method\"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.beforeExpand:method\"}}'beforeExpand' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHeaderClick",
@@ -30303,7 +30303,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 483,
+            "line": 485,
             "description": "Handles {{#crossLink \"FlexberryTreenodeComponent/sendingActions.beforeCollapse:method\"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.beforeCollapse:method\"}}'beforeCollapse' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHeaderClick",
@@ -30319,7 +30319,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 495,
+            "line": 497,
             "description": "Handles {{#crossLink \"FlexberryDdauCheckboxComponent/sendingActions.change:method\"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.changeVisibility:method\"}}'changeVisibility'action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onVisibilityCheckboxChange",
@@ -30335,7 +30335,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 506,
+            "line": 508,
             "description": "Handles {{#crossLink \"FlexberryDdauSliderComponent/sendingActions.change:method\"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.changeVisibility:method\"}}'changeOpacity'action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onOpacitySliderChange",
@@ -30351,7 +30351,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 517,
+            "line": 519,
             "description": "Invokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.fitBounds:method\"}}'fitBounds' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBoundsButtonClick",
@@ -30367,7 +30367,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 528,
+            "line": 530,
             "description": "Handles attributes button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.attributes:method\"}}'attributes'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAttributesButtonClick",
@@ -30383,7 +30383,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 540,
+            "line": 542,
             "description": "Handles add button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddButtonClick",
@@ -30399,7 +30399,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 560,
+            "line": 562,
             "description": "Handles add dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddDialogApprove",
@@ -30422,7 +30422,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 573,
+            "line": 575,
             "description": "Handles copy button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.copy:method\"}}'copy'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onCopyButtonClick",
@@ -30438,7 +30438,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 593,
+            "line": 595,
             "description": "Handles copy dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.copy:method\"}}'copy'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onCopyDialogApprove",
@@ -30461,7 +30461,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 610,
+            "line": 612,
             "description": "Handles edit button's 'click' event.\nShows component's edit dialog.",
             "itemtype": "method",
             "name": "actions.onEditButtonClick",
@@ -30478,7 +30478,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 629,
+            "line": 631,
             "description": "Handles edit dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.add:method\"}}'edit'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onEditDialogApprove",
@@ -30501,7 +30501,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 642,
+            "line": 644,
             "description": "Handles remove button's 'click' event.\nShows component's remove dialog.",
             "itemtype": "method",
             "name": "actions.onRemoveButtonClick",
@@ -30518,7 +30518,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 661,
+            "line": 663,
             "description": "Handles remove dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.remove:method\"}}'remove'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onRemoveDialogApprove",
@@ -30527,7 +30527,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 673,
+            "line": 675,
             "description": "Creates layer's copy.",
             "itemtype": "method",
             "name": "createLayerCopy",
@@ -30548,7 +30548,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 687,
+            "line": 689,
             "description": "Component's action invoking when layer node's header has been clicked.",
             "itemtype": "method",
             "name": "sendingActions.headerClick",
@@ -30564,7 +30564,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 695,
+            "line": 697,
             "description": "Component's action invoking before layer node will be expanded.\nLayer node can be prevented from being expanded with call to action event object's 'originalEvent.stopPropagation()'.",
             "itemtype": "method",
             "name": "sendingActions.beforeExpand",
@@ -30580,7 +30580,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 704,
+            "line": 706,
             "description": "Component's action invoking before layer node will be collapsed.\nLayer node can be prevented from being collapsed with call to action event object's 'originalEvent.stopPropagation()'.",
             "itemtype": "method",
             "name": "sendingActions.beforeCollapse",
@@ -30596,7 +30596,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 713,
+            "line": 715,
             "description": "Component's action invoking when layer node's 'visibility' state changed.",
             "itemtype": "method",
             "name": "sendingActions.changeVisibility",
@@ -30612,7 +30612,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 721,
+            "line": 723,
             "description": "Component's action invoking when layer node's 'opacity' value changed.",
             "itemtype": "method",
             "name": "sendingActions.changeOpacity",
@@ -30628,7 +30628,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 729,
+            "line": 731,
             "description": "Component's action invoking when layer node's 'extent' button clicked.",
             "itemtype": "method",
             "name": "sendingActions.fitBounds",
@@ -30644,7 +30644,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 737,
+            "line": 739,
             "description": "Component's action invoking when user wants to add child layer into current.",
             "itemtype": "method",
             "name": "sendingActions.add",
@@ -30667,7 +30667,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 745,
+            "line": 747,
             "description": "Component's action invoking when user wants to copy current layer.",
             "itemtype": "method",
             "name": "sendingActions.copy",
@@ -30695,7 +30695,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 754,
+            "line": 756,
             "description": "Component's action invoking when user wants to edit current layer.",
             "itemtype": "method",
             "name": "sendingActions.edit",
@@ -30718,7 +30718,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 762,
+            "line": 764,
             "description": "Component's action invoking when user wants to remove current layer.",
             "itemtype": "method",
             "name": "sendingActions.remove",
@@ -30734,7 +30734,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 769,
+            "line": 771,
             "description": "Component's action invoking when user wants to look at attributes of current layer.",
             "itemtype": "method",
             "name": "sendingActions.attributesEdit",
@@ -42863,11 +42863,11 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/flexberry-maplayer.js:403"
+            "line": " addon/components/flexberry-maplayer.js:405"
         },
         {
             "message": "Missing item type\nReference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's hbs-markup.",
-            "line": " addon/components/flexberry-maplayer.js:408"
+            "line": " addon/components/flexberry-maplayer.js:410"
         },
         {
             "message": "Missing item type\nReference to component's template.",

@@ -35242,7 +35242,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://bi-vm1.cloudapp.net:12001","backendUrls":{"root":"http://bi-vm1.cloudapp.net:12001","api":"http://bi-vm1.cloudapp.net:12001/odata"},"log":{"enabled":false},"useUserSettingsService":false,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.0+fba33f2e"});
+  require("dummy/app")["default"].create({"backendUrl":"http://bi-vm1.cloudapp.net:12001","backendUrls":{"root":"http://bi-vm1.cloudapp.net:12001","api":"http://bi-vm1.cloudapp.net:12001/odata"},"log":{"enabled":false},"useUserSettingsService":false,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.0+89941d02"});
 }
 
 /* jshint ignore:end */
