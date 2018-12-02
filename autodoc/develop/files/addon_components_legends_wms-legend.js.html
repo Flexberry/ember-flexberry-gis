@@ -430,7 +430,7 @@ export default BaseLegendComponent.extend({
       let legends = Ember.A();
       let layerSettings = this.get(&#x27;layer.settingsAsObject&#x27;) || {};
 
-      let url = Ember.get(layerSettings, &#x27;url&#x27;) || Ember.get(layerSettings, &#x27;legendSettings.url&#x27;);
+      let url = Ember.get(layerSettings, &#x27;legendSettings.url&#x27;) || Ember.get(layerSettings, &#x27;url&#x27;);
       if (Ember.isBlank(url)) {
         Ember.Logger.error(
           &#x60;Unable to compute legends for &#x27;${this.get(&#x27;layer.name&#x27;)}&#x27; layer, because both required settings &#x27;url&#x27; and &#x27;legendSettings.url&#x27; are blank&#x60;
