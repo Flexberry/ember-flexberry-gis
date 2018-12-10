@@ -457,12 +457,12 @@ export default WmsLayerComponent.extend({
   /**
     Returns leaflet layer for filter component.
 
-    @method getLeafletObjectForFilter
+    @method getLeafletObject
     @returns &lt;a href=&quot;http://leafletjs.com/reference-1.0.1.html#layer&quot;&gt;L.Layer&lt;/a&gt;|&lt;a href=&quot;https://emberjs.com/api/classes/RSVP.Promise.html&quot;&gt;Ember.RSVP.Promise&lt;/a&gt;
     Leaflet layer or promise returning such layer.
   */
-  getLeafletObjectForFilter() {
-    let options = Ember.$.extend(this.get(&#x27;_wfsLayer.options&#x27;) || {}, { showExisting: true });
+  getLeafletObject() {
+    let options = Ember.$.extend(this.get(&#x27;_wfsLayer.options&#x27;) || {}, { showExisting: false });
     return this.get(&#x27;_wfsLayer&#x27;).createVectorLayer(options).then(layer =&gt; {
       return layer;
     });

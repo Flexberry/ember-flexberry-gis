@@ -11151,7 +11151,7 @@
             "line": 58,
             "description": "Returns leaflet layer for filter component.",
             "itemtype": "method",
-            "name": "getLeafletObjectForFilter",
+            "name": "getLeafletObject",
             "return": {
                 "description": "<a href=\"http://leafletjs.com/reference-1.0.1.html#layer\">L.Layer</a>|<a href=\"https://emberjs.com/api/classes/RSVP.Promise.html\">Ember.RSVP.Promise</a>\nLeaflet layer or promise returning such layer."
             },
