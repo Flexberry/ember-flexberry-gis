@@ -80,12 +80,12 @@ export default Ember.Mixin.create({
 
         let sidebarElement = Ember.$('.sidebar-wrapper');
         if (sidebarElement.hasClass('visible')) {
-          widthPadding = sidebarElement.children('.sidebar').width();
+          widthPadding = sidebarElement.children('.sidebar').width() || 0;
         }
 
         let bottompanelElement = Ember.$('.bottom.bottompanel');
         if (!bottompanelElement.hasClass('folded')) {
-          heightPadding = bottompanelElement.height();
+          heightPadding = bottompanelElement.height() || 0;
         }
 
         this.get('leafletMap').fitBounds(bounds.pad(1), { paddingBottomRight: [widthPadding, heightPadding] });
