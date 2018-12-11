@@ -74,7 +74,21 @@ export default Ember.Mixin.create({
       if (!Ember.isNone(bounds)) {
         // 'bound.pad(1)' bounds with zoom decreased by 1 point (padding).
         //  That allows to make map's bounds slightly larger than serviceLayer's bounds to make better UI.
-        this.get('leafletMap').fitBounds(bounds.pad(1));
+
+        let widthPadding = 0;
+        let heightPadding = 0;
+
+        let sidebarElement = Ember.$('.sidebar-wrapper');
+        if (sidebarElement.hasClass('visible')) {
+          widthPadding = sidebarElement.children('.sidebar').width();
+        }
+
+        let bottompanelElement = Ember.$('.bottom.bottompanel');
+        if (!bottompanelElement.hasClass('folded')) {
+          heightPadding = bottompanelElement.height();
+        }
+
+        this.get('leafletMap').fitBounds(bounds.pad(1), { paddingBottomRight: [widthPadding, heightPadding] });
       }
     },
 
