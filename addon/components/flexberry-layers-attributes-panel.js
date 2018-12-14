@@ -490,9 +490,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           /**
            Projects geometry from latlng to coords in layer's CRS
 
-           @method latlngToPoint
-           @param {Leaflet Object} geometry
-           @param {L.CRS} crs
+           @method transform
+           @param {Leaflet Object} latlngs
+           @param {L.CRS} options
            @returns coordinates in GeoJSON
            */
           transform(latlngs, options) {
