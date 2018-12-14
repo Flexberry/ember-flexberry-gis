@@ -509,7 +509,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           },
 
           /**
-           Projects geometry from latlng to coords in layer's CRS
+            Update geometry layer in model.
 
            @method updateGeometryInModel
            @param {Object} layer
