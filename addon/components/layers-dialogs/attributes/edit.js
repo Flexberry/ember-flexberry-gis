@@ -29,6 +29,15 @@ const flexberryClassNames = {
 };
 
 let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
+  /**
+    Current data in edit fields.
+
+    @property _currentParseData
+    @type {Object}
+    @default null
+    @private
+  */
+  _currentParseData: null,
 
   /**
     Reference to component's template.
@@ -278,6 +287,7 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
       @method actions.onShow
     */
     onShow() {
+      this.set('_currentParseData', null);
       this.sendAction('show');
     },
 
@@ -298,7 +308,13 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
       @method actions.onHide
     */
     onHide() {
-      this.sendAction('hide');
+      let currentParseData = this.get('_currentParseData');
+
+      if (Ember.isNone(currentParseData)) {
+        this.sendAction('deny');
+      } else {
+        this.sendAction('hide');
+      }
     },
 
     /**
@@ -309,6 +325,7 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
     */
     onApprove(e) {
       let parsedData = this.parseData();
+      this.set('_currentParseData', parsedData);
       if (Ember.isNone(parsedData)) {
         // Prevent dialog from being closed.
         e.closeDialog = false;
