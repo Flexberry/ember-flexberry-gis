@@ -296,6 +296,20 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
                 Ember.set(layer, 'feature', {});
               }
 
+              if (!Ember.isNone(layer.model)) {
+                let data = {};
+                for (let prop in layer.model.toJSON()) {
+                  let postfix = '';
+                  if (layer.model.get(prop) instanceof Object && layer.model.get(prop + '.name')) {
+                    postfix = '.name';
+                  }
+
+                  data[prop] = layer.model.get('' + prop + postfix);
+                }
+
+                Ember.set(layer, 'feature.properties', data);
+              }
+
               let props = Ember.get(layer, 'feature.properties');
               let propId = Ember.guidFor(props);
               if (Ember.isNone(Ember.get(layer, 'feature.leafletLayer'))) {
