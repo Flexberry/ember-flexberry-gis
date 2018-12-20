@@ -170,18 +170,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.send('onTabMove', true);
       }
 
-      return editedLayers.map((item) => {
+      let tabModels = editedLayers.map((item) => {
         let name = Ember.get(item, 'name');
 
         let leafletObject = Ember.get(item, 'leafletObject');
         let readonly = Ember.get(item, 'settings.readonly') || false;
         let styleSettings = Ember.get(item, 'settings.styleSettings') || {};
-        if (Ember.get(leafletObject, 'editformname')) {
-          this.set('_editComponentName', Ember.get(leafletObject, 'editformname'));
-          this.set('_isPanelEditable', false);
-          this.set('extraLayerData.modelName', Ember.get(leafletObject, 'modelName'));
-          this.set('extraLayerData.projectionName', Ember.get(leafletObject, 'projectionName'));
-        }
 
         let getHeader = () => {
           let result = {};
@@ -568,6 +562,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
         return newTab;
       });
+
+      this._setEditComponentName(tabModels);
+
+      return tabModels;
     }
   }),
 
@@ -780,6 +778,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           this.set('folded', false);
         }
       }
+
+      this._setEditComponentName(this.get('_tabModels'));
     },
 
     /**
@@ -1118,6 +1118,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           }
         }
       }
+
+      this.set('_editRowDialogHasBeenRequested', false);
     },
 
     /**
@@ -1281,6 +1283,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this._zoomToLayer(layer);
         this.set('_newRowPanToObject', null);
       }
+
+      this.set('_newRowDialogHasBeenRequested', false);
     },
 
     /**
@@ -1299,6 +1303,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_newRowTabModel', null);
       this.set('_newRowLayer', null);
       this.set('_newRowPanToObject', null);
+
+      this.set('_newRowDialogHasBeenRequested', false);
     },
 
     /**
@@ -1310,6 +1316,22 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.set('_newRowСhoiceValueMode', false);
         this.set('_newRowСhoiceValueData', null);
       }
+
+      this.set('_newRowDialogHasBeenRequested', false);
+    },
+
+    /**
+      Handles edit row attributes dialog's 'deny' action.
+    */
+    onEditRowDialogDeny() {
+      this.set('_editRowDialogHasBeenRequested', false);
+    },
+
+    /**
+      Handles edit row attributes dialog's 'hide' action.
+    */
+    onEditRowDialogHide() {
+      this.set('_editRowDialogHasBeenRequested', false);
     },
 
     /**
@@ -1589,6 +1611,23 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           }
         }
       }
+    }
+  },
+
+  /**
+    Update '_editComponentName'.
+
+    @param {Object} tabModel Tab model.
+  */
+  _setEditComponentName(tabModels) {
+    let indexTabModel = this.get('selectedTabIndex');
+    let tabModel = tabModels[`${indexTabModel}`];
+    let leafletObject = Ember.get(tabModel, 'leafletObject');
+    if (Ember.get(leafletObject, 'editformname')) {
+      this.set('_editComponentName', Ember.get(leafletObject, 'editformname'));
+      this.set('_isPanelEditable', false);
+      this.set('extraLayerData.modelName', Ember.get(leafletObject, 'modelName'));
+      this.set('extraLayerData.projectionName', Ember.get(leafletObject, 'projectionName'));
     }
   },
 
