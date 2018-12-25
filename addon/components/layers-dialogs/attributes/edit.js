@@ -310,11 +310,7 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
     onHide() {
       let currentParseData = this.get('_currentParseData');
 
-      if (Ember.isNone(currentParseData)) {
-        this.sendAction('deny');
-      } else {
-        this.sendAction('hide');
-      }
+      this.sendAction('hide');
     },
 
     /**
