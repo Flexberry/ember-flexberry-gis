@@ -1180,14 +1180,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.set('_newRowСhoiceValueMode', false);
         this.set('_newRowСhoiceValueData', null);
       }
-
-      let newLayer = this.get('_newRowLayer');
-      if (!Ember.isNone(newLayer)) {
-        this.get('leafletMap').removeLayer(newLayer);
-        this.set('_newRowTabModel', null);
-        this.set('_newRowLayer', null);
-        this.set('_newRowPanToObject', null);
-      }
     },
 
     /**
