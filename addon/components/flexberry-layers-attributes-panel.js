@@ -970,6 +970,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         Ember.set(tabModel, '_editedRows', editedRows);
         tabModel.notifyPropertyChange('_editedRows');
       }
+
+      this.send('onClearFoundItemClick');
     },
 
     /**
