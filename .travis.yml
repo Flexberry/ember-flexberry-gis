@@ -40,9 +40,9 @@ after_success:
   - test $EMBER_TRY_SCENARIO == "default"
     && test $TRAVIS_PULL_REQUEST == "false"
     && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_BRANCH == "develop")
-    && ember build -prod --gh-pages --brunch=$TRAVIS_BRANCH --postfix=-postgres
+    && ember build --gh-pages --brunch=$TRAVIS_BRANCH --postfix=-postgres
     && bash scripts/deploy-to-gh-pages.sh -postgres
-    && ember build -prod --gh-pages --brunch=$TRAVIS_BRANCH --postfix=-mssql
+    && ember build --gh-pages --brunch=$TRAVIS_BRANCH --environment=mssql-backend
     && bash scripts/deploy-to-gh-pages.sh -mssql no-doc
 
 deploy:

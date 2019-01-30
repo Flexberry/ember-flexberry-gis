@@ -1,6 +1,6 @@
 {
   "name": "ember-flexberry-gis",
-  "version": "0.7.0-beta.3",
+  "version": "0.8.0-beta.0",
   "description": "Ember Flexberry GIS Addon",
   "license": "MIT",
   "author": {
@@ -79,8 +79,8 @@
   "dependencies": {
     "ember-cli-babel": "^5.1.6",
     "ember-cli-htmlbars": "^1.0.3",
-    "ember-flexberry": "github:Flexberry/ember-flexberry#63df3edf5a5de626112b0f5cb6ac9dc465b19682",
-    "ember-flexberry-data": "2.0.0-beta.1",
+    "ember-flexberry": "2.0.0-beta.4",
+    "ember-flexberry-data": "2.0.0-beta.2",
     "ember-i18n": "4.2.0",
     "ember-truth-helpers": "1.2.0",
     "ember-validations": "~2.0.0-alpha.4",

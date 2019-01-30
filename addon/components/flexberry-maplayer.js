@@ -48,6 +48,8 @@ const flexberryClassNames = {
   copyButton: flexberryClassNamesPrefix + '-copy-button',
   editButton: flexberryClassNamesPrefix + '-edit-button',
   removeButton: flexberryClassNamesPrefix + '-remove-button',
+  boundsButton: flexberryClassNamesPrefix + '-bounds-button',
+  attributesButton: flexberryClassNamesPrefix + '-attributes-button',
   caption: flexberryClassNamesPrefix + '-caption-label',
   legendToggler: flexberryClassNamesPrefix + '-legend-toggler',
   preventExpandCollapse: FlexberryTreenodeComponent.flexberryClassNames.preventExpandCollapse,
