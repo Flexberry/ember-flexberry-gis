@@ -189,7 +189,7 @@ export default Ember.Component.extend({
       @method actions.showFeature
      */
     showFeature() {
-      if(this.get('expanded')) {
+      if (this.get('expanded')) {
         this.sendAction('zoomTo', this.get('feature'));
       } else {
         this.sendAction('zoomTo', null);

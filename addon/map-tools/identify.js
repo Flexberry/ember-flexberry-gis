@@ -197,7 +197,7 @@ export default BaseNonclickableMapTool.extend({
   _finishIdentification(e) {
     //let identColor='red';
     e.results.forEach((identificationResult) => {
-      let identColor = Ember.get(identificationResult,'layerModel.settingsAsObject.identifySettings.identificationColor');
+      let identColor = Ember.get(identificationResult, 'layerModel.settingsAsObject.identifySettings.identificationColor');
       identificationResult.features.then(
         (features) => {
           // Show new features.
