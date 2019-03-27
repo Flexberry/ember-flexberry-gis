@@ -182,6 +182,18 @@ export default Ember.Component.extend({
      */
     toggleLinks() {
       this.set('_linksExpanded', !this.get('_linksExpanded'));
+    },
+
+    /**
+      Show\hide feature (if present).
+      @method actions.showFeature
+     */
+    showFeature() {
+      if(this.get('expanded')) {
+        this.sendAction('zoomTo', this.get('feature'));
+      } else {
+        this.sendAction('zoomTo', null);
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-<div class="feature-result-item-title">
+<div class="feature-result-item-title" {{action "showFeature" on="click" bubbles=false}}>
   <div class="feature-result-item-toolbar {{if (gt feature.editForms.length 1) "links" ""}}">
     <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo" on="click"}}>
       <i class="caret {{if expanded 'down' 'right'}} icon"></i>

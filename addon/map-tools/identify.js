@@ -195,7 +195,9 @@ export default BaseNonclickableMapTool.extend({
     @private
   */
   _finishIdentification(e) {
+    //let identColor='red';
     e.results.forEach((identificationResult) => {
+      let identColor = Ember.get(identificationResult,'layerModel.settingsAsObject.identifySettings.identificationColor');
       identificationResult.features.then(
         (features) => {
           // Show new features.
@@ -203,7 +205,7 @@ export default BaseNonclickableMapTool.extend({
             let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
             if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
               leafletLayer.setStyle({
-                color: 'salmon',
+                color: identColor,
                 weight: 2,
                 fillOpacity: 0.3
               });

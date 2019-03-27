@@ -33,6 +33,7 @@
         </div>
       {{/if}}
     {{/if}}
+    <div class='layer-result-list-toggler-click' {{action "showFeature" result on="click"}}>
     {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
       <div class="ui list transition">
         {{#each result.features as |feature|}}
@@ -61,6 +62,7 @@
           {{/if}}
         {{/each}}
       </div>
-      {{/flexberry-toggler}}
+    {{/flexberry-toggler}}
+    </div>
   </div>
 {{/each}}
