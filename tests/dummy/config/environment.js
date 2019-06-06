@@ -1,7 +1,7 @@
 /* jshint node: true */
 
 module.exports = function (environment) {
-  var backendUrl = 'http://bi-vm1.cloudapp.net:12001';
+  var backendUrl = 'http://134.209.30.115:1818';
 
   if (environment === 'development-loc') {
     // Use `ember server --environment=development-loc` command for local backend usage.
