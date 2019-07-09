@@ -592,18 +592,41 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
       @method _foundedFeaturesDidChange
       @private
     */
-    _foundedFeaturesDidChange: Ember.observer('foundedFeatures', function() {
-      let availableLayersOptions = this.get('_availableLayersOptions');
-      let selectedLayer = this.get('_selectedLayer');
+    _foundedFeaturesDidChange: Ember.observer('foundedFeatures', function () {
+	    let availableLayersOptions = this.get('_availableLayersOptions');
+	    let selectedLayer = this.get('_selectedLayer');
 
-      if (Ember.isArray(availableLayersOptions) && !Ember.isNone(selectedLayer)) {
-        availableLayersOptions.forEach((cachedEntry) => {
-          if (Ember.get(cachedEntry, 'layer') === selectedLayer) {
-            Ember.set(cachedEntry, 'foundedFeatures', this.get('foundedFeatures'));
-            return false;
-          }
-        });
-      }
+	    if (Ember.isArray(availableLayersOptions) && !Ember.isNone(selectedLayer)) {
+		    availableLayersOptions.forEach((cachedEntry) => {
+			    if (Ember.get(cachedEntry, 'layer') === selectedLayer) {
+				    let features = this.get('foundedFeatures') || null;
+
+				    if (features !== null) {
+					    let properKeys = Object.keys(this.get('_selectedLayerFeaturesLocalizedProperties'));
+
+					    for (let i = 0; i < features.length; i++) {
+						    let proper = features[i].properties;
+						    let obj = {};
+
+						    for (let j = 0; j < properKeys.length; j++) {
+							    let key = properKeys[j];
+
+							    if (proper[key] === undefined) {
+								    obj[key] = '';
+							    } else {
+								    obj[key] = proper[key];
+							    }
+						    }
+
+						    features[i].properties = obj;
+					    }
+
+					    Ember.set(cachedEntry, 'foundedFeatures', features);
+				    }
+				    return false;
+			    }
+		    });
+	    }
     }),
 
     /**
