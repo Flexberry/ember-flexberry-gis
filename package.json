@@ -87,6 +87,9 @@
     "lodash": "^4.4.0",
     "strip-bom": "^2.0.0"
   },
+  "resolutions": {
+    "resolve": "1.11.0"
+  },
   "ember-addon": {
     "configPath": "tests/dummy/config"
   },
