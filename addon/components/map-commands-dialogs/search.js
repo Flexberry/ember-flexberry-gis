@@ -623,7 +623,7 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
 
             Ember.set(cachedEntry, 'foundedFeatures', features);
           }
-          
+
           return false;
         }
       });
