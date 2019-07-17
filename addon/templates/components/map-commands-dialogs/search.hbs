@@ -94,17 +94,11 @@
                       tooltip=(t "components.map-commands-dialogs.search.show.caption")
                       click=(action "onShowFeatureButtonClick" featureIndex)
                     }}
-                  </td>
-                   {{!-- {{#each-in feature.properties as |propertyName propertyValue|}} --}}
-                       {{#each-in _selectedLayerFeaturesLocalizedProperties as |propertyName propertyValue|}} 
+                    </td>
+                    {{#each-in _selectedLayerFeaturesLocalizedProperties as |propertyName propertyValue|}} 
                       {{#if (not (array-contains _selectedLayerFeaturesExcludedProperties propertyName))}}
                         <td>
-                    {{!-- {{propertyValue}}  --}}
-                      {{!-- {{feature.properties.name}} --}}
-                      {{!-- {{#if propertyValue }} --}}
-                      {{get feature.properties propertyValue}}
-                               {{!--  {{foundedFeatures.properties.name}} --}}
-                                     {{!-- {{/if}} --}}
+                          {{get feature.properties propertyValue}}
                         </td>
                       {{/if}}
                     {{/each-in}}
