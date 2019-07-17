@@ -599,9 +599,10 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     if (Ember.isArray(availableLayersOptions) && !Ember.isNone(selectedLayer)) {
       availableLayersOptions.forEach((cachedEntry) => {
         if (Ember.get(cachedEntry, 'layer') === selectedLayer) {
-          let features = this.get('foundedFeatures') || null;
+       // let features = this.get('foundedFeatures') || null;
+       let features = this.get('foundedFeatures');
 
-          if (features !== null) {
+          /*  if (features !== null) {
             let properKeys = Object.keys(this.get('_selectedLayerFeaturesLocalizedProperties'));
 
             for (let i = 0; i < features.length; i++) {
@@ -625,6 +626,9 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
           }
 
           return false;
+          */
+         Ember.set(cachedEntry, 'foundedFeatures', features);
+         return false;
         }
       });
     }

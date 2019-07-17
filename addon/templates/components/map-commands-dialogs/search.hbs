@@ -95,10 +95,16 @@
                       click=(action "onShowFeatureButtonClick" featureIndex)
                     }}
                   </td>
-                    {{#each-in feature.properties as |propertyName propertyValue|}}
+                   {{!-- {{#each-in feature.properties as |propertyName propertyValue|}} --}}
+                       {{#each-in _selectedLayerFeaturesLocalizedProperties as |propertyName propertyValue|}} 
                       {{#if (not (array-contains _selectedLayerFeaturesExcludedProperties propertyName))}}
                         <td>
-                          {{propertyValue}}
+                    {{!-- {{propertyValue}}  --}}
+                      {{!-- {{feature.properties.name}} --}}
+                      {{!-- {{#if propertyValue }} --}}
+                      {{get feature.properties propertyValue}}
+                               {{!--  {{foundedFeatures.properties.name}} --}}
+                                     {{!-- {{/if}} --}}
                         </td>
                       {{/if}}
                     {{/each-in}}
