@@ -36,7 +36,7 @@
         }}
       </div>
       {{#if _selectedLayerTypeIsValid}}
-        {{component (concat "map-commands-dialogs/search-settings/" _selectedLayer.type)
+      {{component (concat "map-commands-dialogs/search-settings/" _selectedLayer.type)
           settings=_options
           layer=_selectedLayer
           layers=layers
@@ -51,62 +51,62 @@
           {{foundedFeaturesSegmentCaption}}
         </label>
         {{#if _hasFoundedFeatures}}
-          {{#if (eq foundedFeatures.length 0)}}
-            {{foundedFeaturesSegmentNothingFoundMessage}}
-          {{else}}
-            <table class="ui celled table">
-              <thead>
-                <tr>
-                  <th class="collapsing">
-                    {{flexberry-ddau-checkbox
+        {{#if (eq foundedFeatures.length 0)}}
+        {{foundedFeaturesSegmentNothingFoundMessage}}
+        {{else}}
+        <table class="ui celled table">
+          <thead>
+            <tr>
+              <th class="collapsing">
+                {{flexberry-ddau-checkbox
                       value=_allFoundedFeaturesAreSelected
                       change=(action "onSelectAllFeaturesCheckboxChange")
                     }}
-                    {{flexberry-button
+                {{flexberry-button
                       iconClass="map icon"
                       tooltip=(t "components.map-commands-dialogs.search.show-selected.caption")
                       click=(action "onShowAllFeaturesButtonClick")
                     }}
-                  </th>
-                  {{#each-in _selectedLayerFeaturesLocalizedProperties as |propertyName propertyValue|}}
-                    {{#if (not (array-contains _selectedLayerFeaturesExcludedProperties propertyName))}}
-                      <th>
-                        {{#if (get _selectedLayerFeaturesLocalizedProperties propertyName)}}
-                          {{get _selectedLayerFeaturesLocalizedProperties propertyName}}
-                        {{else}}
-                          {{propertyName}}
-                        {{/if}}
-                      </th>
-                    {{/if}}
-                  {{/each-in}}
-                </tr>
-              </thead>
-              <tbody>
-                {{#each foundedFeatures as |feature featureIndex|}}
-                  <tr>
-                  <td class="collapsing">
-                    {{flexberry-ddau-checkbox
+              </th>
+              {{#each-in _selectedLayerFeaturesLocalizedProperties as |propertyName propertyValue|}}
+              {{#if (not (array-contains _selectedLayerFeaturesExcludedProperties propertyName))}}
+              <th>
+                {{#if (get _selectedLayerFeaturesLocalizedProperties propertyName)}}
+                {{get _selectedLayerFeaturesLocalizedProperties propertyName}}
+                {{else}}
+                {{propertyName}}
+                {{/if}}
+              </th>
+              {{/if}}
+              {{/each-in}}
+            </tr>
+          </thead>
+          <tbody>
+            {{#each foundedFeatures as |feature featureIndex|}}
+            <tr>
+              <td class="collapsing">
+                {{flexberry-ddau-checkbox
                       value=feature._selected
                       change=(action "onSelectFeatureCheckboxChange" featureIndex)
                     }}
-                    {{flexberry-button
+                {{flexberry-button
                       iconClass="map icon"
                       tooltip=(t "components.map-commands-dialogs.search.show.caption")
                       click=(action "onShowFeatureButtonClick" featureIndex)
                     }}
-                    </td>
-                    {{#each-in _selectedLayerFeaturesLocalizedProperties as |propertyName propertyValue|}} 
-                      {{#if (not (array-contains _selectedLayerFeaturesExcludedProperties propertyName))}}
-                        <td>
-                          {{get feature.properties propertyValue}}
-                        </td>
-                      {{/if}}
-                    {{/each-in}}
-                  </tr>
-                {{/each}}
-              </tbody>
-            </table>
-          {{/if}}
+              </td>
+              {{#each-in _selectedLayerFeaturesLocalizedProperties as |propertyName propertyValue|}}
+              {{#if (not (array-contains _selectedLayerFeaturesExcludedProperties propertyName))}}
+              <td>
+                {{get feature.properties propertyValue}}
+              </td>
+              {{/if}}
+              {{/each-in}}
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+        {{/if}}
         {{/if}}
       </div>
     </div>
