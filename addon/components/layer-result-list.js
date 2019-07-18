@@ -118,6 +118,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
      */
     toggleLinks() {
       this.set('_linksExpanded', !this.get('_linksExpanded'));
+    },
+
+    /**
+      Show\hide feature (if present).
+      @method actions.showFeature
+      @param {Object} result
+     */
+    showFeature(result) {
+      if (Ember.$('.layer-result-list-toggler > .title.active').length > 0) {
+        this.send('zoomTo', result.features);
+      } else {
+        this.send('zoomTo', null);
+      }
     }
   },
 
@@ -373,6 +386,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_displayResults', displayResults);
       this.set('_noData', displayResults.length === 0);
       this.set('_showLoader', false);
+      this.send('zoomTo', displayResults.objectAt(0).features);
 
       if (displayResults.length === 1) {
         this.send('zoomTo', displayResults.objectAt(0).features);

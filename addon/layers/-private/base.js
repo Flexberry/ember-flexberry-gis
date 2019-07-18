@@ -38,7 +38,8 @@ const createCommonSearchSettings = function () {
 
 const createCommonIdentifySettings = function () {
   return {
-    canBeIdentified: true
+    canBeIdentified: true,
+    identificationColor: 'salmon'
   };
 };
 
