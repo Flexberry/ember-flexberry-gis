@@ -6,6 +6,16 @@
   iconClass=iconClass
 }}
   {{#block-slot "submenu"}}
+    {{#if drawLabel}}
+      {{map-tools/base
+        class=(concat flexberryClassNames.drawLabel " " drawLabelClass)
+        name="draw-label"
+        caption=drawLabelCaption
+        iconClass=drawLabelIconClass
+        mapToolProperties=_drawToolProperties
+        activate=(action "onMapToolActivate")
+      }}
+    {{/if}}
     {{#if drawMarker}}
       {{map-tools/base
         class=(concat flexberryClassNames.drawMarker " " drawMarkerClass)
@@ -68,3 +78,18 @@
     {{/if}}
   {{/block-slot}}
 {{/map-tools/base}}
+{{!--
+  Semantic UI modal dialogs takes long time to be initialized
+  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+--}}
+{{#if _labelDialogHasBeenRequested}}
+  {{component "map-tools/dialog-label"
+    caption=_labelDialogCaption
+    visible=_labelDialogIsVisible
+    label=_label
+    signWithCoord=_signWithCoord
+    forMarkerIsVisible = _forMarkerIsVisible
+    approve=(action "onLabelDialogApprove")
+    deny=(action "onLabelDialogDeny")
+  }}
+{{/if}}

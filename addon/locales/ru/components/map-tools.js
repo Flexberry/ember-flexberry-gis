@@ -72,6 +72,16 @@ export default {
     },
     'draw-clear': {
       'caption': 'Очистить'
+    },
+    'dialog-label':{
+      'label': 'Надпись',
+      'color': 'Цвет',
+      'sizeText': 'Размер',
+      'caption': 'Описание',
+      'signWithCoord': 'Подписать координатами'
+    },
+    'draw-label':{
+      'caption': 'Надпись'
     }
   }
 };

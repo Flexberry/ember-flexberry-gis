@@ -128,7 +128,7 @@
           }
         }
     }
-    .flexberry-edit-layermap .ui.small.fluid.buttons:not(.basic):not(.inverted) > .button.flexberry-button {
+    .flexberry-dialog-content, .flexberry-edit-layermap .ui.small.fluid.buttons:not(.basic):not(.inverted) > .button.flexberry-button {
         color: @darkbluecolor;
     }
 }
