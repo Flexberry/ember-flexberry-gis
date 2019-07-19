@@ -80,17 +80,17 @@
               <tbody>
                 {{#each foundedFeatures as |feature featureIndex|}}
                   <tr>
-                  <td class="collapsing">
-                    {{flexberry-ddau-checkbox
-                      value=feature._selected
-                      change=(action "onSelectFeatureCheckboxChange" featureIndex)
-                    }}
-                    {{flexberry-button
-                      iconClass="map icon"
-                      tooltip=(t "components.map-commands-dialogs.search.show.caption")
-                      click=(action "onShowFeatureButtonClick" featureIndex)
-                    }}
-                  </td>
+                    <td class="collapsing">
+                      {{flexberry-ddau-checkbox
+                        value=feature._selected
+                        change=(action "onSelectFeatureCheckboxChange" featureIndex)
+                      }}
+                      {{flexberry-button
+                        iconClass="map icon"
+                        tooltip=(t "components.map-commands-dialogs.search.show.caption")
+                        click=(action "onShowFeatureButtonClick" featureIndex)
+                      }}
+                    </td>
                     {{#each-in _selectedLayerFeaturesLocalizedProperties as |propertyName localizedPropertyName|}}
                       {{#if (not (array-contains _selectedLayerFeaturesExcludedProperties propertyName))}}
                         <td>
