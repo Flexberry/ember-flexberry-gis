@@ -45,6 +45,15 @@ export default Ember.Object.extend(Ember.Evented, {
   i18n: Ember.inject.service('i18n'),
 
   /**
+    Tool's name.
+
+    @property name
+    @type String
+    @default null
+  */
+  name: null,
+
+  /**
     Flag: indicates whether map-tool is exclusive or not.
     Exclusive map-tool lives in enabled state until some other tool will be manually enabled.
 
