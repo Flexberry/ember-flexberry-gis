@@ -35637,7 +35637,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"https://flexberry-gis-test-stand.azurewebsites.net","backendUrls":{"root":"https://flexberry-gis-test-stand.azurewebsites.net","api":"https://flexberry-gis-test-stand.azurewebsites.net/odata"},"log":{"enabled":false},"useUserSettingsService":false,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.0+aeb858ea"});
+  require("dummy/app")["default"].create({"backendUrl":"https://flexberry-gis-test-stand.azurewebsites.net","backendUrls":{"root":"https://flexberry-gis-test-stand.azurewebsites.net","api":"https://flexberry-gis-test-stand.azurewebsites.net/odata"},"log":{"enabled":false},"useUserSettingsService":false,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.0+5c39c658"});
 }
 
 /* jshint ignore:end */
