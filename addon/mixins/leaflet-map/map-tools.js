@@ -77,7 +77,9 @@ export default Ember.Mixin.create({
         }
 
         // Disable enabled map-tool.
-        enabledMapTool.disable();
+        if (!Ember.isNone(enabledMapTool)) {
+          enabledMapTool.disable();
+        }
 
         // Enable specified map-tool.
         mapTool.enable(options);
