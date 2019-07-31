@@ -1363,6 +1363,10 @@ input::selection {
 .bgw-fix.mobile {
   height: 50px;
 }
+.pushable .pusher.mobile {
+  height: auto;
+  min-height: auto;
+}
 .background-logo {
   height: 80px;
   position: fixed;
@@ -1389,8 +1393,11 @@ input::selection {
 .background-logo a img {
   padding: 7px 0px;
 }
-.flexberry-content.ui.attached.segment {
+#example-mobile .flexberry-content.ui.attached.segment,
+#example .flexberry-content.ui.attached.segment {
   border: none;
+  height: auto;
+  min-height: 100%;
 }
 .flex-container {
   width: 100%!important;
@@ -4968,6 +4975,9 @@ lang {
   border-radius: 5px;
   margin: 0px 5px;
 }
+.ui.button.huge {
+  height: 55px;
+}
 .ui.small.button {
   border: none;
   font-size: 12px;
@@ -5186,6 +5196,11 @@ div.ui.secondary.menu.no-margin {
   color: #3c87dc;
   background: #FFFFFF;
 }
+.flexberry-file-mobile-menu.ui.icon.button:hover {
+  border-color: #3c87dc;
+  color: #3c87dc;
+  background: #FFFFFF;
+}
 /******************************************
       Components buttons section
 *******************************************/
@@ -5376,6 +5391,40 @@ div.ui.secondary.menu.no-margin {
 .ui.ui-clear-settings.button:hover {
   background: #FFFFFF;
 }
+.ui.ui-move-up.button {
+  padding: 0px;
+  height: 30px;
+  width: 30px;
+  border: 1px solid #7ba7d9;
+  text-align: right;
+}
+.ui.ui-move-up.button:hover {
+  background: #FFFFFF;
+}
+.ui.ui-move-down.button {
+  padding: 0px;
+  height: 30px;
+  width: 30px;
+  border: 1px solid #7ba7d9;
+  text-align: right;
+}
+.ui.ui-move-down.button:hover {
+  background: #FFFFFF;
+}
+.ui.custom.button {
+  padding: 0px 18px;
+  height: 30px;
+  border: 1px solid #7ba7d9;
+}
+.ui.custom.icon.button {
+  padding: 0px;
+  height: 30px;
+  width: 30px;
+  border: 1px solid #7ba7d9;
+}
+.ui.custom.icon.button:hover i.icon:before {
+  color: #FFFFFF;
+}
 .right.pointing.ui.icon.dropdown.button:hover i.icon.list.layout:before {
   color: #FFFFFF;
 }
@@ -5424,19 +5473,19 @@ div.ui.secondary.menu.no-margin {
 /******************************************
       Not categorized buttons section
 *******************************************/
-#columnConfigurtionButtonUse {
+.flexberry-colsconfig.content .cols-config-apply {
   display: flex;
   align-items: center;
   background-color: #7dd4b4;
   border: 1px solid #7ba7d9;
 }
-#columnConfigurtionButtonUse:hover {
+.flexberry-colsconfig.content .cols-config-apply:hover {
   border: 1px solid #7dd4b4;
 }
-#columnConfigurtionButtonSave {
+.flexberry-colsconfig.content .cols-config-save {
   border: 1px solid #7ba7d9;
 }
-#columnConfigurtionButtonSave:hover {
+.flexberry-colsconfig.content .cols-config-save:hover {
   border: 1px solid #7dd4b4;
   background-color: #7dd4b4;
 }
@@ -11054,6 +11103,10 @@ i.icon.change:before:hover {
   content: "\f057";
   font-family: 'Icons';
 }
+.flexberry-menu > i.icon.setting.bordered {
+  height: 2em;
+  margin-top: -0.5em;
+}
 /**************************************
       FileControl buttons section
 ***************************************/
@@ -11895,6 +11948,9 @@ div.item-minus {
 }
 .flexberry-file-image-preview-wrapper.ui.segment .ui.small.image {
   min-height: 57px;
+}
+.flexberry-file-image-preview-wrapper.ui.small.image .flexberry-file-image-preview {
+  max-width: 100%;
 }
 /*!
  * # Semantic UI - Input
@@ -17809,6 +17865,8 @@ ol.ui.horizontal.list li:before,
   bottom: 0px;
   z-index: 99;
   height: 40px;
+  width: 100% !important;
+  margin: 0px !important;
 }
 .daterangepicker .calendar td {
   color: #7ba7d9;
@@ -20382,14 +20440,14 @@ ol.ui.horizontal.list li:before,
   border-radius: 0px;
   outline: none;
 }
-.ember-view.example-simpledatetime input.flatpickr-input {
-  border-bottom: none;
-}
 .flexberry-simpledatetime .ui.fluid.action.input {
   border: none;
   border-bottom: 1px solid #b1cae8;
   border-radius: 0px;
   outline: none;
+}
+.flexberry-simpledatetime .ui.fluid.action.input input.flatpickr-input {
+  border-bottom: none;
 }
 input[type="checkbox"]:after {
   content: "";
@@ -20457,6 +20515,12 @@ option {
 }
 .ui.form .field .ui.input .block-action-input input {
   width: 100%;
+}
+.flexberry-file-error-modal-dialog .flexberry-file-error-modal-dialog-content {
+  text-align: center;
+}
+.flexberry-file-error-modal-dialog .flexberry-file-error-modal-dialog-button.ui.grid {
+  padding-top: 20px;
 }
 .ui.input.error input,
 .ui.input.error input:focus {
@@ -26828,6 +26892,34 @@ div.ui.secondary.menu.no-margin.nav-bar .right.menu {
 }
 .object-list-view-container.groupedit-container {
   overflow: visible;
+}
+.object-list-view-container.fixed-header {
+  max-height: calc(100vh - 350px);
+  width: intrinsic;
+  /* Safari/WebKit uses a non-standard name */
+  width: -moz-max-content;
+  /* Firefox/Gecko */
+  width: -webkit-max-content;
+  /* Chrome */
+  width: max-content;
+}
+.object-list-view-container.fixed-header .ui.celled.table tr th {
+  border-top: 1px solid rgba(34, 36, 38, 0.1);
+  z-index: 1;
+}
+.object-list-view-container.fixed-header .ui.table {
+  border-top: 0px;
+}
+.object-list-view-container.fixed-header tr.object-list-view-filters > * {
+  position: relative;
+  background-color: #fff;
+  z-index: 1;
+}
+.object-list-view-container.fixed-header tr.object-list-view-filters:first-child > * {
+  z-index: 2;
+}
+.object-list-view-container.fixed-header tr.object-list-view-filters:last-child > * {
+  border-bottom: 1px solid rgba(34, 36, 38, 0.1);
 }
 table.object-list-view.selectable tbody,
 table.object-list-view.selectable thead {
@@ -36091,6 +36183,12 @@ select.ui.dropdown {
 }
 .ui.modal .content h2.ui.header {
   word-wrap: break-word;
+}
+.ui.modal.preview-model .content {
+  overflow: scroll;
+}
+.ui.modal.preview-model .content .close-button {
+  display: none;
 }
 /*************************************
             Popup window
