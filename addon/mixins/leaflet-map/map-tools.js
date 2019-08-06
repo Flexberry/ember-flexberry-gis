@@ -35,6 +35,10 @@ export default Ember.Mixin.create({
       let mapTool = alreadyLookupedMapTools[mapToolName];
       if (Ember.isNone(mapTool)) {
         mapTool = owner.lookup(`map-tool:${mapToolName}`);
+        Ember.assert(
+          `Can't lookup \`map-tool:${mapToolName}\` such map-tool doesn\`t exist`,
+          !Ember.isNone(mapTool));
+
         mapTool.setProperties({
           name: mapToolName,
           leafletMap: leafletMap
@@ -42,10 +46,6 @@ export default Ember.Mixin.create({
 
         alreadyLookupedMapTools[mapToolName] = mapTool;
       }
-
-      Ember.assert(
-        `Can't lookup \`map-tool:${mapToolName}\` such map-tool doesn\`t exist`,
-        !Ember.isNone(mapTool));
 
       return mapTool;
     };
