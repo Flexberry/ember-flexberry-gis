@@ -4,7 +4,6 @@
 
 import Ember from 'ember';
 import SlotsMixin from 'ember-block-slots';
-import DomActionsMixin from 'ember-flexberry/mixins/dom-actions';
 import layout from '../../templates/components/map-tools/base';
 
 /**
@@ -39,8 +38,8 @@ const flexberryClassNames = {
   Usage:
   templates/my-map-form.hbs
   ```handlebars
-  {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-tools/base name="my-map-tool" activate=(action "onMapToolActivate" target=maptoolbar)}}
+  {{#flexberry-maptoolbar}}
+    {{map-tools/base name="my-map-tool" leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   ```
 
@@ -50,8 +49,7 @@ const flexberryClassNames = {
   @uses DomActionsMixin
 */
 let BaseMapToolComponent = Ember.Component.extend(
-  SlotsMixin,
-  DomActionsMixin, {
+  SlotsMixin, {
     /**
       Mutation observer that observes changes in component's 'class' attribute.
 
@@ -61,27 +59,6 @@ let BaseMapToolComponent = Ember.Component.extend(
       @private
     */
     _classObserver: null,
-
-    /**
-      Map tool.
-
-      @property _mapTool
-      @type BaseMapTool
-      @default null
-      @private
-    */
-    _mapTool: null,
-
-    /**
-      Observes changes buffer parameters.
-
-      @method _bufferObserver
-      @type Observer
-      @private
-    */
-    _bufferObserver: Ember.observer('bufferActive', 'bufferRadius', 'bufferUnits', function () {
-      this._applyBufferSettings();
-    }),
 
     /**
       Flag: indicates whether some nested content for submenu is defined
@@ -141,38 +118,19 @@ let BaseMapToolComponent = Ember.Component.extend(
       Flag: indicates whether related map-tool is enabled or not.
 
       @type Boolean
-      @readOnly
-    */
-    _isActive: Ember.computed('_mapTool._enabled', function () {
-      return this.get('_mapTool._enabled') === true;
-    }),
-
-    /**
-      Flag indicates is buffer active
-
-      @property bufferActive
-      @type Boolean
       @default false
+      @private
     */
-    bufferActive: true,
+    _isActive: false,
 
     /**
-      Buffer radius units
+      Map tool name specified before changes.
 
-      @property bufferUnits
       @type String
-      @default 'kilometers'
+      @default null
+      @private
     */
-    bufferUnits: 'kilometers',
-
-    /**
-      Buffer radius in selected units
-
-      @property bufferRadius
-      @type Number
-      @default 0
-    */
-    bufferRadius: 0,
+    _previousName: null,
 
     /**
       Reference to component's template.
@@ -200,7 +158,7 @@ let BaseMapToolComponent = Ember.Component.extend(
 
       Any other CSS-classes can be added through component's 'class' property.
       ```handlebars
-      {{flexberry-icon
+      {{map-tools/base
         class="map icon"
       }}
       ```
@@ -293,146 +251,57 @@ let BaseMapToolComponent = Ember.Component.extend(
     leafletMap: null,
 
     /**
-      Flag: indicates whether map tool is activated
+      Handles leafletMap's 'flexberry-map:tools:enable' event.
 
-      @property activated
-      @type Boolean
-      @default false
+      @method actions.onMapToolEnable
+      @param {Object} e Event object.
+      @param {Object} e.mapTool Enabled map tool.
+      @param {Object[]} e.arguments Arguments passed to map tool's 'enable' method.
     */
-    activated: false,
-
-    /**
-      Observes changes in {{#crossLink "BaseMapToolComponent/leafletMap:property"}}'leafletMap' property{{/crossLink}}.
-      Activates default map-tool when leafletMap initialized and subscribes on flexberry-map:identificationOptionChanged event.
-
-      @method _leafletMapDidChange
-      @type Observer
-      @private
-    */
-    _leafletMapDidChange: Ember.on('didRender', Ember.observer('leafletMap', function () {
-
-      let leafletMap = this.get('leafletMap');
-      if (Ember.isNone(leafletMap)) {
-        return;
-      }
-
-      leafletMap.on('flexberry-map:identificationOptionChanged', this.forceMapToolActivation, this);
-    })),
-
-    actions: {
-      /**
-        Handles map-tools click event.
-        Invokes {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}'activate' action{{/crossLink}}.
-
-        @method actions.click
-        @param {<a href="http://learn.jquery.com/events/introduction-to-events/#the-event-object">jQuery event object</a>} e
-        Click event object.
-      */
-      click(e) {
-        this.activateMapTool(e);
-      }
+    onMapToolEnable(e) {
+      this.set('_isActive', true);
     },
 
     /**
-      Apply buffer settings to existing mapTool
+      Handles leafletMap's 'flexberry-map:tools:disable' event.
 
-      @method _applyBufferSettings
-      @private
+      @method actions.onMapToolEnable
+      @param {Object} e Event object.
+      @param {Object} e.mapTool Disabled map tool.
+      @param {Object[]} e.arguments Arguments passed to map tool's 'disable' method.
     */
-    _applyBufferSettings() {
-      let tool = this.get('_mapTool');
-
-      if (!Ember.isNone(tool)) {
-        let bufferActive = this.get('bufferActive');
-        let bufferRadius = this.get('bufferRadius');
-        let bufferUnits = this.get('bufferUnits');
-
-        tool.set('bufferActive', bufferActive);
-        tool.set('bufferRadius', bufferRadius);
-        tool.set('bufferUnits', bufferUnits);
-      }
+    onMapToolDisable(e) {
+      this.set('_isActive', false);
     },
 
     /**
-      Invokes {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}'activate' action{{/crossLink}}.
+      Handles map-tool's 'click' event.
+
+      @method click
+      @param {<a href="http://learn.jquery.com/events/introduction-to-events/#the-event-object">jQuery event object</a>} e
+      Click event object.
+    */
+    click(e) {
+      this.activateMapTool();
+    },
+
+    /**
+      Performs map-tool's activation.
 
       @method activateMapTool
-      @param {<a href="http://learn.jquery.com/events/introduction-to-events/#the-event-object">jQuery event object</a>} e
-      Original event object.
     */
-    activateMapTool(e) {
-      this.set('activated', false);
-      this.sendAction('activate', {
-        mapTool: this.get('_mapTool'),
-        target: this.$(),
-        originalEvent: e
-      });
-    },
-
-    /**
-      Creates map-tool in component's initialization time.
-
-      @method createMapTool
-    */
-    createMapTool() {
-      let mapToolName = this.get('name');
-      if (Ember.isBlank(mapToolName)) {
+    activateMapTool() {
+      if (this.get('_hasSubmenu') || this.get('isActive')) {
+        // Tool with submenu is just a wrapper, it shouldn't really enable map-tool.
+        // Also if tool is alreay active, then it shouldn't be enabled again.
         return;
       }
 
-      let mapTool = Ember.getOwner(this).lookup(`map-tool:${mapToolName}`);
-      Ember.assert(
-        `Can't lookup \`map-tool:${mapToolName}\` such map-tool doesn\`t exist`, !Ember.isNone(mapTool));
-
+      let leafletMap = this.get('leafletMap');
+      let mapToolName = this.get('name');
       let mapToolProperties = this.get('mapToolProperties');
-      if (!Ember.isNone(mapToolProperties)) {
-        Ember.A(Object.keys(mapToolProperties)).forEach((propertyName) => {
-          Ember.set(mapTool, propertyName, Ember.get(mapToolProperties, propertyName));
-        });
-      }
 
-      Ember.set(mapTool, 'name', mapToolName);
-
-      this.set('_mapTool', mapTool);
-
-      this._applyBufferSettings();
-
-      // delayed activation of maptool
-      if (this.get('activated')) {
-        this.activateMapTool({
-          mapToolName
-        });
-      }
-    },
-
-    /**
-      Destroys map-tool in components destroy time.
-
-      @method destroyMapTool
-    */
-    destroyMapTool() {
-      let mapTool = this.get('_mapTool');
-      if (!Ember.isNone(mapTool) && Ember.typeOf(mapTool.destroy) === 'function') {
-        mapTool.destroy();
-        this.set('_mapTool', null);
-      }
-    },
-
-    /**
-      Force map-tool to activate
-
-      @method forceMapToolActivation
-      @param {<a href="http://learn.jquery.com/events/introduction-to-events/#the-event-object">jQuery event object</a>} e
-    */
-    forceMapToolActivation(e) {
-      let currentName = this.get('_mapTool.name');
-
-      if (e.mapToolName === currentName) {
-        this.activateMapTool(...arguments);
-      } else {
-        // changing mapToolName forces re-render so we make delayed activation
-        this.set('activated', true);
-      }
+      leafletMap.flexberryMap.tools.enable(mapToolName, mapToolProperties);
     },
 
     /**
@@ -441,7 +310,9 @@ let BaseMapToolComponent = Ember.Component.extend(
     init() {
       this._super(...arguments);
 
-      this.createMapTool();
+      // Store initila tool name is '_previousName'.
+      let mapToolName = this.get('name');
+      this.set('_previousName', mapToolName);
     },
 
     /**
@@ -452,9 +323,11 @@ let BaseMapToolComponent = Ember.Component.extend(
 
       let $item = this.$();
       if (this.get('_hasSubmenu')) {
+
         // Initialize Semantic UI dropdown module.
         $item.dropdown();
       } else if (!Ember.isNone(MutationObserver)) {
+
         // Sometimes Semantic UI adds/removes classes too late what breaks results of component's class name bindings.
         // So to fix it, we need to observe changes in 'class' attribute through mutation observer.
         let classObserver = new MutationObserver((mutations) => {
@@ -469,30 +342,14 @@ let BaseMapToolComponent = Ember.Component.extend(
             return;
           }
         });
+
         classObserver.observe($item[0], {
           attributes: true,
           attributeFilter: ['class']
         });
+
         this.set('_classObserver', classObserver);
       }
-    },
-
-    /**
-      Handles DOM-related component's properties after each render.
-    */
-    didRender() {
-      this._super(...arguments);
-
-      let currentName = this.get('_mapTool.name');
-      let newName = this.get('name');
-
-      if (currentName === newName || Ember.isNone(this.get('_mapTool'))) {
-        return;
-      }
-
-      // if map tool name has changed - recreate it
-      this.destroyMapTool();
-      this.createMapTool();
     },
 
     /**
@@ -501,9 +358,8 @@ let BaseMapToolComponent = Ember.Component.extend(
     willDestroyElement() {
       this._super(...arguments);
 
-      let $item = this.$();
-
       // Deinitialize Semantic UI dropdown module.
+      let $item = this.$();
       $item.dropdown('destroy');
 
       // Disconnect mutation observer.
@@ -512,40 +368,44 @@ let BaseMapToolComponent = Ember.Component.extend(
         classObserver.disconnect();
         this.set('_classObserver', null);
       }
+
+      // Detach leaflet map event handlers.
+      let leafletMap = this.get('leafletMap');
+      let mapToolName = this.get('name');
+      if (!Ember.isNone(leafletMap) && !Ember.isBlank(mapToolName)) {
+        leafletMap.off(`flexberry-map:tools:${mapToolName}:enable`, this.onMapToolEnable, this);
+        leafletMap.off(`flexberry-map:tools:${mapToolName}:disable`, this.onMapToolDisable, this);
+      }
     },
 
     /**
-      Destroys component.
+      Observes changes in {{#crossLink "BaseMapToolComponent/leafletMap:property"}}'leafletMap' property{{/crossLink}},
+      and {{#crossLink "BaseMapToolComponent/name:property"}}'name' property{{/crossLink}}.
+      Attaches leafletMap event handlers.
+
+      @method _leafletMapOrNameDidChange
+      @private
     */
-    willDestroy() {
-      this._super(...arguments);
+    _leafletMapOrNameDidChange: Ember.observer('leafletMap', 'name', function () {
+      let leafletMap = this.get('leafletMap');
+      if (Ember.isNone(leafletMap)) {
+        return;
+      }
 
-      this.destroyMapTool();
-    }
+      let mapToolPreviousName = this.get('_previousName');
+      let mapToolName = this.get('name');
+      if (!Ember.isBlank(mapToolPreviousName) && mapToolPreviousName !== mapToolName) {
+        // Detach previously attached leaflet map event handlers.
+        leafletMap.off(`flexberry-map:tools:${mapToolPreviousName}:enable`, this.onMapToolEnable, this);
+        leafletMap.off(`flexberry-map:tools:${mapToolPreviousName}:disable`, this.onMapToolDisable, this);
+      }
 
-    /**
-      Component's action invoking when component was initialized.
-
-      @method sendingActions.initialize
-      @param {Object} e Action's event object.
-      @param {BaseMapTool} e.mapTool Map command that must be executed.
-      @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} e.target
-      jQuery element related to map command that must be executed.
-      @param {<a href="http://learn.jquery.com/events/introduction-to-events/#the-event-object">jQuery event object</a>} [e.originalEvent=null]
-      Event object related to event that triggered this action.
-    */
-
-    /**
-      Component's action invoking when component was clicked & map tool must be activated.
-
-      @method sendingActions.activate
-      @param {Object} e Action's event object.
-      @param {BaseMapTool} e.mapTool Map command that must be executed.
-      @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} e.target
-      jQuery element related to map command that must be executed.
-      @param {<a href="http://learn.jquery.com/events/introduction-to-events/#the-event-object">jQuery event object</a>} e.originalEvent
-      Event object related to event that triggered this action.
-    */
+      if (!Ember.isBlank(mapToolName)) {
+        // Attach new leaflet map event handlers.
+        leafletMap.on(`flexberry-map:tools:${mapToolName}:enable`, this.onMapToolEnable, this);
+        leafletMap.on(`flexberry-map:tools:${mapToolName}:disable`, this.onMapToolDisable, this);
+      }
+    })
   }
 );
 

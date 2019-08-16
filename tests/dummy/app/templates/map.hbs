@@ -1,4 +1,4 @@
-﻿<h3 class="ui header">{{t "forms.map.caption"}}</h3>
+<h3 class="ui header">{{t "forms.map.caption"}}</h3>
 <form class="ui form flexberry-vertical-form" role="form">
   {{ui-message
     type="success"
@@ -164,48 +164,41 @@
   </div>
   <div class="row">
     <div class="sixteen wide column">
-      {{#flexberry-maptoolbar
-        leafletMap=leafletMap
-        layers=model.hierarchy as |mapToolbar|
-      }}
+      {{#flexberry-maptoolbar}}
         {{map-commands/full-extent
-          execute=(action "onMapCommandExecute" target=mapToolbar)
           lat=model.lat
           lng=model.lng
           zoom=model.zoom
-        }}
-        {{map-commands/edit
-          execute=(action "onMapCommandExecute" target=mapToolbar)
-          mapModel=model
-        }}
-        {{scale-control map=leafletMap imperial=false}}
-        {{history-control map=leafletMap}}
-        {{map-tools/drag activate=(action "onMapToolActivate" target=mapToolbar)}}
-        {{map-tools/zoom-in activate=(action "onMapToolActivate" target=mapToolbar)}}
-        {{map-tools/zoom-out activate=(action "onMapToolActivate" target=mapToolbar)}}
-        {{map-tools/identify
-          activate=(action "onMapToolActivate" target=mapToolbar)
-          bufferActive=bufferActive
-          bufferUnits=bufferUnits
-          bufferRadius=bufferRadius          
-          layerMode=identifyLayersOption
-          toolMode=identifyToolOption
           leafletMap=leafletMap
         }}
-        {{map-commands/go-to
-          execute=(action "onMapCommandExecute" target=mapToolbar)
+        {{map-commands/edit
+          mapModel=model
+          leafletMap=leafletMap
         }}
-        {{map-commands/locate
-        	execute=(action "onMapCommandExecute" target=mapToolbar)
+        {{scale-control leafletMap=leafletMap imperial=false}}
+        {{history-control leafletMap=leafletMap}}
+        {{map-tools/drag leafletMap=leafletMap}}
+        {{map-tools/zoom-in leafletMap=leafletMap}}
+        {{map-tools/zoom-out leafletMap=leafletMap}}
+        {{map-tools/identify
+          bufferActive=bufferActive
+          bufferUnits=bufferUnits
+          bufferRadius=bufferRadius
+          layerMode=identifyLayersOption
+          toolMode=identifyToolOption
+          layers=model.hierarchy
+          leafletMap=leafletMap
         }}
-        {{map-commands/search execute=(action "onMapCommandExecute" target=mapToolbar)}}
-        {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
-        {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
+        {{map-commands/go-to leafletMap=leafletMap}}
+        {{map-commands/locate leafletMap=leafletMap}}
+        {{map-commands/search leafletMap=leafletMap}}
+        {{map-tools/measure leafletMap=leafletMap}}
+        {{map-tools/draw leafletMap=leafletMap}}
         {{map-commands/export
+          iconClass="external share icon"
           timeout=30000
           defaultMapCaption=model.name
-          execute=(action "onMapCommandExecute" target=mapToolbar)
-          iconClass="external share icon"
+          leafletMap=leafletMap
         }}
       {{/flexberry-maptoolbar}}
     </div>
@@ -233,13 +226,13 @@
           layers=model.hierarchy
         }}
         {{switch-scale-control
-          map=leafletMap
+          leafletMap=leafletMap
           updateWhenIdle=true
           scales=switchScaleControlScales
         }}
         {{#minimap-control
           minimized=true
-          map=leafletMap as |groupLayers|
+          leafletMap=leafletMap as |groupLayers|
         }}
           {{flexberry-layers
             leafletContainer=groupLayers

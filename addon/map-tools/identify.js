@@ -24,6 +24,15 @@ export default BaseNonclickableMapTool.extend({
   _editTools: null,
 
   /**
+    Tool's cursor CSS-class.
+
+    @property cursor
+    @type String
+    @default 'help'
+  */
+  cursor: 'help',
+
+  /**
     Flag indicates is buffer active
 
     @property bufferActive
@@ -51,13 +60,13 @@ export default BaseNonclickableMapTool.extend({
   bufferRadius: 0,
 
   /**
-    Tool's cursor CSS-class.
+    Map layers hierarchy.
 
-    @property cursor
-    @type String
-    @default 'help'
+    @property layers
+    @type Object[]
+    @default null
   */
-  cursor: 'help',
+  layers: null,
 
   /**
     Tool's polygon area layer.
@@ -112,9 +121,7 @@ export default BaseNonclickableMapTool.extend({
     @returns {Object[]} Flat array of layers satisfying to current identification mode.
     @private
   */
-  _getLayersToIdentify({
-    excludedLayers
-  }) {
+  _getLayersToIdentify({ excludedLayers }) {
     Ember.assert('Method \'_getLayersToIdentify\' must be overridden in some extended identify map-tool.', false);
   },
 
@@ -238,9 +245,7 @@ export default BaseNonclickableMapTool.extend({
     @param {<a href="http://leafletjs.com/reference-1.0.0.html#polygon">L.Polygon</a>} e.layer Drawn polygon layer.
     @private
   */
-  _drawingDidEnd({
-    layer
-  }) {
+  _drawingDidEnd({ layer }) {
     let workingPolygon;
     let bufferedMainPolygon;
     let isBufferActive = this.get('bufferActive');
@@ -380,7 +385,7 @@ export default BaseNonclickableMapTool.extend({
     @private
   */
   _clearPolygonLayer() {
-    // Remove already drawn figure
+    // Remove already drawn figure.
     let polygonLayer = this.get('polygonLayer');
     if (polygonLayer) {
       polygonLayer.disableEdit();

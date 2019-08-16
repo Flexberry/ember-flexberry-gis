@@ -34,8 +34,8 @@ const flexberryClassNames = {
   Usage:
   templates/my-map-form.hbs
   ```handlebars
-  {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-tools/identify activate=(action "onMapToolActivate" target=maptoolbar)}}
+  {{#flexberry-maptoolbar}}
+    {{map-tools/identify leafletMap=leafletMap layers=model.hierarchy}}
   {{/flexberry-maptoolbar}}
   ```
 
@@ -44,33 +44,23 @@ const flexberryClassNames = {
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
 let IdentifyMapToolComponent = Ember.Component.extend({
+  /**
+    Properties which will be passed to the map-tool when it will be instantiated.
+
+    @property _identifyToolProperties
+    @type Object
+    @default null
+  */
+  _identifyToolProperties: null,
 
   /**
-    Flag indicates is buffer active
+    Identify tool name computed by the specified tool settings ('identify'+ '-' + layerMode + '-' + toolMode).
 
-    @property bufferActive
-    @type Boolean
-    @default false
+    @property _identifyToolName
+    @type {String}
+    @readonly
   */
-  bufferActive: false,
-
-  /**
-    Buffer radius units
-
-    @property bufferUnits
-    @type String
-    @default 'kilometers'
-  */
-  bufferUnits: 'kilometers',
-
-  /**
-    Buffer radius in selected units
-
-    @property bufferRadius
-    @type Number
-    @default 0
-  */
-  bufferRadius: 0,
+  _identifyToolName: null,
 
   /**
     Reference to component's template.
@@ -92,15 +82,6 @@ let IdentifyMapToolComponent = Ember.Component.extend({
     @default ''
   */
   tagName: '',
-
-  /**
-    Leaflet map.
-
-    @property leafletMap
-    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
-    @default null
-  */
-  leafletMap: null,
 
   /**
     Map tool's additional CSS-class.
@@ -139,75 +120,170 @@ let IdentifyMapToolComponent = Ember.Component.extend({
   iconClass: 'info circle icon',
 
   /**
-    @property layerMode
-    @default ''
-    @type {String}
+    Flag indicates is buffer active
+
+    @property bufferActive
+    @type Boolean
+    @default false
   */
-  layerMode: '',
+  bufferActive: false,
+
+  /**
+    Buffer radius units
+
+    @property bufferUnits
+    @type String
+    @default 'kilometers'
+  */
+  bufferUnits: 'kilometers',
+
+  /**
+    Buffer radius in selected units
+
+    @property bufferRadius
+    @type Number
+    @default 0
+  */
+  bufferRadius: 0,
+
+  /**
+    @property layerMode
+    @default 'all'
+    @type String
+  */
+  layerMode: 'all',
 
   /**
     @property toolMode
-    @default ''
-    @type {String}
+    @default 'rectangle'
+    @type String
   */
-  toolMode: '',
+  toolMode: 'rectangle',
 
   /**
-    Contains formatted tool name with layers options
-    @property _toolName
-    @type {String}
-    @readonly
-    @returns 'identify'+ '-' + layerMode + '-' + toolMode
+    Map layers hierarchy.
+
+    @property layers
+    @type Object[]
+    @default null
   */
-  _toolName: Ember.computed('layerMode', 'toolMode', function () {
-    let layerMode = this.get('layerMode');
-    let toolMode = this.get('toolMode');
-
-    if (!(Ember.isBlank(layerMode) || Ember.isBlank(toolMode))) {
-      return 'identify-' + layerMode + '-' + toolMode;
-    } else {
-      return 'identify';
-    }
-  }),
-
-  actions: {
-    /**
-      Handles {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
-      Invokes own {{#crossLink "IdentifyMapToolComponent/sendingActions.activate:method"}}'activate' action{{/crossLink}}.
-
-      @method actions.onMapToolActivate
-      @param {Object} e Base map-tool's 'activate' action event-object.
-    */
-    onMapToolActivate(...args) {
-      this.sendAction('activate', ...args);
-    }
-  },
+  layers: null,
 
   /**
-    Initializes DOM-related component's properties  & logic.
+    Leaflet map.
+
+    @property leafletMap
+    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+    @default null
+  */
+  leafletMap: null,
+
+  /**
+    Initializes component.
   */
   init() {
     this._super(...arguments);
 
+    this.set('_identifyToolName', this._getidentifyToolName());
+    this.set('_identifyToolProperties', this._getIdentifyToolProperties());
+  },
+
+  /**
+    Destroys component.
+  */
+  willDestroy() {
+    this._super(...arguments);
+
+    this.set('_identifyToolProperties', null);
+  },
+
+  /**
+    Observes changes in 'leafletMap' property.
+    Attaches leafletMap event handlers.
+
+    @method _leafletMapDidChange
+    @private
+  */
+  _leafletMapDidChange: Ember.observer('leafletMap', function() {
+    let leafletMap = this.get('leafletMap');
+    if (Ember.isNone(leafletMap)) {
+      return;
+    }
+
+    leafletMap.on('flexberry-map:identificationOptionChanged', this._identifyToolPropertiesDidChange, this);
+  }),
+
+  /**
+    Handles changes in 'identify' tool properties.
+
+    @method _identifyToolPropertiesDidChange
+    @private
+  */
+  _identifyToolPropertiesDidChange: Ember.observer(
+    'bufferActive',
+    'bufferUnits',
+    'bufferRadius',
+    'layerMode',
+    'toolMode',
+    'layers',
+    function() {
+      let leafletMap = this.get('leafletMap');
+      if (Ember.isNone(leafletMap)) {
+        return;
+      }
+
+      // Disable currently enabled tool.
+      leafletMap.flexberryMap.tools.disable();
+
+      // Calculate actual tool name.
+      let identifyToolName = this._getidentifyToolName();
+      this.set('_identifyToolName', identifyToolName);
+
+      // Calculate actual tool properties.
+      let identifyToolProperties = this._getIdentifyToolProperties();
+      this.set('_identifyToolProperties', identifyToolProperties);
+
+      // Now we can enable 'identification' tool with actual tool properties.
+      Ember.run.scheduleOnce('afterRender', this, function () {
+        leafletMap.flexberryMap.tools.enable(identifyToolName, identifyToolProperties);
+      });
+    }
+  ),
+
+  /**
+    Gets actual 'identify' tool name.
+
+    @method _getidentifyToolName
+    @private
+  */
+  _getidentifyToolName() {
+    let identifyToolName = 'identify';
     let layerMode = this.get('layerMode');
     let toolMode = this.get('toolMode');
 
-    if (!layerMode) {
-      this.set('layerMode', 'all');
+    if (!(Ember.isBlank(layerMode) || Ember.isBlank(toolMode))) {
+      identifyToolName = `identify-${layerMode}-${toolMode}`;
     }
 
-    if (!toolMode) {
-      this.set('toolMode', 'rectangle');
-    }
-  }
+    return identifyToolName;
+  },
 
   /**
-    Component's action invoking when map-tool must be activated.
+    Gets actual 'identify' tool properties.
 
-    @method sendingActions.activate
-    @param {Object} e Action's event object from
-    {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
+    @method _getIdentifyToolProperties
+    @private
   */
+  _getIdentifyToolProperties() {
+    return {
+      bufferActive: this.get('bufferActive'),
+      bufferUnits: this.get('bufferUnits'),
+      bufferRadius: this.get('bufferRadius'),
+      layerMode: this.get('layerMode'),
+      toolMode: this.get('toolMode'),
+      layers: this.get('layers')
+    };
+  }
 });
 
 // Add component's CSS-class names as component's class static constants

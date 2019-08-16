@@ -1,12 +1,9 @@
 {{map-tools/base
   class=(concat flexberryClassNames.wrapper " " class)
-  name=_toolName
+  name=_identifyToolName
   caption=caption
   tooltip=tooltip
   iconClass=iconClass
-  activate=(action "onMapToolActivate")
   leafletMap=leafletMap
-  bufferActive=bufferActive
-  bufferUnits=bufferUnits
-  bufferRadius=bufferRadius
+  mapToolProperties=_identifyToolProperties
 }}
