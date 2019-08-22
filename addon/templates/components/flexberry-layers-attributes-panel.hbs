@@ -59,12 +59,6 @@
 
               {{#block-slot "head-block"}}
                 <div class="bottompanel-tab-head-panel">
-                  {{flexberry-checkbox
-                    label=(if tabModel.selectAll (t "components.flexberry-layers-attributes-panel.clear") (t "components.flexberry-layers-attributes-panel.select-all"))
-                    value=tabModel.selectAll
-                    onChange=(action "onSelectAllClick" tabModel)
-                    class=(if (eq tabModel.properties.length 0) "disabled")
-                  }}
                   <div class="buttons">
                     {{flexberry-button
                       tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
@@ -201,7 +195,13 @@
               {{/block-slot}}
 
               {{#block-slot "column-header-head-0"}}
-                <th class="checkbox"></th>
+                <th>
+                 {{flexberry-checkbox
+                  value=tabModel.selectAll
+                  onChange=(action "onSelectAllClick" tabModel)
+                  class=(if (eq tabModel.properties.length 0) "disabled")
+                 }}
+                </th>
               {{/block-slot}}
 
               {{#if tabModel.allowEdit}}
