@@ -70,6 +70,15 @@ export default {
     'draw-polygon': {
       'caption': 'Polygon'
     },
+    'draw-part': {
+      'caption': 'Part'
+    },
+    'draw-ring': {
+      'caption': 'Ring'
+    },
+    'draw-arrow': {
+      'caption': 'Add by coordinates'
+    },
     'draw-clear': {
       'caption': 'Clear'
     }

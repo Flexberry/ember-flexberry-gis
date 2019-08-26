@@ -58,9 +58,11 @@
             }}
 
               {{#block-slot "head-block"}}
+
+
                 <div class="bottompanel-tab-head-panel">
                   <div class="buttons">
-                    {{flexberry-button
+                    {{!-- {{flexberry-button
                       tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
                       click=(action "onFindItemClick" tabModel)
                       iconClass="marker icon"
@@ -69,16 +71,108 @@
                       tooltip=(t "components.flexberry-layers-attributes-panel.clear-found")
                       click=(action "onClearFoundItemClick")
                       iconClass="erase icon"
-                    }}
+                    }} --}}
+
                     {{#if tabModel.allowEdit}}
-                      {{flexberry-button
+                    {{!-- {{#if true}} --}}
+                      {{!-- {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
                         click=(action "onDeleteItemClick" tabModel)
                         iconClass="trash icon"
                         readonly=(eq tabModel._selectedRowsCount 0)
+                      }} --}}
+                      {{flexberry-button
+                       tooltip=(t "components.map-tools.draw.draw-arrow.caption")
+                       click=(action "onGeometryTypeSelect" "arrow")
+                       iconClass="flexberry-map-command-icon location arrow icon"
                       }}
-                      {{!-- available geometry adding tools --}}
-                      {{#each availableGeometryAddModes as |mode|}}
+                      {{log tabModel._typeSelectedRows.line}}
+                      {{!-- {{#if (eq tabModel._typeSelectedRows.polygon 0) }} --}}
+                      {{#if true }}
+                        {{flexberry-button
+                          tooltip=(t "components.map-tools.draw.draw-polygon.caption")
+                          click=(action "onGeometryTypeSelect" "polygon")
+                          iconClass="flexberry-map-tool-icon star icon"
+                        }}
+                        {{flexberry-button
+                          tooltip=(t "components.map-tools.draw.draw-rectangle.caption")
+                          click=(action "onGeometryTypeSelect" "rectangle")
+                          iconClass="flexberry-map-tool-icon square icon"
+                        }}
+                        {{flexberry-button
+                          tooltip=(t "components.map-tools.draw.draw-circle.caption")
+                          click=(action "onGeometryTypeSelect" "circle")
+                          iconClass="flexberry-map-tool-icon circle icon"
+                        }}
+                        {{flexberry-button
+                          tooltip=(t "components.map-tools.draw.draw-part.caption")
+                          click=(action "onGeometryTypeSelect" "part")
+                          iconClass="flexberry-map-tool-icon part icon"
+                        }}
+                        {{flexberry-button
+                          tooltip=(t "components.map-tools.draw.draw-ring.caption")
+                          click=(action "onGeometryTypeSelect" "ring")
+                          iconClass="flexberry-map-tool-icon scissors icon"
+                        }}
+                      {{/if}}
+
+                      {{!-- {{#if (eq tabModel._typeSelectedRows.line 0) }} --}}
+                      {{#if false }}
+                        {{flexberry-button
+                          tooltip=(t "components.map-tools.draw.draw-polyline.caption")
+                          click=(action "onGeometryTypeSelect" "polyline")
+                          iconClass="flexberry-map-tool-icon empty star icon"
+                        }}
+                        {{flexberry-button
+                          tooltip=(t "components.map-tools.draw.draw-part.caption")
+                          click=(action "onGeometryTypeSelect" "part")
+                          iconClass="flexberry-map-tool-icon part icon"
+                        }}
+                        {{/if}}
+                      {{!-- его нет но нужно сделать  --}}
+                      {{!-- {{#if (eq tabModel._typeSelectedRows.point 0) }} --}}
+                      {{#if false}}
+                        {{flexberry-button
+                          tooltip=(t "components.map-tools.draw.draw-marker.caption")
+                          click=(action "onGeometryTypeSelect" "marker")
+                          iconClass="flexberry-map-tool-icon marker icon"
+                        }}
+                        {{flexberry-button
+                          tooltip=(t "components.map-tools.draw.draw-world.caption")
+                          click=(action "onGeometryTypeSelect" "world")
+                          iconClass="flexberry-map-tool-icon world icon"
+                        }}
+                      {{/if}}
+
+                      {{flexberry-button
+                        tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
+                        click=(action "onFindItemClick" tabModel)
+                        iconClass="marker icon"
+                        readonly=(eq tabModel._selectedRowsCount 0) }}
+                      {{flexberry-button
+                        tooltip=(t "components.flexberry-layers-attributes-panel.clear-found")
+                        click=(action "onClearFoundItemClick")
+                        iconClass="erase icon"
+                      }}
+                      {{!-- {{#if tabModel.allowEdit}} --}}
+                      {{#if true}}
+                        {{flexberry-button
+                          tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
+                          click=(action "onDeleteItemClick" tabModel)
+                          iconClass="trash icon"
+                          readonly=(eq tabModel._selectedRowsCount 0)
+                        }}
+                      {{/if}}
+
+                        {{flexberry-button
+                          tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
+                          click=(action "onSaveChangesClick" tabModel)
+                          iconClass="save icon"
+                          readonly=(not (get tabModel "leafletObject._wasChanged"))
+                        }}
+                    {{/if}}
+
+                      {{!-- {{#each availableGeometryAddModes as |mode|}}
                         {{component (concat "geometry-add-modes/" mode)
                           leafletMap=leafletMap
                           settings=(hash
@@ -91,8 +185,8 @@
                           drawStart=(action "onAddDrawStart" tabModel)
                           importComplete=(action "onImportComplete" tabModel)
                         }}
-                      {{/each}}
-                      <div class="flexberry-geometry-move {{if tabModel.groupDraggable "active"}}">
+                      {{/each}} --}}
+                     {{!-- <div class="flexberry-geometry-move {{if tabModel.groupDraggable "active"}}">
                         <div class="ui simple dropdown item">
                           <i class="move icon"></i>
                           <i class="dropdown icon"></i>
@@ -169,14 +263,14 @@
                         click=(action "onFindIntersectPolygons" tabModel)
                         iconClass="close icon"
                         readonly=(eq tabModel._selectedRowsCount 0)
-                      }}
-                      {{flexberry-button
+                      }} --}}
+                      {{!-- {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
                         click=(action "onSaveChangesClick" tabModel)
                         iconClass="save icon"
                         readonly=(not (get tabModel "leafletObject._wasChanged"))
                       }}
-                    {{/if}}
+                    {{/if}} --}}
                   </div>
                   <div class="field">
                     {{#if _moveWithError}}

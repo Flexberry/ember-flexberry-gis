@@ -121,6 +121,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
         let leafletObject = Ember.get(item, 'leafletObject');
         let readonly = Ember.get(item, 'settings.readonly') || false;
+        readonly=false;
         let styleSettings = Ember.get(item, 'settings.styleSettings') || {};
 
         let getHeader = () => {
@@ -145,6 +146,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
         let availableDrawTools = null;
         if (!readonly) {
+
           availableDrawTools = this._getAvailableDrawTools(Ember.get(leafletObject, 'readFormat.featureType.geometryFields'));
         }
 
@@ -667,13 +669,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   init() {
     this._super(...arguments);
-
     let settings = this.get('settings');
     if (Ember.isNone(settings)) {
       settings = {
         withToolbar: false,
         sidebarOpened: false,
       };
+
+      settings.drawTools = {}
 
       this.set('settings', settings);
 
@@ -1036,6 +1039,16 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let editedRows = Ember.get(tabModel, '_editedRows');
       let edit = Ember.get(editedRows, rowId) || false;
       edit = !edit;
+
+      // remove selection
+      // for (var key in editedRows) {
+      //   if (typeof editedRows[key] !== 'function') {
+      //     Ember.set(editedRows, key, false);
+      //   }
+      // }
+
+      editedRows = {};
+
       Ember.set(editedRows, rowId, edit);
       Ember.set(tabModel, '_editedRows', editedRows);
       tabModel.notifyPropertyChange('_editedRows');
@@ -1421,7 +1434,67 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
         tabModel._triggerChanged.call([tabModel, feature.leafletLayer, true], { layer: feature.leafletLayer });
       });
+    },
+
+        /**
+      Handles click on available geometry type.
+
+      @param {String} geometryType Selected geometry type.
+    */
+   onGeometryTypeSelect(geometryType) {
+     /*
+    this.sendAction('drawStart', geometryType);
+    let editTools = this._getEditTools();
+    Ember.set(this.get('leafletMap'), 'drawTools', editTools);
+
+    // let that = { component: this, tabModel: tabModel };
+    editTools.on('editable:drawing:end', this._disableDraw, this);
+    this.get('leafletMap').fire('flexberry-map:switchToDefaultMapTool');
+    this.$().closest('body').on('keydown', ((e) => {
+      // Esc was pressed
+      if (e.which === 27) {
+        this._disableDraw();
+      }
+    }));
+
+    // TODO add event listener on mapTool.enable event - to disable drawing tool when user click on any map tool.
+
+    switch (geometryType) {
+      case 'marker':
+        editTools.startMarker();
+        break;
+      case 'polyline':
+        editTools.startPolyline();
+        break;
+      case 'circle':
+        editTools.startCircle();
+        break;
+      case 'rectangle':
+        editTools.startRectangle();
+        break;
+      case 'polygon':
+        editTools.startPolygon();
+        break;
     }
+    */
+   console.log('GeometryType click');
+  },
+
+  _disableDraw(e) {
+    let editTools = this.get('_editTools');
+
+    this.$().closest('body').off('keydown');
+
+    if (!Ember.isNone(editTools)) {
+      editTools.off('editable:drawing:end', this._disableDraw, this);
+      editTools.stopDrawing();
+    }
+
+    if (!Ember.isNone(e)) {
+      let addedLayer = e.layer;
+      this.sendAction('complete', addedLayer);
+    }
+  },
   },
 
   /**
