@@ -562,6 +562,16 @@
 
       .buttons {
         display: inline-block;
+		
+		/* part */
+		i.icon.part:before {
+			content: "\f248";
+		}
+		
+		/* ring */
+		i.icon.ring:before {
+			content: "\f10c"
+		}
       }
 
       .flexberry-geometry-add-mode-draw, .flexberry-geometry-buffer,
