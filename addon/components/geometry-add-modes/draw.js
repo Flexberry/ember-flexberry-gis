@@ -57,16 +57,20 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     */
     onGeometryTypeSelect(geometryType) {
       this.sendAction('drawStart', geometryType);
-      let editTools = this._getEditTools();
-      Ember.set(this.get('leafletMap'), 'drawTools', editTools);
 
       this.set('geometryType', geometryType);
 
       // let that = { component: this, tabModel: tabModel };
+      let editTools = this._getEditTools();
       editTools.on('editable:drawing:end', this._disableDraw, this);
-      this.get('leafletMap').fire('flexberry-map:switchToDefaultMapTool');
+
+      let leafletMap = this.get('leafletMap');
+      Ember.set(leafletMap, 'drawTools', editTools);
+
+      leafletMap.flexberryMap.tools.enableDefault();
+
       this.$().closest('body').on('keydown', ((e) => {
-        // Esc was pressed
+        // Esc was pressed.
         if (e.which === 27) {
           this._disableDraw();
         }

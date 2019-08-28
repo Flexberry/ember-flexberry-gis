@@ -4,9 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/map-tools/identify';
-import {
-  translationMacro as t
-} from 'ember-i18n';
+import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -35,7 +33,7 @@ const flexberryClassNames = {
   templates/my-map-form.hbs
   ```handlebars
   {{#flexberry-maptoolbar}}
-    {{map-tools/identify leafletMap=leafletMap layers=model.hierarchy}}
+    {{map-tools/identify layers=model.hierarchy leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   ```
 
@@ -45,22 +43,23 @@ const flexberryClassNames = {
 */
 let IdentifyMapToolComponent = Ember.Component.extend({
   /**
-    Properties which will be passed to the map-tool when it will be instantiated.
-
-    @property _identifyToolProperties
-    @type Object
-    @default null
-  */
-  _identifyToolProperties: null,
-
-  /**
-    Identify tool name computed by the specified tool settings ('identify'+ '-' + layerMode + '-' + toolMode).
+    Identify tool name computed by the specified tool settings.
 
     @property _identifyToolName
-    @type {String}
-    @readonly
+    @type String
+    @readOnly
   */
-  _identifyToolName: null,
+  _identifyToolName: Ember.computed('layerMode', 'toolMode', function() {
+    let identifyToolName = 'identify';
+    let layerMode = this.get('layerMode');
+    let toolMode = this.get('toolMode');
+
+    if (!(Ember.isBlank(layerMode) || Ember.isBlank(toolMode))) {
+      identifyToolName = `identify-${layerMode}-${toolMode}`;
+    }
+
+    return identifyToolName;
+  }),
 
   /**
     Reference to component's template.
@@ -120,7 +119,25 @@ let IdentifyMapToolComponent = Ember.Component.extend({
   iconClass: 'info circle icon',
 
   /**
-    Flag indicates is buffer active
+    Idenify tool layers mode (which layers to identify).
+
+    @property layerMode
+    @default 'visible'
+    @type String
+  */
+  layerMode: 'visible',
+
+  /**
+    Identify tool mode (in which type of area to identify).
+
+    @property toolMode
+    @default 'marker'
+    @type String
+  */
+  toolMode: 'marker',
+
+  /**
+    Flag: indicates whether idenify tool's buffer if active or not.
 
     @property bufferActive
     @type Boolean
@@ -129,7 +146,7 @@ let IdentifyMapToolComponent = Ember.Component.extend({
   bufferActive: false,
 
   /**
-    Buffer radius units
+    Idenify tool buffer raduus units.
 
     @property bufferUnits
     @type String
@@ -138,27 +155,13 @@ let IdentifyMapToolComponent = Ember.Component.extend({
   bufferUnits: 'kilometers',
 
   /**
-    Buffer radius in selected units
+    Idenify tool buffer radius in selected units.
 
     @property bufferRadius
     @type Number
     @default 0
   */
   bufferRadius: 0,
-
-  /**
-    @property layerMode
-    @default 'all'
-    @type String
-  */
-  layerMode: 'all',
-
-  /**
-    @property toolMode
-    @default 'rectangle'
-    @type String
-  */
-  toolMode: 'rectangle',
 
   /**
     Map layers hierarchy.
@@ -176,114 +179,7 @@ let IdentifyMapToolComponent = Ember.Component.extend({
     @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
     @default null
   */
-  leafletMap: null,
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-
-    this.set('_identifyToolName', this._getidentifyToolName());
-    this.set('_identifyToolProperties', this._getIdentifyToolProperties());
-  },
-
-  /**
-    Destroys component.
-  */
-  willDestroy() {
-    this._super(...arguments);
-
-    this.set('_identifyToolProperties', null);
-  },
-
-  /**
-    Observes changes in 'leafletMap' property.
-    Attaches leafletMap event handlers.
-
-    @method _leafletMapDidChange
-    @private
-  */
-  _leafletMapDidChange: Ember.observer('leafletMap', function() {
-    let leafletMap = this.get('leafletMap');
-    if (Ember.isNone(leafletMap)) {
-      return;
-    }
-
-    leafletMap.on('flexberry-map:identificationOptionChanged', this._identifyToolPropertiesDidChange, this);
-  }),
-
-  /**
-    Handles changes in 'identify' tool properties.
-
-    @method _identifyToolPropertiesDidChange
-    @private
-  */
-  _identifyToolPropertiesDidChange: Ember.observer(
-    'bufferActive',
-    'bufferUnits',
-    'bufferRadius',
-    'layerMode',
-    'toolMode',
-    'layers',
-    function() {
-      let leafletMap = this.get('leafletMap');
-      if (Ember.isNone(leafletMap)) {
-        return;
-      }
-
-      // Disable currently enabled tool.
-      leafletMap.flexberryMap.tools.disable();
-
-      // Calculate actual tool name.
-      let identifyToolName = this._getidentifyToolName();
-      this.set('_identifyToolName', identifyToolName);
-
-      // Calculate actual tool properties.
-      let identifyToolProperties = this._getIdentifyToolProperties();
-      this.set('_identifyToolProperties', identifyToolProperties);
-
-      // Now we can enable 'identification' tool with actual tool properties.
-      Ember.run.scheduleOnce('afterRender', this, function () {
-        leafletMap.flexberryMap.tools.enable(identifyToolName, identifyToolProperties);
-      });
-    }
-  ),
-
-  /**
-    Gets actual 'identify' tool name.
-
-    @method _getidentifyToolName
-    @private
-  */
-  _getidentifyToolName() {
-    let identifyToolName = 'identify';
-    let layerMode = this.get('layerMode');
-    let toolMode = this.get('toolMode');
-
-    if (!(Ember.isBlank(layerMode) || Ember.isBlank(toolMode))) {
-      identifyToolName = `identify-${layerMode}-${toolMode}`;
-    }
-
-    return identifyToolName;
-  },
-
-  /**
-    Gets actual 'identify' tool properties.
-
-    @method _getIdentifyToolProperties
-    @private
-  */
-  _getIdentifyToolProperties() {
-    return {
-      bufferActive: this.get('bufferActive'),
-      bufferUnits: this.get('bufferUnits'),
-      bufferRadius: this.get('bufferRadius'),
-      layerMode: this.get('layerMode'),
-      toolMode: this.get('toolMode'),
-      layers: this.get('layers')
-    };
-  }
+  leafletMap: null
 });
 
 // Add component's CSS-class names as component's class static constants

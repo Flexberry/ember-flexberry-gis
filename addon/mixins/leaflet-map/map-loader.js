@@ -63,12 +63,12 @@ export default Ember.Mixin.create({
       $dimmer,
 
       // Returns flag indicating whether loader is shown at the moment or not.
-      isShown: () => {
+      isShown() {
         return loaderIsShown;
       },
 
       // Sets loader's content.
-      setContent: (content) => {
+      setContent(content) {
         content = Ember.isNone(content) ? '' : content;
         content = Ember.typeOf(content) === 'string' ? content : '' + content;
 
@@ -76,7 +76,7 @@ export default Ember.Mixin.create({
       },
 
       // Shows loader.
-      show: (options) => {
+      show(options) {
         // Set possibly defined loader's content.
         options = options || {};
         if (!Ember.isNone(options.content)) {
@@ -98,7 +98,7 @@ export default Ember.Mixin.create({
       },
 
       // Hides loader.
-      hide: (options) => {
+      hide(options) {
         // Set possibly defined loader's content.
         options = options || {};
         if (!Ember.isNone(options.content)) {
@@ -120,7 +120,7 @@ export default Ember.Mixin.create({
       },
 
       // Destroys flexberryMap.loader.
-      _destroy: () => {
+      _destroy() {
         // Hide already shown loader first.
         if (loaderIsShown) {
           loader.hide();

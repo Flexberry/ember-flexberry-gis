@@ -61,12 +61,12 @@ export default Ember.Mixin.create({
     leafletMap.flexberryMap.interaction = {
 
       // Returns flag indicating whether map interaction is enabled at the moment or not.
-      isEnabled: () => {
+      isEnabled() {
         return interactionIsEnabled;
       },
 
       // Enables map interaction.
-      enable: () => {
+      enable() {
         if (interactionIsEnabled) {
           return;
         }
@@ -81,7 +81,7 @@ export default Ember.Mixin.create({
       },
 
       // Disables map interaction.
-      disable: () => {
+      disable() {
         if (!interactionIsEnabled) {
           return;
         }
@@ -102,7 +102,7 @@ export default Ember.Mixin.create({
       },
 
       // Destroys flexberryMap.interaction.
-      _destroy: () => {
+      _destroy() {
         // Restore overridden methods.
         leafletMap._fireDOMEvent = originalFireDOMEvent;
         handlers.forEach((handler, i) => {

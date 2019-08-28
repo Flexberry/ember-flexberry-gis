@@ -60,7 +60,7 @@ export default Ember.Mixin.create({
     let tools = leafletMap.flexberryMap.tools = {
 
       // Sets default map-tool.
-      setDefault: (mapToolName, mapToolProperties) => {
+      setDefault(mapToolName, mapToolProperties) {
         let mapTool = lookupMapTool(mapToolName, mapToolProperties);
         if (Ember.isNone(mapTool)) {
           return;
@@ -71,15 +71,30 @@ export default Ember.Mixin.create({
       },
 
       // Returns default map-tool.
-      getDefault: () => {
+      getDefault() {
         return defaultMapTool;
       },
 
+      // Enables default map-tool.
+      enableDefault(mapToolProperties) {
+        Ember.assert(
+          `Can't enable default map-tool because it isn't defined, ` +
+          `use \`leafletMap.flexberryMap.tools.setDefault\` method to define it.`,
+          !Ember.isNone(defaultMapTool));
+        let defaultMapToolName = Ember.get(defaultMapTool, 'name');
+
+        return tools.enable(defaultMapToolName, mapToolProperties);
+      },
+
       // Enables specified map-tool.
-      enable: (mapToolName, mapToolProperties) => {
+      enable(mapToolName, mapToolProperties) {
         let mapTool = lookupMapTool(mapToolName, mapToolProperties);
         if (Ember.isNone(mapTool)) {
           return;
+        }
+
+        if (mapTool === enabledMapTool) {
+          return enabledMapTool;
         }
 
         // Disable enabled map-tool.
@@ -97,12 +112,17 @@ export default Ember.Mixin.create({
       },
 
       // Returns enabled map-tool.
-      getEnabled: () => {
+      getEnabled() {
         return enabledMapTool;
       },
 
+      // Sets map-tool properties without enabling or disbling it.
+      setProperties(mapToolName, mapToolProperties) {
+        return lookupMapTool(mapToolName, mapToolProperties);
+      },
+
       // Disables enabled map-tool.
-      disable: () => {
+      disable() {
         if (Ember.isNone(enabledMapTool)) {
           return;
         }
@@ -121,7 +141,7 @@ export default Ember.Mixin.create({
       },
 
       // Destroys specified map-tool.
-      destroy: (mapToolName) => {
+      destroy(mapToolName) {
         let mapTool = alreadyLookupedMapTools[mapToolName];
         if (!Ember.isNone(mapTool)) {
           return;
@@ -143,7 +163,7 @@ export default Ember.Mixin.create({
       },
 
       // Destroys flexberryMap.tools.
-      _destroy: () => {
+      _destroy() {
         // Remove flexberryMap.tools namespace & related methods & properties.
         defaultMapTool = null;
         enabledMapTool = null;
@@ -160,7 +180,7 @@ export default Ember.Mixin.create({
     };
 
     // Set 'drag' map-tool as default & enable it.
-    Ember.run.scheduleOnce('afterRender', this, () => {
+    Ember.run.scheduleOnce('afterRender', this, function () {
       tools.setDefault('drag');
       tools.enable('drag');
     });

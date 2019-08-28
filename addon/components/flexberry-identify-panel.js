@@ -4,9 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-identify-panel';
-import {
-  translationMacro as t
-} from 'ember-i18n';
+import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -52,7 +50,17 @@ const flexberryClassNames = {
   Usage:
   templates/my-map-form.hbs
   ```handlebars
-
+  {{flexberry-identify-panel
+    layerMode=identifyToolSettings.layerMode
+    toolMode=identifyToolSettings.toolMode
+    bufferActive=identifyToolSettings.bufferActive
+    bufferUnits=identifyToolSettings.bufferUnits
+    bufferRadius=identifyToolSettings.bufferRadius
+    layers=model.hierarchy
+    leafletMap=leafletMap
+    identificationFinished=(action "onIdentificationFinished")
+    identificationClear=(action "onIdentificationClear")
+  }}
   ```
 
   @class FlexberryIdentifyPanelComponent
@@ -60,24 +68,50 @@ const flexberryClassNames = {
 */
 let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   /**
-    Observes changes buffer parameters in flexberry-identify-panel.
+    Identify tool name computed by the specified tool settings.
 
-    @method _bufferObserver
-    @type Observer
+    @property _identifyToolName
+    @type String
+    @readOnly
+  */
+  _identifyToolName: Ember.computed('layerMode', 'toolMode', function() {
+    let identifyToolName = 'identify';
+    let layerMode = this.get('layerMode');
+    let toolMode = this.get('toolMode');
+
+    if (!(Ember.isBlank(layerMode) || Ember.isBlank(toolMode))) {
+      identifyToolName = `identify-${layerMode}-${toolMode}`;
+    }
+
+    return identifyToolName;
+  }),
+
+  /**
+    Gets actual 'identify' tool properties.
+
+    @property _getIdentifyToolProperties
+    @type Object
+    @readOnly
     @private
   */
-  _bufferObserver: Ember.observer('bufferActive', '_selectedBufferUnits', 'bufferRadius', function () {
-    let bufferActive = this.get('bufferActive');
-    let selectedUnits = this.get('_selectedBufferUnits');
-    let bufferRadius = this.get('bufferRadius');
-    let bufferParameters = {
-      active: bufferActive,
-      units: selectedUnits,
-      radius: bufferRadius
-    };
-
-    this.sendAction('onBufferSet', bufferParameters);
-  }),
+  _identifyToolProperties: Ember.computed(
+    'bufferActive',
+    'bufferUnits',
+    'bufferRadius',
+    'layerMode',
+    'toolMode',
+    'layers',
+    function() {
+      return {
+        bufferActive: this.get('bufferActive'),
+        bufferUnits: this.get('bufferUnits'),
+        bufferRadius: this.get('bufferRadius'),
+        layerMode: this.get('layerMode'),
+        toolMode: this.get('toolMode'),
+        layers: this.get('layers')
+      };
+    }
+  ),
 
   /**
     Reference to component's template.
@@ -110,15 +144,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   class: null,
 
   /**
-    layers option's 'all' mode CSS-class.
-
-    @property allClass
-    @type String
-    @default null
-  */
-  allClass: null,
-
-  /**
     layers option's 'all' mode's caption.
 
     @property allCaption
@@ -135,15 +160,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @default 'square outline icon'
   */
   allIconClass: 'square outline icon',
-
-  /**
-    layers option's 'visible' mode CSS-class.
-
-    @property visibleClass
-    @type String
-    @default null
-  */
-  visibleClass: null,
 
   /**
     layers option's 'visible' mode's caption.
@@ -164,15 +180,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   visibleIconClass: 'checkmark box icon',
 
   /**
-    layers option's 'top' mode CSS-class.
-
-    @property topClass
-    @type String
-    @default null
-  */
-  topClass: null,
-
-  /**
     layers option's 'top' mode's caption.
 
     @property topCaption
@@ -189,103 +196,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
     @default 'square outline icon'
   */
   topIconClass: 'chevron up icon',
-
-  /**
-    Flag: is layers option 'identify all layers' enable
-
-    @property all
-    @default true
-    @type Boolean
-  */
-  all: true,
-
-  /**
-    Flag: is layers option 'identify all visible layers' enable
-
-    @property visible
-    @default true
-    @type Boolean
-  */
-  visible: true,
-
-  /**
-    Flag: is layers option 'identify top layer' enable
-
-    @property top
-    @default true
-    @type Boolean
-  */
-  top: true,
-
-  /**
-    @property layerMode
-    @default 'visible'
-    @type {String}
-   */
-  layerMode: 'visible',
-
-  /**
-    Tools option's 'rectangle' mode CSS-class.
-
-    @property rectangleClass
-    @type String
-    @default null
-  */
-  rectangleClass: null,
-
-  /**
-    Tools option's 'rectangle' mode's caption.
-
-    @property rectangleCaption
-    @type String
-    @default t('components.flexberry-identify-panel.rectangle.caption')
-  */
-  rectangleCaption: t('components.flexberry-identify-panel.rectangle.caption'),
-
-  /**
-    Tools option's 'rectangle' mode's icon CSS-class names.
-
-    @property rectangleIconClass
-    @type String
-    @default 'square outline icon'
-  */
-  rectangleIconClass: 'square outline icon',
-
-  /**
-    Tools option's 'polygon' mode CSS-class.
-
-    @property polygonClass
-    @type String
-    @default null
-  */
-  polygonClass: null,
-
-  /**
-    Tools option's 'polygon' mode's caption.
-
-    @property polygonCaption
-    @type String
-    @default t('components.flexberry-identify-panel.polygon.caption')
-  */
-  polygonCaption: t('components.flexberry-identify-panel.polygon.caption'),
-
-  /**
-    Tools option's 'polygon' mode's icon CSS-class names.
-
-    @property polygonIconClass
-    @type String
-    @default 'star icon'
-  */
-  polygonIconClass: 'star icon',
-
-  /**
-    Tools option's 'marker' mode CSS-class.
-
-    @property markerClass
-    @type String
-    @default null
-  */
-  markerClass: null,
 
   /**
     Tools option's 'marker' mode's caption.
@@ -306,15 +216,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   markerIconClass: 'map marker icon',
 
   /**
-    Tools option's 'polyline' mode CSS-class.
-
-    @property polylineClass
-    @type String
-    @default null
-  */
-  polylineClass: null,
-
-  /**
     Tools option's 'polyline' mode's caption.
 
     @property polylineCaption
@@ -333,13 +234,40 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   polylineIconClass: 'minus icon',
 
   /**
-    clear button's CSS-class.
+    Tools option's 'rectangle' mode's caption.
 
-    @property clearClass
+    @property rectangleCaption
     @type String
-    @default null
+    @default t('components.flexberry-identify-panel.rectangle.caption')
   */
-  clearClass: null,
+  rectangleCaption: t('components.flexberry-identify-panel.rectangle.caption'),
+
+  /**
+    Tools option's 'rectangle' mode's icon CSS-class names.
+
+    @property rectangleIconClass
+    @type String
+    @default 'square outline icon'
+  */
+  rectangleIconClass: 'square outline icon',
+
+  /**
+    Tools option's 'polygon' mode's caption.
+
+    @property polygonCaption
+    @type String
+    @default t('components.flexberry-identify-panel.polygon.caption')
+  */
+  polygonCaption: t('components.flexberry-identify-panel.polygon.caption'),
+
+  /**
+    Tools option's 'polygon' mode's icon CSS-class names.
+
+    @property polygonIconClass
+    @type String
+    @default 'star icon'
+  */
+  polygonIconClass: 'star icon',
 
   /**
     clear button's caption.
@@ -360,58 +288,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   clearIconClass: 'remove icon',
 
   /**
-    Flag: is tools option 'rectangle' enable
-
-    @property rectangle
-    @default true
-    @type Boolean
-  */
-  rectangle: true,
-
-  /**
-    Flag: is tools option 'polygon' enable
-
-    @property polygon
-    @default true
-    @type Boolean
-  */
-  polygon: true,
-
-  /**
-    Flag: is tools option 'marker' enable
-
-    @property marker
-    @default true
-    @type Boolean
-  */
-  marker: true,
-
-  /**
-    Flag: is tools option 'polyline' enable
-
-    @property polyline
-    @default true
-    @type Boolean
-  */
-  polyline: true,
-
-  /**
-    Flag: is tools option 'buffer' enabled.
-
-    @property polyline
-    @default true
-    @type Boolean
-  */
-  buffer: true,
-
-  /**
-    @property toolMode
-    @default 'marker'
-    @type {String}
-   */
-  toolMode: 'marker',
-
-  /**
     Active buffer caption.
 
     @property bufferActiveCaption
@@ -430,24 +306,6 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   bufferRadiusCaption: t('components.flexberry-identify-panel.buffer.radius-caption'),
 
   /**
-    Flag indicates is buffer active
-
-    @property bufferActive
-    @type Boolean
-    @default false
-  */
-  bufferActive: false,
-
-  /**
-    Buffer radius units
-
-    @property _selectedBufferUnits
-    @type String
-    @default 'kilometers'
-  */
-  _selectedBufferUnits: 'kilometers',
-
-  /**
     Buffer radius units with locale.
 
     @property bufferUnitsList
@@ -459,7 +317,43 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   },
 
   /**
-    Buffer radius in selected units
+    Idenify tool layers mode (which layers to identify).
+
+    @property layerMode
+    @default 'visible'
+    @type String
+  */
+  layerMode: 'visible',
+
+  /**
+    Identify tool mode (in which type of area to identify).
+
+    @property toolMode
+    @default 'marker'
+    @type String
+  */
+  toolMode: 'marker',
+
+  /**
+    Flag: indicates whether idenify tool's buffer if active or not.
+
+    @property bufferActive
+    @type Boolean
+    @default false
+  */
+  bufferActive: false,
+
+  /**
+    Idenify tool buffer raduus units.
+
+    @property bufferUnits
+    @type String
+    @default 'kilometers'
+  */
+  bufferUnits: 'kilometers',
+
+  /**
+    Idenify tool buffer radius in selected units.
 
     @property bufferRadius
     @type Number
@@ -476,168 +370,131 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
   */
   leafletMap: null,
 
+  actions: {
+    /**
+      Handles layer mode button's 'click' action.
+
+      @method actions.onLayerModeChange
+    */
+    onLayerModeChange(layerMode) {
+      this.set('layerMode', layerMode);
+
+      this._enableActualIdentifyTool();
+    },
+
+    /**
+      Handles tool mode button's 'click' action.
+
+      @method actions.onToolModeChange
+    */
+    onToolModeChange(toolMode) {
+      this.set('toolMode', toolMode);
+
+      this._enableActualIdentifyTool();
+    },
+
+    /**
+      Handles buffer units dropdown value change.
+
+      @method actions.onBufferUnitsChange
+      @param {String} unitsLocalizedCaption Selected units localized caption.
+      @param {String} unitsValue Selected units value.
+    */
+    onBufferUnitsChange(unitsLocalizedCaption, unitsValue) {
+      this.set('bufferUnits', unitsValue);
+    },
+
+    /**
+      Handles 'flexberry-map:identificationFinished' event of leaflet map.
+
+      @method onIdentificationFinished
+      @param {Object} e Event object.
+    */
+    onIdentificationFinished(e) {
+      let identificationFinished = this.get('identificationFinished');
+      if (Ember.typeOf(identificationFinished) === 'function') {
+        identificationFinished(e);
+      }
+    },
+
+    /**
+      Handles clear button's 'click' action.
+
+      @method actions.onIdentificationClear
+      @param {Object} e Click event-object.
+    */
+    onIdentificationClear(e) {
+      let identificationClear = this.get('identificationClear');
+      if (Ember.typeOf(identificationClear) === 'function') {
+        identificationClear();
+      }
+    }
+  },
+
   /**
-    Observes changes in {{#crossLink "FlexberryMaptoolbarComponent/leafletMap:propery"}}'leafletMap' property{{/crossLink}}.
-    Activates default map-tool when leafletMap initialized and subscribes on flexberry-map:identificationFinished event.
+    Destroys DOM-related component's properties.
+  */
+  willDestroyElement() {
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.off('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
+    }
+
+    this.super(...arguments);
+  },
+
+  /**
+    Observes changes in 'leafletMap' property
 
     @method _leafletMapDidChange
     @type Observer
     @private
   */
   _leafletMapDidChange: Ember.on('didInsertElement', Ember.observer('leafletMap', function () {
-
     let leafletMap = this.get('leafletMap');
     if (Ember.isNone(leafletMap)) {
       return;
     }
 
-    // Attach custom event-handler.
-    leafletMap.on('flexberry-map:identificationFinished', this.identificationFinished, this);
+    leafletMap.on('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
   })),
 
-  actions: {
-    /**
-      Handles inner layer option button's 'click' action.
-
-      @method actions.onLayerOptionChange
-    */
-    onLayerOptionChange(...args) {
-      this.set('layerMode', args[0]);
-      this._switch(true);
-
-      this.sendAction('onLayerOptionChange', ...args);
-    },
-
-    /**
-      Handles inner tool option button's 'click' action.
-
-      @method actions.onToolOptionChange
-    */
-    onToolOptionChange(...args) {
-      this.set('toolMode', args[0]);
-      this._switch(false, true);
-
-      this.sendAction('onToolOptionChange', ...args);
-    },
-
-    /**
-      Handles buffer units dropdown value change.
-
-      @method actions.onBufferUnitSelected
-      @param {String} item Clicked item locale key.
-      @param {String} key Clicked item value.
-    */
-    onBufferUnitSelected(item, key) {
-      this.set('_selectedBufferUnits', key);
-    },
-
-    /**
-      Handles inner clear button's 'click' action.
-
-      @method actions.clear
-    */
-    clear(...args) {
-      this.sendAction('clear', ...args);
-    }
-  },
-
   /**
-      Handles 'flexberry-map:identificationFinished' event of leaflet map.
+    Handles changes in buffer settings.
 
-      @method identificationFinished
-      @param {Object} e Event object.
-      @param {Object} results Hash containing search results.
-      @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
-      or a promise returning such array.
-    */
-  identificationFinished(e) {
-    this.sendAction('onIdentificationFinished', e);
-  },
-
-  /**
-    Initializes DOM-related component's properties.
+    @method _bufferSettingsDidChange
   */
-  didInsertElement() {
-    this._super(...arguments);
-    let selectedLayerOption = this.get('layerMode');
-    let selectedToolOption = this.get('toolMode');
-
-    this._switchActiveLayer(selectedLayerOption);
-    this._switchActiveTool(selectedToolOption);
-  },
+  _bufferSettingsDidChange: Ember.observer('bufferActive', 'bufferUnits', 'bufferRadius', function() {
+    Ember.run.once(this, '_enableActualIdentifyTool');
+  }),
 
   /**
-   * @method _switchActiveLayer
-   * @param {String} selectedLayerOption
-   */
-  _switchActiveLayer(selectedLayerOption) {
-    this.set('allClass', null);
-    this.set('visibleClass', null);
-    this.set('topClass', null);
+    Enables identify tool related to actual settings.
 
-    this.set(selectedLayerOption + 'Class', 'active');
-  },
-
-  /**
-   * @method _switchActiveLayer
-   * @param {String} selectedToolOption
-   */
-  _switchActiveTool(selectedToolOption) {
-    this.set('rectangleClass', null);
-    this.set('polygonClass', null);
-    this.set('markerClass', null);
-    this.set('polylineClass', null);
-
-    this.set(selectedToolOption + 'Class', 'active');
-  },
-
-  /**
-   * @method _switch
-   * handles changes in layer and tools options and fires 'flexberry-map:identificationOptionChanged' event
-   * @private
-   */
-  _switch(_switchActiveLayer, _switchActiveTool) {
-    let layer = this.get('layerMode');
-    let tool = this.get('toolMode');
-
-    if (_switchActiveLayer) {
-      this._switchActiveLayer(layer);
-    }
-
-    if (_switchActiveTool) {
-      this._switchActiveTool(tool);
-    }
-
+    @method _enableActualIdentifyTool
+    @private
+  */
+  _enableActualIdentifyTool() {
     let leafletMap = this.get('leafletMap');
     if (Ember.isNone(leafletMap)) {
       return;
     }
 
-    let mapToolName = 'identify-' + layer + '-' + tool;
-    leafletMap.fire('flexberry-map:identificationOptionChanged', {
-      mapToolName
-    });
-  },
+    let identifyToolName = this.get('_identifyToolName');
+    let identifyToolProperties = this.get('_identifyToolProperties');
+    leafletMap.flexberryMap.tools.enable(identifyToolName, identifyToolProperties);
+  }
 
   /**
-    Component's action invoking when layer option changed.
+    Component's action invoking when idenification finished and results must be handled.
 
-    @method sendingActions.onLayerOptionChange
-    {{#crossLink "FlexberryIdentifyPanelComponent/sendingActions.onLayerOptionChange:method"}}identify panel's on layer option changed action{{/crossLink}}.
+    @method sendingActions.identificationFinished
   */
 
   /**
-    Component's action invoking when tool option changed.
+    Component's action invoking when idenification results must be cleared.
 
-    @method sendingActions.onToolOptionChange
-    {{#crossLink "FlexberryIdentifyPanelComponent/sendingActions.onToolOptionChange:method"}}identify panel's on tool option changed action{{/crossLink}}.
-  */
-
-  /**
-    Component's action invoking when map-tool must be activated.
-
-    @method sendingActions.clear
-    {{#crossLink "FlexberryIdentifyPanelComponent/sendingActions.clear:method"}}identify panel's on clear button clicked action{{/crossLink}}.
+    @method sendingActions.identificationClear
   */
 });
 
