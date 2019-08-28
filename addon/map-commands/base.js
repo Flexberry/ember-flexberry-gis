@@ -32,6 +32,15 @@ export default Ember.Object.extend(Ember.Evented, {
   i18n: Ember.inject.service('i18n'),
 
   /**
+    Tool's name.
+
+    @property name
+    @type String
+    @default null
+  */
+  name: null,
+
+  /**
     Leaflet map related to command.
 
     @property leafletMap
@@ -39,15 +48,6 @@ export default Ember.Object.extend(Ember.Evented, {
     @default null
   */
   leafletMap: null,
-
-  /**
-    Map layers hierarchy.
-
-    @property layers
-    @type Object[]
-    @default null
-  */
-  layers: null,
 
   /**
     Executes map-command.
@@ -68,19 +68,31 @@ export default Ember.Object.extend(Ember.Evented, {
       return;
     }
 
+    let leafletMap = this.get('leafletMap');
     Ember.assert(
       `Wrong type of map-command \`leafletMap\` property: ` +
       `actual type is ${Ember.typeOf(this.get('leafletMap'))}, but \`L.Map\` is expected.`,
-      this.get('leafletMap') instanceof L.Map);
+      leafletMap instanceof L.Map);
 
     this.set('_executing', true);
     let executionResult = this._execute(...arguments);
 
-    // Trigger 'execute' event.
-    this.trigger('execute', {
-      mapCommand: this,
-      executionResult: executionResult,
-      arguments: arguments
+    Ember.run.scheduleOnce('afterRender', this, function () {
+
+      // Trigger common 'execute' event.
+      leafletMap.fire('flexberry-map:commands:execute', {
+        mapCommand: this,
+        executionResult: executionResult,
+        arguments: arguments
+      });
+
+      // Trigger command specific 'execute' event.
+      let mapCommandName = this.get('name');
+      leafletMap.fire(`flexberry-map:commands:${mapCommandName}:execute`, {
+        mapCommand: this,
+        executionResult: executionResult,
+        arguments: arguments
+      });
     });
 
     if (executionResult instanceof Ember.RSVP.Promise) {
@@ -92,11 +104,5 @@ export default Ember.Object.extend(Ember.Evented, {
       // Command isn't asynchronous & already executed.
       this.set('_executing', false);
     }
-  },
-
-  /**
-    Event that signalizes that map-command starts execution.
-
-    @method events.execute
-  */
+  }
 });

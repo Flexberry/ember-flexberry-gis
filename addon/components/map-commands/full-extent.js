@@ -4,9 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/map-commands/full-extent';
-import {
-  translationMacro as t
-} from 'ember-i18n';
+import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -34,8 +32,8 @@ const flexberryClassNames = {
   Usage:
   templates/my-map-form.hbs
   ```handlebars
-  {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-commands/full-extent execute=(action "onMapCommandExecute" target=maptoolbar)}}
+  {{#flexberry-maptoolbar}}
+    {{map-commands/full-extent leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   ```
 
@@ -44,6 +42,21 @@ const flexberryClassNames = {
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
 let FullExtentMapCommandComponent = Ember.Component.extend({
+  /**
+    Options which will be passed to the map-command's 'execute' method.
+
+    @property mapCommandExecutionOptions
+    @type Object
+    @private
+    @readOnly
+  */
+  _mapCommandExecutionOptions: Ember.computed('lat', 'lng', 'zoom', function() {
+    return {
+      latLng: L.latLng(this.get('lat'), this.get('lng')),
+      zoom: this.get('zoom')
+    };
+  }),
+
   /**
     Reference to component's template.
   */
@@ -102,6 +115,15 @@ let FullExtentMapCommandComponent = Ember.Component.extend({
   iconClass: 'globe icon',
 
   /**
+    Leaflet map.
+
+    @property leafletMap
+    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+    @default null
+  */
+  leafletMap: null,
+
+  /**
     Map command's default X position
 
     @property lat
@@ -126,34 +148,7 @@ let FullExtentMapCommandComponent = Ember.Component.extend({
     @type float
     @default 0
   */
-  zoom: 0,
-
-  actions: {
-    /**
-      Handles {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
-      Invokes own {{#crossLink "FullExtentMapCommandComponent/sendingActions.execute:method"}}'execute' action{{/crossLink}}.
-
-      @method actions.onMapCommandExecute
-      @param {Object} e Base map-command's 'execute' action event-object.
-    */
-    onMapCommandExecute(e) {
-      let latLng = L.latLng(this.get('lat'), this.get('lng'));
-      Ember.set(e, 'latLng', latLng);
-
-      let zoom = this.get('zoom');
-      Ember.set(e, 'zoom', zoom);
-
-      this.sendAction('execute', e);
-    }
-  },
-
-  /**
-    Component's action invoking when map-command must be executed.
-
-    @method sendingActions.execute
-    @param {Object} e Action's event object from
-    {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
-  */
+  zoom: 0
 });
 
 // Add component's CSS-class names as component's class static constants

@@ -38,8 +38,8 @@ const flexberryClassNames = {
   Usage:
   templates/my-map-form.hbs
   ```handlebars
-  {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-commands/base name="my-map-command" execute=(action "onMapCommandExecute" target=maptoolbar)}}
+  {{#flexberry-maptoolbar}}
+    {{map-commands/base name="my-map-command" leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   ```
 
@@ -49,117 +49,87 @@ const flexberryClassNames = {
   @uses DomActionsMixin
 */
 let BaseMapCommandComponent = BaseMapToolComponent.extend({
-    /**
-      Map command.
+  /**
+    Reference to component's template.
+  */
+  layout,
 
-      @property _mapCommand
-      @type BaseMapCommand
-      @default null
-      @private
-    */
-    _mapCommand: null,
+  /**
+    Reference to component's CSS-classes names.
+    Must be also a component's instance property to be available from component's .hbs template.
+  */
+  flexberryClassNames,
 
-    /**
-      Reference to component's template.
-    */
-    layout,
+  /**
+    Properties which will be passed to the map-tool when it will be instantiated.
 
-    /**
-      Reference to component's CSS-classes names.
-      Must be also a component's instance property to be available from component's .hbs template.
-    */
-    flexberryClassNames,
+    @property mapToolProperties
+    @type Object
+    @default null
+  */
+  mapCommandProperties: null,
 
-    /**
-      Properties which will be passed to the map-tool when it will be instantiated.
+  /**
+    Options which will be passed to the map-command's 'execute' method.
 
-      @property mapToolProperties
-      @type Object
-      @default null
-    */
-    mapCommandProperties: null,
+    @property mapCommandExecutionOptions
+    @type Object
+    @default null
+  */
+  mapCommandExecutionOptions: null,
 
-    actions: {
-      /**
-        Handles map-tools click event.
-        Invokes {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}'execute' action{{/crossLink}}.
+  /**
+    Handles map-tool's 'click' event.
 
-        @method actions.click
-        @param {<a href="http://learn.jquery.com/events/introduction-to-events/#the-event-object">jQuery event object</a>} e
-        Click event object.
-      */
-      click(e) {
-        this.executeMapCommand(e);
-      }
-    },
+    @method click
+    @param {<a href="http://learn.jquery.com/events/introduction-to-events/#the-event-object">jQuery event object</a>} e
+    Click event object.
+  */
+  click(e) {
+    this.executeMapCommand();
+  },
 
-    /**
-      Invokes {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}'execute' action{{/crossLink}}.
+  /**
+    Performs map-command's execution.
 
-      @method executeMapCommand
-      @param {<a href="http://learn.jquery.com/events/introduction-to-events/#the-event-object">jQuery event object</a>} e
-      Original event object.
-    */
-    executeMapCommand(e) {
-      this.sendAction('execute', {
-        mapCommand: this.get('_mapCommand'),
-        target: this.$(),
-        originalEvent: e
-      });
-    },
+    @method executeMapCommand
+  */
+  executeMapCommand() {
+    if (this.get('_hasSubmenu')) {
+      // Command with submenu is just a wrapper, it shouldn't really execute map-command.
+      return;
+    }
 
-    /**
-      Creates map-tool in component's initialization time.
+    let leafletMap = this.get('leafletMap');
+    let mapCommandName = this.get('name');
+    let mapCommandProperties = this.get('mapCommandProperties');
+    let mapCommandExecutionOptions = this.get('mapCommandExecutionOptions');
 
-      @method createMapTool
-    */
-    createMapTool() {
-      let mapCommandName = this.get('name');
-      if (Ember.isBlank(mapCommandName)) {
-        return;
-      }
+    leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions);
 
-      let mapCommand = Ember.getOwner(this).lookup(`map-command:${mapCommandName}`);
-      Ember.assert(
-        `Can't lookup \`map-command:${mapCommandName}\` such map-command doesn\`t exist`,
-        !Ember.isNone(mapCommand));
+    // Invoke 'execute' action handler if defined.
+    let execute = this.get('execute');
+    if (Ember.typeOf(execute) === 'function') {
+      execute();
+    }
+  },
 
-      let mapCommandProperties = this.get('mapCommandProperties');
-      if (!Ember.isNone(mapCommandProperties)) {
-        Ember.A(Object.keys(mapCommandProperties)).forEach((propertyName) => {
-          Ember.set(mapCommand, propertyName,  Ember.get(mapCommandProperties, propertyName));
-        });
-      }
+  /**
+    Attaches leaflet map event handlers.
 
-      this.set('_mapCommand', mapCommand);
-    },
+    @param {Object} leafletMap Leaflet map.
+  */
+  attachLeafletMapEventHandlers(leafletMap) {
+  },
 
-    /**
-      Destroys map-tool in components destroy time.
+  /**
+    Detaches leaflet map event handlers.
 
-      @method destroyMapTool
-    */
-    destroyMapTool() {
-      let mapCommand = this.get('_mapCommand');
-      if (!Ember.isNone(mapCommand) && Ember.typeOf(mapCommand.destroy) === 'function') {
-        mapCommand.destroy();
-        this.set('_mapCommand', null);
-      }
-    },
-
-    /**
-      Component's action invoking when component was clicked & map-command must be executed.
-
-      @method sendingActions.execute
-      @param {Object} e Action's event object.
-      @param {BaseMapTool} e.mapCommand Map command that must be executed.
-      @param {<a href="http://learn.jquery.com/using-jquery-core/jquery-object/">jQuery-object</a>} e.target
-      jQuery element related to map command that must be executed.
-      @param {<a href="http://learn.jquery.com/events/introduction-to-events/#the-event-object">jQuery event object</a>} e.originalEvent
-      Event object related to event that triggered this action.
-    */
+    @param {Object} leafletMap Leaflet map.
+  */
+  detachLeafletMapEventHandlers(leafletMap) {
   }
-);
+});
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.

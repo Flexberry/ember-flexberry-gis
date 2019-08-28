@@ -35,8 +35,8 @@ const flexberryClassNames = {
   Usage:
   templates/my-map-form.hbs
   ```handlebars
-  {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-commands/edit execute=(action "onMapCommandExecute" target=maptoolbar)}}
+  {{#flexberry-maptoolbar}}
+    {{map-commands/edit leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   ```
 
@@ -45,6 +45,16 @@ const flexberryClassNames = {
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
 let EditMapCommandComponent = Ember.Component.extend({
+  /**
+    Options which will be passed to the map-command's 'execute' method.
+
+    @property mapCommandExecutionOptions
+    @type Object
+    @private
+    @readOnly
+  */
+  _mapCommandExecutionOptions: null,
+
   /**
     Flag: indicates whether edit dialog has been already requested by user or not.
 
@@ -123,6 +133,15 @@ let EditMapCommandComponent = Ember.Component.extend({
   iconClass: 'edit icon',
 
   /**
+    Leaflet map.
+
+    @property leafletMap
+    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+    @default null
+  */
+  leafletMap: null,
+
+  /**
     Map model
 
     @property mapModel
@@ -133,13 +152,12 @@ let EditMapCommandComponent = Ember.Component.extend({
 
   actions: {
     /**
-      Handles {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
+      Handles base map-command's 'execute' action.
 
       @method actions.onEditMapCommandExecute
-      @param {Object} e Base map-command's 'execute' action event-object.
     */
-    onEditMapCommandExecute(e) {
-      this._showEditDialog({ executeActionEventObject: e });
+    onEditMapCommandExecute() {
+      this._showEditDialog();
     },
 
     /**
@@ -176,14 +194,6 @@ let EditMapCommandComponent = Ember.Component.extend({
   */
   _showEditDialog(options) {
     options = options || {};
-
-    // Delay execution, but send action to initialize map-command.
-    let executeActionEventObject = Ember.get(options, 'executeActionEventObject');
-    Ember.set(executeActionEventObject, 'execute', false);
-    this.sendAction('execute', executeActionEventObject);
-
-    // Remember event-object to execute command later (when dialog will be approved).
-    this.set('_executeActionEventObject', executeActionEventObject);
 
     // Include dialog to markup.
     this.set('_editDialogHasBeenRequested', true);
@@ -228,24 +238,7 @@ let EditMapCommandComponent = Ember.Component.extend({
     this._super(...arguments);
 
     this._hideEditDialog();
-  },
-
-  /**
-    Destroys component.
-  */
-  willDestroy() {
-    this._super(...arguments);
-
-    this.set('_executeActionEventObject', null);
   }
-
-  /**
-    Component's action invoking when map-command must be executed.
-
-    @method sendingActions.execute
-    @param {Object} e Action's event object from
-    {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
-  */
 });
 
 // Add component's CSS-class names as component's class static constants

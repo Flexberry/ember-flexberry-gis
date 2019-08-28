@@ -440,7 +440,7 @@ let FlexberryIdentifyPanelComponent = Ember.Component.extend({
       leafletMap.off('flexberry-map:identificationFinished', this.actions.onIdentificationFinished, this);
     }
 
-    this.super(...arguments);
+    this._super(...arguments);
   },
 
   /**
