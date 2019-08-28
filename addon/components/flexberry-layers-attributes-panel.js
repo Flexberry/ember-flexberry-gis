@@ -121,7 +121,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
         let leafletObject = Ember.get(item, 'leafletObject');
         let readonly = Ember.get(item, 'settings.readonly') || false;
-        readonly=false;
+
         let styleSettings = Ember.get(item, 'settings.styleSettings') || {};
 
         let getHeader = () => {
