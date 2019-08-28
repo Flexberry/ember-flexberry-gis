@@ -76,9 +76,6 @@ export default {
     'draw-ring': {
       'caption': 'Ring'
     },
-    'draw-arrow': {
-      'caption': 'Add by coordinates'
-    },
     'draw-clear': {
       'caption': 'Clear'
     }

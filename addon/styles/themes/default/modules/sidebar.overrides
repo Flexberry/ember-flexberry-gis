@@ -563,14 +563,20 @@
       .buttons {
         display: inline-block;
 		
-		/* part */
 		i.icon.part:before {
 			content: "\f248";
 		}
 		
-		/* ring */
 		i.icon.ring:before {
 			content: "\f10c"
+		}
+		
+		i.icon.map-marker:before {
+			content: "\f041";
+		}
+		
+		.draw {
+			border: none;
 		}
       }
 
