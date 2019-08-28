@@ -41,7 +41,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     @property classNames
     @type String[]
   */
-  classNames: [flexberryClassNames.wrapper],
+  classNames: ['draw', flexberryClassNames.wrapper],
 
   /**
    * Component settings.
@@ -87,6 +87,12 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         case 'polygon':
           editTools.startPolygon();
           break;
+        case 'part':
+          editTools.startPolygon();
+          break;
+        case 'ring':
+          editTools.startPolygon();
+          break;
       }
     },
   },
@@ -115,7 +121,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
     if (!Ember.isNone(e)) {
       let addedLayer = e.layer;
-      this.sendAction('complete', addedLayer);
+       this.sendAction('complete', addedLayer);
     }
   },
 

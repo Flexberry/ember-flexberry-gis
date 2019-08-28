@@ -1,4 +1,60 @@
-<div class="ui simple dropdown item">
+{{#if (eq tabModel.typeGeometry "polygon") }}
+  {{flexberry-button
+    tooltip=(t "components.map-tools.draw.draw-polygon.caption")
+    click=(action "onGeometryTypeSelect" "polygon")
+    iconClass="flexberry-map-tool-icon star icon"
+  }}
+  {{flexberry-button
+    tooltip=(t "components.map-tools.draw.draw-rectangle.caption")
+    click=(action "onGeometryTypeSelect" "rectangle")
+    iconClass="flexberry-map-tool-icon square icon"
+  }}
+  {{flexberry-button
+    tooltip=(t "components.map-tools.draw.draw-circle.caption")
+    click=(action "onGeometryTypeSelect" "circle")
+    iconClass="flexberry-map-tool-icon circle icon"
+  }}
+
+  {{flexberry-button
+    tooltip=(t "components.map-tools.draw.draw-part.caption")
+    click=(action "onGeometryTypeSelect" "part")
+    iconClass="flexberry-map-tool-icon part icon"
+    readonly=(eq tabModel._selectedShape false)
+  }}
+  {{flexberry-button
+    tooltip=(t "components.map-tools.draw.draw-ring.caption")
+    click=(action "onGeometryTypeSelect" "ring")
+    iconClass="flexberry-map-tool-icon ring icon"
+    readonly=(eq tabModel._selectedShape false)
+  }}
+{{/if}}
+
+{{#if (eq tabModel.typeGeometry "polyline") }}
+  {{flexberry-button
+    tooltip=(t "components.map-tools.draw.draw-polyline.caption")
+    click=(action "onGeometryTypeSelect" "polyline")
+    iconClass="flexberry-map-tool-icon empty star icon"
+  }}
+
+  {{flexberry-button
+    tooltip=(t "components.map-tools.draw.draw-part.caption")
+    click=(action "onGeometryTypeSelect" "part")
+    iconClass="flexberry-map-tool-icon part icon"
+    readonly=(eq tabModel._selectedShape false)
+  }}
+{{/if}}
+
+{{#if (eq tabModel.typeGeometry "marker") }}
+  {{flexberry-button
+    tooltip=(t "components.map-tools.draw.draw-marker.caption")
+    click=(action "onGeometryTypeSelect" "marker")
+    iconClass="flexberry-map-tool-icon marker icon"
+  }}
+
+{{/if}}
+
+
+{{!-- <div class="ui simple dropdown item">
   <i class="plus icon"></i>
   <i class="dropdown icon"></i>
   <div class="menu">
@@ -33,4 +89,4 @@
       </a>
     {{/if}}
   </div>
-</div>
+</div> --}}

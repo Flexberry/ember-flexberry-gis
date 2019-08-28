@@ -145,9 +145,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         };
 
         let availableDrawTools = null;
+        let typeGeometry = null;
         if (!readonly) {
 
           availableDrawTools = this._getAvailableDrawTools(Ember.get(leafletObject, 'readFormat.featureType.geometryFields'));
+          typeGeometry = this._getTypeGeometry(Ember.get(leafletObject, 'readFormat.featureType.geometryFields')); //todo:!!!!
         }
 
         let tabModel = Ember.Object.extend({
@@ -157,6 +159,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           _saveDragState: true,
           _tempCoords: undefined,
           _nowDragging: false,
+          _selectedShape: false,
           _selectedRows: {},
           _editedRows: {},
           _draggableRows: {},
@@ -480,6 +483,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           return cachedTab;
         }
 
+        typeGeometry = 'polygon';//todo:!!!
+
         let newTab = tabModel.create(
           Ember.getOwner(this).ownerInjection(),
           {
@@ -487,7 +492,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             allowEdit: !readonly,
             leafletObject,
             availableDrawTools,
-            styleSettings
+            styleSettings,
+            typeGeometry
           }
         );
 
@@ -614,9 +620,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     @property availableGeometryAddModes
     @type Array
-    @default ['draw', 'manual', 'geoprovider']
+    @default ['manual', 'draw', 'geoprovider']
   */
-  availableGeometryAddModes: ['draw', 'manual', 'geoprovider', 'import'],
+  availableGeometryAddModes: ['manual', 'draw', 'geoprovider', 'import'],
 
   /**
     Minimum distance for snapping in pixels.
@@ -676,10 +682,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         sidebarOpened: false,
       };
 
-      settings.drawTools = {}
-
+      settings.drawTools = {};
       this.set('settings', settings);
-
       this.set('_selectedUnit', 'meters');
     }
   },
@@ -1040,12 +1044,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let edit = Ember.get(editedRows, rowId) || false;
       edit = !edit;
 
-      // remove selection
-      // for (var key in editedRows) {
-      //   if (typeof editedRows[key] !== 'function') {
-      //     Ember.set(editedRows, key, false);
-      //   }
-      // }
+      Ember.set(tabModel, '_selectedShape', edit);
 
       editedRows = {};
 
@@ -1435,67 +1434,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         tabModel._triggerChanged.call([tabModel, feature.leafletLayer, true], { layer: feature.leafletLayer });
       });
     },
-
-        /**
-      Handles click on available geometry type.
-
-      @param {String} geometryType Selected geometry type.
-    */
-   onGeometryTypeSelect(geometryType) {
-     /*
-    this.sendAction('drawStart', geometryType);
-    let editTools = this._getEditTools();
-    Ember.set(this.get('leafletMap'), 'drawTools', editTools);
-
-    // let that = { component: this, tabModel: tabModel };
-    editTools.on('editable:drawing:end', this._disableDraw, this);
-    this.get('leafletMap').fire('flexberry-map:switchToDefaultMapTool');
-    this.$().closest('body').on('keydown', ((e) => {
-      // Esc was pressed
-      if (e.which === 27) {
-        this._disableDraw();
-      }
-    }));
-
-    // TODO add event listener on mapTool.enable event - to disable drawing tool when user click on any map tool.
-
-    switch (geometryType) {
-      case 'marker':
-        editTools.startMarker();
-        break;
-      case 'polyline':
-        editTools.startPolyline();
-        break;
-      case 'circle':
-        editTools.startCircle();
-        break;
-      case 'rectangle':
-        editTools.startRectangle();
-        break;
-      case 'polygon':
-        editTools.startPolygon();
-        break;
-    }
-    */
-   console.log('GeometryType click');
-  },
-
-  _disableDraw(e) {
-    let editTools = this.get('_editTools');
-
-    this.$().closest('body').off('keydown');
-
-    if (!Ember.isNone(editTools)) {
-      editTools.off('editable:drawing:end', this._disableDraw, this);
-      editTools.stopDrawing();
-    }
-
-    if (!Ember.isNone(e)) {
-      let addedLayer = e.layer;
-      this.sendAction('complete', addedLayer);
-    }
-  },
-  },
+ },
 
   /**
     Selected or deselected all objects.
@@ -1915,6 +1854,34 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     }
 
     return ['marker', 'circle', 'polyline', 'rectangle', 'polygon'];
+  },
+
+  /**
+    Return geometry type.
+
+    @param {Object} geometryFields Hash with the layer geometry field names and their types.
+  */
+  _getTypeGeometry(geometryFields)
+  {
+    if (!Ember.isNone(geometryFields)) {
+      let firstField = Object.keys(geometryFields)[0];
+      switch (geometryFields[firstField]) {
+        case 'PointPropertyType':
+        case 'MultiPointPropertyType':
+          return 'marker';
+
+        case 'LineStringPropertyType':
+        case 'MultiLineStringPropertyType':
+          return 'polyline';
+
+        case 'MultiSurfacePropertyType':
+        case 'PolygonPropertyType':
+        case 'MultiPolygonPropertyType':
+          return 'polygon';
+      }
+    }
+
+    return 'all';
   },
 
   /**

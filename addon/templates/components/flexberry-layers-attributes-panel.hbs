@@ -81,14 +81,87 @@
                         iconClass="trash icon"
                         readonly=(eq tabModel._selectedRowsCount 0)
                       }} --}}
-                      {{flexberry-button
+                      {{!-- {{#each availableGeometryAddModes as |mode|}}
+                        {{#if (and (eq mode "geoprovider") (eq tabModel.typeGeometry "marker")) }}
+                        {{/if}}
+                        {{component (concat "geometry-add-modes/" mode)
+                          leafletMap=leafletMap
+                          settings=(hash
+                            drawTools=(get tabModel "availableDrawTools")
+                            layerCRS=(get tabModel "leafletObject.options.crs")
+                            layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
+                            layersFieldsCaptions=(get tabModel "header")
+                          )
+                          complete=(action "onGeometryAddComplete" tabModel)
+                          drawStart=(action "onAddDrawStart" tabModel)
+                          importComplete=(action "onImportComplete" tabModel)
+                        }}
+                      {{/each}} --}}
+                      {{component "geometry-add-modes/manual"
+                          leafletMap=leafletMap
+                          settings=(hash
+                            drawTools=(get tabModel "availableDrawTools")
+                            layerCRS=(get tabModel "leafletObject.options.crs")
+                            layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
+                            layersFieldsCaptions=(get tabModel "header")
+                          )
+                          tabModel=tabModel
+                          complete=(action "onGeometryAddComplete" tabModel)
+                          drawStart=(action "onAddDrawStart" tabModel)
+                          importComplete=(action "onImportComplete" tabModel)
+                      }}
+                      {{component "geometry-add-modes/draw"
+                          leafletMap=leafletMap
+                          settings=(hash
+                            drawTools=(get tabModel "availableDrawTools")
+                            layerCRS=(get tabModel "leafletObject.options.crs")
+                            layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
+                            layersFieldsCaptions=(get tabModel "header")
+                          )
+                          tabModel=tabModel
+                          complete=(action "onGeometryAddComplete" tabModel)
+                          drawStart=(action "onAddDrawStart" tabModel)
+                          importComplete=(action "onImportComplete" tabModel)
+                      }}
+
+                      {{#if (eq tabModel.typeGeometry "marker") }}
+                        {{component "geometry-add-modes/geoprovider"
+                            leafletMap=leafletMap
+                            settings=(hash
+                              drawTools=(get tabModel "availableDrawTools")
+                              layerCRS=(get tabModel "leafletObject.options.crs")
+                              layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
+                              layersFieldsCaptions=(get tabModel "header")
+                            )
+                            tabModel=tabModel
+                            complete=(action "onGeometryAddComplete" tabModel)
+                            drawStart=(action "onAddDrawStart" tabModel)
+                            importComplete=(action "onImportComplete" tabModel)
+                        }}
+                      {{/if}}
+
+                      {{component "geometry-add-modes/import"
+                          leafletMap=leafletMap
+                          settings=(hash
+                            drawTools=(get tabModel "availableDrawTools")
+                            layerCRS=(get tabModel "leafletObject.options.crs")
+                            layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
+                            layersFieldsCaptions=(get tabModel "header")
+                          )
+                          tabModel=tabModel
+                          complete=(action "onGeometryAddComplete" tabModel)
+                          drawStart=(action "onAddDrawStart" tabModel)
+                          importComplete=(action "onImportComplete" tabModel)
+                      }}
+
+
+                      {{!-- {{flexberry-button
                        tooltip=(t "components.map-tools.draw.draw-arrow.caption")
                        click=(action "onGeometryTypeSelect" "arrow")
                        iconClass="flexberry-map-command-icon location arrow icon"
                       }}
-                      {{log tabModel._typeSelectedRows.line}}
-                      {{!-- {{#if (eq tabModel._typeSelectedRows.polygon 0) }} --}}
-                      {{#if true }}
+                      {{log tabModel.typeGeometry}}
+                      {{#if (eq tabModel.typeGeometry "polygon") }}
                         {{flexberry-button
                           tooltip=(t "components.map-tools.draw.draw-polygon.caption")
                           click=(action "onGeometryTypeSelect" "polygon")
@@ -104,34 +177,37 @@
                           click=(action "onGeometryTypeSelect" "circle")
                           iconClass="flexberry-map-tool-icon circle icon"
                         }}
+
                         {{flexberry-button
                           tooltip=(t "components.map-tools.draw.draw-part.caption")
                           click=(action "onGeometryTypeSelect" "part")
                           iconClass="flexberry-map-tool-icon part icon"
+                          readonly=(eq tabModel._selectedShape false)
                         }}
                         {{flexberry-button
                           tooltip=(t "components.map-tools.draw.draw-ring.caption")
                           click=(action "onGeometryTypeSelect" "ring")
-                          iconClass="flexberry-map-tool-icon scissors icon"
+                          iconClass="flexberry-map-tool-icon ring icon"
+                          readonly=(eq tabModel._selectedShape false)
                         }}
                       {{/if}}
 
-                      {{!-- {{#if (eq tabModel._typeSelectedRows.line 0) }} --}}
-                      {{#if false }}
+                      {{#if (eq tabModel.typeGeometry "polyline") }}
                         {{flexberry-button
                           tooltip=(t "components.map-tools.draw.draw-polyline.caption")
                           click=(action "onGeometryTypeSelect" "polyline")
                           iconClass="flexberry-map-tool-icon empty star icon"
                         }}
+
                         {{flexberry-button
                           tooltip=(t "components.map-tools.draw.draw-part.caption")
                           click=(action "onGeometryTypeSelect" "part")
                           iconClass="flexberry-map-tool-icon part icon"
+                          readonly=(eq tabModel._selectedShape false)
                         }}
-                        {{/if}}
-                      {{!-- его нет но нужно сделать  --}}
-                      {{!-- {{#if (eq tabModel._typeSelectedRows.point 0) }} --}}
-                      {{#if false}}
+                      {{/if}}
+
+                      {{#if (eq tabModel.typeGeometry "marker") }}
                         {{flexberry-button
                           tooltip=(t "components.map-tools.draw.draw-marker.caption")
                           click=(action "onGeometryTypeSelect" "marker")
@@ -142,7 +218,7 @@
                           click=(action "onGeometryTypeSelect" "world")
                           iconClass="flexberry-map-tool-icon world icon"
                         }}
-                      {{/if}}
+                      {{/if}}--}}
 
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
@@ -154,8 +230,8 @@
                         click=(action "onClearFoundItemClick")
                         iconClass="erase icon"
                       }}
-                      {{!-- {{#if tabModel.allowEdit}} --}}
-                      {{#if true}}
+
+                      {{#if tabModel.allowEdit}}
                         {{flexberry-button
                           tooltip=(t "components.flexberry-layers-attributes-panel.delete-selected")
                           click=(action "onDeleteItemClick" tabModel)
@@ -164,29 +240,15 @@
                         }}
                       {{/if}}
 
-                        {{flexberry-button
-                          tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
-                          click=(action "onSaveChangesClick" tabModel)
-                          iconClass="save icon"
-                          readonly=(not (get tabModel "leafletObject._wasChanged"))
-                        }}
+                      {{flexberry-button
+                        tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
+                        click=(action "onSaveChangesClick" tabModel)
+                        iconClass="save icon"
+                        readonly=(not (get tabModel "leafletObject._wasChanged"))
+                      }}
                     {{/if}}
 
-                      {{!-- {{#each availableGeometryAddModes as |mode|}}
-                        {{component (concat "geometry-add-modes/" mode)
-                          leafletMap=leafletMap
-                          settings=(hash
-                            drawTools=(get tabModel "availableDrawTools")
-                            layerCRS=(get tabModel "leafletObject.options.crs")
-                            layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
-                            layersFieldsCaptions=(get tabModel "header")
-                          )
-                          complete=(action "onGeometryAddComplete" tabModel)
-                          drawStart=(action "onAddDrawStart" tabModel)
-                          importComplete=(action "onImportComplete" tabModel)
-                        }}
-                      {{/each}} --}}
-                     {{!-- <div class="flexberry-geometry-move {{if tabModel.groupDraggable "active"}}">
+                     <div class="flexberry-geometry-move {{if tabModel.groupDraggable "active"}}">
                         <div class="ui simple dropdown item">
                           <i class="move icon"></i>
                           <i class="dropdown icon"></i>
@@ -263,7 +325,7 @@
                         click=(action "onFindIntersectPolygons" tabModel)
                         iconClass="close icon"
                         readonly=(eq tabModel._selectedRowsCount 0)
-                      }} --}}
+                      }}
                       {{!-- {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
                         click=(action "onSaveChangesClick" tabModel)
