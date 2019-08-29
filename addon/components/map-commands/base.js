@@ -2,7 +2,6 @@
   @module ember-flexberry-gis
 */
 
-import Ember from 'ember';
 import BaseMapToolComponent from '../map-tools/base';
 import layout from '../../templates/components/map-tools/base';
 
@@ -106,12 +105,6 @@ let BaseMapCommandComponent = BaseMapToolComponent.extend({
     let mapCommandExecutionOptions = this.get('mapCommandExecutionOptions');
 
     leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions);
-
-    // Invoke 'execute' action handler if defined.
-    let execute = this.get('execute');
-    if (Ember.typeOf(execute) === 'function') {
-      execute();
-    }
   },
 
   /**
