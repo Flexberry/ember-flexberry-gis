@@ -1039,6 +1039,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {String} rowId Editing row identifier.
     */
     onRowGeometryEdit(tabModel, rowId) {
+      Ember.set(tabModel, 'layerId', rowId);
+debugger;
       // Toggle row geometry editing
       let editedRows = Ember.get(tabModel, '_editedRows');
       let edit = Ember.get(editedRows, rowId) || false;
@@ -1060,11 +1062,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(leafletMap, 'editTools', editTools);
       let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
 
+      // remove layer editing
+      leafletMap.eachLayer(function (layer) {
+        if (layer.editor !== undefined && layer.editor._enabled === true) {
+          layer.disableEdit();
+        }
+       });
+
       if (edit) {
         // If the layer is not on the map - add it
         if (!leafletMap.hasLayer(layer)) {
           let addedLayers = Ember.get(tabModel, '_addedLayers') || {};
           addedLayers[Ember.guidFor(layer)] = layer;
+
           leafletMap.addLayer(layer);
           Ember.set(tabModel, '_addedLayers', addedLayers);
         }
@@ -1126,6 +1136,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} data A hash containing added feature properties.
     */
     onNewRowDialogApprove(data) {
+      debugger;
       let tabModel = this.get('_newRowTabModel');
       let layer = this.get('_newRowLayer');
 

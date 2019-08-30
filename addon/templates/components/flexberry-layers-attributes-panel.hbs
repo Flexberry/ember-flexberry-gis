@@ -219,7 +219,7 @@
                           iconClass="flexberry-map-tool-icon world icon"
                         }}
                       {{/if}}--}}
-
+                    {{/if}}
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.select-feature")
                         click=(action "onFindItemClick" tabModel)
@@ -239,14 +239,14 @@
                           readonly=(eq tabModel._selectedRowsCount 0)
                         }}
                       {{/if}}
-
+                   {{#if tabModel.allowEdit}}
                       {{flexberry-button
                         tooltip=(t "components.flexberry-layers-attributes-panel.save-changes")
                         click=(action "onSaveChangesClick" tabModel)
                         iconClass="save icon"
                         readonly=(not (get tabModel "leafletObject._wasChanged"))
-                      }}
-                    {{/if}}
+                       }}
+
 
                      <div class="flexberry-geometry-move {{if tabModel.groupDraggable "active"}}">
                         <div class="ui simple dropdown item">
@@ -333,6 +333,7 @@
                         readonly=(not (get tabModel "leafletObject._wasChanged"))
                       }}
                     {{/if}} --}}
+                   {{/if}}
                   </div>
                   <div class="field">
                     {{#if _moveWithError}}

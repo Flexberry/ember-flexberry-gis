@@ -49,6 +49,22 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   settings: null,
 
   actions: {
+
+
+    ontest(){
+      let leafletMap = this.get('leafletMap');
+
+    var nc = [
+          [56.344929, 57.993337],
+          [56.345358, 57.992154],
+          [56.346903, 57.993018],
+          [56.344929, 57.993337]
+        ];
+
+        var multipolygon = L.polygon(nc);
+
+        multipolygon.addTo(leafletMap);
+    },
     /**
       Handles click on available geometry type.
 
@@ -58,6 +74,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       this.sendAction('drawStart', geometryType);
       let editTools = this._getEditTools();
       Ember.set(this.get('leafletMap'), 'drawTools', editTools);
+
+      this.set('geometryType', geometryType);
 
       // let that = { component: this, tabModel: tabModel };
       editTools.on('editable:drawing:end', this._disableDraw, this);
@@ -120,8 +138,117 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     }
 
     if (!Ember.isNone(e)) {
-      let addedLayer = e.layer;
-       this.sendAction('complete', addedLayer);
+      let geometryType = this.get('geometryType');
+      let multyShapes = geometryType === 'part' ||  geometryType === 'ring';
+
+      if (!multyShapes) {
+        let addedLayer = e.layer;
+        this.sendAction('complete', addedLayer);
+      }
+      else {
+
+       // let layer = Ember.get(tabModel, `featureLink.${rowId}`);
+        let leafletMap = this.get('leafletMap');
+
+        let layerId = Ember.get(this.tabModel, 'layerId');
+        let l = Ember.get(this.tabModel, `featureLink.${layerId}`);
+        // Check if layer is a marker
+       // if (layer instanceof L.Polygon) {
+            // Create GeoJSON object from marker
+            debugger;
+            var geojson = l.toGeoJSON();
+
+            var drawnItems = new L.FeatureGroup();
+         //   drawnItems.nid=255;
+        // console.log(drawnItems._leaflet_id);
+            leafletMap.addLayer(drawnItems);
+
+            var polyLayers = [];
+
+            //L.polygon()
+            //var cor =  geojson.geometry.coordinates[0];
+           // polyLayers.push(cor);
+
+          //   var nc = [
+          //   [56.344929, 57.993337],
+          //   [56.345358, 57.992154],
+          //   [56.346903, 57.993018],
+          //   [56.344929, 57.993337]
+          // ];
+
+          // var nc = [
+          //   [57.993337, 56.344929],
+          //   [57.992154, 56.345358],
+          //   [57.993018,56.346903 ],
+          //   [57.993337,56.344929 ]
+          // ];
+
+          //polyLayers.push(nc);
+
+          //var multiPolygonOptions = {color:'red', weight:8};
+
+          //list[0].editor._enabled
+          let coorsList = [];
+          leafletMap.eachLayer(function (layer) {
+          if (layer instanceof L.Polygon && layer.editor !== undefined && layer.editor._enabled === true) {
+           // console.log(layer);
+
+            var geojson0 = layer.toGeoJSON();
+
+           // let coorsList = [];
+            let coordinates = geojson0.geometry.coordinates;
+
+            for(let i=0;i<coordinates.length;i++) {
+              let c =  coordinates[i];
+              let hh = [];
+
+              if(coordinates[0][0][0][0] != undefined) {
+
+              for(let j=0;j<c.length;j++){
+                let c0 =  c[j];
+                let hh1 = [];
+
+                for(let k=0;k<c0.length;k++)
+                {
+                  hh1.push([c0[k][1],c0[k][0]]);
+                }
+
+              //  hh.push(hh1);
+              coorsList.push(hh1);
+            }
+              //coorsList.push(hh);
+          }
+          else {
+          if(coordinates[0][0][0] != undefined) {
+            for(let j=0;j<c.length;j++) {
+              hh.push([c[j][1],c[j][0]]);
+          }
+            coorsList.push(hh);
+            }
+          }
+        }
+            //polyLayers.push(coorsList);
+
+            leafletMap.removeLayer(layer);
+          }
+         // }
+      });
+
+      var multipolygon = L.polygon(coorsList);
+
+      multipolygon.addTo(leafletMap);
+    multipolygon.enableEdit();
+      Ember.set(multipolygon, 'feature', { type: 'Feature' });
+      Ember.set(multipolygon.feature, 'properties', geojson.properties);
+      Ember.set(multipolygon.feature, 'leafletLayer', multipolygon);
+
+      Ember.set(this.tabModel, `featureLink.${layerId}`, multipolygon);
+
+      //leafletMap.removeLayer(l);
+
+        // enable save button
+        Ember.set(this.tabModel, 'leafletObject._wasChanged', true);
+      }
     }
   },
 

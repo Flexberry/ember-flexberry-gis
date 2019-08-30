@@ -14,7 +14,6 @@
     click=(action "onGeometryTypeSelect" "circle")
     iconClass="flexberry-map-tool-icon circle icon"
   }}
-
   {{flexberry-button
     tooltip=(t "components.map-tools.draw.draw-part.caption")
     click=(action "onGeometryTypeSelect" "part")
@@ -35,7 +34,6 @@
     click=(action "onGeometryTypeSelect" "polyline")
     iconClass="flexberry-map-tool-icon empty star icon"
   }}
-
   {{flexberry-button
     tooltip=(t "components.map-tools.draw.draw-part.caption")
     click=(action "onGeometryTypeSelect" "part")
@@ -50,9 +48,12 @@
     click=(action "onGeometryTypeSelect" "marker")
     iconClass="flexberry-map-tool-icon marker icon"
   }}
-
 {{/if}}
-
+  {{flexberry-button
+    tooltip="test"
+    click=(action "ontest")
+    iconClass="flexberry-map-tool-icon marker0 icon"
+  }}
 
 {{!-- <div class="ui simple dropdown item">
   <i class="plus icon"></i>
