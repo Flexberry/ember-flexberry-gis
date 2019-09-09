@@ -1166,7 +1166,7 @@ debugger;
 
       // the hash containing guid of properties object and link to that object
       Ember.set(tabModel, `propertyLink.${propId}`, data);
-      tabModel.properties.pushObject(data);
+      tabModel.properties.insertAt(0, data);
 
       tabModel._triggerChanged.call([tabModel, layer, false], { layer });
 
