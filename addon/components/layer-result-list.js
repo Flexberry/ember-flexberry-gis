@@ -148,7 +148,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       if (typeof goToListFormFunc === 'function') {
         goToListFormFunc(layerId, objectsIdArray);
       }
-    }
+    },
+
+    /**
+    Action is sended to layer-result-list-action-handler
+    @method actions.findIntersection
+     */
+    findIntersection(feature) {
+      this.sendAction('showIntersectionPanel', feature);
+    },
   },
 
   /**

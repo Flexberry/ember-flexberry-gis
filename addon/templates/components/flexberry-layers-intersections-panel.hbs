@@ -1,0 +1,67 @@
+
+<div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if folded " folded" "") (if settings.withToolbar " withToolbar" "") (if settings.sidebarOpened " sidebarOpened" "")}}>
+  <div class="ui top attached tabular menu bottompanel-tab-nav-panel-tabs">
+      <a class= "bottompanel tab item active"
+        {{action 'hidePanel'}}>
+        {{feature.properties.name}}
+      </a>
+       <i class="{{flexberryClassNames.closeButton}} close icon" style=" margin-left: auto;margin-right: 14px;" {{action 'closePanel'}}></i>
+    </div>
+ 
+ 
+    
+  <div class="row">
+    <div class="sixteen wide column">
+      <div class="field">
+        <label>Layer</label>
+        {{flexberry-multiple-select
+          items=layers
+          selectedItems=selectedLayers
+          title=('t' _searchFieldsSelectorLabel)
+          allowAdditions=true
+          isObject=true
+        }}
+      </div>
+    </div>
+  </div>   
+  <div class="ui grid">
+    <div class="row">
+      <div class="sixteen wide column">
+          <div class="ui grid">
+            <div class="four wide column">
+              <div class="field">   
+                <label>Площадь</label>
+                {{flexberry-textbox
+                  class="fluid"
+                  value=square
+                }}
+              </div>
+            </div>
+            <div class="four wide column">
+              <div class="field">   
+                <label>Буфер поиска</label>
+                {{flexberry-textbox
+                  class="fluid"
+                  value=bufferR
+                }}                              
+              </div>
+            </div>
+            <div class="four wide column">
+              <div class="field">   
+                <button type="submit" class="ui button intersect" {{action "findIntersections"}} style="margin-top: 15px">Найти пересечения</button>                       
+              </div>
+            </div>
+            <div class="four wide column">
+              <div class="field">   
+                <button type="submit" class="ui button intersect" {{action "save"}} disabled={{noIntersectionResults}} style="margin-top: 15px">Выгрузить результаты</button>                   
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    Таблица
+
+  </div>
+</div>

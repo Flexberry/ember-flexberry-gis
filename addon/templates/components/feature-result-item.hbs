@@ -9,6 +9,9 @@
     <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
       <i class="hand paper icon"></i>
     </a>
+     <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "findIntersection" on="click"}}>
+      <i class="intersections icon"></i>
+    </a>
       {{#if (gt feature.editForms.length 0)}}
         {{#if (eq feature.editForms.length 1)}}
           {{#if hasEditForm}}

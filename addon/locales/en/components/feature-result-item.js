@@ -6,5 +6,6 @@ export default {
   'feature-table-property-name': 'Property name',
   'feature-table-property-value': 'Value',
   'select-object-caption': 'Go to object',
-  'action-object-caption': 'Go action'
+  'action-object-caption': 'Go action',
+  'find-intersection-caption': 'Search intersections'
 };
