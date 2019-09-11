@@ -16,16 +16,17 @@
   }}
   {{flexberry-button
     tooltip=(t "components.map-tools.draw.draw-part.caption")
-    click=(action "onGeometryTypeSelect" "part")
+    click=(action "onGeometryTypeSelect" "partPolygon")
     iconClass="flexberry-map-tool-icon part icon"
     readonly=(eq tabModel._selectedShape false)
   }}
-  {{flexberry-button
+  {{!-- todo: shape ring --}}
+  {{!-- {{flexberry-button
     tooltip=(t "components.map-tools.draw.draw-ring.caption")
     click=(action "onGeometryTypeSelect" "ring")
     iconClass="flexberry-map-tool-icon ring icon"
     readonly=(eq tabModel._selectedShape false)
-  }}
+  }} --}}
 {{/if}}
 
 {{#if (eq tabModel.typeGeometry "polyline") }}
@@ -36,7 +37,7 @@
   }}
   {{flexberry-button
     tooltip=(t "components.map-tools.draw.draw-part.caption")
-    click=(action "onGeometryTypeSelect" "part")
+    click=(action "onGeometryTypeSelect" "partLine")
     iconClass="flexberry-map-tool-icon part icon"
     readonly=(eq tabModel._selectedShape false)
   }}
@@ -49,6 +50,7 @@
     iconClass="flexberry-map-tool-icon marker icon"
   }}
 {{/if}}
+{{!-- todo:test button --}}
   {{flexberry-button
     tooltip="test"
     click=(action "ontest")

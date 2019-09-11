@@ -483,7 +483,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           return cachedTab;
         }
 
-        typeGeometry = 'polygon';//todo:!!!
+        typeGeometry = 'polyline'//'polygon';//todo:!!!
 
         let newTab = tabModel.create(
           Ember.getOwner(this).ownerInjection(),
@@ -1121,7 +1121,7 @@ debugger;
 
       let saveSuccess = (data) => {
         Ember.set(tabModel, 'leafletObject._wasChanged', false);
-        tabModel._reload();
+       // tabModel._reload(); //todo: уберает проблему приведений
         leafletObject.off('save:failed', saveFailed);
       };
 
@@ -1154,7 +1154,7 @@ debugger;
         layer.setStyle(Ember.get(tabModel, 'leafletObject.options.style'));
       }
 
-      this.get('layersStylesRenderer').renderOnLeafletLayer({ leafletLayer: layer, styleSettings: tabModel.get('styleSettings') });
+     // this.get('layersStylesRenderer').renderOnLeafletLayer({ leafletLayer: layer, styleSettings: tabModel.get('styleSettings') });
 
       tabModel.leafletObject.addLayer(layer);
       layer.disableEdit();

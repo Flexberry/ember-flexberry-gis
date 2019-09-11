@@ -50,20 +50,34 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
   actions: {
 
-
-    ontest(){
+    ontest() {
       let leafletMap = this.get('leafletMap');
 
-    var nc = [
-          [56.344929, 57.993337],
-          [56.345358, 57.992154],
-          [56.346903, 57.993018],
-          [56.344929, 57.993337]
-        ];
+    // var nc = [
+    //       [56.344929, 57.993337],
+    //       [56.345358, 57.992154],
+    //       [56.346903, 57.993018],
+    //       [56.344929, 57.993337]
+    //     ];
 
-        var multipolygon = L.polygon(nc);
+    //     var multipolygon = L.polygon(nc);
 
-        multipolygon.addTo(leafletMap);
+    //     multipolygon.addTo(leafletMap);
+
+    var nc = [[
+      [56.340, 57.920],
+      [56.350, 57.930],
+      [56.360, 57.940]],
+      [[56.380, 57.950],
+        [56.390, 57.960],
+        [56.400, 57.970
+        ]]
+      //[56.344929, 57.993337]
+    ];
+
+    var multipolygon = L.polyline(nc);
+
+    multipolygon.addTo(leafletMap);
     },
     /**
       Handles click on available geometry type.
@@ -105,12 +119,15 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         case 'polygon':
           editTools.startPolygon();
           break;
-        case 'part':
+        case 'partPolygon':
           editTools.startPolygon();
           break;
-        case 'ring':
-          editTools.startPolygon();
+        case 'partLine':
+          editTools.startPolyline();
           break;
+        // case 'ring': // todo: shape ring
+        //   editTools.startPolygon();
+        //   break;
       }
     },
   },
@@ -139,117 +156,226 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
     if (!Ember.isNone(e)) {
       let geometryType = this.get('geometryType');
-      let multyShapes = geometryType === 'part' ||  geometryType === 'ring';
 
-      if (!multyShapes) {
+      if (geometryType !== 'partPolygon' && geometryType !== 'partLine') {
         let addedLayer = e.layer;
         this.sendAction('complete', addedLayer);
-      }
-      else {
-
-       // let layer = Ember.get(tabModel, `featureLink.${rowId}`);
+      } else {
+        // let layer = Ember.get(tabModel, `featureLink.${rowId}`);
         let leafletMap = this.get('leafletMap');
 
-        let layerId = Ember.get(this.tabModel, 'layerId');
-        let l = Ember.get(this.tabModel, `featureLink.${layerId}`);
         // Check if layer is a marker
-       // if (layer instanceof L.Polygon) {
+        // if (layer instanceof L.Polygon) {
             // Create GeoJSON object from marker
-            debugger;
-            var geojson = l.toGeoJSON();
 
-            var drawnItems = new L.FeatureGroup();
-         //   drawnItems.nid=255;
-        // console.log(drawnItems._leaflet_id);
-            leafletMap.addLayer(drawnItems);
+        var drawnItems = new L.FeatureGroup();
+        //   drawnItems.nid=255;
+        leafletMap.addLayer(drawnItems);
 
-            var polyLayers = [];
+          // let layersStyle = this.get('layersStylesRenderer');
+           let styleSettings = this.tabModel.get('styleSettings');
 
-            //L.polygon()
-            //var cor =  geojson.geometry.coordinates[0];
-           // polyLayers.push(cor);
+        let coorsList = [];
+        debugger;
 
-          //   var nc = [
-          //   [56.344929, 57.993337],
-          //   [56.345358, 57.992154],
-          //   [56.346903, 57.993018],
-          //   [56.344929, 57.993337]
-          // ];
+        // var defaultOptions;
+        let hh;
+var c=0;
+var d=0;
+        var _this = this;//todo:!!!
+        leafletMap.eachLayer(function (layer) {
+          if (layer.editor !== undefined && layer.editor._enabled === true) {
+            var layerGeoJson = layer.toGeoJSON();
+            let coordinates = layerGeoJson.geometry.coordinates;
 
-          // var nc = [
-          //   [57.993337, 56.344929],
-          //   [57.992154, 56.345358],
-          //   [57.993018,56.346903 ],
-          //   [57.993337,56.344929 ]
-          // ];
-
-          //polyLayers.push(nc);
-
-          //var multiPolygonOptions = {color:'red', weight:8};
-
-          //list[0].editor._enabled
-          let coorsList = [];
-          leafletMap.eachLayer(function (layer) {
-          if (layer instanceof L.Polygon && layer.editor !== undefined && layer.editor._enabled === true) {
-           // console.log(layer);
-
-            var geojson0 = layer.toGeoJSON();
-
-           // let coorsList = [];
-            let coordinates = geojson0.geometry.coordinates;
-
-            for(let i=0;i<coordinates.length;i++) {
-              let c =  coordinates[i];
-              let hh = [];
-
-              if(coordinates[0][0][0][0] != undefined) {
-
-              for(let j=0;j<c.length;j++){
-                let c0 =  c[j];
-                let hh1 = [];
-
-                for(let k=0;k<c0.length;k++)
-                {
-                  hh1.push([c0[k][1],c0[k][0]]);
-                }
-
-              //  hh.push(hh1);
-              coorsList.push(hh1);
+            if (layer instanceof L.Polygon) {
+              coorsList = _this._getPolygonCoords(coorsList, coordinates);
+            } else if (layer instanceof L.Polyline){
+              coorsList = _this._getPolylineCoords(coorsList, coordinates);
+            //  coorsList2 = _this._getPolylineCoords2(coorsList2, coordinates);
+              // if(layer.feature !== undefined) {
+              //  hh = layer._leaflet_id;// !== undefined && layer.feature.id !== undefined
+              // }
             }
-              //coorsList.push(hh);
-          }
-          else {
-          if(coordinates[0][0][0] != undefined) {
-            for(let j=0;j<c.length;j++) {
-              hh.push([c[j][1],c[j][0]]);
-          }
-            coorsList.push(hh);
-            }
-          }
-        }
-            //polyLayers.push(coorsList);
 
+            // if(layer.feature === undefined) {
+            //   leafletMap.removeLayer(layer);
+            // }
+
+            // if(layer.defaultOptions !== undefined)
+            // {
+            // defaultOptions = layer.defaultOptions;
+            // }
             leafletMap.removeLayer(layer);
+            d++;
           }
-         // }
-      });
+        // }
+        //  layersStyle.renderOnLeafletLayer({ leafletLayer: layer, styleSettings: styleSettings });
+        c++;
+        });
 
-      var multipolygon = L.polygon(coorsList);
+        // leafletMap.eachLayer(function (layer) {
+        //   if (layer._leaflet_id === hh){
+        //     layer._latlngs = coorsList;
+        //   }
 
-      multipolygon.addTo(leafletMap);
-    multipolygon.enableEdit();
-      Ember.set(multipolygon, 'feature', { type: 'Feature' });
-      Ember.set(multipolygon.feature, 'properties', geojson.properties);
-      Ember.set(multipolygon.feature, 'leafletLayer', multipolygon);
+        // });
+/**/
+        let shape = {};
+        if (geometryType === 'partPolygon') {
+          shape = L.polygon(coorsList, {
+            color: styleSettings.style.path.color,
+             weight : styleSettings.style.path.weight,
+             fillColor : styleSettings.style.path.fillColor
+            });
+        } else if (geometryType === 'partLine') {
+          shape = L.polyline(coorsList, {
+            color: styleSettings.style.path.color,
+            weight : styleSettings.style.path.weight
+          });
+        }
+        // shape.defaultOptions = defaultOptions;
 
-      Ember.set(this.tabModel, `featureLink.${layerId}`, multipolygon);
+        // var multipolygon = L.polygon(coorsList);
 
-      //leafletMap.removeLayer(l);
+        // hh._latlngs = multipolygon._latlngs;
+
+        //leafletMap.removeLayer(multipolygon);
+
+        let layerId = Ember.get(this.tabModel, 'layerId');
+        let layer = Ember.get(this.tabModel, `featureLink.${layerId}`);
+        var geoJson = layer.toGeoJSON();
+
+        Ember.set(shape, 'feature', {
+          geometry_name : layer.feature.geometry_name,
+          id : layer.feature.id,
+          type : 'Feature',
+          properties : geoJson.properties,
+          leafletLayer : shape,
+          geometry: {
+            coordinates: this._swapСoordinates(coorsList),
+            type: layer.feature.geometry.type
+        }
+       });
+
+        shape.addTo(leafletMap);
+        shape.enableEdit();
+
+        this.tabModel.leafletObject.editLayer(shape);
+
+        Ember.set(this.tabModel, `featureLink.${layerId}`, shape);
 
         // enable save button
         Ember.set(this.tabModel, 'leafletObject._wasChanged', true);
-      }
+     }
     }
+  },
+
+  /**
+    Building a multiple polygon.
+
+    @param {array} accumulating array of coordinates.
+    @param {array} array of coordinates.
+    @returns {array} accumulating array of coordinates.
+  */
+  _getPolygonCoords(coorsList, coordinates) {
+    for (let i = 0; i < coordinates.length; i++) {
+      let coors =  coordinates[i];
+      let corArr0 = [];
+
+      if (coordinates[0][0][0][0] !== undefined) {
+        for (let j = 0; j < coors.length; j++) {
+          let coordinat = coors[j];
+          let corArr1 = [];
+
+          for(let k = 0; k < coordinat.length; k++) {
+            corArr1.push([coordinat[k][1], coordinat[k][0]]);
+          }
+
+          coorsList.push(corArr1);
+        }
+      } else if (coordinates[0][0][0] !== undefined) {
+          for (let j = 0; j < coors.length; j++) {
+            corArr0.push([coors[j][1], coors[j][0]]);
+          }
+          coorsList.push(corArr0);
+        }
+    }
+
+    return coorsList;
+  },
+
+  /**
+    Building a multiple polyline.
+
+    @param {array} accumulating array of coordinates.
+    @param {array} array of coordinates.
+    @returns {array} accumulating array of coordinates.
+  */
+  _getPolylineCoords(coorsList, coordinates) {
+      let corArr0 = [];
+
+      if (coordinates[0][0][0] !== undefined) {
+        for (let i = 0; i < coordinates.length; i++) {
+          let coordinat = coordinates[i];
+          let corArr1 = [];
+
+          for(let j = 0; j < coordinat.length; j++) {
+            corArr1.push([coordinat[j][1], coordinat[j][0]]);
+          }
+
+          coorsList.push(corArr1);
+        }
+      } else if (coordinates[0][0] !== undefined) {
+          for (let i = 0; i < coordinates.length; i++) {
+            corArr0.push([coordinates[i][1], coordinates[i][0]]);
+          }
+          coorsList.push(corArr0);
+      }
+
+    return coorsList;
+  },
+
+  /**
+    Swap coordinates.
+
+    @param {array} array of coordinates.
+    @returns {array} inverse array of coordinates.
+  */
+  _swapСoordinates(coordinates) {
+    if (coordinates[0][0][0][0] !== undefined) {
+      for (let i = 0; i < coordinates.length; i++) {
+        let coordinat0 = coordinates[i];
+
+        for(let j = 0; j < coordinat0.length; j++) {
+          let coordinat1 = coordinat0[i];
+
+          for(let k = 0; k < coordinat1.length; k++) {
+            let b = coordinat1[k][0];
+            coordinat1[k][0] = coordinat1[k][1];
+            coordinat1[k][1] = b;
+          }
+        }
+      }
+    } else if (coordinates[0][0][0] !== undefined) {
+      for (let i = 0; i < coordinates.length; i++) {
+        let coordinat = coordinates[i];
+
+        for(let j = 0; j < coordinat.length; j++) {
+          let b = coordinat[j][0];
+          coordinat[j][0] = coordinat[j][1];
+          coordinat[j][1] = b;
+        }
+      }
+    } else if (coordinates[0][0] !== undefined) {
+        for (let i = 0; i < coordinates.length; i++) {
+          let b = coordinates[i][0];
+          coordinates[i][0] = coordinates[i][1];
+          coordinates[i][1] = b;
+        }
+    }
+
+    return coordinates;
   },
 
   /**
