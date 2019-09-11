@@ -271,7 +271,6 @@ export default Ember.Mixin.create({
         this.set(loadingPath, false);
       });
     },
-
     /**
       Handles {{#crossLink "FlexberryMaplayerComponent/sendingActions.add:method"}}flexberry-maplayers component's 'add' action{{/crossLink}}.
       It adds new child layer.

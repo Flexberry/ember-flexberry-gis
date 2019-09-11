@@ -118,7 +118,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
      */
     toggleLinks() {
       this.set('_linksExpanded', !this.get('_linksExpanded'));
-    }
+    },
+
+    /**
+    Action is sended to layer-result-list-action-handler
+    @method actions.findIntersection
+     */
+    findIntersection(feature) {
+      this.sendAction('showIntersectionPanel', feature);
+    },
   },
 
   /**

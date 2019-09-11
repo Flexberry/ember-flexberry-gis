@@ -111,6 +111,7 @@
           featureSelected=(action 'onLayerFeatureSelected')
           serviceLayer=serviceLayer
           leafletMap=leafletMap
+          showIntersectionPanel=(action 'onIntersectionPanel')
         }}
       </div>
       <div data-tab="identify" class="ui tab identify">
@@ -128,6 +129,7 @@
           serviceLayer=serviceLayer
           featureSelected=(action 'onLayerFeatureSelected')
           leafletMap=leafletMap
+          showIntersectionPanel=(action 'onIntersectionPanel')
         }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
@@ -148,6 +150,18 @@
       folded=editedLayersPanelFolded
       settings=editedLayersPanelSettings
       loading=editedLayersPanelLoading
+    }}
+  </div>
+  <div class={{concat "bottompanel-wrapper" (if showIntersectionPanel "" " hidden")}}>
+    {{flexberry-layers-intersections-panel
+      test_property=test
+      layers=model.hierarchy
+      serviceLayer=serviceLayer
+      leafletMap=leafletMap
+      settings=editedLayersPanelSettings
+      loading=editedLayersPanelLoading
+      closeIntersectionPanel=(action "closeIntersectionPanel")
+      feature=feature
     }}
   </div>
   <div class="row">

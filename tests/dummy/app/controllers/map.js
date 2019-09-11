@@ -178,6 +178,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   */
   editedLayers: null,
 
+
   /**
     Index of currently selected tab at 'flexberry-layers-attributes-panel'.
 

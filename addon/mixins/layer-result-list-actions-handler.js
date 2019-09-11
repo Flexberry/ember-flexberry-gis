@@ -3,7 +3,6 @@
 */
 
 import Ember from 'ember';
-
 /**
   Mixin containing handlers for
   {{#crossLink "LayerResultListComponent"}}layer-result-list component's{{/crossLink}} actions.
@@ -13,6 +12,16 @@ import Ember from 'ember';
 */
 export default Ember.Mixin.create({
   actions: {
+
+    //Handels click on intersection icon, enables intersection panel
+    onIntersectionPanel(feature) {
+      this.set('feature', feature);
+      this.toggleProperty('showIntersectionPanel');
+      this.set('test', 150);
+    },
+    closeIntersectionPanel() {
+      this.set('showIntersectionPanel', false);
+    },
     /**
       Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.featureSelected:method"}}layer-result-list component's 'featureSelected' action{{/crossLink}}.
 

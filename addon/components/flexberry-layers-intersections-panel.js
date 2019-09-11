@@ -1,0 +1,170 @@
+import Ember from 'ember';
+import layout from '../templates/components/flexberry-layers-intersections-panel';
+import * as buffer from 'npm:@turf/buffer';
+export default Ember.Component.extend({
+  layout,
+  // Для примера
+  test_property: 0,
+  // Все слои 
+  layers: null,
+  // Кнопка выгрузить заблокана
+  noIntersectionResults: true,
+  // Площадь
+  square: 0,
+  //Буфер поиска
+  bufferR: 0,
+  // Выбранные слои 
+  selectedLayers: [],
+  results: [],
+  // Объект с которым ищем пересечения
+  feature: null,
+  folded: false,
+  store: Ember.inject.service(),
+  init() {
+    this._super(...arguments);
+
+    let settings = this.get('settings');
+    if (Ember.isNone(settings)) {
+      settings = {
+        withToolbar: false,
+        sidebarOpened: false,
+      };
+
+      this.set('settings', settings);
+
+      this.set('_selectedUnit', 'meters');
+    }
+  },
+  actions:{
+    findIntersections() {
+      let selectedLayers=this.get('selectedLayers');
+      let store=this.get('store');
+      let selected=Ember.A();
+      selectedLayers.forEach(function(item){
+        let result=store.peekRecord('new-platform-flexberry-g-i-s-map-layer', item);
+        selected.pushObject(result)
+      });
+      //Object clicked on menu 
+      let currentFeature=this.get('feature');
+
+      // Show map loader.
+      let i18n = this.get('i18n');
+      let leafletMap = this.get('leafletMap');
+      leafletMap.setLoaderContent(i18n.t('map-tools.identify.loader-message'));
+      leafletMap.showLoader();
+
+      this._startIdentification({ 
+        polygonLayer: currentFeature.leafletLayer,
+        bufferedMainPolygonLayer: currentFeature.leafletLayer,
+        latlng: currentFeature.leafletLayer.getCenter(),
+        selectedLayers: selected });
+    },
+
+    closePanel() {
+      this.sendAction('closeIntersectionPanel');
+    },
+
+    hidePanel() {
+      this.toggleProperty('folded')
+    }
+  },
+  _startIdentification({
+    polygonLayer,
+    bufferedMainPolygonLayer,
+    latlng,
+    excludedLayers,
+    selectedLayers
+  }) {
+    let leafletMap = this.get('leafletMap');
+
+    let e = {
+      latlng: latlng,
+      polygonLayer: polygonLayer,
+      bufferedMainPolygonLayer: bufferedMainPolygonLayer,
+      excludedLayers: Ember.A(excludedLayers || []),
+      layers: selectedLayers,
+      results: Ember.A()
+    };
+    // Fire custom event on leaflet map (if there is layers to identify).
+    if (e.layers.length > 0) {
+      leafletMap.fire('flexberry-map:identify', e);
+    }
+    // Promises array could be totally changed in 'flexberry-map:identify' event handlers, we should prevent possible errors.
+    e.results = Ember.isArray(e.results) ? e.results : Ember.A();
+    let promises = Ember.A();
+
+    // Handle each result.
+    // Detach promises from already received features.
+    e.results.forEach((result) => {
+      if (Ember.isNone(result)) {
+        return;
+      }
+
+      let features = Ember.get(result, 'features');
+
+      if (!(features instanceof Ember.RSVP.Promise)) {
+        return;
+      }
+
+      promises.pushObject(features);
+    });
+
+    // Wait for all promises to be settled & call '_finishIdentification' hook.
+    RSVP.allSettled(promises).then(() => {
+      this._finishIdentification(e);
+    });
+  },
+
+  /**
+    Finishes identification.
+
+    @method _finishIdentification
+    @param {Object} e Event object.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the polygon layer.
+    @param {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>} options.polygonLayer Polygon layer related to given vertices.
+    @param {Object[]} excludedLayers Objects describing those layers which were excluded from identification.
+    @param {Object[]} layers Objects describing those layers which are identified.
+    @param {Object[]} results Objects describing identification results.
+    Every result-object has the following structure: { layer: ..., features: [...] },
+    where 'layer' is metadata of layer related to identification result, features is array
+    containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
+    @return {<a href="http://leafletjs.com/reference.html#popup">L.Popup</a>} Popup containing identification results.
+    @private
+  */
+  _finishIdentification(e) {
+    e.results.forEach((identificationResult) => {
+      identificationResult.features.then(
+        (features) => {
+          // Show new features.
+          features.forEach((feature) => {
+            let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+            if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+              leafletLayer.setStyle({
+                color: 'salmon',
+                weight: 2,
+                fillOpacity: 0.3
+              });
+            }
+
+            Ember.set(feature, 'leafletLayer', leafletLayer);
+          });
+        });
+    });
+
+    // Hide map loader.
+    let leafletMap = this.get('leafletMap');
+    leafletMap.setLoaderContent('');
+    leafletMap.hideLoader();
+
+    //Assign current tool's boundingBoxLayer
+    let polygonLayer = Ember.get(e, 'polygonLayer');
+    this.set('polygonLayer', polygonLayer);
+
+    // Assign current tool's boundingBoxLayer
+    let bufferedLayer = Ember.get(e, 'bufferedMainPolygonLayer');
+    this.set('bufferedMainPolygonLayer', bufferedLayer);
+
+    // Fire custom event on leaflet map.
+    leafletMap.fire('flexberry-map:identificationFinished', e);
+  },
+});

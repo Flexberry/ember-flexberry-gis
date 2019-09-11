@@ -42,6 +42,15 @@ export default EditFormController.extend(
       @default null
      */
     geofilter: null,
+    test: 111,
+
+     /**
+      Is intersection panel enabled
+      @property setting
+      @type String
+      @default false
+    */
+    showIntersectionPanel: false,
 
     /**
       Query parameter, contains map object setting primary key

@@ -70,6 +70,15 @@ export default Ember.Component.extend({
   selectorName: 'fb-selector',
 
   /**
+    Flag indicates whether is array consists of objects or not
+
+    @property isObject
+    @type Bool
+    @default 'false'
+  */
+  isObject: false,
+
+  /**
     Array with not-selected dropdown items.
 
     @property _usedItems
