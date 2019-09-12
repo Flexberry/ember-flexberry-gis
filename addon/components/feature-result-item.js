@@ -241,11 +241,11 @@ export default Ember.Component.extend({
       }
     },
 
-     /**
+    /**
       Show\hide panel for seraching intersections.
       Action is sended to layer-result-list
       @method actions.findIntersection
-     */
+    */
     findIntersection() {
       this.sendAction('findIntersection', this.get('feature'));
     },

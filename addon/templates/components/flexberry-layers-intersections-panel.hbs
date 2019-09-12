@@ -1,15 +1,12 @@
 
-<div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if folded " folded" "") (if settings.withToolbar " withToolbar" "") (if settings.sidebarOpened " sidebarOpened" "")}}>
+<div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if folded " folded" "") (if settings.withToolbar " withToolbar" "") (if settings.sidebarOpened " sidebarOpened" "")}} >
   <div class="ui top attached tabular menu bottompanel-tab-nav-panel-tabs">
       <a class= "bottompanel tab item active"
         {{action 'hidePanel'}}>
         {{feature.properties.name}}
       </a>
        <i class="{{flexberryClassNames.closeButton}} close icon" style=" margin-left: auto;margin-right: 14px;" {{action 'closePanel'}}></i>
-    </div>
- 
- 
-    
+    </div> 
   <div class="row">
     <div class="sixteen wide column">
       <div class="field">
@@ -60,8 +57,11 @@
       </div>
     </div>
   </div>
-  <div class="row">
-    Таблица
-
+  <div class="row" style="overflow-y: scroll;height: 200px" >
+          {{layer-result-list
+          results=results
+          serviceLayer=serviceLayer
+          leafletMap=leafletMap
+        }}
   </div>
 </div>
