@@ -482,7 +482,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           return cachedTab;
         }
 
-        typeGeometry = 'polygon'//'polyline';//todo:!!!
+        typeGeometry = 'polyline'//'polygon';//todo:!!!
 
         let newTab = tabModel.create(
           Ember.getOwner(this).ownerInjection(),
@@ -1049,6 +1049,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(tabModel, '_selectedShape', edit);
       editedRows = {};
 
+      let tabModels = this.get( '_tabModels');
+
+      // Remove selection for editing on all tabs
+      for (let i = 0; i < tabModels.length; i++) {
+        Ember.set(tabModels[i], '_editedRows', {});
+      }
+
       Ember.set(editedRows, rowId, edit);
       Ember.set(tabModel, '_editedRows', editedRows);
       tabModel.notifyPropertyChange('_editedRows');
@@ -1061,9 +1068,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(leafletMap, 'editTools', editTools);
       let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
 
-      // remove layer editing
+      // Remove layer editing todo: возможно не нужно
       leafletMap.eachLayer(function (layer) {
-        if (layer.editor !== undefined && layer.editor._enabled === true) {
+        let enabled = Ember.get(layer, 'editor._enabled');
+        if (enabled === true) {
           layer.disableEdit();
         }
       });

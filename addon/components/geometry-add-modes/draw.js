@@ -176,7 +176,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
         var _this = this;//todo:!!!
         leafletMap.eachLayer(function (layer) {
-          if (layer.editor !== undefined && layer.editor._enabled === true) {
+          let enabled = Ember.get(layer, 'editor._enabled');
+          if (enabled === true) {
             var layerGeoJson = layer.toGeoJSON();
             let coordinates = layerGeoJson.geometry.coordinates;
 
