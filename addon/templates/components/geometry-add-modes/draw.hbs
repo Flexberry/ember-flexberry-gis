@@ -20,15 +20,7 @@
     iconClass="flexberry-map-tool-icon part icon"
     readonly=(eq tabModel._selectedShape false)
   }}
-  {{!-- todo: shape ring --}}
-  {{!-- {{flexberry-button
-    tooltip=(t "components.map-tools.draw.draw-ring.caption")
-    click=(action "onGeometryTypeSelect" "ring")
-    iconClass="flexberry-map-tool-icon ring icon"
-    readonly=(eq tabModel._selectedShape false)
-  }} --}}
 {{/if}}
-
 {{#if (eq tabModel.typeGeometry "polyline") }}
   {{flexberry-button
     tooltip=(t "components.map-tools.draw.draw-polyline.caption")
@@ -42,7 +34,6 @@
     readonly=(eq tabModel._selectedShape false)
   }}
 {{/if}}
-
 {{#if (eq tabModel.typeGeometry "marker") }}
   {{flexberry-button
     tooltip=(t "components.map-tools.draw.draw-marker.caption")
@@ -51,45 +42,8 @@
   }}
 {{/if}}
 {{!-- todo:test button --}}
-  {{flexberry-button
-    tooltip="test"
-    click=(action "ontest")
-    iconClass="flexberry-map-tool-icon marker0 icon"
-  }}
-
-{{!-- <div class="ui simple dropdown item">
-  <i class="plus icon"></i>
-  <i class="dropdown icon"></i>
-  <div class="menu">
-    {{#if (array-contains settings.drawTools "marker")}}
-      <a class="item" onclick={{action "onGeometryTypeSelect" "marker"}}>
-        <i class="flexberry-map-tool-icon marker icon"></i>
-        {{t "components.map-tools.draw.draw-marker.caption"}}
-      </a>
-    {{/if}}
-    {{#if (array-contains settings.drawTools "polyline")}}
-      <a class="item" onclick={{action "onGeometryTypeSelect" "polyline"}}>
-        <i class="flexberry-map-tool-icon empty star icon"></i>
-        {{t "components.map-tools.draw.draw-polyline.caption"}}
-      </a>
-    {{/if}}
-    {{#if (array-contains settings.drawTools "circle")}}
-      <a class="item" onclick={{action "onGeometryTypeSelect" "circle"}}>
-        <i class="flexberry-map-tool-icon circle icon"></i>
-        {{t "components.map-tools.draw.draw-circle.caption"}}
-      </a>
-    {{/if}}
-    {{#if (array-contains settings.drawTools "rectangle")}}
-      <a class="item" onclick={{action "onGeometryTypeSelect" "rectangle"}}>
-        <i class="flexberry-map-tool-icon square icon"></i>
-        {{t "components.map-tools.draw.draw-rectangle.caption"}}
-      </a>
-    {{/if}}
-    {{#if (array-contains settings.drawTools "polygon")}}
-      <a class="item" onclick={{action "onGeometryTypeSelect" "polygon"}}>
-        <i class="flexberry-map-tool-icon star icon"></i>
-        {{t "components.map-tools.draw.draw-polygon.caption"}}
-      </a>
-    {{/if}}
-  </div>
-</div> --}}
+{{flexberry-button
+  tooltip="test"
+  click=(action "ontest")
+  iconClass="flexberry-map-tool-icon marker0 icon"
+}}
