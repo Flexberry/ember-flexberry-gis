@@ -42,9 +42,8 @@ export default EditFormController.extend(
       @default null
      */
     geofilter: null,
-    test: 111,
 
-     /**
+    /**
       Is intersection panel enabled
       @property setting
       @type String

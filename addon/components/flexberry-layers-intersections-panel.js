@@ -1,25 +1,37 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-intersections-panel';
-import * as buffer from 'npm:@turf/buffer';
+import EmberError from 'ember/error';
 export default Ember.Component.extend({
   layout,
-  // Для примера
-  test_property: 0,
-  // Все слои 
+
+  // Все слои
   layers: null,
+
   // Кнопка выгрузить заблокана
   noIntersectionResults: true,
+
   // Площадь
   square: 0,
+
   //Буфер поиска
   bufferR: 0,
-  // Выбранные слои 
+
+  // Выбранные слои
   selectedLayers: [],
+
   results: [],
+
   // Объект с которым ищем пересечения
   feature: null,
+
   folded: false,
+
   store: Ember.inject.service(),
+
+  _OnFeatureChange: Ember.observer('feature', function() {
+    this.ClearPanel();
+  }),
+
   init() {
     this._super(...arguments);
 
@@ -37,15 +49,39 @@ export default Ember.Component.extend({
   },
   actions:{
     findIntersections() {
-      let selectedLayers=this.get('selectedLayers');
-      let store=this.get('store');
-      let selected=Ember.A();
-      selectedLayers.forEach(function(item){
-        let result=store.peekRecord('new-platform-flexberry-g-i-s-map-layer', item);
-        selected.pushObject(result)
+      let selectedLayers = this.get('selectedLayers');
+
+      let store = this.get('store');
+
+      //Object clicked on menu
+      let currentFeature = this.get('feature');
+
+      let polygonLayer;
+
+      let bufferedMainPolygonLayer;
+
+      let latlng;
+
+      let selected = Ember.A();
+
+      selectedLayers.forEach(function(item) {
+        let result = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', item);
+        selected.pushObject(result);
       });
-      //Object clicked on menu 
-      let currentFeature=this.get('feature');
+
+      // If current feature is L.FeatureGroup
+      if (currentFeature.leafletLayer.hasOwnProperty('_layers')) {
+        if (currentFeature.leafletLayer.getLayers().length === 1) {
+          polygonLayer = currentFeature.leafletLayer.getLayers()[0];
+        } else {
+          throw new EmberError(' L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.');
+        }
+      } else {
+        polygonLayer = currentFeature.leafletLayer;
+      }
+
+      latlng = polygonLayer.getBounds().getCenter();
+      bufferedMainPolygonLayer = polygonLayer;
 
       // Show map loader.
       let i18n = this.get('i18n');
@@ -53,10 +89,10 @@ export default Ember.Component.extend({
       leafletMap.setLoaderContent(i18n.t('map-tools.identify.loader-message'));
       leafletMap.showLoader();
 
-      this._startIdentification({ 
-        polygonLayer: currentFeature.leafletLayer,
-        bufferedMainPolygonLayer: currentFeature.leafletLayer,
-        latlng: currentFeature.leafletLayer.getCenter(),
+      this._startIdentification({
+        polygonLayer: polygonLayer,
+        bufferedMainPolygonLayer: bufferedMainPolygonLayer,
+        latlng: latlng,
         selectedLayers: selected });
     },
 
@@ -65,9 +101,10 @@ export default Ember.Component.extend({
     },
 
     hidePanel() {
-      this.toggleProperty('folded')
+      this.toggleProperty('folded');
     }
   },
+
   _startIdentification({
     polygonLayer,
     bufferedMainPolygonLayer,
@@ -85,10 +122,12 @@ export default Ember.Component.extend({
       layers: selectedLayers,
       results: Ember.A()
     };
+
     // Fire custom event on leaflet map (if there is layers to identify).
     if (e.layers.length > 0) {
       leafletMap.fire('flexberry-map:identify', e);
     }
+
     // Promises array could be totally changed in 'flexberry-map:identify' event handlers, we should prevent possible errors.
     e.results = Ember.isArray(e.results) ? e.results : Ember.A();
     let promises = Ember.A();
@@ -110,9 +149,11 @@ export default Ember.Component.extend({
     });
 
     // Wait for all promises to be settled & call '_finishIdentification' hook.
-    RSVP.allSettled(promises).then(() => {
+    Ember.RSVP.allSettled(promises).then(() => {
       this._finishIdentification(e);
     });
+    this.set('results', e.results);
+    this.set('noIntersectionResults', false);
   },
 
   /**
@@ -165,6 +206,13 @@ export default Ember.Component.extend({
     this.set('bufferedMainPolygonLayer', bufferedLayer);
 
     // Fire custom event on leaflet map.
-    leafletMap.fire('flexberry-map:identificationFinished', e);
+    //leafletMap.fire('flexberry-map:identificationFinished', e);
   },
+  ClearPanel() {
+    this.set('square', 0);
+    this.set('bufferR', 0);
+    this.set('results', []);
+    this.set('noIntersectionResults', true);
+    this.set('folded', false);
+  }
 });

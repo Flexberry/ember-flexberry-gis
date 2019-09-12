@@ -16,8 +16,7 @@ export default Ember.Mixin.create({
     //Handels click on intersection icon, enables intersection panel
     onIntersectionPanel(feature) {
       this.set('feature', feature);
-      this.toggleProperty('showIntersectionPanel');
-      this.set('test', 150);
+      this.set('showIntersectionPanel', true);
     },
     closeIntersectionPanel() {
       this.set('showIntersectionPanel', false);
