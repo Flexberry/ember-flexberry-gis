@@ -563,11 +563,11 @@
       .buttons {
         display: inline-block;
 		
-		i.icon.part: before {
+		i.icon.part:before {
 			content: "\f248";
 		}
 		
-		i.icon.map-marker: before {
+		i.icon.map-marker:before {
 			content: "\f041";
 		}
 		
