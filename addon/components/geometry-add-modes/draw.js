@@ -50,34 +50,34 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
   actions: {
 
-    ontest() {
+    ontest() {//todo: удалить
       let leafletMap = this.get('leafletMap');
 
-    // var nc = [
-    //       [56.344929, 57.993337],
-    //       [56.345358, 57.992154],
-    //       [56.346903, 57.993018],
-    //       [56.344929, 57.993337]
-    //     ];
+      // var nc = [
+      //       [56.344929, 57.993337],
+      //       [56.345358, 57.992154],
+      //       [56.346903, 57.993018],
+      //       [56.344929, 57.993337]
+      //     ];
 
-    //     var multipolygon = L.polygon(nc);
+      //     var multipolygon = L.polygon(nc);
 
-    //     multipolygon.addTo(leafletMap);
+      //     multipolygon.addTo(leafletMap);
 
-    var nc = [[
-      [56.340, 57.920],
-      [56.350, 57.930],
-      [56.360, 57.940]],
+      var nc = [[
+        [56.340, 57.920],
+        [56.350, 57.930],
+        [56.360, 57.940]],
       [[56.380, 57.950],
-        [56.390, 57.960],
-        [56.400, 57.970
-        ]]
-      //[56.344929, 57.993337]
-    ];
+      [56.390, 57.960],
+      [56.400, 57.970
+      ]]
+        //[56.344929, 57.993337]
+      ];
 
-    var multipolygon = L.polyline(nc);
+      var multipolygon = L.polyline(nc);
 
-    multipolygon.addTo(leafletMap);
+      multipolygon.addTo(leafletMap);
     },
     /**
       Handles click on available geometry type.
@@ -161,27 +161,19 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         let addedLayer = e.layer;
         this.sendAction('complete', addedLayer);
       } else {
-        // let layer = Ember.get(tabModel, `featureLink.${rowId}`);
         let leafletMap = this.get('leafletMap');
 
         // Check if layer is a marker
         // if (layer instanceof L.Polygon) {
-            // Create GeoJSON object from marker
+        // Create GeoJSON object from marker
 
         var drawnItems = new L.FeatureGroup();
         //   drawnItems.nid=255;
         leafletMap.addLayer(drawnItems);
 
-          // let layersStyle = this.get('layersStylesRenderer');
-           let styleSettings = this.tabModel.get('styleSettings');
-
         let coorsList = [];
         debugger;
 
-        // var defaultOptions;
-        let hh;
-var c=0;
-var d=0;
         var _this = this;//todo:!!!
         leafletMap.eachLayer(function (layer) {
           if (layer.editor !== undefined && layer.editor._enabled === true) {
@@ -190,53 +182,31 @@ var d=0;
 
             if (layer instanceof L.Polygon) {
               coorsList = _this._getPolygonCoords(coorsList, coordinates);
-            } else if (layer instanceof L.Polyline){
+            } else if (layer instanceof L.Polyline) {
               coorsList = _this._getPolylineCoords(coorsList, coordinates);
-            //  coorsList2 = _this._getPolylineCoords2(coorsList2, coordinates);
-              // if(layer.feature !== undefined) {
-              //  hh = layer._leaflet_id;// !== undefined && layer.feature.id !== undefined
-              // }
             }
 
-            // if(layer.feature === undefined) {
-            //   leafletMap.removeLayer(layer);
-            // }
-
-            // if(layer.defaultOptions !== undefined)
-            // {
-            // defaultOptions = layer.defaultOptions;
-            // }
             leafletMap.removeLayer(layer);
-            d++;
           }
-        // }
-        //  layersStyle.renderOnLeafletLayer({ leafletLayer: layer, styleSettings: styleSettings });
-        c++;
+          // }
+          //  layersStyle.renderOnLeafletLayer({ leafletLayer: layer, styleSettings: styleSettings });
         });
 
-        // leafletMap.eachLayer(function (layer) {
-        //   if (layer._leaflet_id === hh){
-        //     layer._latlngs = coorsList;
-        //   }
-
-        // });
-/**/
+        let styleSettings = this.tabModel.get('styleSettings');
         let shape = {};
         if (geometryType === 'partPolygon') {
           shape = L.polygon(coorsList, {
             color: styleSettings.style.path.color,
-             weight : styleSettings.style.path.weight,
-             fillColor : styleSettings.style.path.fillColor
-            });
+            weight: styleSettings.style.path.weight,
+            fillColor: styleSettings.style.path.fillColor
+          });
         } else if (geometryType === 'partLine') {
           shape = L.polyline(coorsList, {
             color: styleSettings.style.path.color,
-            weight : styleSettings.style.path.weight
+            weight: styleSettings.style.path.weight
           });
         }
         // shape.defaultOptions = defaultOptions;
-
-        // var multipolygon = L.polygon(coorsList);
 
         // hh._latlngs = multipolygon._latlngs;
 
@@ -247,27 +217,26 @@ var d=0;
         var geoJson = layer.toGeoJSON();
 
         Ember.set(shape, 'feature', {
-          geometry_name : layer.feature.geometry_name,
-          id : layer.feature.id,
-          type : 'Feature',
-          properties : geoJson.properties,
-          leafletLayer : shape,
+          geometry_name: layer.feature.geometry_name,
+          id: layer.feature.id,
+          type: 'Feature',
+          properties: geoJson.properties,
+          leafletLayer: shape,
           geometry: {
             coordinates: this._swapСoordinates(coorsList),
             type: layer.feature.geometry.type
-        }
-       });
+          }
+        });
 
         shape.addTo(leafletMap);
         shape.enableEdit();
 
         this.tabModel.leafletObject.editLayer(shape);
-
         Ember.set(this.tabModel, `featureLink.${layerId}`, shape);
 
         // enable save button
         Ember.set(this.tabModel, 'leafletObject._wasChanged', true);
-     }
+      }
     }
   },
 
@@ -280,26 +249,26 @@ var d=0;
   */
   _getPolygonCoords(coorsList, coordinates) {
     for (let i = 0; i < coordinates.length; i++) {
-      let coors =  coordinates[i];
-      let corArr0 = [];
+      let coors = coordinates[i];
+      let corArrI = [];
 
       if (coordinates[0][0][0][0] !== undefined) {
         for (let j = 0; j < coors.length; j++) {
           let coordinat = coors[j];
-          let corArr1 = [];
+          let corArrJ = [];
 
-          for(let k = 0; k < coordinat.length; k++) {
-            corArr1.push([coordinat[k][1], coordinat[k][0]]);
+          for (let k = 0; k < coordinat.length; k++) {
+            corArrJ.push([coordinat[k][1], coordinat[k][0]]);
           }
 
-          coorsList.push(corArr1);
+          coorsList.push(corArrJ);
         }
       } else if (coordinates[0][0][0] !== undefined) {
-          for (let j = 0; j < coors.length; j++) {
-            corArr0.push([coors[j][1], coors[j][0]]);
-          }
-          coorsList.push(corArr0);
+        for (let j = 0; j < coors.length; j++) {
+          corArrI.push([coors[j][1], coors[j][0]]);
         }
+        coorsList.push(corArrI);
+      }
     }
 
     return coorsList;
@@ -313,25 +282,26 @@ var d=0;
     @returns {array} accumulating array of coordinates.
   */
   _getPolylineCoords(coorsList, coordinates) {
-      let corArr0 = [];
+    let corArr = [];
 
-      if (coordinates[0][0][0] !== undefined) {
-        for (let i = 0; i < coordinates.length; i++) {
-          let coordinat = coordinates[i];
-          let corArr1 = [];
+    if (coordinates[0][0][0] !== undefined) {
+      for (let i = 0; i < coordinates.length; i++) {
+        let coordinat = coordinates[i];
+        let corArrI = [];
 
-          for(let j = 0; j < coordinat.length; j++) {
-            corArr1.push([coordinat[j][1], coordinat[j][0]]);
-          }
-
-          coorsList.push(corArr1);
+        for (let j = 0; j < coordinat.length; j++) {
+          corArrI.push([coordinat[j][1], coordinat[j][0]]);
         }
-      } else if (coordinates[0][0] !== undefined) {
-          for (let i = 0; i < coordinates.length; i++) {
-            corArr0.push([coordinates[i][1], coordinates[i][0]]);
-          }
-          coorsList.push(corArr0);
+
+        coorsList.push(corArrI);
       }
+    } else if (coordinates[0][0] !== undefined) {
+      for (let i = 0; i < coordinates.length; i++) {
+        corArr.push([coordinates[i][1], coordinates[i][0]]);
+      }
+
+      coorsList.push(corArr);
+    }
 
     return coorsList;
   },
@@ -345,15 +315,15 @@ var d=0;
   _swapСoordinates(coordinates) {
     if (coordinates[0][0][0][0] !== undefined) {
       for (let i = 0; i < coordinates.length; i++) {
-        let coordinat0 = coordinates[i];
+        let coordinatI = coordinates[i];
 
-        for(let j = 0; j < coordinat0.length; j++) {
-          let coordinat1 = coordinat0[i];
+        for (let j = 0; j < coordinatI.length; j++) {
+          let coordinatJ = coordinatI[i];
 
-          for(let k = 0; k < coordinat1.length; k++) {
-            let b = coordinat1[k][0];
-            coordinat1[k][0] = coordinat1[k][1];
-            coordinat1[k][1] = b;
+          for (let k = 0; k < coordinatJ.length; k++) {
+            let b = coordinatJ[k][0];
+            coordinatJ[k][0] = coordinatJ[k][1];
+            coordinatJ[k][1] = b;
           }
         }
       }
@@ -361,18 +331,18 @@ var d=0;
       for (let i = 0; i < coordinates.length; i++) {
         let coordinat = coordinates[i];
 
-        for(let j = 0; j < coordinat.length; j++) {
+        for (let j = 0; j < coordinat.length; j++) {
           let b = coordinat[j][0];
           coordinat[j][0] = coordinat[j][1];
           coordinat[j][1] = b;
         }
       }
     } else if (coordinates[0][0] !== undefined) {
-        for (let i = 0; i < coordinates.length; i++) {
-          let b = coordinates[i][0];
-          coordinates[i][0] = coordinates[i][1];
-          coordinates[i][1] = b;
-        }
+      for (let i = 0; i < coordinates.length; i++) {
+        let b = coordinates[i][0];
+        coordinates[i][0] = coordinates[i][1];
+        coordinates[i][1] = b;
+      }
     }
 
     return coordinates;
