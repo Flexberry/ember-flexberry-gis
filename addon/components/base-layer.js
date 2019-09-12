@@ -289,6 +289,10 @@ export default Ember.Component.extend(
       this._setLayerZIndex();
       this._setLayerStyle();
       this._setLayerOpacity();
+      const layerInitCallback = Ember.get(window, 'mapApi.layerInitCallback');
+      if (typeof layerInitCallback === 'function') {
+        layerInitCallback(this);
+      }
     },
 
     /**

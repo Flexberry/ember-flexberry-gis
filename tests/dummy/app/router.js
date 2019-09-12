@@ -11,6 +11,9 @@ Router.map(function() {
   this.route('map', { path: 'maps/:id' });
   this.route('map.new', { path: 'maps/new' });
 
+  // Map test routes.
+  this.route('api-test-map', { path: 'api-test-map/:id' });
+
   // Layer metadata routes (list, edit, create).
   this.route('new-platform-flexberry-g-i-s-layer-metadata-l', { path: 'layer-metadata' });
   this.route('new-platform-flexberry-g-i-s-layer-metadata-e', { path: 'layer-metadata/:id' });
