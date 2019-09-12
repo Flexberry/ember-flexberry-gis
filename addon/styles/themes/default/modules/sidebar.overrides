@@ -567,10 +567,6 @@
 			content: "\f248";
 		}
 		
-		i.icon.ring:before {
-			content: "\f10c"
-		}
-		
 		i.icon.map-marker:before {
 			content: "\f041";
 		}

@@ -73,9 +73,6 @@ export default {
     'draw-part': {
       'caption': 'Part'
     },
-    'draw-ring': {
-      'caption': 'Ring'
-    },
     'draw-clear': {
       'caption': 'Clear'
     }
