@@ -1,11 +1,23 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-intersections-panel';
-import EmberError from 'ember/error';
+import intersect from 'npm:@turf/intersect';
 export default Ember.Component.extend({
   layout,
 
-  // Все слои
-  layers: null,
+  // Слой пересечений
+  resultsLayer: null,
+
+  // Векторыне слои
+  vectorLayers: [],
+
+  // Карта
+  leafletMap: null,
+
+  _OnMapChanged: Ember.observer('leafletMap', function() {
+    let map = this.get('leafletMap');
+    let group = L.featureGroup().addTo(map);
+    this.set('resultsLayer', group);
+  }),
 
   // Кнопка выгрузить заблокана
   noIntersectionResults: true,
@@ -13,17 +25,19 @@ export default Ember.Component.extend({
   // Площадь
   square: 0,
 
-  //Буфер поиска
+  // Буфер поиска
   bufferR: 0,
 
   // Выбранные слои
   selectedLayers: [],
 
+  // Результаты идентификации
   results: [],
 
   // Объект с которым ищем пересечения
   feature: null,
 
+  // Свернут
   folded: false,
 
   store: Ember.inject.service(),
@@ -46,6 +60,11 @@ export default Ember.Component.extend({
 
       this.set('_selectedUnit', 'meters');
     }
+
+    let vlayers = [];
+    vlayers = this.get('store').peekAll('new-platform-flexberry-g-i-s-map-layer')
+      .filter(layer=> layer.get('type') === 'geojson' || layer.get('type') === 'wfs');
+    this.set('vectorLayers', vlayers);
   },
   actions:{
     findIntersections() {
@@ -74,7 +93,7 @@ export default Ember.Component.extend({
         if (currentFeature.leafletLayer.getLayers().length === 1) {
           polygonLayer = currentFeature.leafletLayer.getLayers()[0];
         } else {
-          throw new EmberError(' L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.');
+          throw new Ember.Error(' L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.');
         }
       } else {
         polygonLayer = currentFeature.leafletLayer;
@@ -88,7 +107,6 @@ export default Ember.Component.extend({
       let leafletMap = this.get('leafletMap');
       leafletMap.setLoaderContent(i18n.t('map-tools.identify.loader-message'));
       leafletMap.showLoader();
-
       this._startIdentification({
         polygonLayer: polygonLayer,
         bufferedMainPolygonLayer: bufferedMainPolygonLayer,
@@ -154,6 +172,33 @@ export default Ember.Component.extend({
     });
     this.set('results', e.results);
     this.set('noIntersectionResults', false);
+
+    //test
+    e.results[0].features.then((features)=> {
+      features.forEach((item)=> {
+        if (item.geometry.type === 'Polygon') {
+          let res = intersect(item, polygonLayer.feature);
+          console.log(res);
+          let group = this.get('resultsLayer');
+          L.geoJSON(res, {
+            style: { color: 'green' }
+          }).addTo(group);
+        }
+      });
+      let map = this.get('leafletMap');
+      var polygonPoints = [
+      [58.0079743, 56.241384],
+      [58.0112028, 56.2506031],
+      [58.0004668, 56.2556064],
+      [57.9991075, 56.2922359]];
+
+      // var group = L.featureGroup().addTo(map);
+      var poly = L.polygon(polygonPoints).setStyle({
+        color: 'green'
+      });
+      let group = this.get('resultsLayer');
+      poly.addTo(group);
+    });
   },
 
   /**
