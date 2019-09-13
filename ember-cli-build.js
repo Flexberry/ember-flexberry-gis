@@ -64,6 +64,8 @@ module.exports = function(defaults) {
   app.import('vendor/serviceImages/header-bgw.png', { destDir: 'assets/themes/orange/assets/images' });
   app.import('vendor/serviceImages/bgw-head-calendar.png', { destDir: 'assets/themes/orange/assets/images' });
 
+  app.import('vendor/api-tests/api-test-map.html', { destDir: 'assets/api-tests' });
+
   /*
     This build file specifies the options for the dummy test app of this
     addon, located in `/tests/dummy`

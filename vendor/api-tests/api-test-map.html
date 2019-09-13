@@ -1,0 +1,30 @@
+<div class="ui vertical menu">
+  <iframe id="testframe" src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11" width="1000" height="800" align="left">
+ </iframe>
+ <script type="text/javascript">
+   var frame = document.querySelector("#testframe");
+   frame.addEventListener("load", function() {
+     if (frame.contentWindow.mapApi == undefined) {
+       frame.contentWindow.mapApi = {};
+     }
+
+     frame.contentWindow.mapApi.layerInitCallback = function(model) {
+       model.getLeafletObject().then(function(layer) {
+         layer.eachLayer(function(layerr) {
+           switch (model.layerModel.get('id')) {
+             case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
+               layerr.setStyle({ color: '#808000', fillColor: '#FFD700'});
+               break;
+             case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
+               layerr.setStyle({ color: '#008B8B'});
+               break;
+           }
+
+           layerr.on('click', function(e) {
+             alert(e.target.feature.properties.name);
+           })});
+       });
+     };
+   });
+ </script>
+</div>
