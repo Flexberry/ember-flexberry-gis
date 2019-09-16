@@ -211,7 +211,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
           let mainPartShape = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'mainPartShape') === true;
 
           if (partShape === true && mainPartShape === false) {
-              delete this.tabModel.leafletObject.changes[changeLayerNumber];
+            delete this.tabModel.leafletObject.changes[changeLayerNumber];
           }
           else if (partShape === true && mainPartShape === true) {
             changeNumber = changeLayerNumber;

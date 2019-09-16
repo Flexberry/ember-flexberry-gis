@@ -1047,7 +1047,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(tabModel, '_selectedShape', edit);
       editedRows = {};
 
-      let tabModels = this.get( '_tabModels');
+      let tabModels = this.get('_tabModels');
 
       // Remove selection for editing on all tabs
       for (let i = 0; i < tabModels.length; i++) {
