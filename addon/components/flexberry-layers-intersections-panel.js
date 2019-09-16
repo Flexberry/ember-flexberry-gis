@@ -1,6 +1,11 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-intersections-panel';
 import intersect from 'npm:@turf/intersect';
+import area from 'npm:@turf/area';
+import lineIntersect from 'npm:@turf/line-intersect';
+import * as helpers  from 'npm:@turf/helpers';
+import booleanPointInPolygon from 'npm:@turf/boolean-point-in-polygon';
+import lineSplit from 'npm:@turf/line-split';
 export default Ember.Component.extend({
   layout,
 
@@ -120,6 +125,14 @@ export default Ember.Component.extend({
 
     hidePanel() {
       this.toggleProperty('folded');
+    },
+    zoomToIntersection(feature) {
+      console.log(feature.intersection.intesectionObject);
+      let group = this.get('resultsLayer');
+      group.clearLayers();
+      L.geoJSON(feature.intersection.intesectedObject, {
+        style: { color: 'green' }
+      }).addTo(group);
     }
   },
 
@@ -174,31 +187,7 @@ export default Ember.Component.extend({
     this.set('noIntersectionResults', false);
 
     //test
-    e.results[0].features.then((features)=> {
-      features.forEach((item)=> {
-        if (item.geometry.type === 'Polygon') {
-          let res = intersect(item, polygonLayer.feature);
-          console.log(res);
-          let group = this.get('resultsLayer');
-          L.geoJSON(res, {
-            style: { color: 'green' }
-          }).addTo(group);
-        }
-      });
-      let map = this.get('leafletMap');
-      var polygonPoints = [
-      [58.0079743, 56.241384],
-      [58.0112028, 56.2506031],
-      [58.0004668, 56.2556064],
-      [57.9991075, 56.2922359]];
-
-      // var group = L.featureGroup().addTo(map);
-      var poly = L.polygon(polygonPoints).setStyle({
-        color: 'green'
-      });
-      let group = this.get('resultsLayer');
-      poly.addTo(group);
-    });
+    this._findIntersections(e);
   },
 
   /**
@@ -259,5 +248,59 @@ export default Ember.Component.extend({
     this.set('results', []);
     this.set('noIntersectionResults', true);
     this.set('folded', false);
-  }
+  },
+
+  _findIntersections(e) {
+    e.results[0].features.then((features)=> {
+      features.forEach((item)=> {
+        console.log(item.geometry.type);
+        console.log(item);
+        if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
+          let res = intersect(item, e.polygonLayer.feature);
+
+          if (res) {
+            item.intersection = {};
+            item.intersection.intersectedArea = area(res);
+            item.intersection.intersectionCords = res.geometry.coordinates;
+            item.intersection.intesectionObject = res;
+          }
+        } else if (item.geometry.type === 'MultiLineString') {
+          let map = this.get('leafletMap');
+          map.fitBounds(e.polygonLayer.getBounds());
+          item.geometry.coordinates.forEach(part => {
+            let line = helpers.lineString(part);
+            let split = lineSplit(line, e.polygonLayer.feature);
+            let oddPair;
+            if (booleanPointInPolygon(helpers.point(part[0]), e.polygonLayer.feature)) {
+              oddPair = 0;
+            } else {
+              oddPair = 1;
+            }
+
+            split.features.forEach((splitedPart, i) => {
+              if ((i + oddPair) % 2 === 0) {
+                L.geoJSON(splitedPart.geometry).addTo(map);
+              }
+            });
+          });
+        } else if (item.geometry.type === 'LineString') {
+          let intersects = lineIntersect(item, e.polygonLayer.feature);
+          console.log(intersects);
+          let group = this.get('resultsLayer');
+          L.geoJSON(intersects, {
+            style: { color: 'green' }
+          }).addTo(group);
+
+          if (intersects) {
+            item.intersection = {};
+            item.intersection.intersectionCords = [];
+            intersects.features.forEach(function(feat) {
+              item.intersection.intersectionCords.push(feat.geometry.coordinates);
+            });
+            item.intersection.intesectedObject = intersects;
+          }
+        }
+      });
+    });
+  },
 });

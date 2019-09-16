@@ -36,6 +36,8 @@ export default Ember.Component.extend({
   */
   classNameBindings: ['isActive:active'],
 
+  intersection: false,
+
   /**
     Flag: indicates whether to display detailed feature info.
 
@@ -158,7 +160,6 @@ export default Ember.Component.extend({
     panTo() {
       this.sendAction('panTo', this.get('feature'));
     },
-
     /**
       Invokes {{#crossLink "FeatureResultItemComponent/sendingActions.zoomTo:method"}}'zoomTo' action{{/crossLink}}.
       @method actions.zoomTo
@@ -192,6 +193,14 @@ export default Ember.Component.extend({
     findIntersection() {
       this.sendAction('findIntersection', this.get('feature'));
     },
+    panToIntersection() {
+      this.sendAction('zoomTo', this.get('feature'));
+      this.sendAction('panTo', this.get('feature'));
+    },
+    zoomToIntersection() {
+      this.sendAction('zoomTo', this.get('feature'));
+      this.sendAction('zoomToIntersection', this.get('feature'));
+    }
   }
 
   /**
