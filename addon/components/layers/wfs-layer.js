@@ -117,7 +117,6 @@ export default BaseVectorLayer.extend({
   _getAttributesOptions() {
     return this._super(...arguments).then((attribitesOptions) => {
       Ember.set(attribitesOptions, 'settings.readonly', this.get('readonly') || false);
-      Ember.set(attribitesOptions, 'settings.readonly', false); //todo:delete
 
       return attribitesOptions;
     });

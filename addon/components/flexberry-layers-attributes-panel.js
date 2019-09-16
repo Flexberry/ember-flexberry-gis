@@ -149,7 +149,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         if (!readonly) {
           let geometryFields = Ember.get(leafletObject, 'readFormat.featureType.geometryFields');
           availableDrawTools = this._getAvailableDrawTools(geometryFields);
-          typeGeometry = this._getTypeGeometry(geometryFields); //todo:!!!!
+          typeGeometry = this._getTypeGeometry(geometryFields);
         }
 
         let tabModel = Ember.Object.extend({
@@ -482,8 +482,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
           return cachedTab;
         }
-
-        typeGeometry = 'polygon'//'polyline';//todo:!!!
 
         let newTab = tabModel.create(
           Ember.getOwner(this).ownerInjection(),
@@ -1041,7 +1039,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     */
     onRowGeometryEdit(tabModel, rowId) {
       Ember.set(tabModel, 'layerId', rowId);
-      debugger;
       // Toggle row geometry editing
       let editedRows = Ember.get(tabModel, '_editedRows');
       let edit = Ember.get(editedRows, rowId) || false;
@@ -1129,7 +1126,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       let saveSuccess = (data) => {
         Ember.set(tabModel, 'leafletObject._wasChanged', false);
-        // tabModel._reload(); //todo: уберает проблему приведений
         leafletObject.off('save:failed', saveFailed);
       };
 
@@ -1144,7 +1140,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} data A hash containing added feature properties.
     */
     onNewRowDialogApprove(data) {
-      debugger;
       let tabModel = this.get('_newRowTabModel');
       let layer = this.get('_newRowLayer');
 
@@ -1161,8 +1156,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       if (typeof (layer.setStyle) === 'function') {
         layer.setStyle(Ember.get(tabModel, 'leafletObject.options.style'));
       }
-
-      // this.get('layersStylesRenderer').renderOnLeafletLayer({ leafletLayer: layer, styleSettings: tabModel.get('styleSettings') });//todo:хз зачем
 
       tabModel.leafletObject.addLayer(layer);
       layer.disableEdit();

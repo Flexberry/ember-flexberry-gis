@@ -49,36 +49,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   settings: null,
 
   actions: {
-
-    ontest() {//todo: удалить
-      let leafletMap = this.get('leafletMap');
-
-      // var nc = [
-      //       [56.344929, 57.993337],
-      //       [56.345358, 57.992154],
-      //       [56.346903, 57.993018],
-      //       [56.344929, 57.993337]
-      //     ];
-
-      //     var multipolygon = L.polygon(nc);
-
-      //     multipolygon.addTo(leafletMap);
-
-      var nc = [[
-        [56.340, 57.920],
-        [56.350, 57.930],
-        [56.360, 57.940]],
-      [[56.380, 57.950],
-      [56.390, 57.960],
-      [56.400, 57.970
-      ]]
-        //[56.344929, 57.993337]
-      ];
-
-      var multipolygon = L.polyline(nc);
-
-      multipolygon.addTo(leafletMap);
-    },
     /**
       Handles click on available geometry type.
 
@@ -125,9 +95,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         case 'multyLine':
           editTools.startPolyline();
           break;
-        // case 'ring': // todo: shape ring
-        //   editTools.startPolygon();
-        //   break;
       }
     },
   },
@@ -148,7 +115,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     let editTools = this.get('_editTools');
 
     this.$().closest('body').off('keydown');
-  debugger;
     if (!Ember.isNone(editTools)) {
       editTools.off('editable:drawing:end', this._disableDraw, this);
       editTools.stopDrawing();
@@ -169,7 +135,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         let coorsList = [];
         let partShape = true;
 
-        var _this = this;//todo:!!!
+        var _this = this;
         leafletMap.eachLayer(function (layer) {
           let enabled = Ember.get(layer, 'editor._enabled');
           if (enabled === true) {
