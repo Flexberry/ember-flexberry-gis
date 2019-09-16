@@ -119,10 +119,10 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         case 'polygon':
           editTools.startPolygon();
           break;
-        case 'partPolygon':
+        case 'multyPolygon':
           editTools.startPolygon();
           break;
-        case 'partLine':
+        case 'multyLine':
           editTools.startPolyline();
           break;
         // case 'ring': // todo: shape ring
@@ -148,7 +148,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     let editTools = this.get('_editTools');
 
     this.$().closest('body').off('keydown');
-
+  debugger;
     if (!Ember.isNone(editTools)) {
       editTools.off('editable:drawing:end', this._disableDraw, this);
       editTools.stopDrawing();
@@ -157,22 +157,17 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     if (!Ember.isNone(e)) {
       let geometryType = this.get('geometryType');
 
-      if (geometryType !== 'partPolygon' && geometryType !== 'partLine') {
+      if (geometryType !== 'multyPolygon' && geometryType !== 'multyLine') {
         let addedLayer = e.layer;
         this.sendAction('complete', addedLayer);
       } else {
         let leafletMap = this.get('leafletMap');
 
-        // Check if layer is a marker
-        // if (layer instanceof L.Polygon) {
-        // Create GeoJSON object from marker
-
         var drawnItems = new L.FeatureGroup();
-        //   drawnItems.nid=255;
         leafletMap.addLayer(drawnItems);
 
         let coorsList = [];
-        debugger;
+        let hhh = true;
 
         var _this = this;//todo:!!!
         leafletMap.eachLayer(function (layer) {
@@ -180,6 +175,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
           if (enabled === true) {
             var layerGeoJson = layer.toGeoJSON();
             let coordinates = layerGeoJson.geometry.coordinates;
+
+            layer.hhh = hhh;
 
             if (layer instanceof L.Polygon) {
               coorsList = _this._getPolygonCoords(coorsList, coordinates);
@@ -189,51 +186,91 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
             leafletMap.removeLayer(layer);
           }
-          // }
-          //  layersStyle.renderOnLeafletLayer({ leafletLayer: layer, styleSettings: styleSettings });
         });
 
         let styleSettings = this.tabModel.get('styleSettings');
         let shape = {};
-        if (geometryType === 'partPolygon') {
+        if (geometryType === 'multyPolygon') {
           shape = L.polygon(coorsList, {
             color: styleSettings.style.path.color,
             weight: styleSettings.style.path.weight,
             fillColor: styleSettings.style.path.fillColor
           });
-        } else if (geometryType === 'partLine') {
+        } else if (geometryType === 'multyLine') {
           shape = L.polyline(coorsList, {
             color: styleSettings.style.path.color,
             weight: styleSettings.style.path.weight
           });
         }
-        // shape.defaultOptions = defaultOptions;
-
-        // hh._latlngs = multipolygon._latlngs;
-
-        //leafletMap.removeLayer(multipolygon);
 
         let layerId = Ember.get(this.tabModel, 'layerId');
         let layer = Ember.get(this.tabModel, `featureLink.${layerId}`);
         var geoJson = layer.toGeoJSON();
 
         Ember.set(shape, 'feature', {
-          geometry_name: layer.feature.geometry_name,
-          id: layer.feature.id,
+        //  geometry_name: layer.feature.geometry_name,
+         // id: layer.feature.id,
           type: 'Feature',
           properties: geoJson.properties,
-          leafletLayer: shape,
-          geometry: {
-            coordinates: this._swapСoordinates(coorsList),
-            type: layer.feature.geometry.type
-          }
+          leafletLayer: shape
+          // geometry: {
+          //   coordinates: this._swapСoordinates(coorsList)
+          // }
         });
 
+        let id = Ember.get(layer.feature, 'id');
+        if (!Ember.isNone(id)) {
+          Ember.set(shape.feature, 'id', id);
+          Ember.set(shape.feature, 'geometry_name', layer.feature.geometry_name);
+
+          Ember.set(shape.feature, 'geometry', {
+            coordinates: this._swapСoordinates(coorsList)
+          });
+
+          let geoType = Ember.get(layer.feature, 'geometry.type');
+          if (!Ember.isNone(geoType)) {
+            Ember.set(shape.feature.geometry, 'type', geoType);
+          }
+
+        }
+
         shape.addTo(leafletMap);
+        shape.hhh = true;
+        shape.hhhNew = true;
         shape.enableEdit();
 
         this.tabModel.leafletObject.editLayer(shape);
         Ember.set(this.tabModel, `featureLink.${layerId}`, shape);
+
+        var keys = Object.keys(this.tabModel.leafletObject.changes);
+        keys.sort();
+
+        let state = 0;
+        let kk = null;
+        for (let i = 0; i < keys.length; i++) {
+          let changeLayerNumber = keys[i];
+
+          state = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'state') === 'insertElement' ? state + 1 : state;
+
+          let h0 = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'hhh') === true;
+          let h1 = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'hhhNew') === true;
+
+          if (h0 === true && h1 === false) {
+              delete this.tabModel.leafletObject.changes[changeLayerNumber];
+          }
+          else if (h0 === true && h1 === true) {
+            kk = changeLayerNumber;
+            delete this.tabModel.leafletObject.changes[changeLayerNumber].hhh;
+            delete this.tabModel.leafletObject.changes[changeLayerNumber].hhhNew;
+          }
+
+
+        }
+
+        if (state > 0) {
+          //let changeLayerNumber = this.tabModel.leafletObject.changes[kk];
+          Ember.set(this.tabModel.leafletObject.changes[kk], 'state', 'insertElement');
+        }
 
         // enable save button
         Ember.set(this.tabModel, 'leafletObject._wasChanged', true);

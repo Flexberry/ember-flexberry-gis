@@ -15,9 +15,9 @@
     iconClass="flexberry-map-tool-icon circle icon"
   }}
   {{flexberry-button
-    tooltip=(t "components.map-tools.draw.draw-part.caption")
-    click=(action "onGeometryTypeSelect" "partPolygon")
-    iconClass="flexberry-map-tool-icon part icon"
+    tooltip=(t "components.map-tools.draw.draw-multy-polygon.caption")
+    click=(action "onGeometryTypeSelect" "multyPolygon")
+    iconClass="flexberry-map-tool-icon multy-polygon icon"
     readonly=(eq tabModel._selectedShape false)
   }}
 {{/if}}
@@ -28,9 +28,9 @@
     iconClass="flexberry-map-tool-icon empty star icon"
   }}
   {{flexberry-button
-    tooltip=(t "components.map-tools.draw.draw-part.caption")
-    click=(action "onGeometryTypeSelect" "partLine")
-    iconClass="flexberry-map-tool-icon part icon"
+    tooltip=(t "components.map-tools.draw.draw-multy-line.caption")
+    click=(action "onGeometryTypeSelect" "multyLine")
+    iconClass="flexberry-map-tool-icon multy-line icon"
     readonly=(eq tabModel._selectedShape false)
   }}
 {{/if}}

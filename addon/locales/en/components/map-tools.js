@@ -70,8 +70,11 @@ export default {
     'draw-polygon': {
       'caption': 'Polygon'
     },
-    'draw-part': {
-      'caption': 'Part'
+    'draw-multy-polygon': {
+      'caption': 'Multy polygon'
+    },
+    'draw-multy-line': {
+      'caption': 'Multy line'
     },
     'draw-clear': {
       'caption': 'Clear'

@@ -563,16 +563,20 @@
       .buttons {
         display: inline-block;
 		
-		i.icon.part:before {
-			content: "\f248";
+		i.icon.multy-polygon:before {
+	      content: "\f248";
+		}
+		
+		i.icon.multy-line:before {
+	      content: "\f248";
 		}
 		
 		i.icon.map-marker:before {
-			content: "\f041";
+		  content: "\f041";
 		}
 		
 		.draw {
-			border: none;
+		 border: none;
 		}
       }
 

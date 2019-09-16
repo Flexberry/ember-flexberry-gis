@@ -147,8 +147,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let typeGeometry = null;
 
         if (!readonly) {
-          availableDrawTools = this._getAvailableDrawTools(Ember.get(leafletObject, 'readFormat.featureType.geometryFields'));
-          typeGeometry = this._getTypeGeometry(Ember.get(leafletObject, 'readFormat.featureType.geometryFields')); //todo:!!!!
+          let geometryFields = Ember.get(leafletObject, 'readFormat.featureType.geometryFields');
+          availableDrawTools = this._getAvailableDrawTools(geometryFields);
+          typeGeometry = this._getTypeGeometry(geometryFields); //todo:!!!!
         }
 
         let tabModel = Ember.Object.extend({
@@ -482,7 +483,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           return cachedTab;
         }
 
-        typeGeometry = 'polyline'//'polygon';//todo:!!!
+        typeGeometry = 'polygon'//'polyline';//todo:!!!
 
         let newTab = tabModel.create(
           Ember.getOwner(this).ownerInjection(),
@@ -1068,7 +1069,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(leafletMap, 'editTools', editTools);
       let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
 
-      // Remove layer editing todo: возможно не нужно
+      // Remove layer editing
       leafletMap.eachLayer(function (layer) {
         let enabled = Ember.get(layer, 'editor._enabled');
         if (enabled === true) {
