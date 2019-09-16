@@ -4,7 +4,7 @@
 // See: https://github.com/ef4/ember-browserify#using-ember-browserify-in-addons
 /* jshint ignore:start */
 import * as buffer from 'npm:@turf/buffer';
-import * as thelpers from 'npm:@turf/helpers';
+import * as helpers from 'npm:@turf/helpers';
 import * as difference from 'npm:@turf/difference';
 import * as booleanEqual from 'npm:@turf/boolean-equal';
 import * as lineSplit from 'npm:@turf/line-split';
@@ -20,4 +20,6 @@ import * as invariant from 'npm:@turf/invariant';
 import * as distance from 'npm:@turf/distance';
 import * as midpoint from 'npm:@turf/midpoint';
 import * as union from 'npm:@turf/union';
+import * as area from 'npm:@turf/area';
+import * as booleanPointInPolygon from 'npm:@turf/boolean-point-in-polygon';
 /* jshint ignore:end */

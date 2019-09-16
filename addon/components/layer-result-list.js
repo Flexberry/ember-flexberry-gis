@@ -39,6 +39,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   classNames: ['layer-result-list'],
 
+  intersection: false,
+
   /**
     Reference to component's template.
   */
@@ -157,6 +159,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     findIntersection(feature) {
       this.sendAction('showIntersectionPanel', feature);
     },
+    zoomToIntersection(feature) {
+      this.sendAction('zoomToIntersection', feature);
+    }
   },
 
   /**
@@ -278,7 +283,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         }
       );
     });
-
     let getFeatureDisplayProperty = (feature, featuresPropertiesSettings) => {
       let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
       let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');

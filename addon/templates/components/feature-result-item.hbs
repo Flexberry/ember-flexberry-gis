@@ -3,15 +3,24 @@
     <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo" on="click"}}>
       <i class="caret {{if expanded 'down' 'right'}} icon"></i>
     </a>
-    <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
-      <i class="marker icon"></i>
-    </a>
-    <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
-      <i class="hand paper icon"></i>
-    </a>
-     <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "findIntersection" on="click"}}>
-      <i class="intersections icon"></i>
-    </a>
+      {{#if intersection}}
+         <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" on="click"}}>
+          <i class="hand paper icon"></i>
+        </a>
+        <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "zoomToIntersection" on="click"}}>
+          <i class="intersections icon"></i>
+        </a>
+      {{else}}
+        <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
+          <i class="marker icon"></i>
+        </a>
+        <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
+          <i class="hand paper icon"></i>
+        </a>
+        <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "findIntersection" on="click"}}>
+          <i class="intersections icon"></i>
+        </a>
+      {{/if}}
       {{#if (gt feature.editForms.length 0)}}
         {{#if (eq feature.editForms.length 1)}}
           {{#if hasEditForm}}
@@ -101,6 +110,26 @@
           </tr>
         {{/if}}
       {{/each-in}}
+      {{#if intersection}}
+      {{#if (eq feature.intersection.intersectionObject.geometry.type "Polygon")}}
+        <tr>
+            <td>
+              Площадь пересечения 
+            </td>
+            <td>
+             {{feature.intersection.intersectedArea}} 
+            </td>
+        </tr>
+         {{/if}}
+        <tr>
+          <td>
+              Координаты пересечения
+          </td>
+          <td>
+              {{feature.intersection.intersectionCords}} 
+          </td>
+        </tr>
+      {{/if}}
     </table>
   {{/if}}
 </div>
