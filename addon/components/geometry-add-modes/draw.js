@@ -167,7 +167,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         leafletMap.addLayer(drawnItems);
 
         let coorsList = [];
-        let hhh = true;
+        let partShape = true;
 
         var _this = this;//todo:!!!
         leafletMap.eachLayer(function (layer) {
@@ -176,7 +176,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
             var layerGeoJson = layer.toGeoJSON();
             let coordinates = layerGeoJson.geometry.coordinates;
 
-            layer.hhh = hhh;
+            Ember.set(layer, 'partShape', partShape);
 
             if (layer instanceof L.Polygon) {
               coorsList = _this._getPolygonCoords(coorsList, coordinates);
@@ -208,14 +208,9 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         var geoJson = layer.toGeoJSON();
 
         Ember.set(shape, 'feature', {
-        //  geometry_name: layer.feature.geometry_name,
-         // id: layer.feature.id,
           type: 'Feature',
           properties: geoJson.properties,
           leafletLayer: shape
-          // geometry: {
-          //   coordinates: this._swapСoordinates(coorsList)
-          // }
         });
 
         let id = Ember.get(layer.feature, 'id');
@@ -231,45 +226,36 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
           if (!Ember.isNone(geoType)) {
             Ember.set(shape.feature.geometry, 'type', geoType);
           }
-
         }
 
         shape.addTo(leafletMap);
-        shape.hhh = true;
-        shape.hhhNew = true;
+        Ember.set(shape, 'partShape', true);
+        Ember.set(shape, 'mainPartShape', true);
         shape.enableEdit();
 
         this.tabModel.leafletObject.editLayer(shape);
         Ember.set(this.tabModel, `featureLink.${layerId}`, shape);
 
-        var keys = Object.keys(this.tabModel.leafletObject.changes);
-        keys.sort();
-
         let state = 0;
-        let kk = null;
-        for (let i = 0; i < keys.length; i++) {
-          let changeLayerNumber = keys[i];
-
+        let changeNumber = null;
+        for (let changeLayerNumber in this.tabModel.leafletObject.changes) {
           state = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'state') === 'insertElement' ? state + 1 : state;
 
-          let h0 = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'hhh') === true;
-          let h1 = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'hhhNew') === true;
+          let partShape = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'partShape') === true;
+          let mainPartShape = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'mainPartShape') === true;
 
-          if (h0 === true && h1 === false) {
+          if (partShape === true && mainPartShape === false) {
               delete this.tabModel.leafletObject.changes[changeLayerNumber];
           }
-          else if (h0 === true && h1 === true) {
-            kk = changeLayerNumber;
-            delete this.tabModel.leafletObject.changes[changeLayerNumber].hhh;
-            delete this.tabModel.leafletObject.changes[changeLayerNumber].hhhNew;
+          else if (partShape === true && mainPartShape === true) {
+            changeNumber = changeLayerNumber;
+            delete this.tabModel.leafletObject.changes[changeLayerNumber].partShape;
+            delete this.tabModel.leafletObject.changes[changeLayerNumber].mainPartShape;
           }
-
-
         }
 
         if (state > 0) {
-          //let changeLayerNumber = this.tabModel.leafletObject.changes[kk];
-          Ember.set(this.tabModel.leafletObject.changes[kk], 'state', 'insertElement');
+          Ember.set(this.tabModel.leafletObject.changes[changeNumber], 'state', 'insertElement');
         }
 
         // enable save button
