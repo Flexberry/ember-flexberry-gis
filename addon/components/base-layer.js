@@ -251,7 +251,7 @@ export default Ember.Component.extend(
         resolve({
           object: this.get('_leafletObject'),
           settings: {
-            readonly: false,
+            readonly: true,
             localizedProperties: this.get('displaySettings.featuresPropertiesSettings.localizedProperties'),
             excludedProperties: this.get('displaySettings.featuresPropertiesSettings.excludedProperties'),
           }
