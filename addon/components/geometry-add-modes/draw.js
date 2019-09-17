@@ -133,16 +133,16 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         leafletMap.addLayer(drawnItems);
 
         let coorsList = [];
-        let partShape = true;
 
         var _this = this;
+        // Define editable objects
         leafletMap.eachLayer(function (layer) {
           let enabled = Ember.get(layer, 'editor._enabled');
           if (enabled === true) {
             var layerGeoJson = layer.toGeoJSON();
             let coordinates = layerGeoJson.geometry.coordinates;
 
-            Ember.set(layer, 'partShape', partShape);
+            Ember.set(layer, 'multyShape', true);
 
             if (layer instanceof L.Polygon) {
               coorsList = _this._getPolygonCoords(coorsList, coordinates);
@@ -194,29 +194,40 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
           }
         }
 
+        // Create a multiple shape
         shape.addTo(leafletMap);
-        Ember.set(shape, 'partShape', true);
-        Ember.set(shape, 'mainPartShape', true);
+
+        // Linking shapes
+        Ember.set(shape, 'multyShape', true);
+        Ember.set(shape, 'mainMultyShape', true);
+
         shape.enableEdit();
 
+        // We note that the shape was edited
         this.tabModel.leafletObject.editLayer(shape);
+
+        // Replace with a new shape
         Ember.set(this.tabModel, `featureLink.${layerId}`, shape);
 
         let state = 0;
         let changeNumber = null;
+
+        // From the list of changed shapes, delete individual ones, leaving only the multiple shape
         for (let changeLayerNumber in this.tabModel.leafletObject.changes) {
           state = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'state') === 'insertElement' ? state + 1 : state;
 
-          let partShape = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'partShape') === true;
-          let mainPartShape = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'mainPartShape') === true;
+          let multyShape = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'multyShape') === true;
+          let mainMultyShape = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'mainMultyShape') === true;
 
-          if (partShape === true && mainPartShape === false) {
-            delete this.tabModel.leafletObject.changes[changeLayerNumber];
-          }
-          else if (partShape === true && mainPartShape === true) {
-            changeNumber = changeLayerNumber;
-            delete this.tabModel.leafletObject.changes[changeLayerNumber].partShape;
-            delete this.tabModel.leafletObject.changes[changeLayerNumber].mainPartShape;
+          if (multyShape === true) {
+            if (mainMultyShape === false) {
+              delete this.tabModel.leafletObject.changes[changeLayerNumber];
+            }
+            else if (mainMultyShape === true) {
+              changeNumber = changeLayerNumber;
+              delete this.tabModel.leafletObject.changes[changeLayerNumber].multyShape;
+              delete this.tabModel.leafletObject.changes[changeLayerNumber].mainMultyShape;
+            }
           }
         }
 
@@ -242,7 +253,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       let coors = coordinates[i];
       let corArrI = [];
 
-      if (coordinates[0][0][0][0] !== undefined) {
+      if (!Ember.isNone(coordinates[0][0][0][0])) {
         for (let j = 0; j < coors.length; j++) {
           let coordinat = coors[j];
           let corArrJ = [];
@@ -253,7 +264,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
           coorsList.push(corArrJ);
         }
-      } else if (coordinates[0][0][0] !== undefined) {
+      } else if (!Ember.isNone(coordinates[0][0][0])) {
         for (let j = 0; j < coors.length; j++) {
           corArrI.push([coors[j][1], coors[j][0]]);
         }
@@ -274,7 +285,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   _getPolylineCoords(coorsList, coordinates) {
     let corArr = [];
 
-    if (coordinates[0][0][0] !== undefined) {
+    if (!Ember.isNone(coordinates[0][0][0])) {
       for (let i = 0; i < coordinates.length; i++) {
         let coordinat = coordinates[i];
         let corArrI = [];
@@ -285,7 +296,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
         coorsList.push(corArrI);
       }
-    } else if (coordinates[0][0] !== undefined) {
+    } else if (!Ember.isNone(coordinates[0][0])) {
       for (let i = 0; i < coordinates.length; i++) {
         corArr.push([coordinates[i][1], coordinates[i][0]]);
       }
@@ -303,7 +314,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     @returns {array} inverse array of coordinates.
   */
   _swapСoordinates(coordinates) {
-    if (coordinates[0][0][0][0] !== undefined) {
+    if (!Ember.isNone(coordinates[0][0][0][0])) {
       for (let i = 0; i < coordinates.length; i++) {
         let coordinatI = coordinates[i];
 
@@ -317,7 +328,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
           }
         }
       }
-    } else if (coordinates[0][0][0] !== undefined) {
+    } else if (!Ember.isNone(coordinates[0][0][0])) {
       for (let i = 0; i < coordinates.length; i++) {
         let coordinat = coordinates[i];
 
@@ -327,7 +338,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
           coordinat[j][1] = b;
         }
       }
-    } else if (coordinates[0][0] !== undefined) {
+    } else if (!Ember.isNone(coordinates[0][0])) {
       for (let i = 0; i < coordinates.length; i++) {
         let b = coordinates[i][0];
         coordinates[i][0] = coordinates[i][1];
