@@ -135,6 +135,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         let coorsList = [];
 
         var _this = this;
+
         // Define editable objects
         leafletMap.eachLayer(function (layer) {
           let enabled = Ember.get(layer, 'editor._enabled');
@@ -236,8 +237,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       if (multyShape === true) {
         if (mainMultyShape === false) {
           delete changes[changeLayerNumber];
-        }
-        else if (mainMultyShape === true) {
+        } else if (mainMultyShape === true) {
           changeNumber = changeLayerNumber;
           delete changes[changeLayerNumber].multyShape;
           delete changes[changeLayerNumber].mainMultyShape;
@@ -277,6 +277,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         for (let j = 0; j < coors.length; j++) {
           corArrI.push([coors[j][1], coors[j][0]]);
         }
+
         coorsList.push(corArrI);
       }
     }
