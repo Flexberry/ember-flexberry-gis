@@ -151,7 +151,11 @@ export default EditFormRoute.extend({
       }
     });
 
-    this.get('mapApi').addToApi('mapModel', model);
+    if (Ember.isNone(window.mapApi)) {
+      window.mapApi = {};
+    }
+
+    window.mapApi.mapModel = model;
 
     this.transitionTo({
       queryParams: currentParams
@@ -175,7 +179,7 @@ export default EditFormRoute.extend({
       controller.set('metadata', null);
     }
 
-    this.get('mapApi').addToApi('mapModel', undefined);
+    window.mapApi.mapModel = undefined;
   },
 
   /**
