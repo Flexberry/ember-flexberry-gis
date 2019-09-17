@@ -1039,6 +1039,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     */
     onRowGeometryEdit(tabModel, rowId) {
       Ember.set(tabModel, 'layerId', rowId);
+
       // Toggle row geometry editing
       let editedRows = Ember.get(tabModel, '_editedRows');
       let edit = Ember.get(editedRows, rowId) || false;
