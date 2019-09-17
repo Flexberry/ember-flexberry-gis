@@ -143,6 +143,12 @@ export default EditFormRoute.extend({
       }
     });
 
+    if (Ember.isNone(window.mapApi)) {
+      window.mapApi = {};
+    }
+
+    window.mapApi.mapModel = model;
+
     this.transitionTo({
       queryParams: currentParams
     });
@@ -164,6 +170,8 @@ export default EditFormRoute.extend({
       controller.set('lng', null);
       controller.set('metadata', null);
     }
+
+    window.mapApi.mapModel = undefined;
   },
 
   /**
