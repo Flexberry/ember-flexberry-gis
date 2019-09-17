@@ -209,35 +209,44 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         // Replace with a new shape
         Ember.set(this.tabModel, `featureLink.${layerId}`, shape);
 
-        let state = 0;
-        let changeNumber = null;
-
-        // From the list of changed shapes, delete individual ones, leaving only the multiple shape
-        for (let changeLayerNumber in this.tabModel.leafletObject.changes) {
-          state = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'state') === 'insertElement' ? state + 1 : state;
-
-          let multyShape = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'multyShape') === true;
-          let mainMultyShape = Ember.get(this.tabModel.leafletObject.changes[changeLayerNumber], 'mainMultyShape') === true;
-
-          if (multyShape === true) {
-            if (mainMultyShape === false) {
-              delete this.tabModel.leafletObject.changes[changeLayerNumber];
-            }
-            else if (mainMultyShape === true) {
-              changeNumber = changeLayerNumber;
-              delete this.tabModel.leafletObject.changes[changeLayerNumber].multyShape;
-              delete this.tabModel.leafletObject.changes[changeLayerNumber].mainMultyShape;
-            }
-          }
-        }
-
-        if (state > 0) {
-          Ember.set(this.tabModel.leafletObject.changes[changeNumber], 'state', 'insertElement');
-        }
+        // From the list of changed shapes, delete individual ones, leaving only the multiple shape.
+        this._removeFromModified(this.tabModel.leafletObject.changes);
 
         // enable save button
         Ember.set(this.tabModel, 'leafletObject._wasChanged', true);
       }
+    }
+  },
+
+  /**
+    From the list of changed shapes, delete individual ones, leaving only the multiple shape.
+
+    @param {array} array of modified shapes.
+  */
+  _removeFromModified(changes) {
+    let state = 0;
+    let changeNumber = null;
+
+    for (let changeLayerNumber in changes) {
+      state = Ember.get(changes[changeLayerNumber], 'state') === 'insertElement' ? state + 1 : state;
+
+      let multyShape = Ember.get(changes[changeLayerNumber], 'multyShape') === true;
+      let mainMultyShape = Ember.get(changes[changeLayerNumber], 'mainMultyShape') === true;
+
+      if (multyShape === true) {
+        if (mainMultyShape === false) {
+          delete changes[changeLayerNumber];
+        }
+        else if (mainMultyShape === true) {
+          changeNumber = changeLayerNumber;
+          delete changes[changeLayerNumber].multyShape;
+          delete changes[changeLayerNumber].mainMultyShape;
+        }
+      }
+    }
+
+    if (state > 0) {
+      Ember.set(changes[changeNumber], 'state', 'insertElement');
     }
   },
 
