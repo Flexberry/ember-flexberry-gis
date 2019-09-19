@@ -4,7 +4,7 @@
       <i class="caret {{if expanded 'down' 'right'}} icon"></i>
     </a>
       {{#if intersection}}
-         <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" on="click"}}>
+        <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" on="click"}}>
           <i class="hand paper icon"></i>
         </a>
         <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "zoomToIntersection" on="click"}}>
@@ -111,24 +111,49 @@
         {{/if}}
       {{/each-in}}
       {{#if intersection}}
-      {{#if (eq feature.intersection.intersectionObject.geometry.type "Polygon")}}
-        <tr>
+        {{#if feature.intersection.isPolygon}}
+          <tr>
             <td>
-              Площадь пересечения 
+              {{t 'components.flexberry-layers-intersections-panel.square'}}
             </td>
             <td>
-             {{feature.intersection.intersectedArea}} 
+              {{feature.intersection.intersectedArea}} 
             </td>
-        </tr>
-         {{/if}}
+          </tr>
+        {{/if}}
+      {{#if feature.intersection.intersectionCords}}
         <tr>
           <td>
-              Координаты пересечения
+              {{t 'components.flexberry-layers-intersections-panel.intersection-cords'}}
           </td>
           <td>
-              {{feature.intersection.intersectionCords}} 
+            {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler' style="width:50%"}}
+            <div class=>
+              <table class="ui compact celled table">
+                <tr>
+                  <td>
+                    {{t 'components.flexberry-layers-intersections-panel.x-cord'}}
+                  </td>
+                  <td>
+                    {{t 'components.flexberry-layers-intersections-panel.y-cord'}}
+                  </td>
+                </tr>
+                {{#each feature.intersection.intersectionCords as |cords|}}
+                  <tr>
+                    <td>
+                      {{cords.[0]}}
+                    </td>
+                    <td>
+                      {{cords.[1]}}
+                    </td>
+                  </tr>
+                {{/each}}
+              </table>    
+            </div>
+            {{/flexberry-toggler}}       
           </td>
         </tr>
+        {{/if}}
       {{/if}}
     </table>
   {{/if}}

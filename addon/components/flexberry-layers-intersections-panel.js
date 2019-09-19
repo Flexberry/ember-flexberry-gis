@@ -3,54 +3,145 @@ import layout from '../templates/components/flexberry-layers-intersections-panel
 import intersect from 'npm:@turf/intersect';
 import area from 'npm:@turf/area';
 import lineIntersect from 'npm:@turf/line-intersect';
-import * as helpers  from 'npm:@turf/helpers';
-import booleanPointInPolygon from 'npm:@turf/boolean-point-in-polygon';
-import lineSplit from 'npm:@turf/line-split';
+import * as buffer from 'npm:@turf/buffer';
+/**
+  The component for searching for intersections with selected feature.
+
+  @class FlexberryLayersAttributesPanelComponent
+  @uses LeafletZoomToFeatureMixin
+  @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
+ */
 export default Ember.Component.extend({
+  /**
+    Reference to component's template.
+  */
   layout,
 
-  // Слой пересечений
+  /**
+    Layer contains identification result features.
+
+    @property resultsLayer
+    @type Object
+    @default null
+  */
   resultsLayer: null,
 
-  // Векторыне слои
+  /**
+    List vector layers.
+
+    @property vectorLayers
+    @type Array
+    @default []
+  */
   vectorLayers: [],
 
-  // Карта
+  /**
+    Leaflet map object for zoom and pan.
+
+    @property leafletMap
+    @type L.Map
+    @default null
+  */
   leafletMap: null,
 
+  /**
+    Observer for leafletMap property adding layer with results.
+
+    @property _OnMapChanged
+    @private
+    @readonly
+  */
   _OnMapChanged: Ember.observer('leafletMap', function() {
     let map = this.get('leafletMap');
     let group = L.featureGroup().addTo(map);
     this.set('resultsLayer', group);
   }),
 
-  // Кнопка выгрузить заблокана
+  /**
+    Flag indicates if there are any results of intersection.
+
+    @property noIntersectionResults
+    @type Boolean
+    @default true
+  */
   noIntersectionResults: true,
 
-  // Площадь
+  /**
+    intersection area over which to look.
+
+    @property square
+    @type Number
+    @default 0
+  */
   square: 0,
 
-  // Буфер поиска
+  /**
+    Buffer radius in selected units.
+
+    @property bufferR
+    @type Number
+    @default 0
+  */
   bufferR: 0,
 
-  // Выбранные слои
+  /**
+    List of selected vector layers.
+
+    @property selectedLayers
+    @type Array
+    @default []
+  */
   selectedLayers: [],
 
-  // Результаты идентификации
+  /**
+    List of intersection results.
+
+    @property  results
+    @type Array
+    @default []
+  */
   results: [],
 
-  // Объект с которым ищем пересечения
+  /**
+    Selected feature.
+
+    @property  feature
+    @type Object
+    @default null
+  */
   feature: null,
 
-  // Свернут
+  /**
+    Flag indicates if panel is folded.
+
+    @property folded
+    @type Boolean
+    @default false
+  */
   folded: false,
 
+  /**
+    Injected ember storage.
+
+    @property folded
+    @type Ember.store
+  */
   store: Ember.inject.service(),
 
+  /**
+    Observer for feature. If changed=> clear form.
+
+    @property _OnMapChanged
+    @private
+    @readonly
+  */
   _OnFeatureChange: Ember.observer('feature', function() {
     this.ClearPanel();
   }),
 
+  /**
+    Initializes component.
+  */
   init() {
     this._super(...arguments);
 
@@ -71,7 +162,13 @@ export default Ember.Component.extend({
       .filter(layer=> layer.get('type') === 'geojson' || layer.get('type') === 'wfs');
     this.set('vectorLayers', vlayers);
   },
+
   actions:{
+    /**
+      Handles click on a button.
+
+      @method actions.findIntersections
+    */
     findIntersections() {
       let selectedLayers = this.get('selectedLayers');
 
@@ -80,13 +177,15 @@ export default Ember.Component.extend({
       //Object clicked on menu
       let currentFeature = this.get('feature');
 
-      let polygonLayer;
+      let polygonLayer = null;
 
       let bufferedMainPolygonLayer;
 
       let latlng;
 
       let selected = Ember.A();
+
+      let bufferR = this.get('bufferR');
 
       selectedLayers.forEach(function(item) {
         let result = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', item);
@@ -105,7 +204,12 @@ export default Ember.Component.extend({
       }
 
       latlng = polygonLayer.getBounds().getCenter();
-      bufferedMainPolygonLayer = polygonLayer;
+
+      bufferedMainPolygonLayer =  polygonLayer;
+
+      if (bufferR > 0) {
+        polygonLayer.feature = buffer.default(polygonLayer.toGeoJSON(), bufferR, { units: 'meters' });
+      }
 
       // Show map loader.
       let i18n = this.get('i18n');
@@ -119,23 +223,52 @@ export default Ember.Component.extend({
         selectedLayers: selected });
     },
 
+    /**
+      Handles click on a close button.
+
+      @method actions.findIntersections
+    */
     closePanel() {
+      let group = this.get('resultsLayer');
+      group.clearLayers();
       this.sendAction('closeIntersectionPanel');
     },
 
+    /**
+      Handles click on tab.
+
+      @method actions.hidePanel
+    */
     hidePanel() {
       this.toggleProperty('folded');
     },
+
+    /**
+      Handles click on zoom icon.
+
+      @method actions.hidePanel
+      @param {Object} feature Selected feature to zoom.
+    */
     zoomToIntersection(feature) {
-      console.log(feature.intersection.intesectionObject);
       let group = this.get('resultsLayer');
       group.clearLayers();
-      L.geoJSON(feature.intersection.intesectedObject, {
+      L.geoJSON(feature.intersection.intersectedObject, {
         style: { color: 'green' }
       }).addTo(group);
     }
   },
 
+  /**
+  Starts identification by array of satisfying layers inside given polygon area.
+
+  @method _startIdentification
+  @param {Object} options Method options.
+  @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the polygon layer.
+  @param {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>} options.polygonLayer Polygon layer related to given area.
+  @param {Object[]} options.excludedLayers Layers excluded from identification.
+  @param {Object[]} options.selectedLayers Layers selected by user.
+  @private
+  */
   _startIdentification({
     polygonLayer,
     bufferedMainPolygonLayer,
@@ -184,9 +317,11 @@ export default Ember.Component.extend({
       this._finishIdentification(e);
     });
     this.set('results', e.results);
-    this.set('noIntersectionResults', false);
 
-    //test
+    if (e.results.length > 0) {
+      this.set('noIntersectionResults', false);
+    }
+
     this._findIntersections(e);
   },
 
@@ -239,9 +374,13 @@ export default Ember.Component.extend({
     let bufferedLayer = Ember.get(e, 'bufferedMainPolygonLayer');
     this.set('bufferedMainPolygonLayer', bufferedLayer);
 
-    // Fire custom event on leaflet map.
-    //leafletMap.fire('flexberry-map:identificationFinished', e);
   },
+
+  /**
+    Cleaning after changing feature.
+
+    @method ClearPanel
+  */
   ClearPanel() {
     this.set('square', 0);
     this.set('bufferR', 0);
@@ -250,56 +389,64 @@ export default Ember.Component.extend({
     this.set('folded', false);
   },
 
+  /**
+    Searching intersections.
+
+    @method _findIntersections
+    @param {Object[]} e Objects describing identification results.
+    @private
+  */
   _findIntersections(e) {
-    e.results[0].features.then((features)=> {
-      features.forEach((item)=> {
-        console.log(item.geometry.type);
-        console.log(item);
-        if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
-          let res = intersect(item, e.polygonLayer.feature);
-
-          if (res) {
-            item.intersection = {};
-            item.intersection.intersectedArea = area(res);
-            item.intersection.intersectionCords = res.geometry.coordinates;
-            item.intersection.intesectionObject = res;
-          }
-        } else if (item.geometry.type === 'MultiLineString') {
-          let map = this.get('leafletMap');
-          map.fitBounds(e.polygonLayer.getBounds());
-          item.geometry.coordinates.forEach(part => {
-            let line = helpers.lineString(part);
-            let split = lineSplit(line, e.polygonLayer.feature);
-            let oddPair;
-            if (booleanPointInPolygon(helpers.point(part[0]), e.polygonLayer.feature)) {
-              oddPair = 0;
-            } else {
-              oddPair = 1;
-            }
-
-            split.features.forEach((splitedPart, i) => {
-              if ((i + oddPair) % 2 === 0) {
-                L.geoJSON(splitedPart.geometry).addTo(map);
+    let square = this.get('square');
+    e.results.forEach((layer)=> {
+      layer.features.then((features)=> {
+        features.forEach((item)=> {
+          if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
+            let res = intersect(item, e.polygonLayer.feature);
+            if (res) {
+              if (square > 0) {
+                if (area(res) > square) {
+                  item.intersection = {};
+                  item.intersection.intersectionCords = [];
+                  item.intersection.intersectedArea = area(res);
+                  res.geometry.coordinates.forEach(arr=> {
+                    arr.forEach(pair=> {
+                      item.intersection.intersectionCords.push(pair);
+                    });
+                  });
+                  item.intersection.intersectedObject = res;
+                  if (res.geometry.type === 'Polygon' || res.geometry.type === 'MultiPolygon') {
+                    item.intersection.isPolygon = true;
+                  }
+                }
+              } else {
+                item.intersection = {};
+                item.intersection.intersectionCords = [];
+                item.intersection.intersectedArea = area(res);
+                res.geometry.coordinates.forEach(arr=> {
+                  arr.forEach(pair=> {
+                    item.intersection.intersectionCords.push(pair);
+                  });
+                });
+                item.intersection.intersectedObject = res;
+                if (res.geometry.type === 'Polygon' || res.geometry.type === 'MultiPolygon') {
+                  item.intersection.isPolygon = true;
+                }
               }
-            });
-          });
-        } else if (item.geometry.type === 'LineString') {
-          let intersects = lineIntersect(item, e.polygonLayer.feature);
-          console.log(intersects);
-          let group = this.get('resultsLayer');
-          L.geoJSON(intersects, {
-            style: { color: 'green' }
-          }).addTo(group);
+            }
+          } else if (item.geometry.type === 'MultiLineString' || item.geometry.type === 'LineString') {
+            let intersects = lineIntersect(item, e.polygonLayer.feature);
 
-          if (intersects) {
-            item.intersection = {};
-            item.intersection.intersectionCords = [];
-            intersects.features.forEach(function(feat) {
-              item.intersection.intersectionCords.push(feat.geometry.coordinates);
-            });
-            item.intersection.intesectedObject = intersects;
+            if (intersects) {
+              item.intersection = {};
+              item.intersection.intersectionCords = [];
+              intersects.features.forEach(function(feat) {
+                item.intersection.intersectionCords.push(feat.geometry.coordinates);
+              });
+              item.intersection.intersectedObject = intersects;
+            }
           }
-        }
+        });
       });
     });
   },

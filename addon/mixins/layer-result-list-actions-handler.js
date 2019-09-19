@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+
 /**
   Mixin containing handlers for
   {{#crossLink "LayerResultListComponent"}}layer-result-list component's{{/crossLink}} actions.
@@ -13,11 +14,19 @@ import Ember from 'ember';
 export default Ember.Mixin.create({
   actions: {
 
-    //Handels click on intersection icon, enables intersection panel
+    /**
+    Action shows intersection panel.
+    @method actions.onIntersectionPanel
+     */
     onIntersectionPanel(feature) {
       this.set('feature', feature);
       this.set('showIntersectionPanel', true);
     },
+
+    /**
+    Close intersection panel.
+    @method actions.findIntersection
+     */
     closeIntersectionPanel() {
       this.set('showIntersectionPanel', false);
     },
