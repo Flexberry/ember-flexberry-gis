@@ -10,7 +10,7 @@
   <div class="row">
     <div class="sixteen wide column">
       <div class="field">
-        <label>Layer</label>
+        {{t 'components.flexberry-layers-intersections-panel.layers-list'}}
         {{flexberry-multiple-select
           items=vectorLayers
           selectedItems=selectedLayers
@@ -27,7 +27,7 @@
           <div class="ui grid">
             <div class="four wide column">
               <div class="field">   
-                <label>Площадь</label>
+                {{t 'components.flexberry-layers-intersections-panel.square'}}
                 {{flexberry-textbox
                   class="fluid"
                   value=square
@@ -36,7 +36,7 @@
             </div>
             <div class="four wide column">
               <div class="field">   
-                <label>Буфер поиска</label>
+                {{t 'components.flexberry-layers-intersections-panel.buffer'}}
                 {{flexberry-textbox
                   class="fluid"
                   value=bufferR
@@ -45,12 +45,12 @@
             </div>
             <div class="four wide column">
               <div class="field">   
-                <button type="submit" class="ui button intersect" {{action "findIntersections"}} style="margin-top: 15px">Найти пересечения</button>                       
+                <button type="submit" class="ui button intersect" {{action "findIntersections"}} style="margin-top: 15px">{{t 'components.flexberry-layers-intersections-panel.find-intersection'}}</button>                       
               </div>
             </div>
             <div class="four wide column">
               <div class="field">   
-                <button type="submit" class="ui button intersect" {{action "save"}} disabled={{noIntersectionResults}} style="margin-top: 15px">Выгрузить результаты</button>                   
+                <button type="submit" class="ui button intersect" {{action "save"}} disabled={{noIntersectionResults}} style="margin-top: 15px">{{t 'components.flexberry-layers-intersections-panel.load-results'}}</button>                   
               </div>
             </div>
           </div>

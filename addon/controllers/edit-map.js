@@ -46,7 +46,7 @@ export default EditFormController.extend(
     /**
       Is intersection panel enabled
       @property setting
-      @type String
+      @type Boolean
       @default false
     */
     showIntersectionPanel: false,

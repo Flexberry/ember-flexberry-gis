@@ -36,6 +36,13 @@ export default Ember.Component.extend({
   */
   classNameBindings: ['isActive:active'],
 
+  /**
+    Flag indicates if intersection panel is active.
+
+    @property intersection
+    @type Boolean
+    @default false
+  */
   intersection: false,
 
   /**
@@ -160,6 +167,7 @@ export default Ember.Component.extend({
     panTo() {
       this.sendAction('panTo', this.get('feature'));
     },
+
     /**
       Invokes {{#crossLink "FeatureResultItemComponent/sendingActions.zoomTo:method"}}'zoomTo' action{{/crossLink}}.
       @method actions.zoomTo
@@ -187,16 +195,26 @@ export default Ember.Component.extend({
 
     /**
       Show\hide panel for seraching intersections.
-      Action is sended to layer-result-list
+      Action is sended to layer-result-list.
       @method actions.findIntersection
-    */
+     */
     findIntersection() {
       this.sendAction('findIntersection', this.get('feature'));
     },
+
+    /**
+      Pans and zooms to intersection object.
+      @method actions.panToIntersection
+     */
     panToIntersection() {
       this.sendAction('zoomTo', this.get('feature'));
       this.sendAction('panTo', this.get('feature'));
     },
+
+    /**
+      Zooms to intersection and add intersection object on map.
+      @method actions.zoomToIntersection
+     */
     zoomToIntersection() {
       this.sendAction('zoomTo', this.get('feature'));
       this.sendAction('zoomToIntersection', this.get('feature'));
