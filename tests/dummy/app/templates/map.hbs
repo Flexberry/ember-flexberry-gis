@@ -152,10 +152,9 @@
       loading=editedLayersPanelLoading
     }}
   </div>
-  <div class={{concat "bottompanel-wrapper" (if showIntersectionPanel "" " hidden")}}>
+  <div class={{concat "bottompanel-wrapper intersection-panel" (if showIntersectionPanel "" " hidden")}}>
     {{flexberry-layers-intersections-panel
       layers=model.hierarchy
-      serviceLayer=serviceLayer
       leafletMap=leafletMap
       settings=editedLayersPanelSettings
       loading=editedLayersPanelLoading

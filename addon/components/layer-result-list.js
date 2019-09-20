@@ -40,7 +40,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   classNames: ['layer-result-list'],
 
   /**
-    Flag indicates if intersection panel is active
+    Flag indicates if intersection panel is active.
 
     @property intersection
     @type Boolean
@@ -141,7 +141,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Show\hide links list (if present).
       @method actions.toggleLinks
-     */
+    */
     toggleLinks() {
       this.set('_linksExpanded', !this.get('_linksExpanded'));
     },
@@ -160,7 +160,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     /**
-    Action is sended to layer-result-list-action-handler
+    Action is sended to layer-result-list-action-handler.
     Action shows intersection panel.
     @method actions.findIntersection
     */
@@ -170,8 +170,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     /**
     Action zooms to intersection and shows object on map.
-    @method actions.zoomToIntersection
-     */
+
+      @method actions.zoomToIntersection
+    */
     zoomToIntersection(feature) {
       this.sendAction('zoomToIntersection', feature);
     }

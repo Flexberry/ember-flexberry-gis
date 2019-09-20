@@ -140,26 +140,25 @@ export default Ember.Component.extend({
   }),
 
   /**
+    "Layers" label locale key.
+
+    @property __layersLabel
+    @type String
+    @default 'components.flexberry-layers-intersections-panel.layers-list'
+  */
+  _layersLabel: 'components.flexberry-layers-intersections-panel.layers-list',
+
+  /**
     Initializes component.
   */
   init() {
     this._super(...arguments);
-
-    let settings = this.get('settings');
-    if (Ember.isNone(settings)) {
-      settings = {
-        withToolbar: false,
-        sidebarOpened: false,
-      };
-
-      this.set('settings', settings);
-
-      this.set('_selectedUnit', 'meters');
-    }
-
     let vlayers = [];
-    vlayers = this.get('store').peekAll('new-platform-flexberry-g-i-s-map-layer')
-      .filter(layer=> layer.get('type') === 'geojson' || layer.get('type') === 'wfs');
+    this.get('layers').forEach(item=> {
+      if (item.get('type') === 'geojson' || item.get('type') === 'wfs') {
+        vlayers.push(item);
+      }
+    });
     this.set('vectorLayers', vlayers);
   },
 

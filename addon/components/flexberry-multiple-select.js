@@ -70,7 +70,7 @@ export default Ember.Component.extend({
   selectorName: 'fb-selector',
 
   /**
-    Flag indicates whether is array consists of objects or not
+    Flag indicates whether is array consists of objects or not.
 
     @property isObject
     @type Bool

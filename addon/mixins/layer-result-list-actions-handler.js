@@ -15,18 +15,20 @@ export default Ember.Mixin.create({
   actions: {
 
     /**
-    Action shows intersection panel.
-    @method actions.onIntersectionPanel
-     */
+      Action shows intersection panel.
+
+      @method actions.onIntersectionPanel
+    */
     onIntersectionPanel(feature) {
       this.set('feature', feature);
       this.set('showIntersectionPanel', true);
     },
 
     /**
-    Close intersection panel.
-    @method actions.findIntersection
-     */
+      Close intersection panel.
+
+      @method actions.findIntersection
+    */
     closeIntersectionPanel() {
       this.set('showIntersectionPanel', false);
     },
