@@ -3,6 +3,7 @@
  </iframe>
  <button id="showLayers">Show Layers</button>
  <button id="hideLayers">Hide Layers</button>
+ <button id="getIntersectionObjects">get Intersection Objects</button>
  <script type="text/javascript">
    var frame = document.getElementById("testframe");
    frame.addEventListener("load", function() {
@@ -38,6 +39,12 @@
        frame.contentWindow.mapApi.mapModel.hideLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
      };
      hideButton.addEventListener('click', hideLayers);
+
+     var intersectionButton = document.getElementById('getIntersectionObjects');
+     var getIntersections = function() {
+       console.log(frame.contentWindow.mapApi.mapModel.getIntersectionObjects('perm_water_line.3666', ['f8dec493-d879-49ae-ad55-f4f18c89cb88']));
+     };
+     intersectionButton.addEventListener('click', getIntersections);
    });
  </script>
 </div>
