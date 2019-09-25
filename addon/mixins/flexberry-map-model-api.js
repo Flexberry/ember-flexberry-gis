@@ -30,4 +30,14 @@ export default Ember.Mixin.create({
       });
     }
   },
+
+  createNewLayer(options) {
+    options = options || {};
+    let store = this.get('store');
+    let layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', options);
+    layer.set('map', this);
+    return layer.save().then(()=> {
+      return layer.id;
+    });
+  }
 });
