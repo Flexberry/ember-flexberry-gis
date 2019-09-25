@@ -26,17 +26,39 @@ export default Ember.Mixin.create({
     @param {String} id layer.
     @param {String} id shape.
   */
-  deleteLayerObject(layerId, objectId) {//57cebb75-a9a1-47b0-877a-49fdccb86ad4 ,
-    debugger;
+  deleteLayerObject(layerId, objectId) {
+
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
 
-    // layerIds.forEach(id => {
-    //   const layer = layers.findBy('id', id);
-    //   if (layer) {
-    //     //layer.set('visibility', visibility);
-    //   }
-    // });
+    let layerShapes = layer._leafletObject._layers;
+    //let leafletObject = layerShapes[204].feature.id;
+  debugger;
+    var layerShapekeys = Object.keys(layerShapes);
+
+    // for (shape in layerShapes) {
+    for (let i = 0; i < layerShapekeys.length; i++) {
+     let shape = layerShapes[layerShapekeys[i]];
+      let id = shape.feature !== undefined ? shape.feature.id : undefined;
+      if (id === undefined) {
+        if (window.mapApi !== undefined && window.mapApi.getLayerObjectId !== undefined) {
+
+          // Need to implement id definition function
+          id = window.mapApi.getLayerObjectId(shape);
+        } else {//todo:возможно удалить
+            throw 'Function not defined.';
+        }
+      }
+      if (id !== undefined && id === objectId) {
+        layer._leafletObject.removeLayer(shape);
+        //layer._leafletObject._map.invalidateSize();
+        // delete layerShapes[layerShapekeys[i]];
+        break;
+      }
+
+    }
+
+    layer._leafletObject.save();
   },
 
   /**
@@ -48,7 +70,7 @@ export default Ember.Mixin.create({
   */
   deleteLayerObjects(layerId, objectIds) {
     objectIds.forEach(id => {
-      deleteLayerObject(layerId, id)
+      this.deleteLayerObject(layerId, id)
     });
   },
 

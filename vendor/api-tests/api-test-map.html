@@ -1,43 +1,77 @@
 <div class="ui vertical menu">
-  <iframe id="testframe" src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11" width="1000" height="800" align="left">
- </iframe>
- <button id="showLayers">Show Layers</button>
- <button id="hideLayers">Hide Layers</button>
- <script type="text/javascript">
-   var frame = document.getElementById("testframe");
-   frame.addEventListener("load", function() {
-     if (frame.contentWindow.mapApi == undefined) {
-       frame.contentWindow.mapApi = {};
-     }
+  <iframe id="testframe"
+    src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11"
+    width="1000" height="800" align="left">
+  </iframe>
+  <button id="showLayers">Show Layers</button>
+  <button id="hideLayers">Hide Layers</button>
+  <div>
+    <textarea id="layerObjects" name="text" style="width:750px;height:100px"></textarea>
+    <br />
+    <button id="deleteLayerObjects">Delete object/objects</button>
+  </div>
+  <script type="text/javascript">
+    var frame = document.getElementById("testframe");
+    frame.addEventListener("load", function () {
+      if (frame.contentWindow.mapApi == undefined) {
+        frame.contentWindow.mapApi = {};
+      }
 
-     frame.contentWindow.mapApi.layerInitCallback = function(model) {
-       model.getLeafletObject().then(function(layer) {
-         layer.eachLayer(function(layerr) {
-           switch (model.layerModel.get('id')) {
-             case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
-               layerr.setStyle({ color: '#808000', fillColor: '#FFD700'});
-               break;
-             case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
-               layerr.setStyle({ color: '#008B8B'});
-               break;
-           }
+      frame.contentWindow.mapApi.layerInitCallback = function (model) {
+        model.getLeafletObject().then(function (layer) {
+          layer.eachLayer(function (layerr) {
+            switch (model.layerModel.get('id')) {
+              case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
+                layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
+                break;
+              case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
+                layerr.setStyle({ color: '#008B8B' });
+                break;
+            }
 
-           layerr.on('click', function(e) {
-             alert(e.target.feature.properties.name);
-           })});
-       });
-     };
+            layerr.on('click', function (e) {
+              alert(e.target.feature.properties.name);
+            })
+          });
+        });
+      };
 
-     var showButton = document.getElementById('showLayers');
-     var showLayers = function() {
-       frame.contentWindow.mapApi.mapModel.showLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
-     };
-     showButton.addEventListener('click', showLayers);
-     var hideButton = document.getElementById('hideLayers');
-     var hideLayers = function() {
-       frame.contentWindow.mapApi.mapModel.hideLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
-     };
-     hideButton.addEventListener('click', hideLayers);
-   });
- </script>
+      var showButton = document.getElementById('showLayers');
+      var showLayers = function () {
+        frame.contentWindow.mapApi.mapModel.showLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
+      };
+
+      showButton.addEventListener('click', showLayers);
+      var hideButton = document.getElementById('hideLayers');
+      var hideLayers = function () {
+        frame.contentWindow.mapApi.mapModel.hideLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
+      };
+      hideButton.addEventListener('click', hideLayers);
+
+      textaeraDelObj = {
+        layerId: "f8dec493-d879-49ae-ad55-f4f18c89cb88", objectIds: ["perm_water_line.8322"]
+      };
+      layerObjects.value = JSON.stringify(textaeraDelObj);
+
+      var deleteObjectsLayerButton = document.getElementById('deleteLayerObjects');
+      var deleteObjectsLayer = function () {
+        var layerObjects = document.getElementById('layerObjects');
+        var delObj = JSON.parse(layerObjects.value);
+
+        if (delObj.layerId !== undefined) {
+          if (delObj.objectIds.length > 1) {
+            frame.contentWindow.mapApi.mapModel.deleteLayerObjects(delObj.layerId, delObj.objectIds);
+          } else if (delObj.objectIds.length === 1) {
+            frame.contentWindow.mapApi.mapModel.deleteLayerObject(delObj.layerId, delObj.objectIds[0]);
+          }
+        }
+      };
+
+      deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
+    });
+
+    window.mapApi.getLayerObjectId = function (object) {
+      return 999666;//todo:!!!
+    }
+  </script>
 </div>
