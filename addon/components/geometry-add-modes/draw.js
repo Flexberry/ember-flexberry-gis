@@ -111,6 +111,11 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     return editTools;
   },
 
+  /**
+    Finishing a layer editing operation.
+
+    @param {Object} e Transmitted data.
+  */
   _disableDraw(e) {
     let editTools = this.get('_editTools');
 
@@ -222,7 +227,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   /**
     From the list of changed shapes, delete individual ones, leaving only the multiple shape.
 
-    @param {array} array of modified shapes.
+    @param {array} changes Array of modified shapes.
   */
   _removeFromModified(changes) {
     let state = 0;
@@ -253,8 +258,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   /**
     Building a multiple polygon.
 
-    @param {array} accumulating array of coordinates.
-    @param {array} array of coordinates.
+    @param {array} coorsList Accumulating array of coordinates.
+    @param {array} coordinates Array of coordinates.
     @returns {array} accumulating array of coordinates.
   */
   _getPolygonCoords(coorsList, coordinates) {
@@ -288,8 +293,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   /**
     Building a multiple polyline.
 
-    @param {array} accumulating array of coordinates.
-    @param {array} array of coordinates.
+    @param {array} coorsList Accumulating array of coordinates.
+    @param {array} coordinates Array of coordinates.
     @returns {array} accumulating array of coordinates.
   */
   _getPolylineCoords(coorsList, coordinates) {
@@ -320,7 +325,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   /**
     Swap coordinates.
 
-    @param {array} array of coordinates.
+    @param {array} coordinates Array of coordinates.
     @returns {array} inverse array of coordinates.
   */
   _swapСoordinates(coordinates) {
