@@ -33,6 +33,10 @@ export default {
       'title': 'Поиск по метаданным слоёв и проектам карт'
     }
   },
+  'map-object-setting': {
+    'caption': 'Настройка объектов карты',
+    'title': ''
+  },
   'components-examples': {
     'caption': 'Примеры компонентов',
     'title': '',
