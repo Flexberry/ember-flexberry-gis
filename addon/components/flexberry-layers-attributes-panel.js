@@ -163,7 +163,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             return Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item)).length;
           }),
 
-          _typeSelectedRows: Ember.computed('_selectedRows', function() {
+          _typeSelectedRows: Ember.computed('_selectedRows', function () {
             let typeElements = {
               point: 0,
               line: 0,
@@ -173,27 +173,27 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             };
             let selectedRows = Ember.get(this, '_selectedRows');
             Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
-            .map((key) => {
-              let feature = this.get('featureLink')[key].feature;
-              let layer = feature.leafletLayer.toGeoJSON();
-              switch (layer.geometry.type) {
-                case 'Point':
-                  typeElements.point++;
-                  break;
-                case 'LineString':
-                  typeElements.line++;
-                  break;
-                case 'MultiLineString':
-                  typeElements.multiLine++;
-                  break;
-                case 'Polygon':
-                  typeElements.polygon++;
-                  break;
-                case 'MultiPolygon':
-                  typeElements.multiPolygon++;
-                  break;
-              }
-            });
+              .map((key) => {
+                let feature = this.get('featureLink')[key].feature;
+                let layer = feature.leafletLayer.toGeoJSON();
+                switch (layer.geometry.type) {
+                  case 'Point':
+                    typeElements.point++;
+                    break;
+                  case 'LineString':
+                    typeElements.line++;
+                    break;
+                  case 'MultiLineString':
+                    typeElements.multiLine++;
+                    break;
+                  case 'Polygon':
+                    typeElements.polygon++;
+                    break;
+                  case 'MultiPolygon':
+                    typeElements.multiPolygon++;
+                    break;
+                }
+              });
             return typeElements;
           }),
 
@@ -663,6 +663,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   createCombinedPolygon: false,
 
   /**
+  Initializes component's DOM-related properties.
+*/
+  didInsertElement(layerId) {
+    this._super(...arguments);
+    window.mapApi.deleteLayerById = this._deleteLayerById.bind(this);//todo:!!!
+  },
+
+  /**
     Initializes component.
   */
   init() {
@@ -943,33 +951,44 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} tabModel Related tab.
     */
     onDeleteItemClick(tabModel) {
-      let selectedRows = Ember.get(tabModel, '_selectedRows');
-      let editedRows = Ember.get(tabModel, '_editedRows');
-      let editedRowsChange = false;
-      let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
-      selectedFeatureKeys.forEach((key) => {
-        let layer = tabModel.featureLink[key];
-        tabModel.leafletObject.removeLayer(layer);
-        tabModel.properties.removeObject(tabModel.propertyLink[key]);
-        delete selectedRows[key];
-        delete tabModel.featureLink[key];
-        delete tabModel.propertyLink[key];
 
-        if (Ember.get(editedRows, key) || false) {
-          delete editedRows[key];
-          editedRowsChange = true;
-          layer.disableEdit();
-          this.get('leafletMap').off('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
-        }
+      let treatmentSelectedEditedRows = function (selectedRows, editedRows, editedRowsChange) {
+        let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
+        selectedFeatureKeys.forEach((key) => {
+          this._deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange)
+        });
+      }.bind(this);
 
-        tabModel._triggerChanged.call([tabModel, layer, false], { layer });
-      });
-      Ember.set(tabModel, '_selectedRows', selectedRows);
-      tabModel.notifyPropertyChange('_selectedRows');
-      if (editedRowsChange) {
-        Ember.set(tabModel, '_editedRows', editedRows);
-        tabModel.notifyPropertyChange('_editedRows');
-      }
+      this._treatmentSelectedEditedRows(tabModel, treatmentSelectedEditedRows);
+
+      // let selectedRows = Ember.get(tabModel, '_selectedRows');
+      // let editedRows = Ember.get(tabModel, '_editedRows');
+      // let editedRowsChange = false;
+      // let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
+      // selectedFeatureKeys.forEach((key) => {
+      //   this._deleteLayerByKey(tabModel, key, selectedRows, editedRows)
+      //   // let layer = tabModel.featureLink[key];
+      //   // tabModel.leafletObject.removeLayer(layer);
+      //   // tabModel.properties.removeObject(tabModel.propertyLink[key]);
+      //   // delete selectedRows[key];
+      //   // delete tabModel.featureLink[key];
+      //   // delete tabModel.propertyLink[key];
+
+      //   // if (Ember.get(editedRows, key) || false) {
+      //   //   delete editedRows[key];
+      //   //   editedRowsChange = true;
+      //   //   layer.disableEdit();
+      //   //   this.get('leafletMap').off('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
+      //   // }
+
+      //   // tabModel._triggerChanged.call([tabModel, layer, false], { layer });
+      // });
+      // Ember.set(tabModel, '_selectedRows', selectedRows);
+      // tabModel.notifyPropertyChange('_selectedRows');
+      // if (editedRowsChange) {
+      //   Ember.set(tabModel, '_editedRows', editedRows);
+      //   tabModel.notifyPropertyChange('_editedRows');
+      // }
     },
 
     /**
@@ -1249,15 +1268,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     onDifferenceClick(tabModel) {
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
-      .map((key) => {
-        let feature = tabModel.featureLink[key].feature;
-        let layer = feature.leafletLayer.toGeoJSON();
-        if ((layer.geometry.type === 'Polygon') || (layer.geometry.type === 'MultiPolygon')) {
-          return layer;
-        }
+        .map((key) => {
+          let feature = tabModel.featureLink[key].feature;
+          let layer = feature.leafletLayer.toGeoJSON();
+          if ((layer.geometry.type === 'Polygon') || (layer.geometry.type === 'MultiPolygon')) {
+            return layer;
+          }
 
-        delete selectedRows[key];
-      }).filter((item) => !Ember.isNone(item));
+          delete selectedRows[key];
+        }).filter((item) => !Ember.isNone(item));
 
       if (selectedFeatures.length < 1) {
         return;
@@ -1269,7 +1288,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
         // Create function for observer.
         let _this = this;
-        tabModel._typeSelectedRowsObserverForDifference = function() {
+        tabModel._typeSelectedRowsObserverForDifference = function () {
           let typeSelectedRows = this.get('_typeSelectedRows');
           if (typeSelectedRows.polygon > 0 || typeSelectedRows.multiPolygon > 0) {
             _this.send('onDifferenceClick', tabModel);
@@ -1285,15 +1304,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         // Find intersecting polygons with splitter.
         let dataForDifference = this.get('_dataForDifference');
         let intersectingPolygon = Object.keys(dataForDifference).filter((item) => Ember.get(dataForDifference, item))
-        .map((key) => {
-          let feature = tabModel.featureLink[key].feature;
-          let layer = feature.leafletLayer.toGeoJSON();
-          if (!booleanEqual.default(layer, selectedFeatures[0]) && lineIntersect.default(layer, selectedFeatures[0]).features.length > 0) {
-            return layer;
-          }
+          .map((key) => {
+            let feature = tabModel.featureLink[key].feature;
+            let layer = feature.leafletLayer.toGeoJSON();
+            if (!booleanEqual.default(layer, selectedFeatures[0]) && lineIntersect.default(layer, selectedFeatures[0]).features.length > 0) {
+              return layer;
+            }
 
-          delete dataForDifference[key];
-        }).filter((item) => !Ember.isNone(item));
+            delete dataForDifference[key];
+          }).filter((item) => !Ember.isNone(item));
 
         intersectingPolygon.forEach((polygon) => {
           let differenceResult = difference.default(polygon, selectedFeatures[0]);
@@ -1397,10 +1416,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let selectedRows = Ember.get(tabModel, '_selectedRows');
       let _moveX = parseFloat(this.get('_moveX')) || 0;
       let _moveY = parseFloat(this.get('_moveY')) || 0;
-      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
-      .map((key) => {
-        return tabModel.featureLink[key].feature;
-      });
+      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
+        .map((key) => {
+          return tabModel.featureLink[key].feature;
+        });
       let crs = tabModel.leafletObject.options.crs;
       this.send('onClearFoundItemClick');
       this.set('_moveWithError', false);
@@ -1462,6 +1481,91 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     }
   },
 
+  _deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange) { //todo:!!!
+    let layer = tabModel.featureLink[key];
+    tabModel.leafletObject.removeLayer(layer);
+
+    tabModel.properties.removeObject(tabModel.propertyLink[key]);
+    delete selectedRows[key];
+    delete tabModel.propertyLink[key];
+    delete tabModel.featureLink[key];
+
+    if (Ember.get(editedRows, key) || false) {
+      delete editedRows[key];
+      editedRowsChange = true;
+      layer.disableEdit();
+      this.get('leafletMap').off('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
+    }
+
+    tabModel._triggerChanged.call([tabModel, layer, false], { layer });
+  },
+
+  _treatmentSelectedEditedRows(tabModel, func) {
+    let selectedRows = Ember.get(tabModel, '_selectedRows');
+    let editedRows = Ember.get(tabModel, '_editedRows');
+    let editedRowsChange = false;
+
+    func(selectedRows, editedRows, editedRowsChange);
+
+    Ember.set(tabModel, '_selectedRows', selectedRows);
+    tabModel.notifyPropertyChange('_selectedRows');
+    if (editedRowsChange) {
+      Ember.set(tabModel, '_editedRows', editedRows);
+      tabModel.notifyPropertyChange('_editedRows');
+    }
+  },
+
+  _deleteLayerById(layerId) { //todo:!!!
+    let tabModels = this.get('_tabModels');
+
+    for (let i = 0; i < tabModels.length; i++) {
+      let tabModel = tabModels[i];
+      // let selectedRows = Ember.get(tabModel, '_selectedRows');
+      // let editedRows = Ember.get(tabModel, '_editedRows');
+      // let editedRowsChange = false;
+
+      let treatmentSelectedEditedRows = function (selectedRows, editedRows, editedRowsChange) {
+        for (let key in tabModel.featureLink) {
+          let layer = tabModel.featureLink[key];
+          if (layer.feature.id === layerId) {
+            this._deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange);
+          }
+        }
+      }.bind(this);
+
+      this._treatmentSelectedEditedRows(tabModel, treatmentSelectedEditedRows);
+
+      // for (let key in tabModel.featureLink) {
+      //   let layer = tabModel.featureLink[key];
+      //   if (layer.feature.id === layerId) {
+      //     this._deleteLayerByKey(tabModel, key, selectedRows, editedRows);
+
+      //     // tabModel.leafletObject.removeLayer(layer);
+
+      //     // tabModel.properties.removeObject(tabModel.propertyLink[key]);
+      //     // delete selectedRows[key];
+      //     // delete tabModel.propertyLink[key];
+      //     // delete tabModel.featureLink[key];
+
+      //     // if (Ember.get(editedRows, key) || false) {
+      //     //   delete editedRows[key];
+      //     //   editedRowsChange = true;
+      //     //   layer.disableEdit();
+      //     //   this.get('leafletMap').off('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
+      //     // }
+
+      //     // tabModel._triggerChanged.call([tabModel, layer, false], { layer });
+      //   }
+      // }
+      // Ember.set(tabModel, '_selectedRows', selectedRows);
+      // tabModel.notifyPropertyChange('_selectedRows');
+      // if (editedRowsChange) {
+      //   Ember.set(tabModel, '_editedRows', editedRows);
+      //   tabModel.notifyPropertyChange('_editedRows');
+      // }
+    }
+  },
+
   /**
     Disables tool and split geometry.
 
@@ -1472,17 +1576,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     let selectedRows = Ember.get(tabModel, '_selectedRows');
     let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
-    .map((key) => {
-      let feature = tabModel.featureLink[key].feature;
-      let layer = feature.leafletLayer.toGeoJSON();
-      if ((layer.geometry.type !== 'LineString') && (layer.geometry.type !== 'MultiLineString') &&
+      .map((key) => {
+        let feature = tabModel.featureLink[key].feature;
+        let layer = feature.leafletLayer.toGeoJSON();
+        if ((layer.geometry.type !== 'LineString') && (layer.geometry.type !== 'MultiLineString') &&
           (layer.geometry.type !== 'Polygon') && (layer.geometry.type !== 'MultiPolygon')) {
-        delete selectedRows[key];
-        return;
-      }
+          delete selectedRows[key];
+          return;
+        }
 
-      return layer;
-    }).filter((item) => !Ember.isNone(item));
+        return layer;
+      }).filter((item) => !Ember.isNone(item));
 
     let editTools = _this.get('_editTools');
     editTools.off('editable:drawing:end', _this._disableDrawSplitGeometry, _this);

@@ -14,7 +14,11 @@
     var frame = document.getElementById("testframe");
     frame.addEventListener("load", function () {
       if (frame.contentWindow.mapApi == undefined) {
-        frame.contentWindow.mapApi = {};
+        frame.contentWindow.mapApi = {
+          getLayerObjectId: function (object) {
+            return 999666;//todo:!!!
+          }
+        };
       }
 
       frame.contentWindow.mapApi.layerInitCallback = function (model) {
@@ -69,9 +73,5 @@
 
       deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
     });
-
-    window.mapApi.getLayerObjectId = function (object) {
-      return 999666;//todo:!!!
-    }
   </script>
 </div>
