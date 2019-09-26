@@ -175,4 +175,37 @@ export default Ember.Mixin.create({
 
     return Ember.get(layerObject, 'feature.id');
   },
+
+  /**
+    Copt Object to layer.
+    @method moveObjectToLayer
+    @param {String} objectId GeoJSON object id
+    @param {String} layerId  id of layer to add object
+  */
+  copyObject(objectId, toLayerId) {
+    let objectToSearch;
+    let store = this.get('store');
+    const layers = this.get('mapLayer');
+    layers.forEach(layer => {
+      if (layer._leafletObject._layers !== undefined && layer._leafletObject.hasOwnProperty('_layers')) {
+        Object.values(layer._leafletObject._layers).forEach(object=> {
+          if (object.hasOwnProperty('window.mapApi.getLayerObjectId')) {
+            if (object.window.mapApi.getLayerObjectId(object) === objectId) {
+              objectToSearch = object;
+            }
+          } else {
+            if (object._leaflet_id === objectId) {
+              objectToSearch = object;
+            }
+          }
+        });
+      }
+    });
+    let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
+    if (layerTo && objectToSearch) {
+      objectToSearch._leaflet_id = null;
+      objectToSearch.addTo(layerTo._leafletObject);
+      layerTo.save();
+    }
+  }
 });
