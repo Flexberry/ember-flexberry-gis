@@ -42,45 +42,35 @@ export default Ember.Mixin.create({
     var layer = layers.findBy('id', layerId);
 
     let layerShapes = layer._leafletObject._layers;
-    //let leafletObject = layerShapes[204].feature.id;
-    debugger;
-    var layerShapekeys = Object.keys(layerShapes);
+    let ids = [];
 
-    // for (shape in layerShapes) {
-    for (let i = 0; i < layerShapekeys.length; i++) {
-      let shape = layerShapes[layerShapekeys[i]];
+    for (let shape in layerShapes) { //todo:возможно вернуть
+      //  for (let i = 0; i < layerShapekeys.length; i++) {
+      // let shape = layerShapes[layerShapekeys[i]];
       let id = shape.feature !== undefined ? shape.feature.id : undefined;
       if (id === undefined) {
         if (window.mapApi !== undefined && window.mapApi.getLayerObjectId !== undefined) {
 
           // Need to implement id definition function
           id = window.mapApi.getLayerObjectId(shape);
-        } else {//todo:возможно удалить
+        } else {
           throw 'Function not defined.';
         }
       }
       if (id !== undefined && objectIds.indexOf(id) !== -1) {
-         window.mapApi.deleteLayerById(id);
-       // layer._leafletObject.removeLayer(shape);
-
-        //layer._leafletObject._map.invalidateSize();
-        // delete layerShapes[layerShapekeys[i]];
+        ids.push(id);
+        layer._leafletObject.removeLayer(shape);
       }
     }
 
     let saveSuccess = (data) => {
-      console.log('Hello');
-          //layer.notifyPropertyChange('leafletObject')
-          //window.mapApi.deleteLayer(777);
-      // Ember.set(tabModel, 'leafletObject._wasChanged', false);
-      // tabModel._reload();
-      // leafletObject.off('save:failed', saveFailed);
+      ids.forEach((id) => {
+        window.mapApi.deleteLayerById(id);
+      });
     };
 
     layer._leafletObject.once('save:success', saveSuccess);
-   // layer._leafletObject.save();
-
-
+    layer._leafletObject.save();
   },
 
   _setVisibility(layerIds, visibility = false) {
