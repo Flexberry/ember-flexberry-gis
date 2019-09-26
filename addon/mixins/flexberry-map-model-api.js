@@ -56,6 +56,7 @@ export default Ember.Mixin.create({
           throw 'Function not defined.';
         }
       }
+
       if (id !== undefined && objectIds.indexOf(id) !== -1) {
         ids.push(id);
         layer._leafletObject.removeLayer(shape);
