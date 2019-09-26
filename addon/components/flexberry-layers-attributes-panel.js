@@ -954,7 +954,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let treatmentSelectedEditedRows = function (selectedRows, editedRows, editedRowsChange) {
         let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
         selectedFeatureKeys.forEach((key) => {
-          this._deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange)
+          this._deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange);
         });
       }.bind(this);
 
