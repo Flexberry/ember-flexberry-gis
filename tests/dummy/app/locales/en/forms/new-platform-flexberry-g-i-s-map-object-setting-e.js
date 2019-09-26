@@ -5,5 +5,5 @@ export default {
   'listForm-caption': 'List Form',
   'editForm-caption': 'Edit Form',
   'multEditForm-caption': 'MultEdit Form',
-  'defaultMap-caption': 'Defaul tMap'
+  'defaultMap-caption': 'Default Map'
 };
