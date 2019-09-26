@@ -175,4 +175,32 @@ export default Ember.Mixin.create({
 
     return Ember.get(layerObject, 'feature.id');
   },
+
+  /**
+    Move Object From one  layer to another.
+    @method moveObjectToLayer
+    @param {String} objectId GeoJSON object id
+    @param {String} fromLayerId id of layer to remove object
+    @param {String} layerId  id of layer to add object
+  */
+  moveObjectToLayer(objectId, fromLayerId, toLayerId) {
+    let objectToSearch;
+    let store = this.get('store');
+    let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
+    let features = Ember.get(layer, '_leafletObject._layers');
+    Object.values(features).forEach(feature=> {
+      const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);  
+      if (layerFeatureId === objectId) {
+        objectToSearch = object;
+      }
+    });
+    let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
+    if (layerFrom && layerTo && objectToSearch) {
+      layerFrom._leafletObject.removeLayer(objectToSearch);
+      objectToSearch._leaflet_id = null;
+      objectToSearch.addTo(layerTo._leafletObject);
+      layerFrom.save();
+      layerTo.save();
+    }
+  }
 });
