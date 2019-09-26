@@ -25,7 +25,7 @@ export default Ember.Service.extend({
   init() {
     this._super(...arguments);
     const appConfig = Ember.getOwner(this)._lookupFactory('config:environment');
-    if (!Ember.isNone(appConfig.APP.mapApiService)) {
+    if (!Ember.isNone(appConfig) && !Ember.isNone(appConfig.APP.mapApiService)) {
       this.set('isApiAvailable', appConfig.APP.mapApiService);
     }
   },
