@@ -650,5 +650,22 @@ export default Ember.Mixin.create({
         return L.polygon(objectToDefine.getLatLngs());
       default: return undefined;
     }
+  },
+
+  /*
+    Add Object To Layer.
+
+    @method addObjectToLayer
+    @param {<a href="https://leafletjs.com/reference-1.5.0.html#geojson">L.GeoJSON</a>} object GeoJSON object
+    @param {String} layerId id of layer to add object
+  */
+  addObjectToLayer(object, layerId) {
+    object = object || {};
+    let store = this.get('store');
+    let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
+    if (layer) {
+      object.addTo(layer._leafletObject);
+      layer.save();
+    }
   }
 });
