@@ -44,9 +44,8 @@ export default Ember.Mixin.create({
     let layerShapes = layer._leafletObject._layers;
     let ids = [];
 
-    for (let shape in layerShapes) { //todo:возможно вернуть
-      //  for (let i = 0; i < layerShapekeys.length; i++) {
-      // let shape = layerShapes[layerShapekeys[i]];
+    for (let key in layerShapes) {
+      let shape = layerShapes[key];
       let id = shape.feature !== undefined ? shape.feature.id : undefined;
       if (id === undefined) {
         if (window.mapApi !== undefined && window.mapApi.getLayerObjectId !== undefined) {
