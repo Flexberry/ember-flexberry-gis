@@ -205,22 +205,22 @@ export default Ember.Mixin.create({
         switch (objectToSearch.feature.geometry.type) {
           case 'Marker' :
             newObj =  L.marker(objectToSearch.getLatLng());
-          break;
+            break;
           case 'Circle' :
             newObj = L.circle(objectToSearch.getLatLng(), objectToSearch.getRadius());
-          break;
+            break;
           case 'LineString' :
             newObj = L.polyline(objectToSearch.getLatLngs());
-          break;
+            break;
           case 'MultiLineString' :
             newObj = L.polyline(objectToSearch.getLatLngs());
-          break;
-          case  'Polygon' :
+            break;
+          case 'Polygon' :
             newObj = L.polygon(objectToSearch.getLatLngs());
-          break;
+            break;
           case 'MultiPolygon' :
             newObj = L.polygon(objectToSearch.getLatLngs());
-          break;
+            break;
         }
         newObj.options = objectToSearch.options;
         Ember.get(layerTo, '_leafletObject').addLayer(newObj);
