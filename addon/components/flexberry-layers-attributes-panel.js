@@ -1127,6 +1127,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       let saveSuccess = (data) => {
         Ember.set(tabModel, 'leafletObject._wasChanged', false);
+        tabModel._reload();
         leafletObject.off('save:failed', saveFailed);
       };
 
