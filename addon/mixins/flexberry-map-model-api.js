@@ -186,26 +186,60 @@ export default Ember.Mixin.create({
     let objectToSearch;
     let store = this.get('store');
     const layers = this.get('mapLayer');
-    layers.forEach(layer => {
-      if (layer._leafletObject._layers !== undefined && layer._leafletObject.hasOwnProperty('_layers')) {
-        Object.values(layer._leafletObject._layers).forEach(object=> {
-          if (object.hasOwnProperty('window.mapApi.getLayerObjectId')) {
-            if (object.window.mapApi.getLayerObjectId(object) === objectId) {
-              objectToSearch = object;
+    let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
+    if (layerTo) {
+      layers.forEach(layer => {
+        let features = Ember.get(layer, '_leafletObject._layers');
+        if (features) {
+          Object.values(features).find(feature=> {
+            const layerFeatureId = this._getLayerFeatureId(layer, feature);
+            if (layerFeatureId === objectId) {
+              objectToSearch = feature;
             }
-          } else {
-            if (object._leaflet_id === objectId) {
-              objectToSearch = object;
-            }
-          }
+          });
+        }
+      });
+      if (objectToSearch) {
+        objectToSearch._leaflet_id = null;
+        var newObj;
+        switch (objectToSearch.feature.geometry.type) {
+          case 'Marker' :
+            newObj =  L.marker(objectToSearch.getLatLng());
+          break;
+          case 'Circle' :
+            newObj = L.circle(objectToSearch.getLatLng(), objectToSearch.getRadius());
+          break;
+          case 'LineString' :
+            newObj = L.polyline(objectToSearch.getLatLngs());
+          break;
+          case 'MultiLineString' :
+            newObj = L.polyline(objectToSearch.getLatLngs());
+          break;
+          case  'Polygon' :
+            newObj = L.polygon(objectToSearch.getLatLngs());
+          break;
+          case 'MultiPolygon' :
+            newObj = L.polygon(objectToSearch.getLatLngs());
+          break;
+        }
+        newObj.options = objectToSearch.options;
+        Ember.get(layerTo, '_leafletObject').addLayer(newObj);
+        return new Ember.RSVP.Promise((resolve, reject) => {
+          const saveSuccess = (data) => {
+            layerTo._leafletObject.off('save:failed', saveSuccess);
+            resolve(data);
+          };
+
+          const saveFailed = (data) => {
+            layerTo._leafletObject.off('save:success', saveSuccess);
+            reject(data);
+          };
+
+          layerTo._leafletObject.once('save:success', saveSuccess);
+          layerTo._leafletObject.once('save:failed', saveFailed);
+          layerTo._leafletObject.save();
         });
       }
-    });
-    let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
-    if (layerTo && objectToSearch) {
-      objectToSearch._leaflet_id = null;
-      objectToSearch.addTo(layerTo._leafletObject);
-      layerTo.save();
     }
   }
 });
