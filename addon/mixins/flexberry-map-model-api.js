@@ -660,12 +660,27 @@ export default Ember.Mixin.create({
     @param {String} layerId id of layer to add object
   */
   addObjectToLayer(object, layerId) {
-    object = object || {};
-    let store = this.get('store');
-    let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
-    if (layer) {
-      object.addTo(layer._leafletObject);
-      layer.save();
+    if (object) {
+      let store = this.get('store');
+      let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
+      if (layer) {
+        object.addTo(layer._leafletObject);
+        return new Ember.RSVP.Promise((resolve, reject) => {
+          const saveSuccess = (data) => {
+            layer._leafletObject.off('save:failed', saveSuccess);
+            resolve(data);
+          };
+
+          const saveFailed = (data) => {
+            layer._leafletObject.off('save:success', saveSuccess);
+            reject(data);
+          };
+
+          layer._leafletObject.once('save:success', saveSuccess);
+          layer._leafletObject.once('save:failed', saveFailed);
+          layer._leafletObject.save();
+        });
+      }
     }
   }
 });
