@@ -19,6 +19,11 @@ Router.map(function() {
   this.route('new-platform-flexberry-g-i-s-layer-metadata-e', { path: 'layer-metadata/:id' });
   this.route('new-platform-flexberry-g-i-s-layer-metadata-e.new', { path: 'layer-metadata/new' });
 
+  //Map object settings routes (list, edit, create).
+  this.route('new-platform-flexberry-g-i-s-map-object-setting-l', { path: 'map-object-setting' });
+  this.route('new-platform-flexberry-g-i-s-map-object-setting-e', { path: 'map-object-setting/:id' });
+  this.route('new-platform-flexberry-g-i-s-map-object-setting-e.new', { path: 'map-object-setting/new' });
+
   // Maps and metadata search form's route.
   this.route('gis-search-form', { path: 'search' });
 
