@@ -11,6 +11,7 @@
    <br />
    <button id="deleteLayerObjects">Delete object/objects</button>
  </div>
+ <button id="addObjectToLayer">add Object To Layer</button>
  <script type="text/javascript">
    var frame = document.getElementById("testframe");
    frame.addEventListener("load", function() {
@@ -105,6 +106,12 @@
      };
 
      deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
+     var addButton = document.getElementById('addObjectToLayer');
+     var addObject = function() {
+       var polygon = {};
+       frame.contentWindow.mapApi.mapModel.addObjectToLayer(polygon, 'f8dec493-d879-49ae-ad55-f4f18c89cb88').then(() => console.log('object added sucessfully'));
+     };
+     addButton.addEventListener('click', addObject);
    });
  </script>
 </div>
