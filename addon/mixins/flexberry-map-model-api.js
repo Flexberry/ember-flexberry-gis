@@ -19,6 +19,18 @@ export default Ember.Mixin.create({
     this._setVisibility(layerIds);
   },
 
+  _setVisibility(layerIds, visibility = false) {
+    if (Ember.isArray(layerIds)) {
+      const layers = this.get('mapLayer');
+      layerIds.forEach(id => {
+        const layer = layers.findBy('id', id);
+        if (layer) {
+          layer.set('visibility', visibility);
+        }
+      });
+    }
+  },
+
   /**
     Remove shape from layer.
 
@@ -71,17 +83,5 @@ export default Ember.Mixin.create({
 
     layer._leafletObject.once('save:success', saveSuccess);
     layer._leafletObject.save();
-  },
-
-  _setVisibility(layerIds, visibility = false) {
-    if (Ember.isArray(layerIds)) {
-      const layers = this.get('mapLayer');
-      layerIds.forEach(id => {
-        const layer = layers.findBy('id', id);
-        if (layer) {
-          layer.set('visibility', visibility);
-        }
-      });
-    }
-  },
+  }
 });

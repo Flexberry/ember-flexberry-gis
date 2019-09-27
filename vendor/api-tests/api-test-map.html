@@ -14,11 +14,7 @@
     var frame = document.getElementById("testframe");
     frame.addEventListener("load", function () {
       if (frame.contentWindow.mapApi == undefined) {
-        frame.contentWindow.mapApi = {
-          getLayerObjectId: function (object) {
-            return -1;//todo: write you function
-          }
-        };
+        frame.contentWindow.mapApi = {};
       }
 
       frame.contentWindow.mapApi.layerInitCallback = function (model) {
@@ -44,7 +40,6 @@
       var showLayers = function () {
         frame.contentWindow.mapApi.mapModel.showLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
       };
-
       showButton.addEventListener('click', showLayers);
       var hideButton = document.getElementById('hideLayers');
       var hideLayers = function () {
