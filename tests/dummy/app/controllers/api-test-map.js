@@ -13,6 +13,14 @@ import MapController from './map';
   @uses EditFormControllerOperationsIndicationMixin
 */
 export default MapController.extend({
+  /**
+    Service for managing map API.
+
+    @property mapApi
+    @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
   actions: {
     /**
       Sets layerInitCallback function.
@@ -20,11 +28,7 @@ export default MapController.extend({
       @method  actions.applyApiSettings
     */
     applyApiSettings() {
-      if (Ember.isNone(window.mapApi)) {
-        window.mapApi = {};
-      }
-
-      window.mapApi.layerInitCallback = function(model) {
+      this.get('mapApi').addToApi('layerInitCallback', function(model) {
         model.getLeafletObject().then(function(layer) {
           layer.eachLayer(function(layerr) {
             switch (model.layerModel.get('id')) {
@@ -41,7 +45,7 @@ export default MapController.extend({
             });
           });
         });
-      };
+      });
 
       this.send('refreshMap');
     },

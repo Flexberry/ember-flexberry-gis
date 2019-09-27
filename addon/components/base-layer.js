@@ -53,6 +53,14 @@ export default Ember.Component.extend(
     _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
 
     /**
+      Service for managing map API.
+
+      @property mapApi
+      @type MapApiService
+    */
+    mapApi: Ember.inject.service(),
+
+    /**
       Overload wrapper tag name for disabling wrapper.
     */
     tagName: '',
@@ -289,7 +297,7 @@ export default Ember.Component.extend(
       this._setLayerZIndex();
       this._setLayerStyle();
       this._setLayerOpacity();
-      const layerInitCallback = Ember.get(window, 'mapApi.layerInitCallback');
+      const layerInitCallback = this.get('mapApi').getFromApi('layerInitCallback');
       if (typeof layerInitCallback === 'function') {
         layerInitCallback(this);
       }
