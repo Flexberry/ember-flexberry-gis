@@ -667,7 +667,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   didInsertElement() {
     this._super(...arguments);
-    window.mapApi.deleteLayerById = this._deleteLayerById.bind(this);
+    Ember.set(window, 'mapApi.deleteLayerById', this._deleteLayerById.bind(this));
   },
 
   /**
