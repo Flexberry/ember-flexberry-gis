@@ -49,5 +49,28 @@ export default MapController.extend({
 
       this.send('refreshMap');
     },
+
+    onIdentificationFinished(e) {
+      let leafletMap = this.get('leafletMap');
+      let identifyServiceLayer = this.get('identifyServiceLayer');
+      if (identifyServiceLayer) {
+        identifyServiceLayer.clearLayers();
+      } else {
+        this.set('identifyServiceLayer', e.serviceLayer || L.featureGroup().addTo(leafletMap));
+      }
+
+      this.set('polygonLayer', e.polygonLayer);
+      this.set('identifyToolResults', e.results);
+
+      if (this.get('sidebar.2.active') !== true) {
+        this.set('sidebar.2.active', true);
+      }
+
+      if (!this.get('sidebarOpened')) {
+        this.send('toggleSidebar', {
+          changed: false
+        });
+      }
+    },
   }
 });

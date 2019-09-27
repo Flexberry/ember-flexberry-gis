@@ -3,6 +3,7 @@
  </iframe>
  <button id="showLayers">Show Layers</button>
  <button id="hideLayers">Hide Layers</button>
+ <button id="queryLayers">Query Layers</button>
  <script type="text/javascript">
    var frame = document.getElementById("testframe");
    frame.addEventListener("load", function() {
@@ -15,10 +16,10 @@
          layer.eachLayer(function(layerr) {
            switch (model.layerModel.get('id')) {
              case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
-               layerr.setStyle({ color: '#808000', fillColor: '#FFD700'});
+               layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
                break;
              case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
-               layerr.setStyle({ color: '#008B8B'});
+               layerr.setStyle({ color: '#008B8B' });
                break;
            }
 
@@ -38,6 +39,11 @@
        frame.contentWindow.mapApi.mapModel.hideLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
      };
      hideButton.addEventListener('click', hideLayers);
+     var queryButton = document.getElementById('queryLayers');
+     var queryLayers = function() {
+       frame.contentWindow.mapApi.runQuery({ waterway: 'drain', name: 'Гайва' }, 'c2ce814e-cb31-432e-af9e-2e86cea65c67');
+     };
+     queryButton.addEventListener('click', queryLayers);
    });
  </script>
 </div>
