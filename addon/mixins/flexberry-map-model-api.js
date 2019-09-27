@@ -187,20 +187,70 @@ export default Ember.Mixin.create({
     let objectToSearch;
     let store = this.get('store');
     let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
-    let features = Ember.get(layer, '_leafletObject._layers');
-    Object.values(features).forEach(feature=> {
-      const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);  
-      if (layerFeatureId === objectId) {
-        objectToSearch = object;
-      }
-    });
     let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
-    if (layerFrom && layerTo && objectToSearch) {
-      layerFrom._leafletObject.removeLayer(objectToSearch);
-      objectToSearch._leaflet_id = null;
-      objectToSearch.addTo(layerTo._leafletObject);
-      layerFrom.save();
-      layerTo.save();
+    let features = Ember.get(layerFrom, '_leafletObject._layers');
+    if (layerFrom && layerTo) {
+      if (features) {
+        Object.values(features).find(feature=> {
+          const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
+          if (layerFeatureId === objectId) {
+            objectToSearch = feature;
+          }
+        });
+        if (objectToSearch) {
+          layerFrom._leafletObject.removeLayer(objectToSearch);
+          objectToSearch._leaflet_id = null;
+          var newObj;
+          switch (objectToSearch.feature.geometry.type) {
+            case 'Marker' :
+              newObj =  L.marker(objectToSearch.getLatLng());
+              break;
+            case 'Circle' :
+              newObj = L.circle(objectToSearch.getLatLng(), objectToSearch.getRadius());
+              break;
+            case 'LineString' :
+              newObj = L.polyline(objectToSearch.getLatLngs());
+              break;
+            case 'MultiLineString' :
+              newObj = L.polyline(objectToSearch.getLatLngs());
+              break;
+            case 'Polygon' :
+              newObj = L.polygon(objectToSearch.getLatLngs());
+              break;
+            case 'MultiPolygon' :
+              newObj = L.polygon(objectToSearch.getLatLngs());
+              break;
+          }
+          newObj.options = objectToSearch.options;
+          Ember.get(layerTo, '_leafletObject').addLayer(newObj);
+          return new Ember.RSVP.Promise((resolve) => {
+            const saveSuccess = () => {
+              layerTo._leafletObject.off('save:failed', saveSuccess);
+            };
+
+            const saveFailed = () => {
+              layerTo._leafletObject.off('save:success', saveSuccess);
+            };
+
+            layerTo._leafletObject.once('save:success', saveSuccess);
+            layerTo._leafletObject.once('save:failed', saveFailed);
+            layerTo._leafletObject.save();
+
+            const saveSuccess2 = () => {
+              layerFrom._leafletObject.off('save:failed', saveSuccess2);
+            };
+
+            const saveFailed2 = () => {
+              layerFrom._leafletObject.off('save:success', saveSuccess2);
+            };
+
+            layerFrom._leafletObject.once('save:success', saveSuccess2);
+            layerFrom._leafletObject.once('save:failed', saveFailed2);
+            layerFrom._leafletObject.save();
+            resolve();
+          });
+        }
+      }
     }
   }
 });

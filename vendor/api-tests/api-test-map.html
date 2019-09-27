@@ -10,6 +10,7 @@
    <br />
    <button id="deleteLayerObjects">Delete object/objects</button>
  </div>
+ <button id="moveObjectToLayer">move Object To Layer</button>
  <script type="text/javascript">
    var frame = document.getElementById("testframe");
    frame.addEventListener("load", function() {
@@ -97,6 +98,13 @@
      };
 
      deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
+
+     var moveButton = document.getElementById('moveObjectToLayer');
+     var moveObject = function() {
+       let  promise = frame.contentWindow.mapApi.mapModel.moveObjectToLayer('perm_water_polygon.8151','cd68892e-2896-47e0-b0e1-28dd700bad87' , 'f8dec493-d879-49ae-ad55-f4f18c89cb88');
+       promise.then(()=>console.log('object moved sucessfully')).catch(() => console.log('Layer saving failed'));
+     };
+     moveButton.addEventListener('click', moveObject)
    });
  </script>
 </div>
