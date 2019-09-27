@@ -139,8 +139,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
         let coorsList = [];
 
-        var _this = this;
-
         // Define editable objects
         leafletMap.eachLayer(function (layer) {
           let enabled = Ember.get(layer, 'editor._enabled');
@@ -151,14 +149,14 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
             Ember.set(layer, 'multyShape', true);
 
             if (layer instanceof L.Polygon) {
-              coorsList = _this._getPolygonCoords(coorsList, coordinates);
+              coorsList = this._getPolygonCoords(coorsList, coordinates);
             } else if (layer instanceof L.Polyline) {
-              coorsList = _this._getPolylineCoords(coorsList, coordinates);
+              coorsList = this._getPolylineCoords(coorsList, coordinates);
             }
 
             leafletMap.removeLayer(layer);
           }
-        });
+        }.bind(this));
 
         let styleSettings = this.tabModel.get('styleSettings');
         let shape = {};
