@@ -138,9 +138,11 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         leafletMap.addLayer(drawnItems);
 
         let coorsList = [];
+        var leafletId;
 
         // Define editable objects.
         leafletMap.eachLayer(function (layer) {
+          let i = 0;
           let enabled = Ember.get(layer, 'editor._enabled');
           if (enabled === true) {
             var layerGeoJson = layer.toGeoJSON();
@@ -152,6 +154,10 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
               coorsList = this._getPolygonCoords(coorsList, coordinates);
             } else if (layer instanceof L.Polyline) {
               coorsList = this._getPolylineCoords(coorsList, coordinates);
+            }
+
+            if (i === 0) {
+              leafletId = layer._leaflet_id;
             }
 
             leafletMap.removeLayer(layer);
@@ -200,6 +206,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
         // Create a multiple shape.
         shape.addTo(leafletMap);
+        Ember.set(shape, '_leaflet_id', leafletId);
 
         // Linking shapes.
         Ember.set(shape, 'multyShape', true);
@@ -265,18 +272,19 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       let coors = coordinates[i];
       let corArrI = [];
 
-      if (!Ember.isNone(coordinates[0][0][0][0])) {
-        for (let j = 0; j < coors.length; j++) {
-          let coordinat = coors[j];
-          let corArrJ = [];
+      // if (!Ember.isNone(coordinates[0][0][0][0])) {
+      //   for (let j = 0; j < coors.length; j++) {
+      //     let coordinat = coors[j];
+      //     let corArrJ = [];
 
-          for (let k = 0; k < coordinat.length; k++) {
-            corArrJ.push([coordinat[k][1], coordinat[k][0]]);
-          }
+      //     for (let k = 0; k < coordinat.length; k++) {
+      //       corArrJ.push([coordinat[k][1], coordinat[k][0]]);
+      //     }
 
-          coorsList.push(corArrJ);
-        }
-      } else if (!Ember.isNone(coordinates[0][0][0])) {
+      //     coorsList.push(corArrJ);
+      //   }
+      // } else if (!Ember.isNone(coordinates[0][0][0])) {
+      if (!Ember.isNone(coordinates[0][0][0])) {
         for (let j = 0; j < coors.length; j++) {
           corArrI.push([coors[j][1], coors[j][0]]);
         }
