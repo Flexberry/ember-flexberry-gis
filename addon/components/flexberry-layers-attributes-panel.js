@@ -32,6 +32,13 @@ import * as union from 'npm:@turf/union';
  */
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   /**
+    Service for managing map API.
+    @property mapApi
+    @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
+  /**
     Reference to 'layers-styles-renderer' servie.
 
     @property layersStylesRenderer
@@ -667,9 +674,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   didInsertElement() {
     this._super(...arguments);
-    if (!Ember.isNone(window.map - api)) {
-      Ember.set(window, 'map-api._deleteLayerFromAttrPanel', this._deleteLayerFromAttrPanel.bind(this));
-    }
+    this.get('mapApi').addToApi('_deleteLayerFromAttrPanel', this._deleteLayerById.bind(this));
   },
 
   /**
@@ -1507,7 +1512,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     @param {Number} layerId Layer id.
   */
-  _deleteLayerFromAttrPanel(layerId) {
+  _deleteLayerById(layerId) {
     let tabModels = this.get('_tabModels');
 
     for (let i = 0; i < tabModels.length; i++) {

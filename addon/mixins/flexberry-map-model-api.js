@@ -2,6 +2,13 @@ import Ember from 'ember';
 
 export default Ember.Mixin.create({
   /**
+  Service for managing map API.
+  @property mapApi
+  @type MapApiService
+*/
+  mapApi: Ember.inject.service(),
+
+  /**
     Shows specified by id layers.
 
     @method showLayers.
@@ -56,24 +63,29 @@ export default Ember.Mixin.create({
     let layerShapes = layer._leafletObject._layers;
     let ids = [];
 
-    layer._leafletObject.eachLayer(function () {
-      let shape = layerShapes[key];
+    layer._leafletObject.eachLayer(function (shape) {
       let id = Ember.get(shape, 'feature.id');
       if (Ember.isNone(id)) {
+        const getLayerObjectId = this.get('mapApi').getFromApi('getLayerObjectId');
+        if (typeof getLayerObjectId === 'function') {
 
-        // Need to implement id definition function
-        id = window.map - api.getLayerObjectId(shape);
+          //Need to implement id definition function
+          id = getLayerObjectId(shape);
+        }
       }
 
       if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
         ids.push(id);
         layer._leafletObject.removeLayer(shape);
       }
-    });
+    }.bind(this));
 
     let saveSuccess = (data) => {
+      const deleteLayerFromAttrPanel = this.get('mapApi').getFromApi('_deleteLayerFromAttrPanel');
       ids.forEach((id) => {
-        window.map - api.deleteLayerById(id);
+        if (typeof deleteLayerFromAttrPanel === 'function') {
+          deleteLayerFromAttrPanel(id);
+        }
       });
     };
 
