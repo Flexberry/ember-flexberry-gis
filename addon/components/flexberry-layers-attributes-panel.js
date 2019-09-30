@@ -1067,7 +1067,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(leafletMap, 'editTools', editTools);
       let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
 
-      // Remove layer editing
+      // Remove layer editing.
       leafletMap.eachLayer(function (layer) {
         let enabled = Ember.get(layer, 'editor._enabled');
         if (enabled === true) {
@@ -1449,7 +1449,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
         tabModel._triggerChanged.call([tabModel, feature.leafletLayer, true], { layer: feature.leafletLayer });
       });
-    },
+    }
   },
 
   /**

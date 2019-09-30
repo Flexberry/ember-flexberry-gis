@@ -139,7 +139,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
         let coorsList = [];
 
-        // Define editable objects
+        // Define editable objects.
         leafletMap.eachLayer(function (layer) {
           let enabled = Ember.get(layer, 'editor._enabled');
           if (enabled === true) {
@@ -198,25 +198,25 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
           }
         }
 
-        // Create a multiple shape
+        // Create a multiple shape.
         shape.addTo(leafletMap);
 
-        // Linking shapes
+        // Linking shapes.
         Ember.set(shape, 'multyShape', true);
         Ember.set(shape, 'mainMultyShape', true);
 
         shape.enableEdit();
 
-        // We note that the shape was edited
+        // We note that the shape was edited.
         this.tabModel.leafletObject.editLayer(shape);
 
-        // Replace with a new shape
+        // Replace with a new shape.
         Ember.set(this.tabModel, `featureLink.${layerId}`, shape);
 
         // From the list of changed shapes, delete individual ones, leaving only the multiple shape.
         this._removeFromModified(this.tabModel.leafletObject.changes);
 
-        // enable save button
+        // Enable save button.
         Ember.set(this.tabModel, 'leafletObject._wasChanged', true);
       }
     }
@@ -225,7 +225,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   /**
     From the list of changed shapes, delete individual ones, leaving only the multiple shape.
 
-    @param {array} changes Array of modified shapes.
+    @param {Object[]} changes Array of modified shapes.
   */
   _removeFromModified(changes) {
     let state = 0;
@@ -240,7 +240,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       if (multyShape === true) {
         if (mainMultyShape === false) {
           delete changes[changeLayerNumber];
-        } else if (mainMultyShape === true) {
+        } else {
           changeNumber = changeLayerNumber;
           delete changes[changeLayerNumber].multyShape;
           delete changes[changeLayerNumber].mainMultyShape;
@@ -256,9 +256,9 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   /**
     Building a multiple polygon.
 
-    @param {array} coorsList Accumulating array of coordinates.
-    @param {array} coordinates Array of coordinates.
-    @returns {array} accumulating array of coordinates.
+    @param {Object[]} coorsList Accumulating array of coordinates.
+    @param {Object[]} coordinates Array of coordinates.
+    @return {Object[]} accumulating array of coordinates.
   */
   _getPolygonCoords(coorsList, coordinates) {
     for (let i = 0; i < coordinates.length; i++) {
@@ -291,9 +291,9 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   /**
     Building a multiple polyline.
 
-    @param {array} coorsList Accumulating array of coordinates.
-    @param {array} coordinates Array of coordinates.
-    @returns {array} accumulating array of coordinates.
+    @param {Object[]} coorsList Accumulating array of coordinates.
+    @param {Object[]} coordinates Array of coordinates.
+    @returns {Object[]} accumulating array of coordinates.
   */
   _getPolylineCoords(coorsList, coordinates) {
     let corArr = [];
@@ -323,25 +323,11 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   /**
     Swap coordinates.
 
-    @param {array} coordinates Array of coordinates.
-    @returns {array} inverse array of coordinates.
+    @param {Object[]} coordinates Array of coordinates.
+    @return {Object[]} inverse array of coordinates.
   */
   _swapСoordinates(coordinates) {
-    if (!Ember.isNone(coordinates[0][0][0][0])) {
-      for (let i = 0; i < coordinates.length; i++) {
-        let coordinatI = coordinates[i];
-
-        for (let j = 0; j < coordinatI.length; j++) {
-          let coordinatJ = coordinatI[i];
-
-          for (let k = 0; k < coordinatJ.length; k++) {
-            let b = coordinatJ[k][0];
-            coordinatJ[k][0] = coordinatJ[k][1];
-            coordinatJ[k][1] = b;
-          }
-        }
-      }
-    } else if (!Ember.isNone(coordinates[0][0][0])) {
+    if (!Ember.isNone(coordinates[0][0][0])) {
       for (let i = 0; i < coordinates.length; i++) {
         let coordinat = coordinates[i];
 
