@@ -667,8 +667,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   didInsertElement() {
     this._super(...arguments);
-    if (!Ember.isNone(window.mapApi)) {
-      Ember.set(window, 'mapApi.deleteLayerById', this._deleteLayerById.bind(this));
+    if (!Ember.isNone(window.map - api)) {
+      Ember.set(window, 'map-api._deleteLayerFromAttrPanel', this._deleteLayerFromAttrPanel.bind(this));
     }
   },
 
@@ -1507,7 +1507,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     @param {Number} layerId Layer id.
   */
-  _deleteLayerById(layerId) {
+  _deleteLayerFromAttrPanel(layerId) {
     let tabModels = this.get('_tabModels');
 
     for (let i = 0; i < tabModels.length; i++) {
@@ -1515,8 +1515,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       let treatmentSelectedEditedRows = function (selectedRows, editedRows, editedRowsChange) {
         for (let key in tabModel.featureLink) {
-          let layer = tabModel.featureLink[key];
-          if (layer.feature.id === layerId) {
+          let id = Ember.get(tabModel, `featureLink.${key}.feature.id`);
+          if (id === layerId) {
             this._deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange);
           }
         }

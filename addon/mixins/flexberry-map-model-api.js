@@ -35,8 +35,8 @@ export default Ember.Mixin.create({
     Remove shape from layer.
 
     @method deleteLayerObject.
-    @param {String} id layer.
-    @param {String} id shape.
+    @param {String} layerId Id layer.
+    @param {String} objectId Id shape.
   */
   deleteLayerObject(layerId, objectId) {
     this.deleteLayerObjects(layerId, [objectId]);
@@ -46,8 +46,8 @@ export default Ember.Mixin.create({
     Remove shapes from layer.
 
     @method deleteLayerObjects.
-    @param {String} id layer.
-    @param {Array} array of id shapes.
+    @param {String} layerId Id layer.
+    @param {OBject[]} objectIds Array of id shapes.
   */
   deleteLayerObjects(layerId, objectIds) {
     const layers = this.get('mapLayer');
@@ -56,28 +56,24 @@ export default Ember.Mixin.create({
     let layerShapes = layer._leafletObject._layers;
     let ids = [];
 
-    for (let key in layerShapes) {
+    layer._leafletObject.eachLayer(function () {
       let shape = layerShapes[key];
-      let id = shape.feature !== undefined ? shape.feature.id : undefined;
-      if (id === undefined) {
-        if (window.mapApi !== undefined && window.mapApi.getLayerObjectId !== undefined) {
+      let id = Ember.get(shape, 'feature.id');
+      if (Ember.isNone(id)) {
 
-          // Need to implement id definition function
-          id = window.mapApi.getLayerObjectId(shape);
-        } else {
-          throw 'Function not defined.';
-        }
+        // Need to implement id definition function
+        id = window.map - api.getLayerObjectId(shape);
       }
 
-      if (id !== undefined && objectIds.indexOf(id) !== -1) {
+      if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
         ids.push(id);
         layer._leafletObject.removeLayer(shape);
       }
-    }
+    });
 
     let saveSuccess = (data) => {
       ids.forEach((id) => {
-        window.mapApi.deleteLayerById(id);
+        window.map - api.deleteLayerById(id);
       });
     };
 
