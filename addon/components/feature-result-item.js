@@ -141,6 +141,33 @@ export default Ember.Component.extend({
   */
   selectedFeature: null,
 
+  /**
+    Feature's metadata. //todo:!!! valid description
+
+    @property feature
+    @type Boolean !!!
+  */
+  hasEditForm: false,
+
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+    console.log('init');
+
+    debugger;
+    if (!Ember.isNone(window.mapApi.hasEditForm)) {
+      const feature = this.get('feature');
+      const hh = window.mapApi.hasEditForm(feature.layerModel.id, feature.id);
+
+      this.hasEditForm = hh;
+      // this.set(this.hasEditForm, hasEditForm);
+    } else {
+      throw 'Function hasEditForm not defined.';
+    }
+  },
+
   actions: {
 
     /**
@@ -182,6 +209,19 @@ export default Ember.Component.extend({
      */
     toggleLinks() {
       this.set('_linksExpanded', !this.get('_linksExpanded'));
+    },
+
+    /**
+      Show\hide links list (if present).
+      @method actions.toggleLinks
+     */
+    goToEditForm(layerId, objectId) { //todo:!!!
+      debugger;
+      if (!Ember.isNone(window.mapApi.goToEditForm)) {
+        window.mapApi.goToEditForm(layerId, objectId);
+      } else {
+        throw 'Function goToEditForm not defined.';
+      }
     }
   }
 

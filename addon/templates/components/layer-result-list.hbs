@@ -39,6 +39,7 @@
           {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
             {{component (concat 'feature-result-item-' result.layerModel.type)
               feature=feature
+              result=result
               infoExpanded=(and (eq result.features.length 1) result.first)
               displayProperty="displayValue"
               displaySettings=result.settings
@@ -50,6 +51,7 @@
           {{else}}
             {{feature-result-item
               feature=feature
+              result=result
               infoExpanded=(and (eq result.features.length 1) result.first)
               displayProperty="displayValue"
               displaySettings=result.settings
