@@ -19,6 +19,13 @@ const isMapLimitKey = 'GISLinked';
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   /**
+  Service for managing map API.
+  @property mapApi
+  @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
+  /**
     Component's wrapping <div> CSS-classes names.
 
     Any other CSS-class names can be added through component's 'class' property.
@@ -111,6 +118,38 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
    */
   _linksExpanded: false,
 
+  /**
+    Feature's metadata. //todo:!!! valid description
+
+    @property ishasListForm
+    @type Boolean todo:!!!
+  */
+  ishasListForm: true,
+
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+    console.log('init');
+
+    debugger;
+    const feature = this.get('feature');
+
+    const hasListForm = this.get('mapApi').getFromApi('hasListForm');
+    if (typeof hasListForm === 'function') {
+      const hh = hasListForm(feature.layerModel.id);
+
+      // this.isHasEditForm=true;
+
+      //  const hh = window.mapApi.hasEditForm(feature.layerModel.id, feature.id);
+
+      //  this.hasEditForm = hh;
+      //this.set(this,'isHasEditForm', hh);
+
+    }
+  },
+
   actions: {
     /**
       Show\hide links list (if present).
@@ -118,6 +157,20 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
      */
     toggleLinks() {
       this.set('_linksExpanded', !this.get('_linksExpanded'));
+    },
+
+    /**
+      Process the specified method.
+      @method actions.goToListForm
+     */
+    goToListForm(layerId, objectsIdArray) { //todo:!!!
+      console.log('go');
+      debugger;
+
+      const goToListForm = this.get('mapApi').getFromApi('goToListForm');
+      if (typeof goToListForm === 'function') {
+        goToListForm(layerId, objectsIdArray);
+      }
     }
   },
 

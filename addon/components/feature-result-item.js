@@ -14,6 +14,13 @@ import layout from '../templates/components/feature-result-item';
 export default Ember.Component.extend({
 
   /**
+  Service for managing map API.
+  @property mapApi
+  @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
+  /**
     Component's wrapping <div> CSS-classes names.
 
     Any other CSS-class names can be added through component's 'class' property.
@@ -144,10 +151,10 @@ export default Ember.Component.extend({
   /**
     Feature's metadata. //todo:!!! valid description
 
-    @property feature
-    @type Boolean !!!
+    @property isHasEditForm
+    @type Boolean todo:!!!
   */
-  hasEditForm: false,
+  isHasEditForm: true,
 
   /**
     Initializes DOM-related component's properties.
@@ -157,14 +164,19 @@ export default Ember.Component.extend({
     console.log('init');
 
     debugger;
-    if (!Ember.isNone(window.mapApi.hasEditForm)) {
-      const feature = this.get('feature');
-      const hh = window.mapApi.hasEditForm(feature.layerModel.id, feature.id);
+    const feature = this.get('feature');
 
-      this.hasEditForm = hh;
-      // this.set(this.hasEditForm, hasEditForm);
-    } else {
-      throw 'Function hasEditForm not defined.';
+    const hasEditForm = this.get('mapApi').getFromApi('hasEditForm');
+    if (typeof hasEditForm === 'function') {
+      const hh = hasEditForm(feature.layerModel.id, feature.id);
+
+       this.isHasEditForm=true;
+
+      //  const hh = window.mapApi.hasEditForm(feature.layerModel.id, feature.id);
+
+      //  this.hasEditForm = hh;
+      //this.set(this,'isHasEditForm', hh);
+
     }
   },
 
@@ -212,16 +224,23 @@ export default Ember.Component.extend({
     },
 
     /**
-      Show\hide links list (if present).
-      @method actions.toggleLinks
+      Process the specified method.
+      @method actions.goToEditForm
      */
     goToEditForm(layerId, objectId) { //todo:!!!
+      console.log('go');
       debugger;
-      if (!Ember.isNone(window.mapApi.goToEditForm)) {
-        window.mapApi.goToEditForm(layerId, objectId);
-      } else {
-        throw 'Function goToEditForm not defined.';
+
+      const goToEditForm = this.get('mapApi').getFromApi('goToEditForm');
+      if (typeof goToEditForm === 'function') {
+        goToEditForm(layerId, objectId);
       }
+
+      // if (!Ember.isNone(window.mapApi.goToEditForm)) {
+      //   window.mapApi.goToEditForm(layerId, objectId);
+      // } else {
+      //   throw 'Function goToEditForm not defined.';
+      // }
     }
   }
 

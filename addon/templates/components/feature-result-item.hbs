@@ -9,14 +9,14 @@
     <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
       <i class="hand paper icon"></i>
     </a>
-      {{#if (eq true true)}}
-              <a class="feature-result-item-object icon item"
-            title="{{t "components.feature-result-item.select-object-caption"}}"
-            href="" {{action "goToEditForm" feature.layerModel.id feature.id}}>
-            <i class="external icon"></i>
-          </a>
-          {{/if}}
-          {{log hasEditForm}}
+      {{#if (eq this.isHasEditForm true)}}
+        <a class="feature-result-item-object icon item"
+          title="{{t "components.feature-result-item.action-object-caption"}}"
+          href="" {{action "goToEditForm" feature.layerModel.id feature.id}}>
+          <i class="external icon"></i>
+        </a>
+      {{/if}}
+
       {{#if (gt feature.editForms.length 0)}}
         {{#if (eq feature.editForms.length 1)}}
           <a class="feature-result-item-object icon item"
@@ -36,6 +36,13 @@
                     <i class="external icon"></i>
                   </a>
                 {{/each}}
+                {{#if (eq this.isHasEditForm true)}}
+                  <a class="feature-result-item-object icon item"
+                    title="{{t "components.feature-result-item.action-object-caption"}}"
+                    href="" {{action "goToEditForm" feature.layerModel.id feature.id}}>
+                    <i class="external icon"></i>
+                  </a>
+                {{/if}}
             </div>
           </div>
         {{/if}}

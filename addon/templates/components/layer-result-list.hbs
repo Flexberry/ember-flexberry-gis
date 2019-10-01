@@ -10,6 +10,13 @@
       {{action "zoomTo" result.features}}>
       <i class="marker icon"></i>
     </a>
+          {{#if (eq this.ishasListForm true)}}
+          <a class="feature-result-item-object icon item"
+            title="{{t "components.feature-result-item.action-object-caption"}}"
+            href="" {{action "goToListForm" feature.layerModel.id feature.id}}>
+            <i class="external icon"></i>
+          </a>
+          {{/if}}
     {{#if (gt result.listForms.length 0)}}
       {{#if (eq result.listForms.length 1)}}
         <a class="feature-result-item-list icon item"
@@ -29,6 +36,13 @@
                   <i class="list icon"></i>
                 </a>
               {{/each}}
+              {{#if (eq this.ishasListForm true)}}
+                <a class="feature-result-item-object icon item"
+                  title="{{t "components.feature-result-item.action-object-caption"}}"
+                  href="" {{action "goToListForm" feature.layerModel.id feature.id}}>
+                  <i class="external icon"></i>
+                </a>
+              {{/if}}
           </div>
         </div>
       {{/if}}
