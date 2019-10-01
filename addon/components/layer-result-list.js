@@ -136,7 +136,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     if (typeof hasListForm === 'function') {
       const result = hasListForm(feature.layerModel.id);
-      Ember.set(this,'hasListForm', result);
+      Ember.set(this, 'hasListForm', result);
     }
   },
 
