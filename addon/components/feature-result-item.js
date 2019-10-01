@@ -153,6 +153,7 @@ export default Ember.Component.extend({
 
     @property hasEditForm
     @type boolean
+    @default false
   */
   hasEditForm: false,
 
@@ -161,11 +162,12 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this._super(...arguments);
-    const feature = this.get('feature');
-    const hasEditForm = this.get('mapApi').getFromApi('hasEditForm');
+    const layerModelId = this.get('feature.layerModel.id');
+    const id = this.get('feature.id');
+    const hasEditFormFunc = this.get('mapApi').getFromApi('hasEditForm');
 
-    if (typeof hasEditForm === 'function') {
-      const result = hasEditForm(feature.layerModel.id, feature.id);
+    if (typeof hasEditFormFunc === 'function') {
+      const result = hasEditFormFunc(layerModelId, id);
       Ember.set(this, 'hasEditForm', result);
     }
   },
@@ -216,11 +218,13 @@ export default Ember.Component.extend({
     /**
       Process the specified method.
       @method actions.goToEditForm
+      @param {String} layerId Id layer
+      @param {String[]} objectId Array Id object
     */
     goToEditForm(layerId, objectId) {
-      const goToEditForm = this.get('mapApi').getFromApi('goToEditForm');
-      if (typeof goToEditForm === 'function') {
-        goToEditForm(layerId, objectId);
+      const goToEditFormFunc = this.get('mapApi').getFromApi('goToEditForm');
+      if (typeof goToEditFormFunc === 'function') {
+        goToEditFormFunc(layerId, objectId);
       }
     }
   }

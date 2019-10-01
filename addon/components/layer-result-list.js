@@ -123,6 +123,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     @property hasListForm
     @type boolean
+    @default false
   */
   hasListForm: true,
 
@@ -131,11 +132,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   didInsertElement() {
     this._super(...arguments);
-    const feature = this.get('feature');
-    const hasListForm = this.get('mapApi').getFromApi('hasListForm');
+    const id = this.get('feature.layerModel.id');
+    const hasListFormfunc = this.get('mapApi').getFromApi('hasListForm');
 
-    if (typeof hasListForm === 'function') {
-      const result = hasListForm(feature.layerModel.id);
+    if (typeof hasListFormfunc === 'function') {
+      const result = hasListFormfunc(id);
       Ember.set(this, 'hasListForm', result);
     }
   },
@@ -153,11 +154,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Process the specified method.
       @method actions.goToListForm
+      @param {String} layerId Id layer
+      @param {String[]} objectsIdArray Array of id objects
     */
     goToListForm(layerId, objectsIdArray) {
-      const goToListForm = this.get('mapApi').getFromApi('goToListForm');
-      if (typeof goToListForm === 'function') {
-        goToListForm(layerId, objectsIdArray);
+      const goToListFormFunc = this.get('mapApi').getFromApi('goToListForm');
+      if (typeof goToListFormFunc === 'function') {
+        goToListFormFunc(layerId, objectsIdArray);
       }
     }
   },
@@ -389,6 +392,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               objectList.pushObject(queryValue);
             });
           });
+
+          var layerIds = [];
+          result.features.forEach((feature) => {
+            layerIds.push(feature.id);
+          });
+          result.layerIds = layerIds;
 
           let forms = Ember.A();
           if (objectList.length === 0 || listForms.length === 0) {
