@@ -162,11 +162,12 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this._super(...arguments);
-    const layerModelId = this.get('feature.layerModel.id');
-    const id = this.get('feature.id');
     const hasEditFormFunc = this.get('mapApi').getFromApi('hasEditForm');
 
     if (typeof hasEditFormFunc === 'function') {
+      const layerModelId = this.get('feature.layerModel.id');
+      const id = this.get('feature.id');
+
       const result = hasEditFormFunc(layerModelId, id);
       Ember.set(this, 'hasEditForm', result);
     }

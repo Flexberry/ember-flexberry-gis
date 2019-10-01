@@ -132,10 +132,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   didInsertElement() {
     this._super(...arguments);
-    const id = this.get('feature.layerModel.id');
     const hasListFormfunc = this.get('mapApi').getFromApi('hasListForm');
 
     if (typeof hasListFormfunc === 'function') {
+      const id = this.get('feature.layerModel.id');
+
       const result = hasListFormfunc(id);
       Ember.set(this, 'hasListForm', result);
     }
@@ -397,7 +398,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           result.features.forEach((feature) => {
             layerIds.push(feature.id);
           });
-          result.layerIds = layerIds;
+
+          Ember.set(result, 'layerIds', layerIds);
 
           let forms = Ember.A();
           if (objectList.length === 0 || listForms.length === 0) {
