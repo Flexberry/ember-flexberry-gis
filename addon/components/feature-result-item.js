@@ -161,9 +161,6 @@ export default Ember.Component.extend({
   */
   didInsertElement() {
     this._super(...arguments);
-
-    debugger;
-
     const feature = this.get('feature');
     const hasEditForm = this.get('mapApi').getFromApi('hasEditForm');
 
@@ -220,11 +217,7 @@ export default Ember.Component.extend({
       Process the specified method.
       @method actions.goToEditForm
     */
-    goToEditForm(layerId, objectId) { //todo:!!!
-
-      console.log('go');
-      debugger;
-
+    goToEditForm(layerId, objectId) {
       const goToEditForm = this.get('mapApi').getFromApi('goToEditForm');
       if (typeof goToEditForm === 'function') {
         goToEditForm(layerId, objectId);

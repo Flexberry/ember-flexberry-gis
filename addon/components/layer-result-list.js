@@ -131,9 +131,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   didInsertElement() {
     this._super(...arguments);
-
-    debugger;
-
     const feature = this.get('feature');
     const hasListForm = this.get('mapApi').getFromApi('hasListForm');
 
@@ -157,11 +154,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Process the specified method.
       @method actions.goToListForm
     */
-    goToListForm(layerId, objectsIdArray) { //todo:!!!
-
-      console.log('go');
-      debugger;
-
+    goToListForm(layerId, objectsIdArray) {
       const goToListForm = this.get('mapApi').getFromApi('goToListForm');
       if (typeof goToListForm === 'function') {
         goToListForm(layerId, objectsIdArray);

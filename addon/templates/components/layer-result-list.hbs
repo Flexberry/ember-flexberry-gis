@@ -10,22 +10,8 @@
       {{action "zoomTo" result.features}}>
       <i class="marker icon"></i>
     </a>
-          {{!-- {{#if this.hasListForm}}
-          <a class="feature-result-item-object icon item"
-            title="{{t "components.feature-result-item.action-object-caption"}}"
-            href="" {{action "goToListForm" feature.layerModel.id feature.id}}>
-            <i class="list icon"></i>
-          </a>
-          {{/if}} --}}
-    {{!-- {{#if (gt result.listForms.length 0)}} --}}
-    {{#if (eq result.listForms.length 0)}}
-      {{!-- {{#if (eq result.listForms.length 1)}} --}}
+    {{#if (gt result.listForms.length 0)}}
       {{#if (eq result.listForms.length 1)}}
-        {{!-- <a class="feature-result-item-list icon item"
-          title="{{t "components.layer-result-list.select-list-caption"}}"
-          href="{{result.listForms.[0].url}}" target="_blank">
-          <i class="list icon"></i>
-        </a> --}}
         {{#if this.hasListForm}}
           <div class="ui dropdown item" {{action "toggleLinks" on="click"}}>
             <i class="dropdown icon"></i>
