@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import intersect from 'npm:@turf/intersect';
+import lineIntersect from 'npm:@turf/line-intersect';
 
 export default Ember.Mixin.create({
   /**
@@ -75,8 +75,12 @@ export default Ember.Mixin.create({
           let features = Ember.get(layer, '_leafletObject._layers');
           if (features) {
             Object.values(features).forEach(object=> {
-              let intersectionResult = intersect(objectToSearch.feature, Ember.get(object, 'feature'));
-              if (intersectionResult) {
+              let intersectionResult;
+              if (Ember.get(object, 'feature.id') !== objectId) {
+                intersectionResult = lineIntersect(objectToSearch.feature, Ember.get(object, 'feature'));
+              }
+
+              if (intersectionResult && intersectionResult.features.length > 0) {
                 if (object.hasOwnProperty('window.mapApi.getLayerObjectId')) {
                   intersectedObjectsCollection.push(this.get('mapApi').getFromApi('getLayerObjectId')(object));
                 } else {

@@ -33,7 +33,6 @@
     "@turf/helpers": "^5.1.5",
     "@turf/invariant": "^5.1.5",
     "@turf/kinks": "^5.1.5",
-    "@turf/intersect": "^5.1.5",
     "@turf/line-intersect": "^5.1.5",
     "@turf/line-slice": "^5.1.5",
     "@turf/line-split": "^5.1.5",
