@@ -31,13 +31,20 @@ export default Ember.Mixin.create({
     }
   },
 
+  /**
+    Creates new layer with specified options.
+
+    @method createNewLayer.
+  */
   createNewLayer(options) {
     options = options || {};
-    let store = this.get('store');
+    const store = this.get('store');
     let layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', options);
     layer.set('map', this);
     return layer.save().then(()=> {
-      return layer.id;
+      const layers = this.get('hierarchy');
+      layers.addObject(layer);
+      return layer.get('id');
     });
   }
 });
