@@ -119,38 +119,32 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _linksExpanded: false,
 
   /**
-    Feature's metadata. //todo:!!! valid description
+    Action button hasListForm display.
 
-    @property ishasListForm
-    @type Boolean todo:!!!
+    @property hasListForm
+    @type boolean
   */
-  ishasListForm: true,
+  hasListForm: true,
 
   /**
     Initializes DOM-related component's properties.
   */
   didInsertElement() {
     this._super(...arguments);
-    console.log('init');
 
     debugger;
+
     const feature = this.get('feature');
-
     const hasListForm = this.get('mapApi').getFromApi('hasListForm');
+
     if (typeof hasListForm === 'function') {
-      const hh = hasListForm(feature.layerModel.id);
-
-      // this.isHasEditForm=true;
-
-      //  const hh = window.mapApi.hasEditForm(feature.layerModel.id, feature.id);
-
-      //  this.hasEditForm = hh;
-      //this.set(this,'isHasEditForm', hh);
-
+      const result = hasListForm(feature.layerModel.id);
+      Ember.set(this,'hasListForm', result);
     }
   },
 
   actions: {
+
     /**
       Show\hide links list (if present).
       @method actions.toggleLinks
@@ -162,8 +156,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Process the specified method.
       @method actions.goToListForm
-     */
+    */
     goToListForm(layerId, objectsIdArray) { //todo:!!!
+
       console.log('go');
       debugger;
 

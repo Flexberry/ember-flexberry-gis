@@ -149,34 +149,27 @@ export default Ember.Component.extend({
   selectedFeature: null,
 
   /**
-    Feature's metadata. //todo:!!! valid description
+    Action button hasEditForm display.
 
-    @property isHasEditForm
-    @type Boolean todo:!!!
+    @property hasEditForm
+    @type boolean
   */
-  isHasEditForm: true,
+  hasEditForm: false,
 
   /**
     Initializes DOM-related component's properties.
   */
   didInsertElement() {
     this._super(...arguments);
-    console.log('init');
 
     debugger;
+
     const feature = this.get('feature');
-
     const hasEditForm = this.get('mapApi').getFromApi('hasEditForm');
+
     if (typeof hasEditForm === 'function') {
-      const hh = hasEditForm(feature.layerModel.id, feature.id);
-
-       this.isHasEditForm=true;
-
-      //  const hh = window.mapApi.hasEditForm(feature.layerModel.id, feature.id);
-
-      //  this.hasEditForm = hh;
-      //this.set(this,'isHasEditForm', hh);
-
+      const result = hasEditForm(feature.layerModel.id, feature.id);
+      Ember.set(this, 'hasEditForm', result);
     }
   },
 
@@ -226,8 +219,9 @@ export default Ember.Component.extend({
     /**
       Process the specified method.
       @method actions.goToEditForm
-     */
+    */
     goToEditForm(layerId, objectId) { //todo:!!!
+
       console.log('go');
       debugger;
 
@@ -235,12 +229,6 @@ export default Ember.Component.extend({
       if (typeof goToEditForm === 'function') {
         goToEditForm(layerId, objectId);
       }
-
-      // if (!Ember.isNone(window.mapApi.goToEditForm)) {
-      //   window.mapApi.goToEditForm(layerId, objectId);
-      // } else {
-      //   throw 'Function goToEditForm not defined.';
-      // }
     }
   }
 

@@ -9,21 +9,47 @@
     <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
       <i class="hand paper icon"></i>
     </a>
-      {{#if (eq this.isHasEditForm true)}}
-        <a class="feature-result-item-object icon item"
-          title="{{t "components.feature-result-item.action-object-caption"}}"
-          href="" {{action "goToEditForm" feature.layerModel.id feature.id}}>
-          <i class="external icon"></i>
-        </a>
-      {{/if}}
-
-      {{#if (gt feature.editForms.length 0)}}
-        {{#if (eq feature.editForms.length 1)}}
-          <a class="feature-result-item-object icon item"
+    {{log feature.editForms.length}}
+    {{log this.hasEditForm}}
+      {{!-- {{#if (gt feature.editForms.length 0)}} --}}
+       {{#if (eq feature.editForms.length 0)}}
+        {{!-- {{#if (eq feature.editForms.length 1)}} --}}
+         {{#if (eq feature.editForms.length 1)}}
+          {{!-- <a class="feature-result-item-object icon item"
             title="{{t "components.feature-result-item.select-object-caption"}}"
             href="{{feature.editForms.[0].url}}" target="_blank">
             <i class="external icon"></i>
-          </a>
+          </a> --}}
+          {{#if this.hasEditForm}}
+            {{!-- <a class="feature-result-item-object icon item"
+              title="{{t "components.feature-result-item.action-object-caption"}}"
+              href="" {{action "goToEditForm" feature.layerModel.id feature.id}}>
+              <i class="external icon"></i>
+            </a> --}}
+
+            <div class="ui dropdown item" {{action "toggleLinks" on="click"}}>
+              {{t "components.feature-result-item.select-object-caption"}}
+              <i class="dropdown icon"></i>
+              <div class="ui menu transition {{if _linksExpanded "visible" "hidden"}}">
+                <a class="feature-result-item-object icon item"
+                  title="{{t "components.feature-result-item.select-object-caption"}}"
+                  href="{{feature.editForms.[0].url}}" target="_blank">
+                  <i class="external icon"></i>
+                </a>
+                <a class="feature-result-item-object icon item"
+                  title="{{t "components.feature-result-item.action-object-caption"}}"
+                  href="" {{action "goToEditForm" feature.layerModel.id feature.id}}>
+                  <i class="external icon"></i>
+                </a>
+              </div>
+            </div>
+          {{else}}
+            <a class="feature-result-item-object icon item"
+              title="{{t "components.feature-result-item.select-object-caption"}}"
+              href="{{feature.editForms.[0].url}}" target="_blank">
+              <i class="external icon"></i>
+            </a>
+          {{/if}}
         {{else}}
           <div class="ui dropdown item" {{action "toggleLinks" on="click"}}>
             {{t "components.feature-result-item.select-object-caption"}}
@@ -36,7 +62,7 @@
                     <i class="external icon"></i>
                   </a>
                 {{/each}}
-                {{#if (eq this.isHasEditForm true)}}
+                {{#if this.hasEditForm}}
                   <a class="feature-result-item-object icon item"
                     title="{{t "components.feature-result-item.action-object-caption"}}"
                     href="" {{action "goToEditForm" feature.layerModel.id feature.id}}>
