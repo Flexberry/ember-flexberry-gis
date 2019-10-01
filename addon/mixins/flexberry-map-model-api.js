@@ -44,9 +44,10 @@ export default Ember.Mixin.create({
     @method deleteLayerObject.
     @param {String} layerId Id layer.
     @param {String} objectId Id shape.
+    @return {Promise} Return target object.
   */
   deleteLayerObject(layerId, objectId) {
-    this.deleteLayerObjects(layerId, [objectId]);
+    return this.deleteLayerObjects(layerId, [objectId]);
   },
 
   /**
@@ -60,18 +61,16 @@ export default Ember.Mixin.create({
     const layers = this.get('mapLayer');
     var layer = layers.findBy('id', layerId);
 
-    let layerShapes = layer._leafletObject._layers;
     let ids = [];
-
     layer._leafletObject.eachLayer(function (shape) {
-      let id = Ember.get(shape, 'feature.id');
-      if (Ember.isNone(id)) {
-        const getLayerObjectId = this.get('mapApi').getFromApi('getLayerObjectId');
-        if (typeof getLayerObjectId === 'function') {
+      let id;
+      const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
+      if (typeof getLayerObjectIdFunc === 'function') {
 
-          //Need to implement id definition function
-          id = getLayerObjectId(shape);
-        }
+        //Need to implement id definition function
+        id = getLayerObjectIdFunc(layer, shape);
+      } else {
+        id = Ember.get(shape, 'feature.id');
       }
 
       if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
@@ -80,16 +79,20 @@ export default Ember.Mixin.create({
       }
     }.bind(this));
 
-    let saveSuccess = (data) => {
-      const deleteLayerFromAttrPanel = this.get('mapApi').getFromApi('_deleteLayerFromAttrPanel');
-      ids.forEach((id) => {
-        if (typeof deleteLayerFromAttrPanel === 'function') {
-          deleteLayerFromAttrPanel(id);
-        }
-      });
-    };
+    const deleteLayerFromAttrPanelFunc = this.get('mapApi').getFromApi('_deleteLayerFromAttrPanel');
+    ids.forEach((id) => {
+      if (typeof deleteLayerFromAttrPanelFunc === 'function') {
+        deleteLayerFromAttrPanelFunc(id);
+      }
+    });
 
-    layer._leafletObject.once('save:success', saveSuccess);
-    layer._leafletObject.save();
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let saveSuccess = (data) => {
+        resolve(data);
+      };
+
+      layer._leafletObject.once('save:success', saveSuccess);
+      layer._leafletObject.save();
+    });
   }
 });

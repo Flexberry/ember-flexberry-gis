@@ -962,6 +962,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
         selectedFeatureKeys.forEach((key) => {
           this._deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange);
+
+          let layer = tabModel.featureLink[key];
+          tabModel._triggerChanged.call([tabModel, layer, false], { layer });
         });
       }.bind(this);
 
@@ -1467,7 +1470,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @param {Array} selectedRows Array of edited records.
     @param {Boolean} editedRowsChange Record edit flag.
   */
-  _deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange) { //todo:!!!
+  _deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange) {
     let layer = tabModel.featureLink[key];
     tabModel.leafletObject.removeLayer(layer);
 
@@ -1482,8 +1485,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       layer.disableEdit();
       this.get('leafletMap').off('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
     }
-
-    tabModel._triggerChanged.call([tabModel, layer, false], { layer });
   },
 
   /**
@@ -1520,7 +1521,16 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       let treatmentSelectedEditedRows = function (selectedRows, editedRows, editedRowsChange) {
         for (let key in tabModel.featureLink) {
-          let id = Ember.get(tabModel, `featureLink.${key}.feature.id`);
+          let id;
+          const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
+          if (typeof getLayerObjectIdFunc === 'function') {
+
+            //Need to implement id definition function
+            id = getLayerObjectIdFunc(Ember.get(tabModel, `featureLink.${key}`));
+          } else {
+            id = Ember.get(tabModel, `featureLink.${key}.feature.id`);
+          }
+
           if (id === layerId) {
             this._deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange);
           }
