@@ -127,31 +127,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   hasListForm: true,
 
-  /**
-    Initializes DOM-related component's properties.
-  */
-  didInsertElement() {
-    this._super(...arguments);
-    const hasListFormfunc = this.get('mapApi').getFromApi('hasListForm');
-
-    if (typeof hasListFormfunc === 'function') {
-      let shapeId;
-      const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
-      if (typeof getLayerObjectIdFunc === 'function') {
-        const layer = this.get('feature.layerModel');
-        const shape = this.get('feature.leafletLayer');
-
-        //Need to implement id definition function
-        shapeId = getLayerObjectIdFunc(layer, shape);
-      } else {
-        shapeId = this.get('feature.layerModel.id');
-      }
-
-      const result = hasListFormfunc(shapeId);
-      Ember.set(this, 'hasListForm', result);
-    }
-  },
-
   actions: {
 
     /**
@@ -258,14 +233,35 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       result.features.then(
         (features) => {
           if (features.length > 0) {
+            const hasListFormFunc = this.get('mapApi').getFromApi('hasListForm');
+            const layerModel = Ember.get(result, 'layerModel');
+            let hasListForm;
+            if (typeof hasListFormFunc === 'function') {
+              hasListForm = hasListFormFunc(layerModel.id);
+            }
+
+            let layerIds = Ember.A();
+            if (hasListForm) {
+              layerIds = Ember.A(features).map(feature => {
+                const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
+                if (typeof getLayerObjectIdFunc === 'function') {
+                  return getLayerObjectIdFunc(layerModel, feature);
+                }
+
+                return Ember.get(feature, 'id');
+              });
+            }
+
             let displayResult = {
-              name: Ember.get(result, 'layerModel.name') || '',
-              settings: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings'),
-              displayProperties: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
+              name: Ember.get(layerModel, 'name') || '',
+              settings: Ember.get(layerModel, 'settingsAsObject.displaySettings.featuresPropertiesSettings'),
+              displayProperties: Ember.get(layerModel, 'settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
               listForms: Ember.A(),
               editForms: Ember.A(),
               features: Ember.A(features),
-              layerModel: Ember.get(result, 'layerModel')
+              layerModel: layerModel,
+              hasListForm: hasListForm,
+              layerIds: layerIds
             };
 
             this._processLayerLinkForDisplayResults(result, displayResult);

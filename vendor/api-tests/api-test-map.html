@@ -14,31 +14,24 @@
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
     frame.addEventListener("load", function () {
-      if (frame.contentWindow.mapApi === undefined) {
+      if (frame.contentWindow.mapApi == undefined) {
         frame.contentWindow.mapApi = {};
       }
 
       frame.contentWindow.mapApi.goToEditForm = function (layerId, objectId) {
-        console.log('Go to edit form.');
+        console.log(`Go to edit form for element ${objectId}.`);
       }
 
       frame.contentWindow.mapApi.hasEditForm = function (layerId, objectId) {
-        console.log('Has edit form.');
         return true;
       }
 
-      frame.contentWindow.mapApi.goToListForm = function (layerId) {
-        console.log('Go to list form.');
+      frame.contentWindow.mapApi.goToListForm = function (layerId, objectIds) {
+        console.log(`Go to list form for elements ${objectIds}.`);
       }
 
       frame.contentWindow.mapApi.hasListForm = function (layerId) {
-        console.log('Has list form.');
         return true;
-      }
-
-      frame.contentWindow.mapApi.getLayerObjectId = function (layerId, shape) {
-        console.log('getLayerObjectId = 1');
-        return 1;
       }
 
       frame.contentWindow.mapApi.layerInitCallback = function (model) {

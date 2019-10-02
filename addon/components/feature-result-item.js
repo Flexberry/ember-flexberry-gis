@@ -179,8 +179,9 @@ export default Ember.Component.extend({
         shapeId = this.get('feature.id');
       }
 
-      const result = hasEditFormFunc(layerId, shapeId);
-      Ember.set(this, 'hasEditForm', result);
+      const hasEditForm = hasEditFormFunc(layerId, shapeId);
+      this.set('featureId', shapeId);
+      this.set('hasEditForm', hasEditForm);
     }
   },
 
