@@ -243,9 +243,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             let layerIds = Ember.A();
             if (hasListForm) {
               layerIds = Ember.A(features).map(feature => {
-                const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
-                if (typeof getLayerObjectIdFunc === 'function') {
-                  return getLayerObjectIdFunc(layerModel, feature);
+                const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
+                if (typeof getLayerFeatureIdFunc === 'function') {
+                  return getLayerFeatureIdFunc(layerModel, feature);
                 }
 
                 return Ember.get(feature, 'id');
@@ -444,11 +444,11 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     var shapeIds = [];
     features.forEach((feature) => {
       let shapeId;
-      const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
-      if (typeof getLayerObjectIdFunc === 'function') {
+      const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
+      if (typeof getLayerFeatureIdFunc === 'function') {
 
         //Need to implement id definition function
-        shapeId = getLayerObjectIdFunc(feature.layerModel, feature.leafletLayer);
+        shapeId = getLayerFeatureIdFunc(feature.layerModel, feature.leafletLayer);
       } else {
         shapeId = feature.id;
       }

@@ -1509,11 +1509,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   },
 
   /**
-    Delete layer by id.
+    Delete layer feature by id.
 
-    @param {Number} layerId Layer id.
+    @param {String} featureId Layer feature id.
+    @param {String} layer Layer to delete from.
   */
-  _deleteLayerById(layerId) {
+  _deleteLayerById(featureId, layer) {
     let tabModels = this.get('_tabModels');
 
     if (!Ember.isNone(tabModels)) {
@@ -1523,16 +1524,16 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         let treatmentSelectedEditedRows = function (selectedRows, editedRows, editedRowsChange) {
           for (let key in tabModel.featureLink) {
             let id;
-            const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
-            if (typeof getLayerObjectIdFunc === 'function') {
+            const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
+            if (typeof getLayerFeatureIdFunc === 'function') {
 
               //Need to implement id definition function
-              id = getLayerObjectIdFunc(Ember.get(tabModel, `featureLink.${key}`));
+              id = getLayerFeatureIdFunc(Ember.get(tabModel, `featureLink.${key}`));
             } else {
               id = Ember.get(tabModel, `featureLink.${key}.feature.id`);
             }
 
-            if (id === layerId) {
+            if (id === featureId) {
               this._deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange);
             }
           }
