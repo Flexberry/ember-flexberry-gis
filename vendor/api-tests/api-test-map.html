@@ -4,11 +4,33 @@
  <button id="showLayers">Show Layers</button>
  <button id="hideLayers">Hide Layers</button>
  <button id="getIntersectionObjects">get Intersection Objects</button>
+ <button id="createNewlayer">Create new Layer</button>
+ <div>
+   <textarea id="layerObjects" name="text" style="width:750px;height:100px"></textarea>
+   <br />
+   <button id="deleteLayerObjects">Delete object/objects</button>
+ </div>
  <script type="text/javascript">
    var frame = document.getElementById("testframe");
    frame.addEventListener("load", function() {
      if (frame.contentWindow.mapApi == undefined) {
        frame.contentWindow.mapApi = {};
+     }
+
+     frame.contentWindow.mapApi.goToEditForm = function (layerId, objectId) {
+       console.log(`Go to edit form for element ${objectId}.`);
+     }
+
+     frame.contentWindow.mapApi.hasEditForm = function (layerId, objectId) {
+       return true;
+     }
+
+     frame.contentWindow.mapApi.goToListForm = function (layerId, objectIds) {
+       console.log(`Go to list form for elements ${objectIds}.`);
+     }
+
+     frame.contentWindow.mapApi.hasListForm = function (layerId) {
+       return true;
      }
 
      frame.contentWindow.mapApi.layerInitCallback = function(model) {
@@ -45,6 +67,36 @@
        console.log(frame.contentWindow.mapApi.mapModel.getIntersectionObjects('perm_water_line.3666', ['f8dec493-d879-49ae-ad55-f4f18c89cb88']));
      };
      intersectionButton.addEventListener('click', getIntersections);
+
+     var newLayerButton = document.getElementById('createNewlayer');
+     var newLayer = function () {
+       frame.contentWindow.mapApi.mapModel.createNewLayer({ name: 'test_osm', type: 'osm' }).then(id => console.log(id));
+     };
+     newLayerButton.addEventListener('click', newLayer);
+
+     textaeraDelObj = {
+       layerId: "f8dec493-d879-49ae-ad55-f4f18c89cb88", objectIds: ["perm_water_line.8322"]
+     };
+     layerObjects.value = JSON.stringify(textaeraDelObj);
+
+     var deleteObjectsLayerButton = document.getElementById('deleteLayerObjects');
+     var deleteObjectsLayer = function () {
+       var layerObjects = document.getElementById('layerObjects');
+       var delObj = JSON.parse(layerObjects.value);
+
+       if (delObj.layerId !== undefined) {
+         var promise;
+         if (delObj.objectIds.length > 1) {
+           promise = frame.contentWindow.mapApi.mapModel.deleteLayerObjects(delObj.layerId, delObj.objectIds);
+         } else if (delObj.objectIds.length === 1) {
+           promise = frame.contentWindow.mapApi.mapModel.deleteLayerObject(delObj.layerId, delObj.objectIds[0]);
+         }
+
+         promise.then(() => console.log(delObj.objectIds)).catch(() => console.log('Layer saving failed'));
+       }
+     };
+
+     deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
    });
  </script>
 </div>
