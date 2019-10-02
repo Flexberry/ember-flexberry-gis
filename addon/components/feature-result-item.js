@@ -168,13 +168,13 @@ export default Ember.Component.extend({
       const layerId = this.get('feature.layerModel.id');
 
       let shapeId;
-      const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
-      if (typeof getLayerObjectIdFunc === 'function') {
+      const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
+      if (typeof getLayerFeatureIdFunc === 'function') {
         const layer = this.get('feature.layerModel');
         const shape = this.get('feature');
 
         //Need to implement id definition function
-        shapeId = getLayerObjectIdFunc(layer, shape);
+        shapeId = getLayerFeatureIdFunc(layer, shape);
       } else {
         shapeId = this.get('feature.id');
       }

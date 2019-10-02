@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import lineIntersect from 'npm:@turf/line-intersect';
 
 export default Ember.Mixin.create({
   /**
@@ -26,18 +27,6 @@ export default Ember.Mixin.create({
     this._setVisibility(layerIds);
   },
 
-  _setVisibility(layerIds, visibility = false) {
-    if (Ember.isArray(layerIds)) {
-      const layers = this.get('mapLayer');
-      layerIds.forEach(id => {
-        const layer = layers.findBy('id', id);
-        if (layer) {
-          layer.set('visibility', visibility);
-        }
-      });
-    }
-  },
-
   /**
     Creates new layer with specified options.
     @method createNewLayer.
@@ -59,11 +48,11 @@ export default Ember.Mixin.create({
 
     @method deleteLayerObject.
     @param {String} layerId Id layer.
-    @param {String} objectId Id shape.
-    @return {Promise} Return target object.
+    @param {String} featureId Id shape.
+    @return {Promise} Return target feature.
   */
-  deleteLayerObject(layerId, objectId) {
-    return this.deleteLayerObjects(layerId, [objectId]);
+  deleteLayerObject(layerId, featureId) {
+    return this.deleteLayerObjects(layerId, [featureId]);
   },
 
   /**
@@ -71,25 +60,17 @@ export default Ember.Mixin.create({
 
     @method deleteLayerObjects.
     @param {String} layerId Id layer.
-    @param {OBject[]} objectIds Array of id shapes.
+    @param {OBject[]} featureIds Array of id shapes.
   */
-  deleteLayerObjects(layerId, objectIds) {
+  deleteLayerObjects(layerId, featureIds) {
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
 
     let ids = [];
     layer._leafletObject.eachLayer(function (shape) {
-      let id;
-      const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
-      if (typeof getLayerObjectIdFunc === 'function') {
+      const id = this._getLayerFeatureId(layer, shape);
 
-        //Need to implement id definition function
-        id = getLayerObjectIdFunc(layer, shape);
-      } else {
-        id = Ember.get(shape, 'feature.id');
-      }
-
-      if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
+      if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
         ids.push(id);
         layer._leafletObject.removeLayer(shape);
       }
@@ -98,7 +79,7 @@ export default Ember.Mixin.create({
     const deleteLayerFromAttrPanelFunc = this.get('mapApi').getFromApi('_deleteLayerFromAttrPanel');
     ids.forEach((id) => {
       if (typeof deleteLayerFromAttrPanelFunc === 'function') {
-        deleteLayerFromAttrPanelFunc(id);
+        deleteLayerFromAttrPanelFunc(id, layer);
       }
     });
 
@@ -120,62 +101,78 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Gets intersected objects.
+    Gets intersected features.
     @method getIntersectionObjects
-    @param {String} objectId object id with which we are looking for intersections
+    @param {String} featureId feature id with which we are looking for intersections
     @param {Array} layerIds array of layers ids
   */
-  getIntersectionObjects(objectId, layerIds) {
+  getIntersectionObjects(featureId, layerIds) {
     let result = [];
-    let objectToSearch;
+    let featureToSearch;
     if (Ember.isArray(layerIds)) {
       const allLayers = this.get('mapLayer');
       let layers = Ember.A(allLayers);
       layers.find(layer => {
         let features = Ember.get(layer, '_leafletObject._layers');
         if (!Ember.isNone(features)) {
-          Object.values(features).forEach(object=> {
-            if (object.hasOwnProperty('window.mapApi.getLayerObjectId')) {
-              if (this.get('mapApi').getFromApi('getLayerObjectId')(object) === objectId) {
-                objectToSearch = object;
-              }
-            } else {
-              if (Ember.get(object, 'feature.id') === objectId) {
-                objectToSearch = object;
-              }
+          featureToSearch = Object.values(features).find(feature => {
+            if (this._getLayerFeatureId(layer, feature) === featureId) {
+              return true;
             }
           });
+
+          if (featureToSearch) {
+            return true;
+          }
         }
       });
-      if (!Ember.isNone(objectToSearch)) {
+      if (!Ember.isNone(featureToSearch)) {
         layerIds.forEach(id => {
-          let intersectedObjectsCollection = [];
+          let intersectedFeaturesCollection = [];
           const layer = layers.findBy('id', id);
           let features = Ember.get(layer, '_leafletObject._layers');
           if (features) {
-            Object.values(features).forEach(object=> {
+            Object.values(features).forEach(feature => {
               let intersectionResult;
-              if (Ember.get(object, 'feature.id') !== objectId) {
-                intersectionResult = lineIntersect(objectToSearch.feature, Ember.get(object, 'feature'));
+              const layerFeatureId = this._getLayerFeatureId(layer, feature);
+              if (layerFeatureId !== featureId) {
+                intersectionResult = lineIntersect(featureToSearch.feature, Ember.get(feature, 'feature'));
               }
 
               if (intersectionResult && intersectionResult.features.length > 0) {
-                if (object.hasOwnProperty('window.mapApi.getLayerObjectId')) {
-                  intersectedObjectsCollection.push(this.get('mapApi').getFromApi('getLayerObjectId')(object));
-                } else {
-                  intersectedObjectsCollection.push(Ember.get(object, 'feature.id'));
-                }
+                intersectedFeaturesCollection.push(layerFeatureId);
               }
             });
           }
 
-          if (intersectedObjectsCollection.length > 0) {
-            result.push({ id: id, intersected_objects: intersectedObjectsCollection });
+          if (intersectedFeaturesCollection.length > 0) {
+            result.push({ id: id, intersected_features: intersectedFeaturesCollection });
           }
         });
       }
     }
 
     return result;
-  }
+  },
+
+  _setVisibility(layerIds, visibility = false) {
+    if (Ember.isArray(layerIds)) {
+      const layers = this.get('mapLayer');
+      layerIds.forEach(id => {
+        const layer = layers.findBy('id', id);
+        if (layer) {
+          layer.set('visibility', visibility);
+        }
+      });
+    }
+  },
+
+  _getLayerFeatureId(layer, layerObject) {
+    const getLayerFeatureId = this.get('mapApi').getFromApi('getLayerFeatureId');
+    if (typeof getLayerFeatureId === 'function') {
+      return getLayerFeatureId(layer, layerObject);
+    }
+
+    return Ember.get(layerObject, 'feature.id');
+  },
 });
