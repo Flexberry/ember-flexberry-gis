@@ -1,5 +1,7 @@
 <div class="ui vertical menu">
-  <iframe id="testframe" src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11" width="1000" height="800" align="left">
+  <iframe id="testframe"
+    src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11"
+    width="1000" height="800" align="left">
   </iframe>
   <button id="showLayers">Show Layers</button>
   <button id="hideLayers">Hide Layers</button>
@@ -14,6 +16,22 @@
     frame.addEventListener("load", function () {
       if (frame.contentWindow.mapApi == undefined) {
         frame.contentWindow.mapApi = {};
+      }
+
+      frame.contentWindow.mapApi.goToEditForm = function (layerId, objectId) {
+        console.log(`Go to edit form for element ${objectId}.`);
+      }
+
+      frame.contentWindow.mapApi.hasEditForm = function (layerId, objectId) {
+        return true;
+      }
+
+      frame.contentWindow.mapApi.goToListForm = function (layerId, objectIds) {
+        console.log(`Go to list form for elements ${objectIds}.`);
+      }
+
+      frame.contentWindow.mapApi.hasListForm = function (layerId) {
+        return true;
       }
 
       frame.contentWindow.mapApi.layerInitCallback = function (model) {
@@ -46,8 +64,8 @@
       };
       hideButton.addEventListener('click', hideLayers);
       var newLayerButton = document.getElementById('createNewlayer');
-      var newLayer = function() {
-        frame.contentWindow.mapApi.mapModel.createNewLayer({ name:'test_osm',type: 'osm' }).then(id => console.log(id));
+      var newLayer = function () {
+        frame.contentWindow.mapApi.mapModel.createNewLayer({ name: 'test_osm', type: 'osm' }).then(id => console.log(id));
       };
       newLayerButton.addEventListener('click', newLayer);
 
