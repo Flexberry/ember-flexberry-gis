@@ -135,9 +135,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     const hasListFormfunc = this.get('mapApi').getFromApi('hasListForm');
 
     if (typeof hasListFormfunc === 'function') {
-      const id = this.get('feature.layerModel.id');
+      let shapeId;
+      const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
+      if (typeof getLayerObjectIdFunc === 'function') {
+        const layer = this.get('feature.layerModel');
+        const shape = this.get('feature.leafletLayer');
 
-      const result = hasListFormfunc(id);
+        //Need to implement id definition function
+        shapeId = getLayerObjectIdFunc(layer, shape);
+      } else {
+        shapeId = this.get('feature.layerModel.id');
+      }
+
+      const result = hasListFormfunc(shapeId);
       Ember.set(this, 'hasListForm', result);
     }
   },
@@ -394,12 +404,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             });
           });
 
-          var layerIds = [];
-          result.features.forEach((feature) => {
-            layerIds.push(feature.id);
-          });
-
-          Ember.set(result, 'layerIds', layerIds);
+          let shapeIds = this._getFeatureShapeIds(result.features);
+          Ember.set(result, 'shapeIds', shapeIds);
 
           let forms = Ember.A();
           if (objectList.length === 0 || listForms.length === 0) {
@@ -430,5 +436,29 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.send('zoomTo', displayResults.objectAt(0).features);
       }
     });
-  }))
+  })),
+
+  /**
+    Get an array of layer shapes id.
+    @method _getFeatureShapeIds
+    @param {Object} features Layer object
+    @return {String[]} Array of layer shapes id
+  */
+  _getFeatureShapeIds(features) {
+    var shapeIds = [];
+    features.forEach((feature) => {
+      let shapeId;
+      const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
+      if (typeof getLayerObjectIdFunc === 'function') {
+
+        //Need to implement id definition function
+        shapeId = getLayerObjectIdFunc(feature.layerModel, feature.leafletLayer);
+      } else {
+        shapeId = feature.id;
+      }
+
+      shapeIds.push(shapeId);
+    });
+    return shapeIds;
+  }
 });

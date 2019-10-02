@@ -165,10 +165,21 @@ export default Ember.Component.extend({
     const hasEditFormFunc = this.get('mapApi').getFromApi('hasEditForm');
 
     if (typeof hasEditFormFunc === 'function') {
-      const layerModelId = this.get('feature.layerModel.id');
-      const id = this.get('feature.id');
+      const layerId = this.get('feature.layerModel.id');
 
-      const result = hasEditFormFunc(layerModelId, id);
+      let shapeId;
+      const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
+      if (typeof getLayerObjectIdFunc === 'function') {
+        const layer = this.get('feature.layerModel');
+        const shape = this.get('feature');
+
+        //Need to implement id definition function
+        shapeId = getLayerObjectIdFunc(layer, shape);
+      } else {
+        shapeId = this.get('feature.id');
+      }
+
+      const result = hasEditFormFunc(layerId, shapeId);
       Ember.set(this, 'hasEditForm', result);
     }
   },

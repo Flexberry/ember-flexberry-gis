@@ -24,7 +24,7 @@
               </a>
               <a class="feature-result-item-object icon item"
                 title="{{t "components.feature-result-item.action-object-caption"}}"
-                href="" {{action "goToListForm" feature.layerModel.id feature.id}}>
+                href="" {{action "goToListForm" feature.layerModel.id feature.shapeIds}}>
                 <i class="list icon"></i>
               </a>
             </div>
@@ -51,7 +51,7 @@
               {{#if this.hasListForm}}
                 <a class="feature-result-item-object icon item"
                   title="{{t "components.feature-result-item.action-object-caption"}}"
-                  href="" {{action "goToListForm" feature.layerModel.id feature.id}}>
+                  href="" {{action "goToListForm" feature.layerModel.id feature.shapeIds}}>
                   <i class="list icon"></i>
                 </a>
               {{/if}}
