@@ -19,6 +19,13 @@ const isMapLimitKey = 'GISLinked';
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   /**
+  Service for managing map API.
+  @property mapApi
+  @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
+  /**
     Component's wrapping <div> CSS-classes names.
 
     Any other CSS-class names can be added through component's 'class' property.
@@ -111,13 +118,36 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
    */
   _linksExpanded: false,
 
+  /**
+    Action button hasListForm display.
+
+    @property hasListForm
+    @type boolean
+    @default false
+  */
+  hasListForm: true,
+
   actions: {
+
     /**
       Show\hide links list (if present).
       @method actions.toggleLinks
      */
     toggleLinks() {
       this.set('_linksExpanded', !this.get('_linksExpanded'));
+    },
+
+    /**
+      Process the specified method.
+      @method actions.goToListForm
+      @param {String} layerId Id layer
+      @param {String[]} objectsIdArray Array of id objects
+    */
+    goToListForm(layerId, objectsIdArray) {
+      const goToListFormFunc = this.get('mapApi').getFromApi('goToListForm');
+      if (typeof goToListFormFunc === 'function') {
+        goToListFormFunc(layerId, objectsIdArray);
+      }
     }
   },
 
@@ -203,14 +233,35 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       result.features.then(
         (features) => {
           if (features.length > 0) {
+            const hasListFormFunc = this.get('mapApi').getFromApi('hasListForm');
+            const layerModel = Ember.get(result, 'layerModel');
+            let hasListForm;
+            if (typeof hasListFormFunc === 'function') {
+              hasListForm = hasListFormFunc(layerModel.id);
+            }
+
+            let layerIds = Ember.A();
+            if (hasListForm) {
+              layerIds = Ember.A(features).map(feature => {
+                const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
+                if (typeof getLayerFeatureIdFunc === 'function') {
+                  return getLayerFeatureIdFunc(layerModel, feature);
+                }
+
+                return Ember.get(feature, 'id');
+              });
+            }
+
             let displayResult = {
-              name: Ember.get(result, 'layerModel.name') || '',
-              settings: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings'),
-              displayProperties: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
+              name: Ember.get(layerModel, 'name') || '',
+              settings: Ember.get(layerModel, 'settingsAsObject.displaySettings.featuresPropertiesSettings'),
+              displayProperties: Ember.get(layerModel, 'settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
               listForms: Ember.A(),
               editForms: Ember.A(),
               features: Ember.A(features),
-              layerModel: Ember.get(result, 'layerModel')
+              layerModel: layerModel,
+              hasListForm: hasListForm,
+              layerIds: layerIds
             };
 
             this._processLayerLinkForDisplayResults(result, displayResult);
@@ -349,6 +400,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             });
           });
 
+          let shapeIds = this._getFeatureShapeIds(result.features);
+          Ember.set(result, 'shapeIds', shapeIds);
+
           let forms = Ember.A();
           if (objectList.length === 0 || listForms.length === 0) {
             return;
@@ -378,5 +432,29 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.send('zoomTo', displayResults.objectAt(0).features);
       }
     });
-  }))
+  })),
+
+  /**
+    Get an array of layer shapes id.
+    @method _getFeatureShapeIds
+    @param {Object} features Layer object
+    @return {String[]} Array of layer shapes id
+  */
+  _getFeatureShapeIds(features) {
+    var shapeIds = [];
+    features.forEach((feature) => {
+      let shapeId;
+      const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
+      if (typeof getLayerFeatureIdFunc === 'function') {
+
+        //Need to implement id definition function
+        shapeId = getLayerFeatureIdFunc(feature.layerModel, feature.leafletLayer);
+      } else {
+        shapeId = feature.id;
+      }
+
+      shapeIds.push(shapeId);
+    });
+    return shapeIds;
+  }
 });
