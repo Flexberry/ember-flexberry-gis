@@ -39,6 +39,22 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Creates new layer with specified options.
+    @method createNewLayer.
+  */
+  createNewLayer(options) {
+    options = options || {};
+    const store = this.get('store');
+    let layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', options);
+    layer.set('map', this);
+    return layer.save().then(()=> {
+      const layers = this.get('hierarchy');
+      layers.addObject(layer);
+      return layer.get('id');
+    });
+  },
+
+  /**
     Remove shape from layer.
 
     @method deleteLayerObject.
@@ -59,7 +75,7 @@ export default Ember.Mixin.create({
   */
   deleteLayerObjects(layerId, objectIds) {
     const layers = this.get('mapLayer');
-    var layer = layers.findBy('id', layerId);
+    const layer = layers.findBy('id', layerId);
 
     let ids = [];
     layer._leafletObject.eachLayer(function (shape) {
@@ -87,11 +103,18 @@ export default Ember.Mixin.create({
     });
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let saveSuccess = (data) => {
+      const saveSuccess = (data) => {
+        layer._leafletObject.off('save:failed', saveSuccess);
         resolve(data);
       };
 
+      const saveFailed = (data) => {
+        layer._leafletObject.off('save:success', saveSuccess);
+        reject(data);
+      };
+
       layer._leafletObject.once('save:success', saveSuccess);
+      layer._leafletObject.once('save:failed', saveFailed);
       layer._leafletObject.save();
     });
   }

@@ -1516,28 +1516,30 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _deleteLayerById(layerId) {
     let tabModels = this.get('_tabModels');
 
-    for (let i = 0; i < tabModels.length; i++) {
-      let tabModel = tabModels[i];
+    if (!Ember.isNone(tabModels)) {
+      for (let i = 0; i < tabModels.length; i++) {
+        let tabModel = tabModels[i];
 
-      let treatmentSelectedEditedRows = function (selectedRows, editedRows, editedRowsChange) {
-        for (let key in tabModel.featureLink) {
-          let id;
-          const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
-          if (typeof getLayerObjectIdFunc === 'function') {
+        let treatmentSelectedEditedRows = function (selectedRows, editedRows, editedRowsChange) {
+          for (let key in tabModel.featureLink) {
+            let id;
+            const getLayerObjectIdFunc = this.get('mapApi').getFromApi('getLayerObjectId');
+            if (typeof getLayerObjectIdFunc === 'function') {
 
-            //Need to implement id definition function
-            id = getLayerObjectIdFunc(Ember.get(tabModel, `featureLink.${key}`));
-          } else {
-            id = Ember.get(tabModel, `featureLink.${key}.feature.id`);
+              //Need to implement id definition function
+              id = getLayerObjectIdFunc(Ember.get(tabModel, `featureLink.${key}`));
+            } else {
+              id = Ember.get(tabModel, `featureLink.${key}.feature.id`);
+            }
+
+            if (id === layerId) {
+              this._deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange);
+            }
           }
+        }.bind(this);
 
-          if (id === layerId) {
-            this._deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange);
-          }
-        }
-      }.bind(this);
-
-      this._treatmentSelectedEditedRows(tabModel, treatmentSelectedEditedRows);
+        this._treatmentSelectedEditedRows(tabModel, treatmentSelectedEditedRows);
+      }
     }
   },
 

@@ -1,10 +1,9 @@
 <div class="ui vertical menu">
-  <iframe id="testframe"
-    src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11"
-    width="1000" height="800" align="left">
+  <iframe id="testframe" src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11" width="1000" height="800" align="left">
   </iframe>
   <button id="showLayers">Show Layers</button>
   <button id="hideLayers">Hide Layers</button>
+  <button id="createNewlayer">Create new Layer</button>
   <div>
     <textarea id="layerObjects" name="text" style="width:750px;height:100px"></textarea>
     <br />
@@ -46,6 +45,11 @@
         frame.contentWindow.mapApi.mapModel.hideLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
       };
       hideButton.addEventListener('click', hideLayers);
+      var newLayerButton = document.getElementById('createNewlayer');
+      var newLayer = function() {
+        frame.contentWindow.mapApi.mapModel.createNewLayer({ name:'test_osm',type: 'osm' }).then(id => console.log(id));
+      };
+      newLayerButton.addEventListener('click', newLayer);
 
       textaeraDelObj = {
         layerId: "f8dec493-d879-49ae-ad55-f4f18c89cb88", objectIds: ["perm_water_line.8322"]
@@ -58,11 +62,14 @@
         var delObj = JSON.parse(layerObjects.value);
 
         if (delObj.layerId !== undefined) {
+          var promise;
           if (delObj.objectIds.length > 1) {
-            frame.contentWindow.mapApi.mapModel.deleteLayerObjects(delObj.layerId, delObj.objectIds);
+            promise = frame.contentWindow.mapApi.mapModel.deleteLayerObjects(delObj.layerId, delObj.objectIds);
           } else if (delObj.objectIds.length === 1) {
-            frame.contentWindow.mapApi.mapModel.deleteLayerObject(delObj.layerId, delObj.objectIds[0]);
+            promise = frame.contentWindow.mapApi.mapModel.deleteLayerObject(delObj.layerId, delObj.objectIds[0]);
           }
+
+          promise.then(() => console.log(delObj.objectIds)).catch(() => console.log('Layer saving failed'));
         }
       };
 
