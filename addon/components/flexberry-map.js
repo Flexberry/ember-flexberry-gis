@@ -228,6 +228,13 @@ let FlexberryMapComponent = Ember.Component.extend(
     queryFilter: null,
 
     /**
+      Service for managing map API.
+      @property mapApi
+      @type MapApiService
+    */
+    mapApi: Ember.inject.service(),
+
+    /**
       Injects additional methods into initialized leaflet map.
 
       @method _injectMapLoaderMethods
@@ -483,6 +490,12 @@ let FlexberryMapComponent = Ember.Component.extend(
         });
       }
 
+      const mapApi = this.get('mapApi');
+      if (Ember.isNone(mapApi.getFromApi('runQuery'))) {
+        mapApi.addToApi('runQuery',  this._runQuery.bind(this));
+        this.set('_hasQueryApi', true);
+      }
+
       Ember.run.scheduleOnce('afterRender', this, '_localeDidChange');
     },
 
@@ -510,6 +523,10 @@ let FlexberryMapComponent = Ember.Component.extend(
         leafletMap.remove();
         this.set('_leafletObject', null);
         this.set('_$leafletContainer', null);
+
+        if (this.get('_hasQueryApi')) {
+          this.get('mapApi').addToApi('runQuery', undefined);
+        }
 
         this.sendAction('leafletDestroy');
       }
