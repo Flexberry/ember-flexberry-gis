@@ -138,11 +138,9 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         leafletMap.addLayer(drawnItems);
 
         let coorsList = [];
-        var leafletId;
 
         // Define editable objects.
         leafletMap.eachLayer(function (layer) {
-          let i = 0;
           let enabled = Ember.get(layer, 'editor._enabled');
           if (enabled === true) {
             var layerGeoJson = layer.toGeoJSON();
@@ -156,11 +154,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
               coorsList = this._getPolylineCoords(coorsList, coordinates);
             }
 
-            if (i === 0) {
-              leafletId = layer._leaflet_id;
-            }
-
             leafletMap.removeLayer(layer);
+            this.tabModel.leafletObject.removeLayer(layer);
           }
         }.bind(this));
 
@@ -193,6 +188,35 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         if (!Ember.isNone(id)) {
           Ember.set(shape.feature, 'id', id);
           Ember.set(shape.feature, 'geometry_name', layer.feature.geometry_name);
+          debugger
+          // let crs = layer.get('crs'); toso:!!!
+          // let latlng = layer.options.crs.projection.unproject(shape);
+
+          // Ember.set(shape.feature, 'geometry.coordinates', function (coords) {
+          //   let point = new L.Point(coords[0], coords[1]);
+          //   let latlng = crs.projection.unproject(point);
+          //   if (!Ember.isNone(coords[2])) {
+          //     latlng.alt = coords[2];
+          //   }
+
+          //   return latlng;
+          // });
+
+          // let hh = function (coords) {
+          //   let point = new L.Point(coords[0], coords[1]);
+          //   let latlng = crs.projection.unproject(point);
+          //   if (!Ember.isNone(coords[2])) {
+          //     latlng.alt = coords[2];
+          //   }
+
+          //   return latlng;
+          // };
+
+          // let kk = hh(coorsList);
+
+          // Ember.set(shape.feature, 'geometry', {
+          //   coordinates: kk
+          // });
 
           Ember.set(shape.feature, 'geometry', {
             coordinates: this._swapСoordinates(coorsList)
@@ -205,8 +229,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         }
 
         // Create a multiple shape.
-        shape.addTo(leafletMap);
-        Ember.set(shape, '_leaflet_id', leafletId);
+        shape.addTo(this.tabModel.leafletObject);
 
         // Linking shapes.
         Ember.set(shape, 'multyShape', true);
@@ -265,7 +288,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
     @param {Object[]} coorsList Accumulating array of coordinates.
     @param {Object[]} coordinates Array of coordinates.
-    @return {Object[]} accumulating array of coordinates.
+    @return {Object[]} Accumulating array of coordinates.
   */
   _getPolygonCoords(coorsList, coordinates) {
     for (let i = 0; i < coordinates.length; i++) {
