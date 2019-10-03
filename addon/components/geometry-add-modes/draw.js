@@ -138,6 +138,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         leafletMap.addLayer(drawnItems);
 
         let coorsList = [];
+        //var state = 0;
 
         // Define editable objects.
         leafletMap.eachLayer(function (layer) {
@@ -154,8 +155,19 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
               coorsList = this._getPolylineCoords(coorsList, coordinates);
             }
 
-            leafletMap.removeLayer(layer);
-            this.tabModel.leafletObject.removeLayer(layer);
+            let id = Ember.get(layer, 'feature.id');
+
+            // state = Ember.isNone(id) ? state : state++;
+
+
+
+            if (leafletMap.hasLayer(layer)) {
+              leafletMap.removeLayer(layer);
+            }
+
+            if (this.tabModel.leafletObject.hasLayer(layer)) {
+              this.tabModel.leafletObject.removeLayer(layer);
+            }
           }
         }.bind(this));
 
@@ -188,35 +200,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         if (!Ember.isNone(id)) {
           Ember.set(shape.feature, 'id', id);
           Ember.set(shape.feature, 'geometry_name', layer.feature.geometry_name);
+          Ember.set(shape, 'state', 'updateElement');
           debugger
-          // let crs = layer.get('crs'); toso:!!!
-          // let latlng = layer.options.crs.projection.unproject(shape);
-
-          // Ember.set(shape.feature, 'geometry.coordinates', function (coords) {
-          //   let point = new L.Point(coords[0], coords[1]);
-          //   let latlng = crs.projection.unproject(point);
-          //   if (!Ember.isNone(coords[2])) {
-          //     latlng.alt = coords[2];
-          //   }
-
-          //   return latlng;
-          // });
-
-          // let hh = function (coords) {
-          //   let point = new L.Point(coords[0], coords[1]);
-          //   let latlng = crs.projection.unproject(point);
-          //   if (!Ember.isNone(coords[2])) {
-          //     latlng.alt = coords[2];
-          //   }
-
-          //   return latlng;
-          // };
-
-          // let kk = hh(coorsList);
-
-          // Ember.set(shape.feature, 'geometry', {
-          //   coordinates: kk
-          // });
 
           Ember.set(shape.feature, 'geometry', {
             coordinates: this._swapСoordinates(coorsList)
@@ -226,6 +211,8 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
           if (!Ember.isNone(geoType)) {
             Ember.set(shape.feature.geometry, 'type', geoType);
           }
+        } else {
+          Ember.set(shape, 'state', 'insertElement');
         }
 
         // Create a multiple shape.
@@ -258,11 +245,11 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     @param {Object[]} changes Array of modified shapes.
   */
   _removeFromModified(changes) {
-    let state = 0;
-    let changeNumber = null;
+    // let state = 0;
+    // var changeNumber = null;
 
     for (let changeLayerNumber in changes) {
-      state = Ember.get(changes[changeLayerNumber], 'state') === 'insertElement' ? state + 1 : state;
+      // state = Ember.get(changes[changeLayerNumber], 'state') === 'insertElement' ? state + 1 : state;
 
       let multyShape = Ember.get(changes[changeLayerNumber], 'multyShape') === true;
       let mainMultyShape = Ember.get(changes[changeLayerNumber], 'mainMultyShape') === true;
@@ -271,16 +258,19 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         if (mainMultyShape === false) {
           delete changes[changeLayerNumber];
         } else {
-          changeNumber = changeLayerNumber;
+          // changeNumber = changeLayerNumber;
           delete changes[changeLayerNumber].multyShape;
           delete changes[changeLayerNumber].mainMultyShape;
         }
       }
     }
 
-    if (state > 0) {
-      Ember.set(changes[changeNumber], 'state', 'insertElement');
-    }
+    // if (state > 0) {
+    //   Ember.set(changes[changeNumber], 'state', 'insertElement');
+    // }
+    // else{
+    //   Ember.set(changes[changeNumber], 'state', 'updateElement');
+    // }
   },
 
   /**
@@ -295,21 +285,26 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       let coors = coordinates[i];
       let corArrI = [];
 
-      // if (!Ember.isNone(coordinates[0][0][0][0])) {
-      //   for (let j = 0; j < coors.length; j++) {
-      //     let coordinat = coors[j];
-      //     let corArrJ = [];
-
-      //     for (let k = 0; k < coordinat.length; k++) {
-      //       corArrJ.push([coordinat[k][1], coordinat[k][0]]);
-      //     }
-
-      //     coorsList.push(corArrJ);
-      //   }
-      // } else if (!Ember.isNone(coordinates[0][0][0])) {
-      if (!Ember.isNone(coordinates[0][0][0])) {
+      if (!Ember.isNone(coordinates[0][0][0][0])) {
         for (let j = 0; j < coors.length; j++) {
-          corArrI.push([coors[j][1], coors[j][0]]);
+          let coordinat = coors[j];
+          let corArrJ = [];
+
+          for (let k = 0; k < coordinat.length; k++) {
+            let latLng = new L.latLng(coordinat[k][1], coordinat[k][0]);
+
+            //  corArrJ.push([coordinat[k][1], coordinat[k][0]]);
+            corArrJ.push(latLng);
+          }
+
+          coorsList.push(corArrJ);
+        }
+      } else if (!Ember.isNone(coordinates[0][0][0])) {
+        for (let j = 0; j < coors.length; j++) {
+          let latLng = new L.latLng(coors[j][1], coors[j][0]);
+
+          //  corArrI.push([coors[j][1], coors[j][0]]);
+          corArrI.push(latLng);
         }
 
         coorsList.push(corArrI);
@@ -324,7 +319,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
     @param {Object[]} coorsList Accumulating array of coordinates.
     @param {Object[]} coordinates Array of coordinates.
-    @returns {Object[]} accumulating array of coordinates.
+    @return {Object[]} accumulating array of coordinates.
   */
   _getPolylineCoords(coorsList, coordinates) {
     let corArr = [];
@@ -335,14 +330,20 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         let corArrI = [];
 
         for (let j = 0; j < coordinat.length; j++) {
-          corArrI.push([coordinat[j][1], coordinat[j][0]]);
+          let latLng = new L.latLng(coordinat[j][1], coordinat[j][0]);
+          //corArrI.push([coordinat[j][1], coordinat[j][0]]);
+
+          corArrI.push(latLng);
         }
 
         coorsList.push(corArrI);
       }
     } else if (!Ember.isNone(coordinates[0][0])) {
       for (let i = 0; i < coordinates.length; i++) {
-        corArr.push([coordinates[i][1], coordinates[i][0]]);
+        let latLng = new L.latLng(coordinates[i][1], coordinates[i][0]);
+        //corArr.push([coordinates[i][1], coordinates[i][0]]);
+
+        corArr.push(latLng);
       }
 
       coorsList.push(corArr);
@@ -358,25 +359,39 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     @return {Object[]} inverse array of coordinates.
   */
   _swapСoordinates(coordinates) {
+    let result = [];
     if (!Ember.isNone(coordinates[0][0][0])) {
       for (let i = 0; i < coordinates.length; i++) {
         let coordinat = coordinates[i];
+        result.push([]);
 
         for (let j = 0; j < coordinat.length; j++) {
-          let b = coordinat[j][0];
-          coordinat[j][0] = coordinat[j][1];
-          coordinat[j][1] = b;
+          result[i].push([]);
+          let lat = coordinat[j].lat;
+          let lng = coordinat[j].lng;
+          result[i][j].push([lng, lat]);
+
+          // let b = coordinat[j][0];
+          // coordinat[j][0] = coordinat[j][1];
+          // coordinat[j][1] = b;
         }
       }
     } else if (!Ember.isNone(coordinates[0][0])) {
       for (let i = 0; i < coordinates.length; i++) {
-        let b = coordinates[i][0];
-        coordinates[i][0] = coordinates[i][1];
-        coordinates[i][1] = b;
+        let coordinat = coordinates[i];
+        result.push([]);
+        let lat = coordinat[i].lat;
+        let lng = coordinat[i].lng;
+        result[i].push([lng, lat]);
+
+        // let b = coordinates[i][0];
+        // coordinates[i][0] = coordinates[i][1];
+        // coordinates[i][1] = b;
       }
     }
 
-    return coordinates;
+    //return coordinates;
+    return result;
   },
 
   /**
