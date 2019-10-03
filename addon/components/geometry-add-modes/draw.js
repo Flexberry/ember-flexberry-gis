@@ -164,48 +164,10 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
           }
         }.bind(this));
 
-        let styleSettings = this.tabModel.get('styleSettings');
-        let shape = {};
-        if (geometryType === 'multyPolygon') {
-          shape = L.polygon(coorsList, {
-            color: styleSettings.style.path.color,
-            weight: styleSettings.style.path.weight,
-            fillColor: styleSettings.style.path.fillColor
-          });
-        } else if (geometryType === 'multyLine') {
-          shape = L.polyline(coorsList, {
-            color: styleSettings.style.path.color,
-            weight: styleSettings.style.path.weight
-          });
-        }
-
         let layerId = Ember.get(this.tabModel, 'layerId');
-        let layer = Ember.get(this.tabModel, `featureLink.${layerId}`);
-        var geoJson = layer.toGeoJSON();
 
-        Ember.set(shape, 'feature', {
-          type: 'Feature',
-          properties: geoJson.properties,
-          leafletLayer: shape
-        });
-
-        let id = Ember.get(layer.feature, 'id');
-        if (!Ember.isNone(id)) {
-          Ember.set(shape.feature, 'id', id);
-          Ember.set(shape.feature, 'geometry_name', layer.feature.geometry_name);
-          Ember.set(shape, 'state', 'updateElement');
-
-          Ember.set(shape.feature, 'geometry', {
-            coordinates: this._swapСoordinates(coorsList)
-          });
-
-          let geoType = Ember.get(layer.feature, 'geometry.type');
-          if (!Ember.isNone(geoType)) {
-            Ember.set(shape.feature.geometry, 'type', geoType);
-          }
-        } else {
-          Ember.set(shape, 'state', 'insertElement');
-        }
+        // Create a new multi shape with old shape data
+        let shape = this._createCopyMultiShape(this.tabModel, layerId, geometryType, coorsList);
 
         // Create a multiple shape.
         shape.addTo(this.tabModel.leafletObject);
@@ -214,6 +176,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         Ember.set(shape, 'multyShape', true);
         Ember.set(shape, 'mainMultyShape', true);
 
+        // Make shape in edit mode
         shape.enableEdit();
 
         // We note that the shape was edited.
@@ -229,6 +192,61 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         Ember.set(this.tabModel, 'leafletObject._wasChanged', true);
       }
     }
+  },
+
+  /**
+    Will create a new multi shape with the data of the old shape.
+
+    @param {Object} tabModel Tab model.
+    @param {Number} layerId Layer id.
+    @param {String} geometryType Shape type.
+    @param {Object[]} coorsList Accumulating array of coordinates.
+    @return {Object} Return a new multi shape.
+  */
+  _createCopyMultiShape(tabModel, layerId, geometryType, coorsList) {
+    let styleSettings = tabModel.get('styleSettings');
+    let shape = {};
+    if (geometryType === 'multyPolygon') {
+      shape = L.polygon(coorsList, {
+        color: styleSettings.style.path.color,
+        weight: styleSettings.style.path.weight,
+        fillColor: styleSettings.style.path.fillColor
+      });
+    } else if (geometryType === 'multyLine') {
+      shape = L.polyline(coorsList, {
+        color: styleSettings.style.path.color,
+        weight: styleSettings.style.path.weight
+      });
+    }
+
+    let layer = Ember.get(tabModel, `featureLink.${layerId}`);
+    var geoJson = layer.toGeoJSON();
+
+    Ember.set(shape, 'feature', {
+      type: 'Feature',
+      properties: geoJson.properties,
+      leafletLayer: shape
+    });
+
+    let id = Ember.get(layer.feature, 'id');
+    if (!Ember.isNone(id)) {
+      Ember.set(shape.feature, 'id', id);
+      Ember.set(shape.feature, 'geometry_name', layer.feature.geometry_name);
+      Ember.set(shape, 'state', 'updateElement');
+
+      Ember.set(shape.feature, 'geometry', {
+        coordinates: this._swapСoordinates(coorsList)
+      });
+
+      let geoType = Ember.get(layer.feature, 'geometry.type');
+      if (!Ember.isNone(geoType)) {
+        Ember.set(shape.feature.geometry, 'type', geoType);
+      }
+    } else {
+      Ember.set(shape, 'state', 'insertElement');
+    }
+
+    return shape;
   },
 
   /**
@@ -334,7 +352,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   */
   _swapСoordinates(coordinates) {
     let result = [];
-    if (!Ember.isNone(coordinates[0][0][0])) {
+    if (!Ember.isNone(coordinates[0][0])) {
       for (let i = 0; i < coordinates.length; i++) {
         let coordinat = coordinates[i];
         result.push([]);
@@ -345,14 +363,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
           let lng = coordinat[j].lng;
           result[i][j].push([lng, lat]);
         }
-      }
-    } else if (!Ember.isNone(coordinates[0][0])) {
-      for (let i = 0; i < coordinates.length; i++) {
-        let coordinat = coordinates[i];
-        result.push([]);
-        let lat = coordinat[i].lat;
-        let lng = coordinat[i].lng;
-        result[i].push([lng, lat]);
       }
     }
 
