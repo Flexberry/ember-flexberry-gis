@@ -3,12 +3,24 @@
     <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo" on="click"}}>
       <i class="caret {{if expanded 'down' 'right'}} icon"></i>
     </a>
-    <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
-      <i class="marker icon"></i>
-    </a>
-    <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
-      <i class="hand paper icon"></i>
-    </a>
+      {{#if intersection}}
+        <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" on="click"}}>
+          <i class="hand paper icon"></i>
+        </a>
+        <a class="icon item" title="{{t 'components.flexberry-layers-intersections-panel.show-on-map'}}" {{action "zoomToIntersection" on="click"}}>
+          <i class="intersections icon"></i>
+        </a>
+      {{else}}
+        <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
+          <i class="marker icon"></i>
+        </a>
+        <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
+          <i class="hand paper icon"></i>
+        </a>
+        <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "findIntersection" on="click"}}>
+          <i class="intersections icon"></i>
+        </a>
+      {{/if}}
       {{#if (gt feature.editForms.length 0)}}
         {{#if (eq feature.editForms.length 1)}}
           {{#if hasEditForm}}
@@ -98,6 +110,51 @@
           </tr>
         {{/if}}
       {{/each-in}}
+      {{#if intersection}}
+        {{#if feature.intersection.isPolygon}}
+          <tr>
+            <td>
+              {{t 'components.flexberry-layers-intersections-panel.square'}}
+            </td>
+            <td>
+              {{feature.intersection.intersectedArea}} 
+            </td>
+          </tr>
+        {{/if}}
+      {{#if feature.intersection.intersectionCords}}
+        <tr>
+          <td>
+              {{t 'components.flexberry-layers-intersections-panel.intersection-cords'}}
+          </td>
+          <td class="cords">
+            {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
+            <div>
+              <table class="ui compact celled table">
+                <tr>
+                  <td>
+                    {{t 'components.flexberry-layers-intersections-panel.x-cord'}}
+                  </td>
+                  <td>
+                    {{t 'components.flexberry-layers-intersections-panel.y-cord'}}
+                  </td>
+                </tr>
+                {{#each feature.intersection.intersectionCords as |cords|}}
+                  <tr>
+                    <td>
+                      {{cords.[0]}}
+                    </td>
+                    <td>
+                      {{cords.[1]}}
+                    </td>
+                  </tr>
+                {{/each}}
+              </table>    
+            </div>
+            {{/flexberry-toggler}}       
+          </td>
+        </tr>
+        {{/if}}
+      {{/if}}
     </table>
   {{/if}}
 </div>
