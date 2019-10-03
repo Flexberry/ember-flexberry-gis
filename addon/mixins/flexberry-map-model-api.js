@@ -1,5 +1,9 @@
 import Ember from 'ember';
 import lineIntersect from 'npm:@turf/line-intersect';
+import pointinPolygon from 'npm:@turf/boolean-point-in-polygon';
+import area from 'npm:@turf/area';
+import intersect from 'npm:@turf/intersect';
+import * as helper from 'npm:@turf/helpers';
 
 export default Ember.Mixin.create({
   /**
@@ -195,6 +199,88 @@ export default Ember.Mixin.create({
     return result;
   },
 
+  /**
+    Check if objectA contains object B.
+    @method  isContainsObject
+    @param {String} objectAId id of first object.
+    @param {String} objectBId id of second object.
+  */
+  isContainsObject(objectAId, objectBId) {
+    let objA;
+    let objB;
+    const layers = this.get('mapLayer');
+    layers.forEach(layer => {
+      let features = Ember.get(layer, '_leafletObject._layers');
+      if (features) {
+        Object.values(features).forEach(feature=> {
+          const layerFeatureId = this._getLayerFeatureId(layer, feature);
+          if (layerFeatureId === objectAId) {
+            objA = feature;
+          }
+
+          if (layerFeatureId === objectBId) {
+            objB = feature;
+          }
+        });
+      }
+    });
+    if (objA && objB) {
+      let cordsInPolygon = 0;
+      if (objB.feature.geometry.type === 'Polygon' || objB.feature.geometry.type === 'MultiPolygon') {
+        let allCords = 0;
+        objA.feature.geometry.coordinates.forEach(array=> {
+          array.forEach(pair=> {
+            allCords++;
+            var point = helper.default.point(pair);
+            if (pointinPolygon(point, objB.feature)) {
+              cordsInPolygon++;
+            }
+          });
+        });
+        if (allCords === cordsInPolygon) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  },
+
+  /**
+    Calculate the area of ​​object B that extends beyond the boundaries of object A.
+    @method  getAreaExtends
+    @param {String} objectAId id of first object.
+    @param {String} objectBId id of second object.
+  */
+  getAreaExtends(objectAId, objectBId) {
+    let objA;
+    let objB;
+    const layers = this.get('mapLayer');
+    layers.forEach(layer => {
+      let features = Ember.get(layer, '_leafletObject._layers');
+      if (features) {
+        Object.values(features).forEach(feature=> {
+          const layerFeatureId = this._getLayerFeatureId(layer, feature);
+          if (layerFeatureId === objectAId) {
+            objA = feature;
+          }
+
+          if (layerFeatureId === objectBId) {
+            objB = feature;
+          }
+        });
+      }
+    });
+    if (objA && objB) {
+      let intersectionRes = intersect(objB.feature, objA.feature);
+      if (intersectionRes) {
+        let resultArea = area(objB.feature) - area(intersectionRes);
+        return resultArea;
+      }
+    }
+
+    return 0;
+  },
   _setVisibility(layerIds, visibility = false) {
     if (Ember.isArray(layerIds)) {
       const layers = this.get('mapLayer');
