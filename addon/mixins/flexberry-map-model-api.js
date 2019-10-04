@@ -210,17 +210,19 @@ export default Ember.Mixin.create({
     if (Ember.isArray(objectIds)) {
       const layers = this.get('mapLayer');
       const layer = layers.findBy('id', layerId);
+      const map = Ember.get(layer, '_leafletObject._map');
+
 
       layer._leafletObject.eachLayer(function (shape) {
         const id = this._getLayerFeatureId(layer, shape);
         if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
           if (visibility) {
-            if (!layer._leafletObject._map.hasLayer(shape)) {
-              layer._leafletObject._map.addLayer(shape);
+            if (!map.hasLayer(shape)) {
+              map.addLayer(shape);
             }
           } else {
-            if (layer._leafletObject._map.hasLayer(shape)) {
-              layer._leafletObject._map.removeLayer(shape);
+            if (map.hasLayer(shape)) {
+              map.removeLayer(shape);
             }
           }
         }
