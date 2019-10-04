@@ -207,7 +207,6 @@ export default Ember.Mixin.create({
     @param {Boolean} [visibility=false] visibility Object Visibility
   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
-    debugger;
     if (Ember.isArray(objectIds)) {
       const layers = this.get('mapLayer');
       const layer = layers.findBy('id', layerId);
