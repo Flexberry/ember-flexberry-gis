@@ -50,6 +50,24 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Show all layer objects.
+
+    @method showAllLayerObjects
+    @param {String} layerId Layer id
+  */
+  showAllLayerObjects(layerId) {
+    const layer = this.get('mapLayer').findBy('id', layerId);
+    const leafletObject = Ember.get(layer, '_leafletObject');
+    var map = Ember.get(leafletObject, '_map');
+
+    leafletObject.eachLayer(function (layerShape) {
+      if (!map.hasLayer(layerShape)) {
+        map.addLayer(layerShape);
+      }
+    });
+  },
+
+  /**
     Creates new layer with specified options.
     @method createNewLayer.
   */
@@ -208,12 +226,11 @@ export default Ember.Mixin.create({
   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
     if (Ember.isArray(objectIds)) {
-      const layers = this.get('mapLayer');
-      const layer = layers.findBy('id', layerId);
-      const map = Ember.get(layer, '_leafletObject._map');
+      const layer = this.get('mapLayer').findBy('id', layerId);
+      const leafletObject = Ember.get(layer, '_leafletObject');
+      var map = Ember.get(leafletObject, '_map');
 
-
-      layer._leafletObject.eachLayer(function (shape) {
+      leafletObject.eachLayer(function (shape) {
         const id = this._getLayerFeatureId(layer, shape);
         if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
           if (visibility) {

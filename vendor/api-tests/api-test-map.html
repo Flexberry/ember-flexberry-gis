@@ -8,6 +8,7 @@
   <button id="queryLayers">Query Layers</button>
   <button id="getIntersectionObjects">get Intersection Objects</button>
   <button id="createNewlayer">Create new Layer</button>
+  <button id="showAllLayerObjects">Show all layer objects</button>
   <div>
     <textarea id="layerObjects" name="text" style="width:750px;height:100px"></textarea>
     <br />
@@ -88,7 +89,7 @@
       newLayerButton.addEventListener('click', newLayer);
 
       textaeraDelObj = {
-        layerId: "f8dec493-d879-49ae-ad55-f4f18c89cb88", objectIds: ["perm_water_line.8383", "perm_water_line.8382"]
+        layerId: 'f8dec493-d879-49ae-ad55-f4f18c89cb88', objectIds: ['perm_water_line.8383', 'perm_water_line.8382']
       };
       layerObjects.value = JSON.stringify(textaeraDelObj);
 
@@ -138,6 +139,13 @@
       }
 
       hideObjectsButton.addEventListener('click', hideObjects);
+
+      var showAllLayerObjectsButton = document.getElementById('showAllLayerObjects');
+      var showAllLayerObjects = function () {
+        frame.contentWindow.mapApi.mapModel.showAllLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88');
+      }
+
+      showAllLayerObjectsButton.addEventListener('click', showAllLayerObjects);
     });
   </script>
 </div>
