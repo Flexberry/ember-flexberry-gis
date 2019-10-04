@@ -28,6 +28,28 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Shows id objects for layer.
+
+    @method showLayerObjects
+    @param {String} layerId Layer id
+    @param {String[]} objectIds Array of id objects
+  */
+  showLayerObjects(layerId, objectIds) {
+    this._setVisibilityObjects(layerId, objectIds, true);
+  },
+
+  /**
+    Hides id objects for layer.
+
+    @method hideLayerObjects
+    @param {String} layerId Layer id
+    @param {String[]} objectIds Array of id objects
+  */
+  hideLayerObjects(layerId, objectIds) {
+    this._setVisibilityObjects(layerId, objectIds, false);
+  },
+
+  /**
     Creates new layer with specified options.
     @method createNewLayer.
   */
@@ -36,7 +58,7 @@ export default Ember.Mixin.create({
     const store = this.get('store');
     let layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', options);
     layer.set('map', this);
-    return layer.save().then(()=> {
+    return layer.save().then(() => {
       const layers = this.get('hierarchy');
       layers.addObject(layer);
       return layer.get('id');
@@ -60,7 +82,7 @@ export default Ember.Mixin.create({
 
     @method deleteLayerObjects.
     @param {String} layerId Id layer.
-    @param {OBject[]} featureIds Array of id shapes.
+    @param {Object[]} featureIds Array of id shapes.
   */
   deleteLayerObjects(layerId, featureIds) {
     const layers = this.get('mapLayer');
@@ -175,4 +197,70 @@ export default Ember.Mixin.create({
 
     return Ember.get(layerObject, 'feature.id');
   },
+
+  /**
+    Determine the visibility of the specified objects by id for the layer
+
+    @method _setVisibilityObjects
+    @param {String} layerId Layer id
+    @param {String[]} objectIds Array of id objects
+    @param {Boolean} [visibility=false] visibility Object Visibility
+  */
+  _setVisibilityObjects(layerId, objectIds, visibility = false) {
+    debugger;
+    if (Ember.isArray(objectIds)) {
+      const layers = this.get('mapLayer');
+      const layer = layers.findBy('id', layerId);
+      // let leafletMap = this.get('map');
+
+
+      // layer.setFilter(function (f) {
+      //   // Returning true for all markers shows everything.
+      //   return true;
+      // });
+
+      layer._leafletObject.eachLayer(function (shape) {
+        const id = this._getLayerFeatureId(layer, shape);
+        if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
+          if (visibility) {
+            if (!layer._leafletObject._map.hasLayer(shape)) {
+              layer._leafletObject._map.addLayer(shape);
+            }
+          } else {
+            if (layer._leafletObject._map.hasLayer(shape)) {
+              layer._leafletObject._map.removeLayer(shape);
+            }
+          }
+        }
+      }.bind(this));
+
+
+      // if (visibility) {
+      //   layer._leafletObject.eachLayer(function (shape) {
+      //     const id = this._getLayerFeatureId(layer, shape);
+      //     if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
+      //       layer._leafletObject._map.addLayer(shape);
+      //     }
+      //   }.bind(this));
+      // } else {
+      //   layer._leafletObject.eachLayer(function (shape) {
+      //     const id = this._getLayerFeatureId(layer, shape);
+
+      //     if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
+      //       layer._leafletObject._map.removeLayer(shape);
+      //       // layer._leafletObject.removeLayer(shape);
+      //     }
+      //   }.bind(this));
+      // }
+      //   const layers = this.get('mapLayer');
+      //   layerIds.forEach(id => {
+      //     const layer = layers.findBy('id', id);
+      //     if (layer) {
+      //       layer.set('visibility', visibility);
+      //     }
+      //   });
+    }
+  }
+
+
 });
