@@ -211,13 +211,6 @@ export default Ember.Mixin.create({
     if (Ember.isArray(objectIds)) {
       const layers = this.get('mapLayer');
       const layer = layers.findBy('id', layerId);
-      // let leafletMap = this.get('map');
-
-
-      // layer.setFilter(function (f) {
-      //   // Returning true for all markers shows everything.
-      //   return true;
-      // });
 
       layer._leafletObject.eachLayer(function (shape) {
         const id = this._getLayerFeatureId(layer, shape);
@@ -233,34 +226,6 @@ export default Ember.Mixin.create({
           }
         }
       }.bind(this));
-
-
-      // if (visibility) {
-      //   layer._leafletObject.eachLayer(function (shape) {
-      //     const id = this._getLayerFeatureId(layer, shape);
-      //     if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
-      //       layer._leafletObject._map.addLayer(shape);
-      //     }
-      //   }.bind(this));
-      // } else {
-      //   layer._leafletObject.eachLayer(function (shape) {
-      //     const id = this._getLayerFeatureId(layer, shape);
-
-      //     if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
-      //       layer._leafletObject._map.removeLayer(shape);
-      //       // layer._leafletObject.removeLayer(shape);
-      //     }
-      //   }.bind(this));
-      // }
-      //   const layers = this.get('mapLayer');
-      //   layerIds.forEach(id => {
-      //     const layer = layers.findBy('id', id);
-      //     if (layer) {
-      //       layer.set('visibility', visibility);
-      //     }
-      //   });
     }
   }
-
-
 });
