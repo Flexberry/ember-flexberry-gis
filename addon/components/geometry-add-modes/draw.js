@@ -234,8 +234,27 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       Ember.set(shape.feature, 'geometry_name', layer.feature.geometry_name);
       Ember.set(shape, 'state', 'updateElement');
 
+      const swapСoordinates = function (coordinates) {
+        let result = [];
+        let crs = Ember.get(tabModel, 'leafletObject.options.crs');
+
+        for (let i = 0; i < coordinates.length; i++) {
+          let coordinat = coordinates[i];
+          result.push([]);
+
+          for (let j = 0; j < coordinat.length; j++) {
+            result[i].push([]);
+
+            let objCoordinat = crs.project(coordinat[j]);
+            result[i][j].push(objCoordinat);
+          }
+        }
+
+        return result;
+      }
+
       Ember.set(shape.feature, 'geometry', {
-        coordinates: this._swapСoordinates(coorsList)
+        coordinates: swapСoordinates(coorsList)
       });
 
       let geoType = Ember.get(layer.feature, 'geometry.type');
@@ -344,30 +363,30 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     return coorsList;
   },
 
-  /**
-    Swap coordinates.
+  // /**
+  //   Swap coordinates.
 
-    @param {Object[]} coordinates Array of coordinates.
-    @return {Object[]} inverse array of coordinates.
-  */
-  _swapСoordinates(coordinates) {
-    let result = [];
-    if (!Ember.isNone(coordinates[0][0])) {
-      for (let i = 0; i < coordinates.length; i++) {
-        let coordinat = coordinates[i];
-        result.push([]);
+  //   @param {Object[]} coordinates Array of coordinates.
+  //   @return {Object[]} inverse array of coordinates.
+  // */
+  // _swapСoordinates(coordinates) {
+  //   let result = [];
+  //   if (!Ember.isNone(coordinates[0][0])) {
+  //     for (let i = 0; i < coordinates.length; i++) {
+  //       let coordinat = coordinates[i];
+  //       result.push([]);
 
-        for (let j = 0; j < coordinat.length; j++) {
-          result[i].push([]);
-          let lat = coordinat[j].lat;
-          let lng = coordinat[j].lng;
-          result[i][j].push([lng, lat]);
-        }
-      }
-    }
+  //       for (let j = 0; j < coordinat.length; j++) {
+  //         result[i].push([]);
+  //         let lat = coordinat[j].lat;
+  //         let lng = coordinat[j].lng;
+  //         result[i][j].push([lng, lat]);
+  //       }
+  //     }
+  //   }
 
-    return result;
-  },
+  //   return result;
+  // },
 
   /**
     Component's action invoking when new geometry was added.
