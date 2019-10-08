@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/geometry-add-modes/draw';
-import * as turf from 'npm:@turf/combine';
+import turfCombine from 'npm:@turf/combine';
 
 /**
   Component's CSS-classes names.
@@ -138,7 +138,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         var drawnItems = new L.FeatureGroup();
         leafletMap.addLayer(drawnItems);
 
-       // let coorsList = [];
         var featureCollection = {
           type: 'FeatureCollection',
           features: []
@@ -149,15 +148,9 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
           let enabled = Ember.get(layer, 'editor._enabled');
           if (enabled === true) {
             var layerGeoJson = layer.toGeoJSON();
-           // let coordinates = layerGeoJson.geometry.coordinates;
+            featureCollection.features.push(layerGeoJson);
 
             Ember.set(layer, 'multyShape', true);
-
-            // if (layer instanceof L.Polygon) {
-            //   coorsList = this._getPolygonCoords(coorsList, coordinates);
-            // } else if (layer instanceof L.Polyline) {
-            //   coorsList = this._getPolylineCoords(coorsList, coordinates);
-            // }
 
             if (leafletMap.hasLayer(layer)) {
               leafletMap.removeLayer(layer);
@@ -166,24 +159,15 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
             if (this.tabModel.leafletObject.hasLayer(layer)) {
               this.tabModel.leafletObject.removeLayer(layer);
             }
-
-            featureCollection.features.push(layerGeoJson);
           }
         }.bind(this));
 
-        // var fc = {
-        //   type: 'FeatureCollection',
-        //   features: [
-        //     L.point(19.026432, 47.49134),
-        //      L.point(19.074497, 47.509548)
-        //    ]
-        // };
-
-        let fcCombined = turf.default.default(featureCollection);
+        // Coordinate union.
+        let fcCombined = turfCombine.default(featureCollection);
 
         let layerId = Ember.get(this.tabModel, 'layerId');
 
-        // Create a new multi shape with old shape data
+        // Create a new multi shape with old shape data.
         let shape = this._createCopyMultiShape(this.tabModel, layerId, geometryType, fcCombined);
 
         // Create a multiple shape.
@@ -193,7 +177,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         Ember.set(shape, 'multyShape', true);
         Ember.set(shape, 'mainMultyShape', true);
 
-        // Make shape in edit mode
+        // Make shape in edit mode.
         shape.enableEdit();
 
         // We note that the shape was edited.
@@ -217,8 +201,7 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     @param {Object} tabModel Tab model.
     @param {Number} layerId Layer id.
     @param {String} geometryType Shape type.
-   // @param {Object[]} coorsList Accumulating array of coordinates.
-    //todo:!!!
+    @param {Object[]} featureCollection United coordinates.
     @return {Object} Return a new multi shape.
   */
   _createCopyMultiShape(tabModel, layerId, geometryType, featureCollection) {
@@ -226,19 +209,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     let feature = featureCollection.features.pop();
     let coordinates = feature.geometry.coordinates;
     let shape = {};
-
-    // if (geometryType === 'multyPolygon') {
-    //   shape = L.polygon(coorsList, {
-    //     color: styleSettings.style.path.color,
-    //     weight: styleSettings.style.path.weight,
-    //     fillColor: styleSettings.style.path.fillColor
-    //   });
-    // } else if (geometryType === 'multyLine') {
-    //   shape = L.polyline(coorsList, {
-    //     color: styleSettings.style.path.color,
-    //     weight: styleSettings.style.path.weight
-    //   });
-    // }
 
     const swapСoordinates = function (coordinates) {
       let result = [];
@@ -269,39 +239,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       return result;
     };
 
-    // const swapСoordinates = function (coordinates, result) {
-    //   result =Ember.isNone(result) ? []: result;
-
-    //   for (let i = 0; i < coordinates.length; i++) {
-    //     let coordinatI = coordinates[i];
-    //     result.push([]);
-
-    //     if (Ember.isArray(coordinatI[0])) {
-    //       result = swapСoordinates(coordinatI,result);
-    //     }
-    //     else {
-    //     //  let coordinatK = coordinatI[i];
-
-    //       let point = new L.LatLng(coordinatI[1], coordinatI[0]);
-    //       result[i].push(point);
-    //     }
-
-    //     // for (let j = 0; j < coordinatI.length; j++) {
-    //     //   let coordinatJ = coordinatI[j];
-    //     //   result[i].push([]);
-
-    //     //   for (let k = 0; k < coordinatJ.length; k++) {
-    //     //     let coordinatK = coordinatJ[k];
-
-    //     //     let point = new L.LatLng(coordinatK[1], coordinatK[0]);
-    //     //     result[i][j].push(point);
-    //     //   }
-    //     // }
-    //   }
-
-    //   return result;
-    // }
-
     let coors = swapСoordinates(coordinates);
 
     if (geometryType === 'multyPolygon') {
@@ -331,12 +268,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       Ember.set(shape.feature, 'id', id);
       Ember.set(shape.feature, 'geometry_name', layer.feature.geometry_name);
       Ember.set(shape, 'state', 'updateElement');
-
-
-
-      // Ember.set(shape.feature, 'geometry', {
-      //   coordinates: swapСoordinates(coorsList)
-      // });
 
       Ember.set(shape.feature, 'geometry', {
         coordinates: coordinates
@@ -373,105 +304,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       }
     }
   },
-
-  /**
-    Building a multiple polygon.
-
-    @param {Object[]} coorsList Accumulating array of coordinates.
-    @param {Object[]} coordinates Array of coordinates.
-    @return {Object[]} Accumulating array of coordinates.
-  */
-  _getPolygonCoords(coorsList, coordinates) {
-    for (let i = 0; i < coordinates.length; i++) {
-      let coors = coordinates[i];
-      let corArrI = [];
-
-      // Define a multipolygon
-      if (!Ember.isNone(coordinates[0][0][0][0])) {
-        for (let j = 0; j < coors.length; j++) {
-          let coordinat = coors[j];
-          let corArrJ = [];
-
-          for (let k = 0; k < coordinat.length; k++) {
-            let latLng = new L.latLng(coordinat[k][1], coordinat[k][0]);
-            corArrJ.push(latLng);
-          }
-
-          coorsList.push(corArrJ);
-        }
-
-        // Define a polygon
-      } else if (!Ember.isNone(coordinates[0][0][0])) {
-        for (let j = 0; j < coors.length; j++) {
-          let latLng = new L.latLng(coors[j][1], coors[j][0]);
-          corArrI.push(latLng);
-        }
-
-        coorsList.push(corArrI);
-      }
-    }
-
-    return coorsList;
-  },
-
-  /**
-    Building a multiple polyline.
-
-    @param {Object[]} coorsList Accumulating array of coordinates.
-    @param {Object[]} coordinates Array of coordinates.
-    @return {Object[]} accumulating array of coordinates.
-  */
-  _getPolylineCoords(coorsList, coordinates) {
-    let corArr = [];
-
-    if (!Ember.isNone(coordinates[0][0][0])) {
-      for (let i = 0; i < coordinates.length; i++) {
-        let coordinat = coordinates[i];
-        let corArrI = [];
-
-        for (let j = 0; j < coordinat.length; j++) {
-          let latLng = new L.latLng(coordinat[j][1], coordinat[j][0]);
-          corArrI.push(latLng);
-        }
-
-        coorsList.push(corArrI);
-      }
-    } else if (!Ember.isNone(coordinates[0][0])) {
-      for (let i = 0; i < coordinates.length; i++) {
-        let latLng = new L.latLng(coordinates[i][1], coordinates[i][0]);
-        corArr.push(latLng);
-      }
-
-      coorsList.push(corArr);
-    }
-
-    return coorsList;
-  },
-
-  // /**
-  //   Swap coordinates.
-
-  //   @param {Object[]} coordinates Array of coordinates.
-  //   @return {Object[]} inverse array of coordinates.
-  // */
-  // _swapСoordinates(coordinates) {
-  //   let result = [];
-  //   if (!Ember.isNone(coordinates[0][0])) {
-  //     for (let i = 0; i < coordinates.length; i++) {
-  //       let coordinat = coordinates[i];
-  //       result.push([]);
-
-  //       for (let j = 0; j < coordinat.length; j++) {
-  //         result[i].push([]);
-  //         let lat = coordinat[j].lat;
-  //         let lng = coordinat[j].lng;
-  //         result[i][j].push([lng, lat]);
-  //       }
-  //     }
-  //   }
-
-  //   return result;
-  // },
 
   /**
     Component's action invoking when new geometry was added.
