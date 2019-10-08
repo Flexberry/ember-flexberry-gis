@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/geometry-add-modes/draw';
+import * as turf from 'npm:@turf/combine';
 
 /**
   Component's CSS-classes names.
@@ -137,22 +138,26 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
         var drawnItems = new L.FeatureGroup();
         leafletMap.addLayer(drawnItems);
 
-        let coorsList = [];
+       // let coorsList = [];
+        var featureCollection = {
+          type: 'FeatureCollection',
+          features: []
+        };
 
         // Define editable objects.
         leafletMap.eachLayer(function (layer) {
           let enabled = Ember.get(layer, 'editor._enabled');
           if (enabled === true) {
             var layerGeoJson = layer.toGeoJSON();
-            let coordinates = layerGeoJson.geometry.coordinates;
+           // let coordinates = layerGeoJson.geometry.coordinates;
 
             Ember.set(layer, 'multyShape', true);
 
-            if (layer instanceof L.Polygon) {
-              coorsList = this._getPolygonCoords(coorsList, coordinates);
-            } else if (layer instanceof L.Polyline) {
-              coorsList = this._getPolylineCoords(coorsList, coordinates);
-            }
+            // if (layer instanceof L.Polygon) {
+            //   coorsList = this._getPolygonCoords(coorsList, coordinates);
+            // } else if (layer instanceof L.Polyline) {
+            //   coorsList = this._getPolylineCoords(coorsList, coordinates);
+            // }
 
             if (leafletMap.hasLayer(layer)) {
               leafletMap.removeLayer(layer);
@@ -161,13 +166,25 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
             if (this.tabModel.leafletObject.hasLayer(layer)) {
               this.tabModel.leafletObject.removeLayer(layer);
             }
+
+            featureCollection.features.push(layerGeoJson);
           }
         }.bind(this));
+
+        // var fc = {
+        //   type: 'FeatureCollection',
+        //   features: [
+        //     L.point(19.026432, 47.49134),
+        //      L.point(19.074497, 47.509548)
+        //    ]
+        // };
+
+        let fcCombined = turf.default.default(featureCollection);
 
         let layerId = Ember.get(this.tabModel, 'layerId');
 
         // Create a new multi shape with old shape data
-        let shape = this._createCopyMultiShape(this.tabModel, layerId, geometryType, coorsList);
+        let shape = this._createCopyMultiShape(this.tabModel, layerId, geometryType, fcCombined);
 
         // Create a multiple shape.
         shape.addTo(this.tabModel.leafletObject);
@@ -200,20 +217,101 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     @param {Object} tabModel Tab model.
     @param {Number} layerId Layer id.
     @param {String} geometryType Shape type.
-    @param {Object[]} coorsList Accumulating array of coordinates.
+   // @param {Object[]} coorsList Accumulating array of coordinates.
+    //todo:!!!
     @return {Object} Return a new multi shape.
   */
-  _createCopyMultiShape(tabModel, layerId, geometryType, coorsList) {
+  _createCopyMultiShape(tabModel, layerId, geometryType, featureCollection) {
     let styleSettings = tabModel.get('styleSettings');
+    let feature = featureCollection.features.pop();
+    let coordinates = feature.geometry.coordinates;
     let shape = {};
+
+    // if (geometryType === 'multyPolygon') {
+    //   shape = L.polygon(coorsList, {
+    //     color: styleSettings.style.path.color,
+    //     weight: styleSettings.style.path.weight,
+    //     fillColor: styleSettings.style.path.fillColor
+    //   });
+    // } else if (geometryType === 'multyLine') {
+    //   shape = L.polyline(coorsList, {
+    //     color: styleSettings.style.path.color,
+    //     weight: styleSettings.style.path.weight
+    //   });
+    // }
+
+    const swapСoordinates = function (coordinates) {
+      let result = [];
+
+      for (let i = 0; i < coordinates.length; i++) {
+        let coordinatI = coordinates[i];
+        result.push([]);
+
+        for (let j = 0; j < coordinatI.length; j++) {
+          let coordinatJ = coordinatI[j];
+
+          if (Ember.isArray(coordinatJ[0])) {
+            result[i].push([]);
+            for (let k = 0; k < coordinatJ.length; k++) {
+              let coordinatK = coordinatJ[k];
+
+              let point = new L.LatLng(coordinatK[1], coordinatK[0]);
+              result[i][j].push(point);
+            }
+
+          } else {
+            let point = new L.LatLng(coordinatJ[1], coordinatJ[0]);
+            result[i].push(point);
+          }
+        }
+      }
+
+      return result;
+    };
+
+    // const swapСoordinates = function (coordinates, result) {
+    //   result =Ember.isNone(result) ? []: result;
+
+    //   for (let i = 0; i < coordinates.length; i++) {
+    //     let coordinatI = coordinates[i];
+    //     result.push([]);
+
+    //     if (Ember.isArray(coordinatI[0])) {
+    //       result = swapСoordinates(coordinatI,result);
+    //     }
+    //     else {
+    //     //  let coordinatK = coordinatI[i];
+
+    //       let point = new L.LatLng(coordinatI[1], coordinatI[0]);
+    //       result[i].push(point);
+    //     }
+
+    //     // for (let j = 0; j < coordinatI.length; j++) {
+    //     //   let coordinatJ = coordinatI[j];
+    //     //   result[i].push([]);
+
+    //     //   for (let k = 0; k < coordinatJ.length; k++) {
+    //     //     let coordinatK = coordinatJ[k];
+
+    //     //     let point = new L.LatLng(coordinatK[1], coordinatK[0]);
+    //     //     result[i][j].push(point);
+    //     //   }
+    //     // }
+    //   }
+
+    //   return result;
+    // }
+
+    let coors = swapСoordinates(coordinates);
+
     if (geometryType === 'multyPolygon') {
-      shape = L.polygon(coorsList, {
+      shape = L.polygon(coors, {
         color: styleSettings.style.path.color,
         weight: styleSettings.style.path.weight,
         fillColor: styleSettings.style.path.fillColor
       });
     } else if (geometryType === 'multyLine') {
-      shape = L.polyline(coorsList, {
+      shape = L.polyline(coors, {
         color: styleSettings.style.path.color,
         weight: styleSettings.style.path.weight
       });
@@ -234,27 +332,14 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
       Ember.set(shape.feature, 'geometry_name', layer.feature.geometry_name);
       Ember.set(shape, 'state', 'updateElement');
 
-      const swapСoordinates = function (coordinates) {
-        let result = [];
-        let crs = Ember.get(tabModel, 'leafletObject.options.crs');
 
-        for (let i = 0; i < coordinates.length; i++) {
-          let coordinat = coordinates[i];
-          result.push([]);
 
-          for (let j = 0; j < coordinat.length; j++) {
-            result[i].push([]);
-
-            let objCoordinat = crs.project(coordinat[j]);
-            result[i][j].push(objCoordinat);
-          }
-        }
-
-        return result;
-      }
+      // Ember.set(shape.feature, 'geometry', {
+      //   coordinates: swapСoordinates(coorsList)
+      // });
 
       Ember.set(shape.feature, 'geometry', {
-        coordinates: swapСoordinates(coorsList)
+        coordinates: coordinates
       });
 
       let geoType = Ember.get(layer.feature, 'geometry.type');
