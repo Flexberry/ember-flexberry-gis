@@ -165,6 +165,7 @@
   <div class="row">
     <div class="sixteen wide column">
       {{#flexberry-maptoolbar
+      
         leafletMap=leafletMap
         layers=model.hierarchy as |mapToolbar|
       }}
@@ -192,6 +193,7 @@
           toolMode=identifyToolOption
           leafletMap=leafletMap
         }}
+        {{map-tools/compare activate=(action "onMapToolActivate" target=mapToolbar)}}
         {{map-commands/go-to
           execute=(action "onMapCommandExecute" target=mapToolbar)
         }}

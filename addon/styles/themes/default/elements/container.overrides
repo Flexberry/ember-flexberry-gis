@@ -321,8 +321,11 @@
     }
     /* переход к точке */
     .flexberry-identify-map-tool {
-        border-radius: 0px 5px 5px 0px;
         left: 284px;
+    }
+    .flexberry-compare-map-tool {
+        border-radius: 0px 5px 5px 0px;
+        left: 320px;
     }
     .flexberry-full-extent-map-command {
         border-radius: 5px;
@@ -407,6 +410,10 @@
     i.icon.intersections:before {
       font-family: Icons;
       content: "\f24d";
+    }
+    i.icon.compare:before {
+      font-family: Icons;
+      content: "\f0ec";
     }
     /* + */
     i.icon.zoom:before {
