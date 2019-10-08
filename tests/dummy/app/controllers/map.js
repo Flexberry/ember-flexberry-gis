@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import EditMapController from 'ember-flexberry-gis/controllers/edit-map';
 import EditFormControllerOperationsIndicationMixin from 'ember-flexberry/mixins/edit-form-controller-operations-indication';
+import sideBySide from 'npm:leaflet-side-by-side';
 
 /**
   Map controller.
@@ -22,6 +23,11 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @default 'maps'
   */
   parentRoute: 'maps',
+
+  mapLayers: [],
+
+  //api
+  mapApi: Ember.inject.service(),
 
   /**
     Idenify tool layers mode (which layers to identify).
@@ -256,6 +262,24 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   editedLayersPanelSettings: null,
 
   /**
+    Flag indicates if comapre tool active.
+
+    @property compareLayersEnabled
+    @type Boolean
+    @default false
+  */
+  compareLayersEnabled: false,
+
+  /**
+    Property contatining sideBySide component.
+
+    @property sideBySide
+    @type L.control.sideBySide
+    @default null
+  */
+  sideBySide: L.control.sideBySide(),
+
+  /**
     Initializes 'flexberry-layers-attributes-panel'.
 
     @method initializeEditPanel
@@ -366,7 +390,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this._super(...arguments);
 
       this.initializeEditPanel();
-
       let leafletMap = this.get('leafletMap');
       if (!Ember.isNone(leafletMap)) {
         leafletMap.on('containerResizeStart', this.onLeafletMapContainerResizeStart, this);
@@ -523,6 +546,31 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       if (identifyToolBufferedMainPolygonLayer) {
         identifyToolBufferedMainPolygonLayer.remove();
       }
-    }
+
+    },
+
+    /**
+      Handles click on compare-layers button.
+
+      @method showCompareSideBar
+    */
+    showCompareSideBar() {
+      if (sideBySide) {
+        if (this.get('sidebar.0.active') !== true) {
+          this.set('sidebar.0.active', true);
+        }
+
+        if (!this.get('sidebarOpened')) {
+          this.send('toggleSidebar', {
+            changed: false,
+            tabName: 'treeview'
+          });
+        }
+
+        setTimeout(() => {
+          this.toggleProperty('compareLayersEnabled');
+        }, 500);
+      }
+    },
   }
 });
