@@ -210,45 +210,20 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     let coordinates = feature.geometry.coordinates;
     let shape = {};
 
-    const swapСoordinates = function (coordinates) {
-      let result = [];
-
-      for (let i = 0; i < coordinates.length; i++) {
-        let coordinatI = coordinates[i];
-        result.push([]);
-
-        for (let j = 0; j < coordinatI.length; j++) {
-          let coordinatJ = coordinatI[j];
-
-          if (Ember.isArray(coordinatJ[0])) {
-            result[i].push([]);
-            for (let k = 0; k < coordinatJ.length; k++) {
-              let coordinatK = coordinatJ[k];
-
-              let point = new L.LatLng(coordinatK[1], coordinatK[0]);
-              result[i][j].push(point);
-            }
-
-          } else {
-            let point = new L.LatLng(coordinatJ[1], coordinatJ[0]);
-            result[i].push(point);
-          }
-        }
+    feature = L.geoJson(feature, {
+      coordsToLatLng: function (coords) {
+        return coords;
       }
-
-      return result;
-    };
-
-    let coors = swapСoordinates(coordinates);
+    }).toGeoJSON();
 
     if (geometryType === 'multyPolygon') {
-      shape = L.polygon(coors, {
+      shape = L.polygon(feature.features[0].geometry.coordinates, {
         color: styleSettings.style.path.color,
         weight: styleSettings.style.path.weight,
         fillColor: styleSettings.style.path.fillColor
       });
     } else if (geometryType === 'multyLine') {
-      shape = L.polyline(coors, {
+      shape = L.polyline(feature.features[0].geometry.coordinates, {
         color: styleSettings.style.path.color,
         weight: styleSettings.style.path.weight
       });
