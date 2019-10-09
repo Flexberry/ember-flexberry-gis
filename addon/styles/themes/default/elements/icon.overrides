@@ -22,6 +22,10 @@
     &.hand.paper:before {
       content: '\e823';
     }
+    &.intersections:before {
+      font-family: FontAwesome;
+      content: "\f24d";
+    }
     &.marker:before {
       content: "\e812";
     }

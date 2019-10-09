@@ -32,6 +32,13 @@ import * as union from 'npm:@turf/union';
  */
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   /**
+    Service for managing map API.
+    @property mapApi
+    @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
+  /**
     Reference to 'layers-styles-renderer' servie.
 
     @property layersStylesRenderer
@@ -669,6 +676,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   createCombinedPolygon: false,
 
   /**
+    Initializes component's DOM-related properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+    this.get('mapApi').addToApi('_deleteLayerFromAttrPanel', this._deleteLayerById.bind(this));
+  },
+
+  /**
     Initializes component.
   */
   init() {
@@ -949,33 +964,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} tabModel Related tab.
     */
     onDeleteItemClick(tabModel) {
-      let selectedRows = Ember.get(tabModel, '_selectedRows');
-      let editedRows = Ember.get(tabModel, '_editedRows');
-      let editedRowsChange = false;
-      let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
-      selectedFeatureKeys.forEach((key) => {
-        let layer = tabModel.featureLink[key];
-        tabModel.leafletObject.removeLayer(layer);
-        tabModel.properties.removeObject(tabModel.propertyLink[key]);
-        delete selectedRows[key];
-        delete tabModel.featureLink[key];
-        delete tabModel.propertyLink[key];
+      let treatmentSelectedEditedRows = function (selectedRows, editedRows, editedRowsChange) {
+        let selectedFeatureKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
+        selectedFeatureKeys.forEach((key) => {
+          this._deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange);
 
-        if (Ember.get(editedRows, key) || false) {
-          delete editedRows[key];
-          editedRowsChange = true;
-          layer.disableEdit();
-          this.get('leafletMap').off('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
-        }
+          let layer = tabModel.featureLink[key];
+          tabModel._triggerChanged.call([tabModel, layer, false], { layer });
+        });
+      }.bind(this);
 
-        tabModel._triggerChanged.call([tabModel, layer, false], { layer });
-      });
-      Ember.set(tabModel, '_selectedRows', selectedRows);
-      tabModel.notifyPropertyChange('_selectedRows');
-      if (editedRowsChange) {
-        Ember.set(tabModel, '_editedRows', editedRows);
-        tabModel.notifyPropertyChange('_editedRows');
-      }
+      this._treatmentSelectedEditedRows(tabModel, treatmentSelectedEditedRows);
     },
 
     /**
@@ -1486,6 +1485,89 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             tabModel.disableDragging(rowId);
           }
         }
+      }
+    }
+  },
+
+  /**
+    Delete layer by key.
+
+    @param {Object} tabModel Tab model.
+    @param {String} key Layer key.
+    @param {Array} selectedRows Array of selected records.
+    @param {Array} selectedRows Array of edited records.
+    @param {Boolean} editedRowsChange Record edit flag.
+  */
+  _deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange) {
+    let layer = tabModel.featureLink[key];
+    tabModel.leafletObject.removeLayer(layer);
+
+    tabModel.properties.removeObject(tabModel.propertyLink[key]);
+    delete selectedRows[key];
+    delete tabModel.propertyLink[key];
+    delete tabModel.featureLink[key];
+
+    if (Ember.get(editedRows, key) || false) {
+      delete editedRows[key];
+      editedRowsChange = true;
+      layer.disableEdit();
+      this.get('leafletMap').off('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
+    }
+  },
+
+  /**
+    Treatment selected and edited rows.
+
+    @param {Object} tabModel Tab model.
+    @param {Boolean} func Processing function.
+  */
+  _treatmentSelectedEditedRows(tabModel, func) {
+    let selectedRows = Ember.get(tabModel, '_selectedRows');
+    let editedRows = Ember.get(tabModel, '_editedRows');
+    let editedRowsChange = false;
+
+    func(selectedRows, editedRows, editedRowsChange);
+
+    Ember.set(tabModel, '_selectedRows', selectedRows);
+    tabModel.notifyPropertyChange('_selectedRows');
+    if (editedRowsChange) {
+      Ember.set(tabModel, '_editedRows', editedRows);
+      tabModel.notifyPropertyChange('_editedRows');
+    }
+  },
+
+  /**
+    Delete layer feature by id.
+
+    @param {String} featureId Layer feature id.
+    @param {String} layer Layer to delete from.
+  */
+  _deleteLayerById(featureId, layer) {
+    let tabModels = this.get('_tabModels');
+
+    if (!Ember.isNone(tabModels)) {
+      for (let i = 0; i < tabModels.length; i++) {
+        let tabModel = tabModels[i];
+
+        let treatmentSelectedEditedRows = function (selectedRows, editedRows, editedRowsChange) {
+          for (let key in tabModel.featureLink) {
+            let id;
+            const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
+            if (typeof getLayerFeatureIdFunc === 'function') {
+
+              //Need to implement id definition function
+              id = getLayerFeatureIdFunc(Ember.get(tabModel, `featureLink.${key}`));
+            } else {
+              id = Ember.get(tabModel, `featureLink.${key}.feature.id`);
+            }
+
+            if (id === featureId) {
+              this._deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange);
+            }
+          }
+        }.bind(this);
+
+        this._treatmentSelectedEditedRows(tabModel, treatmentSelectedEditedRows);
       }
     }
   },

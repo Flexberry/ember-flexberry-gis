@@ -1,6 +1,6 @@
 {
   "name": "ember-flexberry-gis",
-  "version": "0.8.0-beta.0",
+  "version": "0.8.0-beta.1",
   "description": "Ember Flexberry GIS Addon",
   "license": "MIT",
   "author": {
@@ -40,6 +40,8 @@
     "@turf/midpoint": "^5.1.5",
     "@turf/polygon-to-line": "^5.1.5",
     "@turf/union": "^5.1.5",
+    "@turf/intersect": "^5.1.5",
+    "@turf/boolean-point-in-polygon": "^5.1.5",
     "broccoli-asset-rev": "^2.4.2",
     "broccoli-jscs": "1.2.2",
     "dexie": "^1.4.2",
