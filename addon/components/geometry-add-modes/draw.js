@@ -207,23 +207,25 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   _createCopyMultiShape(tabModel, layerId, geometryType, featureCollection) {
     let styleSettings = tabModel.get('styleSettings');
     let feature = featureCollection.features.pop();
-    let coordinates = feature.geometry.coordinates;
     let shape = {};
 
+    // We will transform feature coordinates from WGS84 (it is EPSG: 4326) to LatLng.
     feature = L.geoJson(feature, {
       coordsToLatLng: function (coords) {
         return coords;
       }
     }).toGeoJSON();
 
+    let coordinates = feature.features[0].geometry.coordinates;
+
     if (geometryType === 'multyPolygon') {
-      shape = L.polygon(feature.features[0].geometry.coordinates, {
+      shape = L.polygon(coordinates, {
         color: styleSettings.style.path.color,
         weight: styleSettings.style.path.weight,
         fillColor: styleSettings.style.path.fillColor
       });
     } else if (geometryType === 'multyLine') {
-      shape = L.polyline(feature.features[0].geometry.coordinates, {
+      shape = L.polyline(coordinates, {
         color: styleSettings.style.path.color,
         weight: styleSettings.style.path.weight
       });

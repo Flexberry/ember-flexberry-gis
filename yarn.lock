@@ -149,6 +149,17 @@
   resolved "https://registry.yarnpkg.com/@turf/helpers/-/helpers-5.1.5.tgz#153405227ab933d004a5bb9641a9ed999fcbe0cf"
   integrity sha1-FTQFInq5M9AEpbuWQantmZ/L4M8=
 
+"@turf/intersect@^5.1.5":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@turf/intersect/-/intersect-5.1.6.tgz#13ffcceb7a529c2a7e5d6681ab3ba671f868e95f"
+  integrity sha512-KXyNv/GXdoGAOy03qZF53rgtXC2tNhF/4jLwTKiVRrBQH6kcEpipGStdJ+QkYIlarQPa8f7I9UlVAB19et4MfQ==
+  dependencies:
+    "@turf/clean-coords" "^5.1.5"
+    "@turf/helpers" "^5.1.5"
+    "@turf/invariant" "^5.1.5"
+    "@turf/truncate" "^5.1.5"
+    turf-jsts "*"
+
 "@turf/invariant@^5.1.5":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@turf/invariant/-/invariant-5.2.0.tgz#f0150ff7290b38577b73d088b7932c1ee0aa90a7"
