@@ -252,7 +252,7 @@ let SearchMapCommandComponent = Ember.Component.extend({
       @method actions.onSearchAttributesMapCommandExecute
       @param {Object} e Base map-command's 'execute' action event-object.
     */
-    onSearchAttributesMapCommandExecute(e) {
+    onMapCommandButtonClick(e) {
       // Delay execution, but send action to initialize map-command.
       Ember.set(e, 'execute', false);
       this.sendAction('execute', e);
@@ -282,116 +282,61 @@ let SearchMapCommandComponent = Ember.Component.extend({
       @param {Object} e Action's event object.
     */
     onSearchDialogApprove(e) {
-      if (this.get('_searchIsInProgress')) {
-        // Prevent new search until already executing search will be completed.
-        e.closeDialog = false;
-        return;
-      }
-
-      let executeActionEventObject = this.get('_searchAttributesExecuteActionEventObject');
-      let mapCommand = Ember.get(executeActionEventObject, 'mapCommand');
-
-      // Prevent export dialog from hiding until export will be completed.
+      console.log(e);
       e.closeDialog = false;
+      let leafletMap = this.get('leafletMap');
+      let mapCommandName = 'search-attributes';
+      let mapCommandProperties = null;
+      let mapCommandExecutionOptions = Ember.get(e, 'searchOptions');
+      leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions);
+      // if (this.get('_searchIsInProgress')) {
+      //   // Prevent new search until already executing search will be completed.
+      //   e.closeDialog = false;
+      //   return;
+      // }
 
-      // Listen to map-command's 'execute' event & handle it.
-      mapCommand.one('execute', (e) => {
-        // Hide possibly shown error message.
-        this.set('_showSearchErrorMessage', false);
+      // let executeActionEventObject = this.get('_searchAttributesExecuteActionEventObject');
+      // let mapCommand = Ember.get(executeActionEventObject, 'mapCommand');
 
-        // Show delay indicator.
-        this.set('_searchIsInProgress', true);
+      // // Prevent export dialog from hiding until export will be completed.
+      // e.closeDialog = false;
 
-        // here we have only one search results
-        e.executionResult.get('firstObject.features').then((features) => {
+      // // Listen to map-command's 'execute' event & handle it.
+      // mapCommand.one('execute', (e) => {
+      //   // Hide possibly shown error message.
+      //   this.set('_showSearchErrorMessage', false);
 
-          this.set('_foundedFeatures', features);
+      //   // Show delay indicator.
+      //   this.set('_searchIsInProgress', true);
 
-          // Search successfully completed.
-          // Hide delay indicator.
-          this.set('_searchIsInProgress', false);
-        }).catch((reason) => {
-          this.set('_foundedFeatures', null);
+      //   // here we have only one search results
+      //   e.executionResult.get('firstObject.features').then((features) => {
 
-          // Search failed, so don't hide dialog.
-          // Hide delay indicator.
-          this.set('_searchIsInProgress', false);
+      //     this.set('_foundedFeatures', features);
 
-          // Show error message.
-          this.set('_showSearchErrorMessage', true);
-          this.set('_searchErrorMessage', (reason || 'Search error').toString());
-        });
-      });
+      //     // Search successfully completed.
+      //     // Hide delay indicator.
+      //     this.set('_searchIsInProgress', false);
+      //   }).catch((reason) => {
+      //     this.set('_foundedFeatures', null);
 
-      // Clean up results of previous search.
-      this.set('_foundedFeatures', null);
+      //     // Search failed, so don't hide dialog.
+      //     // Hide delay indicator.
+      //     this.set('_searchIsInProgress', false);
 
-      // Map toolbar will catch action, call to map-command's 'execute' method, then 'execute' event will be triggered.
-      Ember.set(executeActionEventObject, 'execute', true);
-      this.sendAction('execute', e, executeActionEventObject);
+      //     // Show error message.
+      //     this.set('_showSearchErrorMessage', true);
+      //     this.set('_searchErrorMessage', (reason || 'Search error').toString());
+      //   });
+      // });
+
+      // // Clean up results of previous search.
+      // this.set('_foundedFeatures', null);
+
+      // // Map toolbar will catch action, call to map-command's 'execute' method, then 'execute' event will be triggered.
+      // Ember.set(executeActionEventObject, 'execute', true);
+      // this.sendAction('execute', e, executeActionEventObject);
     },
-
-    /**
-      Handles export dialog's 'deny' action.
-
-      @method actions.onSearchDialogDeny
-      @param {Object} e Action's event object.
-    */
-    onSearchDialogDeny(e) {
-      // Prevent export dialog from hiding until already executing search will be completed.
-      e.closeDialog = !this.get('_searchIsInProgress');
-    },
-
-    /**
-      Handles search dialog's 'hide' action.
-
-      @method actions.onSearchDialogHide
-      @param {Object} e Action's event object.
-    */
-    onSearchDialogHide(e) {
-      // Dialog is hidden.
-      // Hide error message.
-      this.set('_showSearchErrorMessage', false);
-    },
-
-    /**
-      Handles search dialog's 'showFoundedFeatures' action.
-
-      @method actions.onSearchDialogShowFoundedFeatures
-      @param {Object} e Action's event object.
-      @param {Object[]} e.features Founded features to show.
-    */
-    onSearchDialogShowFoundedFeatures(e) {
-      let executeActionEventObject = this.get('_searchShowExecuteActionEventObject');
-
-      // Initialize & remember 'execute' action's event-object for 'search-show' map-command,
-      // if it isn't initialized yet.
-      if (Ember.isNone(executeActionEventObject)) {
-        executeActionEventObject = {
-          mapCommand: null,
-          target: null,
-          originalEvent: null
-        };
-
-        let mapCommand = Ember.getOwner(this).lookup('map-command:search-show');
-        Ember.assert(
-          `Can't lookup \`map-command:search-show\` such map-command doesn\`t exist`,
-          !Ember.isNone(mapCommand));
-
-        let mapCommandProperties = this.get('_searchCommandProperties');
-        if (!Ember.isNone(mapCommandProperties)) {
-          Ember.A(Object.keys(mapCommandProperties)).forEach((propertyName) => {
-            Ember.set(mapCommand, propertyName, Ember.get(mapCommandProperties, propertyName));
-          });
-        }
-
-        Ember.set(executeActionEventObject, 'mapCommand', mapCommand);
-        this.set('_searchShowExecuteActionEventObject', executeActionEventObject);
-      }
-
-      Ember.$.extend(executeActionEventObject, e);
-      this.sendAction('execute', executeActionEventObject);
-    }
   },
 
   /**

@@ -4,6 +4,7 @@
   caption=caption
   tooltip=tooltip
   iconClass=iconClass
+  leafletMap=leafletMap
 }}
   {{#block-slot "submenu"}}
     {{map-commands/base
@@ -12,7 +13,8 @@
       caption=searchAttributesCaption
       iconClass=searchAttributesIconClass
       mapCommandProperties=_searchCommandProperties
-      execute=(action "onSearchAttributesMapCommandExecute")
+      leafletMap=leafletMap
+      click=(action "onMapCommandButtonClick")
     }}
     {{map-commands/base
       class=(concat flexberryClassNames.searchClear " " searchClearClass)
@@ -20,7 +22,8 @@
       caption=searchClearCaption
       iconClass=searchClearIconClass
       mapCommandProperties=_searchCommandProperties
-      execute=(action "onSearchClearMapCommandExecute")
+      leafletMap=leafletMap
+      click=(action "onMapCommandButtonClick")
     }}
   {{/block-slot}}
 {{/map-commands/base}}
@@ -32,12 +35,9 @@
     isBusy=_searchIsInProgress
     showErrorMessage=_showSearchErrorMessage
     errorMessage=_searchErrorMessage
-    layers=_searchAttributesExecuteActionEventObject.mapCommand.layers
-    leafletMap=_searchAttributesExecuteActionEventObject.mapCommand.leafletMap
+    layers=layers
+    leafletMap=leafletMap
     foundedFeatures=_foundedFeatures
     approve=(action "onSearchDialogApprove")
-    deny=(action "onSearchDialogDeny")
-    hide=(action "onSearchDialogHide")
-    showFoundedFeatures=(action "onSearchDialogShowFoundedFeatures")
   }}
 {{/if}}

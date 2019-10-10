@@ -104,5 +104,6 @@ export default Ember.Object.extend(Ember.Evented, {
       // Command isn't asynchronous & already executed.
       this.set('_executing', false);
     }
+    return executionResult;
   }
 });

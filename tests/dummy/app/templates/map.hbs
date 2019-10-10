@@ -197,7 +197,10 @@
         }}
         {{map-commands/go-to leafletMap=leafletMap}}
         {{map-commands/locate leafletMap=leafletMap}}
-        {{map-commands/search leafletMap=leafletMap}}
+        {{map-commands/search
+          leafletMap=leafletMap
+          layers=model.hierarchy
+        }}
         {{map-tools/measure leafletMap=leafletMap}}
         {{map-tools/draw leafletMap=leafletMap}}
         {{map-commands/export
@@ -205,6 +208,7 @@
           timeout=30000
           defaultMapCaption=model.name
           leafletMap=leafletMap
+          layers=model.hierarchy
         }}
       {{/flexberry-maptoolbar}}
     </div>
