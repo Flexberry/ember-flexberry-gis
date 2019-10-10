@@ -617,7 +617,6 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     if (!Ember.isArray(features) || Ember.get(features, 'length') === 0) {
       return;
     }
-
     this.sendAction('showFoundedFeatures', {
       features: features,
       layer: layer

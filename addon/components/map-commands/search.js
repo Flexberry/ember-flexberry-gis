@@ -45,6 +45,7 @@ const flexberryClassNames = {
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
 */
 let SearchMapCommandComponent = Ember.Component.extend({
+  features: null,
   /**
     Additional properties for 'search' map-commands.
 
@@ -253,13 +254,6 @@ let SearchMapCommandComponent = Ember.Component.extend({
       @param {Object} e Base map-command's 'execute' action event-object.
     */
     onMapCommandButtonClick(e) {
-      // Delay execution, but send action to initialize map-command.
-      Ember.set(e, 'execute', false);
-      this.sendAction('execute', e);
-
-      // Remember event-object to execute command later (when dialog will be approved).
-      this.set('_searchAttributesExecuteActionEventObject', e);
-
       // Show dialog.
       this._showSearchDialog();
     },
@@ -270,8 +264,13 @@ let SearchMapCommandComponent = Ember.Component.extend({
       @method actions.onSearchAttributesMapCommandExecute
       @param {Object} e Base map-command's 'execute' action event-object.
     */
-    onSearchClearMapCommandExecute(e) {
-      this.sendAction('execute', e);
+    onMapCommandButtonClearClick(e) {
+      let leafletMap = this.get('leafletMap');
+      let mapCommandName = 'search-clear';
+      let mapCommandProperties = null;
+      let mapCommandExecutionOptions = e;
+
+      leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions);
     },
 
     /**
@@ -282,61 +281,32 @@ let SearchMapCommandComponent = Ember.Component.extend({
       @param {Object} e Action's event object.
     */
     onSearchDialogApprove(e) {
-      console.log(e);
       e.closeDialog = false;
       let leafletMap = this.get('leafletMap');
       let mapCommandName = 'search-attributes';
-      let mapCommandProperties = null;
-      let mapCommandExecutionOptions = Ember.get(e, 'searchOptions');
-      leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions);
-      // if (this.get('_searchIsInProgress')) {
-      //   // Prevent new search until already executing search will be completed.
-      //   e.closeDialog = false;
-      //   return;
-      // }
-
-      // let executeActionEventObject = this.get('_searchAttributesExecuteActionEventObject');
-      // let mapCommand = Ember.get(executeActionEventObject, 'mapCommand');
-
-      // // Prevent export dialog from hiding until export will be completed.
-      // e.closeDialog = false;
-
-      // // Listen to map-command's 'execute' event & handle it.
-      // mapCommand.one('execute', (e) => {
-      //   // Hide possibly shown error message.
-      //   this.set('_showSearchErrorMessage', false);
-
-      //   // Show delay indicator.
-      //   this.set('_searchIsInProgress', true);
-
-      //   // here we have only one search results
-      //   e.executionResult.get('firstObject.features').then((features) => {
-
-      //     this.set('_foundedFeatures', features);
-
-      //     // Search successfully completed.
-      //     // Hide delay indicator.
-      //     this.set('_searchIsInProgress', false);
-      //   }).catch((reason) => {
-      //     this.set('_foundedFeatures', null);
-
-      //     // Search failed, so don't hide dialog.
-      //     // Hide delay indicator.
-      //     this.set('_searchIsInProgress', false);
-
-      //     // Show error message.
-      //     this.set('_showSearchErrorMessage', true);
-      //     this.set('_searchErrorMessage', (reason || 'Search error').toString());
-      //   });
-      // });
-
-      // // Clean up results of previous search.
-      // this.set('_foundedFeatures', null);
-
-      // // Map toolbar will catch action, call to map-command's 'execute' method, then 'execute' event will be triggered.
-      // Ember.set(executeActionEventObject, 'execute', true);
-      // this.sendAction('execute', e, executeActionEventObject);
+      let mapCommandProperties = {featuresLayer: new L.FeatureGroup()};
+      this.set('_searchIsInProgress', true);
+      leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, e).then(res=> {
+        res[0].features.then(result=> {
+          this.set('_foundedFeatures', result);
+          this.set('_searchIsInProgress', false);
+        });
+      });
     },
+
+    /**
+      Handles search dialog's 'showFoundedFeatures' action.
+
+      @method actions.onSearchDialogShowFoundedFeatures
+      @param {Object} e Action's event object.
+    */
+    onSearchDialogShowFoundedFeatures(e) {
+      let leafletMap = this.get('leafletMap');
+      let mapCommandName = 'search-show';
+      let mapCommandProperties = {featuresLayer: new L.FeatureGroup()};
+      let mapCommandExecutionOptions = e;
+      this.set('features', leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions));
+    }
   },
 
   /**

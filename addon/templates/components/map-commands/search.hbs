@@ -5,6 +5,7 @@
   tooltip=tooltip
   iconClass=iconClass
   leafletMap=leafletMap
+  layers=layers
 }}
   {{#block-slot "submenu"}}
     {{map-commands/base
@@ -12,8 +13,8 @@
       name="search-attributes"
       caption=searchAttributesCaption
       iconClass=searchAttributesIconClass
-      mapCommandProperties=_searchCommandProperties
       leafletMap=leafletMap
+      layers=layers
       click=(action "onMapCommandButtonClick")
     }}
     {{map-commands/base
@@ -21,9 +22,9 @@
       name="search-clear"
       caption=searchClearCaption
       iconClass=searchClearIconClass
-      mapCommandProperties=_searchCommandProperties
       leafletMap=leafletMap
-      click=(action "onMapCommandButtonClick")
+      layers=layers
+      click=(action "onMapCommandButtonClearClick")
     }}
   {{/block-slot}}
 {{/map-commands/base}}
@@ -39,5 +40,6 @@
     leafletMap=leafletMap
     foundedFeatures=_foundedFeatures
     approve=(action "onSearchDialogApprove")
+    showFoundedFeatures=(action "onSearchDialogShowFoundedFeatures")
   }}
 {{/if}}

@@ -21,8 +21,8 @@ export default SearchMapCommand.extend({
   _execute(options) {
     this._super(...arguments);
     options = options || {};
-
-    // Layer that must be searched.
+    return new Ember.RSVP.Promise(resolve => {
+       // Layer that must be searched.
     let layer = Ember.get(options, 'layer');
     Ember.assert(
       `Wrong type of \`options.layer\` property: ` +
@@ -52,6 +52,8 @@ export default SearchMapCommand.extend({
     leafletMap.fire('flexberry-map:search', e);
 
     // Return received features or features promise.
-    return e.results;
+    resolve(e.results);      
+    })
+   
   }
 });
