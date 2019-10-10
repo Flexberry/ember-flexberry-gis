@@ -14,6 +14,13 @@ import layout from '../templates/components/feature-result-item';
 export default Ember.Component.extend({
 
   /**
+  Service for managing map API.
+  @property mapApi
+  @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
+  /**
     Component's wrapping <div> CSS-classes names.
 
     Any other CSS-class names can be added through component's 'class' property.
@@ -35,6 +42,15 @@ export default Ember.Component.extend({
     @default ['isActive:active']
   */
   classNameBindings: ['isActive:active'],
+
+  /**
+    Flag indicates if intersection panel is active.
+
+    @property intersection
+    @type Boolean
+    @default false
+  */
+  intersection: false,
 
   /**
     Flag: indicates whether to display detailed feature info.
@@ -141,6 +157,43 @@ export default Ember.Component.extend({
   */
   selectedFeature: null,
 
+  /**
+    Action button hasEditForm display.
+
+    @property hasEditForm
+    @type boolean
+    @default false
+  */
+  hasEditForm: false,
+
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+    const hasEditFormFunc = this.get('mapApi').getFromApi('hasEditForm');
+
+    if (typeof hasEditFormFunc === 'function') {
+      const layerId = this.get('feature.layerModel.id');
+
+      let shapeId;
+      const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
+      if (typeof getLayerFeatureIdFunc === 'function') {
+        const layer = this.get('feature.layerModel');
+        const shape = this.get('feature');
+
+        //Need to implement id definition function
+        shapeId = getLayerFeatureIdFunc(layer, shape);
+      } else {
+        shapeId = this.get('feature.id');
+      }
+
+      const hasEditForm = hasEditFormFunc(layerId, shapeId);
+      this.set('featureId', shapeId);
+      this.set('hasEditForm', hasEditForm);
+    }
+  },
+
   actions: {
 
     /**
@@ -182,6 +235,46 @@ export default Ember.Component.extend({
      */
     toggleLinks() {
       this.set('_linksExpanded', !this.get('_linksExpanded'));
+    },
+
+    /**
+      Process the specified method.
+      @method actions.goToEditForm
+      @param {String} layerId Id layer
+      @param {String[]} objectId Array Id object
+    */
+    goToEditForm(layerId, objectId) {
+      const goToEditFormFunc = this.get('mapApi').getFromApi('goToEditForm');
+      if (typeof goToEditFormFunc === 'function') {
+        goToEditFormFunc(layerId, objectId);
+      }
+    },
+
+    /**
+      Show\hide panel for seraching intersections.
+      Action is sended to layer-result-list.
+      @method actions.findIntersection
+     */
+    findIntersection() {
+      this.sendAction('findIntersection', this.get('feature'));
+    },
+
+    /**
+      Pans and zooms to intersection object.
+      @method actions.panToIntersection
+     */
+    panToIntersection() {
+      this.sendAction('zoomTo', this.get('feature'));
+      this.sendAction('panTo', this.get('feature'));
+    },
+
+    /**
+      Zooms to intersection and add intersection object on map.
+      @method actions.zoomToIntersection
+     */
+    zoomToIntersection() {
+      this.sendAction('zoomTo', this.get('feature'));
+      this.sendAction('zoomToIntersection', this.get('feature'));
     }
   }
 

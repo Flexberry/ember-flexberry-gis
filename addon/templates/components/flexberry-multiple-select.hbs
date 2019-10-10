@@ -4,8 +4,14 @@
   <i class="dropdown icon"></i>
   <div class="default text">{{title}}</div>
   <div class="menu">
+    {{#if isObject}}
+    {{#each _usedItems as |item|}}
+      <div class="item" data-value={{item.id}}>{{item.name}}</div>
+    {{/each}}
+    {{else}}
     {{#each _usedItems as |item|}}
       <div class="item" data-value="{{item}}">{{item}}</div>
     {{/each}}
+    {{/if}}
   </div>
 </div>

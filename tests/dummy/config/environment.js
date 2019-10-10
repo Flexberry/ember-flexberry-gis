@@ -52,6 +52,9 @@ module.exports = function (environment) {
       // Flag: indicates whether to use user settings service or not.
       useUserSettingsService: false,
 
+      // Flag: indicates whether to use map api service or not.
+      mapApiService: true,
+
       // Custom property with offline mode settings.
       offline: {
         dbName: 'ember-flexberry-gis-dummy',

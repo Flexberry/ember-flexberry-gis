@@ -9,7 +9,6 @@ i.icon.angle.right:before {
     font-size: 1em;
 }
 
-
 .sidebar-wrapper {
   .ui.tabular.menu.flexberry-tab-bar {
     i.icon:before {
@@ -39,6 +38,10 @@ i.icon.angle.right:before {
     /* Bookmarks */
     i.icon.bookmark:before {
       font-family: icons;
+    }
+    /* Поиск пересеченйи*/
+    i.icon.intersections:before {
+    content: "\f24d";
     }
   }
 }
@@ -124,4 +127,8 @@ i.icon.pie:before {
 i.icon.datalist:before {
   font-family: 'Crimean';
   content: "\e821";
+}
+
+i.icon.intersections:before {
+  content: "\f24d";
 }

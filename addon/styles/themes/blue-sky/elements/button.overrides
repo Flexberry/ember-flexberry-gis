@@ -96,3 +96,9 @@
       }
     }
 }
+
+ui.button.intersect {
+  color:black;
+  margin-top: 10px;
+  vertical-align: middle;
+}
