@@ -36,7 +36,7 @@ export default Ember.Mixin.create({
     const store = this.get('store');
     let layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', options);
     layer.set('map', this);
-    return layer.save().then(()=> {
+    return layer.save().then(() => {
       const layers = this.get('hierarchy');
       layers.addObject(layer);
       return layer.get('id');
@@ -65,6 +65,10 @@ export default Ember.Mixin.create({
   deleteLayerObjects(layerId, featureIds) {
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
+
+    if (Ember.isNone(layer)) {
+      throw `Layer '${layerId}' not found.`;
+    }
 
     let ids = [];
     layer._leafletObject.eachLayer(function (shape) {
