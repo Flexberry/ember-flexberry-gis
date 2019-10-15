@@ -1,5 +1,7 @@
 import Ember from 'ember';
 import lineIntersect from 'npm:@turf/line-intersect';
+import distance from 'npm:@turf/distance';
+import helpers from 'npm:@turf/helpers';
 
 export default Ember.Mixin.create({
   /**
@@ -156,6 +158,100 @@ export default Ember.Mixin.create({
       }
     }
 
+    return result;
+  },
+
+  /**
+    Get the closest object
+    @method getNearObject
+    @param {String} layerId Layer id of the selected object.
+    @param {String} layerObjectId Id of the selected object.
+    @param {Array} layerIdsArray Array of id of layers in which to search.
+    @return {Object} Id of the nearest object.
+  */
+  getNearObject(layerId, layerObjectId, layerIdsArray) {
+    const layers = this.get('mapLayer');
+    const layer = layers.findBy('id', layerId);
+
+    if (Ember.isNone(layer)) {
+      throw `Layer '${layerId}' not found.`;
+    }
+
+    var result = {
+      distance: null,
+      layer: null,
+      obj: null,
+    };
+
+    layerIdsArray.forEach(lid => {
+      const layer = layers.findBy('id', lid);
+      if (layer) {
+        let features = Ember.get(layer, '_leafletObject');
+        features.eachLayer(obj => {
+          if (layerId === lid && layerObjectId === obj.feature.id) {
+            return;
+          }
+
+          let distance = this.getDistanceBetweenObjects(layerId, layerObjectId, lid, obj.feature.id);
+
+          if (distance < result.distance || result.distance === null) {
+            result.distance = distance;
+            result.layer = layer,
+              result.obj = obj
+          }
+        });
+      }
+    });
+
+    return result;
+  },
+
+  /**
+    Get distance between objects
+    @method getDistanceBetweenObjects
+    @param {String} firstLayerId First layer id.
+    @param {String} firstLayerObjectId First layer object id.
+    @param {String} secondLayerId Second layer id.
+    @param {String} secondLayerObjectId Second layer object id.
+    @return {Number} Distance between objects in meters.
+  */
+  getDistanceBetweenObjects(firstLayerId, firstLayerObjectId, secondLayerId, secondLayerObjectId) {
+    const layers = this.get('mapLayer');
+    const firstLayer = layers.findBy('id', firstLayerId);
+    if (Ember.isNone(firstLayer)) {
+      throw `Layer '${firstLayerId}' not found.`;
+    }
+
+    const secondLayer = layers.findBy('id', secondLayerId);
+    if (Ember.isNone(secondLayer)) {
+      throw `Layer '${secondLayerId}' not found.`;
+    }
+
+    const getObjectCenter = function (layer, objectId) {
+      var result;
+      let features = Ember.get(layer, '_leafletObject');
+      features.eachLayer(obj => {
+        if (obj.feature.id === objectId) {
+          result = obj;
+          return;
+        }
+      });
+
+      if (result.feature.geometry.type === 'Point') {
+        return result._latlng;
+      } else {
+        return result.getBounds().getCenter();
+      }
+    };
+
+    let fromPoint = getObjectCenter(firstLayer, firstLayerObjectId);
+    let from = helpers.point([fromPoint.lat, fromPoint.lng]);
+
+    let toPoint = getObjectCenter(secondLayer, secondLayerObjectId);
+    let to = helpers.point([toPoint.lat, toPoint.lng]);
+
+    // Get distance in meters.
+    let result = distance.default(from, to, { units: 'kilometers' }) * 1000;
     return result;
   },
 
