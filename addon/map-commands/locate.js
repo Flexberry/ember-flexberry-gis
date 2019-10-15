@@ -111,6 +111,7 @@ export default BaseMapCommand.extend(LeafletOptionsMixin, {
   */
   _execute(options) {
     this._super(...arguments);
+
     // Clean up results of previous execution.
     this.cleanUpLocationResults();
 

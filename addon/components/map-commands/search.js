@@ -267,7 +267,7 @@ let SearchMapCommandComponent = Ember.Component.extend({
     onMapCommandButtonClearClick(e) {
       let leafletMap = this.get('leafletMap');
       let mapCommandName = 'search-clear';
-      let mapCommandProperties = null;
+      let mapCommandProperties = this.get('_searchCommandProperties');
       let mapCommandExecutionOptions = e;
 
       leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions);
@@ -284,7 +284,8 @@ let SearchMapCommandComponent = Ember.Component.extend({
       e.closeDialog = false;
       let leafletMap = this.get('leafletMap');
       let mapCommandName = 'search-attributes';
-      let mapCommandProperties = {featuresLayer: new L.FeatureGroup()};
+      let mapCommandProperties = this.get('_searchCommandProperties');
+      console.log(mapCommandProperties);
       this.set('_searchIsInProgress', true);
       leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, e).then(res=> {
         res[0].features.then(result=> {
@@ -303,7 +304,7 @@ let SearchMapCommandComponent = Ember.Component.extend({
     onSearchDialogShowFoundedFeatures(e) {
       let leafletMap = this.get('leafletMap');
       let mapCommandName = 'search-show';
-      let mapCommandProperties = {featuresLayer: new L.FeatureGroup()};
+      let mapCommandProperties = this.get('_searchCommandProperties');
       let mapCommandExecutionOptions = e;
       this.set('features', leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions));
     }

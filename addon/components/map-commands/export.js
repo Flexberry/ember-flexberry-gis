@@ -48,12 +48,13 @@ let ExportMapCommandComponent = Ember.Component.extend({
     /**
       Map command to execute.
 
-      @property _comand
+      @property _command
       @type String
       @default null
       @private
     */
-    _comand: null,
+    _command: null,
+
     /**
       Flag: indicates whether export dialog has been already requested by user or not.
 
@@ -261,10 +262,10 @@ let ExportMapCommandComponent = Ember.Component.extend({
 
     actions: {
       onMapCommandButtonClick(e) {
-        this.set('_comand', 'export-download');
+        this.set('_command', 'export-download');
         this._showExportDialog({ isDownloadDialog: true, executeActionEventObject: e });
       },
-    
+
       /**
         Handles {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
 
@@ -272,7 +273,7 @@ let ExportMapCommandComponent = Ember.Component.extend({
         @param {Object} e Base map-command's 'execute' action event-object.
       */
       onExportPrintMapCommandExecute(e) {
-        this.set('_comand', 'export-print');
+        this.set('_command', 'export-print');
         this._showExportDialog({ isDownloadDialog: false, executeActionEventObject: e });
       },
 
@@ -285,9 +286,9 @@ let ExportMapCommandComponent = Ember.Component.extend({
       */
       onExportDialogApprove(e) {
         this.set('_exportIsInProgress', true);
-      //  e.closeDialog = false;
+        e.closeDialog = false;
         let leafletMap = this.get('leafletMap');
-        let mapCommandName = this.get('_comand');
+        let mapCommandName = this.get('_command');
         let mapCommandProperties = null;
         let mapCommandExecutionOptions = Ember.get(e, 'exportOptions');
         leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions).then(()=> {
