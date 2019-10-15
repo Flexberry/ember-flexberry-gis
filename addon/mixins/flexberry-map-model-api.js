@@ -159,6 +159,72 @@ export default Ember.Mixin.create({
     return result;
   },
 
+  /**
+    Get object at layer attributes.
+    @method getLayerObjectOptions
+    @param {String} layerId Id layer
+    @param {String} objectId Id object
+  */
+  getLayerObjectOptions(layerId, objectId) {
+    let result = [];
+    
+    if (Ember.isNone(layerId) || Ember.isNone(objectId)) {
+      return result;
+    }
+
+    const layerFeatureId = this._getLayerFeatureId(layerId, objectId);
+    if (!layerFeatureId) {
+      return null;
+    }
+
+    if (Ember.isNone(layerIds)) {
+      const allLayers = this.get('mapLayer');
+      let layers = Ember.A(allLayers);
+      layers.find(layer => {
+        let features = Ember.get(layer, '_leafletObject._layers');
+        if (!Ember.isNone(features)) {
+          featureToSearch = Object.values(features).find(feature => {
+            if (this._getLayerFeatureId(layer, feature) === featureId) {
+              return true;
+            }
+          });
+
+          if (featureToSearch) {
+            return true;
+          }
+        }
+      });
+      if (!Ember.isNone(featureToSearch)) {
+        layerIds.forEach(id => {
+          let intersectedFeaturesCollection = [];
+          const layer = layers.findBy('id', id);
+          let features = Ember.get(layer, '_leafletObject._layers');
+          if (features) {
+            Object.values(features).forEach(feature => {
+              let intersectionResult;
+              const layerFeatureId = this._getLayerFeatureId(layer, feature);
+              if (layerFeatureId !== featureId) {
+                intersectionResult = lineIntersect(featureToSearch.feature, Ember.get(feature, 'feature'));
+              }
+
+              if (intersectionResult && intersectionResult.features.length > 0) {
+                intersectedFeaturesCollection.push(layerFeatureId);
+              }
+            });
+          }
+
+          if (intersectedFeaturesCollection.length > 0) {
+            result.push({ id: id, intersected_features: intersectedFeaturesCollection });
+          }
+        });
+      }
+    }
+
+    
+
+    return result;
+  },
+
   _setVisibility(layerIds, visibility = false) {
     if (Ember.isArray(layerIds)) {
       const layers = this.get('mapLayer');

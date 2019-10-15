@@ -6,6 +6,7 @@
  <button id="queryLayers">Query Layers</button>
  <button id="getIntersectionObjects">get Intersection Objects</button>
  <button id="createNewlayer">Create new Layer</button>
+ <button id="getLayerObjectOptions">Get object attr (console)</button>
  <div>
    <textarea id="layerObjects" name="text" style="width:750px;height:100px"></textarea>
    <br />
@@ -81,6 +82,12 @@
        frame.contentWindow.mapApi.mapModel.createNewLayer({ name: 'test_osm', type: 'osm' }).then(id => console.log(id));
      };
      newLayerButton.addEventListener('click', newLayer);
+
+     var getObjectAttrButton = document.getElementById('getLayerObjectOptions');
+     var getOptions = function () {
+       frame.contentWindow.mapApi.mapModel.getLayerObjectOptions('f8dec493-d879-49ae-ad55-f4f18c89cb88','perm_water_line.4499').then(id => console.log(id));
+     };
+     getObjectAttrButton.addEventListener('click', getOptions);
 
      textaeraDelObj = {
        layerId: "f8dec493-d879-49ae-ad55-f4f18c89cb88", objectIds: ["perm_water_line.8322"]
