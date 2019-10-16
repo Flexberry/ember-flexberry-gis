@@ -180,7 +180,7 @@ export default Ember.Mixin.create({
     var result = {
       distance: null,
       layer: null,
-      obj: null,
+      object: null,
     };
 
     layerIdsArray.forEach(lid => {
@@ -197,7 +197,7 @@ export default Ember.Mixin.create({
           if (distance < result.distance || result.distance === null) {
             result.distance = distance;
             result.layer = layer,
-              result.obj = obj
+              result.object = obj
           }
         });
       }
@@ -237,22 +237,22 @@ export default Ember.Mixin.create({
         }
       });
 
-      if (result.feature.geometry.type === 'Point') {
+      let type = Ember.get(result, 'feature.geometry.type');
+      if (type === 'Point') {
         return result._latlng;
       } else {
         return result.getBounds().getCenter();
       }
     };
 
-    let fromPoint = getObjectCenter(firstLayer, firstLayerObjectId);
-    let from = helpers.point([fromPoint.lat, fromPoint.lng]);
+    let firstPoint = getObjectCenter(firstLayer, firstLayerObjectId);
+    let firstObject = helpers.point([firstPoint.lat, firstPoint.lng]);
 
-    let toPoint = getObjectCenter(secondLayer, secondLayerObjectId);
-    let to = helpers.point([toPoint.lat, toPoint.lng]);
+    let secondPoint = getObjectCenter(secondLayer, secondLayerObjectId);
+    let secondObject = helpers.point([secondPoint.lat, secondPoint.lng]);
 
     // Get distance in meters.
-    let result = distance.default(from, to, { units: 'kilometers' }) * 1000;
-    return result;
+    return distance.default(firstObject, secondObject, { units: 'kilometers' }) * 1000;
   },
 
   _setVisibility(layerIds, visibility = false) {

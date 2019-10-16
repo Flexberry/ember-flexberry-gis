@@ -1,6 +1,5 @@
 <div class="ui vertical menu">
-  <iframe id="testframe"
-    src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11"
+  <iframe id="testframe" src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11"
     width="1000" height="800" align="left">
   </iframe>
   <button id="showLayers">Show Layers</button>
@@ -113,12 +112,6 @@
 
       var nearestObjectButton = document.getElementById('nearestObject');
       var nearestObject = function () {
-        // var obj = frame.contentWindow.mapApi.mapModel.getNearObject('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'perm_water_line.7836', ['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
-        // var obj = frame.contentWindow.mapApi.mapModel.getNearObject('04bd48f3-b898-4041-9270-2c154abbf289', 'water_polygon.563', ['04bd48f3-b898-4041-9270-2c154abbf289']);
-        // var obj = frame.contentWindow.mapApi.mapModel.getNearObject('57cebb75-a9a1-47b0-877a-49fdccb86ad4', 'water_line.286', ['57cebb75-a9a1-47b0-877a-49fdccb86ad4']);
-        // var obj = frame.contentWindow.mapApi.mapModel.getNearObject('57cebb75-a9a1-47b0-877a-49fdccb86ad4', 'water_line.285', ['04bd48f3-b898-4041-9270-2c154abbf289']);
-        // var obj = frame.contentWindow.mapApi.mapModel.getNearObject('57cebb75-a9a1-47b0-877a-49fdccb86ad4', 'water_line.285', ['57cebb75-a9a1-47b0-877a-49fdccb86ad4', '04bd48f3-b898-4041-9270-2c154abbf289']);
-
         var obj = frame.contentWindow.mapApi.mapModel.getNearObject('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8412', ['f8dec493-d879-49ae-ad55-f4f18c89cb88']);
 
         console.log(obj);
@@ -127,9 +120,9 @@
 
       var distanceObjectsButton = document.getElementById('distanceObjects');
       var distanceObjects = function () {
-        var obj = frame.contentWindow.mapApi.mapModel.getNearObject('04bd48f3-b898-4041-9270-2c154abbf289', 'water_polygon.563', ['04bd48f3-b898-4041-9270-2c154abbf289']);
+        var obj = frame.contentWindow.mapApi.mapModel.getNearObject('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8412', ['f8dec493-d879-49ae-ad55-f4f18c89cb88']);
 
-        var distance = frame.contentWindow.mapApi.mapModel.GetDistanceBetweenObjects('04bd48f3-b898-4041-9270-2c154abbf289', 'water_polygon.561', obj.layer, obj.object);
+        var distance = frame.contentWindow.mapApi.mapModel.getDistanceBetweenObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8412', obj.layer.id, obj.object.feature.id);
         console.log(distance + ' (m)');
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
