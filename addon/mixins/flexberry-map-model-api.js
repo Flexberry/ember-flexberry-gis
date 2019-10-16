@@ -196,8 +196,8 @@ export default Ember.Mixin.create({
 
           if (distance < result.distance || result.distance === null) {
             result.distance = distance;
-            result.layer = layer,
-              result.object = obj
+            result.layer = layer;
+            result.object = obj;
           }
         });
       }
