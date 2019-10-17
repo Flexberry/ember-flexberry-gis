@@ -171,6 +171,7 @@ export default Ember.Mixin.create({
     if (Ember.isNone(layerId) || Ember.isNone(featureId)) {
       return result;
     }
+
     const allLayers = this.get('mapLayer');
     let layers = Ember.A(allLayers);
     const layer = layers.findBy('id', layerId);
@@ -183,7 +184,7 @@ export default Ember.Mixin.create({
           object = feature;
         }
       });
-      if(Ember.isNone(object)) {
+      if (Ember.isNone(object)) {
         return result;
       }
     }
@@ -192,8 +193,7 @@ export default Ember.Mixin.create({
     result = {
       ...object.feature.properties,
       area: areaOfObject,
-    }
-    
+    };
     return result;
   },
 
