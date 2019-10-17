@@ -236,6 +236,7 @@ export default Ember.Mixin.create({
         return true;
       }
     }
+
     return false;
   },
 
@@ -275,11 +276,11 @@ export default Ember.Mixin.create({
       if (intersectionRes) {
         let resultArea = area(objB.feature) - area(intersectionRes);
         return resultArea;
-      }
-      else {
+      } else {
         return area(objB.feature);
       }
     }
+
     return 0;
   },
 
