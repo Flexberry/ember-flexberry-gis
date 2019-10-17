@@ -221,7 +221,7 @@ export default Ember.Mixin.create({
       let featuresB = Ember.get(layerB, '_leafletObject._layers');
       objB = Object.values(featuresB).find(feature => {
         const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
-        return layerBFeatureId === objectBId;     
+        return layerBFeatureId === objectBId;
       });
     }
 
@@ -254,12 +254,12 @@ export default Ember.Mixin.create({
       let featuresA = Ember.get(layerA, '_leafletObject._layers');
       objA = Object.values(featuresA).find(feature => {
         const layerAFeatureId = this._getLayerFeatureId(layerA, feature);
-        return layerAFeatureId === objectAId
+        return layerAFeatureId === objectAId;
       });
       let featuresB = Ember.get(layerB, '_leafletObject._layers');
       objB = Object.values(featuresB).find(feature => {
         const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
-        return layerBFeatureId === objectBId
+        return layerBFeatureId === objectBId;
       });
     }
 
