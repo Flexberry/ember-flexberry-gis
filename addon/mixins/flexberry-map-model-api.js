@@ -177,13 +177,14 @@ export default Ember.Mixin.create({
     const layer = layers.findBy('id', layerId);
     let features = Ember.get(layer, '_leafletObject._layers');
     let object = Object.values(features).find(feature => {
-      return this._getLayerFeatureId(layer, feature) === featureId
+      return this._getLayerFeatureId(layer, feature) === featureId;
     });
 
     if (!Ember.isNone(object)) {
       result = jQuery.extend(true, {}, object.feature.properties);
       result.area = area(object.feature);
     }
+
     return result;
   },
 
