@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import lineIntersect from 'npm:@turf/line-intersect';
+import area from 'npm:@turf/area';
 
 export default Ember.Mixin.create({
   /**
@@ -184,6 +185,15 @@ export default Ember.Mixin.create({
           object = feature;
         }
       });
+      if(Ember.isNone(object)) {
+        return result;
+      }
+    }
+
+    let areaOfObject = area(object.feature);
+    result= {
+      ...object.feature.properties,
+      area: areaOfObject,
     }
     
     return result;
