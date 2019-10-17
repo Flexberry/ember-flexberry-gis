@@ -181,7 +181,7 @@ export default Ember.Mixin.create({
     @method moveObjectToLayer
     @param {String} objectId GeoJSON object id
     @param {String} fromLayerId id of layer to remove object
-    @param {String} layerId  id of layer to add object
+    @param {String} tolayerId  id of layer to add object
   */
   moveObjectToLayer(objectId, fromLayerId, toLayerId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
