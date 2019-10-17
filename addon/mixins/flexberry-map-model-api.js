@@ -181,7 +181,7 @@ export default Ember.Mixin.create({
     });
 
     if (!Ember.isNone(object)) {
-      result = jQuery.extend(true, {}, object.feature.properties);
+      result = Object.assign(object.feature.properties);
       result.area = area(object.feature);
     }
 
