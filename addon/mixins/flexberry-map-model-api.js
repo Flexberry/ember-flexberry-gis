@@ -184,73 +184,92 @@ export default Ember.Mixin.create({
     @param {String} layerId  id of layer to add object
   */
   moveObjectToLayer(objectId, fromLayerId, toLayerId) {
-    let objectToSearch;
-    let store = this.get('store');
-    let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
-    let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
-    let features = Ember.get(layerFrom, '_leafletObject._layers');
-    if (layerFrom && layerTo) {
-      if (features) {
-        Object.values(features).find(feature=> {
-          const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
-          if (layerFeatureId === objectId) {
-            objectToSearch = feature;
-          }
-        });
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let objectToSearch;
+      let store = this.get('store');
+      let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
+      let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
+      if (layerFrom && layerTo) {
+        let features = Ember.get(layerFrom, '_leafletObject._layers');
+        if (features) {
+          objectToSearch = Object.values(features).find(feature=> {
+            const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
+            return layerFeatureId === objectId;
+          });
+        }
+
         if (objectToSearch) {
           layerFrom._leafletObject.removeLayer(objectToSearch);
           objectToSearch._leaflet_id = null;
-          var newObj;
-          switch (objectToSearch.feature.geometry.type) {
-            case 'Marker' :
-              newObj =  L.marker(objectToSearch.getLatLng());
-              break;
-            case 'Circle' :
-              newObj = L.circle(objectToSearch.getLatLng(), objectToSearch.getRadius());
-              break;
-            case 'LineString' :
-              newObj = L.polyline(objectToSearch.getLatLngs());
-              break;
-            case 'MultiLineString' :
-              newObj = L.polyline(objectToSearch.getLatLngs());
-              break;
-            case 'Polygon' :
-              newObj = L.polygon(objectToSearch.getLatLngs());
-              break;
-            case 'MultiPolygon' :
-              newObj = L.polygon(objectToSearch.getLatLngs());
-              break;
-          }
+          var newObj = this.createGeometryType(objectToSearch, reject);
           newObj.options = objectToSearch.options;
           Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-          return new Ember.RSVP.Promise((resolve) => {
-            const saveSuccess = () => {
+          let promiseSaveLayerTo = new Ember.RSVP.Promise((resolve,reject)=> {
+            const saveSuccess = (data) => {
               layerTo._leafletObject.off('save:failed', saveSuccess);
+              resolve(data);
             };
 
-            const saveFailed = () => {
+            const saveFailed = (data) => {
               layerTo._leafletObject.off('save:success', saveSuccess);
+              reject(data);
             };
 
             layerTo._leafletObject.once('save:success', saveSuccess);
             layerTo._leafletObject.once('save:failed', saveFailed);
             layerTo._leafletObject.save();
-
-            const saveSuccess2 = () => {
+          });
+          let promiseSaveLayerFrom = new Ember.RSVP.Promise((resolve,reject)=> {
+            const saveSuccess2 = (data) => {
               layerFrom._leafletObject.off('save:failed', saveSuccess2);
+              resolve(data);
             };
 
-            const saveFailed2 = () => {
+            const saveFailed2 = (data) => {
               layerFrom._leafletObject.off('save:success', saveSuccess2);
+              reject(data);
             };
 
             layerFrom._leafletObject.once('save:success', saveSuccess2);
             layerFrom._leafletObject.once('save:failed', saveFailed2);
             layerFrom._leafletObject.save();
-            resolve();
           });
+          Ember.RSVP.all([promiseSaveLayerTo, promiseSaveLayerFrom])
+            .then(()=> {
+              resolve('object moved successfully');
+            }, ()=> {
+              reject('error while saving layers');
+            });
+        } else {
+          reject('no object with such id');
         }
+      } else {
+        reject('no layer with such id');
       }
+    });
+  },
+
+  /**
+    Create new Lealfet object according to objectToDefine geometry type.
+    @method  createGeometryType
+    @param {String} objectToDefine GeoJSON object.
+    @param {Function} reject RSVP reject function.
+  */
+  createGeometryType(objectToDefine, reject) {
+    switch (Ember.get(objectToDefine, 'feature.geometry.type')) {
+      case 'Marker' :
+        return L.marker(objectToDefine.getLatLng());
+      case 'Circle' :
+        return L.circle(objectToDefine.getLatLng(), objectToDefine.getRadius());
+      case 'LineString' :
+        return L.polyline(objectToDefine.getLatLngs());
+      case 'MultiLineString' :
+        return L.polyline(objectToDefine.getLatLngs());
+      case 'Polygon' :
+        return L.polygon(objectToDefine.getLatLngs());
+      case 'MultiPolygon' :
+        return L.polygon(objectToDefine.getLatLngs());
+      default: return reject('unknown geometry type');
     }
   }
 });

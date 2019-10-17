@@ -48,6 +48,7 @@
 
            layerr.on('click', function(e) {
              alert(e.target.feature.properties.name);
+             alert(e.target.feature.id);
            })});
        });
      };
@@ -101,8 +102,10 @@
 
      var moveButton = document.getElementById('moveObjectToLayer');
      var moveObject = function() {
-       let  promise = frame.contentWindow.mapApi.mapModel.moveObjectToLayer('perm_water_polygon.8151','cd68892e-2896-47e0-b0e1-28dd700bad87' , 'f8dec493-d879-49ae-ad55-f4f18c89cb88');
-       promise.then(()=>console.log('object moved sucessfully')).catch(() => console.log('Layer saving failed'));
+       let  promise = frame.contentWindow.mapApi.mapModel.moveObjectToLayer('perm_water_polygon.8238','cd68892e-2896-47e0-b0e1-28dd700bad87' , 'f8dec493-d879-49ae-ad55-f4f18c89cb88');
+       promise.then(resolve =>{console.log(resolve)}, reject=> {
+        console.log(reject);
+       })
      };
      moveButton.addEventListener('click', moveObject)
    });
