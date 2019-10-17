@@ -190,10 +190,9 @@ export default Ember.Mixin.create({
     }
 
     let areaOfObject = area(object.feature);
-    result = {
-      ...object.feature.properties,
-      area: areaOfObject,
-    };
+    result = object.feature.properties;
+    result.area = areaOfObject;
+
     return result;
   },
 
