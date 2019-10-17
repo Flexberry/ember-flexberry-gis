@@ -168,11 +168,9 @@ export default Ember.Mixin.create({
   */
   getLayerObjectOptions(layerId, featureId) {
     let result = [];
-    
     if (Ember.isNone(layerId) || Ember.isNone(featureId)) {
       return result;
     }
-    
     const allLayers = this.get('mapLayer');
     let layers = Ember.A(allLayers);
     const layer = layers.findBy('id', layerId);
@@ -191,7 +189,7 @@ export default Ember.Mixin.create({
     }
 
     let areaOfObject = area(object.feature);
-    result= {
+    result = {
       ...object.feature.properties,
       area: areaOfObject,
     }
