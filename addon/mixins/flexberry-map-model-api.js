@@ -214,18 +214,14 @@ export default Ember.Mixin.create({
     let layerB = layers.findBy('id', layerBId);
     if (layerA && layerB) {
       let featuresA = Ember.get(layerA, '_leafletObject._layers');
-      Object.values(featuresA).find(feature => {
+      objA = Object.values(featuresA).find(feature => {
         const layerAFeatureId = this._getLayerFeatureId(layerA, feature);
-        if (layerAFeatureId === objectAId) {
-          objA = feature;
-        }
+        return layerAFeatureId === objectAId;
       });
       let featuresB = Ember.get(layerB, '_leafletObject._layers');
-      Object.values(featuresB).find(feature => {
+      objB = Object.values(featuresB).find(feature => {
         const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
-        if (layerBFeatureId === objectBId) {
-          objB = feature;
-        }
+        return layerBFeatureId === objectBId;     
       });
     }
 
@@ -256,18 +252,14 @@ export default Ember.Mixin.create({
     let layerB = layers.findBy('id', layerBId);
     if (layerA && layerB) {
       let featuresA = Ember.get(layerA, '_leafletObject._layers');
-      Object.values(featuresA).find(feature => {
+      objA = Object.values(featuresA).find(feature => {
         const layerAFeatureId = this._getLayerFeatureId(layerA, feature);
-        if (layerAFeatureId === objectAId) {
-          objA = feature;
-        }
+        return layerAFeatureId === objectAId
       });
       let featuresB = Ember.get(layerB, '_leafletObject._layers');
-      Object.values(featuresB).find(feature => {
+      objB = Object.values(featuresB).find(feature => {
         const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
-        if (layerBFeatureId === objectBId) {
-          objB = feature;
-        }
+        return layerBFeatureId === objectBId
       });
     }
 
