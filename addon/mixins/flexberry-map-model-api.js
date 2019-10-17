@@ -178,53 +178,31 @@ export default Ember.Mixin.create({
 
   /**
     Copt Object to layer.
-    @method moveObjectToLayer
+    @method copyObject
     @param {String} objectId GeoJSON object id
-    @param {String} layerId  id of layer to add object
+    @param {String} fromLayerId GeoJSON object id
+    @param {String} toLayerId  id of layer to add object
   */
-  copyObject(objectId, toLayerId) {
-    let objectToSearch;
-    let store = this.get('store');
-    const layers = this.get('mapLayer');
-    let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
-    if (layerTo) {
-      layers.forEach(layer => {
-        let features = Ember.get(layer, '_leafletObject._layers');
+  copyObject(objectId, fromLayerId, toLayerId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let objectToSearch;
+      let store = this.get('store');
+      let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer',fromLayerId);
+      let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
+      if (layerTo && layerFrom) {
+        let features = Ember.get(layerFrom, '_leafletObject._layers');
         if (features) {
-          Object.values(features).find(feature=> {
-            const layerFeatureId = this._getLayerFeatureId(layer, feature);
-            if (layerFeatureId === objectId) {
-              objectToSearch = feature;
-            }
+          objectToSearch = Object.values(features).find(feature=> {
+            const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
+            return layerFeatureId === objectId;
           });
         }
-      });
-      if (objectToSearch) {
-        objectToSearch._leaflet_id = null;
-        var newObj;
-        switch (objectToSearch.feature.geometry.type) {
-          case 'Marker' :
-            newObj =  L.marker(objectToSearch.getLatLng());
-            break;
-          case 'Circle' :
-            newObj = L.circle(objectToSearch.getLatLng(), objectToSearch.getRadius());
-            break;
-          case 'LineString' :
-            newObj = L.polyline(objectToSearch.getLatLngs());
-            break;
-          case 'MultiLineString' :
-            newObj = L.polyline(objectToSearch.getLatLngs());
-            break;
-          case 'Polygon' :
-            newObj = L.polygon(objectToSearch.getLatLngs());
-            break;
-          case 'MultiPolygon' :
-            newObj = L.polygon(objectToSearch.getLatLngs());
-            break;
-        }
-        newObj.options = objectToSearch.options;
-        Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-        return new Ember.RSVP.Promise((resolve, reject) => {
+        if (objectToSearch) {
+          objectToSearch._leaflet_id = null;
+          var newObj = this.createGeometryType(objectToSearch, reject);
+          newObj.options = objectToSearch.options;
+          Ember.get(layerTo, '_leafletObject').addLayer(newObj);
+
           const saveSuccess = (data) => {
             layerTo._leafletObject.off('save:failed', saveSuccess);
             resolve(data);
@@ -238,8 +216,36 @@ export default Ember.Mixin.create({
           layerTo._leafletObject.once('save:success', saveSuccess);
           layerTo._leafletObject.once('save:failed', saveFailed);
           layerTo._leafletObject.save();
-        });
+        } else {
+          reject('no object with such id');
+        }
+      }  else {
+        reject('no layer with such id');
       }
+    });
+  },
+
+  /**
+    Create new Lealfet object according to objectToDefine geometry type.
+    @method  createGeometryType
+    @param {String} objectToDefine GeoJSON object.
+    @param {Function} reject RSVP reject function.
+  */
+  createGeometryType(objectToDefine, reject) {
+    switch (Ember.get(objectToDefine, 'feature.geometry.type')) {
+      case 'Marker' :
+        return  L.marker(objectToDefine.getLatLng());
+      case 'Circle' :
+        return L.circle(objectToDefine.getLatLng(), objectToDefine.getRadius());
+      case 'LineString' :
+        return L.polyline(objectToDefine.getLatLngs());
+      case 'MultiLineString' :
+        return L.polyline(objectToDefine.getLatLngs());
+      case 'Polygon' :
+        return L.polygon(objectToDefine.getLatLngs());
+      case 'MultiPolygon' :
+        return L.polygon(objectToDefine.getLatLngs());
+      default: return reject('unknown geometry type'); 
     }
   }
 });
