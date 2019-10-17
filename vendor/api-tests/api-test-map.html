@@ -85,7 +85,9 @@
 
      var getObjectAttrButton = document.getElementById('getLayerObjectOptions');
      var getOptions = function () {
-       frame.contentWindow.mapApi.mapModel.getLayerObjectOptions('f8dec493-d879-49ae-ad55-f4f18c89cb88','perm_water_line.4499').then(id => console.log(id));
+        frame.contentWindow.mapApi.mapModel.getLayerObjectOptions('f8dec493-d879-49ae-ad55-f4f18c89cb88','perm_water_line.4499').then(
+          result => console.log('Text')
+        );
      };
      getObjectAttrButton.addEventListener('click', getOptions);
 

@@ -163,65 +163,29 @@ export default Ember.Mixin.create({
     Get object at layer attributes.
     @method getLayerObjectOptions
     @param {String} layerId Id layer
-    @param {String} objectId Id object
+    @param {String} featureId Id object
   */
-  getLayerObjectOptions(layerId, objectId) {
+  getLayerObjectOptions(layerId, featureId) {
     let result = [];
     
-    if (Ember.isNone(layerId) || Ember.isNone(objectId)) {
+    if (Ember.isNone(layerId) || Ember.isNone(featureId)) {
       return result;
     }
-
-    const layerFeatureId = this._getLayerFeatureId(layerId, objectId);
-    if (!layerFeatureId) {
-      return null;
-    }
-
-    if (Ember.isNone(layerIds)) {
-      const allLayers = this.get('mapLayer');
-      let layers = Ember.A(allLayers);
-      layers.find(layer => {
-        let features = Ember.get(layer, '_leafletObject._layers');
-        if (!Ember.isNone(features)) {
-          featureToSearch = Object.values(features).find(feature => {
-            if (this._getLayerFeatureId(layer, feature) === featureId) {
-              return true;
-            }
-          });
-
-          if (featureToSearch) {
-            return true;
-          }
+    
+    const allLayers = this.get('mapLayer');
+    let layers = Ember.A(allLayers);
+    const layer = layers.findBy('id', layerId);
+    let features = Ember.get(layer, '_leafletObject._layers');
+    let object;
+    if (features) {
+      Object.values(features).forEach(feature => {
+        const layerFeatureId = this._getLayerFeatureId(layer, feature);
+        if (layerFeatureId === featureId) {
+          object = feature;
         }
       });
-      if (!Ember.isNone(featureToSearch)) {
-        layerIds.forEach(id => {
-          let intersectedFeaturesCollection = [];
-          const layer = layers.findBy('id', id);
-          let features = Ember.get(layer, '_leafletObject._layers');
-          if (features) {
-            Object.values(features).forEach(feature => {
-              let intersectionResult;
-              const layerFeatureId = this._getLayerFeatureId(layer, feature);
-              if (layerFeatureId !== featureId) {
-                intersectionResult = lineIntersect(featureToSearch.feature, Ember.get(feature, 'feature'));
-              }
-
-              if (intersectionResult && intersectionResult.features.length > 0) {
-                intersectedFeaturesCollection.push(layerFeatureId);
-              }
-            });
-          }
-
-          if (intersectedFeaturesCollection.length > 0) {
-            result.push({ id: id, intersected_features: intersectedFeaturesCollection });
-          }
-        });
-      }
     }
-
     
-
     return result;
   },
 
