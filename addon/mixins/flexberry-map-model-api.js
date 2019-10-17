@@ -204,7 +204,7 @@ export default Ember.Mixin.create({
           var newObj = this.createGeometryType(objectToSearch, reject);
           newObj.options = objectToSearch.options;
           Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-          let promiseSaveLayerTo = new Ember.RSVP.Promise((resolve,reject)=> {
+          let promiseSaveLayerTo = new Ember.RSVP.Promise((resolve, reject)=> {
             const saveSuccess = (data) => {
               layerTo._leafletObject.off('save:failed', saveSuccess);
               resolve(data);
@@ -219,7 +219,7 @@ export default Ember.Mixin.create({
             layerTo._leafletObject.once('save:failed', saveFailed);
             layerTo._leafletObject.save();
           });
-          let promiseSaveLayerFrom = new Ember.RSVP.Promise((resolve,reject)=> {
+          let promiseSaveLayerFrom = new Ember.RSVP.Promise((resolve, reject)=> {
             const saveSuccess2 = (data) => {
               layerFrom._leafletObject.off('save:failed', saveSuccess2);
               resolve(data);
