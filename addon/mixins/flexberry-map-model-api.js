@@ -167,7 +167,7 @@ export default Ember.Mixin.create({
     @param {String} featureId Id object
   */
   getLayerObjectOptions(layerId, featureId) {
-    let result = [];
+    let result;
     if (Ember.isNone(layerId) || Ember.isNone(featureId)) {
       return result;
     }
@@ -176,23 +176,14 @@ export default Ember.Mixin.create({
     let layers = Ember.A(allLayers);
     const layer = layers.findBy('id', layerId);
     let features = Ember.get(layer, '_leafletObject._layers');
-    let object;
-    if (features) {
-      Object.values(features).forEach(feature => {
-        const layerFeatureId = this._getLayerFeatureId(layer, feature);
-        if (layerFeatureId === featureId) {
-          object = feature;
-        }
-      });
-      if (Ember.isNone(object)) {
-        return result;
-      }
+    let object = Object.values(features).find(feature => {
+      return this._getLayerFeatureId(layer, feature) === featureId
+    });
+
+    if (!Ember.isNone(object)) {
+      result = jQuery.extend(true, {}, object.feature.properties);
+      result.area = area(object.feature);
     }
-
-    let areaOfObject = area(object.feature);
-    result = object.feature.properties;
-    result.area = areaOfObject;
-
     return result;
   },
 
