@@ -187,7 +187,7 @@ export default Ember.Mixin.create({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let objectToSearch;
       let store = this.get('store');
-      let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer',fromLayerId);
+      let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
       let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
       if (layerTo && layerFrom) {
         let features = Ember.get(layerFrom, '_leafletObject._layers');
@@ -197,6 +197,7 @@ export default Ember.Mixin.create({
             return layerFeatureId === objectId;
           });
         }
+
         if (objectToSearch) {
           objectToSearch._leaflet_id = null;
           var newObj = this.createGeometryType(objectToSearch, reject);
@@ -234,7 +235,7 @@ export default Ember.Mixin.create({
   createGeometryType(objectToDefine, reject) {
     switch (Ember.get(objectToDefine, 'feature.geometry.type')) {
       case 'Marker' :
-        return  L.marker(objectToDefine.getLatLng());
+        return L.marker(objectToDefine.getLatLng());
       case 'Circle' :
         return L.circle(objectToDefine.getLatLng(), objectToDefine.getRadius());
       case 'LineString' :
@@ -245,7 +246,7 @@ export default Ember.Mixin.create({
         return L.polygon(objectToDefine.getLatLngs());
       case 'MultiPolygon' :
         return L.polygon(objectToDefine.getLatLngs());
-      default: return reject('unknown geometry type'); 
+      default: return reject('unknown geometry type');
     }
   }
 });
