@@ -19,6 +19,15 @@ export default Ember.Component.extend({
   layout,
 
   /**
+    Object name disaplayed on template.
+
+    @property disaplayName
+    @type String
+    @default null
+  */
+  disaplayName: null,
+
+  /**
     Layer contains identification result features.
 
     @property resultsLayer
