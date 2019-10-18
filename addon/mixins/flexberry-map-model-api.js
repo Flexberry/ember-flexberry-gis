@@ -200,7 +200,10 @@ export default Ember.Mixin.create({
 
         if (objectToSearch) {
           objectToSearch._leaflet_id = null;
-          var newObj = this.createGeometryType(objectToSearch, reject);
+          var newObj = this.createGeometryType(objectToSearch);
+          if (Ember.isNone(newObj)) {
+            reject('unknown geometry type');
+          }
           newObj.options = objectToSearch.options;
           Ember.get(layerTo, '_leafletObject').addLayer(newObj);
 
@@ -232,7 +235,7 @@ export default Ember.Mixin.create({
     @param {String} objectToDefine GeoJSON object.
     @param {Function} reject RSVP reject function.
   */
-  createGeometryType(objectToDefine, reject) {
+  createGeometryType(objectToDefine) {
     switch (Ember.get(objectToDefine, 'feature.geometry.type')) {
       case 'Marker' :
         return L.marker(objectToDefine.getLatLng());
@@ -246,7 +249,7 @@ export default Ember.Mixin.create({
         return L.polygon(objectToDefine.getLatLngs());
       case 'MultiPolygon' :
         return L.polygon(objectToDefine.getLatLngs());
-      default: return reject('unknown geometry type');
+      default: return undefined;
     }
   }
 });
