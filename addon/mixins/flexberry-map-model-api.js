@@ -204,6 +204,7 @@ export default Ember.Mixin.create({
           if (Ember.isNone(newObj)) {
             reject('unknown geometry type');
           }
+
           newObj.options = objectToSearch.options;
           Ember.get(layerTo, '_leafletObject').addLayer(newObj);
 
@@ -233,7 +234,6 @@ export default Ember.Mixin.create({
     Create new Lealfet object according to objectToDefine geometry type.
     @method  createGeometryType
     @param {String} objectToDefine GeoJSON object.
-    @param {Function} reject RSVP reject function.
   */
   createGeometryType(objectToDefine) {
     switch (Ember.get(objectToDefine, 'feature.geometry.type')) {
