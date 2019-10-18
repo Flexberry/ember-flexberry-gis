@@ -4,6 +4,7 @@ import intersect from 'npm:@turf/intersect';
 import area from 'npm:@turf/area';
 import lineIntersect from 'npm:@turf/line-intersect';
 import * as buffer from 'npm:@turf/buffer';
+import VectorLayer from '../layers/-private/vector';
 /**
   The component for searching for intersections with selected feature.
 
@@ -155,7 +156,9 @@ export default Ember.Component.extend({
     this._super(...arguments);
     let vlayers = [];
     this.get('layers').forEach(item=> {
-      if (item.get('type') === 'geojson' || item.get('type') === 'wfs') {
+      let className = Ember.get(item, 'type');
+      let layerType = Ember.getOwner(this).knownForType('layer', className);
+      if (layerType instanceof VectorLayer) {
         vlayers.push(item);
       }
     });
