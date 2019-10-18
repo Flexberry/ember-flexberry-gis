@@ -205,6 +205,7 @@ export default Ember.Mixin.create({
           if (Ember.isNone(newObj)) {
             reject('unknown geomerty type');
           }
+
           newObj.options = objectToSearch.options;
           Ember.get(layerTo, '_leafletObject').addLayer(newObj);
           let promiseSaveLayerTo = new Ember.RSVP.Promise((resolve, reject)=> {
