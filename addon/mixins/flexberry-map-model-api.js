@@ -28,6 +28,46 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Shows id objects for layer.
+
+    @method showLayerObjects
+    @param {String} layerId Layer id
+    @param {String[]} objectIds Array of id objects
+  */
+  showLayerObjects(layerId, objectIds) {
+    this._setVisibilityObjects(layerId, objectIds, true);
+  },
+
+  /**
+    Hides id objects for layer.
+
+    @method hideLayerObjects
+    @param {String} layerId Layer id
+    @param {String[]} objectIds Array of id objects
+  */
+  hideLayerObjects(layerId, objectIds) {
+    this._setVisibilityObjects(layerId, objectIds, false);
+  },
+
+  /**
+    Show all layer objects.
+
+    @method showAllLayerObjects
+    @param {String} layerId Layer id
+  */
+  showAllLayerObjects(layerId) {
+    const layer = this.get('mapLayer').findBy('id', layerId);
+    const leafletObject = Ember.get(layer, '_leafletObject');
+    var map = Ember.get(leafletObject, '_map');
+
+    leafletObject.eachLayer(function (layerShape) {
+      if (!map.hasLayer(layerShape)) {
+        map.addLayer(layerShape);
+      }
+    });
+  },
+
+  /**
     Creates new layer with specified options.
     @method createNewLayer.
   */
@@ -60,15 +100,11 @@ export default Ember.Mixin.create({
 
     @method deleteLayerObjects.
     @param {String} layerId Id layer.
-    @param {OBject[]} featureIds Array of id shapes.
+    @param {Object[]} featureIds Array of id shapes.
   */
   deleteLayerObjects(layerId, featureIds) {
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
-
-    if (Ember.isNone(layer)) {
-      throw `Layer '${layerId}' not found.`;
-    }
 
     let ids = [];
     layer._leafletObject.eachLayer(function (shape) {
@@ -181,6 +217,37 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Determine the visibility of the specified objects by id for the layer
+
+    @method _setVisibilityObjects
+    @param {String} layerId Layer id
+    @param {String[]} objectIds Array of id objects
+    @param {Boolean} [visibility=false] visibility Object Visibility
+  */
+  _setVisibilityObjects(layerId, objectIds, visibility = false) {
+    if (Ember.isArray(objectIds)) {
+      const layer = this.get('mapLayer').findBy('id', layerId);
+      const leafletObject = Ember.get(layer, '_leafletObject');
+      var map = Ember.get(leafletObject, '_map');
+
+      leafletObject.eachLayer(function (shape) {
+        const id = this._getLayerFeatureId(layer, shape);
+        if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
+          if (visibility) {
+            if (!map.hasLayer(shape)) {
+              map.addLayer(shape);
+            }
+          } else {
+            if (map.hasLayer(shape)) {
+              map.removeLayer(shape);
+            }
+          }
+        }
+      }.bind(this));
+    }
+  },
+
+  /**
     Move Object From one  layer to another.
     @method moveObjectToLayer
     @param {String} objectId GeoJSON object id
@@ -196,7 +263,7 @@ export default Ember.Mixin.create({
       if (layerFrom && layerTo) {
         let features = Ember.get(layerFrom, '_leafletObject._layers');
         if (features) {
-          objectToSearch = Object.values(features).find(feature=> {
+          objectToSearch = Object.values(features).find(feature => {
             const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
             return layerFeatureId === objectId;
           });
@@ -212,7 +279,7 @@ export default Ember.Mixin.create({
 
           newObj.options = objectToSearch.options;
           Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-          let promiseSaveLayerTo = new Ember.RSVP.Promise((resolve, reject)=> {
+          let promiseSaveLayerTo = new Ember.RSVP.Promise((resolve, reject) => {
             const saveSuccess = (data) => {
               layerTo._leafletObject.off('save:failed', saveSuccess);
               resolve(data);
@@ -227,7 +294,7 @@ export default Ember.Mixin.create({
             layerTo._leafletObject.once('save:failed', saveFailed);
             layerTo._leafletObject.save();
           });
-          let promiseSaveLayerFrom = new Ember.RSVP.Promise((resolve, reject)=> {
+          let promiseSaveLayerFrom = new Ember.RSVP.Promise((resolve, reject) => {
             const saveSuccess2 = (data) => {
               layerFrom._leafletObject.off('save:failed', saveSuccess2);
               resolve(data);
@@ -243,9 +310,9 @@ export default Ember.Mixin.create({
             layerFrom._leafletObject.save();
           });
           Ember.RSVP.all([promiseSaveLayerTo, promiseSaveLayerFrom])
-            .then(()=> {
+            .then(() => {
               resolve('object moved successfully');
-            }, ()=> {
+            }, () => {
               reject('error while saving layers');
             });
         } else {
@@ -264,17 +331,17 @@ export default Ember.Mixin.create({
   */
   createGeometryType(objectToDefine) {
     switch (Ember.get(objectToDefine, 'feature.geometry.type')) {
-      case 'Marker' :
+      case 'Marker':
         return L.marker(objectToDefine.getLatLng());
-      case 'Circle' :
+      case 'Circle':
         return L.circle(objectToDefine.getLatLng(), objectToDefine.getRadius());
-      case 'LineString' :
+      case 'LineString':
         return L.polyline(objectToDefine.getLatLngs());
-      case 'MultiLineString' :
+      case 'MultiLineString':
         return L.polyline(objectToDefine.getLatLngs());
-      case 'Polygon' :
+      case 'Polygon':
         return L.polygon(objectToDefine.getLatLngs());
-      case 'MultiPolygon' :
+      case 'MultiPolygon':
         return L.polygon(objectToDefine.getLatLngs());
       default: return undefined;
     }
