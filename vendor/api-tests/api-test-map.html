@@ -9,6 +9,8 @@
   <button id="getIntersectionObjects">get Intersection Objects</button>
   <button id="createNewlayer">Create new Layer</button>
   <button id="showAllLayerObjects">Show all layer objects</button>
+  <button id="isContainsObject">Is Contains Object</button>
+  <button id="extendsAreaObject">Get Extended Area</button>
   <div>
     <textarea id="layerObjects" name="text" style="width:750px;height:100px"></textarea>
     <br />
@@ -59,6 +61,12 @@
           });
         });
       };
+      frame.contentWindow.mapApi.getLayerFeatureId = function(layer, layerObject)  {
+       if (layer.id === "f7670a1f-1acb-4571-923c-1ce3bc88e11e") {
+         return layerObject.feature.properties.name;
+       }
+       return layerObject.feature.id;
+     }
 
       var showButton = document.getElementById('showLayers');
       var showLayers = function () {
@@ -158,6 +166,21 @@
       };
       moveButton.addEventListener('click', moveObject);
 
+      var containsButton = document.getElementById('isContainsObject');
+      var containsObject = function() {
+        let layerId= "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
+        let isContains = frame.contentWindow.mapApi.mapModel.isContainsObject('Малые реки', layerId, 'Голованово', layerId)
+        console.log("layer 'Голованово' contains layer 'Малые реки':" + isContains);
+      };
+      containsButton.addEventListener('click', containsObject);
+
+      var extendsAreaButton = document.getElementById('extendsAreaObject');
+      var extendsObject = function() {
+        let layerId= "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
+        let area = frame.contentWindow.mapApi.mapModel.getAreaExtends('Малые реки', layerId, 'Голованово', layerId)
+        console.log("the area of ​​layer 'Голованово' that extends beyond the boundaries of layer 'Малые реки':" + area);
+      };
+     extendsAreaButton.addEventListener('click', extendsObject);
     });
   </script>
 </div>

@@ -42,6 +42,7 @@
     "@turf/union": "^5.1.5",
     "@turf/intersect": "^5.1.5",
     "@turf/boolean-point-in-polygon": "^5.1.5",
+    "@turf/boolean-contains": "^5.1.5",
     "broccoli-asset-rev": "^2.4.2",
     "broccoli-jscs": "1.2.2",
     "dexie": "^1.4.2",
