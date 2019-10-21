@@ -241,7 +241,7 @@ export default BaseVectorLayer.extend({
         searchFields.forEach((field) => {
           let ind = layerProperties.indexOf(field);
           if (ind > -1) {
-            let layerPropertyType = typeof layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0]
+            let layerPropertyType = typeof layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
             let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
             if (layerPropertyType != 'string' || (layerPropertyType == 'object' && layerPropertyValue instanceof Date)) {
               equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));

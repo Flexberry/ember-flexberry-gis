@@ -313,12 +313,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       if (!displayPropertyIsCallback) {
         let featureProperties = Ember.get(feature, 'properties') || {};
 
-      for (var prop in featureProperties) {
-        let value = featureProperties[prop];
-        if (value instanceof Date && !Ember.isNone(value) && !Ember.isEmpty(value) && !Ember.isEmpty(dateFormat)) {
-          featureProperties[prop] = moment(value).format(dateFormat);
+        for (var prop in featureProperties) {
+          let value = featureProperties[prop];
+          if (value instanceof Date && !Ember.isNone(value) && !Ember.isEmpty(value) && !Ember.isEmpty(dateFormat)) {
+            featureProperties[prop] = moment(value).format(dateFormat);
+          }
         }
-      }
 
         let displayValue = Ember.none;
         displayProperty.forEach((prop) => {
