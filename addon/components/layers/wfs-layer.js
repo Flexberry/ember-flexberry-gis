@@ -232,11 +232,28 @@ export default BaseVectorLayer.extend({
 
     // Create filter for each search field.
     let equals = Ember.A();
-    searchFields.forEach((field) => {
-      equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', {
-        matchCase: false
-      }));
-    });
+    let leafletObject = this.get('_leafletObject');
+    if (!Ember.isNone(leafletObject)) {
+      let type = this.get('layerModel.type');
+      if (!Ember.isBlank(type)) {
+        let layerClass = Ember.getOwner(this).knownForType('layer', type);
+        let layerProperties = layerClass.getLayerProperties(leafletObject);
+        searchFields.forEach((field) => {
+          let ind = layerProperties.indexOf(field);
+          if (ind > -1) {
+            let layerPropertyType = typeof layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0]
+            let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
+            if (layerPropertyType != 'string' || (layerPropertyType == 'object' && layerPropertyValue instanceof Date)) {
+              equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
+            } else {
+              equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', {
+                matchCase: false
+              }));
+            }
+          }
+        });
+      }
+    }
 
     let filter;
     if (equals.length === 1) {

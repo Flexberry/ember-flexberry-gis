@@ -599,6 +599,20 @@ let FlexberrySearchMapCommandDialogComponent = Ember.Component.extend({
     if (Ember.isArray(availableLayersOptions) && !Ember.isNone(selectedLayer)) {
       availableLayersOptions.forEach((cachedEntry) => {
         if (Ember.get(cachedEntry, 'layer') === selectedLayer) {
+          let dateFormat = Ember.get(selectedLayer, 'settingsAsObject.displaySettings.dateFormat');
+          if (!Ember.isEmpty(dateFormat)) {
+            this.get('foundedFeatures').forEach((feature) => {
+              let featureProperties = Ember.get(feature, 'properties') || {};
+
+              for (var prop in featureProperties) {
+                let value = featureProperties[prop];
+                if (value instanceof Date && !Ember.isNone(value) && !Ember.isEmpty(value) && !Ember.isEmpty(dateFormat)) {
+                  featureProperties[prop] = moment(value).format(dateFormat);
+                }
+              }
+            });
+          }
+
           Ember.set(cachedEntry, 'foundedFeatures', this.get('foundedFeatures'));
           return false;
         }
