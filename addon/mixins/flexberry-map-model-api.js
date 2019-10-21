@@ -406,6 +406,60 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Copt Object to layer.
+    @method copyObject
+    @param {String} objectId GeoJSON object id
+    @param {String} fromLayerId GeoJSON object id
+    @param {String} toLayerId  id of layer to add object
+  */
+  copyObject(objectId, fromLayerId, toLayerId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let objectToSearch;
+      let store = this.get('store');
+      let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
+      let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
+      if (layerTo && layerFrom) {
+        let features = Ember.get(layerFrom, '_leafletObject._layers');
+        if (features) {
+          objectToSearch = Object.values(features).find(feature=> {
+            const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
+            return layerFeatureId === objectId;
+          });
+        }
+
+        if (objectToSearch) {
+          objectToSearch._leaflet_id = null;
+          var newObj = this.createGeometryType(objectToSearch);
+          if (Ember.isNone(newObj)) {
+            reject('unknown geometry type');
+          }
+
+          newObj.options = objectToSearch.options;
+          Ember.get(layerTo, '_leafletObject').addLayer(newObj);
+
+          const saveSuccess = (data) => {
+            layerTo._leafletObject.off('save:failed', saveSuccess);
+            resolve(data);
+          };
+
+          const saveFailed = (data) => {
+            layerTo._leafletObject.off('save:success', saveSuccess);
+            reject(data);
+          };
+
+          layerTo._leafletObject.once('save:success', saveSuccess);
+          layerTo._leafletObject.once('save:failed', saveFailed);
+          layerTo._leafletObject.save();
+        } else {
+          reject('no object with such id');
+        }
+      }  else {
+        reject('no layer with such id');
+      }
+    });
+  },
+
+  /**
     Create new Lealfet object according to objectToDefine geometry type.
     @method  createGeometryType
     @param {String} objectToDefine GeoJSON object.
