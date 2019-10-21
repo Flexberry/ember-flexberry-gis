@@ -42,6 +42,7 @@
     "@turf/union": "^5.1.5",
     "@turf/intersect": "^5.1.5",
     "@turf/boolean-point-in-polygon": "^5.1.5",
+    "@turf/boolean-contains": "^5.1.5",
     "broccoli-asset-rev": "^2.4.2",
     "broccoli-jscs": "1.2.2",
     "dexie": "^1.4.2",
@@ -79,6 +80,7 @@
     "ui-ember-slider": "0.5.0"
   },
   "dependencies": {
+    "@turf/combine": "^6.0.1",
     "ember-cli-babel": "^5.1.6",
     "ember-cli-htmlbars": "^1.0.3",
     "ember-flexberry": "2.1.0",

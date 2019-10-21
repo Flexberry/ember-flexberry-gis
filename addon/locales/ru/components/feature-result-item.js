@@ -6,5 +6,6 @@ export default {
   'feature-table-property-name': 'Поле',
   'feature-table-property-value': 'Значение',
   'select-object-caption': 'К объекту',
+  'action-object-caption': 'К объекту',
   'find-intersection-caption': 'Поиск пересечений'
 };
