@@ -16,6 +16,7 @@
     <button id="showObjects">Show Objects</button>
     <button id="hideObjects">Hide Objects</button>
   </div>
+  <button id="moveObjectToLayer">move Object To Layer</button>
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
     frame.addEventListener("load", function () {
@@ -42,15 +43,16 @@
       frame.contentWindow.mapApi.layerInitCallback = function (model) {
         model.getLeafletObject().then(function (layer) {
           layer.eachLayer(function (layerr) {
-            switch (model.layerModel.get('id')) {
-              case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
-                layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
-                break;
-              case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
-                layerr.setStyle({ color: '#008B8B' });
-                break;
+            if (!Ember.IsNone(layerr.setStyle)) {
+              switch (model.layerModel.get('id')) {
+                case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
+                  layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
+                  break;
+                case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
+                  layerr.setStyle({ color: '#008B8B' });
+                  break;
+              }
             }
-
             layerr.on('click', function (e) {
               alert(e.target.feature.properties.name);
             })
@@ -146,6 +148,16 @@
       }
 
       showAllLayerObjectsButton.addEventListener('click', showAllLayerObjects);
+
+      var moveButton = document.getElementById('moveObjectToLayer');
+      var moveObject = function () {
+        let promise = frame.contentWindow.mapApi.mapModel.moveObjectToLayer('perm_water_polygon.8238', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88');
+        promise.then(resolve => { console.log(resolve) }, reject => {
+          console.log(reject);
+        })
+      };
+      moveButton.addEventListener('click', moveObject);
+
     });
   </script>
 </div>
