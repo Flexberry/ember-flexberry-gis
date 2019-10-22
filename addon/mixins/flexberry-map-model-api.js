@@ -1,5 +1,8 @@
 import Ember from 'ember';
 import lineIntersect from 'npm:@turf/line-intersect';
+import booleanContains from 'npm:@turf/boolean-contains';
+import area from 'npm:@turf/area';
+import intersect from 'npm:@turf/intersect';
 
 export default Ember.Mixin.create({
   /**
@@ -25,6 +28,46 @@ export default Ember.Mixin.create({
   */
   hideLayers(layerIds) {
     this._setVisibility(layerIds);
+  },
+
+  /**
+    Shows id objects for layer.
+
+    @method showLayerObjects
+    @param {String} layerId Layer id
+    @param {String[]} objectIds Array of id objects
+  */
+  showLayerObjects(layerId, objectIds) {
+    this._setVisibilityObjects(layerId, objectIds, true);
+  },
+
+  /**
+    Hides id objects for layer.
+
+    @method hideLayerObjects
+    @param {String} layerId Layer id
+    @param {String[]} objectIds Array of id objects
+  */
+  hideLayerObjects(layerId, objectIds) {
+    this._setVisibilityObjects(layerId, objectIds, false);
+  },
+
+  /**
+    Show all layer objects.
+
+    @method showAllLayerObjects
+    @param {String} layerId Layer id
+  */
+  showAllLayerObjects(layerId) {
+    const layer = this.get('mapLayer').findBy('id', layerId);
+    const leafletObject = Ember.get(layer, '_leafletObject');
+    var map = Ember.get(leafletObject, '_map');
+
+    leafletObject.eachLayer(function (layerShape) {
+      if (!map.hasLayer(layerShape)) {
+        map.addLayer(layerShape);
+      }
+    });
   },
 
   /**
@@ -60,15 +103,11 @@ export default Ember.Mixin.create({
 
     @method deleteLayerObjects.
     @param {String} layerId Id layer.
-    @param {OBject[]} featureIds Array of id shapes.
+    @param {Object[]} featureIds Array of id shapes.
   */
   deleteLayerObjects(layerId, featureIds) {
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
-
-    if (Ember.isNone(layer)) {
-      throw `Layer '${layerId}' not found.`;
-    }
 
     let ids = [];
     layer._leafletObject.eachLayer(function (shape) {
@@ -159,6 +198,84 @@ export default Ember.Mixin.create({
     return result;
   },
 
+  /**
+    Check if objectA contains object B.
+    @method isContainsObject
+    @param {String} objectAId id of first object.
+    @param {String} layerAId id of first layer.
+    @param {String} objectBId id of second object.
+    @param {String} layerBId id of second layer.
+  */
+  isContainsObject(objectAId, layerAId, objectBId, layerBId) {
+    let objA;
+    let objB;
+    const layers = this.get('mapLayer');
+    let layerA = layers.findBy('id', layerAId);
+    let layerB = layers.findBy('id', layerBId);
+    if (layerA && layerB) {
+      let featuresA = Ember.get(layerA, '_leafletObject._layers');
+      objA = Object.values(featuresA).find(feature => {
+        const layerAFeatureId = this._getLayerFeatureId(layerA, feature);
+        return layerAFeatureId === objectAId;
+      });
+      let featuresB = Ember.get(layerB, '_leafletObject._layers');
+      objB = Object.values(featuresB).find(feature => {
+        const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
+        return layerBFeatureId === objectBId;
+      });
+    }
+
+    if (objA && objB) {
+      let featureA = Ember.get(objA, 'feature');
+      let featureB = Ember.get(objB, 'feature');
+      if (booleanContains(featureB, featureA)) {
+        return true;
+      }
+    }
+
+    return false;
+  },
+
+  /**
+    Calculate the area of ​​object B that extends beyond the boundaries of object A.
+    @method getAreaExtends
+    @param {String} objectAId id of first object.
+    @param {String} layerAId id of first layer.
+    @param {String} objectBId id of second object.
+    @param {String} layerBId id of second layer.
+  */
+  getAreaExtends(objectAId, layerAId, objectBId, layerBId) {
+    let objA;
+    let objB;
+    const layers = this.get('mapLayer');
+    let layerA = layers.findBy('id', layerAId);
+    let layerB = layers.findBy('id', layerBId);
+    if (layerA && layerB) {
+      let featuresA = Ember.get(layerA, '_leafletObject._layers');
+      objA = Object.values(featuresA).find(feature => {
+        const layerAFeatureId = this._getLayerFeatureId(layerA, feature);
+        return layerAFeatureId === objectAId;
+      });
+      let featuresB = Ember.get(layerB, '_leafletObject._layers');
+      objB = Object.values(featuresB).find(feature => {
+        const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
+        return layerBFeatureId === objectBId;
+      });
+    }
+
+    if (objA && objB) {
+      let intersectionRes = intersect(objB.feature, objA.feature);
+      if (intersectionRes) {
+        let resultArea = area(objB.feature) - area(intersectionRes);
+        return resultArea;
+      } else {
+        return area(objB.feature);
+      }
+    }
+
+    return 0;
+  },
+
   _setVisibility(layerIds, visibility = false) {
     if (Ember.isArray(layerIds)) {
       const layers = this.get('mapLayer');
@@ -179,4 +296,189 @@ export default Ember.Mixin.create({
 
     return Ember.get(layerObject, 'feature.id');
   },
+
+  /**
+    Determine the visibility of the specified objects by id for the layer
+
+    @method _setVisibilityObjects
+    @param {String} layerId Layer id
+    @param {String[]} objectIds Array of id objects
+    @param {Boolean} [visibility=false] visibility Object Visibility
+  */
+  _setVisibilityObjects(layerId, objectIds, visibility = false) {
+    if (Ember.isArray(objectIds)) {
+      const layer = this.get('mapLayer').findBy('id', layerId);
+      const leafletObject = Ember.get(layer, '_leafletObject');
+      var map = Ember.get(leafletObject, '_map');
+
+      leafletObject.eachLayer(function (shape) {
+        const id = this._getLayerFeatureId(layer, shape);
+        if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
+          if (visibility) {
+            if (!map.hasLayer(shape)) {
+              map.addLayer(shape);
+            }
+          } else {
+            if (map.hasLayer(shape)) {
+              map.removeLayer(shape);
+            }
+          }
+        }
+      }.bind(this));
+    }
+  },
+
+  /**
+    Move Object From one  layer to another.
+    @method moveObjectToLayer
+    @param {String} objectId GeoJSON object id
+    @param {String} fromLayerId id of layer to remove object
+    @param {String} tolayerId  id of layer to add object
+  */
+  moveObjectToLayer(objectId, fromLayerId, toLayerId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let objectToSearch;
+      let store = this.get('store');
+      let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
+      let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
+      if (layerFrom && layerTo) {
+        let features = Ember.get(layerFrom, '_leafletObject._layers');
+        if (features) {
+          objectToSearch = Object.values(features).find(feature => {
+            const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
+            return layerFeatureId === objectId;
+          });
+        }
+
+        if (objectToSearch) {
+          layerFrom._leafletObject.removeLayer(objectToSearch);
+          objectToSearch._leaflet_id = null;
+          var newObj = this.createGeometryType(objectToSearch, reject);
+          if (Ember.isNone(newObj)) {
+            reject('unknown geomerty type');
+          }
+
+          newObj.options = objectToSearch.options;
+          Ember.get(layerTo, '_leafletObject').addLayer(newObj);
+          let promiseSaveLayerTo = new Ember.RSVP.Promise((resolve, reject) => {
+            const saveSuccess = (data) => {
+              layerTo._leafletObject.off('save:failed', saveSuccess);
+              resolve(data);
+            };
+
+            const saveFailed = (data) => {
+              layerTo._leafletObject.off('save:success', saveSuccess);
+              reject(data);
+            };
+
+            layerTo._leafletObject.once('save:success', saveSuccess);
+            layerTo._leafletObject.once('save:failed', saveFailed);
+            layerTo._leafletObject.save();
+          });
+          let promiseSaveLayerFrom = new Ember.RSVP.Promise((resolve, reject) => {
+            const saveSuccess2 = (data) => {
+              layerFrom._leafletObject.off('save:failed', saveSuccess2);
+              resolve(data);
+            };
+
+            const saveFailed2 = (data) => {
+              layerFrom._leafletObject.off('save:success', saveSuccess2);
+              reject(data);
+            };
+
+            layerFrom._leafletObject.once('save:success', saveSuccess2);
+            layerFrom._leafletObject.once('save:failed', saveFailed2);
+            layerFrom._leafletObject.save();
+          });
+          Ember.RSVP.all([promiseSaveLayerTo, promiseSaveLayerFrom])
+            .then(() => {
+              resolve('object moved successfully');
+            }, () => {
+              reject('error while saving layers');
+            });
+        } else {
+          reject('no object with such id');
+        }
+      } else {
+        reject('no layer with such id');
+      }
+    });
+  },
+
+  /**
+    Copt Object to layer.
+    @method copyObject
+    @param {String} objectId GeoJSON object id
+    @param {String} fromLayerId GeoJSON object id
+    @param {String} toLayerId  id of layer to add object
+  */
+  copyObject(objectId, fromLayerId, toLayerId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let objectToSearch;
+      let store = this.get('store');
+      let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
+      let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
+      if (layerTo && layerFrom) {
+        let features = Ember.get(layerFrom, '_leafletObject._layers');
+        if (features) {
+          objectToSearch = Object.values(features).find(feature=> {
+            const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
+            return layerFeatureId === objectId;
+          });
+        }
+
+        if (objectToSearch) {
+          objectToSearch._leaflet_id = null;
+          var newObj = this.createGeometryType(objectToSearch);
+          if (Ember.isNone(newObj)) {
+            reject('unknown geometry type');
+          }
+
+          newObj.options = objectToSearch.options;
+          Ember.get(layerTo, '_leafletObject').addLayer(newObj);
+
+          const saveSuccess = (data) => {
+            layerTo._leafletObject.off('save:failed', saveSuccess);
+            resolve(data);
+          };
+
+          const saveFailed = (data) => {
+            layerTo._leafletObject.off('save:success', saveSuccess);
+            reject(data);
+          };
+
+          layerTo._leafletObject.once('save:success', saveSuccess);
+          layerTo._leafletObject.once('save:failed', saveFailed);
+          layerTo._leafletObject.save();
+        } else {
+          reject('no object with such id');
+        }
+      }  else {
+        reject('no layer with such id');
+      }
+    });
+  },
+
+  /**
+    Create new Lealfet object according to objectToDefine geometry type.
+    @method  createGeometryType
+    @param {String} objectToDefine GeoJSON object.
+  */
+  createGeometryType(objectToDefine) {
+    switch (Ember.get(objectToDefine, 'feature.geometry.type')) {
+      case 'Marker':
+        return L.marker(objectToDefine.getLatLng());
+      case 'Circle':
+        return L.circle(objectToDefine.getLatLng(), objectToDefine.getRadius());
+      case 'LineString':
+        return L.polyline(objectToDefine.getLatLngs());
+      case 'MultiLineString':
+        return L.polyline(objectToDefine.getLatLngs());
+      case 'Polygon':
+        return L.polygon(objectToDefine.getLatLngs());
+      case 'MultiPolygon':
+        return L.polygon(objectToDefine.getLatLngs());
+      default: return undefined;
+    }
+  }
 });
