@@ -20,10 +20,6 @@ export default Ember.Component.extend({
 
   /**
     Object name disaplayed on template.
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
     @property disaplayName
     @type String
     @default null
