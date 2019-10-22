@@ -109,6 +109,10 @@ export default Ember.Mixin.create({
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
 
+    if (Ember.isNone(layer)) {
+      throw `Layer '${layerId}' not found.`;
+    }
+
     let ids = [];
     layer._leafletObject.eachLayer(function (shape) {
       const id = this._getLayerFeatureId(layer, shape);
