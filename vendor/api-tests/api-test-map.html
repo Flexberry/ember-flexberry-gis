@@ -31,10 +31,6 @@
     <div>
       <button id="extendsAreaObject">Get Extended Area</button>
     </div>
-
-    <!-- <div>
-    <textarea id="layerObjects" name="text" style="width:750px;height:100px"></textarea>
-    <br /> -->
     <div>
       <button id="deleteLayerObject">Delete object</button>
       <button id="deleteLayerObjects">Delete objects</button>
@@ -43,8 +39,6 @@
       <button id="showObjects">Show Objects</button>
       <button id="hideObjects">Hide Objects</button>
     </div>
-
-    <!-- </div> -->
     <div>
       <button id="moveObjectToLayer">Move Object To Layer</button>
     </div>
@@ -132,11 +126,6 @@
       };
       newLayerButton.addEventListener('click', newLayer);
 
-      // textaeraDelObj = {
-      //   layerId: 'f8dec493-d879-49ae-ad55-f4f18c89cb88', objectIds: ['perm_water_line.8383', 'perm_water_line.8382']
-      // };
-      // layerObjects.value = JSON.stringify(textaeraDelObj);
-
       var deleteLayerObjectButton = document.getElementById('deleteLayerObject');
       var deleteObjectLayer = function () {
         var promise = frame.contentWindow.mapApi.mapModel.deleteLayerObject('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8383');
@@ -146,46 +135,19 @@
 
       var deleteObjectsLayerButton = document.getElementById('deleteLayerObjects');
       var deleteObjectsLayer = function () {
-        // var layerObjects = document.getElementById('layerObjects');
-        // var delObj = JSON.parse(layerObjects.value);
-
-        // if (delObj.layerId !== undefined) {
-        //   var promise;
-        //   if (delObj.objectIds.length > 1) {
-        //     promise = frame.contentWindow.mapApi.mapModel.deleteLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
-        //   } else if (delObj.objectIds.length === 1) {
-        //     promise = frame.contentWindow.mapApi.mapModel.deleteLayerObject('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8383');
-        //   }
-
         var promise = frame.contentWindow.mapApi.mapModel.deleteLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
         promise.then(() => console.log(['perm_water_line.8383', 'perm_water_line.8382'])).catch(() => console.log('Layer saving failed'));
-        // }
       };
       deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
 
       var showObjectsButton = document.getElementById('showObjects');
       var showObjects = function () {
-        // var layerObjects = document.getElementById('layerObjects');
-        // var visibilityObj = JSON.parse(layerObjects.value);
-
-        // if (visibilityObj.layerId !== undefined) {
-        //   if (visibilityObj.objectIds.length > 0) {
         frame.contentWindow.mapApi.mapModel.showLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
-        //   }
-        // };
       };
       showObjectsButton.addEventListener('click', showObjects);
 
       var hideObjectsButton = document.getElementById('hideObjects');
       var hideObjects = function () {
-        // var layerObjects = document.getElementById('layerObjects');
-        // var visibilityObj = JSON.parse(layerObjects.value);
-
-        // if (visibilityObj.layerId !== undefined) {
-        //   if (visibilityObj.objectIds.length > 0) {
-        //     frame.contentWindow.mapApi.mapModel.hideLayerObjects(visibilityObj.layerId, visibilityObj.objectIds);
-        //   }
-        // };
         frame.contentWindow.mapApi.mapModel.hideLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
       }
       hideObjectsButton.addEventListener('click', hideObjects);
