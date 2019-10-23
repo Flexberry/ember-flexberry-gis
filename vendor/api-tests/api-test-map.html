@@ -1,6 +1,6 @@
 <div class="ui vertical menu">
   <iframe id="testframe"
-    src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11"
+    src="../../api-test-map/61a70ecf-58a6-4260-836f-53fca2a1f628?lat=58.03636517477584&lng=56.4042752981186&zoom=18"
     width="1000" height="800" align="left">
   </iframe>
   <button id="showLayers">Show Layers</button>
@@ -20,6 +20,9 @@
   </div>
   <button id="moveObjectToLayer">Move Object To Layer</button>
   <button id="copyObject"> Copy Object</button>
+  <button id="editLayerObject">Edit Layer Object</button>
+  <button id="saveLayer">Save Layer</button>
+
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
     frame.addEventListener("load", function () {
@@ -62,12 +65,12 @@
           });
         });
       };
-      frame.contentWindow.mapApi.getLayerFeatureId = function(layer, layerObject)  {
-       if (layer.id === "f7670a1f-1acb-4571-923c-1ce3bc88e11e") {
-         return layerObject.feature.properties.name;
-       }
-       return layerObject.feature.id;
-     }
+      frame.contentWindow.mapApi.getLayerFeatureId = function (layer, layerObject) {
+        if (layer.id === "f7670a1f-1acb-4571-923c-1ce3bc88e11e") {
+          return layerObject.feature.properties.name;
+        }
+        return layerObject.feature.id;
+      }
 
       var showButton = document.getElementById('showLayers');
       var showLayers = function () {
@@ -168,27 +171,41 @@
       moveButton.addEventListener('click', moveObject);
 
       var copyButton = document.getElementById('copyObject');
-      var  copyObject = function() {
-       frame.contentWindow.mapApi.mapModel.copyObject('perm_water_polygon.8000', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88')
-       .then(() => {console.log('layer copied successfully')}, reject => {console.log(reject)})
+      var copyObject = function () {
+        frame.contentWindow.mapApi.mapModel.copyObject('perm_water_polygon.8000', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88')
+          .then(() => { console.log('layer copied successfully') }, reject => { console.log(reject) })
       };
       copyButton.addEventListener('click', copyObject);
 
       var containsButton = document.getElementById('isContainsObject');
-      var containsObject = function() {
-        let layerId= "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
+      var containsObject = function () {
+        let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
         let isContains = frame.contentWindow.mapApi.mapModel.isContainsObject('Малые реки', layerId, 'Голованово', layerId)
         console.log("layer 'Голованово' contains layer 'Малые реки':" + isContains);
       };
       containsButton.addEventListener('click', containsObject);
 
       var extendsAreaButton = document.getElementById('extendsAreaObject');
-      var extendsObject = function() {
-        let layerId= "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
+      var extendsObject = function () {
+        let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
         let area = frame.contentWindow.mapApi.mapModel.getAreaExtends('Малые реки', layerId, 'Голованово', layerId)
         console.log("the area of ​​layer 'Голованово' that extends beyond the boundaries of layer 'Малые реки':" + area);
       };
       extendsAreaButton.addEventListener('click', extendsObject);
+
+      var editLayerObjectButton = document.getElementById('editLayerObject');
+      var editObject = function () {
+        frame.contentWindow.mapApi.mapModel.editLayerObject('04bd48f3-b898-4041-9270-2c154abbf289', 'water_polygon.573');
+      };
+      editLayerObjectButton.addEventListener('click', editObject);
+
+      var saveLayerButton = document.getElementById('saveLayer');
+      var saveLayer = function () {
+        frame.contentWindow.mapApi.mapModel.saveLayer('f7670a1f-1acb-4571-923c-1ce3bc88e11e');
+        //.then(() => {console.log('layer copied successfully')}, reject => {console.log(reject)})
+      };
+      saveLayerButton.addEventListener('click', saveLayer);
+
     });
   </script>
 </div>

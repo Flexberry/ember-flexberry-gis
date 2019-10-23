@@ -421,7 +421,7 @@ export default Ember.Mixin.create({
       if (layerTo && layerFrom) {
         let features = Ember.get(layerFrom, '_leafletObject._layers');
         if (features) {
-          objectToSearch = Object.values(features).find(feature=> {
+          objectToSearch = Object.values(features).find(feature => {
             const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
             return layerFeatureId === objectId;
           });
@@ -453,7 +453,7 @@ export default Ember.Mixin.create({
         } else {
           reject('no object with such id');
         }
-      }  else {
+      } else {
         reject('no layer with such id');
       }
     });
@@ -480,5 +480,49 @@ export default Ember.Mixin.create({
         return L.polygon(objectToDefine.getLatLngs());
       default: return undefined;
     }
+  },
+
+  /**
+    Enable edit mode for an object.
+
+    @method editLayerObject
+    @param {String} layerId Layer id.
+    @param {String} objectId Object id.
+  */
+  editLayerObject(layerId, objectId) {
+    const layers = this.get('mapLayer');
+    const layer = layers.findBy('id', layerId);
+
+    if (Ember.isNone(layer._leafletObject)) {
+      throw new Error('Layer type not supported');
+    }
+
+    let features = Ember.get(layer, '_leafletObject._layers');
+    let obj = Object.values(features).find(feature => {
+      const layerFeatureId = this._getLayerFeatureId(layer, feature);
+      return layerFeatureId === objectId;
+    });
+
+    const map = Ember.get(layer, '_leafletObject._map');
+    const editTools = new L.Editable(map);
+
+    Ember.set(map, 'editTools', editTools);
+
+    obj.enableEdit(map);
+  },
+
+  /**
+    Save layer.
+
+    @method saveLayer
+    @param {String} layerId Layer id.
+    @return {Object} Returns promise.
+  */
+  saveLayer(layerId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+
+    });
   }
+
+
 });
