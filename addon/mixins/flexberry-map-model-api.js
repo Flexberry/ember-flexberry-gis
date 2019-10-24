@@ -492,23 +492,58 @@ export default Ember.Mixin.create({
   editLayerObject(layerId, objectId) {
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
+    const leafletObject = Ember.get(layer, '_leafletObject');
 
-    if (Ember.isNone(layer._leafletObject)) {
+    if (Ember.isNone(leafletObject)) {
       throw new Error('Layer type not supported');
     }
 
-    let features = Ember.get(layer, '_leafletObject._layers');
+    //Ember.set(leafletObject, '_wasChanged', true);
+
+    const features = Ember.get(leafletObject, '_layers');
     let obj = Object.values(features).find(feature => {
       const layerFeatureId = this._getLayerFeatureId(layer, feature);
       return layerFeatureId === objectId;
     });
 
-    const map = Ember.get(layer, '_leafletObject._map');
+    var isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
+
+    if (!isMarker) {
+      //tabModel.enableDragging(rowId);
+      if (obj.bringToFront) {
+        obj.bringToFront();
+      }
+    }
+
+    const map = Ember.get(leafletObject, '_map');
+
+    // Remove layer editing.
+    this._removeLayerEditing(map);
+
+    // Get closer to the object.
+    map.fitBounds(obj.getBounds());
+
     const editTools = new L.Editable(map);
-
     Ember.set(map, 'editTools', editTools);
-
+    map.on('editable:editing', this._triggerChanged, [leafletObject, obj, true]);
     obj.enableEdit(map);
+  },
+
+  /**
+    Mark layer as changed.
+
+    @method _triggerChanged
+    @param {Object} e Event object.
+  */
+  _triggerChanged(e) {
+    let [leafletObject, object, setEdited] = this;
+    if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(object))) {
+      Ember.set(leafletObject, '_wasChanged', true);
+
+      if (setEdited) {
+        leafletObject.editLayer(object);
+      }
+    }
   },
 
   /**
@@ -519,10 +554,50 @@ export default Ember.Mixin.create({
     @return {Object} Returns promise.
   */
   saveLayer(layerId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    const layers = this.get('mapLayer');
+    const layer = layers.findBy('id', layerId);
+    const leafletObject = Ember.get(layer, '_leafletObject');
 
+    if (Ember.isNone(leafletObject)) {
+      throw new Error('Layer type not supported');
+    }
+
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      const saveSuccess = (data) => {
+        Ember.set(leafletObject, '_wasChanged', false);
+        const map = Ember.get(leafletObject, '_map');
+
+        // Remove layer editing.
+        this._removeLayerEditing(map);
+
+        leafletObject.off('save:failed', saveSuccess);
+        resolve(data);
+      };
+
+      const saveFailed = (data) => {
+        leafletObject.off('save:success', saveSuccess);
+        reject(data);
+      };
+
+      leafletObject.once('save:success', saveSuccess);
+      leafletObject.once('save:failed', saveFailed);
+      leafletObject.save();
+    });
+  },
+
+  /**
+    Remove layer editing.
+
+    @method _removeLayerEditing
+    @param {Object} map Map.
+  */
+  _removeLayerEditing(map) {
+    map.eachLayer(function (object) {
+      let enabled = Ember.get(object, 'editor._enabled');
+      if (enabled === true) {
+        object.disableEdit();
+      }
     });
   }
-
 
 });
