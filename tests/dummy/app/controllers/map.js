@@ -122,6 +122,11 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   switchScaleControlScales: [500, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 150000, 200000],
 
   /**
+   Flat indicates that map should fire create object on first load
+  */
+  createObject: null,
+
+  /**
     Sidebar tabs metadata.
 
     @property sidebar
@@ -145,6 +150,24 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     captionPath: 'forms.map.bookmarksbuttontooltip',
     iconClass: 'bookmark icon'
   }]),
+
+  _sidebarFiltered: Ember.computed('sidebar', 'createObject', function () {
+    let result = Ember.A();
+    let sidebar = this.get('sidebar');
+    sidebar.forEach((item) => {
+      result.push(item);
+    });
+
+    if (this.get('createObject')) {
+      result.push({
+        selector: 'createObject',
+        captionPath: 'forms.map.createobjectbuttontooltip',
+        iconClass: 'createObject icon'
+      });
+    }
+
+    return result;
+  }),
 
   /**
     Sidebar items metadata.
@@ -276,6 +299,46 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   },
 
   actions: {
+    /**
+      Handles create object.
+
+      @method  actions.onCreateObject
+    */
+    onCreateObject(createItems) {
+      this.set('createItems', createItems);
+      this.set('createObject', true);
+
+      if (this.get('createObject')) {
+        Ember.run.later(() => {
+          if (this.get('_sidebarFiltered.4.active') !== true) {
+            this.set('_sidebarFiltered.4.active', true);
+          }
+
+          this.send('toggleSidebar', {
+            changed: false,
+            tabName: 'createObject'
+          });
+        });
+      }
+    },
+
+    onQueryFinished(e) {
+      if (this.get('createObject')) {
+        Ember.run.later(() => {
+          if (this.get('sidebarItems.4.active') !== true) {
+            this.set('sidebarItems.4.active', true);
+          }
+
+          this.send('toggleSidebar', {
+            changed: false,
+            tabName: 'createObject'
+          });
+        });
+      } else {
+        this._identificationFinished(e);
+      }
+    },
+
     /**
       Handles leaflet map initialization.
 

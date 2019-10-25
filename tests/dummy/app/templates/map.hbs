@@ -29,7 +29,7 @@
   <div class="sidebar-wrapper">
     {{flexberry-tab-bar
       change=(action "toggleSidebar")
-      items=sidebarItems
+      items=_sidebarFiltered
     }}
     <div class="ui very wide right sidebar pushable tabbar">
       <div data-tab="treeview" class="ui tab treeview">
@@ -139,6 +139,15 @@
           storageKey=model.id
         }}
       </div>
+      <div data-tab="createObject" class="ui tab createObject">
+      <h3>{{t "forms.map.tabbar.createObject.caption"}}</h3>
+      {{#each createItems as |createItem|}}
+        {{flexberry-create-object-geometry
+          createItem=createItem
+          leafletMap=leafletMap
+        }}
+      {{/each}}
+    </div>
     </div>
   </div>
   <div class={{concat "bottompanel-wrapper" (if (or (gt editedLayers.length 0) editedLayersPanelLoading) "" " hidden")}}>
@@ -227,6 +236,8 @@
         leafletDestroy=(action "onMapLeafletDestroy" "leafletMap")
         moveend=(action "onMapMoveend" "model.lat" "model.lng")
         zoomend=(action "onMapZoomend" "model.zoom")
+        queryFinished=(action "onQueryFinished")
+        onCreateObject=(action "onCreateObject")
       }}
         {{flexberry-layers
           leafletMap=leafletMap
