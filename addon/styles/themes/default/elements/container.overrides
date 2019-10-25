@@ -1234,3 +1234,30 @@ form.flexberry-edit-layermap {
     height: 14px;
   }
 }
+
+/* создание объектов */
+.ui.tab.createObject {
+  .coordinates-area {
+    width: 100%;
+    margin: 8px 0 0 0;
+
+    .flexberry-textarea {
+      width: 100%;
+
+      textarea {
+        min-height: 240px;
+        max-height: 480px;
+        min-width: 100%;
+        max-width: 100%;
+      }
+    }
+  }
+}
+
+.flexberry-gis-edit-panel .flexberry-buttons.left {
+  float: left;
+}
+
+.flexberry-gis-edit-panel .flexberry-buttons.right {
+  float: right;
+}
