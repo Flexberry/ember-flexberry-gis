@@ -195,14 +195,18 @@
 
       var editLayerObjectButton = document.getElementById('editLayerObject');
       var editObject = function () {
-        frame.contentWindow.mapApi.mapModel.editLayerObject('04bd48f3-b898-4041-9270-2c154abbf289', 'water_polygon.573');
+        //frame.contentWindow.mapApi.mapModel.editLayerObject('04bd48f3-b898-4041-9270-2c154abbf289', 'water_polygon.573');
+        frame.contentWindow.mapApi.mapModel.editLayerObject('57cebb75-a9a1-47b0-877a-49fdccb86ad4', 'water_line.41');
       };
       editLayerObjectButton.addEventListener('click', editObject);
 
       var saveLayerButton = document.getElementById('saveLayer');
       var saveLayer = function () {
-        frame.contentWindow.mapApi.mapModel.saveLayer('f7670a1f-1acb-4571-923c-1ce3bc88e11e');
-        //.then(() => {console.log('layer copied successfully')}, reject => {console.log(reject)})
+        // frame.contentWindow.mapApi.mapModel.saveLayer('04bd48f3-b898-4041-9270-2c154abbf289')
+        // .then(() => {console.log('layer save successfully')}, reject => {console.log(reject)})
+
+        frame.contentWindow.mapApi.mapModel.saveLayer('57cebb75-a9a1-47b0-877a-49fdccb86ad4')
+          .then(resolve => console.log('layer save successfully'), reject => console.log(reject))
       };
       saveLayerButton.addEventListener('click', saveLayer);
 

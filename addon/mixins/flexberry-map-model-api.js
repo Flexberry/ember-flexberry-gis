@@ -483,22 +483,57 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Enable edit mode for an object.
+    Error not found layer.
+    @method _errorLayerNotFound
+    @param {string} layerId Layer id.
+    @return {Error}
+    @private
+  */
+  _errorLayerNotFound(layerId) {
+    return new Error(`Layer '${layerId}' not found.`);
+  },
 
+  /**
+    Error not found object.
+    @method _errorObjectNotFound
+    @param {string} objectId Object id.
+    @return {Error}
+    @private
+  */
+  _errorObjectNotFound(objectId) {
+    return new Error(`Object '${objectId}' not found.`);
+  },
+
+  /**
+    Error layer type not supported.
+    @method _errorLayerTypeNotSupported
+    @return {Error}
+    @private
+  */
+  _errorLayerTypeNotSupported() {
+    return new Error('Layer type not supported');
+  },
+
+  /**
+    Enable edit mode for an object.
     @method editLayerObject
-    @param {String} layerId Layer id.
-    @param {String} objectId Object id.
+    @param {string} layerId Layer id.
+    @param {string} objectId Object id.
+    @throws {Error}
   */
   editLayerObject(layerId, objectId) {
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
+
+    if (Ember.isNone(layer)) {
+      throw this._errorLayerNotFound(layerId);
+    }
+
     const leafletObject = Ember.get(layer, '_leafletObject');
 
     if (Ember.isNone(leafletObject)) {
-      throw new Error('Layer type not supported');
+      throw this._errorLayerTypeNotSupported();
     }
-
-    //Ember.set(leafletObject, '_wasChanged', true);
 
     const features = Ember.get(leafletObject, '_layers');
     let obj = Object.values(features).find(feature => {
@@ -506,10 +541,13 @@ export default Ember.Mixin.create({
       return layerFeatureId === objectId;
     });
 
+    if (Ember.isNone(obj)) {
+      throw this._errorObjectNotFound(objectId);
+    }
+
     var isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
 
     if (!isMarker) {
-      //tabModel.enableDragging(rowId);
       if (obj.bringToFront) {
         obj.bringToFront();
       }
@@ -531,9 +569,9 @@ export default Ember.Mixin.create({
 
   /**
     Mark layer as changed.
-
     @method _triggerChanged
     @param {Object} e Event object.
+    @private
   */
   _triggerChanged(e) {
     let [leafletObject, object, setEdited] = this;
@@ -548,18 +586,33 @@ export default Ember.Mixin.create({
 
   /**
     Save layer.
-
     @method saveLayer
-    @param {String} layerId Layer id.
-    @return {Object} Returns promise.
+    @param {string} layerId Layer id.
+    @throws {Error}
+    @return {Ember.RSVP.Promise} Returns promise.
   */
   saveLayer(layerId) {
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
+
+    if (Ember.isNone(layer)) {
+      return new Ember.RSVP.Promise(() => {
+        throw this._errorLayerNotFound(layerId);
+      });
+    }
+
     const leafletObject = Ember.get(layer, '_leafletObject');
 
     if (Ember.isNone(leafletObject)) {
-      throw new Error('Layer type not supported');
+      return new Ember.RSVP.Promise(() => {
+        throw this._errorLayerTypeNotSupported();
+      });
+    }
+
+    if (Object.keys(leafletObject.changes).length === 0) {
+      return new Ember.RSVP.Promise(() => {
+        throw new Error('No changed objects');
+      });
     }
 
     return new Ember.RSVP.Promise((resolve, reject) => {
@@ -587,9 +640,9 @@ export default Ember.Mixin.create({
 
   /**
     Remove layer editing.
-
     @method _removeLayerEditing
     @param {Object} map Map.
+    @private
   */
   _removeLayerEditing(map) {
     map.eachLayer(function (object) {
