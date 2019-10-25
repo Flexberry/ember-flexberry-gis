@@ -159,7 +159,7 @@ export default Ember.Component.extend({
 
       layer.feature = { properties: Ember.merge(defaultProperties, properties) };
 
-      let wfsProperties = this.get('layerModel.settingsAsObject');
+      let wfsProperties = Ember.$.extend(this.get('layerModel.settingsAsObject'), { showExisting: false });
 
       this.get('_wfsLayer').createVectorLayer(wfsProperties).then((wfs) => {
         wfs.addLayer(layer);
@@ -179,7 +179,7 @@ export default Ember.Component.extend({
     let innerWfsLayerProperties = {
       leafletMap: this.get('leafletMap'),
       visibility: false,
-      dynamicProperties: this.get('layerModel.settingsAsObject')
+      dynamicProperties: Ember.$.extend(this.get('layerModel.settingsAsObject'), { showExisting: false })
     };
 
     // Set creating component's owner to avoid possible lookup exceptions.
