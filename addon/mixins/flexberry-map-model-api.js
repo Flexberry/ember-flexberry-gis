@@ -460,7 +460,48 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Determine the visibility of the specified objects by id for the layer.
+  Add Object To Layer.
+
+  @method addObjectToLayer
+  @param {<a href="https://leafletjs.com/reference-1.5.0.html#geojson">L.GeoJSON</a>} object GeoJSON object
+  @param {String} layerId id of layer to add object
+  */
+  addObjectToLayer(object, layerId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      if (!Ember.isNone(object)) {
+        let store = this.get('store');
+        let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
+        if (!Ember.isNone(layer)) {
+          let newObj = L.geoJSON(object);
+          if (typeof (newObj.setStyle) === 'function') {
+            newObj.setStyle(Ember.get(layer, '_leafletObject.options.style'));
+          }
+
+          layer._leafletObject.addLayer(newObj.getLayers()[0]);
+          const saveSuccess = (data) => {
+            layer._leafletObject.off('save:failed', saveSuccess);
+            resolve(data);
+          };
+
+          const saveFailed = (data) => {
+            layer._leafletObject.off('save:success', saveSuccess);
+            reject(data);
+          };
+
+          layer._leafletObject.once('save:success', saveSuccess);
+          layer._leafletObject.once('save:failed', saveFailed);
+          layer._leafletObject.save();
+        } else {
+          reject('no layer with such id');
+        }
+      } else {
+        reject('passed object is null');
+      }
+    });
+  },
+
+  /**
+    Determine the visibility of the specified objects by id for the layer
 
     @method _setVisibilityObjects
     @param {string} layerId Layer id.
@@ -651,36 +692,4 @@ export default Ember.Mixin.create({
       default: return undefined;
     }
   },
-
-  /*
-    Add Object To Layer.
-
-    @method addObjectToLayer
-    @param {<a href="https://leafletjs.com/reference-1.5.0.html#geojson">L.GeoJSON</a>} object GeoJSON object
-    @param {String} layerId id of layer to add object
-  */
-  addObjectToLayer(object, layerId) {
-    if (object) {
-      let store = this.get('store');
-      let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
-      if (layer) {
-        object.addTo(layer._leafletObject);
-        return new Ember.RSVP.Promise((resolve, reject) => {
-          const saveSuccess = (data) => {
-            layer._leafletObject.off('save:failed', saveSuccess);
-            resolve(data);
-          };
-
-          const saveFailed = (data) => {
-            layer._leafletObject.off('save:success', saveSuccess);
-            reject(data);
-          };
-
-          layer._leafletObject.once('save:success', saveSuccess);
-          layer._leafletObject.once('save:failed', saveFailed);
-          layer._leafletObject.save();
-        });
-      }
-    }
-  }
 });
