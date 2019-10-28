@@ -175,12 +175,11 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
     this.set('crs', crsFactoryESPG3857.create());
-    this.set('layerModel.settingsAsObject.showExisting', false);
 
     let innerWfsLayerProperties = {
       leafletMap: this.get('leafletMap'),
       visibility: false,
-      dynamicProperties: this.get('layerModel.settingsAsObject')
+      dynamicProperties: Ember.$.extend({}, this.get('layerModel.settingsAsObject'), { 'showExisting': false })
     };
 
     // Set creating component's owner to avoid possible lookup exceptions.
