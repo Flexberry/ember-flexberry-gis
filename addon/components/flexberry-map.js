@@ -344,6 +344,24 @@ let FlexberryMapComponent = Ember.Component.extend(
       });
     },
 
+    _createObject(queryFilter, mapObjectSetting) {
+      if (!Ember.isBlank(queryFilter) && !Ember.isBlank(mapObjectSetting)) {
+
+        let e = {
+          queryFilter: queryFilter,
+          mapObjectSetting: mapObjectSetting,
+          results: Ember.A()
+        };
+
+        let leafletMap = this.get('_leafletObject');
+
+        leafletMap.fire('flexberry-map:createObject', e);
+        if (e.results.length) {
+          this.sendAction('onCreateObject', e.results);
+        }
+      }
+    },
+
     /**
       Finishes query.
 
@@ -496,6 +514,11 @@ let FlexberryMapComponent = Ember.Component.extend(
         this.set('_hasQueryApi', true);
       }
 
+      if (Ember.isNone(mapApi.getFromApi('createObject'))) {
+        mapApi.addToApi('createObject',  this._createObject.bind(this));
+        this.set('_hasCreateObjectApi', true);
+      }
+
       Ember.run.scheduleOnce('afterRender', this, '_localeDidChange');
     },
 
@@ -526,6 +549,10 @@ let FlexberryMapComponent = Ember.Component.extend(
 
         if (this.get('_hasQueryApi')) {
           this.get('mapApi').addToApi('runQuery', undefined);
+        }
+
+        if (this.get('_hasCreateObjectApi')) {
+          this.get('mapApi').addToApi('createObject', undefined);
         }
 
         this.sendAction('leafletDestroy');
