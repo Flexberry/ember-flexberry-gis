@@ -175,7 +175,7 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
     this.set('crs', crsFactoryESPG3857.create());
-    this.set('layerModel.settingsAsObject.showExisting',false);
+    this.set('layerModel.settingsAsObject.showExisting', false);
 
     let innerWfsLayerProperties = {
       leafletMap: this.get('leafletMap'),
