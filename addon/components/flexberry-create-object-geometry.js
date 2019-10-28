@@ -159,7 +159,7 @@ export default Ember.Component.extend({
 
       layer.feature = { properties: Ember.merge(defaultProperties, properties) };
 
-      let wfsProperties = this.get('layerModel.settingsAsObject');
+      let wfsProperties = Ember.$.extend({}, this.get('layerModel.settingsAsObject'), { 'showExisting': false });
 
       this.get('_wfsLayer').createVectorLayer(wfsProperties).then((wfs) => {
         wfs.addLayer(layer);
