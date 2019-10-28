@@ -21,6 +21,7 @@
   <button id="moveObjectToLayer">Move Object To Layer</button>
   <button id="copyObject"> Copy Object</button>
   <button id="creatObject"> Create Object</button>
+  <button id="getRhumb"> Get Rhumb</button>
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
     frame.addEventListener("load", function () {
@@ -63,12 +64,12 @@
           });
         });
       };
-      frame.contentWindow.mapApi.getLayerFeatureId = function(layer, layerObject)  {
-       if (layer.id === "f7670a1f-1acb-4571-923c-1ce3bc88e11e") {
-         return layerObject.feature.properties.name;
-       }
-       return layerObject.feature.id;
-     }
+      frame.contentWindow.mapApi.getLayerFeatureId = function (layer, layerObject) {
+        if (layer.id === "f7670a1f-1acb-4571-923c-1ce3bc88e11e") {
+          return layerObject.feature.properties.name;
+        }
+        return layerObject.feature.id;
+      }
 
       var showButton = document.getElementById('showLayers');
       var showLayers = function () {
@@ -169,23 +170,23 @@
       moveButton.addEventListener('click', moveObject);
 
       var copyButton = document.getElementById('copyObject');
-      var  copyObject = function() {
-       frame.contentWindow.mapApi.mapModel.copyObject('perm_water_polygon.8000', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88')
-       .then(() => {console.log('layer copied successfully')}, reject => {console.log(reject)})
+      var copyObject = function () {
+        frame.contentWindow.mapApi.mapModel.copyObject('perm_water_polygon.8000', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88')
+          .then(() => { console.log('layer copied successfully') }, reject => { console.log(reject) })
       };
       copyButton.addEventListener('click', copyObject);
 
       var containsButton = document.getElementById('isContainsObject');
-      var containsObject = function() {
-        let layerId= "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
+      var containsObject = function () {
+        let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
         let isContains = frame.contentWindow.mapApi.mapModel.isContainsObject('Малые реки', layerId, 'Голованово', layerId)
         console.log("layer 'Голованово' contains layer 'Малые реки':" + isContains);
       };
       containsButton.addEventListener('click', containsObject);
 
       var extendsAreaButton = document.getElementById('extendsAreaObject');
-      var extendsObject = function() {
-        let layerId= "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
+      var extendsObject = function () {
+        let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
         let area = frame.contentWindow.mapApi.mapModel.getAreaExtends('Малые реки', layerId, 'Голованово', layerId)
         console.log("the area of ​​layer 'Голованово' that extends beyond the boundaries of layer 'Малые реки':" + area);
       };
@@ -193,9 +194,18 @@
 
       var creatObjectButton = document.getElementById('creatObject');
       var creatObjectLayers = function () {
-        frame.contentWindow.mapApi.createObject({ PK: '3059', nomer: '10'}, 'c2ce814e-cb31-432e-af9e-2e86cea65c67');
+        frame.contentWindow.mapApi.createObject({ PK: '3059', nomer: '10' }, 'c2ce814e-cb31-432e-af9e-2e86cea65c67');
       };
       creatObjectButton.addEventListener('click', creatObjectLayers);
     });
+
+    var getRhumbButton = document.getElementById('getRhumb');
+    var getRhumb = function () {
+      var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_polygon.8000');
+      console.log(thumbs);
+    }
+
+    getThumbButton.addEventListener('click', getRhumb);
+
   </script>
 </div>

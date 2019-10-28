@@ -3,6 +3,8 @@ import lineIntersect from 'npm:@turf/line-intersect';
 import booleanContains from 'npm:@turf/boolean-contains';
 import area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
+import rhumbBearing from 'npm:@turf/rhumb-bearing';
+import rhumbDistance from 'npm:@turf/rhumb-distance';
 
 export default Ember.Mixin.create({
   /**
@@ -421,7 +423,7 @@ export default Ember.Mixin.create({
       if (layerTo && layerFrom) {
         let features = Ember.get(layerFrom, '_leafletObject._layers');
         if (features) {
-          objectToSearch = Object.values(features).find(feature=> {
+          objectToSearch = Object.values(features).find(feature => {
             const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
             return layerFeatureId === objectId;
           });
@@ -453,7 +455,7 @@ export default Ember.Mixin.create({
         } else {
           reject('no object with such id');
         }
-      }  else {
+      } else {
         reject('no layer with such id');
       }
     });
@@ -480,5 +482,29 @@ export default Ember.Mixin.create({
         return L.polygon(objectToDefine.getLatLngs());
       default: return undefined;
     }
+  },
+
+  /**
+    Get the object thumb.
+    @method  getRhumb
+    @param {string} layerId Layer id.
+    @param {string} objectId Object id.
+    @return {array} Table rhumb.
+  */
+  getRhumb(layerId, objectId) {
+    const layer = this.get('mapLayer').findBy('id', layerId);
+    const leafletObject = Ember.get(layer, '_leafletObject');
+
+    leafletObject.eachLayer(function (object) {
+      const id = this._getLayerFeatureId(layer, object);
+      if (!Ember.isNone(id) && objectId === id) {
+         debugger;
+      }
+    }.bind(this));
+
+
   }
+
+
+
 });
