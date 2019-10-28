@@ -4,9 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/map-commands/edit';
-import {
-  translationMacro as t
-} from 'ember-i18n';
+import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component's CSS-classes names.
@@ -24,7 +22,7 @@ const flexberryClassNamesPrefix = 'flexberry-edit-map-command';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: flexberryClassNamesPrefix,
-  editdialog: 'flexberry-edit-dialog-map-command',
+  editdialog: 'flexberry-edit-dialog-map-command'
 };
 
 /**
@@ -35,8 +33,8 @@ const flexberryClassNames = {
   Usage:
   templates/my-map-form.hbs
   ```handlebars
-  {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-commands/edit execute=(action "onMapCommandExecute" target=maptoolbar)}}
+  {{#flexberry-maptoolbar}}
+    {{map-commands/edit leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   ```
 
@@ -123,6 +121,15 @@ let EditMapCommandComponent = Ember.Component.extend({
   iconClass: 'edit icon',
 
   /**
+    Leaflet map.
+
+    @property leafletMap
+    @type <a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>
+    @default null
+  */
+  leafletMap: null,
+
+  /**
     Map model
 
     @property mapModel
@@ -133,24 +140,22 @@ let EditMapCommandComponent = Ember.Component.extend({
 
   actions: {
     /**
-      Handles {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
+      Handles base map-command's 'click' action.
 
-      @method actions.onEditMapCommandExecute
-      @param {Object} e Base map-command's 'execute' action event-object.
+      @method actions.onMapCommandButtonClick
     */
-    onEditMapCommandExecute(e) {
-      this._showEditDialog({ executeActionEventObject: e });
+    onMapCommandButtonClick() {
+      this._showEditDialog();
     },
 
     /**
       Handles edit dialog's 'approve' action.
-      Invokes own {{#crossLink "EditMapCommandComponent/sendingActions.execute:method"}}'execute' action{{/crossLink}}.
 
       @method actions.onEditDialogApprove
       @param {Object} e Action's event object.
     */
     onEditDialogApprove(e) {
-      //Set properties from new map model to current map model.
+      // Set edited properties values to map model.
       let mapModel = e.mapProperties;
       let model = this.get('mapModel');
 
@@ -164,43 +169,14 @@ let EditMapCommandComponent = Ember.Component.extend({
       model.set('scale', mapModel.scale);
       model.set('coordinateReferenceSystem', mapModel.coordinateReferenceSystem);
       model.set('boundingBox', mapModel.boundingBox);
+
+      let leafletMap = this.get('leafletMap');
+      let mapCommandName = 'edit';
+      let mapCommandProperties = null;
+      let mapCommandExecutionOptions = null;
+
+      leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions);
     },
-  },
-
-  /**
-    Shows edit dialog.
-
-    @method _showEditDialog
-    @param {Object} [options] Method options.
-    @private
-  */
-  _showEditDialog(options) {
-    options = options || {};
-
-    // Delay execution, but send action to initialize map-command.
-    let executeActionEventObject = Ember.get(options, 'executeActionEventObject');
-    Ember.set(executeActionEventObject, 'execute', false);
-    this.sendAction('execute', executeActionEventObject);
-
-    // Remember event-object to execute command later (when dialog will be approved).
-    this.set('_executeActionEventObject', executeActionEventObject);
-
-    // Include dialog to markup.
-    this.set('_editDialogHasBeenRequested', true);
-
-    // Show dialog.
-    this.set('_editDialogIsVisible', true);
-  },
-
-  /**
-    Hides edit dialog.
-
-    @method _hideEditDialog
-    @private
-  */
-  _hideEditDialog() {
-    // Hide dialog.
-    this.set('_editDialogIsVisible', false);
   },
 
   /**
@@ -231,21 +207,29 @@ let EditMapCommandComponent = Ember.Component.extend({
   },
 
   /**
-    Destroys component.
-  */
-  willDestroy() {
-    this._super(...arguments);
+    Shows edit dialog.
 
-    this.set('_executeActionEventObject', null);
-  }
+    @method _showEditDialog
+    @private
+  */
+  _showEditDialog() {
+    // Include dialog to markup.
+    this.set('_editDialogHasBeenRequested', true);
+
+    // Show dialog.
+    this.set('_editDialogIsVisible', true);
+  },
 
   /**
-    Component's action invoking when map-command must be executed.
+    Hides edit dialog.
 
-    @method sendingActions.execute
-    @param {Object} e Action's event object from
-    {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
+    @method _hideEditDialog
+    @private
   */
+  _hideEditDialog() {
+    // Hide dialog.
+    this.set('_editDialogIsVisible', false);
+  },
 });
 
 // Add component's CSS-class names as component's class static constants

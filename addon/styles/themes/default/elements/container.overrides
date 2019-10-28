@@ -41,12 +41,23 @@
   &.help {
     cursor: help;
   }
-  &-loader {
-    z-index: 10001 !important;
 
+  .flexberry-map-loader.ui.loader {
+    display: none;
+    z-index: 10001 !important;
     color: @flexberryMapLoaderColor;
-    &-dimmer {
-      z-index: 10000 !important;
+
+    &.active {
+      display: block;
+    }
+  }
+
+  .flexberry-map-loader-dimmer.ui.dimmer {
+    display: none;
+    z-index: 10000 !important;
+
+    &.active {
+      display: block;
     }
   }
 }

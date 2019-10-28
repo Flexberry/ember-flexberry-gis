@@ -31,8 +31,8 @@ const flexberryClassNames = {
   Usage:
   templates/my-map-form.hbs
   ```handlebars
-  {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-commands/locate execute=(action "onMapCommandExecute" target=maptoolbar)}}
+  {{#flexberry-maptoolbar}}
+    {{map-commands/locate leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   ```
   @class FullExtentMapCommandComponent
@@ -91,25 +91,6 @@ let LocateMapCommandComponent = Ember.Component.extend({
     @default 'bullseye icon'
   */
   iconClass: 'bullseye icon',
-
-  actions: {
-    /**
-      Handles {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
-      Invokes own {{#crossLink "LocateMapCommandComponent/sendingActions.execute:method"}}'execute' action{{/crossLink}}.
-      @method actions.onMapCommandExecute
-      @param {Object} e Base map-command's 'execute' action event-object.
-    */
-    onMapCommandExecute(e) {
-      this.sendAction('execute', e);
-    }
-  },
-
-  /**
-    Component's action invoking when map-command must be executed.
-    @method sendingActions.execute
-    @param {Object} e Action's event object from
-    {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
-  */
 });
 
 // Add component's CSS-class names as component's class static constants

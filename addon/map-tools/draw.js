@@ -41,16 +41,6 @@ export default BaseNonclickableMapTool.extend({
   featuresLayer: null,
 
   /**
-    Flag: indicates whether map-tool is exclusive or not.
-    Exclusive map-tool lives in enabled state until some other tool will be manually enabled.
-
-    @property enabled
-    @type Boolean
-    @default false
-  */
-  exclusive: false,
-
-  /**
     Enables tool.
 
     @method _enable
@@ -80,7 +70,7 @@ export default BaseNonclickableMapTool.extend({
       Ember.set(leafletMap, 'drawTools', editTools);
     }
 
-    editTools.on('editable:drawing:end', this.disable, this);
+    editTools.on('editable:drawing:end', this._onDrawingEnd, this);
   },
 
   /**
@@ -94,8 +84,22 @@ export default BaseNonclickableMapTool.extend({
 
     let editTools = this.get('_editTools');
     if (!Ember.isNone(editTools)) {
-      editTools.off('editable:drawing:end', this.disable, this);
+      editTools.off('editable:drawing:end', this._onDrawingEnd, this);
       editTools.stopDrawing();
+    }
+  },
+
+  /**
+    Handles edit tools 'editable:drawing:end' event.
+
+    @method _onDrawingEnd
+    @private
+  */
+  _onDrawingEnd() {
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      // Disable current draw tool in favor of default map tool.
+      leafletMap.flexberryMap.tools.disable();
     }
   },
 

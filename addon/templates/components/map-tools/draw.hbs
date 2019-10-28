@@ -4,6 +4,7 @@
   caption=caption
   tooltip=tooltip
   iconClass=iconClass
+  leafletMap=leafletMap
 }}
   {{#block-slot "submenu"}}
     {{#if drawMarker}}
@@ -12,8 +13,8 @@
         name="draw-marker"
         caption=drawMarkerCaption
         iconClass=drawMarkerIconClass
+        leafletMap=leafletMap
         mapToolProperties=_drawToolProperties
-        activate=(action "onMapToolActivate")
       }}
     {{/if}}
     {{#if drawPolyline}}
@@ -22,8 +23,8 @@
         name="draw-polyline"
         caption=drawPolylineCaption
         iconClass=drawPolylineIconClass
+        leafletMap=leafletMap
         mapToolProperties=_drawToolProperties
-        activate=(action "onMapToolActivate")
       }}
     {{/if}}
     {{#if drawCircle}}
@@ -32,8 +33,8 @@
         name="draw-circle"
         caption=drawCircleCaption
         iconClass=drawCircleIconClass
+        leafletMap=leafletMap
         mapToolProperties=_drawToolProperties
-        activate=(action "onMapToolActivate")
       }}
     {{/if}}
     {{#if drawRectangle}}
@@ -42,8 +43,8 @@
         name="draw-rectangle"
         caption=drawRectangleCaption
         iconClass=drawRectangleIconClass
+        leafletMap=leafletMap
         mapToolProperties=_drawToolProperties
-        activate=(action "onMapToolActivate")
       }}
     {{/if}}
     {{#if drawPolygon}}
@@ -52,8 +53,8 @@
         name="draw-polygon"
         caption=drawPolygonCaption
         iconClass=drawPolygonIconClass
+        leafletMap=leafletMap
         mapToolProperties=_drawToolProperties
-        activate=(action "onMapToolActivate")
       }}
     {{/if}}
     {{#if drawClear}}
@@ -62,8 +63,8 @@
         name="draw-clear"
         caption=drawClearCaption
         iconClass=drawClearIconClass
+        leafletMap=leafletMap
         mapToolProperties=_drawToolProperties
-        activate=(action "onMapToolActivate")
       }}
     {{/if}}
   {{/block-slot}}
