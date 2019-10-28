@@ -310,7 +310,12 @@ export default Ember.Mixin.create({
         let store = this.get('store');
         let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
         if (!Ember.isNone(layer)) {
-          object.addTo(layer._leafletObject);
+          let newObj = L.geoJSON(object);
+          if (typeof (newObj.setStyle) === 'function') {
+            newObj.setStyle(Ember.get(layer, '_leafletObject.options.style'));
+          }
+
+          layer._leafletObject.addLayer(newObj.getLayers()[0]);
           const saveSuccess = (data) => {
             layer._leafletObject.off('save:failed', saveSuccess);
             resolve(data);

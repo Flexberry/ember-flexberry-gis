@@ -20,7 +20,7 @@
   </div>
   <button id="moveObjectToLayer">Move Object To Layer</button>
   <button id="copyObject"> Copy Object</button>
-  <button id="addObjectToLayer">Create New Layer</button>
+  <button id="addObjectToLayer">Add Object To Layer</button>
   <button id="creatObject"> Create Object</button>
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
@@ -194,8 +194,17 @@
 
       var addButton = document.getElementById('addObjectToLayer');
       var addObject = function() {
-        var polygon = {};
-        frame.contentWindow.mapApi.mapModel.addObjectToLayer(polygon, 'f7670a1f-1acb-4571-923c-1ce3bc88e11e')
+        var polygon = {
+            type: 'Feature',
+          geometry: {
+            type: 'Polygon',
+            coordinates: [ [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]]
+          },
+          properties: {
+            name: 'test_polygon'
+          }                
+        }
+        frame.contentWindow.mapApi.mapModel.addObjectToLayer(polygon, '334b5a27-321f-44f0-9aee-f0ee2b660283')
           .then(() => {console.log('object added sucessfully')}, reject => {console.log(reject)});
       };
       addButton.addEventListener('click', addObject);
