@@ -55,7 +55,8 @@ export default Ember.Mixin.create({
         `but \`string\` is expected`,
         Ember.typeOf(leafletMapPropertyPath) === 'string');
 
-      this.set(leafletMapPropertyPath, e.map);
+      Ember.set(this, leafletMapPropertyPath, e.map);
+      Ember.set(window, leafletMapPropertyPath, e.map);
     },
 
     onServiceLayerInit(property, serviceLayer) {
@@ -99,7 +100,8 @@ export default Ember.Mixin.create({
         `but \`string\` is expected`,
         Ember.typeOf(leafletMapPropertyPath) === 'string');
 
-      this.set(leafletMapPropertyPath, null);
+      Ember.set(this, leafletMapPropertyPath, null);
+      Ember.set(window, leafletMapPropertyPath, null);
     },
 
     /**
