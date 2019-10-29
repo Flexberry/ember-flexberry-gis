@@ -109,6 +109,18 @@ export default Ember.Mixin.create({
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
 
+    if (Ember.isNone(layer)) {
+      return new Ember.RSVP.Promise(() => {
+        throw new Error(`Layer '${layerId}' not found.`);
+      });
+    }
+
+    if (Ember.isNone(layer._leafletObject)) {
+      return new Ember.RSVP.Promise(() => {
+        throw new Error('Layer type not supported');
+      });
+    }
+
     let ids = [];
     layer._leafletObject.eachLayer(function (shape) {
       const id = this._getLayerFeatureId(layer, shape);
@@ -309,6 +321,11 @@ export default Ember.Mixin.create({
     if (Ember.isArray(objectIds)) {
       const layer = this.get('mapLayer').findBy('id', layerId);
       const leafletObject = Ember.get(layer, '_leafletObject');
+
+      if (Ember.isNone(leafletObject)) {
+        throw 'Layer type not supported';
+      }
+
       var map = Ember.get(leafletObject, '_map');
 
       leafletObject.eachLayer(function (shape) {
@@ -421,7 +438,7 @@ export default Ember.Mixin.create({
       if (layerTo && layerFrom) {
         let features = Ember.get(layerFrom, '_leafletObject._layers');
         if (features) {
-          objectToSearch = Object.values(features).find(feature=> {
+          objectToSearch = Object.values(features).find(feature => {
             const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
             return layerFeatureId === objectId;
           });
@@ -453,7 +470,7 @@ export default Ember.Mixin.create({
         } else {
           reject('no object with such id');
         }
-      }  else {
+      } else {
         reject('no layer with such id');
       }
     });
