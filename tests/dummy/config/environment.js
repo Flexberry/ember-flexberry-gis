@@ -8,17 +8,6 @@ module.exports = function (environment) {
     backendUrl = 'http://localhost:6500';
   }
 
-  if (environment === 'mssql-backend') {
-    // Use `ember server --environment=mssql-backend` command for mssql backend usage.
-    backendUrl = 'https://flexberry-gis-test-stand.azurewebsites.net';
-  }
-
-  if (environment === 'production') {
-    if (process.argv.indexOf('--postfix=-mssql') >= 0) {
-      backendUrl = 'https://flexberry-gis-test-stand.azurewebsites.net';
-    }
-  }
-
   var ENV = {
     repositoryName: 'ember-flexberry-gis',
     modulePrefix: 'dummy',

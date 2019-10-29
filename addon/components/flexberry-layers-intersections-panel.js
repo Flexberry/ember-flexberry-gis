@@ -20,7 +20,6 @@ export default Ember.Component.extend({
 
   /**
     Object name disaplayed on template.
-
     @property disaplayName
     @type String
     @default null
@@ -223,10 +222,8 @@ export default Ember.Component.extend({
       }
 
       // Show map loader.
-      let i18n = this.get('i18n');
       let leafletMap = this.get('leafletMap');
-      leafletMap.setLoaderContent(i18n.t('map-tools.identify.loader-message'));
-      leafletMap.showLoader();
+      leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.loader-message') });
       this._startIdentification({
         polygonLayer: polygonLayer,
         bufferedMainPolygonLayer: bufferedMainPolygonLayer,
@@ -374,8 +371,7 @@ export default Ember.Component.extend({
 
     // Hide map loader.
     let leafletMap = this.get('leafletMap');
-    leafletMap.setLoaderContent('');
-    leafletMap.hideLoader();
+    leafletMap.flexberryMap.loader.hide({ content: '' });
 
     //Assign current tool's boundingBoxLayer
     let polygonLayer = Ember.get(e, 'polygonLayer');
