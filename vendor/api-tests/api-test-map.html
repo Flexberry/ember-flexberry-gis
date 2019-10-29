@@ -48,6 +48,9 @@
     <div>
       <button id="creatObject">Create Object</button>
     </div>
+    <div>
+      <button id="getLayerObjectOptions">Get Object Attributes</button>
+    </div>
   </div>
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
@@ -197,6 +200,12 @@
         frame.contentWindow.mapApi.createObject({ PK: '3059', nomer: '10'}, 'c2ce814e-cb31-432e-af9e-2e86cea65c67');
       };
       creatObjectButton.addEventListener('click', creatObjectLayers);
+
+      var getObjectAttrButton = document.getElementById('getLayerObjectOptions');
+      var getOptions = function () {
+       console.log(frame.contentWindow.mapApi.mapModel.getLayerObjectOptions('f7670a1f-1acb-4571-923c-1ce3bc88e11e','Студгородок'));
+      };
+      getObjectAttrButton.addEventListener('click', getOptions);
     });
   </script>
 </div>

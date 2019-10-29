@@ -211,6 +211,38 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Get layer object attributes.
+    @method getLayerObjectOptions
+    @param {String} layerId Id layer
+    @param {String} featureId Id object
+  */
+  getLayerObjectOptions(layerId, featureId) {
+    let result;
+    if (Ember.isNone(layerId) || Ember.isNone(featureId)) {
+      return result;
+    }
+
+    const allLayers = this.get('mapLayer');
+    let layers = Ember.A(allLayers);
+    const layer = layers.findBy('id', layerId);
+    if (Ember.isNone(layer)) {
+      return result;
+    }
+
+    let features = Ember.get(layer, '_leafletObject._layers') || {};
+    let object = Object.values(features).find(feature => {
+      return this._getLayerFeatureId(layer, feature) === featureId;
+    });
+
+    if (!Ember.isNone(object)) {
+      result = Ember.$.extend({}, object.feature.properties);
+      result.area = area(object.feature);
+    }
+
+    return result;
+  },
+
+  /**
     Check if objectA contains object B.
     @method isContainsObject
     @param {String} objectAId id of first object.
