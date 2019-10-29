@@ -1,27 +1,55 @@
+<style>
+  .box-buttons div {
+    margin: 8px 0;
+  }
+</style>
 <div class="ui vertical menu">
   <iframe id="testframe"
     src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11"
     width="1000" height="800" align="left">
   </iframe>
-  <button id="showLayers">Show Layers</button>
-  <button id="hideLayers">Hide Layers</button>
-  <button id="queryLayers">Query Layers</button>
-  <button id="getIntersectionObjects">get Intersection Objects</button>
-  <button id="createNewlayer">Create new Layer</button>
-  <button id="showAllLayerObjects">Show all layer objects</button>
-  <button id="isContainsObject">Is Contains Object</button>
-  <button id="extendsAreaObject">Get Extended Area</button>
-  <div>
-    <textarea id="layerObjects" name="text" style="width:750px;height:100px"></textarea>
-    <br />
-    <button id="deleteLayerObjects">Delete object/objects</button>
-    <button id="showObjects">Show Objects</button>
-    <button id="hideObjects">Hide Objects</button>
-  </div>
-  <button id="moveObjectToLayer">Move Object To Layer</button>
-  <button id="copyObject"> Copy Object</button>
-  <button id="creatObject"> Create Object</button>
+  <div class="box-buttons">
+    <div>
+      <button id="showLayers">Show Layers</button>
+      <button id="hideLayers">Hide Layers</button>
+    </div>
+    <div>
+      <button id="queryLayers">Query Layers</button>
+    </div>
+    <div>
+      <button id="getIntersectionObjects">Get Intersection Objects</button>
+    </div>
+    <div>
+      <button id="createNewlayer">Create new Layer</button>
+    </div>
+    <div>
+      <button id="showAllLayerObjects">Show all layer objects</button>
+    </div>
+    <div>
+      <button id="isContainsObject">Is Contains Object</button>
+    </div>
+    <div>
+      <button id="extendsAreaObject">Get Extended Area</button>
+    </div>
+    <div>
+      <button id="deleteLayerObject">Delete object</button>
+      <button id="deleteLayerObjects">Delete objects</button>
+    </div>
+    <div>
+      <button id="showObjects">Show Objects</button>
+      <button id="hideObjects">Hide Objects</button>
+    </div>
+    <div>
+      <button id="moveObjectToLayer">Move Object To Layer</button>
+    </div>
+    <div>
+      <button id="copyObject">Copy Object</button>
+    </div>
+    <div>
+      <button id="creatObject">Create Object</button>
   <button id="getRhumb"> Get Rhumb</button>
+    </div>
+  </div>
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
     frame.addEventListener("load", function () {
@@ -101,63 +129,36 @@
       };
       newLayerButton.addEventListener('click', newLayer);
 
-      textaeraDelObj = {
-        layerId: 'f8dec493-d879-49ae-ad55-f4f18c89cb88', objectIds: ['perm_water_line.8383', 'perm_water_line.8382']
+      var deleteLayerObjectButton = document.getElementById('deleteLayerObject');
+      var deleteObjectLayer = function () {
+        frame.contentWindow.mapApi.mapModel.deleteLayerObject('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8383')
+        .then(() => console.log('perm_water_line.8383')).catch((e) => console.log(e));
       };
-      layerObjects.value = JSON.stringify(textaeraDelObj);
+      deleteLayerObjectButton.addEventListener('click', deleteObjectLayer);
 
       var deleteObjectsLayerButton = document.getElementById('deleteLayerObjects');
       var deleteObjectsLayer = function () {
-        var layerObjects = document.getElementById('layerObjects');
-        var delObj = JSON.parse(layerObjects.value);
-
-        if (delObj.layerId !== undefined) {
-          var promise;
-          if (delObj.objectIds.length > 1) {
-            promise = frame.contentWindow.mapApi.mapModel.deleteLayerObjects(delObj.layerId, delObj.objectIds);
-          } else if (delObj.objectIds.length === 1) {
-            promise = frame.contentWindow.mapApi.mapModel.deleteLayerObject(delObj.layerId, delObj.objectIds[0]);
-          }
-
-          promise.then(() => console.log(delObj.objectIds)).catch(() => console.log('Layer saving failed'));
-        }
+        frame.contentWindow.mapApi.mapModel.deleteLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382'])
+        .then(() => console.log(['perm_water_line.8383', 'perm_water_line.8382'])).catch((e) => console.log(e));
       };
-
       deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
 
       var showObjectsButton = document.getElementById('showObjects');
       var showObjects = function () {
-        var layerObjects = document.getElementById('layerObjects');
-        var visibilityObj = JSON.parse(layerObjects.value);
-
-        if (visibilityObj.layerId !== undefined) {
-          if (visibilityObj.objectIds.length > 0) {
-            frame.contentWindow.mapApi.mapModel.showLayerObjects(visibilityObj.layerId, visibilityObj.objectIds);
-          }
-        };
+        frame.contentWindow.mapApi.mapModel.showLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
       };
-
       showObjectsButton.addEventListener('click', showObjects);
 
       var hideObjectsButton = document.getElementById('hideObjects');
       var hideObjects = function () {
-        var layerObjects = document.getElementById('layerObjects');
-        var visibilityObj = JSON.parse(layerObjects.value);
-
-        if (visibilityObj.layerId !== undefined) {
-          if (visibilityObj.objectIds.length > 0) {
-            frame.contentWindow.mapApi.mapModel.hideLayerObjects(visibilityObj.layerId, visibilityObj.objectIds);
-          }
-        };
+        frame.contentWindow.mapApi.mapModel.hideLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
       }
-
       hideObjectsButton.addEventListener('click', hideObjects);
 
       var showAllLayerObjectsButton = document.getElementById('showAllLayerObjects');
       var showAllLayerObjects = function () {
         frame.contentWindow.mapApi.mapModel.showAllLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88');
       }
-
       showAllLayerObjectsButton.addEventListener('click', showAllLayerObjects);
 
       var moveButton = document.getElementById('moveObjectToLayer');
