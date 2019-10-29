@@ -47,166 +47,170 @@
     </div>
     <div>
       <button id="creatObject">Create Object</button>
-  <button id="getRhumb"> Get Rhumb</button>
+      <button id="getRhumb"> Get Rhumb</button>
     </div>
   </div>
-  <script type="text/javascript">
-    var frame = document.getElementById("testframe");
-    frame.addEventListener("load", function () {
-      if (frame.contentWindow.mapApi == undefined) {
-        frame.contentWindow.mapApi = {};
-      }
-
-      frame.contentWindow.mapApi.goToEditForm = function (layerId, objectId) {
-        console.log(`Go to edit form for element ${objectId}.`);
-      }
-
-      frame.contentWindow.mapApi.hasEditForm = function (layerId, objectId) {
-        return true;
-      }
-
-      frame.contentWindow.mapApi.goToListForm = function (layerId, objectIds) {
-        console.log(`Go to list form for elements ${objectIds}.`);
-      }
-
-      frame.contentWindow.mapApi.hasListForm = function (layerId) {
-        return true;
-      }
-
-      frame.contentWindow.mapApi.layerInitCallback = function (model) {
-        model.getLeafletObject().then(function (layer) {
-          layer.eachLayer(function (layerr) {
-            if (!Ember.IsNone(layerr.setStyle)) {
-              switch (model.layerModel.get('id')) {
-                case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
-                  layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
-                  break;
-                case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
-                  layerr.setStyle({ color: '#008B8B' });
-                  break;
-              }
-            }
-            layerr.on('click', function (e) {
-              alert(e.target.feature.properties.name);
-            })
-          });
-        });
-      };
-      frame.contentWindow.mapApi.getLayerFeatureId = function (layer, layerObject) {
-        if (layer.id === "f7670a1f-1acb-4571-923c-1ce3bc88e11e") {
-          return layerObject.feature.properties.name;
-        }
-        return layerObject.feature.id;
-      }
-
-      var showButton = document.getElementById('showLayers');
-      var showLayers = function () {
-        frame.contentWindow.mapApi.mapModel.showLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
-      };
-      showButton.addEventListener('click', showLayers);
-
-      var hideButton = document.getElementById('hideLayers');
-      var hideLayers = function () {
-        frame.contentWindow.mapApi.mapModel.hideLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
-      };
-      hideButton.addEventListener('click', hideLayers);
-
-      var queryButton = document.getElementById('queryLayers');
-      var queryLayers = function () {
-        frame.contentWindow.mapApi.runQuery({ waterway: 'drain', name: 'Гайва' }, 'c2ce814e-cb31-432e-af9e-2e86cea65c67');
-      };
-      queryButton.addEventListener('click', queryLayers);
-
-      var intersectionButton = document.getElementById('getIntersectionObjects');
-      var getIntersections = function () {
-        console.log(frame.contentWindow.mapApi.mapModel.getIntersectionObjects('perm_water_line.7836', ['f8dec493-d879-49ae-ad55-f4f18c89cb88']));
-      };
-      intersectionButton.addEventListener('click', getIntersections);
-
-      var newLayerButton = document.getElementById('createNewlayer');
-      var newLayer = function () {
-        frame.contentWindow.mapApi.mapModel.createNewLayer({ name: 'test_osm', type: 'osm' }).then(id => console.log(id));
-      };
-      newLayerButton.addEventListener('click', newLayer);
-
-      var deleteLayerObjectButton = document.getElementById('deleteLayerObject');
-      var deleteObjectLayer = function () {
-        frame.contentWindow.mapApi.mapModel.deleteLayerObject('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8383')
-        .then(() => console.log('perm_water_line.8383')).catch((e) => console.log(e));
-      };
-      deleteLayerObjectButton.addEventListener('click', deleteObjectLayer);
-
-      var deleteObjectsLayerButton = document.getElementById('deleteLayerObjects');
-      var deleteObjectsLayer = function () {
-        frame.contentWindow.mapApi.mapModel.deleteLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382'])
-        .then(() => console.log(['perm_water_line.8383', 'perm_water_line.8382'])).catch((e) => console.log(e));
-      };
-      deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
-
-      var showObjectsButton = document.getElementById('showObjects');
-      var showObjects = function () {
-        frame.contentWindow.mapApi.mapModel.showLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
-      };
-      showObjectsButton.addEventListener('click', showObjects);
-
-      var hideObjectsButton = document.getElementById('hideObjects');
-      var hideObjects = function () {
-        frame.contentWindow.mapApi.mapModel.hideLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
-      }
-      hideObjectsButton.addEventListener('click', hideObjects);
-
-      var showAllLayerObjectsButton = document.getElementById('showAllLayerObjects');
-      var showAllLayerObjects = function () {
-        frame.contentWindow.mapApi.mapModel.showAllLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88');
-      }
-      showAllLayerObjectsButton.addEventListener('click', showAllLayerObjects);
-
-      var moveButton = document.getElementById('moveObjectToLayer');
-      var moveObject = function () {
-        let promise = frame.contentWindow.mapApi.mapModel.moveObjectToLayer('perm_water_polygon.8238', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88');
-        promise.then(resolve => { console.log(resolve) }, reject => {
-          console.log(reject);
-        })
-      };
-      moveButton.addEventListener('click', moveObject);
-
-      var copyButton = document.getElementById('copyObject');
-      var copyObject = function () {
-        frame.contentWindow.mapApi.mapModel.copyObject('perm_water_polygon.8000', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88')
-          .then(() => { console.log('layer copied successfully') }, reject => { console.log(reject) })
-      };
-      copyButton.addEventListener('click', copyObject);
-
-      var containsButton = document.getElementById('isContainsObject');
-      var containsObject = function () {
-        let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
-        let isContains = frame.contentWindow.mapApi.mapModel.isContainsObject('Малые реки', layerId, 'Голованово', layerId)
-        console.log("layer 'Голованово' contains layer 'Малые реки':" + isContains);
-      };
-      containsButton.addEventListener('click', containsObject);
-
-      var extendsAreaButton = document.getElementById('extendsAreaObject');
-      var extendsObject = function () {
-        let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
-        let area = frame.contentWindow.mapApi.mapModel.getAreaExtends('Малые реки', layerId, 'Голованово', layerId)
-        console.log("the area of ​​layer 'Голованово' that extends beyond the boundaries of layer 'Малые реки':" + area);
-      };
-      extendsAreaButton.addEventListener('click', extendsObject);
-
-      var creatObjectButton = document.getElementById('creatObject');
-      var creatObjectLayers = function () {
-        frame.contentWindow.mapApi.createObject({ PK: '3059', nomer: '10' }, 'c2ce814e-cb31-432e-af9e-2e86cea65c67');
-      };
-      creatObjectButton.addEventListener('click', creatObjectLayers);
-    });
-
-    var getRhumbButton = document.getElementById('getRhumb');
-    var getRhumb = function () {
-      var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_polygon.3093');//vydel_polygon.3095
-      console.log(thumbs);
+  <div>
+    <button id="getRhumb"> Get Rhumb</button>
+  </div>
+</div>
+<script type="text/javascript">
+  var frame = document.getElementById("testframe");
+  frame.addEventListener("load", function () {
+    if (frame.contentWindow.mapApi == undefined) {
+      frame.contentWindow.mapApi = {};
     }
 
-    getRhumbButton.addEventListener('click', getRhumb);
+    frame.contentWindow.mapApi.goToEditForm = function (layerId, objectId) {
+      console.log(`Go to edit form for element ${objectId}.`);
+    }
 
-  </script>
+    frame.contentWindow.mapApi.hasEditForm = function (layerId, objectId) {
+      return true;
+    }
+
+    frame.contentWindow.mapApi.goToListForm = function (layerId, objectIds) {
+      console.log(`Go to list form for elements ${objectIds}.`);
+    }
+
+    frame.contentWindow.mapApi.hasListForm = function (layerId) {
+      return true;
+    }
+
+    frame.contentWindow.mapApi.layerInitCallback = function (model) {
+      model.getLeafletObject().then(function (layer) {
+        layer.eachLayer(function (layerr) {
+          if (!Ember.IsNone(layerr.setStyle)) {
+            switch (model.layerModel.get('id')) {
+              case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
+                layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
+                break;
+              case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
+                layerr.setStyle({ color: '#008B8B' });
+                break;
+            }
+          }
+          layerr.on('click', function (e) {
+            alert(e.target.feature.properties.name);
+          })
+        });
+      });
+    };
+    frame.contentWindow.mapApi.getLayerFeatureId = function (layer, layerObject) {
+      if (layer.id === "f7670a1f-1acb-4571-923c-1ce3bc88e11e") {
+        return layerObject.feature.properties.name;
+      }
+      return layerObject.feature.id;
+    }
+
+    var showButton = document.getElementById('showLayers');
+    var showLayers = function () {
+      frame.contentWindow.mapApi.mapModel.showLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
+    };
+    showButton.addEventListener('click', showLayers);
+
+    var hideButton = document.getElementById('hideLayers');
+    var hideLayers = function () {
+      frame.contentWindow.mapApi.mapModel.hideLayers(['f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'f8dec493-d879-49ae-ad55-f4f18c89cb88']);
+    };
+    hideButton.addEventListener('click', hideLayers);
+
+    var queryButton = document.getElementById('queryLayers');
+    var queryLayers = function () {
+      frame.contentWindow.mapApi.runQuery({ waterway: 'drain', name: 'Гайва' }, 'c2ce814e-cb31-432e-af9e-2e86cea65c67');
+    };
+    queryButton.addEventListener('click', queryLayers);
+
+    var intersectionButton = document.getElementById('getIntersectionObjects');
+    var getIntersections = function () {
+      console.log(frame.contentWindow.mapApi.mapModel.getIntersectionObjects('perm_water_line.7836', ['f8dec493-d879-49ae-ad55-f4f18c89cb88']));
+    };
+    intersectionButton.addEventListener('click', getIntersections);
+
+    var newLayerButton = document.getElementById('createNewlayer');
+    var newLayer = function () {
+      frame.contentWindow.mapApi.mapModel.createNewLayer({ name: 'test_osm', type: 'osm' }).then(id => console.log(id));
+    };
+    newLayerButton.addEventListener('click', newLayer);
+
+    var deleteLayerObjectButton = document.getElementById('deleteLayerObject');
+    var deleteObjectLayer = function () {
+      frame.contentWindow.mapApi.mapModel.deleteLayerObject('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8383')
+        .then(() => console.log('perm_water_line.8383')).catch((e) => console.log(e));
+    };
+    deleteLayerObjectButton.addEventListener('click', deleteObjectLayer);
+
+    var deleteObjectsLayerButton = document.getElementById('deleteLayerObjects');
+    var deleteObjectsLayer = function () {
+      frame.contentWindow.mapApi.mapModel.deleteLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382'])
+        .then(() => console.log(['perm_water_line.8383', 'perm_water_line.8382'])).catch((e) => console.log(e));
+    };
+    deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
+
+    var showObjectsButton = document.getElementById('showObjects');
+    var showObjects = function () {
+      frame.contentWindow.mapApi.mapModel.showLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
+    };
+    showObjectsButton.addEventListener('click', showObjects);
+
+    var hideObjectsButton = document.getElementById('hideObjects');
+    var hideObjects = function () {
+      frame.contentWindow.mapApi.mapModel.hideLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
+    }
+    hideObjectsButton.addEventListener('click', hideObjects);
+
+    var showAllLayerObjectsButton = document.getElementById('showAllLayerObjects');
+    var showAllLayerObjects = function () {
+      frame.contentWindow.mapApi.mapModel.showAllLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88');
+    }
+    showAllLayerObjectsButton.addEventListener('click', showAllLayerObjects);
+
+    var moveButton = document.getElementById('moveObjectToLayer');
+    var moveObject = function () {
+      let promise = frame.contentWindow.mapApi.mapModel.moveObjectToLayer('perm_water_polygon.8238', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88');
+      promise.then(resolve => { console.log(resolve) }, reject => {
+        console.log(reject);
+      })
+    };
+    moveButton.addEventListener('click', moveObject);
+
+    var copyButton = document.getElementById('copyObject');
+    var copyObject = function () {
+      frame.contentWindow.mapApi.mapModel.copyObject('perm_water_polygon.8000', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88')
+        .then(() => { console.log('layer copied successfully') }, reject => { console.log(reject) })
+    };
+    copyButton.addEventListener('click', copyObject);
+
+    var containsButton = document.getElementById('isContainsObject');
+    var containsObject = function () {
+      let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
+      let isContains = frame.contentWindow.mapApi.mapModel.isContainsObject('Малые реки', layerId, 'Голованово', layerId)
+      console.log("layer 'Голованово' contains layer 'Малые реки':" + isContains);
+    };
+    containsButton.addEventListener('click', containsObject);
+
+    var extendsAreaButton = document.getElementById('extendsAreaObject');
+    var extendsObject = function () {
+      let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
+      let area = frame.contentWindow.mapApi.mapModel.getAreaExtends('Малые реки', layerId, 'Голованово', layerId)
+      console.log("the area of ​​layer 'Голованово' that extends beyond the boundaries of layer 'Малые реки':" + area);
+    };
+    extendsAreaButton.addEventListener('click', extendsObject);
+
+    var creatObjectButton = document.getElementById('creatObject');
+    var creatObjectLayers = function () {
+      frame.contentWindow.mapApi.createObject({ PK: '3059', nomer: '10' }, 'c2ce814e-cb31-432e-af9e-2e86cea65c67');
+    };
+    creatObjectButton.addEventListener('click', creatObjectLayers);
+  });
+
+  var getRhumbButton = document.getElementById('getRhumb');
+  var getRhumb = function () {
+    var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_polygon.3093');//vydel_polygon.3095
+    console.log(thumbs);
+  }
+
+  getRhumbButton.addEventListener('click', getRhumb);
+
+</script>
 </div>
