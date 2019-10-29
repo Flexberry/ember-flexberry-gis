@@ -43,6 +43,8 @@
     "@turf/intersect": "^5.1.5",
     "@turf/boolean-point-in-polygon": "^5.1.5",
     "@turf/boolean-contains": "^5.1.5",
+    "@turf/rhumb-bearing": "^6.0.1",
+    "@turf/rhumb-distance": "^6.0.1",
     "broccoli-asset-rev": "^2.4.2",
     "broccoli-jscs": "1.2.2",
     "dexie": "^1.4.2",

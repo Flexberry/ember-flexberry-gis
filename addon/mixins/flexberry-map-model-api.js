@@ -3,6 +3,7 @@ import lineIntersect from 'npm:@turf/line-intersect';
 import booleanContains from 'npm:@turf/boolean-contains';
 import area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
+import * as helper from 'npm:@turf/helpers';
 import rhumbBearing from 'npm:@turf/rhumb-bearing';
 import rhumbDistance from 'npm:@turf/rhumb-distance';
 
@@ -509,26 +510,57 @@ export default Ember.Mixin.create({
 
     let result = [];
 
-    var rowPush = function (n1, n2, point1, point2) {
-      let rib = `${n1};${n2}`;
-      let rhumb = 'sw;30';
-      let distance = '12.4';
+    var rowPush = function (number, vertexNum1, vertexNum2, point1, point2) {
+      var pointFrom = helper.default.point([point2.lat, point2.lng]);
+      var pointTo = helper.default.point([point1.lat, point1.lng]);
 
-      return { rib: rib, rhumb: rhumb, distance: distance };;
+      // We get the distance and translate into meters.
+      let distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
+
+      // Get the angle.
+      let bearing = rhumbBearing.default(pointFrom, pointTo);
+
+      let rhumb;
+
+      // Calculates rhumb.
+      if (bearing < -90 && bearing > -180) {
+        console.log('СВ'); // todo: !!!
+        // СВ
+        rhumb = 'NE;' + (Math.abs(bearing) - 90);
+      } else if (bearing <= 180 && bearing > 90) {
+        console.log('ЮВ');
+        // ЮВ
+        rhumb = 'SE;' + (180 - bearing);
+      } else if (bearing <= 90 && bearing > 0) {
+        console.log('ЮЗ');
+        // ЮЗ
+        rhumb = 'SW;' + (90 - bearing);
+      } if (bearing <= 0 && bearing >= -90) {
+        console.log('СЗ');
+        // СЗ
+        rhumb = 'NW;' + (90 - Math.abs(bearing));
+      }
+      console.log(rhumb);
+
+      return {
+        number: number,
+        rib: `${vertexNum1};${vertexNum2}`,
+        rhumb: rhumb,
+        distance: distance
+      };
     };
 
     for (let i = 0; i < cors.length; i++) {
       for (let j = 0; j < cors[i].length; j++) {
         for (let k = 0; k < cors[i][j].length; k++) {
           let point1 = cors[i][j][k];
-          let k2 = !Ember.isNone(cors[i][j][k + 1]) ? k2 = k + 1 : k2 = 0;
-          let point2 = cors[i][j][k2];
+          let n = !Ember.isNone(cors[i][j][k + 1]) ? n = k + 1 : n = 0;
+          let point2 = cors[i][j][n];
 
-          result.push(rowPush(k, k2, point1, point2));
+          result.push(rowPush(i, k, n, point1, point2));
         }
       }
     }
-
 
     return result;
   }
