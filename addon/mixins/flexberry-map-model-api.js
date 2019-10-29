@@ -495,14 +495,42 @@ export default Ember.Mixin.create({
     const layer = this.get('mapLayer').findBy('id', layerId);
     const leafletObject = Ember.get(layer, '_leafletObject');
 
+    var cors;
     leafletObject.eachLayer(function (object) {
       const id = this._getLayerFeatureId(layer, object);
       if (!Ember.isNone(id) && objectId === id) {
-         debugger;
+        cors = object._latlngs;
       }
     }.bind(this));
 
+    if (Ember.isNone(cors)) {
+      throw new Error('Object not found');
+    }
 
+    let result = [];
+
+    var rowPush = function (n1, n2, point1, point2) {
+      let rib = `${n1};${n2}`;
+      let rhumb = 'sw;30';
+      let distance = '12.4';
+
+      return { rib: rib, rhumb: rhumb, distance: distance };;
+    };
+
+    for (let i = 0; i < cors.length; i++) {
+      for (let j = 0; j < cors[i].length; j++) {
+        for (let k = 0; k < cors[i][j].length; k++) {
+          let point1 = cors[i][j][k];
+          let k2 = !Ember.isNone(cors[i][j][k + 1]) ? k2 = k + 1 : k2 = 0;
+          let point2 = cors[i][j][k2];
+
+          result.push(rowPush(k, k2, point1, point2));
+        }
+      }
+    }
+
+
+    return result;
   }
 
 
