@@ -41,16 +41,6 @@ export default BaseNonclickableMapTool.extend({
   featuresLayer: null,
 
   /**
-    Flag: indicates whether map-tool is exclusive or not.
-    Exclusive map-tool lives in enabled state until some other tool will be manually enabled.
-
-    @property enabled
-    @type Boolean
-    @default false
-  */
-  exclusive: false,
-
-  /**
     Enables tool.
 
     @method _enable
@@ -82,7 +72,7 @@ export default BaseNonclickableMapTool.extend({
     }
 
     // Disable tool when measure will be created.
-    leafletMap.on('measure:created', this.disable, this);
+    leafletMap.on('measure:created', this._onMeasurCreated, this);
   },
 
   /**
@@ -96,12 +86,26 @@ export default BaseNonclickableMapTool.extend({
 
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
-      leafletMap.off('measure:created', this.disable, this);
+      leafletMap.off('measure:created', this._onMeasurCreated, this);
     }
 
     let measureTools = this.get('_measureTools');
     if (!Ember.isNone(measureTools)) {
       measureTools.stopMeasuring();
+    }
+  },
+
+  /**
+    Handles edit tools 'editable:drawing:end' event.
+
+    @method _onDrawingEnd
+    @private
+  */
+  _onMeasurCreated() {
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      // Disable current measure tool in favor of default map tool.
+      leafletMap.flexberryMap.tools.disable();
     }
   },
 

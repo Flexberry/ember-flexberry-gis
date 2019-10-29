@@ -43,11 +43,13 @@
       <button id="moveObjectToLayer">Move Object To Layer</button>
     </div>
     <div>
-      <button id="copyObject"> Copy Object</button>
+      <button id="copyObject">Copy Object</button>
+    </div>
+    <div>
+      <button id="creatObject">Create Object</button>
     </div>
   </div>
-
-  <script>
+  <script type="text/javascript">
     var frame = document.getElementById("testframe");
     frame.addEventListener("load", function () {
       if (frame.contentWindow.mapApi == undefined) {
@@ -189,6 +191,12 @@
         console.log("the area of ​​layer 'Голованово' that extends beyond the boundaries of layer 'Малые реки':" + area);
       };
       extendsAreaButton.addEventListener('click', extendsObject);
+
+      var creatObjectButton = document.getElementById('creatObject');
+      var creatObjectLayers = function () {
+        frame.contentWindow.mapApi.createObject({ PK: '3059', nomer: '10'}, 'c2ce814e-cb31-432e-af9e-2e86cea65c67');
+      };
+      creatObjectButton.addEventListener('click', creatObjectLayers);
     });
   </script>
 </div>
