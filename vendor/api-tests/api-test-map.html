@@ -220,9 +220,7 @@
 
       var distanceObjectsButton = document.getElementById('distanceObjects');
       var distanceObjects = function () {
-        var obj = frame.contentWindow.mapApi.mapModel.getNearObject('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Студгородок', ['f7670a1f-1acb-4571-923c-1ce3bc88e11e']);
-
-        var distance = frame.contentWindow.mapApi.mapModel.getDistanceBetweenObjects('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Студгородок', obj.layer.id, obj.object.feature.id);
+        var distance = frame.contentWindow.mapApi.mapModel.getDistanceBetweenObjects('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Студгородок', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Архиерейка');
         console.log(distance + ' (m)');
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
