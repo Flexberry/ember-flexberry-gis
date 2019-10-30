@@ -4,6 +4,7 @@ import intersect from 'npm:@turf/intersect';
 import area from 'npm:@turf/area';
 import lineIntersect from 'npm:@turf/line-intersect';
 import * as buffer from 'npm:@turf/buffer';
+import helpers from 'npm:@turf/helpers'
 import VectorLayer from '../layers/-private/vector';
 /**
   The component for searching for intersections with selected feature.
@@ -146,7 +147,7 @@ export default Ember.Component.extend({
     @readonly
   */
   _OnFeatureChange: Ember.observer('feature', function() {
-    this.ClearPanel();
+    this.clearPanel();
   }),
 
   /**
@@ -165,10 +166,21 @@ export default Ember.Component.extend({
     this._super(...arguments);
     let vlayers = [];
     this.get('layers').forEach(item=> {
-      let className = Ember.get(item, 'type');
-      let layerType = Ember.getOwner(this).knownForType('layer', className);
-      if (layerType instanceof VectorLayer) {
-        vlayers.push(item);
+      let layers = Ember.get(item, 'layers');
+      if (layers.length > 0) {
+        layers.forEach(layer=> {
+          let className = Ember.get(layer, 'type');
+          let layerType = Ember.getOwner(this).knownForType('layer', className);
+          if (layerType instanceof VectorLayer) {
+            vlayers.push(layer);
+          }
+        });
+      } else {
+        let className = Ember.get(item, 'type');
+        let layerType = Ember.getOwner(this).knownForType('layer', className);
+        if (layerType instanceof VectorLayer) {
+          vlayers.push(item);
+        }
       }
     });
     this.set('vectorLayers', vlayers);
@@ -181,6 +193,7 @@ export default Ember.Component.extend({
       @method actions.findIntersections
     */
     findIntersections() {
+      this.removeLayers();
       let selectedLayers = this.get('selectedLayers');
 
       let store = this.get('store');
@@ -243,6 +256,7 @@ export default Ember.Component.extend({
       let group = this.get('resultsLayer');
       group.clearLayers();
       this.sendAction('closeIntersectionPanel');
+      this.removeLayers();
     },
 
     /**
@@ -263,10 +277,11 @@ export default Ember.Component.extend({
     zoomToIntersection(feature) {
       let group = this.get('resultsLayer');
       group.clearLayers();
-      L.geoJSON(feature.intersection.intersectedObject, {
+      let obj =   L.geoJSON(feature.intersection.intersectedObject, {
         style: { color: 'green' }
-      }).addTo(group);
-    }
+      });
+      obj.addTo(group);
+    } 
   },
 
   /**
@@ -358,7 +373,7 @@ export default Ember.Component.extend({
         (features) => {
           // Show new features.
           features.forEach((feature) => {
-            let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+             let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
             if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
               leafletLayer.setStyle({
                 color: 'salmon',
@@ -367,7 +382,7 @@ export default Ember.Component.extend({
               });
             }
 
-            Ember.set(feature, 'leafletLayer', leafletLayer);
+             Ember.set(feature, 'leafletLayer', leafletLayer);
           });
         });
     });
@@ -390,14 +405,32 @@ export default Ember.Component.extend({
   /**
     Cleaning after changing feature.
 
-    @method ClearPanel
+    @method clearPanel
   */
-  ClearPanel() {
+  clearPanel() {
     this.set('square', 0);
     this.set('bufferR', 0);
     this.set('results', []);
     this.set('noIntersectionResults', true);
     this.set('folded', false);
+  },
+
+  /**
+    Removing layers with identification results.
+
+    @method removeLayers
+  */
+  removeLayers() {
+    let res = this.get('results');
+    res.forEach((identificationResult) => {
+      identificationResult.features.then(
+        (features) => {
+          features.forEach((feature) => {
+            Ember.get(feature, 'leafletLayer').remove();
+          });
+        });
+    });
+    this.set('results', []);
   },
 
   /**
@@ -411,9 +444,9 @@ export default Ember.Component.extend({
     let square = this.get('square');
     e.results.forEach((layer)=> {
       layer.features.then((features)=> {
-        features.forEach((item)=> {
+        features.forEach((item)=> {     
           if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
-            let res = intersect(item, e.polygonLayer.feature);
+            let res = intersect.default(item, e.polygonLayer.feature);   
             if (res) {
               if (square > 0) {
                 if (area(res) > square) {
