@@ -1,19 +1,61 @@
+<style>
+  .box-buttons div {
+    margin: 8px 0;
+  }
+</style>
 <div class="ui vertical menu">
-  <iframe id="testframe" src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11"
+  <iframe id="testframe"
+    src="../../api-test-map/51099a34-7b54-487e-868d-c44290edcded?lat=58.03537122378858&lng=56.19266510009766&zoom=11"
     width="1000" height="800" align="left">
   </iframe>
-  <button id="showLayers">Show Layers</button>
-  <button id="hideLayers">Hide Layers</button>
-  <button id="queryLayers">Query Layers</button>
-  <button id="getIntersectionObjects">get Intersection Objects</button>
-  <button id="createNewlayer">Create new Layer</button>
-  <div>
-    <textarea id="layerObjects" name="text" style="width:750px;height:100px"></textarea>
-    <br />
-    <button id="deleteLayerObjects">Delete object/objects</button>
+  <div class="box-buttons">
+    <div>
+      <button id="showLayers">Show Layers</button>
+      <button id="hideLayers">Hide Layers</button>
+    </div>
+    <div>
+      <button id="queryLayers">Query Layers</button>
+    </div>
+    <div>
+      <button id="getIntersectionObjects">Get Intersection Objects</button>
+    </div>
+    <div>
+      <button id="createNewlayer">Create new Layer</button>
+    </div>
+    <div>
+      <button id="showAllLayerObjects">Show all layer objects</button>
+    </div>
+    <div>
+      <button id="isContainsObject">Is Contains Object</button>
+    </div>
+    <div>
+      <button id="extendsAreaObject">Get Extended Area</button>
+    </div>
+    <div>
+      <button id="deleteLayerObject">Delete object</button>
+      <button id="deleteLayerObjects">Delete objects</button>
+    </div>
+    <div>
+      <button id="nearestObject">Get nearest object</button>
+      <button id="distanceObjects">Get distance</button>
+    </div>
+    <div>
+      <button id="showObjects">Show Objects</button>
+      <button id="hideObjects">Hide Objects</button>
+    </div>
+    <div>
+      <button id="moveObjectToLayer">Move Object To Layer</button>
+    </div>
+    <div>
+      <button id="copyObject">Copy Object</button>
+    </div>
+    <div>
+      <button id="creatObject">Create Object</button>
+    </div>
+    <div>
+      <button id="getLayerObjectOptions">Get Object Attributes</button>
+    </div>
   </div>
-  <button id="nearestObject">Get nearest object</button>
-  <button id="distanceObjects">Get distance</button>
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
     frame.addEventListener("load", function () {
@@ -40,21 +82,28 @@
       frame.contentWindow.mapApi.layerInitCallback = function (model) {
         model.getLeafletObject().then(function (layer) {
           layer.eachLayer(function (layerr) {
-            switch (model.layerModel.get('id')) {
-              case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
-                layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
-                break;
-              case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
-                layerr.setStyle({ color: '#008B8B' });
-                break;
+            if (!Ember.IsNone(layerr.setStyle)) {
+              switch (model.layerModel.get('id')) {
+                case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
+                  layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
+                  break;
+                case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
+                  layerr.setStyle({ color: '#008B8B' });
+                  break;
+              }
             }
-
             layerr.on('click', function (e) {
               alert(e.target.feature.properties.name);
             })
           });
         });
       };
+      frame.contentWindow.mapApi.getLayerFeatureId = function (layer, layerObject) {
+        if (layer.id === "f7670a1f-1acb-4571-923c-1ce3bc88e11e") {
+          return layerObject.feature.properties.name;
+        }
+        return layerObject.feature.id;
+      }
 
       var showButton = document.getElementById('showLayers');
       var showLayers = function () {
@@ -86,29 +135,81 @@
       };
       newLayerButton.addEventListener('click', newLayer);
 
-      textaeraDelObj = {
-        layerId: "f8dec493-d879-49ae-ad55-f4f18c89cb88", objectIds: ["perm_water_line.8322"]
+      var deleteLayerObjectButton = document.getElementById('deleteLayerObject');
+      var deleteObjectLayer = function () {
+        frame.contentWindow.mapApi.mapModel.deleteLayerObject('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8383')
+          .then(() => console.log('perm_water_line.8383')).catch((e) => console.log(e));
       };
-      layerObjects.value = JSON.stringify(textaeraDelObj);
+      deleteLayerObjectButton.addEventListener('click', deleteObjectLayer);
 
       var deleteObjectsLayerButton = document.getElementById('deleteLayerObjects');
       var deleteObjectsLayer = function () {
-        var layerObjects = document.getElementById('layerObjects');
-        var delObj = JSON.parse(layerObjects.value);
-
-        if (delObj.layerId !== undefined) {
-          var promise;
-          if (delObj.objectIds.length > 1) {
-            promise = frame.contentWindow.mapApi.mapModel.deleteLayerObjects(delObj.layerId, delObj.objectIds);
-          } else if (delObj.objectIds.length === 1) {
-            promise = frame.contentWindow.mapApi.mapModel.deleteLayerObject(delObj.layerId, delObj.objectIds[0]);
-          }
-
-          promise.then(() => console.log(delObj.objectIds)).catch(() => console.log('Layer saving failed'));
-        }
+        frame.contentWindow.mapApi.mapModel.deleteLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382'])
+          .then(() => console.log(['perm_water_line.8383', 'perm_water_line.8382'])).catch((e) => console.log(e));
       };
-
       deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
+
+      var showObjectsButton = document.getElementById('showObjects');
+      var showObjects = function () {
+        frame.contentWindow.mapApi.mapModel.showLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
+      };
+      showObjectsButton.addEventListener('click', showObjects);
+
+      var hideObjectsButton = document.getElementById('hideObjects');
+      var hideObjects = function () {
+        frame.contentWindow.mapApi.mapModel.hideLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
+      }
+      hideObjectsButton.addEventListener('click', hideObjects);
+
+      var showAllLayerObjectsButton = document.getElementById('showAllLayerObjects');
+      var showAllLayerObjects = function () {
+        frame.contentWindow.mapApi.mapModel.showAllLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88');
+      }
+      showAllLayerObjectsButton.addEventListener('click', showAllLayerObjects);
+
+      var moveButton = document.getElementById('moveObjectToLayer');
+      var moveObject = function () {
+        let promise = frame.contentWindow.mapApi.mapModel.moveObjectToLayer('perm_water_polygon.8238', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88');
+        promise.then(resolve => { console.log(resolve) }, reject => {
+          console.log(reject);
+        })
+      };
+      moveButton.addEventListener('click', moveObject);
+
+      var copyButton = document.getElementById('copyObject');
+      var copyObject = function () {
+        frame.contentWindow.mapApi.mapModel.copyObject('perm_water_polygon.8000', 'cd68892e-2896-47e0-b0e1-28dd700bad87', 'f8dec493-d879-49ae-ad55-f4f18c89cb88')
+          .then(() => { console.log('layer copied successfully') }, reject => { console.log(reject) })
+      };
+      copyButton.addEventListener('click', copyObject);
+
+      var containsButton = document.getElementById('isContainsObject');
+      var containsObject = function () {
+        let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
+        let isContains = frame.contentWindow.mapApi.mapModel.isContainsObject('Малые реки', layerId, 'Голованово', layerId)
+        console.log("layer 'Голованово' contains layer 'Малые реки':" + isContains);
+      };
+      containsButton.addEventListener('click', containsObject);
+
+      var extendsAreaButton = document.getElementById('extendsAreaObject');
+      var extendsObject = function () {
+        let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e"
+        let area = frame.contentWindow.mapApi.mapModel.getAreaExtends('Малые реки', layerId, 'Голованово', layerId)
+        console.log("the area of ​​layer 'Голованово' that extends beyond the boundaries of layer 'Малые реки':" + area);
+      };
+      extendsAreaButton.addEventListener('click', extendsObject);
+
+      var creatObjectButton = document.getElementById('creatObject');
+      var creatObjectLayers = function () {
+        frame.contentWindow.mapApi.createObject({ PK: '3059', nomer: '10' }, 'c2ce814e-cb31-432e-af9e-2e86cea65c67');
+      };
+      creatObjectButton.addEventListener('click', creatObjectLayers);
+
+      var getObjectAttrButton = document.getElementById('getLayerObjectOptions');
+      var getOptions = function () {
+        console.log(frame.contentWindow.mapApi.mapModel.getLayerObjectOptions('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Студгородок'));
+      };
+      getObjectAttrButton.addEventListener('click', getOptions);
 
       var nearestObjectButton = document.getElementById('nearestObject');
       var nearestObject = function () {

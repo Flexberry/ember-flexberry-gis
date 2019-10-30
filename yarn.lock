@@ -31,6 +31,17 @@
     "@turf/helpers" "^5.1.5"
     "@turf/invariant" "^5.1.5"
 
+"@turf/boolean-contains@^5.1.5":
+  version "5.1.5"
+  resolved "https://registry.yarnpkg.com/@turf/boolean-contains/-/boolean-contains-5.1.5.tgz#596d63aee636f7ad53ee99f9ff24c96994a0ef14"
+  integrity sha1-WW1jruY2961T7pn5/yTJaZSg7xQ=
+  dependencies:
+    "@turf/bbox" "^5.1.5"
+    "@turf/boolean-point-in-polygon" "^5.1.5"
+    "@turf/boolean-point-on-line" "^5.1.5"
+    "@turf/helpers" "^5.1.5"
+    "@turf/invariant" "^5.1.5"
+
 "@turf/boolean-equal@^5.1.5":
   version "5.1.5"
   resolved "https://registry.yarnpkg.com/@turf/boolean-equal/-/boolean-equal-5.1.5.tgz#29f8f6d60bb84507dfd765b32254db8e72c938a4"

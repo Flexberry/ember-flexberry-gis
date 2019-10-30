@@ -32,8 +32,8 @@ const flexberryClassNames = {
   Usage:
   templates/my-map-form.hbs
   ```handlebars
-  {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-tools/zoom-in activate=(action "onMapToolActivate" target=maptoolbar)}}
+  {{#flexberry-maptoolbar}}
+    {{map-tools/zoom-in leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   ```
 
@@ -97,28 +97,7 @@ let ZoomInMapToolComponent = Ember.Component.extend({
       @type String
       @default 'zoom icon'
     */
-    iconClass: 'zoom icon',
-
-    actions: {
-      /**
-        Handles {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
-        Invokes own {{#crossLink "ZoomInMapToolComponent/sendingActions.activate:method"}}'activate' action{{/crossLink}}.
-
-        @method actions.onMapToolActivate
-        @param {Object} e Base map-tool's 'activate' action event-object.
-      */
-      onMapToolActivate(...args) {
-        this.sendAction('activate', ...args);
-      }
-    },
-
-    /**
-      Component's action invoking when map-tool must be activated.
-
-      @method sendingActions.activate
-      @param {Object} e Action's event object from
-      {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
-    */
+    iconClass: 'zoom icon'
   }
 );
 
