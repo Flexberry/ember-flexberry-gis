@@ -24,22 +24,94 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   parentRoute: 'maps',
 
   /**
-    Parameter contains current map identification layer option (all, visible, top etc.).
+    Idenify tool layers mode (which layers to identify).
 
-    @property identifyLayersOption
+    @property identifyToolLayerMode
+    @default 'visible'
     @type String
-    @default ''
   */
-  identifyLayersOption: 'visible',
+  identifyToolLayerMode: 'visible',
 
   /**
-    Parameter contains current map identification tool option (arrow, square, polygon etc.).
+    Identify tool mode (in which type of area to identify).
 
-    @property identifyToolOption
-    @type String
+    @property identifyToolToolMode
     @default 'marker'
+    @type String
   */
-  identifyToolOption: 'marker',
+  identifyToolToolMode: 'marker',
+
+  /**
+    Flag: indicates whether idenify tool's buffer if active or not.
+
+    @property identifyToolBufferActive
+    @type Boolean
+    @default false
+  */
+  identifyToolBufferActive: false,
+
+  /**
+    Idenify tool buffer raduus units.
+
+    @property identifyToolBufferUnits
+    @type String
+    @default 'kilometers'
+  */
+  identifyToolBufferUnits: 'kilometers',
+
+  /**
+    Idenify tool buffer radius in selected units.
+
+    @property identifyToolBufferRadius
+    @type Number
+    @default 0
+  */
+  identifyToolBufferRadius: 0,
+
+  /**
+    Identify tool name computed by the specified tool settings.
+
+    @property identifyToolName
+    @type String
+    @readOnly
+  */
+  identifyToolName: Ember.computed('identifyToolLayerMode', 'identifyToolToolMode', function() {
+    let identifyToolName = 'identify';
+    let layerMode = this.get('identifyToolLayerMode');
+    let toolMode = this.get('identifyToolToolMode');
+
+    if (!(Ember.isBlank(layerMode) || Ember.isBlank(toolMode))) {
+      identifyToolName = `identify-${layerMode}-${toolMode}`;
+    }
+
+    return identifyToolName;
+  }),
+
+  /**
+    Polygon layer representing identification area (icluding buffer, if buffer enabled).
+
+    @property identifyToolPolygonLayer
+    @type <a href="http://leafletjs.com/reference-1.2.0.html#layergroup">L.LayerGroup</a>
+    @default null
+  */
+  identifyToolPolygonLayer: null,
+
+  /**
+    Polygon layer around which the buffer is drawn.
+
+    @property bufferedMainPolygonLayer
+    @type <a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>
+    @default null
+  */
+  identifyToolBufferedMainPolygonLayer: null,
+
+  /**
+    Identification results.
+
+    @property identifyToolResults
+    @type Object[]
+  */
+  identifyToolResults: null,
 
   /**
     Leaflet layer group for temporal layers.
@@ -49,60 +121,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @default null
   */
   serviceLayer: null,
-
-  /**
-    Leaflet layer group for temporal identification resulting layers.
-
-    @property identifyServiceLayer
-    @type <a href="http://leafletjs.com/reference-1.2.0.html#layergroup">L.LayerGroup</a>
-    @default null
-  */
-  identifyServiceLayer: null,
-
-  /**
-    Leaflet layer group for temporal polygon layers.
-
-    @property polygonLayer
-    @type <a href="http://leafletjs.com/reference-1.2.0.html#layergroup">L.LayerGroup</a>
-    @default null
-  */
-  polygonLayer: null,
-
-  /**
-    Main polygon around which the buffer is drawn
-
-    @property bufferedMainPolygonLayer
-    @type {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>}
-    @default null
-  */
-  bufferedMainPolygonLayer: null,
-
-  /**
-    Flag indicates is buffer active
-
-    @property bufferActive
-    @type Boolean
-    @default false
-  */
-  bufferActive: false,
-
-  /**
-    Buffer radius units
-
-    @property bufferUnits
-     @type String
-    @default 'kilometers'
-  */
-  bufferUnits: 'kilometers',
-
-  /**
-    Buffer radius in selected units
-
-     @property bufferRadius
-     @type Number
-    @default 0
-  */
-  bufferRadius: 0,
 
   /**
     Flag: indicates whether to show layer tree or not.
@@ -120,6 +138,11 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     @type Number[]
   */
   switchScaleControlScales: [500, 1000, 2000, 5000, 10000, 15000, 25000, 50000, 75000, 100000, 150000, 200000],
+
+  /**
+   Flat indicates that map should fire create object on first load
+  */
+  createObject: null,
 
   /**
     Sidebar tabs metadata.
@@ -145,6 +168,24 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     captionPath: 'forms.map.bookmarksbuttontooltip',
     iconClass: 'bookmark icon'
   }]),
+
+  _sidebarFiltered: Ember.computed('sidebar', 'createObject', function () {
+    let result = Ember.A();
+    let sidebar = this.get('sidebar');
+    sidebar.forEach((item) => {
+      result.push(item);
+    });
+
+    if (this.get('createObject')) {
+      result.push({
+        selector: 'createObject',
+        captionPath: 'forms.map.createobjectbuttontooltip',
+        iconClass: 'createObject icon'
+      });
+    }
+
+    return result;
+  }),
 
   /**
     Sidebar items metadata.
@@ -277,6 +318,46 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
 
   actions: {
     /**
+      Handles create object.
+
+      @method  actions.onCreateObject
+    */
+    onCreateObject(createItems) {
+      this.set('createItems', createItems);
+      this.set('createObject', true);
+
+      if (this.get('createObject')) {
+        Ember.run.later(() => {
+          if (this.get('_sidebarFiltered.4.active') !== true) {
+            this.set('_sidebarFiltered.4.active', true);
+          }
+
+          this.send('toggleSidebar', {
+            changed: false,
+            tabName: 'createObject'
+          });
+        });
+      }
+    },
+
+    onQueryFinished(e) {
+      if (this.get('createObject')) {
+        Ember.run.later(() => {
+          if (this.get('sidebarItems.4.active') !== true) {
+            this.set('sidebarItems.4.active', true);
+          }
+
+          this.send('toggleSidebar', {
+            changed: false,
+            tabName: 'createObject'
+          });
+        });
+      } else {
+        this._identificationFinished(e);
+      }
+    },
+
+    /**
       Handles leaflet map initialization.
 
       @method  actions.onMapLeafletInit
@@ -332,13 +413,18 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
           return;
         }
 
-        let layer = this.get('identifyLayersOption');
-        let tool = this.get('identifyToolOption');
+        // Enable identify tool when 'identify' tab is clicked.
+        let identifyToolName = this.get('identifyToolName');
+        let identifyToolProperties = {
+          bufferActive: this.get('identifyToolBufferActive'),
+          bufferUnits: this.get('identifyToolBufferUnits'),
+          bufferRadius: this.get('identifyToolBufferRadius'),
+          layerMode: this.get('identifyToolLayerMode'),
+          toolMode: this.get('identifyToolToolMode'),
+          layers: this.get('model.hierarchy')
+        };
 
-        let mapToolName = 'identify-' + layer + '-' + tool;
-        leafletMap.fire('flexberry-map:identificationOptionChanged', {
-          mapToolName
-        });
+        leafletMap.flexberryMap.tools.enable(identifyToolName, identifyToolProperties);
       }
 
       if (e.tabName === 'treeview') {
@@ -376,18 +462,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     },
 
     /**
-      Handles 'flexberry-identify-panel:onBufferSet' event of leaflet map.
-
-      @method onBufferSet
-      @param {Object} bufferParameters all bufffer parameters.
-    */
-    onBufferSet(bufferParameters) {
-      this.set('bufferActive', bufferParameters.active);
-      this.set('bufferUnits', bufferParameters.units);
-      this.set('bufferRadius', bufferParameters.radius);
-    },
-
-    /**
       Clears search results.
 
       @method actions.clearSearch
@@ -407,16 +481,11 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     */
     onIdentificationFinished(e) {
       let serviceLayer = this.get('serviceLayer');
-      if (!serviceLayer) {
-        let leafletMap = this.get('leafletMap');
-        this.set('serviceLayer', L.featureGroup().addTo(leafletMap));
-      } else {
-        serviceLayer.clearLayers();
-      }
+      serviceLayer.clearLayers();
 
-      this.set('polygonLayer', e.polygonLayer);
-      this.set('bufferedMainPolygonLayer', e.bufferedMainPolygonLayer);
-      this.set('identifyResults', e.results);
+      this.set('identifyToolPolygonLayer', e.polygonLayer);
+      this.set('identifyToolBufferedMainPolygonLayer', e.bufferedMainPolygonLayer);
+      this.set('identifyToolResults', e.results);
 
       // Below is kind of madness, but if you want sidebar to move on identification finish - do that.
       if (this.get('sidebar.2.active') !== true) {
@@ -434,27 +503,26 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     /**
       Clears identification results.
 
-      @method actions.clearSearch
+      @method actions.onIdentificationClear
     */
-    clearIdentification() {
-      this.set('identifyResults', null);
+    onIdentificationClear() {
+      this.set('identifyToolResults', null);
 
       let serviceLayer = this.get('serviceLayer');
       if (serviceLayer) {
         serviceLayer.clearLayers();
       }
 
-      let polygonLayer = this.get('polygonLayer');
-      if (polygonLayer) {
-        polygonLayer.disableEdit();
-        polygonLayer.remove();
+      let identifyToolPolygonLayer = this.get('identifyToolPolygonLayer');
+      if (identifyToolPolygonLayer) {
+        identifyToolPolygonLayer.disableEdit();
+        identifyToolPolygonLayer.remove();
       }
 
-      let bufferedMainPolygon = this.get('bufferedMainPolygonLayer');
-      if (bufferedMainPolygon) {
-        bufferedMainPolygon.remove();
+      let identifyToolBufferedMainPolygonLayer = this.get('identifyToolBufferedMainPolygonLayer');
+      if (identifyToolBufferedMainPolygonLayer) {
+        identifyToolBufferedMainPolygonLayer.remove();
       }
-
     }
   }
 });

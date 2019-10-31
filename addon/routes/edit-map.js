@@ -54,6 +54,14 @@ export default EditFormRoute.extend({
   mapStore: Ember.inject.service(),
 
   /**
+    Service for managing map API.
+
+    @property mapApi
+    @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
+  /**
     Name of model projection to be used as record's properties limitation.
 
     @property modelProjection
@@ -143,6 +151,8 @@ export default EditFormRoute.extend({
       }
     });
 
+    this.get('mapApi').addToApi('mapModel', model);
+
     this.transitionTo({
       queryParams: currentParams
     });
@@ -164,6 +174,8 @@ export default EditFormRoute.extend({
       controller.set('lng', null);
       controller.set('metadata', null);
     }
+
+    this.get('mapApi').addToApi('mapModel', undefined);
   },
 
   /**

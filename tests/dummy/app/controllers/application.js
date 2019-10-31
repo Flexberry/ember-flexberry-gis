@@ -201,6 +201,11 @@ export default Ember.Controller.extend({
           caption: i18n.t('forms.application.sitemap.gis.gis-search-form.caption'),
           title: i18n.t('forms.application.sitemap.gis.gis-search-form.title'),
           children: null
+        }, {
+          link: 'new-platform-flexberry-g-i-s-map-object-setting-l',
+          caption: i18n.t('forms.application.sitemap.map-object-setting.caption'),
+          title: i18n.t('forms.application.sitemap.map-object-setting.title'),
+          children: null
         }]
       }, {
         link: null,

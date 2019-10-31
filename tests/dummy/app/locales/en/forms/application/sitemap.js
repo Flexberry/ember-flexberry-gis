@@ -33,6 +33,10 @@ export default {
       'title': 'Search through layer metadata and maps'
     }
   },
+  'map-object-setting': {
+    'caption': 'Map object settings',
+    'title': ''
+  },
   'components-examples': {
     'caption': 'Components examples',
     'title': '',

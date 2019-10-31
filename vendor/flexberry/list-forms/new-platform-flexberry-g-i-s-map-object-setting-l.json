@@ -1,0 +1,15 @@
+﻿{
+  "newForm": "new-platform-flexberry-g-i-s-map-object-setting-e",
+  "editForm": "new-platform-flexberry-g-i-s-map-object-setting-e",
+  "external": false,
+  "caption": "Настройка объектов карты",
+  "name": "NewPlatformFlexberryGISMapObjectSettingL",
+  "className": "MapObjectSettingL",
+  "attrs": [],
+  "projections": [
+    {
+      "modelName": "new-platform-flexberry-g-i-s-map-object-setting",
+      "modelProjection": "MapObjectSettingL"
+    }
+  ]
+}

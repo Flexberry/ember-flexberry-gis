@@ -2,7 +2,11 @@ import { moduleForComponent, test } from 'ember-qunit';
 import sinon from 'sinon';
 
 moduleForComponent('base-layer', 'Unit | Component | base layer', {
-  unit: true
+  unit: true,
+  needs: [
+    'service:map-api',
+    'config:environment'
+  ]
 });
 
 // stubs for createLayer method
