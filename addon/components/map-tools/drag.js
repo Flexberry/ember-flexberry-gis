@@ -32,8 +32,8 @@ const flexberryClassNames = {
   Usage:
   templates/my-map-form.hbs
   ```handlebars
-  {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-tools/drag activate=(action "onMapToolActivate" target=maptoolbar)}}
+  {{#flexberry-maptoolbar}}
+    {{map-tools/drag leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   ```
 
@@ -42,85 +42,63 @@ const flexberryClassNames = {
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
 let DragMapToolComponent = Ember.Component.extend({
-    /**
-      Reference to component's template.
-    */
-    layout,
+  /**
+    Reference to component's template.
+  */
+  layout,
 
-    /**
-      Reference to component's CSS-classes names.
-      Must be also a component's instance property to be available from component's .hbs template.
-    */
-    flexberryClassNames,
+  /**
+    Reference to component's CSS-classes names.
+    Must be also a component's instance property to be available from component's .hbs template.
+  */
+  flexberryClassNames,
 
-    /**
-      Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
-      to disable a component's wrapping element.
+  /**
+    Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
+    to disable a component's wrapping element.
 
-      @property tagName
-      @type String
-      @default ''
-    */
-    tagName: '',
+    @property tagName
+    @type String
+    @default ''
+  */
+  tagName: '',
 
-    /**
-      Map tool's additional CSS-class.
+  /**
+    Map tool's additional CSS-class.
 
-      @property class
-      @type String
-      @default null
-    */
-    class: null,
+    @property class
+    @type String
+    @default null
+  */
+  class: null,
 
-    /**
-      Map tool's caption.
+  /**
+    Map tool's caption.
 
-      @property caption
-      @type String
-      @default t('components.map-tools.drag.caption')
-    */
-    caption: t('components.map-tools.drag.caption'),
+    @property caption
+    @type String
+    @default t('components.map-tools.drag.caption')
+  */
+  caption: t('components.map-tools.drag.caption'),
 
-    /**
-      Map tool's tooltip text.
-      Will be added as wrapper's element 'title' attribute.
+  /**
+    Map tool's tooltip text.
+    Will be added as wrapper's element 'title' attribute.
 
-      @property tooltip
-      @default t('components.map-tools.drag.tooltip')
-    */
-    tooltip: t('components.map-tools.drag.tooltip'),
+    @property tooltip
+    @default t('components.map-tools.drag.tooltip')
+  */
+  tooltip: t('components.map-tools.drag.tooltip'),
 
-    /**
-      Map tool's icon CSS-class names.
+  /**
+    Map tool's icon CSS-class names.
 
-      @property iconClass
-      @type String
-      @default 'hand paper icon'
-    */
-    iconClass: 'hand paper icon',
-
-    actions: {
-      /**
-        Handles {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
-        Invokes own {{#crossLink "DragMapToolComponent/sendingActions.activate:method"}}'activate' action{{/crossLink}}.
-
-        @method actions.onMapToolActivate
-        @param {Object} e Base map-tool's 'activate' action event-object.
-      */
-      onMapToolActivate(...args) {
-        this.sendAction('activate', ...args);
-      }
-    },
-
-    /**
-      Component's action invoking when map-tool must be activated.
-
-      @method sendingActions.activate
-      @param {Object} e Action's event object from
-      {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
-    */
-  }
-);
+    @property iconClass
+    @type String
+    @default 'hand paper icon'
+  */
+  iconClass: 'hand paper icon'
+});
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.

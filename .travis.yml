@@ -1,21 +1,21 @@
 language: node_js
 node_js:
-  - "6.10.3"
+  - "8"
 
-sudo: false
+sudo: required
 
 cache:
+  yarn: true
   directories:
+    - $HOME/.npm
+    - $HOME/.cache
     - node_modules
 
 env:
   - EMBER_TRY_SCENARIO=default
-  - EMBER_TRY_SCENARIO=ember-release
 
 matrix:
   fast_finish: true
-  allow_failures:
-    - env: EMBER_TRY_SCENARIO=ember-release
 
 dist: trusty
 
@@ -23,14 +23,13 @@ addons:
   chrome: stable
 
 before_install:
-  - npm config set spin false
-  - npm install -g npm@^2
+  - sudo chown root /opt/google/chrome/chrome-sandbox
+  - sudo chmod 4755 /opt/google/chrome/chrome-sandbox
   - google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost &
-
+  - yarn global add ember-cli@2.4.3
+  - yarn global add bower
 install:
-  - npm install -g bower
-  - npm install
-  - npm rebuild node-sass
+  - yarn install
   - bower install
 
 script:
@@ -40,9 +39,9 @@ after_success:
   - test $EMBER_TRY_SCENARIO == "default"
     && test $TRAVIS_PULL_REQUEST == "false"
     && (test $TRAVIS_BRANCH == "master" || test $TRAVIS_BRANCH == "develop")
-    && ember build -prod --gh-pages --brunch=$TRAVIS_BRANCH --postfix=-postgres
+    && ember build --gh-pages --brunch=$TRAVIS_BRANCH --postfix=-postgres
     && bash scripts/deploy-to-gh-pages.sh -postgres
-    && ember build -prod --gh-pages --brunch=$TRAVIS_BRANCH --postfix=-mssql
+    && ember build --gh-pages --brunch=$TRAVIS_BRANCH --environment=mssql-backend
     && bash scripts/deploy-to-gh-pages.sh -mssql no-doc
 
 deploy:

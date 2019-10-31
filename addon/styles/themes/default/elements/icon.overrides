@@ -22,6 +22,10 @@
     &.hand.paper:before {
       content: '\e823';
     }
+    &.intersections:before {
+      font-family: FontAwesome;
+      content: "\f24d";
+    }
     &.marker:before {
       content: "\e812";
     }
@@ -69,8 +73,14 @@
   i.icon.bookmark:before {
     font-family: icons;
   }
+  /* CreateObject */
+  i.icon.createObject:before {
+    content: "\f067";
+    font-family: Icons;
+    font-weight: 500;
+    font-size: 22px;
+  }
 }
-
 
 /*********************************************
             Flexberry search panel
@@ -91,4 +101,9 @@
       }
     }
   }
+}
+
+.flexberry-gis-edit-panel i.icon.polygon:before {
+  font-family: Crimean;
+  content: "\e802";
 }

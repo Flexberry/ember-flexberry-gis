@@ -45,14 +45,13 @@ export default Ember.Object.extend(Ember.Evented, {
   i18n: Ember.inject.service('i18n'),
 
   /**
-    Flag: indicates whether map-tool is exclusive or not.
-    Exclusive map-tool lives in enabled state until some other tool will be manually enabled.
+    Tool's name.
 
-    @property enabled
-    @type Boolean
-    @default true
+    @property name
+    @type String
+    @default null
   */
-  exclusive: true,
+  name: null,
 
   /**
     Tool's cursor CSS-class.
@@ -71,15 +70,6 @@ export default Ember.Object.extend(Ember.Evented, {
     @default null
   */
   leafletMap: null,
-
-  /**
-    Map layers hierarchy.
-
-    @property layers
-    @type Object[]
-    @default null
-  */
-  layers: null,
 
   /**
     Enables tool.
@@ -119,18 +109,27 @@ export default Ember.Object.extend(Ember.Evented, {
       return;
     }
 
+    let leafletMap = this.get('leafletMap');
     Ember.assert(
       `Wrong type of map-tool \`leafletMap\` property: ` +
       `actual type is ${Ember.typeOf(this.get('leafletMap'))}, but \`L.Map\` is expected.`,
-      this.get('leafletMap') instanceof L.Map);
+      leafletMap instanceof L.Map);
 
     this.set('_enabled', true);
     this._enable(...arguments);
 
-    // Trigger 'enable' event.
-    this.trigger('enable', {
-      mapTool: this,
-      arguments: arguments
+    Ember.run.scheduleOnce('afterRender', this, function () {
+
+      // Trigger common 'enable' event.
+      leafletMap.fire('flexberry-map:tools:enable', {
+        mapTool: this
+      });
+
+      // Trigger tool specific 'enable' event.
+      let mapToolName = this.get('name');
+      leafletMap.fire(`flexberry-map:tools:${mapToolName}:enable`, {
+        mapTool: this
+      });
     });
   },
 
@@ -144,13 +143,24 @@ export default Ember.Object.extend(Ember.Evented, {
       return;
     }
 
+    let leafletMap = this.get('leafletMap');
+    Ember.assert(
+      `Wrong type of map-tool \`leafletMap\` property: ` +
+      `actual type is ${Ember.typeOf(this.get('leafletMap'))}, but \`L.Map\` is expected.`,
+      leafletMap instanceof L.Map);
+
     this.set('_enabled', false);
     this._disable(...arguments);
 
-    // Trigger 'disable' event.
-    this.trigger('disable', {
-      mapTool: this,
-      arguments: arguments
+    // Trigger common 'disable' event.
+    leafletMap.fire('flexberry-map:tools:disable', {
+      mapTool: this
+    });
+
+    // Trigger tool specific 'disable' event.
+    let mapToolName = this.get('name');
+    leafletMap.fire(`flexberry-map:tools:${mapToolName}:disable`, {
+      mapTool: this
     });
   },
 
@@ -162,18 +172,5 @@ export default Ember.Object.extend(Ember.Evented, {
 
     this.disable();
     this.set('leafletMap', null);
-    this.set('layers', null);
   }
-
-  /**
-    Event that signalizes that map-tool becomes enabled.
-
-    @method events.enable
-  */
-
-  /**
-    Event that signalizes that map-tool becomes disabled.
-
-    @method events.disable
-  */
 });

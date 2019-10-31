@@ -68,14 +68,10 @@
                       click=(action "onShowAllFeaturesButtonClick")
                     }}
                   </th>
-                  {{#each-in foundedFeatures.0.properties as |propertyName propertyValue|}}
+                  {{#each-in _selectedLayerFeaturesLocalizedProperties as |propertyName localizedPropertyName|}}
                     {{#if (not (array-contains _selectedLayerFeaturesExcludedProperties propertyName))}}
                       <th>
-                        {{#if (get _selectedLayerFeaturesLocalizedProperties propertyName)}}
-                          {{get _selectedLayerFeaturesLocalizedProperties propertyName}}
-                        {{else}}
-                          {{propertyName}}
-                        {{/if}}
+                        {{localizedPropertyName}}
                       </th>
                     {{/if}}
                   {{/each-in}}
@@ -84,21 +80,21 @@
               <tbody>
                 {{#each foundedFeatures as |feature featureIndex|}}
                   <tr>
-                  <td class="collapsing">
-                    {{flexberry-ddau-checkbox
-                      value=feature._selected
-                      change=(action "onSelectFeatureCheckboxChange" featureIndex)
-                    }}
-                    {{flexberry-button
-                      iconClass="map icon"
-                      tooltip=(t "components.map-commands-dialogs.search.show.caption")
-                      click=(action "onShowFeatureButtonClick" featureIndex)
-                    }}
-                  </td>
-                    {{#each-in feature.properties as |propertyName propertyValue|}}
+                    <td class="collapsing">
+                      {{flexberry-ddau-checkbox
+                        value=feature._selected
+                        change=(action "onSelectFeatureCheckboxChange" featureIndex)
+                      }}
+                      {{flexberry-button
+                        iconClass="map icon"
+                        tooltip=(t "components.map-commands-dialogs.search.show.caption")
+                        click=(action "onShowFeatureButtonClick" featureIndex)
+                      }}
+                    </td>
+                    {{#each-in _selectedLayerFeaturesLocalizedProperties as |propertyName localizedPropertyName|}}
                       {{#if (not (array-contains _selectedLayerFeaturesExcludedProperties propertyName))}}
                         <td>
-                          {{propertyValue}}
+                          {{get feature.properties propertyName}}
                         </td>
                       {{/if}}
                     {{/each-in}}
