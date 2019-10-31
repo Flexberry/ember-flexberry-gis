@@ -9,7 +9,6 @@ i.icon.angle.right:before {
     font-size: 1em;
 }
 
-
 .sidebar-wrapper {
   .ui.tabular.menu.flexberry-tab-bar {
     i.icon:before {
@@ -39,6 +38,17 @@ i.icon.angle.right:before {
     /* Bookmarks */
     i.icon.bookmark:before {
       font-family: icons;
+    }
+    /* Поиск пересеченйи*/
+    i.icon.intersections:before {
+    content: "\f24d";
+    }
+    /* CreateObject */
+    i.icon.createObject:before {
+      content: "\f067";
+      font-family: Icons;
+      font-weight: 500;
+      font-size: 22px;
     }
   }
 }
@@ -86,6 +96,11 @@ i.icon.angle.right:before {
     }
 }
 
+.flexberry-gis-edit-panel i.icon.polygon:before {
+  font-family: Crimean;
+  content: "\e802";
+}
+
 
 /*********************************************
         Flexberry Rdit Layermap Segment
@@ -124,4 +139,8 @@ i.icon.pie:before {
 i.icon.datalist:before {
   font-family: 'Crimean';
   content: "\e821";
+}
+
+i.icon.intersections:before {
+  content: "\f24d";
 }

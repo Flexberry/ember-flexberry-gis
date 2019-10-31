@@ -16,11 +16,11 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
   /**
     Leaflet map for this control.
 
-    @property map
+    @property leafletMap
     @type L.Map
     @default null
   */
-  map: null,
+  leafletMap: null,
 
   /**
     Conrol's position inside map.
@@ -50,6 +50,7 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
   */
   didInsertElement() {
     this._super(...arguments);
+
     this.initControl();
   },
 
@@ -57,8 +58,9 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
     Destroys component's DOM-related properties.
   */
   willDestroyElement() {
-    this._super(...arguments);
     this.destroyControl();
+
+    this._super(...arguments);
   },
 
   /**
@@ -75,11 +77,12 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
 
     @method initControl
   */
-  initControl: Ember.observer('map', function () {
-    let leafletMap = this.get('map');
+  initControl: Ember.observer('leafletMap', function () {
+    let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       let control = this.createControl();
       this.set('control', control);
+
       leafletMap.addControl(control);
     }
   }),
@@ -90,7 +93,7 @@ export default Ember.Component.extend(LeafletOptionsMixin, {
     @method initControl
   */
   destroyControl() {
-    let leafletMap = this.get('map');
+    let leafletMap = this.get('leafletMap');
     let control = this.get('control');
     if (!Ember.isNone(leafletMap) && !Ember.isNone(control)) {
       leafletMap.removeControl(control);

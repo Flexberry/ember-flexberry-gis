@@ -24,11 +24,13 @@ import FlexberryBoundingboxComponent from './components/flexberry-boundingbox';
 import FlexberryEditCrsComponent from './components/flexberry-edit-crs';
 import FlexberryIdentifyPanel from './components/flexberry-identify-panel';
 import FlexberryLayersAttributesPanel from './components/flexberry-layers-attributes-panel';
+import FlexberryLayersIntersectionPanel from './components/flexberry-layers-intersections-panel';
 import GeometryAddModesComponents from './components/geometry-add-modes';
 import ChartsComponents from './components/charts';
 import LayerResultListComponent from './components/layer-result-list';
 import FeatureResultItemComponent from './components/feature-result-item';
 import HistoryControlComponent from './components/history-control';
+import FlexberryCreateObjectGeometry from './components/flexberry-create-object-geometry';
 
 export default {
   'layers-styles-editor': LayersStylesEditorComponent,
@@ -60,10 +62,12 @@ export default {
   'flexberry-edit-crs': FlexberryEditCrsComponent,
   'flexberry-identify-panel': FlexberryIdentifyPanel,
   'flexberry-layers-attributes-panel': FlexberryLayersAttributesPanel,
+  'flexberry-layers-intersections-panel': FlexberryLayersIntersectionPanel,
   'flexberry-multiple-select': FlexberryMultipleSelectComponent,
   'geometry-add-modes': GeometryAddModesComponents,
   'charts': ChartsComponents,
   'layer-result-list': LayerResultListComponent,
   'feature-result-item': FeatureResultItemComponent,
-  'history-control': HistoryControlComponent
+  'history-control': HistoryControlComponent,
+  'flexberry-create-object-geometry': FlexberryCreateObjectGeometry
 };

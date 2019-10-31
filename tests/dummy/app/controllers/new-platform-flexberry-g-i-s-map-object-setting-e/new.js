@@ -1,0 +1,4 @@
+import NewPlatformFlexberryGISMapObjectSettingEController from '../new-platform-flexberry-g-i-s-map-object-setting-e';
+
+var NewPlatformFlexberryGISMapObjectSettingENewController = NewPlatformFlexberryGISMapObjectSettingEController;
+export default NewPlatformFlexberryGISMapObjectSettingENewController;

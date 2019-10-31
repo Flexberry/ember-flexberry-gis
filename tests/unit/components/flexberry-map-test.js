@@ -4,7 +4,11 @@ import { moduleForComponent, test } from 'ember-qunit';
 moduleForComponent('flexberry-map', 'Unit | Component | flexberry map', {
   unit: true,
   needs: [
-    'component:flexberry-layers'
+    'component:flexberry-layers',
+    'service:map-api',
+    'service:i18n',
+    'map-tool:drag',
+    'config:environment'
   ]
 });
 
@@ -47,10 +51,12 @@ test('should pass center/zoom from properties to leaflet map', function (assert)
 
   assert.equal(leafletMap.getZoom(), 0);
 
-  // after update to leaflet-1.0.0 panTo not directly change center,
-  // it will changed after animation will trigger moveend
+  // After update to leaflet-1.0.0 panTo not directly change center,
+  // it will changed after animation will trigger 'moveend' event.
   let promise = new Ember.Test.promise((resolve) => {
-    leafletMap.on('moveend', resolve);
+    leafletMap.on('moveend', () => {
+      setTimeout(resolve, 500);
+    });
   });
 
   Ember.run(() => {

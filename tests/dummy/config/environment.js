@@ -1,22 +1,11 @@
 /* jshint node: true */
 
 module.exports = function (environment) {
-  var backendUrl = 'http://bi-vm1.cloudapp.net:12001';
+  var backendUrl = 'http://134.209.30.115:1818';
 
   if (environment === 'development-loc') {
     // Use `ember server --environment=development-loc` command for local backend usage.
     backendUrl = 'http://localhost:6500';
-  }
-
-  if (environment === 'mssql-backend') {
-    // Use `ember server --environment=mssql-backend` command for mssql backend usage.
-    backendUrl = 'https://flexberry-gis-test-stand.azurewebsites.net';
-  }
-
-  if (environment === 'production') {
-    if (process.argv.indexOf('--postfix=-mssql') >= 0) {
-      backendUrl = 'https://flexberry-gis-test-stand.azurewebsites.net';
-    }
   }
 
   var ENV = {
@@ -51,6 +40,9 @@ module.exports = function (environment) {
 
       // Flag: indicates whether to use user settings service or not.
       useUserSettingsService: false,
+
+      // Flag: indicates whether to use map api service or not.
+      mapApiService: true,
 
       // Custom property with offline mode settings.
       offline: {

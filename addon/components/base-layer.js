@@ -53,6 +53,14 @@ export default Ember.Component.extend(
     _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
 
     /**
+      Service for managing map API.
+
+      @property mapApi
+      @type MapApiService
+    */
+    mapApi: Ember.inject.service(),
+
+    /**
       Overload wrapper tag name for disabling wrapper.
     */
     tagName: '',
@@ -289,6 +297,10 @@ export default Ember.Component.extend(
       this._setLayerZIndex();
       this._setLayerStyle();
       this._setLayerOpacity();
+      const layerInitCallback = this.get('mapApi').getFromApi('layerInitCallback');
+      if (typeof layerInitCallback === 'function') {
+        layerInitCallback(this);
+      }
     },
 
     /**
@@ -533,6 +545,33 @@ export default Ember.Component.extend(
     },
 
     /**
+      Handles 'flexberry-map:createObject' event of leaflet map.
+
+      @method createObject
+      @param {Object} e Event object.
+      @param {Object} queryFilter Object with query filter parameters
+      @param {Object} mapObjectSetting Object describing current query setting
+      @param {Object} results Hash containing createObject results.
+    */
+    _createObject(e) {
+      let layerLinks =
+        this.get('layerModel.layerLink')
+          .filter(link => link.get('mapObjectSetting.id').toLowerCase() === e.mapObjectSetting.toLowerCase());
+
+      if (!Ember.isArray(layerLinks) || layerLinks.length === 0) {
+        return;
+      }
+
+      layerLinks.forEach((link) => {
+        e.results.push({
+          layerModel: this.get('layerModel'),
+          linkParameters: link.get('parameters'),
+          queryFilter: e.queryFilter
+        });
+      });
+    },
+
+    /**
       Initializes component.
     */
     init() {
@@ -559,6 +598,7 @@ export default Ember.Component.extend(
         leafletMap.on('flexberry-map:identify', this._identify, this);
         leafletMap.on('flexberry-map:search', this._search, this);
         leafletMap.on('flexberry-map:query', this._query, this);
+        leafletMap.on('flexberry-map:createObject', this._createObject, this);
       }
     },
 
@@ -574,6 +614,7 @@ export default Ember.Component.extend(
         leafletMap.off('flexberry-map:identify', this._identify, this);
         leafletMap.off('flexberry-map:search', this._search, this);
         leafletMap.off('flexberry-map:query', this._query, this);
+        leafletMap.off('flexberry-map:createObject', this._createObject, this);
       }
 
       // Destroy leaflet layer.
