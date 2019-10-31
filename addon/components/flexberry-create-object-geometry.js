@@ -10,6 +10,13 @@ export default Ember.Component.extend({
   layout,
 
   /**
+  Service for managing map API.
+  @property mapApi
+  @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
+  /**
     'draw' caption.
 
     @property drawCaption
@@ -160,11 +167,16 @@ export default Ember.Component.extend({
       layer.feature = { properties: Ember.merge(defaultProperties, properties) };
 
       let wfsProperties = Ember.$.extend({}, this.get('layerModel.settingsAsObject'), { 'showExisting': false });
+      let layerId = this.get('layerModel.id');
 
       this.get('_wfsLayer').createVectorLayer(wfsProperties).then((wfs) => {
         wfs.addLayer(layer);
         wfs.on('save:success', () => {
           this._clearCurrentGeometry();
+          const saveObjectFunc = this.get('mapApi').getFromApi('saveObject');
+          if (typeof saveObjectFunc === 'function') {
+            saveObjectFunc(layerId, layer);
+          }
         });
 
         wfs.save();
