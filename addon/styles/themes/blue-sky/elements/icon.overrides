@@ -43,6 +43,13 @@ i.icon.angle.right:before {
     i.icon.intersections:before {
     content: "\f24d";
     }
+    /* CreateObject */
+    i.icon.createObject:before {
+      content: "\f067";
+      font-family: Icons;
+      font-weight: 500;
+      font-size: 22px;
+    }
   }
 }
 
@@ -87,6 +94,11 @@ i.icon.angle.right:before {
             }
         }
     }
+}
+
+.flexberry-gis-edit-panel i.icon.polygon:before {
+  font-family: Crimean;
+  content: "\e802";
 }
 
 

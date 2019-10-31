@@ -4,6 +4,7 @@ import intersect from 'npm:@turf/intersect';
 import area from 'npm:@turf/area';
 import lineIntersect from 'npm:@turf/line-intersect';
 import * as buffer from 'npm:@turf/buffer';
+import VectorLayer from '../layers/-private/vector';
 /**
   The component for searching for intersections with selected feature.
 
@@ -16,6 +17,14 @@ export default Ember.Component.extend({
     Reference to component's template.
   */
   layout,
+
+  /**
+    Object name disaplayed on template.
+    @property disaplayName
+    @type String
+    @default null
+  */
+  disaplayName: null,
 
   /**
     Layer contains identification result features.
@@ -155,7 +164,9 @@ export default Ember.Component.extend({
     this._super(...arguments);
     let vlayers = [];
     this.get('layers').forEach(item=> {
-      if (item.get('type') === 'geojson' || item.get('type') === 'wfs') {
+      let className = Ember.get(item, 'type');
+      let layerType = Ember.getOwner(this).knownForType('layer', className);
+      if (layerType instanceof VectorLayer) {
         vlayers.push(item);
       }
     });
@@ -211,10 +222,8 @@ export default Ember.Component.extend({
       }
 
       // Show map loader.
-      let i18n = this.get('i18n');
       let leafletMap = this.get('leafletMap');
-      leafletMap.setLoaderContent(i18n.t('map-tools.identify.loader-message'));
-      leafletMap.showLoader();
+      leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.loader-message') });
       this._startIdentification({
         polygonLayer: polygonLayer,
         bufferedMainPolygonLayer: bufferedMainPolygonLayer,
@@ -362,8 +371,7 @@ export default Ember.Component.extend({
 
     // Hide map loader.
     let leafletMap = this.get('leafletMap');
-    leafletMap.setLoaderContent('');
-    leafletMap.hideLoader();
+    leafletMap.flexberryMap.loader.hide({ content: '' });
 
     //Assign current tool's boundingBoxLayer
     let polygonLayer = Ember.get(e, 'polygonLayer');

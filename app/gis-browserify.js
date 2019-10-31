@@ -19,5 +19,7 @@ import * as invariant from 'npm:@turf/invariant';
 import * as distance from 'npm:@turf/distance';
 import * as midpoint from 'npm:@turf/midpoint';
 import * as union from 'npm:@turf/union';
+import * as turf from 'npm:@turf/combine';
 import * as area from 'npm:@turf/area';
 import * as booleanPointInPolygon from 'npm:@turf/boolean-point-in-polygon';
+import * as booleanContains from 'npm:@turf/boolean-contains';
