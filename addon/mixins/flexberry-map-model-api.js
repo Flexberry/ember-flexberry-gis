@@ -1,5 +1,7 @@
 import Ember from 'ember';
 import lineIntersect from 'npm:@turf/line-intersect';
+import distance from 'npm:@turf/distance';
+import helpers from 'npm:@turf/helpers';
 import booleanContains from 'npm:@turf/boolean-contains';
 import area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
@@ -34,8 +36,8 @@ export default Ember.Mixin.create({
     Shows id objects for layer.
 
     @method showLayerObjects
-    @param {String} layerId Layer id
-    @param {String[]} objectIds Array of id objects
+    @param {string} layerId Layer id.
+    @param {string[]} objectIds Array of id objects.
   */
   showLayerObjects(layerId, objectIds) {
     this._setVisibilityObjects(layerId, objectIds, true);
@@ -45,8 +47,8 @@ export default Ember.Mixin.create({
     Hides id objects for layer.
 
     @method hideLayerObjects
-    @param {String} layerId Layer id
-    @param {String[]} objectIds Array of id objects
+    @param {string} layerId Layer id.
+    @param {string[]} objectIds Array of id objects.
   */
   hideLayerObjects(layerId, objectIds) {
     this._setVisibilityObjects(layerId, objectIds, false);
@@ -56,7 +58,7 @@ export default Ember.Mixin.create({
     Show all layer objects.
 
     @method showAllLayerObjects
-    @param {String} layerId Layer id
+    @param {string} layerId Layer id.
   */
   showAllLayerObjects(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
@@ -102,12 +104,24 @@ export default Ember.Mixin.create({
     Remove shapes from layer.
 
     @method deleteLayerObjects.
-    @param {String} layerId Id layer.
+    @param {string} layerId Id layer.
     @param {Object[]} featureIds Array of id shapes.
   */
   deleteLayerObjects(layerId, featureIds) {
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
+
+    if (Ember.isNone(layer)) {
+      return new Ember.RSVP.Promise(() => {
+        throw new Error(`Layer '${layerId}' not found.`);
+      });
+    }
+
+    if (Ember.isNone(layer._leafletObject)) {
+      return new Ember.RSVP.Promise(() => {
+        throw new Error('Layer type not supported');
+      });
+    }
 
     let ids = [];
     layer._leafletObject.eachLayer(function (shape) {
@@ -146,8 +160,8 @@ export default Ember.Mixin.create({
   /**
     Gets intersected features.
     @method getIntersectionObjects
-    @param {String} featureId feature id with which we are looking for intersections
-    @param {Array} layerIds array of layers ids
+    @param {string} featureId feature id with which we are looking for intersections
+    @param {number[]} layerIds array of layers ids
   */
   getIntersectionObjects(featureId, layerIds) {
     let result = [];
@@ -193,6 +207,146 @@ export default Ember.Mixin.create({
           }
         });
       }
+    }
+
+    return result;
+  },
+
+  /**
+    Get the closest object
+    @method getNearObject
+    @param {string} layerId Layer id of the selected object.
+    @param {string} layerObjectId Id of the selected object.
+    @param {number[]} layerIdsArray Array of id of layers in which to search.
+    @return {Object} Id of the nearest object.
+  */
+  getNearObject(layerId, layerObjectId, layerIdsArray) {
+    const layers = this.get('mapLayer');
+    const layer = layers.findBy('id', layerId);
+
+    if (Ember.isNone(layer)) {
+      throw `Layer '${layerId}' not found.`;
+    }
+
+    var result = null;
+    layerIdsArray.forEach(lid => {
+      const layer = layers.findBy('id', lid);
+      if (Ember.isNone(layer)) {
+        throw `Layer '${lid}' not found.`;
+      }
+
+      const features = Ember.get(layer, '_leafletObject');
+      if (Ember.isNone(features)) {
+        throw `There are no objects in the '${lid}' layer.`;
+      }
+
+      features.eachLayer(obj => {
+        const id = this._getLayerFeatureId(layer, obj);
+        const distance = this.getDistanceBetweenObjects(layerId, layerObjectId, lid, id);
+
+        if (layerId === lid && layerObjectId === id) {
+          return;
+        }
+
+        if (Ember.isNone(result) || distance < result.distance) {
+          result = {
+            distance: distance,
+            layer: layer,
+            object: obj,
+          };
+        }
+      });
+    });
+
+    return result;
+  },
+
+  /**
+    Get distance between objects
+    @method getDistanceBetweenObjects
+    @param {string} firstLayerId First layer id.
+    @param {string} firstLayerObjectId First layer object id.
+    @param {string} secondLayerId Second layer id.
+    @param {string} secondLayerObjectId Second layer object id.
+    @return {number} Distance between objects in meters.
+  */
+  getDistanceBetweenObjects(firstLayerId, firstLayerObjectId, secondLayerId, secondLayerObjectId) {
+    const layers = this.get('mapLayer');
+    const firstLayer = layers.findBy('id', firstLayerId);
+    if (Ember.isNone(firstLayer)) {
+      throw `Layer '${firstLayerId}' not found.`;
+    }
+
+    const secondLayer = layers.findBy('id', secondLayerId);
+    if (Ember.isNone(secondLayer)) {
+      throw `Layer '${secondLayerId}' not found.`;
+    }
+
+    const getObjectCenter = function (layer, objectId) {
+      var result;
+      const features = Ember.get(layer, '_leafletObject');
+      if (Ember.isNone(features)) {
+        throw `There are no objects in the '${layer.id}' layer.`;
+      }
+
+      features.eachLayer(obj => {
+        const id = this._getLayerFeatureId(layer, obj);
+
+        if (id === objectId) {
+          result = obj;
+          return;
+        }
+      });
+
+      if (Ember.isNone(result)) {
+        throw `Object '${objectId}' not found.`;
+      }
+
+      const type = Ember.get(result, 'feature.geometry.type');
+      if (type === 'Point') {
+        return result._latlng;
+      } else {
+        return result.getBounds().getCenter();
+      }
+    };
+
+    const firstPoint = getObjectCenter.call(this, firstLayer, firstLayerObjectId);
+    const firstObject = helpers.point([firstPoint.lat, firstPoint.lng]);
+
+    const secondPoint = getObjectCenter.call(this, secondLayer, secondLayerObjectId);
+    const secondObject = helpers.point([secondPoint.lat, secondPoint.lng]);
+
+    // Get distance in meters.
+    return distance.default(firstObject, secondObject, { units: 'kilometers' }) * 1000;
+  },
+
+  /**
+    Get layer object attributes.
+    @method getLayerObjectOptions
+    @param {String} layerId Id layer
+    @param {String} featureId Id object
+  */
+  getLayerObjectOptions(layerId, featureId) {
+    let result;
+    if (Ember.isNone(layerId) || Ember.isNone(featureId)) {
+      return result;
+    }
+
+    const allLayers = this.get('mapLayer');
+    let layers = Ember.A(allLayers);
+    const layer = layers.findBy('id', layerId);
+    if (Ember.isNone(layer)) {
+      return result;
+    }
+
+    let features = Ember.get(layer, '_leafletObject._layers') || {};
+    let object = Object.values(features).find(feature => {
+      return this._getLayerFeatureId(layer, feature) === featureId;
+    });
+
+    if (!Ember.isNone(object)) {
+      result = Ember.$.extend({}, object.feature.properties);
+      result.area = area(object.feature);
     }
 
     return result;
@@ -288,6 +442,14 @@ export default Ember.Mixin.create({
     }
   },
 
+  /**
+    Get object id by object and layer.
+
+    @method _getLayerFeatureId
+    @param {Object} layer Layer.
+    @param {Object} layerObject Object.
+    @return {number} Id object.
+  */
   _getLayerFeatureId(layer, layerObject) {
     const getLayerFeatureId = this.get('mapApi').getFromApi('getLayerFeatureId');
     if (typeof getLayerFeatureId === 'function') {
@@ -298,17 +460,22 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Determine the visibility of the specified objects by id for the layer
+    Determine the visibility of the specified objects by id for the layer.
 
     @method _setVisibilityObjects
-    @param {String} layerId Layer id
-    @param {String[]} objectIds Array of id objects
-    @param {Boolean} [visibility=false] visibility Object Visibility
+    @param {string} layerId Layer id.
+    @param {string[]} objectIds Array of id objects.
+    @param {boolean} [visibility=false] visibility Object Visibility.
   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
     if (Ember.isArray(objectIds)) {
       const layer = this.get('mapLayer').findBy('id', layerId);
       const leafletObject = Ember.get(layer, '_leafletObject');
+
+      if (Ember.isNone(leafletObject)) {
+        throw 'Layer type not supported';
+      }
+
       var map = Ember.get(leafletObject, '_map');
 
       leafletObject.eachLayer(function (shape) {
