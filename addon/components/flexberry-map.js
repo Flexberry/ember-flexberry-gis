@@ -461,6 +461,17 @@ let FlexberryMapComponent = Ember.Component.extend(
           this._runQuery(queryFilter, mapObjectSetting);
         });
       }
+
+      const mapApi = this.get('mapApi');
+      if (Ember.isNone(mapApi.getFromApi('runQuery'))) {
+        mapApi.addToApi('runQuery',  this._runQuery.bind(this));
+        this.set('_hasQueryApi', true);
+      }
+
+      if (Ember.isNone(mapApi.getFromApi('createObject'))) {
+        mapApi.addToApi('createObject',  this._createObject.bind(this));
+        this.set('_hasCreateObjectApi', true);
+      }
     },
 
     /**
@@ -569,21 +580,18 @@ let FlexberryMapComponent = Ember.Component.extend(
         this.set('_onLeafletContainerResize', null);
       }
 
-      const mapApi = this.get('mapApi');
-      if (Ember.isNone(mapApi.getFromApi('runQuery'))) {
-        mapApi.addToApi('runQuery',  this._runQuery.bind(this));
-        this.set('_hasQueryApi', true);
-      }
-
-      if (Ember.isNone(mapApi.getFromApi('createObject'))) {
-        mapApi.addToApi('createObject',  this._createObject.bind(this));
-        this.set('_hasCreateObjectApi', true);
-      }
-
       Ember.run.scheduleOnce('afterRender', this, '_localeDidChange');
       leafletMap.remove();
       this.set('_leafletObject', null);
       this.set('_$leafletContainer', null);
+
+      if (this.get('_hasQueryApi')) {
+        this.get('mapApi').addToApi('runQuery', undefined);
+      }
+
+      if (this.get('_hasCreateObjectApi')) {
+        this.get('mapApi').addToApi('createObject', undefined);
+      }
 
       this.sendAction('leafletDestroy');
     },
@@ -604,15 +612,6 @@ let FlexberryMapComponent = Ember.Component.extend(
     /**
       Destroys map's service layer.
 
-        if (this.get('_hasQueryApi')) {
-          this.get('mapApi').addToApi('runQuery', undefined);
-        }
-
-        if (this.get('_hasCreateObjectApi')) {
-          this.get('mapApi').addToApi('createObject', undefined);
-        }
-
-        this.sendAction('leafletDestroy');
       @param {Object} leafletMap Leaflet map.
     */
     destroyServiceLayer(leafletMap) {
