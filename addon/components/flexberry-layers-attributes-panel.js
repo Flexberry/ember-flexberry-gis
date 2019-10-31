@@ -975,6 +975,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }.bind(this);
 
       this._treatmentSelectedEditedRows(tabModel, treatmentSelectedEditedRows);
+      this.send('onClearFoundItemClick');
     },
 
     /**
