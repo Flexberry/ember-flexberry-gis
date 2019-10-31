@@ -141,27 +141,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _isPanelEditable: true,
 
   /**
-   Projects geometry from latlng to coords in layer's CRS
-
-   @method latlngToPoint
-   @param {Leaflet Object} geometry
-   @param {L.CRS} crs
-   @returns coordinates in GeoJSON
-   */
-  transform(latlngs, options) {
-    if (Array.isArray(latlngs[0])) {
-      let coords = [];
-      for (let i = 0; i < latlngs.length; i++) {
-        coords.push(this.transform(latlngs[i], options));
-      }
-
-      return coords;
-    }
-
-    return options.latLngToCoords(latlngs);
-  },
-
-  /**
     Computed property that builds tab models collection from items.
 
     @property _tabModels
@@ -409,9 +388,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
             if (this.get('groupDraggable') && selectedLayer.indexOf(dragLayer) > -1) {
               selectedLayer.forEach((layer) => {
+                if (!Ember.isNone(layer.model)) {
+                  this.updateGeometryInModel(layer, layer.model);
+                }
+
                 this._triggerChanged.call([this, layer, true], { layer: layer });
               });
             } else {
+              if (!Ember.isNone(dragLayer.model)) {
+                this.updateGeometryInModel(dragLayer, dragLayer.model);
+              }
+
               this._triggerChanged.call([this, dragLayer, true], { layer: dragLayer });
             }
 
@@ -510,6 +497,56 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             this.set('featureLink', null);
             this.set('propertyLink', null);
             this.set('properties', null);
+          },
+
+          /**
+           Projects geometry from latlng to coords in layer's CRS
+
+           @method transform
+           @param {Leaflet Object} latlngs
+           @param {L.CRS} options
+           @returns coordinates in GeoJSON
+           */
+          transform(latlngs, options) {
+            if (Array.isArray(latlngs[0])) {
+              let coords = [];
+              for (let i = 0; i < latlngs.length; i++) {
+                coords.push(this.transform(latlngs[i], options));
+              }
+
+              return coords;
+            }
+
+            return options.latLngToCoords(latlngs);
+          },
+
+          /**
+            Update geometry layer in model.
+
+           @method updateGeometryInModel
+           @param {Object} layer
+           @param {Object} model
+           */
+          updateGeometryInModel(layer, model) {
+            let geometry = layer.toGeoJSON().geometry;
+            let options = Ember.get(this, 'leafletObject.options');
+            try {
+              geometry.coordinates = this.transform(geometry.coordinates, options);
+            }
+            catch (err) {
+              console.log(err);
+              layer.disableEdit();
+            }
+
+            model.set('geometry', geometry);
+
+            let crsObj = {
+              type: 'name',
+              properties: {
+                name: options.crs.code
+              }
+            };
+            model.set('geometry.crs', crsObj);
           },
 
           /**
@@ -1153,10 +1190,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(leafletMap, 'editTools', editTools);
       let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
 
+      let updateGeometryInModel = function() {
+        let [tabModel, layer] = this;
+        if (!Ember.isNone(layer.model)) {
+          tabModel.updateGeometryInModel(layer, layer.model);
+        }
+      };
+
       // Remove layer editing.
       leafletMap.eachLayer(function (layer) {
         let enabled = Ember.get(layer, 'editor._enabled');
-        if (enabled === true) {
+        if (enabled) {
           layer.disableEdit();
         }
       });
@@ -1182,6 +1226,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         layer.enableEdit(leafletMap);
         leafletMap.on('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
         leafletMap.on('editable:vertex:dragstart', this._startSnapping, this);
+        leafletMap.on('editable:vertex:dragend', updateGeometryInModel, [tabModel, layer]);
       } else {
         if (!isMarker) {
           tabModel.disableDragging(rowId);
@@ -1189,6 +1234,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
         layer.disableEdit();
         leafletMap.off('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
+        leafletMap.off('editable:vertex:dragend', updateGeometryInModel, [tabModel, layer]);
 
         let addedLayers = Ember.get(tabModel, '_addedLayers') || {};
         if (!Ember.isNone(addedLayers[Ember.guidFor(layer)])) {
@@ -1240,24 +1286,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       if (isModel) {
-        let geometry = layer.toGeoJSON().geometry;
-        let options = Ember.get(tabModel, 'leafletObject.options');
-        try {
-          geometry.coordinates = this.transform(geometry.coordinates, options);
-        }
-        catch (err) {
-          console.log(err);
-          layer.disableEdit();
-        }
-
-        data.set('geometry', geometry);
-        let crsObj = {
-          type: 'name',
-          properties: {
-            name: options.crs.code
-          }
-        };
-        data.set('geometry.crs', crsObj);
+        tabModel.updateGeometryInModel(layer, data);
         Ember.set(layer, 'model', data);
         data = data.data;
       }
