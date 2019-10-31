@@ -20,10 +20,10 @@
       <button id="getIntersectionObjects">Get Intersection Objects</button>
     </div>
     <div>
-      <button id="createNewlayer">Create new Layer</button>
+      <button id="createNewlayer">Create New Layer</button>
     </div>
     <div>
-      <button id="showAllLayerObjects">Show all layer objects</button>
+      <button id="showAllLayerObjects">Show All Layer Objects</button>
     </div>
     <div>
       <button id="isContainsObject">Is Contains Object</button>
@@ -32,8 +32,12 @@
       <button id="extendsAreaObject">Get Extended Area</button>
     </div>
     <div>
-      <button id="deleteLayerObject">Delete object</button>
-      <button id="deleteLayerObjects">Delete objects</button>
+      <button id="deleteLayerObject">Delete Object</button>
+      <button id="deleteLayerObjects">Delete Objects</button>
+    </div>
+    <div>
+      <button id="nearestObject">Get Nearest Object</button>
+      <button id="distanceObjects">Get Distance</button>
     </div>
     <div>
       <button id="showObjects">Show Objects</button>
@@ -209,6 +213,21 @@
         console.log(frame.contentWindow.mapApi.mapModel.getLayerObjectOptions('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Студгородок'));
       };
       getObjectAttrButton.addEventListener('click', getOptions);
+
+      var nearestObjectButton = document.getElementById('nearestObject');
+      var nearestObject = function () {
+        var obj = frame.contentWindow.mapApi.mapModel.getNearObject('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Студгородок', ['f7670a1f-1acb-4571-923c-1ce3bc88e11e']);
+        console.log(obj);
+      };
+      nearestObjectButton.addEventListener('click', nearestObject);
+
+      var distanceObjectsButton = document.getElementById('distanceObjects');
+      var distanceObjects = function () {
+        var distance = frame.contentWindow.mapApi.mapModel.getDistanceBetweenObjects('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Студгородок', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Архиерейка');
+        console.log(distance + ' (m)');
+      };
+      distanceObjectsButton.addEventListener('click', distanceObjects);
+
     });
 
     var getRhumbButton = document.getElementById('getRhumb');
