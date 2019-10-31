@@ -1,106 +1,91 @@
-<div class="{{concat "ui celled grid" " " flexberryClassNames.wrapper}}">
-    <div class="{{concat "ui six wide column" " " flexberryClassNames.layersOptions}}">
-        {{#if all}}
-            {{flexberry-button
-                class=(concat flexberryClassNames.identifyAll " " allClass)
-                iconClass=allIconClass
-                tooltip=allCaption
-                click=(action "onLayerOptionChange" "all")
-            }}
-        {{/if}}
-        {{#if visible}}
-            {{flexberry-button
-                class=(concat flexberryClassNames.identifyAllVisible " " visibleClass)
-                iconClass=visibleIconClass
-                tooltip=visibleCaption
-                click=(action "onLayerOptionChange" "visible")
-            }}
-        {{/if}}
-        {{#if top}}
-            {{flexberry-button
-                class=(concat flexberryClassNames.identifyTopVisible " " topClass)
-                iconClass=topIconClass
-                tooltip=topCaption
-                click=(action "onLayerOptionChange" "top")
-            }}
-        {{/if}}
-    </div>
-    <div class="{{concat "ui seven wide column" " " flexberryClassNames.toolsOptions}}">
-      {{#if marker}}
-          {{flexberry-button
-              class=(concat flexberryClassNames.identifyMarker " " markerClass)
-              iconClass=markerIconClass
-              tooltip=markerCaption
-              click=(action "onToolOptionChange" "marker")
+<div class="ui celled grid {{flexberryClassNames.wrapper}}">
+  <div class="ui six wide column {{flexberryClassNames.layersOptions}}">
+    {{flexberry-button
+      class=(concat flexberryClassNames.identifyAll (if (eq layerMode "all") " active" ""))
+      iconClass=allIconClass
+      tooltip=allCaption
+      click=(action "onLayerModeChange" "all")
+    }}
+    {{flexberry-button
+      class=(concat flexberryClassNames.identifyAllVisible (if (eq layerMode "visible") " active" ""))
+      iconClass=visibleIconClass
+      tooltip=visibleCaption
+      click=(action "onLayerModeChange" "visible")
+    }}
+    {{flexberry-button
+      class=(concat flexberryClassNames.identifyTopVisible (if (eq layerMode "top") " active" ""))
+      iconClass=topIconClass
+      tooltip=topCaption
+      click=(action "onLayerModeChange" "top")
+    }}
+  </div>
+  <div class="ui seven wide column {{flexberryClassNames.toolsOptions}}">
+    {{flexberry-button
+      class=(concat flexberryClassNames.identifyMarker (if (eq toolMode "marker") " active" ""))
+      iconClass=markerIconClass
+      tooltip=markerCaption
+      click=(action "onToolModeChange" "marker")
+    }}
+    {{flexberry-button
+      class=(concat flexberryClassNames.identifyPolyline (if (eq toolMode "polyline") " active" ""))
+      iconClass=polylineIconClass
+      tooltip=polylineCaption
+      click=(action "onToolModeChange" "polyline")
+    }}
+    {{flexberry-button
+      class=(concat flexberryClassNames.identifyRectangle (if (eq toolMode "rectangle") " active" ""))
+      iconClass=rectangleIconClass
+      tooltip=rectangleCaption
+      click=(action "onToolModeChange" "rectangle")
+    }}
+    {{flexberry-button
+      class=(concat flexberryClassNames.identifyPolygon (if (eq toolMode "polygon") " active" ""))
+      iconClass=polygonIconClass
+      tooltip=polygonCaption
+      click=(action "onToolModeChange" "polygon")
+    }}
+  </div>
+  <div class="ui two wide column {{flexberryClassNames.toolsOptions}}">
+    {{flexberry-button
+      class=flexberryClassNames.clearButton
+      iconClass=clearIconClass
+      tooltip=clearCaption
+      click=(action "onIdentificationClear")
+    }}
+  </div>
+  <div class="buffer-tools">
+    {{flexberry-checkbox
+      label=bufferActiveCaption
+      value=bufferActive
+    }}
+  </div>
+  {{#if bufferActive}}
+    <div class="buffer-tools">
+      <div class="ui grid">
+        <div class="buffer-tools ui three wide column">
+          <label>{{bufferRadiusCaption}}</label>
+        </div>
+        <div class="ui five wide column">
+          {{input
+            type="number"
+            min=0
+            value=bufferRadius
           }}
-      {{/if}}
-      {{#if polyline}}
-          {{flexberry-button
-              class=(concat flexberryClassNames.identifyPolyline " " polylineClass)
-              iconClass=polylineIconClass
-              tooltip=polylineCaption
-              click=(action "onToolOptionChange" "polyline")
-          }}
-      {{/if}}
-      {{#if rectangle}}
-          {{flexberry-button
-              class=(concat flexberryClassNames.identifyRectangle " " rectangleClass)
-              iconClass=rectangleIconClass
-              tooltip=rectangleCaption
-              click=(action "onToolOptionChange" "rectangle")
-          }}
-      {{/if}}
-      {{#if polygon}}
-          {{flexberry-button
-                class=(concat flexberryClassNames.identifyPolygon " " polygonClass)
-              iconClass=polygonIconClass
-              tooltip=polygonCaption
-              click=(action "onToolOptionChange" "polygon")
-          }}
-      {{/if}}
-    </div>
-    <div class="{{concat "ui two wide column" flexberryClassNames.toolsOptions}}">
-        {{flexberry-button
-            class=(concat flexberryClassNames.clearButton " " clearClass)
-            iconClass=clearIconClass
-            tooltip=clearCaption
-            click=(action "clear")
-        }}
-    </div>
-    {{#if buffer}}
-      <div class="buffer-tools">
-          {{flexberry-checkbox
-              label=bufferActiveCaption
-              value=bufferActive
-          }}
+        </div>
+        <div class="ui seven wide column">
+          {{#ui-dropdown class="item fluid selection" onChange=(action "onBufferUnitsChange")}}
+            <i class="dropdown icon"></i>
+            <div class="text">
+              {{t (get bufferUnitsList bufferUnits)}}
+            </div>
+            <div class="menu">
+              {{#each-in bufferUnitsList as |unitsValue unitsLocalizedCaptionPath|}}
+                <div class="item" data-value="{{unitsValue}}">{{t unitsLocalizedCaptionPath}}</div>
+              {{/each-in}}
+            </div>
+          {{/ui-dropdown}}
+        </div>
       </div>
-      {{#if bufferActive}}
-          <div class="buffer-tools">
-              <div class="ui grid">
-                  <div class="buffer-tools ui three wide column">
-                      <label>{{bufferRadiusCaption}}</label>
-                  </div>
-                  <div class="ui five wide column">
-                      {{input
-                          type="number"
-                          value=bufferRadius
-                      }}
-                  </div>
-                  <div class="ui seven wide column">
-                      {{#ui-dropdown class="item fluid selection" onChange=(action "onBufferUnitSelected")}}
-                        <i class="dropdown icon"></i>
-                        <div class="text">
-                          {{t (get bufferUnitsList _selectedBufferUnits)}}
-                        </div>
-                        <div class="menu">
-                          {{#each-in bufferUnitsList as |key value|}}
-                            <div class="item" data-value="{{key}}">{{t value}}</div>
-                          {{/each-in}}
-                        </div>
-                      {{/ui-dropdown}}
-                  </div>
-              </div>
-          </div>
-      {{/if}}
-    {{/if}}
+    </div>
+  {{/if}}
 </div>

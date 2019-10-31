@@ -42,8 +42,8 @@ const flexberryClassNames = {
   Usage:
   templates/my-map-form.hbs
   ```handlebars
-  {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-tools/measure activate=(action "onMapToolActivate" target=maptoolbar)}}
+  {{#flexberry-maptoolbar}}
+    {{map-tools/measure leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   ```
 
@@ -343,19 +343,6 @@ let MeasureMapToolComponent = Ember.Component.extend({
   */
   displayCoordinates: false,
 
-  actions: {
-    /**
-      Handles {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
-      Invokes own {{#crossLink "MeasureMapToolComponent/sendingActions.activate:method"}}'activate' action{{/crossLink}}.
-
-      @method actions.onMapToolActivate
-      @param {Object} e Base map-tool's 'activate' action event-object.
-    */
-    onMapToolActivate(...args) {
-      this.sendAction('activate', ...args);
-    }
-  },
-
   /**
     Initializes component.
   */
@@ -370,15 +357,16 @@ let MeasureMapToolComponent = Ember.Component.extend({
       captions: this.get('coordinatesCaptions'),
       displayCoordinates: this.get('displayCoordinates')
     });
-  }
+  },
 
   /**
-    Component's action invoking when map-tool must be activated.
-
-    @method sendingActions.activate
-    @param {Object} e Action's event object from
-    {{#crossLink "BaseMapToolComponent/sendingActions.activate:method"}}base map-tool's 'activate' action{{/crossLink}}.
+    Destroys component.
   */
+  willDestroy() {
+    this._super(...arguments);
+
+    this.set('_measureToolProperties', null);
+  }
 });
 
 // Add component's CSS-class names as component's class static constants
