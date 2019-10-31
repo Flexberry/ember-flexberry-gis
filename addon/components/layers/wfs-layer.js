@@ -29,7 +29,8 @@ export default BaseVectorLayer.extend({
     'showExisting',
     'style',
     'filter',
-    'forceMulti'
+    'forceMulti',
+    'withCredentials'
   ],
 
   /**

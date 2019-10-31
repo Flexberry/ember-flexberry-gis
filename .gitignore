@@ -16,5 +16,6 @@
 npm-debug.log
 testem.log
 /.vscode
+/.githooks
 jsconfig.json
 typings/ember/ember.d.ts
