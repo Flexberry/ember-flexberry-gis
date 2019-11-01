@@ -678,8 +678,8 @@ export default Ember.Mixin.create({
     let result = [];
 
     var rowPush = function (number, vertexNum1, vertexNum2, point1, point2) {
-      const pointFrom = helper.default.point([point2.lat, point2.lng]); // λ1;φ1
-      const pointTo = helper.default.point([point1.lat, point1.lng]); // λ2;φ2
+      const pointFrom = helper.default.point([point2.lat, point2.lng]);
+      const pointTo = helper.default.point([point1.lat, point1.lng]);
 
       // We get the distance and translate into meters.
       const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
@@ -687,42 +687,22 @@ export default Ember.Mixin.create({
       // Get the angle.
       const bearing = rhumbBearing.default(pointFrom, pointTo);
 
-      const rhumbBearingInRadians = helpers.degreesToRadians(bearing);
-
-      // var y = Math.sin(λ2 - λ1) * Math.cos(φ2); // Latitude - φ, Longitude - λ
-      // var x = Math.cos(φ1) * Math.sin(φ2) -
-      //   Math.sin(φ1) * Math.cos(φ2) * Math.cos(λ2 - λ1);
-      // var brng = Math.atan2(y, x).toDegrees();
-
-      var y = Math.sin(point2.lng - point1.lng) * Math.cos(point1.lat);
-      var x = Math.cos(point2.lng) * Math.sin(point1.lng) -
-        Math.sin(point2.lng) * Math.cos(point1.lng) * Math.cos(point2.lng - point1.lng);
-      var brng = Math.atan2(y, x);//.toDegrees();
-
       let rhumb;
 
       // Calculates rhumb.
       if (bearing < -90 && bearing > -180) {
-        console.log('СВ'); // todo: !!!
         // СВ
-        // rhumb = 'NE;' + (Math.abs(bearing) - 90);
         rhumb = 'NE;' + (Math.abs(bearing) - 90);
       } else if (bearing <= 180 && bearing > 90) {
-        console.log('ЮВ');
         // ЮВ
-        //rhumb = 'SE;' + (90 - bearing);
         rhumb = 'SE;' + (bearing - 90);
       } else if (bearing <= 90 && bearing > 0) {
-        console.log('ЮЗ');
         // ЮЗ
-        // rhumb = 'SW;' + (90 - bearing);
         rhumb = 'SW;' + (90 - bearing);
       } if (bearing <= 0 && bearing >= -90) {
-        console.log('СЗ');
         // СЗ
         rhumb = 'NW;' + Math.abs(-90 - bearing);
       }
-      console.log(rhumb);
 
       return {
         number: number,
@@ -759,7 +739,5 @@ export default Ember.Mixin.create({
 
     return result;
   }
-
-
 
 });
