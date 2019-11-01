@@ -23,43 +23,58 @@ export default BaseVectorLayer.extend({
 
   postfixForEditForm: '-e',
 
-  // save button at attr panel
+  /**
+    Saves layer changes.
+
+    @method save
+  */
   save() {
-    /*const layers = Object.values(this.getLayers());
+    const layers = Object.values(this.getLayers());
+    const promises = Ember.A();
     layers.forEach(layer => {
-      let transformToCoords = function(latLngs, options) {
-        if (Array.isArray(latLngs[0])) {
-          let coords = [];
-          for (let i = 0; i < latLngs.length; i++) {
-            coords.push(transformToCoords(latLngs[i], options));
-          }
-
-          return coords;
-        }
-
-        return options.latLngToCoords(latLngs);
-      };
-
-      const newCoords = transformToCoords(Ember.get(layer, 'feature.properties.geometry.coordinates'), this.options);
-      Ember.set(layer, 'model.geometry.coordinates', newCoords);
-      if (Ember.get(layer, 'model.hasDirtyAttributes')) {
-        layer.model.save().then((res) => {
-          console.log('success');
-          Ember.set(res, 'hasChanged', false);
-          this.fire('save:success');
-        }).catch( function(r) {
-          this.fire('save:failed', r);
-        });
+      if (layer.hasChanges) {
+        promises.addObject(layer.model.save());
+        layer.hasChanges = false;
       }
-    }, this);*/
+    }, this);
+
+    this.deletedModels.forEach(model => {
+      promises.addObject(model.save());
+    });
+
+    this.deletedModels.clear();
+
+    Ember.RSVP.all(promises).then(() => {
+      console.log('success');
+      this.fire('save:success');
+    }).catch(function(r) {
+      this.fire('save:failed', r);
+    });
     return this;
   },
 
-  // edit button at panel pressed
+  /**
+    Trigers after layer was edited.
+
+    @method editLayer
+    @param layer
+  */
   editLayer(layer) {
-    //layer.hasChanged = true;
+    layer.hasChanges = true;
 
     return this;
+  },
+
+  /**
+    Deletes model in odata layer.
+
+    @method deleteModel
+    @param model
+  */
+  deleteModel(model) {
+    model.deleteRecord();
+    model.set('hasChanged', true);
+    this.deletedModels.addObject(model);
   },
 
   /**
@@ -92,13 +107,21 @@ export default BaseVectorLayer.extend({
 
         let crs = this.get('crs');
         layer.options.crs = crs;
+        const latLngToCoords = this.get('latLngToCoords') || 'return [latLng[0], latLng[1]]';
+        const coordsToLatLng = this.get('coordsToLatLng') || 'return L.latLng([coordinates[1], coordinates[0]])';
+
+        layer.options.latLngToCoords = new Function('latLng', latLngToCoords);
+        layer.options.coordsToLatLng = new Function('coords', coordsToLatLng);
+
         L.setOptions(layer, options);
 
         layer.save = this.get('save');
         layer.editLayer = this.get('editLayer');
+        layer.deleteModel = this.get('deleteModel');
         layer.modelName = modelName;
         layer.projectionName = projectionName;
         layer.editformname = this.get('modelName') + this.get('postfixForEditForm');
+        layer.deletedModels = Ember.A(),
         models.forEach(model => {
           let geometry = model.get(geometryField);
           if (!geometry) {
@@ -106,13 +129,14 @@ export default BaseVectorLayer.extend({
             return;
           }
 
-          let geometryCoordinates = this.transformLatLng(geometry.coordinates);
+          let geometryCoordinates = this.transformToLatLng(geometry.coordinates);
 
           let innerLayer = null;
-          if (geometry.type === 'Polygon' || geometry.type === 'MultiPolygon') {
+          if (geometry.type === 'Polygon') {
             innerLayer = L.polygon(geometryCoordinates[0]);
-          }
-          else if (geometry.type === 'LineString' || geometry.type === 'MultiLineString') {
+          } else if (geometry.type === 'MultiPolygon') {
+            innerLayer = L.polygon(geometryCoordinates);
+          } else if (geometry.type === 'LineString' || geometry.type === 'MultiLineString') {
             innerLayer = L.polyline(geometryCoordinates);
           } else if (geometry.type === 'Point') {
             innerLayer = L.marker(geometryCoordinates);
@@ -134,11 +158,11 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  transformLatLng(coordinates) {
+  transformToLatLng(coordinates) {
     if (Array.isArray(coordinates[0])) {
       let latLngs = [];
       for (let i = 0; i < coordinates.length; i++) {
-        latLngs.push(this.transformLatLng(coordinates[i]));
+        latLngs.push(this.transformToLatLng(coordinates[i]));
       }
 
       return latLngs;

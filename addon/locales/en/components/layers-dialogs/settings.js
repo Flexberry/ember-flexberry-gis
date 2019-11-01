@@ -76,6 +76,9 @@ export default {
     },
     'coords-function-textbox': {
       'caption': 'Coords transformation method'
+    },
+    'latlng-function-textbox': {
+      'caption': 'LatLngs transformation method'
     }
   },
 

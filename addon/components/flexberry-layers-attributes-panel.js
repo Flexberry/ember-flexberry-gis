@@ -1243,6 +1243,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         leafletMap.on('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
         leafletMap.on('editable:vertex:dragstart', this._startSnapping, this);
         leafletMap.on('editable:vertex:dragend', updateGeometryInModel, [tabModel, layer]);
+        leafletMap.on('editable:vertex:deleted', updateGeometryInModel, [tabModel, layer]);
       } else {
         if (!isMarker) {
           tabModel.disableDragging(rowId);
@@ -1251,6 +1252,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         layer.disableEdit();
         leafletMap.off('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
         leafletMap.off('editable:vertex:dragend', updateGeometryInModel, [tabModel, layer]);
+        leafletMap.off('editable:vertex:deleted', updateGeometryInModel, [tabModel, layer]);
 
         let addedLayers = Ember.get(tabModel, '_addedLayers') || {};
         if (!Ember.isNone(addedLayers[Ember.guidFor(layer)])) {
@@ -1696,11 +1698,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange) {
     let layer = tabModel.featureLink[key];
     if (Ember.get(layer, 'model')) {
-      layer.model.deleteRecord();
-      layer.model.set('hasChanged', true);
-    } else {
-      tabModel.leafletObject.removeLayer(layer);
+      tabModel.leafletObject.deleteModel(layer.model);
     }
+
+    tabModel.leafletObject.removeLayer(layer);
 
     tabModel.properties.removeObject(tabModel.propertyLink[key]);
     delete selectedRows[key];

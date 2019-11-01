@@ -56,7 +56,8 @@ export default VectorLayer.extend({
       modelName: undefined,
       projectionName: undefined,
       geometryField: 'geometry',
-      coordsToLatLng: undefined
+      coordsToLatLng: undefined,
+      latLngToCoords: undefined
     });
     Ember.set(settings, 'searchSettings', this.createSearchSettings());
     return settings;

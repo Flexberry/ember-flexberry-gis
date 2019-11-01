@@ -78,6 +78,9 @@ export default {
     },
     'coords-function-textbox': {
       'caption': 'Метод преобразования координат'
+    },
+    'latlng-function-textbox': {
+      'caption': 'Метод преобразования широты и долготы'
     }
   },
 
