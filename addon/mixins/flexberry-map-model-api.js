@@ -719,8 +719,9 @@ export default Ember.Mixin.create({
         // Polygon.
         if (!Ember.isNone(item.length)) {
           for (let k = 0; k < item.length; k++) {
+            let n;
             let point1 = item[k];
-            let n = !Ember.isNone(item[k + 1]) ? n = k + 1 : n = 0;
+            n = !Ember.isNone(item[k + 1]) ? n = k + 1 : n = 0;
             let point2 = item[n];
 
             result.push(rowPush(i, k, n, point1, point2));
@@ -728,8 +729,9 @@ export default Ember.Mixin.create({
 
           // LineString.
         } else {
+          let n;
           let point1 = item;
-          let n = !Ember.isNone(cors[i][j + 1]) ? n = j + 1 : n = 0;
+          n = !Ember.isNone(cors[i][j + 1]) ? n = j + 1 : n = 0;
           let point2 = cors[i][n];
 
           result.push(rowPush(i, j, n, point1, point2));
