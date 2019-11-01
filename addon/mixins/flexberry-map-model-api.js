@@ -678,14 +678,26 @@ export default Ember.Mixin.create({
     let result = [];
 
     var rowPush = function (number, vertexNum1, vertexNum2, point1, point2) {
-      var pointFrom = helper.default.point([point2.lat, point2.lng]);
-      var pointTo = helper.default.point([point1.lat, point1.lng]);
+      const pointFrom = helper.default.point([point2.lat, point2.lng]); // λ1;φ1
+      const pointTo = helper.default.point([point1.lat, point1.lng]); // λ2;φ2
 
       // We get the distance and translate into meters.
-      let distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
+      const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
 
       // Get the angle.
-      let bearing = rhumbBearing.default(pointFrom, pointTo);
+      const bearing = rhumbBearing.default(pointFrom, pointTo);
+
+      const rhumbBearingInRadians = helpers.degreesToRadians(bearing);
+
+      // var y = Math.sin(λ2 - λ1) * Math.cos(φ2); // Latitude - φ, Longitude - λ
+      // var x = Math.cos(φ1) * Math.sin(φ2) -
+      //   Math.sin(φ1) * Math.cos(φ2) * Math.cos(λ2 - λ1);
+      // var brng = Math.atan2(y, x).toDegrees();
+
+      var y = Math.sin(point2.lng - point1.lng) * Math.cos(point1.lat);
+      var x = Math.cos(point2.lng) * Math.sin(point1.lng) -
+        Math.sin(point2.lng) * Math.cos(point1.lng) * Math.cos(point2.lng - point1.lng);
+      var brng = Math.atan2(y, x);//.toDegrees();
 
       let rhumb;
 
@@ -693,19 +705,22 @@ export default Ember.Mixin.create({
       if (bearing < -90 && bearing > -180) {
         console.log('СВ'); // todo: !!!
         // СВ
+        // rhumb = 'NE;' + (Math.abs(bearing) - 90);
         rhumb = 'NE;' + (Math.abs(bearing) - 90);
       } else if (bearing <= 180 && bearing > 90) {
         console.log('ЮВ');
         // ЮВ
-        rhumb = 'SE;' + (180 - bearing);
+        //rhumb = 'SE;' + (90 - bearing);
+        rhumb = 'SE;' + (bearing - 90);
       } else if (bearing <= 90 && bearing > 0) {
         console.log('ЮЗ');
         // ЮЗ
+        // rhumb = 'SW;' + (90 - bearing);
         rhumb = 'SW;' + (90 - bearing);
       } if (bearing <= 0 && bearing >= -90) {
         console.log('СЗ');
         // СЗ
-        rhumb = 'NW;' + (90 - Math.abs(bearing));
+        rhumb = 'NW;' + Math.abs(-90 - bearing);
       }
       console.log(rhumb);
 
@@ -719,12 +734,25 @@ export default Ember.Mixin.create({
 
     for (let i = 0; i < cors.length; i++) {
       for (let j = 0; j < cors[i].length; j++) {
-        for (let k = 0; k < cors[i][j].length; k++) {
-          let point1 = cors[i][j][k];
-          let n = !Ember.isNone(cors[i][j][k + 1]) ? n = k + 1 : n = 0;
-          let point2 = cors[i][j][n];
+        let item = cors[i][j];
 
-          result.push(rowPush(i, k, n, point1, point2));
+        // Polygon.
+        if (!Ember.isNone(item.length)) {
+          for (let k = 0; k < item.length; k++) {
+            let point1 = item[k];
+            let n = !Ember.isNone(item[k + 1]) ? n = k + 1 : n = 0;
+            let point2 = item[n];
+
+            result.push(rowPush(i, k, n, point1, point2));
+          }
+
+          // LineString.
+        } else {
+          let point1 = item;
+          let n = !Ember.isNone(cors[i][j + 1]) ? n = j + 1 : n = 0;
+          let point2 = cors[i][n];
+
+          result.push(rowPush(i, j, n, point1, point2));
         }
       }
     }
