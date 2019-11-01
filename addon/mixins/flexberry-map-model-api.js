@@ -647,5 +647,18 @@ export default Ember.Mixin.create({
         return L.polygon(objectToDefine.getLatLngs());
       default: return undefined;
     }
-  }
+  },
+
+/**
+  Create polygon object by coordinates.
+  @method createPolygonObjectCoordinates.
+  @param {string} layerId Layer id.
+  @param {Object[]} coors Array coordinates.
+  @param {Object} properties Object properties
+*/
+  createPolygonObjectCoordinates(layerId, coors, properties) {
+
+  },
+
+
 });

@@ -55,6 +55,10 @@
     <div>
       <button id="getLayerObjectOptions">Get Object Attributes</button>
     </div>
+    <div>
+      <button id="createPolygonObjectCoordinates">Create Polygon Object By Coordinates</button>
+      <button id="createPolygonObjectRhumb">Create Polygon Object By Rhumb</button>
+    </div>
   </div>
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
@@ -79,7 +83,7 @@
         return true;
       }
 
-      frame.contentWindow.mapApi.saveObject = function(layerId, layerObject)  {
+      frame.contentWindow.mapApi.saveObject = function (layerId, layerObject) {
         if (layerId === "56f4b518-e375-4b24-be2f-88d48110c0a3") {
           console.log(layerObject);
         }
@@ -230,6 +234,36 @@
         console.log(distance + ' (m)');
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
+
+
+
+      var createPolygonObjectCoordinatesButton = document.getElementById('createPolygonObjectCoordinates');
+      var createPolygonObjectCoordinates = function () {
+        var data = [[10, 10], [10, 10]];
+        var properties = { numer: 'w458' };
+
+        frame.contentWindow.mapApi.mapModel.createPolygonObjectCoordinates('f7670a1f-1acb-4571-923c-1ce3bc88e11e', data, properties)
+          .then(() => { console.log('object added sucessfully') }, reject => { console.log(reject) });
+      };
+      createPolygonObjectCoordinatesButton.addEventListener('click', createPolygonObjectCoordinates);
+
+
+      var createPolygonObjectRhumbButton = document.getElementById('createPolygonObjectRhumb');
+      var createPolygonObjectRhumb = function () {
+        var data = [{
+          number: 0,
+          rib: `0;1`,
+          rhumb: 58,
+          distance: 1256
+        }];
+
+        var properties = { numer: 'w458' };
+
+        frame.contentWindow.mapApi.mapModel.createPolygonObjectRhumb('f7670a1f-1acb-4571-923c-1ce3bc88e11e', data, properties)
+          .then(() => { console.log('object added sucessfully') }, reject => { console.log(reject) });
+      };
+      createPolygonObjectRhumbButton.addEventListener('click', createPolygonObjectRhumb);
+
 
     });
   </script>
