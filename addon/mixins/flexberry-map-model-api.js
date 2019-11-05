@@ -771,75 +771,10 @@ export default Ember.Mixin.create({
 
     if (depthArray === 2) {
       getList(result, cors);
-  } else  if (depthArray === 3) {
-      // for (let i = 0; i < cors.length; i++) {
-      //   let item = cors[i];
-      //   let n1 = 0;
-      //   let n2 = 1;
-
-      //   for (let j = 0; j < cors[i].length; j++) {
-      //     let n;
-      //     let point1;
-      //     let point2;
-
-      //     if (j === 0) {
-      //       point1 = L.latLng(0, 0);
-      //       point2 = item[0];
-      //       result.push(rowPush(i, n1++, n2++, point1, point2));
-      //     }
-
-      //     point1 = item[j];
-      //     if (!Ember.isNone(item[j + 1])) {
-      //       n = j + 1;
-      //     } else {
-      //       n = 0;
-      //       n2 = 1;
-      //     }
-      //     point2 = item[n];
-
-      //     result.push(rowPush(i, n1++, n2++, point1, point2));
-      //   }
-      // }
-
+    } else if (depthArray === 3 || depthArray === 4) {
       for (var i = 0; i < cors.length; i++) {
         getList(result, cors[i], i);
       }
-    } else if (depthArray === 4) {
-      for (let i = 0; i < cors.length; i++) {
-        getList(result, cors[i], i);
-      }
-      // for (let i = 0; i < cors.length; i++) {
-      //   let item0 = cors[i];
-      //   for (let j = 0; j < cors[i].length; j++) {
-      //     let item1 = cors[i][j];
-      //     let n1 = 0;
-      //     let n2 = 1;
-
-      //     for (let k = 0; k < item1.length; k++) {
-      //       let n;
-      //       let point1;
-      //       let point2;
-
-      //       if (k === 0) {
-      //         point1 = L.latLng(0, 0);
-      //         point2 = item1[0];
-      //         result.push(rowPush(i, n1++, n2++, point1, point2));
-      //       }
-
-      //       point1 = item1[k];
-      //       if (!Ember.isNone(item1[k + 1])) {
-      //         n = k + 1;
-      //       } else {
-      //         n = 0;
-      //         n2 = 1;
-      //       }
-      //       point2 = item1[n];
-
-      //       result.push(rowPush(i, n1++, n2++, point1, point2));
-      //     }
-
-      //   }
-      // }
     }
 
     return result;
