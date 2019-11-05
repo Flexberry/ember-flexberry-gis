@@ -712,32 +712,159 @@ export default Ember.Mixin.create({
       };
     };
 
-    for (let i = 0; i < cors.length; i++) {
-      for (let j = 0; j < cors[i].length; j++) {
-        let item = cors[i][j];
+    // Find out the depth of the array.
+    const countDimensions = function countDimensions(arr, dim) {
+      arr = arr || this;
+      if (window.Array !== arr.constructor) return 0;
 
-        // Polygon.
-        if (!Ember.isNone(item.length)) {
-          for (let k = 0; k < item.length; k++) {
-            let n;
-            let point1 = item[k];
-            n = !Ember.isNone(item[k + 1]) ? n = k + 1 : n = 0;
-            let point2 = item[n];
+      var d = dim || 1;
+      var inc = true;
+      for (var item in arr) {
+        if (window.Array === arr[item].constructor) {
+          if (inc) { d++; inc = false }
+          d = countDimensions(arr[item], d);
+        }
+      }
+      return d;
+    }
 
-            result.push(rowPush(i, k, n, point1, point2));
+    // const arrayClone = function (arr) {
+    //   var i, copy;
+
+    //   if (Array.isArray(arr)) {
+    //     copy = arr.slice(0);
+    //     for (i = 0; i < copy.length; i++) {
+    //       copy[i] = arrayClone(copy[i]);
+    //     }
+    //     return copy;
+    //   } else if (typeof arr === 'object') {
+    //     throw 'Cannot clone array containing an object!';
+    //   } else {
+    //     return arr;
+    //   }
+    // }
+
+    let depthArray = countDimensions(cors);
+
+    // let newCors = arrayClone(cors);
+
+    // // Add starting zero point.
+    // if (depthArray === 2) {
+    //   for (let i = 0; i < newCors.length; i++) {
+    //     newCors[i].unshift(L.latLng(0, 0));
+    //   }
+    // } else if (depthArray === 3) {
+    //   for (let i = 0; i < newCors.length; i++) {
+    //     for (let j = 0; j < newCors[i].length; j++) {
+    //       newCors[i][j].unshift(L.latLng(0, 0));
+    //     }
+    //   }
+    // }
+
+    if (depthArray === 2) {
+      for (let i = 0; i < cors.length; i++) {
+        let item = cors[i];
+        let n1 = 0;
+        let n2 = 1;
+
+        for (let j = 0; j < cors[i].length; j++) {
+          let n;
+          let point1;
+          let point2;
+
+          if (j === 0) {
+            point1 = L.latLng(0, 0);
+            point2 = item[0];
+            result.push(rowPush(i, n1++, n2++, point1, point2));
           }
 
-          // LineString.
-        } else {
-          let n;
-          let point1 = item;
-          n = !Ember.isNone(cors[i][j + 1]) ? n = j + 1 : n = 0;
-          let point2 = cors[i][n];
+          point1 = item[j];
+          if (!Ember.isNone(item[j + 1])) {
+            n = j + 1
+          } else {
+            n = 0;
+            n2 = 1;
+          }
+          point2 = item[n];
 
-          result.push(rowPush(i, j, n, point1, point2));
+          result.push(rowPush(i, n1++, n2++, point1, point2));
+        }
+      }
+    } else if (depthArray === 3) {
+      for (let i = 0; i < cors.length; i++) {
+        for (let j = 0; j < cors[i].length; j++) {
+          let item = cors[i][j];
+          let n1 = 0;
+          let n2 = 1;
+
+          for (let k = 0; k < item.length; k++) {
+            let n;
+            let point1;
+            let point2;
+
+            if (k === 0) {
+              point1 = L.latLng(0, 0);
+              point2 = item[0];
+              result.push(rowPush(i, n1++, n2++, point1, point2));
+            }
+
+            point1 = item[k];
+            if (!Ember.isNone(item[k + 1])) {
+              n = k + 1
+            } else {
+              n = 0;
+              n2 = 1;
+            }
+            point2 = item[n];
+
+            result.push(rowPush(i, n1++, n2++, point1, point2));
+          }
+
         }
       }
     }
+
+    // for (let i = 0; i < cors.length; i++) {
+    //   for (let j = 0; j < cors[i].length; j++) {
+    //     let item = cors[i][j];
+    //     let n;
+    //     let n1 = 0;
+    //     let n2 = 1;
+    //     let point1;
+    //     let point2;
+
+    //     // Polygon.
+    //     if (!Ember.isNone(item.length)) {
+    //       for (let k = 0; k < item.length; k++) {
+    //         if (k === 0) {
+    //           point1 = L.latLng(0, 0);
+    //           point2 = item[0];
+    //           result.push(rowPush(i, n1++, n2++, point1, point2));
+    //         }
+
+    //         point1 = item[k];
+    //         //n = !Ember.isNone(item[k + 1]) ? n = k + 1 : n = 0;
+    //         if (!Ember.isNone(item[k + 1])) {
+    //           n = k + 1
+    //         } else {
+    //           n = 0;
+    //           n2 = 1;
+    //         }
+    //         point2 = item[n];
+
+    //         result.push(rowPush(i, n1++, n2++, point1, point2));
+    //       }
+
+    //       // LineString.
+    //     } else {
+    //       point1 = item;
+    //       n = !Ember.isNone(cors[i][j + 1]) ? n = j + 1 : n = 0;
+    //       point2 = cors[i][n];
+
+    //       result.push(rowPush(i, j, n1, point1, point2));
+    //     }
+    //   }
+    // }
 
     return result;
   }
