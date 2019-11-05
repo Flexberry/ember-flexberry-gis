@@ -171,6 +171,13 @@
     "@turf/truncate" "^5.1.5"
     turf-jsts "*"
 
+"@turf/invariant@6.x":
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/@turf/invariant/-/invariant-6.1.2.tgz#6013ed6219f9ac2edada9b31e1dfa5918eb0a2f7"
+  integrity sha512-WU08Ph8j0J2jVGlQCKChXoCtI50BB3yEH21V++V0T4cR1T27HKCxkehV2sYMwTierfMBgjwSwDIsxnR4/2mWXg==
+  dependencies:
+    "@turf/helpers" "6.x"
+
 "@turf/invariant@^5.1.5":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@turf/invariant/-/invariant-5.2.0.tgz#f0150ff7290b38577b73d088b7932c1ee0aa90a7"
@@ -292,6 +299,14 @@
     "@turf/clone" "^5.1.5"
     "@turf/helpers" "^5.1.5"
     "@turf/meta" "^5.1.5"
+
+"@turf/rhumb-destination@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@turf/rhumb-destination/-/rhumb-destination-6.0.3.tgz#5322c0c2a428cdcfbf5a49c24ff715f6973720fd"
+  integrity sha512-N8hFeP88s4OHv/wKV5Dp9gdyrtNJ7htPs6ZL1fCtAkVXQlPCr5o7lAdichVV7R8nUgSuyCA93/ctt/ZQ4nUCOQ==
+  dependencies:
+    "@turf/helpers" "6.x"
+    "@turf/invariant" "6.x"
 
 "@turf/square@^5.1.5":
   version "5.1.5"

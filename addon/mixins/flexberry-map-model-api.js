@@ -5,6 +5,7 @@ import helpers from 'npm:@turf/helpers';
 import booleanContains from 'npm:@turf/boolean-contains';
 import area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
+import rhumbDestination from 'npm:@turf/rhumb-destination';
 
 export default Ember.Mixin.create({
   /**
@@ -13,6 +14,20 @@ export default Ember.Mixin.create({
     @type MapApiService
   */
   mapApi: Ember.inject.service(),
+
+  /**
+    Object types.
+    @property objectTypes
+    @type Object
+  */
+  objectTypes: {
+    marker: 'Marker',
+    circle: 'Circle',
+    lineString: 'LineString',
+    multiLineString: 'MultiLineString',
+    polygon: 'Polygon',
+    multiPolygon: 'MultiPolygon'
+  },
 
   /**
     Shows specified by id layers.
@@ -649,16 +664,137 @@ export default Ember.Mixin.create({
     }
   },
 
-/**
-  Create polygon object by coordinates.
-  @method createPolygonObjectCoordinates.
-  @param {string} layerId Layer id.
-  @param {Object[]} coors Array coordinates.
-  @param {Object} properties Object properties
-*/
-  createPolygonObjectCoordinates(layerId, coors, properties) {
+  /**
+    Create polygon object by coordinates.
+    @method createPolygonObjectCoordinates
+    @param {string} layerId Layer id.
+    @param {Object[]} coors Array coordinates.
+    @param {Object} properties Object properties.
+    @return {Ember.RSVP.Promise} Return Promise.
+  */
+  createPolygonObjectCoordinates(layerId, object, properties) {
+    const layers = this.get('mapLayer');
+    const layer = layers.findBy('id', layerId);
 
+    if (Ember.isNone(layer)) {
+      return new Ember.RSVP.Promise(() => {
+        throw new Error(`Layer '${layerId}' not found.`);
+      });
+    }
+
+    var leafletObject = layer._leafletObject;
+    if (Ember.isNone(leafletObject)) {
+      return new Ember.RSVP.Promise(() => {
+        throw new Error('Layer type not supported');
+      });
+    }
+
+    let newObj = L.geoJSON(object);
+    if (typeof (newObj.setStyle) === 'function') {
+      newObj.setStyle(Ember.get(layer, '_leafletObject.options.style'));
+    }
+
+    leafletObject.addLayer(newObj);
+
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      const saveSuccess = (data) => {
+        leafletObject.off('save:failed', saveSuccess);
+        resolve(data);
+      };
+
+      const saveFailed = (data) => {
+        leafletObject.off('save:success', saveSuccess);
+        reject(data);
+      };
+
+      leafletObject.once('save:success', saveSuccess);
+      leafletObject.once('save:failed', saveFailed);
+      leafletObject.save();
+    });
   },
+
+  /**
+  Create polygon object by rhumb.
+  @method createPolygonObjectRhumb
+  @param {string} layerId Layer id.
+  @param {Object} data Coordinate objects.
+  @param {Object} properties Object properties.
+  @return {Ember.RSVP.Promise} Return Promise.
+*/
+  createPolygonObjectRhumb(layerId, data, type, properties) {
+
+    data = {
+      startPoint: [-75.343, 39.984],
+      points: [{
+        number: 0,
+        rib: '0;1',
+        rhumb: 58,
+        distance: 1256
+      },
+      {
+        number: 0,
+        rib: '1;2',
+        rhumb: 58,
+        distance: 1256
+      }
+      ]
+    };
+
+    if (Ember.isNone(data.points) || data.points.length === 0) {
+      throw new Error('Not data.');
+    }
+
+    if (Ember.isNone(type)) {
+      throw new Error('Specify type.');
+    } else {
+      const polygonTypeSet = new Set([this.objectTypes.lineString, this.objectTypes.multiLineString, this.objectTypes.polygon, this.objectTypes.multiPolygon]);
+      if (polygonTypeSet.has(type) === false) {
+        throw new Error('Specified the wrong type.');
+      }
+    }
+    const points = data.points;
+    const numberCount = Math.max(...points.map(o => o.number), points[0].number);
+
+    let coors = [];
+    for (let i = 0; i <= numberCount; i++) {
+      // let item = data[i];
+
+      const vertexCount = points.filter(o => o.number === i).sort((a, b) => a.rib[0] - b.rib[0]);
+
+      for (let j = 0; j <= vertexCount.length; j++) {
+        let item = vertexCount[j];
+
+        //let cor  = item.rhumb * item.distance;
+        var pt = helpers.point(data.startPoint);
+
+        let bearing = null;
+       let hh = rhumbDestination(pt, item.distance, bearing);
+      }
+
+    }
+
+    let obj = {
+      type: 'Feature',
+      geometry: {
+        type: type,
+        //coordinates: [[[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]]
+        coordinates: coors
+      },
+      properties: properties
+    };
+
+    //return this.createPolygonObjectCoordinates(layerId, obj, properties);
+
+  }
+
+
+  // www(options) {
+  //   options = options || {};
+  //   const store = this.get('store');
+  //   let layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', options);
+  //   layer.set('map', this);
+  //   return layer.save();
+  // },
 
 
 });

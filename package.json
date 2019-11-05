@@ -81,6 +81,7 @@
   },
   "dependencies": {
     "@turf/combine": "^6.0.1",
+    "@turf/rhumb-destination": "^6.0.3",
     "ember-cli-babel": "^5.1.6",
     "ember-cli-htmlbars": "^1.0.3",
     "ember-flexberry": "2.1.0",
