@@ -727,9 +727,11 @@ export default Ember.Mixin.create({
             d++;
             inc = false;
           }
+
           d = countDimensions(arr[item], d);
         }
       }
+
       return d;
     };
 
@@ -761,6 +763,7 @@ export default Ember.Mixin.create({
             n = 0;
             n2 = 1;
           }
+
           point2 = item[n];
 
           num = Ember.isNone(number) ? i : number;
