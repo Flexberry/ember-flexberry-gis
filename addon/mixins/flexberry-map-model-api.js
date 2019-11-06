@@ -690,9 +690,12 @@ export default Ember.Mixin.create({
     }
 
     let newObj = L.geoJSON(object);
-    if (typeof (newObj.setStyle) === 'function') {
-      newObj.setStyle(Ember.get(layer, '_leafletObject.options.style'));
-    }
+    // if (typeof (newObj.setStyle) === 'function') {
+    //   newObj.setStyle(Ember.get(layer, '_leafletObject.options.style'));
+    // }
+
+    // let defaultProperties = Ember.get(layer, 'settingsAsObject.defaultProperties');// || {};
+    // newObj.feature = { properties: Ember.merge(defaultProperties, properties) };
 
     leafletObject.addLayer(newObj);
 
@@ -724,27 +727,14 @@ export default Ember.Mixin.create({
   createPolygonObjectRhumb(layerId, data, type, properties) {
 
     data = {
-      startPoint: [-75.343, 39.984],
-      points: [{
-        number: 0,
-        rib: '0;1',
-        rhumb: 58,
-        distance: 1256
-      },
-      {
-        number: 0,
-        rib: '1;2',
-        rhumb: 58,
-        distance: 1256
-      },
-      {
-        number: 0,
-        rib: '2;0',
-        rhumb: 58,
-        distance: 1256
-      }
+      "startPoint": [0, 0],
+      "points": [
+        { "number": 0, "rib": "0;1", "rhumb": "СВ;49.09008872055813", "distance": 8145960.361643748, "bearing": -139.09008872055813 },
+        { "number": 0, "rib": "1;2", "rhumb": "ЮВ;86.76787457562546", "distance": 8182.6375760837955, "bearing": 176.76787457562546 },
+        { "number": 0, "rib": "2;3", "rhumb": "СВ;79.04259420114585", "distance": 8476.868426796427, "bearing": -169.04259420114585 },
+        { "number": 0, "rib": "3;1", "rhumb": "ЮЗ;86.0047147391561", "distance": 16532.122718537685, "bearing": 3.9952852608439002 }
       ]
-    };
+    };//todo:пример
 
     if (Ember.isNone(data.points) || data.points.length === 0) {
       throw new Error('Not data.');
@@ -761,25 +751,54 @@ export default Ember.Mixin.create({
     const points = data.points;
     const numberCount = Math.max(...points.map(o => o.number), points[0].number);
 
-    let coors = [];
-    for (let i = 0; i <= numberCount; i++) {
-      // let item = data[i];
+    const getBearing = function (rhumb) {
+      let result;
+      const arr = rhumb.split(';');
+      const direct = arr[0];
+      const degree = arr[1];
 
-      const vertexCount = points.filter(o => o.number === i).sort((a, b) => a.rib[0] - b.rib[0]);
-
-      var pt0 = helpers.point(data.startPoint);
-      let startPoint;
-
-      for (let j = 0; j < vertexCount.length; j++) {
-        let item = vertexCount[j];
-
-        //let cor  = item.rhumb * item.distance;
-        // var pt = helpers.point(data.startPoint);
-
-        startPoint = Ember.isNone(startPoint) ? rhumbDestination.default(pt0, item.distance, item.rhumb) : rhumbDestination.default(startPoint, item.distance, item.rhumb);
-        coors.push(startPoint.geometry.coordinates);
+      switch (direct) { // todo: проверить
+        case 'СВ':
+          result = (parseFloat(degree) + 90) * -1;
+          break;
+        case 'ЮВ':
+          result = parseFloat(degree) + 90;
+          break;
+        case 'ЮЗ':
+          result = 90 - parseFloat(degree);
+          break;
+        case 'СЗ':
+          result = (90 - parseFloat(degree)) * -1;
+          break;
       }
 
+      return result;
+    };
+
+    let coors = [];
+
+    if (type === 'Polygon') { // [[[0,0], [0,0]]]
+      let startPoint;
+      let coordinates = [];
+      for (let i = 0; i <= numberCount; i++) {
+        const vertexCount = points.filter(o => o.number === i).sort((a, b) => a.rib.split(';')[0] - b.rib.split(';')[0]);
+
+        for (let j = 0; j < vertexCount.length; j++) {
+          const vertex = vertexCount[j];
+
+          const bearing = getBearing(vertex.rhumb);
+
+          if (Ember.isNone(startPoint)) {
+            startPoint = rhumbDestination.default(helpers.point(data.startPoint), vertex.distance / 1000, bearing, { units: 'kilometers' }); // Convert to meters
+          } else {
+            startPoint = rhumbDestination.default(startPoint, vertex.distance / 1000, bearing, { units: 'kilometers' });
+          }
+
+          coordinates.push(startPoint.geometry.coordinates);
+        }
+      }
+
+      coors.push(coordinates);
     }
 
     let obj = {
@@ -792,18 +811,8 @@ export default Ember.Mixin.create({
       properties: properties
     };
 
-    //return this.createPolygonObjectCoordinates(layerId, obj, properties);
-
+    return this.createPolygonObjectCoordinates(layerId, obj, properties);
   }
-
-
-  // www(options) {
-  //   options = options || {};
-  //   const store = this.get('store');
-  //   let layer = store.createRecord('new-platform-flexberry-g-i-s-map-layer', options);
-  //   layer.set('map', this);
-  //   return layer.save();
-  // },
 
 
 });
