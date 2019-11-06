@@ -736,6 +736,12 @@ export default Ember.Mixin.create({
         rib: '1;2',
         rhumb: 58,
         distance: 1256
+      },
+      {
+        number: 0,
+        rib: '2;0',
+        rhumb: 58,
+        distance: 1256
       }
       ]
     };
@@ -761,14 +767,17 @@ export default Ember.Mixin.create({
 
       const vertexCount = points.filter(o => o.number === i).sort((a, b) => a.rib[0] - b.rib[0]);
 
-      for (let j = 0; j <= vertexCount.length; j++) {
+      var pt0 = helpers.point(data.startPoint);
+      let startPoint;
+
+      for (let j = 0; j < vertexCount.length; j++) {
         let item = vertexCount[j];
 
         //let cor  = item.rhumb * item.distance;
-        var pt = helpers.point(data.startPoint);
+        // var pt = helpers.point(data.startPoint);
 
-        let bearing = null;
-       let hh = rhumbDestination(pt, item.distance, bearing);
+        startPoint = Ember.isNone(startPoint) ? rhumbDestination.default(pt0, item.distance, item.rhumb) : rhumbDestination.default(startPoint, item.distance, item.rhumb);
+        coors.push(startPoint.geometry.coordinates);
       }
 
     }
