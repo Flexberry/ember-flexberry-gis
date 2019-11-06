@@ -692,16 +692,16 @@ export default Ember.Mixin.create({
       // Calculates rhumb.
       if (bearing < -90 && bearing > -180) {
         // СВ
-        rhumb = 'NE;' + (Math.abs(bearing) - 90);
+        rhumb = 'СВ;' + (Math.abs(bearing) - 90);
       } else if (bearing <= 180 && bearing > 90) {
         // ЮВ
-        rhumb = 'SE;' + (bearing - 90);
+        rhumb = 'ЮВ;' + (bearing - 90);
       } else if (bearing <= 90 && bearing > 0) {
         // ЮЗ
-        rhumb = 'SW;' + (90 - bearing);
+        rhumb = 'ЮЗ;' + (90 - bearing);
       } if (bearing <= 0 && bearing >= -90) {
         // СЗ
-        rhumb = 'NW;' + Math.abs(-90 - bearing);
+        rhumb = 'СЗ;' + Math.abs(-90 - bearing);
       }
 
       return {
@@ -750,7 +750,7 @@ export default Ember.Mixin.create({
           let point2;
 
           if (j === 0) {
-            point1 = L.latLng(0, 0);
+            point1 = L.latLng(0, 0);//todo: Какую брать точку отчёта?
             point2 = item[0];
             num = Ember.isNone(number) ? i : number;
             result.push(rowPush(num, n1++, n2++, point1, point2));
