@@ -242,7 +242,7 @@
         // var data = [[10, 10], [10, 10]];
         // var properties = { numer: 'w458' };
 
-        var polygon = {
+        var obj = {
           type: 'Feature',
           geometry: {
             type: 'Polygon',
@@ -253,7 +253,7 @@
           }
         };
 
-        frame.contentWindow.mapApi.mapModel.createPolygonObjectCoordinates('56f4b518-e375-4b24-be2f-88d48110c0a3', polygon)
+        frame.contentWindow.mapApi.mapModel.createPolygonObjectCoordinates('f7670a1f-1acb-4571-923c-1ce3bc88e11e', obj)//56f4b518-e375-4b24-be2f-88d48110c0a3
           .then(() => { console.log('object added sucessfully') }, reject => { console.log(reject) });
       };
       createPolygonObjectCoordinatesButton.addEventListener('click', createPolygonObjectCoordinates);
@@ -262,6 +262,8 @@
       var createPolygonObjectRhumbButton = document.getElementById('createPolygonObjectRhumb');
       var createPolygonObjectRhumb = function () {
         var data = {
+          type:'LineString',
+          properties : null,
           startPoint: [0, 0],
           points: [{
             number: 0,
@@ -280,7 +282,8 @@
 
         var properties = { numer: 'w458' };
 
-        frame.contentWindow.mapApi.mapModel.createPolygonObjectRhumb('56f4b518-e375-4b24-be2f-88d48110c0a3', data, 'Polygon', properties)
+        //frame.contentWindow.mapApi.mapModel.createPolygonObjectRhumb('f7670a1f-1acb-4571-923c-1ce3bc88e11e', data, 'Polygon', properties) //56f4b518-e375-4b24-be2f-88d48110c0a3
+        frame.contentWindow.mapApi.mapModel.createPolygonObjectRhumb('b60df574-6eef-45fb-a64f-011fa351c88d', data)
           .then(() => { console.log('object added sucessfully') }, reject => { console.log(reject) });
       };
       createPolygonObjectRhumbButton.addEventListener('click', createPolygonObjectRhumb);
