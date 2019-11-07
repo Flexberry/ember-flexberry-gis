@@ -677,7 +677,7 @@ export default Ember.Mixin.create({
 
     let result = [];
 
-    var rowPush = function (number, vertexNum1, vertexNum2, point1, point2) {
+    var rowPush = function (vertexNum1, vertexNum2, point1, point2) {
       const pointFrom = helper.default.point([point2.lat, point2.lng]);
       const pointTo = helper.default.point([point1.lat, point1.lng]);
 
@@ -705,82 +705,47 @@ export default Ember.Mixin.create({
       }
 
       return {
-        number: number,
-        rib: `${vertexNum1};${vertexNum2}`,
+        rib: `${vertexNum1 + 1};${vertexNum2 + 1}`,
         rhumb: rhumb,
         distance: distance
       };
     };
 
-    // Find out the depth of the array.
-    const countDimensions = function (arr, dim) {
-      arr = arr || this;
-      if (window.Array !== arr.constructor) {
-        return 0;
-      }
+    let startPoint = null;
+    for (let i = 0; i < cors.length; i++) {
+      for (let j = 0; j < cors[i].length; j++) {
+        let n;
+        let point1;
+        let point2;
+        let item = cors[i][j];
 
-      let d = dim || 1;
-      let inc = true;
-      for (let item in arr) {
-        if (window.Array === arr[item].constructor) {
-          if (inc === true) {
-            d++;
-            inc = false;
+        // Polygon.
+        if (!Ember.isNone(item.length)) {
+          for (let k = 0; k < item.length; k++) {
+            startPoint = k === 0 ? item[k] : startPoint;
+            point1 = item[k];
+            n = !Ember.isNone(item[k + 1]) ? n = k + 1 : n = 0;
+            point2 = item[n];
+
+            result.push(rowPush(k, n, point1, point2));
           }
 
-          d = countDimensions(arr[item], d);
+          // LineString.
+        } else {
+          startPoint = j === 0 ? item : startPoint;
+          point1 = item;
+          n = !Ember.isNone(cors[i][j + 1]) ? n = j + 1 : n = 0;
+          point2 = cors[i][n];
+
+          result.push(rowPush(j, n, point1, point2));
         }
-      }
-
-      return d;
-    };
-
-    let depthArray = countDimensions(cors);
-
-    const getList = function (result, cors, number) {
-      for (let i = 0; i < cors.length; i++) {
-        let num;
-        let item = cors[i];
-        let n1 = 0;
-        let n2 = 1;
-
-        for (let j = 0; j < cors[i].length; j++) {
-          let n;
-          let point1;
-          let point2;
-
-          if (j === 0) {
-            point1 = L.latLng(0, 0);//todo: Какую брать точку отчёта?
-            point2 = item[0];
-            num = Ember.isNone(number) ? i : number;
-            result.push(rowPush(num, n1++, n2++, point1, point2));
-          }
-
-          point1 = item[j];
-          if (!Ember.isNone(item[j + 1])) {
-            n = j + 1;
-          } else {
-            n = 0;
-            n2 = 1;
-          }
-
-          point2 = item[n];
-
-          num = Ember.isNone(number) ? i : number;
-          result.push(rowPush(num, n1++, n2++, point1, point2));
-        }
-      }
-    };
-
-    if (depthArray === 2) {
-      getList(result, cors);
-    } else if (depthArray === 3 || depthArray === 4) {
-      for (var i = 0; i < cors.length; i++) {
-        getList(result, cors[i], i);
       }
     }
 
-    return result;
+    return {
+      startPoint: startPoint,
+      coordinates: result
+    };
   }
 
 });
