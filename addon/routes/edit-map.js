@@ -152,7 +152,6 @@ export default EditFormRoute.extend({
     });
 
     this.get('mapApi').addToApi('mapModel', model);
-
     this.transitionTo({
       queryParams: currentParams
     });
