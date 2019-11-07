@@ -235,18 +235,25 @@
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
 
-
-
       var createPolygonObjectCoordinatesButton = document.getElementById('createPolygonObjectCoordinates');
       var createPolygonObjectCoordinates = function () {
-        // var data = [[10, 10], [10, 10]];
-        // var properties = { numer: 'w458' };
+
+        // var obj = {
+        //   type: 'Feature',
+        //   geometry: {
+        //     type: 'Polygon',
+        //     coordinates: [[[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]]
+        //   },
+        //   properties: {
+        //     name: 'test_polygon'
+        //   }
+        // };
 
         var obj = {
           type: 'Feature',
           geometry: {
-            type: 'Polygon',
-            coordinates: [[[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]]
+            type: 'LineString',
+            coordinates: [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]
           },
           properties: {
             name: 'test_polygon'
@@ -287,7 +294,6 @@
           .then(() => { console.log('object added sucessfully') }, reject => { console.log(reject) });
       };
       createPolygonObjectRhumbButton.addEventListener('click', createPolygonObjectRhumb);
-
 
     });
   </script>

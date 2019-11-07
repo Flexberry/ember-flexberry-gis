@@ -740,8 +740,8 @@ export default Ember.Mixin.create({
   createPolygonObjectRhumb(layerId, data) {
 
     data = {// todo:remove
-      type:'LineString',
-      properties : null,
+      type: 'LineString',
+      properties: null,
       "startPoint": [0, 0],
       "points": [
         //{ "number": 0, "rib": "0;1", "rhumb": "СВ;49.09008872055813", "distance": 8145960.361643748, "bearing": -139.09008872055813 },
@@ -750,6 +750,20 @@ export default Ember.Mixin.create({
         { "number": 0, "rib": "3;1", "rhumb": "ЮЗ;86.0047147391561", "distance": 16532.122718537685, "bearing": 3.9952852608439002 }
       ]
     };
+
+    // data = {// todo:remove
+    //   type: 'LineString',
+    //   properties: null,
+    //   "startPoint": [0, 0],
+    //   "points": [
+    //     //{ "number": 0, "rib": "0;1", "rhumb": "СВ;49.09008872055813", "distance": 8145960.361643748, "bearing": -139.09008872055813 },
+    //     { "number": 0, "rib": "1;2", "rhumb": `ЮВ;86°32'16"`, "distance": 8182.6375760837955, "bearing": 176.76787457562546 },
+    //     { "number": 0, "rib": "2;3", "rhumb": `СВ;79°33'21,42"`, "distance": 8476.868426796427, "bearing": -169.04259420114585 },
+    //     { "number": 0, "rib": "3;4", "rhumb": `ЮЗ;56°24'15,4"`, "distance": 16532.122718537685, "bearing": 3.9952852608439002 },
+    //     { "number": 0, "rib": "4;5", "rhumb": `ЮЗ;86°32'`, "distance": 16532.122718537685, "bearing": 3.9952852608439002 },
+    //     { "number": 0, "rib": "5;1", "rhumb": `ЮЗ;86°`, "distance": 16532.122718537685, "bearing": 3.9952852608439002 }
+    //   ]
+    // };
 
     if (Ember.isNone(data.points) || data.points.length === 0) {
       throw new Error('Not data.');
@@ -761,20 +775,60 @@ export default Ember.Mixin.create({
     } else {
       // const polygonTypeSet = new Set([this.objectTypes.lineString, this.objectTypes.multiLineString, this.objectTypes.polygon, this.objectTypes.multiPolygon]);
       const polygonTypeSet = new Set([this.objectTypes.lineString, this.objectTypes.polygon]);
-      if (polygonTypeSet.has(type) === false) {
+      if (!polygonTypeSet.has(type)) {
         throw new Error('Specified the wrong type.');
       }
     }
     const points = data.points;
     const numberCount = Math.max(...points.map(o => o.number), points[0].number);
 
+    const degreeToRadian = function (degree) {
+      let deg;
+      let min = 0;
+      let sec = 0;
+
+      const regex = /^([0-8]?[0-9]|90)°([0-5]?[0-9]')?([0-5]?[0-9](,[0-9]*)?")?$/gm;
+      let m;
+
+      while ((m = regex.exec(degree)) !== null) {
+
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === regex.lastIndex) {
+          regex.lastIndex++;
+        }
+
+        // The result can be accessed through the `m`-variable.
+        m.forEach((match, groupIndex) => {
+          console.log(`Found match, group ${groupIndex}: ${match}`);
+
+          if (!Ember.isNone(match)) {
+            switch (groupIndex) {
+              case 1:
+                deg = parseInt(match);
+                break;
+              case 2:
+                min = parseInt(match.replace("'", ''));
+                break;
+              case 3:
+                sec = parseFloat(match.replace(`"`, "").replace(',', '.'));
+                break;
+            }
+          }
+        });
+      }
+
+      return deg + min / 60 + sec / 3600;
+    };
+
     const getBearing = function (rhumb) {
       let result;
       const arr = rhumb.split(';');
       const direct = arr[0];
-      const degree = arr[1];
 
-      switch (direct) { // todo: проверить
+      // Conver radian.
+      let degree = arr[1].indexOf('°') > 0 ? degreeToRadian(arr[1]) : arr[1];
+
+      switch (direct) {
         case 'СВ':
           result = (parseFloat(degree) + 90) * -1;
           break;
