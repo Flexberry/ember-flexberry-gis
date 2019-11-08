@@ -55,6 +55,9 @@
     <div>
       <button id="getLayerObjectOptions">Get Object Attributes</button>
     </div>
+    <div>
+      <button id="editLayerObject">Edit Layer Objects</button>
+    </div>
   </div>
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
@@ -230,6 +233,23 @@
         console.log(distance + ' (m)');
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
+
+      var editLayerObjectButton = document.getElementById('editLayerObject');
+      var editLayerObject = function () {
+        let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e";
+        let newGeometry = {
+          coordinates: [[
+            [58.0127912,56.2439621],
+            [58.0222549,56.0901882],
+            [58.009608, 56.395335],
+            [57.9096626,56.1933563],
+            [58.0127912,56.2439621]
+          ]],
+          type: "Polygon"
+        }
+        var distance = frame.contentWindow.mapApi.mapModel.editLayerObject(layerId, 'Малые реки', newGeometry).then(resolve=>console.log("geomeytry changed successully"), reject=> console.log(reject));
+      };
+      editLayerObjectButton.addEventListener('click', editLayerObject);
 
     });
   </script>
