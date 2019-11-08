@@ -166,18 +166,17 @@ export default Ember.Component.extend({
       let wfsProperties = Ember.$.extend({}, this.get('layerModel.settingsAsObject'), { 'showExisting': false });
 
       let wfs = this.get('layerModel');
-      let layerId = wfs.id;
       Ember.get(wfs, '_leafletObject').addLayer(layer);
 
       const saveObjectFunc = this.get('mapApi').getFromApi('saveObject');
       if (typeof saveObjectFunc === 'function') {
         saveObjectFunc(this, wfs.id);
       } else {
-        wfs._leafletObject.on('save:success', (obj) => {
+        Ember.get(wfs, '_leafletObject').on('save:success', (obj) => {
           this._clearCurrentGeometry();
         });
 
-        wfs._leafletObject.save();
+        Ember.get(wfs, '_leafletObject').save();
       }
     }
   },
@@ -186,7 +185,7 @@ export default Ember.Component.extend({
     let layer = this.get('layerModel');
     return new Ember.RSVP.Promise((resolve, reject) => {
       const saveSuccess = (data) => {
-        layer._leafletObject.off('save:failed', saveSuccess);
+        Ember.get(layer, '_leafletObject').off('save:failed', saveSuccess);
         this._clearCurrentGeometry();
         let layers = Object.values(data.target._layers);
         let feature = layers[layers.length - 1].feature;
@@ -194,13 +193,13 @@ export default Ember.Component.extend({
       };
 
       const saveFailed = (data) => {
-        layer._leafletObject.off('save:success', saveSuccess);
+        Ember.get(layer, '_leafletObject').off('save:success', saveSuccess);
         reject(data);
       };
 
-      layer._leafletObject.once('save:success', saveSuccess);
-      layer._leafletObject.once('save:failed', saveFailed);
-      layer._leafletObject.save();
+      Ember.get(layer, '_leafletObject').once('save:success', saveSuccess);
+      Ember.get(layer, '_leafletObject').once('save:failed', saveFailed);
+      Ember.get(layer, '_leafletObject').save();
     });
   },
 
