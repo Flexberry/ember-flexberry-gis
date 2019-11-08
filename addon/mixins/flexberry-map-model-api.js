@@ -108,52 +108,39 @@ export default Ember.Mixin.create({
     @param {Object[]} featureIds Array of id shapes.
   */
   deleteLayerObjects(layerId, featureIds) {
-    const layers = this.get('mapLayer');
-    const layer = layers.findBy('id', layerId);
-
-    if (Ember.isNone(layer)) {
-      return new Ember.RSVP.Promise(() => {
-        throw new Error(`Layer '${layerId}' not found.`);
-      });
-    }
-
-    if (Ember.isNone(layer._leafletObject)) {
-      return new Ember.RSVP.Promise(() => {
-        throw new Error('Layer type not supported');
-      });
-    }
-
-    let ids = [];
-    layer._leafletObject.eachLayer(function (shape) {
-      const id = this._getLayerFeatureId(layer, shape);
-
-      if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
-        ids.push(id);
-        layer._leafletObject.removeLayer(shape);
-      }
-    }.bind(this));
-
-    const deleteLayerFromAttrPanelFunc = this.get('mapApi').getFromApi('_deleteLayerFromAttrPanel');
-    ids.forEach((id) => {
-      if (typeof deleteLayerFromAttrPanelFunc === 'function') {
-        deleteLayerFromAttrPanelFunc(id, layer);
-      }
-    });
-
     return new Ember.RSVP.Promise((resolve, reject) => {
-      const saveSuccess = (data) => {
-        layer._leafletObject.off('save:failed', saveSuccess);
-        resolve(data);
-      };
+      const layers = this.get('mapLayer');
+      const layer = layers.findBy('id', layerId);
 
-      const saveFailed = (data) => {
-        layer._leafletObject.off('save:success', saveSuccess);
-        reject(data);
-      };
+      if (Ember.isNone(layer)) {
+        reject(`Layer '${layerId}' not found.`);
+      }
 
-      layer._leafletObject.once('save:success', saveSuccess);
-      layer._leafletObject.once('save:failed', saveFailed);
-      layer._leafletObject.save();
+      if (Ember.isNone(layer._leafletObject)) {
+          reject('Layer type not supported');
+      }
+
+      let ids = [];
+      layer._leafletObject.eachLayer(function (shape) {
+        const id = this._getLayerFeatureId(layer, shape);
+
+        if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
+          ids.push(id);
+          layer._leafletObject.removeLayer(shape);
+        } else {
+          reject('id not found')
+        }
+      }.bind(this));
+
+      const deleteLayerFromAttrPanelFunc = this.get('mapApi').getFromApi('_deleteLayerFromAttrPanel');
+      ids.forEach((id) => {
+        if (typeof deleteLayerFromAttrPanelFunc === 'function') {
+          deleteLayerFromAttrPanelFunc(id, layer);
+        } else {
+          reject('_deleteLayerFromAttrPanel function not defined');
+        }
+      });
+      resolve('layer removed successfully');
     });
   },
 
@@ -527,42 +514,7 @@ export default Ember.Mixin.create({
 
           newObj.options = objectToSearch.options;
           Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-          let promiseSaveLayerTo = new Ember.RSVP.Promise((resolve, reject) => {
-            const saveSuccess = (data) => {
-              layerTo._leafletObject.off('save:failed', saveSuccess);
-              resolve(data);
-            };
-
-            const saveFailed = (data) => {
-              layerTo._leafletObject.off('save:success', saveSuccess);
-              reject(data);
-            };
-
-            layerTo._leafletObject.once('save:success', saveSuccess);
-            layerTo._leafletObject.once('save:failed', saveFailed);
-            layerTo._leafletObject.save();
-          });
-          let promiseSaveLayerFrom = new Ember.RSVP.Promise((resolve, reject) => {
-            const saveSuccess2 = (data) => {
-              layerFrom._leafletObject.off('save:failed', saveSuccess2);
-              resolve(data);
-            };
-
-            const saveFailed2 = (data) => {
-              layerFrom._leafletObject.off('save:success', saveSuccess2);
-              reject(data);
-            };
-
-            layerFrom._leafletObject.once('save:success', saveSuccess2);
-            layerFrom._leafletObject.once('save:failed', saveFailed2);
-            layerFrom._leafletObject.save();
-          });
-          Ember.RSVP.all([promiseSaveLayerTo, promiseSaveLayerFrom])
-            .then(() => {
-              resolve('object moved successfully');
-            }, () => {
-              reject('error while saving layers');
-            });
+          resolve('object moved successfully');
         } else {
           reject('no object with such id');
         }
@@ -603,20 +555,7 @@ export default Ember.Mixin.create({
 
           newObj.options = objectToSearch.options;
           Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-
-          const saveSuccess = (data) => {
-            layerTo._leafletObject.off('save:failed', saveSuccess);
-            resolve(data);
-          };
-
-          const saveFailed = (data) => {
-            layerTo._leafletObject.off('save:success', saveSuccess);
-            reject(data);
-          };
-
-          layerTo._leafletObject.once('save:success', saveSuccess);
-          layerTo._leafletObject.once('save:failed', saveFailed);
-          layerTo._leafletObject.save();
+          resolve('object copied successfully');
         } else {
           reject('no object with such id');
         }
