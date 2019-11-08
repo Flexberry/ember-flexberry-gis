@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-create-object-geometry';
-import WfsLayerComponent from 'ember-flexberry-gis/components/layers/wfs-layer';
 import crsFactoryESPG3857 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-3857';
 import {
   translationMacro as t
@@ -108,8 +107,6 @@ export default Ember.Component.extend({
     return editTools;
   }),
 
-  _wfsLayer: null,
-
   createItem: null,
 
   layerModel: Ember.computed('createItem', function () {
@@ -167,47 +164,49 @@ export default Ember.Component.extend({
       layer.feature = { properties: Ember.merge(defaultProperties, properties) };
 
       let wfsProperties = Ember.$.extend({}, this.get('layerModel.settingsAsObject'), { 'showExisting': false });
-      let layerId = this.get('layerModel.id');
 
-      this.get('_wfsLayer').createVectorLayer(wfsProperties).then((wfs) => {
-        wfs.addLayer(layer);
-        wfs.on('save:success', () => {
+      let wfs = this.get('layerModel');
+      let layerId = wfs.id;
+      Ember.get(wfs, '_leafletObject').addLayer(layer);
+
+      const saveObjectFunc = this.get('mapApi').getFromApi('saveObject');
+      if (typeof saveObjectFunc === 'function') {
+        saveObjectFunc(this, wfs.id);
+      } else {
+        wfs._leafletObject.on('save:success', (obj) => {
           this._clearCurrentGeometry();
-          const saveObjectFunc = this.get('mapApi').getFromApi('saveObject');
-          if (typeof saveObjectFunc === 'function') {
-            saveObjectFunc(layerId, layer);
-          }
         });
 
-        wfs.save();
-      });
+        wfs._leafletObject.save();
+      }
     }
+  },
+
+  saveObject() {
+    let layer = this.get('layerModel');
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      const saveSuccess = (data) => {
+        layer._leafletObject.off('save:failed', saveSuccess);
+        this._clearCurrentGeometry();
+        let layers = Object.values(data.target._layers);
+        let feature = layers[layers.length-1].feature;
+        resolve(feature);
+      };
+
+      const saveFailed = (data) => {
+        layer._leafletObject.off('save:success', saveSuccess);
+        reject(data);
+      };
+
+      layer._leafletObject.once('save:success', saveSuccess);
+      layer._leafletObject.once('save:failed', saveFailed);
+      layer._leafletObject.save();
+    });
   },
 
   init() {
     this._super(...arguments);
     this.set('crs', crsFactoryESPG3857.create());
-
-    let innerWfsLayerProperties = {
-      leafletMap: this.get('leafletMap'),
-      visibility: false,
-      dynamicProperties: Ember.$.extend({}, this.get('layerModel.settingsAsObject'), { 'showExisting': false })
-    };
-
-    // Set creating component's owner to avoid possible lookup exceptions.
-    let owner = Ember.getOwner(this);
-    let ownerKey = null;
-    Ember.A(Object.keys(this) || []).forEach((key) => {
-      if (this[key] === owner) {
-        ownerKey = key;
-        return false;
-      }
-    });
-    if (!Ember.isBlank(ownerKey)) {
-      innerWfsLayerProperties[ownerKey] = owner;
-    }
-
-    this.set('_wfsLayer', WfsLayerComponent.create(innerWfsLayerProperties));
   },
 
   _clearCurrentGeometry() {
