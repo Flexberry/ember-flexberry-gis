@@ -189,7 +189,7 @@ export default Ember.Component.extend({
         layer._leafletObject.off('save:failed', saveSuccess);
         this._clearCurrentGeometry();
         let layers = Object.values(data.target._layers);
-        let feature = layers[layers.length-1].feature;
+        let feature = layers[layers.length - 1].feature;
         resolve(feature);
       };
 
