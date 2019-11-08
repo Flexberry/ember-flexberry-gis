@@ -688,8 +688,6 @@ export default Ember.Mixin.create({
       });
     }
 
-    //  L.geoJSON(object).addTo(leafletObject);
-
     let polyline = new Set([this.objectTypes.lineString, this.objectTypes.multiLineString]);
     let polygon = new Set([this.objectTypes.polygon, this.objectTypes.multiPolygon]);
 
@@ -697,21 +695,11 @@ export default Ember.Mixin.create({
       L.polyline(object).addTo(leafletObject);
     } else if (polygon.has(object.geometry.type) === true) {
       L.polygon(object).addTo(leafletObject);
-    }
-    else {
+    } else {
       return new Ember.RSVP.Promise(() => {
         throw new Error('Object type not supported');
       });
     }
-
-    // if (typeof (newObj.setStyle) === 'function') {
-    //   newObj.setStyle(Ember.get(layer, '_leafletObject.options.style'));
-    // }
-
-    // let defaultProperties = Ember.get(layer, 'settingsAsObject.defaultProperties');// || {};
-    // newObj.feature = { properties: Ember.merge(defaultProperties, properties) };
-
-    //leafletObject.addLayer(newObj);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       const saveSuccess = (data) => {
@@ -742,12 +730,11 @@ export default Ember.Mixin.create({
     data = {// todo:remove
       type: 'LineString',
       properties: null,
-      "startPoint": [0, 0],
-      "points": [
-        //{ "number": 0, "rib": "0;1", "rhumb": "СВ;49.09008872055813", "distance": 8145960.361643748, "bearing": -139.09008872055813 },
-        { "number": 0, "rib": "1;2", "rhumb": "ЮВ;86.76787457562546", "distance": 8182.6375760837955, "bearing": 176.76787457562546 },
-        { "number": 0, "rib": "2;3", "rhumb": "СВ;79.04259420114585", "distance": 8476.868426796427, "bearing": -169.04259420114585 },
-        { "number": 0, "rib": "3;1", "rhumb": "ЮЗ;86.0047147391561", "distance": 16532.122718537685, "bearing": 3.9952852608439002 }
+      startPoint: [85, 79],
+      points: [
+        { number: 0, rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955, bearing: 176.76787457562546 },
+        { number: 0, rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427, bearing: -169.04259420114585 },
+        { number: 0, rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685, bearing: 3.9952852608439002 }
       ]
     };
 
@@ -779,6 +766,7 @@ export default Ember.Mixin.create({
         throw new Error('Specified the wrong type.');
       }
     }
+
     const points = data.points;
     const numberCount = Math.max(...points.map(o => o.number), points[0].number);
 
@@ -810,7 +798,7 @@ export default Ember.Mixin.create({
                 min = parseInt(match.replace("'", ''));
                 break;
               case 3:
-                sec = parseFloat(match.replace(`"`, "").replace(',', '.'));
+                sec = parseFloat(match.replace(`"`, '').replace(',', '.'));
                 break;
             }
           }
@@ -825,7 +813,7 @@ export default Ember.Mixin.create({
       const arr = rhumb.split(';');
       const direct = arr[0];
 
-      // Conver radian.
+      // Convert to radians
       let degree = arr[1].indexOf('°') > 0 ? degreeToRadian(arr[1]) : arr[1];
 
       switch (direct) {
@@ -877,7 +865,6 @@ export default Ember.Mixin.create({
 
     if (type === this.objectTypes.lineString) { // [[0,0], [0,0]]
       let startPoint;
-      // let coordinates = [];
       for (let i = 0; i <= numberCount; i++) {
         const vertexCount = points.filter(o => o.number === i).sort((a, b) => a.rib.split(';')[0] - b.rib.split(';')[0]);
 
@@ -892,19 +879,15 @@ export default Ember.Mixin.create({
             startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
           }
 
-          //coordinates.push(startPoint.geometry.coordinates);
           coors.push(startPoint.geometry.coordinates);
         }
       }
-
-      // coors.push(coordinates);
     }
 
     let obj = {
       type: 'Feature',
       geometry: {
         type: type,
-        //coordinates: [[[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]]
         coordinates: coors
       },
       properties: data.properties
@@ -912,6 +895,5 @@ export default Ember.Mixin.create({
 
     return this.createPolygonObjectCoordinates(layerId, obj);
   }
-
 
 });
