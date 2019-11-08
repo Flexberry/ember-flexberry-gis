@@ -117,7 +117,7 @@ export default Ember.Mixin.create({
       }
 
       if (Ember.isNone(layer._leafletObject)) {
-          reject('Layer type not supported');
+        reject('Layer type not supported');
       }
 
       let ids = [];
@@ -128,7 +128,7 @@ export default Ember.Mixin.create({
           ids.push(id);
           layer._leafletObject.removeLayer(shape);
         } else {
-          reject('id not found')
+          reject('id not found');
         }
       }.bind(this));
 
