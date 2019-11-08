@@ -671,11 +671,7 @@ export default Ember.Mixin.create({
           return this._getLayerFeatureId(layer, feature) === objectId;
         });
         if (object) {
-          object.remove();
-          Ember.set(object, 'feature.geometry', polygon);
-          let newObj = L.geoJSON(object.feature);
-          newObj.setStyle(Ember.get(object, 'options'));
-          layer._leafletObject.addLayer(newObj);
+          object.setLatLngs(Ember.get(polygon, 'coordinates'));
           resolve('object polygon changed successfully');
         } else {
           reject('no object with such id');
