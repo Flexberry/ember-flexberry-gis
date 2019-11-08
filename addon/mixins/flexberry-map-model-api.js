@@ -657,7 +657,7 @@ export default Ember.Mixin.create({
     @param {String} polygon  new object polygon.
   */
   editLayerObject(layerId, objectId, polygon) {
-    return new Ember.RSVP.Promise((resolve,reject) => {
+    return new Ember.RSVP.Promise((resolve, reject) => {
       if (polygon) {
         const allLayers = this.get('mapLayer');
         let layers = Ember.A(allLayers);
@@ -676,6 +676,7 @@ export default Ember.Mixin.create({
           let newObj = L.geoJSON(object.feature);
           newObj.setStyle(Ember.get(object, 'options'));
           layer._leafletObject.addLayer(newObj);
+          resolve('object polygon changed successfully');
         } else {
           reject('no object with such id');
         }

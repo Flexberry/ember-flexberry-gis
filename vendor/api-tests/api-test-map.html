@@ -236,7 +236,6 @@
 
       var editLayerObjectButton = document.getElementById('editLayerObject');
       var editLayerObject = function () {
-        let layerId = "f7670a1f-1acb-4571-923c-1ce3bc88e11e";
         let newGeometry = {
           coordinates: [[
             [58.0127912,56.2439621],
@@ -247,7 +246,7 @@
           ]],
           type: "Polygon"
         }
-        var distance = frame.contentWindow.mapApi.mapModel.editLayerObject(layerId, 'Малые реки', newGeometry).then(resolve=>console.log("geomeytry changed successully"), reject=> console.log(reject));
+        frame.contentWindow.mapApi.mapModel.editLayerObject("f7670a1f-1acb-4571-923c-1ce3bc88e11e", 'Малые реки', newGeometry).then(resolve=>console.log("geomeytry changed successully"), reject=> console.log(reject));
       };
       editLayerObjectButton.addEventListener('click', editLayerObject);
 
