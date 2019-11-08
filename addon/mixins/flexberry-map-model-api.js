@@ -663,7 +663,7 @@ export default Ember.Mixin.create({
         let layers = Ember.A(allLayers);
         const layer = layers.findBy('id', layerId);
         if (Ember.isNone(layer)) {
-          reject("no layer with such id");
+          reject('no layer with such id');
         }
 
         let features = Ember.get(layer, '_leafletObject._layers') || {};
@@ -676,26 +676,12 @@ export default Ember.Mixin.create({
           let newObj = L.geoJSON(object.feature);
           newObj.setStyle(Ember.get(object, 'options'));
           layer._leafletObject.addLayer(newObj);
-
-          const saveSuccess = (data) => {
-            layer._leafletObject.off('save:failed', saveSuccess);
-            resolve(data);
-          };
-
-          const saveFailed = (data) => {
-            layer._leafletObject.off('save:success', saveSuccess);
-            reject(data);
-          };
-
-          layer._leafletObject.once('save:success', saveSuccess);
-          layer._leafletObject.once('save:failed', saveFailed);
-          layer._leafletObject.save();
         } else {
-          reject("no object with such id");
+          reject('no object with such id');
         }
       } else {
-        reject("new object settings not passed");
+        reject('new object settings not passed');
       }
-    })
+    });
   }
 });
