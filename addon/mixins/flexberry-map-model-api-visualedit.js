@@ -1,18 +1,23 @@
 import Ember from 'ember';
 
 export default Ember.Mixin.create({
-  startChangeLayerObject(layerId, featureId) {
-    let layerModel = this._getLayerModel(layerId);
-    let layers = layerModel.get('_leafletObject._layers');
-    let featureLayer = Object.values(layers).find(feature => {
-      const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
-      return layerFeatureId === featureId;
-    });
+  changeLayerObjectProperties(layerId, featureId, properties) {
+    let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
+    Object.assign(featureLayer.feature.properties, properties);
+    leafletObject.editLayer(featureLayer);
+  },
 
+  startChangeLayerObject(layerId, featureId) {
+    let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     leafletMap.fitBounds(featureLayer.getBounds());
     this._getEditTools();
     featureLayer.enableEdit(leafletMap);
+    leafletMap.on('editable:editing', (e) => {
+      if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayer))) {
+        leafletObject.editLayer(e.layer);
+      }
+    });
   },
 
   /**
@@ -23,14 +28,19 @@ export default Ember.Mixin.create({
    * @returns noting
    */
   startNewObject(layerId, properties) {
-    let layerModel = this._getLayerModel(layerId);
-    let leafletObject = layerModel.get('_leafletObject');
+    let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
     let editTools = this._getEditTools();
-    editTools.on('editable:drawing:end', this._finishDraw, this);
+
+    let finishDraw = () => {
+      editTools.off('editable:drawing:end', finishDraw, this);
+      editTools.stopDrawing();
+    }
+
+    editTools.on('editable:drawing:end', finishDraw, this);
 
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     leafletMap.fire('flexberry-map:switchToDefaultMapTool');
-    if(editTools.drawing()) {
+    if (editTools.drawing()) {
       editTools.stopDrawing();
     }
 
@@ -52,9 +62,6 @@ export default Ember.Mixin.create({
     let defaultProperties = layerModel.get('settingsAsObject.defaultProperties') || {};
     newLayer.feature = { properties: Ember.merge(defaultProperties, properties) };
     leafletObject.addLayer(newLayer);
-  },
-
-  saveLayers(layerIds) {
   },
 
   _getEditTools() {
@@ -84,9 +91,18 @@ export default Ember.Mixin.create({
     return layer;
   },
 
-  _finishDraw() {
-    let editTools = this._getEditTools();
-    editTools.off('editable:drawing:end', this._finishDraw, this);
-    editTools.stopDrawing();
+  _getModelLayerFeature(layerId, featureId) {
+    let layerModel = this._getLayerModel(layerId);
+    let leafletObject = layerModel.get('_leafletObject');
+    let layers = leafletObject._layers;
+    let featureLayer;
+    if (featureId !== undefined) {
+      featureLayer = Object.values(layers).find(feature => {
+        const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
+        return layerFeatureId === featureId;
+      });
+    }
+
+    return [layerModel, leafletObject, featureLayer];
   }
 });
