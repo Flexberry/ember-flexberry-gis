@@ -13,26 +13,11 @@ export default Ember.Mixin.create({
     @return {Ember.RSVP.Promise} Returns promise.
   */
   saveLayer(layerId) {
-    const layers = this.get('mapLayer');
-    const layer = layers.findBy('id', layerId);
-
-    if (Ember.isNone(layer)) {
-      return new Ember.RSVP.Promise(() => {
-        throw new Error(`Layer '${layerId}' not found.`);;
-      });
-    }
-
-    const leafletObject = Ember.get(layer, '_leafletObject');
+    let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
 
     if (Ember.isNone(leafletObject)) {
       return new Ember.RSVP.Promise(() => {
         throw new Error('Layer type not supported');
-      });
-    }
-
-    if (Object.keys(leafletObject.changes).length === 0) {
-      return new Ember.RSVP.Promise(() => {
-        throw new Error('No changed objects');
       });
     }
 
@@ -45,7 +30,10 @@ export default Ember.Mixin.create({
         this.disableLayerEditing(map);
 
         leafletObject.off('save:failed', saveFailed);
-        resolve(data);
+        resolve({
+          layerModel,
+          newFeatures: data.layers
+        });
       };
 
       const saveFailed = (data) => {

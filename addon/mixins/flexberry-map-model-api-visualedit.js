@@ -34,7 +34,7 @@ export default Ember.Mixin.create({
     let finishDraw = () => {
       editTools.off('editable:drawing:end', finishDraw, this);
       editTools.stopDrawing();
-    }
+    };
 
     editTools.on('editable:drawing:end', finishDraw, this);
 
