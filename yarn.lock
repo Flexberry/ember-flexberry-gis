@@ -33,7 +33,7 @@
 
 "@turf/boolean-contains@^5.1.5":
   version "5.1.5"
-  resolved "http://dh.ics.perm.ru:4873/@turf%2fboolean-contains/-/boolean-contains-5.1.5.tgz#596d63aee636f7ad53ee99f9ff24c96994a0ef14"
+  resolved "https://registry.yarnpkg.com/@turf%2fboolean-contains/-/boolean-contains-5.1.5.tgz#596d63aee636f7ad53ee99f9ff24c96994a0ef14"
   integrity sha1-WW1jruY2961T7pn5/yTJaZSg7xQ=
   dependencies:
     "@turf/bbox" "^5.1.5"
@@ -162,7 +162,7 @@
 
 "@turf/intersect@^6.1.3":
   version "6.1.3"
-  resolved "http://dh.ics.perm.ru:4873/@turf%2fintersect/-/intersect-6.1.3.tgz#c6574a2f00a38df6f81fc08d8103ad5295b7b6bc"
+  resolved "https://registry.yarnpkg.com/@turf%2fintersect/-/intersect-6.1.3.tgz#c6574a2f00a38df6f81fc08d8103ad5295b7b6bc"
   integrity sha512-SeAJG/zPRRTeyK2OifkPoyLq60q8tv8prpPIH3R8ZhyF4MdLOnMv5MURaQ6kQd+3UTDrL+pYm6rqbPvln1zqIw==
   dependencies:
     "@turf/helpers" "6.x"
@@ -171,7 +171,7 @@
 
 "@turf/invariant@6.x", "@turf/invariant@^6.1.2":
   version "6.1.2"
-  resolved "http://dh.ics.perm.ru:4873/@turf%2finvariant/-/invariant-6.1.2.tgz#6013ed6219f9ac2edada9b31e1dfa5918eb0a2f7"
+  resolved "https://registry.yarnpkg.com/@turf%2finvariant/-/invariant-6.1.2.tgz#6013ed6219f9ac2edada9b31e1dfa5918eb0a2f7"
   integrity sha512-WU08Ph8j0J2jVGlQCKChXoCtI50BB3yEH21V++V0T4cR1T27HKCxkehV2sYMwTierfMBgjwSwDIsxnR4/2mWXg==
   dependencies:
     "@turf/helpers" "6.x"
@@ -5423,7 +5423,7 @@ markdown-it@^4.4.0:
 
 martinez-polygon-clipping@^0.4.3:
   version "0.4.3"
-  resolved "http://dh.ics.perm.ru:4873/martinez-polygon-clipping/-/martinez-polygon-clipping-0.4.3.tgz#a3971ddf1da147104b5d0fbbf68f728bb62885c1"
+  resolved "https://registry.yarnpkg.com/martinez-polygon-clipping/-/martinez-polygon-clipping-0.4.3.tgz#a3971ddf1da147104b5d0fbbf68f728bb62885c1"
   integrity sha512-3ZNS0ksKhWTLsmCUkNf+/UimndZ5U2cVOS0I+IjiwF+M23E77TmeOZSmbRJbfCoQUog/vcQ42s3DXrhgOhgPqw==
   dependencies:
     splaytree "^0.1.4"
@@ -7473,7 +7473,7 @@ spdx-license-ids@~1.2.0:
 
 splaytree@^0.1.4:
   version "0.1.4"
-  resolved "http://dh.ics.perm.ru:4873/splaytree/-/splaytree-0.1.4.tgz#fc35475248edcc29d4938c9b67e43c6b7e55a659"
+  resolved "https://registry.yarnpkg.com/splaytree/-/splaytree-0.1.4.tgz#fc35475248edcc29d4938c9b67e43c6b7e55a659"
   integrity sha512-D50hKrjZgBzqD3FT2Ek53f2dcDLAQT8SSGrzj3vidNH5ISRgceeGVJ2dQIthKOuayqFXfFjXheHNo4bbt9LhRQ==
 
 sprintf-js@^1.0.3:
@@ -7796,7 +7796,7 @@ tiny-lr@0.2.1:
 
 tinyqueue@^1.2.0:
   version "1.2.3"
-  resolved "http://dh.ics.perm.ru:4873/tinyqueue/-/tinyqueue-1.2.3.tgz#b6a61de23060584da29f82362e45df1ec7353f3d"
+  resolved "https://registry.yarnpkg.com/tinyqueue/-/tinyqueue-1.2.3.tgz#b6a61de23060584da29f82362e45df1ec7353f3d"
   integrity sha512-Qz9RgWuO9l8lT+Y9xvbzhPT2efIUIFd69N7eF7tJ9lnQl0iLj1M7peK7IoUGZL9DJHw9XftqLreccfxcQgYLxA==
 
 tmp@0.0.28:
