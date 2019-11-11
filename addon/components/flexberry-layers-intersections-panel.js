@@ -60,7 +60,7 @@ export default Ember.Component.extend({
     @private
     @readonly
   */
-  _OnMapChanged: Ember.observer('leafletMap', function() {
+  _OnMapChanged: Ember.observer('leafletMap', function () {
     let map = this.get('leafletMap');
     let group = L.featureGroup().addTo(map);
     this.set('resultsLayer', group);
@@ -144,7 +144,7 @@ export default Ember.Component.extend({
     @private
     @readonly
   */
-  _OnFeatureChange: Ember.observer('feature', function() {
+  _OnFeatureChange: Ember.observer('feature', function () {
     this.clearPanel();
   }),
 
@@ -163,10 +163,10 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
     let vlayers = [];
-    this.get('layers').forEach(item=> {
+    this.get('layers').forEach(item => {
       let layers = Ember.get(item, 'layers');
       if (layers.length > 0) {
-        layers.forEach(layer=> {
+        layers.forEach(layer => {
           let className = Ember.get(layer, 'type');
           let layerType = Ember.getOwner(this).knownForType('layer', className);
           if (layerType instanceof VectorLayer) {
@@ -184,7 +184,7 @@ export default Ember.Component.extend({
     this.set('vectorLayers', vlayers);
   },
 
-  actions:{
+  actions: {
     /**
       Handles click on a button.
 
@@ -209,7 +209,7 @@ export default Ember.Component.extend({
 
       let bufferR = this.get('bufferR');
 
-      selectedLayers.forEach(function(item) {
+      selectedLayers.forEach(function (item) {
         let result = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', item);
         selected.pushObject(result);
       });
@@ -227,7 +227,7 @@ export default Ember.Component.extend({
 
       latlng = polygonLayer.getBounds().getCenter();
 
-      bufferedMainPolygonLayer =  polygonLayer;
+      bufferedMainPolygonLayer = polygonLayer;
 
       if (bufferR > 0) {
         polygonLayer.feature = buffer.default(polygonLayer.toGeoJSON(), bufferR, { units: 'meters' });
@@ -240,7 +240,8 @@ export default Ember.Component.extend({
         polygonLayer: polygonLayer,
         bufferedMainPolygonLayer: bufferedMainPolygonLayer,
         latlng: latlng,
-        selectedLayers: selected });
+        selectedLayers: selected
+      });
     },
 
     /**
@@ -273,7 +274,7 @@ export default Ember.Component.extend({
     zoomToIntersection(feature) {
       let group = this.get('resultsLayer');
       group.clearLayers();
-      let obj =   L.geoJSON(feature.intersection.intersectedObject, {
+      let obj = L.geoJSON(feature.intersection.intersectedObject, {
         style: { color: 'green' }
       });
       obj.addTo(group);
@@ -369,7 +370,7 @@ export default Ember.Component.extend({
         (features) => {
           // Show new features.
           features.forEach((feature) => {
-             let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+            let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
             if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
               leafletLayer.setStyle({
                 color: 'salmon',
@@ -378,7 +379,7 @@ export default Ember.Component.extend({
               });
             }
 
-             Ember.set(feature, 'leafletLayer', leafletLayer);
+            Ember.set(feature, 'leafletLayer', leafletLayer);
           });
         });
     });
@@ -437,9 +438,9 @@ export default Ember.Component.extend({
   */
   _findIntersections(e) {
     let square = this.get('square');
-    e.results.forEach((layer)=> {
-      layer.features.then((features)=> {
-        features.forEach((item)=> {
+    e.results.forEach((layer) => {
+      layer.features.then((features) => {
+        features.forEach((item) => {
           if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
             let res = intersect.default(item, e.polygonLayer.feature);
             if (res) {
@@ -448,8 +449,8 @@ export default Ember.Component.extend({
                   item.intersection = {};
                   item.intersection.intersectionCords = [];
                   item.intersection.intersectedArea = area(res);
-                  res.geometry.coordinates.forEach(arr=> {
-                    arr.forEach(pair=> {
+                  res.geometry.coordinates.forEach(arr => {
+                    arr.forEach(pair => {
                       item.intersection.intersectionCords.push(pair);
                     });
                   });
@@ -462,8 +463,8 @@ export default Ember.Component.extend({
                 item.intersection = {};
                 item.intersection.intersectionCords = [];
                 item.intersection.intersectedArea = area(res);
-                res.geometry.coordinates.forEach(arr=> {
-                  arr.forEach(pair=> {
+                res.geometry.coordinates.forEach(arr => {
+                  arr.forEach(pair => {
                     item.intersection.intersectionCords.push(pair);
                   });
                 });
@@ -479,7 +480,7 @@ export default Ember.Component.extend({
             if (intersects) {
               item.intersection = {};
               item.intersection.intersectionCords = [];
-              intersects.features.forEach(function(feat) {
+              intersects.features.forEach(function (feat) {
                 item.intersection.intersectionCords.push(feat.geometry.coordinates);
               });
               item.intersection.intersectedObject = intersects;
