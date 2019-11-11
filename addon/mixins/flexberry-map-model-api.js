@@ -691,15 +691,49 @@ export default Ember.Mixin.create({
     let polyline = new Set([this.objectTypes.lineString, this.objectTypes.multiLineString]);
     let polygon = new Set([this.objectTypes.polygon, this.objectTypes.multiPolygon]);
 
+    let shape;
     if (polyline.has(object.geometry.type) === true) {
-      L.polyline(object).addTo(leafletObject);
+      shape = L.polyline(object.geometry.coordinates);
     } else if (polygon.has(object.geometry.type) === true) {
-      L.polygon(object).addTo(leafletObject);
+      shape = L.polygon(object.geometry.coordinates);
     } else {
       return new Ember.RSVP.Promise(() => {
         throw new Error('Object type not supported');
       });
     }
+
+    // shape.options = {
+    //   color: '#3388ff',
+    //   weight: 3
+    // };
+
+    // let drawnItems = new L.FeatureGroup();
+    // leafletObject.addLayer(drawnItems);
+
+    //Ember.set(shape, 'properties', object.properties);
+    Ember.set(shape, 'state', 'insertElement');
+    //shape.feature = { leafletLayer: shape }
+
+    Ember.set(shape, 'feature', {
+      type: 'Feature',
+      properties: object.properties,
+      leafletLayer: shape
+    });
+    leafletObject.addLayer(shape);
+    shape.addTo(leafletObject);
+
+
+
+    Ember.set(leafletObject, '_wasChanged', true);
+
+    // Make shape in edit mode.
+    //shape.enableEdit();
+
+    // We note that the shape was edited.
+    // leafletObject.editLayer(shape);
+
+    // Enable save button.
+    //Ember.set(leafletObject, '_wasChanged', true);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       const saveSuccess = (data) => {
@@ -717,6 +751,41 @@ export default Ember.Mixin.create({
       leafletObject.save();
     });
   },
+
+  addObjectToLayer(object, layerId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      if (!Ember.isNone(object)) {
+        let store = this.get('store');
+        let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
+        if (!Ember.isNone(layer)) {
+          let newObj = L.geoJSON(object);
+          if (typeof (newObj.setStyle) === 'function') {
+            newObj.setStyle(Ember.get(layer, '_leafletObject.options.style'));
+          }
+
+          layer._leafletObject.addLayer(newObj.getLayers()[0]);
+          const saveSuccess = (data) => {
+            layer._leafletObject.off('save:failed', saveSuccess);
+            resolve(data);
+          };
+
+          const saveFailed = (data) => {
+            layer._leafletObject.off('save:success', saveSuccess);
+            reject(data);
+          };
+
+          layer._leafletObject.once('save:success', saveSuccess);
+          layer._leafletObject.once('save:failed', saveFailed);
+          layer._leafletObject.save();
+        } else {
+          reject('no layer with such id');
+        }
+      } else {
+        reject('passed object is null');
+      }
+    });
+  },
+
 
   /**
   Create polygon object by rhumb.
