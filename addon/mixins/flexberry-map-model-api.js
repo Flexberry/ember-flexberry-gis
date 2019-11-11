@@ -94,10 +94,9 @@ export default Ember.Mixin.create({
     @method deleteLayerObject.
     @param {String} layerId Id layer.
     @param {String} featureId Id shape.
-    @return {Promise} Return target feature.
   */
   deleteLayerObject(layerId, featureId) {
-    return this.deleteLayerObjects(layerId, [featureId]);
+    this.deleteLayerObjects(layerId, [featureId]);
   },
 
   /**
@@ -112,24 +111,27 @@ export default Ember.Mixin.create({
     const layer = layers.findBy('id', layerId);
 
     if (Ember.isNone(layer)) {
-      return new Ember.RSVP.Promise(() => {
-        throw new Error(`Layer '${layerId}' not found.`);
-      });
+      throw new Error(`Layer '${layerId}' not found.`);
+      // return new Ember.RSVP.Promise(() => {
+      //   throw new Error(`Layer '${layerId}' not found.`);
+      // });
     }
 
-    if (Ember.isNone(layer._leafletObject)) {
-      return new Ember.RSVP.Promise(() => {
-        throw new Error('Layer type not supported');
-      });
+    const leafletObject = Ember.get(layer, '_leafletObject');
+    if (Ember.isNone(leafletObject)) {
+      throw new Error('Layer type not supported');
+      // return new Ember.RSVP.Promise(() => {
+      //   throw new Error('Layer type not supported');
+      // });
     }
 
     let ids = [];
-    layer._leafletObject.eachLayer(function (shape) {
+    leafletObject.eachLayer(function (shape) {
       const id = this._getLayerFeatureId(layer, shape);
 
       if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
         ids.push(id);
-        layer._leafletObject.removeLayer(shape);
+        leafletObject.removeLayer(shape);
       }
     }.bind(this));
 
@@ -140,21 +142,21 @@ export default Ember.Mixin.create({
       }
     });
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      const saveSuccess = (data) => {
-        layer._leafletObject.off('save:failed', saveSuccess);
-        resolve(data);
-      };
+    // return new Ember.RSVP.Promise((resolve, reject) => {
+    //   const saveSuccess = (data) => {
+    //     layer._leafletObject.off('save:failed', saveSuccess);
+    //     resolve(data);
+    //   };
 
-      const saveFailed = (data) => {
-        layer._leafletObject.off('save:success', saveSuccess);
-        reject(data);
-      };
+    //   const saveFailed = (data) => {
+    //     layer._leafletObject.off('save:success', saveSuccess);
+    //     reject(data);
+    //   };
 
-      layer._leafletObject.once('save:success', saveSuccess);
-      layer._leafletObject.once('save:failed', saveFailed);
-      layer._leafletObject.save();
-    });
+    //   layer._leafletObject.once('save:success', saveSuccess);
+    //   layer._leafletObject.once('save:failed', saveFailed);
+    //   layer._leafletObject.save();
+    // });
   },
 
   /**

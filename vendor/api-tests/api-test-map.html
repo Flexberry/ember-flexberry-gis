@@ -144,15 +144,15 @@
 
       var deleteLayerObjectButton = document.getElementById('deleteLayerObject');
       var deleteObjectLayer = function () {
-        frame.contentWindow.mapApi.mapModel.deleteLayerObject('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8383')
-          .then(() => console.log('perm_water_line.8383')).catch((e) => console.log(e));
+        frame.contentWindow.mapApi.mapModel.deleteLayerObject('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8383');
+          //.then(() => console.log('perm_water_line.8383')).catch((e) => console.log(e));
       };
       deleteLayerObjectButton.addEventListener('click', deleteObjectLayer);
 
       var deleteObjectsLayerButton = document.getElementById('deleteLayerObjects');
       var deleteObjectsLayer = function () {
-        frame.contentWindow.mapApi.mapModel.deleteLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382'])
-          .then(() => console.log(['perm_water_line.8383', 'perm_water_line.8382'])).catch((e) => console.log(e));
+        frame.contentWindow.mapApi.mapModel.deleteLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382']);
+          //.then(() => console.log(['perm_water_line.8383', 'perm_water_line.8382'])).catch((e) => console.log(e));
       };
       deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
 
