@@ -163,6 +163,7 @@ export default BaseVectorLayer.extend({
       L.wfst(options, featuresReadFormat)
         .once('load', (e) => {
           let wfsLayer = e.target;
+          wfsLayer.on('save:success', this._setLayerState, this);
           resolve(wfsLayer);
         })
         .once('error', (e) => {

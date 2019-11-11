@@ -1,0 +1,36 @@
+{{createItem.layerModel.name}}
+<div class="flexberry-gis-edit-panel">
+  <div class="flexberry-buttons left">
+    {{flexberry-button
+      tooltip=drawCaption
+      iconClass=drawIconClass
+      click=(action "onDraw")
+    }}
+  </div>
+  {{#if geometryCreated}}
+    <div class="flexberry-buttons right">
+      {{flexberry-button
+        tooltip=zoomToCaption
+        iconClass=zoomToIconClass
+        click=(action "onZoomTo")
+      }}
+      {{flexberry-button
+        tooltip=removeCaption
+        iconClass=removeIconClass
+        click=(action "onRemove")
+      }}
+      {{flexberry-button
+        tooltip=saveCaption
+        iconClass=saveIconClass
+        click=(action "onSave")
+      }}
+    </div>
+  {{/if}}
+</div>
+<div class="coordinates-area">
+  {{flexberry-textarea
+    value=_coordinates
+    placeholder=(t "components.flexberry-create-object-geometry.coordinates.caption")
+    readonly=(not _allowCoordinatesEdit)
+  }}
+</div>

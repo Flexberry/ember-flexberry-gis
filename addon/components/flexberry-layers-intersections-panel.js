@@ -4,7 +4,6 @@ import intersect from 'npm:@turf/intersect';
 import area from 'npm:@turf/area';
 import lineIntersect from 'npm:@turf/line-intersect';
 import * as buffer from 'npm:@turf/buffer';
-import helpers from 'npm:@turf/helpers'
 import VectorLayer from '../layers/-private/vector';
 /**
   The component for searching for intersections with selected feature.
@@ -21,7 +20,6 @@ export default Ember.Component.extend({
 
   /**
     Object name disaplayed on template.
-
     @property disaplayName
     @type String
     @default null
@@ -236,10 +234,8 @@ export default Ember.Component.extend({
       }
 
       // Show map loader.
-      let i18n = this.get('i18n');
       let leafletMap = this.get('leafletMap');
-      leafletMap.setLoaderContent(i18n.t('map-tools.identify.loader-message'));
-      leafletMap.showLoader();
+      leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.loader-message') });
       this._startIdentification({
         polygonLayer: polygonLayer,
         bufferedMainPolygonLayer: bufferedMainPolygonLayer,
@@ -281,7 +277,7 @@ export default Ember.Component.extend({
         style: { color: 'green' }
       });
       obj.addTo(group);
-    } 
+    }
   },
 
   /**
@@ -389,8 +385,7 @@ export default Ember.Component.extend({
 
     // Hide map loader.
     let leafletMap = this.get('leafletMap');
-    leafletMap.setLoaderContent('');
-    leafletMap.hideLoader();
+    leafletMap.flexberryMap.loader.hide({ content: '' });
 
     //Assign current tool's boundingBoxLayer
     let polygonLayer = Ember.get(e, 'polygonLayer');
@@ -444,9 +439,9 @@ export default Ember.Component.extend({
     let square = this.get('square');
     e.results.forEach((layer)=> {
       layer.features.then((features)=> {
-        features.forEach((item)=> {     
+        features.forEach((item)=> {
           if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
-            let res = intersect.default(item, e.polygonLayer.feature);   
+            let res = intersect.default(item, e.polygonLayer.feature);
             if (res) {
               if (square > 0) {
                 if (area(res) > square) {

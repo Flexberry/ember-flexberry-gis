@@ -29,6 +29,15 @@ const flexberryClassNames = {
 };
 
 let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
+  /**
+    If user apply or deny data his made decision.
+
+    @property  _isDecisionMade
+    @type Boolean
+    @default false
+    @private
+  */
+  _isDecisionMade: false,
 
   /**
     Reference to component's template.
@@ -278,6 +287,7 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
       @method actions.onShow
     */
     onShow() {
+      this.set('_isDecisionMade', false);
       this.sendAction('show');
     },
 
@@ -298,7 +308,13 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
       @method actions.onHide
     */
     onHide() {
+      let isDecisionMade = this.get('_isDecisionMade');
+
       this.sendAction('hide');
+
+      if (!isDecisionMade) {
+        this.sendAction('deny');
+      }
     },
 
     /**
@@ -316,6 +332,7 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
         return;
       }
 
+      this.set('_isDecisionMade', true);
       this.sendAction('approve', parsedData);
     },
 
@@ -326,6 +343,7 @@ let FlexberryEditLayerAttributesDialogComponent = Ember.Component.extend({
       @method actions.onDeny
     */
     onDeny() {
+      this.set('_isDecisionMade', true);
       this.sendAction('deny');
     }
   }
