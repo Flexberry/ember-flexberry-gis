@@ -83,7 +83,7 @@
         return true;
       }
 
-      frame.contentWindow.mapApi.saveObject = function(obj, layerId)  {
+      frame.contentWindow.mapApi.saveObject = function (obj, layerId) {
         if (layerId === "56f4b518-e375-4b24-be2f-88d48110c0a3") {
           obj.saveObject().then((feature) => console.log(feature)).catch((e) => console.log(e));
         }
@@ -240,30 +240,6 @@
       var createPolygonObjectCoordinatesButton = document.getElementById('createPolygonObjectCoordinates');
       var createPolygonObjectCoordinates = function () {
 
-        // var obj = {
-        //   type: 'Feature',
-        //   geometry: {
-        //     type: 'Polygon',
-        //     coordinates: [[[55.55374145,58.68764494],[55.59356689,58.70120267],[55.61004638,58.66908369],[55.55374145,58.68764494]]]]
-        //   },
-        //   properties: {
-        //     name: 'test_polygon'
-        //   }
-        // };
-
-
-        // var obj = {
-        //   type: 'Feature',
-        //   geometry: {
-        //     type: 'Polygon',
-        //     coordinates: [[[55.55374145, 58.68764494], [55.59356689, 58.70120267], [55.61004638, 58.66908369], [55.55374145, 58.68764494]]]
-        //   },
-        //   properties: {
-        //     name: 'test_polygon'
-        //   }
-        // };
-
-
         var obj = {
           type: 'Feature',
           geometry: {
@@ -275,44 +251,25 @@
           }
         };
 
-        //f7670a1f-1acb-4571-923c-1ce3bc88e11e, 56f4b518-e375-4b24-be2f-88d48110c0a3, 0f2b3002-1b28-44bd-877f-6c0a917b963f
-        frame.contentWindow.mapApi.mapModel.createObject('0f2b3002-1b28-44bd-877f-6c0a917b963f', obj)
-          //.then(() => { console.log('object added sucessfully') }, reject => { console.log(reject) });
-
-
-        // var polygon = {
-        //     type: 'Feature',
-        //   geometry: {
-        //     type: 'Polygon',
-        //     coordinates: [ [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]]
-        //   },
-        //   properties: {
-        //     name: 'test_polygon'
-        //   }
-        // }
-        // frame.contentWindow.mapApi.mapModel.addObjectToLayer(polygon, '0f2b3002-1b28-44bd-877f-6c0a917b963f')
-        //   .then(() => {console.log('object added sucessfully')}, reject => {console.log(reject)});
+        frame.contentWindow.mapApi.mapModel.createObject('0f2b3002-1b28-44bd-877f-6c0a917b963f', obj);
       };
       createPolygonObjectCoordinatesButton.addEventListener('click', createPolygonObjectCoordinates);
 
-
       var createPolygonObjectRhumbButton = document.getElementById('createPolygonObjectRhumb');
       var createPolygonObjectRhumb = function () {
-        var data = {
+
+        data = {// todo:remove
           type: 'LineString',
           properties: { numer: 'w458' },
-          "startPoint": [85, 79],
-          "points": [
-            { "number": 0, "rib": "1;2", "rhumb": "ЮВ;86.76787457562546", "distance": 8182.6375760837955, "bearing": 176.76787457562546 },
-            { "number": 0, "rib": "2;3", "rhumb": "СВ;79.04259420114585", "distance": 8476.868426796427, "bearing": -169.04259420114585 },
-            { "number": 0, "rib": "3;1", "rhumb": "ЮЗ;86.0047147391561", "distance": 16532.122718537685, "bearing": 3.9952852608439002 }
+          startPoint: [85, 79],
+          points: [
+            { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955, bearing: 176.76787457562546 },
+            { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427, bearing: -169.04259420114585 },
+            { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685, bearing: 3.9952852608439002 }
           ]
         };
 
-        //frame.contentWindow.mapApi.mapModel.createPolygonObjectRhumb('f7670a1f-1acb-4571-923c-1ce3bc88e11e', data, 'Polygon', properties) //56f4b518-e375-4b24-be2f-88d48110c0a3
-        //b60df574-6eef-45fb-a64f-011fa351c88d
-        frame.contentWindow.mapApi.mapModel.createPolygonObjectRhumb('0f2b3002-1b28-44bd-877f-6c0a917b963f', data)
-          .then(() => { console.log('object added sucessfully') }, reject => { console.log(reject) });
+        frame.contentWindow.mapApi.mapModel.createPolygonObjectRhumb('0f2b3002-1b28-44bd-877f-6c0a917b963f', data);
       };
       createPolygonObjectRhumbButton.addEventListener('click', createPolygonObjectRhumb);
 

@@ -713,96 +713,30 @@ export default Ember.Mixin.create({
 
     if (Ember.isNone(layer)) {
       throw new Error(`Layer '${layerId}' not found.`);
-      // return new Ember.RSVP.Promise(() => {
-      //   throw new Error(`Layer '${layerId}' not found.`);
-      // });
     }
 
-    const leafletObject = layer._leafletObject;
+    let leafletObject = layer._leafletObject;
     if (Ember.isNone(leafletObject)) {
       throw new Error('Layer type not supported');
-      // return new Ember.RSVP.Promise(() => {
-      //   throw new Error('Layer type not supported');
-      // });
     }
 
-    // let polyline = new Set([this.objectTypes.lineString, this.objectTypes.multiLineString]);
-    // let polygon = new Set([this.objectTypes.polygon, this.objectTypes.multiPolygon]);
-
-    // let shape;
-    // if (polyline.has(object.geometry.type) === true) {
-    //   // shape = L.polyline(object.geometry.coordinates);
-    // } else if (polygon.has(object.geometry.type) === true) {
-    //   // shape = L.polygon(object.geometry.coordinates);
-    // } else {
-    //   return new Ember.RSVP.Promise(() => {
-    //     throw new Error('Object type not supported');
-    //   });
-    // }
     let editTools = this._getEditTools();
-    let newLayer;
+    let newObject;
     switch (object.geometry.type) {
       case this.objectTypes.multiPolygon:
-        newLayer = editTools.startPolygon();
+        newObject = editTools.startPolygon(object.geometry.coordinates, object.properties);
         break;
       case this.objectTypes.lineString:
-        newLayer = editTools.startPolyline();
+        newObject = editTools.startPolyline(object.geometry.coordinates, object.properties);
         break;
       case this.objectTypes.marker:
-        newLayer = editTools.startMarker();
+        newObject = editTools.startMarker(object.geometry.coordinates, object.properties);
         break;
       default:
         throw new Error(`Unknown layer type: ${object.geometry.type}`);
     }
 
-    leafletObject.addLayer(newLayer);
-
-    // shape.options = {
-    //   color: '#3388ff',
-    //   weight: 3
-    // };
-
-    // let drawnItems = new L.FeatureGroup();
-    // leafletObject.addLayer(drawnItems);
-
-    //Ember.set(shape, 'properties', object.properties);
-    // Ember.set(shape, 'state', 'insertElement');
-    //shape.feature = { leafletLayer: shape }
-
-    // Ember.set(shape, 'feature', {
-    //   type: 'Feature',
-    //   properties: object.properties,
-    //   leafletLayer: shape
-    // });
-
-    // shape.addTo(leafletObject);
-
-    //Ember.set(leafletObject, '_wasChanged', true);
-
-    // Make shape in edit mode.
-    //shape.enableEdit();
-
-    // We note that the shape was edited.
-    // leafletObject.editLayer(shape);
-
-    // Enable save button.
-    //Ember.set(leafletObject, '_wasChanged', true);
-
-    // return new Ember.RSVP.Promise((resolve, reject) => {
-    //   const saveSuccess = (data) => {
-    //     leafletObject.off('save:failed', saveSuccess);
-    //     resolve(data);
-    //   };
-
-    //   const saveFailed = (data) => {
-    //     leafletObject.off('save:success', saveSuccess);
-    //     reject(data);
-    //   };
-
-    //   leafletObject.once('save:success', saveSuccess);
-    //   leafletObject.once('save:failed', saveFailed);
-    //   leafletObject.save();
-    // });
+    leafletObject.addLayer(newObject);
   },
 
   /**
@@ -810,35 +744,8 @@ export default Ember.Mixin.create({
   @method createPolygonObjectRhumb
   @param {string} layerId Layer id.
   @param {Object} data Coordinate objects.
-  @return {Ember.RSVP.Promise} Return Promise.
 */
   createPolygonObjectRhumb(layerId, data) {
-
-    data = {// todo:remove
-      type: 'LineString',
-      properties: null,
-      startPoint: [85, 79],
-      points: [
-        { number: 0, rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955, bearing: 176.76787457562546 },
-        { number: 0, rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427, bearing: -169.04259420114585 },
-        { number: 0, rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685, bearing: 3.9952852608439002 }
-      ]
-    };
-
-    // data = {// todo:remove
-    //   type: 'LineString',
-    //   properties: null,
-    //   "startPoint": [0, 0],
-    //   "points": [
-    //     //{ "number": 0, "rib": "0;1", "rhumb": "СВ;49.09008872055813", "distance": 8145960.361643748, "bearing": -139.09008872055813 },
-    //     { "number": 0, "rib": "1;2", "rhumb": `ЮВ;86°32'16"`, "distance": 8182.6375760837955, "bearing": 176.76787457562546 },
-    //     { "number": 0, "rib": "2;3", "rhumb": `СВ;79°33'21,42"`, "distance": 8476.868426796427, "bearing": -169.04259420114585 },
-    //     { "number": 0, "rib": "3;4", "rhumb": `ЮЗ;56°24'15,4"`, "distance": 16532.122718537685, "bearing": 3.9952852608439002 },
-    //     { "number": 0, "rib": "4;5", "rhumb": `ЮЗ;86°32'`, "distance": 16532.122718537685, "bearing": 3.9952852608439002 },
-    //     { "number": 0, "rib": "5;1", "rhumb": `ЮЗ;86°`, "distance": 16532.122718537685, "bearing": 3.9952852608439002 }
-    //   ]
-    // };
-
     if (Ember.isNone(data.points) || data.points.length === 0) {
       throw new Error('Not data.');
     }
@@ -847,7 +754,6 @@ export default Ember.Mixin.create({
     if (Ember.isNone(type)) {
       throw new Error('Specify type.');
     } else {
-      // const polygonTypeSet = new Set([this.objectTypes.lineString, this.objectTypes.multiLineString, this.objectTypes.polygon, this.objectTypes.multiPolygon]);
       const polygonTypeSet = new Set([this.objectTypes.lineString, this.objectTypes.polygon]);
       if (!polygonTypeSet.has(type)) {
         throw new Error('Specified the wrong type.');
@@ -855,7 +761,6 @@ export default Ember.Mixin.create({
     }
 
     const points = data.points;
-    const numberCount = Math.max(...points.map(o => o.number), points[0].number);
 
     const degreeToRadian = function (degree) {
       let deg;
@@ -923,55 +828,55 @@ export default Ember.Mixin.create({
 
     let coors = [];
 
-    if (type === this.objectTypes.polygon) { // [[[0,0], [0,0]]]
+    if (type === this.objectTypes.polygon) {
       let startPoint;
       let coordinates = [];
-      for (let i = 0; i <= numberCount; i++) {
-        const vertexCount = points.filter(o => o.number === i).sort((a, b) => a.rib.split(';')[0] - b.rib.split(';')[0]);
 
-        for (let j = 0; j < vertexCount.length; j++) {
-          const vertex = vertexCount[j];
+      // Rib sorting
+      const vertexCount = points.sort((a, b) => a.rib.split(';')[0] - b.rib.split(';')[0]);
 
-          const bearing = getBearing(vertex.rhumb);
+      for (let i = 0; i < vertexCount.length; i++) {
+        const vertex = vertexCount[i];
 
-          if (Ember.isNone(startPoint)) {
+        const bearing = getBearing(vertex.rhumb);
 
-            // Convert to meters
-            vertex.distance = vertex.distance / 1000;
-            startPoint = rhumbDestination.default(helpers.point(data.startPoint), vertex.distance, bearing, { units: 'kilometers' });
-          } else {
-            startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
-          }
+        if (Ember.isNone(startPoint)) {
 
-          coordinates.push(startPoint.geometry.coordinates);
+          // Convert to meters
+          vertex.distance = vertex.distance / 1000;
+          startPoint = rhumbDestination.default(helpers.point(data.startPoint), vertex.distance, bearing, { units: 'kilometers' });
+        } else {
+          startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
         }
+
+        coordinates.push(startPoint.geometry.coordinates);
       }
 
       coors.push(coordinates);
     }
 
-    if (type === this.objectTypes.lineString) { // [[0,0], [0,0]]
+    if (type === this.objectTypes.lineString) {
       let startPoint;
-      for (let i = 0; i <= numberCount; i++) {
-        const vertexCount = points.filter(o => o.number === i).sort((a, b) => a.rib.split(';')[0] - b.rib.split(';')[0]);
 
-        for (let j = 0; j < vertexCount.length; j++) {
-          const vertex = vertexCount[j];
-          const bearing = getBearing(vertex.rhumb);
+      //Rib sorting
+      const vertexCount = points.sort((a, b) => a.rib.split(';')[0] - b.rib.split(';')[0]);
 
-          if (Ember.isNone(startPoint)) {
-            vertex.distance = vertex.distance / 1000;
-            startPoint = rhumbDestination.default(helpers.point(data.startPoint), vertex.distance, bearing, { units: 'kilometers' });
-          } else {
-            startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
-          }
+      for (let i = 0; i < vertexCount.length; i++) {
+        const vertex = vertexCount[i];
+        const bearing = getBearing(vertex.rhumb);
 
-          coors.push(startPoint.geometry.coordinates);
+        if (Ember.isNone(startPoint)) {
+          vertex.distance = vertex.distance / 1000;
+          startPoint = rhumbDestination.default(helpers.point(data.startPoint), vertex.distance, bearing, { units: 'kilometers' });
+        } else {
+          startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
         }
+
+        coors.push(startPoint.geometry.coordinates);
       }
     }
 
-    let obj = {
+    const obj = {
       type: 'Feature',
       geometry: {
         type: type,
@@ -980,7 +885,7 @@ export default Ember.Mixin.create({
       properties: data.properties
     };
 
-    return this.createObject(layerId, obj);
+    this.createObject(layerId, obj);
   }
 
 });
