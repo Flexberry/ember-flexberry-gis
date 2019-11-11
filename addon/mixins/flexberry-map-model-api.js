@@ -667,94 +667,6 @@ export default Ember.Mixin.create({
     }
   },
 
-  /**
-    Create polygon object by coordinates.
-    @method createPolygonObjectCoordinates
-    @param {string} layerId Layer id.
-    @param {GeoJson} object GeoJson object.
-    @return {Ember.RSVP.Promise} Return Promise.
-  */
-  createPolygonObjectCoordinates(layerId, object) {
-    const layers = this.get('mapLayer');
-    const layer = layers.findBy('id', layerId);
-
-    if (Ember.isNone(layer)) {
-      return new Ember.RSVP.Promise(() => {
-        throw new Error(`Layer '${layerId}' not found.`);
-      });
-    }
-
-    var leafletObject = layer._leafletObject;
-    if (Ember.isNone(leafletObject)) {
-      return new Ember.RSVP.Promise(() => {
-        throw new Error('Layer type not supported');
-      });
-    }
-
-    let polyline = new Set([this.objectTypes.lineString, this.objectTypes.multiLineString]);
-    let polygon = new Set([this.objectTypes.polygon, this.objectTypes.multiPolygon]);
-
-    let shape;
-    if (polyline.has(object.geometry.type) === true) {
-      shape = L.polyline(object.geometry.coordinates);
-    } else if (polygon.has(object.geometry.type) === true) {
-      shape = L.polygon(object.geometry.coordinates);
-    } else {
-      return new Ember.RSVP.Promise(() => {
-        throw new Error('Object type not supported');
-      });
-    }
-
-    // shape.options = {
-    //   color: '#3388ff',
-    //   weight: 3
-    // };
-
-    // let drawnItems = new L.FeatureGroup();
-    // leafletObject.addLayer(drawnItems);
-
-    //Ember.set(shape, 'properties', object.properties);
-    Ember.set(shape, 'state', 'insertElement');
-    //shape.feature = { leafletLayer: shape }
-
-    Ember.set(shape, 'feature', {
-      type: 'Feature',
-      properties: object.properties,
-      leafletLayer: shape
-    });
-    leafletObject.addLayer(shape);
-    shape.addTo(leafletObject);
-
-
-
-    Ember.set(leafletObject, '_wasChanged', true);
-
-    // Make shape in edit mode.
-    //shape.enableEdit();
-
-    // We note that the shape was edited.
-    // leafletObject.editLayer(shape);
-
-    // Enable save button.
-    //Ember.set(leafletObject, '_wasChanged', true);
-
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      const saveSuccess = (data) => {
-        leafletObject.off('save:failed', saveSuccess);
-        resolve(data);
-      };
-
-      const saveFailed = (data) => {
-        leafletObject.off('save:success', saveSuccess);
-        reject(data);
-      };
-
-      leafletObject.once('save:success', saveSuccess);
-      leafletObject.once('save:failed', saveFailed);
-      leafletObject.save();
-    });
-  },
-
   addObjectToLayer(object, layerId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (!Ember.isNone(object)) {
@@ -789,6 +701,109 @@ export default Ember.Mixin.create({
     });
   },
 
+  /**
+    Create polygon object by coordinates.
+    @method createObject
+    @param {string} layerId Layer id.
+    @param {GeoJson} object GeoJson object.
+  */
+  createObject(layerId, object) {
+    const layers = this.get('mapLayer');
+    const layer = layers.findBy('id', layerId);
+
+    if (Ember.isNone(layer)) {
+      throw new Error(`Layer '${layerId}' not found.`);
+      // return new Ember.RSVP.Promise(() => {
+      //   throw new Error(`Layer '${layerId}' not found.`);
+      // });
+    }
+
+    const leafletObject = layer._leafletObject;
+    if (Ember.isNone(leafletObject)) {
+      throw new Error('Layer type not supported');
+      // return new Ember.RSVP.Promise(() => {
+      //   throw new Error('Layer type not supported');
+      // });
+    }
+
+    // let polyline = new Set([this.objectTypes.lineString, this.objectTypes.multiLineString]);
+    // let polygon = new Set([this.objectTypes.polygon, this.objectTypes.multiPolygon]);
+
+    // let shape;
+    // if (polyline.has(object.geometry.type) === true) {
+    //   // shape = L.polyline(object.geometry.coordinates);
+    // } else if (polygon.has(object.geometry.type) === true) {
+    //   // shape = L.polygon(object.geometry.coordinates);
+    // } else {
+    //   return new Ember.RSVP.Promise(() => {
+    //     throw new Error('Object type not supported');
+    //   });
+    // }
+    let editTools = this._getEditTools();
+    let newLayer;
+    switch (object.geometry.type) {
+      case this.objectTypes.multiPolygon:
+        newLayer = editTools.startPolygon();
+        break;
+      case this.objectTypes.lineString:
+        newLayer = editTools.startPolyline();
+        break;
+      case this.objectTypes.marker:
+        newLayer = editTools.startMarker();
+        break;
+      default:
+        throw new Error(`Unknown layer type: ${object.geometry.type}`);
+    }
+
+    leafletObject.addLayer(newLayer);
+
+    // shape.options = {
+    //   color: '#3388ff',
+    //   weight: 3
+    // };
+
+    // let drawnItems = new L.FeatureGroup();
+    // leafletObject.addLayer(drawnItems);
+
+    //Ember.set(shape, 'properties', object.properties);
+    // Ember.set(shape, 'state', 'insertElement');
+    //shape.feature = { leafletLayer: shape }
+
+    // Ember.set(shape, 'feature', {
+    //   type: 'Feature',
+    //   properties: object.properties,
+    //   leafletLayer: shape
+    // });
+
+    // shape.addTo(leafletObject);
+
+    //Ember.set(leafletObject, '_wasChanged', true);
+
+    // Make shape in edit mode.
+    //shape.enableEdit();
+
+    // We note that the shape was edited.
+    // leafletObject.editLayer(shape);
+
+    // Enable save button.
+    //Ember.set(leafletObject, '_wasChanged', true);
+
+    // return new Ember.RSVP.Promise((resolve, reject) => {
+    //   const saveSuccess = (data) => {
+    //     leafletObject.off('save:failed', saveSuccess);
+    //     resolve(data);
+    //   };
+
+    //   const saveFailed = (data) => {
+    //     leafletObject.off('save:success', saveSuccess);
+    //     reject(data);
+    //   };
+
+    //   leafletObject.once('save:success', saveSuccess);
+    //   leafletObject.once('save:failed', saveFailed);
+    //   leafletObject.save();
+    // });
+  },
 
   /**
   Create polygon object by rhumb.
@@ -965,7 +980,7 @@ export default Ember.Mixin.create({
       properties: data.properties
     };
 
-    return this.createPolygonObjectCoordinates(layerId, obj);
+    return this.createObject(layerId, obj);
   }
 
 });

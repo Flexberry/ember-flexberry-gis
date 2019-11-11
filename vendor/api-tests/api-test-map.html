@@ -56,8 +56,8 @@
       <button id="getLayerObjectOptions">Get Object Attributes</button>
     </div>
     <div>
-      <button id="createPolygonObjectCoordinates">Create Polygon Object By Coordinates</button>
-      <button id="createPolygonObjectRhumb">Create Polygon Object By Rhumb</button>
+      <button id="createPolygonObjectCoordinates">Create Object By Coordinates</button>
+      <button id="createPolygonObjectRhumb">Create Object By Rhumb</button>
     </div>
   </div>
   <script type="text/javascript">
@@ -83,7 +83,7 @@
         return true;
       }
 
-      mapApi.saveObject = function(obj, layerId)  {
+      frame.contentWindow.mapApi.saveObject = function(obj, layerId)  {
         if (layerId === "56f4b518-e375-4b24-be2f-88d48110c0a3") {
           obj.saveObject().then((feature) => console.log(feature)).catch((e) => console.log(e));
         }
@@ -109,6 +109,7 @@
           });
         });
       };
+
       frame.contentWindow.mapApi.getLayerFeatureId = function (layer, layerObject) {
         if (layer.id === "f7670a1f-1acb-4571-923c-1ce3bc88e11e") {
           return layerObject.feature.properties.name;
@@ -251,32 +252,32 @@
         // };
 
 
-        var obj = {
-          type: 'Feature',
-          geometry: {
-            type: 'Polygon',
-            coordinates: [[[55.55374145, 58.68764494], [55.59356689, 58.70120267], [55.61004638, 58.66908369], [55.55374145, 58.68764494]]]
-          },
-          properties: {
-            name: 'test_polygon'
-          }
-        };
-
-
         // var obj = {
         //   type: 'Feature',
         //   geometry: {
-        //     type: 'LineString',
-        //     coordinates: [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]
+        //     type: 'Polygon',
+        //     coordinates: [[[55.55374145, 58.68764494], [55.59356689, 58.70120267], [55.61004638, 58.66908369], [55.55374145, 58.68764494]]]
         //   },
         //   properties: {
         //     name: 'test_polygon'
         //   }
         // };
 
+
+        var obj = {
+          type: 'Feature',
+          geometry: {
+            type: 'LineString',
+            coordinates: [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]
+          },
+          properties: {
+            name: 'test_polygon'
+          }
+        };
+
         //f7670a1f-1acb-4571-923c-1ce3bc88e11e, 56f4b518-e375-4b24-be2f-88d48110c0a3, 0f2b3002-1b28-44bd-877f-6c0a917b963f
-        frame.contentWindow.mapApi.mapModel.createPolygonObjectCoordinates('0f2b3002-1b28-44bd-877f-6c0a917b963f', obj)//
-          .then(() => { console.log('object added sucessfully') }, reject => { console.log(reject) });
+        frame.contentWindow.mapApi.mapModel.createObject('0f2b3002-1b28-44bd-877f-6c0a917b963f', obj)
+          //.then(() => { console.log('object added sucessfully') }, reject => { console.log(reject) });
 
 
         // var polygon = {
