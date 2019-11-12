@@ -56,6 +56,7 @@ export default VectorLayer.extend({
       modelName: undefined,
       projectionName: undefined,
       geometryField: 'geometry',
+      geometryType: 'PolygonPropertyType',
       coordsToLatLng: undefined,
       latLngToCoords: undefined
     });

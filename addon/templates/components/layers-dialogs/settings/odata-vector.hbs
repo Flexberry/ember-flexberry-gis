@@ -27,6 +27,16 @@
 </div>
 <div class="field">
   <label>
+    {{t "components.layers-dialogs.settings.odata-vector.geometry-type-textbox.caption"}}
+  </label>
+  {{flexberry-dropdown
+    class="compact"
+    items=geometryTypes
+    value=settings.geometryType
+  }}
+</div>
+<div class="field">
+  <label>
     {{t "components.layers-dialogs.settings.odata-vector.coords-function-textbox.caption"}}
   </label>
   <label>

@@ -74,6 +74,9 @@ export default {
     'geometry-field-textbox': {
       'caption': 'Geometry field'
     },
+    'geometry-type-textbox': {
+      'caption': 'Geometry type'
+    },
     'coords-function-textbox': {
       'caption': 'Coords transformation method'
     },

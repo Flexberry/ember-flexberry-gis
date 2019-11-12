@@ -76,6 +76,9 @@ export default {
     'geometry-field-textbox': {
       'caption': 'Поле геометрии'
     },
+    'geometry-type-textbox': {
+      'caption': 'Тип геометрии'
+    },
     'coords-function-textbox': {
       'caption': 'Метод преобразования координат'
     },

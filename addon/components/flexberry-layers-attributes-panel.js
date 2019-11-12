@@ -1124,24 +1124,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} data Hash cantaining edited data.
     */
     onEditRowDialogApprove(data) {
-      let isModel = Ember.get(data, 'isModel');
-      if (isModel) {
-        if (!Ember.get(data, 'hasChanged')) {
-          return;
-        }
-
-        let tabModel = this.get('_editRowTabModel');
-        let layer = this.get('_editRowLayer');
-        Ember.set(layer, 'model', data);
-        tabModel._triggerChanged.call([tabModel, layer, true], { layer });
-        data = data.data;
-
-        for (let key in data) {
-          if (data.hasOwnProperty(key)) {
-            let element = data[key];
-            this.set(`_editRowData.${key}`, element);
-          }
-        }
+      let tabModel = this.get('_editRowTabModel');
+      let layer = this.get('_editRowLayer');
+      if (tabModel.leafletObject.editLayerObjectProperties) {
+        tabModel.leafletObject.editLayerObjectProperties(layer.model, data);
       }
 
       for (var key in data) {
@@ -1149,8 +1135,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           var element = data[key];
           if (!Ember.isEqual(element, this.get(`_editRowData.${key}`))) {
             this.set(`_editRowData.${key}`, element);
-            let tabModel = this.get('_editRowTabModel');
-            let layer = this.get('_editRowLayer');
             tabModel._triggerChanged.call([tabModel, layer, true], { layer });
           }
         }
@@ -1292,7 +1276,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} data A hash containing added feature properties.
     */
     onNewRowDialogApprove(data) {
-      let isModel = Ember.get(data, 'isModel');
       let tabModel = this.get('_newRowTabModel');
       let layer = this.get('_newRowLayer');
 
@@ -1303,20 +1286,21 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.set('_newRowСhoiceValueData', null);
       }
 
-      if (isModel) {
-        tabModel.updateGeometryInModel(layer, data);
-        Ember.set(layer, 'model', data);
-        data = data.data;
+      const tabLeafletObject = tabModel.get('leafletObject');
+      if (tabLeafletObject.createLayerObject) {
+        tabLeafletObject.createLayerObject(tabLeafletObject, data, layer.toGeoJSON().geometry);
+        this.get('leafletMap').removeLayer(layer);
+      } else {
+        Ember.set(layer, 'feature', { type: 'Feature' });
+        Ember.set(layer.feature, 'properties', data);
+        Ember.set(layer.feature, 'leafletLayer', layer);
+        if (typeof (layer.setStyle) === 'function') {
+          layer.setStyle(Ember.get(tabModel, 'leafletObject.options.style'));
+        }
+
+        tabModel.leafletObject.addLayer(layer);
       }
 
-      Ember.set(layer, 'feature', { type: 'Feature' });
-      Ember.set(layer.feature, 'properties', data);
-      Ember.set(layer.feature, 'leafletLayer', layer);
-      if (typeof (layer.setStyle) === 'function') {
-        layer.setStyle(Ember.get(tabModel, 'leafletObject.options.style'));
-      }
-
-      tabModel.leafletObject.addLayer(layer);
       layer.disableEdit();
 
       let propId = Ember.guidFor(data);

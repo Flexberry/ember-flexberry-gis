@@ -29,12 +29,10 @@ export default BaseVectorLayer.extend({
     @method save
   */
   save() {
-    const layers = Object.values(this.getLayers());
     const promises = Ember.A();
-    layers.forEach(layer => {
-      if (layer.hasChanges) {
+    this.eachLayer(function(layer) {
+      if (Ember.get(layer, 'model.hasDirtyAttributes')) {
         promises.addObject(layer.model.save());
-        layer.hasChanges = false;
       }
     }, this);
 
@@ -60,7 +58,6 @@ export default BaseVectorLayer.extend({
     @param layer
   */
   editLayer(layer) {
-    layer.hasChanges = true;
 
     return this;
   },
@@ -75,6 +72,66 @@ export default BaseVectorLayer.extend({
     model.deleteRecord();
     model.set('hasChanged', true);
     this.deletedModels.addObject(model);
+  },
+
+  createLayerObject(layer, objectProperties, geometry) {
+    if (geometry) {
+      const model = this.get('store').createRecord(layer.modelName, objectProperties);
+      const geometryField = this.get('geometryField') || 'geometry';
+      const geometryObject = {};
+      geometryObject.coordinates = this.transformToCoords(geometry.coordinates);
+      geometryObject.crs = {
+        properties: { name: this.get('crs.code') },
+        type: 'name'
+      };
+      geometryObject.type = geometry.type;
+      model.set(geometryField, geometryObject);
+
+      this.addLayerObject(layer, model);
+    }
+  },
+
+  addLayerObject(layer, model) {
+    const geometryField = this.get('geometryField') || 'geometry';
+    const geometry = model.get(geometryField);
+    if (!geometry) {
+      console.log('No geometry specified for layer');
+      return;
+    }
+
+    const geometryCoordinates = this.transformToLatLng(geometry.coordinates);
+
+    let innerLayer;
+    if (geometry.type === 'Polygon') {
+      innerLayer = L.polygon(geometryCoordinates[0]);
+    } else if (geometry.type === 'MultiPolygon') {
+      innerLayer = L.polygon(geometryCoordinates);
+    } else if (geometry.type === 'LineString' || geometry.type === 'MultiLineString') {
+      innerLayer = L.polyline(geometryCoordinates);
+    } else if (geometry.type === 'Point') {
+      innerLayer = L.marker(geometryCoordinates);
+    }
+
+    if (innerLayer) {
+      const modelProj = model.constructor.projections.get(this.get('projectionName'));
+      innerLayer.model = model;
+      innerLayer.modelProj = modelProj;
+      innerLayer.feature = {
+        type: 'Feature',
+        properties: this.createPropsFromModel(model)
+      };
+      if (typeof (innerLayer.setStyle) === 'function') {
+        innerLayer.setStyle(Ember.get(layer, 'leafletObject.options.style'));
+      }
+
+      layer.addLayer(innerLayer);
+    }
+  },
+
+  editLayerObjectProperties(model, objectProperties) {
+    if (model) {
+      model.setProperties(objectProperties);
+    }
   },
 
   /**
@@ -116,40 +173,16 @@ export default BaseVectorLayer.extend({
         L.setOptions(layer, options);
 
         layer.save = this.get('save');
+        layer.createLayerObject = this.get('createLayerObject').bind(this);
+        layer.editLayerObjectProperties = this.get('editLayerObjectProperties').bind(this);
         layer.editLayer = this.get('editLayer');
         layer.deleteModel = this.get('deleteModel');
         layer.modelName = modelName;
         layer.projectionName = projectionName;
-        layer.editformname = this.get('modelName') + this.get('postfixForEditForm');
-        layer.deletedModels = Ember.A(),
+        layer.editformname = modelName + this.get('postfixForEditForm');
+        layer.deletedModels = Ember.A();
         models.forEach(model => {
-          let geometry = model.get(geometryField);
-          if (!geometry) {
-            console.log('No geometry specified for layer');
-            return;
-          }
-
-          let geometryCoordinates = this.transformToLatLng(geometry.coordinates);
-
-          let innerLayer = null;
-          if (geometry.type === 'Polygon') {
-            innerLayer = L.polygon(geometryCoordinates[0]);
-          } else if (geometry.type === 'MultiPolygon') {
-            innerLayer = L.polygon(geometryCoordinates);
-          } else if (geometry.type === 'LineString' || geometry.type === 'MultiLineString') {
-            innerLayer = L.polyline(geometryCoordinates);
-          } else if (geometry.type === 'Point') {
-            innerLayer = L.marker(geometryCoordinates);
-          }
-
-          let modelProj = model.constructor.projections.get(projectionName);
-          innerLayer.model = model;
-          innerLayer.modelProj = modelProj;
-          innerLayer.feature = {
-            type: 'Feature',
-            properties: this.createPropsFromModel(model)
-          };
-          layer.addLayer(innerLayer);
+          this.addLayerObject(layer, model);
         });
         resolve(layer);
       }).catch((e) => {
@@ -171,6 +204,28 @@ export default BaseVectorLayer.extend({
     const coordsToLatLng = this.get('coordsToLatLng');
 
     return Ember.isNone(coordsToLatLng) ? L.latLng([coordinates[1], coordinates[0]]) : new Function('coords', coordsToLatLng)(coordinates);
+  },
+
+  /**
+   Projects geometry from latlng to coords.
+
+   @method transformToCoords
+   @param {Leaflet Object} latlngs
+   @returns coordinates in GeoJSON
+   */
+  transformToCoords(latlngs) {
+    if (Array.isArray(latlngs[0])) {
+      let coords = [];
+      for (let i = 0; i < latlngs.length; i++) {
+        coords.push(this.transformToCoords(latlngs[i]));
+      }
+
+      return coords;
+    }
+
+    const latLngToCoords = this.get('latLngToCoords');
+
+    return Ember.isNone(latLngToCoords) ? [latlngs[0], latlngs[1]] : new Function('latLng', latLngToCoords)(latlngs);
   },
 
   /**
