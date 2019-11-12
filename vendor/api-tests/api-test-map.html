@@ -79,7 +79,7 @@
         return true;
       }
 
-      mapApi.saveObject = function(obj, layerId)  {
+      frame.contentWindow.mapApi.saveObject = function(obj, layerId)  {
         if (layerId === "56f4b518-e375-4b24-be2f-88d48110c0a3") {
           obj.saveObject().then((feature) => console.log(feature)).catch((e) => console.log(e));
         }
