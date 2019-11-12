@@ -460,11 +460,11 @@ export default Ember.Mixin.create({
   },
 
   /**
-  Add Object To Layer.
+    Add Object To Layer.
 
-  @method addObjectToLayer
-  @param {<a href="https://leafletjs.com/reference-1.5.0.html#geojson">L.GeoJSON</a>} object GeoJSON object
-  @param {String} layerId id of layer to add object
+    @method addObjectToLayer
+    @param {<a href="https://leafletjs.com/reference-1.5.0.html#geojson">L.GeoJSON</a>} object GeoJSON object
+    @param {String} layerId id of layer to add object
   */
   addObjectToLayer(object, layerId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
@@ -472,25 +472,18 @@ export default Ember.Mixin.create({
         let store = this.get('store');
         let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
         if (!Ember.isNone(layer)) {
-          let newObj = L.geoJSON(object);
+          let newObj = L.geoJSON(object.geometry).getLayers()[0];
+
+          Ember.set(newObj, 'feature', { type: 'Feature' });
+          Ember.set(newObj.feature, 'properties', object.properties);
+          Ember.set(newObj.feature, 'leafletLayer', layer);
           if (typeof (newObj.setStyle) === 'function') {
-            newObj.setStyle(Ember.get(layer, '_leafletObject.options.style'));
+            newObj.setStyle(Ember.get(layer, 'settingsAsObject.styleSettings.style.path'));
+            Ember.set(newObj, 'options.fillOpacity', 1);
           }
 
-          layer._leafletObject.addLayer(newObj.getLayers()[0]);
-          const saveSuccess = (data) => {
-            layer._leafletObject.off('save:failed', saveSuccess);
-            resolve(data);
-          };
-
-          const saveFailed = (data) => {
-            layer._leafletObject.off('save:success', saveSuccess);
-            reject(data);
-          };
-
-          layer._leafletObject.once('save:success', saveSuccess);
-          layer._leafletObject.once('save:failed', saveFailed);
-          layer._leafletObject.save();
+          layer._leafletObject.addLayer(newObj);
+          resolve('object added successfully');
         } else {
           reject('no layer with such id');
         }
