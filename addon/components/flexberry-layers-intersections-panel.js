@@ -252,6 +252,7 @@ export default Ember.Component.extend({
     closePanel() {
       let group = this.get('resultsLayer');
       group.clearLayers();
+      this.set('noIntersectionResults', true);
       this.sendAction('closeIntersectionPanel');
       this.removeLayers();
     },
@@ -275,7 +276,7 @@ export default Ember.Component.extend({
       let group = this.get('resultsLayer');
       group.clearLayers();
       let obj = L.geoJSON(feature.intersection.intersectedObject, {
-        style: { color: 'green' }
+        style: { color: 'green'}
       });
       obj.addTo(group);
     }
