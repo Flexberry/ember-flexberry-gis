@@ -472,29 +472,32 @@ export default Ember.Mixin.create({
   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
     if (Ember.isArray(objectIds)) {
-      const layer = this.get('mapLayer').findBy('id', layerId);
+      const layers = this.get('mapLayer');
+      const layer = layers.findBy('id', layerId);
+      if (Ember.isNone(layer)) {
+        throw 'No layer with such id';
+      }
+
       const leafletObject = Ember.get(layer, '_leafletObject');
 
       if (Ember.isNone(leafletObject)) {
         throw 'Layer type not supported';
       }
 
-      var map = Ember.get(leafletObject, '_map');
+      const map = this.get('mapApi').getFromApi('leafletMap');
 
-      leafletObject.eachLayer(function (shape) {
-        const id = this._getLayerFeatureId(layer, shape);
-        if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
+      objectIds.forEach(objectId => {
+        let object = Object.values(leafletObject._layers).find(shape => {
+          return Ember.get(shape, 'feature.properties.primarykey') === objectId;
+        });
+        if (object) {
           if (visibility) {
-            if (!map.hasLayer(shape)) {
-              map.addLayer(shape);
-            }
+            map.addLayer(object);
           } else {
-            if (map.hasLayer(shape)) {
-              map.removeLayer(shape);
-            }
+            map.removeLayer(object);
           }
         }
-      }.bind(this));
+      });
     }
   },
 
