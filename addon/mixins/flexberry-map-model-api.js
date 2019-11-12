@@ -112,17 +112,11 @@ export default Ember.Mixin.create({
 
     if (Ember.isNone(layer)) {
       throw new Error(`Layer '${layerId}' not found.`);
-      // return new Ember.RSVP.Promise(() => {
-      //   throw new Error(`Layer '${layerId}' not found.`);
-      // });
     }
 
     const leafletObject = Ember.get(layer, '_leafletObject');
     if (Ember.isNone(leafletObject)) {
       throw new Error('Layer type not supported');
-      // return new Ember.RSVP.Promise(() => {
-      //   throw new Error('Layer type not supported');
-      // });
     }
 
     let ids = [];
@@ -141,22 +135,6 @@ export default Ember.Mixin.create({
         deleteLayerFromAttrPanelFunc(id, layer);
       }
     });
-
-    // return new Ember.RSVP.Promise((resolve, reject) => {
-    //   const saveSuccess = (data) => {
-    //     layer._leafletObject.off('save:failed', saveSuccess);
-    //     resolve(data);
-    //   };
-
-    //   const saveFailed = (data) => {
-    //     layer._leafletObject.off('save:success', saveSuccess);
-    //     reject(data);
-    //   };
-
-    //   layer._leafletObject.once('save:success', saveSuccess);
-    //   layer._leafletObject.once('save:failed', saveFailed);
-    //   layer._leafletObject.save();
-    // });
   },
 
   /**
