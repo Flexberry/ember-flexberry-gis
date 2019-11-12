@@ -90,7 +90,6 @@ export default Ember.Mixin.create({
 
   /**
     Remove shape from layer.
-
     @method deleteLayerObject.
     @param {String} layerId Id layer.
     @param {String} featureId Id shape.
@@ -101,7 +100,6 @@ export default Ember.Mixin.create({
 
   /**
     Remove shapes from layer.
-
     @method deleteLayerObjects.
     @param {string} layerId Id layer.
     @param {Object[]} featureIds Array of id shapes.
