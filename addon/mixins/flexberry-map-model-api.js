@@ -678,15 +678,19 @@ export default Ember.Mixin.create({
         const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
         return layerBFeatureId === objectBId;
       });
+    } else {
+      throw 'no layer with such id';
     }
 
     if (objA && objB) {
-      objA = objA.options.crs.code == 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-      objB = objB.options.crs.code == 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+      objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+      objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
       let intersectionRes = intersect.default(objB, objA);
       if (intersectionRes) {
         return area(intersectionRes);
-      } 
+      }
+    } else {
+      throw 'no object with such id';
     }
 
     return 0;
@@ -718,12 +722,12 @@ export default Ember.Mixin.create({
         return layerBFeatureId === objectBId;
       });
     } else {
-      throw "no layer with such id";
+      throw 'no layer with such id';
     }
 
     if (objA && objB) {
-      objA = objA.options.crs.code == 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-      objB = objB.options.crs.code == 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+      objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+      objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
       let intersectionRes = intersect.default(objB, objA);
       if (intersectionRes) {
         let obj = L.geoJSON(intersectionRes, {
@@ -733,11 +737,11 @@ export default Ember.Mixin.create({
         obj.addTo(map);
       }
     } else {
-      throw "no object with such id";
+      throw 'no object with such id';
     }
   },
 
-   /**
+  /**
     Cleans the service layer.
     @method clearServiceLayer
   */
