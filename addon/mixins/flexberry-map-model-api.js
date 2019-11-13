@@ -650,5 +650,15 @@ export default Ember.Mixin.create({
         return L.polygon(objectToDefine.getLatLngs());
       default: return undefined;
     }
+  },
+
+  startChangeMultyLayerObject(layerId, objectId) {
+
+    this.startChangeMultyLayerObject(layerId, objectId);
+
+    // var FlexberryMapModelApiVisualeditObject = Ember.Object.extend(FlexberryMapModelApiVisualeditMixin);
+    // let hh = FlexberryMapModelApiVisualeditObject.create();
+
+    // hh.startChangeLayerObject(layerId, objectId);
   }
 });

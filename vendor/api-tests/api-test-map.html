@@ -55,6 +55,9 @@
     <div>
       <button id="getLayerObjectOptions">Get Object Attributes</button>
     </div>
+    <div>
+      <button id="test">test</button>
+    </div>
   </div>
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
@@ -231,6 +234,14 @@
         console.log(distance + ' (m)');
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
+
+
+
+      var testButton = document.getElementById('test');
+      var testObjects = function () {
+        frame.contentWindow.mapApi.mapModel.startChangeMultyLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_utverzhdeno_polygon.02b29e0f-e9b0-47c7-a6bf-a91abfe719c3');
+      };
+      testButton.addEventListener('click', testObjects);
 
     });
   </script>
