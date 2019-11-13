@@ -477,6 +477,7 @@ let FlexberryMapComponent = Ember.Component.extend(
         mapApi.addToApi('leafletMap',  leafletMap);
         this.set('_hasLeafletMap', true);
       }
+
       if (Ember.isNone(mapApi.getFromApi('serviceLayer'))) {
         mapApi.addToApi('serviceLayer',  this.get('serviceLayer'));
         this.set('_hasServiceLayer', true);
