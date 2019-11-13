@@ -9,11 +9,13 @@ export default Ember.Mixin.create({
    * @param {string} layerId Layer id.
    * @param {string} featureId Object id.
    * @param {Object} properties Object properties.
+   * @return {Object} featureLayer.
    */
   changeLayerObjectProperties(layerId, featureId, properties) {
     let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
     Object.assign(featureLayer.feature.properties, properties);
     leafletObject.editLayer(featureLayer);
+    return featureLayer;
   },
 
   /**
@@ -21,6 +23,7 @@ export default Ember.Mixin.create({
    * @method startChangeLayerObject
    * @param {string} layerId Layer id.
    * @param {string} featureId Object id.
+   * @return {Object} featureLayer.
    */
   startChangeLayerObject(layerId, featureId) {
     let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
@@ -33,6 +36,8 @@ export default Ember.Mixin.create({
         leafletObject.editLayer(e.layer);
       }
     });
+
+    return featureLayer;
   },
 
   /**
