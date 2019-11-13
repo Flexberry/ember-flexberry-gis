@@ -4,17 +4,24 @@ import turfCombine from 'npm:@turf/combine';
 export default Ember.Mixin.create({
 
   /**
-   Start creating multy objects.
-   @method startChangeMultyLayerObject
-   @param {string} layerId Layer id.
-   @param {string} featureId Object id.
- */
+   * Change layer object properties.
+   * @method changeLayerObjectProperties
+   * @param {string} layerId Layer id.
+   * @param {string} featureId Object id.
+   * @param {Object} properties Object properties.
+   */
   changeLayerObjectProperties(layerId, featureId, properties) {
     let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
     Object.assign(featureLayer.feature.properties, properties);
     leafletObject.editLayer(featureLayer);
   },
 
+  /**
+   * Start change layer object.
+   * @method startChangeLayerObject
+   * @param {string} layerId Layer id.
+   * @param {string} featureId Object id.
+   */
   startChangeLayerObject(layerId, featureId) {
     let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
@@ -29,11 +36,11 @@ export default Ember.Mixin.create({
   },
 
   /**
-   Start creating multy objects.
-   @method startChangeMultyLayerObject
-   @param {string} layerId Layer id.
-   @param {string} featureId Object id.
- */
+   * Start creating multy objects.
+   * @method startChangeMultyLayerObject
+   * @param {string} layerId Layer id.
+   * @param {string} featureId Object id.
+   */
   startChangeMultyLayerObject(layerId, featureId) {
     let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
 
@@ -47,7 +54,7 @@ export default Ember.Mixin.create({
         geometryType = 'multyLine';
         break;
       default:
-        throw `Type '${type}' is not supported.`;
+        throw new Error(`Type '${type}' is not supported.`);
     }
 
     // Select an object for the construction of a multi object.
@@ -83,13 +90,12 @@ export default Ember.Mixin.create({
     }
   },
 
-
   /**
-    Finishing a layer editing operation.
-    @method _disableDraw
-    @param {Object} e Transmitted data.
-    @private
-  */
+   * Finishing a layer editing operation.
+   * @method _disableDraw
+   * @param {Object} e Transmitted data.
+   * @private
+   */
   _disableDraw(e) {
     let editTools = this.get('_editTools');
 
@@ -165,26 +171,28 @@ export default Ember.Mixin.create({
 
 
   /**
-    Will create a new multi shape with the data of the old shape.
-    @method _createCopyMultiShape
-    @param {String} geometryType Shape type.
-    @param {Object[]} featureCollection United coordinates.
-    @return {Object} Return a new multi shape.
-    @private
-  */
-  _createCopyMultiShape(layer, geometryType, featureCollection) {
+   * Will create a new multi shape with the data of the old shape.
+   * @method _createCopyMultiShape
+   * @param {Object} featureLayer Layer.
+   * @param {String} geometryType Shape type.
+   * @param {Object[]} featureCollection United coordinates.
+   * @return {Object} Return a new multi shape.
+   * @private
+   */
+  _createCopyMultiShape(featureLayer, geometryType, featureCollection) {
     //let styleSettings = tabModel.get('styleSettings');
-    let feature = featureCollection.features.pop();
-    let shape = {};
+    //const feature = featureCollection.features.pop();
+
 
     // We will transform feature coordinates from WGS84 (it is EPSG: 4326) to LatLng.
-    feature = L.geoJson(feature, {
+    const featureCombined = L.geoJson(featureCollection.features.pop(), {
       coordsToLatLng: function (coords) {
         return coords;
       }
     }).toGeoJSON();
 
-    let coordinates = feature.features[0].geometry.coordinates;
+    let shape = {};
+    const coordinates = featureCombined.features[0].geometry.coordinates;
 
     if (geometryType === 'multyPolygon') {
       // shape = L.polygon(coordinates, {
@@ -206,23 +214,24 @@ export default Ember.Mixin.create({
     // let layer = Ember.get(tabModel, `featureLink.${layerId}`);
     //var geoJson = layer.toGeoJSON();
 
+    const feature = featureLayer.feature;
     Ember.set(shape, 'feature', {
       type: 'Feature',
-      // properties: geoJson.properties,
+      properties: feature.properties,
       leafletLayer: shape
     });
 
-    let id = Ember.get(layer.feature, 'id');
+    let id = Ember.get(feature, 'id');
     if (!Ember.isNone(id)) {
       Ember.set(shape.feature, 'id', id);
-      Ember.set(shape.feature, 'geometry_name', layer.feature.geometry_name);
+      Ember.set(shape.feature, 'geometry_name', feature.geometry_name);
       Ember.set(shape, 'state', 'updateElement');
 
       Ember.set(shape.feature, 'geometry', {
         coordinates: coordinates
       });
 
-      let geoType = Ember.get(layer.feature, 'geometry.type');
+      let geoType = Ember.get(feature, 'geometry.type');
       if (!Ember.isNone(geoType)) {
         Ember.set(shape.feature.geometry, 'type', geoType);
       }
@@ -234,15 +243,15 @@ export default Ember.Mixin.create({
   },
 
   /**
-    From the list of changed objects, delete individual ones, leaving only the multiple shape.
-    @method _removeFromModified
-    @param {Object[]} changes Array of modified objects.
-    @private
-  */
+   * From the list of changed objects, delete individual ones, leaving only the multiple shape.
+   * @method _removeFromModified
+   * @param {Object[]} changes Array of modified objects.
+   * @private
+   */
   _removeFromModified(changes) {
     for (let changeLayerNumber in changes) {
-      let multyShape = Ember.get(changes[changeLayerNumber], 'multyShape') === true;
-      let mainMultyShape = Ember.get(changes[changeLayerNumber], 'mainMultyShape') === true;
+      const multyShape = Ember.get(changes[changeLayerNumber], 'multyShape') === true;
+      const mainMultyShape = Ember.get(changes[changeLayerNumber], 'mainMultyShape') === true;
 
       if (multyShape === true) {
         if (mainMultyShape === false) {
@@ -257,7 +266,6 @@ export default Ember.Mixin.create({
 
   /**
    * Start visual creating of feature
-   *
    * @param {String} layerId Id of layer in that should started editing
    * @param {Object} properties New layer properties
    * @returns noting
@@ -300,11 +308,11 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Get editTools.
-    @method _getEditTools
-    @return {Object} EditTools.
-    @private
-  */
+   * Get editTools.
+   * @method _getEditTools
+   * @return {Object} EditTools.
+   * @private
+   */
   _getEditTools() {
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     let editTools = Ember.get(leafletMap, 'editTools');
@@ -317,12 +325,12 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Return leaflet layer thats corresponds to passed layerId
-    @method _getLeafletLayer
-    @param {String} layerId
-    @returns {Object}
-    @private
-  */
+   * Return leaflet layer thats corresponds to passed layerId.
+   * @method _getLeafletLayer
+   * @param {String} layerId
+   * @returns {Object}
+   * @private
+   */
   _getLayerModel(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     if (Ember.isNone(layer)) {
@@ -332,6 +340,14 @@ export default Ember.Mixin.create({
     return layer;
   },
 
+  /**
+   *
+   * @method _getModelLayerFeature
+   * @param {String} layerId Layer id.
+   * @param {String} featureId Object id.
+   * @returns {Object}
+   * @private
+   */
   _getModelLayerFeature(layerId, featureId) {
     let layerModel = this._getLayerModel(layerId);
     let leafletObject = layerModel.get('_leafletObject');

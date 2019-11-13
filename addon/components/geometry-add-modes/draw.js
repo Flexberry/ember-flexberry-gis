@@ -1,23 +1,23 @@
 /**
-  @module ember-flexberry-gis
-*/
+ * @module ember-flexberry-gis
+ */
 
 import Ember from 'ember';
 import layout from '../../templates/components/geometry-add-modes/draw';
 import turfCombine from 'npm:@turf/combine';
 
 /**
-  Component's CSS-classes names.
-  JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
-
-  @property {Object} flexberryClassNames
-  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-geometry-add-mode-draw').
-  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-geometry-add-mode-draw').
-  @readonly
-  @static
-
-  @for FlexberryGeometryAddModeDrawComponent
-*/
+ * Component's CSS-classes names.
+ * JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
+ *
+ * @property {Object} flexberryClassNames
+ * @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-geometry-add-mode-draw').
+ * @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-geometry-add-mode-draw').
+ * @readonly
+ * @static
+ *
+ * @for FlexberryGeometryAddModeDrawComponent
+ */
 const flexberryClassNamesPrefix = 'flexberry-geometry-add-mode-draw';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
@@ -26,22 +26,22 @@ const flexberryClassNames = {
 
 let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   /**
-    Reference to component's template.
-  */
+   * Reference to component's template.
+   */
   layout,
 
   /**
-    Reference to component's CSS-classes names.
-    Must be also a component's instance property to be available from component's .hbs template.
-  */
+   * Reference to component's CSS-classes names.
+   * Must be also a component's instance property to be available from component's .hbs template.
+   */
   flexberryClassNames,
 
   /**
-    Component's wrapping <div> CSS-classes names.
-
-    @property classNames
-    @type String[]
-  */
+   * Component's wrapping <div> CSS-classes names.
+   *
+   * @property classNames
+   * @type String[]
+   */
   classNames: ['draw', flexberryClassNames.wrapper],
 
   /**
@@ -51,10 +51,9 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
   actions: {
     /**
-      Handles click on available geometry type.
-
-      @method onGeometryTypeSelect
-      @param {String} geometryType Selected geometry type.
+    * Handles click on available geometry type.
+    * @method onGeometryTypeSelect
+    * @param {String} geometryType Selected geometry type.
     */
     onGeometryTypeSelect(geometryType) {
       this.sendAction('drawStart', geometryType);
@@ -106,11 +105,10 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   },
 
   /**
-    Get editTools.
-
-    @method _getEditTools
-    @private
-  */
+   * Get editTools.
+   * @method _getEditTools
+   * @private
+   */
   _getEditTools() {
     let leafletMap = this.get('leafletMap');
 
@@ -124,11 +122,10 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   },
 
   /**
-    Finishing a layer editing operation.
-
-    @method _disableDraw
-    @param {Object} e Transmitted data.
-    @private
+   * Finishing a layer editing operation.
+   * @method _disableDraw
+   * @param {Object} e Transmitted data.
+   * @private
   */
   _disableDraw(e) {
     let editTools = this.get('_editTools');
@@ -209,16 +206,15 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   },
 
   /**
-    Will create a new multi shape with the data of the old shape.
-
-    @method _createCopyMultiShape
-    @param {Object} tabModel Tab model.
-    @param {Number} layerId Layer id.
-    @param {String} geometryType Shape type.
-    @param {Object[]} featureCollection United coordinates.
-    @return {Object} Return a new multi shape.
-    @private
-  */
+   * Will create a new multi shape with the data of the old shape.
+   * @method _createCopyMultiShape
+   * @param {Object} tabModel Tab model.
+   * @param {Number} layerId Layer id.
+   * @param {String} geometryType Shape type.
+   * @param {Object[]} featureCollection United coordinates.
+   * @return {Object} Return a new multi shape.
+   * @private
+   */
   _createCopyMultiShape(tabModel, layerId, geometryType, featureCollection) {
     let styleSettings = tabModel.get('styleSettings');
     let feature = featureCollection.features.pop();
@@ -277,12 +273,11 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   },
 
   /**
-    From the list of changed objects, delete individual ones, leaving only the multiple shape.
-
-    @method _removeFromModified
-    @param {Object[]} changes Array of modified objects.
-    @private
-  */
+   * From the list of changed objects, delete individual ones, leaving only the multiple shape.
+   * @method _removeFromModified
+   * @param {Object[]} changes Array of modified objects.
+   * @private
+   */
   _removeFromModified(changes) {
     for (let changeLayerNumber in changes) {
       let multyShape = Ember.get(changes[changeLayerNumber], 'multyShape') === true;
@@ -300,11 +295,11 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   },
 
   /**
-    Component's action invoking when new geometry was added.
-
-    @method sendingActions.complete
-    @param {Object} addedLayer Added layer.
-  */
+   * Component's action invoking when new geometry was added.
+   *
+   * @method sendingActions.complete
+   * @param {Object} addedLayer Added layer.
+   */
 });
 
 // Add component's CSS-class names as component's class static constants

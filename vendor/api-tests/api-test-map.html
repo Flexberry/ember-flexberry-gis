@@ -56,7 +56,7 @@
       <button id="getLayerObjectOptions">Get Object Attributes</button>
     </div>
     <div>
-      <button id="test">test</button>
+      <button id="startChangeMultyLayerObject">Change Multy Object</button>
     </div>
   </div>
   <script type="text/javascript">
@@ -235,13 +235,11 @@
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
 
-
-
-      var testButton = document.getElementById('test');
-      var testObjects = function () {
+      var startChangeMultyLayerObjectButton = document.getElementById('startChangeMultyLayerObjects');
+      var startChangeMultyLayerObjects = function () {
         frame.contentWindow.mapApi.mapModel.startChangeMultyLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_utverzhdeno_polygon.02b29e0f-e9b0-47c7-a6bf-a91abfe719c3');
       };
-      testButton.addEventListener('click', testObjects);
+      startChangeMultyLayerObjectButton.addEventListener('click', startChangeMultyLayerObjects);
 
     });
   </script>
