@@ -15,7 +15,7 @@ export default Ember.Mixin.create({
     let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
     Object.assign(featureLayer.feature.properties, properties);
     leafletObject.editLayer(featureLayer);
-    return featureLayer;
+    return leafletObject;
   },
 
   /**
@@ -23,7 +23,7 @@ export default Ember.Mixin.create({
    * @method startChangeLayerObject
    * @param {string} layerId Layer id.
    * @param {string} featureId Object id.
-   * @return {Object} featureLayer.
+   * @return {Object[]} [leafletObject, featureLayer].
    */
   startChangeLayerObject(layerId, featureId) {
     let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
@@ -37,7 +37,7 @@ export default Ember.Mixin.create({
       }
     });
 
-    return featureLayer;
+    return [leafletObject, featureLayer];
   },
 
   /**
@@ -47,36 +47,74 @@ export default Ember.Mixin.create({
    * @param {string} featureId Object id.
    */
   startChangeMultyLayerObject(layerId, featureId) {
-    let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
+    //let [, , featureLayer] = this._getModelLayerFeature(layerId, featureId);
 
-    const type = Ember.get(featureLayer, 'feature.geometry.type');
-    let geometryType;
-    switch (type) {
-      case 'MultiPolygon':
-        geometryType = 'multyPolygon';
-        break;
-      case 'MultiLineString':
-        geometryType = 'multyLine';
-        break;
-      default:
-        throw new Error(`Type '${type}' is not supported.`);
-    }
+    // const type = Ember.get(featureLayer, 'feature.geometry.type');
+    // let geometryType;
+    // switch (type) {
+    //   case 'MultiPolygon':
+    //     geometryType = 'multyPolygon';
+    //     break;
+    //   case 'MultiLineString':
+    //     geometryType = 'multyLine';
+    //     break;
+    //   default:
+    //     throw new Error(`Type '${type}' is not supported.`);
+    // }
 
     // Select an object for the construction of a multi object.
-    this.startChangeLayerObject(layerId, featureId);
+    let [leafletObject, featureLayer] = this.startChangeLayerObject(layerId, featureId);
 
-    this.set('geometryType', geometryType);
+    //this.set('geometryType', 'multyPolygon');
 
     let editTools = this._getEditTools();
-    let context = this;
-    Ember.set(context, 'leafletObject', leafletObject);
-    Ember.set(context, 'featureLayer', featureLayer);
-    editTools.on('editable:drawing:end', this._disableDraw, context);
+    //let context = this;
+    //Ember.set(context, 'leafletObject', leafletObject);
+    //Ember.set(context, 'featureLayer', featureLayer);
+    //Ember.set(context, 'editTools', editTools);
 
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    Ember.set(leafletMap, 'drawTools', editTools);
+    const _disableDraw = function (e) {
+      editTools.off('editable:drawing:end', this._disableDraw, this);
+      editTools.stopDrawing();
 
-    leafletMap.flexberryMap.tools.enableDefault();
+      //if (!Ember.isNone(e)) {
+      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+
+      var drawnItems = new L.FeatureGroup();
+      leafletMap.addLayer(drawnItems);
+
+      var featureCollection = {
+        type: 'FeatureCollection',
+        features: []
+      };
+
+      // Define editable objects.
+      leafletMap.eachLayer(function (layer) {
+        let enabled = Ember.get(layer, 'editor._enabled');
+        if (enabled === true) {
+          var layerGeoJson = layer.toGeoJSON();
+          featureCollection.features.push(layerGeoJson);
+        }
+      }.bind(this));
+
+      // Coordinate union.
+      let fcCombined = turfCombine.default(featureCollection);
+      const featureCombined = fcCombined.features.pop();
+
+      Ember.set(featureLayer, 'feature.geometry', featureCombined.geometry);
+
+      // We note that the shape was edited.
+      leafletObject.editLayer(featureLayer);
+      //this.leafletObject.changes
+      // }
+    };
+
+    editTools.on('editable:drawing:end', _disableDraw, this);
+
+    // let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    // Ember.set(leafletMap, 'drawTools', editTools);
+
+    // leafletMap.flexberryMap.tools.enableDefault();
 
     // this.$().closest('body').on('keydown', ((e) => {
     //   // Esc was pressed.
@@ -84,12 +122,12 @@ export default Ember.Mixin.create({
     //     this._disableDraw();
     //   }
     // }));
-
-    switch (geometryType) {
-      case 'multyPolygon':
+    const type = Ember.get(featureLayer, 'feature.geometry.type');
+    switch (type) {
+      case 'MultiPolygon':
         editTools.startPolygon();
         break;
-      case 'multyLine':
+      case 'MultiLineString':
         editTools.startPolyline();
         break;
     }
@@ -102,75 +140,87 @@ export default Ember.Mixin.create({
    * @private
    */
   _disableDraw(e) {
-    let editTools = this.get('_editTools');
+    //let editTools = this.get('_editTools');
 
     // this.$().closest('body').off('keydown');
-    if (!Ember.isNone(editTools)) {
-      editTools.off('editable:drawing:end', this._disableDraw, this);
-      editTools.stopDrawing();
-    }
+    // if (!Ember.isNone(editTools)) {
+    //   editTools.off('editable:drawing:end', this._disableDraw, this);
+    //   editTools.stopDrawing();
+    // }
+
+    this.editTools.off('editable:drawing:end', this._disableDraw, this);
+    this.editTools.stopDrawing();
 
     if (!Ember.isNone(e)) {
-      let geometryType = this.get('geometryType');
+      // let geometryType = this.get('geometryType');
 
-      if (geometryType !== 'multyPolygon' && geometryType !== 'multyLine') {
-        let addedLayer = e.layer;
-        this.sendAction('complete', addedLayer);
-      } else {
-        let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+      // if (geometryType !== 'multyPolygon' && geometryType !== 'multyLine') {
+      //   let addedLayer = e.layer;
+      //   this.sendAction('complete', addedLayer);
+      // } else {
+      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
-        var drawnItems = new L.FeatureGroup();
-        leafletMap.addLayer(drawnItems);
+      var drawnItems = new L.FeatureGroup();
+      leafletMap.addLayer(drawnItems);
 
-        var featureCollection = {
-          type: 'FeatureCollection',
-          features: []
-        };
+      var featureCollection = {
+        type: 'FeatureCollection',
+        features: []
+      };
 
-        // Define editable objects.
-        leafletMap.eachLayer(function (layer) {
-          let enabled = Ember.get(layer, 'editor._enabled');
-          if (enabled === true) {
-            var layerGeoJson = layer.toGeoJSON();
-            featureCollection.features.push(layerGeoJson);
+      // Define editable objects.
+      leafletMap.eachLayer(function (layer) {
+        let enabled = Ember.get(layer, 'editor._enabled');
+        if (enabled === true) {
+          var layerGeoJson = layer.toGeoJSON();
+          featureCollection.features.push(layerGeoJson);
 
-            Ember.set(layer, 'multyShape', true);
+          // Ember.set(layer, 'multyShape', true);
 
-            if (leafletMap.hasLayer(layer)) {
-              leafletMap.removeLayer(layer);
-            }
+          // if (leafletMap.hasLayer(layer)) {
+          //   leafletMap.removeLayer(layer);
+          // }
 
-            if (this.leafletObject.hasLayer(layer)) {
-              this.leafletObject.removeLayer(layer);
-            }
-          }
-        }.bind(this));
+          // if (this.leafletObject.hasLayer(layer)) {
+          //   this.leafletObject.removeLayer(layer);
+          // }
+        }
+      }.bind(this));
 
-        // Coordinate union.
-        let fcCombined = turfCombine.default(featureCollection);
+      // Coordinate union.
+      let fcCombined = turfCombine.default(featureCollection);
 
-        // Create a new multi shape with old shape data.
-        let shape = this._createCopyMultiShape(this.featureLayer, geometryType, fcCombined);
+      let hh = fcCombined.features.pop();
+      //  this.featureLayer.feature.geometry.coordinates = hh.geometry.coordinates;
+      this.featureLayer.feature.geometry = hh.geometry;
 
-        // Create a multiple shape.
-        shape.addTo(this.leafletObject);
+      //hh.geometry.type
 
-        // Linking shapes.
-        Ember.set(shape, 'multyShape', true);
-        Ember.set(shape, 'mainMultyShape', true);
+      // let fcCombined = turfCombine.default(this.featureLayer.feature);
 
-        // Make shape in edit mode.
-        shape.enableEdit();
 
-        // We note that the shape was edited.
-        this.leafletObject.editLayer(shape);
+      // // Create a new multi shape with old shape data.
+      // let shape = this._createCopyMultiShape(this.featureLayer, geometryType, fcCombined);
 
-        // From the list of changed shapes, delete individual ones, leaving only the multiple shape.
-        this._removeFromModified(this.leafletObject.changes);
+      // // Create a multiple shape.
+      // shape.addTo(this.leafletObject);
 
-        delete this.leafletObject;
-        delete this.featureLayer;
-      }
+      // // Linking shapes.
+      // Ember.set(shape, 'multyShape', true);
+      // Ember.set(shape, 'mainMultyShape', true);
+
+      // // Make shape in edit mode.
+      // shape.enableEdit();
+
+      // We note that the shape was edited.
+      this.leafletObject.editLayer(this.featureLayer);
+
+      // // From the list of changed shapes, delete individual ones, leaving only the multiple shape.
+      // this._removeFromModified(this.leafletObject.changes);
+
+      // delete this.leafletObject;
+      // delete this.featureLayer;
+      //  }
     }
   },
 
@@ -350,7 +400,7 @@ export default Ember.Mixin.create({
    * @method _getModelLayerFeature
    * @param {String} layerId Layer id.
    * @param {String} featureId Object id.
-   * @returns {Object}
+   * @returns {Object[]} [layerModel, leafletObject, featureLayer]
    * @private
    */
   _getModelLayerFeature(layerId, featureId) {
