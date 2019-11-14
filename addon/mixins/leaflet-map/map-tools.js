@@ -123,7 +123,7 @@ export default Ember.Mixin.create({
 
       // Hide map-tool.
       hide(mapToolName) {
-        let $leafletContainer = $(leafletMap._container);
+        let $leafletContainer = Ember.$(leafletMap._container);
 
         const addClassHidden = function ($toolControl) {
           if ($toolControl.length === 1 && !$toolControl.hasClass('hidden')) {
@@ -131,15 +131,15 @@ export default Ember.Mixin.create({
           } else {
             let $toolControlInner = $toolControl.children();
             for (var tool of $toolControlInner) {
-              if (!$(tool).hasClass('hidden')) {
-                $(tool).addClass('hidden');
+              if (!Ember.$(tool).hasClass('hidden')) {
+                Ember.$(tool).addClass('hidden');
               }
             }
           }
         };
 
         if (Ember.isNone(mapToolName)) {
-          addClassHidden($('.flexberry-maptoolbar'));
+          addClassHidden(Ember.$('.flexberry-maptoolbar'));
           addClassHidden($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
           addClassHidden($leafletContainer.find('.leaflet-control-container .history-control'));
           return;
@@ -162,7 +162,7 @@ export default Ember.Mixin.create({
 
       // Show map-tool.
       show(mapToolName) {
-        let $leafletContainer = $(leafletMap._container);
+        let $leafletContainer = Ember.$(leafletMap._container);
 
         const removeClassHidden = function ($toolControl) {
           if ($toolControl.length === 1 && $toolControl.hasClass('hidden')) {
@@ -170,15 +170,15 @@ export default Ember.Mixin.create({
           } else {
             let $toolControlInner = $toolControl.children();
             for (var tool of $toolControlInner) {
-              if ($(tool).hasClass('hidden')) {
-                $(tool).removeClass('hidden');
+              if (Ember.$(tool).hasClass('hidden')) {
+                Ember.$(tool).removeClass('hidden');
               }
             }
           }
         };
 
         if (Ember.isNone(mapToolName)) {
-          removeClassHidden($('.flexberry-maptoolbar'));
+          removeClassHidden(Ember.$('.flexberry-maptoolbar'));
           removeClassHidden($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
           removeClassHidden($leafletContainer.find('.leaflet-control-container .history-control'));
           return;

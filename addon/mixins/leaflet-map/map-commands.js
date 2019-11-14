@@ -96,7 +96,7 @@ export default Ember.Mixin.create({
 
       // Hide map-command.
       hide(mapCommandName) {
-        let $leafletContainer = $(leafletMap._container);
+        let $leafletContainer = Ember.$(leafletMap._container);
 
         const addClassHidden = function ($commandControl) {
           if ($commandControl.length === 1 && !$commandControl.hasClass('hidden')) {
@@ -104,15 +104,15 @@ export default Ember.Mixin.create({
           } else {
             let $commandControlInner = $commandControl.children();
             for (var command of $commandControlInner) {
-              if (!$(command).hasClass('hidden')) {
-                $(command).addClass('hidden');
+              if (!Ember.$(command).hasClass('hidden')) {
+                Ember.$(command).addClass('hidden');
               }
             }
           }
         };
 
         if (Ember.isNone(mapCommandName)) {
-          addClassHidden($('.flexberry-maptoolbar'));
+          addClassHidden(Ember.$('.flexberry-maptoolbar'));
           addClassHidden($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
           addClassHidden($leafletContainer.find('.leaflet-control-container .history-control'));
           return;
@@ -135,7 +135,7 @@ export default Ember.Mixin.create({
 
       // Show map-command.
       show(mapCommandName) {
-        let $leafletContainer = $(leafletMap._container);
+        let $leafletContainer = Ember.$(leafletMap._container);
 
         const removeClassHidden = function ($commandControl) {
           if ($commandControl.length === 1 && $commandControl.hasClass('hidden')) {
@@ -143,15 +143,15 @@ export default Ember.Mixin.create({
           } else {
             let $commandControlInner = $commandControl.children();
             for (var command of $commandControlInner) {
-              if ($(command).hasClass('hidden')) {
-                $(command).removeClass('hidden');
+              if (Ember.$(command).hasClass('hidden')) {
+                Ember.$(command).removeClass('hidden');
               }
             }
           }
         };
 
         if (Ember.isNone(mapCommandName)) {
-          removeClassHidden($('.flexberry-maptoolbar'));
+          removeClassHidden(Ember.$('.flexberry-maptoolbar'));
           removeClassHidden($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
           removeClassHidden($leafletContainer.find('.leaflet-control-container .history-control'));
           return;

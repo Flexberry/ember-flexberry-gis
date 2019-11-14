@@ -24,7 +24,7 @@ export default Ember.Mixin.create({
 
       // Hide sidebar.
       hide() {
-        let $control = $('.sidebar-wrapper');
+        let $control = Ember.$('.sidebar-wrapper');
         if ($control.length === 1 && !$control.hasClass('hidden')) {
           $control.addClass('hidden');
         }
@@ -32,7 +32,7 @@ export default Ember.Mixin.create({
 
       // Show sidebar.
       show() {
-        let $control = $('.sidebar-wrapper');
+        let $control = Ember.$('.sidebar-wrapper');
         if ($control.length === 1 && $control.hasClass('hidden')) {
           $control.removeClass('hidden');
         }
