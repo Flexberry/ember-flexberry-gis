@@ -107,7 +107,7 @@ export default Ember.Object.extend(Ember.Evented, {
 
     return executionResult;
   },
-  
+
   hideCommand() {
     let mapCommandName = this.get('name');
     let $leafletMapContainer = $(leafletMap._container);
