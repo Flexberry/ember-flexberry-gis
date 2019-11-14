@@ -41,74 +41,6 @@ export default Ember.Mixin.create({
   },
 
   /**
-   * Start creating multy objects.
-   * @method startChangeMultyLayerObject
-   * @param {string} layerId Layer id.
-   * @param {string} featureId Object id.
-   */
-  startChangeMultyLayerObject(layerId, featureId) {
-
-    // Select an object for the construction of a multi object.
-    let [leafletObject, featureLayer] = this.startChangeLayerObject(layerId, featureId);
-
-    let editTools = this._getEditTools();
-
-    const _disableDraw = () => {
-      editTools.off('editable:drawing:end', _disableDraw, this);
-      editTools.stopDrawing();
-
-      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-
-      var drawnItems = new L.FeatureGroup();
-      leafletMap.addLayer(drawnItems);
-
-      var featureCollection = {
-        type: 'FeatureCollection',
-        features: []
-      };
-
-      // Define editable objects.
-      leafletMap.eachLayer(function (layer) {
-        const enabled = Ember.get(layer, 'editor._enabled');
-        if (enabled === true) {
-          const layerGeoJson = layer.toGeoJSON();
-          featureCollection.features.push(layerGeoJson);
-        }
-      }.bind(this));
-
-      // Coordinate union.
-      let fcCombined = turfCombine.default(featureCollection);
-      const featureCombined = fcCombined.features.pop();
-
-      Ember.set(featureLayer, 'feature.geometry', featureCombined.geometry);
-
-      // We note that the shape was edited.
-      leafletObject.editLayer(featureLayer);
-      //leafletObject.changes
-    };
-
-    editTools.on('editable:drawing:end', _disableDraw, this);
-
-    const type = Ember.get(featureLayer, 'feature.geometry.type');
-    switch (type) {
-      case 'Polygon':
-        editTools.startPolygon();
-        Ember.set(featureLayer, 'feature.geometry.type', 'MultiPolygon');
-        break;
-      case 'MultiPolygon':
-        editTools.startPolygon();
-        break;
-      case 'LineString':
-        editTools.startPolyline();
-        Ember.set(featureLayer, 'feature.geometry.type', 'MultiLineString');
-        break;
-      case 'MultiLineString':
-        editTools.startPolyline();
-        break;
-    }
-  },
-
-  /**
    * Start visual creating of feature
    * @param {String} layerId Id of layer in that should started editing
    * @param {Object} properties New layer properties
@@ -205,5 +137,70 @@ export default Ember.Mixin.create({
     }
 
     return [layerModel, leafletObject, featureLayer];
+  },
+
+  /**
+   * Start creating multy objects.
+   * @method startChangeMultyLayerObject
+   * @param {string} layerId Layer id.
+   * @param {string} featureId Object id.
+   */
+  startChangeMultyLayerObject(layerId, featureId) {
+
+    // Select an object for the construction of a multi object.
+    let [leafletObject, featureLayer] = this.startChangeLayerObject(layerId, featureId);
+
+    let editTools = this._getEditTools();
+
+    const _disableDraw = () => {
+      editTools.off('editable:drawing:end', _disableDraw, this);
+      editTools.stopDrawing();
+
+      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+
+      var featureCollection = {
+        type: 'FeatureCollection',
+        features: []
+      };
+
+      // Define editable objects.
+      leafletMap.eachLayer(function (layer) {
+        const enabled = Ember.get(layer, 'editor._enabled');
+        if (enabled === true) {
+          const layerGeoJson = layer.toGeoJSON();
+          featureCollection.features.push(layerGeoJson);
+        }
+      }.bind(this));
+
+      // Coordinate union.
+      let fcCombined = turfCombine.default(featureCollection);
+      const featureCombined = fcCombined.features.pop();
+
+      Ember.set(featureLayer, 'feature.geometry', featureCombined.geometry);
+
+      // We note that the shape was edited.
+      leafletObject.editLayer(featureLayer);
+    };
+
+    editTools.on('editable:drawing:end', _disableDraw, this);
+
+    const type = Ember.get(featureLayer, 'feature.geometry.type');
+    switch (type) {
+      case 'Polygon':
+        editTools.startPolygon();
+        Ember.set(featureLayer, 'feature.geometry.type', 'MultiPolygon');
+        break;
+      case 'MultiPolygon':
+        editTools.startPolygon();
+        break;
+      case 'LineString':
+        editTools.startPolyline();
+        Ember.set(featureLayer, 'feature.geometry.type', 'MultiLineString');
+        break;
+      case 'MultiLineString':
+        editTools.startPolyline();
+        break;
+    }
   }
+
 });
