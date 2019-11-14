@@ -172,5 +172,25 @@ export default Ember.Object.extend(Ember.Evented, {
 
     this.disable();
     this.set('leafletMap', null);
+  },
+
+  hideTool() {
+    let mapToolName = this.get('name');
+    let $leafletMapContainer = this.get('_leafletMapContainer');
+    let mapToolClass = `.flexberry-${mapToolName}-map-tool.flexberry-map-tool`;
+    let $toolControl = $(`.flexberry-maptoolbar ${mapToolClass}`);
+    if ($toolControl.length == 1 && !$toolControl.hasClass('hidden')) {
+      $toolControl.addClass('hidden');
+    }
+  },
+
+  showTool() {
+    let mapToolName = this.get('name');
+    let $leafletMapContainer = this.get('_leafletMapContainer');
+    let mapToolClass = `.flexberry-${mapToolName}-map-tool.flexberry-map-tool`;
+    let $toolControl = $(`.flexberry-maptoolbar ${mapToolClass}`);
+    if ($toolControl.length == 1 && $toolControl.hasClass('hidden')) {
+      $toolControl.removeClass('hidden');
+    }
   }
 });

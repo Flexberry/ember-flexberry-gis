@@ -92,6 +92,84 @@ export default Ember.Mixin.create({
         });
 
         delete leafletMap.flexberryMap.commands;
+      },
+
+      // Hide map-command.
+      hide(mapCommandName) {
+        let $leafletContainer = $(leafletMap._container);
+
+        const addClassHidden = function ($commandControl) {
+          if ($commandControl.length === 1 && !$commandControl.hasClass('hidden')) {
+            $commandControl.addClass('hidden');
+          } else {
+            let $commandControlInner = $commandControl.children();
+            for (var command of $commandControlInner) {
+              if (!$(command).hasClass('hidden')) {
+                $(command).addClass('hidden');
+              }
+            }
+          }
+        };
+
+        if (Ember.isNone(mapCommandName)) {
+          addClassHidden($('.flexberry-maptoolbar'));
+          addClassHidden($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
+          addClassHidden($leafletContainer.find('.leaflet-control-container .history-control'));
+          return;
+        }
+
+        if (mapCommandName.includes('history-')) {
+          addClassHidden($leafletContainer.find(`.leaflet-control-container .history-control .${mapCommandName}-button`));
+        } else if (mapCommandName.includes('zoom-')) {
+          addClassHidden($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapCommandName}`));
+        } else {
+          let mapCommand = lookupMapCommand(mapCommandName, null);
+          if (Ember.isNone(mapCommand)) {
+            return;
+          }
+
+          mapCommand.hideCommand();
+        }
+
+      },
+
+      // Show map-command.
+      show(mapCommandName) {
+        let $leafletContainer = $(leafletMap._container);
+
+        const removeClassHidden = function ($commandControl) {
+          if ($commandControl.length === 1 && $commandControl.hasClass('hidden')) {
+            $commandControl.removeClass('hidden');
+          } else {
+            let $commandControlInner = $commandControl.children();
+            for (var command of $commandControlInner) {
+              if ($(command).hasClass('hidden')) {
+                $(command).removeClass('hidden');
+              }
+            }
+          }
+        };
+
+        if (Ember.isNone(mapCommandName)) {
+          removeClassHidden($('.flexberry-maptoolbar'));
+          removeClassHidden($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
+          removeClassHidden($leafletContainer.find('.leaflet-control-container .history-control'));
+          return;
+        }
+
+        if (mapCommandName.includes('history-')) {
+          removeClassHidden($leafletContainer.find(`.leaflet-control-container .history-control .${mapCommandName}-button`));
+        } else if (mapCommandName.includes('zoom-')) {
+          removeClassHidden($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapCommandName}`));
+        } else {
+          let mapCommand = lookupMapCommand(mapCommandName, null);
+          if (Ember.isNone(mapCommand)) {
+            return;
+          }
+
+          mapCommand.showCommand();
+        }
+
       }
     };
   },

@@ -121,6 +121,84 @@ export default Ember.Mixin.create({
         return lookupMapTool(mapToolName, mapToolProperties);
       },
 
+      // Hide map-tool.
+      hide(mapToolName) {
+        let $leafletContainer = $(leafletMap._container);
+
+        const addClassHidden = function ($toolControl) {
+          if ($toolControl.length === 1 && !$toolControl.hasClass('hidden')) {
+            $toolControl.addClass('hidden');
+          } else {
+            let $toolControlInner = $toolControl.children();
+            for (var tool of $toolControlInner) {
+              if (!$(tool).hasClass('hidden')) {
+                $(tool).addClass('hidden');
+              }
+            }
+          }
+        };
+
+        if (Ember.isNone(mapToolName)) {
+          addClassHidden($('.flexberry-maptoolbar'));
+          addClassHidden($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
+          addClassHidden($leafletContainer.find('.leaflet-control-container .history-control'));
+          return;
+        }
+
+        if (mapToolName.includes('history-')) {
+          addClassHidden($leafletContainer.find(`.leaflet-control-container .history-control .${mapToolName}-button`));
+        } else if (mapToolName.includes('zoom-')) {
+          addClassHidden($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapToolName}`));
+        } else {
+          let mapTool = lookupMapTool(mapToolName, null);
+          if (Ember.isNone(mapTool)) {
+            return;
+          }
+
+          mapTool.hideTool();
+        }
+
+      },
+
+      // Show map-tool.
+      show(mapToolName) {
+        let $leafletContainer = $(leafletMap._container);
+
+        const removeClassHidden = function ($toolControl) {
+          if ($toolControl.length === 1 && $toolControl.hasClass('hidden')) {
+            $toolControl.removeClass('hidden');
+          } else {
+            let $toolControlInner = $toolControl.children();
+            for (var tool of $toolControlInner) {
+              if ($(tool).hasClass('hidden')) {
+                $(tool).removeClass('hidden');
+              }
+            }
+          }
+        };
+
+        if (Ember.isNone(mapToolName)) {
+          removeClassHidden($('.flexberry-maptoolbar'));
+          removeClassHidden($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
+          removeClassHidden($leafletContainer.find('.leaflet-control-container .history-control'));
+          return;
+        }
+
+        if (mapToolName.includes('history-')) {
+          removeClassHidden($leafletContainer.find(`.leaflet-control-container .history-control .${mapToolName}-button`));
+        } else if (mapToolName.includes('zoom-')) {
+          removeClassHidden($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapToolName}`));
+        } else {
+          let mapTool = lookupMapTool(mapToolName, null);
+          if (Ember.isNone(mapTool)) {
+            return;
+          }
+
+          mapTool.showTool();
+        }
+
+      },
+
       // Disables enabled map-tool.
       disable() {
         if (Ember.isNone(enabledMapTool)) {

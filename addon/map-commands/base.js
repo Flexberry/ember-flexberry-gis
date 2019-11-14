@@ -106,5 +106,25 @@ export default Ember.Object.extend(Ember.Evented, {
     }
 
     return executionResult;
+  },
+  
+  hideCommand() {
+    let mapCommandName = this.get('name');
+    let $leafletMapContainer = $(leafletMap._container);
+    let mapCommandClass = `.flexberry-${mapCommandName}-map-command.flexberry-map-tool`;
+    let $commandControl = $(`.flexberry-maptoolbar ${mapCommandClass}`);
+    if ($commandControl.length == 1 && !$commandControl.hasClass('hidden')) {
+      $commandControl.addClass('hidden');
+    }
+  },
+
+  showCommand() {
+    let mapCommandName = this.get('name');
+    let $leafletMapContainer = $(leafletMap._container);
+    let mapCommandClass = `.flexberry-${mapCommandName}-map-command.flexberry-map-tool`;
+    let $commandControl = $(`.flexberry-maptoolbar ${mapCommandClass}`);
+    if ($commandControl.length == 1 && $commandControl.hasClass('hidden')) {
+      $commandControl.removeClass('hidden');
+    }
   }
 });

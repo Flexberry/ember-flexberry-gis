@@ -55,6 +55,15 @@
     <div>
       <button id="getLayerObjectOptions">Get Object Attributes</button>
     </div>
+    <div>
+      <button id="hideLeftPanel">Hide left panel</button>
+      <button id="showLeftPanel">Show left panel</button>
+      <input type="text" size="40" id="nameTools">
+    </div>
+    <div>
+      <button id="hideRightPanel">Hide right panel</button>
+      <button id="showRightPanel">Show right panel</button>
+    </div>
   </div>
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
@@ -232,6 +241,37 @@
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
 
+      var showLeftPanelButton = document.getElementById('showLeftPanel');
+      var showLeftPanel = function () {
+        var nameTool = document.getElementById('nameTools').value;
+        if (nameTool != '')
+          frame.contentWindow.leafletMap.flexberryMap.tools.show(nameTool);
+        else
+          frame.contentWindow.leafletMap.flexberryMap.tools.show();
+      };
+      showLeftPanelButton.addEventListener('click', showLeftPanel);
+
+      var hideLeftPanelButton = document.getElementById('hideLeftPanel');
+      var hideLeftPanel = function () {
+        var nameTool = document.getElementById('nameTools').value;
+        if (nameTool != '')
+          frame.contentWindow.leafletMap.flexberryMap.tools.hide(nameTool);
+        else
+          frame.contentWindow.leafletMap.flexberryMap.tools.hide();
+      };
+      hideLeftPanelButton.addEventListener('click', hideLeftPanel);
+
+      var showRightPanelButton = document.getElementById('showRightPanel');
+      var showRightPanel = function () {
+        frame.contentWindow.leafletMap.flexberryMap.sidebar.show();
+      };
+      showRightPanelButton.addEventListener('click', showRightPanel);
+
+      var hideRightPanelButton = document.getElementById('hideRightPanel');
+      var hideRightPanel = function () {
+        frame.contentWindow.leafletMap.flexberryMap.sidebar.hide();
+      };
+      hideRightPanelButton.addEventListener('click', hideRightPanel);
     });
   </script>
 </div>
