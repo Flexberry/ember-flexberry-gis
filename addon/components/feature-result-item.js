@@ -183,7 +183,7 @@ export default Ember.Component.extend({
         const shape = this.get('feature');
 
         //Need to implement id definition function
-        shapeId = getLayerFeatureIdFunc(layer, shape);
+        shapeId = getLayerFeatureIdFunc(layer, shape.leafletLayer);
       } else {
         shapeId = this.get('feature.id');
       }
