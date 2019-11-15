@@ -16,10 +16,10 @@ export default Ember.Mixin.create({
   mapApi: Ember.inject.service(),
 
   /**
-    Object types.
-    @property objectTypes
-    @type Object
-  */
+   * Object types.
+   * @property objectTypes
+   * @type Object
+   */
   objectTypes: {
     marker: 'Marker',
     circle: 'Circle',
@@ -667,46 +667,40 @@ export default Ember.Mixin.create({
     }
   },
 
+  /**
+   * Add object to layer.
+   * @method addObjectToLayer
+   * @param {Object} object Object.
+   * @param {string} layerId Layer id.
+   */
   addObjectToLayer(object, layerId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      if (!Ember.isNone(object)) {
-        let store = this.get('store');
-        let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
-        if (!Ember.isNone(layer)) {
-          let newObj = L.geoJSON(object);
-          if (typeof (newObj.setStyle) === 'function') {
-            newObj.setStyle(Ember.get(layer, '_leafletObject.options.style'));
-          }
+    if (Ember.isNone(object)) {
+      throw new Error('Passed object is null.');
+    }
 
-          layer._leafletObject.addLayer(newObj.getLayers()[0]);
-          const saveSuccess = (data) => {
-            layer._leafletObject.off('save:failed', saveSuccess);
-            resolve(data);
-          };
+    const store = this.get('store');
+    let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
 
-          const saveFailed = (data) => {
-            layer._leafletObject.off('save:success', saveSuccess);
-            reject(data);
-          };
+    if (Ember.isNone(layer)) {
+      throw new Error('No layer with such id.');
+    }
 
-          layer._leafletObject.once('save:success', saveSuccess);
-          layer._leafletObject.once('save:failed', saveFailed);
-          layer._leafletObject.save();
-        } else {
-          reject('no layer with such id');
-        }
-      } else {
-        reject('passed object is null');
-      }
-    });
+    let leafletObject = layer._leafletObject;
+    let newObj = L.geoJSON(object);
+
+    if (typeof (newObj.setStyle) === 'function') {
+      newObj.setStyle(Ember.get(leafletObject, 'options.style'));
+    }
+
+    leafletObject.addLayer(newObj.getLayers()[0]);
   },
 
   /**
-    Create polygon object by coordinates.
-    @method createObject
-    @param {string} layerId Layer id.
-    @param {GeoJson} object GeoJson object.
-  */
+   * Create polygon object by coordinates.
+   * @method createObject
+   * @param {string} layerId Layer id.
+   * @param {GeoJson} object GeoJson object.
+   */
   createObject(layerId, object) {
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
@@ -740,11 +734,11 @@ export default Ember.Mixin.create({
   },
 
   /**
-  Create polygon object by rhumb.
-  @method createPolygonObjectRhumb
-  @param {string} layerId Layer id.
-  @param {Object} data Coordinate objects.
-*/
+   * Create polygon object by rhumb.
+   * @method createPolygonObjectRhumb
+   * @param {string} layerId Layer id.
+   * @param {Object} data Coordinate objects.
+   */
   createPolygonObjectRhumb(layerId, data) {
     if (Ember.isNone(data.points) || data.points.length === 0) {
       throw new Error('Not data.');
