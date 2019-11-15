@@ -6,6 +6,8 @@ import booleanContains from 'npm:@turf/boolean-contains';
 import area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
 import rhumbDestination from 'npm:@turf/rhumb-destination';
+import rhumbBearing from 'npm:@turf/rhumb-bearing';
+import rhumbDistance from 'npm:@turf/rhumb-distance';
 
 export default Ember.Mixin.create({
   /**
@@ -880,6 +882,102 @@ export default Ember.Mixin.create({
     };
 
     this.createObject(layerId, obj);
+  },
+
+  /*
+   * Get the object thumb.
+   * @method  getRhumb
+   * @param {string} layerId Layer id.
+   * @param {string} objectId Object id.
+   * @return {array} Table rhumb.
+   */
+  getRhumb(layerId, objectId) {
+    const layer = this.get('mapLayer').findBy('id', layerId);
+    const leafletObject = Ember.get(layer, '_leafletObject');
+
+    var cors;
+    leafletObject.eachLayer(function (object) {
+      const id = this._getLayerFeatureId(layer, object);
+      if (!Ember.isNone(id) && objectId === id) {
+        cors = object._latlngs;
+      }
+    }.bind(this));
+
+    if (Ember.isNone(cors)) {
+      throw new Error('Object not found');
+    }
+
+    let result = [];
+
+    var rowPush = function (vertexNum1, vertexNum2, point1, point2) {
+      const pointFrom = helpers.point([point2.lat, point2.lng]);
+      const pointTo = helpers.point([point1.lat, point1.lng]);
+
+      // We get the distance and translate into meters.
+      const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
+
+      // Get the angle.
+      const bearing = rhumbBearing.default(pointFrom, pointTo);
+
+      let rhumb;
+
+      // Calculates rhumb.
+      if (bearing < -90 && bearing > -180) {
+        // СВ
+        rhumb = 'СВ;' + (Math.abs(bearing) - 90);
+      } else if (bearing <= 180 && bearing > 90) {
+        // ЮВ
+        rhumb = 'ЮВ;' + (bearing - 90);
+      } else if (bearing <= 90 && bearing > 0) {
+        // ЮЗ
+        rhumb = 'ЮЗ;' + (90 - bearing);
+      } if (bearing <= 0 && bearing >= -90) {
+        // СЗ
+        rhumb = 'СЗ;' + Math.abs(-90 - bearing);
+      }
+
+      return {
+        rib: `${vertexNum1 + 1};${vertexNum2 + 1}`,
+        rhumb: rhumb,
+        distance: distance
+      };
+    };
+
+    let startPoint = null;
+    for (let i = 0; i < cors.length; i++) {
+      for (let j = 0; j < cors[i].length; j++) {
+        let n;
+        let point1;
+        let point2;
+        let item = cors[i][j];
+
+        // Polygon.
+        if (!Ember.isNone(item.length)) {
+          for (let k = 0; k < item.length; k++) {
+            startPoint = k === 0 ? item[k] : startPoint;
+            point1 = item[k];
+            n = !Ember.isNone(item[k + 1]) ? k + 1 : 0;
+            point2 = item[n];
+
+            result.push(rowPush(k, n, point1, point2));
+          }
+
+          // LineString.
+        } else {
+          startPoint = j === 0 ? item : startPoint;
+          point1 = item;
+          n = !Ember.isNone(cors[i][j + 1]) ? j + 1 : 0;
+          point2 = cors[i][n];
+
+          result.push(rowPush(j, n, point1, point2));
+        }
+      }
+    }
+
+    return {
+      startPoint: startPoint,
+      coordinates: result
+    };
   }
 
 });
