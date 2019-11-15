@@ -272,7 +272,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               layerIds = Ember.A(features).map(feature => {
                 const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
                 if (typeof getLayerFeatureIdFunc === 'function') {
-                  return getLayerFeatureIdFunc(layerModel, feature);
+                  return getLayerFeatureIdFunc(layerModel, feature.leafletLayer);
                 }
 
                 return Ember.get(feature, 'id');
