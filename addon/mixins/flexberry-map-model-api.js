@@ -5,7 +5,6 @@ import helpers from 'npm:@turf/helpers';
 import booleanContains from 'npm:@turf/boolean-contains';
 import area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
-import * as helper from 'npm:@turf/helpers';
 import rhumbBearing from 'npm:@turf/rhumb-bearing';
 import rhumbDistance from 'npm:@turf/rhumb-distance';
 
@@ -656,12 +655,12 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Get the object thumb.
-    @method  getRhumb
-    @param {string} layerId Layer id.
-    @param {string} objectId Object id.
-    @return {array} Table rhumb.
-  */
+   * Get the object thumb.
+   * @method  getRhumb
+   * @param {string} layerId Layer id.
+   * @param {string} objectId Object id.
+   * @return {array} Table rhumb.
+   */
   getRhumb(layerId, objectId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     const leafletObject = Ember.get(layer, '_leafletObject');
@@ -681,8 +680,8 @@ export default Ember.Mixin.create({
     let result = [];
 
     var rowPush = function (vertexNum1, vertexNum2, point1, point2) {
-      const pointFrom = helper.default.point([point2.lat, point2.lng]);
-      const pointTo = helper.default.point([point1.lat, point1.lng]);
+      const pointFrom = helpers.point([point2.lat, point2.lng]);
+      const pointTo = helpers.point([point1.lat, point1.lng]);
 
       // We get the distance and translate into meters.
       const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
@@ -727,7 +726,7 @@ export default Ember.Mixin.create({
           for (let k = 0; k < item.length; k++) {
             startPoint = k === 0 ? item[k] : startPoint;
             point1 = item[k];
-            n = !Ember.isNone(item[k + 1]) ? n = k + 1 : n = 0;
+            n = !Ember.isNone(item[k + 1]) ? k + 1 : 0;
             point2 = item[n];
 
             result.push(rowPush(k, n, point1, point2));
@@ -737,7 +736,7 @@ export default Ember.Mixin.create({
         } else {
           startPoint = j === 0 ? item : startPoint;
           point1 = item;
-          n = !Ember.isNone(cors[i][j + 1]) ? n = j + 1 : n = 0;
+          n = !Ember.isNone(cors[i][j + 1]) ? j + 1 : 0;
           point2 = cors[i][n];
 
           result.push(rowPush(j, n, point1, point2));
