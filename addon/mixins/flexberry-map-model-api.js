@@ -653,7 +653,7 @@ export default Ember.Mixin.create({
     Create image for layer object.
     @method  getSnapShot
   */
-  getSnapShot(layerId, objectId, layerArrIds ) {
+  getSnapShot(layerId, objectId, layerArrIds) {
     let store = this.get('store');
     let layer = this.get('mapLayer').findBy('id', layerId);
 
@@ -670,17 +670,17 @@ export default Ember.Mixin.create({
 
     Array.prototype.diff = function(a) {
       return this.filter(function(i) {return a.indexOf(i) < 0;});
-    };  
-   
-    let hideLayersIds = allLayersIds.diff( showLayersIds );
+    };
+
+    let hideLayersIds = allLayersIds.diff(showLayersIds);
     this.hideLayers(hideLayersIds);
 
     let objectIds = [];
     objectIds.push(objectId);
-    this.showLayerObjects(layerId, objectIds );
+    this.showLayerObjects(layerId, objectIds);
 
     let objectToSearch;
-      
+
     let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
     let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
     if (layerFrom && layerTo) {
@@ -705,16 +705,16 @@ export default Ember.Mixin.create({
     });
   },
 
-   /**
+  /**
     Download image for layer object.
     @method  downloadSnapShot
   */
   downloadSnapShot() {
     const leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    document.getElementsByClassName("leaflet-control-zoom leaflet-bar leaflet-control")[0].style.display='none';
-    document.getElementsByClassName("history-control leaflet-bar leaflet-control horizontal")[0].style.display='none';
+    document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'none';
+    document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'none';
     let $mapPicture = Ember.$(leafletMap._container);
-    
+
     let canvas = window.html2canvas($mapPicture[0], {
       useCORS: true
     }).then((canvas) => {
@@ -726,8 +726,8 @@ export default Ember.Mixin.create({
         type: type
       };
       saveAs(canvasPic.data, 'map.png');
-      document.getElementsByClassName("leaflet-control-zoom leaflet-bar leaflet-control")[0].style.display='block';
-      document.getElementsByClassName("history-control leaflet-bar leaflet-control horizontal")[0].style.display='block';
+      document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'block';
+      document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'block';
     });
 
     function saveAs(uri, filename) {
@@ -750,5 +750,3 @@ export default Ember.Mixin.create({
     }
   },
 });
-
-
