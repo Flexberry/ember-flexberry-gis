@@ -213,7 +213,7 @@ export default Ember.Mixin.create({
     @param {string} layerId Layer id of the selected object.
     @param {string} layerObjectId Id of the selected object.
     @param {number[]} layerIdsArray Array of id of layers in which to search.
-    @return {Object} Id of the nearest object.
+    @returns {Object} Id of the nearest object.
   */
   getNearObject(layerId, layerObjectId, layerIdsArray) {
     const layers = this.get('mapLayer');
@@ -263,7 +263,7 @@ export default Ember.Mixin.create({
     @param {string} firstLayerObjectId First layer object id.
     @param {string} secondLayerId Second layer id.
     @param {string} secondLayerObjectId Second layer object id.
-    @return {number} Distance between objects in meters.
+    @returns {number} Distance between objects in meters.
   */
   getDistanceBetweenObjects(firstLayerId, firstLayerObjectId, secondLayerId, secondLayerObjectId) {
     const layers = this.get('mapLayer');
@@ -443,7 +443,8 @@ export default Ember.Mixin.create({
     @method _getLayerFeatureId
     @param {Object} layer Layer.
     @param {Object} layerObject Object.
-    @return {number} Id object.
+    @returns {number} Id object.
+    @private
   */
   _getLayerFeatureId(layer, layerObject) {
     const getLayerFeatureId = this.get('mapApi').getFromApi('getLayerFeatureId');
@@ -461,6 +462,7 @@ export default Ember.Mixin.create({
     @param {string} layerId Layer id.
     @param {string[]} objectIds Array of id objects.
     @param {boolean} [visibility=false] visibility Object Visibility.
+    @private
   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
     if (Ember.isArray(objectIds)) {
@@ -650,74 +652,101 @@ export default Ember.Mixin.create({
   /**
    * Add object to layer.
    * @method addObjectToLayer
-   * @param {Object} object Object.
    * @param {string} layerId Layer id.
+   * @param {Object} object Object.
+   * Example:
+   * var object = {
+   *   type: 'Feature',
+   *   geometry: {
+   *     type: 'LineString',
+   *     coordinates: [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]
+   *     },
+   *   properties: {
+   *     name: 'test_polygon'
+   *   }
+   * };
+   * @returns {Object} New featureLayer.
    */
-  addObjectToLayer(object, layerId) {
+  addObjectToLayer(layerId, object) {
     if (Ember.isNone(object)) {
       throw new Error('Passed object is null.');
     }
 
-    const store = this.get('store');
-    let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
+    //const store = this.get('store');
+    // let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
+    let [layer, leafletObject] = this._getModelLayerFeature(layerId);
 
     if (Ember.isNone(layer)) {
       throw new Error('No layer with such id.');
     }
 
-    let leafletObject = layer._leafletObject;
-    let newObj = L.geoJSON(object);
+    //let leafletObject = layer._leafletObject;
+    let geoJSON = L.geoJSON(object);
 
-    if (typeof (newObj.setStyle) === 'function') {
-      newObj.setStyle(Ember.get(leafletObject, 'options.style'));
-    }
+    // if (typeof (newObj.setStyle) === 'function') {
+    //   newObj.setStyle(Ember.get(leafletObject, 'options.style'));
+    // }
+    let newObj = geoJSON.getLayers()[0];
+    leafletObject.addLayer(newObj);
 
-    leafletObject.addLayer(newObj.getLayers()[0]);
+    return newObj;
   },
 
-  /**
-   * Create polygon object by coordinates.
-   * @method createObject
-   * @param {string} layerId Layer id.
-   * @param {GeoJson} object GeoJson object.
-   */
-  createObject(layerId, object) {
-    const layers = this.get('mapLayer');
-    const layer = layers.findBy('id', layerId);
+  // /**
+  //  * Create polygon object by coordinates.
+  //  * @method createObject
+  //  * @param {string} layerId Layer id.
+  //  * @param {GeoJson} object GeoJson object.
+  //  */
+  // createObject(layerId, object) {
+  //   const layers = this.get('mapLayer');
+  //   const layer = layers.findBy('id', layerId);
 
-    if (Ember.isNone(layer)) {
-      throw new Error(`Layer '${layerId}' not found.`);
-    }
+  //   if (Ember.isNone(layer)) {
+  //     throw new Error(`Layer '${layerId}' not found.`);
+  //   }
 
-    let leafletObject = layer._leafletObject;
-    if (Ember.isNone(leafletObject)) {
-      throw new Error('Layer type not supported');
-    }
+  //   let leafletObject = layer._leafletObject;
+  //   if (Ember.isNone(leafletObject)) {
+  //     throw new Error('Layer type not supported');
+  //   }
 
-    let editTools = this._getEditTools();
-    let newObject;
-    switch (object.geometry.type) {
-      case this.objectTypes.multiPolygon:
-        newObject = editTools.startPolygon(object.geometry.coordinates, object.properties);
-        break;
-      case this.objectTypes.lineString:
-        newObject = editTools.startPolyline(object.geometry.coordinates, object.properties);
-        break;
-      case this.objectTypes.marker:
-        newObject = editTools.startMarker(object.geometry.coordinates, object.properties);
-        break;
-      default:
-        throw new Error(`Unknown layer type: ${object.geometry.type}`);
-    }
+  //   let editTools = this._getEditTools();
+  //   let newObject;
+  //   switch (object.geometry.type) {
+  //     case this.objectTypes.multiPolygon:
+  //       newObject = editTools.startPolygon(object.geometry.coordinates, object.properties);
+  //       break;
+  //     case this.objectTypes.lineString:
+  //       newObject = editTools.startPolyline(object.geometry.coordinates, object.properties);
+  //       break;
+  //     case this.objectTypes.marker:
+  //       newObject = editTools.startMarker(object.geometry.coordinates, object.properties);
+  //       break;
+  //     default:
+  //       throw new Error(`Unknown layer type: ${object.geometry.type}`);
+  //   }
 
-    leafletObject.addLayer(newObject);
-  },
+  //   leafletObject.addLayer(newObject);
+  // },
 
   /**
    * Create polygon object by rhumb.
    * @method createPolygonObjectRhumb
    * @param {string} layerId Layer id.
    * @param {Object} data Coordinate objects.
+   * Example:
+   * var data = {
+   *       type: 'LineString',
+   *       properties: { name: 'test_polygon' },
+   *       startPoint: [85, 79],
+   *       points: [
+   *         { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955, bearing: 176.76787457562546 },
+   *         { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427, bearing: -169.04259420114585 },
+   *         { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685, bearing: 3.9952852608439002 }
+   *       ]
+   *     };
+   * @returns {Object} New featureLayer.
    */
   createPolygonObjectRhumb(layerId, data) {
     if (Ember.isNone(data.points) || data.points.length === 0) {
@@ -859,15 +888,17 @@ export default Ember.Mixin.create({
       properties: data.properties
     };
 
-    this.createObject(layerId, obj);
+    //this.createObject(layerId, obj);
+    //const newObj = this.addObjectToLayer(layerId, obj); //todo: simplify
+    return this.addObjectToLayer(layerId, obj); //todo: simplify;
   },
 
-  /*
+  /**
    * Get the object thumb.
    * @method  getRhumb
    * @param {string} layerId Layer id.
    * @param {string} objectId Object id.
-   * @return {array} Table rhumb.
+   * @returns {array} Table rhumb.
    */
   getRhumb(layerId, objectId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
