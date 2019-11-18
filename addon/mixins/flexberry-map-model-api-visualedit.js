@@ -146,16 +146,8 @@ export default Ember.Mixin.create({
    * @param {Object} featureLayer Feature layer.
    */
   startChangeMultyLayerObject(layerId, featureLayer) {
-
-    // Select an object for the construction of a multi object.
-    //let [leafletObject, featureLayer] = this.startChangeLayerObject(layerId, featureId);
-    //let [leafletObject, featureLayer] = this.startChangeLayerObject(layerId, featureId);
-
     const layerModel = this._getLayerModel(layerId);
     let leafletObject = layerModel.get('_leafletObject');
-
-  //   const featureLayerId = Ember.get(featureLayer, 'feature.id');
-  //  let [layerModel, leafletObject, featureLayer] =  this._getModelLayerFeature(layerId, featureLayerId);
 
     let editTools = this._getEditTools();
 
