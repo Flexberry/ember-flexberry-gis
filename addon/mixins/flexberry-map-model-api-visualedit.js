@@ -104,6 +104,7 @@ export default Ember.Mixin.create({
     let layers = leafletObject._layers;
     let featureLayer;
       if (!Ember.isNone(featureId)) {
+
       featureLayer = Object.values(layers).find(feature => {
         const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
         return layerFeatureId === featureId;
