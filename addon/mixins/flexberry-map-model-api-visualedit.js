@@ -4,13 +4,14 @@ import turfCombine from 'npm:@turf/combine';
 export default Ember.Mixin.create({
 
   /**
-   * Change layer object properties.
-   * @method changeLayerObjectProperties
-   * @param {string} layerId Layer id.
-   * @param {string} featureId Object id.
-   * @param {Object} properties Object properties.
-   * @return {Object} featureLayer.
-   */
+    Change layer object properties.
+
+    @method changeLayerObjectProperties
+    @param {string} layerId Layer id.
+    @param {string} featureId Object id.
+    @param {Object} properties Object properties.
+    @return {Object} featureLayer.
+  */
   changeLayerObjectProperties(layerId, featureId, properties) {
     let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
     Object.assign(featureLayer.feature.properties, properties);
@@ -19,12 +20,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-   * Start change layer object.
-   * @method startChangeLayerObject
-   * @param {string} layerId Layer id.
-   * @param {string} featureId Object id.
-   * @return {Object} Feature layer.
-   */
+    Start change layer object.
+
+    @method startChangeLayerObject
+    @param {string} layerId Layer id.
+    @param {string} featureId Object id.
+    @return {Object} Feature layer.
+  */
   startChangeLayerObject(layerId, featureId) {
     let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
@@ -41,11 +43,12 @@ export default Ember.Mixin.create({
   },
 
   /**
-   * Start visual creating of feature
-   * @param {String} layerId Id of layer in that should started editing
-   * @param {Object} properties New layer properties
-   * @returns noting
-   */
+    Start visual creating of feature
+
+    @param {String} layerId Id of layer in that should started editing
+    @param {Object} properties New layer properties
+    @returns noting
+  */
   startNewObject(layerId, properties) {
     let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
     let editTools = this._getEditTools();
@@ -84,11 +87,12 @@ export default Ember.Mixin.create({
   },
 
   /**
-   * Get editTools.
-   * @method _getEditTools
-   * @return {Object} EditTools.
-   * @private
-   */
+    Get editTools.
+
+    @method _getEditTools
+    @return {Object} EditTools.
+    @private
+  */
   _getEditTools() {
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     let editTools = Ember.get(leafletMap, 'editTools');
@@ -101,12 +105,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-   * Return leaflet layer thats corresponds to passed layerId.
-   * @method _getLeafletLayer
-   * @param {String} layerId
-   * @returns {Object}
-   * @private
-   */
+    Return leaflet layer thats corresponds to passed layerId.
+
+    @method _getLeafletLayer
+    @param {String} layerId
+    @returns {Object}
+    @private
+  */
   _getLayerModel(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     if (Ember.isNone(layer)) {
@@ -117,13 +122,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-   *
-   * @method _getModelLayerFeature
-   * @param {String} layerId Layer id.
-   * @param {String} featureId Object id.
-   * @returns {Object[]} [layerModel, leafletObject, featureLayer]
-   * @private
-   */
+
+    @method _getModelLayerFeature
+    @param {String} layerId Layer id.
+    @param {String} featureId Object id.
+    @returns {Object[]} [layerModel, leafletObject, featureLayer]
+    @private
+  */
   _getModelLayerFeature(layerId, featureId) {
     let layerModel = this._getLayerModel(layerId);
     let leafletObject = layerModel.get('_leafletObject');
@@ -140,11 +145,12 @@ export default Ember.Mixin.create({
   },
 
   /**
-   * Start creating multy objects.
-   * @method startChangeMultyLayerObject
-   * @param {string} layerId Layer id.
-   * @param {Object} featureLayer Feature layer.
-   */
+    Start creating multy objects.
+
+    @method startChangeMultyLayerObject
+    @param {string} layerId Layer id.
+    @param {Object} featureLayer Feature layer.
+  */
   startChangeMultyLayerObject(layerId, featureLayer) {
     const layerModel = this._getLayerModel(layerId);
     let leafletObject = layerModel.get('_leafletObject');
