@@ -11,10 +11,10 @@ import rhumbDistance from 'npm:@turf/rhumb-distance';
 
 export default Ember.Mixin.create({
   /**
-    Service for managing map API.
-    @property mapApi
-    @type MapApiService
-  */
+   * Service for managing map API.
+   * @property mapApi
+   * @type MapApiService
+   */
   mapApi: Ember.inject.service(),
 
   /**
@@ -32,51 +32,46 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Shows specified by id layers.
-
-    @method showLayers.
-  */
+   * Shows specified by id layers.
+   * @method showLayers.
+   */
   showLayers(layerIds) {
     this._setVisibility(layerIds, true);
   },
 
   /**
-    Hides specified by id layers.
-
-    @method showLayers.
-  */
+   * Hides specified by id layers.
+   * @method showLayers.
+   */
   hideLayers(layerIds) {
     this._setVisibility(layerIds);
   },
 
   /**
-    Shows id objects for layer.
-
-    @method showLayerObjects
-    @param {string} layerId Layer id.
-    @param {string[]} objectIds Array of id objects.
-  */
+   * Shows id objects for layer.
+   * @method showLayerObjects
+   * @param {string} layerId Layer id.
+   * @param {string[]} objectIds Array of id objects.
+   */
   showLayerObjects(layerId, objectIds) {
     this._setVisibilityObjects(layerId, objectIds, true);
   },
 
   /**
-    Hides id objects for layer.
-
-    @method hideLayerObjects
-    @param {string} layerId Layer id.
-    @param {string[]} objectIds Array of id objects.
-  */
+   * Hides id objects for layer.
+   * @method hideLayerObjects
+   * @param {string} layerId Layer id.
+   * @param {string[]} objectIds Array of id objects.
+   */
   hideLayerObjects(layerId, objectIds) {
     this._setVisibilityObjects(layerId, objectIds, false);
   },
 
   /**
-    Show all layer objects.
-
-    @method showAllLayerObjects
-    @param {string} layerId Layer id.
-  */
+   * Show all layer objects.
+   * @method showAllLayerObjects
+   * @param {string} layerId Layer id.
+   */
   showAllLayerObjects(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     const leafletObject = Ember.get(layer, '_leafletObject');
@@ -90,9 +85,9 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Creates new layer with specified options.
-    @method createNewLayer.
-  */
+   * Creates new layer with specified options.
+   * @method createNewLayer.
+   */
   createNewLayer(options) {
     options = options || {};
     const store = this.get('store');
@@ -106,21 +101,21 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Remove shape from layer.
-    @method deleteLayerObject.
-    @param {String} layerId Id layer.
-    @param {String} featureId Id shape.
-  */
+   * Remove shape from layer.
+   * @method deleteLayerObject.
+   * @param {String} layerId Id layer.
+   * @param {String} featureId Id shape.
+   */
   deleteLayerObject(layerId, featureId) {
     this.deleteLayerObjects(layerId, [featureId]);
   },
 
   /**
-    Remove shapes from layer.
-    @method deleteLayerObjects.
-    @param {string} layerId Id layer.
-    @param {Object[]} featureIds Array of id shapes.
-  */
+   * Remove shapes from layer.
+   * @method deleteLayerObjects.
+   * @param {string} layerId Id layer.
+   * @param {Object[]} featureIds Array of id shapes.
+   */
   deleteLayerObjects(layerId, featureIds) {
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
@@ -153,11 +148,11 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Gets intersected features.
-    @method getIntersectionObjects
-    @param {string} featureId feature id with which we are looking for intersections
-    @param {number[]} layerIds array of layers ids
-  */
+   * Gets intersected features.
+   * @method getIntersectionObjects
+   * @param {string} featureId feature id with which we are looking for intersections
+   * @param {number[]} layerIds array of layers ids
+   */
   getIntersectionObjects(featureId, layerIds) {
     let result = [];
     let featureToSearch;
@@ -208,13 +203,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Get the closest object
-    @method getNearObject
-    @param {string} layerId Layer id of the selected object.
-    @param {string} layerObjectId Id of the selected object.
-    @param {number[]} layerIdsArray Array of id of layers in which to search.
-    @returns {Object} Id of the nearest object.
-  */
+   * Get the closest object
+   * @method getNearObject
+   * @param {string} layerId Layer id of the selected object.
+   * @param {string} layerObjectId Id of the selected object.
+   * @param {number[]} layerIdsArray Array of id of layers in which to search.
+   * @returns {Object} Id of the nearest object.
+   */
   getNearObject(layerId, layerObjectId, layerIdsArray) {
     const layers = this.get('mapLayer');
     const layer = layers.findBy('id', layerId);
@@ -257,14 +252,14 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Get distance between objects
-    @method getDistanceBetweenObjects
-    @param {string} firstLayerId First layer id.
-    @param {string} firstLayerObjectId First layer object id.
-    @param {string} secondLayerId Second layer id.
-    @param {string} secondLayerObjectId Second layer object id.
-    @returns {number} Distance between objects in meters.
-  */
+   * Get distance between objects
+   * @method getDistanceBetweenObjects
+   * @param {string} firstLayerId First layer id.
+   * @param {string} firstLayerObjectId First layer object id.
+   * @param {string} secondLayerId Second layer id.
+   * @param {string} secondLayerObjectId Second layer object id.
+   * @returns {number} Distance between objects in meters.
+   */
   getDistanceBetweenObjects(firstLayerId, firstLayerObjectId, secondLayerId, secondLayerObjectId) {
     const layers = this.get('mapLayer');
     const firstLayer = layers.findBy('id', firstLayerId);
@@ -316,11 +311,11 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Get layer object attributes.
-    @method getLayerObjectOptions
-    @param {String} layerId Id layer
-    @param {String} featureId Id object
-  */
+   * Get layer object attributes.
+   * @method getLayerObjectOptions
+   * @param {String} layerId Id layer
+   * @param {String} featureId Id object
+   */
   getLayerObjectOptions(layerId, featureId) {
     let result;
     if (Ember.isNone(layerId) || Ember.isNone(featureId)) {
@@ -348,13 +343,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Check if objectA contains object B.
-    @method isContainsObject
-    @param {String} objectAId id of first object.
-    @param {String} layerAId id of first layer.
-    @param {String} objectBId id of second object.
-    @param {String} layerBId id of second layer.
-  */
+   * Check if objectA contains object B.
+   * @method isContainsObject
+   * @param {String} objectAId id of first object.
+   * @param {String} layerAId id of first layer.
+   * @param {String} objectBId id of second object.
+   * @param {String} layerBId id of second layer.
+   */
   isContainsObject(objectAId, layerAId, objectBId, layerBId) {
     let objA;
     let objB;
@@ -386,13 +381,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Calculate the area of ​​object B that extends beyond the boundaries of object A.
-    @method getAreaExtends
-    @param {String} objectAId id of first object.
-    @param {String} layerAId id of first layer.
-    @param {String} objectBId id of second object.
-    @param {String} layerBId id of second layer.
-  */
+   * Calculate the area of ​​object B that extends beyond the boundaries of object A.
+   * @method getAreaExtends
+   * @param {String} objectAId id of first object.
+   * @param {String} layerAId id of first layer.
+   * @param {String} objectBId id of second object.
+   * @param {String} layerBId id of second layer.
+   */
   getAreaExtends(objectAId, layerAId, objectBId, layerBId) {
     let objA;
     let objB;
@@ -425,6 +420,12 @@ export default Ember.Mixin.create({
     return 0;
   },
 
+  /**
+   * Change visibility.
+   * @param {string[]} layerIds Array layer id.
+   * @param {boolean} [visibility=false] Visibility.
+   * @private
+   */
   _setVisibility(layerIds, visibility = false) {
     if (Ember.isArray(layerIds)) {
       const layers = this.get('mapLayer');
@@ -438,14 +439,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Get object id by object and layer.
-
-    @method _getLayerFeatureId
-    @param {Object} layer Layer.
-    @param {Object} layerObject Object.
-    @returns {number} Id object.
-    @private
-  */
+   * Get object id by object and layer.
+   * @method _getLayerFeatureId
+   * @param {Object} layer Layer.
+   * @param {Object} layerObject Object.
+   * @returns {number} Id object.
+   * @private
+   */
   _getLayerFeatureId(layer, layerObject) {
     const getLayerFeatureId = this.get('mapApi').getFromApi('getLayerFeatureId');
     if (typeof getLayerFeatureId === 'function') {
@@ -456,14 +456,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Determine the visibility of the specified objects by id for the layer.
-
-    @method _setVisibilityObjects
-    @param {string} layerId Layer id.
-    @param {string[]} objectIds Array of id objects.
-    @param {boolean} [visibility=false] visibility Object Visibility.
-    @private
-  */
+   * Determine the visibility of the specified objects by id for the layer.
+   * @method _setVisibilityObjects
+   * @param {string} layerId Layer id.
+   * @param {string[]} objectIds Array of id objects.
+   * @param {boolean} [visibility=false] visibility Object Visibility.
+   * @private
+   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
     if (Ember.isArray(objectIds)) {
       const layers = this.get('mapLayer');
@@ -496,12 +495,12 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Move Object From one  layer to another.
-    @method moveObjectToLayer
-    @param {String} objectId GeoJSON object id
-    @param {String} fromLayerId id of layer to remove object
-    @param {String} tolayerId  id of layer to add object
-  */
+   * Move Object From one  layer to another.
+   * @method moveObjectToLayer
+   * @param {String} objectId GeoJSON object id
+   * @param {String} fromLayerId id of layer to remove object
+   * @param {String} tolayerId  id of layer to add object
+   */
   moveObjectToLayer(objectId, fromLayerId, toLayerId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let objectToSearch;
@@ -573,12 +572,12 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Copt Object to layer.
-    @method copyObject
-    @param {String} objectId GeoJSON object id
-    @param {String} fromLayerId GeoJSON object id
-    @param {String} toLayerId  id of layer to add object
-  */
+   * Copt Object to layer.
+   * @method copyObject
+   * @param {String} objectId GeoJSON object id
+   * @param {String} fromLayerId GeoJSON object id
+   * @param {String} toLayerId  id of layer to add object
+   */
   copyObject(objectId, fromLayerId, toLayerId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let objectToSearch;
@@ -627,10 +626,10 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Create new Lealfet object according to objectToDefine geometry type.
-    @method  createGeometryType
-    @param {String} objectToDefine GeoJSON object.
-  */
+   * Create new Lealfet object according to objectToDefine geometry type.
+   * @method  createGeometryType
+   * @param {String} objectToDefine GeoJSON object.
+   */
   createGeometryType(objectToDefine) {
     switch (Ember.get(objectToDefine, 'feature.geometry.type')) {
       case 'Marker':
@@ -672,63 +671,19 @@ export default Ember.Mixin.create({
       throw new Error('Passed object is null.');
     }
 
-    //const store = this.get('store');
-    // let layer = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
     let [layer, leafletObject] = this._getModelLayerFeature(layerId);
 
     if (Ember.isNone(layer)) {
       throw new Error('No layer with such id.');
     }
 
-    //let leafletObject = layer._leafletObject;
     let geoJSON = L.geoJSON(object);
-
-    // if (typeof (newObj.setStyle) === 'function') {
-    //   newObj.setStyle(Ember.get(leafletObject, 'options.style'));
-    // }
     let newObj = geoJSON.getLayers()[0];
+
     leafletObject.addLayer(newObj);
 
     return newObj;
   },
-
-  // /**
-  //  * Create polygon object by coordinates.
-  //  * @method createObject
-  //  * @param {string} layerId Layer id.
-  //  * @param {GeoJson} object GeoJson object.
-  //  */
-  // createObject(layerId, object) {
-  //   const layers = this.get('mapLayer');
-  //   const layer = layers.findBy('id', layerId);
-
-  //   if (Ember.isNone(layer)) {
-  //     throw new Error(`Layer '${layerId}' not found.`);
-  //   }
-
-  //   let leafletObject = layer._leafletObject;
-  //   if (Ember.isNone(leafletObject)) {
-  //     throw new Error('Layer type not supported');
-  //   }
-
-  //   let editTools = this._getEditTools();
-  //   let newObject;
-  //   switch (object.geometry.type) {
-  //     case this.objectTypes.multiPolygon:
-  //       newObject = editTools.startPolygon(object.geometry.coordinates, object.properties);
-  //       break;
-  //     case this.objectTypes.lineString:
-  //       newObject = editTools.startPolyline(object.geometry.coordinates, object.properties);
-  //       break;
-  //     case this.objectTypes.marker:
-  //       newObject = editTools.startMarker(object.geometry.coordinates, object.properties);
-  //       break;
-  //     default:
-  //       throw new Error(`Unknown layer type: ${object.geometry.type}`);
-  //   }
-
-  //   leafletObject.addLayer(newObject);
-  // },
 
   /**
    * Create polygon object by rhumb.
@@ -888,9 +843,7 @@ export default Ember.Mixin.create({
       properties: data.properties
     };
 
-    //this.createObject(layerId, obj);
-    //const newObj = this.addObjectToLayer(layerId, obj); //todo: simplify
-    return this.addObjectToLayer(layerId, obj); //todo: simplify;
+    return this.addObjectToLayer(layerId, obj);
   },
 
   /**
