@@ -44,5 +44,6 @@ export default Ember.Component.extend({
     @type Array
     @default []
   */
-  geometryTypes: ['PointPropertyType', 'LineStringPropertyType', 'PolygonPropertyType']
+  geometryTypes: ['PointPropertyType', 'LineStringPropertyType', 'PolygonPropertyType',
+                  'MultiPointPropertyType', 'MultiLineStringPropertyType', 'MultiPolygonPropertyType']
 });
