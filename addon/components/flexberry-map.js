@@ -562,7 +562,7 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       this.sendAction('leafletInit', {
         map: leafletMap
-      });      
+      });
       this.get('mapApi').addToApi('leafletMap', leafletMap);
     },
 
