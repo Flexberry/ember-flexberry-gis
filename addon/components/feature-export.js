@@ -1,10 +1,5 @@
 import Ember from 'ember';
 import layout from '../templates/components/feature-export';
-/*import EPSG4200 from '../coordinate-reference-systems/epsg4200';
-import EPSG4284 from '../coordinate-reference-systems/epsg4284';
-import EPSG4740 from '../coordinate-reference-systems/epsg4740';
-import EPSG196305 from '../coordinate-reference-systems/epsg196305';
-import EPSG196304 from '../coordinate-reference-systems/epsg196304';*/
 import ESPG3857 from '../coordinate-reference-systems/epsg-3857';
 import {
   translationMacro as t
@@ -15,7 +10,7 @@ import {
  */
 const defaultOptions = {
   format: 'JSON',
-  coordSystem: 'Сферический Меркатор / EPSG:3857'
+  coordSystem: 'EPSG:3857'
 };
 
 /**
@@ -40,6 +35,10 @@ let FeatureExportDialogComponent = Ember.Component.extend({
 
   denyButtonCaption: t('components.layer-result-list.flexberry-export.denyButtonCaption'),
 
+  formatCaption: t('components.layer-result-list.flexberry-export.formatCaption'),
+
+  crsCaption: t('components.layer-result-list.flexberry-export.crsCaption'),
+
   /**
    * Availble format.
    */
@@ -62,19 +61,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     let _options = this.get('_options');
 
     switch(_options.coordSystem) {
-      /*case 'CK 1963 зона 5':
-        return EPSG196305.create();
-      case 'CK 1963 зона 4':
-        return EPSG196304.create();
-      case 'СК 42 / ESPG:4284':
-        return EPSG4284.create();
-      case 'СК 95 / ESPG:4200':
-        return EPSG4200.create();
-      case 'ПЗ-90 / ESPG:4740':
-        return EPSG4740.create();
-      case 'WGS 84 / EPSG:4326':
-        return L.CRS.EPSG4326;*/
-      case 'Сферический Меркатор / EPSG:3857':
+      case 'EPSG:3857':
         return L.CRS.EPSG3857;
       default:
         return L.CRS.Base;
@@ -129,6 +116,24 @@ let FeatureExportDialogComponent = Ember.Component.extend({
   }),
 
   /**
+   * Layer settings
+  */
+  _layerSettings: Ember.computed('result', function() {
+    let result = this.get('result');
+    let layer = result.layerModel;
+    let type = layer.get('type');
+
+    switch(type) {
+      case 'wms-wfs':
+        return layer.get('settingsAsObject').wfs;
+      case 'wfs':
+        return layer.get('settingsAsObject');
+      default:
+        return null;
+    }
+  }),
+
+  /**
    * Сервис полномочий.
    */
   security: Ember.inject.service(),
@@ -161,14 +166,11 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     onApprove(e) {
       // Objects for unloading.
       let result = this.get('result');
-      // Layer model.
       let layer = result.layerModel;
-      // Layer settings.
-      let layerSettings = layer.get('settingsAsObject').wfs;
-      // Date format.
+      let layerSettings = this.get('_layerSettings');
+      let type = layer.get('type');
       let readFormat = this.get('_format');
 
-      // WFS layer to initialize requestа.
       let wfsLayer = new L.WFS({
         crs: this.get('_crs'),
         url: layerSettings.url,
@@ -190,13 +192,12 @@ let FeatureExportDialogComponent = Ember.Component.extend({
         data: L.XmlUtil.serializeXmlDocumentString(req),
         headers: wfsLayer.options.headers || {},
         success: (blob) => {
-
           let ext = this.get('_fileExt');
           this.downloadBlob(result.name + '.' + ext, blob);
         },
         error: (errorMessage) => {
-          console.log('Ошибка выгрузки слоя ' + result.name + ': ' + errorMessage);
-          alert('При выгрузке слоя ' + result.name + ' произошла ошибка.');
+          console.log('Layer upload error ' + result.name + ': ' + errorMessage);
+          alert('When unloading a layer ' + result.name + ' an error occurred.');
         }
       });
     }
@@ -222,13 +223,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
 
     // CRS.
     this.set('_availableCoordSystems', Ember.A([
-      /*'CK 1963 зона 5',
-      'CK 1963 зона 4',
-      'СК 42 / ESPG:4284',
-      'СК 95 / ESPG:4200',
-      'ПЗ-90 / ESPG:4740',
-      'WGS 84 / EPSG:4326',*/
-      'Сферический Меркатор / EPSG:3857',
+      'EPSG:3857',
     ]));
 
     this.set('_options', Ember.$.extend(true, {}, defaultOptions));

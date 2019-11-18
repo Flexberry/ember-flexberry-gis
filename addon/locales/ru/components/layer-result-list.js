@@ -7,6 +7,8 @@ export default {
   'flexberry-export': {
     'caption': 'Выгрузка',
     'approveButtonCaption': 'ОК',
-    'denyButtonCaption': 'Отмена'
+    'denyButtonCaption': 'Отмена',
+    'formatCaption': 'Формат',
+    'crsCaption': 'Система координат'
   }
 };

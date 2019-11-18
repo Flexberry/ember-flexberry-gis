@@ -69,7 +69,7 @@
     {{/if}}
     {{#if (or (eq result.layerModel.type "wfs") (eq result.layerModel.type "wms-wfs"))}}
       <a class="feature-result-item-upload icon item" 
-        title="{{"components.layer-result-list.flexberry-export-caption"}}"
+        title="{{t "components.layer-result-list.flexberry-export-caption"}}"
         {{action "upload" result}}>
         <i class="upload icon"></i>
       </a>

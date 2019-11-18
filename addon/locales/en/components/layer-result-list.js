@@ -7,6 +7,8 @@ export default {
   'flexberry-export': {
     'caption': 'Unload',
     'approveButtonCaption': 'OK',
-    'denyButtonCaption': 'Cancel'
+    'denyButtonCaption': 'Cancel',
+    'formatCaption': 'Format',
+    'crsCaption': 'Coordinate reference systems'
   }
 };
