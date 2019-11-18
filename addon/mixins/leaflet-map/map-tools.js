@@ -11,7 +11,7 @@ import LeafletMapVisibilityMixin from './map-visibility';
   @class LeafletMapToolsMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
   /**
     Performs some initialization before leaflet map will be initialized.
 
