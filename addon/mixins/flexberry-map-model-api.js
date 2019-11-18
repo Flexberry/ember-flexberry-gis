@@ -26,7 +26,7 @@ export default Ember.Mixin.create({
   /**
     Hides specified by id layers.
 
-    @method showLayers.
+    @method hideLayers.
   */
   hideLayers(layerIds) {
     this._setVisibility(layerIds);
@@ -647,5 +647,108 @@ export default Ember.Mixin.create({
         return L.polygon(objectToDefine.getLatLngs());
       default: return undefined;
     }
-  }
+  },
+
+  /**
+    Create image for layer object.
+    @method  getSnapShot
+  */
+  getSnapShot(layerId, objectId, layerArrIds ) {
+    let store = this.get('store');
+    let layer = this.get('mapLayer').findBy('id', layerId);
+
+    let allLayers = this.get('mapLayer.canonicalState');
+    let allLayersIds = [];
+
+    allLayers.forEach(function(i) {
+      allLayersIds.push(i.id);
+    });
+
+    let showLayersIds = layerArrIds;
+    showLayersIds.push(layerId, this.get('id'));
+    this.showLayers(showLayersIds);
+
+    Array.prototype.diff = function(a) {
+      return this.filter(function(i) {return a.indexOf(i) < 0;});
+    };  
+   
+    let hideLayersIds = allLayersIds.diff( showLayersIds );
+    this.hideLayers(hideLayersIds);
+
+    let objectIds = [];
+    objectIds.push(objectId);
+    this.showLayerObjects(layerId, objectIds );
+
+    let objectToSearch;
+      
+    let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
+    let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', layerId);
+    if (layerFrom && layerTo) {
+      let features = Ember.get(layerFrom, '_leafletObject._layers');
+      if (features) {
+        objectToSearch = Object.values(features).find(feature => {
+          let layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
+          return layerFeatureId === objectId;
+        });
+      }
+    }
+
+    const leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    let bounds = layer.get('_leafletObject').getBounds();
+
+    if (!Ember.isNone(bounds)) {
+      leafletMap.fitBounds(bounds.pad(1));
+    }
+
+    leafletMap.once('moveend', () => {
+      this.downloadSnapShot();
+    });
+  },
+
+   /**
+    Download image for layer object.
+    @method  downloadSnapShot
+  */
+  downloadSnapShot() {
+    const leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    document.getElementsByClassName("leaflet-control-zoom leaflet-bar leaflet-control")[0].style.display='none';
+    document.getElementsByClassName("history-control leaflet-bar leaflet-control horizontal")[0].style.display='none';
+    let $mapPicture = Ember.$(leafletMap._container);
+    
+    let canvas = window.html2canvas($mapPicture[0], {
+      useCORS: true
+    }).then((canvas) => {
+      let type = 'image/png';
+      let canvasPic =  {
+        data: canvas.toDataURL(type),
+        width: canvas.width,
+        height: canvas.height,
+        type: type
+      };
+      saveAs(canvasPic.data, 'map.png');
+      document.getElementsByClassName("leaflet-control-zoom leaflet-bar leaflet-control")[0].style.display='block';
+      document.getElementsByClassName("history-control leaflet-bar leaflet-control horizontal")[0].style.display='block';
+    });
+
+    function saveAs(uri, filename) {
+      var link = document.createElement('a');
+      if (typeof link.download === 'string') {
+        link.href = uri;
+        link.download = filename;
+
+        //Firefox requires the link to be in the body
+        document.body.appendChild(link);
+
+        //simulate click
+        link.click();
+
+        //remove the link when done
+        document.body.removeChild(link);
+      } else {
+        window.open(uri);
+      }
+    }
+  },
 });
+
+
