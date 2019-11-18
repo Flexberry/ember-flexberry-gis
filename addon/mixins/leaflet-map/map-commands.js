@@ -106,7 +106,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
         if (Ember.isNone(mapCommand)) {
           return;
         }
-  
+
         mapCommand.hideCommand();
       },
 
@@ -118,7 +118,7 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
         if (Ember.isNone(mapCommand)) {
           return;
         }
-  
+
         mapCommand.showCommand();
       }
     };

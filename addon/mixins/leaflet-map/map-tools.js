@@ -144,7 +144,7 @@ export default Ember.Mixin.create({
         if (Ember.isNone(mapCommand)) {
           return;
         }
-  
+
         mapCommand.showTool();
       },
 
