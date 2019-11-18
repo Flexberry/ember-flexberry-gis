@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import LeafletMapVisibilityMixin from './map-visibility';
 
 /**
   Mixin which injects map-tools methods & properties into leaflet map.
@@ -20,6 +21,8 @@ export default Ember.Mixin.create({
     this._super(...arguments);
 
     let owner = Ember.getOwner(this);
+
+    let _this = this;
 
     // Default map-tool.
     let defaultMapTool = null;
@@ -122,81 +125,27 @@ export default Ember.Mixin.create({
       },
 
       // Hide map-tool.
-      hide(mapToolName) {
-        let $leafletContainer = Ember.$(leafletMap._container);
+      hide(mapCommandName) {
+        _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, true);
 
-        const addClassHidden = function ($toolControl) {
-          if ($toolControl.length === 1 && !$toolControl.hasClass('hidden')) {
-            $toolControl.addClass('hidden');
-          } else {
-            let $toolControlInner = $toolControl.children();
-            for (var tool of $toolControlInner) {
-              if (!Ember.$(tool).hasClass('hidden')) {
-                Ember.$(tool).addClass('hidden');
-              }
-            }
-          }
-        };
-
-        if (Ember.isNone(mapToolName)) {
-          addClassHidden(Ember.$('.flexberry-maptoolbar'));
-          addClassHidden($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
-          addClassHidden($leafletContainer.find('.leaflet-control-container .history-control'));
+        let mapCommand = lookupMapTool(mapCommandName, null);
+        if (Ember.isNone(mapCommand)) {
           return;
         }
 
-        if (mapToolName.includes('history-')) {
-          addClassHidden($leafletContainer.find(`.leaflet-control-container .history-control .${mapToolName}-button`));
-        } else if (mapToolName.includes('zoom-')) {
-          addClassHidden($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapToolName}`));
-        } else {
-          let mapTool = lookupMapTool(mapToolName, null);
-          if (Ember.isNone(mapTool)) {
-            return;
-          }
-
-          mapTool.hideTool();
-        }
-
+        mapCommand.hideTool();
       },
 
       // Show map-tool.
-      show(mapToolName) {
-        let $leafletContainer = Ember.$(leafletMap._container);
+      show(mapCommandName) {
+        _this.showHide(mapCommandName, _this.removeClassHidden, leafletMap, true);
 
-        const removeClassHidden = function ($toolControl) {
-          if ($toolControl.length === 1 && $toolControl.hasClass('hidden')) {
-            $toolControl.removeClass('hidden');
-          } else {
-            let $toolControlInner = $toolControl.children();
-            for (var tool of $toolControlInner) {
-              if (Ember.$(tool).hasClass('hidden')) {
-                Ember.$(tool).removeClass('hidden');
-              }
-            }
-          }
-        };
-
-        if (Ember.isNone(mapToolName)) {
-          removeClassHidden(Ember.$('.flexberry-maptoolbar'));
-          removeClassHidden($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
-          removeClassHidden($leafletContainer.find('.leaflet-control-container .history-control'));
+        let mapCommand = lookupMapTool(mapCommandName, null);
+        if (Ember.isNone(mapCommand)) {
           return;
         }
-
-        if (mapToolName.includes('history-')) {
-          removeClassHidden($leafletContainer.find(`.leaflet-control-container .history-control .${mapToolName}-button`));
-        } else if (mapToolName.includes('zoom-')) {
-          removeClassHidden($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapToolName}`));
-        } else {
-          let mapTool = lookupMapTool(mapToolName, null);
-          if (Ember.isNone(mapTool)) {
-            return;
-          }
-
-          mapTool.showTool();
-        }
-
+  
+        mapCommand.showTool();
       },
 
       // Disables enabled map-tool.

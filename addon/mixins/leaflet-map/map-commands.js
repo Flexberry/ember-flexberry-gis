@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import LeafletMapVisibilityMixin from './map-visibility';
 
 /**
   Mixin which injects map-commands methods & properties into leaflet map.
@@ -10,7 +11,7 @@ import Ember from 'ember';
   @class LeafletMapCommandsMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
   /**
     Performs some initialization before leaflet map will be initialized.
 
@@ -20,6 +21,8 @@ export default Ember.Mixin.create({
     this._super(...arguments);
 
     let owner = Ember.getOwner(this);
+
+    let _this = this;
 
     // Cache containing already lookuped map-commands.
     let alreadyLookupedMapCommands = {};
@@ -52,6 +55,7 @@ export default Ember.Mixin.create({
 
     // Define flexberryMap.commands namespace & related methods & properties.
     let commands = leafletMap.flexberryMap.commands = {
+
       // Executes specified map-command.
       execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions) {
         let mapCommand = lookupMapCommand(mapCommandName, mapCommandProperties);
@@ -96,80 +100,26 @@ export default Ember.Mixin.create({
 
       // Hide map-command.
       hide(mapCommandName) {
-        let $leafletContainer = Ember.$(leafletMap._container);
+        _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, false);
 
-        const addClassHidden = function ($commandControl) {
-          if ($commandControl.length === 1 && !$commandControl.hasClass('hidden')) {
-            $commandControl.addClass('hidden');
-          } else {
-            let $commandControlInner = $commandControl.children();
-            for (var command of $commandControlInner) {
-              if (!Ember.$(command).hasClass('hidden')) {
-                Ember.$(command).addClass('hidden');
-              }
-            }
-          }
-        };
-
-        if (Ember.isNone(mapCommandName)) {
-          addClassHidden(Ember.$('.flexberry-maptoolbar'));
-          addClassHidden($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
-          addClassHidden($leafletContainer.find('.leaflet-control-container .history-control'));
+        let mapCommand = lookupMapCommand(mapCommandName, null);
+        if (Ember.isNone(mapCommand)) {
           return;
         }
-
-        if (mapCommandName.includes('history-')) {
-          addClassHidden($leafletContainer.find(`.leaflet-control-container .history-control .${mapCommandName}-button`));
-        } else if (mapCommandName.includes('zoom-')) {
-          addClassHidden($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapCommandName}`));
-        } else {
-          let mapCommand = lookupMapCommand(mapCommandName, null);
-          if (Ember.isNone(mapCommand)) {
-            return;
-          }
-
-          mapCommand.hideCommand();
-        }
-
+  
+        mapCommand.hideCommand();
       },
 
       // Show map-command.
       show(mapCommandName) {
-        let $leafletContainer = Ember.$(leafletMap._container);
+        _this.showHide(mapCommandName, _this.removeClassHidden, leafletMap, false);
 
-        const removeClassHidden = function ($commandControl) {
-          if ($commandControl.length === 1 && $commandControl.hasClass('hidden')) {
-            $commandControl.removeClass('hidden');
-          } else {
-            let $commandControlInner = $commandControl.children();
-            for (var command of $commandControlInner) {
-              if (Ember.$(command).hasClass('hidden')) {
-                Ember.$(command).removeClass('hidden');
-              }
-            }
-          }
-        };
-
-        if (Ember.isNone(mapCommandName)) {
-          removeClassHidden(Ember.$('.flexberry-maptoolbar'));
-          removeClassHidden($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
-          removeClassHidden($leafletContainer.find('.leaflet-control-container .history-control'));
+        let mapCommand = lookupMapCommand(mapCommandName, null);
+        if (Ember.isNone(mapCommand)) {
           return;
         }
-
-        if (mapCommandName.includes('history-')) {
-          removeClassHidden($leafletContainer.find(`.leaflet-control-container .history-control .${mapCommandName}-button`));
-        } else if (mapCommandName.includes('zoom-')) {
-          removeClassHidden($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapCommandName}`));
-        } else {
-          let mapCommand = lookupMapCommand(mapCommandName, null);
-          if (Ember.isNone(mapCommand)) {
-            return;
-          }
-
-          mapCommand.showCommand();
-        }
-
+  
+        mapCommand.showCommand();
       }
     };
   },
