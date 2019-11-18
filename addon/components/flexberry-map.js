@@ -472,6 +472,11 @@ let FlexberryMapComponent = Ember.Component.extend(
         mapApi.addToApi('createObject',  this._createObject.bind(this));
         this.set('_hasCreateObjectApi', true);
       }
+
+      if (Ember.isNone(mapApi.getFromApi('leafletMap'))) {
+        mapApi.addToApi('leafletMap',  leafletMap);
+        this.set('_hasLeafletMap', true);
+      }
     },
 
     /**
@@ -594,7 +599,10 @@ let FlexberryMapComponent = Ember.Component.extend(
         this.get('mapApi').addToApi('createObject', undefined);
       }
 
-      this.get('mapApi').addToApi('leafletMap', undefined);
+      if (this.get('_hasLeafletMap')) {
+        this.get('mapApi').addToApi('leafletMap', undefined);
+      }
+
       this.sendAction('leafletDestroy');
     },
 
