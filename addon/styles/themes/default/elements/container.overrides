@@ -679,7 +679,7 @@
     word-break: break-word;
     word-wrap: break-word;
   }
-  .feature-result-item-select.icon.item {
+  .feature-result-item-select.icon.item, .feature-result-item-upload.icon.item {
     font-size: 1.4em;
   }
   .feature-result-item-list.icon.item {

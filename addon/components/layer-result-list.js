@@ -136,6 +136,24 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   hasListForm: true,
 
+  /**
+    Visibility of the export dialog.
+
+    @property exportDialogVisible
+    @type boolean
+    @default false
+   */
+  exportDialogVisible: false,
+  
+  /**
+    Object to search
+
+    @property exportResult
+    @type Ember.A()
+    @default null
+  */
+  exportResult: null,
+
   actions: {
 
     /**
@@ -175,6 +193,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     */
     zoomToIntersection(feature) {
       this.sendAction('zoomToIntersection', feature);
+    },
+
+    /**
+     * Set the parameters of export and show the dialog.
+     * @param {object} result Object to search.
+     */
+    upload(result) {
+      this.set('exportResult', result);
+      this.set('exportDialogVisible', true);
     }
   },
 
