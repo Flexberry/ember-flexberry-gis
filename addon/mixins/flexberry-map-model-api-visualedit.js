@@ -15,7 +15,7 @@ export default Ember.Mixin.create({
     let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
     Object.assign(featureLayer.feature.properties, properties);
     leafletObject.editLayer(featureLayer);
-    return leafletObject;
+    return featureLayer;
   },
 
   /**
@@ -23,7 +23,7 @@ export default Ember.Mixin.create({
    * @method startChangeLayerObject
    * @param {string} layerId Layer id.
    * @param {string} featureId Object id.
-   * @return {Object[]} [leafletObject, featureLayer].
+   * @return {Object} Feature layer.
    */
   startChangeLayerObject(layerId, featureId) {
     let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
@@ -37,7 +37,7 @@ export default Ember.Mixin.create({
       }
     });
 
-    return [leafletObject, featureLayer];
+    return featureLayer;
   },
 
   /**
@@ -143,12 +143,19 @@ export default Ember.Mixin.create({
    * Start creating multy objects.
    * @method startChangeMultyLayerObject
    * @param {string} layerId Layer id.
-   * @param {string} featureId Object id.
+   * @param {Object} featureLayer Feature layer.
    */
-  startChangeMultyLayerObject(layerId, featureId) {
+  startChangeMultyLayerObject(layerId, featureLayer) {
 
     // Select an object for the construction of a multi object.
-    let [leafletObject, featureLayer] = this.startChangeLayerObject(layerId, featureId);
+    //let [leafletObject, featureLayer] = this.startChangeLayerObject(layerId, featureId);
+    //let [leafletObject, featureLayer] = this.startChangeLayerObject(layerId, featureId);
+
+    const layerModel = this._getLayerModel(layerId);
+    let leafletObject = layerModel.get('_leafletObject');
+
+  //   const featureLayerId = Ember.get(featureLayer, 'feature.id');
+  //  let [layerModel, leafletObject, featureLayer] =  this._getModelLayerFeature(layerId, featureLayerId);
 
     let editTools = this._getEditTools();
 
