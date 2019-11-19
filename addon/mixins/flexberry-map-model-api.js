@@ -649,8 +649,8 @@ export default Ember.Mixin.create({
     let layerA = layers.findBy('id', layerAId);
     let layerB = layers.findBy('id', layerBId);
     if (layerA && layerB) {
-      let [, , featureLayerA] = this._getModelLayerFeature(layerAId, objectAId);
-      let [, , featureLayerB] = this._getModelLayerFeature(layerBId, objectBId);
+      let [,, featureLayerA] = this._getModelLayerFeature(layerAId, objectAId);
+      let [,, featureLayerB] = this._getModelLayerFeature(layerBId, objectBId);
       objA = featureLayerA;
       objB = featureLayerB;
     } else {
