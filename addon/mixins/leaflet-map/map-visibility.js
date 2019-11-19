@@ -64,6 +64,7 @@ export default Ember.Mixin.create({
       funcClass($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapCommandName}`));
       return true;
     }
+
     return false;
   },
 
@@ -72,6 +73,7 @@ export default Ember.Mixin.create({
     if (!isTool) {
       endClass = '-map-command';
     }
+
     let mapToolClass = `.flexberry-${mapToolName}${endClass}.flexberry-map-tool`;
     let $toolControl = Ember.$(`.flexberry-maptoolbar ${mapToolClass}`);
     funcClass($toolControl);
