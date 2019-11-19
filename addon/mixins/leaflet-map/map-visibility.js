@@ -54,13 +54,26 @@ export default Ember.Mixin.create({
       funcClass(Ember.$('.flexberry-maptoolbar'));
       funcClass($leafletContainer.find('.leaflet-control-container .leaflet-control-zoom'));
       funcClass($leafletContainer.find('.leaflet-control-container .history-control'));
-      return;
+      return true;
     }
 
     if (mapCommandName.includes('history-')) {
       funcClass($leafletContainer.find(`.leaflet-control-container .history-control .${mapCommandName}-button`));
+      return true;
     } else if (mapCommandName.includes('zoom-') && !isTool) {
       funcClass($leafletContainer.find(`.leaflet-control-container .leaflet-control-zoom .leaflet-control-${mapCommandName}`));
+      return true;
     }
+    return false;
+  },
+
+  showHideTool(mapToolName, isTool, funcClass) {
+    let endClass = '-map-tool';
+    if (!isTool) {
+      endClass = '-map-command';
+    }
+    let mapToolClass = `.flexberry-${mapToolName}${endClass}.flexberry-map-tool`;
+    let $toolControl = Ember.$(`.flexberry-maptoolbar ${mapToolClass}`);
+    funcClass($toolControl);
   }
 });

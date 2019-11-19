@@ -100,26 +100,30 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
 
       // Hide map-command.
       hide(mapCommandName) {
-        _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, false);
+        let result = _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, false);
 
-        let mapCommand = lookupMapCommand(mapCommandName, null);
-        if (Ember.isNone(mapCommand)) {
-          return;
+        if (!result) {
+          let mapCommand = lookupMapCommand(mapCommandName, null);
+          if (Ember.isNone(mapCommand)) {
+            return;
+          }
+
+          mapCommand.hideCommand();
         }
-
-        mapCommand.hideCommand();
       },
 
       // Show map-command.
       show(mapCommandName) {
-        _this.showHide(mapCommandName, _this.removeClassHidden, leafletMap, false);
+        let result = _this.showHide(mapCommandName, _this.removeClassHidden, leafletMap, false);
 
-        let mapCommand = lookupMapCommand(mapCommandName, null);
-        if (Ember.isNone(mapCommand)) {
-          return;
+        if (!result) {
+          let mapCommand = lookupMapCommand(mapCommandName, null);
+          if (Ember.isNone(mapCommand)) {
+            return;
+          }
+
+          mapCommand.showCommand();
         }
-
-        mapCommand.showCommand();
       }
     };
   },

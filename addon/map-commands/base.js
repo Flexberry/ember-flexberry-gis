@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import LeafletMapVisibilityMixin from '../mixins/leaflet-map/map-visibility';
 
 /**
   Base map-command.
@@ -11,7 +12,8 @@ import Ember from 'ember';
   @extends <a href="http://emberjs.com/api/classes/Ember.Object.html">Ember.Object</a>
   @uses <a href="http://emberjs.com/api/classes/Ember.Evented.html">Ember.Evented</a>
 */
-export default Ember.Object.extend(Ember.Evented, {
+export default Ember.Object.extend(Ember.Evented,
+  LeafletMapVisibilityMixin, {
   /**
     Flag: indicates whether map-command is executing now or not.
 
@@ -110,23 +112,11 @@ export default Ember.Object.extend(Ember.Evented, {
 
   hideCommand() {
     let mapCommandName = this.get('name');
-    let leafletMap = this.get('leafletMap');
-    let $leafletMapContainer = Ember.$(leafletMap._container);
-    let mapCommandClass = `.flexberry-${mapCommandName}-map-command.flexberry-map-tool`;
-    let $commandControl = Ember.$(`.flexberry-maptoolbar ${mapCommandClass}`);
-    if ($commandControl.length === 1 && !$commandControl.hasClass('hidden')) {
-      $commandControl.addClass('hidden');
-    }
+    this.showHideTool(mapCommandName, false, this.addClassHidden);
   },
 
   showCommand() {
     let mapCommandName = this.get('name');
-    let leafletMap = this.get('leafletMap');
-    let $leafletMapContainer = Ember.$(leafletMap._container);
-    let mapCommandClass = `.flexberry-${mapCommandName}-map-command.flexberry-map-tool`;
-    let $commandControl = Ember.$(`.flexberry-maptoolbar ${mapCommandClass}`);
-    if ($commandControl.length === 1 && $commandControl.hasClass('hidden')) {
-      $commandControl.removeClass('hidden');
-    }
+    this.showHideTool(mapCommandName, false, this.removeClassHidden);
   }
 });

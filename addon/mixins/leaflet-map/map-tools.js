@@ -126,26 +126,30 @@ export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
 
       // Hide map-tool.
       hide(mapCommandName) {
-        _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, true);
+        let result = _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, true);
 
-        let mapCommand = lookupMapTool(mapCommandName, null);
-        if (Ember.isNone(mapCommand)) {
-          return;
+        if (!result) {
+          let mapCommand = lookupMapTool(mapCommandName, null);
+          if (Ember.isNone(mapCommand)) {
+            return;
+          }
+
+          mapCommand.hideTool();
         }
-
-        mapCommand.hideTool();
       },
 
       // Show map-tool.
       show(mapCommandName) {
-        _this.showHide(mapCommandName, _this.removeClassHidden, leafletMap, true);
+        let result = _this.showHide(mapCommandName, _this.removeClassHidden, leafletMap, true);
 
-        let mapCommand = lookupMapTool(mapCommandName, null);
-        if (Ember.isNone(mapCommand)) {
-          return;
+        if (!result) {
+          let mapCommand = lookupMapTool(mapCommandName, null);
+          if (Ember.isNone(mapCommand)) {
+            return;
+          }
+
+          mapCommand.showTool();
         }
-
-        mapCommand.showTool();
       },
 
       // Disables enabled map-tool.
