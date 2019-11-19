@@ -148,13 +148,14 @@
 
       var intersectionAreaButton = document.getElementById('getIntersectionArea');
         var getIntersectionsArea = function () {
-          console.log(frame.contentWindow.mapApi.mapModel.getIntersectionArea('Малые реки', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Голованово','f7670a1f-1acb-4571-923c-1ce3bc88e11e'));
+          frame.contentWindow.mapApi.mapModel.getIntersectionArea('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Малые реки', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e',  'Голованово', false)
+          .then(resolve => {console.log(resolve)},reject => {console.log(reject)});
         };
       intersectionAreaButton.addEventListener('click', getIntersectionsArea);
 
       var showIntersectionAreaButton = document.getElementById('showIntersectionArea');
         var showIntersectionsArea = function () {
-          frame.contentWindow.mapApi.mapModel.showIntersectionArea('Малые реки', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Голованово','f7670a1f-1acb-4571-923c-1ce3bc88e11e');
+          frame.contentWindow.mapApi.mapModel.getIntersectionArea('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Малые реки', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e',  'Голованово', true);
         };
       showIntersectionAreaButton.addEventListener('click', showIntersectionsArea);
 

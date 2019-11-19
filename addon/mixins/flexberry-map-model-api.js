@@ -437,7 +437,7 @@ export default Ember.Mixin.create({
       return getLayerFeatureId(layer, layerObject);
     }
 
-    return Ember.get(layerObject, 'feature.id');
+    return Ember.get(layerObject, 'feature.properties.name');
   },
 
   /**
@@ -640,82 +640,43 @@ export default Ember.Mixin.create({
     @param {String} layerAId id of first layer.
     @param {String} objectBId id of second object.
     @param {String} layerBId id of second layer.
+    @param {Bool} showOnMap flag indicates if intersection area will be displayed on map.
   */
-  getIntersectionArea(objectAId, layerAId, objectBId, layerBId) {
+  getIntersectionArea(layerAId, objectAId, layerBId, objectBId, showOnMap) {
     let objA;
     let objB;
     const layers = this.get('mapLayer');
     let layerA = layers.findBy('id', layerAId);
     let layerB = layers.findBy('id', layerBId);
     if (layerA && layerB) {
-      let featuresA = Ember.get(layerA, '_leafletObject._layers');
-      objA = Object.values(featuresA).find(feature => {
-        const layerAFeatureId = this._getLayerFeatureId(layerA, feature);
-        return layerAFeatureId === objectAId;
-      });
-      let featuresB = Ember.get(layerB, '_leafletObject._layers');
-      objB = Object.values(featuresB).find(feature => {
-        const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
-        return layerBFeatureId === objectBId;
-      });
+      let [, , featureLayerA] = this._getModelLayerFeature(layerAId, objectAId);
+      let [, , featureLayerB] = this._getModelLayerFeature(layerBId, objectBId);
+      objA = featureLayerA;
+      objB = featureLayerB;
     } else {
       throw 'no layer with such id';
     }
 
     if (objA && objB) {
-      objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-      objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
-      let intersectionRes = intersect.default(objB, objA);
-      if (intersectionRes) {
-        return area(intersectionRes);
-      }
-    } else {
-      throw 'no object with such id';
-    }
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+        objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+        let intersectionRes = intersect.default(objA, objB);
+        if (intersectionRes) {
+          if (showOnMap) {
+            let obj = L.geoJSON(intersectionRes, {
+              style: { color: 'green' }
+            });
+            let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+            obj.addTo(serviceLayer);
+            resolve('displayed');
+          }
 
-    return 0;
-  },
-
-  /**
-    Show the intersection area between object A and object B on map.
-    @method showIntersectionArea
-    @param {String} objectAId id of first object.
-    @param {String} layerAId id of first layer.
-    @param {String} objectBId id of second object.
-    @param {String} layerBId id of second layer.
-  */
-  showIntersectionArea(objectAId, layerAId, objectBId, layerBId) {
-    let objA;
-    let objB;
-    const layers = this.get('mapLayer');
-    let layerA = layers.findBy('id', layerAId);
-    let layerB = layers.findBy('id', layerBId);
-    if (layerA && layerB) {
-      let featuresA = Ember.get(layerA, '_leafletObject._layers');
-      objA = Object.values(featuresA).find(feature => {
-        const layerAFeatureId = this._getLayerFeatureId(layerA, feature);
-        return layerAFeatureId === objectAId;
+          resolve(area(intersectionRes));
+        } else {
+          reject('no intersection found');
+        }
       });
-      let featuresB = Ember.get(layerB, '_leafletObject._layers');
-      objB = Object.values(featuresB).find(feature => {
-        const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
-        return layerBFeatureId === objectBId;
-      });
-    } else {
-      throw 'no layer with such id';
-    }
-
-    if (objA && objB) {
-      objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-      objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
-      let intersectionRes = intersect.default(objB, objA);
-      if (intersectionRes) {
-        let obj = L.geoJSON(intersectionRes, {
-          style: { color: 'green' }
-        });
-        let map = this.get('mapApi').getFromApi('serviceLayer');
-        obj.addTo(map);
-      }
     } else {
       throw 'no object with such id';
     }
@@ -726,8 +687,8 @@ export default Ember.Mixin.create({
     @method clearServiceLayer
   */
   clearServiceLayer() {
-    let map = this.get('mapApi').getFromApi('serviceLayer');
-    map.clearLayers();
+    let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+    serviceLayer.clearLayers();
   },
 
   /*
