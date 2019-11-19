@@ -643,34 +643,36 @@ export default Ember.Mixin.create({
     @param {Bool} showOnMap flag indicates if intersection area will be displayed on map.
   */
   getIntersectionArea(layerAId, objectAId, layerBId, objectBId, showOnMap) {
-    let [layerA, leafletLayerA, objA] = this._getModelLayerFeature(layerAId, objectAId);
-    let [layerB, leafletLayerB, objB] = this._getModelLayerFeature(layerBId, objectBId);
-    if (layerA && layerB) {
-      if (objA && objB) {
-        return new Ember.RSVP.Promise((resolve, reject) => {
-          objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-          objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
-          let intersectionRes = intersect.default(objA, objB);
-          if (intersectionRes) {
-            if (showOnMap) {
-              let obj = L.geoJSON(intersectionRes, {
-                style: { color: 'green' }
-              });
-              let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
-              obj.addTo(serviceLayer);
-              resolve('displayed');
+    let [layerA, layerObject, objA] = this._getModelLayerFeature(layerAId, objectAId);
+    let [layerB, layerObject, objB] = this._getModelLayerFeature(layerBId, objectBId);
+    if (layerObject) {
+      if (layerA && layerB) {
+        if (objA && objB) {
+          return new Ember.RSVP.Promise((resolve, reject) => {
+            objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+            objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+            let intersectionRes = intersect.default(objA, objB);
+            if (intersectionRes) {
+              if (showOnMap) {
+                let obj = L.geoJSON(intersectionRes, {
+                  style: { color: 'green' }
+                });
+                let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+                obj.addTo(serviceLayer);
+                resolve('displayed');
+              }
+  
+              resolve(area(intersectionRes));
+            } else {
+              reject('no intersection found');
             }
-
-            resolve(area(intersectionRes));
-          } else {
-            reject('no intersection found');
-          }
-        });
+          });
+        } else {
+          throw 'no object with such id';
+        }
       } else {
-        throw 'no object with such id';
+        throw 'no layer with such id';
       }
-    } else {
-      throw 'no layer with such id';
     }
   },
 
