@@ -643,9 +643,9 @@ export default Ember.Mixin.create({
     @param {Bool} showOnMap flag indicates if intersection area will be displayed on map.
   */
   getIntersectionArea(layerAId, objectAId, layerBId, objectBId, showOnMap) {
-    let [layerA, layerObject, objA] = this._getModelLayerFeature(layerAId, objectAId);
-    let [layerB, layerObject, objB] = this._getModelLayerFeature(layerBId, objectBId);
-    if (layerObject) {
+    let [layerA, layerObjectA, objA] = this._getModelLayerFeature(layerAId, objectAId);
+    let [layerB, layerObjectB, objB] = this._getModelLayerFeature(layerBId, objectBId);
+    if (layerObjectA && layerObjectB) {
       if (layerA && layerB) {
         if (objA && objB) {
           return new Ember.RSVP.Promise((resolve, reject) => {
@@ -661,7 +661,7 @@ export default Ember.Mixin.create({
                 obj.addTo(serviceLayer);
                 resolve('displayed');
               }
-  
+
               resolve(area(intersectionRes));
             } else {
               reject('no intersection found');
