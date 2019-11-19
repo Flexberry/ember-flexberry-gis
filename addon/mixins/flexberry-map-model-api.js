@@ -643,42 +643,34 @@ export default Ember.Mixin.create({
     @param {Bool} showOnMap flag indicates if intersection area will be displayed on map.
   */
   getIntersectionArea(layerAId, objectAId, layerBId, objectBId, showOnMap) {
-    let objA;
-    let objB;
-    const layers = this.get('mapLayer');
-    let layerA = layers.findBy('id', layerAId);
-    let layerB = layers.findBy('id', layerBId);
+    let [layerA, leafletLayerA, objA] = this._getModelLayerFeature(layerAId, objectAId);
+    let [layerB, leafletLayerB, objB] = this._getModelLayerFeature(layerBId, objectBId);
     if (layerA && layerB) {
-      let [,, featureLayerA] = this._getModelLayerFeature(layerAId, objectAId);
-      let [,, featureLayerB] = this._getModelLayerFeature(layerBId, objectBId);
-      objA = featureLayerA;
-      objB = featureLayerB;
+      if (objA && objB) {
+        return new Ember.RSVP.Promise((resolve, reject) => {
+          objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+          objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+          let intersectionRes = intersect.default(objA, objB);
+          if (intersectionRes) {
+            if (showOnMap) {
+              let obj = L.geoJSON(intersectionRes, {
+                style: { color: 'green' }
+              });
+              let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+              obj.addTo(serviceLayer);
+              resolve('displayed');
+            }
+
+            resolve(area(intersectionRes));
+          } else {
+            reject('no intersection found');
+          }
+        });
+      } else {
+        throw 'no object with such id';
+      }
     } else {
       throw 'no layer with such id';
-    }
-
-    if (objA && objB) {
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-        objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
-        let intersectionRes = intersect.default(objA, objB);
-        if (intersectionRes) {
-          if (showOnMap) {
-            let obj = L.geoJSON(intersectionRes, {
-              style: { color: 'green' }
-            });
-            let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
-            obj.addTo(serviceLayer);
-            resolve('displayed');
-          }
-
-          resolve(area(intersectionRes));
-        } else {
-          reject('no intersection found');
-        }
-      });
-    } else {
-      throw 'no object with such id';
     }
   },
 
