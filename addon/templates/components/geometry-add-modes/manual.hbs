@@ -26,7 +26,7 @@
       }}
     </div>
     {{!-- currently disabled --}}
-    <div class="field disabled">
+    <div class="field {{if _objectTypeDisabled "disabled" ""}} {{if _geometryField "error" ""}}">
       <label>{{geometryFieldLabel}}</label>
       {{flexberry-dropdown
         items=_types

@@ -90,6 +90,13 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
   */
   _coordinatesWithError: false,
 
+  _objectTypeDisabled: true,
+
+  _geometryField: false,
+
+  //_types: ['Point', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon'],
+  _types: ['Point', 'LineString', 'Polygon'],
+
   menuButtonTooltip: t('components.geometry-add-modes.manual.menu-button-tooltip'),
 
   dialogApproveButtonCaption: t('components.geometry-add-modes.manual.dialog-approve-button-caption'),
@@ -103,8 +110,6 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
   coordinatesFieldLabel: t('components.geometry-add-modes.manual.coordinates-field-label'),
 
   coordinatesFieldPlaceholder: t('components.geometry-add-modes.manual.coordinates-field-placeholder'),
-
-  _types: ['Point', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon'],
 
   actions: {
     /**
@@ -126,6 +131,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
         rowId = keys[0];
         edit = Ember.get(tabModel, `_editedRows.${rowId}`);
       }
+
+      this.set('_objectTypeDisabled', edit);
 
       if (edit) {
         //this.menuButtonTooltip = t('components.geometry-add-modes.manual.menu-button-tooltip-edit');//todo: does not work
@@ -201,6 +208,35 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
     */
     onApprove(tabModel, e) {
       let objectType = this.get('_objectType');
+
+      let error = false;
+      if (Ember.isNone(objectType)) {
+        error = true
+        // e.closeDialog = false;
+        this.set('_geometryField', true);
+        // return;
+      }
+      else {
+        this.set('_geometryField', false);
+      }
+
+      const coordinates = this.get('_coordinates');
+
+      if (Ember.isEmpty(coordinates)) {
+        error = true
+        // e.closeDialog = false;
+        this.set('_coordinatesWithError', true);
+        // return;
+      }
+      else {
+        this.set('_coordinatesWithError', false);
+      }
+
+      if (error) {
+        e.closeDialog = false;
+        return;
+      }
+
       const editedRows = Ember.get(tabModel, '_editedRows');
       const keys = Object.keys(editedRows);
 
@@ -211,13 +247,13 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
         edit = Ember.get(tabModel, `_editedRows.${rowId}`);
       }
 
-      if (Ember.isNone(objectType)) {
-        let layer = Ember.get(tabModel, `featureLink.${rowId}`);
-        const geoJSON = layer.toGeoJSON();
-        objectType = geoJSON.geometry.type
-      }
+      // if (Ember.isNone(objectType)) {
+      //   let layer = Ember.get(tabModel, `featureLink.${rowId}`);
+      //   const geoJSON = layer.toGeoJSON();
+      //   objectType = geoJSON.geometry.type
+      // }
 
-      const coordinates = this.get('_coordinates');
+
       // if (edit) {
       switch (objectType) {
         case 'Point':
@@ -272,9 +308,9 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
           }
 
           break;
-        case 'MultiLineString': break;
-        case 'Polygon': break;
-        case 'MultiPolygon':
+        // case 'MultiLineString': break;
+        // case 'MultiPolygon': break;
+        case 'Polygon':
 
           const parsedCoordinates1 = this._parseMultyCoordinates(coordinates);
           if (Ember.isNone(parsedCoordinates1)) {
@@ -327,6 +363,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
     onDeny(e) {
       this.set('_coordinates', null);
       this.set('_coordinatesWithError', null);
+      this.set('_geometryField', false);
+      this.set('_objectTypeDisabled', true);
     }
   },
 
@@ -399,7 +437,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
         let items;
 
         if (k == 0) {
-          items = lines.slice(k, i);
+          items = lines.slice(k, i + 1);
         } else if (i === lines.length - 1) {
           items = lines.slice(k + 1, i + 1);
         } else {
@@ -431,7 +469,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
       }
     }
 
-    return result;
+    return result.length > 0 ? result : null;
   },
 
   _getLayer() {
