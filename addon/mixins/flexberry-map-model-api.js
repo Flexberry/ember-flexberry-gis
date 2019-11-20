@@ -502,7 +502,7 @@ export default Ember.Mixin.create({
       if (objectToSearch) {
         layerFrom._leafletObject.removeLayer(objectToSearch);
         objectToSearch._leaflet_id = null;
-        var newObj = this.createGeometryType(objectToSearch, reject);
+        var newObj = this.createGeometryType(objectToSearch);
         if (Ember.isNone(newObj)) {
           throw 'unknown geomerty type';
         }
