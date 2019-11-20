@@ -1,6 +1,6 @@
 {{flexberry-button
   tooltip=menuButtonTooltip
-  click=(action "onButtonClick")
+  click=(action "onButtonClick" tabModel)
   iconClass="flexberry-map-command-icon location arrow icon"
 }}
 
@@ -14,7 +14,7 @@
     approveButtonCaption=dialogApproveButtonCaption
     denyButtonCaption=dialogDenyButtonCaption
     visible=_dialogVisible
-    approve=(action "onApprove")
+    approve=(action "onApprove" tabModel)
     deny=(action "onDeny")
   }}
   <form class="ui form {{flexberryClassNames.form}}" role="form">
@@ -29,8 +29,8 @@
     <div class="field disabled">
       <label>{{geometryFieldLabel}}</label>
       {{flexberry-dropdown
-        items=settings.drawTools
-        value="polygon"
+        items=_types
+        value=_objectType
       }}
     </div>
     <div class="field {{if _coordinatesWithError "error" ""}}">

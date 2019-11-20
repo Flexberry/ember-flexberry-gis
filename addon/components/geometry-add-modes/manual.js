@@ -104,13 +104,92 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
 
   coordinatesFieldPlaceholder: t('components.geometry-add-modes.manual.coordinates-field-placeholder'),
 
+  _types: ['Point', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon'],
+
   actions: {
     /**
       Handles button click.
+
+      @method actions.onButtonClick
+      @param {Object} tabModel Tab model.s
     */
-    onButtonClick() {
+    onButtonClick(tabModel) {
       this.set('_dialogHasBeenRequested', true);
       this.set('_dialogVisible', true);
+
+      const editedRows = Ember.get(tabModel, '_editedRows');
+      const keys = Object.keys(editedRows);
+
+      let edit = false;
+      let rowId;
+      if (!Ember.isNone(keys[0])) {
+        rowId = keys[0];
+        edit = Ember.get(tabModel, `_editedRows.${rowId}`);
+      }
+
+      if (edit) {
+        //this.menuButtonTooltip = t('components.geometry-add-modes.manual.menu-button-tooltip-edit');//todo: does not work
+
+        const countDimensions = (value) => {
+          return Array.isArray(value) ? 1 + Math.max(...value.map(countDimensions)) : 0;
+        };
+
+        var layer = Ember.get(tabModel, `featureLink.${rowId}`);
+
+        //let coordinates = layer.feature.geometry.coordinates; //todo: хз что правильнее.
+        const geoJSON = layer.toGeoJSON();
+        let coordinates = geoJSON.geometry.coordinates;
+        // let coordinates = layer._latlngs;
+
+        // Get array depth.
+        const arrLength = countDimensions(coordinates);
+
+        let coors = [];
+       // let objectType = geoJSON.geometry.type;
+        switch (arrLength) {
+          case 1: // Point.
+            coors.push(coordinates);
+           // objectType = 'Point';
+            break;
+          case 3: // LineString and MultiLineString.
+            for (let i = 0; i < coordinates.length; i++) {
+              for (let j = 0; j < coordinates[i].length; j++) {
+                let item = coordinates[i][j];
+                coors.push(item);
+              }
+
+              if (i !== coordinates.length - 1) {
+                coors.push(null);
+              }
+            }
+            //objectType = 'LineString'; //todo: MultiLineString
+            break;
+          case 4: // Polygon and MultiPolygon.
+            for (let i = 0; i < coordinates.length; i++) {
+              for (let j = 0; j < coordinates[i].length; j++) {
+                for (let k = 0; k < coordinates[i][j].length; k++) {
+                  let item = coordinates[i][j][k];
+                  coors.push(item);
+                }
+              }
+
+              if (i !== coordinates.length - 1) {
+                coors.push(null);
+              }
+            }
+            // = 'Polygon'; //todo: MultiPolygon
+            break;
+          default:
+            throw new Error('Coordinate array error.');
+        }
+
+        let str = '';
+        coors.forEach(item => str += item !== null ? `${item[0]} ${item[1]} \n` : '\n');
+        //coors.forEach(item => str += item !== null ? `${item.lat} ${item.lng} \n` : '\n');
+
+        this.set('_coordinates', str);
+        this.set('_objectType', geoJSON.geometry.type);
+      }
     },
 
     /**
@@ -118,34 +197,105 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
       Invokes {{#crossLink "FlexberryGeometryAddModeManualComponent/sendingActions.complete:method"}}'complete' action{{/crossLink}}.
 
       @method actions.onApprove
+      @param {Object} e Object event.
     */
-    onApprove(e) {
-      let parsedCoordinates = this.parseCoordinates();
-      if (Ember.isNone(parsedCoordinates)) {
-        // Prevent dialog from being closed.
-        e.closeDialog = false;
+    onApprove(e, tabModel) {
+      const objectType = this.get('_objectType');
 
-        return;
+      const editedRows = Ember.get(tabModel, '_editedRows');
+      const keys = Object.keys(editedRows);
+
+      let edit = false;
+      let rowId;
+      if (!Ember.isNone(keys[0])) {
+        rowId = keys[0];
+        edit = Ember.get(tabModel, `_editedRows.${rowId}`);
       }
 
-      // create a polygon with provided coordinates
-      let addedLayer = L.polygon(parsedCoordinates);
-      this.set('_coordinates', null);
-      this.set('_coordinatesWithError', null);
+      if (edit) {
+        switch (objectType) {
+          case 'Point':
 
-      this.sendAction('complete', addedLayer, { panToAddedObject: true });
+            const parsedCoordinates = this._parsePointCoordinates();
+            if (Ember.isNone(parsedCoordinates)) {
+
+              // Prevent dialog from being closed.
+              e.closeDialog = false;
+
+              return;
+            }
+
+            // Edit a point with provided coordinates.
+            const addedLayer = L.point(200, 300); //L.polygon(parsedCoordinates);
+            this.set('_coordinates', null);
+            this.set('_coordinatesWithError', null);
+
+
+            break;
+          case 'LineString': break;
+          case 'Polygon': break;
+        }
+
+      } else {
+        const parsedCoordinates = this.parseCoordinates();
+        if (Ember.isNone(parsedCoordinates)) {
+
+          // Prevent dialog from being closed.
+          e.closeDialog = false;
+
+          return;
+        }
+
+        // create a polygon with provided coordinates
+        const addedLayer = L.polygon(parsedCoordinates);
+        this.set('_coordinates', null);
+        this.set('_coordinatesWithError', null);
+
+        this.sendAction('complete', addedLayer, { panToAddedObject: true });//todo: Не забыть включить
+
+      }
+
+
     },
 
     /**
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
 
       @method actions.onDeny
+      @param {Object} e Object event.
     */
     onDeny(e) {
       this.set('_coordinates', null);
       this.set('_coordinatesWithError', null);
     }
   },
+
+  // _parsePointCoordinates(coordinates) {
+  //   let coordinates = this.get('_coordinates');
+  //   let result = null;
+
+  //   if (Ember.isNone(coordinates)) {
+  //     this.set('_coordinatesWithError', true);
+  //   } else {
+  //     let lines = coordinates.split('\n');
+  //     lines.forEach((line) => {
+  //       const check = line.match(/(.*) (.*)/);
+  //       if (!check) {
+  //         this.set('_coordinatesWithError', true);
+  //         return null;
+  //       }
+
+  //       result = result || [];
+  //       result.push([check[1], check[2]]);
+  //     });
+  //   }
+
+  //   if (!Ember.isNone(result)) {
+  //     this.set('_coordinatesWithError', false);
+  //   }
+
+  //   return result;
+  // },
 
   /**
     Parses coordinates.
