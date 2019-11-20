@@ -5,6 +5,8 @@ import helpers from 'npm:@turf/helpers';
 import booleanContains from 'npm:@turf/boolean-contains';
 import area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
+import rhumbBearing from 'npm:@turf/rhumb-bearing';
+import rhumbDistance from 'npm:@turf/rhumb-distance';
 
 export default Ember.Mixin.create({
   /**
@@ -90,57 +92,48 @@ export default Ember.Mixin.create({
 
   /**
     Remove shape from layer.
-
     @method deleteLayerObject.
     @param {String} layerId Id layer.
     @param {String} featureId Id shape.
-    @return {Promise} Return target feature.
   */
   deleteLayerObject(layerId, featureId) {
-    return this.deleteLayerObjects(layerId, [featureId]);
+    this.deleteLayerObjects(layerId, [featureId]);
   },
 
   /**
     Remove shapes from layer.
-
     @method deleteLayerObjects.
     @param {string} layerId Id layer.
     @param {Object[]} featureIds Array of id shapes.
   */
   deleteLayerObjects(layerId, featureIds) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      const layers = this.get('mapLayer');
-      const layer = layers.findBy('id', layerId);
+    const layers = this.get('mapLayer');
+    const layer = layers.findBy('id', layerId);
 
-      if (Ember.isNone(layer)) {
-        reject(`Layer '${layerId}' not found.`);
+    if (Ember.isNone(layer)) {
+      throw new Error(`Layer '${layerId}' not found.`);
+    }
+
+    const leafletObject = Ember.get(layer, '_leafletObject');
+    if (Ember.isNone(leafletObject)) {
+      throw new Error('Layer type not supported');
+    }
+
+    let ids = [];
+    leafletObject.eachLayer(function (shape) {
+      const id = this._getLayerFeatureId(layer, shape);
+
+      if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
+        ids.push(id);
+        leafletObject.removeLayer(shape);
       }
+    }.bind(this));
 
-      if (Ember.isNone(layer._leafletObject)) {
-        reject('Layer type not supported');
+    const deleteLayerFromAttrPanelFunc = this.get('mapApi').getFromApi('_deleteLayerFromAttrPanel');
+    ids.forEach((id) => {
+      if (typeof deleteLayerFromAttrPanelFunc === 'function') {
+        deleteLayerFromAttrPanelFunc(id, layer);
       }
-
-      let ids = [];
-      layer._leafletObject.eachLayer(function (shape) {
-        const id = this._getLayerFeatureId(layer, shape);
-
-        if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
-          ids.push(id);
-          layer._leafletObject.removeLayer(shape);
-        } else {
-          reject('id not found');
-        }
-      }.bind(this));
-
-      const deleteLayerFromAttrPanelFunc = this.get('mapApi').getFromApi('_deleteLayerFromAttrPanel');
-      ids.forEach((id) => {
-        if (typeof deleteLayerFromAttrPanelFunc === 'function') {
-          deleteLayerFromAttrPanelFunc(id, layer);
-        } else {
-          reject('_deleteLayerFromAttrPanel function not defined');
-        }
-      });
-      resolve('layer removed successfully');
     });
   },
 
@@ -456,29 +449,32 @@ export default Ember.Mixin.create({
   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
     if (Ember.isArray(objectIds)) {
-      const layer = this.get('mapLayer').findBy('id', layerId);
+      const layers = this.get('mapLayer');
+      const layer = layers.findBy('id', layerId);
+      if (Ember.isNone(layer)) {
+        throw 'No layer with such id';
+      }
+
       const leafletObject = Ember.get(layer, '_leafletObject');
 
       if (Ember.isNone(leafletObject)) {
         throw 'Layer type not supported';
       }
 
-      var map = Ember.get(leafletObject, '_map');
+      const map = this.get('mapApi').getFromApi('leafletMap');
 
-      leafletObject.eachLayer(function (shape) {
-        const id = this._getLayerFeatureId(layer, shape);
-        if (!Ember.isNone(id) && objectIds.indexOf(id) !== -1) {
+      objectIds.forEach(objectId => {
+        let object = Object.values(leafletObject._layers).find(shape => {
+          return Ember.get(shape, 'feature.properties.primarykey') === objectId;
+        });
+        if (object) {
           if (visibility) {
-            if (!map.hasLayer(shape)) {
-              map.addLayer(shape);
-            }
+            map.addLayer(object);
           } else {
-            if (map.hasLayer(shape)) {
-              map.removeLayer(shape);
-            }
+            map.removeLayer(object);
           }
         }
-      }.bind(this));
+      });
     }
   },
 
@@ -490,7 +486,6 @@ export default Ember.Mixin.create({
     @param {String} tolayerId  id of layer to add object
   */
   moveObjectToLayer(objectId, fromLayerId, toLayerId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
       let objectToSearch;
       let store = this.get('store');
       let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
@@ -509,19 +504,18 @@ export default Ember.Mixin.create({
           objectToSearch._leaflet_id = null;
           var newObj = this.createGeometryType(objectToSearch, reject);
           if (Ember.isNone(newObj)) {
-            reject('unknown geomerty type');
+            throw 'unknown geomerty type';
           }
 
           newObj.options = objectToSearch.options;
           Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-          resolve('object moved successfully');
+          return 'object moved successfully';
         } else {
-          reject('no object with such id');
+          throw 'no object with such id';
         }
       } else {
-        reject('no layer with such id');
+        throw 'no layer with such id';
       }
-    });
   },
 
   /**
@@ -532,7 +526,6 @@ export default Ember.Mixin.create({
     @param {String} toLayerId  id of layer to add object
   */
   copyObject(objectId, fromLayerId, toLayerId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
       let objectToSearch;
       let store = this.get('store');
       let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
@@ -550,19 +543,18 @@ export default Ember.Mixin.create({
           objectToSearch._leaflet_id = null;
           var newObj = this.createGeometryType(objectToSearch);
           if (Ember.isNone(newObj)) {
-            reject('unknown geometry type');
+            throw('unknown geometry type');
           }
 
           newObj.options = objectToSearch.options;
           Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-          resolve('object copied successfully');
+          return 'object copied successfully';
         } else {
-          reject('no object with such id');
+          throw 'no object with such id';
         }
       } else {
-        reject('no layer with such id');
+        throw 'no layer with such id';
       }
-    });
   },
 
   /**
@@ -586,5 +578,102 @@ export default Ember.Mixin.create({
         return L.polygon(objectToDefine.getLatLngs());
       default: return undefined;
     }
+  },
+
+  /**
+   * Get the object thumb.
+   * @method  getRhumb
+   * @param {string} layerId Layer id.
+   * @param {string} objectId Object id.
+   * @return {array} Table rhumb.
+   */
+  getRhumb(layerId, objectId) {
+    const layer = this.get('mapLayer').findBy('id', layerId);
+    const leafletObject = Ember.get(layer, '_leafletObject');
+
+    var cors;
+    leafletObject.eachLayer(function (object) {
+      const id = this._getLayerFeatureId(layer, object);
+      if (!Ember.isNone(id) && objectId === id) {
+        cors = object._latlngs;
+      }
+    }.bind(this));
+
+    if (Ember.isNone(cors)) {
+      throw new Error('Object not found');
+    }
+
+    let result = [];
+
+    var rowPush = function (vertexNum1, vertexNum2, point1, point2) {
+      const pointFrom = helpers.point([point2.lat, point2.lng]);
+      const pointTo = helpers.point([point1.lat, point1.lng]);
+
+      // We get the distance and translate into meters.
+      const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
+
+      // Get the angle.
+      const bearing = rhumbBearing.default(pointFrom, pointTo);
+
+      let rhumb;
+
+      // Calculates rhumb.
+      if (bearing < -90 && bearing > -180) {
+        // СВ
+        rhumb = 'СВ;' + (Math.abs(bearing) - 90);
+      } else if (bearing <= 180 && bearing > 90) {
+        // ЮВ
+        rhumb = 'ЮВ;' + (bearing - 90);
+      } else if (bearing <= 90 && bearing > 0) {
+        // ЮЗ
+        rhumb = 'ЮЗ;' + (90 - bearing);
+      } if (bearing <= 0 && bearing >= -90) {
+        // СЗ
+        rhumb = 'СЗ;' + Math.abs(-90 - bearing);
+      }
+
+      return {
+        rib: `${vertexNum1 + 1};${vertexNum2 + 1}`,
+        rhumb: rhumb,
+        distance: distance
+      };
+    };
+
+    let startPoint = null;
+    for (let i = 0; i < cors.length; i++) {
+      for (let j = 0; j < cors[i].length; j++) {
+        let n;
+        let point1;
+        let point2;
+        let item = cors[i][j];
+
+        // Polygon.
+        if (!Ember.isNone(item.length)) {
+          for (let k = 0; k < item.length; k++) {
+            startPoint = k === 0 ? item[k] : startPoint;
+            point1 = item[k];
+            n = !Ember.isNone(item[k + 1]) ? k + 1 : 0;
+            point2 = item[n];
+
+            result.push(rowPush(k, n, point1, point2));
+          }
+
+          // LineString.
+        } else {
+          startPoint = j === 0 ? item : startPoint;
+          point1 = item;
+          n = !Ember.isNone(cors[i][j + 1]) ? j + 1 : 0;
+          point2 = cors[i][n];
+
+          result.push(rowPush(j, n, point1, point2));
+        }
+      }
+    }
+
+    return {
+      startPoint: startPoint,
+      coordinates: result
+    };
   }
+
 });
