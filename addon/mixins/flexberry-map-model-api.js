@@ -486,36 +486,36 @@ export default Ember.Mixin.create({
     @param {String} tolayerId  id of layer to add object
   */
   moveObjectToLayer(objectId, fromLayerId, toLayerId) {
-      let objectToSearch;
-      let store = this.get('store');
-      let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
-      let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
-      if (layerFrom && layerTo) {
-        let features = Ember.get(layerFrom, '_leafletObject._layers');
-        if (features) {
-          objectToSearch = Object.values(features).find(feature => {
-            const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
-            return layerFeatureId === objectId;
-          });
-        }
-
-        if (objectToSearch) {
-          layerFrom._leafletObject.removeLayer(objectToSearch);
-          objectToSearch._leaflet_id = null;
-          var newObj = this.createGeometryType(objectToSearch, reject);
-          if (Ember.isNone(newObj)) {
-            throw 'unknown geomerty type';
-          }
-
-          newObj.options = objectToSearch.options;
-          Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-          return 'object moved successfully';
-        } else {
-          throw 'no object with such id';
-        }
-      } else {
-        throw 'no layer with such id';
+    let objectToSearch;
+    let store = this.get('store');
+    let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
+    let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
+    if (layerFrom && layerTo) {
+      let features = Ember.get(layerFrom, '_leafletObject._layers');
+      if (features) {
+        objectToSearch = Object.values(features).find(feature => {
+          const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
+          return layerFeatureId === objectId;
+        });
       }
+
+      if (objectToSearch) {
+        layerFrom._leafletObject.removeLayer(objectToSearch);
+        objectToSearch._leaflet_id = null;
+        var newObj = this.createGeometryType(objectToSearch, reject);
+        if (Ember.isNone(newObj)) {
+          throw 'unknown geomerty type';
+        }
+
+        newObj.options = objectToSearch.options;
+        Ember.get(layerTo, '_leafletObject').addLayer(newObj);
+        return 'object moved successfully';
+      } else {
+        throw 'no object with such id';
+      }
+    } else {
+      throw 'no layer with such id';
+    }
   },
 
   /**
@@ -526,35 +526,35 @@ export default Ember.Mixin.create({
     @param {String} toLayerId  id of layer to add object
   */
   copyObject(objectId, fromLayerId, toLayerId) {
-      let objectToSearch;
-      let store = this.get('store');
-      let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
-      let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
-      if (layerTo && layerFrom) {
-        let features = Ember.get(layerFrom, '_leafletObject._layers');
-        if (features) {
-          objectToSearch = Object.values(features).find(feature => {
-            const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
-            return layerFeatureId === objectId;
-          });
-        }
-
-        if (objectToSearch) {
-          objectToSearch._leaflet_id = null;
-          var newObj = this.createGeometryType(objectToSearch);
-          if (Ember.isNone(newObj)) {
-            throw('unknown geometry type');
-          }
-
-          newObj.options = objectToSearch.options;
-          Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-          return 'object copied successfully';
-        } else {
-          throw 'no object with such id';
-        }
-      } else {
-        throw 'no layer with such id';
+    let objectToSearch;
+    let store = this.get('store');
+    let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
+    let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
+    if (layerTo && layerFrom) {
+      let features = Ember.get(layerFrom, '_leafletObject._layers');
+      if (features) {
+        objectToSearch = Object.values(features).find(feature => {
+          const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
+          return layerFeatureId === objectId;
+        });
       }
+
+      if (objectToSearch) {
+        objectToSearch._leaflet_id = null;
+        var newObj = this.createGeometryType(objectToSearch);
+        if (Ember.isNone(newObj)) {
+          throw('unknown geometry type');
+        }
+
+        newObj.options = objectToSearch.options;
+        Ember.get(layerTo, '_leafletObject').addLayer(newObj);
+        return 'object copied successfully';
+      } else {
+        throw 'no object with such id';
+      }
+    } else {
+      throw 'no layer with such id';
+    }
   },
 
   /**
