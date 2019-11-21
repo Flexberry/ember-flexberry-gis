@@ -485,36 +485,14 @@ export default Ember.Mixin.create({
     @param {String} fromLayerId id of layer to remove object
     @param {String} tolayerId  id of layer to add object
   */
-  moveObjectToLayer(objectId, fromLayerId, toLayerId) {
-    let objectToSearch;
-    let store = this.get('store');
-    let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
-    let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
-    if (layerFrom && layerTo) {
-      let features = Ember.get(layerFrom, '_leafletObject._layers');
-      if (features) {
-        objectToSearch = Object.values(features).find(feature => {
-          const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
-          return layerFeatureId === objectId;
-        });
-      }
-
-      if (objectToSearch) {
-        layerFrom._leafletObject.removeLayer(objectToSearch);
-        objectToSearch._leaflet_id = null;
-        var newObj = this.createGeometryType(objectToSearch);
-        if (Ember.isNone(newObj)) {
-          throw 'unknown geomerty type';
-        }
-
-        newObj.options = objectToSearch.options;
-        Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-        return 'object moved successfully';
-      } else {
-        throw 'no object with such id';
-      }
+  moveObjectToLayer(fromLayerId, toLayerId, objectId) {
+    let [layerFromModel, leafletObjectFrom, objectToSearch] = this._getModelLayerFeature(fromLayerId, objectId);
+    let [layerToModel, leafletObjectTo] = this._getModelLayerFeature(toLayerId);
+    if (layerFromModel && layerToModel && leafletObjectFrom && leafletObjectTo && objectToSearch) {
+      leafletObjectFrom.removeLayer(objectToSearch);
+      leafletObjectTo.addLayer(objectToSearch);
     } else {
-      throw 'no layer with such id';
+      throw 'Wrong parameters';
     }
   },
 
@@ -525,58 +503,30 @@ export default Ember.Mixin.create({
     @param {String} fromLayerId GeoJSON object id
     @param {String} toLayerId  id of layer to add object
   */
-  copyObject(objectId, fromLayerId, toLayerId) {
-    let objectToSearch;
-    let store = this.get('store');
-    let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
-    let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
-    if (layerTo && layerFrom) {
-      let features = Ember.get(layerFrom, '_leafletObject._layers');
-      if (features) {
-        objectToSearch = Object.values(features).find(feature => {
-          const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
-          return layerFeatureId === objectId;
-        });
+  copyObject(fromLayerId, toLayerId, objectId) {
+    let [layerFromModel, leafletObjectFrom, objectToSearch] = this._getModelLayerFeature(fromLayerId, objectId);
+    let [layerToModel, leafletObjectTo] = this._getModelLayerFeature(toLayerId);
+    if (layerFromModel && layerToModel && leafletObjectFrom && leafletObjectTo && objectToSearch) {
+      let newObject;
+      switch (layerModel.get('settingsAsObject.typeGeometry')) {
+        case 'polygon':
+          newObject = L.polygon(objectToDefine.getLatLngs());
+          break;
+        case 'polyline':
+          newObject = L.polyline(objectToDefine.getLatLngs());
+          break;
+        case 'marker':
+          newObject = L.marker(objectToDefine.getLatLng());
+          break;
+        default:
+          throw 'Unknown layer type: ' + layerModel.get('settingsAsObject.typeGeometry');
       }
 
-      if (objectToSearch) {
-        objectToSearch._leaflet_id = null;
-        var newObj = this.createGeometryType(objectToSearch);
-        if (Ember.isNone(newObj)) {
-          throw('unknown geometry type');
-        }
-
-        newObj.options = objectToSearch.options;
-        Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-        return 'object copied successfully';
-      } else {
-        throw 'no object with such id';
-      }
+      newObject.feature.properties = Ember.assign({}, objectToSearch.feature.properties);
+      newObject.options = objectToSearch.options;
+      leafletObjectTo.addLayer(newObject);
     } else {
-      throw 'no layer with such id';
-    }
-  },
-
-  /**
-    Create new Lealfet object according to objectToDefine geometry type.
-    @method  createGeometryType
-    @param {String} objectToDefine GeoJSON object.
-  */
-  createGeometryType(objectToDefine) {
-    switch (Ember.get(objectToDefine, 'feature.geometry.type')) {
-      case 'Marker':
-        return L.marker(objectToDefine.getLatLng());
-      case 'Circle':
-        return L.circle(objectToDefine.getLatLng(), objectToDefine.getRadius());
-      case 'LineString':
-        return L.polyline(objectToDefine.getLatLngs());
-      case 'MultiLineString':
-        return L.polyline(objectToDefine.getLatLngs());
-      case 'Polygon':
-        return L.polygon(objectToDefine.getLatLngs());
-      case 'MultiPolygon':
-        return L.polygon(objectToDefine.getLatLngs());
-      default: return undefined;
+      throw 'Wrong parameters';
     }
   },
 
