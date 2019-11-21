@@ -174,6 +174,7 @@ export default Ember.Mixin.create({
       featureLayer.disableEdit();
       featureLayer.enableEdit();
       editTools.featuresLayer.clearLayers();
+
       // We note that the shape was edited.
       leafletObject.editLayer(featureLayer);
     };
