@@ -49,6 +49,23 @@ define('dummy/tests/app.jshint', ['exports'], function (exports) {
     assert.ok(true, 'app.js should pass jshint.');
   });
 });
+define('dummy/tests/controllers/api-test-map.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - controllers');
+  test('controllers/api-test-map.js should pass jscs', function () {
+    ok(true, 'controllers/api-test-map.js should pass jscs.');
+  });
+});
+define('dummy/tests/controllers/api-test-map.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - controllers/api-test-map.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'controllers/api-test-map.js should pass jshint.');
+  });
+});
 define('dummy/tests/controllers/application.jscs-test', ['exports'], function (exports) {
   'use strict';
 
@@ -132,6 +149,57 @@ define('dummy/tests/controllers/maps.jshint', ['exports'], function (exports) {
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'controllers/maps.js should pass jshint.');
+  });
+});
+define('dummy/tests/controllers/new-platform-flexberry-g-i-s-map-object-setting-e.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - controllers');
+  test('controllers/new-platform-flexberry-g-i-s-map-object-setting-e.js should pass jscs', function () {
+    ok(true, 'controllers/new-platform-flexberry-g-i-s-map-object-setting-e.js should pass jscs.');
+  });
+});
+define('dummy/tests/controllers/new-platform-flexberry-g-i-s-map-object-setting-e.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - controllers/new-platform-flexberry-g-i-s-map-object-setting-e.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'controllers/new-platform-flexberry-g-i-s-map-object-setting-e.js should pass jshint.');
+  });
+});
+define('dummy/tests/controllers/new-platform-flexberry-g-i-s-map-object-setting-e/new.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - controllers/new-platform-flexberry-g-i-s-map-object-setting-e');
+  test('controllers/new-platform-flexberry-g-i-s-map-object-setting-e/new.js should pass jscs', function () {
+    ok(true, 'controllers/new-platform-flexberry-g-i-s-map-object-setting-e/new.js should pass jscs.');
+  });
+});
+define('dummy/tests/controllers/new-platform-flexberry-g-i-s-map-object-setting-e/new.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - controllers/new-platform-flexberry-g-i-s-map-object-setting-e/new.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'controllers/new-platform-flexberry-g-i-s-map-object-setting-e/new.js should pass jshint.');
+  });
+});
+define('dummy/tests/controllers/new-platform-flexberry-g-i-s-map-object-setting-l.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - controllers');
+  test('controllers/new-platform-flexberry-g-i-s-map-object-setting-l.js should pass jscs', function () {
+    ok(true, 'controllers/new-platform-flexberry-g-i-s-map-object-setting-l.js should pass jscs.');
+  });
+});
+define('dummy/tests/controllers/new-platform-flexberry-g-i-s-map-object-setting-l.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - controllers/new-platform-flexberry-g-i-s-map-object-setting-l.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'controllers/new-platform-flexberry-g-i-s-map-object-setting-l.js should pass jshint.');
   });
 });
 define('dummy/tests/controllers/sitemap-node.jscs-test', ['exports'], function (exports) {
@@ -656,6 +724,49 @@ define('dummy/tests/integration/components/flexberry-layers-attributes-panel-tes
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'integration/components/flexberry-layers-attributes-panel-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/integration/components/flexberry-layers-intersections-panel-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+
+  // import hbs from 'htmlbars-inline-precompile';
+
+  (0, _emberQunit.moduleForComponent)('flexberry-layers-intersections-panel', 'Integration | Component | flexberry layers intersections panel', {
+    integration: true
+  });
+
+  (0, _emberQunit.test)('it renders', function (assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    // this.render(hbs`{{flexberry-layers-intersections-panel}}`);
+
+    assert.equal(this.$().text().trim(), '');
+
+    // Template block usage:
+    // this.render(hbs`
+    //   {{#flexberry-layers-intersections-panel}}
+    //     template block text
+    //   {{/flexberry-layers-intersections-panel}}
+    // `);
+
+    // assert.equal(this.$().text().trim(), 'template block text');
+  });
+});
+define('dummy/tests/integration/components/flexberry-layers-intersections-panel-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - integration/components');
+  test('integration/components/flexberry-layers-intersections-panel-test.js should pass jscs', function () {
+    ok(true, 'integration/components/flexberry-layers-intersections-panel-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/integration/components/flexberry-layers-intersections-panel-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - integration/components/flexberry-layers-intersections-panel-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'integration/components/flexberry-layers-intersections-panel-test.js should pass jshint.');
   });
 });
 define('dummy/tests/integration/components/flexberry-layers-test', ['exports', 'ember', 'ember-qunit'], function (exports, _ember, _emberQunit) {
@@ -2504,6 +2615,40 @@ define('dummy/tests/locales/en/forms/maps.jshint', ['exports'], function (export
     assert.ok(true, 'locales/en/forms/maps.js should pass jshint.');
   });
 });
+define('dummy/tests/locales/en/forms/new-platform-flexberry-g-i-s-map-object-setting-e.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - locales/en/forms');
+  test('locales/en/forms/new-platform-flexberry-g-i-s-map-object-setting-e.js should pass jscs', function () {
+    ok(true, 'locales/en/forms/new-platform-flexberry-g-i-s-map-object-setting-e.js should pass jscs.');
+  });
+});
+define('dummy/tests/locales/en/forms/new-platform-flexberry-g-i-s-map-object-setting-e.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - locales/en/forms/new-platform-flexberry-g-i-s-map-object-setting-e.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'locales/en/forms/new-platform-flexberry-g-i-s-map-object-setting-e.js should pass jshint.');
+  });
+});
+define('dummy/tests/locales/en/forms/new-platform-flexberry-g-i-s-map-object-setting-l.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - locales/en/forms');
+  test('locales/en/forms/new-platform-flexberry-g-i-s-map-object-setting-l.js should pass jscs', function () {
+    ok(true, 'locales/en/forms/new-platform-flexberry-g-i-s-map-object-setting-l.js should pass jscs.');
+  });
+});
+define('dummy/tests/locales/en/forms/new-platform-flexberry-g-i-s-map-object-setting-l.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - locales/en/forms/new-platform-flexberry-g-i-s-map-object-setting-l.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'locales/en/forms/new-platform-flexberry-g-i-s-map-object-setting-l.js should pass jshint.');
+  });
+});
 define('dummy/tests/locales/en/translations.jscs-test', ['exports'], function (exports) {
   'use strict';
 
@@ -2708,6 +2853,40 @@ define('dummy/tests/locales/ru/forms/maps.jshint', ['exports'], function (export
     assert.ok(true, 'locales/ru/forms/maps.js should pass jshint.');
   });
 });
+define('dummy/tests/locales/ru/forms/new-platform-flexberry-g-i-s-map-object-setting-e.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - locales/ru/forms');
+  test('locales/ru/forms/new-platform-flexberry-g-i-s-map-object-setting-e.js should pass jscs', function () {
+    ok(true, 'locales/ru/forms/new-platform-flexberry-g-i-s-map-object-setting-e.js should pass jscs.');
+  });
+});
+define('dummy/tests/locales/ru/forms/new-platform-flexberry-g-i-s-map-object-setting-e.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - locales/ru/forms/new-platform-flexberry-g-i-s-map-object-setting-e.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'locales/ru/forms/new-platform-flexberry-g-i-s-map-object-setting-e.js should pass jshint.');
+  });
+});
+define('dummy/tests/locales/ru/forms/new-platform-flexberry-g-i-s-map-object-setting-l.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - locales/ru/forms');
+  test('locales/ru/forms/new-platform-flexberry-g-i-s-map-object-setting-l.js should pass jscs', function () {
+    ok(true, 'locales/ru/forms/new-platform-flexberry-g-i-s-map-object-setting-l.js should pass jscs.');
+  });
+});
+define('dummy/tests/locales/ru/forms/new-platform-flexberry-g-i-s-map-object-setting-l.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - locales/ru/forms/new-platform-flexberry-g-i-s-map-object-setting-l.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'locales/ru/forms/new-platform-flexberry-g-i-s-map-object-setting-l.js should pass jshint.');
+  });
+});
 define('dummy/tests/locales/ru/translations.jscs-test', ['exports'], function (exports) {
   'use strict';
 
@@ -2791,6 +2970,23 @@ define('dummy/tests/router.jshint', ['exports'], function (exports) {
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'router.js should pass jshint.');
+  });
+});
+define('dummy/tests/routes/api-test-map.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - routes');
+  test('routes/api-test-map.js should pass jscs', function () {
+    ok(true, 'routes/api-test-map.js should pass jscs.');
+  });
+});
+define('dummy/tests/routes/api-test-map.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - routes/api-test-map.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'routes/api-test-map.js should pass jshint.');
   });
 });
 define('dummy/tests/routes/application.jscs-test', ['exports'], function (exports) {
@@ -2895,6 +3091,57 @@ define('dummy/tests/routes/maps.jshint', ['exports'], function (exports) {
     assert.ok(true, 'routes/maps.js should pass jshint.');
   });
 });
+define('dummy/tests/routes/new-platform-flexberry-g-i-s-map-object-setting-e.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - routes');
+  test('routes/new-platform-flexberry-g-i-s-map-object-setting-e.js should pass jscs', function () {
+    ok(true, 'routes/new-platform-flexberry-g-i-s-map-object-setting-e.js should pass jscs.');
+  });
+});
+define('dummy/tests/routes/new-platform-flexberry-g-i-s-map-object-setting-e.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - routes/new-platform-flexberry-g-i-s-map-object-setting-e.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'routes/new-platform-flexberry-g-i-s-map-object-setting-e.js should pass jshint.');
+  });
+});
+define('dummy/tests/routes/new-platform-flexberry-g-i-s-map-object-setting-e/new.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - routes/new-platform-flexberry-g-i-s-map-object-setting-e');
+  test('routes/new-platform-flexberry-g-i-s-map-object-setting-e/new.js should pass jscs', function () {
+    ok(true, 'routes/new-platform-flexberry-g-i-s-map-object-setting-e/new.js should pass jscs.');
+  });
+});
+define('dummy/tests/routes/new-platform-flexberry-g-i-s-map-object-setting-e/new.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - routes/new-platform-flexberry-g-i-s-map-object-setting-e/new.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'routes/new-platform-flexberry-g-i-s-map-object-setting-e/new.js should pass jshint.');
+  });
+});
+define('dummy/tests/routes/new-platform-flexberry-g-i-s-map-object-setting-l.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - routes');
+  test('routes/new-platform-flexberry-g-i-s-map-object-setting-l.js should pass jscs', function () {
+    ok(true, 'routes/new-platform-flexberry-g-i-s-map-object-setting-l.js should pass jscs.');
+  });
+});
+define('dummy/tests/routes/new-platform-flexberry-g-i-s-map-object-setting-l.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - routes/new-platform-flexberry-g-i-s-map-object-setting-l.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'routes/new-platform-flexberry-g-i-s-map-object-setting-l.js should pass jshint.');
+  });
+});
 define('dummy/tests/serializers/application-offline.jscs-test', ['exports'], function (exports) {
   'use strict';
 
@@ -2990,9 +3237,9 @@ define('dummy/tests/unit/components/base-control-test', ['exports', 'ember-qunit
     unit: true
   });
 
-  (0, _emberQunit.test)('it should call map.addControl method on initControl', function (assert) {
+  (0, _emberQunit.test)('it should call leafletMap.addControl method on initControl', function (assert) {
     var addControl = _sinon['default'].spy();
-    var component = this.subject({ map: { addControl: addControl } });
+    var component = this.subject({ leafletMap: { addControl: addControl } });
 
     component.initControl();
 
@@ -3019,7 +3266,8 @@ define('dummy/tests/unit/components/base-control-test.jshint', ['exports'], func
 define('dummy/tests/unit/components/base-layer-test', ['exports', 'ember-qunit', 'sinon'], function (exports, _emberQunit, _sinon) {
 
   (0, _emberQunit.moduleForComponent)('base-layer', 'Unit | Component | base layer', {
-    unit: true
+    unit: true,
+    needs: ['service:map-api', 'config:environment']
   });
 
   // stubs for createLayer method
@@ -3235,7 +3483,7 @@ define('dummy/tests/unit/components/flexberry-map-test', ['exports', 'ember', 'e
 
   (0, _emberQunit.moduleForComponent)('flexberry-map', 'Unit | Component | flexberry map', {
     unit: true,
-    needs: ['component:flexberry-layers']
+    needs: ['component:flexberry-layers', 'service:map-api', 'service:i18n', 'map-tool:drag', 'config:environment']
   });
 
   (0, _emberQunit.test)('it should create leaflet map on didInsertElement', function (assert) {
@@ -3277,10 +3525,12 @@ define('dummy/tests/unit/components/flexberry-map-test', ['exports', 'ember', 'e
 
     assert.equal(leafletMap.getZoom(), 0);
 
-    // after update to leaflet-1.0.0 panTo not directly change center,
-    // it will changed after animation will trigger moveend
+    // After update to leaflet-1.0.0 panTo not directly change center,
+    // it will changed after animation will trigger 'moveend' event.
     var promise = new _ember['default'].Test.promise(function (resolve) {
-      leafletMap.on('moveend', resolve);
+      leafletMap.on('moveend', function () {
+        setTimeout(resolve, 500);
+      });
     });
 
     _ember['default'].run(function () {
@@ -3977,6 +4227,62 @@ define('dummy/tests/unit/mixins/dynamic-properties-test.jshint', ['exports'], fu
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/mixins/dynamic-properties-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-savelayer-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/flexberry-map-model-api-savelayer', 'qunit'], function (exports, _ember, _emberFlexberryGisMixinsFlexberryMapModelApiSavelayer, _qunit) {
+
+  (0, _qunit.module)('Unit | Mixin | flexberry map model api savelayer');
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works', function (assert) {
+    var FlexberryMapModelApiSavelayerObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApiSavelayer['default']);
+    var subject = FlexberryMapModelApiSavelayerObject.create();
+    assert.ok(subject);
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-savelayer-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-savelayer-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-savelayer-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-savelayer-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-savelayer-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-savelayer-test.js should pass jshint.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-visualedit-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/flexberry-map-model-api-visualedit', 'qunit'], function (exports, _ember, _emberFlexberryGisMixinsFlexberryMapModelApiVisualedit, _qunit) {
+
+  (0, _qunit.module)('Unit | Mixin | flexberry map model api visualedit');
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works', function (assert) {
+    var FlexberryMapModelApiVisualeditObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApiVisualedit['default']);
+    var subject = FlexberryMapModelApiVisualeditObject.create();
+    assert.ok(subject);
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-visualedit-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-visualedit-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-visualedit-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-visualedit-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-visualedit-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-visualedit-test.js should pass jshint.');
   });
 });
 define('dummy/tests/unit/mixins/leaflet-events-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/leaflet-events', 'qunit', 'sinon'], function (exports, _ember, _emberFlexberryGisMixinsLeafletEvents, _qunit, _sinon) {
