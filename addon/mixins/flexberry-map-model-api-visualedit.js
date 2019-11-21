@@ -152,59 +152,46 @@ export default Ember.Mixin.create({
     @param {Object} featureLayer Feature layer.
   */
   startChangeMultyLayerObject(layerId, featureLayer) {
-    const layerModel = this._getLayerModel(layerId);
-    let leafletObject = layerModel.get('_leafletObject');
+    let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
 
     let editTools = this._getEditTools();
+    let newLayer;
 
-    const _disableDraw = () => {
-      editTools.off('editable:drawing:end', _disableDraw, this);
+    const disableDraw = () => {
+      editTools.off('editable:drawing:end', disableDraw, this);
       editTools.stopDrawing();
-
-      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
       var featureCollection = {
         type: 'FeatureCollection',
-        features: []
+        features: [featureLayer.toGeoJSON(), newLayer.toGeoJSON()]
       };
-
-      // Define editable objects.
-      leafletMap.eachLayer(function (layer) {
-        const enabled = Ember.get(layer, 'editor._enabled');
-        if (enabled === true) {
-          const layerGeoJson = layer.toGeoJSON();
-          featureCollection.features.push(layerGeoJson);
-        }
-      }.bind(this));
 
       // Coordinate union.
       let fcCombined = turfCombine.default(featureCollection);
-      const featureCombined = fcCombined.features.pop();
-
-      Ember.set(featureLayer, 'feature.geometry', featureCombined.geometry);
-
+      const featureCombined = L.geoJSON(fcCombined);
+      const combinedLeaflet = featureCombined.getLayers()[0];
+      featureLayer.setLatLngs(combinedLeaflet.getLatLngs());
+      featureLayer.disableEdit();
+      featureLayer.enableEdit();
+      editTools.featuresLayer.clearLayers();
       // We note that the shape was edited.
       leafletObject.editLayer(featureLayer);
     };
 
-    editTools.on('editable:drawing:end', _disableDraw, this);
+    editTools.on('editable:drawing:end', disableDraw, this);
 
-    const type = Ember.get(featureLayer, 'feature.geometry.type');
-    switch (type) {
-      case 'Polygon':
-        editTools.startPolygon();
-        Ember.set(featureLayer, 'feature.geometry.type', 'MultiPolygon');
+    switch (layerModel.get('settingsAsObject.typeGeometry')) {
+      case 'polygon':
+        newLayer = editTools.startPolygon();
         break;
-      case 'MultiPolygon':
-        editTools.startPolygon();
+      case 'polyline':
+        newLayer = editTools.startPolyline();
         break;
-      case 'LineString':
-        editTools.startPolyline();
-        Ember.set(featureLayer, 'feature.geometry.type', 'MultiLineString');
+      case 'marker':
+        newLayer = editTools.startMarker();
         break;
-      case 'MultiLineString':
-        editTools.startPolyline();
-        break;
+      default:
+        throw 'Unknown layer type: ' + layerModel.get('settingsAsObject.typeGeometry');
     }
   }
 
