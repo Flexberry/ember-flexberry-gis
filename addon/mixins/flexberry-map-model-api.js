@@ -480,6 +480,7 @@ export default Ember.Mixin.create({
 
   /**
     Move Object From one  layer to another.
+
     @method moveObjectToLayer
     @param {String} objectId GeoJSON object id
     @param {String} fromLayerId id of layer to remove object
@@ -557,6 +558,7 @@ export default Ember.Mixin.create({
 
   /**
     Copt Object to layer.
+
     @method copyObject
     @param {String} objectId GeoJSON object id
     @param {String} fromLayerId GeoJSON object id
@@ -611,6 +613,7 @@ export default Ember.Mixin.create({
 
   /**
     Create new Lealfet object according to objectToDefine geometry type.
+
     @method  createGeometryType
     @param {String} objectToDefine GeoJSON object.
   */
@@ -633,12 +636,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-   * Get the object thumb.
-   * @method  getRhumb
-   * @param {string} layerId Layer id.
-   * @param {string} objectId Object id.
-   * @return {array} Table rhumb.
-   */
+    Get the object thumb.
+
+    @method  getRhumb
+    @param {string} layerId Layer id.
+    @param {string} objectId Object id.
+    @return {array} Table rhumb.
+  */
   getRhumb(layerId, objectId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     const leafletObject = Ember.get(layer, '_leafletObject');
