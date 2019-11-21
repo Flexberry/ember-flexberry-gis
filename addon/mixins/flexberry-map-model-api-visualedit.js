@@ -21,12 +21,12 @@ export default Ember.Mixin.create({
   },
 
   /**
-   * Start visual creating of feature
-   *
-   * @param {String} layerId Id of layer in that should started editing
-   * @param {Object} properties New layer properties
-   * @returns noting
-   */
+    Start visual creating of feature
+
+    @param {String} layerId Id of layer in that should started editing
+    @param {Object} properties New layer properties
+    @returns noting
+  */
   startNewObject(layerId, properties) {
     let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
     let editTools = this._getEditTools();
@@ -76,12 +76,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-   * Return leaflet layer thats corresponds to passed layerId
-   * @method _getLeafletLayer
-   * @param {String} layerId
-   * @returns {Object}
-   * @private
-   */
+    Return leaflet layer thats corresponds to passed layerId
+
+    @method _getLeafletLayer
+    @param {String} layerId
+    @returns {Object}
+    @private
+  */
   _getLayerModel(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     if (Ember.isNone(layer)) {
@@ -92,12 +93,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-   * Get [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.
-   * @param {string} layerId Layer id.
-   * @param {string} [featureId] Object id.
-   * @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, leafletObject, featureLayer] or [layerModel, leafletObject, undefined].
-   * @private
-   */
+    Get [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.
+
+    @param {string} layerId Layer id.
+    @param {string} [featureId] Object id.
+    @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, leafletObject, featureLayer] or [layerModel, leafletObject, undefined].
+    @private
+  */
   _getModelLayerFeature(layerId, featureId) {
     let layerModel = this._getLayerModel(layerId);
     let leafletObject = layerModel.get('_leafletObject');

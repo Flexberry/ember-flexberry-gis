@@ -7,6 +7,7 @@ import { Model as MapMixin, defineProjections } from '../mixins/regenerated/mode
 import MapModelApiMixin from '../mixins/flexberry-map-model-api';
 import MapModelApiVisualEditMixin from '../mixins/flexberry-map-model-api-visualedit';
 import MapModelApiSaveLayerMixin from '../mixins/flexberry-map-model-api-savelayer';
+import MapModelApiExpansionMixin from '../mixins/flexberry-map-model-api-expansion';
 import { Projection } from 'ember-flexberry-data';
 import { Offline } from 'ember-flexberry-data';
 import LeafletCrsMixin from '../mixins/leaflet-crs';
@@ -27,6 +28,7 @@ let Model = Projection.Model.extend(
   MapModelApiMixin,
   MapModelApiVisualEditMixin,
   MapModelApiSaveLayerMixin,
+  MapModelApiExpansionMixin,
   {
   _anyTextChanged: Ember.on('init', Ember.observer('name', 'description', 'keyWords', function() {
     Ember.run.once(this, '_anyTextCompute');
