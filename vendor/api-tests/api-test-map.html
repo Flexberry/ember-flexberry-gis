@@ -53,6 +53,9 @@
       <button id="creatObject">Create Object</button>
     </div>
     <div>
+      <button id="getRhumb"> Get Rhumb</button>
+    </div>
+    <div>
       <button id="getLayerObjectOptions">Get Object Attributes</button>
     </div>
     <div>
@@ -63,6 +66,9 @@
     <div>
       <button id="hideRightPanel">Hide right panel</button>
       <button id="showRightPanel">Show right panel</button>
+    </div>
+    <div>
+      <button id="startChangeMultyLayerObject">Change Multy Object</button>
     </div>
   </div>
   <script type="text/javascript">
@@ -88,7 +94,7 @@
         return true;
       }
 
-      frame.contentWindow.mapApi.saveObject = function(obj, layerId)  {
+      frame.contentWindow.mapApi.saveObject = function (obj, layerId) {
         if (layerId === "56f4b518-e375-4b24-be2f-88d48110c0a3") {
           obj.saveObject().then((feature) => console.log(feature)).catch((e) => console.log(e));
         }
@@ -153,15 +159,13 @@
 
       var deleteLayerObjectButton = document.getElementById('deleteLayerObject');
       var deleteObjectLayer = function () {
-        frame.contentWindow.mapApi.mapModel.deleteLayerObject('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8383')
-          .then(() => console.log('perm_water_line.8383')).catch((e) => console.log(e));
+        frame.contentWindow.mapApi.mapModel.deleteLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_utverzhdeno_polygon.02b29e0f-e9b0-47c7-a6bf-a91abfe719c3');
       };
       deleteLayerObjectButton.addEventListener('click', deleteObjectLayer);
 
       var deleteObjectsLayerButton = document.getElementById('deleteLayerObjects');
       var deleteObjectsLayer = function () {
-        frame.contentWindow.mapApi.mapModel.deleteLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382'])
-          .then(() => console.log(['perm_water_line.8383', 'perm_water_line.8382'])).catch((e) => console.log(e));
+        frame.contentWindow.mapApi.mapModel.deleteLayerObjects('56f4b518-e375-4b24-be2f-88d48110c0a3', ['vydel_utverzhdeno_polygon.1df5d9e9-e9e1-42ca-b4f4-c823bf84bc8e']);
       };
       deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
 
@@ -241,6 +245,7 @@
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
 
+
       var showLeftPanelButton = document.getElementById('showLeftPanel');
       var showLeftPanel = function () {
         var nameTool = document.getElementById('nameTools').value;
@@ -272,6 +277,33 @@
         frame.contentWindow.leafletMap.flexberryMap.sidebar.hide();
       };
       hideRightPanelButton.addEventListener('click', hideRightPanel);
+
+      var startChangeMultyLayerObjectButton = document.getElementById('startChangeMultyLayerObject');
+      var startChangeMultyLayerObject = function () {
+
+        var featureLayer = frame.contentWindow.mapApi.mapModel.startChangeLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_utverzhdeno_polygon.02b29e0f-e9b0-47c7-a6bf-a91abfe719c3');
+        frame.contentWindow.mapApi.mapModel.startChangeMultyLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', featureLayer);
+      };
+      startChangeMultyLayerObjectButton.addEventListener('click', startChangeMultyLayerObject);
+
+
     });
+
+    var getRhumbButton = document.getElementById('getRhumb');
+    var getRhumb = function () {
+      // Пример обычного полигона (длина вложенности массива: 3)
+      // var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_polygon.3110');
+      // Пример обычной линии (длина вложенности массива: 2)
+      var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('fc26ac89-ccb5-47f5-bd2d-89a5e587f9d3', 'Улица.1094');
+      // Пример мультиполигон (длина вложенности массива: 4)
+      //var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_polygon.3111');
+      // Пример мультилинии (длина вложенности массива: 2)
+      //var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('fc26ac89-ccb5-47f5-bd2d-89a5e587f9d3', 'Улица.15477');
+
+      console.log(thumbs);
+    }
+
+    getRhumbButton.addEventListener('click', getRhumb);
+
   </script>
 </div>

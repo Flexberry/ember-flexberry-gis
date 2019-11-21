@@ -23,3 +23,6 @@ import * as turf from 'npm:@turf/combine';
 import * as area from 'npm:@turf/area';
 import * as booleanPointInPolygon from 'npm:@turf/boolean-point-in-polygon';
 import * as booleanContains from 'npm:@turf/boolean-contains';
+import * as rhumbDistance from 'npm:@turf/rhumb-distance';
+import * as rhumbBearing from 'npm:@turf/rhumb-bearing';
+

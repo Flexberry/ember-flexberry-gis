@@ -413,9 +413,9 @@ let FlexberryMapComponent = Ember.Component.extend(
     */
     _localeDidChange: Ember.observer('i18n.locale', function() {
       let i18n = this.get('i18n');
+      let $leafletContainer = this.get('_$leafletContainer');
 
-      if (this.get('zoomControl')) {
-        let $leafletContainer = this.get('_$leafletContainer');
+      if (this.get('zoomControl') && $leafletContainer) {
         let $zoomControl = $leafletContainer.find('.leaflet-control-container .leaflet-control-zoom');
         let $zoomInButton = $zoomControl.find('.leaflet-control-zoom-in');
         let $zoomOutButton = $zoomControl.find('.leaflet-control-zoom-out');

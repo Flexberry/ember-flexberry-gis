@@ -64,6 +64,27 @@ export default {
 
   'kml': Kml,
 
+  'odata-vector': {
+    'model-name-textbox': {
+      'caption': 'ModelName'
+    },
+    'projection-name-textbox': {
+      'caption': 'Projection'
+    },
+    'geometry-field-textbox': {
+      'caption': 'Geometry field'
+    },
+    'geometry-type-textbox': {
+      'caption': 'Geometry type'
+    },
+    'coords-function-textbox': {
+      'caption': 'Coords transformation method'
+    },
+    'latlng-function-textbox': {
+      'caption': 'LatLngs transformation method'
+    }
+  },
+
   'geocoder-osm-overpass': {
     'url-textbox': {
       'caption': 'Url'
