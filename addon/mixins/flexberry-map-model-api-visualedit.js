@@ -122,11 +122,11 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Get [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.
 
-    @method _getModelLayerFeature
-    @param {String} layerId Layer id.
-    @param {String} featureId Object id.
-    @returns {Object[]} [layerModel, leafletObject, featureLayer]
+    @param {string} layerId Layer id.
+    @param {string} [featureId] Object id.
+    @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, leafletObject, featureLayer] or [layerModel, leafletObject, undefined].
     @private
   */
   _getModelLayerFeature(layerId, featureId) {
@@ -134,7 +134,7 @@ export default Ember.Mixin.create({
     let leafletObject = layerModel.get('_leafletObject');
     let layers = leafletObject._layers;
     let featureLayer;
-    if (featureId !== undefined) {
+    if (!Ember.isNone(featureId)) {
       featureLayer = Object.values(layers).find(feature => {
         const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
         return layerFeatureId === featureId;
