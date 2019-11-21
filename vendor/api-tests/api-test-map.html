@@ -58,6 +58,9 @@
     <div>
       <button id="getLayerObjectOptions">Get Object Attributes</button>
     </div>
+    <div>
+      <button id="startChangeMultyLayerObject">Change Multy Object</button>
+    </div>
   </div>
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
@@ -233,6 +236,14 @@
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
 
+      var startChangeMultyLayerObjectButton = document.getElementById('startChangeMultyLayerObject');
+      var startChangeMultyLayerObject = function () {
+
+        var featureLayer = frame.contentWindow.mapApi.mapModel.startChangeLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_utverzhdeno_polygon.02b29e0f-e9b0-47c7-a6bf-a91abfe719c3');
+        frame.contentWindow.mapApi.mapModel.startChangeMultyLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', featureLayer);
+      };
+      startChangeMultyLayerObjectButton.addEventListener('click', startChangeMultyLayerObject);
+
     });
 
     var getRhumbButton = document.getElementById('getRhumb');
@@ -240,7 +251,7 @@
       // Пример обычного полигона (длина вложенности массива: 3)
       // var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_polygon.3110');
       // Пример обычной линии (длина вложенности массива: 2)
-       var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('fc26ac89-ccb5-47f5-bd2d-89a5e587f9d3', 'Улица.1094');
+      var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('fc26ac89-ccb5-47f5-bd2d-89a5e587f9d3', 'Улица.1094');
       // Пример мультиполигон (длина вложенности массива: 4)
       //var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_polygon.3111');
       // Пример мультилинии (длина вложенности массива: 2)
