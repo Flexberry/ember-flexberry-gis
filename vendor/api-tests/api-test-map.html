@@ -20,6 +20,13 @@
       <button id="getIntersectionObjects">Get Intersection Objects</button>
     </div>
     <div>
+      <button id="getIntersectionArea">Get Intersection Area</button>
+    </div>
+    <div>
+      <button id="showIntersectionArea">Show Intersection Area</button>
+      <button id="clearIntersectionArea">Clear Intersection Area</button>
+    </div>
+    <div>
       <button id="createNewlayer">Create New Layer</button>
     </div>
     <div>
@@ -59,11 +66,18 @@
       <button id="getLayerObjectOptions">Get Object Attributes</button>
     </div>
     <div>
-      <button id="createPolygonObjectCoordinates">Create Object By Coordinates</button>
-      <button id="createPolygonObjectRhumb">Create Object By Rhumb</button>
+      <button id="hideLeftPanel">Hide left panel</button>
+      <button id="showLeftPanel">Show left panel</button>
+      <input type="text" size="40" id="nameTools">
+    </div>
+    <div>
+      <button id="hideRightPanel">Hide right panel</button>
+      <button id="showRightPanel">Show right panel</button>
     </div>
     <div>
       <button id="startChangeMultyLayerObject">Change Multy Object</button>
+      <button id="createPolygonObjectCoordinates">Create Object By Coordinates</button>
+      <button id="createPolygonObjectRhumb">Create Object By Rhumb</button>
     </div>
   </div>
   <script type="text/javascript">
@@ -145,6 +159,25 @@
         console.log(frame.contentWindow.mapApi.mapModel.getIntersectionObjects('perm_water_line.7836', ['f8dec493-d879-49ae-ad55-f4f18c89cb88']));
       };
       intersectionButton.addEventListener('click', getIntersections);
+
+      var intersectionAreaButton = document.getElementById('getIntersectionArea');
+        var getIntersectionsArea = function () {
+          frame.contentWindow.mapApi.mapModel.getIntersectionArea('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Малые реки', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e',  'Голованово', false)
+          .then(resolve => {console.log(resolve)},reject => {console.log(reject)});
+        };
+      intersectionAreaButton.addEventListener('click', getIntersectionsArea);
+
+      var showIntersectionAreaButton = document.getElementById('showIntersectionArea');
+        var showIntersectionsArea = function () {
+          frame.contentWindow.mapApi.mapModel.getIntersectionArea('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Малые реки', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e',  'Голованово', true);
+        };
+      showIntersectionAreaButton.addEventListener('click', showIntersectionsArea);
+
+      var clearIntersectionAreaButton = document.getElementById('clearIntersectionArea');
+        var clearIntersectionsArea = function () {
+          frame.contentWindow.mapApi.mapModel.clearServiceLayer();
+        };
+      clearIntersectionAreaButton.addEventListener('click', clearIntersectionsArea);
 
       var newLayerButton = document.getElementById('createNewlayer');
       var newLayer = function () {
@@ -239,6 +272,39 @@
         console.log(distance + ' (m)');
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
+
+
+      var showLeftPanelButton = document.getElementById('showLeftPanel');
+      var showLeftPanel = function () {
+        var nameTool = document.getElementById('nameTools').value;
+        if (nameTool != '')
+          frame.contentWindow.leafletMap.flexberryMap.tools.show(nameTool);
+        else
+          frame.contentWindow.leafletMap.flexberryMap.tools.show();
+      };
+      showLeftPanelButton.addEventListener('click', showLeftPanel);
+
+      var hideLeftPanelButton = document.getElementById('hideLeftPanel');
+      var hideLeftPanel = function () {
+        var nameTool = document.getElementById('nameTools').value;
+        if (nameTool != '')
+          frame.contentWindow.leafletMap.flexberryMap.tools.hide(nameTool);
+        else
+          frame.contentWindow.leafletMap.flexberryMap.tools.hide();
+      };
+      hideLeftPanelButton.addEventListener('click', hideLeftPanel);
+
+      var showRightPanelButton = document.getElementById('showRightPanel');
+      var showRightPanel = function () {
+        frame.contentWindow.leafletMap.flexberryMap.sidebar.show();
+      };
+      showRightPanelButton.addEventListener('click', showRightPanel);
+
+      var hideRightPanelButton = document.getElementById('hideRightPanel');
+      var hideRightPanel = function () {
+        frame.contentWindow.leafletMap.flexberryMap.sidebar.hide();
+      };
+      hideRightPanelButton.addEventListener('click', hideRightPanel);
 
       var startChangeMultyLayerObjectButton = document.getElementById('startChangeMultyLayerObject');
       var startChangeMultyLayerObject = function () {

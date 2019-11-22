@@ -5,6 +5,7 @@ import helpers from 'npm:@turf/helpers';
 import booleanContains from 'npm:@turf/boolean-contains';
 import area from 'npm:@turf/area';
 import intersect from 'npm:@turf/intersect';
+import projection from 'npm:@turf/projection';
 import rhumbBearing from 'npm:@turf/rhumb-bearing';
 import rhumbDistance from 'npm:@turf/rhumb-distance';
 
@@ -534,13 +535,64 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Get the object thumb.
-
-    @method  getRhumb
-    @param {string} layerId Layer id.
-    @param {string} objectId Object id.
-    @return {array} Table rhumb.
+    Calculate the area of intersection between object A and object B .
+    @method getIntersectionArea
+    @param {String} objectAId id of first object.
+    @param {String} layerAId id of first layer.
+    @param {String} objectBId id of second object.
+    @param {String} layerBId id of second layer.
+    @param {Bool} showOnMap flag indicates if intersection area will be displayed on map.
   */
+  getIntersectionArea(layerAId, objectAId, layerBId, objectBId, showOnMap) {
+    let [layerA, layerObjectA, objA] = this._getModelLayerFeature(layerAId, objectAId);
+    let [layerB, layerObjectB, objB] = this._getModelLayerFeature(layerBId, objectBId);
+    if (layerObjectA && layerObjectB) {
+      if (layerA && layerB) {
+        if (objA && objB) {
+          return new Ember.RSVP.Promise((resolve, reject) => {
+            objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+            objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+            let intersectionRes = intersect.default(objA, objB);
+            if (intersectionRes) {
+              if (showOnMap) {
+                let obj = L.geoJSON(intersectionRes, {
+                  style: { color: 'green' }
+                });
+                let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+                obj.addTo(serviceLayer);
+                resolve('displayed');
+              }
+
+              resolve(area(intersectionRes));
+            } else {
+              reject('no intersection found');
+            }
+          });
+        } else {
+          throw 'no object with such id';
+        }
+      } else {
+        throw 'no layer with such id';
+      }
+    }
+  },
+
+  /**
+    Cleans the service layer.
+    @method clearServiceLayer
+  */
+  clearServiceLayer() {
+    let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+    serviceLayer.clearLayers();
+  },
+
+  /*
+   * Get the object thumb.
+   * @method  getRhumb
+   * @param {string} layerId Layer id.
+   * @param {string} objectId Object id.
+   * @return {array} Table rhumb.
+   */
   getRhumb(layerId, objectId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     const leafletObject = Ember.get(layer, '_leafletObject');

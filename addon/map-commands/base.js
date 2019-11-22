@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import LeafletMapVisibilityMixin from '../mixins/leaflet-map/map-visibility';
 
 /**
   Base map-command.
@@ -11,7 +12,8 @@ import Ember from 'ember';
   @extends <a href="http://emberjs.com/api/classes/Ember.Object.html">Ember.Object</a>
   @uses <a href="http://emberjs.com/api/classes/Ember.Evented.html">Ember.Evented</a>
 */
-export default Ember.Object.extend(Ember.Evented, {
+export default Ember.Object.extend(Ember.Evented,
+  LeafletMapVisibilityMixin, {
   /**
     Flag: indicates whether map-command is executing now or not.
 
@@ -106,5 +108,15 @@ export default Ember.Object.extend(Ember.Evented, {
     }
 
     return executionResult;
+  },
+
+  hideCommand() {
+    let mapCommandName = this.get('name');
+    this.showHideTool(mapCommandName, false, this.addClassHidden);
+  },
+
+  showCommand() {
+    let mapCommandName = this.get('name');
+    this.showHideTool(mapCommandName, false, this.removeClassHidden);
   }
 });
