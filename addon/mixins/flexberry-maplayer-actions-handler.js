@@ -274,7 +274,7 @@ export default Ember.Mixin.create({
         });
       }, this);
 
-      leafletObject.fire('reset');
+      leafletObject.fire('load-data');
     },
 
     /**

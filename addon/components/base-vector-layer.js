@@ -269,10 +269,10 @@ export default BaseLayer.extend({
 
         if (this.get('clusterize')) {
           let clusterLayer = this.createClusterLayer(vectorLayer);
-          clusterLayer.on('reset', this._loadData, this);
+          clusterLayer.on('load-data', this._loadData, this);
           resolve(clusterLayer);
         } else {
-          vectorLayer.on('reset', this._loadData, this);
+          vectorLayer.on('load-data', this._loadData, this);
           resolve(vectorLayer);
         }
       }).catch((e) => {
@@ -470,7 +470,7 @@ export default BaseLayer.extend({
     if (allEvents) {
       let leafletLayer = this.get('_leafletObject');
       if (leafletLayer) {
-        leafletLayer.off('reset', this._loadData, this);
+        leafletLayer.off('load-data', this._loadData, this);
       }
     }
   }
