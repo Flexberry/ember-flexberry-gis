@@ -437,7 +437,7 @@ export default Ember.Mixin.create({
       return getLayerFeatureId(layer, layerObject);
     }
 
-    return Ember.get(layerObject, 'feature.properties.name');
+    return Ember.get(layerObject, 'feature.id');
   },
 
   /**
@@ -481,6 +481,7 @@ export default Ember.Mixin.create({
 
   /**
     Move Object From one  layer to another.
+
     @method moveObjectToLayer
     @param {String} objectId GeoJSON object id
     @param {String} fromLayerId id of layer to remove object
@@ -558,6 +559,7 @@ export default Ember.Mixin.create({
 
   /**
     Copt Object to layer.
+
     @method copyObject
     @param {String} objectId GeoJSON object id
     @param {String} fromLayerId GeoJSON object id
@@ -612,6 +614,7 @@ export default Ember.Mixin.create({
 
   /**
     Create new Lealfet object according to objectToDefine geometry type.
+
     @method  createGeometryType
     @param {String} objectToDefine GeoJSON object.
   */
