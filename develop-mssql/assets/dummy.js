@@ -8803,6 +8803,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/leafl
     assert.ok(true, 'modules/ember-flexberry-gis/mixins/leaflet-map/map-loader.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/leaflet-map/map-sidebar.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/mixins/leaflet-map');
+  test('modules/ember-flexberry-gis/mixins/leaflet-map/map-sidebar.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/mixins/leaflet-map/map-sidebar.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/leaflet-map/map-sidebar.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/mixins/leaflet-map/map-sidebar.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/mixins/leaflet-map/map-sidebar.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/leaflet-map/map-tools.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/mixins/leaflet-map');
   test('modules/ember-flexberry-gis/mixins/leaflet-map/map-tools.js should pass jscs', function () {
@@ -8814,6 +8827,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/leafl
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/mixins/leaflet-map/map-tools.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/leaflet-map/map-visibility.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/mixins/leaflet-map');
+  test('modules/ember-flexberry-gis/mixins/leaflet-map/map-visibility.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/mixins/leaflet-map/map-visibility.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/leaflet-map/map-visibility.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/mixins/leaflet-map/map-visibility.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/mixins/leaflet-map/map-visibility.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/mixins/leaflet-options.jscs-test', ['exports'], function (exports) {
@@ -37374,7 +37400,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.1+58fa6878"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.1+aa3ceda1"});
 }
 
 /* jshint ignore:end */
