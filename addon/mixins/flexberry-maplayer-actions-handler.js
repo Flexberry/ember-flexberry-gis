@@ -255,21 +255,26 @@ export default Ember.Mixin.create({
         this.set(foldedPath, false);
       }
 
-      getAttributesOptions().then(({ object, settings }) => {
-        let items = this.get(itemsPath) || Ember.A();
-        let index = items.findIndex((item) => Ember.isEqual(item.name, name));
-        if (index >= 0) {
-          this.set(selectedTabIndexPath, index);
-        } else {
-          items.addObject({ name: name, leafletObject: object, settings });
-          this.set(itemsPath, items);
-          this.set(selectedTabIndexPath, items.length - 1);
-        }
-      }).catch((errorMessage) => {
-        Ember.Logger.error(errorMessage);
-      }).finally(() => {
-        this.set(loadingPath, false);
-      });
+      const leafletObject = Ember.get(layerModel, '_leafletObject');
+      leafletObject.once('layerDataLoaded', function() {
+        getAttributesOptions().then(({ object, settings }) => {
+          let items = this.get(itemsPath) || Ember.A();
+          let index = items.findIndex((item) => Ember.isEqual(item.name, name));
+          if (index >= 0) {
+            this.set(selectedTabIndexPath, index);
+          } else {
+            items.addObject({ name: name, leafletObject: object, settings });
+            this.set(itemsPath, items);
+            this.set(selectedTabIndexPath, items.length - 1);
+          }
+        }).catch((errorMessage) => {
+          Ember.Logger.error(errorMessage);
+        }).finally(() => {
+          this.set(loadingPath, false);
+        });
+      }, this);
+
+      leafletObject.fire('reset');
     },
 
     /**

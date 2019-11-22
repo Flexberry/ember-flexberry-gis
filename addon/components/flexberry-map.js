@@ -9,6 +9,7 @@ import LeafletMapInteractionMixin from '../mixins/leaflet-map/map-interaction';
 import LeafletMapLoaderMixin from '../mixins/leaflet-map/map-loader';
 import LeafletMapToolsMixin from '../mixins/leaflet-map/map-tools';
 import LeafletMapCommandsMixin from '../mixins/leaflet-map/map-commands';
+import Renderer from '../objects/custom-renderer';
 
 import layout from '../templates/components/flexberry-map';
 
@@ -444,8 +445,11 @@ let FlexberryMapComponent = Ember.Component.extend(
       let $leafletContainer = this.$();
       this.set('_$leafletContainer', $leafletContainer);
 
+      let options = this.get('options');
+      options.renderer = new Renderer();
+
       // Create leaflet map.
-      let leafletMap = L.map($leafletContainer[0], this.get('options'));
+      let leafletMap = L.map($leafletContainer[0], options);
       this.set('_leafletObject', leafletMap);
 
       // Perform initializations.

@@ -34,6 +34,26 @@ export default BaseLayer.extend({
   clusterOptions: null,
 
   /**
+    Indicates when layer data was loaded.
+
+    @property _layerLoaded
+    @type Boolean
+    @default false
+    @private
+   */
+  _layerLoaded: false,
+
+  /**
+    Indicates when layer data is loading.
+
+    @property _layerLoading
+    @type Boolean
+    @default false
+    @private
+   */
+  _layerLoading: false,
+
+  /**
     Observes and handles changes in {{#crossLink "BaseVectorLayerComponent/clusterize:property"}}'clusterize' property{{/crossLink}}.
     Resets layer with respect to new value of {{#crossLink "BaseVectorLayerComponent/clusterize:property"}}'clusterize' property{{/crossLink}}.
 
@@ -207,6 +227,15 @@ export default BaseLayer.extend({
     clusterLayer._featureGroup.off('layerremove', this._setLayerOpacity, this);
   },
 
+  _loadData() {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      const leafletObject = this.get('layerModel._leafletObject');
+      this._deleteDataLoadEvents();
+      leafletObject.fire('layerDataLoaded');
+      resolve(leafletObject);
+    });
+  },
+
   /**
     Creates leaflet layer related to layer type.
 
@@ -215,20 +244,35 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
+    const leafletMap = this.get('leafletMap');
+    if (leafletMap && !this._checkMapZoom()) {
+      leafletMap.on('zoomend', this._loadData, this);
+    }
+
     return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.RSVP.hash({
         vectorLayer: this.createVectorLayer()
       }).then(({ vectorLayer }) => {
+        this.set('_layerLoading', false);
+        if (this._checkMapZoom()) {
+          this.set('_layerLoaded', true);
+        }
+
         // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
         let readFormat = vectorLayer.readFormat;
         if (Ember.isNone(readFormat)) {
           vectorLayer.readFormat = this.createReadFormat(vectorLayer);
         }
 
+        vectorLayer.minZoom = this.get('minZoom');
+        vectorLayer.maxZoom = this.get('maxZoom');
+
         if (this.get('clusterize')) {
           let clusterLayer = this.createClusterLayer(vectorLayer);
+          clusterLayer.on('reset', this._loadData, this);
           resolve(clusterLayer);
         } else {
+          vectorLayer.on('reset', this._loadData, this);
           resolve(vectorLayer);
         }
       }).catch((e) => {
@@ -243,6 +287,10 @@ export default BaseLayer.extend({
     @method destroyLayer
   */
   destroyLayer() {
+    this.set('_layerLoaded', false);
+
+    this._deleteDataLoadEvents(true);
+
     let leafletLayer = this.get('_leafletObject');
     if (leafletLayer instanceof L.MarkerClusterGroup) {
       this.destroyClusterLayer(leafletLayer);
@@ -394,5 +442,36 @@ export default BaseLayer.extend({
 
       resolve(features);
     });
+  },
+
+  /**
+    Returns true when map's zoom between layer's min and max zoom.
+
+    @method _checkMapZoom
+  */
+  _checkMapZoom() {
+    const mapZoom = this.get('leafletMap').getZoom();
+    const minZoom = this.get('minZoom');
+    const maxZoom = this.get('maxZoom');
+    return mapZoom >= minZoom && mapZoom <= maxZoom;
+  },
+
+  /**
+    Delete layer load events.
+
+    @method _deleteDataLoadEvents
+  */
+  _deleteDataLoadEvents(allEvents) {
+    const leafletMap = this.get('leafletMap');
+    if (leafletMap) {
+      leafletMap.off('zoomend', this._loadData, this);
+    }
+
+    if (allEvents) {
+      let leafletLayer = this.get('_leafletObject');
+      if (leafletLayer) {
+        leafletLayer.off('reset', this._loadData, this);
+      }
+    }
   }
 });
