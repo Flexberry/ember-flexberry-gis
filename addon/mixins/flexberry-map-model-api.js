@@ -479,54 +479,57 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Move Object From one  layer to another.
-    @method moveObjectToLayer
-    @param {String} objectId GeoJSON object id
-    @param {String} fromLayerId id of layer to remove object
-    @param {String} tolayerId  id of layer to add object
-  */
-  moveObjectToLayer(fromLayerId, toLayerId, objectId) {
-    let [layerFromModel, leafletObjectFrom, objectToSearch] = this._getModelLayerFeature(fromLayerId, objectId);
-    let [layerToModel, leafletObjectTo] = this._getModelLayerFeature(toLayerId);
-    if (layerFromModel && layerToModel && leafletObjectFrom && leafletObjectTo && objectToSearch) {
-      leafletObjectFrom.removeLayer(objectToSearch);
-      leafletObjectTo.addLayer(objectToSearch);
-    } else {
-      throw 'Wrong parameters';
-    }
-  },
-
-  /**
-    Copt Object to layer.
+    Copy Object from Source layer to Destination.
     @method copyObject
-    @param {String} objectId GeoJSON object id
-    @param {String} fromLayerId GeoJSON object id
-    @param {String} toLayerId  id of layer to add object
+    @param {Object} source Object with source settings
+    {
+      layerId,
+      objectId,
+      shouldRemove
+    }
+    @param {Object} destination Object with destination settings
+    {
+      layerId,
+      properties
+    }
   */
-  copyObject(fromLayerId, toLayerId, objectId) {
-    let [layerFromModel, leafletObjectFrom, objectToSearch] = this._getModelLayerFeature(fromLayerId, objectId);
-    let [layerToModel, leafletObjectTo] = this._getModelLayerFeature(toLayerId);
-    if (layerFromModel && layerToModel && leafletObjectFrom && leafletObjectTo && objectToSearch) {
-      let newObject;
-      switch (layerModel.get('settingsAsObject.typeGeometry')) {
+  copyObject(source, destination) {
+    let [sourceLayerModel, sourceLeafletLayer, sourceFeature] = this._getModelLayerFeature(source.layerId, source.objectId);
+    let [destLayerModel, destLeafletLayer] = this._getModelLayerFeature(destination.layerId);
+    if (sourceLayerModel && destLayerModel && sourceLeafletLayer && destLeafletLayer && sourceFeature) {
+      let destFeature;
+      switch (destLayerModel.get('settingsAsObject.typeGeometry')) {
         case 'polygon':
-          newObject = L.polygon(objectToDefine.getLatLngs());
+          destFeature = L.polygon(sourceFeature.getLatLngs());
           break;
         case 'polyline':
-          newObject = L.polyline(objectToDefine.getLatLngs());
+          destFeature = L.polyline(sourceFeature.getLatLngs());
           break;
         case 'marker':
-          newObject = L.marker(objectToDefine.getLatLng());
+          destFeature = L.marker(sourceFeature.getLatLng());
           break;
         default:
-          throw 'Unknown layer type: ' + layerModel.get('settingsAsObject.typeGeometry');
+          throw 'Unknown layer type: ' + destLayerModel.get('settingsAsObject.typeGeometry');
       }
 
-      newObject.feature.properties = Ember.assign({}, objectToSearch.feature.properties);
-      newObject.options = objectToSearch.options;
-      leafletObjectTo.addLayer(newObject);
+      destFeature.feature = {
+        properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {})
+      };
+
+      destLeafletLayer.addLayer(destFeature);
+
+      if (source.shouldRemove) {
+        sourceLeafletLayer.removeLayer(sourceFeature);
+      }
     } else {
-      throw 'Wrong parameters';
+      throw {
+        message: 'Wrong parameters',
+        sourceLayerModel,
+        sourceLeafletLayer,
+        sourceFeature,
+        destLayerModel,
+        destLeafletLayer
+      };
     }
   },
 
