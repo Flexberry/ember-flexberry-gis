@@ -163,6 +163,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "LeafletMapInteractionMixin",
         "LeafletMapLoaderMixin",
         "LeafletMapToolsMixin",
+        "LeafletMapVisibilityMixin",
         "LeafletOptionsMixin",
         "LeafletPropertiesMixin",
         "LeafletZoomToFeatureMixin",

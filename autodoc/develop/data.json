@@ -2249,9 +2249,7 @@
         "addon/mixins/leaflet-map/map-commands.js": {
             "name": "addon/mixins/leaflet-map/map-commands.js",
             "modules": {},
-            "classes": {
-                "LeafletMapCommandsMixin": 1
-            },
+            "classes": {},
             "fors": {},
             "namespaces": {}
         },
@@ -2275,11 +2273,29 @@
             },
             "namespaces": {}
         },
+        "addon/mixins/leaflet-map/map-sidebar.js": {
+            "name": "addon/mixins/leaflet-map/map-sidebar.js",
+            "modules": {},
+            "classes": {
+                "LeafletMapCommandsMixin": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/mixins/leaflet-map/map-tools.js": {
             "name": "addon/mixins/leaflet-map/map-tools.js",
             "modules": {},
             "classes": {
                 "LeafletMapToolsMixin": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/mixins/leaflet-map/map-visibility.js": {
+            "name": "addon/mixins/leaflet-map/map-visibility.js",
+            "modules": {},
+            "classes": {
+                "LeafletMapVisibilityMixin": 1
             },
             "fors": {},
             "namespaces": {}
@@ -3365,6 +3381,7 @@
                 "LeafletMapInteractionMixin": 1,
                 "LeafletMapLoaderMixin": 1,
                 "LeafletMapToolsMixin": 1,
+                "LeafletMapVisibilityMixin": 1,
                 "IdentifyAllMixin": 1,
                 "IdentifyTopMixin": 1,
                 "IdentifyVisibleMixin": 1,
@@ -5204,7 +5221,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/flexberry-map.js",
-            "line": 33,
+            "line": 34,
             "description": "Flexberry map component.\nWraps [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) into ember component.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>",
             "uses": [
@@ -6146,7 +6163,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/map-commands/base.js",
-            "line": 7,
+            "line": 8,
             "description": "Base map-command.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Object.html\">Ember.Object</a>",
             "uses": [
@@ -6347,7 +6364,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/map-tools/base.js",
-            "line": 7,
+            "line": 8,
             "description": "Base map-tool.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Object.html\">Ember.Object</a>",
             "uses": [
@@ -6918,7 +6935,7 @@
             "extension_for": [],
             "module": "ember-flexberry-gis",
             "namespace": "",
-            "file": "addon/mixins/leaflet-map/map-commands.js",
+            "file": "addon/mixins/leaflet-map/map-sidebar.js",
             "line": 7,
             "description": "Mixin which injects map-commands methods & properties into leaflet map.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Mixin.html\">Ember.Mixin</a>"
@@ -6964,8 +6981,23 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/mixins/leaflet-map/map-tools.js",
-            "line": 7,
+            "line": 8,
             "description": "Mixin which injects map-tools methods & properties into leaflet map.",
+            "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Mixin.html\">Ember.Mixin</a>"
+        },
+        "LeafletMapVisibilityMixin": {
+            "name": "LeafletMapVisibilityMixin",
+            "shortname": "LeafletMapVisibilityMixin",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": "",
+            "file": "addon/mixins/leaflet-map/map-visibility.js",
+            "line": 7,
+            "description": "Mixin which injects visibility methods into map-tools and map-commands.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Mixin.html\">Ember.Mixin</a>"
         },
         "IdentifyAllMixin": {
@@ -29892,7 +29924,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 15,
+            "line": 16,
             "description": "Component's CSS-classes names.\nJSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.",
             "itemtype": "property",
             "name": "flexberryClassNames",
@@ -29916,7 +29948,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 52,
+            "line": 54,
             "description": "Leaflet map.",
             "itemtype": "property",
             "name": "_leafletObject",
@@ -29929,7 +29961,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 62,
+            "line": 64,
             "description": "Leaflet map container.",
             "itemtype": "property",
             "name": "_$leafletContainer",
@@ -29942,21 +29974,21 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 72,
+            "line": 74,
             "description": "Reference to component's template.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 77,
+            "line": 79,
             "description": "Reference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 83,
+            "line": 85,
             "description": "Component's wrapping <div> CSS-classes names.\n\nAny other CSS-class names can be added through component's 'class' property.\n```handlebars\n{{#flexberry-map class=\"my-class\"}}\n  Map's content\n{{/flexberry-map}}\n```",
             "itemtype": "property",
             "name": "classNames",
@@ -29967,21 +29999,21 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 99,
+            "line": 101,
             "description": "List of leaflet map options which will be passed into leaflet map.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 125,
+            "line": 127,
             "description": "List of leaflet map properties bindings.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 130,
+            "line": 132,
             "description": "Map center latitude.",
             "itemtype": "property",
             "name": "lat",
@@ -29992,7 +30024,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 139,
+            "line": 141,
             "description": "Map center longitude.",
             "itemtype": "property",
             "name": "lng",
@@ -30003,7 +30035,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 148,
+            "line": 150,
             "description": "Map center.",
             "itemtype": "property",
             "name": "center",
@@ -30015,7 +30047,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 160,
+            "line": 162,
             "description": "Map zoom.",
             "itemtype": "property",
             "name": "zoom",
@@ -30026,7 +30058,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 169,
+            "line": 171,
             "description": "Forces the map's zoom level to always be a multiple of this.",
             "itemtype": "property",
             "name": "zoomSnap",
@@ -30037,7 +30069,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 178,
+            "line": 180,
             "description": "Controls how much the map's zoom level will change after a zoomIn(), zoomOut(),\npressing + or - on the keyboard, or using the zoom controls.",
             "itemtype": "property",
             "name": "zoomDelta",
@@ -30048,7 +30080,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 188,
+            "line": 190,
             "description": "Flag: indicates whether all paths should be rendered on a 'Canvas' renderer instead of 'SVG'.",
             "itemtype": "property",
             "name": "preferCanvas",
@@ -30059,7 +30091,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 197,
+            "line": 199,
             "description": "Array of map layers.",
             "itemtype": "property",
             "name": "layers",
@@ -30069,7 +30101,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 205,
+            "line": 207,
             "description": "JSON object with query parameters",
             "itemtype": "property",
             "name": "queryFilter",
@@ -30080,7 +30112,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 214,
+            "line": 216,
             "description": "Service for managing map API.",
             "itemtype": "property",
             "name": "mapApi",
@@ -30090,7 +30122,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 221,
+            "line": 223,
             "description": "Injects additional methods into initialized leaflet map.",
             "itemtype": "method",
             "name": "_injectMapLoaderMethods",
@@ -30108,7 +30140,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 274,
+            "line": 276,
             "description": "Removes injected additional methods from initialized leaflet map.\nRuns search query related to the specified URL params: 'queryFilter' and 'mapObjectSetting'.\nShows map loader, triggeres leaflet map event 'flexberry-map:query', then starts query and waits for all query requests to be finished,\nand finally calls to '_finishQuery' hook.",
             "itemtype": "method",
             "name": "_runQuery",
@@ -30119,7 +30151,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 342,
+            "line": 344,
             "description": "Handles search query finish.\nShows query results on map, hides map loader, triggers 'queryFinished' action and related leaflet map event 'flexberry-map:queryFinished'.",
             "itemtype": "method",
             "name": "_finishQuery",
@@ -30142,7 +30174,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 384,
+            "line": 386,
             "description": "Handles leaflet map's moveend event.",
             "itemtype": "method",
             "name": "_moveend",
@@ -30160,7 +30192,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 395,
+            "line": 397,
             "description": "Handles leaflet map's zoomend event.",
             "itemtype": "method",
             "name": "_zoomend",
@@ -30178,7 +30210,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 406,
+            "line": 408,
             "description": "Observes changhes in application's current locale, and refreshes some GUI related to it.",
             "itemtype": "method",
             "name": "localeDidChange",
@@ -30189,7 +30221,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 426,
+            "line": 428,
             "description": "Handles leaflet map container's resize.\nInitializes in 'initLeafletMap' hook.",
             "itemtype": "property",
             "name": "_onLeafletContainerResize",
@@ -30202,21 +30234,21 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 437,
+            "line": 439,
             "description": "Initializes DOM-related component's properties.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 488,
+            "line": 490,
             "description": "Destroys DOM-related component's properties.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 502,
+            "line": 504,
             "description": "Performs some initialization before leaflet map will be initialized.",
             "params": [
                 {
@@ -30230,7 +30262,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 519,
+            "line": 521,
             "description": "Performs some clean up before leaflet map will be destroyed.",
             "params": [
                 {
@@ -30244,7 +30276,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 536,
+            "line": 538,
             "description": "Initializes leaflet map related properties.",
             "params": [
                 {
@@ -30258,7 +30290,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 574,
+            "line": 576,
             "description": "Destroys leaflet map.",
             "params": [
                 {
@@ -30272,7 +30304,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 618,
+            "line": 620,
             "description": "Initializes map's service layer.",
             "params": [
                 {
@@ -30286,7 +30318,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 631,
+            "line": 633,
             "description": "Destroys map's service layer.",
             "params": [
                 {
@@ -30300,7 +30332,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 646,
+            "line": 648,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) initialized.",
             "itemtype": "method",
             "name": "sendingActions.leafletInit",
@@ -30323,7 +30355,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 654,
+            "line": 656,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) destroyed.",
             "itemtype": "method",
             "name": "sendingActions.leafletDestroy",
@@ -30332,7 +30364,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 660,
+            "line": 662,
             "description": "Component's action invoking when map's service layer initialized.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerInit",
@@ -30348,7 +30380,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 667,
+            "line": 669,
             "description": "Component's action invoking when maps's service layer destroyed.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerDestroy",
@@ -30357,7 +30389,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 673,
+            "line": 675,
             "description": "Component's action invoking when query on map load finished.",
             "itemtype": "method",
             "name": "sendingActions.queryFinished",
@@ -30373,7 +30405,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 681,
+            "line": 683,
             "description": "Handles edit dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.edit:method\"}}'edit'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onEditDialogApprove",
@@ -37116,7 +37148,7 @@
         },
         {
             "file": "addon/map-commands/base.js",
-            "line": 15,
+            "line": 17,
             "description": "Flag: indicates whether map-command is executing now or not.",
             "itemtype": "property",
             "name": "_executing",
@@ -37129,7 +37161,7 @@
         },
         {
             "file": "addon/map-commands/base.js",
-            "line": 25,
+            "line": 27,
             "description": "Reference to i18n service.",
             "itemtype": "property",
             "name": "i18n",
@@ -37140,7 +37172,7 @@
         },
         {
             "file": "addon/map-commands/base.js",
-            "line": 34,
+            "line": 36,
             "description": "Tool's name.",
             "itemtype": "property",
             "name": "name",
@@ -37151,7 +37183,7 @@
         },
         {
             "file": "addon/map-commands/base.js",
-            "line": 43,
+            "line": 45,
             "description": "Leaflet map related to command.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -37162,7 +37194,7 @@
         },
         {
             "file": "addon/map-commands/base.js",
-            "line": 52,
+            "line": 54,
             "description": "Executes map-command.",
             "itemtype": "method",
             "name": "_enable",
@@ -37173,7 +37205,7 @@
         },
         {
             "file": "addon/map-commands/base.js",
-            "line": 61,
+            "line": 63,
             "description": "Executes map-command.",
             "itemtype": "method",
             "name": "execute",
@@ -37530,7 +37562,7 @@
         },
         {
             "file": "addon/map-tools/base.js",
-            "line": 15,
+            "line": 17,
             "description": "Flag: indicates whether map-tool is enabled or not.",
             "itemtype": "property",
             "name": "_enabled",
@@ -37543,7 +37575,7 @@
         },
         {
             "file": "addon/map-tools/base.js",
-            "line": 25,
+            "line": 27,
             "description": "Container of {{#crossLink \"BaseMapTool/leafletMap:property\"}}leaflet map related to map-tool{{/crossLink}}.",
             "itemtype": "property",
             "name": "leafletMapContainer",
@@ -37556,7 +37588,7 @@
         },
         {
             "file": "addon/map-tools/base.js",
-            "line": 38,
+            "line": 40,
             "description": "Reference to i18n service.",
             "itemtype": "property",
             "name": "i18n",
@@ -37567,7 +37599,7 @@
         },
         {
             "file": "addon/map-tools/base.js",
-            "line": 47,
+            "line": 49,
             "description": "Tool's name.",
             "itemtype": "property",
             "name": "name",
@@ -37578,7 +37610,7 @@
         },
         {
             "file": "addon/map-tools/base.js",
-            "line": 56,
+            "line": 58,
             "description": "Tool's cursor CSS-class.",
             "itemtype": "property",
             "name": "cursor",
@@ -37589,7 +37621,7 @@
         },
         {
             "file": "addon/map-tools/base.js",
-            "line": 65,
+            "line": 67,
             "description": "Leaflet map related to tool.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -37600,7 +37632,7 @@
         },
         {
             "file": "addon/map-tools/base.js",
-            "line": 74,
+            "line": 76,
             "description": "Enables tool.",
             "itemtype": "method",
             "name": "_enable",
@@ -37611,7 +37643,7 @@
         },
         {
             "file": "addon/map-tools/base.js",
-            "line": 88,
+            "line": 90,
             "description": "Disables tool.",
             "itemtype": "method",
             "name": "_disable",
@@ -37622,7 +37654,7 @@
         },
         {
             "file": "addon/map-tools/base.js",
-            "line": 102,
+            "line": 104,
             "description": "Enables tool.",
             "itemtype": "method",
             "name": "enable",
@@ -37631,7 +37663,7 @@
         },
         {
             "file": "addon/map-tools/base.js",
-            "line": 136,
+            "line": 138,
             "description": "Disables tool.",
             "itemtype": "method",
             "name": "disable",
@@ -37640,7 +37672,7 @@
         },
         {
             "file": "addon/map-tools/base.js",
-            "line": 167,
+            "line": 169,
             "description": "Destroys map tool.",
             "class": "BaseMapTool",
             "module": "ember-flexberry-gis"
@@ -38840,7 +38872,7 @@
         },
         {
             "file": "addon/mixins/leaflet-map/map-commands.js",
-            "line": 14,
+            "line": 15,
             "description": "Performs some initialization before leaflet map will be initialized.",
             "params": [
                 {
@@ -38854,7 +38886,7 @@
         },
         {
             "file": "addon/mixins/leaflet-map/map-commands.js",
-            "line": 99,
+            "line": 131,
             "description": "Performs some clean up before leaflet map will be destroyed.",
             "params": [
                 {
@@ -38935,8 +38967,36 @@
             "module": "ember-flexberry-gis"
         },
         {
-            "file": "addon/mixins/leaflet-map/map-tools.js",
+            "file": "addon/mixins/leaflet-map/map-sidebar.js",
             "line": 14,
+            "description": "Performs some initialization before leaflet map will be initialized.",
+            "params": [
+                {
+                    "name": "leafletMap",
+                    "description": "Leaflet map.",
+                    "type": "Object"
+                }
+            ],
+            "class": "LeafletMapCommandsMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/leaflet-map/map-sidebar.js",
+            "line": 43,
+            "description": "Performs some clean up before leaflet map will be destroyed.",
+            "params": [
+                {
+                    "name": "leafletMap",
+                    "description": "Leaflet map.",
+                    "type": "Object"
+                }
+            ],
+            "class": "LeafletMapCommandsMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/leaflet-map/map-tools.js",
+            "line": 15,
             "description": "Performs some initialization before leaflet map will be initialized.",
             "params": [
                 {
@@ -38950,7 +39010,7 @@
         },
         {
             "file": "addon/mixins/leaflet-map/map-tools.js",
-            "line": 189,
+            "line": 220,
             "description": "Performs some clean up before leaflet map will be destroyed.",
             "params": [
                 {
@@ -38960,6 +39020,35 @@
                 }
             ],
             "class": "LeafletMapToolsMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/leaflet-map/map-visibility.js",
+            "line": 42,
+            "description": "Show or hide tools/commands",
+            "params": [
+                {
+                    "name": "mapCommandName",
+                    "description": "map-command/map-tool name.",
+                    "type": "String"
+                },
+                {
+                    "name": "funcClass",
+                    "description": "addClassHidden or removeClassHidden.",
+                    "type": "Function"
+                },
+                {
+                    "name": "leafletMap",
+                    "description": "Leaflet map.",
+                    "type": "Object"
+                },
+                {
+                    "name": "isTool",
+                    "description": "flag, which indicate that is tool, that hide/show tools zoom.",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "LeafletMapVisibilityMixin",
             "module": "ember-flexberry-gis"
         },
         {
@@ -44662,51 +44751,51 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/flexberry-map.js:72"
+            "line": " addon/components/flexberry-map.js:74"
         },
         {
             "message": "Missing item type\nReference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
-            "line": " addon/components/flexberry-map.js:77"
+            "line": " addon/components/flexberry-map.js:79"
         },
         {
             "message": "Missing item type\nList of leaflet map options which will be passed into leaflet map.",
-            "line": " addon/components/flexberry-map.js:99"
+            "line": " addon/components/flexberry-map.js:101"
         },
         {
             "message": "Missing item type\nList of leaflet map properties bindings.",
-            "line": " addon/components/flexberry-map.js:125"
+            "line": " addon/components/flexberry-map.js:127"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/flexberry-map.js:437"
+            "line": " addon/components/flexberry-map.js:439"
         },
         {
             "message": "Missing item type\nDestroys DOM-related component's properties.",
-            "line": " addon/components/flexberry-map.js:488"
+            "line": " addon/components/flexberry-map.js:490"
         },
         {
             "message": "Missing item type\nPerforms some initialization before leaflet map will be initialized.",
-            "line": " addon/components/flexberry-map.js:502"
+            "line": " addon/components/flexberry-map.js:504"
         },
         {
             "message": "Missing item type\nPerforms some clean up before leaflet map will be destroyed.",
-            "line": " addon/components/flexberry-map.js:519"
+            "line": " addon/components/flexberry-map.js:521"
         },
         {
             "message": "Missing item type\nInitializes leaflet map related properties.",
-            "line": " addon/components/flexberry-map.js:536"
+            "line": " addon/components/flexberry-map.js:538"
         },
         {
             "message": "Missing item type\nDestroys leaflet map.",
-            "line": " addon/components/flexberry-map.js:574"
+            "line": " addon/components/flexberry-map.js:576"
         },
         {
             "message": "Missing item type\nInitializes map's service layer.",
-            "line": " addon/components/flexberry-map.js:618"
+            "line": " addon/components/flexberry-map.js:620"
         },
         {
             "message": "Missing item type\nDestroys map's service layer.",
-            "line": " addon/components/flexberry-map.js:631"
+            "line": " addon/components/flexberry-map.js:633"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -44874,7 +44963,7 @@
         },
         {
             "message": "Missing item type\nDestroys map tool.",
-            "line": " addon/map-tools/base.js:167"
+            "line": " addon/map-tools/base.js:169"
         },
         {
             "message": "Missing item type\nDestroys map-tool.",
@@ -44894,11 +44983,11 @@
         },
         {
             "message": "Missing item type\nPerforms some initialization before leaflet map will be initialized.",
-            "line": " addon/mixins/leaflet-map/map-commands.js:14"
+            "line": " addon/mixins/leaflet-map/map-commands.js:15"
         },
         {
             "message": "Missing item type\nPerforms some clean up before leaflet map will be destroyed.",
-            "line": " addon/mixins/leaflet-map/map-commands.js:99"
+            "line": " addon/mixins/leaflet-map/map-commands.js:131"
         },
         {
             "message": "Missing item type\nPerforms some initialization before leaflet map will be initialized.",
@@ -44918,11 +45007,23 @@
         },
         {
             "message": "Missing item type\nPerforms some initialization before leaflet map will be initialized.",
-            "line": " addon/mixins/leaflet-map/map-tools.js:14"
+            "line": " addon/mixins/leaflet-map/map-sidebar.js:14"
         },
         {
             "message": "Missing item type\nPerforms some clean up before leaflet map will be destroyed.",
-            "line": " addon/mixins/leaflet-map/map-tools.js:189"
+            "line": " addon/mixins/leaflet-map/map-sidebar.js:43"
+        },
+        {
+            "message": "Missing item type\nPerforms some initialization before leaflet map will be initialized.",
+            "line": " addon/mixins/leaflet-map/map-tools.js:15"
+        },
+        {
+            "message": "Missing item type\nPerforms some clean up before leaflet map will be destroyed.",
+            "line": " addon/mixins/leaflet-map/map-tools.js:220"
+        },
+        {
+            "message": "Missing item type\nShow or hide tools/commands",
+            "line": " addon/mixins/leaflet-map/map-visibility.js:42"
         },
         {
             "message": "Missing item type\nExecutes component's DOM-related logic.",
