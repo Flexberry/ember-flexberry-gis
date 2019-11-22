@@ -450,10 +450,15 @@ export default BaseLayer.extend({
     @method _checkMapZoom
   */
   _checkMapZoom() {
-    const mapZoom = this.get('leafletMap').getZoom();
-    const minZoom = this.get('minZoom');
-    const maxZoom = this.get('maxZoom');
-    return mapZoom >= minZoom && mapZoom <= maxZoom;
+    const leafletMap = this.get('leafletMap');
+    if (leafletMap) {
+      const mapZoom = leafletMap.getZoom();
+      const minZoom = this.get('minZoom');
+      const maxZoom = this.get('maxZoom');
+      return mapZoom >= minZoom && mapZoom <= maxZoom;
+    }
+
+    return false;
   },
 
   /**
