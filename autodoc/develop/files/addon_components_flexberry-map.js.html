@@ -980,6 +980,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       this.sendAction(&#x27;leafletInit&#x27;, {
         map: leafletMap
       });
+      this.get(&#x27;mapApi&#x27;).addToApi(&#x27;leafletMap&#x27;, leafletMap);
     },
 
     /**

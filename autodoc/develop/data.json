@@ -30290,7 +30290,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 576,
+            "line": 577,
             "description": "Destroys leaflet map.",
             "params": [
                 {
@@ -30304,7 +30304,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 620,
+            "line": 621,
             "description": "Initializes map's service layer.",
             "params": [
                 {
@@ -30318,7 +30318,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 633,
+            "line": 634,
             "description": "Destroys map's service layer.",
             "params": [
                 {
@@ -30332,7 +30332,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 648,
+            "line": 649,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) initialized.",
             "itemtype": "method",
             "name": "sendingActions.leafletInit",
@@ -30355,7 +30355,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 656,
+            "line": 657,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) destroyed.",
             "itemtype": "method",
             "name": "sendingActions.leafletDestroy",
@@ -30364,7 +30364,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 662,
+            "line": 663,
             "description": "Component's action invoking when map's service layer initialized.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerInit",
@@ -30380,7 +30380,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 669,
+            "line": 670,
             "description": "Component's action invoking when maps's service layer destroyed.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerDestroy",
@@ -30389,7 +30389,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 675,
+            "line": 676,
             "description": "Component's action invoking when query on map load finished.",
             "itemtype": "method",
             "name": "sendingActions.queryFinished",
@@ -30405,7 +30405,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 683,
+            "line": 684,
             "description": "Handles edit dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.edit:method\"}}'edit'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onEditDialogApprove",
@@ -39917,7 +39917,7 @@
             "line": 29,
             "description": "Hides specified by id layers.",
             "itemtype": "method",
-            "name": "showLayers.",
+            "name": "hideLayers.",
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
@@ -40315,6 +40315,50 @@
             "description": "Cleans the service layer.",
             "itemtype": "method",
             "name": "clearServiceLayer",
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 589,
+            "description": "Create image for layer object.",
+            "itemtype": "method",
+            "name": "getSnapShot",
+            "snapt": "",
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 650,
+            "description": "Download image for layer object.",
+            "itemtype": "method",
+            "name": "downloadSnapShot",
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 675,
+            "description": "Get the object thumb.",
+            "itemtype": "method",
+            "name": "getRhumb",
+            "params": [
+                {
+                    "name": "layerId",
+                    "description": "Layer id.",
+                    "type": "String"
+                },
+                {
+                    "name": "objectId",
+                    "description": "Object id.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Table rhumb.",
+                "type": "Array"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
@@ -43546,6 +43590,10 @@
             "line": " addon/mixins/flexberry-map-model-api-visualedit.js:124"
         },
         {
+            "message": "unknown tag: snapt",
+            "line": " addon/mixins/flexberry-map-model-api.js:589"
+        },
+        {
             "message": "replacing incorrect tag: returns with return",
             "line": " addon/mixins/flexberry-maplayer-actions-handler.js:494"
         },
@@ -44787,15 +44835,15 @@
         },
         {
             "message": "Missing item type\nDestroys leaflet map.",
-            "line": " addon/components/flexberry-map.js:576"
+            "line": " addon/components/flexberry-map.js:577"
         },
         {
             "message": "Missing item type\nInitializes map's service layer.",
-            "line": " addon/components/flexberry-map.js:620"
+            "line": " addon/components/flexberry-map.js:621"
         },
         {
             "message": "Missing item type\nDestroys map's service layer.",
-            "line": " addon/components/flexberry-map.js:633"
+            "line": " addon/components/flexberry-map.js:634"
         },
         {
             "message": "Missing item type\nReference to component's template.",

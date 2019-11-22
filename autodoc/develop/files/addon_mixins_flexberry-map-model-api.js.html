@@ -438,7 +438,7 @@ export default Ember.Mixin.create({
   /**
     Hides specified by id layers.
 
-    @method showLayers.
+    @method hideLayers.
   */
   hideLayers(layerIds) {
     this._setVisibility(layerIds);
@@ -995,13 +995,99 @@ export default Ember.Mixin.create({
     serviceLayer.clearLayers();
   },
 
-  /*
+  /**
+    Create image for layer object.
+    @method  getSnapShot
+    @snapt
+  */
+  getSnapShot({ layerId, objectId, layerArrIds, options }) {
+    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      let [layerModel, leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
+      if (layerModel &amp;&amp; leafletLayer &amp;&amp; featureLayer) {
+        if (layerArrIds) {
+          let allLayers = this.get(&#x27;mapLayer.canonicalState&#x27;);
+          let allLayersIds = allLayers.map((l) =&gt; l.id);
+
+          let showLayersIds = layerArrIds;
+          showLayersIds.push(layerId);
+
+          this.showLayers(showLayersIds);
+          let hideLayersIds = allLayersIds.filter((i) =&gt; { return showLayersIds.indexOf(i) &lt; 0; });
+          this.hideLayers(hideLayersIds);
+        }
+
+        const leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+
+        leafletMap.once(&#x27;moveend&#x27;, () =&gt; {
+          Ember.run.later(() =&gt; {
+            document.getElementsByClassName(&#x27;leaflet-control-zoom leaflet-bar leaflet-control&#x27;)[0].style.display = &#x27;none&#x27;;
+            document.getElementsByClassName(&#x27;history-control leaflet-bar leaflet-control horizontal&#x27;)[0].style.display = &#x27;none&#x27;;
+            let $mapPicture = Ember.$(leafletMap._container);
+
+            let html2canvasOptions = Object.assign({
+              useCORS: true
+            }, options);
+            window.html2canvas($mapPicture[0], html2canvasOptions)
+              .then((canvas) =&gt; {
+                let type = &#x27;image/png&#x27;;
+                var image64 = canvas.toDataURL(type);
+                resolve(image64);
+              })
+              .catch((e) =&gt; reject(e))
+              .finally(() =&gt; {
+                document.getElementsByClassName(&#x27;leaflet-control-zoom leaflet-bar leaflet-control&#x27;)[0].style.display = &#x27;block&#x27;;
+                document.getElementsByClassName(&#x27;history-control leaflet-bar leaflet-control horizontal&#x27;)[0].style.display = &#x27;block&#x27;;
+              });
+          });
+        });
+
+        let bounds = featureLayer.getBounds();
+        if (!Ember.isNone(bounds)) {
+          leafletMap.fitBounds(bounds);
+        }
+      } else {
+        throw {
+          message: &#x27;Wrong parameters&#x27;,
+          layerModel,
+          leafletLayer,
+          featureLayer
+        };
+      }
+    });
+  },
+
+  /**
+    Download image for layer object.
+    @method  downloadSnapShot
+  */
+  downloadSnapShot({ layerId, objectId, layerArrIds, options, fileName }) {
+    this.getSnapShot({ layerId, objectId, layerArrIds, options }).then((uri) =&gt; {
+      var link = document.createElement(&#x27;a&#x27;);
+      if (typeof link.download === &#x27;string&#x27;) {
+        link.href = uri;
+        link.download = fileName;
+
+        //Firefox requires the link to be in the body
+        document.body.appendChild(link);
+
+        //simulate click
+        link.click();
+
+        //remove the link when done
+        document.body.removeChild(link);
+      } else {
+        window.open(uri);
+      }
+    });
+  },
+
+  /**
    * Get the object thumb.
    * @method  getRhumb
    * @param {string} layerId Layer id.
    * @param {string} objectId Object id.
    * @return {array} Table rhumb.
-   */
+  */
   getRhumb(layerId, objectId) {
     const layer = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, layerId);
     const leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;);
