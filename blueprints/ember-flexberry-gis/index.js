@@ -122,6 +122,12 @@ module.exports = {
       {
         name: 'chart.js',
         target: '2.7.1'
+      },
+
+      // Used in `gradients/gradient-edit` component.
+      {
+        name: 'jquery-minicolors',
+        target: '2.3.4'
       }
     ]).then(function () {
       return _this.addAddonsToProject({

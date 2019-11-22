@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import LeafletMapVisibilityMixin from './map-visibility';
 
 /**
   Mixin which injects map-commands methods & properties into leaflet map.
@@ -10,7 +11,7 @@ import Ember from 'ember';
   @class LeafletMapCommandsMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
   /**
     Performs some initialization before leaflet map will be initialized.
 
@@ -20,6 +21,8 @@ export default Ember.Mixin.create({
     this._super(...arguments);
 
     let owner = Ember.getOwner(this);
+
+    let _this = this;
 
     // Cache containing already lookuped map-commands.
     let alreadyLookupedMapCommands = {};
@@ -52,6 +55,7 @@ export default Ember.Mixin.create({
 
     // Define flexberryMap.commands namespace & related methods & properties.
     let commands = leafletMap.flexberryMap.commands = {
+
       // Executes specified map-command.
       execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions) {
         let mapCommand = lookupMapCommand(mapCommandName, mapCommandProperties);
@@ -92,6 +96,34 @@ export default Ember.Mixin.create({
         });
 
         delete leafletMap.flexberryMap.commands;
+      },
+
+      // Hide map-command.
+      hide(mapCommandName) {
+        let result = _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, false);
+
+        if (!result) {
+          let mapCommand = lookupMapCommand(mapCommandName, null);
+          if (Ember.isNone(mapCommand)) {
+            return;
+          }
+
+          mapCommand.hideCommand();
+        }
+      },
+
+      // Show map-command.
+      show(mapCommandName) {
+        let result = _this.showHide(mapCommandName, _this.removeClassHidden, leafletMap, false);
+
+        if (!result) {
+          let mapCommand = lookupMapCommand(mapCommandName, null);
+          if (Ember.isNone(mapCommand)) {
+            return;
+          }
+
+          mapCommand.showCommand();
+        }
       }
     };
   },
