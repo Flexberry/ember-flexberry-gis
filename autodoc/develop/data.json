@@ -40166,50 +40166,19 @@
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
             "line": 481,
-            "description": "Move Object From one  layer to another.",
-            "itemtype": "method",
-            "name": "moveObjectToLayer",
-            "params": [
-                {
-                    "name": "objectId",
-                    "description": "GeoJSON object id",
-                    "type": "String"
-                },
-                {
-                    "name": "fromLayerId",
-                    "description": "id of layer to remove object",
-                    "type": "String"
-                },
-                {
-                    "name": "tolayerId",
-                    "description": "id of layer to add object",
-                    "type": "String"
-                }
-            ],
-            "class": "FlexberryMaplayerActionsHandlerMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 559,
-            "description": "Copt Object to layer.",
+            "description": "Copy Object from Source layer to Destination.",
             "itemtype": "method",
             "name": "copyObject",
             "params": [
                 {
-                    "name": "objectId",
-                    "description": "GeoJSON object id",
-                    "type": "String"
+                    "name": "source",
+                    "description": "Object with source settings\n{\n  layerId,\n  objectId,\n  shouldRemove\n}",
+                    "type": "Object"
                 },
                 {
-                    "name": "fromLayerId",
-                    "description": "GeoJSON object id",
-                    "type": "String"
-                },
-                {
-                    "name": "toLayerId",
-                    "description": "id of layer to add object",
-                    "type": "String"
+                    "name": "destination",
+                    "description": "Object with destination settings\n{\n  layerId,\n  properties\n}",
+                    "type": "Object"
                 }
             ],
             "class": "FlexberryMaplayerActionsHandlerMixin",
@@ -40217,23 +40186,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 614,
-            "description": "Create new Lealfet object according to objectToDefine geometry type.",
-            "itemtype": "method",
-            "name": "createGeometryType",
-            "params": [
-                {
-                    "name": "objectToDefine",
-                    "description": "GeoJSON object.",
-                    "type": "String"
-                }
-            ],
-            "class": "FlexberryMaplayerActionsHandlerMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 638,
+            "line": 536,
             "description": "Get the object thumb.",
             "itemtype": "method",
             "name": "getRhumb",
