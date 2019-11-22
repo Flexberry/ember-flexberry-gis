@@ -534,12 +534,13 @@ export default Ember.Mixin.create({
   },
 
   /**
-   * Get the object thumb.
-   * @method  getRhumb
-   * @param {string} layerId Layer id.
-   * @param {string} objectId Object id.
-   * @return {array} Table rhumb.
-   */
+    Get the object thumb.
+
+    @method  getRhumb
+    @param {string} layerId Layer id.
+    @param {string} objectId Object id.
+    @return {array} Table rhumb.
+  */
   getRhumb(layerId, objectId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     const leafletObject = Ember.get(layer, '_leafletObject');

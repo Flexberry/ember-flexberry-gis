@@ -1,5 +1,5 @@
 /**
-  @module ember-flexberry-gis
+   @module ember-flexberry-gis
 */
 
 import Ember from 'ember';
@@ -45,14 +45,15 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   classNames: ['draw', flexberryClassNames.wrapper],
 
   /**
-   * Component settings.
-   */
+    Component settings.
+  */
   settings: null,
 
   actions: {
     /**
       Handles click on available geometry type.
 
+      @method onGeometryTypeSelect
       @param {String} geometryType Selected geometry type.
     */
     onGeometryTypeSelect(geometryType) {
@@ -104,6 +105,12 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     },
   },
 
+  /**
+    Get editTools.
+
+    @method _getEditTools
+    @private
+  */
   _getEditTools() {
     let leafletMap = this.get('leafletMap');
 
@@ -119,7 +126,9 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   /**
     Finishing a layer editing operation.
 
+    @method _disableDraw
     @param {Object} e Transmitted data.
+    @private
   */
   _disableDraw(e) {
     let editTools = this.get('_editTools');
@@ -202,11 +211,13 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   /**
     Will create a new multi shape with the data of the old shape.
 
+    @method _createCopyMultiShape
     @param {Object} tabModel Tab model.
     @param {Number} layerId Layer id.
     @param {String} geometryType Shape type.
     @param {Object[]} featureCollection United coordinates.
     @return {Object} Return a new multi shape.
+    @private
   */
   _createCopyMultiShape(tabModel, layerId, geometryType, featureCollection) {
     let styleSettings = tabModel.get('styleSettings');
@@ -266,10 +277,12 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
   },
 
   /**
-    From the list of changed shapes, delete individual ones, leaving only the multiple shape.
+    From the list of changed objects, delete individual ones, leaving only the multiple shape.
 
-    @param {Object[]} changes Array of modified shapes.
-  */
+    @method _removeFromModified
+    @param {Object[]} changes Array of modified objects.
+    @private
+   */
   _removeFromModified(changes) {
     for (let changeLayerNumber in changes) {
       let multyShape = Ember.get(changes[changeLayerNumber], 'multyShape') === true;
