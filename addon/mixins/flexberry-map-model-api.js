@@ -479,159 +479,57 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Move Object From one  layer to another.
-
-    @method moveObjectToLayer
-    @param {String} objectId GeoJSON object id
-    @param {String} fromLayerId id of layer to remove object
-    @param {String} tolayerId  id of layer to add object
-  */
-  moveObjectToLayer(objectId, fromLayerId, toLayerId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      let objectToSearch;
-      let store = this.get('store');
-      let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
-      let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
-      if (layerFrom && layerTo) {
-        let features = Ember.get(layerFrom, '_leafletObject._layers');
-        if (features) {
-          objectToSearch = Object.values(features).find(feature => {
-            const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
-            return layerFeatureId === objectId;
-          });
-        }
-
-        if (objectToSearch) {
-          layerFrom._leafletObject.removeLayer(objectToSearch);
-          objectToSearch._leaflet_id = null;
-          var newObj = this.createGeometryType(objectToSearch, reject);
-          if (Ember.isNone(newObj)) {
-            reject('unknown geomerty type');
-          }
-
-          newObj.options = objectToSearch.options;
-          Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-          let promiseSaveLayerTo = new Ember.RSVP.Promise((resolve, reject) => {
-            const saveSuccess = (data) => {
-              layerTo._leafletObject.off('save:failed', saveSuccess);
-              resolve(data);
-            };
-
-            const saveFailed = (data) => {
-              layerTo._leafletObject.off('save:success', saveSuccess);
-              reject(data);
-            };
-
-            layerTo._leafletObject.once('save:success', saveSuccess);
-            layerTo._leafletObject.once('save:failed', saveFailed);
-            layerTo._leafletObject.save();
-          });
-          let promiseSaveLayerFrom = new Ember.RSVP.Promise((resolve, reject) => {
-            const saveSuccess2 = (data) => {
-              layerFrom._leafletObject.off('save:failed', saveSuccess2);
-              resolve(data);
-            };
-
-            const saveFailed2 = (data) => {
-              layerFrom._leafletObject.off('save:success', saveSuccess2);
-              reject(data);
-            };
-
-            layerFrom._leafletObject.once('save:success', saveSuccess2);
-            layerFrom._leafletObject.once('save:failed', saveFailed2);
-            layerFrom._leafletObject.save();
-          });
-          Ember.RSVP.all([promiseSaveLayerTo, promiseSaveLayerFrom])
-            .then(() => {
-              resolve('object moved successfully');
-            }, () => {
-              reject('error while saving layers');
-            });
-        } else {
-          reject('no object with such id');
-        }
-      } else {
-        reject('no layer with such id');
-      }
-    });
-  },
-
-  /**
-    Copt Object to layer.
-
+    Copy Object from Source layer to Destination.
     @method copyObject
-    @param {String} objectId GeoJSON object id
-    @param {String} fromLayerId GeoJSON object id
-    @param {String} toLayerId  id of layer to add object
+    @param {Object} source Object with source settings
+    {
+      layerId,
+      objectId,
+      shouldRemove
+    }
+    @param {Object} destination Object with destination settings
+    {
+      layerId,
+      properties
+    }
   */
-  copyObject(objectId, fromLayerId, toLayerId) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      let objectToSearch;
-      let store = this.get('store');
-      let layerFrom = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', fromLayerId);
-      let layerTo = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', toLayerId);
-      if (layerTo && layerFrom) {
-        let features = Ember.get(layerFrom, '_leafletObject._layers');
-        if (features) {
-          objectToSearch = Object.values(features).find(feature => {
-            const layerFeatureId = this._getLayerFeatureId(layerFrom, feature);
-            return layerFeatureId === objectId;
-          });
-        }
-
-        if (objectToSearch) {
-          objectToSearch._leaflet_id = null;
-          var newObj = this.createGeometryType(objectToSearch);
-          if (Ember.isNone(newObj)) {
-            reject('unknown geometry type');
-          }
-
-          newObj.options = objectToSearch.options;
-          Ember.get(layerTo, '_leafletObject').addLayer(newObj);
-
-          const saveSuccess = (data) => {
-            layerTo._leafletObject.off('save:failed', saveSuccess);
-            resolve(data);
-          };
-
-          const saveFailed = (data) => {
-            layerTo._leafletObject.off('save:success', saveSuccess);
-            reject(data);
-          };
-
-          layerTo._leafletObject.once('save:success', saveSuccess);
-          layerTo._leafletObject.once('save:failed', saveFailed);
-          layerTo._leafletObject.save();
-        } else {
-          reject('no object with such id');
-        }
-      } else {
-        reject('no layer with such id');
+  copyObject(source, destination) {
+    let [sourceLayerModel, sourceLeafletLayer, sourceFeature] = this._getModelLayerFeature(source.layerId, source.objectId);
+    let [destLayerModel, destLeafletLayer] = this._getModelLayerFeature(destination.layerId);
+    if (sourceLayerModel && destLayerModel && sourceLeafletLayer && destLeafletLayer && sourceFeature) {
+      let destFeature;
+      switch (destLayerModel.get('settingsAsObject.typeGeometry')) {
+        case 'polygon':
+          destFeature = L.polygon(sourceFeature.getLatLngs());
+          break;
+        case 'polyline':
+          destFeature = L.polyline(sourceFeature.getLatLngs());
+          break;
+        case 'marker':
+          destFeature = L.marker(sourceFeature.getLatLng());
+          break;
+        default:
+          throw 'Unknown layer type: ' + destLayerModel.get('settingsAsObject.typeGeometry');
       }
-    });
-  },
 
-  /**
-    Create new Lealfet object according to objectToDefine geometry type.
+      destFeature.feature = {
+        properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {})
+      };
 
-    @method  createGeometryType
-    @param {String} objectToDefine GeoJSON object.
-  */
-  createGeometryType(objectToDefine) {
-    switch (Ember.get(objectToDefine, 'feature.geometry.type')) {
-      case 'Marker':
-        return L.marker(objectToDefine.getLatLng());
-      case 'Circle':
-        return L.circle(objectToDefine.getLatLng(), objectToDefine.getRadius());
-      case 'LineString':
-        return L.polyline(objectToDefine.getLatLngs());
-      case 'MultiLineString':
-        return L.polyline(objectToDefine.getLatLngs());
-      case 'Polygon':
-        return L.polygon(objectToDefine.getLatLngs());
-      case 'MultiPolygon':
-        return L.polygon(objectToDefine.getLatLngs());
-      default: return undefined;
+      destLeafletLayer.addLayer(destFeature);
+
+      if (source.shouldRemove) {
+        sourceLeafletLayer.removeLayer(sourceFeature);
+      }
+    } else {
+      throw {
+        message: 'Wrong parameters',
+        sourceLayerModel,
+        sourceLeafletLayer,
+        sourceFeature,
+        destLayerModel,
+        destLeafletLayer
+      };
     }
   },
 
