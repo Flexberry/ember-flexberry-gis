@@ -589,8 +589,9 @@ export default Ember.Mixin.create({
   /**
     Create image for layer object.
     @method  getSnapShot
+    @snapt
   */
-  getSnapShot(layerId, objectId, layerArrIds, options) {
+  getSnapShot({ layerId, objectId, layerArrIds, options }) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let [layerModel, leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
       if (layerModel && leafletLayer && featureLayer) {
@@ -609,24 +610,26 @@ export default Ember.Mixin.create({
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
         leafletMap.once('moveend', () => {
-          document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'none';
-          document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'none';
-          let $mapPicture = Ember.$(leafletMap._container);
+          Ember.run.later(() => {
+            document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'none';
+            document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'none';
+            let $mapPicture = Ember.$(leafletMap._container);
 
-          let html2canvasOptions = Object.assign({
-            useCORS: true
-          }, options);
-          window.html2canvas($mapPicture[0], html2canvasOptions)
-            .then((canvas) => {
-              let type = 'image/png';
-              var image64 = canvas.toDataURL(type);
-              resolve(image64);
-            })
-            .catch((e) => reject(e))
-            .finally(() => {
-              document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'block';
-              document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'block';
-            });
+            let html2canvasOptions = Object.assign({
+              useCORS: true
+            }, options);
+            window.html2canvas($mapPicture[0], html2canvasOptions)
+              .then((canvas) => {
+                let type = 'image/png';
+                var image64 = canvas.toDataURL(type);
+                resolve(image64);
+              })
+              .catch((e) => reject(e))
+              .finally(() => {
+                document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'block';
+                document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'block';
+              });
+          });
         });
 
         let bounds = featureLayer.getBounds();
@@ -639,7 +642,7 @@ export default Ember.Mixin.create({
           layerModel,
           leafletLayer,
           featureLayer
-        }
+        };
       }
     });
   },
@@ -648,12 +651,12 @@ export default Ember.Mixin.create({
     Download image for layer object.
     @method  downloadSnapShot
   */
-  downloadSnapShot(layerId, objectId, layerArrIds, options, filename) {
-    this.getSnapShot(layerId, objectId, layerArrIds, options).then((uri) => {
+  downloadSnapShot({ layerId, objectId, layerArrIds, options, fileName }) {
+    this.getSnapShot({ layerId, objectId, layerArrIds, options }).then((uri) => {
       var link = document.createElement('a');
       if (typeof link.download === 'string') {
         link.href = uri;
-        link.download = filename;
+        link.download = fileName;
 
         //Firefox requires the link to be in the body
         document.body.appendChild(link);
