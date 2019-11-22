@@ -885,6 +885,12 @@ let FlexberryMapComponent = Ember.Component.extend(
         mapApi.addToApi(&#x27;leafletMap&#x27;,  leafletMap);
         this.set(&#x27;_hasLeafletMap&#x27;, true);
       }
+
+      if (Ember.isNone(mapApi.getFromApi(&#x27;serviceLayer&#x27;))) {
+        mapApi.addToApi(&#x27;serviceLayer&#x27;,  this.get(&#x27;serviceLayer&#x27;));
+        this.set(&#x27;_hasServiceLayer&#x27;, true);
+      }
+
     },
 
     /**
@@ -1008,6 +1014,10 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       if (this.get(&#x27;_hasLeafletMap&#x27;)) {
         this.get(&#x27;mapApi&#x27;).addToApi(&#x27;leafletMap&#x27;, undefined);
+      }
+
+      if (this.get(&#x27;_hasServiceLayer&#x27;)) {
+        this.get(&#x27;mapApi&#x27;).addToApi(&#x27;serviceLayer&#x27;, undefined);
       }
 
       this.sendAction(&#x27;leafletDestroy&#x27;);

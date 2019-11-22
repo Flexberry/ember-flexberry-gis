@@ -413,6 +413,7 @@ import area from &#x27;npm:@turf/area&#x27;;
 import lineIntersect from &#x27;npm:@turf/line-intersect&#x27;;
 import * as buffer from &#x27;npm:@turf/buffer&#x27;;
 import VectorLayer from &#x27;../layers/-private/vector&#x27;;
+import projection from &#x27;npm:@turf/projection&#x27;;
 /**
   The component for searching for intersections with selected feature.
 
@@ -615,8 +616,6 @@ export default Ember.Component.extend({
 
       let selected = Ember.A();
 
-      let bufferR = this.get(&#x27;bufferR&#x27;);
-
       selectedLayers.forEach(function (item) {
         let result = store.peekRecord(&#x27;new-platform-flexberry-g-i-s-map-layer&#x27;, item);
         selected.pushObject(result);
@@ -627,7 +626,7 @@ export default Ember.Component.extend({
         if (currentFeature.leafletLayer.getLayers().length === 1) {
           polygonLayer = currentFeature.leafletLayer.getLayers()[0];
         } else {
-          throw new Ember.Error(&#x27; L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.&#x27;);
+          throw (&#x27; L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.&#x27;);
         }
       } else {
         polygonLayer = currentFeature.leafletLayer;
@@ -636,10 +635,6 @@ export default Ember.Component.extend({
       latlng = polygonLayer.getBounds().getCenter();
 
       bufferedMainPolygonLayer = polygonLayer;
-
-      if (bufferR &gt; 0) {
-        polygonLayer.feature = buffer.default(polygonLayer.toGeoJSON(), bufferR, { units: &#x27;meters&#x27; });
-      }
 
       // Show map loader.
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
@@ -845,12 +840,31 @@ export default Ember.Component.extend({
     @private
   */
   _findIntersections(e) {
+    let bufferR = this.get(&#x27;bufferR&#x27;);
     let square = this.get(&#x27;square&#x27;);
     e.results.forEach((layer) =&gt; {
       layer.features.then((features) =&gt; {
         features.forEach((item) =&gt; {
+          let objA = item;
+          let objB = e.polygonLayer.feature;
+          if (e.polygonLayer.options.hasOwnProperty(&#x27;crs&#x27;)) {
+            if (e.polygonLayer.options.crs.code !== &#x27;EPSG:4326&#x27;) {
+              objB = projection.toWgs84(e.polygonLayer.feature);
+            }
+          }
+
+          if (item.hasOwnProperty(&#x27;leafletLayer&#x27;)) {
+            if (item.leafletLayer.options.crs.code !== &#x27;EPSG:4326&#x27;) {
+              objA = projection.toWgs84(item);
+            }
+          }
+
+          if (buffer &gt; 0) {
+            objB  = buffer.default(objB.toGeoJSON(), bufferR, { units: &#x27;meters&#x27; });
+          }
+
           if (item.geometry.type === &#x27;Polygon&#x27; || item.geometry.type === &#x27;MultiPolygon&#x27;) {
-            let res = intersect.default(item, e.polygonLayer.feature);
+            let res = intersect.default(objA, objB);
             if (res) {
               if (square &gt; 0) {
                 if (area(res) &gt; square) {
@@ -883,7 +897,7 @@ export default Ember.Component.extend({
               }
             }
           } else if (item.geometry.type === &#x27;MultiLineString&#x27; || item.geometry.type === &#x27;LineString&#x27;) {
-            let intersects = lineIntersect(item, e.polygonLayer.feature);
+            let intersects = lineIntersect(objA, objB);
 
             if (intersects) {
               item.intersection = {};

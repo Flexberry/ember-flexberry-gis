@@ -5123,7 +5123,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 8,
+            "line": 9,
             "description": "The component for searching for intersections with selected feature.",
             "uses": [
                 "LeafletZoomToFeatureMixin"
@@ -29001,14 +29001,14 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 16,
+            "line": 17,
             "description": "Reference to component's template.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 21,
+            "line": 22,
             "description": "Object name disaplayed on template.",
             "itemtype": "property",
             "name": "disaplayName",
@@ -29019,7 +29019,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 29,
+            "line": 30,
             "description": "Layer contains identification result features.",
             "itemtype": "property",
             "name": "resultsLayer",
@@ -29030,7 +29030,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 38,
+            "line": 39,
             "description": "List vector layers.",
             "itemtype": "property",
             "name": "vectorLayers",
@@ -29041,7 +29041,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 47,
+            "line": 48,
             "description": "Leaflet map object for zoom and pan.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -29052,7 +29052,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 56,
+            "line": 57,
             "description": "Observer for leafletMap property adding layer with results.",
             "itemtype": "property",
             "name": "_OnMapChanged",
@@ -29064,7 +29064,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 69,
+            "line": 70,
             "description": "Flag indicates if there are any results of intersection.",
             "itemtype": "property",
             "name": "noIntersectionResults",
@@ -29075,7 +29075,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 78,
+            "line": 79,
             "description": "intersection area over which to look.",
             "itemtype": "property",
             "name": "square",
@@ -29086,7 +29086,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 87,
+            "line": 88,
             "description": "Buffer radius in selected units.",
             "itemtype": "property",
             "name": "bufferR",
@@ -29097,7 +29097,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 96,
+            "line": 97,
             "description": "List of selected vector layers.",
             "itemtype": "property",
             "name": "selectedLayers",
@@ -29108,7 +29108,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 105,
+            "line": 106,
             "description": "List of intersection results.",
             "itemtype": "property",
             "name": "results",
@@ -29119,7 +29119,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 114,
+            "line": 115,
             "description": "Selected feature.",
             "itemtype": "property",
             "name": "feature",
@@ -29130,7 +29130,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 123,
+            "line": 124,
             "description": "Flag indicates if panel is folded.",
             "itemtype": "property",
             "name": "folded",
@@ -29141,7 +29141,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 132,
+            "line": 133,
             "description": "Injected ember storage.",
             "itemtype": "property",
             "name": "folded",
@@ -29151,7 +29151,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 140,
+            "line": 141,
             "description": "Observer for feature. If changed=> clear form.",
             "itemtype": "property",
             "name": "_OnMapChanged",
@@ -29163,7 +29163,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 151,
+            "line": 152,
             "description": "\"Layers\" label locale key.",
             "itemtype": "property",
             "name": "__layersLabel",
@@ -29174,14 +29174,14 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 160,
+            "line": 161,
             "description": "Initializes component.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 188,
+            "line": 189,
             "description": "Handles click on a button.",
             "itemtype": "method",
             "name": "actions.findIntersections",
@@ -29190,7 +29190,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 247,
+            "line": 242,
             "description": "Handles click on a close button.",
             "itemtype": "method",
             "name": "actions.findIntersections",
@@ -29199,7 +29199,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 259,
+            "line": 254,
             "description": "Handles click on tab.",
             "itemtype": "method",
             "name": "actions.hidePanel",
@@ -29208,7 +29208,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 268,
+            "line": 263,
             "description": "Handles click on zoom icon.",
             "itemtype": "method",
             "name": "actions.hidePanel",
@@ -29224,7 +29224,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 284,
+            "line": 279,
             "description": "Starts identification by array of satisfying layers inside given polygon area.",
             "itemtype": "method",
             "name": "_startIdentification",
@@ -29264,7 +29264,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 351,
+            "line": 346,
             "description": "Finishes identification.",
             "itemtype": "method",
             "name": "_finishIdentification",
@@ -29313,7 +29313,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 401,
+            "line": 396,
             "description": "Cleaning after changing feature.",
             "itemtype": "method",
             "name": "clearPanel",
@@ -29322,7 +29322,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 414,
+            "line": 409,
             "description": "Removing layers with identification results.",
             "itemtype": "method",
             "name": "removeLayers",
@@ -29331,7 +29331,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 432,
+            "line": 427,
             "description": "Searching intersections.",
             "itemtype": "method",
             "name": "_findIntersections",
@@ -30209,14 +30209,14 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 482,
+            "line": 488,
             "description": "Destroys DOM-related component's properties.",
             "class": "FlexberryMapComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 496,
+            "line": 502,
             "description": "Performs some initialization before leaflet map will be initialized.",
             "params": [
                 {
@@ -30230,7 +30230,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 513,
+            "line": 519,
             "description": "Performs some clean up before leaflet map will be destroyed.",
             "params": [
                 {
@@ -30244,7 +30244,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 530,
+            "line": 536,
             "description": "Initializes leaflet map related properties.",
             "params": [
                 {
@@ -30258,7 +30258,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 568,
+            "line": 574,
             "description": "Destroys leaflet map.",
             "params": [
                 {
@@ -30272,7 +30272,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 608,
+            "line": 618,
             "description": "Initializes map's service layer.",
             "params": [
                 {
@@ -30286,7 +30286,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 621,
+            "line": 631,
             "description": "Destroys map's service layer.",
             "params": [
                 {
@@ -30300,7 +30300,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 636,
+            "line": 646,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) initialized.",
             "itemtype": "method",
             "name": "sendingActions.leafletInit",
@@ -30323,7 +30323,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 644,
+            "line": 654,
             "description": "Component's action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) destroyed.",
             "itemtype": "method",
             "name": "sendingActions.leafletDestroy",
@@ -30332,7 +30332,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 650,
+            "line": 660,
             "description": "Component's action invoking when map's service layer initialized.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerInit",
@@ -30348,7 +30348,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 657,
+            "line": 667,
             "description": "Component's action invoking when maps's service layer destroyed.",
             "itemtype": "method",
             "name": "sendingActions.serviceLayerDestroy",
@@ -30357,7 +30357,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 663,
+            "line": 673,
             "description": "Component's action invoking when query on map load finished.",
             "itemtype": "method",
             "name": "sendingActions.queryFinished",
@@ -30373,7 +30373,7 @@
         },
         {
             "file": "addon/components/flexberry-map.js",
-            "line": 671,
+            "line": 681,
             "description": "Handles edit dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.edit:method\"}}'edit'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onEditDialogApprove",
@@ -39806,7 +39806,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 12,
+            "line": 13,
             "description": "Service for managing map API.",
             "itemtype": "property",
             "name": "mapApi",
@@ -39816,7 +39816,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 19,
+            "line": 20,
             "description": "Shows specified by id layers.",
             "itemtype": "method",
             "name": "showLayers.",
@@ -39825,7 +39825,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 28,
+            "line": 29,
             "description": "Hides specified by id layers.",
             "itemtype": "method",
             "name": "showLayers.",
@@ -39834,7 +39834,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 37,
+            "line": 38,
             "description": "Shows id objects for layer.",
             "itemtype": "method",
             "name": "showLayerObjects",
@@ -39855,7 +39855,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 48,
+            "line": 49,
             "description": "Hides id objects for layer.",
             "itemtype": "method",
             "name": "hideLayerObjects",
@@ -39876,7 +39876,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 59,
+            "line": 60,
             "description": "Show all layer objects.",
             "itemtype": "method",
             "name": "showAllLayerObjects",
@@ -39892,7 +39892,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 77,
+            "line": 78,
             "description": "Creates new layer with specified options.",
             "itemtype": "method",
             "name": "createNewLayer.",
@@ -39901,7 +39901,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 93,
+            "line": 94,
             "description": "Remove shape from layer.",
             "itemtype": "method",
             "name": "deleteLayerObject.",
@@ -39922,7 +39922,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 103,
+            "line": 104,
             "description": "Remove shapes from layer.",
             "itemtype": "method",
             "name": "deleteLayerObjects.",
@@ -39943,7 +39943,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 140,
+            "line": 141,
             "description": "Gets intersected features.",
             "itemtype": "method",
             "name": "getIntersectionObjects",
@@ -39964,7 +39964,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 195,
+            "line": 196,
             "description": "Get the closest object",
             "itemtype": "method",
             "name": "getNearObject",
@@ -39994,7 +39994,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 244,
+            "line": 245,
             "description": "Get distance between objects",
             "itemtype": "method",
             "name": "getDistanceBetweenObjects",
@@ -40029,7 +40029,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 303,
+            "line": 304,
             "description": "Get layer object attributes.",
             "itemtype": "method",
             "name": "getLayerObjectOptions",
@@ -40050,7 +40050,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 335,
+            "line": 336,
             "description": "Check if objectA contains object B.",
             "itemtype": "method",
             "name": "isContainsObject",
@@ -40081,7 +40081,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 373,
+            "line": 374,
             "description": "Calculate the area of ​​object B that extends beyond the boundaries of object A.",
             "itemtype": "method",
             "name": "getAreaExtends",
@@ -40112,7 +40112,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 425,
+            "line": 426,
             "description": "Get object id by object and layer.",
             "itemtype": "method",
             "name": "_getLayerFeatureId",
@@ -40137,7 +40137,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 442,
+            "line": 443,
             "description": "Determine the visibility of the specified objects by id for the layer.",
             "itemtype": "method",
             "name": "_setVisibilityObjects",
@@ -40165,7 +40165,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 481,
+            "line": 482,
             "description": "Copy Object from Source layer to Destination.",
             "itemtype": "method",
             "name": "copyObject",
@@ -40186,26 +40186,46 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 536,
-            "description": "Get the object thumb.",
+            "line": 537,
+            "description": "Calculate the area of intersection between object A and object B .",
             "itemtype": "method",
-            "name": "getRhumb",
+            "name": "getIntersectionArea",
             "params": [
                 {
-                    "name": "layerId",
-                    "description": "Layer id.",
+                    "name": "objectAId",
+                    "description": "id of first object.",
                     "type": "String"
                 },
                 {
-                    "name": "objectId",
-                    "description": "Object id.",
+                    "name": "layerAId",
+                    "description": "id of first layer.",
                     "type": "String"
+                },
+                {
+                    "name": "objectBId",
+                    "description": "id of second object.",
+                    "type": "String"
+                },
+                {
+                    "name": "layerBId",
+                    "description": "id of second layer.",
+                    "type": "String"
+                },
+                {
+                    "name": "showOnMap",
+                    "description": "flag indicates if intersection area will be displayed on map.",
+                    "type": "Bool"
                 }
             ],
-            "return": {
-                "description": "Table rhumb.",
-                "type": "Array"
-            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 580,
+            "description": "Cleans the service layer.",
+            "itemtype": "method",
+            "name": "clearServiceLayer",
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
@@ -44618,11 +44638,11 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/flexberry-layers-intersections-panel.js:16"
+            "line": " addon/components/flexberry-layers-intersections-panel.js:17"
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/flexberry-layers-intersections-panel.js:160"
+            "line": " addon/components/flexberry-layers-intersections-panel.js:161"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -44662,31 +44682,31 @@
         },
         {
             "message": "Missing item type\nDestroys DOM-related component's properties.",
-            "line": " addon/components/flexberry-map.js:482"
+            "line": " addon/components/flexberry-map.js:488"
         },
         {
             "message": "Missing item type\nPerforms some initialization before leaflet map will be initialized.",
-            "line": " addon/components/flexberry-map.js:496"
+            "line": " addon/components/flexberry-map.js:502"
         },
         {
             "message": "Missing item type\nPerforms some clean up before leaflet map will be destroyed.",
-            "line": " addon/components/flexberry-map.js:513"
+            "line": " addon/components/flexberry-map.js:519"
         },
         {
             "message": "Missing item type\nInitializes leaflet map related properties.",
-            "line": " addon/components/flexberry-map.js:530"
+            "line": " addon/components/flexberry-map.js:536"
         },
         {
             "message": "Missing item type\nDestroys leaflet map.",
-            "line": " addon/components/flexberry-map.js:568"
+            "line": " addon/components/flexberry-map.js:574"
         },
         {
             "message": "Missing item type\nInitializes map's service layer.",
-            "line": " addon/components/flexberry-map.js:608"
+            "line": " addon/components/flexberry-map.js:618"
         },
         {
             "message": "Missing item type\nDestroys map's service layer.",
-            "line": " addon/components/flexberry-map.js:621"
+            "line": " addon/components/flexberry-map.js:631"
         },
         {
             "message": "Missing item type\nReference to component's template.",
