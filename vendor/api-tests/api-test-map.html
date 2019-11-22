@@ -20,6 +20,13 @@
       <button id="getIntersectionObjects">Get Intersection Objects</button>
     </div>
     <div>
+      <button id="getIntersectionArea">Get Intersection Area</button>
+    </div>
+    <div>
+      <button id="showIntersectionArea">Show Intersection Area</button>
+      <button id="clearIntersectionArea">Clear Intersection Area</button>
+    </div>
+    <div>
       <button id="createNewlayer">Create New Layer</button>
     </div>
     <div>
@@ -145,6 +152,25 @@
         console.log(frame.contentWindow.mapApi.mapModel.getIntersectionObjects('perm_water_line.7836', ['f8dec493-d879-49ae-ad55-f4f18c89cb88']));
       };
       intersectionButton.addEventListener('click', getIntersections);
+
+      var intersectionAreaButton = document.getElementById('getIntersectionArea');
+        var getIntersectionsArea = function () {
+          frame.contentWindow.mapApi.mapModel.getIntersectionArea('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Малые реки', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e',  'Голованово', false)
+          .then(resolve => {console.log(resolve)},reject => {console.log(reject)});
+        };
+      intersectionAreaButton.addEventListener('click', getIntersectionsArea);
+
+      var showIntersectionAreaButton = document.getElementById('showIntersectionArea');
+        var showIntersectionsArea = function () {
+          frame.contentWindow.mapApi.mapModel.getIntersectionArea('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Малые реки', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e',  'Голованово', true);
+        };
+      showIntersectionAreaButton.addEventListener('click', showIntersectionsArea);
+
+      var clearIntersectionAreaButton = document.getElementById('clearIntersectionArea');
+        var clearIntersectionsArea = function () {
+          frame.contentWindow.mapApi.mapModel.clearServiceLayer();
+        };
+      clearIntersectionAreaButton.addEventListener('click', clearIntersectionsArea);
 
       var newLayerButton = document.getElementById('createNewlayer');
       var newLayer = function () {
