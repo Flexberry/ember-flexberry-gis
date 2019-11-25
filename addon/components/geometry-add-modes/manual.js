@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/geometry-add-modes/manual';
+import LeafletZoomToFeatureMixin from '../../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
 
 /**
@@ -28,7 +29,7 @@ const flexberryClassNames = {
   form: flexberryClassNamesPrefix + '-form'
 };
 
-let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
+let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   //#region Properties
   /**
@@ -118,11 +119,11 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
 
     @property _geometryField
     @type string[]
-    @default ['Point', 'LineString', 'Polygon']
+    @default ['Point', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon']
     @readonly
     @private
   */
-  _types: ['Point', 'LineString', 'Polygon'],
+  _types: ['Point', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon'],
 
   menuButtonTooltip: t('components.geometry-add-modes.manual.menu-button-tooltip'),
 
@@ -162,23 +163,84 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
 
         //let coordinates = layer.feature.geometry.coordinates; //todo: хз что правильнее.
         const geoJSON = layer.toGeoJSON();
+
+        let type = Ember.get(geoJSON, 'geometry.type');
+
         let coordinates = geoJSON.geometry.coordinates;
+        //let selectType;
+        switch (type) {
+          case 'Point':
+            //selectType = type;
+            break;
+          case 'LineString':
+            // selectType = type;
+            break;
+          case 'MultiLineString':
+            // selectType = 'LineString';
+            break;
+          case 'Polygon':
+            // selectType = type;
+            coordinates.forEach(item => item.pop());
+            break;
+          case 'MultiPolygon':
+            // selectType = 'Polygon';
+            for (let i = 0; i < coordinates.length; i++) {
+              for (let j = 0; j < coordinates[i].length; j++) {
+                coordinates[i][j].pop();
+              }
+            }
+            break;
+        }
+
+        // if (type === 'Polygon' || type === 'MultiPolygon') {
+        //   coordinates = geoJSON.geometry.coordinates;
+
+        //   let depth = this._countDimensions(coordinates);
+
+        //   // Remove repeated first coordinate for polygon
+        //   if (depth === 3) {
+        //     coordinates.forEach(item => item.pop());
+
+
+        //     // for (let i = 0; i < coordinates.length; i++) {
+        //     //   coordinates[i].pop();
+        //     //   // for (let j = 0; j < coordinates[i].length; j++) {
+        //     //   //   if (j === coordinates[i][j].length + 1) {
+        //     //   //     delete coordinates[i][j];
+        //     //   //   }
+        //     //   // }
+        //     // }
+        //   } else if (depth === 4) {
+        //     for (let i = 0; i < coordinates.length; i++) {
+        //       for (let j = 0; j < coordinates[i].length; j++) {
+        //         coordinates[i][j].pop();
+        //       }
+        //     }
+        //   }
+
+        // } else {
+        //   coordinates = geoJSON.geometry.coordinates;
+        // }
+
+        //let coordinates = geoJSON.geometry.coordinates;
         // let coordinates = layer._latlngs;
 
         let str = this._cootrdinatesToString(coordinates);
         this.set('_coordinates', str);
 
-        const getType = (type) => {
-          switch (type) {
-            case 'MultiLineString':
-              return 'LineString';
-            case 'MultiPolygon':
-              return 'Polygon';
-            default: return type;
-          }
-        }
+        // const getType = (type) => {
+        //   switch (type) {
+        //     case 'MultiLineString':
+        //       return 'LineString';
+        //     case 'MultiPolygon':
+        //       return 'Polygon';
+        //     default: return type;
+        //   }
+        // }
 
-        this.set('_objectType', getType(geoJSON.geometry.type));
+        // this.set('_objectType', getType(geoJSON.geometry.type));
+        //this.set('_objectSelectType', selectType);
+        this.set('_objectSelectType', type);
       } else {
         this.set('_coordinates', '');
       }
@@ -193,10 +255,11 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
       @param {Object} e Object event.
     */
     onApprove(tabModel, e) {
-      let objectType = this.get('_objectType');
+      debugger;
+      let objectSelectType = this.get('_objectSelectType');
 
       let error = false;
-      if (Ember.isNone(objectType)) {
+      if (Ember.isNone(objectSelectType)) {
         error = true
         this.set('_geometryField', true);
       }
@@ -219,8 +282,12 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
       }
 
       const rowId = this._getRowId(tabModel);
-      const edit = Ember.get(tabModel, `_editedRows.${rowId}`);
-
+      let edit = false;
+      let layer;
+      if (!Ember.isNone(rowId)) {
+        edit = Ember.get(tabModel, `_editedRows.${rowId}`);
+        layer = Ember.get(tabModel, `featureLink.${rowId}`);
+      }
       const parsedCoordinates = this._parseStringToCoordinates(coordinates);
 
       if (Ember.isNone(parsedCoordinates) || parsedCoordinates.length === 0) {
@@ -242,10 +309,13 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
         return true;
       };
 
-      let layer = Ember.get(tabModel, `featureLink.${rowId}`);
-  let leafletMap = this.get('leafletMap');
 
-      switch (objectType) {
+      let leafletMap = this.get('leafletMap');
+
+      //let geoJSON = layer.toGeoJSON();
+      //const objectType = Ember.get(geoJSON, 'geometry.type');
+
+      switch (objectSelectType) {
         case 'Point':
 
           // Only one point.
@@ -257,22 +327,19 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
           }
 
           if (edit) {
-
-
-
             //const editLayer = L.point(parsedCoordinates[0], parsedCoordinates[1]);
 
             //let geoJson = layer.toGeoJSON();
             // let addedLayers = Ember.get(tabModel, '_addedLayers') || {};
             // addedLayers[Ember.guidFor(geoJson)] = geoJson;
 
-            let feature = layer.feature;
-            feature.geometry.coordinates = parsedCoordinates[0][0];//parsedCoordinates;
+            // let feature = layer.feature;
+            // feature.geometry.coordinates = parsedCoordinates[0][0];//parsedCoordinates;
 
-            Ember.set(layer, 'feature', feature);
+            // Ember.set(layer, 'feature', feature);
 
             //todo: возможно есть более правильный вариант
-            layer._latlng = { lat: parsedCoordinates[0][0][1], lng: parsedCoordinates[0][0][0] }
+            layer._latlng = { lat: parsedCoordinates[0][0][0], lng: parsedCoordinates[0][0][1] }
 
 
 
@@ -300,7 +367,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
             //   }
             // }
 
-
+            this.send('zoomTo', [layer.feature]);
 
             //leafletMap.addLayer(layer);
             tabModel.leafletObject.editLayer(layer);
@@ -308,11 +375,48 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
             //Ember.set(tabModel, '_addedLayers', addedLayers);
           } else {
             //const addedLayer = L.point(parsedCoordinates[0][0][0], parsedCoordinates[0][0][1]);
-            const addedLayer = L.point(parsedCoordinates[0][0]);
+            //const addedLayer = new L.point(parsedCoordinates[0][0]);
+            const addedLayer = new L.marker(parsedCoordinates[0][0]);
             this.sendAction('complete', addedLayer, { panToAddedObject: true });
           }
           break;
         case 'LineString':
+          if (!hasMinCountPoint(parsedCoordinates, 2)) {
+            e.closeDialog = false;
+            this.set('_coordinatesWithError', true);
+
+            return;
+          }
+
+          if (edit) {
+            if (!Ember.isNone(layer.feature.geometry)) {
+              Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates);
+            }
+
+            let latLngCoors = [];
+            let coors = [];
+            for (let i = 0; i < parsedCoordinates.length; i++) {
+              for (let j = 0; j < parsedCoordinates[i].length; j++) {
+                latLngCoors.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
+                coors.push(parsedCoordinates[i][j]);
+              }
+            }
+
+            layer._latlngs = latLngCoors;
+
+            leafletMap.removeLayer(layer);
+            leafletMap.addLayer(layer);
+
+            this.send('zoomTo', [layer.feature]);
+
+            tabModel.leafletObject.editLayer(layer);
+            Ember.set(tabModel, 'leafletObject._wasChanged', true);
+          } else {
+            const addedLayer = L.polyline(parsedCoordinates);
+            this.sendAction('complete', addedLayer, { panToAddedObject: true });
+          }
+
+          break;
         case 'MultiLineString':
           if (!hasMinCountPoint(parsedCoordinates, 2)) {
             e.closeDialog = false;
@@ -322,13 +426,15 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
           }
 
           if (edit) {
-            Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates);
+            if (!Ember.isNone(layer.feature.geometry)) {
+              Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates);
+            }
 
             var latLngCoors = [];
             for (let i = 0; i < parsedCoordinates.length; i++) {
               let mas = [];
               for (let j = 0; j < parsedCoordinates[i].length; j++) {
-                mas.push(L.latLng(parsedCoordinates[i][j][1], parsedCoordinates[i][j][0]));
+                mas.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
               }
 
               latLngCoors.push(mas);
@@ -339,6 +445,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
             leafletMap.removeLayer(layer);
             leafletMap.addLayer(layer);
 
+            this.send('zoomTo', [layer.feature]);
 
             tabModel.leafletObject.editLayer(layer);
             Ember.set(tabModel, 'leafletObject._wasChanged', true);
@@ -349,6 +456,45 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
 
           break;
         case 'Polygon':
+          if (!hasMinCountPoint(parsedCoordinates, 3)) {
+            e.closeDialog = false;
+            this.set('_coordinatesWithError', true);
+
+            return;
+          }
+
+          if (edit) {
+            let latLngCoors = [];
+            let coors = [];
+            for (let i = 0; i < parsedCoordinates.length; i++) {
+              let masLatLng = [];
+              let mas = [];
+              for (let j = 0; j < parsedCoordinates[i].length; j++) {
+                masLatLng.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
+                mas.push(parsedCoordinates[i][j]);
+              }
+
+              latLngCoors.push(masLatLng);
+              coors.push(mas);
+            }
+
+            if (!Ember.isNone(layer.feature.geometry)) {
+              Ember.set(layer, 'feature.geometry.coordinates', coors);
+            }
+            layer._latlngs = latLngCoors;
+
+            leafletMap.removeLayer(layer);
+            leafletMap.addLayer(layer);
+
+            this.send('zoomTo', [layer.feature]);
+
+            tabModel.leafletObject.editLayer(layer);
+            Ember.set(tabModel, 'leafletObject._wasChanged', true);
+          } else {
+            const addedLayer = L.polygon(parsedCoordinates);
+            this.sendAction('complete', addedLayer, { panToAddedObject: true });
+          }
+          break;
         case 'MultiPolygon':
           if (!hasMinCountPoint(parsedCoordinates, 3)) {
             e.closeDialog = false;
@@ -358,28 +504,29 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
           }
 
           if (edit) {
-
-
-            var latLngCoors1 = [];
-            var coors = [];
+            let latLngCoors = [];
+            let coors = [];
             for (let i = 0; i < parsedCoordinates.length; i++) {
               let masLatLng = [];
               let mas = [];
               for (let j = 0; j < parsedCoordinates[i].length; j++) {
-                masLatLng.push(L.latLng(parsedCoordinates[i][j][1], parsedCoordinates[i][j][0]));
+                masLatLng.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
                 mas.push(parsedCoordinates[i][j]);
               }
 
-              latLngCoors1.push([masLatLng]);
+              latLngCoors.push([masLatLng]);
               coors.push([mas]);
             }
 
-            Ember.set(layer, 'feature.geometry.coordinates', coors);
-            layer._latlngs = latLngCoors1;
+            if (!Ember.isNone(layer.feature.geometry)) {
+              Ember.set(layer, 'feature.geometry.coordinates', coors);
+            }
+            layer._latlngs = latLngCoors;
 
             leafletMap.removeLayer(layer);
             leafletMap.addLayer(layer);
 
+            this.send('zoomTo', [layer.feature]);
 
             tabModel.leafletObject.editLayer(layer);
             Ember.set(tabModel, 'leafletObject._wasChanged', true);
@@ -470,7 +617,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
               regex.lastIndex++;
             }
 
-            mas.push([m[1], m[2]]);
+            //mas.push([m[1], m[2]]);
+            mas.push([m[2], m[1]]);
           }
         }
 
@@ -486,25 +634,36 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
   },
 
   /**
+    Get the depth of the array.
+
+    @method _countDimensions
+    @param {Object[]} value Array.
+    @returns {number} value Array depth.
+  */
+  _countDimensions(value) {
+    return Array.isArray(value) ? 1 + Math.max(...value.map(this._countDimensions.bind(this))) : 0;
+  },
+
+  /**
     Get coordinate line.
 
     @method _cootrdinatesToString
     @param {Object[]} coordinates Coordinates.
   */
   _cootrdinatesToString(coordinates) {
-    const countDimensions = (value) => {
-      return Array.isArray(value) ? 1 + Math.max(...value.map(countDimensions)) : 0;
-    };
 
     // Get array depth.
-    const arrLength = countDimensions(coordinates);
+    const arrDepth = this._countDimensions(coordinates);
 
     let coors = [];
-    switch (arrLength) {
+    switch (arrDepth) {
       case 1: // Point.
         coors.push(coordinates);
         break;
-      case 3: // LineString and MultiLineString.
+      case 2: // LineString.
+        coors = coordinates;
+        break;
+      case 3: // Polygon and MultiLineString.
         for (let i = 0; i < coordinates.length; i++) {
           for (let j = 0; j < coordinates[i].length; j++) {
             let item = coordinates[i][j];
@@ -516,7 +675,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
           }
         }
         break;
-      case 4: // Polygon and MultiPolygon.
+      case 4: // MultiPolygon.
         for (let i = 0; i < coordinates.length; i++) {
           for (let j = 0; j < coordinates[i].length; j++) {
             for (let k = 0; k < coordinates[i][j].length; k++) {
