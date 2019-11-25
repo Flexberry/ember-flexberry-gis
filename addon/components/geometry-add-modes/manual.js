@@ -290,13 +290,15 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       }
       const parsedCoordinates = this._parseStringToCoordinates(coordinates);
 
+      const coordinatesWithError = () => {
+        e.closeDialog = false;
+        this.set('_coordinatesWithError', true);
+      };
+
       if (Ember.isNone(parsedCoordinates) || parsedCoordinates.length === 0) {
 
         // Prevent dialog from being closed.
-        e.closeDialog = false;
-        this.set('_coordinatesWithError', true);
-
-        return;
+        return coordinatesWithError();
       }
 
       const hasMinCountPoint = (items, n) => {
@@ -309,120 +311,79 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
         return true;
       };
 
-
-      let leafletMap = this.get('leafletMap');
-
-      //let geoJSON = layer.toGeoJSON();
-      //const objectType = Ember.get(geoJSON, 'geometry.type');
-
+      let addedLayer, latlngs;
       switch (objectSelectType) {
         case 'Point':
 
           // Only one point.
           if (parsedCoordinates.length > 1 || (parsedCoordinates.length === 1 && parsedCoordinates[0].length > 1)) {
-            e.closeDialog = false;
-            this.set('_coordinatesWithError', true);
 
-            return;
+            return coordinatesWithError();
           }
 
           if (edit) {
-            //const editLayer = L.point(parsedCoordinates[0], parsedCoordinates[1]);
 
-            //let geoJson = layer.toGeoJSON();
-            // let addedLayers = Ember.get(tabModel, '_addedLayers') || {};
-            // addedLayers[Ember.guidFor(geoJson)] = geoJson;
-
-            // let feature = layer.feature;
-            // feature.geometry.coordinates = parsedCoordinates[0][0];//parsedCoordinates;
-
-            // Ember.set(layer, 'feature', feature);
+            latlngs = { lat: parsedCoordinates[0][0][0], lng: parsedCoordinates[0][0][1] };
 
             //todo: возможно есть более правильный вариант
-            layer._latlng = { lat: parsedCoordinates[0][0][0], lng: parsedCoordinates[0][0][1] }
+            //layer._latlng = { lat: parsedCoordinates[0][0][0], lng: parsedCoordinates[0][0][1] }
 
 
+            // leafletMap.removeLayer(layer);
+            // leafletMap.addLayer(layer);
 
-            //let id = layer.feature.id;
+            // this.send('zoomTo', [layer.feature]);
 
-            // let object = Object.values(tabModel.leafletObject._layers).find(shape => {
-            //   return Ember.get(shape, 'feature.id') === id;
-            // });
-
-            leafletMap.removeLayer(layer);
-            leafletMap.addLayer(layer);
-
-            // var corner1 = L.latLng(layer.feature.geometry.coordinates)
-
-            // leafletMap.fitBounds(corner1);
-
-            //this.send('zoomTo', [layer.feature]);
-            //this.send('onClearFoundItemClick');
-
-            // if (object) {
-            //   if (visibility) {
-            //     leafletMap.addLayer(object);
-            //   } else {
-            //     leafletMap.removeLayer(object);
-            //   }
-            // }
-
-            this.send('zoomTo', [layer.feature]);
-
-            //leafletMap.addLayer(layer);
-            tabModel.leafletObject.editLayer(layer);
-            Ember.set(tabModel, 'leafletObject._wasChanged', true);
+            // //leafletMap.addLayer(layer);
+            // tabModel.leafletObject.editLayer(layer);
+            // Ember.set(tabModel, 'leafletObject._wasChanged', true);
             //Ember.set(tabModel, '_addedLayers', addedLayers);
           } else {
             //const addedLayer = L.point(parsedCoordinates[0][0][0], parsedCoordinates[0][0][1]);
             //const addedLayer = new L.point(parsedCoordinates[0][0]);
-            const addedLayer = new L.marker(parsedCoordinates[0][0]);
-            this.sendAction('complete', addedLayer, { panToAddedObject: true });
+            addedLayer = new L.marker(parsedCoordinates[0][0]);
+            //this.sendAction('complete', addedLayer, { panToAddedObject: true });
           }
           break;
         case 'LineString':
           if (!hasMinCountPoint(parsedCoordinates, 2)) {
-            e.closeDialog = false;
-            this.set('_coordinatesWithError', true);
 
-            return;
+            return coordinatesWithError();
           }
 
           if (edit) {
-            if (!Ember.isNone(layer.feature.geometry)) {
+            if (!Ember.isNone(layer.feature.geometry)) {//todo:!!!
               Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates);
             }
 
-            let latLngCoors = [];
-            let coors = [];
+            latlngs = [];
+            //let coors = [];
             for (let i = 0; i < parsedCoordinates.length; i++) {
               for (let j = 0; j < parsedCoordinates[i].length; j++) {
-                latLngCoors.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
-                coors.push(parsedCoordinates[i][j]);
+                latlngs.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
+                // coors.push(parsedCoordinates[i][j]);
               }
             }
 
-            layer._latlngs = latLngCoors;
+            //layer._latlngs = latLngCoors;
 
-            leafletMap.removeLayer(layer);
-            leafletMap.addLayer(layer);
+            // leafletMap.removeLayer(layer);
+            // leafletMap.addLayer(layer);
 
-            this.send('zoomTo', [layer.feature]);
+            // this.send('zoomTo', [layer.feature]);
 
-            tabModel.leafletObject.editLayer(layer);
-            Ember.set(tabModel, 'leafletObject._wasChanged', true);
+            // tabModel.leafletObject.editLayer(layer);
+            // Ember.set(tabModel, 'leafletObject._wasChanged', true);
           } else {
-            const addedLayer = L.polyline(parsedCoordinates);
-            this.sendAction('complete', addedLayer, { panToAddedObject: true });
+            addedLayer = L.polyline(parsedCoordinates);
+            //this.sendAction('complete', addedLayer, { panToAddedObject: true });
           }
 
           break;
         case 'MultiLineString':
           if (!hasMinCountPoint(parsedCoordinates, 2)) {
-            e.closeDialog = false;
-            this.set('_coordinatesWithError', true);
 
-            return;
+            return coordinatesWithError();
           }
 
           if (edit) {
@@ -430,41 +391,39 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
               Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates);
             }
 
-            var latLngCoors = [];
+            latlngs = [];
             for (let i = 0; i < parsedCoordinates.length; i++) {
               let mas = [];
               for (let j = 0; j < parsedCoordinates[i].length; j++) {
                 mas.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
               }
 
-              latLngCoors.push(mas);
+              latlngs.push(mas);
             }
 
-            layer._latlngs = latLngCoors;
+            //layer._latlngs = latLngCoors;
 
-            leafletMap.removeLayer(layer);
-            leafletMap.addLayer(layer);
+            // leafletMap.removeLayer(layer);
+            // leafletMap.addLayer(layer);
 
-            this.send('zoomTo', [layer.feature]);
+            // this.send('zoomTo', [layer.feature]);
 
-            tabModel.leafletObject.editLayer(layer);
-            Ember.set(tabModel, 'leafletObject._wasChanged', true);
+            // tabModel.leafletObject.editLayer(layer);
+            // Ember.set(tabModel, 'leafletObject._wasChanged', true);
           } else {
-            const addedLayer = L.polyline(parsedCoordinates);
-            this.sendAction('complete', addedLayer, { panToAddedObject: true });
+            addedLayer = L.polyline(parsedCoordinates);
+            //this.sendAction('complete', addedLayer, { panToAddedObject: true });
           }
 
           break;
         case 'Polygon':
           if (!hasMinCountPoint(parsedCoordinates, 3)) {
-            e.closeDialog = false;
-            this.set('_coordinatesWithError', true);
 
-            return;
+            return coordinatesWithError();
           }
 
           if (edit) {
-            let latLngCoors = [];
+            latlngs = [];
             let coors = [];
             for (let i = 0; i < parsedCoordinates.length; i++) {
               let masLatLng = [];
@@ -474,37 +433,35 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
                 mas.push(parsedCoordinates[i][j]);
               }
 
-              latLngCoors.push(masLatLng);
+              latlngs.push(masLatLng);
               coors.push(mas);
             }
 
             if (!Ember.isNone(layer.feature.geometry)) {
               Ember.set(layer, 'feature.geometry.coordinates', coors);
             }
-            layer._latlngs = latLngCoors;
+            //layer._latlngs = latLngCoors;
 
-            leafletMap.removeLayer(layer);
-            leafletMap.addLayer(layer);
+            //   leafletMap.removeLayer(layer);
+            //   leafletMap.addLayer(layer);
 
-            this.send('zoomTo', [layer.feature]);
+            //   this.send('zoomTo', [layer.feature]);
 
-            tabModel.leafletObject.editLayer(layer);
-            Ember.set(tabModel, 'leafletObject._wasChanged', true);
+            //   tabModel.leafletObject.editLayer(layer);
+            //   Ember.set(tabModel, 'leafletObject._wasChanged', true);
           } else {
-            const addedLayer = L.polygon(parsedCoordinates);
-            this.sendAction('complete', addedLayer, { panToAddedObject: true });
+            addedLayer = L.polygon(parsedCoordinates);
+            //this.sendAction('complete', addedLayer, { panToAddedObject: true });
           }
           break;
         case 'MultiPolygon':
           if (!hasMinCountPoint(parsedCoordinates, 3)) {
-            e.closeDialog = false;
-            this.set('_coordinatesWithError', true);
 
-            return;
+            return coordinatesWithError();
           }
 
           if (edit) {
-            let latLngCoors = [];
+            latlngs = [];
             let coors = [];
             for (let i = 0; i < parsedCoordinates.length; i++) {
               let masLatLng = [];
@@ -514,28 +471,36 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
                 mas.push(parsedCoordinates[i][j]);
               }
 
-              latLngCoors.push([masLatLng]);
+              latlngs.push([masLatLng]);
               coors.push([mas]);
             }
 
             if (!Ember.isNone(layer.feature.geometry)) {
               Ember.set(layer, 'feature.geometry.coordinates', coors);
             }
-            layer._latlngs = latLngCoors;
 
-            leafletMap.removeLayer(layer);
-            leafletMap.addLayer(layer);
-
-            this.send('zoomTo', [layer.feature]);
-
-            tabModel.leafletObject.editLayer(layer);
-            Ember.set(tabModel, 'leafletObject._wasChanged', true);
           } else {
-            const addedLayer = L.polygon(parsedCoordinates);
-            this.sendAction('complete', addedLayer, { panToAddedObject: true });
+            addedLayer = L.polygon(parsedCoordinates);
+            //this.sendAction('complete', addedLayer, { panToAddedObject: true });
           }
 
           break;
+      }
+
+      if (edit) {
+
+        layer._latlngs = latlngs;
+
+        let leafletMap = this.get('leafletMap');
+        leafletMap.removeLayer(layer);
+        leafletMap.addLayer(layer);
+
+        this.send('zoomTo', [layer.feature]);
+
+        tabModel.leafletObject.editLayer(layer);
+        Ember.set(tabModel, 'leafletObject._wasChanged', true);
+      } else {
+        this.sendAction('complete', addedLayer, { panToAddedObject: true });
       }
 
       this.set('_coordinates', null);
