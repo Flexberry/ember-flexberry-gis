@@ -29,6 +29,8 @@ const flexberryClassNames = {
 };
 
 let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
+
+  //#region Properties
   /**
     Reference to component's template.
   */
@@ -136,6 +138,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
 
   coordinatesFieldPlaceholder: t('components.geometry-add-modes.manual.coordinates-field-placeholder'),
 
+  //#endregion
+
   actions: {
     /**
       Handles button click.
@@ -238,6 +242,9 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
         return true;
       };
 
+      let layer = Ember.get(tabModel, `featureLink.${rowId}`);
+  let leafletMap = this.get('leafletMap');
+
       switch (objectType) {
         case 'Point':
 
@@ -250,8 +257,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
           }
 
           if (edit) {
-            let layer = Ember.get(tabModel, `featureLink.${rowId}`);
-            let leafletMap = this.get('leafletMap');
+
+
 
             //const editLayer = L.point(parsedCoordinates[0], parsedCoordinates[1]);
 
@@ -259,9 +266,45 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
             // let addedLayers = Ember.get(tabModel, '_addedLayers') || {};
             // addedLayers[Ember.guidFor(geoJson)] = geoJson;
 
-            Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates);// do not work
+            let feature = layer.feature;
+            feature.geometry.coordinates = parsedCoordinates[0][0];//parsedCoordinates;
 
+            Ember.set(layer, 'feature', feature);
+
+            //todo: возможно есть более правильный вариант
+            layer._latlng = { lat: parsedCoordinates[0][0][1], lng: parsedCoordinates[0][0][0] }
+
+
+
+            //let id = layer.feature.id;
+
+            // let object = Object.values(tabModel.leafletObject._layers).find(shape => {
+            //   return Ember.get(shape, 'feature.id') === id;
+            // });
+
+            leafletMap.removeLayer(layer);
             leafletMap.addLayer(layer);
+
+            // var corner1 = L.latLng(layer.feature.geometry.coordinates)
+
+            // leafletMap.fitBounds(corner1);
+
+            //this.send('zoomTo', [layer.feature]);
+            //this.send('onClearFoundItemClick');
+
+            // if (object) {
+            //   if (visibility) {
+            //     leafletMap.addLayer(object);
+            //   } else {
+            //     leafletMap.removeLayer(object);
+            //   }
+            // }
+
+
+
+            //leafletMap.addLayer(layer);
+            tabModel.leafletObject.editLayer(layer);
+            Ember.set(tabModel, 'leafletObject._wasChanged', true);
             //Ember.set(tabModel, '_addedLayers', addedLayers);
           } else {
             //const addedLayer = L.point(parsedCoordinates[0][0][0], parsedCoordinates[0][0][1]);
@@ -279,7 +322,26 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
           }
 
           if (edit) {
-            //todo:!!!1
+            Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates);
+
+            var latLngCoors = [];
+            for (let i = 0; i < parsedCoordinates.length; i++) {
+              let mas = [];
+              for (let j = 0; j < parsedCoordinates[i].length; j++) {
+                mas.push(L.latLng(parsedCoordinates[i][j][1], parsedCoordinates[i][j][0]));
+              }
+
+              latLngCoors.push(mas);
+            }
+
+            layer._latlngs = latLngCoors;
+
+            leafletMap.removeLayer(layer);
+            leafletMap.addLayer(layer);
+
+
+            tabModel.leafletObject.editLayer(layer);
+            Ember.set(tabModel, 'leafletObject._wasChanged', true);
           } else {
             const addedLayer = L.polyline(parsedCoordinates);
             this.sendAction('complete', addedLayer, { panToAddedObject: true });
@@ -296,7 +358,31 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
           }
 
           if (edit) {
-            //todo:!!!1
+
+
+            var latLngCoors1 = [];
+            var coors = [];
+            for (let i = 0; i < parsedCoordinates.length; i++) {
+              let masLatLng = [];
+              let mas = [];
+              for (let j = 0; j < parsedCoordinates[i].length; j++) {
+                masLatLng.push(L.latLng(parsedCoordinates[i][j][1], parsedCoordinates[i][j][0]));
+                mas.push(parsedCoordinates[i][j]);
+              }
+
+              latLngCoors1.push([masLatLng]);
+              coors.push([mas]);
+            }
+
+            Ember.set(layer, 'feature.geometry.coordinates', coors);
+            layer._latlngs = latLngCoors1;
+
+            leafletMap.removeLayer(layer);
+            leafletMap.addLayer(layer);
+
+
+            tabModel.leafletObject.editLayer(layer);
+            Ember.set(tabModel, 'leafletObject._wasChanged', true);
           } else {
             const addedLayer = L.polygon(parsedCoordinates);
             this.sendAction('complete', addedLayer, { panToAddedObject: true });
