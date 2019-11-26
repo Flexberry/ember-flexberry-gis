@@ -248,7 +248,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
         return true;
       };
 
-      let addedLayer, latlngs;
+      let [addedLayer, latlngs] = undefined;
 
       switch (objectSelectType) {
         case 'Point':
