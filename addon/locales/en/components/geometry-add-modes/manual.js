@@ -1,5 +1,5 @@
 export default {
-  'menu-button-tooltip': 'Add with coordinates',
+  'menu-button-tooltip-add': 'Add with coordinates',
   'menu-button-tooltip-edit': 'Edit with coordinates',
   'dialog-approve-button-caption': 'Save',
   'dialog-deny-button-caption': 'Cancel',
