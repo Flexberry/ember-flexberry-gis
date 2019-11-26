@@ -169,6 +169,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
                 coordinates[i][j].pop();
               }
             }
+
             break;
         }
 
@@ -198,8 +199,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       if (Ember.isNone(objectSelectType)) {
         error = true;
         this.set('_geometryField', true);
-      }
-      else {
+      } else {
         this.set('_geometryField', false);
       }
 
@@ -207,8 +207,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       if (Ember.isEmpty(coordinates)) {
         error = true;
         this.set('_coordinatesWithError', true);
-      }
-      else {
+      } else {
         this.set('_coordinatesWithError', false);
       }
 
@@ -224,6 +223,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
         edit = Ember.get(tabModel, `_editedRows.${rowId}`);
         layer = Ember.get(tabModel, `featureLink.${rowId}`);
       }
+
       const parsedCoordinates = this._parseStringToCoordinates(coordinates);
 
       // Prevent dialog from being closed.
@@ -249,6 +249,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       };
 
       let addedLayer, latlngs;
+
       switch (objectSelectType) {
         case 'Point':
 
@@ -268,6 +269,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
           } else {
             addedLayer = new L.marker(parsedCoordinates[0][0]);
           }
+
           break;
         case 'LineString':
           if (!hasMinCountPoint(parsedCoordinates, 2)) {
@@ -350,6 +352,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
           } else {
             addedLayer = L.polygon(parsedCoordinates);
           }
+
           break;
         case 'MultiPolygon':
           if (!hasMinCountPoint(parsedCoordinates, 3)) {
@@ -538,6 +541,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
             coors.push(null);
           }
         }
+
         break;
       case 4: // MultiPolygon.
         for (let i = 0; i < coordinates.length; i++) {
@@ -552,6 +556,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
             coors.push(null);
           }
         }
+
         break;
       default:
         throw new Error('Coordinate array error.');
