@@ -315,7 +315,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               features: Ember.A(features),
               layerModel: layerModel,
               hasListForm: hasListForm,
-              layerIds: layerIds
+              layerIds: layerIds,
+              dateFormat: Ember.get(layerModel, 'settingsAsObject.displaySettings.dateFormat')
             };
 
             this._processLayerLinkForDisplayResults(result, displayResult);
@@ -324,7 +325,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         }
       );
     });
-    let getFeatureDisplayProperty = (feature, featuresPropertiesSettings) => {
+    let getFeatureDisplayProperty = (feature, featuresPropertiesSettings, dateFormat) => {
       let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
       let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
 
@@ -338,6 +339,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       if (!displayPropertyIsCallback) {
         let featureProperties = Ember.get(feature, 'properties') || {};
+
+        for (var prop in featureProperties) {
+          let value = featureProperties[prop];
+          if (value instanceof Date && !Ember.isNone(value) && !Ember.isEmpty(value) && !Ember.isEmpty(dateFormat)) {
+            featureProperties[prop] = moment(value).format(dateFormat);
+          }
+        }
 
         let displayValue = Ember.none;
         displayProperty.forEach((prop) => {
@@ -402,7 +410,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           let listForms = result.listForms;
 
           result.features.forEach((feature) => {
-            feature.displayValue = getFeatureDisplayProperty(feature, result.settings);
+            feature.displayValue = getFeatureDisplayProperty(feature, result.settings, result.dateFormat);
             feature.layerModel = Ember.get(result, 'layerModel');
             feature.editForms = Ember.A();
 

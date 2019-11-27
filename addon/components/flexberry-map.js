@@ -9,6 +9,7 @@ import LeafletMapInteractionMixin from '../mixins/leaflet-map/map-interaction';
 import LeafletMapLoaderMixin from '../mixins/leaflet-map/map-loader';
 import LeafletMapToolsMixin from '../mixins/leaflet-map/map-tools';
 import LeafletMapCommandsMixin from '../mixins/leaflet-map/map-commands';
+import LeafletMapSidebarMixin from '../mixins/leaflet-map/map-sidebar';
 
 import layout from '../templates/components/flexberry-map';
 
@@ -48,7 +49,8 @@ let FlexberryMapComponent = Ember.Component.extend(
   LeafletMapInteractionMixin,
   LeafletMapLoaderMixin,
   LeafletMapToolsMixin,
-  LeafletMapCommandsMixin, {
+  LeafletMapCommandsMixin,
+  LeafletMapSidebarMixin, {
     /**
       Leaflet map.
 
@@ -411,9 +413,9 @@ let FlexberryMapComponent = Ember.Component.extend(
     */
     _localeDidChange: Ember.observer('i18n.locale', function() {
       let i18n = this.get('i18n');
+      let $leafletContainer = this.get('_$leafletContainer');
 
-      if (this.get('zoomControl')) {
-        let $leafletContainer = this.get('_$leafletContainer');
+      if (this.get('zoomControl') && $leafletContainer) {
         let $zoomControl = $leafletContainer.find('.leaflet-control-container .leaflet-control-zoom');
         let $zoomInButton = $zoomControl.find('.leaflet-control-zoom-in');
         let $zoomOutButton = $zoomControl.find('.leaflet-control-zoom-out');
@@ -477,6 +479,12 @@ let FlexberryMapComponent = Ember.Component.extend(
         mapApi.addToApi('leafletMap',  leafletMap);
         this.set('_hasLeafletMap', true);
       }
+
+      if (Ember.isNone(mapApi.getFromApi('serviceLayer'))) {
+        mapApi.addToApi('serviceLayer',  this.get('serviceLayer'));
+        this.set('_hasServiceLayer', true);
+      }
+
     },
 
     /**
@@ -563,6 +571,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       this.sendAction('leafletInit', {
         map: leafletMap
       });
+      this.get('mapApi').addToApi('leafletMap', leafletMap);
     },
 
     /**
@@ -600,6 +609,10 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       if (this.get('_hasLeafletMap')) {
         this.get('mapApi').addToApi('leafletMap', undefined);
+      }
+
+      if (this.get('_hasServiceLayer')) {
+        this.get('mapApi').addToApi('serviceLayer', undefined);
       }
 
       this.sendAction('leafletDestroy');

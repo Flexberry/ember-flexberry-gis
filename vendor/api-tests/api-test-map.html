@@ -20,6 +20,13 @@
       <button id="getIntersectionObjects">Get Intersection Objects</button>
     </div>
     <div>
+      <button id="getIntersectionArea">Get Intersection Area</button>
+    </div>
+    <div>
+      <button id="showIntersectionArea">Show Intersection Area</button>
+      <button id="clearIntersectionArea">Clear Intersection Area</button>
+    </div>
+    <div>
       <button id="createNewlayer">Create New Layer</button>
     </div>
     <div>
@@ -53,7 +60,24 @@
       <button id="creatObject">Create Object</button>
     </div>
     <div>
+      <button id="getRhumb"> Get Rhumb</button>
+    </div>
+    <div>
       <button id="getLayerObjectOptions">Get Object Attributes</button>
+    </div>
+    <div>
+      <button id="hideLeftPanel">Hide left panel</button>
+      <button id="showLeftPanel">Show left panel</button>
+      <input type="text" size="40" id="nameTools">
+    </div>
+    <div>
+      <button id="hideRightPanel">Hide right panel</button>
+      <button id="showRightPanel">Show right panel</button>
+    </div>
+    <div>
+      <button id="startChangeMultyLayerObject">Change Multy Object</button>
+      <button id="createPolygonObjectCoordinates">Create Object By Coordinates</button>
+      <button id="createPolygonObjectRhumb">Create Object By Rhumb</button>
     </div>
   </div>
   <script type="text/javascript">
@@ -79,7 +103,7 @@
         return true;
       }
 
-      frame.contentWindow.mapApi.saveObject = function(obj, layerId)  {
+      frame.contentWindow.mapApi.saveObject = function (obj, layerId) {
         if (layerId === "56f4b518-e375-4b24-be2f-88d48110c0a3") {
           obj.saveObject().then((feature) => console.log(feature)).catch((e) => console.log(e));
         }
@@ -136,6 +160,25 @@
       };
       intersectionButton.addEventListener('click', getIntersections);
 
+      var intersectionAreaButton = document.getElementById('getIntersectionArea');
+        var getIntersectionsArea = function () {
+          frame.contentWindow.mapApi.mapModel.getIntersectionArea('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Малые реки', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e',  'Голованово', false)
+          .then(resolve => {console.log(resolve)},reject => {console.log(reject)});
+        };
+      intersectionAreaButton.addEventListener('click', getIntersectionsArea);
+
+      var showIntersectionAreaButton = document.getElementById('showIntersectionArea');
+        var showIntersectionsArea = function () {
+          frame.contentWindow.mapApi.mapModel.getIntersectionArea('f7670a1f-1acb-4571-923c-1ce3bc88e11e', 'Малые реки', 'f7670a1f-1acb-4571-923c-1ce3bc88e11e',  'Голованово', true);
+        };
+      showIntersectionAreaButton.addEventListener('click', showIntersectionsArea);
+
+      var clearIntersectionAreaButton = document.getElementById('clearIntersectionArea');
+        var clearIntersectionsArea = function () {
+          frame.contentWindow.mapApi.mapModel.clearServiceLayer();
+        };
+      clearIntersectionAreaButton.addEventListener('click', clearIntersectionsArea);
+
       var newLayerButton = document.getElementById('createNewlayer');
       var newLayer = function () {
         frame.contentWindow.mapApi.mapModel.createNewLayer({ name: 'test_osm', type: 'osm' }).then(id => console.log(id));
@@ -144,15 +187,13 @@
 
       var deleteLayerObjectButton = document.getElementById('deleteLayerObject');
       var deleteObjectLayer = function () {
-        frame.contentWindow.mapApi.mapModel.deleteLayerObject('f8dec493-d879-49ae-ad55-f4f18c89cb88', 'perm_water_line.8383')
-          .then(() => console.log('perm_water_line.8383')).catch((e) => console.log(e));
+        frame.contentWindow.mapApi.mapModel.deleteLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_utverzhdeno_polygon.02b29e0f-e9b0-47c7-a6bf-a91abfe719c3');
       };
       deleteLayerObjectButton.addEventListener('click', deleteObjectLayer);
 
       var deleteObjectsLayerButton = document.getElementById('deleteLayerObjects');
       var deleteObjectsLayer = function () {
-        frame.contentWindow.mapApi.mapModel.deleteLayerObjects('f8dec493-d879-49ae-ad55-f4f18c89cb88', ['perm_water_line.8383', 'perm_water_line.8382'])
-          .then(() => console.log(['perm_water_line.8383', 'perm_water_line.8382'])).catch((e) => console.log(e));
+        frame.contentWindow.mapApi.mapModel.deleteLayerObjects('56f4b518-e375-4b24-be2f-88d48110c0a3', ['vydel_utverzhdeno_polygon.1df5d9e9-e9e1-42ca-b4f4-c823bf84bc8e']);
       };
       deleteObjectsLayerButton.addEventListener('click', deleteObjectsLayer);
 
@@ -231,6 +272,107 @@
         console.log(distance + ' (m)');
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
+
+
+      var showLeftPanelButton = document.getElementById('showLeftPanel');
+      var showLeftPanel = function () {
+        var nameTool = document.getElementById('nameTools').value;
+        if (nameTool != '')
+          frame.contentWindow.leafletMap.flexberryMap.tools.show(nameTool);
+        else
+          frame.contentWindow.leafletMap.flexberryMap.tools.show();
+      };
+      showLeftPanelButton.addEventListener('click', showLeftPanel);
+
+      var hideLeftPanelButton = document.getElementById('hideLeftPanel');
+      var hideLeftPanel = function () {
+        var nameTool = document.getElementById('nameTools').value;
+        if (nameTool != '')
+          frame.contentWindow.leafletMap.flexberryMap.tools.hide(nameTool);
+        else
+          frame.contentWindow.leafletMap.flexberryMap.tools.hide();
+      };
+      hideLeftPanelButton.addEventListener('click', hideLeftPanel);
+
+      var showRightPanelButton = document.getElementById('showRightPanel');
+      var showRightPanel = function () {
+        frame.contentWindow.leafletMap.flexberryMap.sidebar.show();
+      };
+      showRightPanelButton.addEventListener('click', showRightPanel);
+
+      var hideRightPanelButton = document.getElementById('hideRightPanel');
+      var hideRightPanel = function () {
+        frame.contentWindow.leafletMap.flexberryMap.sidebar.hide();
+      };
+      hideRightPanelButton.addEventListener('click', hideRightPanel);
+
+      var startChangeMultyLayerObjectButton = document.getElementById('startChangeMultyLayerObject');
+      var startChangeMultyLayerObject = function () {
+
+        var featureLayer = frame.contentWindow.mapApi.mapModel.startChangeLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_utverzhdeno_polygon.02b29e0f-e9b0-47c7-a6bf-a91abfe719c3');
+        frame.contentWindow.mapApi.mapModel.startChangeMultyLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', featureLayer);
+      };
+      startChangeMultyLayerObjectButton.addEventListener('click', startChangeMultyLayerObject);
+
+      var createPolygonObjectCoordinatesButton = document.getElementById('createPolygonObjectCoordinates');
+      var createPolygonObjectCoordinates = function () {
+
+        var obj = {
+          type: 'Feature',
+          geometry: {
+            type: 'LineString',
+            coordinates: [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]
+          },
+          properties: {
+            name: 'test_polygon'
+          }
+        };
+
+        var newObj = frame.contentWindow.mapApi.mapModel.addObjectToLayer('0f2b3002-1b28-44bd-877f-6c0a917b963f', obj);
+        console.log(newObj);
+      };
+      createPolygonObjectCoordinatesButton.addEventListener('click', createPolygonObjectCoordinates);
+
+      var createPolygonObjectRhumbButton = document.getElementById('createPolygonObjectRhumb');
+      var createPolygonObjectRhumb = function () {
+        data = {
+          type: 'LineString',
+          properties: { name: 'test_polygon' },
+          startPoint: [85, 79],
+          points: [
+            { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955 },
+            { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427 },
+            { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685 }
+          ]
+        };
+
+        var newObj = frame.contentWindow.mapApi.mapModel.createPolygonObjectRhumb('0f2b3002-1b28-44bd-877f-6c0a917b963f', data);
+        console.log(newObj);
+      };
+      createPolygonObjectRhumbButton.addEventListener('click', createPolygonObjectRhumb);
+
+      var startChangeMultyLayerObjectButton = document.getElementById('startChangeMultyLayerObject');
+      var startChangeMultyLayerObject = function () {
+        var featureLayer = frame.contentWindow.mapApi.mapModel.startChangeLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_utverzhdeno_polygon.02b29e0f-e9b0-47c7-a6bf-a91abfe719c3');
+        frame.contentWindow.mapApi.mapModel.startChangeMultyLayerObject('56f4b518-e375-4b24-be2f-88d48110c0a3', featureLayer);
+      };
+      startChangeMultyLayerObjectButton.addEventListener('click', startChangeMultyLayerObject);
+
+      var getRhumbButton = document.getElementById('getRhumb');
+      var getRhumb = function () {
+        // Пример обычного полигона (длина вложенности массива: 3)
+        // var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_polygon.3110');
+        // Пример обычной линии (длина вложенности массива: 2)
+        var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('fc26ac89-ccb5-47f5-bd2d-89a5e587f9d3', 'Улица.1094');
+        // Пример мультиполигон (длина вложенности массива: 4)
+        //var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('56f4b518-e375-4b24-be2f-88d48110c0a3', 'vydel_polygon.3111');
+        // Пример мультилинии (длина вложенности массива: 2)
+        //var thumbs = frame.contentWindow.mapApi.mapModel.getRhumb('fc26ac89-ccb5-47f5-bd2d-89a5e587f9d3', 'Улица.15477');
+
+        console.log(thumbs);
+      }
+
+      getRhumbButton.addEventListener('click', getRhumb);
 
     });
   </script>
