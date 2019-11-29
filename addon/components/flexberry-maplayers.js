@@ -417,7 +417,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     currentLayers: [],
 
     /**
-      Flag indicates if compare layers mode enabled.   
+      Flag indicates if compare layers mode enabled.
 
       @property compareLayersEnabled
       @type Boolean
