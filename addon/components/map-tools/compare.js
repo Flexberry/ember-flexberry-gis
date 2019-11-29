@@ -6,7 +6,6 @@ import Ember from 'ember';
 import { translationMacro as t } from 'ember-i18n';
 import layout from '../../templates/components/map-tools/compare';
 
-
 /**
   Component's CSS-classes names.
   JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.

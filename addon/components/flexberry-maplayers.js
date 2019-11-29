@@ -387,7 +387,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       @type L.control.sideBySide
       @default null
     */
-    sideBySide : null,
+    sideBySide: null,
 
     /**
       Proprty containing layer on left side of sideBySide control.
