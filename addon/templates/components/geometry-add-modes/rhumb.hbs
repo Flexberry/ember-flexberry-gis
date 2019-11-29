@@ -1,0 +1,46 @@
+{{flexberry-button
+  tooltip=menuRhumbButtonTooltip
+  click=(action "onOpenDialogRhumb")
+  iconClass="flexberry-map-command-icon location map-pin icon"
+}}
+
+{{!--
+  Semantic UI modal dialogs takes long time to be initialized
+  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+--}}
+{{#if _dialogRhumbHasBeenRequested}}
+  {{#flexberry-dialog class=flexberryClassNames.dialog
+    caption=menuRhumbButtonTooltip
+    approveButtonCaption=dialogRhumbApproveButtonCaption
+    denyButtonCaption=dialogRhumbDenyButtonCaption
+    visible=_dialogRhumbVisible
+    approve=(action "onRhumbApprove")
+    deny=(action "onRhumbDeny")
+  }}
+  <form class="ui form {{flexberryClassNames.form}}" role="form">
+    {{!-- currently disabled --}}
+    <div class="field disabled">
+      {{flexberry-edit-crs
+        crsCaption=crsFieldLabel
+        coordinateReferenceSystem=settings.layerCRS
+      }}
+    </div>
+    {{!-- currently disabled --}}
+    <div class="field disabled">
+      <label>{{geometryFieldLabel}}</label>
+      {{flexberry-dropdown
+        items=settings.drawTools
+        value="polygon"
+      }}
+    </div>
+    <div class="field {{if _coordinatesWithError "error" ""}}">
+      <label>{{coordinatesFieldLabel}}</label>
+      {{flexberry-textarea
+        value=_coordinates
+        placeholder=coordinatesFieldPlaceholder
+      }}
+    </div>
+  </form>
+
+{{/flexberry-dialog}}
+{{/if}}
