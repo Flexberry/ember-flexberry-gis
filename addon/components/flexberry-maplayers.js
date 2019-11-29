@@ -538,14 +538,14 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
         @param {Object} layer Layer to add.
       */
       addToSideToSide(layer) {
-        let sbs = this.get('sideBySide');  
+        let sbs = this.get('sideBySide');
         let map = this.get('leafletMap');
         if (this.get('side') === 'Left') {
           if (this.get('leftLayer') !== null) {
             this.get('leftLayer._leafletObject').remove();
           }
 
-          let leafletObject = Ember.get(layer,'_leafletObject').addTo(map);
+          let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
           this.set('leftLayer', layer);
           sbs.setLeftLayers(leafletObject);
         } else {
@@ -553,10 +553,10 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
             this.get('rightLayer._leafletObject').remove();
           }
 
-          let leafletObject = Ember.get(layer,'_leafletObject').addTo(map);
+          let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
           this.set('rightLayer', layer);
           sbs.setRightLayers(leafletObject);
-        }     
+        }
       }
     }
 
