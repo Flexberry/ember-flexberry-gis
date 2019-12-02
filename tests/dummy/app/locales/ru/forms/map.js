@@ -5,6 +5,8 @@ export default {
   'bookmarksbuttontooltip': 'Пространственные закладки',
   'identifybuttontooltip': 'Идентификация',
   'createobjectbuttontooltip': 'Создание объекта',
+  'xCaption': 'Долгота',
+  'yCaption': 'Широта',
 
   'tabbar': {
     'treeview': {

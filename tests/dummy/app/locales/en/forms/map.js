@@ -5,6 +5,8 @@ export default {
   'bookmarksbuttontooltip': 'Spatial bookmarks',
   'identifybuttontooltip': 'Show identification',
   'createobjectbuttontooltip': 'Show object creation',
+  'xCaption': 'Longitude',
+  'yCaption': 'Latitude',
 
   'tabbar': {
     'treeview': {

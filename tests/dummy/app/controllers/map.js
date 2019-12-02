@@ -6,6 +6,10 @@ import Ember from 'ember';
 import EditMapController from 'ember-flexberry-gis/controllers/edit-map';
 import EditFormControllerOperationsIndicationMixin from 'ember-flexberry/mixins/edit-form-controller-operations-indication';
 
+/*import epsg3395 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-3395';
+import epsg3857 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-3857';
+import epsg4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';*/
+
 /**
   Map controller.
 
@@ -208,6 +212,34 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     });
 
     return result;
+  }),
+
+  /**
+    СRS metadata.
+
+    @property sidebar
+    @type Object[]
+   */
+  availableCRS: Ember.computed(function () {
+    return [{
+      crs: L.CRS.ESPG3395,
+      name: 'EPSG:3395',
+      xCaption: 'forms.map.xCaption',
+      yCaption: 'forms.map.yCaption'
+    },
+    {
+      crs: L.CRS.EPSG4326,
+      name: 'EPSG:4326',
+      xCaption: 'forms.map.xCaption',
+      yCaption: 'forms.map.yCaption'
+    },
+    {
+      crs: L.CRS.EPSG3857,
+      name: 'EPSG:3857',
+      xCaption: 'forms.map.xCaption',
+      yCaption: 'forms.map.yCaption'
+    }
+    ];
   }),
 
   /**

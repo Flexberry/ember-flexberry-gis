@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import layout from '../templates/components/feature-export';
-import ESPG3857 from '../coordinate-reference-systems/epsg-3857';
+
 import {
   translationMacro as t
 } from 'ember-i18n';
@@ -47,7 +47,12 @@ let FeatureExportDialogComponent = Ember.Component.extend({
   /**
    * Availble crs.
    */
-  _availableCoordSystems: null,
+  availableCRS: null,
+
+  /**
+   * Availble crs name.
+   */
+  _availableCRSNames: null,
 
   /**
    * Request dialog to show.
@@ -60,12 +65,13 @@ let FeatureExportDialogComponent = Ember.Component.extend({
   _crs: Ember.computed('_options.coordSystem', function() {
     let _options = this.get('_options');
 
-    switch(_options.coordSystem) {
-      case 'EPSG:3857':
-        return L.CRS.EPSG3857;
-      default:
-        return L.CRS.Base;
-    }
+    let factories = this.get('availableCRS');
+
+    factories.forEach((factory) => {
+      if (factory.name === _options.coordSystem) {
+        return factory.crs;
+      }
+    });
   }),
 
   /**
@@ -166,9 +172,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     onApprove(e) {
       // Objects for unloading.
       let result = this.get('result');
-      let layer = result.layerModel;
       let layerSettings = this.get('_layerSettings');
-      let type = layer.get('type');
       let readFormat = this.get('_format');
 
       let wfsLayer = new L.WFS({
@@ -222,9 +226,19 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     ]));
 
     // CRS.
-    this.set('_availableCoordSystems', Ember.A([
-      'EPSG:3857',
-    ]));
+    let factories = this.get('availableCRS');
+    
+    let availableCRSNames = [];
+
+    if (!Ember.isNone(factories)) {
+      factories.forEach((factory) => {
+        availableCRSNames.push(factory.name);
+      });
+    } else {
+      availableCRSNames.push(defaultOptions.coordSystem);
+    }
+
+    this.set('availableCRSNames', availableCRSNames);
 
     this.set('_options', Ember.$.extend(true, {}, defaultOptions));
   },
