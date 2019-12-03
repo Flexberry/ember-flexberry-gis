@@ -1,9 +1,12 @@
 export default {
   'menu-button-tooltip': 'Add with rhumbs',
-  'dialog-approve-button-caption': 'Ok',
+  'menu-button-tooltip-edit': 'Rhumbs edit',
+  'dialog-approve-button-caption': 'Save',
   'dialog-deny-button-caption': 'Cancel',
-  'crs-field-label': 'Coordinate reference system',
-  'geometry-field-label': 'Geometry type',
-  'coordinates-field-label': 'Coordinates to add',
-  'coordinates-field-placeholder': 'Enter the coordinates',
+  'type-object-field-label': 'Type object',
+  'start-point-field-label': 'Start point',
+  'direction-field-label': 'Direction',
+  'rhumb-field-label': 'Rhumb',
+  'distance-field-label': 'Distance',
+  'add-button-caption': 'Add'
 };

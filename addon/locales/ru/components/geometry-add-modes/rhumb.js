@@ -1,9 +1,12 @@
 export default {
-  'menu-button-tooltip': 'Добавить по координатам',
-  'dialog-approve-button-caption': 'Ok',
+  'menu-button-tooltip': 'Добавить по румбу',
+  'menu-button-tooltip-edit': 'Редактировать по румбу',
+  'dialog-approve-button-caption': 'Сохранить',
   'dialog-deny-button-caption': 'Отмена',
-  'crs-field-label': 'Система координат',
-  'geometry-field-label': 'Тип геометрии',
-  'coordinates-field-label': 'Координаты',
-  'coordinates-field-placeholder': 'Добавьте координаты',
+  'type-object-field-label': 'Тип объекта',
+  'start-point-field-label': 'Начальная точка',
+  'direction-field-label': 'Направление',
+  'rhumb-field-label': 'Румб',
+  'distance-field-label': 'Растояние',
+  'add-button-caption': 'Добавить',
 };

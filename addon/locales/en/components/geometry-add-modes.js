@@ -7,5 +7,5 @@ export default {
   'geoprovider': GeoProvider,
   'manual': Manual,
   'import': Import,
-  'import': Rhumb,
+  'rhumb': Rhumb,
 };

@@ -1,6 +1,6 @@
 {{flexberry-button
   tooltip=menuButtonTooltip
-  click=(action "onButtonClick" tabModel)
+  click=(action "onOpenDialog" tabModel)
   iconClass="flexberry-map-command-icon location map-pin icon"
 }}
 {{!
@@ -18,79 +18,81 @@
     deny=(action "onDeny")
   }}
     <form class="ui form {{flexberryClassNames.form}}" role="form">
-      <div class="field {{if _coordinatesWithError "error" ""}}">
+      <div class="field {{if _startPointValideError "error" ""}}">
         <label>
-          {{coordinatesFieldLabel}}
+          {{startPointFieldLabel}}
         </label>
         {{flexberry-field
           value=_startPoint
           placeholder=coordinatesFieldPlaceholder
         }}
       </div>
-      <div class="field">
+      <div class="field {{if _typeObjectValideError "error" ""}}">
         <label>
-          Тип объекта
+          {{typeObjectFieldLabel}}
         </label>
-        {{flexberry-dropdown items=_objectTypes value=_objectType }}
+        {{flexberry-dropdown items=_objectTypes value=_objectType}}
       </div>
-      {{!-- <div class="field">
-        <label>
-          {{geometryFieldLabel}}
-        </label>
-        {{flexberry-dropdown items=_cardinalPoints}}
-      </div> --}}
       <table class="ui celled table flexberry-table">
-        <tr>
-          <th class="narrow">
-            Направление
-          </th>
-          <th>
-            Румб
-          </th>
-          <th>
-            Дистанция
-          </th>
-          <th></th>
-        </tr>
-        <tr>
-          <td class="narrow">
-            {{flexberry-dropdown items=_cardinalPoints value=_direction}}
-          </td>
-          <td class="narrow">
-            {{flexberry-field value=_rhumb}}
-          </td>
-          <td class="narrow">
-            {{flexberry-field value=_distance}}
-          </td>
-          <td class="narrow">
-            {{flexberry-button caption="Добавить" click=(action "onAddRaw")}}
-          </td>
-        </tr>
+        <thead>
+          <tr>
+            <th class="narrow">
+              {{directionTh}}
+            </th>
+            <th class="narrow">
+              {{rhumbTh}}
+            </th>
+            <th class="narrow">
+              {{distanceTh}}
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="narrow">
+              <div class="field {{if _addDirectionValide "error"}}">
+                {{flexberry-dropdown items=_cardinalPoints value=_direction}}
+              </div>
+            </td>
+            <td class="narrow">
+              <div class="field {{if _addRhumbValide "error"}}">
+                {{flexberry-field value=_rhumb}}
+              </div>
+            </td>
+            <td class="narrow">
+              <div class="field {{if _addDistanceValide "error"}}">
+                {{flexberry-field value=_distance}}
+              </div>
+            </td>
+            <td class="narrow">
+              {{flexberry-button
+                caption=addButtonCaption
+                click=(action "onAddRaw")
+              }}
+            </td>
+          </tr>
+        </tbody>
       </table>
       <div class="field">
         {{#flexberry-table perPageAvailable=false model=_queryResults}}
           {{#block-slot "column-header-head-0"}}
+            <th class="narrow">
+              {{directionTh}}
+            </th>
+          {{/block-slot}}
+          {{#block-slot "column-header-head-0"}}
+            <th class="narrow">
+              {{rhumbTh}}
+            </th>
+          {{/block-slot}}
+          {{#block-slot "column-header-head-0"}}
+            <th class="narrow">
+              {{distanceTh}}
+            </th>
+          {{/block-slot}}
+          {{#block-slot "column-header-head-0"}}
             <th class="narrow"></th>
-          {{/block-slot}}
-          {{#block-slot "column-header-head-0"}}
-            <th class="narrow">
-              Направление
-            </th>
-          {{/block-slot}}
-          {{#block-slot "column-header-head-0"}}
-            <th class="narrow">
-              Румб
-            </th>
-          {{/block-slot}}
-          {{#block-slot "column-header-head-0"}}
-            <th class="narrow">
-              Дистанция
-            </th>
-          {{/block-slot}}
-          {{#block-slot "column-cell-head-0"}}
-            <td class="narrow">
-              !!
-            </td>
           {{/block-slot}}
           {{#block-slot "column-cell-head-0" as |row|}}
             <td class="narrow">
@@ -107,28 +109,14 @@
               {{row.distance}}
             </td>
           {{/block-slot}}
+          {{#block-slot "column-cell-head-0" as |row|}}
+            <td class="narrow">
+              {{flexberry-button caption="X" click=(action "OnRemoveRow" row.id)
+              }}
+            </td>
+          {{/block-slot}}
         {{/flexberry-table}}
       </div>
-      {{!-- <div class="field disabled">
-      {{flexberry-edit-crs
-        crsCaption=crsFieldLabel
-        coordinateReferenceSystem=settings.layerCRS
-      }}
-    </div>
-    <div class="field disabled">
-      <label>{{geometryFieldLabel}}</label>
-      {{flexberry-dropdown
-        items=settings.drawTools
-        value="polygon"
-      }}
-    </div>
-    <div class="field {{if _coordinatesWithError "error" ""}}">
-      <label>{{coordinatesFieldLabel}}</label>
-      {{flexberry-textarea
-        value=_coordinates
-        placeholder=coordinatesFieldPlaceholder
-      }}
-    </div> --}}
     </form>
   {{/flexberry-dialog}}
 {{/if}}
