@@ -5,22 +5,25 @@
 import Ember from 'ember';
 import layout from '../../templates/components/geometry-add-modes/rhumb';
 import { translationMacro as t } from 'ember-i18n';
+// import mapModelApi from '../../mixins/flexberry-map-model-api';
+import hhh from '../../utils/rhumb-operations';
+import www from '../../mixins/flexberry-map-model-api-expansion';
 
 /**
   Component's CSS-classes names.
   JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.
 
   @property {Object} flexberryClassNames
-  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-geometry-add-mode-manual').
-  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-geometry-add-mode-manual').
-  @property {String} flexberryClassNames.dialog Component's inner dialog CSS-class name ('flexberry-geometry-add-mode-manual').
-  @property {String} flexberryClassNames.form Component's inner <form> CSS-class name ('flexberry-geometry-add-mode-manual').
+  @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-geometry-add-mode-rhumb').
+  @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-geometry-add-mode-rhumb').
+  @property {String} flexberryClassNames.dialog Component's inner dialog CSS-class name ('flexberry-geometry-add-mode-rhumb').
+  @property {String} flexberryClassNames.form Component's inner <form> CSS-class name ('flexberry-geometry-add-mode-rhumb').
   @readonly
   @static
 
-  @for FlexberryGeometryAddModeManualComponent
+  @for FlexberryGeometryAddModeRhumbComponent
 */
-const flexberryClassNamesPrefix = 'flexberry-geometry-add-mode-manual';
+const flexberryClassNamesPrefix = 'flexberry-geometry-add-mode-rhumb';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
@@ -28,7 +31,14 @@ const flexberryClassNames = {
   form: flexberryClassNamesPrefix + '-form'
 };
 
-let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
+//let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(mapModelApi, {
+let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(hhh, www, {
+  /**
+    Service for managing map API.
+    @property mapApi
+    @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
   /**
     Reference to component's template.
   */
@@ -51,7 +61,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
   tagName: '',
 
   /**
-    Flag indicates whether manual geometry adding dialog has been already requested by user or not.
+    Flag indicates whether rhumb geometry rhumb dialog has been already requested by user or not.
 
     @property _dialogHasBeenRequested
     @type Boolean
@@ -61,7 +71,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
   _dialogHasBeenRequested: false,
 
   /**
-    Flag indicates whether to show manual geometry adding dialog.
+    Flag indicates whether to show rhumb geometry adding dialog.
 
     @property _dialogVisible
     @type Boolean
@@ -90,58 +100,119 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
   */
   _coordinatesWithError: false,
 
-  /**
-    Flag for editing dialog rhumb.
+  _cardinalPoints: ['СВ', 'ЮВ', 'ЮЗ', 'СЗ'],
 
-    @property _dialogRhumbVisible
-    @type Boolean
-    @default false
-    @private
-  */
- _dialogRhumbVisible: false,
+  _startPoint: '56:454;34:567',
 
-   /**
-    Flag indicates whether manual geometry adding dialog rhumb has been already requested by user or not.
+  _queryResults: [
+    { direction: 'ЮВ', rhumb: 86.76787457562546, distance: 8182.6375760837955 },
+    { direction: 'СВ', rhumb: 79.04259420114585, distance: 8476.868426796427 },
+    { direction: 'ЮЗ', rhumb: 86.0047147391561, distance: 16532.122718537685 }
+  ],
 
-    @property _dialogRhumbHasBeenRequested
-    @type Boolean
-    @default false
-    @private
-  */
- _dialogRhumbHasBeenRequested: false,
+  _objectTypes: ['Polygon', 'Line'],
 
-  menuButtonTooltip: t('components.geometry-add-modes.manual.menu-button-tooltip'),
+  _objectType: null,
 
-  menuRhumbButtonTooltip: t('components.geometry-add-modes.manual.menu-button-rhumb-tooltip'),
+  _startPoint: null,
 
-  dialogApproveButtonCaption: t('components.geometry-add-modes.manual.dialog-approve-button-caption'),
+  _direction: null,
+  _rhumb: null,
+  _distance: null,
 
-  dialogRhumbApproveButtonCaption: t('components.geometry-add-modes.manual.dialog-approve-rhumb-button-caption'),
+  //  menuButtonTooltip: t('components.geometry-add-modes.manual.menu-button-tooltip'),
+  menuButtonTooltip: t('components.geometry-add-modes.rhumb0.menu-button-tooltip'),
 
-  dialogDenyButtonCaption: t('components.geometry-add-modes.manual.dialog-deny-rhumb-button-caption'),
+  dialogApproveButtonCaption: t('components.geometry-add-modes.rhumb.dialog-approve-button-caption'),
 
-  dialogRhumbDenyButtonCaption: t('components.geometry-add-modes.manual.dialog-deny-button-caption'),
+  dialogDenyButtonCaption: t('components.geometry-add-modes.rhumb.dialog-deny-button-caption'),
 
-  crsFieldLabel: t('components.geometry-add-modes.manual.crs-field-label'),
+  crsFieldLabel: t('components.geometry-add-modes.rhumb.crs-field-label'),
 
-  geometryFieldLabel: t('components.geometry-add-modes.manual.geometry-field-label'),
+  geometryFieldLabel: t('components.geometry-add-modes.rhumb.geometry-field-label'),
 
-  coordinatesFieldLabel: t('components.geometry-add-modes.manual.coordinates-field-label'),
+  coordinatesFieldLabel: t('components.geometry-add-modes.rhumb.coordinates-field-label'),
 
-  coordinatesFieldPlaceholder: t('components.geometry-add-modes.manual.coordinates-field-placeholder'),
+  coordinatesFieldPlaceholder: t('components.geometry-add-modes.rhumb.coordinates-field-placeholder'),
+
+  //   /**
+  //   Initializes DOM-related component's properties.
+  // */
+  //   didInsertElement(tabModel) {
+  //     this._super(...arguments);
+
+  //     debugger;
+
+
+  //   },
 
   actions: {
     /**
       Handles button click.
     */
-    onButtonClick() {
+    onButtonClick(tabModel) {
       this.set('_dialogHasBeenRequested', true);
       this.set('_dialogVisible', true);
+
+      const rowId = this._getRowId(tabModel);
+      const edit = Ember.get(tabModel, `_editedRows.${rowId}`);
+
+      this.set('_objectTypeDisabled', edit);
+
+      if (edit) {
+        const layer = Ember.get(tabModel, `featureLink.${rowId}`);
+        const geoJSON = layer.toGeoJSON();
+        const type = Ember.get(geoJSON, 'geometry.type');
+
+        // this.menuButtonTooltipt = t('components.geometry-add-modes.manual.menu-button-tooltip-edit');
+
+        let coordinates = geoJSON.geometry.coordinates;
+
+        this.createPolygonObjectRhumb('0f2b3002-1b28-44bd-877f-6c0a917b963f', data);
+
+        //let objectId = Ember.get(layer, 'feature.id');
+
+        //let objectContainingActionHandler = Ember.Object.extend(mapModelApi).create();
+
+        debugger;
+        const mapLayer = this.get('mapLayer')
+        const mapApi = this.get('mapApi');
+
+        let data = this.getRhumb(mapLayer, mapApi, 'fc26ac89-ccb5-47f5-bd2d-89a5e587f9d3', geoJSON.id);
+
+        this._startPoint = `${data.StartPoint.lat};${data.StartPoint.lng}`;
+
+        //_objectType
+
+        switch (type) {
+          case 'Polygon':
+            _objectType = 'Polygon';
+            break;
+          case 'LineString':
+            _objectType = 'Line';
+            break;
+        }
+
+        //   var hh = { direction: 'ЮЗ', rhumb: 86.0047147391561, distance: 16532.122718537685 };//this._queryResults[0];
+
+
+        this._queryResults.push(data);
+
+        // const str = this._cootrdinatesToString(coordinates);
+        // this.set('_coordinates', str);
+
+        this.set('_objectSelectType', type);
+        Ember.set(this, 'menuButtonTooltip', t('components.geometry-add-modes.rhumb.menu-button-tooltip-edit'));
+      } else {
+        // this.set('_coordinates', '');
+        // Ember.set(this, 'menuButtonTooltip', t('components.geometry-add-modes.manual.menu-button-tooltip-add'));
+      }
+
     },
 
     /**
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.approve:method"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.
-      Invokes {{#crossLink "FlexberryGeometryAddModeManualComponent/sendingActions.complete:method"}}'complete' action{{/crossLink}}.
+      Invokes {{#crossLink "FlexberryGeometryAddModeRhumbComponent/sendingActions.complete:method"}}'complete' action{{/crossLink}}.
 
       @method actions.onApprove
     */
@@ -172,25 +243,37 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
       this.set('_coordinatesWithError', null);
     },
 
+    onAddRaw() {
+      debugger;
+      var hh = { direction: 'ЮЗ', rhumb: 86.0047147391561, distance: 16532.122718537685 };//this._queryResults[0];
+      // _direction:null,
+      // _rhumb:null,
+      // _distance:null,
 
-    /**
-      Open dialogue edit rumba.
+      let serviceLayer = this.get('mapApi');
 
-      @method onOpenDialogRhumb
-    */
-    onOpenDialogRhumb() {
-      this.set('_dialogRhumbHasBeenRequested', true);
-      this.set('_dialogRhumbVisible', true);
-    },
 
-    onRhumbApprove(e) {
+      this._queryResults.push(hh);
+    }
 
-    },
+  },
 
-    onRhumbDeny(e) {
+  /**
+    Get row id.
+    @method _getRowId
+    @param {Object} tabModel Tab model.
+    @returns {string} Row id.
+  */
+  _getRowId(tabModel) {
+    const editedRows = Ember.get(tabModel, '_editedRows');
+    const keys = Object.keys(editedRows);
 
-    },
+    let rowId;
+    if (!Ember.isNone(keys[0])) {
+      rowId = keys[0];
+    }
 
+    return rowId;
   },
 
   /**
@@ -238,8 +321,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
 
 // Add component's CSS-class names as component's class static constants
 // to make them available outside of the component instance.
-FlexberryGeometryAddModeManualComponent.reopenClass({
+FlexberryGeometryAddModeRhumbComponent.reopenClass({
   flexberryClassNames
 });
 
-export default FlexberryGeometryAddModeManualComponent;
+export default FlexberryGeometryAddModeRhumbComponent;
