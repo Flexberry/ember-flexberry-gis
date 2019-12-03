@@ -1,6 +1,5 @@
 export default {
   'menu-button-tooltip': 'Add with rhumbs',
-  'menu-button-tooltip-edit': 'Rhumbs edit',
   'dialog-approve-button-caption': 'Save',
   'dialog-deny-button-caption': 'Cancel',
   'type-object-field-label': 'Type object',

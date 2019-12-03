@@ -3,146 +3,170 @@
 */
 
 import Ember from 'ember';
-import rhumbBearing from 'npm:@turf/rhumb-bearing';
-import rhumbDistance from 'npm:@turf/rhumb-distance';
+import rhumbDestination from 'npm:@turf/rhumb-destination';
+import helpers from 'npm:@turf/helpers';
 
 /**
-  Builds leaflet coordinate reference system (CRS).
+  Create polygon object by rhumb.
 
-  @for Utils.Layers
-  @method getLeafletCrs
-  @param {String} coordinateReferenceSystem Serialized JSON with the following structure: { code: '...', definition: '...' },
-        'code' is necessary CRS code, 'definition' is optional CRS definition in Proj4 format.
-  @param {String} context Ember object with available getOwner method.
-
-  Usage:
-  controllers/my-form.js
-  ```javascript
-    import { getLeafletCrs } from 'ember-flexberry-gis/utils/leaflet-crs'l
-    let crs = getLeafletCrs('{ code: "ESPG:3857", definition: "" }', this)
-
-  ```
+  @method createPolygonObjectRhumb
+  @param {Object} data Coordinate objects.
+  Example:
+  var data = {
+        type: 'LineString',
+        properties: { name: 'test_polygon' },
+        startPoint: [85, 79],
+        points: [
+          { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955 },
+          { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427 },
+          { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685 }
+        ]
+      };
+  @returns {Object} New featureLayer.
 */
-
-/**
-  Get the object thumb.
-
-  @method  getRhumb
-  @param {string} layerId Layer id.
-  @param {string} objectId Object id.
-  @return {array} Table rhumb.
-*/
-const getRhumb = (mapLayer, mapApi, layerId, objectId) => {
-  // const layer = this.get('mapLayer').findBy('id', layerId);
-  const layer = mapLayer.findBy('id', layerId);
-  const leafletObject = Ember.get(layer, '_leafletObject');
-
-  var cors;
-  leafletObject.eachLayer(function (object) {
-    const id = this.getLayerFeatureId(mapApi, layer, object);
-    if (!Ember.isNone(id) && objectId === id) {
-      cors = object._latlngs;
-    }
-  }.bind(this));
-
-  if (Ember.isNone(cors)) {
-    throw new Error('Object not found');
+const createObjectRhumb = (data) => {
+  if (Ember.isNone(data.points) || data.points.length === 0) {
+    throw new Error('Not data.');
   }
 
-  let result = [];
-
-  var rowPush = function (vertexNum1, vertexNum2, point1, point2) {
-    const pointFrom = helpers.point([point2.lat, point2.lng]);
-    const pointTo = helpers.point([point1.lat, point1.lng]);
-
-    // We get the distance and translate into meters.
-    const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
-
-    // Get the angle.
-    const bearing = rhumbBearing.default(pointFrom, pointTo);
-
-    let rhumb;
-
-    // Calculates rhumb.
-    if (bearing < -90 && bearing > -180) {
-      // СВ
-      rhumb = 'СВ;' + (Math.abs(bearing) - 90);
-    } else if (bearing <= 180 && bearing > 90) {
-      // ЮВ
-      rhumb = 'ЮВ;' + (bearing - 90);
-    } else if (bearing <= 90 && bearing > 0) {
-      // ЮЗ
-      rhumb = 'ЮЗ;' + (90 - bearing);
-    } if (bearing <= 0 && bearing >= -90) {
-      // СЗ
-      rhumb = 'СЗ;' + Math.abs(-90 - bearing);
+  const type = data.type;
+  if (Ember.isNone(type)) {
+    throw new Error('Specify type.');
+  } else {
+    const polygonTypeSet = new Set(['LineString', 'Polygon']);
+    if (!polygonTypeSet.has(type)) {
+      throw new Error('Specified the wrong type.');
     }
+  }
 
-    return {
-      rib: `${vertexNum1 + 1};${vertexNum2 + 1}`,
-      rhumb: rhumb,
-      distance: distance
-    };
-  };
+  const points = data.points;
 
-  let startPoint = null;
-  for (let i = 0; i < cors.length; i++) {
-    for (let j = 0; j < cors[i].length; j++) {
-      let n;
-      let point1;
-      let point2;
-      let item = cors[i][j];
+  const degreeToRadian = function (degree) {
+    let deg;
+    let min = 0;
+    let sec = 0;
 
-      // Polygon.
-      if (!Ember.isNone(item.length)) {
-        for (let k = 0; k < item.length; k++) {
-          startPoint = k === 0 ? item[k] : startPoint;
-          point1 = item[k];
-          n = !Ember.isNone(item[k + 1]) ? k + 1 : 0;
-          point2 = item[n];
+    const regex = /^([0-8]?[0-9]|90)°([0-5]?[0-9]')?([0-5]?[0-9](,[0-9]*)?")?$/gm;
+    let m;
 
-          result.push(rowPush(k, n, point1, point2));
-        }
+    while ((m = regex.exec(degree)) !== null) {
 
-        // LineString.
-      } else {
-        startPoint = j === 0 ? item : startPoint;
-        point1 = item;
-        n = !Ember.isNone(cors[i][j + 1]) ? j + 1 : 0;
-        point2 = cors[i][n];
-
-        result.push(rowPush(j, n, point1, point2));
+      // This is necessary to avoid infinite loops with zero-width matches
+      if (m.index === regex.lastIndex) {
+        regex.lastIndex++;
       }
+
+      // The result can be accessed through the `m`-variable.
+      m.forEach((match, groupIndex) => {
+        console.log(`Found match, group ${groupIndex}: ${match}`);
+
+        if (!Ember.isNone(match)) {
+          switch (groupIndex) {
+            case 1:
+              deg = parseInt(match);
+              break;
+            case 2:
+              min = parseInt(match.replace("'", ''));
+              break;
+            case 3:
+              sec = parseFloat(match.replace(`"`, '').replace(',', '.'));
+              break;
+          }
+        }
+      });
+    }
+
+    return deg + min / 60 + sec / 3600;
+  };
+
+  const getBearing = function (rhumb) {
+    let result;
+    const arr = rhumb.split(';');
+    const direct = arr[0];
+
+    // Convert to radians
+    let degree = arr[1].indexOf('°') > 0 ? degreeToRadian(arr[1]) : arr[1];
+
+    switch (direct) {
+      case 'СВ':
+        result = (parseFloat(degree) + 90) * -1;
+        break;
+      case 'ЮВ':
+        result = parseFloat(degree) + 90;
+        break;
+      case 'ЮЗ':
+        result = 90 - parseFloat(degree);
+        break;
+      case 'СЗ':
+        result = (90 - parseFloat(degree)) * -1;
+        break;
+    }
+
+    return result;
+  };
+
+  let coors = [];
+
+  if (type === 'Polygon') {
+    let startPoint;
+    let coordinates = [];
+
+    // Rib sorting
+    const vertexCount = points.sort((a, b) => a.rib.split(';')[0] - b.rib.split(';')[0]);
+
+    for (let i = 0; i < vertexCount.length; i++) {
+      const vertex = vertexCount[i];
+
+      const bearing = getBearing(vertex.rhumb);
+
+      if (Ember.isNone(startPoint)) {
+
+        // Convert to meters
+        vertex.distance = vertex.distance / 1000;
+        startPoint = rhumbDestination.default(helpers.point(data.startPoint), vertex.distance, bearing, { units: 'kilometers' });
+      } else {
+        startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
+      }
+
+      coordinates.push(startPoint.geometry.coordinates);
+    }
+
+    coors.push(coordinates);
+  }
+
+  if (type === 'LineString') {
+    let startPoint;
+
+    //Rib sorting
+    const vertexCount = points.sort((a, b) => a.rib.split(';')[0] - b.rib.split(';')[0]);
+
+    for (let i = 0; i < vertexCount.length; i++) {
+      const vertex = vertexCount[i];
+      const bearing = getBearing(vertex.rhumb);
+
+      if (Ember.isNone(startPoint)) {
+        vertex.distance = vertex.distance / 1000;
+        startPoint = rhumbDestination.default(helpers.point(data.startPoint), vertex.distance, bearing, { units: 'kilometers' });
+      } else {
+        startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
+      }
+
+      coors.push(startPoint.geometry.coordinates);
     }
   }
 
-  return {
-    startPoint: startPoint,
-    coordinates: result
+  const obj = {
+    type: 'Feature',
+    geometry: {
+      type: type,
+      coordinates: coors
+    },
+    properties: data.properties
   };
+
+  return obj;
 };
-
-/**
-  Get object id by object and layer.
-
-  @method _getLayerFeatureId
-  @param {Object} mapApi Map Api.
-  @param {Object} layer Layer.
-  @param {Object} layerObject Object.
-  @return {number} Id object.
-*/
-const getLayerFeatureId = (mapApi, layer, layerObject) => {
-  // const getLayerFeatureId = this.get('mapApi').getFromApi('getLayerFeatureId');
-  const getLayerFeatureId = mapApi.getFromApi('getLayerFeatureId');
-  if (typeof getLayerFeatureId === 'function') {
-    return getLayerFeatureId(layer, layerObject);
-  }
-
-  return Ember.get(layerObject, 'feature.id');
-};
-
 
 export {
-  getRhumb,
-  getLayerFeatureId
+  createObjectRhumb
 };
