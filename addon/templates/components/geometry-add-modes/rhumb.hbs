@@ -17,65 +17,76 @@
     approve=(action "onApprove")
     deny=(action "onDeny")
   }}
-    <form class="ui form {{flexberryClassNames.form}}" role="form">
-      <div class="field {{if _startPointValideError "error" ""}}">
+<form class="ui form {{flexberryClassNames.form}}" role="form">
+    {{! <div class="row"></div> }}
+    <div class="field {{if _formValide.startPointValide "error" ""}}">
+      <label>
+        {{startPointFieldLabel}}
+      </label>
+      {{flexberry-field
+        value=_startPoint
+        placeholder=coordinatesFieldPlaceholder
+      }}
+    </div>
+
+    {{! <div class="row">   </div> }}
+    <div class="field {{if _formValide.typeObjectValide "error" ""}}">
+      <label>
+        {{typeObjectFieldLabel}}
+      </label>
+      {{flexberry-dropdown items=_objectTypes value=_objectType}}
+    </div>
+
+    {{! <div class="row">  </div> }}
+    <table class="ui celled table flexberry-table">
+      <thead>
+        <tr>
+          <th class="narrow">
+            {{directionTh}}
+          </th>
+          <th class="narrow">
+            {{rhumbTh}}
+          </th>
+          <th class="narrow">
+            {{distanceTh}}
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="narrow">
+            <div class="field {{if _addValide.directionValide "error"}}">
+              {{flexberry-dropdown items=_cardinalPoints value=_dataTable.direction}}
+            </div>
+          </td>
+          <td class="narrow">
+            <div class="field {{if _addValide.rhumbValide "error"}}">
+              {{flexberry-field value=_dataTable.rhumb}}
+            </div>
+          </td>
+          <td class="narrow">
+            <div class="field {{if _addValide.distanceValide "error"}}">
+              {{flexberry-field value=_dataTable.distance}}
+            </div>
+          </td>
+          <td class="narrow">
+            {{flexberry-button
+              caption=addButtonCaption
+              click=(action "onAddRow")
+            }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    {{! <div class="row"></div> }}
+
+      <div class="field {{if _formValide.tableValide "error"}}">
         <label>
-          {{startPointFieldLabel}}
+          {{tableFieldLabel}}
         </label>
-        {{flexberry-field
-          value=_startPoint
-          placeholder=coordinatesFieldPlaceholder
-        }}
-      </div>
-      <div class="field {{if _typeObjectValideError "error" ""}}">
-        <label>
-          {{typeObjectFieldLabel}}
-        </label>
-        {{flexberry-dropdown items=_objectTypes value=_objectType}}
-      </div>
-      <table class="ui celled table flexberry-table">
-        <thead>
-          <tr>
-            <th class="narrow">
-              {{directionTh}}
-            </th>
-            <th class="narrow">
-              {{rhumbTh}}
-            </th>
-            <th class="narrow">
-              {{distanceTh}}
-            </th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="narrow">
-              <div class="field {{if _addDirectionValide "error"}}">
-                {{flexberry-dropdown items=_cardinalPoints value=_direction}}
-              </div>
-            </td>
-            <td class="narrow">
-              <div class="field {{if _addRhumbValide "error"}}">
-                {{flexberry-field value=_rhumb}}
-              </div>
-            </td>
-            <td class="narrow">
-              <div class="field {{if _addDistanceValide "error"}}">
-                {{flexberry-field value=_distance}}
-              </div>
-            </td>
-            <td class="narrow">
-              {{flexberry-button
-                caption=addButtonCaption
-                click=(action "onAddRow")
-              }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="field">
-        {{#flexberry-table perPageAvailable=false model=_queryResults}}
+        {{#flexberry-table perPageAvailable=true model=_queryResults}}
           {{#block-slot "column-header-head-0"}}
             <th class="narrow">
               {{directionTh}}
@@ -111,8 +122,14 @@
           {{/block-slot}}
           {{#block-slot "column-cell-head-0" as |row|}}
             <td class="narrow">
-              {{flexberry-button caption="X" click=(action "OnRemoveRow" row.id)
-              }}
+              {{!-- {{flexberry-button iconClass=allIconClass caption="x" click=(action "OnRemoveRow" row.id)}} --}}
+
+              <button
+                class="ui icon clear-search-button"
+                {{action "OnRemoveRow" row.id}}
+              >
+                <i class="remove icon"></i>
+              </button>
             </td>
           {{/block-slot}}
         {{/flexberry-table}}

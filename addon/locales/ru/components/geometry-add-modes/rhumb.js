@@ -8,4 +8,5 @@ export default {
   'rhumb-field-label': 'Румб',
   'distance-field-label': 'Растояние',
   'add-button-caption': 'Добавить',
+  'table-field-label': 'Таблица румбов'
 };

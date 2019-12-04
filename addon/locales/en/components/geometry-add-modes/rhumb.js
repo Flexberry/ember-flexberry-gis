@@ -7,5 +7,6 @@ export default {
   'direction-field-label': 'Direction',
   'rhumb-field-label': 'Rhumb',
   'distance-field-label': 'Distance',
-  'add-button-caption': 'Add'
+  'add-button-caption': 'Add',
+  'table-field-label': 'Table rhumbs'
 };
