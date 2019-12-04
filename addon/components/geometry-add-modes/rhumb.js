@@ -29,14 +29,8 @@ const flexberryClassNames = {
   form: flexberryClassNamesPrefix + '-form'
 };
 
-//let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(mapModelApi, {
 let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperations, {
-  /**
-    Service for managing map API.
-    @property mapApi
-    @type MapApiService
 
-  mapApi: Ember.inject.service(),*/
   /**
     Reference to component's template.
   */
@@ -78,54 +72,107 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
   */
   _dialogVisible: false,
 
+  /**
+    Form validation flags.
 
-  // _startPointValideError: false,
-  // _typeObjectValideError: false,
-
-  // _addTableValideError: false,
-
+    @property _formValide
+    @type Object
+    @default {
+    startPointValide: false,
+    typeObjectValide: false,
+    tableValide: false
+  }
+    @private
+  */
   _formValide: {
     startPointValide: false,
     typeObjectValide: false,
     tableValide: false
   },
 
+  /**
+    Validation flags for adding a new record.
+
+    @property _addValide
+    @type Object
+    @default {
+    directionValide: false,
+    rhumbValide: false,
+    distanceValide: false
+  }
+    @private
+  */
   _addValide: {
     directionValide: false,
     rhumbValide: false,
     distanceValide: false
   },
 
-  /*  _addDirectionValide: false,
-   _addRhumbValide: false,
-   _addDistanceValide: false, */
+  /**
+    List of cardinal points.
 
+    @property _cardinalPoints
+    @type string[]
+    @default ['СВ', 'ЮВ', 'ЮЗ', 'СЗ']
+    @readonly
+    @private
+  */
   _cardinalPoints: ['СВ', 'ЮВ', 'ЮЗ', 'СЗ'],
 
-  // _queryResults: null,
-  _queryResults: Ember.A(
-    [
-      { id: 0, direction: 'ЮВ', rhumb: 86.76787457562546, distance: 8182.6375760837955 },
-      { id: 1, direction: 'СВ', rhumb: 79.04259420114585, distance: 8476.868426796427 },
-      { id: 2, direction: 'ЮЗ', rhumb: 86.0047147391561, distance: 16532.122718537685 }
-    ]
-  ),
+  /**
+    Data table.
 
+    @property _tableData
+    @type Object[]
+    @default Ember.A([])
+    @private
+  */
+  _tableData: Ember.A([]),
+
+  /**
+    Object types.
+
+    @property _objectTypes
+    @type string[]
+    @default ['Polygon', 'Line']
+    @readonly
+    @private
+  */
   _objectTypes: ['Polygon', 'Line'],
 
-  _objectType: null,
+  /**
+    Form fields.
 
-  _startPoint: '',
+    @property _dataForm
+    @type Object
+    @default {
+    objectType: null,
+    startPoint: ''
+  }
+    @private
+  */
+  _dataForm: {
+    objectType: null,
+    startPoint: ''
+  },
 
+  /**
+    Fields for adding a new record.
+
+    @property _dataTable
+    @type Object
+    @default {
+    direction: null,
+    rhumb: null,
+    distance: null,
+  }
+    @private
+  */
   _dataTable: {
     direction: null,
     rhumb: null,
     distance: null,
   },
-
-  // _direction: null,
-  // _rhumb: null,
-  // _distance: null,
 
   menuButtonTooltip: t('components.geometry-add-modes.rhumb.menu-button-tooltip'),
 
@@ -147,8 +194,6 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
 
   tableFieldLabel: t('components.geometry-add-modes.rhumb.table-field-label'),
 
-  //removeButtonCaption: t('components.geometry-add-modes.rhumb.remove-button-caption'),
-
   actions: {
     /**
       Handles button click.
@@ -157,69 +202,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
       this.set('_dialogHasBeenRequested', true);
       this.set('_dialogVisible', true);
 
-
-
       this._dropForm();
-
-      // const rowId = this._getRowId(tabModel);
-      // const edit = Ember.get(tabModel, `_editedRows.${rowId}`);
-
-      // this.set('_objectTypeDisabled', edit);
-
-      // if (edit) {
-      // const layer = Ember.get(tabModel, `featureLink.${rowId}`);
-      // const geoJSON = layer.toGeoJSON();
-      // const type = Ember.get(geoJSON, 'geometry.type');
-
-      // let coordinates = geoJSON.geometry.coordinates;
-
-      //this.createPolygonObjectRhumb('0f2b3002-1b28-44bd-877f-6c0a917b963f', data);
-
-      //let objectId = Ember.get(layer, 'feature.id');
-
-      //let objectContainingActionHandler = Ember.Object.extend(mapModelApi).create();
-
-      // const mapLayer = this.get('mapLayer')
-      // const mapApi = this.get('mapApi');
-
-      // let data = this.getRhumb(mapLayer, mapApi, 'fc26ac89-ccb5-47f5-bd2d-89a5e587f9d3', geoJSON.id);
-
-      // this._startPoint = `${data.StartPoint.lat};${data.StartPoint.lng}`;
-
-      // switch (type) {
-      //   case 'Polygon':
-      //     _objectType = 'Polygon';
-      //     break;
-      //   case 'LineString':
-      //     _objectType = 'Line';
-      //     break;
-      // }
-
-      //   var hh = { direction: 'ЮЗ', rhumb: 86.0047147391561, distance: 16532.122718537685 };//this._queryResults[0];
-
-
-      // this.hh = Ember.A([
-      //   { id: 0, rib: '1;2', direction: 'ЮВ', rhumb: 86.76787457562546, distance: 8182.6375760837955 },
-      //   { id: 1, rib: '2;3', direction: 'СВ', rhumb: 79.04259420114585, distance: 8476.868426796427 },
-      //   { id: 2, rib: '3;1', direction: 'ЮЗ', rhumb: 86.0047147391561, distance: 16532.122718537685 }
-      // ]);
-
-      // Ember.set(this, '_queryResults', this.hh);
-      // this._queryResults.push(data);
-
-      // const str = this._cootrdinatesToString(coordinates);
-      // this.set('_coordinates', str);
-
-      //   this.set('_objectSelectType', type);
-      // } else {
-      //   this.set('_startPoint', '');
-      //   this.set('_objectType', null);
-
-      //   this.set('_direction', null);
-      //   this.set('_rhumb', null);
-      //   this.set('_distance', null);
-      // }
-
     },
 
     /**
@@ -232,47 +215,21 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
       this._dropTableValideForm();
       let error = false;
 
-      if (Ember.isNone(this._objectType)) {
+      if (Ember.isNone(this._dataForm.objectType)) {
         this.set('_formValide.typeObjectValide', true);
         error = true;
       } else {
         this.set('_formValide.typeObjectValide', false);
       }
 
-      if (Ember.isBlank(this._startPoint)) {
+      if (!this._validStartPoint(this._dataForm.startPoint)) {
         this.set('_formValide.startPointValide', true);
         error = true;
       } else {
-        //const points = this._startPoint.split(';');//todo:!!!
-
-        //^(([0-9]*[.])?[0-9]+);(([0-9]*[.])?[0-9]+)$
-
-        const regex = /^(([0-9]*[.])?[0-9]+);(([0-9]*[.])?[0-9]+)$/;
-        // const str = `47.098098;48.8979798`;
-        // let m;
-
-        //if ((m = regex.exec(this._startPoint)) !== null) {
-        if (regex.exec(this._startPoint) === null) {
-          this.set('_formValide.startPointValide', true);
-          error = true;
-
-          // The result can be accessed through the `m`-variable.
-          // m.forEach((match, groupIndex) => {
-          //   console.log(`Found match, group ${groupIndex}: ${match}`);
-          // })
-
-          // if (points.length !== 2) {
-          //   this.set('_startPointValideError', true);
-          //   error = true;
-          // } else {
-          //   this.set('_startPointValideError', false);
-          // }
-        } else {
-          this.set('_formValide.startPointValide', false);
-        }
+        this.set('_formValide.startPointValide', false);
       }
 
-      if ((this._objectType === 'Polygon' && this._queryResults.length < 3) || (this._objectType === 'Line' && this._queryResults.length < 2)) {
+      if ((this._dataForm.objectType === 'Polygon' && this._tableData.length < 3) || (this._dataForm.objectType === 'Line' && this._tableData.length < 2)) {
         this.set('_formValide.tableValide', true);
         error = true;
       } else {
@@ -286,7 +243,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
       }
 
       let objectType;
-      switch (this._objectType) {
+      switch (this._dataForm.objectType) {
         case 'Polygon':
           objectType = 'Polygon';
           break;
@@ -295,13 +252,13 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
           break;
       }
 
-      const startPoints = this._startPoint.split(';');
+      const startPoints = this._dataForm.startPoint.split(';');
 
       let points = [];
-      for (let i = 0; i < this._queryResults.length; i++) {
-        let item = this._queryResults[i];
+      for (let i = 0; i < this._tableData.length; i++) {
+        let item = this._tableData[i];
         let data = {
-          rib: i !== this._queryResults.length - 1 ? `${i + 1};${i + 2}` : `${i + 1};${1}`,
+          rib: i !== this._tableData.length - 1 ? `${i + 1};${i + 2}` : `${i + 1};${1}`,
           rhumb: `${item.direction};${item.rhumb}`,
           distance: item.distance
         };
@@ -309,25 +266,17 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
         points.push(data);
       }
 
-      let data = {
-        // type: 'LineString',
+      const data = {
         type: objectType,
-        // properties: { name: 'test_polygon' },
-        // startPoint: [85, 79],
         startPoint: startPoints,
-        // points: [
-        //   { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955 },
-        //   { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427 },
-        //   { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685 }
-        // ]
         points: points
       };
 
       const rhumbObj = this.createObjectRhumb(data);
-      const coordinates = rhumbObj.geometry.coordinates;//this.get('rhumbObj.geometry.coordinates');
+      const coordinates = rhumbObj.geometry.coordinates;
 
       let addedLayer;
-      switch (this._objectType) {
+      switch (this._dataForm.objectType) {
         case 'Polygon':
           addedLayer = L.polygon(coordinates);
           break;
@@ -345,26 +294,14 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
       @method actions.onDeny
     */
     onDeny(e) {
-      //this._formValide.clear()
       this._dropForm();
-
-      // this.set('_startPoint', '');
-      // this.set('_objectType', null);
-
-      // this.set('_direction', null);
-      // this.set('_rhumb', null);
-      // this.set('_distance', null);
-
-      // this.set('_startPointValideError', false);
-      // this.set('_typeObjectValideError', false);
-
-      // this.set('_addDirectionValide', false);
-      // this.set('_addRhumbValide', false);
-      // this.set('_addDistanceValide', false);
-
-      // this.set('_queryResults', Ember.A([]));
     },
 
+    /**
+      The button for adding a new record to the table.
+
+      @method actions.onAddRow
+    */
     onAddRow() {
       let error = false;
 
@@ -375,28 +312,18 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
         this.set('_addValide.directionValide', false);
       }
 
-      if (Ember.isBlank(this._dataTable.rhumb)) {
+      if (!this._validFloatNumber(this._dataTable.rhumb)) {
         this.set('_addValide.rhumbValide', true);
         error = true;
       } else {
-        if (this._validFloatNumber(this._dataTable.rhumb)) {
-          this.set('_addValide.rhumbValide', false);
-        } else {
-          this.set('_addValide.rhumbValide', true);
-          error = true;
-        }
+        this.set('_addValide.rhumbValide', false);
       }
 
-      if (Ember.isBlank(this._addValide.distance)) {
+      if (!this._validFloatNumber(this._dataTable.distance)) {
         this.set('_addValide.distanceValide', true);
         error = true;
       } else {
-        if (this._validFloatNumber(this._addValide.distance)) {
-          this.set('_addValide.distanceValide', false);
-        } else {
-          this.set('_addValide.distanceValide', true);
-          error = true;
-        }
+        this.set('_addValide.distanceValide', false);
       }
 
       if (error) {
@@ -405,42 +332,32 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
 
       const getGuid = () => {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-          let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+          let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
           return v.toString(16);
         });
-      }
+      };
 
-      // let serviceLayer = this.get('mapApi');
-      var row = {
+      const row = {
         id: getGuid(),
         direction: this._dataTable.direction,
         rhumb: this._dataTable.rhumb,
-        distance: this._addValide.distance
+        distance: this._dataTable.distance
       };
 
-      //let kk =
-
-      this._queryResults.pushObject(row);
+      this._tableData.pushObject(row);
       this._dropTableForm();
-
-      // this._queryResults=null;
-
-      // Ember.set(this, '_queryResults', null);
-      // Ember.set(this, '_queryResults', this.hh);
-
-      // this.set('_addDirectionValide', false);
-      // this.set('_addRhumbValide', false);
-      // this.set('_addDistanceValide', false);
     },
 
-    OnRemoveRow(id) {
-      for (let i = 0; i < this._queryResults.length; i++) {
-        let item = this._queryResults[i];
-        if (item.id === id) {
-          //delete this._queryResults[i];
-          // this._queryResults.splice(i, 1);
+    /**
+      Button to delete a record in a table.
 
-          this._queryResults.removeAt(i, 1);
+      @method actions.OnRemoveRow
+    */
+    OnRemoveRow(id) {
+      for (let i = 0; i < this._tableData.length; i++) {
+        let item = this._tableData[i];
+        if (item.id === id) {
+          this._tableData.removeAt(i, 1);
 
           return;
         }
@@ -448,45 +365,59 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
     }
   },
 
+  /**
+    Сlear form.
+
+    @method _dropForm
+  */
   _dropForm() {
-    this.set('_startPoint', '');
-    this.set('_objectType', null);
+    this.set('_dataForm.startPoint', '');
+    this.set('_dataForm.objectType', null);
 
     this._dropTableForm();
 
-    // this.set('_formValide.startPointValide', false);
-    // this.set('_formValide.typeObjectValide', false);
-
-    Object.keys(this._formValide).forEach(v => Ember.set(this, `_formValide[${v}]`, false));
-
-    /*    this.set('_addDirectionValide', false);
-       this.set('_addRhumbValide', false);
-       this.set('_addDistanceValide', false); */
+    Object.keys(this._formValide).forEach(v => Ember.set(this, `_formValide.${v}`, false));
 
     this._dropTableValideForm();
 
-    // this.set('_queryResults', null);
+    this.set('_tableData', Ember.A([]));
   },
 
+  /**
+    Сlear form.
+
+    @method _dropTableValideForm
+  */
   _dropTableValideForm() {
-    // this.set('_addValide.directionValide', false);
-    // this.set('_addValide.rhumbValide', false);
-    // this.set('_addValide.distanceValide', false);
-
-    Object.keys(this._addValide).forEach(v => Ember.set(this, `_addValide[${v}]`, false));
-
-    // this._addValide = _.mapValues(this._addValide, () => false);
+    Object.keys(this._addValide).forEach(v => Ember.set(this, `_addValide.${v}`, false));
   },
 
+  /**
+    Clear form validation.
+
+    @method _dropTableForm
+  */
   _dropTableForm() {
-    // this.set('_dataTable.direction', null);
-    // this.set('_dataTable.rhumb', null);
-    // this.set('_addValide.distance', null);
-    Object.keys(this._dataTable).forEach(v => Ember.set(this, `_dataTable[${v}]`, false));
+    Object.keys(this._dataTable).forEach(v => Ember.set(this, `_dataTable.${v}`, null));
   },
 
+  /**
+    Number check.
+
+    @method _validFloatNumber
+  */
   _validFloatNumber(str) {
     const regex = /^(([0-9]*[.])?[0-9]+)$/;
+    return regex.exec(str);
+  },
+
+  /**
+    Starp point check.
+
+    @method _validStartPoint
+  */
+  _validStartPoint(str) {
+    const regex = /^(([0-9]*[.])?[0-9]+);(([0-9]*[.])?[0-9]+)$/;
     return regex.exec(str);
   }
 
