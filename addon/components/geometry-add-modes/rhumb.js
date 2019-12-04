@@ -106,7 +106,6 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
   _cardinalPoints: ['СВ', 'ЮВ', 'ЮЗ', 'СЗ'],
 
   _queryResults: Ember.A([]),
-  //hh: Ember.A([]),
   // [
   //   { id: 0, direction: 'ЮВ', rhumb: 86.76787457562546, distance: 8182.6375760837955 },
   //   // { id: 1, direction: 'СВ', rhumb: 79.04259420114585, distance: 8476.868426796427 },
@@ -123,20 +122,11 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
   _rhumb: null,
   _distance: null,
 
-  //  menuButtonTooltip: t('components.geometry-add-modes.manual.menu-button-tooltip'),
   menuButtonTooltip: t('components.geometry-add-modes.rhumb.menu-button-tooltip'),
 
   dialogApproveButtonCaption: t('components.geometry-add-modes.rhumb.dialog-approve-button-caption'),
 
   dialogDenyButtonCaption: t('components.geometry-add-modes.rhumb.dialog-deny-button-caption'),
-
-  // crsFieldLabel: t('components.geometry-add-modes.rhumb.crs-field-label'),
-
-  //geometryFieldLabel: t('components.geometry-add-modes.rhumb.geometry-field-label'),
-
-  //coordinatesFieldLabel: t('components.geometry-add-modes.rhumb.coordinates-field-label'),
-
-  //coordinatesFieldPlaceholder: t('components.geometry-add-modes.rhumb.coordinates-field-placeholder'),
 
   startPointFieldLabel: t('components.geometry-add-modes.rhumb.start-point-field-label'),
 
@@ -160,12 +150,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
       this.set('_dialogHasBeenRequested', true);
       this.set('_dialogVisible', true);
 
-      this.set('_startPoint', '');
-      this.set('_objectType', null);
-
-      this.set('_direction', null);
-      this.set('_rhumb', null);
-      this.set('_distance', null);
+      _dropForm();
 
       // const rowId = this._getRowId(tabModel);
       // const edit = Ember.get(tabModel, `_editedRows.${rowId}`);
@@ -248,11 +233,30 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
         this.set('_startPointValideError', true);
         error = true;
       } else {
-        const points = this._startPoint.split(';');//todo:!!!
+        //const points = this._startPoint.split(';');//todo:!!!
 
-        if (points.length !== 2) {
+        //^(([0-9]*[.])?[0-9]+);(([0-9]*[.])?[0-9]+)$
+
+        const regex = /^(([0-9]*[.])?[0-9]+);(([0-9]*[.])?[0-9]+)$/;
+        // const str = `47.098098;48.8979798`;
+        // let m;
+
+        //if ((m = regex.exec(this._startPoint)) !== null) {
+        if (regex.exec(this._startPoint) === null) {
           this.set('_startPointValideError', true);
           error = true;
+
+          // The result can be accessed through the `m`-variable.
+          // m.forEach((match, groupIndex) => {
+          //   console.log(`Found match, group ${groupIndex}: ${match}`);
+          // })
+
+          // if (points.length !== 2) {
+          //   this.set('_startPointValideError', true);
+          //   error = true;
+          // } else {
+          //   this.set('_startPointValideError', false);
+          // }
         } else {
           this.set('_startPointValideError', false);
         }
@@ -311,21 +315,23 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
       @method actions.onDeny
     */
     onDeny(e) {
-      this.set('_startPoint', '');
-      this.set('_objectType', null);
+      _dropForm();
 
-      this.set('_direction', null);
-      this.set('_rhumb', null);
-      this.set('_distance', null);
+      // this.set('_startPoint', '');
+      // this.set('_objectType', null);
 
-      this.set('_startPointValideError', false);
-      this.set('_typeObjectValideError', false);
+      // this.set('_direction', null);
+      // this.set('_rhumb', null);
+      // this.set('_distance', null);
 
-      this.set('_addDirectionValide', false);
-      this.set('_addRhumbValide', false);
-      this.set('_addDistanceValide', false);
+      // this.set('_startPointValideError', false);
+      // this.set('_typeObjectValideError', false);
 
-      this.set('_queryResults', []);
+      // this.set('_addDirectionValide', false);
+      // this.set('_addRhumbValide', false);
+      // this.set('_addDistanceValide', false);
+
+      // this.set('_queryResults', Ember.A([]));
     },
 
     onAddRow() {
@@ -389,7 +395,25 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
         }
       }
     }
-  }
+  },
+
+  _dropForm() {
+    this.set('_startPoint', '');
+    this.set('_objectType', null);
+
+    this.set('_direction', null);
+    this.set('_rhumb', null);
+    this.set('_distance', null);
+
+    this.set('_startPointValideError', false);
+    this.set('_typeObjectValideError', false);
+
+    this.set('_addDirectionValide', false);
+    this.set('_addRhumbValide', false);
+    this.set('_addDistanceValide', false);
+
+    this.set('_queryResults', Ember.A([]));
+  },
 
   /**
     Component's action invoking when new geometry was added.
