@@ -40363,6 +40363,27 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 771,
+            "description": "Add a layer to the group.",
+            "itemtype": "method",
+            "name": "layerToGroup",
+            "params": [
+                {
+                    "name": "layerGroupId",
+                    "description": "Group layer id.",
+                    "type": "String"
+                },
+                {
+                    "name": "layerId",
+                    "description": "layer id.",
+                    "type": "String"
+                }
+            ],
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/mixins/flexberry-maplayer-actions-handler.js",
             "line": 21,
             "description": "Handles {{#crossLink \"FlexberryMaplayerComponent/sendingActions.headerClick:method\"}}flexberry-maplayers component's 'headerClick' action{{/crossLink}}.",
@@ -43592,6 +43613,14 @@
         {
             "message": "unknown tag: snapt",
             "line": " addon/mixins/flexberry-map-model-api.js:589"
+        },
+        {
+            "message": "replacing incorrect tag: parm with param",
+            "line": " addon/mixins/flexberry-map-model-api.js:771"
+        },
+        {
+            "message": "replacing incorrect tag: parm with param",
+            "line": " addon/mixins/flexberry-map-model-api.js:771"
         },
         {
             "message": "replacing incorrect tag: returns with return",
