@@ -231,7 +231,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
         this.set('_formValide.startPointValide', false);
       }
 
-      if (this._tableData.length === 0 || (this._dataForm.objectType === 'Polygon' && this._tableData.length < 3) || (this._dataForm.objectType === 'Line' && this._tableData.length < 2)) {
+      if (this._tableData.length === 0 || (this._dataForm.objectType === 'Polygon' && this._tableData.length < 3) ||
+      (this._dataForm.objectType === 'Line' && this._tableData.length < 2)) {
         this.set('_formValide.tableValide', true);
         error = true;
       } else {
