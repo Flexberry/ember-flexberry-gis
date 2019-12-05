@@ -26,7 +26,6 @@ const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
   dialog: flexberryClassNamesPrefix + '-dialog',
-  // form: flexberryClassNamesPrefix + '-form' todo:remove
 };
 
 let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperations, {
@@ -205,16 +204,6 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
       this.set('_dialogVisible', true);
 
       this._dropForm();
-
-
-
-      this._tableData = Ember.A(//todo:remove
-        [
-          { id: 0, direction: 'ЮВ', rhumb: 86.76787457562546, distance: 8182.6375760837955 },
-          { id: 1, direction: 'СВ', rhumb: 79.04259420114585, distance: 8476.868426796427 },
-          { id: 2, direction: 'ЮЗ', rhumb: 86.0047147391561, distance: 16532.122718537685 }
-        ]
-      );
     },
 
     /**
