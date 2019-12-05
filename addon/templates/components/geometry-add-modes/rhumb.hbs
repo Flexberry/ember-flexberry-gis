@@ -18,23 +18,32 @@
     deny=(action "onDeny")
   }}
     <form class="ui form" role="form">
-      <div class="field {{if _formValide.startPointValide "error" ""}}">
-        <label>
-          {{startPointFieldLabel}}
-        </label>
-        {{flexberry-field
-          value=_dataForm.startPoint
-          placeholder=coordinatesFieldPlaceholder
-        }}
+      <div class="ui grid">
+        <div class="eight wide column">
+          <div class="field {{if _formValide.startPointValide "error" ""}}">
+            <label>
+              {{startPointFieldLabel}}
+            </label>
+            {{flexberry-field
+              value=_dataForm.startPoint
+              placeholder=coordinatesFieldPlaceholder
+            }}
+          </div>
+        </div>
+        <div class="eight wide column">
+          <div class="field {{if _formValide.typeObjectValide "error" ""}}">
+            <label>
+              {{typeObjectFieldLabel}}
+            </label>
+            {{flexberry-dropdown items=_objectTypes value=_dataForm.objectType}}
+          </div>
+        </div>
       </div>
-
-      <div class="field {{if _formValide.typeObjectValide "error" ""}}">
+      <div class="field {{if _formValide.tableValide "error"}}">
         <label>
-          {{typeObjectFieldLabel}}
+          {{addCoordinatesFieldLabel}}
         </label>
-        {{flexberry-dropdown items=_objectTypes value=_dataForm.objectType}}
       </div>
-
       <table class="ui celled table flexberry-table">
         <thead>
           <tr>
@@ -48,7 +57,7 @@
               {{distanceTh}}
             </th>
             <th class="narrow">
-               {{tableColumnOperation}}
+              {{tableColumnOperation}}
             </th>
           </tr>
         </thead>
@@ -74,20 +83,19 @@
             </td>
             <td class="narrow">
               {{flexberry-button
-                caption=addButtonCaption
+                iconClass="plus icon"
                 click=(action "onAddRow")
               }}
             </td>
           </tr>
         </tbody>
       </table>
-
       {{#if (gt _tableData.length 0)}}
-        <div class="field {{if _formValide.tableValide "error"}}">
+        <div class="field">
           <label>
             {{tableFieldLabel}}
           </label>
-          <div style="overflow: auto;height: 110px;">
+          <div style="overflow: auto;height: 170px;">
             {{#flexberry-table perPageAvailable=true model=_tableData}}
               {{#block-slot "column-header-head-0"}}
                 <th>

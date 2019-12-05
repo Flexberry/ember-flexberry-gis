@@ -3,6 +3,7 @@ export default {
   'dialog-approve-button-caption': 'Save',
   'dialog-deny-button-caption': 'Cancel',
   'type-object-field-label': 'Type object',
+  'add-coordinates-field-label': 'Add coordinates',
   'start-point-field-label': 'Starting point',
   'direction-field-label': 'Direction',
   'rhumb-field-label': 'Rhumb',

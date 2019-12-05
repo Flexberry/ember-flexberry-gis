@@ -15,7 +15,6 @@ import rhumbOperations from '../../utils/rhumb-operations';
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-geometry-add-mode-rhumb').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-geometry-add-mode-rhumb').
   @property {String} flexberryClassNames.dialog Component's inner dialog CSS-class name ('flexberry-geometry-add-mode-rhumb').
-  @property {String} flexberryClassNames.form Component's inner <form> CSS-class name ('flexberry-geometry-add-mode-rhumb').
   @readonly
   @static
 
@@ -195,6 +194,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
 
   tableColumnOperation: t('components.geometry-add-modes.rhumb.table-column-operation'),
 
+  addCoordinatesFieldLabel: t('components.geometry-add-modes.rhumb.add-coordinates-field-label'),
+
   actions: {
     /**
       Handles button click.
@@ -230,7 +231,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
         this.set('_formValide.startPointValide', false);
       }
 
-      if ((this._dataForm.objectType === 'Polygon' && this._tableData.length < 3) || (this._dataForm.objectType === 'Line' && this._tableData.length < 2)) {
+      if (this._tableData.length === 0 || (this._dataForm.objectType === 'Polygon' && this._tableData.length < 3) || (this._dataForm.objectType === 'Line' && this._tableData.length < 2)) {
         this.set('_formValide.tableValide', true);
         error = true;
       } else {
@@ -331,8 +332,18 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
         return;
       }
 
-      const getGuid = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-        .replace(/[xy]/g, (c, r) => ('x' === c ? (r = Math.random() * 16 | 0) : (r & 0x3 | 0x8)).toString(16));
+      const getGuid = () => {
+        const templ = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+        let result = templ.replace(/[xy]/g, (c, r) => {
+          if ('x' === c) {
+            return Math.random() * 16 | 0;
+          } else {
+            return r & 0x3 | 0x8;
+          }
+        });
+
+        return result.toString(16);
+      };
 
       const row = {
         id: getGuid(),

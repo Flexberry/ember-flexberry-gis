@@ -3,6 +3,7 @@ export default {
   'dialog-approve-button-caption': 'Сохранить',
   'dialog-deny-button-caption': 'Отмена',
   'type-object-field-label': 'Тип объекта',
+  'add-coordinates-field-label': 'Добавить координаты',
   'start-point-field-label': 'Начальная точка',
   'direction-field-label': 'Направление',
   'rhumb-field-label': 'Румб',
