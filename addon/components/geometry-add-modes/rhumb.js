@@ -337,8 +337,10 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
         const templ = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
         let result = templ.replace(/[xy]/g, (c, r) => {
           if ('x' === c) {
+
             return Math.random() * 16 | 0;
           } else {
+
             return r & 0x3 | 0x8;
           }
         });
