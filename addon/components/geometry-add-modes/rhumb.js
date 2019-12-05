@@ -232,7 +232,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
       }
 
       if (this._tableData.length === 0 || (this._dataForm.objectType === 'Polygon' && this._tableData.length < 3) ||
-      (this._dataForm.objectType === 'Line' && this._tableData.length < 2)) {
+        (this._dataForm.objectType === 'Line' && this._tableData.length < 2)) {
         this.set('_formValide.tableValide', true);
         error = true;
       } else {
@@ -336,13 +336,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
       const getGuid = () => {
         const templ = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
         let result = templ.replace(/[xy]/g, (c, r) => {
-          if ('x' === c) {
 
-            return Math.random() * 16 | 0;
-          } else {
-
-            return r & 0x3 | 0x8;
-          }
+          return c === 'x' ? Math.random() * 16 | 0 : r & 0x3 | 0x8;
         });
 
         return result.toString(16);
