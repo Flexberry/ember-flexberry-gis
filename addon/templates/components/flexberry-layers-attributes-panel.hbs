@@ -73,16 +73,8 @@
                     }}
                     {{component "geometry-add-modes/rhumb"
                         leafletMap=leafletMap
-                        settings=(hash
-                          drawTools=(get tabModel "availableDrawTools")
-                          layerCRS=(get tabModel "leafletObject.options.crs")
-                          layerFields=(get tabModel "leafletObject.readFormat.featureType.fields")
-                          layersFieldsCaptions=(get tabModel "header")
-                        )
                         tabModel=tabModel
                         complete=(action "onGeometryAddComplete" tabModel)
-                        drawStart=(action "onAddDrawStart" tabModel)
-                        importComplete=(action "onImportComplete" tabModel)
                     }}
                     {{component "geometry-add-modes/draw"
                         leafletMap=leafletMap

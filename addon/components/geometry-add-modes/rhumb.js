@@ -26,7 +26,7 @@ const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
   dialog: flexberryClassNamesPrefix + '-dialog',
-  form: flexberryClassNamesPrefix + '-form'
+  // form: flexberryClassNamesPrefix + '-form' todo:remove
 };
 
 let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperations, {
@@ -159,7 +159,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
   /**
     Fields for adding a new record.
 
-    @property _dataTable
+    @property _dataFormTable
     @type Object
     @default {
     direction: null,
@@ -167,8 +167,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
     distance: null,
   }
     @private
-  */
-  _dataTable: {
+ */
+  _dataFormTable: {
     direction: null,
     rhumb: null,
     distance: null,
@@ -194,6 +194,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
 
   tableFieldLabel: t('components.geometry-add-modes.rhumb.table-field-label'),
 
+  tableColumnOperation: t('components.geometry-add-modes.rhumb.table-column-operation'),
+
   actions: {
     /**
       Handles button click.
@@ -203,6 +205,16 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
       this.set('_dialogVisible', true);
 
       this._dropForm();
+
+
+
+      this._tableData = Ember.A(//todo:remove
+        [
+          { id: 0, direction: 'ЮВ', rhumb: 86.76787457562546, distance: 8182.6375760837955 },
+          { id: 1, direction: 'СВ', rhumb: 79.04259420114585, distance: 8476.868426796427 },
+          { id: 2, direction: 'ЮЗ', rhumb: 86.0047147391561, distance: 16532.122718537685 }
+        ]
+      );
     },
 
     /**
@@ -305,21 +317,21 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
     onAddRow() {
       let error = false;
 
-      if (Ember.isNone(this._dataTable.direction)) {
+      if (Ember.isNone(this._dataFormTable.direction)) {
         this.set('_addValide.directionValide', true);
         error = true;
       } else {
         this.set('_addValide.directionValide', false);
       }
 
-      if (!this._validFloatNumber(this._dataTable.rhumb)) {
+      if (!this._validFloatNumber(this._dataFormTable.rhumb)) {
         this.set('_addValide.rhumbValide', true);
         error = true;
       } else {
         this.set('_addValide.rhumbValide', false);
       }
 
-      if (!this._validFloatNumber(this._dataTable.distance)) {
+      if (!this._validFloatNumber(this._dataFormTable.distance)) {
         this.set('_addValide.distanceValide', true);
         error = true;
       } else {
@@ -330,18 +342,14 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
         return;
       }
 
-      const getGuid = () => {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-          let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-          return v.toString(16);
-        });
-      };
+      const getGuid = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+        .replace(/[xy]/g, (c, r) => ('x' === c ? (r = Math.random() * 16 | 0) : (r & 0x3 | 0x8)).toString(16));
 
       const row = {
         id: getGuid(),
-        direction: this._dataTable.direction,
-        rhumb: this._dataTable.rhumb,
-        distance: this._dataTable.distance
+        direction: this._dataFormTable.direction,
+        rhumb: this._dataFormTable.rhumb,
+        distance: this._dataFormTable.distance
       };
 
       this._tableData.pushObject(row);
@@ -375,11 +383,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
     this.set('_dataForm.objectType', null);
 
     this._dropTableForm();
-
     Object.keys(this._formValide).forEach(v => Ember.set(this, `_formValide.${v}`, false));
-
     this._dropTableValideForm();
-
     this.set('_tableData', Ember.A([]));
   },
 
@@ -398,7 +403,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
     @method _dropTableForm
   */
   _dropTableForm() {
-    Object.keys(this._dataTable).forEach(v => Ember.set(this, `_dataTable.${v}`, null));
+    Object.keys(this._dataFormTable).forEach(v => Ember.set(this, `_dataFormTable.${v}`, null));
   },
 
   /**
