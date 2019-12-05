@@ -440,15 +440,25 @@ export default Ember.Mixin.create({
     let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
     let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
     leafletMap.fitBounds(featureLayer.getBounds());
-    this._getEditTools();
+    let editTools = this._getEditTools();
     featureLayer.enableEdit(leafletMap);
-    leafletMap.on(&#x27;editable:editing&#x27;, (e) =&gt; {
+    editTools.on(&#x27;editable:editing&#x27;, (e) =&gt; {
       if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayer))) {
         leafletObject.editLayer(e.layer);
       }
     });
 
     return featureLayer;
+  },
+
+  cancelEdit() {
+    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+    this.disableLayerEditing(leafletMap);
+    let editTools = this._getEditTools();
+    editTools.off(&#x27;editable:drawing:end&#x27;);
+    editTools.off(&#x27;editable:editing&#x27;);
+    editTools.stopDrawing();
+    editTools.featuresLayer.clearLayers();
   },
 
   /**
@@ -462,9 +472,14 @@ export default Ember.Mixin.create({
     let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
     let editTools = this._getEditTools();
 
+    let newLayer;
+
     let finishDraw = () =&gt; {
       editTools.off(&#x27;editable:drawing:end&#x27;, finishDraw, this);
       editTools.stopDrawing();
+      let defaultProperties = layerModel.get(&#x27;settingsAsObject.defaultProperties&#x27;) || {};
+      newLayer.feature = { properties: Ember.merge(defaultProperties, properties) };
+      leafletObject.addLayer(newLayer);
     };
 
     editTools.on(&#x27;editable:drawing:end&#x27;, finishDraw, this);
@@ -475,7 +490,6 @@ export default Ember.Mixin.create({
       editTools.stopDrawing();
     }
 
-    let newLayer;
     switch (layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;)) {
       case &#x27;polygon&#x27;:
         newLayer = editTools.startPolygon();
@@ -490,9 +504,7 @@ export default Ember.Mixin.create({
         throw &#x27;Unknown layer type: &#x27; + layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;);
     }
 
-    let defaultProperties = layerModel.get(&#x27;settingsAsObject.defaultProperties&#x27;) || {};
-    newLayer.feature = { properties: Ember.merge(defaultProperties, properties) };
-    leafletObject.addLayer(newLayer);
+    return newLayer;
   },
 
   /**

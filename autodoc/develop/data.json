@@ -39789,7 +39789,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 45,
+            "line": 55,
             "description": "Start visual creating of feature",
             "params": [
                 {
@@ -39811,7 +39811,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 89,
+            "line": 101,
             "description": "Get editTools.",
             "itemtype": "method",
             "name": "_getEditTools",
@@ -39826,7 +39826,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 107,
+            "line": 119,
             "description": "Return leaflet layer thats corresponds to passed layerId.",
             "itemtype": "method",
             "name": "_getLeafletLayer",
@@ -39848,7 +39848,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 124,
+            "line": 136,
             "description": "Get [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.",
             "params": [
                 {
@@ -39874,7 +39874,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 147,
+            "line": 159,
             "description": "Start creating multy objects.",
             "itemtype": "method",
             "name": "startChangeMultyLayerObject",
@@ -43579,15 +43579,15 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:45"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:55"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:107"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:119"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:124"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:136"
         },
         {
             "message": "unknown tag: snapt",
@@ -45091,11 +45091,11 @@
         },
         {
             "message": "Missing item type\nStart visual creating of feature",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:45"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:55"
         },
         {
             "message": "Missing item type\nGet [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:124"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:136"
         },
         {
             "message": "Missing item type\nRemoves attached event listeners on destroy.",
