@@ -123,35 +123,6 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  _loadData() {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      const leafletObject = this.get('layerModel._leafletObject');
-      if (!this.get('_layerLoading') && !this.get('_layerLoaded')) {
-        this.set('_layerLoading', true);
-        leafletObject.once('load', () => {
-          this.set('_layerLoading', false);
-          this.set('_layerLoaded', true);
-          this._deleteDataLoadEvents();
-          leafletObject.fire('layerDataLoaded');
-          resolve(leafletObject);
-        });
-
-        leafletObject.once('error', (error) => {
-          this.set('_layerLoading', false);
-          reject(error);
-        });
-
-        leafletObject.loadFeatures(leafletObject.options.filter);
-      }
-
-      if (!this.get('_layerLoading')) {
-        leafletObject.fire('layerDataLoaded');
-      }
-
-      resolve(leafletObject);
-    });
-  },
-
   /**
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
@@ -187,10 +158,6 @@ export default BaseVectorLayer.extend({
 
       // Combine options defined in layer's settings with options defined in method, and with resulting filter option.
       options = Ember.$.extend(true, {}, initialOptions, options, { filter: resultingFilter });
-
-      if (!this._checkMapZoom()) {
-        options.showExisting = false;
-      }
 
       let featuresReadFormat = this.getFeaturesReadFormat();
       L.wfst(options, featuresReadFormat)
