@@ -85,6 +85,15 @@
             },
             "namespaces": {}
         },
+        "addon/components/geometry-add-modes/rhumb.js": {
+            "name": "addon/components/geometry-add-modes/rhumb.js",
+            "modules": {},
+            "classes": {},
+            "fors": {
+                "FlexberryGeometryAddModeRhumbComponent": 1
+            },
+            "namespaces": {}
+        },
         "addon/components/gradients/dropdown-gradient.js": {
             "name": "addon/components/gradients/dropdown-gradient.js",
             "modules": {},
@@ -3149,6 +3158,13 @@
             },
             "namespaces": {}
         },
+        "addon/utils/rhumb-operations.js": {
+            "name": "addon/utils/rhumb-operations.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/views/gis-search-form.js": {
             "name": "addon/views/gis-search-form.js",
             "modules": {},
@@ -3171,6 +3187,7 @@
                 "FlexberryGeometryAddModeDrawComponent": 1,
                 "FlexberryGeometryAddModeGeoProviderComponent": 1,
                 "FlexberryGeometryAddModeManualComponent": 1,
+                "FlexberryGeometryAddModeRhumbComponent": 1,
                 "GradientEditComponent": 1,
                 "BaseLayerTreenodeContentComponent": 1,
                 "GeocoderBaseLayerComponent": 1,
@@ -3471,6 +3488,7 @@
                 "FlexberryGeometryAddModeDrawComponent": 1,
                 "FlexberryGeometryAddModeGeoProviderComponent": 1,
                 "FlexberryGeometryAddModeManualComponent": 1,
+                "FlexberryGeometryAddModeRhumbComponent": 1,
                 "FlexberryEditLayerAttributesDialogComponent": 1,
                 "MetadataModeComponent": 1,
                 "FlexberryAddLayerDialogComponent": 1,
@@ -3671,6 +3689,17 @@
         "FlexberryGeometryAddModeManualComponent": {
             "name": "FlexberryGeometryAddModeManualComponent",
             "shortname": "FlexberryGeometryAddModeManualComponent",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": ""
+        },
+        "FlexberryGeometryAddModeRhumbComponent": {
+            "name": "FlexberryGeometryAddModeRhumbComponent",
+            "shortname": "FlexberryGeometryAddModeRhumbComponent",
             "classitems": [],
             "plugins": [],
             "extensions": [],
@@ -9904,6 +9933,295 @@
                 }
             ],
             "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 10,
+            "description": "Component's CSS-classes names.\nJSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.",
+            "itemtype": "property",
+            "name": "flexberryClassNames",
+            "type": "Object",
+            "readonly": "",
+            "static": 1,
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis",
+            "subprops": [
+                {
+                    "name": "prefix",
+                    "description": "Component's CSS-class names prefix ('flexberry-geometry-add-mode-rhumb').",
+                    "type": "String"
+                },
+                {
+                    "name": "wrapper",
+                    "description": "Component's wrapping <div> CSS-class name ('flexberry-geometry-add-mode-rhumb').",
+                    "type": "String"
+                },
+                {
+                    "name": "dialog",
+                    "description": "Component's inner dialog CSS-class name ('flexberry-geometry-add-mode-rhumb').",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 33,
+            "description": "Reference to component's template.",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 38,
+            "description": "Reference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 44,
+            "description": "Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)\nis empty to disable component's wrapping <div>.",
+            "itemtype": "property",
+            "name": "tagName",
+            "type": "String",
+            "default": "''",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 54,
+            "description": "Flag indicates whether rhumb geometry rhumb dialog has been already requested by user or not.",
+            "itemtype": "property",
+            "name": "_dialogHasBeenRequested",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 64,
+            "description": "Flag indicates whether to show rhumb geometry adding dialog.",
+            "itemtype": "property",
+            "name": "_dialogVisible",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 74,
+            "description": "Form validation flags.",
+            "itemtype": "property",
+            "name": "_formValid",
+            "type": "Object",
+            "default": "{\nstartPointValid: false,\ntypeObjectValid: false,\ntableValid: false\n  }",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 92,
+            "description": "Validation flags for adding a new record.",
+            "itemtype": "property",
+            "name": "_addValid",
+            "type": "Object",
+            "default": "{\ndirectionValid: false,\nrhumbValid: false,\ndistanceValid: false\n  }",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 110,
+            "description": "List of cardinal points.",
+            "itemtype": "property",
+            "name": "_cardinalPoints",
+            "type": "string[]",
+            "default": "['СВ', 'ЮВ', 'ЮЗ', 'СЗ']",
+            "readonly": "",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 121,
+            "description": "Data table.",
+            "itemtype": "property",
+            "name": "_tableData",
+            "type": "Object[]",
+            "default": "Ember.A([])",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 131,
+            "description": "Object types.",
+            "itemtype": "property",
+            "name": "_objectTypes",
+            "type": "string[]",
+            "default": "['Polygon', 'Line']",
+            "readonly": "",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 142,
+            "description": "Form fields.",
+            "itemtype": "property",
+            "name": "_dataForm",
+            "type": "Object",
+            "default": "{\nobjectType: null,\nstartPoint: ''\n  }",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 158,
+            "description": "Fields for adding a new record.",
+            "itemtype": "property",
+            "name": "_dataFormTable",
+            "type": "Object",
+            "default": "{\ndirection: null,\nrhumb: null,\ndistance: null,\n  }",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 201,
+            "description": "Handles button click.",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 211,
+            "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGeometryAddModeRhumbComponent/sendingActions.complete:method\"}}'complete' action{{/crossLink}}.",
+            "itemtype": "method",
+            "name": "actions.onApprove",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 295,
+            "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.",
+            "itemtype": "method",
+            "name": "actions.onDeny",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 304,
+            "description": "The button for adding a new record to the table.",
+            "itemtype": "method",
+            "name": "actions.onAddRow",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 358,
+            "description": "Button to delete a record in a table.",
+            "itemtype": "method",
+            "name": "actions.OnRemoveRow",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 375,
+            "description": "Сlear form.",
+            "itemtype": "method",
+            "name": "_dropForm",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 390,
+            "description": "Сlear form.",
+            "itemtype": "method",
+            "name": "_dropTableValidForm",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 399,
+            "description": "Clear form validation.",
+            "itemtype": "method",
+            "name": "_dropTableForm",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 408,
+            "description": "Number check.",
+            "itemtype": "method",
+            "name": "_validFloatNumber",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 418,
+            "description": "Starp point check.",
+            "itemtype": "method",
+            "name": "_validStartPoint",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 428,
+            "description": "Component's action invoking when new geometry was added.",
+            "itemtype": "method",
+            "name": "sendingActions.complete",
+            "params": [
+                {
+                    "name": "addedLayer",
+                    "description": "Added layer.",
+                    "type": "Object"
+                },
+                {
+                    "name": "options",
+                    "description": "Actions options.",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "panToAddedObject",
+                            "description": "Flag indicating wheter to pan to added object.",
+                            "type": "Boolean"
+                        }
+                    ]
+                }
+            ],
+            "class": "FlexberryGeometryAddModeRhumbComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -27711,7 +28029,7 @@
             "itemtype": "property",
             "name": "availableGeometryAddModes",
             "type": "Array",
-            "default": "['manual', 'draw', 'geoprovider']",
+            "default": "['manual', 'rhumb', 'draw', 'geoprovider']",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
@@ -39642,7 +39960,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 7,
+            "line": 6,
             "description": "Add object to layer.",
             "itemtype": "method",
             "name": "addObjectToLayer",
@@ -39667,7 +39985,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 45,
+            "line": 44,
             "description": "Create polygon object by rhumb.",
             "itemtype": "method",
             "name": "createPolygonObjectRhumb",
@@ -43236,6 +43554,26 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/utils/rhumb-operations.js",
+            "line": 9,
+            "description": "Create polygon object by rhumb.",
+            "itemtype": "method",
+            "name": "createPolygonObjectRhumb",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "Coordinate objects.\nExample:\nvar data = {\n      type: 'LineString',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      points: [\n        { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955 },\n        { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427 },\n        { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685 }\n      ]\n    };",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "New featureLayer.",
+                "type": "Object"
+            },
+            "class": "",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/views/gis-search-form.js",
             "line": 4,
             "description": "Observes changhes in application's current locale, and refreshes some GUI related to it.",
@@ -43592,11 +43930,11 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:7"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:6"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:45"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:44"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -43693,6 +44031,10 @@
         {
             "message": "replacing incorrect tag: returns with return",
             "line": " addon/services/param-gradient.js:49"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/utils/rhumb-operations.js:9"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -43797,6 +44139,18 @@
         {
             "message": "Missing item type\nHandles button click.",
             "line": " addon/components/geometry-add-modes/manual.js:108"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/geometry-add-modes/rhumb.js:33"
+        },
+        {
+            "message": "Missing item type\nReference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
+            "line": " addon/components/geometry-add-modes/rhumb.js:38"
+        },
+        {
+            "message": "Missing item type\nHandles button click.",
+            "line": " addon/components/geometry-add-modes/rhumb.js:201"
         },
         {
             "message": "Missing item type\nReference to component's template.",
