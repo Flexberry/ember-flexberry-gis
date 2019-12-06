@@ -397,22 +397,5 @@ export default BaseLayer.extend({
 
       resolve(features);
     });
-  },
-
-  /**
-    Returns true when map's zoom between layer's min and max zoom.
-
-    @method _checkMapZoom
-  */
-  _checkMapZoom() {
-    const leafletMap = this.get('leafletMap');
-    if (leafletMap) {
-      const mapZoom = leafletMap.getZoom();
-      const minZoom = this.get('minZoom');
-      const maxZoom = this.get('maxZoom');
-      return mapZoom >= minZoom && mapZoom <= maxZoom;
-    }
-
-    return false;
   }
 });
