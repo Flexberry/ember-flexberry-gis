@@ -222,7 +222,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
    */
   availableCRS: Ember.computed(function () {
     return [{
-      crs: L.CRS.ESPG3395,
+      crs: L.CRS.EPSG3395,
       name: 'EPSG:3395',
       xCaption: 'forms.map.xCaption',
       yCaption: 'forms.map.yCaption'

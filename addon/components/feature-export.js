@@ -64,14 +64,9 @@ let FeatureExportDialogComponent = Ember.Component.extend({
    */
   _crs: Ember.computed('_options.coordSystem', function() {
     let _options = this.get('_options');
-
     let factories = this.get('availableCRS');
 
-    factories.forEach((factory) => {
-      if (factory.name === _options.coordSystem) {
-        return factory.crs;
-      }
-    });
+    return factories.filter((factory) => factory.name === _options.coordSystem)[0].crs;
   }),
 
   /**
@@ -140,11 +135,6 @@ let FeatureExportDialogComponent = Ember.Component.extend({
   }),
 
   /**
-   * Сервис полномочий.
-   */
-  security: Ember.inject.service(),
-
-  /**
    * Layout.
    */
   layout,
@@ -164,6 +154,25 @@ let FeatureExportDialogComponent = Ember.Component.extend({
    */
   result: null,
 
+  /**
+   * GPX format only polyline and marker
+   */
+  _GPXFormat: Ember.observer('result', function() {
+    let result = this.get('result');
+    let layer = result.layerModel;
+    let type = layer.get('settingsAsObject.typeGeometry');
+    let formats = this.get('_availableFormats');
+    if (type === 'polyline' || type === 'marker') {
+      this.set('_availableFormats', formats.push('GPX'));
+    } else {
+      let ind = formats.indexOf('GPX');
+      if (ind !== -1) {
+        this.set('_availableFormats', formats.splice(ind));
+      }
+    }
+  }),
+  
+
   actions: {
     /**
      * Approve and start of export.
@@ -174,9 +183,10 @@ let FeatureExportDialogComponent = Ember.Component.extend({
       let result = this.get('result');
       let layerSettings = this.get('_layerSettings');
       let readFormat = this.get('_format');
+      let crs = this.get('_crs');
 
       let wfsLayer = new L.WFS({
-        crs: this.get('_crs'),
+        crs: crs,
         url: layerSettings.url,
         typeNS: layerSettings.typeNS,
         typeName: layerSettings.typeName,
@@ -220,7 +230,6 @@ let FeatureExportDialogComponent = Ember.Component.extend({
       'GML2',
       'GML3',
       'KML',
-      'GPX',
       'Shape Zip',
       'MIF'
     ]));
