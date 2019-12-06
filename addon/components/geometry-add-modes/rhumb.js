@@ -20,14 +20,15 @@ import rhumbOperations from '../../utils/rhumb-operations';
 
   @for FlexberryGeometryAddModeRhumbComponent
 */
-const flexberryClassNamesPrefix = 'flexberry-geometry-add-mode-manual';
+const flexberryClassNamesPrefix = 'flexberry-geometry-add-mode-rhumb';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
   wrapper: null,
   dialog: flexberryClassNamesPrefix + '-dialog',
+  tableBlock: flexberryClassNamesPrefix + '-table-block'
 };
 
-let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperations, {
+let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
   /**
     Reference to component's template.
@@ -73,37 +74,37 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
   /**
     Form validation flags.
 
-    @property _formValide
+    @property _formValid
     @type Object
     @default {
-    startPointValide: false,
-    typeObjectValide: false,
-    tableValide: false
+    startPointValid: false,
+    typeObjectValid: false,
+    tableValid: false
   }
     @private
   */
-  _formValide: {
-    startPointValide: false,
-    typeObjectValide: false,
-    tableValide: false
+  _formValid: {
+    startPointValid: false,
+    typeObjectValid: false,
+    tableValid: false
   },
 
   /**
     Validation flags for adding a new record.
 
-    @property _addValide
+    @property _addValid
     @type Object
     @default {
-    directionValide: false,
-    rhumbValide: false,
-    distanceValide: false
+    directionValid: false,
+    rhumbValid: false,
+    distanceValid: false
   }
     @private
   */
-  _addValide: {
-    directionValide: false,
-    rhumbValide: false,
-    distanceValide: false
+  _addValid: {
+    directionValid: false,
+    rhumbValid: false,
+    distanceValid: false
   },
 
   /**
@@ -214,29 +215,29 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
       @method actions.onApprove
     */
     onApprove(e) {
-      this._dropTableValideForm();
+      this._dropTableValidForm();
       let error = false;
 
       if (Ember.isNone(this._dataForm.objectType)) {
-        this.set('_formValide.typeObjectValide', true);
+        this.set('_formValid.typeObjectValid', true);
         error = true;
       } else {
-        this.set('_formValide.typeObjectValide', false);
+        this.set('_formValid.typeObjectValid', false);
       }
 
       if (!this._validStartPoint(this._dataForm.startPoint)) {
-        this.set('_formValide.startPointValide', true);
+        this.set('_formValid.startPointValid', true);
         error = true;
       } else {
-        this.set('_formValide.startPointValide', false);
+        this.set('_formValid.startPointValid', false);
       }
 
       if (this._tableData.length === 0 || (this._dataForm.objectType === 'Polygon' && this._tableData.length < 3) ||
         (this._dataForm.objectType === 'Line' && this._tableData.length < 2)) {
-        this.set('_formValide.tableValide', true);
+        this.set('_formValid.tableValid', true);
         error = true;
       } else {
-        this.set('_formValide.tableValide', false);
+        this.set('_formValid.tableValid', false);
       }
 
       if (error) {
@@ -275,7 +276,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
         points: points
       };
 
-      const rhumbObj = this.createObjectRhumb(data);
+      const rhumbObj = rhumbOperations.createObjectRhumb(data);
       const coordinates = rhumbObj.geometry.coordinates;
 
       let addedLayer;
@@ -309,24 +310,24 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
       let error = false;
 
       if (Ember.isNone(this._dataFormTable.direction)) {
-        this.set('_addValide.directionValide', true);
+        this.set('_addValid.directionValid', true);
         error = true;
       } else {
-        this.set('_addValide.directionValide', false);
+        this.set('_addValid.directionValid', false);
       }
 
       if (!this._validFloatNumber(this._dataFormTable.rhumb)) {
-        this.set('_addValide.rhumbValide', true);
+        this.set('_addValid.rhumbValid', true);
         error = true;
       } else {
-        this.set('_addValide.rhumbValide', false);
+        this.set('_addValid.rhumbValid', false);
       }
 
       if (!this._validFloatNumber(this._dataFormTable.distance)) {
-        this.set('_addValide.distanceValide', true);
+        this.set('_addValid.distanceValid', true);
         error = true;
       } else {
-        this.set('_addValide.distanceValide', false);
+        this.set('_addValid.distanceValid', false);
       }
 
       if (error) {
@@ -381,18 +382,18 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend(rhumbOperati
     this.set('_dataForm.objectType', null);
 
     this._dropTableForm();
-    Object.keys(this._formValide).forEach(v => Ember.set(this, `_formValide.${v}`, false));
-    this._dropTableValideForm();
+    Object.keys(this._formValid).forEach(v => Ember.set(this, `_formValid.${v}`, false));
+    this._dropTableValidForm();
     this.set('_tableData', Ember.A([]));
   },
 
   /**
     Сlear form.
 
-    @method _dropTableValideForm
+    @method _dropTableValidForm
   */
-  _dropTableValideForm() {
-    Object.keys(this._addValide).forEach(v => Ember.set(this, `_addValide.${v}`, false));
+  _dropTableValidForm() {
+    Object.keys(this._addValid).forEach(v => Ember.set(this, `_addValid.${v}`, false));
   },
 
   /**

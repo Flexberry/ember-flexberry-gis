@@ -20,7 +20,7 @@
     <form class="ui form" role="form">
       <div class="ui grid">
         <div class="eight wide column">
-          <div class="field {{if _formValide.startPointValide "error" ""}}">
+          <div class="field {{if _formValid.startPointValid "error" ""}}">
             <label>
               {{startPointFieldLabel}}
             </label>
@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="eight wide column">
-          <div class="field {{if _formValide.typeObjectValide "error" ""}}">
+          <div class="field {{if _formValid.typeObjectValid "error" ""}}">
             <label>
               {{typeObjectFieldLabel}}
             </label>
@@ -39,7 +39,7 @@
           </div>
         </div>
       </div>
-      <div class="field {{if _formValide.tableValide "error"}}">
+      <div class="field {{if _formValid.tableValid "error"}}">
         <label>
           {{addCoordinatesFieldLabel}}
         </label>
@@ -64,7 +64,7 @@
         <tbody>
           <tr>
             <td>
-              <div class="field {{if _addValide.directionValide "error"}}">
+              <div class="field {{if _addValid.directionValid "error"}}">
                 {{flexberry-dropdown
                   items=_cardinalPoints
                   value=_dataFormTable.direction
@@ -72,12 +72,12 @@
               </div>
             </td>
             <td>
-              <div class="field {{if _addValide.rhumbValide "error"}}">
+              <div class="field {{if _addValid.rhumbValid "error"}}">
                 {{flexberry-field value=_dataFormTable.rhumb}}
               </div>
             </td>
             <td>
-              <div class="field {{if _addValide.distanceValide "error"}}">
+              <div class="field {{if _addValid.distanceValid "error"}}">
                 {{flexberry-field value=_dataFormTable.distance}}
               </div>
             </td>
@@ -95,7 +95,7 @@
           <label>
             {{tableFieldLabel}}
           </label>
-          <div style="overflow: auto;height: 170px;">
+          <div class="{{flexberryClassNames.tableBlock}}">
             {{#flexberry-table perPageAvailable=true model=_tableData}}
               {{#block-slot "column-header-head-0"}}
                 <th>
