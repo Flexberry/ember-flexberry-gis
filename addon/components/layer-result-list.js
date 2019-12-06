@@ -144,7 +144,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default false
    */
   exportDialogVisible: false,
-  
+
   /**
     Object to search
 

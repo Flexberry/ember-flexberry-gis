@@ -77,10 +77,10 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     let crs = this.get('_crs');
 
     if (_options.format === 'JSON') {
-      return new L.Format.GeoJSON({crs: crs});
+      return new L.Format.GeoJSON({ crs: crs });
     }
 
-    let format = new L.Format.Base({crs: crs});
+    let format = new L.Format.Base({ crs: crs });
 
     format.outputFormat = _options.format;
 
@@ -97,7 +97,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
   _fileExt: Ember.computed('_options.format', function() {
     let _options = this.get('_options');
 
-    switch(_options.format) {
+    switch (_options.format) {
       case 'JSON':
         return 'json';
       case 'GML2':
@@ -124,7 +124,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     let layer = result.layerModel;
     let type = layer.get('type');
 
-    switch(type) {
+    switch (type) {
       case 'wms-wfs':
         return layer.get('settingsAsObject').wfs;
       case 'wfs':
@@ -171,7 +171,6 @@ let FeatureExportDialogComponent = Ember.Component.extend({
       }
     }
   }),
-  
 
   actions: {
     /**
@@ -236,7 +235,6 @@ let FeatureExportDialogComponent = Ember.Component.extend({
 
     // CRS.
     let factories = this.get('availableCRS');
-    
     let availableCRSNames = [];
 
     if (!Ember.isNone(factories)) {
@@ -311,7 +309,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
       method: options.method,
       url: options.url + L.Util.getParamString(options.params, options.url),
       data: options.data,
-      contentType: "text/xml",
+      contentType: 'text/xml',
       headers: options.headers,
       dataType: 'blob',
       success: function(blob) {

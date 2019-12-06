@@ -6,10 +6,6 @@ import Ember from 'ember';
 import EditMapController from 'ember-flexberry-gis/controllers/edit-map';
 import EditFormControllerOperationsIndicationMixin from 'ember-flexberry/mixins/edit-form-controller-operations-indication';
 
-/*import epsg3395 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-3395';
-import epsg3857 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-3857';
-import epsg4326 from 'ember-flexberry-gis/coordinate-reference-systems/epsg-4326';*/
-
 /**
   Map controller.
 
