@@ -635,6 +635,9 @@ export default BaseLayer.extend({
           vectorLayer.readFormat = this.createReadFormat(vectorLayer);
         }
 
+        vectorLayer.minZoom = this.get(&#x27;minZoom&#x27;);
+        vectorLayer.maxZoom = this.get(&#x27;maxZoom&#x27;);
+
         if (this.get(&#x27;clusterize&#x27;)) {
           let clusterLayer = this.createClusterLayer(vectorLayer);
           resolve(clusterLayer);
