@@ -202,6 +202,6 @@ export default Ember.Mixin.create({
 
       let newZoom = e.target.getZoom();
       this.transitionToRoute({ queryParams: { zoom: newZoom } });
-    },
+    }
   }
 });
