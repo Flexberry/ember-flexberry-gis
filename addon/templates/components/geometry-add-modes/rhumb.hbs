@@ -1,0 +1,149 @@
+{{flexberry-button
+  tooltip=menuButtonTooltip
+  click=(action "onOpenDialog")
+  iconClass="flexberry-map-command-icon location compass icon"
+}}
+{{!
+  Semantic UI modal dialogs takes long time to be initialized
+  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+}}
+{{#if _dialogHasBeenRequested}}
+  {{#flexberry-dialog
+    class=flexberryClassNames.dialog
+    caption=menuButtonTooltip
+    approveButtonCaption=dialogApproveButtonCaption
+    denyButtonCaption=dialogDenyButtonCaption
+    visible=_dialogVisible
+    approve=(action "onApprove")
+    deny=(action "onDeny")
+  }}
+    <form class="ui form" role="form">
+      <div class="ui grid">
+        <div class="eight wide column">
+          <div class="field {{if _formValid.startPointValid "error" ""}}">
+            <label>
+              {{startPointFieldLabel}}
+            </label>
+            {{flexberry-field
+              value=_dataForm.startPoint
+              placeholder=coordinatesFieldPlaceholder
+            }}
+          </div>
+        </div>
+        <div class="eight wide column">
+          <div class="field {{if _formValid.typeObjectValid "error" ""}}">
+            <label>
+              {{typeObjectFieldLabel}}
+            </label>
+            {{flexberry-dropdown items=_objectTypes value=_dataForm.objectType}}
+          </div>
+        </div>
+      </div>
+      <div class="field {{if _formValid.tableValid "error"}}">
+        <label>
+          {{addCoordinatesFieldLabel}}
+        </label>
+      </div>
+      <table class="ui celled table flexberry-table">
+        <thead>
+          <tr>
+            <th>
+              {{directionTh}}
+            </th>
+            <th>
+              {{rhumbTh}}
+            </th>
+            <th>
+              {{distanceTh}}
+            </th>
+            <th class="narrow">
+              {{tableColumnOperation}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="field {{if _addValid.directionValid "error"}}">
+                {{flexberry-dropdown
+                  items=_cardinalPoints
+                  value=_dataFormTable.direction
+                }}
+              </div>
+            </td>
+            <td>
+              <div class="field {{if _addValid.rhumbValid "error"}}">
+                {{flexberry-field value=_dataFormTable.rhumb}}
+              </div>
+            </td>
+            <td>
+              <div class="field {{if _addValid.distanceValid "error"}}">
+                {{flexberry-field value=_dataFormTable.distance}}
+              </div>
+            </td>
+            <td class="narrow">
+              {{flexberry-button
+                iconClass="plus icon"
+                click=(action "onAddRow")
+              }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      {{#if (gt _tableData.length 0)}}
+        <div class="field">
+          <label>
+            {{tableFieldLabel}}
+          </label>
+          <div class="{{flexberryClassNames.tableBlock}}">
+            {{#flexberry-table perPageAvailable=true model=_tableData}}
+              {{#block-slot "column-header-head-0"}}
+                <th>
+                  {{directionTh}}
+                </th>
+              {{/block-slot}}
+              {{#block-slot "column-header-head-0"}}
+                <th>
+                  {{rhumbTh}}
+                </th>
+              {{/block-slot}}
+              {{#block-slot "column-header-head-0"}}
+                <th>
+                  {{distanceTh}}
+                </th>
+              {{/block-slot}}
+              {{#block-slot "column-header-head-0"}}
+                <th class="narrow">
+                  {{tableColumnOperation}}
+                </th>
+              {{/block-slot}}
+              {{#block-slot "column-cell-head-0" as |row|}}
+                <td>
+                  {{row.direction}}
+                </td>
+              {{/block-slot}}
+              {{#block-slot "column-cell-head-0" as |row|}}
+                <td>
+                  {{row.rhumb}}
+                </td>
+              {{/block-slot}}
+              {{#block-slot "column-cell-head-0" as |row|}}
+                <td>
+                  {{row.distance}}
+                </td>
+              {{/block-slot}}
+              {{#block-slot "column-cell-head-0" as |row|}}
+                <td class="narrow">
+                  {{flexberry-button
+                    iconClass="trash icon"
+                    click=(action "OnRemoveRow" row.id)
+                  }}
+                </td>
+              {{/block-slot}}
+            {{/flexberry-table}}
+          </div>
+        </div>
+      {{/if}}
+    </form>
+  {{/flexberry-dialog}}
+{{/if}}
