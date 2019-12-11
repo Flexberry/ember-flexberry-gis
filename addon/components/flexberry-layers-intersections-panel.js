@@ -194,7 +194,7 @@ export default Ember.Component.extend({
     findIntersections() {
       this.removeLayers();
       let selectedLayers = this.get('selectedLayers');
-
+      console.log(selectedLayers);
       let store = this.get('store');
 
       //Object clicked on menu

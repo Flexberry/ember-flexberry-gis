@@ -2,6 +2,7 @@
 <div class="ui fluid multiple search selection dropdown {{selectorName}}">
   <input name="{{selectorName}}" type="hidden" value={{selectedItems}}>
   <i class="dropdown icon"></i>
+   <i class="close icon" {{action 'clear'}} style="margin-right: -20px; right:0; position:absolute"></i>
   <div class="default text">{{title}}</div>
   <div class="menu">
     {{#if isObject}}
