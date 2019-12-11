@@ -58,7 +58,7 @@ export default Ember.Mixin.create({
       Ember.set(this, leafletMapPropertyPath, e.map);
       Ember.set(window, leafletMapPropertyPath, e.map);
 
-      e.map.on('layeradd', function _layeradd(e) {
+      let checkZIndex = function checkZIndex(e) {
         let hierarchy = this.get('model.hierarchy');
         hierarchy.forEach((layer) => {
           let leafletObject = layer.get('_leafletObject');
@@ -66,16 +66,10 @@ export default Ember.Mixin.create({
             leafletObject.bringToFront();
           }
         });
-      }, this);
-      e.map.on('layerremove', function _layerremove(e) {
-        let hierarchy = this.get('model.hierarchy');
-        hierarchy.forEach((layer) => {
-          let leafletObject = layer.get('_leafletObject');
-          if ((leafletObject != null) && (leafletObject.bringToFront instanceof Function)) {
-            leafletObject.bringToFront();
-          }
-        });
-      }, this);
+      }
+
+      e.map.on('layeradd', checkZIndex, this);
+      e.map.on('layerremove', checkZIndex, this);
     },
 
     onServiceLayerInit(property, serviceLayer) {
@@ -121,6 +115,8 @@ export default Ember.Mixin.create({
 
       Ember.set(this, leafletMapPropertyPath, null);
       Ember.set(window, leafletMapPropertyPath, null);
+
+      e.map.remove(this.checkZIndex);
     },
 
     /**
