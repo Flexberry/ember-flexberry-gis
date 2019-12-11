@@ -57,6 +57,25 @@ export default Ember.Mixin.create({
 
       Ember.set(this, leafletMapPropertyPath, e.map);
       Ember.set(window, leafletMapPropertyPath, e.map);
+
+      e.map.on('layeradd', function _layeradd(e) {
+        let hierarchy = this.get('model.hierarchy');
+        hierarchy.forEach((layer) => {
+          let leafletObject = layer.get('_leafletObject');
+          if ((leafletObject != null) && (leafletObject.bringToFront instanceof Function)) {
+            leafletObject.bringToFront();
+          }
+        });
+      }, this);
+      e.map.on('layerremove', function _layerremove(e) {
+        let hierarchy = this.get('model.hierarchy');
+        hierarchy.forEach((layer) => {
+          let leafletObject = layer.get('_leafletObject');
+          if ((leafletObject != null) && (leafletObject.bringToFront instanceof Function)) {
+            leafletObject.bringToFront();
+          }
+        });
+      }, this);
     },
 
     onServiceLayerInit(property, serviceLayer) {
