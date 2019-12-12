@@ -790,26 +790,26 @@ export default Ember.Mixin.create({
     @param {String} polygon  new object polygon.
   */
   editLayerObject(layerId, objectId, polygon) {
-      if (polygon) {
-        const allLayers = this.get('mapLayer');
-        let layers = Ember.A(allLayers);
-        const layer = layers.findBy('id', layerId);
-        if (Ember.isNone(layer)) {
-          throw 'no layer with such id';
-        }
-
-        let features = Ember.get(layer, '_leafletObject._layers') || {};
-        let object = Object.values(features).find(feature => {
-          return this._getLayerFeatureId(layer, feature) === objectId;
-        });
-        if (object) {
-          object.setLatLngs(Ember.get(polygon, 'coordinates'));
-          return 'object polygon changed successfully';
-        } else {
-          throw 'no object with such id';
-        }
-      } else {
-        throw 'new object settings not passed';
+    if (polygon) {
+      const allLayers = this.get('mapLayer');
+      let layers = Ember.A(allLayers);
+      const layer = layers.findBy('id', layerId);
+      if (Ember.isNone(layer)) {
+        throw 'no layer with such id';
       }
+
+      let features = Ember.get(layer, '_leafletObject._layers') || {};
+      let object = Object.values(features).find(feature => {
+        return this._getLayerFeatureId(layer, feature) === objectId;
+      });
+      if (object) {
+        object.setLatLngs(Ember.get(polygon, 'coordinates'));
+        return 'object polygon changed successfully';
+      } else {
+        throw 'no object with such id';
+      }
+    } else {
+      throw 'new object settings not passed';
+    }
   }
 });
