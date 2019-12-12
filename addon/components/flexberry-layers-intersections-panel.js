@@ -194,7 +194,7 @@ export default Ember.Component.extend({
     findIntersections() {
       this.removeLayers();
       let selectedLayers = this.get('selectedLayers');
-      console.log(selectedLayers);
+
       let store = this.get('store');
 
       //Object clicked on menu
@@ -451,8 +451,10 @@ export default Ember.Component.extend({
             }
           }
 
-          if (buffer > 0) {
-            objB  = buffer.default(objB.toGeoJSON(), bufferR, { units: 'meters' });
+          if (bufferR > 0) {
+            //objB  = buffer.default(objB.toGeoJSON(), bufferR, { units: 'meters' });
+            //objB  = buffer.default(L.geoJSON(objB), bufferR, { units: 'meters' });
+            objB  = buffer.default(objB.geometry, bufferR, { units: 'meters' });
           }
 
           if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
