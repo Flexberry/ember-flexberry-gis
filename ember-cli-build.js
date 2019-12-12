@@ -65,6 +65,7 @@ module.exports = function(defaults) {
   app.import('vendor/serviceImages/bgw-head-calendar.png', { destDir: 'assets/themes/orange/assets/images' });
 
   app.import('vendor/api-tests/api-test-map.html', { destDir: 'assets/api-tests' });
+  app.import('vendor/api-tests/api-test-odata-layer.html', { destDir: 'assets/api-tests' });
 
   /*
     This build file specifies the options for the dummy test app of this

@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import LeafletMapVisibilityMixin from '../mixins/leaflet-map/map-visibility';
 
 /**
   Base map-tool.
@@ -11,7 +12,8 @@ import Ember from 'ember';
   @extends <a href="http://emberjs.com/api/classes/Ember.Object.html">Ember.Object</a>
   @uses <a href="http://emberjs.com/api/classes/Ember.Evented.html">Ember.Evented</a>
 */
-export default Ember.Object.extend(Ember.Evented, {
+export default Ember.Object.extend(Ember.Evented,
+  LeafletMapVisibilityMixin, {
   /**
     Flag: indicates whether map-tool is enabled or not.
 
@@ -172,5 +174,15 @@ export default Ember.Object.extend(Ember.Evented, {
 
     this.disable();
     this.set('leafletMap', null);
+  },
+
+  hideTool() {
+    let mapToolName = this.get('name');
+    this.showHideTool(mapToolName, true, this.addClassHidden);
+  },
+
+  showTool() {
+    let mapToolName = this.get('name');
+    this.showHideTool(mapToolName, true, this.removeClassHidden);
   }
 });

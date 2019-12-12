@@ -41,6 +41,7 @@
           <div class="ui bottom attached tab segment layers-attributes-segment {{if (or (eq (get _activeTabs tabModel.name) "table-tab") (is-none (get _activeTabs tabModel.name))) "active"}}" data-tab="table-tab">
             {{#flexberry-table
               allowEdit=tabModel.allowEdit
+              allowEditOnList=tabModel.allowEditOnList
               perPageAvailable=false
               model=tabModel.propertiesToShow
               header=tabModel.header
@@ -69,6 +70,11 @@
                         complete=(action "onGeometryAddComplete" tabModel)
                         drawStart=(action "onAddDrawStart" tabModel)
                         importComplete=(action "onImportComplete" tabModel)
+                    }}
+                    {{component "geometry-add-modes/rhumb"
+                        leafletMap=leafletMap
+                        tabModel=tabModel
+                        complete=(action "onGeometryAddComplete" tabModel)
                     }}
                     {{component "geometry-add-modes/draw"
                         leafletMap=leafletMap
@@ -295,7 +301,7 @@
   so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
 --}}
 {{#if _editRowDialogHasBeenRequested}}
-  {{component "layers-dialogs/attributes/edit"
+  {{component (if (known-for-type "component" _editComponentName) _editComponentName "layers-dialogs/attributes/edit")
     class=flexberryClassNames.addDialog
     visible=_onEditRowDialogIsVisible
     fieldNames=(get _editRowTabModel "header")
@@ -303,15 +309,19 @@
     fieldParsers=(get _editRowTabModel "leafletObject.readFormat.featureType.fields")
     fieldValidators=(get _editRowTabModel "leafletObject.readFormat.featureType.fieldValidators")
     data=_editRowDataCopy
+    layerData=extraLayerData
     approve=(action "onEditRowDialogApprove")
+    deny=(action "onEditRowDialogDeny")
+    hide=(action "onEditRowDialogHide")
   }}
 {{/if}}
 {{#if _newRowDialogHasBeenRequested}}
-  {{component "layers-dialogs/attributes/edit"
+  {{component (if (known-for-type "component" _editComponentName) _editComponentName "layers-dialogs/attributes/edit")
     caption=(t "components.layers-dialogs.edit-attributes.add")
     class=flexberryClassNames.addDialog
     visible=_newRowDialogIsVisible
     data=_newRowData
+    layerData=extraLayerData
     choiceValueData=_newRowСhoiceValueData
     choiceValueMode=_newRowСhoiceValueMode
     fieldNames=(get _newRowTabModel "header")

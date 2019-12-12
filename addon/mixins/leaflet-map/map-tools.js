@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import LeafletMapVisibilityMixin from './map-visibility';
 
 /**
   Mixin which injects map-tools methods & properties into leaflet map.
@@ -10,7 +11,7 @@ import Ember from 'ember';
   @class LeafletMapToolsMixin
   @extends <a href="http://emberjs.com/api/classes/Ember.Mixin.html">Ember.Mixin</a>
 */
-export default Ember.Mixin.create({
+export default Ember.Mixin.create(LeafletMapVisibilityMixin, {
   /**
     Performs some initialization before leaflet map will be initialized.
 
@@ -20,6 +21,8 @@ export default Ember.Mixin.create({
     this._super(...arguments);
 
     let owner = Ember.getOwner(this);
+
+    let _this = this;
 
     // Default map-tool.
     let defaultMapTool = null;
@@ -119,6 +122,34 @@ export default Ember.Mixin.create({
       // Sets map-tool properties without enabling or disbling it.
       setProperties(mapToolName, mapToolProperties) {
         return lookupMapTool(mapToolName, mapToolProperties);
+      },
+
+      // Hide map-tool.
+      hide(mapCommandName) {
+        let result = _this.showHide(mapCommandName, _this.addClassHidden, leafletMap, true);
+
+        if (!result) {
+          let mapCommand = lookupMapTool(mapCommandName, null);
+          if (Ember.isNone(mapCommand)) {
+            return;
+          }
+
+          mapCommand.hideTool();
+        }
+      },
+
+      // Show map-tool.
+      show(mapCommandName) {
+        let result = _this.showHide(mapCommandName, _this.removeClassHidden, leafletMap, true);
+
+        if (!result) {
+          let mapCommand = lookupMapTool(mapCommandName, null);
+          if (Ember.isNone(mapCommand)) {
+            return;
+          }
+
+          mapCommand.showTool();
+        }
       },
 
       // Disables enabled map-tool.

@@ -5,6 +5,7 @@ import area from 'npm:@turf/area';
 import lineIntersect from 'npm:@turf/line-intersect';
 import * as buffer from 'npm:@turf/buffer';
 import VectorLayer from '../layers/-private/vector';
+import projection from 'npm:@turf/projection';
 /**
   The component for searching for intersections with selected feature.
 
@@ -60,7 +61,7 @@ export default Ember.Component.extend({
     @private
     @readonly
   */
-  _OnMapChanged: Ember.observer('leafletMap', function() {
+  _OnMapChanged: Ember.observer('leafletMap', function () {
     let map = this.get('leafletMap');
     let group = L.featureGroup().addTo(map);
     this.set('resultsLayer', group);
@@ -144,8 +145,8 @@ export default Ember.Component.extend({
     @private
     @readonly
   */
-  _OnFeatureChange: Ember.observer('feature', function() {
-    this.ClearPanel();
+  _OnFeatureChange: Ember.observer('feature', function () {
+    this.clearPanel();
   }),
 
   /**
@@ -163,23 +164,35 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
     let vlayers = [];
-    this.get('layers').forEach(item=> {
-      let className = Ember.get(item, 'type');
-      let layerType = Ember.getOwner(this).knownForType('layer', className);
-      if (layerType instanceof VectorLayer) {
-        vlayers.push(item);
+    this.get('layers').forEach(item => {
+      let layers = Ember.get(item, 'layers');
+      if (layers.length > 0) {
+        layers.forEach(layer => {
+          let className = Ember.get(layer, 'type');
+          let layerType = Ember.getOwner(this).knownForType('layer', className);
+          if (layerType instanceof VectorLayer) {
+            vlayers.push(layer);
+          }
+        });
+      } else {
+        let className = Ember.get(item, 'type');
+        let layerType = Ember.getOwner(this).knownForType('layer', className);
+        if (layerType instanceof VectorLayer) {
+          vlayers.push(item);
+        }
       }
     });
     this.set('vectorLayers', vlayers);
   },
 
-  actions:{
+  actions: {
     /**
       Handles click on a button.
 
       @method actions.findIntersections
     */
     findIntersections() {
+      this.removeLayers();
       let selectedLayers = this.get('selectedLayers');
 
       let store = this.get('store');
@@ -195,9 +208,7 @@ export default Ember.Component.extend({
 
       let selected = Ember.A();
 
-      let bufferR = this.get('bufferR');
-
-      selectedLayers.forEach(function(item) {
+      selectedLayers.forEach(function (item) {
         let result = store.peekRecord('new-platform-flexberry-g-i-s-map-layer', item);
         selected.pushObject(result);
       });
@@ -207,7 +218,7 @@ export default Ember.Component.extend({
         if (currentFeature.leafletLayer.getLayers().length === 1) {
           polygonLayer = currentFeature.leafletLayer.getLayers()[0];
         } else {
-          throw new Ember.Error(' L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.');
+          throw (' L.FeatureGroup с несколькими дочерними слоями пока не поддерживается.');
         }
       } else {
         polygonLayer = currentFeature.leafletLayer;
@@ -215,11 +226,7 @@ export default Ember.Component.extend({
 
       latlng = polygonLayer.getBounds().getCenter();
 
-      bufferedMainPolygonLayer =  polygonLayer;
-
-      if (bufferR > 0) {
-        polygonLayer.feature = buffer.default(polygonLayer.toGeoJSON(), bufferR, { units: 'meters' });
-      }
+      bufferedMainPolygonLayer = polygonLayer;
 
       // Show map loader.
       let leafletMap = this.get('leafletMap');
@@ -228,7 +235,8 @@ export default Ember.Component.extend({
         polygonLayer: polygonLayer,
         bufferedMainPolygonLayer: bufferedMainPolygonLayer,
         latlng: latlng,
-        selectedLayers: selected });
+        selectedLayers: selected
+      });
     },
 
     /**
@@ -240,6 +248,7 @@ export default Ember.Component.extend({
       let group = this.get('resultsLayer');
       group.clearLayers();
       this.sendAction('closeIntersectionPanel');
+      this.removeLayers();
     },
 
     /**
@@ -260,9 +269,10 @@ export default Ember.Component.extend({
     zoomToIntersection(feature) {
       let group = this.get('resultsLayer');
       group.clearLayers();
-      L.geoJSON(feature.intersection.intersectedObject, {
+      let obj = L.geoJSON(feature.intersection.intersectedObject, {
         style: { color: 'green' }
-      }).addTo(group);
+      });
+      obj.addTo(group);
     }
   },
 
@@ -386,14 +396,32 @@ export default Ember.Component.extend({
   /**
     Cleaning after changing feature.
 
-    @method ClearPanel
+    @method clearPanel
   */
-  ClearPanel() {
+  clearPanel() {
     this.set('square', 0);
     this.set('bufferR', 0);
     this.set('results', []);
     this.set('noIntersectionResults', true);
     this.set('folded', false);
+  },
+
+  /**
+    Removing layers with identification results.
+
+    @method removeLayers
+  */
+  removeLayers() {
+    let res = this.get('results');
+    res.forEach((identificationResult) => {
+      identificationResult.features.then(
+        (features) => {
+          features.forEach((feature) => {
+            Ember.get(feature, 'leafletLayer').remove();
+          });
+        });
+    });
+    this.set('results', []);
   },
 
   /**
@@ -404,20 +432,39 @@ export default Ember.Component.extend({
     @private
   */
   _findIntersections(e) {
+    let bufferR = this.get('bufferR');
     let square = this.get('square');
-    e.results.forEach((layer)=> {
-      layer.features.then((features)=> {
-        features.forEach((item)=> {
+    e.results.forEach((layer) => {
+      layer.features.then((features) => {
+        features.forEach((item) => {
+          let objA = item;
+          let objB = e.polygonLayer.feature;
+          if (e.polygonLayer.options.hasOwnProperty('crs')) {
+            if (e.polygonLayer.options.crs.code !== 'EPSG:4326') {
+              objB = projection.toWgs84(e.polygonLayer.feature);
+            }
+          }
+
+          if (item.hasOwnProperty('leafletLayer')) {
+            if (item.leafletLayer.options.crs.code !== 'EPSG:4326') {
+              objA = projection.toWgs84(item);
+            }
+          }
+
+          if (buffer > 0) {
+            objB  = buffer.default(objB.toGeoJSON(), bufferR, { units: 'meters' });
+          }
+
           if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
-            let res = intersect(item, e.polygonLayer.feature);
+            let res = intersect.default(objA, objB);
             if (res) {
               if (square > 0) {
                 if (area(res) > square) {
                   item.intersection = {};
                   item.intersection.intersectionCords = [];
                   item.intersection.intersectedArea = area(res);
-                  res.geometry.coordinates.forEach(arr=> {
-                    arr.forEach(pair=> {
+                  res.geometry.coordinates.forEach(arr => {
+                    arr.forEach(pair => {
                       item.intersection.intersectionCords.push(pair);
                     });
                   });
@@ -430,8 +477,8 @@ export default Ember.Component.extend({
                 item.intersection = {};
                 item.intersection.intersectionCords = [];
                 item.intersection.intersectedArea = area(res);
-                res.geometry.coordinates.forEach(arr=> {
-                  arr.forEach(pair=> {
+                res.geometry.coordinates.forEach(arr => {
+                  arr.forEach(pair => {
                     item.intersection.intersectionCords.push(pair);
                   });
                 });
@@ -442,12 +489,12 @@ export default Ember.Component.extend({
               }
             }
           } else if (item.geometry.type === 'MultiLineString' || item.geometry.type === 'LineString') {
-            let intersects = lineIntersect(item, e.polygonLayer.feature);
+            let intersects = lineIntersect(objA, objB);
 
             if (intersects) {
               item.intersection = {};
               item.intersection.intersectionCords = [];
-              intersects.features.forEach(function(feat) {
+              intersects.features.forEach(function (feat) {
                 item.intersection.intersectionCords.push(feat.geometry.coordinates);
               });
               item.intersection.intersectedObject = intersects;
