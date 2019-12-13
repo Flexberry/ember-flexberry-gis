@@ -167,17 +167,14 @@ export default BaseVectorLayer.extend({
       options = Ember.$.extend(true, {}, initialOptions, options, { filter: resultingFilter });
 
       let featuresReadFormat = this.getFeaturesReadFormat();
-      debugger;
 
       let newLayer = L.wfst(options, featuresReadFormat)
         .once('load', (e) => {
-          console.log('load-1');//todo:remove!!!
           let wfsLayer = e.target;
           wfsLayer.on('save:success', this._setLayerState, this);
           resolve(wfsLayer);
         })
         .once('error', (e) => {
-          console.log('load-0');//todo:remove!!!
           reject(e.error || e);
         });
 

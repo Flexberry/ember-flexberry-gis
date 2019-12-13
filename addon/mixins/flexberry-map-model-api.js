@@ -781,13 +781,10 @@ export default Ember.Mixin.create({
 
       if (!Ember.isNone(layerLoadArray)) {
         const count = layerLoadArray.length;
-
-        console.log('leng:' + count);//todo:remove!!!
         let n = 0;
         layerLoadArray.forEach((item) => {
           item.once('load error', () => {
             n++;
-            console.log('n:' + n);//todo:remove!!!
 
             if (count === n) {
               mapApi.removeFromApi('layerLoadArray');
