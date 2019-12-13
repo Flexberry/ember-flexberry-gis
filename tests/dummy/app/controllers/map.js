@@ -262,24 +262,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   editedLayersPanelSettings: null,
 
   /**
-    Flag indicates if comapre tool active.
-
-    @property compareLayersEnabled
-    @type Boolean
-    @default false
-  */
-  compareLayersEnabled: false,
-
-  /**
-    Property contatining sideBySide component.
-
-    @property sideBySide
-    @type L.control.sideBySide
-    @default null
-  */
-  sideBySide: L.control.sideBySide(),
-
-  /**
     Initializes 'flexberry-layers-attributes-panel'.
 
     @method initializeEditPanel
@@ -547,30 +529,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
         identifyToolBufferedMainPolygonLayer.remove();
       }
 
-    },
-
-    /**
-      Handles click on compare-layers button.
-
-      @method showCompareSideBar
-    */
-    showCompareSideBar() {
-      if (sideBySide) {
-        if (this.get('sidebar.0.active') !== true) {
-          this.set('sidebar.0.active', true);
-        }
-
-        if (!this.get('sidebarOpened')) {
-          this.send('toggleSidebar', {
-            changed: false,
-            tabName: 'treeview'
-          });
-        }
-
-        setTimeout(() => {
-          this.toggleProperty('compareLayersEnabled');
-        }, 500);
-      }
     },
   }
 });
