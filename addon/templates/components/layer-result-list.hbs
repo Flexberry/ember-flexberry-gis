@@ -8,7 +8,9 @@
     <a class="feature-result-item-select icon item"
       title="{{t "components.feature-result-item.select-all-caption"}}"
       {{action "zoomTo" result.features}}>
+      {{#if (eq intersection false)}}
       <i class="marker icon"></i>
+      {{/if}}
     </a>
     {{#if (gt result.listForms.length 0)}}
       {{#if (eq result.listForms.length 1)}}

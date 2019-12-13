@@ -145,7 +145,7 @@ export default Ember.Component.extend({
       }
     });
   },
-  
+
   actions: {
     clear() {
       this.set('selectedItems', Ember.A())

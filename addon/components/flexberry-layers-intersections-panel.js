@@ -338,6 +338,7 @@ export default Ember.Component.extend({
 
     if (e.results.length > 0) {
       this.set('noIntersectionResults', false);
+      leafletMap.flexberryMap.tools.enable('drag');
     }
 
     this._findIntersections(e);
@@ -399,6 +400,9 @@ export default Ember.Component.extend({
     @method clearPanel
   */
   clearPanel() {
+    this.$('.fb-selector>a').remove();
+    this.$('.fb-selector>.menu>.item').attr('class', 'item')
+    this.set('selectedLayers', []);
     this.set('square', 0);
     this.set('bufferR', 0);
     this.set('results', []);
