@@ -192,9 +192,9 @@ export default BaseVectorLayer.extend({
         let layerLoadArray = mapApi.getFromApi('layerLoadArray');
 
         if (Ember.isNone(layerLoadArray)) {
-          mapApi.addToApi('layerLoadArray', Ember.A([newLayer]));
+          mapApi.addToApi('layerLoadArray', Ember.A([layer]));
         } else {
-          layerLoadArray.addObject(newLayer);
+          layerLoadArray.addObject(layer);
         }
 
         models.forEach(model => {
