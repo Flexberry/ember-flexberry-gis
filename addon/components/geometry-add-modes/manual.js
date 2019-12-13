@@ -173,7 +173,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
             break;
         }
 
-        const str = this._cootrdinatesToString(coordinates);
+        const str = this._coordinatesToString(coordinates);
         this.set('_coordinates', str);
 
         this.set('_objectSelectType', type);
@@ -515,10 +515,10 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   /**
     Get coordinate line.
 
-    @method _cootrdinatesToString
+    @method _coordinatesToString
     @param {Object[]} coordinates Coordinates.
   */
-  _cootrdinatesToString(coordinates) {
+  _coordinatesToString(coordinates) {
 
     // Get array depth.
     const arrDepth = this._countDimensions(coordinates);
