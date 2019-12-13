@@ -68,5 +68,17 @@ export default Ember.Service.extend({
     if (this.get('isApiAvailable') && !Ember.isBlank(path)) {
       return Ember.get(window, `mapApi.${path}`);
     }
+  },
+
+  /**
+    Remove value from map API.
+
+    @method removeFromApi
+    @param {String} path Path in the map API.
+  */
+  removeFromApi(path) {
+    if (this.get('isApiAvailable') && !Ember.isBlank(path)) {
+      Ember.set(window,`mapApi.${path}`, undefined);
+    }
   }
 });

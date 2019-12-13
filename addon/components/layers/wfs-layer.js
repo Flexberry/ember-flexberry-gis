@@ -12,6 +12,13 @@ import BaseVectorLayer from '../base-vector-layer';
  */
 export default BaseVectorLayer.extend({
   /**
+    Service for managing map API.
+    @property mapApi
+    @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
+  /**
     Array containing component's properties which are also leaflet layer options.
     @property leafletOptions
     @type Stirng[]
@@ -160,15 +167,28 @@ export default BaseVectorLayer.extend({
       options = Ember.$.extend(true, {}, initialOptions, options, { filter: resultingFilter });
 
       let featuresReadFormat = this.getFeaturesReadFormat();
-      L.wfst(options, featuresReadFormat)
+      debugger;
+
+      let newLayer = L.wfst(options, featuresReadFormat)
         .once('load', (e) => {
+          console.log('load-1');//todo:remove!!!
           let wfsLayer = e.target;
           wfsLayer.on('save:success', this._setLayerState, this);
           resolve(wfsLayer);
         })
         .once('error', (e) => {
+          console.log('load-0');//todo:remove!!!
           reject(e.error || e);
         });
+
+      const mapApi = this.get('mapApi');
+      let layerLoadArray = mapApi.getFromApi('layerLoadArray');
+
+      if (Ember.isNone(layerLoadArray)) {
+        mapApi.addToApi('layerLoadArray', Ember.A([newLayer]));
+      } else {
+        layerLoadArray.addObject(newLayer);
+      }
     });
   },
 

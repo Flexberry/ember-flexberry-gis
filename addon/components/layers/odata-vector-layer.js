@@ -14,6 +14,12 @@ const { Builder } = Query;
   @extends BaseVectorLayer
  */
 export default BaseVectorLayer.extend({
+  /**
+    Service for managing map API.
+    @property mapApi
+    @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
 
   leafletOptions: ['attribution', 'pane', 'styles'],
 
@@ -181,6 +187,16 @@ export default BaseVectorLayer.extend({
         layer.projectionName = projectionName;
         layer.editformname = modelName + this.get('postfixForEditForm');
         layer.deletedModels = Ember.A();
+
+        const mapApi = this.get('mapApi');
+        let layerLoadArray = mapApi.getFromApi('layerLoadArray');
+
+        if (Ember.isNone(layerLoadArray)) {
+          mapApi.addToApi('layerLoadArray', Ember.A([newLayer]));
+        } else {
+          layerLoadArray.addObject(newLayer);
+        }
+
         models.forEach(model => {
           this.addLayerObject(layer, model);
         });

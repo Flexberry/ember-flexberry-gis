@@ -769,6 +769,37 @@ export default Ember.Mixin.create({
   },
 
   /**
+    loading map layers.
+
+    @method  readyMapLayers
+    @returns {Ember.RSVP.Promise} Ember.RSVP.Promise
+  */
+  readyMapLayers() {
+    return new Ember.RSVP.Promise((resolve) => {
+      const mapApi = this.get('mapApi');
+      let layerLoadArray = mapApi.getFromApi('layerLoadArray');
+
+      if (!Ember.isNone(layerLoadArray)) {
+        const count = layerLoadArray.length;
+
+        console.log('leng:' + count);//todo:remove!!!
+        let n = 0;
+        layerLoadArray.forEach((item) => {
+          item.once('load error', () => {
+            n++;
+            console.log('n:' + n);//todo:remove!!!
+
+            if (count === n) {
+              mapApi.removeFromApi('layerLoadArray');
+              resolve();
+            }
+          });
+        });
+      }
+    });
+  },
+
+  /**
     Add a layer to the group.
 
     @method layerToGroup
