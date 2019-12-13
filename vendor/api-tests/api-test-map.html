@@ -79,6 +79,9 @@
       <button id="createPolygonObjectCoordinates">Create Object By Coordinates</button>
       <button id="createPolygonObjectRhumb">Create Object By Rhumb</button>
     </div>
+    <div>
+      <button id="groupLayers">Group Layers</button>
+    </div>
   </div>
   <script type="text/javascript">
     var frame = document.getElementById("testframe");
@@ -371,8 +374,13 @@
 
         console.log(thumbs);
       }
-
       getRhumbButton.addEventListener('click', getRhumb);
+
+      var groupLayersButton = document.getElementById('groupLayers');
+      var groupLayers = function () {
+        frame.contentWindow.mapApi.mapModel.moveLayerToGroup('756abf4d-76ad-4014-b9b2-39598fcd9c14', '31011034-d4ea-4604-b080-afea302c4259');
+      }
+      groupLayersButton.addEventListener('click', groupLayers);
 
     });
   </script>

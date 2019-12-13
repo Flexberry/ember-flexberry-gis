@@ -84,6 +84,12 @@ export default {
     },
     'latlng-function-textbox': {
       'caption': 'Метод преобразования широты и долготы'
+    },
+    'min-zoom': {
+      'caption': 'Минимальное приближение карты'
+    },
+    'max-zoom': {
+      'caption': 'Максимальное приближение карты'
     }
   },
 

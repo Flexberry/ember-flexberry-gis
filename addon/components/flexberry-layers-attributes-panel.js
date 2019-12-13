@@ -735,9 +735,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     @property availableGeometryAddModes
     @type Array
-    @default ['manual', 'draw', 'geoprovider']
+    @default ['manual', 'rhumb', 'draw', 'geoprovider']
   */
-  availableGeometryAddModes: ['manual', 'draw', 'geoprovider', 'import'],
+  availableGeometryAddModes: ['manual', 'rhumb', 'draw', 'geoprovider', 'import'],
 
   /**
     Minimum distance for snapping in pixels.

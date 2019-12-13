@@ -82,6 +82,12 @@ export default {
     },
     'latlng-function-textbox': {
       'caption': 'LatLngs transformation method'
+    },
+    'min-zoom': {
+      'caption': 'Min zoom'
+    },
+    'max-zoom': {
+      'caption': 'Max zoom'
     }
   },
 
