@@ -38,7 +38,9 @@
           {{flexberry-maplayers
             class="styled"
             leafletMap=leafletMap
-            layers=(get-with-dynamic-actions this "model.hierarchy"
+            compareLayersEnabled=compareLayersEnabled
+            sideBySide=sideBySide
+            layers=(get-with-dynamic-actions this "model.hierarchy"       
               hierarchyPropertyName="layers"
               pathKeyword="layerPath"
               dynamicActions=(array
@@ -204,6 +206,10 @@
           bufferRadius=identifyToolBufferRadius
           layers=model.hierarchy
           leafletMap=leafletMap
+        }}
+        {{map-tools/compare
+          leafletMap=leafletMap
+          showCompareSideBar=(action "showCompareSideBar")
         }}
         {{map-commands/go-to leafletMap=leafletMap}}
         {{map-commands/locate leafletMap=leafletMap}}

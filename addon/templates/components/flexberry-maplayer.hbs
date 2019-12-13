@@ -13,17 +13,25 @@
   {{#block-slot "header"}}
     <div class="flexberry-treenode-header-block">
       <div class="flexberry-treenode-caption-block">
-        {{flexberry-ddau-checkbox
-          class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
-          value=layer.visibility
-          change=(action "onVisibilityCheckboxChange")
-        }}
+        {{#if compareLayersEnabled}}
+          {{flexberry-ddau-checkbox
+            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+            value=layer.visibility
+            change=(action "onAddCompare")
+          }}
+        {{else}}
+          {{flexberry-ddau-checkbox
+            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+            value=layer.visibility
+            change=(action "onVisibilityCheckboxChange")
+          }}
+        {{/if}}
         {{flexberry-icon
           class=(concat flexberryClassNames.typeIcon " " _typeIconClass)
         }}
         <label class={{flexberryClassNames.caption}}>
           {{layer.name}}
-      </label>
+        </label>
       </div>
       <div class="flexberry-treenode-buttons-block">
         {{#if (not readonly)}}

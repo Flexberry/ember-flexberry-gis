@@ -11,6 +11,10 @@ export default {
     'caption': '',
     'tooltip': 'Zoom Out'
   },
+  'comapre-layers': {
+    'caption': '',
+    'tooltip': 'Compare layers'
+  },
   'identify': {
     'caption': 'Identify',
     'tooltip': 'Identify',

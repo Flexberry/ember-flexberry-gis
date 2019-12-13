@@ -34,5 +34,11 @@
         .cords {
             width:50%;
         }
-    }
+    }  
+}
+.compare-layer-tree {
+        height: 52px;
+        padding: 8px 6px; 
+        border-bottom: 1px solid gray; 
+        cursor:pointer;
 }
