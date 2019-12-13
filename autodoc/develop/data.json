@@ -9760,7 +9760,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 9,
+            "line": 10,
             "description": "Component's CSS-classes names.\nJSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.",
             "itemtype": "property",
             "name": "flexberryClassNames",
@@ -9794,21 +9794,21 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 32,
+            "line": 34,
             "description": "Reference to component's template.",
             "class": "FlexberryGeometryAddModeManualComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 37,
+            "line": 39,
             "description": "Reference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
             "class": "FlexberryGeometryAddModeManualComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 43,
+            "line": 45,
             "description": "Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)\nis empty to disable component's wrapping <div>.",
             "itemtype": "property",
             "name": "tagName",
@@ -9819,7 +9819,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 53,
+            "line": 55,
             "description": "Flag indicates whether manual geometry adding dialog has been already requested by user or not.",
             "itemtype": "property",
             "name": "_dialogHasBeenRequested",
@@ -9832,7 +9832,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 63,
+            "line": 65,
             "description": "Flag indicates whether to show manual geometry adding dialog.",
             "itemtype": "property",
             "name": "_dialogVisible",
@@ -9845,7 +9845,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 73,
+            "line": 75,
             "description": "Added coordinates.",
             "itemtype": "property",
             "name": "_coordinates",
@@ -9858,7 +9858,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 83,
+            "line": 85,
             "description": "Flag indicates that entered coordinates has invalid format or is emty.",
             "itemtype": "property",
             "name": "_coordinatesWithError",
@@ -9871,45 +9871,176 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 108,
-            "description": "Handles button click.",
+            "line": 95,
+            "description": "Flag to disable object type selection.",
+            "itemtype": "property",
+            "name": "_objectTypeDisabled",
+            "type": "Boolean",
+            "default": "true",
+            "access": "private",
+            "tagname": "",
             "class": "FlexberryGeometryAddModeManualComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 116,
+            "line": 105,
+            "description": "Object type selection error flag.",
+            "itemtype": "property",
+            "name": "_geometryField",
+            "type": "Boolean",
+            "default": "false",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/manual.js",
+            "line": 115,
+            "description": "Object types.",
+            "itemtype": "property",
+            "name": "_geometryField",
+            "type": "string[]",
+            "default": "['Point', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon']",
+            "readonly": "",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/manual.js",
+            "line": 141,
+            "description": "Handles button click.",
+            "itemtype": "method",
+            "name": "actions.onButtonClick",
+            "params": [
+                {
+                    "name": "tabModel",
+                    "description": "Tab model.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/manual.js",
+            "line": 187,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGeometryAddModeManualComponent/sendingActions.complete:method\"}}'complete' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onApprove",
+            "params": [
+                {
+                    "name": "tabModel",
+                    "description": "Tab model.",
+                    "type": "Object"
+                },
+                {
+                    "name": "e",
+                    "description": "Object event.",
+                    "type": "Object"
+                }
+            ],
             "class": "FlexberryGeometryAddModeManualComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 139,
+            "line": 414,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onDeny",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Object event.",
+                    "type": "Object"
+                }
+            ],
             "class": "FlexberryGeometryAddModeManualComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 150,
-            "description": "Parses coordinates.",
+            "line": 428,
+            "description": "Get row id.",
             "itemtype": "method",
-            "name": "parseCoordinates",
+            "name": "_getRowId",
+            "params": [
+                {
+                    "name": "tabModel",
+                    "description": "Tab model.",
+                    "type": "Object"
+                }
+            ],
             "return": {
-                "description": "Parsed coordinates if it is valid or null.",
-                "type": "Object"
+                "description": "Row id.",
+                "type": "String"
             },
             "class": "FlexberryGeometryAddModeManualComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 183,
+            "line": 447,
+            "description": "Get an array of coordinates from a coordinate line.",
+            "itemtype": "method",
+            "name": "_parseCoordinates",
+            "params": [
+                {
+                    "name": "coordinates",
+                    "description": "A string with the coordinates.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Array of coordinates of type [[[\"55.472379\",\"58.733686\"]],[[\"55.472336\",\"58.733789\"]]].",
+                "type": "String[]"
+            },
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/manual.js",
+            "line": 504,
+            "description": "Get the depth of the array.",
+            "itemtype": "method",
+            "name": "_countDimensions",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "Array.",
+                    "type": "Object[]"
+                }
+            ],
+            "return": {
+                "description": "value Array depth.",
+                "type": "Number"
+            },
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/manual.js",
+            "line": 515,
+            "description": "Get coordinate line.",
+            "itemtype": "method",
+            "name": "_coordinatesToString",
+            "params": [
+                {
+                    "name": "coordinates",
+                    "description": "Coordinates.",
+                    "type": "Object[]"
+                }
+            ],
+            "class": "FlexberryGeometryAddModeManualComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/manual.js",
+            "line": 572,
             "description": "Component's action invoking when new geometry was added.",
             "itemtype": "method",
             "name": "sendingActions.complete",
@@ -43602,6 +43733,18 @@
     "warnings": [
         {
             "message": "replacing incorrect tag: returns with return",
+            "line": " addon/components/geometry-add-modes/manual.js:428"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/components/geometry-add-modes/manual.js:447"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/components/geometry-add-modes/manual.js:504"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
             "line": " addon/components/gradients/dropdown-gradient.js:260"
         },
         {
@@ -44130,15 +44273,11 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/geometry-add-modes/manual.js:32"
+            "line": " addon/components/geometry-add-modes/manual.js:34"
         },
         {
             "message": "Missing item type\nReference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
-            "line": " addon/components/geometry-add-modes/manual.js:37"
-        },
-        {
-            "message": "Missing item type\nHandles button click.",
-            "line": " addon/components/geometry-add-modes/manual.js:108"
+            "line": " addon/components/geometry-add-modes/manual.js:39"
         },
         {
             "message": "Missing item type\nReference to component's template.",
