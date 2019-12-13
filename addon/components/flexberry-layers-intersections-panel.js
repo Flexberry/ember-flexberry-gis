@@ -400,6 +400,9 @@ export default Ember.Component.extend({
     @method clearPanel
   */
   clearPanel() {
+    let group = this.get('resultsLayer');
+    group.clearLayers();
+    this.removeLayers();  
     this.$('.fb-selector>a').remove();
     this.$('.fb-selector>.menu>.item').attr('class', 'item')
     this.set('selectedLayers', []);
