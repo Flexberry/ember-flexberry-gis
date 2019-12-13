@@ -78,7 +78,7 @@ export default Ember.Service.extend({
   */
   removeFromApi(path) {
     if (this.get('isApiAvailable') && !Ember.isBlank(path)) {
-      Ember.set(window,`mapApi.${path}`, undefined);
+      Ember.set(window, `mapApi.${path}`, undefined);
     }
   }
 });
