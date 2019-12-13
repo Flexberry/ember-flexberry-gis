@@ -1494,6 +1494,12 @@ lang {
 .intersection-panel .feature-result-item-content.content .cords {
   width: 50%;
 }
+.compare-layer-tree {
+  height: 52px;
+  padding: 8px 6px;
+  border-bottom: 1px solid gray;
+  cursor: pointer;
+}
 /* Elements */
 /*!
  * # Semantic UI - Button
@@ -6518,8 +6524,11 @@ ui.button.intersect {
   left: 248px;
 }
 .ui.menu.flexberry-maptoolbar .flexberry-identify-map-tool {
-  border-radius: 0px 5px 5px 0px;
   left: 284px;
+}
+.ui.menu.flexberry-maptoolbar .flexberry-compare-map-tool {
+  border-radius: 0px 5px 5px 0px;
+  left: 320px;
 }
 .ui.menu.flexberry-maptoolbar .flexberry-full-extent-map-command {
   border-radius: 5px;
@@ -6623,6 +6632,10 @@ ui.button.intersect {
 .ui.menu.flexberry-maptoolbar i.icon.intersections:before {
   font-family: Icons;
   content: "\f24d";
+}
+.ui.menu.flexberry-maptoolbar i.icon.compare:before {
+  font-family: Icons;
+  content: "\f0ec";
 }
 .ui.menu.flexberry-maptoolbar i.icon.zoom:before {
   content: "\e831";

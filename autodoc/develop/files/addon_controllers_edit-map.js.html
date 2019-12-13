@@ -418,7 +418,7 @@ import FlexberryMapActionsHandlerMixin from &#x27;../mixins/flexberry-map-action
 import FlexberryMaplayerActionsHandlerMixin from &#x27;../mixins/flexberry-maplayer-actions-handler&#x27;;
 import LayerResultListActionsHandlerMixin from &#x27;../mixins/layer-result-list-actions-handler&#x27;;
 import LocalStorageBindingMixin from &#x27;../mixins/local-storage-binding&#x27;;
-
+import sideBySide from &#x27;npm:leaflet-side-by-side&#x27;;
 /**
   Edit map controller.
 
@@ -434,6 +434,24 @@ export default EditFormController.extend(
   FlexberryMaplayerActionsHandlerMixin,
   LayerResultListActionsHandlerMixin,
   LocalStorageBindingMixin, {
+    /**
+      Property contatining sideBySide component.
+
+      @property sideBySide
+      @type L.control.sideBySide
+      @default null
+    */
+    sideBySide: L.control.sideBySide(),
+
+    /**
+      Flag indicates if comapre tool active.
+
+      @property compareLayersEnabled
+      @type Boolean
+      @default false
+    */
+    compareLayersEnabled: false,
+
     /**
       Leaflet map.
 
@@ -657,6 +675,32 @@ export default EditFormController.extend(
       }
 
       return layer;
+    },
+
+    actions: {
+      /**
+        Handles click on compare-layers button.
+
+        @method showCompareSideBar
+      */
+      showCompareSideBar() {
+        if (sideBySide) {
+          if (this.get(&#x27;sidebar.0.active&#x27;) !== true) {
+            this.set(&#x27;sidebar.0.active&#x27;, true);
+          }
+
+          if (!this.get(&#x27;sidebarOpened&#x27;)) {
+            this.send(&#x27;toggleSidebar&#x27;, {
+              changed: false,
+              tabName: &#x27;treeview&#x27;
+            });
+          }
+
+          setTimeout(() =&gt; {
+            this.toggleProperty(&#x27;compareLayersEnabled&#x27;);
+          }, 500);
+        }
+      },
     }
   });
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>ZoomOutMapToolComponent - Flexberry Documentation</title>
+    <title>addon/components/map-tools/compare.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -403,556 +403,115 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>ZoomOutMapToolComponent <small>Class</small></h1>
+    <h1>addon/components/map-tools/compare.js <small>File</small></h1>
 </div>
 
-<div class="well well-small">
-        <div class="uses">
-            Uses
-            <ul class="inline commas">
-                    <li><a href="&lt;a href=&quot;https://github.com/ciena-blueplanet/ember-block-slots#usage&quot;&gt;SlotsMixin&lt;/a&gt;.html">&lt;a href=&quot;https://github.com/ciena-blueplanet/ember-block-slots#usage&quot;&gt;SlotsMixin&lt;/a&gt;</a></li>
-            </ul>
-        </div>
+<div class="file">
+    <pre class="prettyprint linenums">
+/**
+  @module ember-flexberry-gis
+*/
 
-        <div class="extends">
-            Extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
-        </div>
+import Ember from &#x27;ember&#x27;;
+import { translationMacro as t } from &#x27;ember-i18n&#x27;;
+import layout from &#x27;../../templates/components/map-tools/compare&#x27;;
 
-        <div class="foundat">
-            Defined in: <a href="../files/addon_components_map-tools_zoom-out.js.html#l27"><code>addon&#x2F;components&#x2F;map-tools&#x2F;zoom-out.js:27</code></a>
-        </div>
+/**
+  Component&#x27;s CSS-classes names.
+  JSON-object containing string constants with CSS-classes names related to component&#x27;s .hbs markup elements.
 
-            Module: <a href="../modules/ember-flexberry-gis.html">ember-flexberry-gis</a>
+  @property {Object} flexberryClassNames
+  @property {String} flexberryClassNames.prefix Component&#x27;s CSS-class names prefix (&#x27;flexberry-zoom-out-map-tool&#x27;).
+  @property {String} flexberryClassNames.wrapper Component&#x27;s wrapping &lt;div&gt; CSS-class name (&#x27;flexberry-zoom-out-map-tool&#x27;).
+  @readonly
+  @static
 
-</div>
+  @for ZoomOutMapToolComponent
+*/
+const flexberryClassNamesPrefix = &#x27;flexberry-compare-map-tool&#x27;;
+const flexberryClassNames = {
+  prefix: flexberryClassNamesPrefix,
+  wrapper: flexberryClassNamesPrefix
+};
 
+let ComapreToolComponent =  Ember.Component.extend({
+  layout,
 
-<div class="well well-small">
-    <p>Flexberry zoom-out map-tool component.
-Component must be used in combination with <a href="../classes/FlexberryMaptoolbarComponent.html" class="crosslink">flexberry-maptoolbar component</a>
-as a wrapper.</p>
-<p>Usage:
-templates/my-map-form.hbs</p>
-<pre class="code prettyprint"><code class="language-handlebars"></code></pre>
+  /**
+    Reference to component&#x27;s CSS-classes names.
+    Must be also a component&#x27;s instance property to be available from component&#x27;s .hbs template.
+  */
+  flexberryClassNames,
 
-</div>
+  /**
+    Overridden [&#x27;tagName&#x27;](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)
+    to disable a component&#x27;s wrapping element.
 
+    @property tagName
+    @type String
+    @default &#x27;&#x27;
+  */
+  tagName: &#x27;&#x27;,
 
-<div>
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#index">Index</a></li>
+  /**
+    Map tool&#x27;s additional CSS-class.
 
-            <li><a data-toggle="tab" href="#methods">Methods</a></li>
-            <li><a data-toggle="tab" href="#properties">Properties</a></li>
-    </ul>
+    @property class
+    @type String
+    @default null
+  */
+  class: null,
 
-    <div class="tab-content">
-        <div id="index" class="tab-pane active">
-            <h2 class="off-left">Item Index</h2>
+  /**
+    Map tool&#x27;s caption.
 
-                <div class="index-section methods">
-                    <h3>Methods</h3>
+    @property caption
+    @type String
+    @default t(&#x27;components.map-tools.comapre-layers.caption&#x27;)
+  */
+  caption: t(&#x27;components.map-tools.comapre-layers.caption&#x27;),
 
-                    <ul class="index-list methods extends">
-                            <li class="index-item method">
-                                <a href="#" data-tabid="#methods" data-anchor="#method_actions.onMapToolActivate" data-tablink="actions.onMapToolActivate">actions.onMapToolActivate</a>
+  /**
+     Map tool&#x27;s tooltip text.
+     Will be added as wrapper&#x27;s element &#x27;title&#x27; attribute.
 
-                            </li>
-                    </ul>
-                </div>
+    @property tooltip
+    @default t(&#x27;components.map-tools.comapre-layers.tooltip&#x27;)
+  */
+  tooltip: t(&#x27;components.map-tools.comapre-layers.tooltip&#x27;),
 
-                <div class="index-section properties">
-                    <h3>Properties</h3>
+  /**
+    Map tool&#x27;s icon CSS-class names.
 
-                    <ul class="index-list properties extends">
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_caption" data-tablink="caption">caption</a>
+    @property iconClass
+    @type String
+    @default &#x27;compare icon&#x27;
+  */
+  iconClass: &#x27;compare icon&#x27;,
 
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_caption" data-tablink="caption">caption</a>
+  actions: {
+    /**
+      Handles {{#crossLink &quot;BaseMapToolComponent/sendingActions.activate:method&quot;}}base map-tool&#x27;s &#x27;activate&#x27; action{{/crossLink}}.
+      Invokes own {{#crossLink &quot;DragMapToolComponent/sendingActions.activate:method&quot;}}&#x27;activate&#x27; action{{/crossLink}}.
 
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_class" data-tablink="class">class</a>
+      @method actions.onMapToolActivate
+      @param {Object} e Base map-tool&#x27;s &#x27;activate&#x27; action event-object.
+    */
+    showCompareSideBar(e) {
+      this.sendAction(&#x27;showCompareSideBar&#x27;, e);
+    }
+  },
+});
 
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_class" data-tablink="class">class</a>
+// Add component&#x27;s CSS-class names as component&#x27;s class static constants
+// to make them available outside of the component instance.
+ComapreToolComponent.reopenClass({
+  flexberryClassNames
+});
 
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_flexberryClassNames" data-tablink="flexberryClassNames">flexberryClassNames</a>
+export default ComapreToolComponent;
 
-                                    <span class="flag static">static</span>
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_flexberryClassNames" data-tablink="flexberryClassNames">flexberryClassNames</a>
-
-                                    <span class="flag static">static</span>
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_iconClass" data-tablink="iconClass">iconClass</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_iconClass" data-tablink="iconClass">iconClass</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_tagName" data-tablink="tagName">tagName</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_tagName" data-tablink="tagName">tagName</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_tooltip" data-tablink="tooltip">tooltip</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#" data-tabid="#properties" data-anchor="#property_tooltip" data-tablink="tooltip">tooltip</a>
-
-                            </li>
-                    </ul>
-                </div>
-
-
-        </div>
-
-            <div id="methods" class="tab-pane">
-                <h2 class="off-left">Methods</h2>
-
-                    <div id="method_actions.onMapToolActivate" class="method item">
-                        <h3 class="name"><code>actions.onMapToolActivate</code></h3>
-                    
-                            <div class="args">
-                                <span class="paren">(</span><ul class="args-list inline commas">
-                                    <li class="arg">
-                                            <code>e</code>
-                                    </li>
-                                </ul><span class="paren">)</span>
-                            </div>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_compare.js.html#l83"><code>addon&#x2F;components&#x2F;map-tools&#x2F;compare.js:83</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Handles BaseMapToolComponent/sendingActions.activate:method.
-                    Invokes own DragMapToolComponent/sendingActions.activate:method.</p>
-                    
-                        </div>
-                    
-                            <div class="params">
-                                <h4>Parameters:</h4>
-                    
-                                <ul class="params-list">
-                                    <li class="param">
-                                            <code class="param-name">e</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>Base map-tool's 'activate' action event-object.</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                </ul>
-                            </div>
-                    
-                    
-                    </div>
-            </div>
-
-            <div id="properties" class="tab-pane">
-                <h2 class="off-left">Properties</h2>
-
-                    <div id="property_caption" class="property item">
-                        <h3 class="name"><code>caption</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_compare.js.html#l55"><code>addon&#x2F;components&#x2F;map-tools&#x2F;compare.js:55</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Map tool's caption.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> t(&#x27;components.map-tools.comapre-layers.caption&#x27;)</p>
-                    
-                    
-                    </div>
-                    <div id="property_caption" class="property item">
-                        <h3 class="name"><code>caption</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_zoom-out.js.html#l75"><code>addon&#x2F;components&#x2F;map-tools&#x2F;zoom-out.js:75</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Map tool's caption.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> t(&#x27;components.map-tools.zoom-out.caption&#x27;)</p>
-                    
-                    
-                    </div>
-                    <div id="property_class" class="property item">
-                        <h3 class="name"><code>class</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_compare.js.html#l46"><code>addon&#x2F;components&#x2F;map-tools&#x2F;compare.js:46</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Map tool's additional CSS-class.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> null</p>
-                    
-                    
-                    </div>
-                    <div id="property_class" class="property item">
-                        <h3 class="name"><code>class</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_zoom-out.js.html#l66"><code>addon&#x2F;components&#x2F;map-tools&#x2F;zoom-out.js:66</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Map tool's additional CSS-class.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> null</p>
-                    
-                    
-                    </div>
-                    <div id="property_flexberryClassNames" class="property item">
-                        <h3 class="name"><code>flexberryClassNames</code></h3>
-                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                    
-                    
-                    
-                    
-                            <span class="flag static">static</span>
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_zoom-out.js.html#l9"><code>addon&#x2F;components&#x2F;map-tools&#x2F;zoom-out.js:9</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Component's CSS-classes names.
-                    JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.</p>
-                    
-                        </div>
-                    
-                    
-                    
-                            <h4>Sub-properties:</h4>
-                    
-                            <ul class="params-list">
-                                <li class="param">
-                                        <code class="param-name">prefix</code>
-                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                                    <div class="param-description">
-                                        <p>Component's CSS-class names prefix ('flexberry-zoom-out-map-tool').</p>
-                    
-                                    </div>
-                    
-                                </li>
-                                <li class="param">
-                                        <code class="param-name">wrapper</code>
-                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                                    <div class="param-description">
-                                        <p>Component's wrapping <div> CSS-class name ('flexberry-zoom-out-map-tool').</p>
-                    
-                                    </div>
-                    
-                                </li>
-                            </ul>
-                    </div>
-                    <div id="property_flexberryClassNames" class="property item">
-                        <h3 class="name"><code>flexberryClassNames</code></h3>
-                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                    
-                    
-                    
-                    
-                            <span class="flag static">static</span>
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_compare.js.html#l9"><code>addon&#x2F;components&#x2F;map-tools&#x2F;compare.js:9</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Component's CSS-classes names.
-                    JSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.</p>
-                    
-                        </div>
-                    
-                    
-                    
-                            <h4>Sub-properties:</h4>
-                    
-                            <ul class="params-list">
-                                <li class="param">
-                                        <code class="param-name">prefix</code>
-                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                                    <div class="param-description">
-                                        <p>Component's CSS-class names prefix ('flexberry-zoom-out-map-tool').</p>
-                    
-                                    </div>
-                    
-                                </li>
-                                <li class="param">
-                                        <code class="param-name">wrapper</code>
-                                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                                    <div class="param-description">
-                                        <p>Component's wrapping <div> CSS-class name ('flexberry-zoom-out-map-tool').</p>
-                    
-                                    </div>
-                    
-                                </li>
-                            </ul>
-                    </div>
-                    <div id="property_iconClass" class="property item">
-                        <h3 class="name"><code>iconClass</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_compare.js.html#l73"><code>addon&#x2F;components&#x2F;map-tools&#x2F;compare.js:73</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Map tool's icon CSS-class names.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> &#x27;compare icon&#x27;</p>
-                    
-                    
-                    </div>
-                    <div id="property_iconClass" class="property item">
-                        <h3 class="name"><code>iconClass</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_zoom-out.js.html#l93"><code>addon&#x2F;components&#x2F;map-tools&#x2F;zoom-out.js:93</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Map tool's icon CSS-class names.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> &#x27;zoom out icon&#x27;</p>
-                    
-                    
-                    </div>
-                    <div id="property_tagName" class="property item">
-                        <h3 class="name"><code>tagName</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_compare.js.html#l36"><code>addon&#x2F;components&#x2F;map-tools&#x2F;compare.js:36</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Overridden <a href="http://emberjs.com/api/classes/Ember.Component.html#property_tagName">'tagName'</a>
-                    to disable a component's wrapping element.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> &#x27;&#x27;</p>
-                    
-                    
-                    </div>
-                    <div id="property_tagName" class="property item">
-                        <h3 class="name"><code>tagName</code></h3>
-                        <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_zoom-out.js.html#l56"><code>addon&#x2F;components&#x2F;map-tools&#x2F;zoom-out.js:56</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Overridden <a href="http://emberjs.com/api/classes/Ember.Component.html#property_tagName">'tagName'</a>
-                    to disable a component's wrapping element.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> &#x27;&#x27;</p>
-                    
-                    
-                    </div>
-                    <div id="property_tooltip" class="property item">
-                        <h3 class="name"><code>tooltip</code></h3>
-                        <span class="type">Unknown</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_compare.js.html#l64"><code>addon&#x2F;components&#x2F;map-tools&#x2F;compare.js:64</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Map tool's tooltip text.
-                    Will be added as wrapper's element 'title' attribute.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> t(&#x27;components.map-tools.comapre-layers.tooltip&#x27;)</p>
-                    
-                    
-                    </div>
-                    <div id="property_tooltip" class="property item">
-                        <h3 class="name"><code>tooltip</code></h3>
-                        <span class="type">Unknown</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_map-tools_zoom-out.js.html#l84"><code>addon&#x2F;components&#x2F;map-tools&#x2F;zoom-out.js:84</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Map tool's tooltip text.
-                    Will be added as wrapper's element 'title' attribute.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> t(&#x27;components.map-tools.zoom-out.tooltip&#x27;)</p>
-                    
-                    
-                    </div>
-            </div>
-
-
-    </div>
+    </pre>
 </div>
                     </div>
                 </div>

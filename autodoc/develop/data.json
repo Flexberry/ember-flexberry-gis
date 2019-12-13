@@ -900,6 +900,15 @@
             },
             "namespaces": {}
         },
+        "addon/components/map-tools/compare.js": {
+            "name": "addon/components/map-tools/compare.js",
+            "modules": {},
+            "classes": {},
+            "fors": {
+                "ZoomOutMapToolComponent": 1
+            },
+            "namespaces": {}
+        },
         "addon/components/map-tools/drag.js": {
             "name": "addon/components/map-tools/drag.js",
             "modules": {},
@@ -3265,12 +3274,12 @@
                 "FlexberrySearchMapCommandDialogComponent": 1,
                 "FlexberryEditMapDialogComponent": 1,
                 "BaseMapToolComponent": 1,
+                "ZoomOutMapToolComponent": 1,
                 "DragMapToolComponent": 1,
                 "DrawMapToolComponent": 1,
                 "IdentifyMapToolComponent": 1,
                 "MeasureMapToolComponent": 1,
                 "ZoomInMapToolComponent": 1,
-                "ZoomOutMapToolComponent": 1,
                 "ImageMarkersStyleIconEditorComponent": 1,
                 "DefaultMarkersStyleComponent": 1,
                 "ImageMarkersStyleComponent": 1,
@@ -3509,12 +3518,12 @@
                 "FlexberrySearchMapCommandDialogComponent": 1,
                 "FlexberryEditMapDialogComponent": 1,
                 "BaseMapToolComponent": 1,
+                "ZoomOutMapToolComponent": 1,
                 "DragMapToolComponent": 1,
                 "DrawMapToolComponent": 1,
                 "IdentifyMapToolComponent": 1,
                 "MeasureMapToolComponent": 1,
                 "ZoomInMapToolComponent": 1,
-                "ZoomOutMapToolComponent": 1,
                 "FlexberryBoundingboxComponent": 1,
                 "FlexberryIdentifyPanelComponent": 1,
                 "FlexberryLayersDropdownComponent": 1,
@@ -4890,6 +4899,24 @@
                 "DomActionsMixin"
             ]
         },
+        "ZoomOutMapToolComponent": {
+            "name": "ZoomOutMapToolComponent",
+            "shortname": "ZoomOutMapToolComponent",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "ember-flexberry-gis",
+            "namespace": "",
+            "file": "addon/components/map-tools/zoom-out.js",
+            "line": 27,
+            "description": "Flexberry zoom-out map-tool component.\nComponent must be used in combination with {{#crossLink \"FlexberryMaptoolbarComponent\"}}flexberry-maptoolbar component{{/crossLink}}\nas a wrapper.\n\nUsage:\ntemplates/my-map-form.hbs\n```handlebars\n{{#flexberry-maptoolbar}}\n  {{map-tools/zoom-out leafletMap=leafletMap}}\n{{/flexberry-maptoolbar}}\n```",
+            "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>",
+            "uses": [
+                "<a href=\"https://github.com/ciena-blueplanet/ember-block-slots#usage\">SlotsMixin</a>"
+            ]
+        },
         "DragMapToolComponent": {
             "name": "DragMapToolComponent",
             "shortname": "DragMapToolComponent",
@@ -4975,24 +5002,6 @@
             "file": "addon/components/map-tools/zoom-in.js",
             "line": 27,
             "description": "Flexberry zoom-in map-tool component.\nComponent must be used in combination with {{#crossLink \"FlexberryMaptoolbarComponent\"}}flexberry-maptoolbar component{{/crossLink}}\nas a wrapper.\n\nUsage:\ntemplates/my-map-form.hbs\n```handlebars\n{{#flexberry-maptoolbar}}\n  {{map-tools/zoom-in leafletMap=leafletMap}}\n{{/flexberry-maptoolbar}}\n```",
-            "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>",
-            "uses": [
-                "<a href=\"https://github.com/ciena-blueplanet/ember-block-slots#usage\">SlotsMixin</a>"
-            ]
-        },
-        "ZoomOutMapToolComponent": {
-            "name": "ZoomOutMapToolComponent",
-            "shortname": "ZoomOutMapToolComponent",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "ember-flexberry-gis",
-            "namespace": "",
-            "file": "addon/components/map-tools/zoom-out.js",
-            "line": 27,
-            "description": "Flexberry zoom-out map-tool component.\nComponent must be used in combination with {{#crossLink \"FlexberryMaptoolbarComponent\"}}flexberry-maptoolbar component{{/crossLink}}\nas a wrapper.\n\nUsage:\ntemplates/my-map-form.hbs\n```handlebars\n{{#flexberry-maptoolbar}}\n  {{map-tools/zoom-out leafletMap=leafletMap}}\n{{/flexberry-maptoolbar}}\n```",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>",
             "uses": [
                 "<a href=\"https://github.com/ciena-blueplanet/ember-block-slots#usage\">SlotsMixin</a>"
@@ -22267,6 +22276,107 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/components/map-tools/compare.js",
+            "line": 9,
+            "description": "Component's CSS-classes names.\nJSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.",
+            "itemtype": "property",
+            "name": "flexberryClassNames",
+            "type": "Object",
+            "readonly": "",
+            "static": 1,
+            "class": "ZoomOutMapToolComponent",
+            "module": "ember-flexberry-gis",
+            "subprops": [
+                {
+                    "name": "prefix",
+                    "description": "Component's CSS-class names prefix ('flexberry-zoom-out-map-tool').",
+                    "type": "String"
+                },
+                {
+                    "name": "wrapper",
+                    "description": "Component's wrapping <div> CSS-class name ('flexberry-zoom-out-map-tool').",
+                    "type": "String"
+                }
+            ]
+        },
+        {
+            "file": "addon/components/map-tools/compare.js",
+            "line": 30,
+            "description": "Reference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
+            "class": "ZoomOutMapToolComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-tools/compare.js",
+            "line": 36,
+            "description": "Overridden ['tagName'](http://emberjs.com/api/classes/Ember.Component.html#property_tagName)\nto disable a component's wrapping element.",
+            "itemtype": "property",
+            "name": "tagName",
+            "type": "String",
+            "default": "''",
+            "class": "ZoomOutMapToolComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-tools/compare.js",
+            "line": 46,
+            "description": "Map tool's additional CSS-class.",
+            "itemtype": "property",
+            "name": "class",
+            "type": "String",
+            "default": "null",
+            "class": "ZoomOutMapToolComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-tools/compare.js",
+            "line": 55,
+            "description": "Map tool's caption.",
+            "itemtype": "property",
+            "name": "caption",
+            "type": "String",
+            "default": "t('components.map-tools.comapre-layers.caption')",
+            "class": "ZoomOutMapToolComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-tools/compare.js",
+            "line": 64,
+            "description": "Map tool's tooltip text.\nWill be added as wrapper's element 'title' attribute.",
+            "itemtype": "property",
+            "name": "tooltip",
+            "default": "t('components.map-tools.comapre-layers.tooltip')",
+            "class": "ZoomOutMapToolComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-tools/compare.js",
+            "line": 73,
+            "description": "Map tool's icon CSS-class names.",
+            "itemtype": "property",
+            "name": "iconClass",
+            "type": "String",
+            "default": "'compare icon'",
+            "class": "ZoomOutMapToolComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/map-tools/compare.js",
+            "line": 83,
+            "description": "Handles {{#crossLink \"BaseMapToolComponent/sendingActions.activate:method\"}}base map-tool's 'activate' action{{/crossLink}}.\nInvokes own {{#crossLink \"DragMapToolComponent/sendingActions.activate:method\"}}'activate' action{{/crossLink}}.",
+            "itemtype": "method",
+            "name": "actions.onMapToolActivate",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Base map-tool's 'activate' action event-object.",
+                    "type": "Object"
+                }
+            ],
+            "class": "ZoomOutMapToolComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/components/map-tools/drag.js",
             "line": 9,
             "description": "Component's CSS-classes names.\nJSON-object containing string constants with CSS-classes names related to component's .hbs markup elements.",
@@ -31514,7 +31624,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 455,
+            "line": 464,
             "description": "Handles {{#crossLink \"FlexberryTreenodeComponent/sendingActions.headerClick:method\"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.headerClick:method\"}}'headerClick' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHeaderClick",
@@ -31530,7 +31640,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 467,
+            "line": 476,
             "description": "Handles {{#crossLink \"FlexberryTreenodeComponent/sendingActions.beforeExpand:method\"}}'flexberry-treenode' component's 'beforeExpand' action{{/crossLink}}.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.beforeExpand:method\"}}'beforeExpand' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHeaderClick",
@@ -31546,7 +31656,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 485,
+            "line": 494,
             "description": "Handles {{#crossLink \"FlexberryTreenodeComponent/sendingActions.beforeCollapse:method\"}}'flexberry-treenode' component's 'beforeCollapse' action{{/crossLink}}.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.beforeCollapse:method\"}}'beforeCollapse' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHeaderClick",
@@ -31562,7 +31672,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 497,
+            "line": 506,
             "description": "Handles {{#crossLink \"FlexberryDdauCheckboxComponent/sendingActions.change:method\"}}'flexberry-ddau-checkbox' component's 'change' action{{/crossLink}}.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.changeVisibility:method\"}}'changeVisibility'action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onVisibilityCheckboxChange",
@@ -31578,7 +31688,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 508,
+            "line": 517,
             "description": "Handles {{#crossLink \"FlexberryDdauSliderComponent/sendingActions.change:method\"}}'flexberry-ddau-slider' component's 'change' action{{/crossLink}}.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.changeVisibility:method\"}}'changeOpacity'action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onOpacitySliderChange",
@@ -31594,7 +31704,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 519,
+            "line": 528,
             "description": "Invokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.fitBounds:method\"}}'fitBounds' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onBoundsButtonClick",
@@ -31610,7 +31720,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 530,
+            "line": 539,
             "description": "Handles attributes button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.attributes:method\"}}'attributes'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAttributesButtonClick",
@@ -31626,7 +31736,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 542,
+            "line": 551,
             "description": "Handles add button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddButtonClick",
@@ -31642,7 +31752,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 562,
+            "line": 571,
             "description": "Handles add dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddDialogApprove",
@@ -31665,7 +31775,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 575,
+            "line": 584,
             "description": "Handles copy button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.copy:method\"}}'copy'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onCopyButtonClick",
@@ -31681,7 +31791,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 595,
+            "line": 604,
             "description": "Handles copy dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.copy:method\"}}'copy'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onCopyDialogApprove",
@@ -31704,7 +31814,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 612,
+            "line": 621,
             "description": "Handles edit button's 'click' event.\nShows component's edit dialog.",
             "itemtype": "method",
             "name": "actions.onEditButtonClick",
@@ -31721,7 +31831,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 631,
+            "line": 640,
             "description": "Handles edit dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.add:method\"}}'edit'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onEditDialogApprove",
@@ -31744,7 +31854,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 644,
+            "line": 653,
             "description": "Handles remove button's 'click' event.\nShows component's remove dialog.",
             "itemtype": "method",
             "name": "actions.onRemoveButtonClick",
@@ -31761,7 +31871,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 663,
+            "line": 672,
             "description": "Handles remove dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayerComponent/sendingActions.remove:method\"}}'remove'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onRemoveDialogApprove",
@@ -31770,7 +31880,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 675,
+            "line": 684,
             "description": "Creates layer's copy.",
             "itemtype": "method",
             "name": "createLayerCopy",
@@ -31791,7 +31901,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 689,
+            "line": 698,
             "description": "Component's action invoking when layer node's header has been clicked.",
             "itemtype": "method",
             "name": "sendingActions.headerClick",
@@ -31807,7 +31917,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 697,
+            "line": 706,
             "description": "Component's action invoking before layer node will be expanded.\nLayer node can be prevented from being expanded with call to action event object's 'originalEvent.stopPropagation()'.",
             "itemtype": "method",
             "name": "sendingActions.beforeExpand",
@@ -31823,7 +31933,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 706,
+            "line": 715,
             "description": "Component's action invoking before layer node will be collapsed.\nLayer node can be prevented from being collapsed with call to action event object's 'originalEvent.stopPropagation()'.",
             "itemtype": "method",
             "name": "sendingActions.beforeCollapse",
@@ -31839,7 +31949,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 715,
+            "line": 724,
             "description": "Component's action invoking when layer node's 'visibility' state changed.",
             "itemtype": "method",
             "name": "sendingActions.changeVisibility",
@@ -31855,7 +31965,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 723,
+            "line": 732,
             "description": "Component's action invoking when layer node's 'opacity' value changed.",
             "itemtype": "method",
             "name": "sendingActions.changeOpacity",
@@ -31871,7 +31981,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 731,
+            "line": 740,
             "description": "Component's action invoking when layer node's 'extent' button clicked.",
             "itemtype": "method",
             "name": "sendingActions.fitBounds",
@@ -31887,7 +31997,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 739,
+            "line": 748,
             "description": "Component's action invoking when user wants to add child layer into current.",
             "itemtype": "method",
             "name": "sendingActions.add",
@@ -31910,7 +32020,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 747,
+            "line": 756,
             "description": "Component's action invoking when user wants to copy current layer.",
             "itemtype": "method",
             "name": "sendingActions.copy",
@@ -31938,7 +32048,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 756,
+            "line": 765,
             "description": "Component's action invoking when user wants to edit current layer.",
             "itemtype": "method",
             "name": "sendingActions.edit",
@@ -31961,7 +32071,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 764,
+            "line": 773,
             "description": "Component's action invoking when user wants to remove current layer.",
             "itemtype": "method",
             "name": "sendingActions.remove",
@@ -31977,7 +32087,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayer.js",
-            "line": 771,
+            "line": 780,
             "description": "Component's action invoking when user wants to look at attributes of current layer.",
             "itemtype": "method",
             "name": "sendingActions.attributesEdit",
@@ -32291,7 +32401,93 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 375,
+            "line": 374,
+            "description": "String contains on what side to add layer in sideBySide control.",
+            "itemtype": "property",
+            "name": "side",
+            "type": "String",
+            "default": "'Left'",
+            "class": "FlexberryMaplayersComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayers.js",
+            "line": 383,
+            "description": "Property contatining sideBySide component.",
+            "itemtype": "property",
+            "name": "sideBySide",
+            "type": "L.control.sideBySide",
+            "default": "null",
+            "class": "FlexberryMaplayersComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayers.js",
+            "line": 392,
+            "description": "Proprty containing layer on left side of sideBySide control.",
+            "itemtype": "property",
+            "name": "leftLayer",
+            "type": "String",
+            "default": "null",
+            "class": "FlexberryMaplayersComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayers.js",
+            "line": 401,
+            "description": "Proprty containing layer on right side of sideBySide control.",
+            "itemtype": "property",
+            "name": "rightLayer",
+            "type": "String",
+            "default": "null",
+            "class": "FlexberryMaplayersComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayers.js",
+            "line": 410,
+            "description": "Proprty containing current active layers.",
+            "itemtype": "property",
+            "name": "currentLayers",
+            "type": "Array",
+            "default": "[]",
+            "class": "FlexberryMaplayersComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayers.js",
+            "line": 419,
+            "description": "Flag indicates if compare layers mode enabled.",
+            "itemtype": "property",
+            "name": "compareLayersEnabled",
+            "type": "Boolean",
+            "default": "false",
+            "class": "FlexberryMaplayersComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayers.js",
+            "line": 428,
+            "description": "Proprty containing raster layers to compare.",
+            "itemtype": "property",
+            "name": "rasterLayers",
+            "type": "Array",
+            "default": "[]",
+            "class": "FlexberryMaplayersComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayers.js",
+            "line": 437,
+            "description": "Adds side by side control to map and removes current visible layers.",
+            "itemtype": "method",
+            "name": "onCompareLayersEnabled",
+            "class": "FlexberryMaplayersComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayers.js",
+            "line": 482,
             "description": "Handles add button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddButtonClick",
@@ -32307,7 +32503,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 396,
+            "line": 503,
             "description": "Handles add dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddDialogApprove",
@@ -32330,7 +32526,41 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 410,
+            "line": 516,
+            "description": "Handles clicks on left side button.",
+            "itemtype": "method",
+            "name": "actions.onLeftClick",
+            "class": "FlexberryMaplayersComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayers.js",
+            "line": 525,
+            "description": "Handles clicks on right side button.",
+            "itemtype": "method",
+            "name": "actions.onLeftClick",
+            "class": "FlexberryMaplayersComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayers.js",
+            "line": 534,
+            "description": "Handles click on add layer to SideBySide.",
+            "itemtype": "method",
+            "name": "action.addToSideToSide",
+            "params": [
+                {
+                    "name": "layer",
+                    "description": "Layer to add.",
+                    "type": "Object"
+                }
+            ],
+            "class": "FlexberryMaplayersComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-maplayers.js",
+            "line": 563,
             "description": "Component's action invoking when user wants to add child layer into layers tree root.",
             "itemtype": "method",
             "name": "sendingActions.add",
@@ -34639,6 +34869,28 @@
         {
             "file": "addon/controllers/edit-map.js",
             "line": 27,
+            "description": "Property contatining sideBySide component.",
+            "itemtype": "property",
+            "name": "sideBySide",
+            "type": "L.control.sideBySide",
+            "default": "null",
+            "class": "EditMapController",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/controllers/edit-map.js",
+            "line": 36,
+            "description": "Flag indicates if comapre tool active.",
+            "itemtype": "property",
+            "name": "compareLayersEnabled",
+            "type": "Boolean",
+            "default": "false",
+            "class": "EditMapController",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/controllers/edit-map.js",
+            "line": 45,
             "description": "Leaflet map.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -34649,7 +34901,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 38,
+            "line": 56,
             "description": "Query parameter, contains json serialized object with property names and values",
             "itemtype": "property",
             "name": "filter",
@@ -34660,7 +34912,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 46,
+            "line": 64,
             "description": "Is intersection panel enabled.",
             "itemtype": "property",
             "name": "setting",
@@ -34671,7 +34923,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 54,
+            "line": 72,
             "description": "Query parameter, contains map object setting primary key",
             "itemtype": "property",
             "name": "setting",
@@ -34682,7 +34934,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 62,
+            "line": 80,
             "description": "Query parameter, contains current map zoom",
             "itemtype": "property",
             "name": "zoom",
@@ -34693,7 +34945,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 70,
+            "line": 88,
             "description": "Query parameter, contains current map latitude",
             "itemtype": "property",
             "name": "lat",
@@ -34704,7 +34956,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 78,
+            "line": 96,
             "description": "Query parameter, contains current map longitude",
             "itemtype": "property",
             "name": "lng",
@@ -34715,7 +34967,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 86,
+            "line": 104,
             "description": "Query parameter, contains comma-separated ids\nof selected layer metadata",
             "itemtype": "property",
             "name": "metadata",
@@ -34726,7 +34978,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 95,
+            "line": 113,
             "description": "Deserialized valued of filter property",
             "itemtype": "property",
             "name": "queryFilter",
@@ -34737,7 +34989,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 114,
+            "line": 132,
             "description": "Class name used which will be used to save data in local storage.",
             "itemtype": "property",
             "name": "bindingClass",
@@ -34748,7 +35000,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 123,
+            "line": 141,
             "description": "Key property used which will be used to save data in local storage.",
             "itemtype": "property",
             "name": "keyProperty",
@@ -34759,7 +35011,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 132,
+            "line": 150,
             "description": "Object containing bindings as key-value pairs.",
             "itemtype": "property",
             "name": "binding",
@@ -34772,7 +35024,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 150,
+            "line": 168,
             "description": "This method will be invoked before save operation will be called.\nOverride this method to add some custom logic on save operation start.",
             "example": [
                 "\n  ```javascript\n  onSaveActionStarted() {\n    alert('Save operation started!');\n  }\n  ```"
@@ -34784,7 +35036,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 175,
+            "line": 193,
             "description": "Creates new layer as specified layer's child\n(overridden method from {{#crossLink \"FlexberryMaplayerActionsHandlerMixin:createLayer:method\"}}\nFlexberryMaplayerActionsHandlerMixin\n{{/crossLink}}).",
             "itemtype": "method",
             "name": "createLayer",
@@ -34823,7 +35075,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 201,
+            "line": 219,
             "description": "Updates specified layer with given properties.\n(overridden method from {{#crossLink \"FlexberryMaplayerActionsHandlerMixin:editLayer:method\"}}\nFlexberryMaplayerActionsHandlerMixin\n{{/crossLink}}).",
             "itemtype": "method",
             "name": "editLayer",
@@ -34862,7 +35114,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 219,
+            "line": 237,
             "description": "Removes specified layer from layers hierarchy\n(overridden method from {{#crossLink \"FlexberryMaplayerActionsHandlerMixin:/removeLayer:method\"}}\nFlexberryMaplayerActionsHandlerMixin\n{{/crossLink}}).",
             "itemtype": "method",
             "name": "removeLayer",
@@ -34891,6 +35143,15 @@
             },
             "access": "private",
             "tagname": "",
+            "class": "EditMapController",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/controllers/edit-map.js",
+            "line": 271,
+            "description": "Handles click on compare-layers button.",
+            "itemtype": "method",
+            "name": "showCompareSideBar",
             "class": "EditMapController",
             "module": "ember-flexberry-gis"
         },
@@ -43893,19 +44154,19 @@
         },
         {
             "message": "unknown tag: computed",
-            "line": " addon/controllers/edit-map.js:95"
+            "line": " addon/controllers/edit-map.js:113"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/controllers/edit-map.js:175"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " addon/controllers/edit-map.js:201"
+            "line": " addon/controllers/edit-map.js:193"
         },
         {
             "message": "replacing incorrect tag: returns with return",
             "line": " addon/controllers/edit-map.js:219"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/controllers/edit-map.js:237"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -44938,6 +45199,10 @@
         {
             "message": "Missing item type\nDestroys DOM-related component's properties & logic.",
             "line": " addon/components/map-tools/base.js:386"
+        },
+        {
+            "message": "Missing item type\nReference to component's CSS-classes names.\nMust be also a component's instance property to be available from component's .hbs template.",
+            "line": " addon/components/map-tools/compare.js:30"
         },
         {
             "message": "Missing item type\nReference to component's template.",
