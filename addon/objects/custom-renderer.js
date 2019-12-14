@@ -15,9 +15,9 @@ export default L.Canvas.extend({
 
   _checkMapZoom(layer) {
     const mapZoom = this._getMapZoom();
-    const minZoom = this._getLayerZoom(layer);
-    const maxZoom = this._getLayerZoom(layer, true);
-    return Ember.isNone(mapZoom) || mapZoom <= maxZoom && mapZoom >= minZoom;
+    const minZoom = this._getLayerOption(layer, 'minZoom');
+    const maxZoom = this._getLayerOption(layer, 'maxZoom');
+    return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom <= mapZoom && mapZoom <= maxZoom;
   },
 
   _getMapZoom() {
@@ -29,8 +29,7 @@ export default L.Canvas.extend({
     return null;
   },
 
-  _getLayerZoom(layer, getMaxZoom) {
-    const propName = getMaxZoom ? 'maxZoom' : 'minZoom';
+  _getLayerOption(layer, propName) {
     let zoomResult = Ember.get(layer, `${propName}`);
     if (Ember.isNone(zoomResult)) {
       const parentLayers = Ember.get(layer, '_eventParents');
