@@ -71,6 +71,11 @@
                         drawStart=(action "onAddDrawStart" tabModel)
                         importComplete=(action "onImportComplete" tabModel)
                     }}
+                    {{component "geometry-add-modes/rhumb"
+                        leafletMap=leafletMap
+                        tabModel=tabModel
+                        complete=(action "onGeometryAddComplete" tabModel)
+                    }}
                     {{component "geometry-add-modes/draw"
                         leafletMap=leafletMap
                         settings=(hash

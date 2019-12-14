@@ -766,6 +766,19 @@ export default Ember.Mixin.create({
       startPoint: startPoint,
       coordinates: result
     };
-  }
+  },
 
+  /**
+    Add a layer to the group.
+
+    @method layerToGroup
+    @parm {string} layerGroupId Group layer id.
+    @parm {string} layerId layer id.
+  */
+  moveLayerToGroup(layerId, layerGroupId) {
+    const layer = this.get('mapLayer').findBy('id', layerId);
+
+    let layerModel = this._getLayerModel(layerGroupId);
+    layerModel.set('parent', layer);
+  }
 });
