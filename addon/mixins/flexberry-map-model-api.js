@@ -791,22 +791,17 @@ export default Ember.Mixin.create({
   */
   editLayerObject(layerId, objectId, polygon) {
     if (polygon) {
-      const allLayers = this.get('mapLayer');
-      let layers = Ember.A(allLayers);
-      const layer = layers.findBy('id', layerId);
-      if (Ember.isNone(layer)) {
-        throw 'no layer with such id';
-      }
-
-      let features = Ember.get(layer, '_leafletObject._layers') || {};
-      let object = Object.values(features).find(feature => {
-        return this._getLayerFeatureId(layer, feature) === objectId;
-      });
-      if (object) {
-        object.setLatLngs(Ember.get(polygon, 'coordinates'));
-        return 'object polygon changed successfully';
+      let [l, leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
+      if (leafletLayer && featureLayer) {
+        featureLayer.setLatLngs(Ember.get(polygon, 'coordinates'));
+        if (typeof leafletLayer.editLayer === 'function') {
+          leafletLayer.editLayer(featureLayer);
+          return true;
+        } else {
+          throw 'editLayer is not a function';
+        }
       } else {
-        throw 'no object with such id';
+        throw 'no object or layer found';
       }
     } else {
       throw 'new object settings not passed';
