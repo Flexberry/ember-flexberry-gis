@@ -48,7 +48,7 @@ export default Ember.Component.extend({
     if (selectedItems) {
       if (selectedItems.length > 2) {
         this.$('.fb-selector>a').remove();
-        this.$('.fb-selector').append(`<a class="ui label transition visible adition">и ещё  ${selectedItems.length-1}</a>`);
+        this.$('.fb-selector').append(`<a class="ui label transition visible adition">и ещё ${selectedItems.length - 1}</a>`);
       }
     }
   }),
@@ -148,9 +148,9 @@ export default Ember.Component.extend({
 
   actions: {
     clear() {
-      this.set('selectedItems', Ember.A())
+      this.set('selectedItems', Ember.A());
       this.$('.fb-selector>a').remove();
-      this.$('.fb-selector>.menu>.item').attr('class', 'item')
+      this.$('.fb-selector>.menu>.item').attr('class', 'item');
     }
   }
 });
