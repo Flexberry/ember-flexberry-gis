@@ -23,11 +23,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
   */
   parentRoute: 'maps',
 
-  mapLayers: [],
-
-  //api
-  mapApi: Ember.inject.service(),
-
   /**
     Idenify tool layers mode (which layers to identify).
 
@@ -371,6 +366,7 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       this._super(...arguments);
 
       this.initializeEditPanel();
+
       let leafletMap = this.get('leafletMap');
       if (!Ember.isNone(leafletMap)) {
         leafletMap.on('containerResizeStart', this.onLeafletMapContainerResizeStart, this);
@@ -527,7 +523,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
       if (identifyToolBufferedMainPolygonLayer) {
         identifyToolBufferedMainPolygonLayer.remove();
       }
-
-    },
+    }
   }
 });
