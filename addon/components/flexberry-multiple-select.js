@@ -47,8 +47,8 @@ export default Ember.Component.extend({
     let selectedItems = this.get('selectedItems');
     if (selectedItems) {
       if (selectedItems.length > 2) {
-         this.$('.fb-selector>a').remove();
-         this.$('.fb-selector').append(`<a class="ui label transition visible">и еще  ${selectedItems.length-1}</a>`);
+        this.$('.fb-selector>a').remove();
+        this.$('.fb-selector').append(`<a class="ui label transition visible adition">и ещё  ${selectedItems.length-1}</a>`);
       }
     }
   }),

@@ -275,7 +275,6 @@ export default Ember.Component.extend({
       obj.addTo(group);
     }
   },
-
   /**
   Starts identification by array of satisfying layers inside given polygon area.
 
@@ -459,8 +458,6 @@ export default Ember.Component.extend({
           }
 
           if (bufferR > 0) {
-            //objB  = buffer.default(objB.toGeoJSON(), bufferR, { units: 'meters' });
-            //objB  = buffer.default(L.geoJSON(objB), bufferR, { units: 'meters' });
             objB  = buffer.default(objB.geometry, bufferR, { units: 'meters' });
           }
 
