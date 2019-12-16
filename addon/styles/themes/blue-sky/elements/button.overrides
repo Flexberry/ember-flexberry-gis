@@ -27,8 +27,6 @@
 }
 
 .ui.menu.flexberry-maptoolbar {
-    z-index: 1000;
-
     .ui.icon.button {
         font-size: 0px;
     }

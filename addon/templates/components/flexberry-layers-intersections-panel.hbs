@@ -51,34 +51,27 @@
               <button type="submit" class="ui button intersect" {{action "findIntersections"}}>
                 {{t 'components.flexberry-layers-intersections-panel.find-intersection'}}
               </button>
-                <button type="submit" class="ui button intersect" {{action "save"}} disabled={{noIntersectionResults}}>
+              <button type="submit" class="ui button intersect" {{action "save"}} disabled={{noIntersectionResults}}>
                 {{t 'components.flexberry-layers-intersections-panel.load-results'}}
               </button>                         
             </div>
           </div>
-            {{!-- <div class="four wide column">
-              <div class="field">   
-                              
-              </div>
-            </div> --}}
         </div>
       </div>
     </div>
   {{#unless noIntersectionResults}}
   <div class="intersections-panel-results-row row">
      <fieldset>
-   <legend>{{t 'components.flexberry-layers-intersections-panel.results'}}</legend>
-        {{layer-result-list
-          results=results
-          serviceLayer=serviceLayer
-          leafletMap=leafletMap
-          intersection=true
-          zoomToIntersection=(action 'zoomToIntersection')
-        }}
-        </fieldset>
+      <legend>{{t 'components.flexberry-layers-intersections-panel.results'}}</legend>
+      {{layer-result-list
+        results=results
+        serviceLayer=serviceLayer
+        leafletMap=leafletMap
+        intersection=true
+        zoomToIntersection=(action 'zoomToIntersection')
+      }}
+    </fieldset>
   </div>
   {{/unless}}
-  
   </div>
- 
 </div>
