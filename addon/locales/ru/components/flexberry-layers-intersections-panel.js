@@ -9,6 +9,6 @@ export default {
   'y-cord': 'Y',
   'm2': 'м²',
   'm': 'm',
-  'show-on-map': 'Показать на карте',
+  'show-on-map': 'Приблизить к пересечению',
   'results': 'Результаты'
 };
