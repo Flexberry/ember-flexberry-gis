@@ -11,6 +11,10 @@ export default {
     'caption': '',
     'tooltip': 'Уменьшить'
   },
+  'comapre-layers': {
+    'caption': '',
+    'tooltip': 'Сравнить слои'
+  },
   'identify': {
     'caption': 'Идентифицировать',
     'tooltip': 'Идентифицировать',
