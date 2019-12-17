@@ -172,10 +172,10 @@ export default BaseVectorLayer.extend({
 
         let newPromise = new Ember.RSVP.Promise((resolve, reject) => {
           newLayer.once('load', () => {
-            // console.log('w1');
+            console.log('w1');
             resolve();
           }).once('error', (e) => {
-            // console.log('w1');
+            console.log('w0');
             reject();
           });
         });

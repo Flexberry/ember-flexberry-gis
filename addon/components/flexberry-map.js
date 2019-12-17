@@ -511,13 +511,15 @@ let FlexberryMapComponent = Ember.Component.extend(
       const errorMapLayers = mapApi.getFromApi('errorMapLayers');
 
       // console.log('e.results:' + e.results.length);
-      Ember.RSVP.allSettled(e.results).then(() => {
-        // console.log('good');
-        // debugger;
+      // Ember.RSVP.allSettled(e.results).then(() => {
+      Ember.RSVP.all(e.results).then(() => {
+        console.log('good');
+        //
         readyMapLayers();
         //catch
       }, () => {
-        // console.log('error');
+        // debugger;
+        console.log('error');
         errorMapLayers();
       });
 
