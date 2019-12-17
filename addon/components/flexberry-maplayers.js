@@ -460,6 +460,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
         this.set('rasterLayers', rasterLayers);
         this.set('currentLayers', layersArray);
         let map = this.get('leafletMap');
+
         //base tile layer
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap<\/a> contributors'
@@ -571,7 +572,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
             }
 
             let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
-            Ember.set(layer, 'side' , 'Left');
+            Ember.set(layer, 'side', 'Left');
             this.set('leftLayer', layer);
             sbs.setLeftLayers(leafletObject);
           }
@@ -585,7 +586,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
             }
 
             let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
-            Ember.set(layer, 'side' , 'Right');
+            Ember.set(layer, 'side', 'Right');
             this.set('rightLayer', layer);
             sbs.setRightLayers(leafletObject);
           }
