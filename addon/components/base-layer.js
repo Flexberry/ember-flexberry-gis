@@ -188,7 +188,7 @@ export default Ember.Component.extend(
     */
     bounds: null,
 
-   /**
+    /**
       Promise storage property.
 
       @property promiseLoad

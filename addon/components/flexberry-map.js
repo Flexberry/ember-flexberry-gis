@@ -506,13 +506,16 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       leafletMap.fire('flexberry-map:load', e);
 
-      const readyMapLayers = mapApi.getFromApi('readyMapLayers');
-      const errorMapLayers = mapApi.getFromApi('errorMapLayers');
-
       Ember.RSVP.all(e.results).then(() => {
-        readyMapLayers();
+        const readyMapLayers = mapApi.getFromApi('readyMapLayers');
+        if (!Ember.isNone(readyMapLayers)) {
+          readyMapLayers();
+        }
       }, () => {
-        errorMapLayers();
+        const errorMapLayers = mapApi.getFromApi('errorMapLayers');
+        if (!Ember.isNone(errorMapLayers)) {
+          errorMapLayers();
+        }
       });
     },
 
