@@ -548,18 +548,20 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       }, 
       onChange(layer, e) {
         let sbs = this.get('sideBySide');
-        Ember.set(layer, 'visibility' , false);
+        //Ember.set(layer, 'visibility' , false);
         if (e.newValue === false) {
           if (this.get('side') === 'Left') {
             sbs.setLeftLayers(null);
             this.get('leftLayer._leafletObject').remove();
             this.set('leftLayer.side', null);
             this.set('leftLayer.visibility', false);
+            this.set('leftLayer', null);
           } else {
             sbs.setRightLayers(null);
             this.get('rightLayer._leafletObject').remove();
             this.set('rightLayer.side', null);
             this.set('rightLayer.visibility', false);
+            this.set('rightLayer', null);
           }
           return;
         }
@@ -568,6 +570,8 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
         let map = this.get('leafletMap');
         if (this.get('side') === 'Left') {
           if (this.get('leftLayer') !== null) {
+            console.log(this.get('leftLayer'))
+            sbs.setLeftLayers(null);
             this.get('leftLayer._leafletObject').remove();
             this.set('leftLayer.visibility', false);
             this.set('leftLayer.side', null);
@@ -575,20 +579,20 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
 
           let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
           Ember.set(layer, 'side' , "Left"); 
-          this.set('leftLayer', layer);
+          this.set('leftLayer', layer);   
           sbs.setLeftLayers(leafletObject);
-          return;
         } 
    
         if (this.get('side') === 'Right')  {
-          if (this.get('rightLayer') !== null) {
+          if (this.get('rightLayer') !== null) {    
+            sbs.setLeftLayers(null);  
             this.get('rightLayer._leafletObject').remove();
             this.set('rightLayer.visibility', false);
             this.set('rightLayer.side', null);
           }
 
           let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
-          Ember.set(layer, 'side' , "Right"); 
+          Ember.set(layer, 'side' , "Right");
           this.set('rightLayer', layer);
           sbs.setRightLayers(leafletObject);
         }
