@@ -12,13 +12,50 @@
         {{t "components.flexberry-maplayers.right-part"}}
       </a>
   </div>
-  {{#each rasterLayers as |layer|}}
-    {{#if (not layer.isDeleted)}}
-      <div class="compare-layer-tree" onclick={{action "addToSideToSide" layer}}>    
-        {{layer.name}}
-      </div>
-    {{/if}}
-  {{/each}}
+    {{#each rasterLayers as |layer|}}
+      {{#if (not layer.isDeleted)}}
+        <div class="compare-layer-tree" onclick={{action "addToSideToSide" layer}}>   
+          {{flexberry-ddau-checkbox
+            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+            value=layer.visibility
+            change=(action "onChange" layer)
+            readonly=(if  (or (and (eq side "Right") (eq layer.side "Left")) (and (eq side "Left") (eq layer.side "Right"))) true)
+           
+          }} 
+          {{layer.name}}
+        </div>
+      {{/if}}
+    {{/each}}
+  {{!-- {{#if (eq side "Left")}}
+   (or (and (eq side "Right") (eq layer.side "Left")) (and (eq side "Left") (eq layer.side "Right")))
+    {{#each rasterLayers as |layer|}}
+      {{#if (not layer.isDeleted)}}
+        <div class="compare-layer-tree" onclick={{action "addToSideToSide" layer}}>   
+          {{flexberry-ddau-checkbox
+            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+            value=layer.visibility
+            change=(action "onChange" layer)
+            readonly=(if (eq layer.side "Right") true)
+          }} 
+          {{layer.name}}
+        </div>
+      {{/if}}
+    {{/each}}
+  {{else}}
+    {{#each rasterLayers as |layer|}}
+      {{#if (not layer.isDeleted)}}
+        <div class="compare-layer-tree" onclick={{action "addToSideToSide" layer}}>   
+          {{flexberry-ddau-checkbox
+            class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+            value=layer.visibility
+            change=(action "onChange" layer)
+            readonly=(if (eq layer.side "Left") true)
+          }} 
+          {{layer.name}}
+        </div>
+      {{/if}}
+    {{/each}}
+  {{/if}} --}}
 {{else}}
   {{#yield-slot "above-tree" (block-params this)}}
     {{yield}}
