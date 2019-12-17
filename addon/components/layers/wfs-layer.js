@@ -160,7 +160,7 @@ export default BaseVectorLayer.extend({
       options = Ember.$.extend(true, {}, initialOptions, options, { filter: resultingFilter });
 
       let featuresReadFormat = this.getFeaturesReadFormat();
-      L.wfst(options, featuresReadFormat)
+      let newLayer = L.wfst(options, featuresReadFormat)
         .once('load', (e) => {
           let wfsLayer = e.target;
           wfsLayer.on('save:success', this._setLayerState, this);
@@ -169,6 +169,18 @@ export default BaseVectorLayer.extend({
         .once('error', (e) => {
           reject(e.error || e);
         });
+
+        let newPromise = new Ember.RSVP.Promise((resolve, reject) => {
+          newLayer.once('load', () => {
+            // console.log('w1');
+            resolve();
+          }).once('error', (e) => {
+            // console.log('w1');
+            reject();
+          });
+        });
+
+        this.set('promiseLoad', newPromise);
     });
   },
 

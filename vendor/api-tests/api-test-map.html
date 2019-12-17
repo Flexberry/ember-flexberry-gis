@@ -132,6 +132,15 @@
           });
         });
       };
+
+      frame.contentWindow.mapApi.readyMapLayers = function () {
+        console.log('Layers loaded.')
+      };
+
+      frame.contentWindow.mapApi.errorMapLayers = function () {
+        console.log('Error loading layers.')
+      };
+
       frame.contentWindow.mapApi.getLayerFeatureId = function (layer, layerObject) {
         if (layer.id === "f7670a1f-1acb-4571-923c-1ce3bc88e11e") {
           return layerObject.feature.properties.name;

@@ -188,6 +188,14 @@ export default Ember.Component.extend(
     */
     bounds: null,
 
+   /**
+      Promise storage property.
+
+      @property promiseLoad
+      @type Object promise
+    */
+    promiseLoad: null,
+
     /**
       Creates leaflet layer related to layer type.
 
@@ -599,6 +607,13 @@ export default Ember.Component.extend(
         leafletMap.on('flexberry-map:search', this._search, this);
         leafletMap.on('flexberry-map:query', this._query, this);
         leafletMap.on('flexberry-map:createObject', this._createObject, this);
+
+        leafletMap.on('flexberry-map:load', function (e) {
+          if (!Ember.isNone(this.promiseLoad)) {
+            e.results.push(this.promiseLoad);
+          }
+
+        }, this);
       }
     },
 
