@@ -266,7 +266,7 @@ export default EditFormController.extend(
 
       return layer;
     },
-
+    favs:[],
     actions: {
       /**
         Handles click on compare-layers button.
@@ -291,8 +291,23 @@ export default EditFormController.extend(
           }, 500);
         }
       },
-      addToFavorite() {
+      addToFavorite(feature) {
+        console.log(feature);
+        let favs = this.get('favs');
+        if(Ember.get(feature,'isFavorite')) {
+          Ember.set(feature.properties, 'isFavorite', false);
+        }else {
+          Ember.set(feature.properties, 'isFavorite', true);
+        }
+        console.log(feature.layerModel);
+        feature.layerModel.save();
         alert('will be added');
+        favs.push(feature);
+        // if (Ember.$('.fvicon').hasClass('filled')) {
+        //   Ember.$('.fvicon').removeClass('filled');
+        // } else {
+        //   Ember.$('.fvicon').addClass('filled');
+        // }
       }
     }
   });

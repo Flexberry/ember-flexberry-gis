@@ -11,8 +11,8 @@
           <i class="intersections icon"></i>
         </a>
       {{else}}
-       <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "addToFavorite" on="click"}}>
-          <i class="favorites icon"></i>
+        <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "addToFavorite" on="click"}}>
+          <i class="fvicon favorites {{if feature.properties.isFavorite "filled" "unfilled"}} icon"></i>
         </a>
         <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
           <i class="marker icon"></i>

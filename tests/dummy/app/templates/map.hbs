@@ -149,6 +149,10 @@
       <div data-tab="favorites" class="ui tab bookmarks">
         <h3>{{t "forms.map.tabbar.bookmarks.caption"}}</h3>
         Компонент с избранными
+        {{favorites-list
+          favItems=favs
+          leafletMap=leafletMap
+        }}
       </div>
       <div data-tab="createObject" class="ui tab createObject">
       <h3>{{t "forms.map.tabbar.createObject.caption"}}</h3>
