@@ -60,25 +60,25 @@ export default {
     'caption': 'Draw',
     'tooltip': 'Draw',
     'draw-marker': {
-      'caption': 'Marker'
+      'caption': 'Add marker'
     },
     'draw-polyline': {
-      'caption': 'Polyline'
+      'caption': 'Add polyline'
     },
     'draw-circle': {
-      'caption': 'Circle'
+      'caption': 'Add circle'
     },
     'draw-rectangle': {
-      'caption': 'Rectangle'
+      'caption': 'Add rectangle'
     },
     'draw-polygon': {
-      'caption': 'Polygon'
+      'caption': 'Add polygon'
     },
     'draw-multy-polygon': {
-      'caption': 'Multy polygon'
+      'caption': 'Add part/ring'
     },
     'draw-multy-line': {
-      'caption': 'Multy line'
+      'caption': 'Add part/ring'
     },
     'draw-clear': {
       'caption': 'Clear'
