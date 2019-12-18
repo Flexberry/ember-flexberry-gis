@@ -460,11 +460,6 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
         this.set('rasterLayers', rasterLayers);
         this.set('currentLayers', layersArray);
         let map = this.get('leafletMap');
-
-        //base tile layer
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap<\/a> contributors'
-        }).addTo(map);
         this.get('sideBySide').addTo(map);
       } else {
         this.get('sideBySide').remove();
