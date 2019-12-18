@@ -170,7 +170,7 @@ export default BaseVectorLayer.extend({
           reject(e.error || e);
         });
 
-      let newPromise = new Ember.RSVP.Promise((resolve, reject) => {
+      let promiseLoad = new Ember.RSVP.Promise((resolve, reject) => {
         newLayer.once('load', () => {
           resolve();
         }).once('error', (e) => {
@@ -178,7 +178,7 @@ export default BaseVectorLayer.extend({
         });
       });
 
-      this.set('promiseLoad', newPromise);
+      this.set('promiseLoad', promiseLoad);
     });
   },
 
