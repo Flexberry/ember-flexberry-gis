@@ -164,11 +164,6 @@ export default BaseVectorLayer.extend({
 
         let crs = this.get('crs');
         layer.options.crs = crs;
-        const latLngToCoords = this.get('latLngToCoords') || 'return [latLng[0], latLng[1]]';
-        const coordsToLatLng = this.get('coordsToLatLng') || 'return L.latLng([coordinates[1], coordinates[0]])';
-
-        layer.options.latLngToCoords = new Function('latLng', latLngToCoords);
-        layer.options.coordsToLatLng = new Function('coords', coordsToLatLng);
 
         L.setOptions(layer, options);
 
@@ -201,9 +196,10 @@ export default BaseVectorLayer.extend({
       return latLngs;
     }
 
-    const coordsToLatLng = this.get('coordsToLatLng');
+    const crs = this.get('crs');
+    const point = L.point(coordinates);
 
-    return Ember.isNone(coordsToLatLng) ? L.latLng([coordinates[1], coordinates[0]]) : new Function('coords', coordsToLatLng)(coordinates);
+    return crs.unproject(point);
   },
 
   /**
@@ -223,9 +219,9 @@ export default BaseVectorLayer.extend({
       return coords;
     }
 
-    const latLngToCoords = this.get('latLngToCoords');
+    const crs = this.get('crs');
 
-    return Ember.isNone(latLngToCoords) ? [latlngs[0], latlngs[1]] : new Function('latLng', latLngToCoords)(latlngs);
+    return crs.project(latlngs);
   },
 
   /**

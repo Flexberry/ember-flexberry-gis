@@ -525,7 +525,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               return coords;
             }
 
-            return options.latLngToCoords(latlngs);
+            return options.crs.project(latlngs);
           },
 
           /**

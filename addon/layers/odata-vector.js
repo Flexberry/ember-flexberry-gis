@@ -56,9 +56,7 @@ export default VectorLayer.extend({
       modelName: undefined,
       projectionName: undefined,
       geometryField: 'geometry',
-      geometryType: 'PolygonPropertyType',
-      coordsToLatLng: undefined,
-      latLngToCoords: undefined
+      geometryType: 'PolygonPropertyType'
     });
     Ember.set(settings, 'searchSettings', this.createSearchSettings());
     return settings;
