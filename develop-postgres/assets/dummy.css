@@ -1481,6 +1481,9 @@ lang {
 .intersection-panel .multiple.search.selection.dropdown {
   cursor: pointer;
 }
+.intersection-panel .multiple.search.selection.dropdown .ui.label.adition {
+  margin-left: -20px;
+}
 .intersection-panel .row {
   padding-left: 15px;
   padding-right: 15px;
@@ -1490,6 +1493,9 @@ lang {
 }
 .intersection-panel .feature-result-item-content.content .layer-result-list-toggler {
   width: 50%;
+}
+.intersection-panel .feature-result-item-content.content .layer-result-list-toggler .title {
+  margin-top: -10px;
 }
 .intersection-panel .feature-result-item-content.content .cords {
   width: 50%;

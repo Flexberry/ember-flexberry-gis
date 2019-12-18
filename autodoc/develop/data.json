@@ -29815,7 +29815,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 279,
+            "line": 278,
             "description": "Starts identification by array of satisfying layers inside given polygon area.",
             "itemtype": "method",
             "name": "_startIdentification",
@@ -29913,7 +29913,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 409,
+            "line": 415,
             "description": "Removing layers with identification results.",
             "itemtype": "method",
             "name": "removeLayers",
@@ -29922,7 +29922,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 427,
+            "line": 433,
             "description": "Searching intersections.",
             "itemtype": "method",
             "name": "_findIntersections",
@@ -32661,7 +32661,7 @@
         },
         {
             "file": "addon/components/flexberry-multiple-select.js",
-            "line": 45,
+            "line": 56,
             "description": "Dropdown title.",
             "itemtype": "property",
             "name": "title",
@@ -32672,7 +32672,7 @@
         },
         {
             "file": "addon/components/flexberry-multiple-select.js",
-            "line": 54,
+            "line": 65,
             "description": "Flag, allows or forbids manual addition.",
             "itemtype": "property",
             "name": "allowAdditions",
@@ -32683,7 +32683,7 @@
         },
         {
             "file": "addon/components/flexberry-multiple-select.js",
-            "line": 63,
+            "line": 74,
             "description": "Classname.",
             "itemtype": "property",
             "name": "selectorName",
@@ -32694,7 +32694,7 @@
         },
         {
             "file": "addon/components/flexberry-multiple-select.js",
-            "line": 72,
+            "line": 83,
             "description": "Flag indicates whether is array consists of objects or not.",
             "itemtype": "property",
             "name": "isObject",
@@ -32705,7 +32705,7 @@
         },
         {
             "file": "addon/components/flexberry-multiple-select.js",
-            "line": 81,
+            "line": 92,
             "description": "Array with not-selected dropdown items.",
             "itemtype": "property",
             "name": "_usedItems",
@@ -32716,7 +32716,7 @@
         },
         {
             "file": "addon/components/flexberry-multiple-select.js",
-            "line": 104,
+            "line": 115,
             "description": "Hook, working after element insertion",
             "class": "FlexberryMultipleSelectComponent",
             "module": "ember-flexberry-gis"
@@ -45670,7 +45670,7 @@
         },
         {
             "message": "Missing item type\nHook, working after element insertion",
-            "line": " addon/components/flexberry-multiple-select.js:104"
+            "line": " addon/components/flexberry-multiple-select.js:115"
         },
         {
             "message": "Missing item type\nReference to component's template.",

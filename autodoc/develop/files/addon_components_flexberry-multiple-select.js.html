@@ -452,6 +452,17 @@ export default Ember.Component.extend({
   */
   selectedItems: Ember.A(),
 
+  selectedItemsObserver: Ember.observer(&#x27;selectedItems&#x27;, function() {
+    this.$(&#x27;.fb-selector&gt;input&#x27;).val(&#x27;&#x27;);
+    let selectedItems = this.get(&#x27;selectedItems&#x27;);
+    if (selectedItems) {
+      if (selectedItems.length &gt; 2) {
+        this.$(&#x27;.fb-selector&gt;a&#x27;).remove();
+        this.$(&#x27;.fb-selector&#x27;).append(&#x60;&lt;a class=&quot;ui label transition visible adition&quot;&gt;и ещё ${selectedItems.length - 1}&lt;/a&gt;&#x60;);
+      }
+    }
+  }),
+
   /**
     Dropdown title.
 
@@ -543,6 +554,14 @@ export default Ember.Component.extend({
         });
       }
     });
+  },
+
+  actions: {
+    clear() {
+      this.set(&#x27;selectedItems&#x27;, Ember.A());
+      this.$(&#x27;.fb-selector&gt;a&#x27;).remove();
+      this.$(&#x27;.fb-selector&gt;.menu&gt;.item&#x27;).attr(&#x27;class&#x27;, &#x27;item&#x27;);
+    }
   }
 });
 
