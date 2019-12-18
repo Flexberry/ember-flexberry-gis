@@ -1,5 +1,5 @@
 export default {
-  'layers-list': 'Список слоев',
+  'layers-list': 'Слои, по которым будет произведен поиск пересечений',
   'square': 'Площадь пересечения',
   'buffer': 'Буфер поиска',
   'find-intersection': 'Найти пересечения',
@@ -7,8 +7,8 @@ export default {
   'intersection-cords': 'Координаты пересечения',
   'x-cord': 'X',
   'y-cord': 'Y',
-  'm2': 'm2',
+  'm2': 'м²',
   'm': 'm',
-  'show-on-map': 'Показать на карте',
+  'show-on-map': 'Приблизить к пересечению',
   'results': 'Результаты'
 };

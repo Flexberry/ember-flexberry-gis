@@ -18,6 +18,9 @@
         height: 250px;
     }
     .multiple.search.selection.dropdown {
+        .ui.label.adition {
+            margin-left: -20px;
+        }
         cursor: pointer;
     }
     .row {
@@ -30,6 +33,9 @@
     .feature-result-item-content.content {
         .layer-result-list-toggler {
             width:50%;
+            .title {             
+                margin-top: -10px;
+            }
         }
         .cords {
             width:50%;
