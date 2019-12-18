@@ -160,16 +160,25 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     /**
-    Action is sended to layer-result-list-action-handler.
-    Action shows intersection panel.
-    @method actions.findIntersection
+      Action is sended to layer-result-list-action-handler.
+      Action shows intersection panel.
+      @method actions.findIntersection
     */
     findIntersection(feature) {
       this.sendAction('showIntersectionPanel', feature);
     },
 
     /**
-    Action zooms to intersection and shows object on map.
+      Action adds feature to favorites
+
+      @method actions.findIntersection
+    */
+    addToFavorite(feature){
+      this.sendAction('addToFavorite', feature);
+    },
+
+    /**
+      Action zooms to intersection and shows object on map.
 
       @method actions.zoomToIntersection
     */

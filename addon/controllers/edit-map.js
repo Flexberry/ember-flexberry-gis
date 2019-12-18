@@ -291,5 +291,8 @@ export default EditFormController.extend(
           }, 500);
         }
       },
+      addToFavorite() {
+        alert('will be added');
+      }
     }
   });

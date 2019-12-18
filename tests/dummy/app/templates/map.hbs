@@ -114,6 +114,7 @@
           leafletMap=leafletMap
           showIntersectionPanel=(action 'onIntersectionPanel')
           featureSelected=(action "onLayerFeatureSelected")
+          addToFavorite=(action "addToFavorite")
         }}
       </div>
       <div data-tab="identify" class="ui tab identify">
@@ -135,6 +136,7 @@
           leafletMap=leafletMap
           showIntersectionPanel=(action 'onIntersectionPanel')
           featureSelected=(action "onLayerFeatureSelected")
+          addToFavorite=(action "addToFavorite")
         }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
@@ -143,6 +145,10 @@
           leafletMap=leafletMap
           storageKey=model.id
         }}
+      </div>
+      <div data-tab="favorites" class="ui tab bookmarks">
+        <h3>{{t "forms.map.tabbar.bookmarks.caption"}}</h3>
+        Компонент с избранными
       </div>
       <div data-tab="createObject" class="ui tab createObject">
       <h3>{{t "forms.map.tabbar.createObject.caption"}}</h3>
