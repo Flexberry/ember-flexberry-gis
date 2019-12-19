@@ -204,27 +204,27 @@ let FeatureExportDialogComponent = Ember.Component.extend({
         headers = wfsLayer.options.headers;
 
       } else {
-        let doc = document.implementation.createDocument("", "", null);
-        let odataElem = doc.createElement("odata");
-        odataElem.setAttribute("outputFormat", this.get('_options.format'));
+        let doc = document.implementation.createDocument('', '', null);
+        let odataElem = doc.createElement('odata');
+        odataElem.setAttribute('outputFormat', this.get('_options.format'));
         let layerElem = doc.createElement("layer");
-        layerElem.setAttribute("layerName", result.name);
+        layerElem.setAttribute('layerName', result.name);
         let modelName = null;
         $.ajax({
           url: 'assets/flexberry/models/' + layer.get('_leafletObject.modelName') + '.json',
           async: false,
           success: function(data) {
-            modelName = data.className; 
+            modelName = data.className;
           }
         });
 
-        layerElem.setAttribute("modelName", modelName);
-        layerElem.setAttribute("srsName", crs.code);
+        layerElem.setAttribute('modelName', modelName);
+        layerElem.setAttribute('srsName', crs.code);
         let pkListElem = doc.createElement("pkList");
 
         result.features.forEach((feature) => {
-          let pkElem = doc.createElement("pk");
-          pkElem.setAttribute("primarykey", feature.properties.primarykey);
+          let pkElem = doc.createElement('pk');
+          pkElem.setAttribute('primarykey', feature.properties.primarykey);
           pkListElem.appendChild(pkElem);
         });
 
@@ -234,7 +234,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
       }
 
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
-      
+
       this.request({
         url: config.APP.backendUrls.featureExportApi,
         data: L.XmlUtil.serializeXmlDocumentString(req),
