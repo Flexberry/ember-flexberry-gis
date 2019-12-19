@@ -140,7 +140,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
    */
   _isPanelEditable: true,
 
-
   /**
     The last page in the table.
 
@@ -1342,7 +1341,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       const skip = tabModel._top * (lastPage - 1);
       tabModel.set('_skip', skip);
     },
-
 
     /**
       Handles new row attributes dialog's 'deny' action.
