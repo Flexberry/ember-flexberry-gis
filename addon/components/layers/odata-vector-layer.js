@@ -91,6 +91,48 @@ export default BaseVectorLayer.extend({
     }
   },
 
+  identify(e) {
+    let primitiveSatisfiesBounds = (primitive, bounds) => {
+      let satisfiesBounds = false;
+
+      if (typeof primitive.forEach === 'function') {
+        primitive.forEach(function (nestedGeometry, index) {
+          if (satisfiesBounds) {
+            return;
+          }
+
+          let nestedPrimitive = this.get(index);
+          satisfiesBounds = primitiveSatisfiesBounds(nestedPrimitive, bounds);
+        });
+      } else {
+        satisfiesBounds = primitive.within(bounds) || primitive.intersects(bounds);
+      }
+
+      return satisfiesBounds;
+    };
+
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      try {
+        let features = Ember.A();
+        let bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
+        let leafletLayer = this.get('_leafletObject');
+        leafletLayer.eachLayer(function (layer) {
+          let geoLayer = layer.toGeoJSON();
+          let primitive = new Terraformer.Primitive(geoLayer.geometry);
+          let id = layer.model.id;
+          geoLayer.properties.primarykey = id;
+          if (primitiveSatisfiesBounds(primitive, bounds)) {
+            features.pushObject(geoLayer);
+          }
+        });
+
+        resolve(features);
+      } catch (e) {
+        reject(e.error || e);
+      }
+    });
+  },
+
   addLayerObject(layer, model) {
     const geometryField = this.get('geometryField') || 'geometry';
     const geometry = model.get(geometryField);

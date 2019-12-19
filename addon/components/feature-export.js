@@ -183,27 +183,62 @@ let FeatureExportDialogComponent = Ember.Component.extend({
       let layerSettings = this.get('_layerSettings');
       let readFormat = this.get('_format');
       let crs = this.get('_crs');
+      let layer = result.layerModel;
+      let type = layer.get('type');
+      let req = null;
+      let headers = {};
 
-      let wfsLayer = new L.WFS({
-        crs: crs,
-        url: layerSettings.url,
-        typeNS: layerSettings.typeNS,
-        typeName: layerSettings.typeName,
-        geometryField: layerSettings.geometryField,
-        showExisting: false
-      }, readFormat);
+      if (type !== 'odata-vector') {
+        let wfsLayer = new L.WFS({
+          crs: crs,
+          url: layerSettings.url,
+          typeNS: layerSettings.typeNS,
+          typeName: layerSettings.typeName,
+          geometryField: layerSettings.geometryField,
+          showExisting: false
+        }, readFormat);
 
-      let filters = result.features.map((feature) => new L.Filter.GmlObjectID(feature.id));
-      let allfilters = new L.Filter.Or(...filters);
+        let filters = result.features.map((feature) => new L.Filter.GmlObjectID(feature.id));
+        let allfilters = new L.Filter.Or(...filters);
+        req = wfsLayer.getFeature(allfilters);
+        headers = wfsLayer.options.headers;
 
-      let req = wfsLayer.getFeature(allfilters);
+      } else {
+        let doc = document.implementation.createDocument("", "", null);
+        let odataElem = doc.createElement("odata");
+        odataElem.setAttribute("outputFormat", this.get('_options.format'));
+        let layerElem = doc.createElement("layer");
+        layerElem.setAttribute("layerName", result.name);
+        let modelName = null;
+        $.ajax({
+          url: 'assets/flexberry/models/' + layer.get('_leafletObject.modelName') + '.json',
+          async: false,
+          success: function(data) {
+            modelName = data.className; 
+          }
+        });
+
+        layerElem.setAttribute("modelName", modelName);
+        layerElem.setAttribute("srsName", crs.code);
+        let pkListElem = doc.createElement("pkList");
+
+        result.features.forEach((feature) => {
+          let pkElem = doc.createElement("pk");
+          pkElem.setAttribute("primarykey", feature.properties.primarykey);
+          pkListElem.appendChild(pkElem);
+        });
+
+        layerElem.appendChild(pkListElem);
+        odataElem.appendChild(layerElem);
+        req = odataElem;
+      }
 
       let config = Ember.getOwner(this).resolveRegistration('config:environment');
-
+      
       this.request({
         url: config.APP.backendUrls.featureExportApi,
         data: L.XmlUtil.serializeXmlDocumentString(req),
-        headers: wfsLayer.options.headers || {},
+        headers: headers || {},
         success: (blob) => {
           let ext = this.get('_fileExt');
           this.downloadBlob(result.name + '.' + ext, blob);
@@ -292,7 +327,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
       data: '',
       params: {},
       headers: {},
-      url: window.location.href,
+      url: '',
       success: function (data) {
         console.log(data);
       },

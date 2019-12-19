@@ -38,8 +38,8 @@
       content: "\f0ce";
     }
     .feature-result-item-upload i.icon:before {
-    content: "\f019";
-    font-family: FontAwesome;
+      content: "\f019";
+      font-family: FontAwesome;
     }
   }
 
