@@ -207,10 +207,10 @@ let FeatureExportDialogComponent = Ember.Component.extend({
         let doc = document.implementation.createDocument('', '', null);
         let odataElem = doc.createElement('odata');
         odataElem.setAttribute('outputFormat', this.get('_options.format'));
-        let layerElem = doc.createElement("layer");
+        let layerElem = doc.createElement('layer');
         layerElem.setAttribute('layerName', result.name);
         let modelName = null;
-        $.ajax({
+        Ember.$.ajax({
           url: 'assets/flexberry/models/' + layer.get('_leafletObject.modelName') + '.json',
           async: false,
           success: function(data) {
@@ -220,7 +220,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
 
         layerElem.setAttribute('modelName', modelName);
         layerElem.setAttribute('srsName', crs.code);
-        let pkListElem = doc.createElement("pkList");
+        let pkListElem = doc.createElement('pkList');
 
         result.features.forEach((feature) => {
           let pkElem = doc.createElement('pk');
