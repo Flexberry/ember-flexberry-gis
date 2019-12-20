@@ -275,7 +275,6 @@ export default Ember.Component.extend({
       obj.addTo(group);
     }
   },
-
   /**
   Starts identification by array of satisfying layers inside given polygon area.
 
@@ -338,6 +337,7 @@ export default Ember.Component.extend({
 
     if (e.results.length > 0) {
       this.set('noIntersectionResults', false);
+      leafletMap.flexberryMap.tools.enable('drag');
     }
 
     this._findIntersections(e);
@@ -399,6 +399,12 @@ export default Ember.Component.extend({
     @method clearPanel
   */
   clearPanel() {
+    let group = this.get('resultsLayer');
+    group.clearLayers();
+    this.removeLayers();
+    this.$('.fb-selector>a').remove();
+    this.$('.fb-selector>.menu>.item').attr('class', 'item');
+    this.set('selectedLayers', []);
     this.set('square', 0);
     this.set('bufferR', 0);
     this.set('results', []);
@@ -451,8 +457,8 @@ export default Ember.Component.extend({
             }
           }
 
-          if (buffer > 0) {
-            objB  = buffer.default(objB.toGeoJSON(), bufferR, { units: 'meters' });
+          if (bufferR > 0) {
+            objB  = buffer.default(objB.geometry, bufferR, { units: 'meters' });
           }
 
           if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
