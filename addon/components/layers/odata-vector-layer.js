@@ -76,7 +76,7 @@ export default BaseVectorLayer.extend({
 
   createLayerObject(layer, objectProperties, geometry) {
     if (geometry) {
-      const model = this.get('store').createRecord(layer.modelName, objectProperties);
+      const model = this.get('store').createRecord(layer.modelName, objectProperties || {});
       const geometryField = this.get('geometryField') || 'geometry';
       const geometryObject = {};
       geometryObject.coordinates = this.transformToCoords(geometry.coordinates);
@@ -87,7 +87,7 @@ export default BaseVectorLayer.extend({
       geometryObject.type = geometry.type;
       model.set(geometryField, geometryObject);
 
-      this.addLayerObject(layer, model);
+      return this.addLayerObject(layer, model);
     }
   },
 
@@ -118,7 +118,8 @@ export default BaseVectorLayer.extend({
       innerLayer.modelProj = modelProj;
       innerLayer.feature = {
         type: 'Feature',
-        properties: this.createPropsFromModel(model)
+        properties: this.createPropsFromModel(model),
+        leafletLayer: innerLayer
       };
       if (typeof (innerLayer.setStyle) === 'function') {
         innerLayer.setStyle(Ember.get(layer, 'leafletObject.options.style'));
@@ -126,6 +127,8 @@ export default BaseVectorLayer.extend({
 
       layer.addLayer(innerLayer);
     }
+
+    return innerLayer;
   },
 
   editLayerObjectProperties(model, objectProperties) {
@@ -168,6 +171,7 @@ export default BaseVectorLayer.extend({
         L.setOptions(layer, options);
 
         layer.save = this.get('save');
+        layer.geometryField = geometryField;
         layer.createLayerObject = this.get('createLayerObject').bind(this);
         layer.editLayerObjectProperties = this.get('editLayerObjectProperties').bind(this);
         layer.editLayer = this.get('editLayer');
@@ -220,8 +224,9 @@ export default BaseVectorLayer.extend({
     }
 
     const crs = this.get('crs');
-
-    return crs.project(latlngs);
+    const latLng = latlngs instanceof L.LatLng ? latlngs : L.latLng(latlngs[1], latlngs[0]);
+    const point = crs.project(latLng);
+    return [ point.x, point.y ];
   },
 
   /**

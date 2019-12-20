@@ -82,7 +82,8 @@ export default VectorLayer.extend({
 
     props.forEach((key) => {
       let prop = projection.attributes[key];
-      if (!prop.options.hidden) {
+      const geometryField = leafletObject.geometryField;
+      if (!prop.options.hidden && key !== geometryField) {
         fields.addObject(key);
       }
     });
