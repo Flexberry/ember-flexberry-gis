@@ -527,7 +527,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
             const latLng = latlngs instanceof L.LatLng ? latlngs : L.latLng(latlngs[1], latlngs[0]);
             const point = options.crs.project(latLng);
-            return [ point.x, point.y ];
+            return [point.x, point.y];
           },
 
           /**

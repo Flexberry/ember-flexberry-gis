@@ -226,7 +226,7 @@ export default BaseVectorLayer.extend({
     const crs = this.get('crs');
     const latLng = latlngs instanceof L.LatLng ? latlngs : L.latLng(latlngs[1], latlngs[0]);
     const point = crs.project(latLng);
-    return [ point.x, point.y ];
+    return [point.x, point.y];
   },
 
   /**
