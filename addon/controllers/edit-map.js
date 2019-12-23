@@ -292,16 +292,13 @@ export default EditFormController.extend(
         }
       },
       addToFavorite(feature) {
-        console.log(feature);
         let favs = this.get('favs');
         if(Ember.get(feature,'isFavorite')) {
           Ember.set(feature.properties, 'isFavorite', false);
         }else {
           Ember.set(feature.properties, 'isFavorite', true);
         }
-        console.log(feature.layerModel);
-        feature.layerModel.save();
-        alert('will be added');
+        //feature.layerModel.save();
         favs.push(feature);
         // if (Ember.$('.fvicon').hasClass('filled')) {
         //   Ember.$('.fvicon').removeClass('filled');

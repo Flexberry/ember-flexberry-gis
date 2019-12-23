@@ -2,6 +2,11 @@
 <div onclick={{action 'clickme'}}>
   Clicker
 </div>
- {{#each testing as |fav|}}
- {{fav}}
+ {{#each results as |item|}}
+  {{item.properties.name}}<br>
 {{/each}}
+ {{layer-result-list
+    results=results
+    serviceLayer=serviceLayer
+    leafletMap=leafletMap
+}}
