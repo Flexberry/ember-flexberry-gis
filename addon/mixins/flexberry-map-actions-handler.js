@@ -66,10 +66,9 @@ export default Ember.Mixin.create({
             leafletObject.bringToFront();
           }
         });
-      }
+      };
 
-      e.map.on('layeradd', checkZIndex, this);
-      e.map.on('layerremove', checkZIndex, this);
+      e.map.on('fixZIndex', checkZIndex, this);
     },
 
     onServiceLayerInit(property, serviceLayer) {
@@ -115,8 +114,6 @@ export default Ember.Mixin.create({
 
       Ember.set(this, leafletMapPropertyPath, null);
       Ember.set(window, leafletMapPropertyPath, null);
-
-      e.map.remove(this.checkZIndex);
     },
 
     /**
