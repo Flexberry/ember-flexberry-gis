@@ -250,6 +250,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     this.set('_displayResults', null);
 
     let results = this.get('results') || Ember.A();
+    console.log(results)
 
     // If results had been cleared.
     if (Ember.isBlank(results)) {

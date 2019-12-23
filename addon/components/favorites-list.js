@@ -4,7 +4,7 @@ import layout from '../templates/components/favorites-list';
 export default Ember.Component.extend({
   layout,
   store: Ember.inject.service(),
-  results: [],
+  results: Ember.A([]),
   favItems: [],
   actions: {
     clickme() {
@@ -16,6 +16,13 @@ export default Ember.Component.extend({
         ar.push(element);
       });
       this.set('results', ar)
+      let test = Ember.A([]);
+      let promise = new Ember.RSVP.Promise((resolve)=>{
+        resolve(ar);
+      })
+      console.log(test);
+      test[0] = {layerModel: ar[0].layerModel, features: promise}
+      this.set('results', test)
     }
   }
 });

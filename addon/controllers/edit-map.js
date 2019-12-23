@@ -266,7 +266,7 @@ export default EditFormController.extend(
 
       return layer;
     },
-    favs:[],
+    favs:Ember.A([]),
     actions: {
       /**
         Handles click on compare-layers button.
@@ -293,13 +293,18 @@ export default EditFormController.extend(
       },
       addToFavorite(feature) {
         let favs = this.get('favs');
-        if(Ember.get(feature,'isFavorite')) {
+        
+        console.log(Ember.get(feature.properties,'isFavorite'));
+        console.log(Ember.get(feature.properties,'isFavorite'));
+        if(Ember.get(feature.properties,'isFavorite')) {
           Ember.set(feature.properties, 'isFavorite', false);
+          favs.removeObject(feature);
         }else {
           Ember.set(feature.properties, 'isFavorite', true);
+          favs.addObject(feature);
         }
+        console.log(favs)
         //feature.layerModel.save();
-        favs.push(feature);
         // if (Ember.$('.fvicon').hasClass('filled')) {
         //   Ember.$('.fvicon').removeClass('filled');
         // } else {
