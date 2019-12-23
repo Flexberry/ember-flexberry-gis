@@ -899,6 +899,34 @@ let FlexberryMapComponent = Ember.Component.extend(
         this.set(&#x27;_hasServiceLayer&#x27;, true);
       }
 
+      Ember.run.scheduleOnce(&#x27;afterRender&#x27;, this, function () {
+        this.load(leafletMap, mapApi);
+      });
+    },
+
+    /**
+      Run an array of prommis.
+
+      @parm {Object} mapApi Object mapApi.
+    */
+    load(leafletMap, mapApi) {
+      let e = {
+        results: [],
+      };
+
+      leafletMap.fire(&#x27;flexberry-map:load&#x27;, e);
+
+      Ember.RSVP.all(e.results).then(() =&gt; {
+        const readyMapLayers = mapApi.getFromApi(&#x27;readyMapLayers&#x27;);
+        if (!Ember.isNone(readyMapLayers)) {
+          readyMapLayers();
+        }
+      }, () =&gt; {
+        const errorMapLayers = mapApi.getFromApi(&#x27;errorMapLayers&#x27;);
+        if (!Ember.isNone(errorMapLayers)) {
+          errorMapLayers();
+        }
+      });
     },
 
     /**
