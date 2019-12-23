@@ -797,8 +797,6 @@ export default Ember.Mixin.create({
         if (typeof leafletLayer.editLayer === 'function') {
           leafletLayer.editLayer(featureLayer);
           return true;
-        } else {
-          throw 'editLayer is not a function';
         }
       } else {
         throw 'no object or layer found';
