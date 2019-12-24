@@ -324,6 +324,8 @@ export default Ember.Component.extend(
       }
 
       leafletLayer.setZIndex(this.get('index'));
+      let leafletMap = this.get('leafletMap');
+      leafletMap.fire('fixZIndex');
     },
 
     /**
@@ -391,6 +393,8 @@ export default Ember.Component.extend(
       }
 
       leafletContainer.addLayer(leafletLayer);
+      let leafletMap = this.get('leafletMap');
+      leafletMap.fire('fixZIndex');
     },
 
     /**

@@ -57,6 +57,18 @@ export default Ember.Mixin.create({
 
       Ember.set(this, leafletMapPropertyPath, e.map);
       Ember.set(window, leafletMapPropertyPath, e.map);
+
+      let checkZIndex = function checkZIndex(e) {
+        let hierarchy = this.get('model.hierarchy');
+        hierarchy.forEach((layer) => {
+          let leafletObject = layer.get('_leafletObject');
+          if ((leafletObject != null) && (leafletObject.bringToFront instanceof Function)) {
+            leafletObject.bringToFront();
+          }
+        });
+      };
+
+      e.map.on('fixZIndex', checkZIndex, this);
     },
 
     onServiceLayerInit(property, serviceLayer) {
