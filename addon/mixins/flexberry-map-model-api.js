@@ -180,7 +180,7 @@ export default Ember.Mixin.create({
                 objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
                 if (objA.geometry.type === 'Polygon' || objA.geometry.type === 'MultiPolygon') {
                   intersectionResult = intersect.default(objA, objB);
-                } else  if (objA.geometry.type === 'MultiLineString' || objA.geometry.type === 'LineString') {
+                } else if (objA.geometry.type === 'MultiLineString' || objA.geometry.type === 'LineString') {
                   intersectionResult = lineIntersect(objA, objB);
                 }
               }
