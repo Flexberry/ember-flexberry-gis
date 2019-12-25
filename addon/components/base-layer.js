@@ -227,6 +227,13 @@ export default Ember.Component.extend(
 
         this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel') });
 
+        const saveSuccess = () => {
+          let leafletMap = this.get('leafletMap');
+          leafletMap.fire('fixZIndex');
+        };
+
+        leafletLayer.on('save:success', saveSuccess);
+
         return leafletLayer;
       }).catch((errorMessage) => {
         Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
@@ -282,6 +289,7 @@ export default Ember.Component.extend(
       @private
     */
     _resetLayer() {
+
       // Destroy previously created leaflet layer (created with old settings).
       this._destroyLayer();
 
@@ -291,6 +299,7 @@ export default Ember.Component.extend(
       // Wait for the layer creation to be finished and set it's state related to new settings.
       this.get('_leafletLayerPromise').then((leafletLayer) => {
         this._setLayerState();
+        this._setLayerZIndex();
       });
     },
 
@@ -302,7 +311,6 @@ export default Ember.Component.extend(
     */
     _setLayerState() {
       this._setLayerVisibility();
-      this._setLayerZIndex();
       this._setLayerStyle();
       this._setLayerOpacity();
       const layerInitCallback = this.get('mapApi').getFromApi('layerInitCallback');
@@ -391,10 +399,7 @@ export default Ember.Component.extend(
       if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) || leafletContainer.hasLayer(leafletLayer)) {
         return;
       }
-
       leafletContainer.addLayer(leafletLayer);
-      let leafletMap = this.get('leafletMap');
-      leafletMap.fire('fixZIndex');
     },
 
     /**
@@ -433,6 +438,8 @@ export default Ember.Component.extend(
     */
     _visibilityDidChange: Ember.observer('visibility', function () {
       this._setLayerVisibility();
+      let leafletMap = this.get('leafletMap');
+      leafletMap.fire('fixZIndex');
     }),
 
     /**
@@ -606,15 +613,22 @@ export default Ember.Component.extend(
 
       let leafletMap = this.get('leafletMap');
       if (!Ember.isNone(leafletMap)) {
+
         // Attach custom event-handler.
         leafletMap.on('flexberry-map:identify', this._identify, this);
         leafletMap.on('flexberry-map:search', this._search, this);
         leafletMap.on('flexberry-map:query', this._query, this);
         leafletMap.on('flexberry-map:createObject', this._createObject, this);
 
-        leafletMap.on('flexberry-map:load', function (e) {
+        leafletMap.on('flexberry-map:load', (e) => {
           if (!Ember.isNone(this.promiseLoad)) {
             e.results.push(this.promiseLoad);
+
+            if (e.loadFunc.length === 0) {
+              e.loadFunc.push(() => {
+                leafletMap.fire('fixZIndex');
+              });
+            }
           }
 
         }, this);

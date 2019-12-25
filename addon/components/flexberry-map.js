@@ -502,20 +502,28 @@ let FlexberryMapComponent = Ember.Component.extend(
     load(leafletMap, mapApi) {
       let e = {
         results: [],
+        loadFunc: []
       };
 
       leafletMap.fire('flexberry-map:load', e);
 
-      Ember.RSVP.all(e.results).then(() => {
+      Ember.RSVP.allSettled(e.results).then(function (array) {
         const readyMapLayers = mapApi.getFromApi('readyMapLayers');
-        if (!Ember.isNone(readyMapLayers)) {
-          readyMapLayers();
-        }
-      }, () => {
         const errorMapLayers = mapApi.getFromApi('errorMapLayers');
-        if (!Ember.isNone(errorMapLayers)) {
+
+        const rejected = array.filter((item) => { return item.state === 'rejected'; }).length > 0;
+
+        if (!Ember.isNone(readyMapLayers) && !rejected) {
+          readyMapLayers();
+        } else if (!Ember.isNone(errorMapLayers) && rejected) {
           errorMapLayers();
         }
+
+        if (e.loadFunc.length > 0) {
+          const func = e.loadFunc.pop();
+          func();
+        }
+
       });
     },
 
