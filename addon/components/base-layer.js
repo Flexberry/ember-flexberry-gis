@@ -231,9 +231,7 @@ export default Ember.Component.extend(
           this._fire();
         };
 
-        if (!Ember.isNone(leafletLayer)) {
-          leafletLayer.on('save:success', saveSuccess);
-        }
+        leafletLayer.on('save:success', saveSuccess);
 
         return leafletLayer;
       }).catch((errorMessage) => {
@@ -298,7 +296,7 @@ export default Ember.Component.extend(
       this._createLayer();
 
       // Wait for the layer creation to be finished and set it's state related to new settings.
-      this.get('_leafletLayerPromise').then((leafletLayer) => {
+      this.get('_leafletLayerPromise').then(() => {
         this._setLayerState();
         this._setLayerZIndex();
       });
