@@ -153,6 +153,14 @@
           favItems=favs
           leafletMap=leafletMap
         }}
+        {{layer-result-list
+          results=test
+          serviceLayer=serviceLayer
+          leafletMap=leafletMap
+          showIntersectionPanel=(action 'onIntersectionPanel')
+          featureSelected=(action "onLayerFeatureSelected")
+          addToFavorite=(action "addToFavorite")
+        }}
       </div>
       <div data-tab="createObject" class="ui tab createObject">
       <h3>{{t "forms.map.tabbar.createObject.caption"}}</h3>

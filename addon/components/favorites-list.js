@@ -21,7 +21,8 @@ export default Ember.Component.extend({
         resolve(ar);
       })
       console.log(test);
-      test[0] = {layerModel: ar[0].layerModel, features: promise}
+      test.addObject({layerModel: ar[0].layerModel, features: promise});
+      console.log(test);
       this.set('results', test)
     }
   }

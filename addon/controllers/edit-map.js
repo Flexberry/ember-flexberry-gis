@@ -266,7 +266,8 @@ export default EditFormController.extend(
 
       return layer;
     },
-    favs:Ember.A([]),
+    favs:Ember.A(),
+    test: [],
     actions: {
       /**
         Handles click on compare-layers button.
@@ -293,9 +294,6 @@ export default EditFormController.extend(
       },
       addToFavorite(feature) {
         let favs = this.get('favs');
-        
-        console.log(Ember.get(feature.properties,'isFavorite'));
-        console.log(Ember.get(feature.properties,'isFavorite'));
         if(Ember.get(feature.properties,'isFavorite')) {
           Ember.set(feature.properties, 'isFavorite', false);
           favs.removeObject(feature);
@@ -303,7 +301,15 @@ export default EditFormController.extend(
           Ember.set(feature.properties, 'isFavorite', true);
           favs.addObject(feature);
         }
-        console.log(favs)
+        let test = Ember.A();
+        let features = Ember.A();
+        features.addObject(feature);
+        let promise = new Ember.RSVP.Promise((resolve)=>{
+          resolve(features);
+        })   
+        test.addObject({layerModel: feature.layerModel, features: promise});
+        this.set('test', test);
+        console.log(test);
         //feature.layerModel.save();
         // if (Ember.$('.fvicon').hasClass('filled')) {
         //   Ember.$('.fvicon').removeClass('filled');
