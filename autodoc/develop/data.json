@@ -40798,7 +40798,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 196,
+            "line": 204,
             "description": "Get the closest object",
             "itemtype": "method",
             "name": "getNearObject",
@@ -40828,7 +40828,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 245,
+            "line": 253,
             "description": "Get distance between objects",
             "itemtype": "method",
             "name": "getDistanceBetweenObjects",
@@ -40863,7 +40863,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 304,
+            "line": 312,
             "description": "Get layer object attributes.",
             "itemtype": "method",
             "name": "getLayerObjectOptions",
@@ -40884,7 +40884,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 336,
+            "line": 345,
             "description": "Check if objectA contains object B.",
             "itemtype": "method",
             "name": "isContainsObject",
@@ -40915,7 +40915,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 374,
+            "line": 383,
             "description": "Calculate the area of ​​object B that extends beyond the boundaries of object A.",
             "itemtype": "method",
             "name": "getAreaExtends",
@@ -40946,7 +40946,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 426,
+            "line": 435,
             "description": "Get object id by object and layer.",
             "itemtype": "method",
             "name": "_getLayerFeatureId",
@@ -40971,7 +40971,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 443,
+            "line": 452,
             "description": "Determine the visibility of the specified objects by id for the layer.",
             "itemtype": "method",
             "name": "_setVisibilityObjects",
@@ -40999,7 +40999,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 482,
+            "line": 491,
             "description": "Copy Object from Source layer to Destination.",
             "itemtype": "method",
             "name": "copyObject",
@@ -41020,7 +41020,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 537,
+            "line": 546,
             "description": "Calculate the area of intersection between object A and object B .",
             "itemtype": "method",
             "name": "getIntersectionArea",
@@ -41056,7 +41056,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 580,
+            "line": 589,
             "description": "Cleans the service layer.",
             "itemtype": "method",
             "name": "clearServiceLayer",
@@ -41065,7 +41065,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 589,
+            "line": 598,
             "description": "Create image for layer object.",
             "itemtype": "method",
             "name": "getSnapShot",
@@ -41075,7 +41075,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 650,
+            "line": 659,
             "description": "Download image for layer object.",
             "itemtype": "method",
             "name": "downloadSnapShot",
@@ -41084,7 +41084,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 675,
+            "line": 684,
             "description": "Get the object thumb.",
             "itemtype": "method",
             "name": "getRhumb",
@@ -41109,7 +41109,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 771,
+            "line": 780,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
@@ -44393,15 +44393,15 @@
         },
         {
             "message": "unknown tag: snapt",
-            "line": " addon/mixins/flexberry-map-model-api.js:589"
+            "line": " addon/mixins/flexberry-map-model-api.js:598"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:771"
+            "line": " addon/mixins/flexberry-map-model-api.js:780"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:771"
+            "line": " addon/mixins/flexberry-map-model-api.js:780"
         },
         {
             "message": "replacing incorrect tag: returns with return",

@@ -584,10 +584,18 @@ export default Ember.Mixin.create({
               let intersectionResult;
               const layerFeatureId = this._getLayerFeatureId(layer, feature);
               if (layerFeatureId !== featureId) {
-                intersectionResult = lineIntersect(featureToSearch.feature, Ember.get(feature, &#x27;feature&#x27;));
+                let objA = featureToSearch;
+                let objB = feature;
+                objA = objA.options.crs.code === &#x27;EPSG:4326&#x27; ? objA.feature : projection.toWgs84(objA.feature);
+                objB = objB.options.crs.code === &#x27;EPSG:4326&#x27; ? objB.feature : projection.toWgs84(objB.feature);
+                if (objA.geometry.type === &#x27;Polygon&#x27; || objA.geometry.type === &#x27;MultiPolygon&#x27;) {
+                  intersectionResult = intersect.default(objA, objB);
+                } else if (objA.geometry.type === &#x27;MultiLineString&#x27; || objA.geometry.type === &#x27;LineString&#x27;) {
+                  intersectionResult = lineIntersect(objA, objB);
+                }
               }
 
-              if (intersectionResult &amp;&amp; intersectionResult.features.length &gt; 0) {
+              if (intersectionResult) {
                 intersectedFeaturesCollection.push(layerFeatureId);
               }
             });
@@ -737,7 +745,8 @@ export default Ember.Mixin.create({
 
     if (!Ember.isNone(object)) {
       result = Ember.$.extend({}, object.feature.properties);
-      result.area = area(object.feature);
+      var obj = object.options.crs.code === &#x27;EPSG:4326&#x27; ? object.feature : projection.toWgs84(object.feature);
+      result.area = area(obj);
     }
 
     return result;
