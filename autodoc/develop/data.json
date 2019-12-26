@@ -27979,6 +27979,17 @@
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
             "line": 143,
+            "description": "The last page in the table.",
+            "itemtype": "property",
+            "name": "lastPage",
+            "type": "Number",
+            "default": "1",
+            "class": "FlexberryLayersAttributesPanelComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-layers-attributes-panel.js",
+            "line": 152,
             "description": "Computed property that builds tab models collection from items.",
             "itemtype": "property",
             "name": "_tabModels",
@@ -27991,7 +28002,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 316,
+            "line": 325,
             "description": "Handles mouse down event when dragging.",
             "params": [
                 {
@@ -28005,7 +28016,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 352,
+            "line": 361,
             "description": "Handles mouse move event when dragging.",
             "params": [
                 {
@@ -28019,7 +28030,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 365,
+            "line": 374,
             "description": "Handles mouse up event when dragging.",
             "params": [
                 {
@@ -28033,7 +28044,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 416,
+            "line": 425,
             "description": "Handles layer dragging with mouse.",
             "params": [
                 {
@@ -28047,7 +28058,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 482,
+            "line": 491,
             "description": "Mark layer as changed.",
             "params": [
                 {
@@ -28061,7 +28072,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 510,
+            "line": 519,
             "description": "Projects geometry from latlng to coords in layer's CRS",
             "itemtype": "method",
             "name": "transform",
@@ -28085,7 +28096,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 531,
+            "line": 540,
             "description": "Update geometry layer in model.",
             "itemtype": "method",
             "name": "updateGeometryInModel",
@@ -28106,7 +28117,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 560,
+            "line": 569,
             "description": "Enable dragging for specified layers.",
             "params": [
                 {
@@ -28120,7 +28131,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 577,
+            "line": 586,
             "description": "Disable dragging for specified layers.",
             "params": [
                 {
@@ -28134,7 +28145,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 622,
+            "line": 631,
             "description": "Offset of tab panel in pixels.",
             "itemtype": "property",
             "name": "_featureTabsOffset",
@@ -28148,7 +28159,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 633,
+            "line": 642,
             "description": "Flag indicates whether attributes edit dialog has been already requested by user or not.",
             "itemtype": "property",
             "name": "_editRowDialogHasBeenRequested",
@@ -28161,7 +28172,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 643,
+            "line": 652,
             "description": "Flag indicates whether to show edit row dialog.",
             "itemtype": "property",
             "name": "_onEditRowDialogIsVisible",
@@ -28174,7 +28185,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 653,
+            "line": 662,
             "description": "Hash with edited row data.",
             "itemtype": "property",
             "name": "_editRowData",
@@ -28187,7 +28198,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 663,
+            "line": 672,
             "description": "Hash with edited row data copy.",
             "itemtype": "property",
             "name": "_editRowDataCopy",
@@ -28200,7 +28211,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 673,
+            "line": 682,
             "description": "Data for 'onDifferenceClick'.",
             "itemtype": "property",
             "name": "_dataForDifference",
@@ -28213,14 +28224,14 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 683,
+            "line": 692,
             "description": "Reference to component's template.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 688,
+            "line": 697,
             "description": "Selected tab index.",
             "itemtype": "property",
             "name": "selectedTabIndex",
@@ -28231,7 +28242,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 697,
+            "line": 706,
             "description": "Flag indicates that the panel is folded or not.",
             "itemtype": "property",
             "name": "folded",
@@ -28242,7 +28253,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 706,
+            "line": 715,
             "description": "Flag indicates that the panel is loading or not.",
             "itemtype": "property",
             "name": "loading",
@@ -28253,7 +28264,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 715,
+            "line": 724,
             "description": "Collection of tab items.",
             "itemtype": "property",
             "name": "items",
@@ -28264,7 +28275,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 724,
+            "line": 733,
             "description": "Integration with the layer tree",
             "itemtype": "property",
             "name": "settings",
@@ -28275,7 +28286,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 733,
+            "line": 742,
             "description": "Available modes to add geometry.",
             "itemtype": "property",
             "name": "availableGeometryAddModes",
@@ -28286,7 +28297,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 742,
+            "line": 751,
             "description": "Minimum distance for snapping in pixels.",
             "itemtype": "property",
             "name": "snapDistance",
@@ -28297,7 +28308,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 751,
+            "line": 760,
             "description": "Flag: indicates whether moveDialog has been requested",
             "itemtype": "property",
             "name": "_moveDialogHasBeenRequested",
@@ -28308,7 +28319,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 760,
+            "line": 769,
             "description": "Flag: indicates whether moveDialog is visible",
             "itemtype": "property",
             "name": "_moveDialogIsVisible",
@@ -28319,7 +28330,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 770,
+            "line": 779,
             "description": "Flag: indicates that move was with error",
             "itemtype": "property",
             "name": "_moveWithError",
@@ -28330,21 +28341,21 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 788,
+            "line": 797,
             "description": "Initializes component's DOM-related properties.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 796,
+            "line": 805,
             "description": "Initializes component.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 816,
+            "line": 825,
             "description": "Handles click on a tab.",
             "itemtype": "method",
             "name": "actions.onTabSelect",
@@ -28360,7 +28371,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 843,
+            "line": 852,
             "description": "Handles click on tab close icon.",
             "itemtype": "method",
             "name": "actions.closeTab",
@@ -28376,7 +28387,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 871,
+            "line": 880,
             "description": "Handles click on tab.",
             "itemtype": "method",
             "name": "actions.onTabClick",
@@ -28397,7 +28408,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 885,
+            "line": 894,
             "description": "Handles attributes row selection.",
             "itemtype": "method",
             "name": "actions.onRowSelect",
@@ -28423,7 +28434,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 911,
+            "line": 920,
             "description": "Handles 'Find an item on the map' button click.",
             "itemtype": "method",
             "name": "actions.onFindItemClick",
@@ -28439,7 +28450,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 926,
+            "line": 935,
             "description": "Handles units dropdown clicks.",
             "itemtype": "method",
             "name": "actions.onUnitSelected",
@@ -28460,7 +28471,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 937,
+            "line": 946,
             "description": "Handles 'Draw buffer' button click.",
             "itemtype": "method",
             "name": "actions.drawBuffer",
@@ -28476,7 +28487,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 966,
+            "line": 975,
             "description": "Handles 'Delete buffer' button click.",
             "itemtype": "method",
             "name": "actions.deleteBuffer",
@@ -28485,7 +28496,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 976,
+            "line": 985,
             "description": "Handles 'Clear found items' button click.",
             "itemtype": "method",
             "name": "actions.onClearFoundItemClick",
@@ -28494,7 +28505,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 986,
+            "line": 995,
             "description": "Handles find intersecting polygons.",
             "itemtype": "method",
             "name": "actions.onFindIntersectPolygons",
@@ -28503,7 +28514,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1020,
+            "line": 1029,
             "description": "Handles 'Select all' checkbox click.",
             "itemtype": "method",
             "name": "actions.onSelectAllClick",
@@ -28519,7 +28530,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1030,
+            "line": 1039,
             "description": "Handles 'getData' action from flexberry-table.",
             "itemtype": "method",
             "name": "actions.onTabGetData",
@@ -28540,7 +28551,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1042,
+            "line": 1051,
             "description": "Handles tab panel moving.",
             "itemtype": "method",
             "name": "actions.onTabMove",
@@ -28556,7 +28567,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1072,
+            "line": 1081,
             "description": "Handles 'Delete selected items' button click.",
             "itemtype": "method",
             "name": "actions.onDeleteItemClick",
@@ -28572,7 +28583,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1093,
+            "line": 1102,
             "description": "Performs row editing.",
             "itemtype": "method",
             "name": "actions.onRowEdit",
@@ -28593,7 +28604,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1120,
+            "line": 1129,
             "description": "Handles row edit dialog's 'approve' action.",
             "itemtype": "method",
             "name": "actions.onEditRowDialogApprove",
@@ -28609,7 +28620,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1146,
+            "line": 1155,
             "description": "Handles flexberry-table 'rowEdited' action.",
             "params": [
                 {
@@ -28628,7 +28639,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1157,
+            "line": 1166,
             "description": "Handles row's geometry editing.",
             "params": [
                 {
@@ -28647,7 +28658,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1250,
+            "line": 1259,
             "description": "Handles click on 'Save changes' button.",
             "params": [
                 {
@@ -28661,7 +28672,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1273,
+            "line": 1282,
             "description": "Handles new row attributes dialog's 'approve' action.",
             "params": [
                 {
@@ -28675,35 +28686,35 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1327,
+            "line": 1345,
             "description": "Handles new row attributes dialog's 'deny' action.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1347,
+            "line": 1365,
             "description": "Handles new row attributes dialog's 'hide' action.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1360,
+            "line": 1378,
             "description": "Handles edit row attributes dialog's 'deny' action.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1367,
+            "line": 1385,
             "description": "Handles edit row attributes dialog's 'hide' action.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1374,
+            "line": 1392,
             "description": "Handles a new geometry adding completion.",
             "params": [
                 {
@@ -28722,7 +28733,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1388,
+            "line": 1406,
             "description": "Handles a new geometry draw start.",
             "params": [
                 {
@@ -28741,7 +28752,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1421,
+            "line": 1439,
             "description": "Handles a new geometry adding by import completion.",
             "params": [
                 {
@@ -28760,7 +28771,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1433,
+            "line": 1451,
             "description": "Handles click on 'Difference polygon' button.",
             "params": [
                 {
@@ -28774,7 +28785,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1513,
+            "line": 1531,
             "description": "Handles click on 'Split geometry' button.",
             "params": [
                 {
@@ -28788,7 +28799,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1527,
+            "line": 1545,
             "description": "Handles click on 'Union polygon' button.",
             "itemtype": "method",
             "name": "actions.doCombinedPolygon",
@@ -28804,7 +28815,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1563,
+            "line": 1581,
             "description": "Handles move layer's object.",
             "params": [
                 {
@@ -28818,7 +28829,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1579,
+            "line": 1597,
             "description": "Handles move dialog's 'approve' action.",
             "params": [
                 {
@@ -28837,7 +28848,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1618,
+            "line": 1636,
             "description": "Selected or deselected all objects.",
             "params": [
                 {
@@ -28856,7 +28867,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1656,
+            "line": 1674,
             "description": "Update '_editComponentName'.",
             "params": [
                 {
@@ -28870,7 +28881,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1673,
+            "line": 1691,
             "description": "Delete layer by key.",
             "params": [
                 {
@@ -28904,7 +28915,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1703,
+            "line": 1721,
             "description": "Treatment selected and edited rows.",
             "params": [
                 {
@@ -28923,7 +28934,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1724,
+            "line": 1742,
             "description": "Delete layer feature by id.",
             "params": [
                 {
@@ -28942,7 +28953,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1760,
+            "line": 1778,
             "description": "Disables tool and split geometry.",
             "params": [
                 {
@@ -28956,7 +28967,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1862,
+            "line": 1880,
             "description": "Split splitter and split polygon each part splitter.",
             "params": [
                 {
@@ -28975,7 +28986,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1933,
+            "line": 1951,
             "description": "Split polygon.",
             "params": [
                 {
@@ -28994,7 +29005,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 1998,
+            "line": 2016,
             "description": "Calculates new coordinates layer's feature after the move",
             "params": [
                 {
@@ -29023,7 +29034,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2022,
+            "line": 2040,
             "description": "Shows a dialog for entering the attributes  move of layer's feature.",
             "params": [
                 {
@@ -29037,7 +29048,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2035,
+            "line": 2053,
             "description": "Drag and drop.",
             "params": [
                 {
@@ -29051,14 +29062,14 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2055,
+            "line": 2073,
             "description": "Returns Leaflet.Editable instance.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2070,
+            "line": 2088,
             "description": "Overrides {{#crosslink \"LeafletZoomToFeatureMixin/_prepareLayer:method\"}} to make a copy of passed layer\nand apply a style to the layer to make it more visible.",
             "itemtype": "method",
             "name": "_prepareLayer",
@@ -29080,7 +29091,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2088,
+            "line": 2106,
             "description": "Shows a dialog for entering the attributes of the newly added layer.",
             "params": [
                 {
@@ -29099,7 +29110,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2116,
+            "line": 2134,
             "description": "Returns the available drawing tools according to the type of layer geometry.",
             "params": [
                 {
@@ -29113,7 +29124,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2143,
+            "line": 2161,
             "description": "Return geometry type.",
             "params": [
                 {
@@ -29127,7 +29138,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2170,
+            "line": 2188,
             "description": "Zooms map to the specified layer.",
             "params": [
                 {
@@ -29141,7 +29152,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2180,
+            "line": 2198,
             "description": "Initializes snapping for edited vertex.",
             "itemtype": "method",
             "name": "_startSnapping",
@@ -29159,7 +29170,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2208,
+            "line": 2226,
             "description": "Cleaning after snapping.",
             "itemtype": "method",
             "name": "_cleanupSnapping",
@@ -29170,7 +29181,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2222,
+            "line": 2240,
             "description": "Handles snapping.",
             "itemtype": "method",
             "name": "_handleSnapping",
@@ -29188,7 +29199,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2265,
+            "line": 2283,
             "description": "Handles clicks when drawing new geometry.",
             "itemtype": "method",
             "name": "_drawClick",
@@ -29206,7 +29217,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2282,
+            "line": 2300,
             "description": "Check if vertex is in snap distance.",
             "itemtype": "method",
             "name": "_checkSnapToVertex",
@@ -29224,7 +29235,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2309,
+            "line": 2327,
             "description": "Finds closest layer to the specified point.",
             "itemtype": "method",
             "name": "_findClosestLayer",
@@ -29247,7 +29258,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2332,
+            "line": 2350,
             "description": "Calculates distance between layer and point.",
             "itemtype": "method",
             "name": "_calculateDistance",
@@ -29270,7 +29281,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2391,
+            "line": 2409,
             "description": "Finds point on segment closest to the specified point.",
             "itemtype": "method",
             "name": "_getClosestPointOnSegment",
@@ -29303,7 +29314,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2414,
+            "line": 2432,
             "description": "Calculates distance in pixels between point and segment.",
             "itemtype": "method",
             "name": "_getPixelDistanceToSegment",
@@ -29336,7 +29347,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-attributes-panel.js",
-            "line": 2431,
+            "line": 2449,
             "description": "Calculates distance in pixels between two points.",
             "itemtype": "method",
             "name": "_getPixelDistance",
@@ -44174,7 +44185,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:510"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:519"
         },
         {
             "message": "replacing incorrect tag: parm with param",
@@ -45410,167 +45421,167 @@
         },
         {
             "message": "Missing item type\nHandles mouse down event when dragging.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:316"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:325"
         },
         {
             "message": "Missing item type\nHandles mouse move event when dragging.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:352"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:361"
         },
         {
             "message": "Missing item type\nHandles mouse up event when dragging.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:365"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:374"
         },
         {
             "message": "Missing item type\nHandles layer dragging with mouse.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:416"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:425"
         },
         {
             "message": "Missing item type\nMark layer as changed.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:482"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:491"
         },
         {
             "message": "Missing item type\nEnable dragging for specified layers.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:560"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:569"
         },
         {
             "message": "Missing item type\nDisable dragging for specified layers.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:577"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:586"
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:683"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:692"
         },
         {
             "message": "Missing item type\nInitializes component's DOM-related properties.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:788"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:797"
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:796"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:805"
         },
         {
             "message": "Missing item type\nHandles flexberry-table 'rowEdited' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1146"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1155"
         },
         {
             "message": "Missing item type\nHandles row's geometry editing.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1157"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1166"
         },
         {
             "message": "Missing item type\nHandles click on 'Save changes' button.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1250"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1259"
         },
         {
             "message": "Missing item type\nHandles new row attributes dialog's 'approve' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1273"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1282"
         },
         {
             "message": "Missing item type\nHandles new row attributes dialog's 'deny' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1327"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1345"
         },
         {
             "message": "Missing item type\nHandles new row attributes dialog's 'hide' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1347"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1365"
         },
         {
             "message": "Missing item type\nHandles edit row attributes dialog's 'deny' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1360"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1378"
         },
         {
             "message": "Missing item type\nHandles edit row attributes dialog's 'hide' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1367"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1385"
         },
         {
             "message": "Missing item type\nHandles a new geometry adding completion.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1374"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1392"
         },
         {
             "message": "Missing item type\nHandles a new geometry draw start.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1388"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1406"
         },
         {
             "message": "Missing item type\nHandles a new geometry adding by import completion.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1421"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1439"
         },
         {
             "message": "Missing item type\nHandles click on 'Difference polygon' button.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1433"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1451"
         },
         {
             "message": "Missing item type\nHandles click on 'Split geometry' button.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1513"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1531"
         },
         {
             "message": "Missing item type\nHandles move layer's object.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1563"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1581"
         },
         {
             "message": "Missing item type\nHandles move dialog's 'approve' action.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1579"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1597"
         },
         {
             "message": "Missing item type\nSelected or deselected all objects.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1618"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1636"
         },
         {
             "message": "Missing item type\nUpdate '_editComponentName'.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1656"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1674"
         },
         {
             "message": "Missing item type\nDelete layer by key.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1673"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1691"
         },
         {
             "message": "Missing item type\nTreatment selected and edited rows.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1703"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1721"
         },
         {
             "message": "Missing item type\nDelete layer feature by id.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1724"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1742"
         },
         {
             "message": "Missing item type\nDisables tool and split geometry.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1760"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1778"
         },
         {
             "message": "Missing item type\nSplit splitter and split polygon each part splitter.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1862"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1880"
         },
         {
             "message": "Missing item type\nSplit polygon.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1933"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:1951"
         },
         {
             "message": "Missing item type\nCalculates new coordinates layer's feature after the move",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:1998"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2016"
         },
         {
             "message": "Missing item type\nShows a dialog for entering the attributes  move of layer's feature.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2022"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2040"
         },
         {
             "message": "Missing item type\nDrag and drop.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2035"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2053"
         },
         {
             "message": "Missing item type\nReturns Leaflet.Editable instance.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2055"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2073"
         },
         {
             "message": "Missing item type\nShows a dialog for entering the attributes of the newly added layer.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2088"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2106"
         },
         {
             "message": "Missing item type\nReturns the available drawing tools according to the type of layer geometry.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2116"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2134"
         },
         {
             "message": "Missing item type\nReturn geometry type.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2143"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2161"
         },
         {
             "message": "Missing item type\nZooms map to the specified layer.",
-            "line": " addon/components/flexberry-layers-attributes-panel.js:2170"
+            "line": " addon/components/flexberry-layers-attributes-panel.js:2188"
         },
         {
             "message": "Missing item type\nReference to component's template.",
