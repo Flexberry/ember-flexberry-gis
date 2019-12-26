@@ -229,7 +229,11 @@ export default Ember.Component.extend(
 
         const saveSuccess = () => {
           let leafletMap = this.get('leafletMap');
-          leafletMap.fire('fixZIndex');
+
+          if (!Ember.isNone(leafletMap.fire)) {
+            leafletMap.fire('fixZIndex');
+          }
+
         };
 
         leafletLayer.on('save:success', saveSuccess);
@@ -333,7 +337,10 @@ export default Ember.Component.extend(
 
       leafletLayer.setZIndex(this.get('index'));
       let leafletMap = this.get('leafletMap');
-      leafletMap.fire('fixZIndex');
+
+      if (!Ember.isNone(leafletMap.fire)) {
+        leafletMap.fire('fixZIndex');
+      }
     },
 
     /**
@@ -399,6 +406,7 @@ export default Ember.Component.extend(
       if (Ember.isNone(leafletContainer) || Ember.isNone(leafletLayer) || leafletContainer.hasLayer(leafletLayer)) {
         return;
       }
+
       leafletContainer.addLayer(leafletLayer);
     },
 
@@ -439,7 +447,11 @@ export default Ember.Component.extend(
     _visibilityDidChange: Ember.observer('visibility', function () {
       this._setLayerVisibility();
       let leafletMap = this.get('leafletMap');
-      leafletMap.fire('fixZIndex');
+
+
+      if (!Ember.isNone(leafletMap.fire)) {
+        leafletMap.fire('fixZIndex');
+      }
     }),
 
     /**
@@ -626,7 +638,10 @@ export default Ember.Component.extend(
 
             if (e.loadFunc.length === 0) {
               e.loadFunc.push(() => {
-                leafletMap.fire('fixZIndex');
+
+                if (!Ember.isNone(leafletMap.fire)) {
+                  leafletMap.fire('fixZIndex');
+                }
               });
             }
           }
