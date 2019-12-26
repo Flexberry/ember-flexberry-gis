@@ -331,14 +331,12 @@ export default Ember.Component.extend(
       }
 
       const setZIndexFunc = Ember.get(leafletLayer, 'setZIndex');
-      // if (Ember.isNone(leafletLayer) || Ember.typeOf(leafletLayer.setZIndex) !== 'function') {
       if (Ember.typeOf(setZIndexFunc) !== 'function') {
         return;
       }
 
       const index = this.get('index');
       leafletLayer.setZIndex(index);
-      // setZIndexFunc(index);
 
       this._fire();
     },
