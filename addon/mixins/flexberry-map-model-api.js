@@ -373,14 +373,14 @@ export default Ember.Mixin.create({
       objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
       objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
       if (objA.geometry.type === 'MultiPolygon') {
-        objA = L.polygon(objA.geometry.coordinates[0]);
+        objA = L.polygon(objA.geometry.coordinates[0]).toGeoJSON();
       }
 
       if (objB.geometry.type === 'MultiPolygon') {
-        objB = L.polygon(objB.geometry.coordinates[0]);
+        objB = L.polygon(objB.geometry.coordinates[0]).toGeoJSON();
       }
 
-      if (booleanContains(objB.toGeoJSON(), objA.toGeoJSON())) {
+      if (booleanContains(objB, objA)) {
         return true;
       }
     }
