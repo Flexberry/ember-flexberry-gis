@@ -228,12 +228,7 @@ export default Ember.Component.extend(
         this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel') });
 
         const saveSuccess = () => {
-          let leafletMap = this.get('leafletMap');
-
-          if (!Ember.isNone(leafletMap.fire)) {
-            leafletMap.fire('fixZIndex');
-          }
-
+          this._fire();
         };
 
         leafletLayer.on('save:success', saveSuccess);
@@ -336,11 +331,8 @@ export default Ember.Component.extend(
       }
 
       leafletLayer.setZIndex(this.get('index'));
-      let leafletMap = this.get('leafletMap');
 
-      if (!Ember.isNone(leafletMap.fire)) {
-        leafletMap.fire('fixZIndex');
-      }
+      this._fire();
     },
 
     /**
@@ -446,12 +438,7 @@ export default Ember.Component.extend(
     */
     _visibilityDidChange: Ember.observer('visibility', function () {
       this._setLayerVisibility();
-      let leafletMap = this.get('leafletMap');
-
-
-      if (!Ember.isNone(leafletMap.fire)) {
-        leafletMap.fire('fixZIndex');
-      }
+      this._fire();
     }),
 
     /**
@@ -479,6 +466,21 @@ export default Ember.Component.extend(
       // so we must restore opacity to user defined value.
       this._setLayerOpacity();
     }),
+
+    _fire: function () {
+      const leafletMap = this.get('leafletMap');
+
+      if (!Ember.isNone(leafletMap)) {
+        leafletMap.fire('fixZIndex');
+      }
+
+      // const fire = Ember.get(leafletMap, 'fire');
+      // // const fire = leafletMap.get('fire');
+      // if (!Ember.isNone(fire)) {
+      //   fire.bind(leafletMap, 'fixZIndex');
+      //   // fire('fixZIndex');
+      // }
+    },
 
     /**
       Handles 'flexberry-map:identify' event of leaflet map.
