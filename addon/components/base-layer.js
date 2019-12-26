@@ -231,7 +231,9 @@ export default Ember.Component.extend(
           this._fire();
         };
 
-        leafletLayer.on('save:success', saveSuccess);
+        if (!Ember.isNone(leafletLayer)) {
+          leafletLayer.on('save:success', saveSuccess);
+        }
 
         return leafletLayer;
       }).catch((errorMessage) => {
