@@ -7,77 +7,71 @@
     </a>
     <i class="intersection-panel-exit-icon close icon" {{action 'closePanel'}}></i>
   </div> 
-  <div class="intersections-panel-form-row">
- <div class="row">
-    <div class="sixteen wide column">
-      <div class="field intersection-multiselect">
-        {{flexberry-multiple-select
-          items=vectorLayers
-          selectedItems=selectedLayers
-          title=('t' _layersLabel)
-          allowAdditions=false
-          isObject=true
-        }}
-      </div>
-    </div>
-  </div>   
+  <div class="intersections-panel-form-row"> 
     <div class="row">
       <div class="sixteen wide column">
-          <div class="ui grid">
-            <div class="four wide column">
-              <div class="field">
-                {{t 'components.flexberry-layers-intersections-panel.square'}}
-                <div class="ui right labeled input">
-                  {{input type="text" value=square}}
-                  <div class="ui basic label">
-                    {{t 'components.flexberry-layers-intersections-panel.m2'}}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="four wide column">
-              <div class="field">   
-                {{t 'components.flexberry-layers-intersections-panel.buffer'}}
-                <div class="ui right labeled input">
-                  {{input type="text" value=bufferR}}
-                  <div class="ui basic label">
-                    {{t 'components.flexberry-layers-intersections-panel.m'}}
-                  </div>
-                </div>                                    
-              </div>
-            </div>
-            <div class="four wide column">
-              <div class="field">   
-                <button type="submit" class="ui button intersect" {{action "findIntersections"}}>
-                  {{t 'components.flexberry-layers-intersections-panel.find-intersection'}}
-                </button>                       
-              </div>
-            </div>
-            <div class="four wide column">
-              <div class="field">   
-                <button type="submit" class="ui button intersect" {{action "save"}} disabled={{noIntersectionResults}}>
-                  {{t 'components.flexberry-layers-intersections-panel.load-results'}}
-                </button>                   
+        <div class="ui grid">
+          <div class="five wide column">
+            <div class="field">
+              <div class="field intersection-multiselect">
+                {{flexberry-multiple-select
+                  items=vectorLayers
+                  selectedItems=selectedLayers
+                  title=('t' _layersLabel)
+                  allowAdditions=false
+                  isObject=true
+                }}
               </div>
             </div>
           </div>
+          <div class="three wide column">
+            <div class="field">
+              {{t 'components.flexberry-layers-intersections-panel.square'}}
+              <div class="ui right labeled input">
+                {{input type="text" value=square}}
+                <div class="ui basic label">
+                  {{t 'components.flexberry-layers-intersections-panel.m2'}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="three wide column">
+            <div class="field">   
+              {{t 'components.flexberry-layers-intersections-panel.buffer'}}
+              <div class="ui right labeled input">
+                {{input type="text" value=bufferR}}
+                <div class="ui basic label">
+                  {{t 'components.flexberry-layers-intersections-panel.m'}}
+                </div>
+              </div>                                    
+            </div>
+          </div>
+          <div class="five wide column">
+            <div class="field">   
+              <button type="submit" class="ui button intersect" {{action "findIntersections"}}>
+                {{t 'components.flexberry-layers-intersections-panel.find-intersection'}}
+              </button>
+              <button type="submit" class="ui button intersect" {{action "save"}} disabled={{noIntersectionResults}}>
+                {{t 'components.flexberry-layers-intersections-panel.load-results'}}
+              </button>                         
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   {{#unless noIntersectionResults}}
   <div class="intersections-panel-results-row row">
      <fieldset>
-   <legend>{{t 'components.flexberry-layers-intersections-panel.results'}}</legend>
-        {{layer-result-list
-          results=results
-          serviceLayer=serviceLayer
-          leafletMap=leafletMap
-          intersection=true
-          zoomToIntersection=(action 'zoomToIntersection')
-        }}
-        </fieldset>
+      <legend>{{t 'components.flexberry-layers-intersections-panel.results'}}</legend>
+      {{layer-result-list
+        results=results
+        serviceLayer=serviceLayer
+        leafletMap=leafletMap
+        intersection=true
+        zoomToIntersection=(action 'zoomToIntersection')
+      }}
+    </fieldset>
   </div>
   {{/unless}}
-  
   </div>
- 
 </div>

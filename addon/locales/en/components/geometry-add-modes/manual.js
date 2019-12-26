@@ -1,6 +1,7 @@
 export default {
-  'menu-button-tooltip': 'Add with coordinates',
-  'dialog-approve-button-caption': 'Ok',
+  'menu-button-tooltip-add': 'Add with coordinates',
+  'menu-button-tooltip-edit': 'Edit with coordinates',
+  'dialog-approve-button-caption': 'Save',
   'dialog-deny-button-caption': 'Cancel',
   'crs-field-label': 'Coordinate reference system',
   'geometry-field-label': 'Geometry type',

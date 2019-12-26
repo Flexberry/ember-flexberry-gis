@@ -10,6 +10,7 @@ import LeafletMapLoaderMixin from '../mixins/leaflet-map/map-loader';
 import LeafletMapToolsMixin from '../mixins/leaflet-map/map-tools';
 import LeafletMapCommandsMixin from '../mixins/leaflet-map/map-commands';
 import LeafletMapSidebarMixin from '../mixins/leaflet-map/map-sidebar';
+import Renderer from '../objects/custom-renderer';
 
 import layout from '../templates/components/flexberry-map';
 
@@ -446,8 +447,11 @@ let FlexberryMapComponent = Ember.Component.extend(
       let $leafletContainer = this.$();
       this.set('_$leafletContainer', $leafletContainer);
 
+      let options = this.get('options');
+      options.renderer = new Renderer();
+
       // Create leaflet map.
-      let leafletMap = L.map($leafletContainer[0], this.get('options'));
+      let leafletMap = L.map($leafletContainer[0], options);
       this.set('_leafletObject', leafletMap);
 
       // Perform initializations.
@@ -485,6 +489,34 @@ let FlexberryMapComponent = Ember.Component.extend(
         this.set('_hasServiceLayer', true);
       }
 
+      Ember.run.scheduleOnce('afterRender', this, function () {
+        this.load(leafletMap, mapApi);
+      });
+    },
+
+    /**
+      Run an array of prommis.
+
+      @parm {Object} mapApi Object mapApi.
+    */
+    load(leafletMap, mapApi) {
+      let e = {
+        results: [],
+      };
+
+      leafletMap.fire('flexberry-map:load', e);
+
+      Ember.RSVP.all(e.results).then(() => {
+        const readyMapLayers = mapApi.getFromApi('readyMapLayers');
+        if (!Ember.isNone(readyMapLayers)) {
+          readyMapLayers();
+        }
+      }, () => {
+        const errorMapLayers = mapApi.getFromApi('errorMapLayers');
+        if (!Ember.isNone(errorMapLayers)) {
+          errorMapLayers();
+        }
+      });
     },
 
     /**

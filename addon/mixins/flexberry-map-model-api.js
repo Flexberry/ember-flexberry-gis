@@ -174,10 +174,18 @@ export default Ember.Mixin.create({
               let intersectionResult;
               const layerFeatureId = this._getLayerFeatureId(layer, feature);
               if (layerFeatureId !== featureId) {
-                intersectionResult = lineIntersect(featureToSearch.feature, Ember.get(feature, 'feature'));
+                let objA = featureToSearch;
+                let objB = feature;
+                objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+                objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+                if (objA.geometry.type === 'Polygon' || objA.geometry.type === 'MultiPolygon') {
+                  intersectionResult = intersect.default(objA, objB);
+                } else if (objA.geometry.type === 'MultiLineString' || objA.geometry.type === 'LineString') {
+                  intersectionResult = lineIntersect(objA, objB);
+                }
               }
 
-              if (intersectionResult && intersectionResult.features.length > 0) {
+              if (intersectionResult) {
                 intersectedFeaturesCollection.push(layerFeatureId);
               }
             });
@@ -327,7 +335,8 @@ export default Ember.Mixin.create({
 
     if (!Ember.isNone(object)) {
       result = Ember.$.extend({}, object.feature.properties);
-      result.area = area(object.feature);
+      var obj = object.options.crs.code === 'EPSG:4326' ? object.feature : projection.toWgs84(object.feature);
+      result.area = area(obj);
     }
 
     return result;
@@ -766,6 +775,19 @@ export default Ember.Mixin.create({
       startPoint: startPoint,
       coordinates: result
     };
-  }
+  },
 
+  /**
+    Add a layer to the group.
+
+    @method layerToGroup
+    @parm {string} layerGroupId Group layer id.
+    @parm {string} layerId layer id.
+  */
+  moveLayerToGroup(layerId, layerGroupId) {
+    const layer = this.get('mapLayer').findBy('id', layerId);
+
+    let layerModel = this._getLayerModel(layerGroupId);
+    layerModel.set('parent', layer);
+  }
 });

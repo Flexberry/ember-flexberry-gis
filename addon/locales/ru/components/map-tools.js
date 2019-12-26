@@ -11,6 +11,10 @@ export default {
     'caption': '',
     'tooltip': 'Уменьшить'
   },
+  'comapre-layers': {
+    'caption': '',
+    'tooltip': 'Сравнить слои'
+  },
   'identify': {
     'caption': 'Идентифицировать',
     'tooltip': 'Идентифицировать',
@@ -56,19 +60,25 @@ export default {
     'caption': 'Нарисовать',
     'tooltip': 'Нарисовать',
     'draw-marker': {
-      'caption': 'Маркер'
+      'caption': 'Добавить маркер'
     },
     'draw-polyline': {
-      'caption': 'Ломаную'
+      'caption': 'Добавить ломаную'
     },
     'draw-circle': {
-      'caption': 'Круг'
+      'caption': 'Добавить круг'
     },
     'draw-rectangle': {
-      'caption': 'Прямоугольник'
+      'caption': 'Добавить прямоугольник'
     },
     'draw-polygon': {
-      'caption': 'Полигон'
+      'caption': 'Добавить полигон'
+    },
+    'draw-multy-polygon': {
+      'caption': 'Добавить часть/кольцо'
+    },
+    'draw-multy-line': {
+      'caption': 'Добавить часть/кольцо'
     },
     'draw-clear': {
       'caption': 'Очистить'
