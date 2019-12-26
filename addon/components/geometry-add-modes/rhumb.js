@@ -256,7 +256,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
           break;
       }
 
-      const startPoints = this._dataForm.startPoint.split(';');
+      const startPoints = this._dataForm.startPoint.split(' ');
 
       let points = [];
       for (let i = 0; i < this._tableData.length; i++) {
@@ -421,7 +421,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     @method _validStartPoint
   */
   _validStartPoint(str) {
-    const regex = /^(([0-9]*[.])?[0-9]+);(([0-9]*[.])?[0-9]+)$/;
+    const regex = /^(([0-9]*[.])?[0-9]+) (([0-9]*[.])?[0-9]+)$/;
     return regex.exec(str);
   }
 
