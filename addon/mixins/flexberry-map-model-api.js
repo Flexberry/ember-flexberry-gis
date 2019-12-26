@@ -370,9 +370,17 @@ export default Ember.Mixin.create({
     }
 
     if (objA && objB) {
-      let featureA = Ember.get(objA, 'feature');
-      let featureB = Ember.get(objB, 'feature');
-      if (booleanContains(featureB, featureA)) {
+      objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+      objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+      if (objA.geometry.type === 'MultiPolygon') {
+        objA = L.polygon(objA.geometry.coordinates[0]);
+      }
+
+      if (objB.geometry.type === 'MultiPolygon') {
+        objB = L.polygon(objB.geometry.coordinates[0]);
+      }
+
+      if (booleanContains(objB.toGeoJSON(), objA.toGeoJSON())) {
         return true;
       }
     }
@@ -408,12 +416,14 @@ export default Ember.Mixin.create({
     }
 
     if (objA && objB) {
-      let intersectionRes = intersect(objB.feature, objA.feature);
+      objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+      objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+      let intersectionRes = intersect.default(objB, objA);
       if (intersectionRes) {
-        let resultArea = area(objB.feature) - area(intersectionRes);
+        let resultArea = area(objB) - area(intersectionRes);
         return resultArea;
       } else {
-        return area(objB.feature);
+        return area(objB);
       }
     }
 
