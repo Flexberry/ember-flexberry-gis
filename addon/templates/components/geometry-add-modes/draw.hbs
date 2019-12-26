@@ -9,11 +9,12 @@
     click=(action "onGeometryTypeSelect" "rectangle")
     iconClass="flexberry-map-tool-icon square icon"
   }}
-  {{flexberry-button
+  {{!-- todo: To work, you need to translate a circle into a polygon. --}}
+  {{!-- {{flexberry-button
     tooltip=(t "components.map-tools.draw.draw-circle.caption")
     click=(action "onGeometryTypeSelect" "circle")
     iconClass="flexberry-map-tool-icon circle icon"
-  }}
+  }} --}}
   {{flexberry-button
     tooltip=(t "components.map-tools.draw.draw-multy-polygon.caption")
     click=(action "onGeometryTypeSelect" "multyPolygon")
