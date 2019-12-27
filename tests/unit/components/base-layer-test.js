@@ -40,16 +40,14 @@ test('it should call layer.setZIndex on _setLayerZIndex', function (assert) {
   });
 });
 
-test('should call _setLayerVisibility and _setLayerZIndex on render', function(assert) {
-  assert.expect(2);
+test('should call _setLayerVisibility and _setLayerZIndex on render', function (assert) {
+  assert.expect(1);
 
   let setLayerVisibility = sinon.spy();
-  let setLayerZIndex = sinon.spy();
 
   let component = this.subject({
     createLayer: createLayer,
     _setLayerVisibility: setLayerVisibility,
-    _setLayerZIndex: setLayerZIndex
   });
 
   this.render();
@@ -57,7 +55,6 @@ test('should call _setLayerVisibility and _setLayerZIndex on render', function(a
   let leafletLayerPromiseResolved = assert.async();
   component.get('_leafletLayerPromise').then((leafletLayer) => {
     assert.ok(setLayerVisibility.called, 'should call visibilityDidChange');
-    assert.ok(setLayerZIndex.called, 'should call setZIndex');
   }).finally(() => {
     leafletLayerPromiseResolved();
   });
