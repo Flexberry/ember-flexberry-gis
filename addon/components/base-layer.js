@@ -227,11 +227,10 @@ export default Ember.Component.extend(
 
         this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel') });
 
-        const saveSuccess = () => {
-          this._fire();
-        };
-
-        leafletLayer.on('save:success', saveSuccess);
+        // After saving, arrange layers by index.
+        leafletLayer.on('save:success', () => {
+          this._fixZIndexFire();
+        });
 
         return leafletLayer;
       }).catch((errorMessage) => {
@@ -338,7 +337,7 @@ export default Ember.Component.extend(
       const index = this.get('index');
       leafletLayer.setZIndex(index);
 
-      this._fire();
+      this._fixZIndexFire();
     },
 
     /**
@@ -444,7 +443,7 @@ export default Ember.Component.extend(
     */
     _visibilityDidChange: Ember.observer('visibility', function () {
       this._setLayerVisibility();
-      this._fire();
+      this._fixZIndexFire();
     }),
 
     /**
@@ -473,19 +472,18 @@ export default Ember.Component.extend(
       this._setLayerOpacity();
     }),
 
-    _fire: function () {
+    /**
+      Rebuild layers.
+
+      @method _fixZIndexFire
+      @private
+    */
+    _fixZIndexFire: function () {
       const leafletMap = this.get('leafletMap');
 
       if (!Ember.isNone(leafletMap)) {
         leafletMap.fire('fixZIndex');
       }
-
-      // const fire = Ember.get(leafletMap, 'fire');
-      // // const fire = leafletMap.get('fire');
-      // if (!Ember.isNone(fire)) {
-      //   fire.bind(leafletMap, 'fixZIndex');
-      //   // fire('fixZIndex');
-      // }
     },
 
     /**
