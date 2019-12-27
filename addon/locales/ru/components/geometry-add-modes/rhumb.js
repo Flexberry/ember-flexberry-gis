@@ -4,10 +4,10 @@ export default {
   'dialog-deny-button-caption': 'Отмена',
   'type-object-field-label': 'Тип объекта',
   'add-coordinates-field-label': 'Добавить координаты',
-  'start-point-field-label': 'Начальная точка',
+  'start-point-field-label': 'Координаты начальной точки',
   'direction-field-label': 'Направление',
-  'rhumb-field-label': 'Румб',
-  'distance-field-label': 'Растояние',
+  'rhumb-field-label': 'Румб, градусы',
+  'distance-field-label': 'Расстояние, м',
   'add-button-caption': 'Добавить',
   'table-field-label': 'Таблица румбов',
   'table-column-operation': 'Операция'
