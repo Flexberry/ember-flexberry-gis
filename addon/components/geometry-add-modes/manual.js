@@ -337,7 +337,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
             latlngs = [];
             let coors = [];
             for (let i = 0; i < parsedCoordinates.length; i++) {
-              let [masLatLng, mas] = [];
+              let masLatLng = [];
+              let mas = [];
               for (let j = 0; j < parsedCoordinates[i].length; j++) {
                 masLatLng.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
                 mas.push(parsedCoordinates[i][j]);
@@ -365,7 +366,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
             latlngs = [];
             let coors = [];
             for (let i = 0; i < parsedCoordinates.length; i++) {
-              let [masLatLng, mas] = [];
+              let masLatLng = [];
+              let mas = [];
               for (let j = 0; j < parsedCoordinates[i].length; j++) {
                 masLatLng.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
                 mas.push(parsedCoordinates[i][j]);
