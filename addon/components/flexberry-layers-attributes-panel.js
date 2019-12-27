@@ -141,6 +141,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   _isPanelEditable: true,
 
   /**
+    The last page in the table.
+
+    @property lastPage
+    @type Number
+    @default 1
+  */
+  lastPage: 1,
+
+  /**
     Computed property that builds tab models collection from items.
 
     @property _tabModels
@@ -1311,8 +1320,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       // the hash containing guid of properties object and link to that object
       Ember.set(tabModel, `propertyLink.${propId}`, data);
 
-      // new records on top
-      tabModel.properties.insertAt(0, data);
+      tabModel.properties.addObject(data);
 
       tabModel._triggerChanged.call([tabModel, layer, false], { layer });
 
@@ -1322,6 +1330,16 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       }
 
       this.set('_newRowDialogHasBeenRequested', false);
+
+      // Select created object.
+      this.actions.onRowGeometryEdit.call(this, tabModel, propId);
+      const lastPage = Math.ceil(tabModel.properties.length / tabModel._top);
+
+      // Go to last page.
+      Ember.set(this, 'lastPage', lastPage);
+
+      const skip = tabModel._top * (lastPage - 1);
+      tabModel.set('_skip', skip);
     },
 
     /**

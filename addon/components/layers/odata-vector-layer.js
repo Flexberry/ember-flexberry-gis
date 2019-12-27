@@ -184,6 +184,17 @@ export default BaseVectorLayer.extend({
         models.forEach(model => {
           this.addLayerObject(layer, model);
         });
+
+        let promiseLoad = new Ember.RSVP.Promise((resolve, reject) => {
+          layer.on('load', () => {
+            resolve();
+          }).on('error', (e) => {
+            reject();
+          });
+        });
+
+        this.set('promiseLoad', promiseLoad);
+
         resolve(layer);
       }).catch((e) => {
         reject(e);

@@ -451,7 +451,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     */
     hasBeenExpanded: false,
 
+    //side to add layer to comapre
+    side: '',
+
+    //compare enabled
+    compareLayersEnabled: false,
+
     actions: {
+      onAddCompare() {
+        //добавление в зависимости от стороны
+      },
       /**
         Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
         Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.headerClick:method"}}'headerClick' action{{/crossLink}}.
