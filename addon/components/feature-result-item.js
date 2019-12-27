@@ -53,6 +53,15 @@ export default Ember.Component.extend({
   intersection: false,
 
   /**
+    Flag indicates if feature is in favorire list.
+
+    @property intersection
+    @type Boolean
+    @default false
+  */
+  favoriteMode: false,
+
+  /**
     Flag: indicates whether to display detailed feature info.
 
     @property _infoExpanded
@@ -267,7 +276,9 @@ export default Ember.Component.extend({
     addToFavorite() {
       this.sendAction('addToFavorite', this.get('feature'));
     },
-
+    addToCompareGeometries() {
+      this.sendAction('addToCompareGeometries', this.get('feature'));
+    },
     /**
       Pans and zooms to intersection object.
       @method actions.panToIntersection

@@ -305,7 +305,7 @@ export default EditFormController.extend(
         let features = Ember.A();
         features.addObject(feature);
         let promise = new Ember.RSVP.Promise((resolve)=>{
-          resolve(features);
+          resolve(favs);
         })   
         test.addObject({layerModel: feature.layerModel, features: promise});
         this.set('test', test);
@@ -316,6 +316,14 @@ export default EditFormController.extend(
         // } else {
         //   Ember.$('.fvicon').addClass('filled');
         // }
+      },
+      addToCompareGeometries(feature) {
+        if(Ember.get(feature, 'compareEnabled')) {
+          Ember.set(feature, 'compareEnabled', false);
+        }else {
+          Ember.set(feature, 'compareEnabled', true);
+          console.log(feature);
+        }
       }
     }
   });

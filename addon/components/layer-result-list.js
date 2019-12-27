@@ -49,6 +49,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   intersection: false,
 
   /**
+    Flag indicates if layer-result-list used with favorites list.
+
+    @property favoriteMode:
+    @type Boolean
+    @default false
+  */
+  favoriteMode: false,
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -173,8 +182,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       @method actions.findIntersection
     */
-    addToFavorite(feature){
+    addToFavorite(feature) {
       this.sendAction('addToFavorite', feature);
+    },
+
+    /**
+      Action adds feature to array for comparing geometries.
+
+      @method actions.findIntersection
+    */
+    addToCompareGeometries(feature) {
+      this.sendAction('addToCompareGeometries', feature);
     },
 
     /**
@@ -250,7 +268,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     this.set('_displayResults', null);
 
     let results = this.get('results') || Ember.A();
-    console.log(results)
 
     // If results had been cleared.
     if (Ember.isBlank(results)) {
@@ -393,9 +410,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           let listForms = result.listForms;
 
           result.features.forEach((feature) => {
-            feature.displayValue = getFeatureDisplayProperty(feature, result.settings, result.dateFormat);
-            feature.layerModel = Ember.get(result, 'layerModel');
-            feature.editForms = Ember.A();
+            Ember.set(feature, 'displayValue', getFeatureDisplayProperty(feature, result.settings, result.dateFormat));
+            Ember.set(feature, 'layerModel', Ember.get(result, 'layerModel'));
+            Ember.set(feature, 'editForms', Ember.A());
             if (editForms.length === 0) {
               return;
             }

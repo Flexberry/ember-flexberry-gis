@@ -147,8 +147,7 @@
         }}
       </div>
       <div data-tab="favorites" class="ui tab bookmarks">
-        <h3>{{t "forms.map.tabbar.bookmarks.caption"}}</h3>
-        Компонент с избранными
+        <h3>Избранное</h3>
         {{favorites-list
           favItems=favs
           leafletMap=leafletMap
@@ -157,9 +156,11 @@
           results=test
           serviceLayer=serviceLayer
           leafletMap=leafletMap
+          favoriteMode=true
           showIntersectionPanel=(action 'onIntersectionPanel')
           featureSelected=(action "onLayerFeatureSelected")
           addToFavorite=(action "addToFavorite")
+          addToCompareGeometries=(action 'addToCompareGeometries')
         }}
       </div>
       <div data-tab="createObject" class="ui tab createObject">

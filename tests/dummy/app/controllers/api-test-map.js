@@ -61,6 +61,7 @@ export default MapController.extend({
 
       this.set('polygonLayer', e.polygonLayer);
       this.set('identifyToolResults', e.results);
+      console.log(e.results)
 
       if (this.get('sidebar.2.active') !== true) {
         this.set('sidebar.2.active', true);
