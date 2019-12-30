@@ -41075,7 +41075,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 669,
+            "line": 685,
             "description": "Download image for layer object.",
             "itemtype": "method",
             "name": "downloadSnapShot",
@@ -41084,7 +41084,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 694,
+            "line": 710,
             "description": "Get the object thumb.",
             "itemtype": "method",
             "name": "getRhumb",
@@ -41109,7 +41109,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 790,
+            "line": 806,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
@@ -44397,11 +44397,11 @@
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:790"
+            "line": " addon/mixins/flexberry-map-model-api.js:806"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:790"
+            "line": " addon/mixins/flexberry-map-model-api.js:806"
         },
         {
             "message": "replacing incorrect tag: returns with return",
