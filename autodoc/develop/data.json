@@ -9957,7 +9957,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 414,
+            "line": 416,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onDeny",
@@ -9973,7 +9973,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 428,
+            "line": 430,
             "description": "Get row id.",
             "itemtype": "method",
             "name": "_getRowId",
@@ -9993,7 +9993,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 447,
+            "line": 449,
             "description": "Get an array of coordinates from a coordinate line.",
             "itemtype": "method",
             "name": "_parseCoordinates",
@@ -10013,7 +10013,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 504,
+            "line": 506,
             "description": "Get the depth of the array.",
             "itemtype": "method",
             "name": "_countDimensions",
@@ -10033,7 +10033,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 515,
+            "line": 517,
             "description": "Get coordinate line.",
             "itemtype": "method",
             "name": "_coordinatesToString",
@@ -10049,7 +10049,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/manual.js",
-            "line": 572,
+            "line": 574,
             "description": "Component's action invoking when new geometry was added.",
             "itemtype": "method",
             "name": "sendingActions.complete",
@@ -44029,15 +44029,15 @@
     "warnings": [
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/geometry-add-modes/manual.js:428"
+            "line": " addon/components/geometry-add-modes/manual.js:430"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/geometry-add-modes/manual.js:447"
+            "line": " addon/components/geometry-add-modes/manual.js:449"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/geometry-add-modes/manual.js:504"
+            "line": " addon/components/geometry-add-modes/manual.js:506"
         },
         {
             "message": "replacing incorrect tag: returns with return",
