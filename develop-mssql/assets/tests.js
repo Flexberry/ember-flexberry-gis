@@ -3306,15 +3306,13 @@ define('dummy/tests/unit/components/base-layer-test', ['exports', 'ember-qunit',
   });
 
   (0, _emberQunit.test)('should call _setLayerVisibility and _setLayerZIndex on render', function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     var setLayerVisibility = _sinon['default'].spy();
-    var setLayerZIndex = _sinon['default'].spy();
 
     var component = this.subject({
       createLayer: createLayer,
-      _setLayerVisibility: setLayerVisibility,
-      _setLayerZIndex: setLayerZIndex
+      _setLayerVisibility: setLayerVisibility
     });
 
     this.render();
@@ -3322,7 +3320,6 @@ define('dummy/tests/unit/components/base-layer-test', ['exports', 'ember-qunit',
     var leafletLayerPromiseResolved = assert.async();
     component.get('_leafletLayerPromise').then(function (leafletLayer) {
       assert.ok(setLayerVisibility.called, 'should call visibilityDidChange');
-      assert.ok(setLayerZIndex.called, 'should call setZIndex');
     })['finally'](function () {
       leafletLayerPromiseResolved();
     });
