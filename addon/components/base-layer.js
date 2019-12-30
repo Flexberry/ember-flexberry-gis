@@ -227,6 +227,11 @@ export default Ember.Component.extend(
 
         this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel') });
 
+        // After saving, arrange layers by index.
+        leafletLayer.on('save:success', () => {
+          this._fixZIndexFire();
+        });
+
         return leafletLayer;
       }).catch((errorMessage) => {
         Ember.Logger.error(`Failed to create leaflet layer for '${this.get('layerModel.name')}': ${errorMessage}`);
@@ -282,6 +287,7 @@ export default Ember.Component.extend(
       @private
     */
     _resetLayer() {
+
       // Destroy previously created leaflet layer (created with old settings).
       this._destroyLayer();
 
@@ -289,8 +295,9 @@ export default Ember.Component.extend(
       this._createLayer();
 
       // Wait for the layer creation to be finished and set it's state related to new settings.
-      this.get('_leafletLayerPromise').then((leafletLayer) => {
+      this.get('_leafletLayerPromise').then(() => {
         this._setLayerState();
+        this._setLayerZIndex();
       });
     },
 
@@ -302,7 +309,6 @@ export default Ember.Component.extend(
     */
     _setLayerState() {
       this._setLayerVisibility();
-      this._setLayerZIndex();
       this._setLayerStyle();
       this._setLayerOpacity();
       const layerInitCallback = this.get('mapApi').getFromApi('layerInitCallback');
@@ -318,12 +324,20 @@ export default Ember.Component.extend(
       @private
     */
     _setLayerZIndex() {
-      let leafletLayer = this.get('_leafletObject');
-      if (Ember.isNone(leafletLayer) || Ember.typeOf(leafletLayer.setZIndex) !== 'function') {
+      const leafletLayer = this.get('_leafletObject');
+      if (Ember.isNone(leafletLayer)) {
         return;
       }
 
-      leafletLayer.setZIndex(this.get('index'));
+      const setZIndexFunc = Ember.get(leafletLayer, 'setZIndex');
+      if (Ember.typeOf(setZIndexFunc) !== 'function') {
+        return;
+      }
+
+      const index = this.get('index');
+      leafletLayer.setZIndex(index);
+
+      this._fixZIndexFire();
     },
 
     /**
@@ -429,6 +443,7 @@ export default Ember.Component.extend(
     */
     _visibilityDidChange: Ember.observer('visibility', function () {
       this._setLayerVisibility();
+      this._fixZIndexFire();
     }),
 
     /**
@@ -456,6 +471,20 @@ export default Ember.Component.extend(
       // so we must restore opacity to user defined value.
       this._setLayerOpacity();
     }),
+
+    /**
+      Rebuild layers.
+
+      @method _fixZIndexFire
+      @private
+    */
+    _fixZIndexFire: function () {
+      const leafletMap = this.get('leafletMap');
+
+      if (!Ember.isNone(leafletMap)) {
+        leafletMap.fire('fixZIndex');
+      }
+    },
 
     /**
       Handles 'flexberry-map:identify' event of leaflet map.
@@ -602,15 +631,25 @@ export default Ember.Component.extend(
 
       let leafletMap = this.get('leafletMap');
       if (!Ember.isNone(leafletMap)) {
+
         // Attach custom event-handler.
         leafletMap.on('flexberry-map:identify', this._identify, this);
         leafletMap.on('flexberry-map:search', this._search, this);
         leafletMap.on('flexberry-map:query', this._query, this);
         leafletMap.on('flexberry-map:createObject', this._createObject, this);
 
-        leafletMap.on('flexberry-map:load', function (e) {
+        leafletMap.on('flexberry-map:load', (e) => {
           if (!Ember.isNone(this.promiseLoad)) {
             e.results.push(this.promiseLoad);
+
+            if (e.loadFunc.length === 0) {
+              e.loadFunc.push(() => {
+
+                if (!Ember.isNone(leafletMap.fire)) {
+                  leafletMap.fire('fixZIndex');
+                }
+              });
+            }
           }
 
         }, this);
