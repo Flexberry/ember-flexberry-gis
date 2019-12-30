@@ -628,15 +628,28 @@ export default Ember.Mixin.create({
 
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
+        let $mapPicture = Ember.$(leafletMap._container);
+        let heightMap = $mapPicture.height();
+        let widthMap = $mapPicture.width();
+        let heightNew = heightMap;
+        let widthNew = widthMap;
+        if (!Ember.isNone(options)) {
+          heightNew = Ember.isNone(options.height) ? heightMap : options.height;
+          widthNew = Ember.isNone(options.width) ? widthMap : options.width;
+        }
+
+        $mapPicture.height(heightNew);
+        $mapPicture.width(widthNew);
+
         leafletMap.once('moveend', () => {
           Ember.run.later(() => {
             document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'none';
             document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'none';
-            let $mapPicture = Ember.$(leafletMap._container);
+            document.getElementsByClassName('leaflet-control-container')[0].style.display = 'none';
 
             let html2canvasOptions = Object.assign({
               useCORS: true
-            }, options);
+            });
             window.html2canvas($mapPicture[0], html2canvasOptions)
               .then((canvas) => {
                 let type = 'image/png';
@@ -647,13 +660,16 @@ export default Ember.Mixin.create({
               .finally(() => {
                 document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'block';
                 document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'block';
+                document.getElementsByClassName('leaflet-control-container')[0].style.display = 'block';
+                $mapPicture.height(heightMap);
+                $mapPicture.width(widthMap);
               });
-          });
+          }, 2000);
         });
 
         let bounds = featureLayer.getBounds();
         if (!Ember.isNone(bounds)) {
-          leafletMap.fitBounds(bounds);
+          leafletMap.fitBounds(bounds.pad(1));
         }
       } else {
         throw {
