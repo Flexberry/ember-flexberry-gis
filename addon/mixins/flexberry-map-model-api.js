@@ -787,7 +787,7 @@ export default Ember.Mixin.create({
   moveLayerToGroup(layerId, layerGroupId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
 
-    let layerModel = this._getLayerModel(layerGroupId);
+    let layerModel = this.getLayerModel(layerGroupId);
     layerModel.set('parent', layer);
   }
 });
