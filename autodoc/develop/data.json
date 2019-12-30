@@ -41129,6 +41129,32 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 820,
+            "description": "Change object polygon.",
+            "itemtype": "method",
+            "name": "copyObject",
+            "params": [
+                {
+                    "name": "objectId",
+                    "description": "geoJSON object id.",
+                    "type": "String"
+                },
+                {
+                    "name": "layerId",
+                    "description": "id of layer to change object.",
+                    "type": "String"
+                },
+                {
+                    "name": "polygon",
+                    "description": "new object polygon.",
+                    "type": "String"
+                }
+            ],
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/mixins/flexberry-maplayer-actions-handler.js",
             "line": 21,
             "description": "Handles {{#crossLink \"FlexberryMaplayerComponent/sendingActions.headerClick:method\"}}flexberry-maplayers component's 'headerClick' action{{/crossLink}}.",
