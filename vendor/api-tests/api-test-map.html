@@ -66,6 +66,9 @@
       <button id="getLayerObjectOptions">Get Object Attributes</button>
     </div>
     <div>
+      <button id="editLayerObject">Edit Layer Object</button>
+    </div>
+    <div>
       <button id="hideLeftPanel">Hide left panel</button>
       <button id="showLeftPanel">Show left panel</button>
       <input type="text" size="40" id="nameTools">
@@ -285,6 +288,20 @@
       };
       distanceObjectsButton.addEventListener('click', distanceObjects);
 
+      var editLayerObjectButton = document.getElementById('editLayerObject');
+      var editLayerObject = function () {
+        let newGeometry = {
+          coordinates: [[
+            [58.0127912,56.2439621],
+            [58.0222549,56.0901882],
+            [57.9096626,56.1933563],
+            [58.0127912,56.2439621]
+          ]],
+          type: "Polygon"
+        }
+        console.log(frame.contentWindow.mapApi.mapModel.editLayerObject("f7670a1f-1acb-4571-923c-1ce3bc88e11e", 'Малые реки', newGeometry));
+      };
+      editLayerObjectButton.addEventListener('click', editLayerObject);
 
       var showLeftPanelButton = document.getElementById('showLeftPanel');
       var showLeftPanel = function () {

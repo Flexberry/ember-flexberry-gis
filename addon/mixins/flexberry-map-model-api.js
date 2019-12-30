@@ -370,9 +370,17 @@ export default Ember.Mixin.create({
     }
 
     if (objA && objB) {
-      let featureA = Ember.get(objA, 'feature');
-      let featureB = Ember.get(objB, 'feature');
-      if (booleanContains(featureB, featureA)) {
+      objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+      objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+      if (objA.geometry.type === 'MultiPolygon') {
+        objA = L.polygon(objA.geometry.coordinates[0]).toGeoJSON();
+      }
+
+      if (objB.geometry.type === 'MultiPolygon') {
+        objB = L.polygon(objB.geometry.coordinates[0]).toGeoJSON();
+      }
+
+      if (booleanContains(objB, objA)) {
         return true;
       }
     }
@@ -408,12 +416,14 @@ export default Ember.Mixin.create({
     }
 
     if (objA && objB) {
-      let intersectionRes = intersect(objB.feature, objA.feature);
+      objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+      objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+      let intersectionRes = intersect.default(objB, objA);
       if (intersectionRes) {
-        let resultArea = area(objB.feature) - area(intersectionRes);
+        let resultArea = area(objB) - area(intersectionRes);
         return resultArea;
       } else {
-        return area(objB.feature);
+        return area(objB);
       }
     }
 
@@ -618,15 +628,28 @@ export default Ember.Mixin.create({
 
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
 
+        let $mapPicture = Ember.$(leafletMap._container);
+        let heightMap = $mapPicture.height();
+        let widthMap = $mapPicture.width();
+        let heightNew = heightMap;
+        let widthNew = widthMap;
+        if (!Ember.isNone(options)) {
+          heightNew = Ember.isNone(options.height) ? heightMap : options.height;
+          widthNew = Ember.isNone(options.width) ? widthMap : options.width;
+        }
+
+        $mapPicture.height(heightNew);
+        $mapPicture.width(widthNew);
+
         leafletMap.once('moveend', () => {
           Ember.run.later(() => {
             document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'none';
             document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'none';
-            let $mapPicture = Ember.$(leafletMap._container);
+            document.getElementsByClassName('leaflet-control-container')[0].style.display = 'none';
 
             let html2canvasOptions = Object.assign({
               useCORS: true
-            }, options);
+            });
             window.html2canvas($mapPicture[0], html2canvasOptions)
               .then((canvas) => {
                 let type = 'image/png';
@@ -637,13 +660,16 @@ export default Ember.Mixin.create({
               .finally(() => {
                 document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'block';
                 document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'block';
+                document.getElementsByClassName('leaflet-control-container')[0].style.display = 'block';
+                $mapPicture.height(heightMap);
+                $mapPicture.width(widthMap);
               });
-          });
+          }, 2000);
         });
 
         let bounds = featureLayer.getBounds();
         if (!Ember.isNone(bounds)) {
-          leafletMap.fitBounds(bounds);
+          leafletMap.fitBounds(bounds.pad(1));
         }
       } else {
         throw {
@@ -789,5 +815,29 @@ export default Ember.Mixin.create({
 
     let layerModel = this.getLayerModel(layerGroupId);
     layerModel.set('parent', layer);
+  },
+
+  /**
+    Change object polygon.
+    @method copyObject
+    @param {String} objectId geoJSON object id.
+    @param {String} layerId id of layer to change object.
+    @param {String} polygon  new object polygon.
+  */
+  editLayerObject(layerId, objectId, polygon) {
+    if (polygon) {
+      let [leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
+      if (leafletLayer && featureLayer) {
+        featureLayer.setLatLngs(Ember.get(polygon, 'coordinates'));
+        if (typeof leafletLayer.editLayer === 'function') {
+          leafletLayer.editLayer(featureLayer);
+          return true;
+        }
+      } else {
+        throw 'no object or layer found';
+      }
+    } else {
+      throw 'new object settings not passed';
+    }
   }
 });
