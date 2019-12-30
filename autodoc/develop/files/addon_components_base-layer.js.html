@@ -637,6 +637,11 @@ export default Ember.Component.extend(
 
         this.sendAction(&#x27;layerInit&#x27;, { leafletObject: leafletLayer, layerModel: this.get(&#x27;layerModel&#x27;) });
 
+        // After saving, arrange layers by index.
+        leafletLayer.on(&#x27;save:success&#x27;, () =&gt; {
+          this._fixZIndexFire();
+        });
+
         return leafletLayer;
       }).catch((errorMessage) =&gt; {
         Ember.Logger.error(&#x60;Failed to create leaflet layer for &#x27;${this.get(&#x27;layerModel.name&#x27;)}&#x27;: ${errorMessage}&#x60;);
@@ -692,6 +697,7 @@ export default Ember.Component.extend(
       @private
     */
     _resetLayer() {
+
       // Destroy previously created leaflet layer (created with old settings).
       this._destroyLayer();
 
@@ -699,8 +705,9 @@ export default Ember.Component.extend(
       this._createLayer();
 
       // Wait for the layer creation to be finished and set it&#x27;s state related to new settings.
-      this.get(&#x27;_leafletLayerPromise&#x27;).then((leafletLayer) =&gt; {
+      this.get(&#x27;_leafletLayerPromise&#x27;).then(() =&gt; {
         this._setLayerState();
+        this._setLayerZIndex();
       });
     },
 
@@ -712,7 +719,6 @@ export default Ember.Component.extend(
     */
     _setLayerState() {
       this._setLayerVisibility();
-      this._setLayerZIndex();
       this._setLayerStyle();
       this._setLayerOpacity();
       const layerInitCallback = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;layerInitCallback&#x27;);
@@ -728,12 +734,20 @@ export default Ember.Component.extend(
       @private
     */
     _setLayerZIndex() {
-      let leafletLayer = this.get(&#x27;_leafletObject&#x27;);
-      if (Ember.isNone(leafletLayer) || Ember.typeOf(leafletLayer.setZIndex) !== &#x27;function&#x27;) {
+      const leafletLayer = this.get(&#x27;_leafletObject&#x27;);
+      if (Ember.isNone(leafletLayer)) {
         return;
       }
 
-      leafletLayer.setZIndex(this.get(&#x27;index&#x27;));
+      const setZIndexFunc = Ember.get(leafletLayer, &#x27;setZIndex&#x27;);
+      if (Ember.typeOf(setZIndexFunc) !== &#x27;function&#x27;) {
+        return;
+      }
+
+      const index = this.get(&#x27;index&#x27;);
+      leafletLayer.setZIndex(index);
+
+      this._fixZIndexFire();
     },
 
     /**
@@ -839,6 +853,7 @@ export default Ember.Component.extend(
     */
     _visibilityDidChange: Ember.observer(&#x27;visibility&#x27;, function () {
       this._setLayerVisibility();
+      this._fixZIndexFire();
     }),
 
     /**
@@ -866,6 +881,20 @@ export default Ember.Component.extend(
       // so we must restore opacity to user defined value.
       this._setLayerOpacity();
     }),
+
+    /**
+      Rebuild layers.
+
+      @method _fixZIndexFire
+      @private
+    */
+    _fixZIndexFire: function () {
+      const leafletMap = this.get(&#x27;leafletMap&#x27;);
+
+      if (!Ember.isNone(leafletMap)) {
+        leafletMap.fire(&#x27;fixZIndex&#x27;);
+      }
+    },
 
     /**
       Handles &#x27;flexberry-map:identify&#x27; event of leaflet map.
@@ -1012,15 +1041,25 @@ export default Ember.Component.extend(
 
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
       if (!Ember.isNone(leafletMap)) {
+
         // Attach custom event-handler.
         leafletMap.on(&#x27;flexberry-map:identify&#x27;, this._identify, this);
         leafletMap.on(&#x27;flexberry-map:search&#x27;, this._search, this);
         leafletMap.on(&#x27;flexberry-map:query&#x27;, this._query, this);
         leafletMap.on(&#x27;flexberry-map:createObject&#x27;, this._createObject, this);
 
-        leafletMap.on(&#x27;flexberry-map:load&#x27;, function (e) {
+        leafletMap.on(&#x27;flexberry-map:load&#x27;, (e) =&gt; {
           if (!Ember.isNone(this.promiseLoad)) {
             e.results.push(this.promiseLoad);
+
+            if (e.loadFunc.length === 0) {
+              e.loadFunc.push(() =&gt; {
+
+                if (!Ember.isNone(leafletMap.fire)) {
+                  leafletMap.fire(&#x27;fixZIndex&#x27;);
+                }
+              });
+            }
           }
 
         }, this);
