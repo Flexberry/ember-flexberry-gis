@@ -89,16 +89,16 @@ const createObjectRhumb = (data) => {
 
     switch (direct) {
       case 'СВ':
-        result = (parseFloat(degree) + 90) * -1;
+        result = parseFloat(degree);
         break;
       case 'ЮВ':
-        result = parseFloat(degree) + 90;
+        result = 180 - parseFloat(degree);
         break;
       case 'ЮЗ':
-        result = 90 - parseFloat(degree);
+        result = parseFloat(degree) - 180;
         break;
       case 'СЗ':
-        result = (90 - parseFloat(degree)) * -1;
+        result = parseFloat(degree) * -1;
         break;
     }
 
@@ -119,10 +119,10 @@ const createObjectRhumb = (data) => {
 
       const bearing = getBearing(vertex.rhumb);
 
-      if (Ember.isNone(startPoint)) {
+      // Convert to kilometers
+      vertex.distance = vertex.distance / 1000;
 
-        // Convert to meters
-        vertex.distance = vertex.distance / 1000;
+      if (Ember.isNone(startPoint)) {
         startPoint = rhumbDestination.default(helpers.point(data.startPoint), vertex.distance, bearing, { units: 'kilometers' });
       } else {
         startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
@@ -132,6 +132,12 @@ const createObjectRhumb = (data) => {
     }
 
     coors.push(coordinates);
+
+    for (let i = 0; i < coors.length; i++) {
+      for (let j = 0; j < coors[i].length; j++) {
+        coors[i][j] = [coors[i][j][1], coors[i][j][0]];
+      }
+    }
   }
 
   if (type === 'LineString') {
@@ -144,14 +150,20 @@ const createObjectRhumb = (data) => {
       const vertex = vertexCount[i];
       const bearing = getBearing(vertex.rhumb);
 
+      // Convert to kilometers
+      vertex.distance = vertex.distance / 1000;
+
       if (Ember.isNone(startPoint)) {
-        vertex.distance = vertex.distance / 1000;
         startPoint = rhumbDestination.default(helpers.point(data.startPoint), vertex.distance, bearing, { units: 'kilometers' });
       } else {
         startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
       }
 
       coors.push(startPoint.geometry.coordinates);
+    }
+
+    for (let i = 0; i < coors.length; i++) {
+      coors[i] = [coors[i][1], coors[i][0]];
     }
   }
 
