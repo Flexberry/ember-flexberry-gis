@@ -815,5 +815,29 @@ export default Ember.Mixin.create({
 
     let layerModel = this._getLayerModel(layerGroupId);
     layerModel.set('parent', layer);
+  },
+
+  /**
+    Change object polygon.
+    @method copyObject
+    @param {String} objectId geoJSON object id.
+    @param {String} layerId id of layer to change object.
+    @param {String} polygon  new object polygon.
+  */
+  editLayerObject(layerId, objectId, polygon) {
+    if (polygon) {
+      let [leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
+      if (leafletLayer && featureLayer) {
+        featureLayer.setLatLngs(Ember.get(polygon, 'coordinates'));
+        if (typeof leafletLayer.editLayer === 'function') {
+          leafletLayer.editLayer(featureLayer);
+          return true;
+        }
+      } else {
+        throw 'no object or layer found';
+      }
+    } else {
+      throw 'new object settings not passed';
+    }
   }
 });
