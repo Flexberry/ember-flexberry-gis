@@ -534,7 +534,7 @@ export default Ember.Mixin.create({
     @returns {Object}
     @private
   */
-  _getLayerModel(layerId) {
+  getLayerModel(layerId) {
     const layer = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, layerId);
     if (Ember.isNone(layer)) {
       throw &#x27;No layer with such id&#x27;;
@@ -552,7 +552,7 @@ export default Ember.Mixin.create({
     @private
   */
   _getModelLayerFeature(layerId, featureId) {
-    let layerModel = this._getLayerModel(layerId);
+    let layerModel = this.getLayerModel(layerId);
     let leafletObject = layerModel.get(&#x27;_leafletObject&#x27;);
     let layers = leafletObject._layers;
     let featureLayer;
