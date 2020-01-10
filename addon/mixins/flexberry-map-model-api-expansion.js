@@ -37,6 +37,8 @@ export default Ember.Mixin.create(rhumbOperations, {
     let newObj = geoJSON.getLayers()[0];
 
     leafletObject.addLayer(newObj);
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    leafletMap.fitBounds(newObj.getBounds());
 
     return newObj;
   },
