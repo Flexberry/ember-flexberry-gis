@@ -1507,7 +1507,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
           if (polygon.geometry.type !== differenceResult.geometry.type) {
             invariant.default.getCoords(differenceResult).forEach((polygonCoords) => {
-              let lefletLayer = L.geoJSON(helper.default.polygon(polygonCoords)).getLayers();
+              let lefletLayer = L.geoJSON(helper.default.multiPolygon([[polygonCoords]])).getLayers();
               this.set('_newRowTabModel', tabModel);
               this.set('_newRowLayer', lefletLayer[0]);
               this.send('onNewRowDialogApprove', Object.assign({}, polygon.properties));
@@ -1850,7 +1850,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             resultPolygonSplit = resultPolygonSplit.concat(_this._polygonSplit(helper.default.polygon(polygon), splitLine));
           });
 
-          if (arrayPolygons.length < resultPolygonSplit.length) {
+          if (arrayPolygons.length <= resultPolygonSplit.length) {
             split = helper.default.featureCollection(resultPolygonSplit);
           }
 
