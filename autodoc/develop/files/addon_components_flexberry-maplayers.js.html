@@ -862,6 +862,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
           let className = Ember.get(layer, &#x27;type&#x27;);
           let layerType = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, className);
           if (layerType instanceof TileLayer) {
+            layer.side = null;
             rasterLayers.push(layer);
           }
 
@@ -942,33 +943,62 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       },
 
       /**
-        Handles click on add layer to SideBySide.
+        Handles click on checkbox.
 
-        @method action.addToSideToSide
+        @method action.onChange
         @param {Object} layer Layer to add.
+        @param {Object} e event args.
       */
-      addToSideToSide(layer) {
+      onChange(layer, e) {
         let sbs = this.get(&#x27;sideBySide&#x27;);
-        let map = this.get(&#x27;leafletMap&#x27;);
-        if (this.get(&#x27;side&#x27;) === &#x27;Left&#x27;) {
-          if (this.get(&#x27;leftLayer&#x27;) !== null) {
+        if (e.newValue === false) {
+          if (this.get(&#x27;side&#x27;) === &#x27;Left&#x27;) {
+            sbs.setLeftLayers(null);
             this.get(&#x27;leftLayer._leafletObject&#x27;).remove();
-          }
-
-          let leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;).addTo(map);
-          this.set(&#x27;leftLayer&#x27;, layer);
-          sbs.setLeftLayers(leafletObject);
-        } else {
-          if (this.get(&#x27;rightLayer&#x27;) !== null) {
+            this.set(&#x27;leftLayer.side&#x27;, null);
+            this.set(&#x27;leftLayer.visibility&#x27;, false);
+            this.set(&#x27;leftLayer&#x27;, null);
+          } else {
+            sbs.setRightLayers(null);
             this.get(&#x27;rightLayer._leafletObject&#x27;).remove();
+            this.set(&#x27;rightLayer.side&#x27;, null);
+            this.set(&#x27;rightLayer.visibility&#x27;, false);
+            this.set(&#x27;rightLayer&#x27;, null);
+          }
+        } else {
+          Ember.set(layer, &#x27;visibility&#x27;, true);
+          let map = this.get(&#x27;leafletMap&#x27;);
+
+          if (this.get(&#x27;side&#x27;) === &#x27;Left&#x27;) {
+            if (this.get(&#x27;leftLayer&#x27;) !== null) {
+              sbs.setLeftLayers(null);
+              this.get(&#x27;leftLayer._leafletObject&#x27;).remove();
+              this.set(&#x27;leftLayer.visibility&#x27;, false);
+              this.set(&#x27;leftLayer.side&#x27;, null);
+            }
+
+            let leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;).addTo(map);
+            Ember.set(layer, &#x27;side&#x27;, &#x27;Left&#x27;);
+            this.set(&#x27;leftLayer&#x27;, layer);
+            sbs.setLeftLayers(leafletObject);
           }
 
-          let leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;).addTo(map);
-          this.set(&#x27;rightLayer&#x27;, layer);
-          sbs.setRightLayers(leafletObject);
+          if (this.get(&#x27;side&#x27;) === &#x27;Right&#x27;)  {
+            if (this.get(&#x27;rightLayer&#x27;) !== null) {
+              sbs.setLeftLayers(null);
+              this.get(&#x27;rightLayer._leafletObject&#x27;).remove();
+              this.set(&#x27;rightLayer.visibility&#x27;, false);
+              this.set(&#x27;rightLayer.side&#x27;, null);
+            }
+
+            let leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;).addTo(map);
+            Ember.set(layer, &#x27;side&#x27;, &#x27;Right&#x27;);
+            this.set(&#x27;rightLayer&#x27;, layer);
+            sbs.setRightLayers(leafletObject);
+          }
         }
       }
-    }
+    },
 
     /**
       Component&#x27;s action invoking when user wants to add child layer into layers tree root.

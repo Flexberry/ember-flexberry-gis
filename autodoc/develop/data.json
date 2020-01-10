@@ -32533,7 +32533,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 482,
+            "line": 483,
             "description": "Handles add button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddButtonClick",
@@ -32549,7 +32549,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 503,
+            "line": 504,
             "description": "Handles add dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddDialogApprove",
@@ -32572,7 +32572,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 516,
+            "line": 517,
             "description": "Handles clicks on left side button.",
             "itemtype": "method",
             "name": "actions.onLeftClick",
@@ -32581,7 +32581,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 525,
+            "line": 526,
             "description": "Handles clicks on right side button.",
             "itemtype": "method",
             "name": "actions.onLeftClick",
@@ -32590,14 +32590,19 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 534,
-            "description": "Handles click on add layer to SideBySide.",
+            "line": 535,
+            "description": "Handles click on checkbox.",
             "itemtype": "method",
-            "name": "action.addToSideToSide",
+            "name": "action.onChange",
             "params": [
                 {
                     "name": "layer",
                     "description": "Layer to add.",
+                    "type": "Object"
+                },
+                {
+                    "name": "e",
+                    "description": "event args.",
                     "type": "Object"
                 }
             ],
@@ -32606,7 +32611,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 563,
+            "line": 593,
             "description": "Component's action invoking when user wants to add child layer into layers tree root.",
             "itemtype": "method",
             "name": "sendingActions.add",
