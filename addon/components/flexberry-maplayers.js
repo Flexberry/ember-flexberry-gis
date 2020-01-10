@@ -452,6 +452,7 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
           let className = Ember.get(layer, 'type');
           let layerType = Ember.getOwner(this).knownForType('layer', className);
           if (layerType instanceof TileLayer) {
+            layer.side = null;
             rasterLayers.push(layer);
           }
 

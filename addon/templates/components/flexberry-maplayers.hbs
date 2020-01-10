@@ -14,12 +14,12 @@
   </div>
   {{#each rasterLayers as |layer|}}
     {{#if (not layer.isDeleted)}}
-      <div class="compare-layer-tree">   
+      <div class="compare-layer-tree">
         {{flexberry-ddau-checkbox
           class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
           value=layer.visibility
           change=(action "onChange" layer)
-          readonly=(if  (or (and (eq side "Right") (eq layer.side "Left")) (and (eq side "Left") (eq layer.side "Right"))) true)
+          readonly=(and (not-eq side layer.side) (not-eq layer.side null) true)
         }} 
         {{layer.name}}
       </div>
