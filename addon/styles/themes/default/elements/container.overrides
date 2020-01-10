@@ -253,6 +253,7 @@
   flex-wrap: wrap;
 }
 .ui.menu.flexberry-maptoolbar {
+    z-index: 1000 !important;
     margin: 10px 10px 0px 10px;
     background-color: transparent !important; // боримся с технологическими стилями
     overflow: visible;

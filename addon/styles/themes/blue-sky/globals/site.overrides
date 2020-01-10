@@ -43,8 +43,9 @@
     }  
 }
 .compare-layer-tree {
-        height: 52px;
-        padding: 8px 6px; 
-        border-bottom: 1px solid gray; 
-        cursor:pointer;
+    height: 52px;
+    padding: 8px 6px; 
+    border-bottom: 1px solid gray; 
+    cursor:pointer;
+    padding-top: 20px;
 }
