@@ -4,6 +4,7 @@ export default {
   'searchbuttontooltip': 'Поиск',
   'bookmarksbuttontooltip': 'Пространственные закладки',
   'identifybuttontooltip': 'Идентификация',
+  'favoritesbuttontooltip': 'Избранное',
   'createobjectbuttontooltip': 'Создание объекта',
 
   'tabbar': {
@@ -18,6 +19,9 @@ export default {
     },
     'bookmarks': {
       'caption': 'Пространственные закладки'
+    },
+    'favorites': {
+      'caption': 'Избранное'
     },
     'createObject': {
       'caption': 'Создание объекта'

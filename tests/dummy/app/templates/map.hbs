@@ -146,8 +146,17 @@
           storageKey=model.id
         }}
       </div>
+      <div data-tab="createObject" class="ui tab createObject">
+      <h3>{{t "forms.map.tabbar.createObject.caption"}}</h3>
+      {{#each createItems as |createItem|}}
+        {{flexberry-create-object-geometry
+          createItem=createItem
+          leafletMap=leafletMap
+        }}
+      {{/each}}
+      </div>
       <div data-tab="favorites" class="ui tab bookmarks">
-        <h3>Избранное</h3>
+        <h3>{{t "forms.map.tabbar.favorites.caption"}}</h3>
         {{favorites-list
           features=test
           serviceLayer=serviceLayer
@@ -158,15 +167,6 @@
           addToCompareGeometries=(action 'addToCompareGeometries')
         }}
       </div>
-      <div data-tab="createObject" class="ui tab createObject">
-      <h3>{{t "forms.map.tabbar.createObject.caption"}}</h3>
-      {{#each createItems as |createItem|}}
-        {{flexberry-create-object-geometry
-          createItem=createItem
-          leafletMap=leafletMap
-        }}
-      {{/each}}
-    </div>
     </div>
   </div>
   <div class={{concat "bottompanel-wrapper" (if (or (gt editedLayers.length 0) editedLayersPanelLoading) "" " hidden")}}>

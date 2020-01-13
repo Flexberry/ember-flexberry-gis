@@ -7,8 +7,9 @@ import helpers from 'npm:@turf/helpers';
 import projection from 'npm:@turf/projection';
 import intersect from 'npm:@turf/intersect';
 import difference from 'npm:@turf/difference';
-export default Ember.Component.extend(LeafletZoomToFeatureMixin,{
+export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   layout,
+
   /**
     Service for managing map API.
     @property mapApi
@@ -24,12 +25,46 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin,{
   */
   disaplayName: 'Сравнение объектов',
 
+  /**
+    Objects to compare.
+    @property twoObjects
+    @type Array
+    @default null
+  */
   twoObjects: null,
+
+  /**
+    Distance.
+    @property distanceBetween
+    @type Number
+    @default null
+  */
   distanceBetween: null,
+
+  /**
+    Intersection result.
+    @property intersection
+    @type Feature
+    @default null
+  */
   intersection: null,
+
+  /**
+    Difference result.
+    @property intersection
+    @type Feature
+    @default null
+  */
   nonIntersection: null,
 
-  onTwoObjectsChange: Ember.observer('twoObjects.[]', function() {
+  /**
+    Observer for twoObjects property.
+
+    @property  _onTwoObjectsChange
+    @private
+    @readonly
+  */
+  _onTwoObjectsChange: Ember.observer('twoObjects.[]', function() {
     let two = this.get('twoObjects');
     if (two.length === 2) {
       let firstObject =  two[0];
@@ -38,18 +73,34 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin,{
       secondObject = this.convertCoordinates(secondObject);
       Ember.set(firstObject, 'area', area(firstObject).toFixed(3));
       Ember.set(secondObject, 'area', area(secondObject).toFixed(3));
-     
+
       this.set('firstObject', firstObject);
       this.set('secondObject', secondObject);
       let dist = this.getDistance(firstObject, secondObject);
       this.set('distanceBetween', dist);
       this.set('intersection', this.getIntesection(firstObject, secondObject));
       this.set('nonIntersection', this.getNonIntersection(firstObject, secondObject));
-    } 
+    }
   }),
 
+  /**
+    First object to compare.
+
+    @property firstObject
+    @type Feature
+    @default null
+  */
   firstObject: null,
+
+  /**
+    Second object to compare.
+
+    @property secondObject
+    @type Feature
+    @default null
+  */
   secondObject: null,
+
   /**
      Leaflet map object for zoom and pan.
 
@@ -59,7 +110,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin,{
   */
   leafletMap: null,
 
- 
   /**
      Flag indicates if panel is folded.
 
@@ -69,13 +119,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin,{
   */
   folded: false,
 
-    /**
-      Layer contains non/intersection features.
+  /**
+    Layer contains non/intersection features.
 
-      @property resultsLayer
-      @type Object
-      @default null
-    */
+    @property resultsLayer
+    @type Object
+    @default null
+  */
   featuresLayer: null,
 
   /**
@@ -104,21 +154,30 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin,{
     },
 
     /**
-       Handles click on tab.
+      Handles click on tab.
 
       @method actions.hidePanel
     */
     hidePanel() {
       this.toggleProperty('folded');
-      console.log(this.get('twoObjects'));
     },
 
+    /**
+      Handles click on pan to icon.
+
+      @method actions.hidePanel
+    */
     panToIntersection(feature) {
       let center = L.geoJSON(feature).getLayers()[0].getBounds().getCenter();
-      let leafletMap= this.get('leafletMap');
+      let leafletMap = this.get('leafletMap');
       leafletMap.panTo(center);
     },
 
+    /**
+      Handles click on zoom to icon.
+
+      @method actions.hidePanel
+    */
     zoomToIntersection(feature) {
       let group = this.get('featuresLayer');
       group.clearLayers();
@@ -129,22 +188,20 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin,{
     }
   },
   getDistance(firstObject, secondObject) {
-    let firstCenter
-    let secondCenter
-    if(Ember.get(firstObject, 'leafletLayer.getLayers')) {
+    let firstCenter;
+    let secondCenter;
+    if (Ember.get(firstObject, 'leafletLayer.getLayers')) {
       firstCenter = firstObject.leafletLayer.getLayers()[0].getBounds().getCenter();
     } else {
       firstCenter = firstObject.leafletLayer.getBounds().getCenter();
     }
 
-    if(Ember.get(secondObject, 'leafletLayer.getLayers')) {
+    if (Ember.get(secondObject, 'leafletLayer.getLayers')) {
       secondCenter = secondObject.leafletLayer.getLayers()[0].getBounds().getCenter();
     } else {
       secondCenter = secondObject.leafletLayer.getBounds().getCenter();
     }
 
-    // let firstCenter = firstObject.leafletLayer.getLayers()[0].getBounds().getCenter();
-    // let secondCenter = secondObject.leafletLayer.getLayers()[0].getBounds().getCenter();
     let firstPoint = helpers.point([firstCenter.lat, firstCenter.lng]);
     let secondPoint = helpers.point([secondCenter.lat, secondCenter.lng]);
     return (distance.default(firstPoint, secondPoint, { units: 'kilometers' }) * 1000).toFixed(3);
@@ -152,7 +209,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin,{
 
   convertCoordinates(feature) {
     if (Ember.get(feature, 'leafletLayer.options.crs.code')) {
-     return feature.leafletLayer.options.crs.code === 'EPSG:4326' ? feature : projection.toWgs84(feature);
+      return feature.leafletLayer.options.crs.code === 'EPSG:4326' ? feature : projection.toWgs84(feature);
     }
 
     return feature;
@@ -172,7 +229,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin,{
     feature.intersectionCords = [];
     feature.geometry.coordinates.forEach(arr => {
       arr.forEach(pair => {
-        if(feature.geometry.type === 'MultiPolygon') {
+        if (feature.geometry.type === 'MultiPolygon') {
           pair.forEach(cords => {
             feature.intersectionCords.push(cords);
           });

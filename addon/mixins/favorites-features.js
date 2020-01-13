@@ -27,7 +27,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     @property twoObjectToCompare
     @type Array
     @default Ember.A()
-  */  
+  */
   twoObjectToCompare: Ember.A(),
 
   /**
@@ -43,7 +43,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       Handles click on favorite icon.
 
       @method addToFavorite
-      @param feature 
+      @param feature
     */
     addToFavorite(feature) {
       let favs = this.get('favs');
@@ -52,14 +52,15 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         if (Ember.get(feature, 'compareEnabled')) {
           Ember.set(feature, 'compareEnabled', false);
           let twoObjects = this.get('twoObjectToCompare');
-          twoObjects.removeObject(feature)
+          twoObjects.removeObject(feature);
           favs.removeObject(feature);
         } else {
           favs.removeObject(feature);
-        }  
+        }
       } else {
         Ember.set(feature.properties, 'isFavorite', true);
-          favs.addObject(feature);
+        favs.addObject(feature);
+
         // let layerModelIndex = this.isLayerModelInArray(favs, feature.layerModel)
         // if (layerModelIndex !== false) {
         //   // favs = this.addNewFeatureToLayerModel(favs,layerModelIndex, feature)
@@ -75,36 +76,34 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       let promise = new Ember.RSVP.Promise((resolve) => {
         resolve(favs);
       });
-      test.addObject({layerModel: feature.layerModel, features: promise});
-      console.log(favs)
+      test.addObject({ layerModel: feature.layerModel, features: promise });
       this.set('test', test);
-      console.log(test);
     },
 
     /**
       Handles click on checkbox in favorite list.
 
       @method addToCompareGeometries
-      @param feature 
+      @param feature
     */
     addToCompareGeometries(feature) {
       let twoObjects = this.get('twoObjectToCompare');
       if (Ember.get(feature, 'compareEnabled')) {
         Ember.set(feature, 'compareEnabled', false);
-        twoObjects.removeObject(feature)
+        twoObjects.removeObject(feature);
       } else {
         Ember.set(feature, 'compareEnabled', true);
         twoObjects.pushObject(feature);
         if (twoObjects.length > 2) {
           let secondFeature = twoObjects[1];
-          twoObjects.removeObject(secondFeature)
-          Ember.set(secondFeature, 'compareEnabled', false);    
+          twoObjects.removeObject(secondFeature);
+          Ember.set(secondFeature, 'compareEnabled', false);
         }
       }
     },
 
     /**
-      Handles compare features button
+      Handles compare features button.
 
       @method OnCompareTwoGeometries
     */
@@ -141,13 +140,14 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     let features = array[index].features._result;
     array[index].features.then(items => {
       items.forEach(item => {
-        console.log(item)
-      })
+        console.log(item);
+      });
     });
     features.push(feature);
     array[index].features = new Ember.RSVP.Promise((resolve) => {
       resolve(features);
     });
+
     // return array;
   },
 
@@ -157,7 +157,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     let promise = new Ember.RSVP.Promise((resolve) => {
       resolve(featureArray);
     });
-    array.addObject({layerModel: feature.layerModel, features: promise});
+    array.addObject({ layerModel: feature.layerModel, features: promise });
+
     // return array;
   }
 });
