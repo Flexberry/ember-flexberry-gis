@@ -42,6 +42,39 @@
         }
     }  
 }
+
+.compare-geometries-panel {
+    .close {
+        margin-left: auto;
+        margin-right: 14px;
+    }
+    .main-panel {
+        overflow-y: auto;
+        height:90%;
+        font-size: 16px;
+    }
+    .text-line {
+        padding-top: 5px;
+    }
+    .intersection-row {
+        padding-top: 20px;
+    }
+    .row {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .button.intersect {
+        margin-top: 15px;
+    }
+    .feature-result-item-content.content {
+        .layer-result-list-toggler {
+            width:50%;
+        }
+        .cords {
+            width:50%;
+        }
+    }  
+}
 .compare-layer-tree {
     height: 52px;
     padding: 8px 6px; 

@@ -3,14 +3,14 @@
   <div class="ui top attached tabular menu bottompanel-tab-nav-panel-tabs">
     <a class= "bottompanel tab item active"
       {{action 'hidePanel'}}>
-      {{disaplayName}}
+      {{t 'components.compare-object-geometries.comparison-objects-caption'}}
     </a>
     <i class="intersection-panel-exit-icon close icon" {{action 'closePanel'}}></i>
   </div> 
-  <div class="row" style="overflow-y: auto;height:90%">
+  <div class="row main-panel">
     <div class="row">
       <fieldset>
-        <legend>Информация об объектах</legend>
+        <legend>{{t 'components.compare-object-geometries.object-info-caption'}}</legend>
         <div class="row">
           <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" firstObject}}>
             <i class="marker icon"></i>
@@ -19,9 +19,9 @@
             <i class="hand paper icon"></i>
           </a>
           {{firstObject.properties.name}}
-          Площадь: {{firstObject.area}} м²
+          {{t 'components.compare-object-geometries.object-area'}} {{firstObject.area}} {{t 'components.compare-object-geometries.m2'}}
         </div>
-        <div class="row">
+        <div class="row text-line">
           <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" secondObject}}>
             <i class="marker icon"></i>
           </a>
@@ -29,14 +29,14 @@
             <i class="hand paper icon"></i>
           </a>
           {{secondObject.properties.name}}
-          Площадь: {{secondObject.area}} м²
+          {{t 'components.compare-object-geometries.object-area'}} {{secondObject.area}} {{t 'components.compare-object-geometries.m2'}}
         </div>
-        <div class="row">
-          Расстояние между объектами: {{distanceBetween}} м
+        <div class="row text-line">
+          {{t 'components.compare-object-geometries.distance-between'}} {{distanceBetween}} {{t 'components.compare-object-geometries.m'}}
         </div>
       </fieldset>
     </div>   
-    <div class="row" style="padding-top: 20px;">
+    <div class="row intersection-row" >
       <fieldset>
         <legend>
           <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomToIntersection" intersection}}>
@@ -45,36 +45,36 @@
           <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" intersection}}>
             <i class="hand paper icon"></i>
           </a>
-          Пересекающиеся области
-          </legend>
-          Площадь: {{intersection.area}} м²
-              {{#flexberry-toggler class="layer-result-list-toggler" caption="Координаты"}}
-              <div>
-                <table class="ui compact celled table">
-                  <tr>
-                    <td>
-                      {{t "components.flexberry-layers-intersections-panel.x-cord"}}
-                    </td>
-                    <td>
-                      {{t "components.flexberry-layers-intersections-panel.y-cord"}}
-                    </td>
-                  </tr>
-                  {{#each intersection.intersectionCords as |cords|}}
-                    <tr>
-                      <td>
-                        {{cords.[0]}}
-                      </td>
-                      <td>
-                        {{cords.[1]}}
-                      </td>
-                    </tr>
-                  {{/each}}
-                </table>    
-              </div>
-              {{/flexberry-toggler}}
+          {{t 'components.compare-object-geometries.intersection'}}
+        </legend>
+        {{t 'components.compare-object-geometries.object-area'}} {{intersection.area}} {{t 'components.compare-object-geometries.m2'}}
+        {{#flexberry-toggler class="layer-result-list-toggler" caption="Координаты"}}
+          <div>
+            <table class="ui compact celled table">
+              <tr>
+                <td>
+                  {{t "components.compare-object-geometries.x"}}
+                </td>
+                <td>
+                  {{t "components.compare-object-geometries.y"}}
+                </td>
+              </tr>
+              {{#each intersection.intersectionCords as |cords|}}
+                <tr>
+                  <td>
+                    {{cords.[0]}}
+                  </td>
+                  <td>
+                    {{cords.[1]}}
+                  </td>
+                </tr>
+              {{/each}}
+            </table>    
+          </div>
+        {{/flexberry-toggler}}
       </fieldset>
     </div>   
-    <div class="row" style="padding-top: 20px;">
+    <div class="row intersection-row">
       <fieldset>
         <legend>
           <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomToIntersection" nonIntersection}}>
@@ -83,33 +83,33 @@
           <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" nonIntersection}}>
             <i class="hand paper icon"></i>
           </a>
-          Непересекающиеся области
+          {{t 'components.compare-object-geometries.non-intersection'}}
         </legend>
-         Площадь: {{nonIntersection.area}} м²
-              {{#flexberry-toggler class="layer-result-list-toggler" caption="Координаты"}}
-              <div>
-                <table class="ui compact celled table">
-                  <tr>
-                    <td>
-                      {{t "components.flexberry-layers-intersections-panel.x-cord"}}
-                    </td>
-                    <td>
-                      {{t "components.flexberry-layers-intersections-panel.y-cord"}}
-                    </td>
-                  </tr>
-                  {{#each nonIntersection.intersectionCords as |cords|}}
-                    <tr>
-                      <td>
-                        {{cords.[0]}}
-                      </td>
-                      <td>
-                        {{cords.[1]}}
-                      </td>
-                    </tr>
-                  {{/each}}
-                </table>    
-              </div>
-              {{/flexberry-toggler}}
+        {{t 'components.compare-object-geometries.object-area'}} {{nonIntersection.area}}  {{t 'components.compare-object-geometries.m2'}}
+        {{#flexberry-toggler class="layer-result-list-toggler" caption="Координаты"}}
+          <div>
+            <table class="ui compact celled table">
+              <tr>
+                <td>
+                  {{t "components.compare-object-geometries.x"}}
+                </td>
+                <td>
+                  {{t "components.compare-object-geometries.y"}}
+                </td>
+              </tr>
+              {{#each nonIntersection.intersectionCords as |cords|}}
+                <tr>
+                  <td>
+                    {{cords.[0]}}
+                  </td>
+                  <td>
+                    {{cords.[1]}}
+                  </td>
+                </tr>
+              {{/each}}
+            </table>    
+          </div>
+        {{/flexberry-toggler}}
       </fieldset>
     </div>   
   </div>
