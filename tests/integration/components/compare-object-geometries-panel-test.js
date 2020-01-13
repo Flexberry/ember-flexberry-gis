@@ -1,18 +1,18 @@
-import { moduleForComponent, test } from 'ember-qunit';
+// import { moduleForComponent, test } from 'ember-qunit';
 
 // import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('compare-object-geometries-panel', 'Integration | Component | compare object geometries panel', {
-  integration: true
-});
+// moduleForComponent('compare-object-geometries-panel', 'Integration | Component | compare object geometries panel', {
+//   integration: true
+// });
 
-test('it renders', function(assert) {
+// test('it renders', function(assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
   // this.render(hbs`{{compare-object-geometries-panel}}`);
 
-  assert.equal(this.$().text().trim(), '');
+//   assert.equal(this.$().text().trim(), '');
 
   // Template block usage:
   // this.render(hbs`
@@ -22,4 +22,4 @@ test('it renders', function(assert) {
   // `);
 
   // assert.equal(this.$().text().trim(), 'template block text');
-});
+// });
