@@ -25,6 +25,7 @@
     "node": ">= 0.10.0"
   },
   "devDependencies": {
+    "@turf/area": "^5.1.5",
     "@turf/boolean-contains": "^5.1.5",
     "@turf/boolean-equal": "^5.1.5",
     "@turf/boolean-point-in-polygon": "^5.1.5",
