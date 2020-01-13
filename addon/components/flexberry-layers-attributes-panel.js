@@ -22,6 +22,7 @@ import * as invariant from 'npm:@turf/invariant';
 import * as distance from 'npm:@turf/distance';
 import * as midpoint from 'npm:@turf/midpoint';
 import * as union from 'npm:@turf/union';
+import intersect from 'npm:@turf/intersect';
 
 /**
   The component for editing layers attributes.
@@ -1495,7 +1496,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           .map((key) => {
             let feature = tabModel.featureLink[key].feature;
             let layer = feature.leafletLayer.toGeoJSON();
-            if (!booleanEqual.default(layer, selectedFeatures[0]) && lineIntersect.default(layer, selectedFeatures[0]).features.length > 0) {
+            if (!booleanEqual.default(layer, selectedFeatures[0]) && !Ember.isNone(intersect.default(layer, selectedFeatures[0]))) {
               return layer;
             }
 
@@ -1504,20 +1505,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
         intersectingPolygon.forEach((polygon) => {
           let differenceResult = difference.default(polygon, selectedFeatures[0]);
-
-          if (polygon.geometry.type !== differenceResult.geometry.type) {
-            invariant.default.getCoords(differenceResult).forEach((polygonCoords) => {
-              let lefletLayer = L.geoJSON(helper.default.polygon(polygonCoords)).getLayers();
-              this.set('_newRowTabModel', tabModel);
-              this.set('_newRowLayer', lefletLayer[0]);
-              this.send('onNewRowDialogApprove', Object.assign({}, polygon.properties));
-            });
-          } else {
-            let lefletLayer = L.geoJSON(differenceResult).getLayers();
-            this.set('_newRowTabModel', tabModel);
-            this.set('_newRowLayer', lefletLayer[0]);
-            this.send('onNewRowDialogApprove', Object.assign({}, polygon.properties));
-          }
+          let lefletLayer = L.geoJSON(differenceResult).getLayers();
+          this.set('_newRowTabModel', tabModel);
+          this.set('_newRowLayer', lefletLayer[0]);
+          this.send('onNewRowDialogApprove', Object.assign({}, polygon.properties));
         });
 
         Ember.set(tabModel, '_selectedRows', dataForDifference);
@@ -1850,7 +1841,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             resultPolygonSplit = resultPolygonSplit.concat(_this._polygonSplit(helper.default.polygon(polygon), splitLine));
           });
 
-          if (arrayPolygons.length < resultPolygonSplit.length) {
+          if (arrayPolygons.length <= resultPolygonSplit.length) {
             split = helper.default.featureCollection(resultPolygonSplit);
           }
 
