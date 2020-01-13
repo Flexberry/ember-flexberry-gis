@@ -72,6 +72,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         ///
         //favs.addObject(feature);
       }
+
       let test = Ember.A();
       let promise = new Ember.RSVP.Promise((resolve) => {
         resolve(favs);
@@ -151,7 +152,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     // return array;
   },
 
-  addNewFeatureToNewLayerModel(array,feature) {
+  addNewFeatureToNewLayerModel(array, feature) {
     let featureArray = [];
     featureArray.push(feature);
     let promise = new Ember.RSVP.Promise((resolve) => {

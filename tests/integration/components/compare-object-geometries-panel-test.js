@@ -1,4 +1,5 @@
 import { moduleForComponent, test } from 'ember-qunit';
+
 // import hbs from 'htmlbars-inline-precompile';
 
 moduleForComponent('compare-object-geometries-panel', 'Integration | Component | compare object geometries panel', {
