@@ -1,1 +1,10 @@
- <button type="submit" class="ui button">Сравнить объекты</button>
+<button type="submit" class="ui button" {{action "compareTwoGeometries"}}>Сравнить объекты</button>
+{{layer-result-list
+  results=data
+  serviceLayer=serviceLayer
+  leafletMap=leafletMap
+  favoriteMode=true
+  addToFavorite=(action "addToFavorite")
+  addToCompareGeometries=(action 'addToCompareGeometries')
+  showIntersectionPanel=(action 'showIntersectionPanel')
+}}

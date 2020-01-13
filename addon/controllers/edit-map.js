@@ -8,6 +8,7 @@ import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-han
 import FlexberryMaplayerActionsHandlerMixin from '../mixins/flexberry-maplayer-actions-handler';
 import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-actions-handler';
 import LocalStorageBindingMixin from '../mixins/local-storage-binding';
+import FavoritesListMixin from '../mixins/favorites-features';
 import sideBySide from 'npm:leaflet-side-by-side';
 /**
   Edit map controller.
@@ -23,7 +24,8 @@ export default EditFormController.extend(
   FlexberryMapActionsHandlerMixin,
   FlexberryMaplayerActionsHandlerMixin,
   LayerResultListActionsHandlerMixin,
-  LocalStorageBindingMixin, {
+  LocalStorageBindingMixin,
+  FavoritesListMixin, {
     /**
       Property contatining sideBySide component.
 
@@ -266,8 +268,8 @@ export default EditFormController.extend(
 
       return layer;
     },
-    favs:Ember.A(),
-    test: [],
+   
+
     actions: {
       /**
         Handles click on compare-layers button.
@@ -292,38 +294,5 @@ export default EditFormController.extend(
           }, 500);
         }
       },
-      addToFavorite(feature) {
-        let favs = this.get('favs');
-        if(Ember.get(feature.properties,'isFavorite')) {
-          Ember.set(feature.properties, 'isFavorite', false);
-          favs.removeObject(feature);
-        }else {
-          Ember.set(feature.properties, 'isFavorite', true);
-          favs.addObject(feature);
-        }
-        let test = Ember.A();
-        let features = Ember.A();
-        features.addObject(feature);
-        let promise = new Ember.RSVP.Promise((resolve)=>{
-          resolve(favs);
-        })   
-        test.addObject({layerModel: feature.layerModel, features: promise});
-        this.set('test', test);
-        console.log(test);
-        //feature.layerModel.save();
-        // if (Ember.$('.fvicon').hasClass('filled')) {
-        //   Ember.$('.fvicon').removeClass('filled');
-        // } else {
-        //   Ember.$('.fvicon').addClass('filled');
-        // }
-      },
-      addToCompareGeometries(feature) {
-        if(Ember.get(feature, 'compareEnabled')) {
-          Ember.set(feature, 'compareEnabled', false);
-        }else {
-          Ember.set(feature, 'compareEnabled', true);
-          console.log(feature);
-        }
-      }
     }
   });

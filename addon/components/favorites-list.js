@@ -1,29 +1,74 @@
 import Ember from 'ember';
 import layout from '../templates/components/favorites-list';
+import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
+export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
-export default Ember.Component.extend({
+  /**
+    Reference to component's template.
+  */
   layout,
-  store: Ember.inject.service(),
-  results: Ember.A([]),
-  favItems: [],
+
+  /**
+    Array contains identification result features and layerModels.
+
+    @property features
+    @type Array
+    @default Ember.A()
+  */
+  features: Ember.A(),
+
+  /**
+    Array contains identification result features and layerModels.
+
+    @property features
+    @type Array
+    @default null
+  */
+  data: null,
+
+  onTwoObjectsChange: Ember.observer('features.[]', function() {
+    this.set('data', this.get('features'));
+  }),
+
   actions: {
-    clickme() {
-      console.log(this.get('favItems'));
-      let f = this.get('favItems');
-      console.log(f);
-      let ar = []
-      f.forEach(element => {
-        ar.push(element);
-      });
-      this.set('results', ar)
-      let test = Ember.A([]);
-      let promise = new Ember.RSVP.Promise((resolve)=>{
-        resolve(ar);
-      })
-      console.log(test);
-      test.addObject({layerModel: ar[0].layerModel, features: promise});
-      console.log(test);
-      this.set('results', test)
+
+    /**
+      Action adds feature to favorites.
+
+      @method actions.addToFavorite
+      @param feature
+    */
+    addToFavorite(feature) {
+      this.sendAction('addToFavorite', feature);
+    },
+
+    /**
+      Action open compare geometries panel.
+
+      @method actions.compareTwoGeometries
+    */
+    compareTwoGeometries() {
+      this.sendAction('compareTwoGeometries');
+    },
+
+    /**
+      Action handles click on checkbox.
+
+      @method actions.addToCompareGeometries
+      @param feature
+    */
+    addToCompareGeometries(feature) {
+      this.sendAction('addToCompareGeometries', feature);
+    },
+
+    /**
+      Action hadles click on intersection icon.
+
+      @method showIntersectionPanel
+      @param feature
+    */
+    showIntersectionPanel(feature) {
+      this.sendAction('showIntersectionPanel', feature);
     }
   }
 });

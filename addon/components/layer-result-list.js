@@ -51,7 +51,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   /**
     Flag indicates if layer-result-list used with favorites list.
 
-    @property favoriteMode:
+    @property favoriteMode
     @type Boolean
     @default false
   */
@@ -172,15 +172,17 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Action is sended to layer-result-list-action-handler.
       Action shows intersection panel.
       @method actions.findIntersection
+      @param feature
     */
     findIntersection(feature) {
       this.sendAction('showIntersectionPanel', feature);
     },
 
     /**
-      Action adds feature to favorites
+      Action adds feature to favorites.
 
       @method actions.findIntersection
+      @param feature
     */
     addToFavorite(feature) {
       this.sendAction('addToFavorite', feature);
@@ -189,7 +191,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     /**
       Action adds feature to array for comparing geometries.
 
-      @method actions.findIntersection
+      @method actions.addToCompareGeometries
+      @param feature
     */
     addToCompareGeometries(feature) {
       this.sendAction('addToCompareGeometries', feature);
@@ -199,6 +202,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Action zooms to intersection and shows object on map.
 
       @method actions.zoomToIntersection
+      @param feature
     */
     zoomToIntersection(feature) {
       this.sendAction('zoomToIntersection', feature);
