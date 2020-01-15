@@ -242,6 +242,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       feature.area = area(feature).toFixed(3);
       return feature;
     }
+
     return null;
   }
 });
