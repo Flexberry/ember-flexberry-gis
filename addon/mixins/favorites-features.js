@@ -7,7 +7,7 @@ import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
 
   /**
-    Array of items in fav with promise .
+    Array of items in fav with promise.
     @property result
     @type Array
     @default Ember.A()
@@ -37,6 +37,28 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     @default Ember.A()
   */
   favFeatures: Ember.A(),
+
+  /**
+    Flag indicates if comapre button disabled.
+    @property compareBtnDisabled
+    @type Boolean
+    @default true
+  */
+  compareBtnDisabled: true,
+
+  /**
+    Observer on twoObjectToCompare array.
+    @property _onTwoObjectToCompareChange
+    @type Observer
+    @private
+  */
+  _onTwoObjectToCompareChange: Ember.observer('twoObjectToCompare.[]', function() {
+    if (this.get('twoObjectToCompare').length === 2) {
+      this.set('compareBtnDisabled', false);
+    } else {
+      this.set('compareBtnDisabled', true);
+    }
+  }),
 
   actions: {
     /**

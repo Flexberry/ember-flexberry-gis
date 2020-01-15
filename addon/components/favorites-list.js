@@ -26,6 +26,14 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   data: null,
 
+  /**
+    Flag indicates if comapre button disabled.
+    @property compareBtnDisabled
+    @type Boolean
+    @default true
+  */
+  compareBtnDisabled: true,
+
   onTwoObjectsChange: Ember.observer('features.[]', function() {
     this.set('data', this.get('features'));
   }),

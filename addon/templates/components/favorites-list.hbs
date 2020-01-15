@@ -1,4 +1,6 @@
-<button type="submit" class="ui button compare" {{action "compareTwoGeometries"}}>{{t "components.compare-object-geometries.compare-objects-caption"}}</button>
+<button type="submit" class="ui btn compare" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
+  {{t "components.compare-object-geometries.compare-objects-caption"}}
+</button>
 {{layer-result-list
   results=data
   serviceLayer=serviceLayer

@@ -102,3 +102,29 @@ ui.button.intersect {
   margin-top: 10px;
   vertical-align: middle;
 }
+
+.sidebar-wrapper .ui.btn.compare {
+    font-size: 1rem;
+    padding: 0px 18px;
+    height: 35px;
+    text-align: center;
+    border: 1px solid #7ba7d9;
+    border-radius: 5px;
+    margin: 0px 5px;
+    background-color: white;
+    color: #7ba7d9;
+}
+.sidebar-wrapper .ui.btn.compare:hover {
+    background-color: #7ba7d9;
+    color: white;
+}
+.sidebar-wrapper .ui.btn.compare:disabled {
+    cursor: default;
+    opacity: 0.5 !important;
+}
+.sidebar-wrapper .ui.btn.compare[disabled]:hover {
+    background-color: white;
+    color: #7ba7d9;
+    cursor: default;
+    opacity: 0.5 !important;
+}
