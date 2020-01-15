@@ -11,7 +11,7 @@
     <div class="row">
       <fieldset>
         <legend>{{t 'components.compare-object-geometries.object-info-caption'}}</legend>
-        <div class="row">
+        <div class="row text-line">
           <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" firstObject}}>
             <i class="marker icon"></i>
           </a>
@@ -47,9 +47,11 @@
           </a>
           {{t 'components.compare-object-geometries.intersection'}}
         </legend>
-        {{t 'components.compare-object-geometries.object-area'}} {{intersection.area}} {{t 'components.compare-object-geometries.m2'}}
-        {{#flexberry-toggler class="layer-result-list-toggler" caption="Координаты"}}
-          <div>
+        <div class="row text-line">
+          {{t 'components.compare-object-geometries.object-area'}} {{intersection.area}} {{t 'components.compare-object-geometries.m2'}}
+        </div> 
+        {{#flexberry-toggler class="layer-result-list-toggler text-line" caption="Координаты"}}
+          <div class="">
             <table class="ui compact celled table">
               <tr>
                 <td>
@@ -85,8 +87,10 @@
           </a>
           {{t 'components.compare-object-geometries.non-intersection'}}
         </legend>
-        {{t 'components.compare-object-geometries.object-area'}} {{nonIntersection.area}}  {{t 'components.compare-object-geometries.m2'}}
-        {{#flexberry-toggler class="layer-result-list-toggler" caption="Координаты"}}
+        <div class="row text-line">
+          {{t 'components.compare-object-geometries.object-area'}} {{nonIntersection.area}}  {{t 'components.compare-object-geometries.m2'}}
+        </div> 
+        {{#flexberry-toggler class="layer-result-list-toggler text-line" caption="Координаты"}}
           <div>
             <table class="ui compact celled table">
               <tr>

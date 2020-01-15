@@ -54,7 +54,7 @@
         font-size: 16px;
     }
     .text-line {
-        padding-top: 5px;
+        padding-top: 10px;
     }
     .intersection-row {
         padding-top: 20px;
@@ -63,17 +63,10 @@
         padding-left: 15px;
         padding-right: 15px;
     }
-    .button.intersect {
-        margin-top: 15px;
+    .ui.compact.celled.table {
+        width:50%;
     }
-    .feature-result-item-content.content {
-        .layer-result-list-toggler {
-            width:50%;
-        }
-        .cords {
-            width:50%;
-        }
-    }  
+  
 }
 .compare-layer-tree {
     height: 52px;
