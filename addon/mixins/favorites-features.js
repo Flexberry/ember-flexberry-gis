@@ -7,20 +7,12 @@ import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
 
   /**
-    Array of items in fav list.
-    @property favs:
+    Array of items in fav with promise .
+    @property result
     @type Array
     @default Ember.A()
   */
-  favs: Ember.A(),
-
-  /**
-    Array of items in fav list to test.
-    @property test
-    @type Array
-    @default false
-  */
-  test: Ember.A(),
+  result: Ember.A(),
 
   /**
     Array of 2 features that will be compared.
@@ -38,6 +30,12 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   */
   showComapreGeometriesPanel: false,
 
+  /**
+    Array of items in fav list.
+    @property favFeatures
+    @type Array
+    @default Ember.A()
+  */
   favFeatures: Ember.A(),
 
   actions: {
@@ -48,10 +46,10 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       @param feature
     */
     addToFavorite(feature) {
+      let favFeatures = this.get('favFeatures');
+      let layerModelIndex = this.isLayerModelInArray(favFeatures, feature.layerModel);
       if (Ember.get(feature.properties, 'isFavorite')) {
-        Ember.set(feature.properties, 'isFavorite', false);
-        let favFeatures = this.get('favFeatures');
-        let layerModelIndex = this.isLayerModelInArray(favFeatures, feature.layerModel)
+        Ember.set(feature.properties, 'isFavorite', false);   
         if (layerModelIndex !== false) {
           favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
         }
@@ -63,23 +61,21 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         }
       } else {
         Ember.set(feature.properties, 'isFavorite', true);
-        let favFeatures = this.get('favFeatures');
-        let layerModelIndex = this.isLayerModelInArray(favFeatures, feature.layerModel)
         if (layerModelIndex !== false) {
-          favFeatures = this.addNewFeatureToLayerModel(favFeatures,layerModelIndex, feature)
+          favFeatures = this.addNewFeatureToLayerModel(favFeatures,layerModelIndex, feature);
         } else {
           favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature);
-        }
-        
-        let test = Ember.A();
-        favFeatures.forEach(object => {
-          let promise = new Ember.RSVP.Promise((resolve) => {
-            resolve(object.features);
-          });
-          test.addObject({layerModel: object.layerModel, features: promise})
-        });
-        this.set('test', test);
+        }   
       }
+
+      let layerModelPromise = Ember.A();
+      favFeatures.forEach(object => {
+        let promise = new Ember.RSVP.Promise((resolve) => {
+          resolve(object.features);
+        });
+        layerModelPromise.addObject({layerModel: object.layerModel, features: promise});
+      });
+      this.set('result', layerModelPromise);
     },
 
     /**
@@ -97,7 +93,6 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         Ember.set(feature, 'compareEnabled', true);
         twoObjects.pushObject(feature);
         if (twoObjects.length > 2) {
-          alert('more 2');
           let secondFeature = twoObjects[1];
           twoObjects.removeObject(secondFeature);
           Ember.set(secondFeature, 'compareEnabled', false);
@@ -171,10 +166,10 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   removeFeatureFromLayerModel(array, index, feature) {
     let features = array[index].features;
     features.removeObject(feature);
+    if (features.length === 0) {
+      array.removeAt(index);
+    }
+
     return array;
-  },
-
-  removeLayerModel() {
-
   }
 });
