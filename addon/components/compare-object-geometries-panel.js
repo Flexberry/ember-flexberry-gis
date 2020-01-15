@@ -226,19 +226,22 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   },
 
   getObjectWithProperties(feature) {
-    feature.intersectionCords = [];
-    feature.geometry.coordinates.forEach(arr => {
-      arr.forEach(pair => {
-        if (feature.geometry.type === 'MultiPolygon') {
-          pair.forEach(cords => {
-            feature.intersectionCords.push(cords);
-          });
-        } else {
-          feature.intersectionCords.push(pair);
-        }
+    if (feature) {
+      feature.intersectionCords = [];
+      feature.geometry.coordinates.forEach(arr => {
+        arr.forEach(pair => {
+          if (feature.geometry.type === 'MultiPolygon') {
+            pair.forEach(cords => {
+              feature.intersectionCords.push(cords);
+            });
+          } else {
+            feature.intersectionCords.push(pair);
+          }
+        });
       });
-    });
-    feature.area = area(feature).toFixed(3);
-    return feature;
+      feature.area = area(feature).toFixed(3);
+      return feature;
+    }
+    return null;
   }
 });

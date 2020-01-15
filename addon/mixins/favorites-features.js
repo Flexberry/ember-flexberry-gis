@@ -38,6 +38,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   */
   showComapreGeometriesPanel: false,
 
+  favFeatures: Ember.A(),
+
   actions: {
     /**
       Handles click on favorite icon.
@@ -46,39 +48,38 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       @param feature
     */
     addToFavorite(feature) {
-      let favs = this.get('favs');
       if (Ember.get(feature.properties, 'isFavorite')) {
         Ember.set(feature.properties, 'isFavorite', false);
+        let favFeatures = this.get('favFeatures');
+        let layerModelIndex = this.isLayerModelInArray(favFeatures, feature.layerModel)
+        if (layerModelIndex !== false) {
+          favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
+        }
+
         if (Ember.get(feature, 'compareEnabled')) {
           Ember.set(feature, 'compareEnabled', false);
           let twoObjects = this.get('twoObjectToCompare');
           twoObjects.removeObject(feature);
-          favs.removeObject(feature);
-        } else {
-          favs.removeObject(feature);
         }
       } else {
         Ember.set(feature.properties, 'isFavorite', true);
-        favs.addObject(feature);
-
-        // let layerModelIndex = this.isLayerModelInArray(favs, feature.layerModel)
-        // if (layerModelIndex !== false) {
-        //   // favs = this.addNewFeatureToLayerModel(favs,layerModelIndex, feature)
-        //   this.addNewFeatureToLayerModel(test,layerModelIndex, feature)
-        // } else {
-        //   // favs = this.addNewFeatureToNewLayerModel(favs, feature);
-        //   this.addNewFeatureToNewLayerModel(test, feature)
-        // }
-        ///
-        //favs.addObject(feature);
+        let favFeatures = this.get('favFeatures');
+        let layerModelIndex = this.isLayerModelInArray(favFeatures, feature.layerModel)
+        if (layerModelIndex !== false) {
+          favFeatures = this.addNewFeatureToLayerModel(favFeatures,layerModelIndex, feature)
+        } else {
+          favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature);
+        }
+        
+        let test = Ember.A();
+        favFeatures.forEach(object => {
+          let promise = new Ember.RSVP.Promise((resolve) => {
+            resolve(object.features);
+          });
+          test.addObject({layerModel: object.layerModel, features: promise})
+        });
+        this.set('test', test);
       }
-
-      let test = Ember.A();
-      let promise = new Ember.RSVP.Promise((resolve) => {
-        resolve(favs);
-      });
-      test.addObject({ layerModel: feature.layerModel, features: promise });
-      this.set('test', test);
     },
 
     /**
@@ -96,6 +97,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         Ember.set(feature, 'compareEnabled', true);
         twoObjects.pushObject(feature);
         if (twoObjects.length > 2) {
+          alert('more 2');
           let secondFeature = twoObjects[1];
           twoObjects.removeObject(secondFeature);
           Ember.set(secondFeature, 'compareEnabled', false);
@@ -127,6 +129,12 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     }
   },
 
+  /**
+    Method checks id layerModel in array.
+    if it is returns its index.
+
+      @method isLayerModelInArray
+  */
   isLayerModelInArray(array, layerModel) {
     let res = false;
     array.forEach((item, index) => {
@@ -137,29 +145,36 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     return res;
   },
 
-  addNewFeatureToLayerModel(array, index, feature) {
-    let features = array[index].features._result;
-    array[index].features.then(items => {
-      items.forEach(item => {
-        console.log(item);
-      });
-    });
-    features.push(feature);
-    array[index].features = new Ember.RSVP.Promise((resolve) => {
-      resolve(features);
-    });
+  /**
+    Adding new featre to leayer model array of features.
 
-    // return array;
+      @method addNewFeatureToLayerModel
+  */
+  addNewFeatureToLayerModel(array, index, feature) {
+    let features = array[index].features;
+    features.push(feature);
+    return array;
   },
 
-  addNewFeatureToNewLayerModel(array, feature) {
-    let featureArray = [];
-    featureArray.push(feature);
-    let promise = new Ember.RSVP.Promise((resolve) => {
-      resolve(featureArray);
-    });
-    array.addObject({ layerModel: feature.layerModel, features: promise });
+  /**
+    Adding new layer model and new feature to array.
 
-    // return array;
+      @method addNewFeatureToNewLayerModel
+  */
+  addNewFeatureToNewLayerModel(array, feature) {
+    let featureArray = Ember.A();
+    featureArray.addObject(feature);
+    array.addObject({ layerModel: feature.layerModel, features: featureArray });
+    return array;
+  },
+
+  removeFeatureFromLayerModel(array, index, feature) {
+    let features = array[index].features;
+    features.removeObject(feature);
+    return array;
+  },
+
+  removeLayerModel() {
+
   }
 });
