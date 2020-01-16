@@ -1489,7 +1489,8 @@ lang {
   padding-right: 15px;
 }
 .intersection-panel .button.intersect {
-  margin-top: 15px;
+  margin-left: 20px;
+  margin-top: 20px;
 }
 .intersection-panel .feature-result-item-content.content .layer-result-list-toggler {
   width: 50%;
@@ -5706,11 +5707,6 @@ div.ui.secondary.menu.no-margin {
 .flexberry-edit-layermap .ui.small.fluid.buttons:not(.basic):not(.inverted) > .button.flexberry-button:hover {
   opacity: 0.8;
   color: #7ba7d9;
-}
-ui.button.intersect {
-  color: black;
-  margin-top: 10px;
-  vertical-align: middle;
 }
 /*!
  * # Semantic UI - Container
