@@ -98,7 +98,8 @@
 }
 
 ui.button.intersect {
-  color:black;
-  margin-top: 10px;
-  vertical-align: middle;
+    margin-left: 25px;
+    color:black;
+    margin-top: 20px;
+    vertical-align: middle;
 }

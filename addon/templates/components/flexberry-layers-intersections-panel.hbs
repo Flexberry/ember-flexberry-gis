@@ -8,23 +8,23 @@
     <i class="intersection-panel-exit-icon close icon" {{action 'closePanel'}}></i>
   </div> 
   <div class="intersections-panel-form-row"> 
-    <div class="row">
+    <div class="intersections-panel-input-params-row row">
       <div class="sixteen wide column">
         <div class="ui grid">
-          <div class="five wide column">
+          <div class="seven wide column">
             <div class="field">
+              {{t "components.flexberry-layers-intersections-panel.layers-list"}}             
               <div class="field intersection-multiselect">
                 {{flexberry-multiple-select
                   items=vectorLayers
                   selectedItems=selectedLayers
-                  title=('t' _layersLabel)
                   allowAdditions=false
                   isObject=true
                 }}
               </div>
             </div>
           </div>
-          <div class="three wide column">
+          <div class="two wide column">
             <div class="field">
               {{t 'components.flexberry-layers-intersections-panel.square'}}
               <div class="ui right labeled input">
@@ -35,7 +35,7 @@
               </div>
             </div>
           </div>
-          <div class="three wide column">
+          <div class="two wide column">
             <div class="field">   
               {{t 'components.flexberry-layers-intersections-panel.buffer'}}
               <div class="ui right labeled input">
