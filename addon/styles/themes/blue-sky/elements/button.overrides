@@ -96,10 +96,3 @@
       }
     }
 }
-
-ui.button.intersect {
-    margin-left: 25px;
-    color:black;
-    margin-top: 20px;
-    vertical-align: middle;
-}
