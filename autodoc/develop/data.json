@@ -29787,24 +29787,13 @@
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
             "line": 152,
-            "description": "\"Layers\" label locale key.",
-            "itemtype": "property",
-            "name": "__layersLabel",
-            "type": "String",
-            "default": "'components.flexberry-layers-intersections-panel.layers-list'",
-            "class": "FlexberryLayersAttributesPanelComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 161,
             "description": "Initializes component.",
             "class": "FlexberryLayersAttributesPanelComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 189,
+            "line": 180,
             "description": "Handles click on a button.",
             "itemtype": "method",
             "name": "actions.findIntersections",
@@ -29813,7 +29802,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 242,
+            "line": 233,
             "description": "Handles click on a close button.",
             "itemtype": "method",
             "name": "actions.findIntersections",
@@ -29822,7 +29811,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 254,
+            "line": 245,
             "description": "Handles click on tab.",
             "itemtype": "method",
             "name": "actions.hidePanel",
@@ -29831,7 +29820,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 263,
+            "line": 254,
             "description": "Handles click on zoom icon.",
             "itemtype": "method",
             "name": "actions.hidePanel",
@@ -29847,7 +29836,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 278,
+            "line": 269,
             "description": "Starts identification by array of satisfying layers inside given polygon area.",
             "itemtype": "method",
             "name": "_startIdentification",
@@ -29887,7 +29876,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 346,
+            "line": 337,
             "description": "Finishes identification.",
             "itemtype": "method",
             "name": "_finishIdentification",
@@ -29936,7 +29925,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 396,
+            "line": 387,
             "description": "Cleaning after changing feature.",
             "itemtype": "method",
             "name": "clearPanel",
@@ -29945,7 +29934,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 415,
+            "line": 406,
             "description": "Removing layers with identification results.",
             "itemtype": "method",
             "name": "removeLayers",
@@ -29954,7 +29943,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 433,
+            "line": 424,
             "description": "Searching intersections.",
             "itemtype": "method",
             "name": "_findIntersections",
@@ -45647,7 +45636,7 @@
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/flexberry-layers-intersections-panel.js:161"
+            "line": " addon/components/flexberry-layers-intersections-panel.js:152"
         },
         {
             "message": "Missing item type\nReference to component's template.",
