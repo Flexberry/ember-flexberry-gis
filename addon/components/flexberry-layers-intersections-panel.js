@@ -150,15 +150,6 @@ export default Ember.Component.extend({
   }),
 
   /**
-    "Layers" label locale key.
-
-    @property __layersLabel
-    @type String
-    @default 'components.flexberry-layers-intersections-panel.layers-list'
-  */
-  _layersLabel: 'components.flexberry-layers-intersections-panel.layers-list',
-
-  /**
     Initializes component.
   */
   init() {
