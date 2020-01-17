@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import { translationMacro as t } from 'ember-i18n';
-export default Ember.Mixin.create( {
+export default Ember.Mixin.create({
 
   /**
     Array of items in fav with promise.
