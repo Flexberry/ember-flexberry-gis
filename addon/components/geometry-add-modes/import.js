@@ -409,18 +409,20 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
       let newLayers = Ember.A();
 
       selectedJSON.features.forEach((feature) => {
-        let newLayer = L.geoJSON(feature, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
-        if (newLayer.getLatLng instanceof Function) {
-          let coords = newLayer.getLatLng();
-          checkCoords(coords.lat, coords.lng, coords.lat, coords.lng);
-        }
+        if (!Ember.isNone(feature.geometry)) {
+          let newLayer = L.geoJSON(feature, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
+          if (newLayer.getLatLng instanceof Function) {
+            let coords = newLayer.getLatLng();
+            checkCoords(coords.lat, coords.lng, coords.lat, coords.lng);
+          }
 
-        if (newLayer.getBounds instanceof Function) {
-          let bounds = newLayer.getBounds();
-          checkCoords(bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast());
-        }
+          if (newLayer.getBounds instanceof Function) {
+            let bounds = newLayer.getBounds();
+            checkCoords(bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast());
+          }
 
-        newLayers.pushObject(newLayer);
+          newLayers.pushObject(newLayer);
+        }
       }, this);
 
       if (this.get('_showError')) {
