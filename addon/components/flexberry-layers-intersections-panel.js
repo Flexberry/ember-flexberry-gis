@@ -436,15 +436,18 @@ export default Ember.Component.extend({
         features.forEach((item) => {
           let objA = item;
           let objB = e.polygonLayer.feature;
+          let convertToMercator = false;
           if (e.polygonLayer.options.hasOwnProperty('crs')) {
             if (e.polygonLayer.options.crs.code !== 'EPSG:4326') {
               objB = projection.toWgs84(e.polygonLayer.feature);
+              convertToMercator = true;
             }
           }
 
           if (item.hasOwnProperty('leafletLayer')) {
             if (item.leafletLayer.options.crs.code !== 'EPSG:4326') {
               objA = projection.toWgs84(item);
+              convertToMercator = true;
             }
           }
 
@@ -457,32 +460,10 @@ export default Ember.Component.extend({
             if (res) {
               if (square > 0) {
                 if (area(res) > square) {
-                  item.intersection = {};
-                  item.intersection.intersectionCords = [];
-                  item.intersection.intersectedArea = area(res);
-                  res.geometry.coordinates.forEach(arr => {
-                    arr.forEach(pair => {
-                      item.intersection.intersectionCords.push(pair);
-                    });
-                  });
-                  item.intersection.intersectedObject = res;
-                  if (res.geometry.type === 'Polygon' || res.geometry.type === 'MultiPolygon') {
-                    item.intersection.isPolygon = true;
-                  }
+                  item = this.computeFeatureProperties(item, convertToMercator, res);
                 }
               } else {
-                item.intersection = {};
-                item.intersection.intersectionCords = [];
-                item.intersection.intersectedArea = area(res);
-                res.geometry.coordinates.forEach(arr => {
-                  arr.forEach(pair => {
-                    item.intersection.intersectionCords.push(pair);
-                  });
-                });
-                item.intersection.intersectedObject = res;
-                if (res.geometry.type === 'Polygon' || res.geometry.type === 'MultiPolygon') {
-                  item.intersection.isPolygon = true;
-                }
+                item = this.computeFeatureProperties(item, convertToMercator, res);
               }
             }
           } else if (item.geometry.type === 'MultiLineString' || item.geometry.type === 'LineString') {
@@ -501,4 +482,38 @@ export default Ember.Component.extend({
       });
     });
   },
+
+  computeCoordinates(feature) {
+    let coordinatesArray = [];
+    feature.geometry.coordinates.forEach(arr => {
+      arr.forEach(pair => {
+        if (feature.geometry.type === 'MultiPolygon') {
+          pair.forEach(cords => {
+            coordinatesArray.push(cords);
+          })
+        } else {
+          coordinatesArray.push(pair);
+        }
+      });
+    });
+
+    return coordinatesArray;
+  },
+
+  computeFeatureProperties(feature, convertToMercator, res) {
+    feature.intersection = {};
+    feature.intersection.intersectionCords = [];
+    feature.intersection.intersectedArea = area(res);
+    if (convertToMercator) {
+      let resInMercator = projection.toMercator(res);
+      feature.intersection.intersectionCords = this.computeCoordinates(resInMercator);
+    } else {
+      feature.intersection.intersectionCords = this.computeCoordinates(res);
+    }
+
+    feature.intersection.intersectedObject = res;
+    if (res.geometry.type === 'Polygon' || res.geometry.type === 'MultiPolygon') {
+      feature.intersection.isPolygon = true;
+    }
+  }
 });
