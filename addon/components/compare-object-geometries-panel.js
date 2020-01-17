@@ -160,6 +160,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.hidePanel
     */
     panToIntersection(feature) {
+      if (Ember.get(feature,'crs') === 'EPSG:3857') {
+        feature = projection.toWgs84(feature);
+      }
+
       let center = L.geoJSON(feature).getLayers()[0].getBounds().getCenter();
       let leafletMap = this.get('leafletMap');
       leafletMap.panTo(center);
@@ -171,6 +175,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.hidePanel
     */
     zoomToIntersection(feature) {
+      if (Ember.get(feature,'crs') === 'EPSG:3857') {
+        feature = projection.toWgs84(feature);
+      }
+
       let group = this.get('featuresLayer');
       group.clearLayers();
       let obj = L.geoJSON(feature, {
@@ -179,6 +187,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       obj.addTo(group);
     }
   },
+
   getDistance(firstObject, secondObject) {
     let firstCenter;
     let secondCenter;
@@ -209,17 +218,38 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   getIntesection(firstObject, secondObject) {
     let intersection = intersect.default(firstObject, secondObject);
-    return this.getObjectWithProperties(intersection);
+    if (intersection) {
+      if (Ember.get(firstObject, 'leafletLayer.options.crs.code')) {
+        intersection.crs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
+      }
+
+      return this.getObjectWithProperties(intersection);
+    }
+
+    return null;
   },
 
   getNonIntersection(firstObject, secondObject) {
     let nonIntersection = difference.default(firstObject, secondObject);
-    return this.getObjectWithProperties(nonIntersection);
+    if (nonIntersection) {
+      if (Ember.get(firstObject, 'leafletLayer.options.crs.code')) {
+        nonIntersection.crs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
+      }
+
+      return this.getObjectWithProperties(nonIntersection);
+    }
+
+    return null;
   },
 
   getObjectWithProperties(feature) {
     if (feature) {
+      feature.area = area(feature).toFixed(3);
       feature.intersectionCords = [];
+      if (Ember.get(feature,'crs') === 'EPSG:3857') {
+        feature = projection.toMercator(feature);
+      }
+
       feature.geometry.coordinates.forEach(arr => {
         arr.forEach(pair => {
           if (feature.geometry.type === 'MultiPolygon') {
@@ -231,7 +261,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           }
         });
       });
-      feature.area = area(feature).toFixed(3);
       return feature;
     }
 

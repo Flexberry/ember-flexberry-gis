@@ -18,7 +18,7 @@
           <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" firstObject}}>
             <i class="hand paper icon"></i>
           </a>
-          {{firstObject.properties.name}}
+          {{firstObject.displayValue}}
           {{t "components.compare-object-geometries.object-area"}} {{firstObject.area}} {{t "components.compare-object-geometries.m2"}}
         </div>
         <div class="row text-line">
@@ -28,7 +28,7 @@
           <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" secondObject}}>
             <i class="hand paper icon"></i>
           </a>
-          {{secondObject.properties.name}}
+          {{secondObject.displayValue}}
           {{t "components.compare-object-geometries.object-area"}} {{secondObject.area}} {{t "components.compare-object-geometries.m2"}}
         </div>
         <div class="row text-line">
