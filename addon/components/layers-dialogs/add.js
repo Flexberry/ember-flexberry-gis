@@ -105,7 +105,7 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
     @default undefined
   */
   _fileControl: undefined,
-  
+
   /**
     Data request.
     @param {string} url Request url.
@@ -115,7 +115,7 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
     @param {string} successF Succes function.
     @param {string} errorF Error function.
   */
-  request (url, type, contentType, data, successF, errorF) {
+  request(url, type, contentType, data, successF, errorF) {
     let config = Ember.getOwner(this).resolveRegistration('config:environment');
 
     Ember.$.ajax({
@@ -125,13 +125,10 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
       processData: false,
       contentType: contentType,
       async: false,
-      beforeSend: function(xhr) { 
-        xhr.setRequestHeader("Authorization", "Basic " + btoa(config.APP.geoserver.login + ":" + config.APP.geoserver.password));
-      },
-      success: function(data){
+      success: function(data) {
         successF(data);
       },
-      error: function(data){
+      error: function(data) {
         errorF(data);
       }
     });
@@ -160,8 +157,7 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
                   alert(this.get('storeExistErrorMessage'));
                 },
                 (data) => {
-                  _this.request(`${url[0]}/geoserver/rest/workspaces/${layerName[0]}/coveragestores/${layerName[1]}/file.geotiff?coverageName=${layerName[1]}`, 'PUT', 
-                    'image/tiff', file,
+                  _this.request(`${url[0]}/geoserver/rest/workspaces/${layerName[0]}/coveragestores/${layerName[1]}/file.geotiff?coverageName=${layerName[1]}`, 'PUT', 'image/tiff', file,
                     (data) => {
                       this.sendAction('approve', {
                         layerProperties: this.get('getLayerProperties')(),
