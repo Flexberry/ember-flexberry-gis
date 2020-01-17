@@ -490,7 +490,7 @@ export default Ember.Component.extend({
         if (feature.geometry.type === 'MultiPolygon') {
           pair.forEach(cords => {
             coordinatesArray.push(cords);
-          })
+          });
         } else {
           coordinatesArray.push(pair);
         }
