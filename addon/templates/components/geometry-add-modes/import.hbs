@@ -39,7 +39,7 @@
         <div class="ui action input">
           <label class="import-from-file">
             <span class="button flexberry-import-from-file-button ui icon">{{loadButtonCaption}}</span>
-            <input onchange={{action "uploadFile"}} type="file"/>
+            <input onchange={{action "uploadFile"}} type="file" multiple="multiple"/>
           </label>
         </div>
       {{/if}}

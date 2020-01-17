@@ -2,15 +2,15 @@
 <div class={{concat "ui very wide bottom bottompanel pushable tabbar" (if folded " folded" "") (if settings.withToolbar " withToolbar" "") (if settings.sidebarOpened " sidebarOpened" "")}} >
   <div class="ui top attached tabular menu bottompanel-tab-nav-panel-tabs">
     <a class= "bottompanel tab item active"
-      {{action 'hidePanel'}}>
-      {{t 'components.compare-object-geometries.comparison-objects-caption'}}
+      {{action "hidePanel"}}>
+      {{t "components.compare-object-geometries.comparison-objects-caption"}}
     </a>
-    <i class="intersection-panel-exit-icon close icon" {{action 'closePanel'}}></i>
+    <i class="intersection-panel-exit-icon close icon" {{action "closePanel"}}></i>
   </div> 
   <div class="row main-panel">
     <div class="row">
       <fieldset>
-        <legend>{{t 'components.compare-object-geometries.object-info-caption'}}</legend>
+        <legend>{{t "components.compare-object-geometries.object-info-caption"}}</legend>
         <div class="row text-line">
           <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" firstObject}}>
             <i class="marker icon"></i>
@@ -19,7 +19,7 @@
             <i class="hand paper icon"></i>
           </a>
           {{firstObject.properties.name}}
-          {{t 'components.compare-object-geometries.object-area'}} {{firstObject.area}} {{t 'components.compare-object-geometries.m2'}}
+          {{t "components.compare-object-geometries.object-area"}} {{firstObject.area}} {{t "components.compare-object-geometries.m2"}}
         </div>
         <div class="row text-line">
           <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" secondObject}}>
@@ -29,10 +29,10 @@
             <i class="hand paper icon"></i>
           </a>
           {{secondObject.properties.name}}
-          {{t 'components.compare-object-geometries.object-area'}} {{secondObject.area}} {{t 'components.compare-object-geometries.m2'}}
+          {{t "components.compare-object-geometries.object-area"}} {{secondObject.area}} {{t "components.compare-object-geometries.m2"}}
         </div>
         <div class="row text-line">
-          {{t 'components.compare-object-geometries.distance-between'}} {{distanceBetween}} {{t 'components.compare-object-geometries.m'}}
+          {{t "components.compare-object-geometries.distance-between"}} {{distanceBetween}} {{t "components.compare-object-geometries.m"}}
         </div>
       </fieldset>
     </div>   
@@ -45,13 +45,13 @@
           <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" intersection}}>
             <i class="hand paper icon"></i>
           </a>
-          {{t 'components.compare-object-geometries.intersection'}}
+          {{t "components.compare-object-geometries.intersection"}}
         </legend>
         <div class="row text-line">
-          {{t 'components.compare-object-geometries.object-area'}} {{intersection.area}} {{t 'components.compare-object-geometries.m2'}}
+          {{t "components.compare-object-geometries.object-area"}} {{intersection.area}} {{t "components.compare-object-geometries.m2"}}
         </div> 
-        {{#flexberry-toggler class="layer-result-list-toggler text-line" caption="Координаты"}}
-          <div class="">
+        {{#flexberry-toggler class="layer-result-list-toggler text-line" caption=(t "components.compare-object-geometries.cords")}}
+          <div>
             <table class="ui compact celled table">
               <tr>
                 <td>
@@ -85,12 +85,12 @@
           <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" nonIntersection}}>
             <i class="hand paper icon"></i>
           </a>
-          {{t 'components.compare-object-geometries.non-intersection'}}
+          {{t "components.compare-object-geometries.non-intersection"}}
         </legend>
         <div class="row text-line">
-          {{t 'components.compare-object-geometries.object-area'}} {{nonIntersection.area}}  {{t 'components.compare-object-geometries.m2'}}
+          {{t "components.compare-object-geometries.object-area"}} {{nonIntersection.area}}  {{t "components.compare-object-geometries.m2"}}
         </div> 
-        {{#flexberry-toggler class="layer-result-list-toggler text-line" caption="Координаты"}}
+        {{#flexberry-toggler class="layer-result-list-toggler text-line" caption=(t "components.compare-object-geometries.cords")}}
           <div>
             <table class="ui compact celled table">
               <tr>

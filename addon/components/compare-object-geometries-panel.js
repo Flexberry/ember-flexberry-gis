@@ -18,14 +18,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   mapApi: Ember.inject.service(),
 
   /**
-    Object name disaplayed on template.
-    @property disaplayName
-    @type String
-    @default null
-  */
-  disaplayName: 'Сравнение объектов',
-
-  /**
     Objects to compare.
     @property twoObjects
     @type Array

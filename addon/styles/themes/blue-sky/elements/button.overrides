@@ -96,13 +96,3 @@
       }
     }
 }
-
-ui.button.intersect {
-  color:black;
-  margin-top: 10px;
-  vertical-align: middle;
-}
-
-.sidebar-wrapper .ui.btn.compare {
-    border: 1px solid #7ba7d9;
-}

@@ -3,8 +3,8 @@
 */
 
 import Ember from 'ember';
-import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
-export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
+import { translationMacro as t } from 'ember-i18n';
+export default Ember.Mixin.create( {
 
   /**
     Array of items in fav with promise.
@@ -45,6 +45,15 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     @default true
   */
   compareBtnDisabled: true,
+
+  /**
+    'Select 2 objects'.
+
+    @property cordsCaption
+    @type String
+    @default t('components.compare-object-geometries.select2')
+  */
+  selectTwo: t('components.compare-object-geometries.select2'),
 
   /**
     Observer on twoObjectToCompare array.
@@ -130,7 +139,7 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
     OnCompareTwoGeometries() {
       let twoObjects = this.get('twoObjectToCompare');
       if (twoObjects.length !== 2) {
-        alert('Выберите 2 объекта');
+        alert(this.get('selectTwo'));
       } else {
         this.set('showComapreGeometriesPanel', true);
       }
