@@ -232,6 +232,15 @@ let FlexberryEditLayerDialogComponent = FlexberryBaseComponent.extend(
       onHide() {
         this.sendAction('hide');
       },
+
+      /**
+        Handles onUploadFile.
+
+        @method actions.onUploadFile
+      */
+      onUploadFile(file) {
+        this.sendAction('onUploadFile', file);
+      }
     }
 
     /**
