@@ -160,7 +160,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.hidePanel
     */
     panToIntersection(feature) {
-      if (Ember.get(feature,'crs') === 'EPSG:3857') {
+      if (Ember.get(feature, 'crs') === 'EPSG:3857') {
         feature = projection.toWgs84(feature);
       }
 
@@ -175,7 +175,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.hidePanel
     */
     zoomToIntersection(feature) {
-      if (Ember.get(feature,'crs') === 'EPSG:3857') {
+      if (Ember.get(feature, 'crs') === 'EPSG:3857') {
         feature = projection.toWgs84(feature);
       }
 
@@ -246,7 +246,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     if (feature) {
       feature.area = area(feature).toFixed(3);
       feature.intersectionCords = [];
-      if (Ember.get(feature,'crs') === 'EPSG:3857') {
+      if (Ember.get(feature, 'crs') === 'EPSG:3857') {
         feature = projection.toMercator(feature);
       }
 
