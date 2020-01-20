@@ -1029,12 +1029,26 @@
             "fors": {},
             "namespaces": {}
         },
+        "addon/components/compare-object-geometries-panel.js": {
+            "name": "addon/components/compare-object-geometries-panel.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/components/div-control.js": {
             "name": "addon/components/div-control.js",
             "modules": {},
             "classes": {
                 "DivControlComponent": 1
             },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/components/favorites-list.js": {
+            "name": "addon/components/favorites-list.js",
+            "modules": {},
+            "classes": {},
             "fors": {},
             "namespaces": {}
         },
@@ -2567,6 +2581,13 @@
             "classes": {
                 "DynamicPropertiesMixin": 1
             },
+            "fors": {},
+            "namespaces": {}
+        },
+        "addon/mixins/favorites-features.js": {
+            "name": "addon/mixins/favorites-features.js",
+            "modules": {},
+            "classes": {},
             "fors": {},
             "namespaces": {}
         },
@@ -5583,7 +5604,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/controllers/edit-map.js",
-            "line": 12,
+            "line": 13,
             "description": "Edit map controller.",
             "extends": "EditFormController",
             "uses": [
@@ -25539,6 +25560,175 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 13,
+            "description": "Service for managing map API.",
+            "itemtype": "property",
+            "name": "mapApi",
+            "type": "MapApiService",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 20,
+            "description": "Objects to compare.",
+            "itemtype": "property",
+            "name": "twoObjects",
+            "type": "Array",
+            "default": "null",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 28,
+            "description": "Distance.",
+            "itemtype": "property",
+            "name": "distanceBetween",
+            "type": "Number",
+            "default": "null",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 36,
+            "description": "Intersection result.",
+            "itemtype": "property",
+            "name": "intersection",
+            "type": "Feature",
+            "default": "null",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 44,
+            "description": "Difference result.",
+            "itemtype": "property",
+            "name": "intersection",
+            "type": "Feature",
+            "default": "null",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 52,
+            "description": "Observer for twoObjects property.",
+            "itemtype": "property",
+            "name": "_onTwoObjectsChange",
+            "access": "private",
+            "tagname": "",
+            "readonly": "",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 78,
+            "description": "First object to compare.",
+            "itemtype": "property",
+            "name": "firstObject",
+            "type": "Feature",
+            "default": "null",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 87,
+            "description": "Second object to compare.",
+            "itemtype": "property",
+            "name": "secondObject",
+            "type": "Feature",
+            "default": "null",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 96,
+            "description": "Leaflet map object for zoom and pan.",
+            "itemtype": "property",
+            "name": "leafletMap",
+            "type": "L.Map",
+            "default": "null",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 105,
+            "description": "Flag indicates if panel is folded.",
+            "itemtype": "property",
+            "name": "folded",
+            "type": "Boolean",
+            "default": "false",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 114,
+            "description": "Layer contains non/intersection features.",
+            "itemtype": "property",
+            "name": "resultsLayer",
+            "type": "Object",
+            "default": "null",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 123,
+            "description": "Observer for leafletMap property adding layer with results.",
+            "itemtype": "property",
+            "name": "_OnMapChanged",
+            "access": "private",
+            "tagname": "",
+            "readonly": "",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 137,
+            "description": "Handles click on a close button.",
+            "itemtype": "method",
+            "name": "actions.findIntersections",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 148,
+            "description": "Handles click on tab.",
+            "itemtype": "method",
+            "name": "actions.hidePanel",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 157,
+            "description": "Handles click on pan to icon.",
+            "itemtype": "method",
+            "name": "actions.hidePanel",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/compare-object-geometries-panel.js",
+            "line": 172,
+            "description": "Handles click on zoom to icon.",
+            "itemtype": "method",
+            "name": "actions.hidePanel",
+            "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/components/div-control.js",
             "line": 22,
             "description": "The position of the control (one of the map corners). Possible values are 'topleft', 'topright', 'bottomleft' or 'bottomright'",
@@ -25569,6 +25759,100 @@
             "type": "Boolean",
             "default": "true",
             "class": "DivControlComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/favorites-list.js",
+            "line": 6,
+            "description": "Reference to component's template.",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/favorites-list.js",
+            "line": 11,
+            "description": "Array contains identification result features and layerModels.",
+            "itemtype": "property",
+            "name": "features",
+            "type": "Array",
+            "default": "Ember.A()",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/favorites-list.js",
+            "line": 20,
+            "description": "Array contains identification result features and layerModels.",
+            "itemtype": "property",
+            "name": "features",
+            "type": "Array",
+            "default": "null",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/favorites-list.js",
+            "line": 29,
+            "description": "Flag indicates if comapre button disabled.",
+            "itemtype": "property",
+            "name": "compareBtnDisabled",
+            "type": "Boolean",
+            "default": "true",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/favorites-list.js",
+            "line": 43,
+            "description": "Action adds feature to favorites.",
+            "itemtype": "method",
+            "name": "actions.addToFavorite",
+            "params": [
+                {
+                    "name": "feature",
+                    "description": ""
+                }
+            ],
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/favorites-list.js",
+            "line": 53,
+            "description": "Action open compare geometries panel.",
+            "itemtype": "method",
+            "name": "actions.compareTwoGeometries",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/favorites-list.js",
+            "line": 62,
+            "description": "Action handles click on checkbox.",
+            "itemtype": "method",
+            "name": "actions.addToCompareGeometries",
+            "params": [
+                {
+                    "name": "feature",
+                    "description": ""
+                }
+            ],
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/favorites-list.js",
+            "line": 72,
+            "description": "Action hadles click on intersection icon.",
+            "itemtype": "method",
+            "name": "showIntersectionPanel",
+            "params": [
+                {
+                    "name": "feature",
+                    "description": ""
+                }
+            ],
+            "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
@@ -25617,6 +25901,17 @@
         {
             "file": "addon/components/feature-result-item.js",
             "line": 55,
+            "description": "Flag indicates if feature is in favorire list.",
+            "itemtype": "property",
+            "name": "intersection",
+            "type": "Boolean",
+            "default": "false",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 64,
             "description": "Flag: indicates whether to display detailed feature info.",
             "itemtype": "property",
             "name": "_infoExpanded",
@@ -25627,7 +25922,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 64,
+            "line": 73,
             "description": "Flag: indicates whether to display links list (if present).",
             "itemtype": "property",
             "name": "_linksExpanded",
@@ -25638,7 +25933,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 73,
+            "line": 82,
             "description": "Property to represent feature.",
             "itemtype": "property",
             "name": "displayProperty",
@@ -25650,7 +25945,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 82,
+            "line": 91,
             "description": "Feature properties excluded from being displayed in info table.",
             "itemtype": "property",
             "name": "_excludedProperties",
@@ -25663,7 +25958,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 94,
+            "line": 103,
             "description": "Features localized properties to being displayed in info table.",
             "itemtype": "property",
             "name": "_localizedProperties",
@@ -25676,7 +25971,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 108,
+            "line": 117,
             "description": "Flag: indicates whether to display detailed feature info.",
             "itemtype": "property",
             "name": "expanded",
@@ -25687,7 +25982,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 119,
+            "line": 128,
             "description": "Flag: indicates whether component is active.",
             "itemtype": "property",
             "name": "isActive",
@@ -25698,14 +25993,14 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 130,
+            "line": 139,
             "description": "Reference to component's template.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 135,
+            "line": 144,
             "description": "Settings for display feature info.",
             "itemtype": "property",
             "name": "displaySettings",
@@ -25716,7 +26011,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 144,
+            "line": 153,
             "description": "Feature's metadata.",
             "itemtype": "property",
             "name": "feature",
@@ -25726,7 +26021,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 152,
+            "line": 161,
             "description": "Current selected feature.",
             "itemtype": "property",
             "name": "feature",
@@ -25736,7 +26031,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 160,
+            "line": 169,
             "description": "Action button hasEditForm display.",
             "itemtype": "property",
             "name": "hasEditForm",
@@ -25747,14 +26042,14 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 169,
+            "line": 178,
             "description": "Initializes DOM-related component's properties.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 199,
+            "line": 208,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.selectFeature:method\"}}'selectFeature' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.selectFeature",
@@ -25763,7 +26058,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 207,
+            "line": 216,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.panTo:method\"}}'panTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.panTo",
@@ -25772,7 +26067,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 215,
+            "line": 224,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.zoomTo:method\"}}'zoomTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.zoomTo",
@@ -25781,7 +26076,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 223,
+            "line": 232,
             "description": "Show\\hide detailed feature info",
             "itemtype": "method",
             "name": "actions.showInfo",
@@ -25790,7 +26085,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 232,
+            "line": 241,
             "description": "Show\\hide links list (if present).",
             "itemtype": "method",
             "name": "actions.toggleLinks",
@@ -25799,7 +26094,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 240,
+            "line": 249,
             "description": "Process the specified method.",
             "itemtype": "method",
             "name": "actions.goToEditForm",
@@ -25820,7 +26115,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 253,
+            "line": 262,
             "description": "Show\\hide panel for seraching intersections.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.findIntersection",
@@ -25829,7 +26124,25 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 262,
+            "line": 271,
+            "description": "Add feature to favorites list\nAction is sended to layer-result-list.",
+            "itemtype": "method",
+            "name": "actions.addToFavorite",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 280,
+            "description": "Handles click on checkbox.\nAction is sended to layer-result-list.",
+            "itemtype": "method",
+            "name": "actions.addToCompareGeometries",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 289,
             "description": "Pans and zooms to intersection object.",
             "itemtype": "method",
             "name": "actions.panToIntersection",
@@ -25838,7 +26151,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 271,
+            "line": 298,
             "description": "Zooms to intersection and add intersection object on map.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -25847,7 +26160,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 281,
+            "line": 308,
             "description": "Component's action invoking for select feature",
             "itemtype": "method",
             "name": "sendingActions.selectFeature",
@@ -25863,7 +26176,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 287,
+            "line": 314,
             "description": "Component's action invoking for feature zooming",
             "itemtype": "method",
             "name": "sendingActions.zoomTo",
@@ -25879,7 +26192,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 293,
+            "line": 320,
             "description": "Component's action invoking for feature pan",
             "itemtype": "method",
             "name": "sendingActions.panTo",
@@ -33874,13 +34187,24 @@
         {
             "file": "addon/components/layer-result-list.js",
             "line": 51,
+            "description": "Flag indicates if layer-result-list used with favorites list.",
+            "itemtype": "property",
+            "name": "favoriteMode",
+            "type": "Boolean",
+            "default": "false",
+            "class": "LayerResultListComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layer-result-list.js",
+            "line": 60,
             "description": "Reference to component's template.",
             "class": "LayerResultListComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 56,
+            "line": 65,
             "description": "FeatureGroup to display layer from selectedFeature.",
             "itemtype": "property",
             "name": "serviceLayer",
@@ -33891,7 +34215,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 65,
+            "line": 74,
             "description": "Leaflet map object for zoom and pan.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -33902,7 +34226,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 74,
+            "line": 83,
             "description": "Array of results for display, each result contains object with following properties\nlayerModel - MapLayer model\nfeatures - promise for array of GeoJSON features",
             "itemtype": "property",
             "name": "results",
@@ -33913,7 +34237,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 85,
+            "line": 94,
             "description": "Ready results for display without promise.",
             "itemtype": "property",
             "name": "_displayResults",
@@ -33924,7 +34248,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 94,
+            "line": 103,
             "description": "Flag: indicates when results contains no data.",
             "itemtype": "property",
             "name": "_noData",
@@ -33935,7 +34259,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 103,
+            "line": 112,
             "description": "Flag: indicates when one or more results.features promises rejected.",
             "itemtype": "property",
             "name": "_hasError",
@@ -33946,7 +34270,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 112,
+            "line": 121,
             "description": "Current selected feature.",
             "itemtype": "property",
             "name": "_selectedFeature",
@@ -33957,7 +34281,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 121,
+            "line": 130,
             "description": "Flag: indicates whether to display links list (if present).",
             "itemtype": "property",
             "name": "_linksExpanded",
@@ -33968,7 +34292,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 130,
+            "line": 139,
             "description": "Action button hasListForm display.",
             "itemtype": "property",
             "name": "hasListForm",
@@ -33979,7 +34303,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 141,
+            "line": 150,
             "description": "Show\\hide links list (if present).",
             "itemtype": "method",
             "name": "actions.toggleLinks",
@@ -33988,7 +34312,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 149,
+            "line": 158,
             "description": "Process the specified method.",
             "itemtype": "method",
             "name": "actions.goToListForm",
@@ -34009,25 +34333,67 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 162,
+            "line": 171,
             "description": "Action is sended to layer-result-list-action-handler.\nAction shows intersection panel.",
             "itemtype": "method",
             "name": "actions.findIntersection",
-            "class": "LayerResultListComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layer-result-list.js",
-            "line": 171,
-            "description": "Action zooms to intersection and shows object on map.",
-            "itemtype": "method",
-            "name": "actions.zoomToIntersection",
+            "params": [
+                {
+                    "name": "feature",
+                    "description": ""
+                }
+            ],
             "class": "LayerResultListComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/layer-result-list.js",
             "line": 181,
+            "description": "Action adds feature to favorites.",
+            "itemtype": "method",
+            "name": "actions.findIntersection",
+            "params": [
+                {
+                    "name": "feature",
+                    "description": ""
+                }
+            ],
+            "class": "LayerResultListComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layer-result-list.js",
+            "line": 191,
+            "description": "Action adds feature to array for comparing geometries.",
+            "itemtype": "method",
+            "name": "actions.addToCompareGeometries",
+            "params": [
+                {
+                    "name": "feature",
+                    "description": ""
+                }
+            ],
+            "class": "LayerResultListComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layer-result-list.js",
+            "line": 201,
+            "description": "Action zooms to intersection and shows object on map.",
+            "itemtype": "method",
+            "name": "actions.zoomToIntersection",
+            "params": [
+                {
+                    "name": "feature",
+                    "description": ""
+                }
+            ],
+            "class": "LayerResultListComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layer-result-list.js",
+            "line": 212,
             "description": "Checks model layer links and adds list and edit forms to result object.",
             "itemtype": "method",
             "name": "_processLayerLinkForDisplayResults",
@@ -34050,7 +34416,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 233,
+            "line": 264,
             "description": "Observer for passed results",
             "itemtype": "method",
             "name": "_resultObserver",
@@ -34059,7 +34425,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 471,
+            "line": 501,
             "description": "Get an array of layer shapes id.",
             "itemtype": "method",
             "name": "_getFeatureShapeIds",
@@ -34908,7 +35274,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 27,
+            "line": 29,
             "description": "Property contatining sideBySide component.",
             "itemtype": "property",
             "name": "sideBySide",
@@ -34919,7 +35285,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 36,
+            "line": 38,
             "description": "Flag indicates if comapre tool active.",
             "itemtype": "property",
             "name": "compareLayersEnabled",
@@ -34930,7 +35296,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 45,
+            "line": 47,
             "description": "Leaflet map.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -34941,7 +35307,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 56,
+            "line": 58,
             "description": "Query parameter, contains json serialized object with property names and values",
             "itemtype": "property",
             "name": "filter",
@@ -34952,7 +35318,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 64,
+            "line": 66,
             "description": "Is intersection panel enabled.",
             "itemtype": "property",
             "name": "setting",
@@ -34963,7 +35329,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 72,
+            "line": 74,
             "description": "Query parameter, contains map object setting primary key",
             "itemtype": "property",
             "name": "setting",
@@ -34974,7 +35340,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 80,
+            "line": 82,
             "description": "Query parameter, contains current map zoom",
             "itemtype": "property",
             "name": "zoom",
@@ -34985,7 +35351,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 88,
+            "line": 90,
             "description": "Query parameter, contains current map latitude",
             "itemtype": "property",
             "name": "lat",
@@ -34996,7 +35362,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 96,
+            "line": 98,
             "description": "Query parameter, contains current map longitude",
             "itemtype": "property",
             "name": "lng",
@@ -35007,7 +35373,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 104,
+            "line": 106,
             "description": "Query parameter, contains comma-separated ids\nof selected layer metadata",
             "itemtype": "property",
             "name": "metadata",
@@ -35018,7 +35384,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 113,
+            "line": 115,
             "description": "Deserialized valued of filter property",
             "itemtype": "property",
             "name": "queryFilter",
@@ -35029,7 +35395,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 132,
+            "line": 134,
             "description": "Class name used which will be used to save data in local storage.",
             "itemtype": "property",
             "name": "bindingClass",
@@ -35040,7 +35406,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 141,
+            "line": 143,
             "description": "Key property used which will be used to save data in local storage.",
             "itemtype": "property",
             "name": "keyProperty",
@@ -35051,7 +35417,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 150,
+            "line": 152,
             "description": "Object containing bindings as key-value pairs.",
             "itemtype": "property",
             "name": "binding",
@@ -35064,7 +35430,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 168,
+            "line": 170,
             "description": "This method will be invoked before save operation will be called.\nOverride this method to add some custom logic on save operation start.",
             "example": [
                 "\n  ```javascript\n  onSaveActionStarted() {\n    alert('Save operation started!');\n  }\n  ```"
@@ -35076,7 +35442,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 193,
+            "line": 195,
             "description": "Creates new layer as specified layer's child\n(overridden method from {{#crossLink \"FlexberryMaplayerActionsHandlerMixin:createLayer:method\"}}\nFlexberryMaplayerActionsHandlerMixin\n{{/crossLink}}).",
             "itemtype": "method",
             "name": "createLayer",
@@ -35115,7 +35481,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 219,
+            "line": 221,
             "description": "Updates specified layer with given properties.\n(overridden method from {{#crossLink \"FlexberryMaplayerActionsHandlerMixin:editLayer:method\"}}\nFlexberryMaplayerActionsHandlerMixin\n{{/crossLink}}).",
             "itemtype": "method",
             "name": "editLayer",
@@ -35154,7 +35520,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 237,
+            "line": 239,
             "description": "Removes specified layer from layers hierarchy\n(overridden method from {{#crossLink \"FlexberryMaplayerActionsHandlerMixin:/removeLayer:method\"}}\nFlexberryMaplayerActionsHandlerMixin\n{{/crossLink}}).",
             "itemtype": "method",
             "name": "removeLayer",
@@ -35188,7 +35554,7 @@
         },
         {
             "file": "addon/controllers/edit-map.js",
-            "line": 271,
+            "line": 273,
             "description": "Handles click on compare-layers button.",
             "itemtype": "method",
             "name": "showCompareSideBar",
@@ -40138,6 +40504,159 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 9,
+            "description": "Array of items in fav with promise.",
+            "itemtype": "property",
+            "name": "result",
+            "type": "Array",
+            "default": "Ember.A()",
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 17,
+            "description": "Array of 2 features that will be compared.",
+            "itemtype": "property",
+            "name": "twoObjectToCompare",
+            "type": "Array",
+            "default": "Ember.A()",
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 25,
+            "description": "Is compare geometries panel enabled.",
+            "itemtype": "property",
+            "name": "showComapreGeometriesPanel",
+            "type": "Boolean",
+            "default": "false",
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 33,
+            "description": "Array of items in fav list.",
+            "itemtype": "property",
+            "name": "favFeatures",
+            "type": "Array",
+            "default": "Ember.A()",
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 41,
+            "description": "Flag indicates if comapre button disabled.",
+            "itemtype": "property",
+            "name": "compareBtnDisabled",
+            "type": "Boolean",
+            "default": "true",
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 49,
+            "description": "'Select 2 objects'.",
+            "itemtype": "property",
+            "name": "cordsCaption",
+            "type": "String",
+            "default": "t('components.compare-object-geometries.select2')",
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 58,
+            "description": "Observer on twoObjectToCompare array.",
+            "itemtype": "property",
+            "name": "_onTwoObjectToCompareChange",
+            "type": "Observer",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 73,
+            "description": "Handles click on favorite icon.",
+            "itemtype": "method",
+            "name": "addToFavorite",
+            "params": [
+                {
+                    "name": "feature",
+                    "description": ""
+                }
+            ],
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 112,
+            "description": "Handles click on checkbox in favorite list.",
+            "itemtype": "method",
+            "name": "addToCompareGeometries",
+            "params": [
+                {
+                    "name": "feature",
+                    "description": ""
+                }
+            ],
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 134,
+            "description": "Handles compare features button.",
+            "itemtype": "method",
+            "name": "OnCompareTwoGeometries",
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 148,
+            "description": "Habdles click on exit comare panel icon",
+            "itemtype": "method",
+            "name": "closeComparePanel",
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 158,
+            "description": "Method checks id layerModel in array.\nif it is returns its index.",
+            "itemtype": "method",
+            "name": "isLayerModelInArray",
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 174,
+            "description": "Adding new featre to leayer model array of features.",
+            "itemtype": "method",
+            "name": "addNewFeatureToLayerModel",
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/favorites-features.js",
+            "line": 185,
+            "description": "Adding new layer model and new feature to array.",
+            "itemtype": "method",
+            "name": "addNewFeatureToNewLayerModel",
+            "class": "FlexberryBoundingboxMapLoaderMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
             "file": "addon/mixins/flexberry-boundingbox-map-loader.js",
             "line": 14,
             "description": "Service for Map loading from store",
@@ -44224,19 +44743,19 @@
         },
         {
             "message": "unknown tag: computed",
-            "line": " addon/controllers/edit-map.js:113"
+            "line": " addon/controllers/edit-map.js:115"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/controllers/edit-map.js:193"
+            "line": " addon/controllers/edit-map.js:195"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/controllers/edit-map.js:219"
+            "line": " addon/controllers/edit-map.js:221"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/controllers/edit-map.js:237"
+            "line": " addon/controllers/edit-map.js:239"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -45392,11 +45911,15 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/feature-result-item.js:130"
+            "line": " addon/components/favorites-list.js:6"
+        },
+        {
+            "message": "Missing item type\nReference to component's template.",
+            "line": " addon/components/feature-result-item.js:139"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/feature-result-item.js:169"
+            "line": " addon/components/feature-result-item.js:178"
         },
         {
             "message": "Missing item type\nReference to component's template.",
@@ -45784,7 +46307,7 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/layer-result-list.js:51"
+            "line": " addon/components/layer-result-list.js:60"
         },
         {
             "message": "Missing item type\nReference to component's template.",

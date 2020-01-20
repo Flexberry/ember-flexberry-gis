@@ -1501,6 +1501,28 @@ lang {
 .intersection-panel .feature-result-item-content.content .cords {
   width: 50%;
 }
+.compare-geometries-panel .close {
+  margin-left: auto;
+  margin-right: 14px;
+}
+.compare-geometries-panel .main-panel {
+  overflow-y: auto;
+  height: 90%;
+  font-size: 16px;
+}
+.compare-geometries-panel .text-line {
+  padding-top: 10px;
+}
+.compare-geometries-panel .intersection-row {
+  padding-top: 20px;
+}
+.compare-geometries-panel .row {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.compare-geometries-panel .ui.compact.celled.table {
+  width: 50%;
+}
 .compare-layer-tree {
   height: 52px;
   padding: 8px 6px;
@@ -6449,6 +6471,7 @@ div.ui.secondary.menu.no-margin {
   /* идентифицировать слои */
   /* все слои, дерево слоёв*/
   /* видимые слои */
+  /* Favorites */
   /* верхний видимый */
   /* измерить */
   /* координаты */
@@ -6637,6 +6660,10 @@ div.ui.secondary.menu.no-margin {
   font-family: Icons;
   content: "\f24d";
 }
+.ui.menu.flexberry-maptoolbar i.icon.favorites:before {
+  font-family: Icons;
+  content: "\f006";
+}
 .ui.menu.flexberry-maptoolbar i.icon.compare:before {
   font-family: Icons;
   content: "\f0ec";
@@ -6680,6 +6707,10 @@ div.ui.secondary.menu.no-margin {
 }
 .ui.menu.flexberry-maptoolbar i.icon.checkmark.box:before {
   content: "\e829";
+}
+.ui.menu.flexberry-maptoolbar i.icon.favorites:before {
+  font-family: Icons;
+  content: "\f006";
 }
 .ui.menu.flexberry-maptoolbar i.icon.chevron.up:before {
   content: "\e828";
@@ -6890,6 +6921,14 @@ div.ui.secondary.menu.no-margin {
 }
 .layer-result-list .feature-result-item-toolbar > .icon.item {
   font-size: 1.15em;
+}
+.layer-result-list .feature-result-item-toolbar .icon.favorites:before {
+  font-family: Icons;
+  content: "\f006";
+}
+.layer-result-list .feature-result-item-toolbar .icon.favorites.filled:before {
+  font-family: Icons;
+  content: "\f005";
 }
 .layer-result-list .ui.accordion .title .dropdown.icon {
   padding: 0 !important;
@@ -11286,6 +11325,7 @@ i.icon.angle.right:before {
   /* All layers, layers tree */
   /* Search */
   /* Bookmarks */
+  /* Favorites*/
   /* Поиск пересеченйи*/
   /* CreateObject */
 }
@@ -11310,6 +11350,10 @@ i.icon.angle.right:before {
 }
 .sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar i.icon.bookmark:before {
   font-family: icons;
+}
+.sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar i.icon.favorites:before {
+  font-family: Icons;
+  content: "\f005";
 }
 .sidebar-wrapper .ui.tabular.menu.flexberry-tab-bar i.icon.intersections:before {
   content: "\f24d";
