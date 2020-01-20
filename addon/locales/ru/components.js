@@ -31,6 +31,7 @@ import LayerResultListComponent from './components/layer-result-list';
 import FeatureResultItemComponent from './components/feature-result-item';
 import HistoryControlComponent from './components/history-control';
 import FlexberryCreateObjectGeometry from './components/flexberry-create-object-geometry';
+import CompareObjectGeometries from './components/compare-object-geometries-panel';
 
 export default {
   'layers-styles-editor': LayersStylesEditorComponent,
@@ -69,5 +70,6 @@ export default {
   'layer-result-list': LayerResultListComponent,
   'feature-result-item': FeatureResultItemComponent,
   'history-control': HistoryControlComponent,
-  'flexberry-create-object-geometry': FlexberryCreateObjectGeometry
+  'flexberry-create-object-geometry': FlexberryCreateObjectGeometry,
+  'compare-object-geometries': CompareObjectGeometries
 };

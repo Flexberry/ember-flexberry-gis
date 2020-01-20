@@ -53,6 +53,15 @@ export default Ember.Component.extend({
   intersection: false,
 
   /**
+    Flag indicates if feature is in favorire list.
+
+    @property intersection
+    @type Boolean
+    @default false
+  */
+  favoriteMode: false,
+
+  /**
     Flag: indicates whether to display detailed feature info.
 
     @property _infoExpanded
@@ -254,9 +263,27 @@ export default Ember.Component.extend({
       Show\hide panel for seraching intersections.
       Action is sended to layer-result-list.
       @method actions.findIntersection
-     */
+    */
     findIntersection() {
       this.sendAction('findIntersection', this.get('feature'));
+    },
+
+    /**
+      Add feature to favorites list
+      Action is sended to layer-result-list.
+      @method actions.addToFavorite
+    */
+    addToFavorite() {
+      this.sendAction('addToFavorite', this.get('feature'));
+    },
+
+    /**
+      Handles click on checkbox.
+      Action is sended to layer-result-list.
+      @method actions.addToCompareGeometries
+    */
+    addToCompareGeometries() {
+      this.sendAction('addToCompareGeometries', this.get('feature'));
     },
 
     /**

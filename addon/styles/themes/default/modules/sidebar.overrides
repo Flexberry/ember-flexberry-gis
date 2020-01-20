@@ -574,7 +574,6 @@
         i.icon.map-marker:before {
           content: "\f041";
         }
-
         .draw {
          border: none;
         }

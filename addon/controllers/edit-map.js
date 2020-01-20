@@ -8,6 +8,7 @@ import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-han
 import FlexberryMaplayerActionsHandlerMixin from '../mixins/flexberry-maplayer-actions-handler';
 import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-actions-handler';
 import LocalStorageBindingMixin from '../mixins/local-storage-binding';
+import FavoritesListMixin from '../mixins/favorites-features';
 import sideBySide from 'npm:leaflet-side-by-side';
 /**
   Edit map controller.
@@ -23,7 +24,8 @@ export default EditFormController.extend(
   FlexberryMapActionsHandlerMixin,
   FlexberryMaplayerActionsHandlerMixin,
   LayerResultListActionsHandlerMixin,
-  LocalStorageBindingMixin, {
+  LocalStorageBindingMixin,
+  FavoritesListMixin, {
     /**
       Property contatining sideBySide component.
 

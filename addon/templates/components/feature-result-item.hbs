@@ -11,6 +11,15 @@
           <i class="intersections icon"></i>
         </a>
       {{else}}
+        {{#if favoriteMode}}
+          {{flexberry-ddau-checkbox
+            value=feature.compareEnabled
+            change=(action 'addToCompareGeometries')
+          }}
+        {{/if}}
+        <a class="icon item" title="{{t "components.compare-object-geometries.add-to-fav-caption"}}" {{action "addToFavorite" on="click"}}>
+          <i class="fvicon favorites {{if feature.properties.isFavorite "filled" "unfilled"}} icon"></i>
+        </a>
         <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
           <i class="marker icon"></i>
         </a>

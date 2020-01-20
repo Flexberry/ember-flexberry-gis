@@ -49,6 +49,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   intersection: false,
 
   /**
+    Flag indicates if layer-result-list used with favorites list.
+
+    @property favoriteMode
+    @type Boolean
+    @default false
+  */
+  favoriteMode: false,
+
+  /**
     Reference to component's template.
   */
   layout,
@@ -160,18 +169,40 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     /**
-    Action is sended to layer-result-list-action-handler.
-    Action shows intersection panel.
-    @method actions.findIntersection
+      Action is sended to layer-result-list-action-handler.
+      Action shows intersection panel.
+      @method actions.findIntersection
+      @param feature
     */
     findIntersection(feature) {
       this.sendAction('showIntersectionPanel', feature);
     },
 
     /**
-    Action zooms to intersection and shows object on map.
+      Action adds feature to favorites.
+
+      @method actions.findIntersection
+      @param feature
+    */
+    addToFavorite(feature) {
+      this.sendAction('addToFavorite', feature);
+    },
+
+    /**
+      Action adds feature to array for comparing geometries.
+
+      @method actions.addToCompareGeometries
+      @param feature
+    */
+    addToCompareGeometries(feature) {
+      this.sendAction('addToCompareGeometries', feature);
+    },
+
+    /**
+      Action zooms to intersection and shows object on map.
 
       @method actions.zoomToIntersection
+      @param feature
     */
     zoomToIntersection(feature) {
       this.sendAction('zoomToIntersection', feature);
@@ -383,10 +414,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           let listForms = result.listForms;
 
           result.features.forEach((feature) => {
-            feature.displayValue = getFeatureDisplayProperty(feature, result.settings, result.dateFormat);
-            feature.layerModel = Ember.get(result, 'layerModel');
-            feature.editForms = Ember.A();
-
+            Ember.set(feature, 'displayValue', getFeatureDisplayProperty(feature, result.settings, result.dateFormat));
+            Ember.set(feature, 'layerModel', Ember.get(result, 'layerModel'));
+            Ember.set(feature, 'editForms', Ember.A());
             if (editForms.length === 0) {
               return;
             }
