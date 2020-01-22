@@ -1278,9 +1278,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           let isExist = tabModel.properties.filter((item) => Ember.guidFor(item) === Object.keys(editedRows)[0]);
           if (isExist.length === 0) {
             let props = tabModel.properties;
-            this.send('onRowGeometryEdit', tabModel, Ember.guidFor(props[props.length-1]));
+            this.send('onRowGeometryEdit', tabModel, Ember.guidFor(props[props.length - 1]));
           }
         }
+
         leafletObject.off('save:failed', saveFailed);
       };
 
