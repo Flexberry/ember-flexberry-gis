@@ -465,16 +465,20 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       } else {
         this.get('sideBySide').remove();
         if (this.get('rightLayer')) {
-          this.get('rightLayer._leafletObject').remove();
+          this.set('rightLayer.visibility', false);
+          this.set('rightLayer.side', null);
+          this.set('rightLayer', null);
         }
 
         if (this.get('leftLayer')) {
-          this.get('leftLayer._leafletObject').remove();
+          this.set('leftLayer.visibility', false);
+          this.set('leftLayer.side', null);
+          this.set('leftLayer', null);
         }
 
         let layersToAdd = this.get('currentLayers');
         layersToAdd.forEach(layer => {
-          layer.set('visibility', true);
+          Ember.set(layer, 'visibility', true);
         });
       }
     }),
