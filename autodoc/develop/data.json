@@ -32835,7 +32835,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 483,
+            "line": 487,
             "description": "Handles add button's 'click' event.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddButtonClick",
@@ -32851,7 +32851,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 504,
+            "line": 508,
             "description": "Handles add dialog's 'approve' action.\nInvokes component's {{#crossLink \"FlexberryMaplayersComponent/sendingActions.add:method\"}}'add'{{/crossLink}} action.",
             "itemtype": "method",
             "name": "actions.onAddDialogApprove",
@@ -32874,7 +32874,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 517,
+            "line": 521,
             "description": "Handles clicks on left side button.",
             "itemtype": "method",
             "name": "actions.onLeftClick",
@@ -32883,7 +32883,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 526,
+            "line": 530,
             "description": "Handles clicks on right side button.",
             "itemtype": "method",
             "name": "actions.onLeftClick",
@@ -32892,7 +32892,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 535,
+            "line": 539,
             "description": "Handles click on checkbox.",
             "itemtype": "method",
             "name": "action.onChange",
@@ -32913,7 +32913,7 @@
         },
         {
             "file": "addon/components/flexberry-maplayers.js",
-            "line": 593,
+            "line": 597,
             "description": "Component's action invoking when user wants to add child layer into layers tree root.",
             "itemtype": "method",
             "name": "sendingActions.add",
