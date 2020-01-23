@@ -473,7 +473,11 @@ export default Ember.Mixin.create({
         hierarchy.forEach((layer) =&gt; {
           let leafletObject = layer.get(&#x27;_leafletObject&#x27;);
           if ((leafletObject != null) &amp;&amp; (leafletObject.bringToFront instanceof Function) &amp;&amp; layer.get(&#x27;visibility&#x27;)) {
-            leafletObject.bringToFront();
+            try {
+              leafletObject.bringToFront();
+            } catch (e) {
+              //Terrible trouble, we need to figure it out
+            }
           }
         });
       };

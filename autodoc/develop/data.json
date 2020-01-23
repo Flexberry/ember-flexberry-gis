@@ -40825,7 +40825,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-actions-handler.js",
-            "line": 78,
+            "line": 82,
             "description": "Handles {{#crossLink \"FlexberryMapComponent/sendingActions.leafletDestroy:method\"}}flexberry-map component's 'leafletDestroy' action{{/crossLink}}.\nIt cleans up previously stored leaflet map.",
             "itemtype": "method",
             "name": "actions.onMapLeafletDestroy",
@@ -40844,7 +40844,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-actions-handler.js",
-            "line": 119,
+            "line": 123,
             "description": "Handles {{#crossLink \"FlexberryMapComponent/sendingActions.moveend:method\"}}flexberry-map component's 'moveend' action{{/crossLink}}.\nIt mutates values of lat, lng properties with given names to values of new map center.",
             "itemtype": "method",
             "name": "actions.onMapMoveend",
@@ -40880,7 +40880,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-actions-handler.js",
-            "line": 172,
+            "line": 176,
             "description": "Handles {{#crossLink \"FlexberryMapComponent/sendingActions.zoomend:method\"}}flexberry-map component's 'zoomend' action{{/crossLink}}.\nIt mutates value of zoom property with given name to value of new map zoom.",
             "itemtype": "method",
             "name": "actions.onMapZoomend",
