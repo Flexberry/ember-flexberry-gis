@@ -69,6 +69,13 @@
         </a>
       {{/if}}
     {{/if}}
+    {{#if (or (eq result.layerModel.type "wfs") (eq result.layerModel.type "wms-wfs") (eq result.layerModel.type "odata-vector"))}}
+      <a class="feature-result-item-upload icon item" 
+        title="{{t "components.layer-result-list.flexberry-export-caption"}}"
+        {{action "upload" result}}>
+        <i class="upload icon"></i>
+      </a>
+    {{/if}}
     {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
       <div class="ui list transition">
         {{#if intersection}}
@@ -152,3 +159,8 @@
     {{/flexberry-toggler}}
   </div>
 {{/each}}
+{{feature-export
+  visible=exportDialogVisible
+  result=exportResult
+  availableCRS=availableCRS
+}}

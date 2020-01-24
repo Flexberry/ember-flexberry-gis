@@ -6,6 +6,8 @@ export default {
   'identifybuttontooltip': 'Show identification',
   'favoritesbuttontooltip': 'Show favorites',
   'createobjectbuttontooltip': 'Show object creation',
+  'xCaption': 'Longitude',
+  'yCaption': 'Latitude',
 
   'tabbar': {
     'treeview': {
