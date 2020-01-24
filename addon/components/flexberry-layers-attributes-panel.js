@@ -818,8 +818,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       settings.drawTools = {};
       this.set('settings', settings);
-      this.set('_selectedUnit', 'meters');
     }
+
+    this.set('_selectedUnit', 'meters');
   },
 
   actions: {
@@ -1272,6 +1273,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let saveSuccess = (data) => {
         Ember.set(tabModel, 'leafletObject._wasChanged', false);
         tabModel._reload();
+        let editedRows = Ember.get(tabModel, '_editedRows');
+        if (Object.keys(editedRows).length > 0) {
+          let isExist = tabModel.properties.filter((item) => Ember.guidFor(item) === Object.keys(editedRows)[0]);
+          if (isExist.length === 0) {
+            let props = tabModel.properties;
+            this.send('onRowGeometryEdit', tabModel, Ember.guidFor(props[props.length - 1]));
+          }
+        }
+
         leafletObject.off('save:failed', saveFailed);
       };
 
@@ -1401,7 +1411,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.set('_newRowPanToObject', true);
       }
 
-      this._showNewRowDialog(tabModel, addedLayer);
+      if (!Ember.isEmpty(addedLayer._latlngs[0])) {
+        this._showNewRowDialog(tabModel, addedLayer);
+      }
     },
 
     /**
