@@ -473,6 +473,11 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
       // let that = { component: this, tabModel: tabModel };
       let editTools = this._getEditTools();
+
+      if (!Ember.isNone(editTools)) {
+        editTools.stopDrawing();
+      }
+
       editTools.on(&#x27;editable:drawing:end&#x27;, this._disableDraw, this);
 
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
