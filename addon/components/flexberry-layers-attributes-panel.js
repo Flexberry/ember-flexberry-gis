@@ -535,7 +535,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               return coords;
             }
 
-            return options.latLngToCoords(latlngs);
+            const latLng = latlngs instanceof L.LatLng ? latlngs : L.latLng(latlngs[1], latlngs[0]);
+            const point = options.crs.project(latLng);
+            return [point.x, point.y];
           },
 
           /**
@@ -556,7 +558,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               layer.disableEdit();
             }
 
-            model.set('geometry', geometry);
+            const geometryField = this.get('leafletObject.geometryField') || 'geometry';
+            model.set(geometryField, geometry);
 
             let crsObj = {
               type: 'name',
@@ -564,7 +567,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
                 name: options.crs.code
               }
             };
-            model.set('geometry.crs', crsObj);
+            model.set(`${geometryField}.crs`, crsObj);
           },
 
           /**
@@ -1298,8 +1301,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       const tabLeafletObject = tabModel.get('leafletObject');
       if (tabLeafletObject.createLayerObject) {
-        tabLeafletObject.createLayerObject(tabLeafletObject, data, layer.toGeoJSON().geometry);
         this.get('leafletMap').removeLayer(layer);
+        layer = tabLeafletObject.createLayerObject(tabLeafletObject, data, layer.toGeoJSON().geometry);
       } else {
         Ember.set(layer, 'feature', { type: 'Feature' });
         Ember.set(layer.feature, 'properties', data);
@@ -1308,7 +1311,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           layer.setStyle(Ember.get(tabModel, 'leafletObject.options.style'));
         }
 
-        tabModel.leafletObject.addLayer(layer);
+        tabLeafletObject.addLayer(layer);
       }
 
       layer.disableEdit();
