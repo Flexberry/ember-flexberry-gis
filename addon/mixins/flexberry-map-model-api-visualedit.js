@@ -44,12 +44,23 @@ export default Ember.Mixin.create({
 
   cancelEdit() {
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    this.disableLayerEditing(leafletMap);
     let editTools = this._getEditTools();
+    this.disableLayerEditing(leafletMap);
     editTools.off('editable:drawing:end');
     editTools.off('editable:editing');
     editTools.stopDrawing();
+
+    let layers = Object.values(editTools.featuresLayer._layers);
+    if (layers.length > 0) {
+      let [layerModel, leafletObject] = this._getModelLayerFeature(editTools.layerId);
+      editTools.layerId = null;
+      layers.forEach((layer) => {
+        leafletObject.removeLayer(layer);
+      });
+    }
+
     editTools.featuresLayer.clearLayers();
+    editTools.editLayer.clearLayers();
   },
 
   /**
@@ -62,7 +73,7 @@ export default Ember.Mixin.create({
   startNewObject(layerId, properties) {
     let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
     let editTools = this._getEditTools();
-
+    editTools.layerId = layerId;
     let newLayer;
 
     let finishDraw = () => {
