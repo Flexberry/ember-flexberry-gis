@@ -52,7 +52,7 @@ export default Ember.Mixin.create({
 
     let layers = Object.values(editTools.featuresLayer._layers);
     if (layers.length > 0) {
-      let [layerModel, leafletObject] = this._getModelLayerFeature(editTools.layerId);
+      let [, leafletObject] = this._getModelLayerFeature(editTools.layerId);
       editTools.layerId = null;
       layers.forEach((layer) => {
         leafletObject.removeLayer(layer);
