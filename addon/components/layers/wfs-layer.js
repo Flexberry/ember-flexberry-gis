@@ -350,13 +350,14 @@ export default BaseVectorLayer.extend({
         let equals = Ember.A();
         this.get('_leafletObject').eachLayer((layer) => {
           let pk = Ember.get(layer, 'feature.properties.primarykey');
-          if (featureIds.includes(pk)){
+          if (featureIds.includes(pk)) {
             equals.pushObject(new L.Filter.EQ('primarykey', pk));
           }
         });
 
         filter = new L.Filter.Or(...equals);
       }
+
       let result = this.get('_leafletObject').loadFeatures(filter);
       resolve(result);
       reject();
