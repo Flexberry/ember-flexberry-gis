@@ -59,7 +59,7 @@ export default Ember.Mixin.create({
       Ember.set(window, leafletMapPropertyPath, e.map);
 
       let checkZIndex = function checkZIndex(e) {
-        let hierarchy = this.get('model.hierarchy').sortBy('index').reverse();
+        let hierarchy = this.get('model.hierarchy').sortBy('index');
         hierarchy.forEach((layer) => {
           let leafletObject = layer.get('_leafletObject');
           if ((leafletObject != null) && (leafletObject.bringToFront instanceof Function) && layer.get('visibility')) {
