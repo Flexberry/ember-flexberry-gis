@@ -36639,7 +36639,8 @@ select.ui.dropdown {
   height: 470px;
   overflow: hidden !important;
 }
-.ui.modal.flexberry-geometry-add-mode-import-dialog .import-from-file input {
+.ui.modal.flexberry-geometry-add-mode-import-dialog .import-from-file input,
+.layers-dialogs-data-tabs .import-from-file input {
   display: none;
 }
 .ui.modal.flexberry-geometry-add-mode-import-result .ui.table.import-table .import-column {

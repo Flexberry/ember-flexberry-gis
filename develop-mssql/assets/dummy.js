@@ -824,6 +824,14 @@ define('dummy/components/layers-dialogs/tabs/links', ['exports', 'ember-flexberr
     }
   });
 });
+define('dummy/components/layers-dialogs/tabs/load-file', ['exports', 'ember-flexberry-gis/components/layers-dialogs/tabs/load-file'], function (exports, _emberFlexberryGisComponentsLayersDialogsTabsLoadFile) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisComponentsLayersDialogsTabsLoadFile['default'];
+    }
+  });
+});
 define('dummy/components/layers-dialogs/tabs/main-settings', ['exports', 'ember-flexberry-gis/components/layers-dialogs/tabs/main-settings'], function (exports, _emberFlexberryGisComponentsLayersDialogsTabsMainSettings) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -3495,6 +3503,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/l
   QUnit.test('should pass jshint', function (assert) {
     assert.expect(1);
     assert.ok(true, 'modules/ember-flexberry-gis/components/layers-dialogs/tabs/links.js should pass jshint.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers-dialogs/tabs/load-file.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/components/layers-dialogs/tabs');
+  test('modules/ember-flexberry-gis/components/layers-dialogs/tabs/load-file.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/components/layers-dialogs/tabs/load-file.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers-dialogs/tabs/load-file.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/components/layers-dialogs/tabs/load-file.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/components/layers-dialogs/tabs/load-file.js should pass jshint.');
   });
 });
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/components/layers-dialogs/tabs/main-settings.jscs-test', ['exports'], function (exports) {
@@ -37635,7 +37656,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.1+c4e7a157"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.1+3eb6d7fc"});
 }
 
 /* jshint ignore:end */
