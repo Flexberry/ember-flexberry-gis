@@ -96,6 +96,9 @@ export default {
     },
     'pmodes-tab': {
       'caption': 'Создание на основе'
+    },
+    'loadfile-tab': {
+      'caption': 'Загрузить из файла'
     }
   },
   'groups': {
