@@ -412,6 +412,7 @@
   @module ember-flexberry-gis
 */
 
+import Ember from &#x27;ember&#x27;;
 import FlexberryEditLayerDialogComponent from &#x27;./edit&#x27;;
 import layout from &#x27;../../templates/components/layers-dialogs/edit&#x27;;
 import { translationMacro as t } from &#x27;ember-i18n&#x27;;
@@ -479,6 +480,68 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
   */
   denyButtonCaption: t(&#x27;components.layers-dialogs.add.deny-button.caption&#x27;),
 
+  /**
+    Message error: datastore exist.
+
+    @property storeExistErrorMessage
+    @type String
+    @default t(&#x27;components.layers-dialogs.add.storeExist-error.message&#x27;)
+  */
+  storeExistErrorMessage: t(&#x27;components.layers-dialogs.add.storeExist-error.message&#x27;),
+
+  /**
+    Message error: can not create layer.
+
+    @property createLayerErrorMessage
+    @type String
+    @default t(&#x27;components.layers-dialogs.add.storeExist-error.message&#x27;)
+  */
+  createLayerErrorMessage: t(&#x27;components.layers-dialogs.add.createLayer-error.message&#x27;),
+
+  /**
+    Message error: can not create workspace.
+
+    @property existWorkspaceErrorMessage
+    @type String
+    @default t(&#x27;components.layers-dialogs.add.createWorkspace-error.message&#x27;)
+  */
+  existWorkspaceErrorMessage: t(&#x27;components.layers-dialogs.add.existWorkspace-error.message&#x27;),
+
+  /**
+    File control.
+
+    @property _fileControl
+    @type Object
+    @default undefined
+  */
+  _fileControl: undefined,
+
+  /**
+    Data request.
+    @param {string} url Request url.
+    @param {string} type Request type.
+    @param {string} contentType Request contentType.
+    @param {Blob} data Request data.
+    @param {string} successF Succes function.
+    @param {string} errorF Error function.
+  */
+  request(url, type, contentType, data, successF, errorF) {
+    Ember.$.ajax({
+      url: url,
+      type: type,
+      data: data,
+      processData: false,
+      contentType: contentType,
+      async: false,
+      success: function(data) {
+        successF(data);
+      },
+      error: function(data) {
+        errorF(data);
+      }
+    });
+  },
+
   actions: {
     /**
       Handles {{#crossLink &quot;FlexberryDialogComponent/sendingActions.approve:method&quot;}}&#x27;flexberry-dialog&#x27; component&#x27;s &#x27;approve&#x27; action{{/crossLink}}.
@@ -487,11 +550,54 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
       @method actions.onApprove
     */
     onApprove() {
-      this.sendAction(&#x27;approve&#x27;, {
-        layerProperties: this.get(&#x27;getLayerProperties&#x27;)(),
-        layer: this.get(&#x27;layer&#x27;)
-      });
+      let file = this.get(&#x27;_fileControl&#x27;);
+      if (!Ember.isNone(file)) {
+        let layerName = JSON.parse(this.get(&#x27;getLayerProperties&#x27;)().settings).layers.split(&#x27;:&#x27;);
+        let url = JSON.parse(this.get(&#x27;getLayerProperties&#x27;)().settings).url.split(&#x27;/geoserver&#x27;);
+        if (!Ember.isNone(layerName)) {
+          let _this = this;
+          let config = Ember.getOwner(this).resolveRegistration(&#x27;config:environment&#x27;);
+
+          this.request(&#x60;${url[0]}/geoserver/rest/workspaces/${layerName[0]}&#x60;, &#x27;GET&#x27;, &#x27;application/json&#x27;, &#x27;&#x27;,
+            (data) =&gt; {
+              this.request(&#x60;${url[0]}/geoserver/rest/workspaces/${layerName[0]}/coveragestores/${layerName[1]}&#x60;, &#x27;GET&#x27;, &#x27;application/json&#x27;, &#x27;&#x27;,
+                (data) =&gt; {
+                  alert(this.get(&#x27;storeExistErrorMessage&#x27;));
+                },
+                (data) =&gt; {
+                  _this.request(&#x60;${url[0]}/geoserver/rest/workspaces/${layerName[0]}/coveragestores/${layerName[1]}/file.geotiff?coverageName=${layerName[1]}&#x60;,
+                    &#x27;PUT&#x27;, &#x27;image/tiff&#x27;, file,
+                    (data) =&gt; {
+                      this.sendAction(&#x27;approve&#x27;, {
+                        layerProperties: this.get(&#x27;getLayerProperties&#x27;)(),
+                        layer: this.get(&#x27;layer&#x27;)
+                      });
+                    },
+                    (data) =&gt; {
+                      console.log(data);
+                      alert(this.get(&#x27;createLayerErrorMessage&#x27;));
+                    }
+                  );
+                }
+              );
+            },
+            (data) =&gt; {
+              alert(this.get(&#x27;existWorkspaceErrorMessage&#x27;) + &#x27; &#x27; + config.APP.geoserver.workspaceRastr);
+            });
+        }
+      }
     },
+
+    /**
+      Handles onUploadFile.
+
+      @method actions.onUploadFile
+    */
+    onUploadFile(file) {
+      if (!Ember.isNone(file)) {
+        this.set(&#x27;_fileControl&#x27;, file);
+      }
+    }
   }
 });
 

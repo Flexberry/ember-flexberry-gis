@@ -443,6 +443,8 @@ export default Ember.Mixin.create({
     leafletMap.fitBounds(featureLayer.getBounds());
     let editTools = this._getEditTools();
     featureLayer.enableEdit(leafletMap);
+    featureLayer.layerId = layerId;
+
     editTools.on(&#x27;editable:editing&#x27;, (e) =&gt; {
       if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayer))) {
         leafletObject.editLayer(e.layer);
@@ -452,14 +454,44 @@ export default Ember.Mixin.create({
     return featureLayer;
   },
 
-  cancelEdit() {
+  /**
+    Cancel edit for layer object.
+
+    @method cancelEdit
+    @param {Object} layer layer object.
+    @return nothing
+  */
+  cancelEdit(layer) {
     let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    this.disableLayerEditing(leafletMap);
     let editTools = this._getEditTools();
+    this.disableLayerEditing(leafletMap);
     editTools.off(&#x27;editable:drawing:end&#x27;);
     editTools.off(&#x27;editable:editing&#x27;);
     editTools.stopDrawing();
     editTools.featuresLayer.clearLayers();
+    editTools.editLayer.clearLayers();
+
+    if (!Ember.isNone(layer.layerId)) {
+      let [, leafletObject] = this._getModelLayerFeature(layer.layerId);
+      if (!Ember.isNone(leafletObject)) {
+        if (layer.state === leafletObject.state.insert) {
+          leafletObject.removeLayer(layer);
+        } else if (layer.state === leafletObject.state.update) {
+          let map = Ember.get(leafletObject, &#x27;_map&#x27;);
+          map.removeLayer(layer);
+          let filter = new L.Filter.EQ(&#x27;primarykey&#x27;, Ember.get(layer, &#x27;feature.properties.primarykey&#x27;));
+          let feature = leafletObject.loadFeatures(filter);
+
+          let id = leafletObject.getLayerId(layer);
+          if (id in leafletObject.changes) {
+            delete leafletObject.changes[id];
+            delete leafletObject._layers[id];
+          }
+        }
+      }
+
+      layer.layerId = null;
+    }
   },
 
   /**
@@ -472,7 +504,6 @@ export default Ember.Mixin.create({
   startNewObject(layerId, properties) {
     let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
     let editTools = this._getEditTools();
-
     let newLayer;
 
     let finishDraw = () =&gt; {
@@ -505,6 +536,7 @@ export default Ember.Mixin.create({
         throw &#x27;Unknown layer type: &#x27; + layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;);
     }
 
+    newLayer.layerId = layerId;
     return newLayer;
   },
 
@@ -578,6 +610,7 @@ export default Ember.Mixin.create({
 
     let editTools = this._getEditTools();
     let newLayer;
+    featureLayer.layerId = layerId;
 
     const disableDraw = () =&gt; {
       editTools.off(&#x27;editable:drawing:end&#x27;, disableDraw, this);

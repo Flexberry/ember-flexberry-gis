@@ -578,6 +578,9 @@ export default BaseVectorLayer.extend({
         })
         .once(&#x27;error&#x27;, (e) =&gt; {
           reject(e.error || e);
+        })
+        .on(&#x27;load&#x27;, () =&gt; {
+          this._setLayerState();
         });
 
       let promiseLoad = new Ember.RSVP.Promise((resolve, reject) =&gt; {
@@ -741,6 +744,34 @@ export default BaseVectorLayer.extend({
     });
 
     return featuresPromise;
+  },
+
+  /**
+    Load features.
+
+    @method loadLayerFeatures
+    @param {Object[]} featureIds Feature id.
+    @returns {Ember.RSVP.Promise} Returns promise.
+  */
+  loadLayerFeatures(featureIds) {
+    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      let filter = null;
+      if (!Ember.isNone(featureIds)) {
+        let equals = Ember.A();
+        this.get(&#x27;_leafletObject&#x27;).eachLayer((layer) =&gt; {
+          let pk = Ember.get(layer, &#x27;feature.properties.primarykey&#x27;);
+          if (featureIds.includes(pk)) {
+            equals.pushObject(new L.Filter.EQ(&#x27;primarykey&#x27;, pk));
+          }
+        });
+
+        filter = new L.Filter.Or(...equals);
+      }
+
+      let result = this.get(&#x27;_leafletObject&#x27;).loadFeatures(filter);
+      resolve(result);
+      reject();
+    });
   }
 });
 

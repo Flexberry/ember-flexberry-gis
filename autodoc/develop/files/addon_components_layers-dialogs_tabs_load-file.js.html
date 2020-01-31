@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/components/layers-dialogs/tabs/main.js - Flexberry Documentation</title>
+    <title>addon/components/layers-dialogs/tabs/load-file.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -403,160 +403,40 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>addon/components/layers-dialogs/tabs/main.js <small>File</small></h1>
+    <h1>addon/components/layers-dialogs/tabs/load-file.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
 import Ember from &#x27;ember&#x27;;
-import RequiredActionsMixin from &#x27;ember-flexberry/mixins/required-actions&#x27;;
-import DynamicActionsMixin from &#x27;ember-flexberry/mixins/dynamic-actions&#x27;;
-import DynamicPropertiesMixin from &#x27;../../../mixins/dynamic-properties&#x27;;
-import FlexberryBoundingboxMapLoaderMixin from &#x27;../../../mixins/flexberry-boundingbox-map-loader&#x27;;
-import layout from &#x27;../../../templates/components/layers-dialogs/tabs/main&#x27;;
-import {
-  translationMacro as t
-} from &#x27;ember-i18n&#x27;;
+import layout from &#x27;../../../templates/components/layers-dialogs/tabs/load-file&#x27;;
+import { translationMacro as t } from &#x27;ember-i18n&#x27;;
 
-export default Ember.Component.extend(
-  RequiredActionsMixin,
-  DynamicActionsMixin,
-  DynamicPropertiesMixin,
-  FlexberryBoundingboxMapLoaderMixin, {
-  /**
-    Reference to component&#x27;s template.
-  */
+export default Ember.Component.extend({
   layout,
 
+  loadButtonCaption: t(&#x27;components.layers-dialogs.add.loadFile.load-button-caption&#x27;),
+
   /**
-    See [EmberJS API](https://emberjs.com/api/).
+    Flag indicates whether import is in process or not.
 
-    @property classNames
-    @type Array
-    @default [&#x27;layers-dialogs-data-tabs&#x27;]
-  */
-  classNames: [&#x27;layers-dialogs-data-tabs&#x27;],
-
-  /***
-    Indicates that boundingBox component&#x27;s map is loading.
-
-    @property _bboxMapIsLoading
+    @property _importInProcess
     @type Boolean
     @default false
-  */
-  _bboxMapIsLoading: false,
-
-  /**
-    Map model fot bounding box component.
-
-    @property boundingBoxComponentMap
-    @type Object
-    @default null
-  */
-  boundingBoxComponentMap: null,
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s caption.
-
-    @property boundsSegmentCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.edit.bounds-segment.caption&#x27;)
-  */
-  boundsSegmentCaption: t(&#x27;components.layers-dialogs.edit.bounds-segment.caption&#x27;),
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s WGS84 option caption.
-
-    @property wgs84bboxCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption&#x27;)
-  */
-  wgs84bboxCaption: t(&#x27;components.layers-dialogs.edit.bounds-segment.options.wgs84bbox.caption&#x27;),
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s BBOX option caption.
-
-    @property bboxCaption
-    @type String
-    @default t(&#x27;components.layers-dialogs.edit.bounds-segment.options.bbox.caption&#x27;)
-  */
-  bboxCaption: t(&#x27;components.layers-dialogs.edit.bounds-segment.options.bbox.caption&#x27;),
-
-  /**
-    Dialog&#x27;s &#x27;Bounds&#x27; segment&#x27;s mode.
-
-    @property boundsMode
-    @type String
-    @default &quot;wgs84bbox&quot;
-  */
-  boundsMode: &#x27;wgs84bbox&#x27;,
-
-  /**
-    Flag: indicates whether to show bounds error message or not.
-
-    @property _showBoundsErrorMessage
-    @type Boolean
-    @readOnly
-  */
-  _showBoundsErrorMessage: false,
-
-  /**
-    Currently active tab name.
-
-    @property _activeTab
-    @type String
-    @default &#x27;links-tab&#x27;
     @private
   */
-  _activeTab: &#x27;main-tab&#x27;,
-
-  /**
-    Initializes component.
-  */
-  init() {
-    this._super(...arguments);
-    this.set(&#x27;_mainGroupIsAvailableForType&#x27;, this.get(&#x27;mainGroupIsAvailableForType&#x27;));
-    let _this = this;
-    this.set(&#x27;_bboxMapIsLoading&#x27;, true);
-
-    this.getBoundingBoxComponentMapModel().then(result =&gt; {
-      _this.set(&#x27;boundingBoxComponentMap&#x27;, result);
-      _this.set(&#x27;_bboxMapIsLoading&#x27;, false);
-    });
-    this.set(&#x27;_activeTab&#x27;, &#x27;main-tab&#x27;);
-  },
+  _importInProcess: false,
 
   actions: {
     /**
-      Handles clicks on tabs.
+      Handles uploadFile.
 
-      @method actions.onTabClick
-      @param {Object} e Click event object.
+      @method actions.uploadFile
     */
-    onTabClick(e) {
-      e = Ember.$.event.fix(e);
-
-      let $clickedTab = Ember.$(e.currentTarget);
-      let clickedTabName = $clickedTab.attr(&#x27;data-tab&#x27;);
-
-      this.set(&#x27;_activeTab&#x27;, clickedTabName);
-    },
-
-    /**
-      Handles bounding box changes.
-
-      @method actions.onBoundingBoxChange
-    */
-    onBoundingBoxChange(e) {
-      this.set(&#x27;layer.boundingBox&#x27;, e.bboxGeoJSON);
-    },
-
-    /**
-      Handles onUploadFile.
-
-      @method actions.onUploadFile
-    */
-    onUploadFile(file) {
+    uploadFile(e) {
+      this.set(&#x27;_importInProcess&#x27;, true);
+      let file = e.target.files[0];
+      this.set(&#x27;_importInProcess&#x27;, false);
       this.sendAction(&#x27;onUploadFile&#x27;, file);
     }
   }
