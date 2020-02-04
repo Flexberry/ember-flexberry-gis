@@ -733,30 +733,30 @@ export default Ember.Mixin.create({
     let result = [];
 
     var rowPush = function (vertexNum1, vertexNum2, point1, point2) {
-      const pointFrom = helpers.point([point2.lat, point2.lng]);
-      const pointTo = helpers.point([point1.lat, point1.lng]);
+      const pointFrom = helpers.point([point2.lng, point2.lat]);
+      const pointTo = helpers.point([point1.lng, point1.lat]);
 
       // We get the distance and translate into meters.
       const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
 
       // Get the angle.
-      const bearing = rhumbBearing.default(pointFrom, pointTo);
+      const bearing = rhumbBearing.default(pointTo, pointFrom);
 
       let rhumb;
 
       // Calculates rhumb.
-      if (bearing < -90 && bearing > -180) {
+      if (bearing <= 90 && bearing >= 0) {
         // СВ
-        rhumb = 'СВ;' + (Math.abs(bearing) - 90);
-      } else if (bearing <= 180 && bearing > 90) {
+        rhumb = 'СВ;' + bearing;
+      } else if (bearing <= 180 && bearing >= 90) {
         // ЮВ
-        rhumb = 'ЮВ;' + (bearing - 90);
-      } else if (bearing <= 90 && bearing > 0) {
+        rhumb = 'ЮВ;' + (180 - bearing);
+      } else if (bearing >= -180 && bearing <= -90) {
         // ЮЗ
-        rhumb = 'ЮЗ;' + (90 - bearing);
+        rhumb = 'ЮЗ;' + (180 + bearing);
       } if (bearing <= 0 && bearing >= -90) {
         // СЗ
-        rhumb = 'СЗ;' + Math.abs(-90 - bearing);
+        rhumb = 'СЗ;' + (-1 * bearing);
       }
 
       return {
@@ -799,7 +799,8 @@ export default Ember.Mixin.create({
 
     return {
       startPoint: startPoint,
-      coordinates: result
+      rhumbCoordinates: result,
+      coordinates: cors
     };
   },
 
