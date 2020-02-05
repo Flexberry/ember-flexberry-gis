@@ -1236,8 +1236,8 @@ export default Ember.Mixin.create({
   */
   editLayerObject(layerId, objectId, polygon) {
     if (polygon) {
-      let [leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
-      if (leafletLayer &amp;&amp; featureLayer) {
+      let [layerModel, leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
+      if (leafletLayer &amp;&amp; featureLayer &amp;&amp; layerModel) {
         featureLayer.setLatLngs(Ember.get(polygon, &#x27;coordinates&#x27;));
         if (typeof leafletLayer.editLayer === &#x27;function&#x27;) {
           leafletLayer.editLayer(featureLayer);
