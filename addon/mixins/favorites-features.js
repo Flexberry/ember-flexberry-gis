@@ -30,6 +30,8 @@ export default Ember.Mixin.create({
   */
   showComapreGeometriesPanel: false,
 
+  favServiceLayer: L.featureGroup(),
+
   /**
     Array of items in fav list.
     @property favFeatures
@@ -68,6 +70,37 @@ export default Ember.Mixin.create({
       this.set('compareBtnDisabled', true);
     }
   }),
+
+  init() {
+    this._super(...arguments);
+    let service = this.get('service');
+    let className = this.get('_storageClassName');
+    let key = this.get('storageKey');
+
+    this.set('favFeatures', service.getFromStorage(className, key));
+  },
+
+  service: Ember.inject.service('local-storage'),
+
+  /**
+        Current instance class name for storage.
+
+        @property storageClassName
+        @type string
+        @default 'bookmarks'
+        @private
+      */
+    _storageClassName: 'favlist',
+
+  /**
+    Map's id (primarykey). Key for storage.
+
+    @property storageKey
+    @type string
+    @default null
+    @public
+  */
+  storageKey: null,
 
   actions: {
     /**
