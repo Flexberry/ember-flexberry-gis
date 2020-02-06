@@ -40,6 +40,14 @@ export default Ember.Mixin.create({
   */
   favFeatures: Ember.A(),
 
+   /**
+    Array of items in fav list.
+    @property favFeatures
+    @type Array
+    @default Ember.A()
+  */
+  favFeaturesIds1: Ember.A(),
+
   /**
     Flag indicates if comapre button disabled.
     @property compareBtnDisabled
@@ -76,21 +84,25 @@ export default Ember.Mixin.create({
     let service = this.get('service');
     let className = this.get('_storageClassName');
     let key = this.get('storageKey');
-
-    this.set('favFeatures', service.getFromStorage(className, key));
+    this.set('favFeaturesIds1', service.getFromStorage(className, key));
+    console.log(this.get('favFeaturesIds1'));
+    console.log(service);
+    this.fromIdArrayToFeatureArray(this.get('favFeaturesIds1'));
   },
 
-  service: Ember.inject.service('local-storage'),
+  storageService: Ember.inject.service('local-storage'),
+
+  store: Ember.inject.service(),
 
   /**
-        Current instance class name for storage.
+    Current instance class name for storage.
 
-        @property storageClassName
-        @type string
-        @default 'bookmarks'
-        @private
-      */
-    _storageClassName: 'favlist',
+    @property storageClassName
+    @type string
+    @default 'bookmarks'
+    @private
+    */
+  _storageClassName: 'favlist',
 
   /**
     Map's id (primarykey). Key for storage.
@@ -100,7 +112,7 @@ export default Ember.Mixin.create({
     @default null
     @public
   */
-  storageKey: null,
+  storageKey: 'fav',
 
   actions: {
     /**
@@ -111,11 +123,16 @@ export default Ember.Mixin.create({
     */
     addToFavorite(feature) {
       let favFeatures = this.get('favFeatures');
+      let favFeaturesIds = this.get('favFeaturesIds1');
+      let service = this.get('service');
+      let className = this.get('_storageClassName');
+      let key = this.get('storageKey');
       let layerModelIndex = this.isLayerModelInArray(favFeatures, feature.layerModel);
       if (Ember.get(feature.properties, 'isFavorite')) {
         Ember.set(feature.properties, 'isFavorite', false);
         if (layerModelIndex !== false) {
           favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
+          ////
         }
 
         if (Ember.get(feature, 'compareEnabled')) {
@@ -127,8 +144,18 @@ export default Ember.Mixin.create({
         Ember.set(feature.properties, 'isFavorite', true);
         if (layerModelIndex !== false) {
           favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);
+          let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.name}
+          favFeaturesIds.pushObject(featureIds)
+          console.log(favFeaturesIds)
+          service.setToStorage(className, key, favFeaturesIds);
+          this.set('favFeaturesIds1', favFeaturesIds);
         } else {
           favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature);
+          let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.name}
+          favFeaturesIds.pushObject(featureIds)
+          console.log(favFeaturesIds)
+          service.setToStorage(className, key, favFeaturesIds);
+          this.set('favFeaturesIds1', favFeaturesIds);
         }
       }
 
@@ -235,5 +262,23 @@ export default Ember.Mixin.create({
     }
 
     return array;
+  },
+
+  fromIdArrayToFeatureArray(favFeaturesIds) {
+    let store = this.get('store');
+    const allLayers = store.peekAll('new-platform-flexberry-g-i-s-map-layer');
+    console.log(this);
+
+    let favFeatures = this.get('favFeatures');
+    let layers = Ember.A(allLayers);
+    favFeaturesIds.forEach(item => {
+      let layer = layers.findBy('id', item.layerId);
+      let features = Ember.get(layer, '_leafletObject._layers') || {};
+      let object = Object.values(features).find(feature => {
+        return feature.feature.properties.name === item.featureId;
+      });
+      console.log(object);
+      let layerModelIndex = this.isLayerModelInArray(favFeatures, object.layerModel);
+    });
   }
 });
