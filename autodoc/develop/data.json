@@ -10294,7 +10294,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 295,
+            "line": 286,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onDeny",
@@ -10303,7 +10303,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 304,
+            "line": 295,
             "description": "The button for adding a new record to the table.",
             "itemtype": "method",
             "name": "actions.onAddRow",
@@ -10312,7 +10312,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 358,
+            "line": 349,
             "description": "Button to delete a record in a table.",
             "itemtype": "method",
             "name": "actions.OnRemoveRow",
@@ -10321,7 +10321,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 375,
+            "line": 366,
             "description": "Сlear form.",
             "itemtype": "method",
             "name": "_dropForm",
@@ -10330,7 +10330,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 390,
+            "line": 381,
             "description": "Сlear form.",
             "itemtype": "method",
             "name": "_dropTableValidForm",
@@ -10339,7 +10339,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 399,
+            "line": 390,
             "description": "Clear form validation.",
             "itemtype": "method",
             "name": "_dropTableForm",
@@ -10348,7 +10348,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 408,
+            "line": 399,
             "description": "Number check.",
             "itemtype": "method",
             "name": "_validFloatNumber",
@@ -10357,7 +10357,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 418,
+            "line": 409,
             "description": "Starp point check.",
             "itemtype": "method",
             "name": "_validStartPoint",
@@ -10366,7 +10366,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 428,
+            "line": 419,
             "description": "Component's action invoking when new geometry was added.",
             "itemtype": "method",
             "name": "sendingActions.complete",
@@ -41135,7 +41135,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 44,
+            "line": 43,
             "description": "Create polygon object by rhumb.",
             "itemtype": "method",
             "name": "createPolygonObjectRhumb",
@@ -41851,7 +41851,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 806,
+            "line": 807,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
@@ -41872,7 +41872,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 820,
+            "line": 821,
             "description": "Change object polygon.",
             "itemtype": "method",
             "name": "copyObject",
@@ -41893,6 +41893,26 @@
                     "type": "String"
                 }
             ],
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 845,
+            "description": "Upload file.",
+            "itemtype": "method",
+            "name": "uploadFile",
+            "params": [
+                {
+                    "name": "file.",
+                    "description": "",
+                    "type": "File"
+                }
+            ],
+            "return": {
+                "description": "Returns promise",
+                "type": "Promise"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
@@ -45153,7 +45173,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:44"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:43"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -45173,11 +45193,11 @@
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:806"
+            "line": " addon/mixins/flexberry-map-model-api.js:807"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:806"
+            "line": " addon/mixins/flexberry-map-model-api.js:807"
         },
         {
             "message": "replacing incorrect tag: returns with return",

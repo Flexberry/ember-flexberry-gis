@@ -545,7 +545,7 @@ const createObjectRhumb = (data) =&gt; {
 
     for (let i = 0; i &lt; coors.length; i++) {
       for (let j = 0; j &lt; coors[i].length; j++) {
-        coors[i][j] = [coors[i][j][1], coors[i][j][0]];
+        coors[i][j] = [coors[i][j][0], coors[i][j][1]];
       }
     }
   }
@@ -573,7 +573,7 @@ const createObjectRhumb = (data) =&gt; {
     }
 
     for (let i = 0; i &lt; coors.length; i++) {
-      coors[i] = [coors[i][1], coors[i][0]];
+      coors[i] = [coors[i][0], coors[i][1]];
     }
   }
 

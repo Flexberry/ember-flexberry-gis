@@ -687,19 +687,10 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       };
 
       const rhumbObj = rhumbOperations.createObjectRhumb(data);
-      const coordinates = rhumbObj.geometry.coordinates;
+      let geoJSON = L.geoJSON(rhumbObj);
+      let newObj = geoJSON.getLayers()[0];
 
-      let addedLayer;
-      switch (this._dataForm.objectType) {
-        case &#x27;Polygon&#x27;:
-          addedLayer = L.polygon(coordinates);
-          break;
-        case &#x27;Line&#x27;:
-          addedLayer = L.polyline(coordinates);
-          break;
-      }
-
-      this.sendAction(&#x27;complete&#x27;, addedLayer, { panToAddedObject: true });
+      this.sendAction(&#x27;complete&#x27;, newObj, { panToAddedObject: true });
     },
 
     /**

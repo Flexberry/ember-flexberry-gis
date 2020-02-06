@@ -1143,30 +1143,30 @@ export default Ember.Mixin.create({
     let result = [];
 
     var rowPush = function (vertexNum1, vertexNum2, point1, point2) {
-      const pointFrom = helpers.point([point2.lat, point2.lng]);
-      const pointTo = helpers.point([point1.lat, point1.lng]);
+      const pointFrom = helpers.point([point2.lng, point2.lat]);
+      const pointTo = helpers.point([point1.lng, point1.lat]);
 
       // We get the distance and translate into meters.
       const distance = rhumbDistance.default(pointFrom, pointTo, { units: &#x27;kilometers&#x27; }) * 1000;
 
       // Get the angle.
-      const bearing = rhumbBearing.default(pointFrom, pointTo);
+      const bearing = rhumbBearing.default(pointTo, pointFrom);
 
       let rhumb;
 
       // Calculates rhumb.
-      if (bearing &lt; -90 &amp;&amp; bearing &gt; -180) {
+      if (bearing &lt;= 90 &amp;&amp; bearing &gt;= 0) {
         // СВ
-        rhumb = &#x27;СВ;&#x27; + (Math.abs(bearing) - 90);
-      } else if (bearing &lt;= 180 &amp;&amp; bearing &gt; 90) {
+        rhumb = &#x27;СВ;&#x27; + bearing;
+      } else if (bearing &lt;= 180 &amp;&amp; bearing &gt;= 90) {
         // ЮВ
-        rhumb = &#x27;ЮВ;&#x27; + (bearing - 90);
-      } else if (bearing &lt;= 90 &amp;&amp; bearing &gt; 0) {
+        rhumb = &#x27;ЮВ;&#x27; + (180 - bearing);
+      } else if (bearing &gt;= -180 &amp;&amp; bearing &lt;= -90) {
         // ЮЗ
-        rhumb = &#x27;ЮЗ;&#x27; + (90 - bearing);
+        rhumb = &#x27;ЮЗ;&#x27; + (180 + bearing);
       } if (bearing &lt;= 0 &amp;&amp; bearing &gt;= -90) {
         // СЗ
-        rhumb = &#x27;СЗ;&#x27; + Math.abs(-90 - bearing);
+        rhumb = &#x27;СЗ;&#x27; + (-1 * bearing);
       }
 
       return {
@@ -1209,7 +1209,8 @@ export default Ember.Mixin.create({
 
     return {
       startPoint: startPoint,
-      coordinates: result
+      rhumbCoordinates: result,
+      coordinates: cors
     };
   },
 
@@ -1249,6 +1250,24 @@ export default Ember.Mixin.create({
     } else {
       throw &#x27;new object settings not passed&#x27;;
     }
+  },
+
+  /**
+    Upload file.
+    @method uploadFile
+    @param {File} file.
+    @return {Promise} Returns promise
+  */
+  uploadFile(file) {
+    let config = Ember.getOwner(this).resolveRegistration(&#x27;config:environment&#x27;);
+
+    return Ember.$.ajax({
+      url: &#x60;${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}&#x60;,
+      type: &#x27;POST&#x27;,
+      data: file,
+      cache: false,
+      processData: false
+    });
   }
 });
 
