@@ -34,9 +34,37 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   compareBtnDisabled: true,
 
+  test: Ember.A(),
+  
+  mapApi: Ember.inject.service(),
+
   onTwoObjectsChange: Ember.observer('features.[]', function() {
     this.set('data', this.get('features'));
   }),
+  onTwoObjectsChange: Ember.observer('test.[]', function() {
+     // console.log(layers);
+     
+    //  let l = this.get('mapApi').getFromApi('mapModel').hierarchy;
+    //  console.log(l);
+    //  l.forEach(item => {
+    //    console.log(item._leafletObject)
+    //  })
+    // let [layerModel, leafletObject, featureLayer] = this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(favFeaturesIds[0].layerId, favFeaturesIds[0].featureId);
+    // console.log(featureLayer)
+    // console.log(leafletObject)
+    
+    // let favFeatures = this.get('favFeatures');
+    // favFeaturesIds.forEach(item => {
+    //   let layer = layers.findBy('id', item.layerId);
+    //   let features = Ember.get(layer, '_leafletObject._layers') || {};
+    //   let object = Object.values(features).find(feature => {
+    //     return feature.properties.primarykey === item.featureId;
+    //   });
+    //   console.log(object);
+    //   let layerModelIndex = this.isLayerModelInArray(favFeatures, object.layerModel);
+    // });
+  }),
+ 
 
   actions: {
 
