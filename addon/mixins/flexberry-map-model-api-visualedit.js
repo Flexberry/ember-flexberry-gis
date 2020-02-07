@@ -112,7 +112,7 @@ export default Ember.Mixin.create({
       editTools.stopDrawing();
     }
 
-    switch (layerModel.get('settingsAsObject.typeGeometry')) {
+    switch (layerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
       case 'polygon':
         newLayer = editTools.startPolygon();
         break;
@@ -226,7 +226,7 @@ export default Ember.Mixin.create({
 
     editTools.on('editable:drawing:end', disableDraw, this);
 
-    switch (layerModel.get('settingsAsObject.typeGeometry')) {
+    switch (layerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
       case 'polygon':
         newLayer = editTools.startPolygon();
         break;

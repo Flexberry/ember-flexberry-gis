@@ -8,6 +8,8 @@ import intersect from 'npm:@turf/intersect';
 import projection from 'npm:@turf/projection';
 import rhumbBearing from 'npm:@turf/rhumb-bearing';
 import rhumbDistance from 'npm:@turf/rhumb-distance';
+import { getLeafletCrs } from '../utils/leaflet-crs';
+import VectorLayer from '../layers/-private/vector';
 
 export default Ember.Mixin.create({
   /**
@@ -71,6 +73,24 @@ export default Ember.Mixin.create({
     leafletObject.eachLayer(function (layerShape) {
       if (!map.hasLayer(layerShape)) {
         map.addLayer(layerShape);
+      }
+    });
+  },
+
+  /**
+    Hide all layer objects.
+
+    @method hideAllLayerObjects
+    @param {string} layerId Layer id.
+  */
+  hideAllLayerObjects(layerId) {
+    const layer = this.get('mapLayer').findBy('id', layerId);
+    const leafletObject = Ember.get(layer, '_leafletObject');
+    var map = Ember.get(leafletObject, '_map');
+
+    leafletObject.eachLayer(function (layerShape) {
+      if (!map.hasLayer(layerShape)) {
+        map.removeLayer(layerShape);
       }
     });
   },
@@ -168,27 +188,31 @@ export default Ember.Mixin.create({
         layerIds.forEach(id => {
           let intersectedFeaturesCollection = [];
           const layer = layers.findBy('id', id);
-          let features = Ember.get(layer, '_leafletObject._layers');
-          if (features) {
-            Object.values(features).forEach(feature => {
-              let intersectionResult;
-              const layerFeatureId = this._getLayerFeatureId(layer, feature);
-              if (layerFeatureId !== featureId) {
-                let objA = featureToSearch;
-                let objB = feature;
-                objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-                objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
-                if (objA.geometry.type === 'Polygon' || objA.geometry.type === 'MultiPolygon') {
-                  intersectionResult = intersect.default(objA, objB);
-                } else if (objA.geometry.type === 'MultiLineString' || objA.geometry.type === 'LineString') {
-                  intersectionResult = lineIntersect(objA, objB);
+          let className = Ember.get(layer, 'type');
+          let layerType = Ember.getOwner(this).knownForType('layer', className);
+          if (layerType instanceof VectorLayer) {
+            let features = Ember.get(layer, '_leafletObject._layers');
+            if (features) {
+              Object.values(features).forEach(feature => {
+                let intersectionResult;
+                const layerFeatureId = this._getLayerFeatureId(layer, feature);
+                if (layerFeatureId !== featureId) {
+                  let objA = featureToSearch;
+                  let objB = feature;
+                  objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+                  objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+                  if (objA.geometry.type === 'Polygon' || objA.geometry.type === 'MultiPolygon') {
+                    intersectionResult = intersect.default(objA, objB);
+                  } else if (objA.geometry.type === 'MultiLineString' || objA.geometry.type === 'LineString') {
+                    intersectionResult = lineIntersect(objA, objB);
+                  }
                 }
-              }
 
-              if (intersectionResult) {
-                intersectedFeaturesCollection.push(layerFeatureId);
-              }
-            });
+                if (intersectionResult) {
+                  intersectedFeaturesCollection.push(layerFeatureId);
+                }
+              });
+            }
           }
 
           if (intersectedFeaturesCollection.length > 0) {
@@ -484,15 +508,17 @@ export default Ember.Mixin.create({
       const map = this.get('mapApi').getFromApi('leafletMap');
 
       objectIds.forEach(objectId => {
-        let object = Object.values(leafletObject._layers).find(shape => {
-          return Ember.get(shape, 'feature.properties.primarykey') === objectId;
+        let objects = Object.values(leafletObject._layers).filter(shape => {
+          return this._getLayerFeatureId(layer, shape) === objectId;
         });
-        if (object) {
-          if (visibility) {
-            map.addLayer(object);
-          } else {
-            map.removeLayer(object);
-          }
+        if (objects.length > 0) {
+          objects.forEach(obj => {
+            if (visibility) {
+              map.addLayer(obj);
+            } else {
+              map.removeLayer(obj);
+            }
+          });
         }
       });
     }
@@ -518,7 +544,7 @@ export default Ember.Mixin.create({
     let [destLayerModel, destLeafletLayer] = this._getModelLayerFeature(destination.layerId);
     if (sourceLayerModel && destLayerModel && sourceLeafletLayer && destLeafletLayer && sourceFeature) {
       let destFeature;
-      switch (destLayerModel.get('settingsAsObject.typeGeometry')) {
+      switch (destLayerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
         case 'polygon':
           destFeature = L.polygon(sourceFeature.getLatLngs());
           break;
@@ -824,15 +850,41 @@ export default Ember.Mixin.create({
     @param {String} objectId geoJSON object id.
     @param {String} layerId id of layer to change object.
     @param {String} polygon  new object polygon.
+    @param {String} crsName  crs name.
   */
-  editLayerObject(layerId, objectId, polygon) {
+  editLayerObject(layerId, objectId, polygon, crsName) {
     if (polygon) {
-      let [layerModel, leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
-      if (leafletLayer && featureLayer && layerModel) {
-        featureLayer.setLatLngs(Ember.get(polygon, 'coordinates'));
-        if (typeof leafletLayer.editLayer === 'function') {
-          leafletLayer.editLayer(featureLayer);
-          return true;
+      let [, leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
+      if (leafletLayer && featureLayer) {
+        let crs = leafletLayer.options.crs;
+        if (!Ember.isNone(crsName)) {
+          crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
+        }
+
+        let coordsToLatLng = function(coords) {
+          return crs.unproject(L.point(coords));
+        };
+
+        let geoJSON = null;
+        if (!Ember.isNone(crs)) {
+          geoJSON = L.geoJSON(polygon, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
+        } else {
+          geoJSON = L.geoJSON(polygon).getLayers()[0];
+        }
+
+        if (!Ember.isNone(Ember.get(geoJSON, 'feature.geometry'))) {
+          if (Ember.get(polygon, 'type').toLowerCase() !== 'point') {
+            featureLayer.setLatLngs(Ember.get(geoJSON, 'feature.geometry.coordinates'));
+          } else {
+            featureLayer.setLatLng(Ember.get(geoJSON, 'feature.geometry.coordinates'));
+          }
+
+          if (typeof leafletLayer.editLayer === 'function') {
+            leafletLayer.editLayer(featureLayer);
+            return true;
+          }
+        } else {
+          throw 'unable to convert coordinates for this CRS ' + crsName;
         }
       } else {
         throw 'no object or layer found';

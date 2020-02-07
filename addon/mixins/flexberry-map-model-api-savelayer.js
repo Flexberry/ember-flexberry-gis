@@ -26,8 +26,10 @@ export default Ember.Mixin.create({
         Ember.set(leafletObject, '_wasChanged', false);
         const map = Ember.get(leafletObject, '_map');
 
-        // Remove layer editing.
-        this.disableLayerEditing(map);
+        if (!Ember.isNone(map)) {
+          // Remove layer editing.
+          this.disableLayerEditing(map);
+        }
 
         Object.values(leafletObject.changes).forEach(item => {
           if (item.state === 'updateElement') {
