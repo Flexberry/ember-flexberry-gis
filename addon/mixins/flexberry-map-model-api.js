@@ -873,7 +873,7 @@ export default Ember.Mixin.create({
         }
 
         if (!Ember.isNone(Ember.get(geoJSON, 'feature.geometry'))) {
-          if (Ember.get(polygon, 'type').toLowerCase() != 'point') {
+          if (Ember.get(polygon, 'type').toLowerCase() !== 'point') {
             featureLayer.setLatLngs(Ember.get(geoJSON, 'feature.geometry.coordinates'));
           } else {
             featureLayer.setLatLng(Ember.get(geoJSON, 'feature.geometry.coordinates'));
