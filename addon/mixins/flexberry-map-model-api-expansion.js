@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import rhumbOperations from '../utils/rhumb-operations';
+import { getLeafletCrs } from '../utils/leaflet-crs'
 
 export default Ember.Mixin.create(rhumbOperations, {
 
@@ -8,6 +9,7 @@ export default Ember.Mixin.create(rhumbOperations, {
 
     @method addObjectToLayer
     @param {string} layerId Layer id.
+    @param {string} crsName crs name.
     @param {Object} object Object.
     Example:
     var object = {
@@ -22,7 +24,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     };
     @returns {Object} New featureLayer.
   */
-  addObjectToLayer(layerId, object) {
+  addObjectToLayer(layerId, object, crsName) {
     if (Ember.isNone(object)) {
       throw new Error('Passed object is null.');
     }
@@ -33,10 +35,25 @@ export default Ember.Mixin.create(rhumbOperations, {
       throw new Error('No layer with such id.');
     }
 
-    let geoJSON = L.geoJSON(object);
+    let crs = leafletObject.options.crs;
+    if (!Ember.isNone(crsName)) {
+      crs = getLeafletCrs('{ "code": "'+crsName.toUpperCase()+'", "definition": "" }', this);
+    }
+
+    let coordsToLatLng = function(coords) {
+      return crs.unproject(L.point(coords));
+    };
+
+    let geoJSON = null;
+    if (crs.code !== 'EPSG:4326') {
+      geoJSON = L.geoJSON(object, { coordsToLatLng: coordsToLatLng.bind(this) });
+    } else {
+      geoJSON = L.geoJSON(object);
+    }
     let newObj = geoJSON.getLayers()[0];
 
     leafletObject.addLayer(newObj);
+    newObj.layerId = layerId;
 
     return newObj;
   },
@@ -50,6 +67,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     Example:
     var data = {
           type: 'LineString',
+          crs: 'EPSG:3857',
           properties: { name: 'test_polygon' },
           startPoint: [85, 79],
           points: [
@@ -61,8 +79,9 @@ export default Ember.Mixin.create(rhumbOperations, {
     @returns {Object} New featureLayer.
   */
   createPolygonObjectRhumb(layerId, data) {
-    const obj = this.createObjectRhumb(data);
-    return this.addObjectToLayer(layerId, obj);
+    let [, leafletObject, ] = this._getModelLayerFeature(layerId);
+    const obj = this.createObjectRhumb(data, leafletObject.options.crs, this);
+    return this.addObjectToLayer(layerId, obj, data.crs);
   }
 
 });
