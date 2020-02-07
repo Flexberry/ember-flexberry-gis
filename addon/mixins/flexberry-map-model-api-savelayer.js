@@ -34,10 +34,8 @@ export default Ember.Mixin.create({
             let filter = new L.Filter.EQ('primarykey', Ember.get(item, 'feature.properties.primarykey'));
             leafletObject.loadFeatures(filter);
             let id = leafletObject.getLayerId(item);
-            if (id in leafletObject.changes) {
-              delete leafletObject.changes[id];
-              delete leafletObject._layers[id];
-            }
+            delete leafletObject.changes[id];
+            delete leafletObject._layers[id];   
           }
         });
 
