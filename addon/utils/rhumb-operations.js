@@ -5,7 +5,6 @@
 import Ember from 'ember';
 import rhumbDestination from 'npm:@turf/rhumb-destination';
 import helpers from 'npm:@turf/helpers';
-import projection from 'npm:@turf/projection';
 import { getLeafletCrs } from '../utils/leaflet-crs';
 
 /**

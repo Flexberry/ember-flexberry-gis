@@ -81,7 +81,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     @returns {Object} New featureLayer.
   */
   createPolygonObjectRhumb(layerId, data) {
-    let [, leafletObject,] = this._getModelLayerFeature(layerId);
+    let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId);
     const obj = this.createObjectRhumb(data, leafletObject.options.crs, this);
     return this.addObjectToLayer(layerId, obj, data.crs);
   }
