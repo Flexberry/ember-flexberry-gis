@@ -277,12 +277,12 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         points: points
       };
 
-      crsRhumb = Ember.get(this.tabModel,'leafletObject.options.crs')
+      crsRhumb = Ember.get(this.tabModel, 'leafletObject.options.crs');
       const rhumbObj = rhumbOperations.createObjectRhumb(data, crsRhumb, this);
       let coordsToLatLng = function(coords) {
         return crsRhumb.unproject(L.point(coords));
       };
-    
+
       let geoJSON = L.geoJSON(object, { coordsToLatLng: coordsToLatLng.bind(this) });
       let newObj = geoJSON.getLayers()[0];
 

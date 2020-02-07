@@ -6,7 +6,7 @@ import Ember from 'ember';
 import rhumbDestination from 'npm:@turf/rhumb-destination';
 import helpers from 'npm:@turf/helpers';
 import projection from 'npm:@turf/projection';
-import { getLeafletCrs } from '../utils/leaflet-crs'
+import { getLeafletCrs } from '../utils/leaflet-crs';
 
 /**
   Create polygon object by rhumb.
@@ -118,6 +118,7 @@ const createObjectRhumb = (data, layerCrs, that) => {
     } else {
       startPointInCrs = layerCrs.unproject(L.point(data.startPoint[0], data.startPoint[1]));
     }
+
     let crs = getLeafletCrs('{ "code": "EPSG:4326", "definition": "" }', that);
     let point = crs.project(startPointInCrs);
     startPointInCrs = helpers.point([point.x, point.y]);

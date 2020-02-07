@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import rhumbOperations from '../utils/rhumb-operations';
-import { getLeafletCrs } from '../utils/leaflet-crs'
+import { getLeafletCrs } from '../utils/leaflet-crs';
 
 export default Ember.Mixin.create(rhumbOperations, {
 
@@ -37,7 +37,7 @@ export default Ember.Mixin.create(rhumbOperations, {
 
     let crs = leafletObject.options.crs;
     if (!Ember.isNone(crsName)) {
-      crs = getLeafletCrs('{ "code": "'+crsName.toUpperCase()+'", "definition": "" }', this);
+      crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
     }
 
     let coordsToLatLng = function(coords) {
@@ -50,6 +50,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     } else {
       geoJSON = L.geoJSON(object);
     }
+
     let newObj = geoJSON.getLayers()[0];
 
     leafletObject.addLayer(newObj);
@@ -79,7 +80,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     @returns {Object} New featureLayer.
   */
   createPolygonObjectRhumb(layerId, data) {
-    let [, leafletObject, ] = this._getModelLayerFeature(layerId);
+    let [, leafletObject,] = this._getModelLayerFeature(layerId);
     const obj = this.createObjectRhumb(data, leafletObject.options.crs, this);
     return this.addObjectToLayer(layerId, obj, data.crs);
   }

@@ -858,7 +858,7 @@ export default Ember.Mixin.create({
       if (leafletLayer && featureLayer) {
         let crs = leafletLayer.options.crs;
         if (!Ember.isNone(crsName)) {
-          crs = getLeafletCrs('{ "code": "'+crsName.toUpperCase()+'", "definition": "" }', this);
+          crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
         }
 
         let coordsToLatLng = function(coords) {
@@ -878,6 +878,7 @@ export default Ember.Mixin.create({
           } else {
             featureLayer.setLatLng(Ember.get(geoJSON, 'feature.geometry.coordinates'));
           }
+
           if (typeof leafletLayer.editLayer === 'function') {
             leafletLayer.editLayer(featureLayer);
             return true;
