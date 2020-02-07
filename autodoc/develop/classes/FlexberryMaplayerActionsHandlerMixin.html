@@ -597,6 +597,10 @@
 
                             </li>
                             <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_hideAllLayerObjects" data-tablink="hideAllLayerObjects">hideAllLayerObjects</a>
+
+                            </li>
+                            <li class="index-item method">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_hideLayerObjects" data-tablink="hideLayerObjects">hideLayerObjects</a>
 
                             </li>
@@ -738,7 +742,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l445"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:445</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l469"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:469</code></a>
                             </p>
                     
                     
@@ -875,7 +879,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api-savelayer.js.html#l59"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-savelayer.js:59</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-savelayer.js.html#l61"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-savelayer.js:61</code></a>
                             </p>
                     
                     
@@ -1014,7 +1018,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l462"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:462</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l486"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:486</code></a>
                             </p>
                     
                     
@@ -2144,6 +2148,9 @@
                                             <code>layerId</code>
                                     </li>
                                     <li class="arg">
+                                            <code>crsName</code>
+                                    </li>
+                                    <li class="arg">
                                             <code>object</code>
                                     </li>
                                 </ul><span class="paren">)</span>
@@ -2162,7 +2169,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l6"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:6</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l7"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:7</code></a>
                             </p>
                     
                     
@@ -2185,6 +2192,17 @@
                     
                                         <div class="param-description">
                                             <p>Layer id.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">crsName</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>crs name.</p>
                     
                                         </div>
                     
@@ -2397,7 +2415,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l599"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:599</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l625"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:625</code></a>
                             </p>
                     
                     
@@ -2418,82 +2436,6 @@
                             <div class="args">
                                 <span class="paren">(</span><ul class="args-list inline commas">
                                     <li class="arg">
-                                            <code>source</code>
-                                    </li>
-                                    <li class="arg">
-                                            <code>destination</code>
-                                    </li>
-                                </ul><span class="paren">)</span>
-                            </div>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l501"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:501</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Copy Object from Source layer to Destination.</p>
-                    
-                        </div>
-                    
-                            <div class="params">
-                                <h4>Parameters:</h4>
-                    
-                                <ul class="params-list">
-                                    <li class="param">
-                                            <code class="param-name">source</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>Object with source settings
-                    {
-                    layerId,
-                    objectId,
-                    shouldRemove
-                    }</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                    <li class="param">
-                                            <code class="param-name">destination</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>Object with destination settings
-                    {
-                    layerId,
-                    properties
-                    }</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                </ul>
-                            </div>
-                    
-                    
-                    </div>
-                    <div id="method_copyObject" class="method item">
-                        <h3 class="name"><code>copyObject</code></h3>
-                    
-                            <div class="args">
-                                <span class="paren">(</span><ul class="args-list inline commas">
-                                    <li class="arg">
                                             <code>objectId</code>
                                     </li>
                                     <li class="arg">
@@ -2502,6 +2444,9 @@
                                     <li class="arg">
                                             <code>polygon</code>
                                     </li>
+                                    <li class="arg">
+                                            <code>crsName</code>
+                                    </li>
                                 </ul><span class="paren">)</span>
                             </div>
                     
@@ -2515,7 +2460,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l821"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:821</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l847"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:847</code></a>
                             </p>
                     
                     
@@ -2560,6 +2505,93 @@
                     
                                         <div class="param-description">
                                             <p>new object polygon.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">crsName</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>crs name.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
+                    <div id="method_copyObject" class="method item">
+                        <h3 class="name"><code>copyObject</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>source</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>destination</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l527"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:527</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Copy Object from Source layer to Destination.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">source</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Object with source settings
+                    {
+                    layerId,
+                    objectId,
+                    shouldRemove
+                    }</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">destination</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Object with destination settings
+                    {
+                    layerId,
+                    properties
+                    }</p>
                     
                                         </div>
                     
@@ -2672,7 +2704,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l78"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:78</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l98"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:98</code></a>
                             </p>
                     
                     
@@ -2714,7 +2746,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l43"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:43</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-expansion.js.html#l63"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-expansion.js:63</code></a>
                             </p>
                     
                     
@@ -2751,6 +2783,7 @@
                     Example:
                     var data = {
                     type: 'LineString',
+                    crs: 'EPSG:3857',
                     properties: { name: 'test_polygon' },
                     startPoint: [85, 79],
                     points: [
@@ -2801,7 +2834,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l94"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:94</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l114"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:114</code></a>
                             </p>
                     
                     
@@ -2868,7 +2901,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l104"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:104</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l124"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:124</code></a>
                             </p>
                     
                     
@@ -2926,7 +2959,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l685"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:685</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l711"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:711</code></a>
                             </p>
                     
                     
@@ -3059,7 +3092,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l391"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:391</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l415"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:415</code></a>
                             </p>
                     
                     
@@ -3157,7 +3190,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l253"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:253</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l277"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:277</code></a>
                             </p>
                     
                     
@@ -3264,7 +3297,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l556"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:556</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l582"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:582</code></a>
                             </p>
                     
                     
@@ -3364,7 +3397,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l141"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:141</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l161"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:161</code></a>
                             </p>
                     
                     
@@ -3431,7 +3464,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l312"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:312</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l336"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:336</code></a>
                             </p>
                     
                     
@@ -3504,7 +3537,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l204"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:204</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l228"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:228</code></a>
                             </p>
                     
                     
@@ -3594,7 +3627,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l710"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:710</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l736"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:736</code></a>
                             </p>
                     
                     
@@ -3661,7 +3694,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l608"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:608</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l634"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:634</code></a>
                             </p>
                     
                     
@@ -3673,6 +3706,59 @@
                     
                         </div>
                     
+                    
+                    
+                    </div>
+                    <div id="method_hideAllLayerObjects" class="method item">
+                        <h3 class="name"><code>hideAllLayerObjects</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>layerId</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l80"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:80</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Hide all layer objects.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">layerId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Layer id.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
                     
                     
                     </div>
@@ -3700,7 +3786,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l49"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:49</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l51"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:51</code></a>
                             </p>
                     
                     
@@ -3758,7 +3844,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l29"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:29</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l31"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:31</code></a>
                             </p>
                     
                     
@@ -3803,7 +3889,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l345"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:345</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l369"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:369</code></a>
                             </p>
                     
                     
@@ -3892,7 +3978,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l807"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:807</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l833"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:833</code></a>
                             </p>
                     
                     
@@ -4152,7 +4238,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l60"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:60</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l62"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:62</code></a>
                             </p>
                     
                     
@@ -4208,7 +4294,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l38"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:38</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l40"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:40</code></a>
                             </p>
                     
                     
@@ -4266,7 +4352,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l20"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:20</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l22"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:22</code></a>
                             </p>
                     
                     
@@ -4451,7 +4537,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l845"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:845</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l897"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:897</code></a>
                             </p>
                     
                     
@@ -4507,7 +4593,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l13"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:13</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l15"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:15</code></a>
                             </p>
                     
                     

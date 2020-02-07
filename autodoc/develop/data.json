@@ -1555,6 +1555,13 @@
             },
             "namespaces": {}
         },
+        "addon/initializers/leaflet-marker.js": {
+            "name": "addon/initializers/leaflet-marker.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/initializers/leaflet.js": {
             "name": "addon/initializers/leaflet.js",
             "modules": {},
@@ -10294,7 +10301,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 286,
+            "line": 293,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onDeny",
@@ -10303,7 +10310,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 295,
+            "line": 302,
             "description": "The button for adding a new record to the table.",
             "itemtype": "method",
             "name": "actions.onAddRow",
@@ -10312,7 +10319,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 349,
+            "line": 356,
             "description": "Button to delete a record in a table.",
             "itemtype": "method",
             "name": "actions.OnRemoveRow",
@@ -10321,7 +10328,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 366,
+            "line": 373,
             "description": "Сlear form.",
             "itemtype": "method",
             "name": "_dropForm",
@@ -10330,7 +10337,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 381,
+            "line": 388,
             "description": "Сlear form.",
             "itemtype": "method",
             "name": "_dropTableValidForm",
@@ -10339,7 +10346,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 390,
+            "line": 397,
             "description": "Clear form validation.",
             "itemtype": "method",
             "name": "_dropTableForm",
@@ -10348,7 +10355,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 399,
+            "line": 406,
             "description": "Number check.",
             "itemtype": "method",
             "name": "_validFloatNumber",
@@ -10357,7 +10364,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 409,
+            "line": 416,
             "description": "Starp point check.",
             "itemtype": "method",
             "name": "_validStartPoint",
@@ -10366,7 +10373,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 419,
+            "line": 426,
             "description": "Component's action invoking when new geometry was added.",
             "itemtype": "method",
             "name": "sendingActions.complete",
@@ -36857,6 +36864,58 @@
             "module": "ember-flexberry-gis"
         },
         {
+            "file": "addon/initializers/leaflet-marker.js",
+            "line": 9,
+            "description": "Style for marker.",
+            "itemtype": "method",
+            "name": "setStyle",
+            "params": [
+                {
+                    "name": "style",
+                    "description": "style for marker",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Returns L.Marker.\n\nstyle: {isImage: false,\n    options: {\n      className: classCss,\n      html: text\n    }\n}",
+                "type": "Object"
+            },
+            "class": "ApplicationInitializer",
+            "module": "ember-flexberry"
+        },
+        {
+            "file": "addon/initializers/leaflet-marker.js",
+            "line": 37,
+            "description": "Create array of strings and feature properies.",
+            "itemtype": "method",
+            "name": "_parseString",
+            "params": [
+                {
+                    "name": "expression",
+                    "description": "String for parsing",
+                    "type": "String"
+                }
+            ],
+            "class": "ApplicationInitializer",
+            "module": "ember-flexberry"
+        },
+        {
+            "file": "addon/initializers/leaflet-marker.js",
+            "line": 53,
+            "description": "Create label string.",
+            "itemtype": "method",
+            "name": "_createStringLabel",
+            "params": [
+                {
+                    "name": "expResult",
+                    "description": "Create array of strings and feature properies",
+                    "type": "Array"
+                }
+            ],
+            "class": "ApplicationInitializer",
+            "module": "ember-flexberry"
+        },
+        {
             "file": "addon/initializers/leaflet.js",
             "line": 5,
             "description": "Registers options for leaflet library.",
@@ -41110,7 +41169,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 6,
+            "line": 7,
             "description": "Add object to layer.",
             "itemtype": "method",
             "name": "addObjectToLayer",
@@ -41118,6 +41177,11 @@
                 {
                     "name": "layerId",
                     "description": "Layer id.",
+                    "type": "String"
+                },
+                {
+                    "name": "crsName",
+                    "description": "crs name.",
                     "type": "String"
                 },
                 {
@@ -41135,7 +41199,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-expansion.js",
-            "line": 43,
+            "line": 63,
             "description": "Create polygon object by rhumb.",
             "itemtype": "method",
             "name": "createPolygonObjectRhumb",
@@ -41147,7 +41211,7 @@
                 },
                 {
                     "name": "data",
-                    "description": "Coordinate objects.\nExample:\nvar data = {\n      type: 'LineString',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      points: [\n        { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955 },\n        { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427 },\n        { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685 }\n      ]\n    };",
+                    "description": "Coordinate objects.\nExample:\nvar data = {\n      type: 'LineString',\n      crs: 'EPSG:3857',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      points: [\n        { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955 },\n        { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427 },\n        { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685 }\n      ]\n    };",
                     "type": "Object"
                 }
             ],
@@ -41184,7 +41248,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-savelayer.js",
-            "line": 59,
+            "line": 61,
             "description": "Remove layer editing.",
             "itemtype": "method",
             "name": "_removeLayerEditing",
@@ -41382,7 +41446,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 13,
+            "line": 15,
             "description": "Service for managing map API.",
             "itemtype": "property",
             "name": "mapApi",
@@ -41392,7 +41456,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 20,
+            "line": 22,
             "description": "Shows specified by id layers.",
             "itemtype": "method",
             "name": "showLayers.",
@@ -41401,7 +41465,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 29,
+            "line": 31,
             "description": "Hides specified by id layers.",
             "itemtype": "method",
             "name": "hideLayers.",
@@ -41410,7 +41474,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 38,
+            "line": 40,
             "description": "Shows id objects for layer.",
             "itemtype": "method",
             "name": "showLayerObjects",
@@ -41431,7 +41495,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 49,
+            "line": 51,
             "description": "Hides id objects for layer.",
             "itemtype": "method",
             "name": "hideLayerObjects",
@@ -41452,7 +41516,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 60,
+            "line": 62,
             "description": "Show all layer objects.",
             "itemtype": "method",
             "name": "showAllLayerObjects",
@@ -41468,7 +41532,23 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 78,
+            "line": 80,
+            "description": "Hide all layer objects.",
+            "itemtype": "method",
+            "name": "hideAllLayerObjects",
+            "params": [
+                {
+                    "name": "layerId",
+                    "description": "Layer id.",
+                    "type": "String"
+                }
+            ],
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 98,
             "description": "Creates new layer with specified options.",
             "itemtype": "method",
             "name": "createNewLayer.",
@@ -41477,7 +41557,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 94,
+            "line": 114,
             "description": "Remove shape from layer.",
             "itemtype": "method",
             "name": "deleteLayerObject.",
@@ -41498,7 +41578,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 104,
+            "line": 124,
             "description": "Remove shapes from layer.",
             "itemtype": "method",
             "name": "deleteLayerObjects.",
@@ -41519,7 +41599,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 141,
+            "line": 161,
             "description": "Gets intersected features.",
             "itemtype": "method",
             "name": "getIntersectionObjects",
@@ -41540,7 +41620,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 204,
+            "line": 228,
             "description": "Get the closest object",
             "itemtype": "method",
             "name": "getNearObject",
@@ -41570,7 +41650,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 253,
+            "line": 277,
             "description": "Get distance between objects",
             "itemtype": "method",
             "name": "getDistanceBetweenObjects",
@@ -41605,7 +41685,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 312,
+            "line": 336,
             "description": "Get layer object attributes.",
             "itemtype": "method",
             "name": "getLayerObjectOptions",
@@ -41626,7 +41706,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 345,
+            "line": 369,
             "description": "Check if objectA contains object B.",
             "itemtype": "method",
             "name": "isContainsObject",
@@ -41657,7 +41737,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 391,
+            "line": 415,
             "description": "Calculate the area of ​​object B that extends beyond the boundaries of object A.",
             "itemtype": "method",
             "name": "getAreaExtends",
@@ -41688,7 +41768,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 445,
+            "line": 469,
             "description": "Get object id by object and layer.",
             "itemtype": "method",
             "name": "_getLayerFeatureId",
@@ -41713,7 +41793,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 462,
+            "line": 486,
             "description": "Determine the visibility of the specified objects by id for the layer.",
             "itemtype": "method",
             "name": "_setVisibilityObjects",
@@ -41741,7 +41821,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 501,
+            "line": 527,
             "description": "Copy Object from Source layer to Destination.",
             "itemtype": "method",
             "name": "copyObject",
@@ -41762,7 +41842,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 556,
+            "line": 582,
             "description": "Calculate the area of intersection between object A and object B .",
             "itemtype": "method",
             "name": "getIntersectionArea",
@@ -41798,7 +41878,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 599,
+            "line": 625,
             "description": "Cleans the service layer.",
             "itemtype": "method",
             "name": "clearServiceLayer",
@@ -41807,7 +41887,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 608,
+            "line": 634,
             "description": "Create image for layer object.",
             "itemtype": "method",
             "name": "getSnapShot",
@@ -41817,7 +41897,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 685,
+            "line": 711,
             "description": "Download image for layer object.",
             "itemtype": "method",
             "name": "downloadSnapShot",
@@ -41826,7 +41906,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 710,
+            "line": 736,
             "description": "Get the object thumb.",
             "itemtype": "method",
             "name": "getRhumb",
@@ -41851,7 +41931,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 807,
+            "line": 833,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
@@ -41872,7 +41952,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 821,
+            "line": 847,
             "description": "Change object polygon.",
             "itemtype": "method",
             "name": "copyObject",
@@ -41891,6 +41971,11 @@
                     "name": "polygon",
                     "description": "new object polygon.",
                     "type": "String"
+                },
+                {
+                    "name": "crsName",
+                    "description": "crs name.",
+                    "type": "String"
                 }
             ],
             "class": "FlexberryMaplayerActionsHandlerMixin",
@@ -41898,7 +41983,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 845,
+            "line": 897,
             "description": "Upload file.",
             "itemtype": "method",
             "name": "uploadFile",
@@ -44770,7 +44855,7 @@
         },
         {
             "file": "addon/utils/rhumb-operations.js",
-            "line": 9,
+            "line": 10,
             "description": "Create polygon object by rhumb.",
             "itemtype": "method",
             "name": "createPolygonObjectRhumb",
@@ -45033,6 +45118,10 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
+            "line": " addon/initializers/leaflet-marker.js:9"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
             "line": " addon/instance-initializers/owner.js:18"
         },
         {
@@ -45169,11 +45258,11 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:6"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:7"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-expansion.js:43"
+            "line": " addon/mixins/flexberry-map-model-api-expansion.js:63"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -45189,15 +45278,15 @@
         },
         {
             "message": "unknown tag: snapt",
-            "line": " addon/mixins/flexberry-map-model-api.js:608"
+            "line": " addon/mixins/flexberry-map-model-api.js:634"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:807"
+            "line": " addon/mixins/flexberry-map-model-api.js:833"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:807"
+            "line": " addon/mixins/flexberry-map-model-api.js:833"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -45273,7 +45362,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/utils/rhumb-operations.js:9"
+            "line": " addon/utils/rhumb-operations.js:10"
         },
         {
             "message": "Missing item type\nReference to component's template.",

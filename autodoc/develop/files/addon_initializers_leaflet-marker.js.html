@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/mixins/flexberry-map-model-api-visualedit.js - Flexberry Documentation</title>
+    <title>addon/initializers/leaflet-marker.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -403,255 +403,92 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>addon/mixins/flexberry-map-model-api-visualedit.js <small>File</small></h1>
+    <h1>addon/initializers/leaflet-marker.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
+/**
+  @module ember-flexberry
+*/
+
 import Ember from &#x27;ember&#x27;;
-import turfCombine from &#x27;npm:@turf/combine&#x27;;
 
-export default Ember.Mixin.create({
+export function initialize() {
+  L.Marker.include({
+    /**
+      Style for marker.
+      @method setStyle
+      @param {Object} style style for marker
+      @returns {Object} Returns L.Marker.
 
-  /**
-    Change layer object properties.
-
-    @method changeLayerObjectProperties
-    @param {string} layerId Layer id.
-    @param {string} featureId Object id.
-    @param {Object} properties Object properties.
-    @return {Object} featureLayer.
-  */
-  changeLayerObjectProperties(layerId, featureId, properties) {
-    let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
-    Object.assign(featureLayer.feature.properties, properties);
-    leafletObject.editLayer(featureLayer);
-    return featureLayer;
-  },
-
-  /**
-    Start change layer object.
-
-    @method startChangeLayerObject
-    @param {string} layerId Layer id.
-    @param {string} featureId Object id.
-    @return {Object} Feature layer.
-  */
-  startChangeLayerObject(layerId, featureId) {
-    let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    leafletMap.fitBounds(featureLayer.getBounds());
-    let editTools = this._getEditTools();
-    featureLayer.enableEdit(leafletMap);
-    featureLayer.layerId = layerId;
-
-    editTools.on(&#x27;editable:editing&#x27;, (e) =&gt; {
-      if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayer))) {
-        leafletObject.editLayer(e.layer);
+      style: {isImage: false,
+          options: {
+            className: classCss,
+            html: text
+          }
       }
-    });
+    */
+    setStyle: function (style) {
+      if (!Ember.isNone(style) &amp;&amp; !Ember.isNone(style.isImage) &amp;&amp; (style.isImage === &#x27;false&#x27; || !style.isImage)) {
+        let html = this._parseString(style.options.html);
+        let label = this._createStringLabel(html, this);
+        style.options.html = label;
+        this.setIcon(new L.divIcon(style.options));
+      } else if (!Ember.isNone(style) &amp;&amp; !Ember.isNone(style.options)) {
+        this.setIcon(new L.Icon(style.options));
+      } else {
+        this.setIcon(new L.Icon.Default());
+      }
 
-    return featureLayer;
-  },
+      return this;
+    },
 
-  /**
-    Cancel edit for layer object.
+    /**
+      Create array of strings and feature properies.
+      @method _parseString
+      @param {String} expression String for parsing
+    */
+    _parseString(expression) {
+      if (Ember.isBlank(expression)) {
+        return null;
+      }
 
-    @method cancelEdit
-    @param {Object} layer layer object.
-    @return nothing
-  */
-  cancelEdit(layer) {
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    let editTools = this._getEditTools();
-    this.disableLayerEditing(leafletMap);
-    editTools.off(&#x27;editable:drawing:end&#x27;);
-    editTools.off(&#x27;editable:editing&#x27;);
-    editTools.stopDrawing();
-    editTools.featuresLayer.clearLayers();
-    editTools.editLayer.clearLayers();
+      let exp = expression.trim();
+      let reg = /&#x27;(.+?)&#x27;/g;
+      let expResult = exp.split(reg).filter(x =&gt; x !== &#x27;&#x27;);
+      return expResult ?  expResult : null;
+    },
 
-    if (!Ember.isNone(layer.layerId)) {
-      let [, leafletObject] = this._getModelLayerFeature(layer.layerId);
-      if (!Ember.isNone(leafletObject)) {
-        if (layer.state === leafletObject.state.insert) {
-          leafletObject.removeLayer(layer);
-        } else if (layer.state === leafletObject.state.update) {
-          let map = Ember.get(leafletObject, &#x27;_map&#x27;);
-          map.removeLayer(layer);
-          let filter = new L.Filter.EQ(&#x27;primarykey&#x27;, Ember.get(layer, &#x27;feature.properties.primarykey&#x27;));
-          let feature = leafletObject.loadFeatures(filter);
-
-          let id = leafletObject.getLayerId(layer);
-          if (id in leafletObject.changes) {
-            delete leafletObject.changes[id];
-            delete leafletObject._layers[id];
+    /**
+      Create label string.
+      @method _createStringLabel
+      @param {Array} expResult Create array of strings and feature properies
+    */
+    _createStringLabel(expResult, featureLayer) {
+      let label = &#x27;&#x27;;
+      let isProp = false;
+      expResult.forEach(function(element) {
+        for (let key in featureLayer.feature.properties) {
+          if (key === element &amp;&amp; !Ember.isNone(featureLayer.feature.properties[key]) &amp;&amp; !Ember.isBlank(featureLayer.feature.properties[key])) {
+            label += featureLayer.feature.properties[key];
+            isProp = true;
           }
         }
-      }
 
-      layer.layerId = null;
-    }
-  },
-
-  /**
-    Start visual creating of feature
-
-    @param {String} layerId Id of layer in that should started editing
-    @param {Object} properties New layer properties
-    @returns noting
-  */
-  startNewObject(layerId, properties) {
-    let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
-    let editTools = this._getEditTools();
-    let newLayer;
-
-    let finishDraw = () =&gt; {
-      editTools.off(&#x27;editable:drawing:end&#x27;, finishDraw, this);
-      editTools.stopDrawing();
-      let defaultProperties = layerModel.get(&#x27;settingsAsObject.defaultProperties&#x27;) || {};
-      newLayer.feature = { properties: Ember.merge(defaultProperties, properties) };
-      leafletObject.addLayer(newLayer);
-    };
-
-    editTools.on(&#x27;editable:drawing:end&#x27;, finishDraw, this);
-
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    leafletMap.fire(&#x27;flexberry-map:switchToDefaultMapTool&#x27;);
-    if (editTools.drawing()) {
-      editTools.stopDrawing();
-    }
-
-    switch (layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;).toLowerCase()) {
-      case &#x27;polygon&#x27;:
-        newLayer = editTools.startPolygon();
-        break;
-      case &#x27;polyline&#x27;:
-        newLayer = editTools.startPolyline();
-        break;
-      case &#x27;marker&#x27;:
-        newLayer = editTools.startMarker();
-        break;
-      default:
-        throw &#x27;Unknown layer type: &#x27; + layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;);
-    }
-
-    newLayer.layerId = layerId;
-    return newLayer;
-  },
-
-  /**
-    Get editTools.
-
-    @method _getEditTools
-    @return {Object} EditTools.
-    @private
-  */
-  _getEditTools() {
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    let editTools = Ember.get(leafletMap, &#x27;editTools&#x27;);
-    if (Ember.isNone(editTools)) {
-      editTools = new L.Editable(leafletMap);
-      Ember.set(leafletMap, &#x27;editTools&#x27;, editTools);
-    }
-
-    return editTools;
-  },
-
-  /**
-    Return leaflet layer thats corresponds to passed layerId.
-
-    @method _getLeafletLayer
-    @param {String} layerId
-    @returns {Object}
-    @private
-  */
-  getLayerModel(layerId) {
-    const layer = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, layerId);
-    if (Ember.isNone(layer)) {
-      throw &#x27;No layer with such id&#x27;;
-    }
-
-    return layer;
-  },
-
-  /**
-    Get [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.
-
-    @param {string} layerId Layer id.
-    @param {string} [featureId] Object id.
-    @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, leafletObject, featureLayer] or [layerModel, leafletObject, undefined].
-    @private
-  */
-  _getModelLayerFeature(layerId, featureId) {
-    let layerModel = this.getLayerModel(layerId);
-    let leafletObject = layerModel.get(&#x27;_leafletObject&#x27;);
-    let layers = leafletObject._layers;
-    let featureLayer;
-    if (!Ember.isNone(featureId)) {
-      featureLayer = Object.values(layers).find(feature =&gt; {
-        const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
-        return layerFeatureId === featureId;
+        label += !isProp ?  element : &#x27;&#x27;;
+        isProp = false;
       });
+
+      return label;
     }
+  });
+}
 
-    return [layerModel, leafletObject, featureLayer];
-  },
-
-  /**
-    Start creating multy objects.
-
-    @method startChangeMultyLayerObject
-    @param {string} layerId Layer id.
-    @param {Object} featureLayer Feature layer.
-  */
-  startChangeMultyLayerObject(layerId, featureLayer) {
-    let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
-
-    let editTools = this._getEditTools();
-    let newLayer;
-    featureLayer.layerId = layerId;
-
-    const disableDraw = () =&gt; {
-      editTools.off(&#x27;editable:drawing:end&#x27;, disableDraw, this);
-      editTools.stopDrawing();
-
-      var featureCollection = {
-        type: &#x27;FeatureCollection&#x27;,
-        features: [featureLayer.toGeoJSON(), newLayer.toGeoJSON()]
-      };
-
-      // Coordinate union.
-      let fcCombined = turfCombine.default(featureCollection);
-      const featureCombined = L.geoJSON(fcCombined);
-      const combinedLeaflet = featureCombined.getLayers()[0];
-      featureLayer.setLatLngs(combinedLeaflet.getLatLngs());
-      featureLayer.disableEdit();
-      featureLayer.enableEdit();
-      editTools.featuresLayer.clearLayers();
-
-      // We note that the shape was edited.
-      leafletObject.editLayer(featureLayer);
-    };
-
-    editTools.on(&#x27;editable:drawing:end&#x27;, disableDraw, this);
-
-    switch (layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;).toLowerCase()) {
-      case &#x27;polygon&#x27;:
-        newLayer = editTools.startPolygon();
-        break;
-      case &#x27;polyline&#x27;:
-        newLayer = editTools.startPolyline();
-        break;
-      case &#x27;marker&#x27;:
-        newLayer = editTools.startMarker();
-        break;
-      default:
-        throw &#x27;Unknown layer type: &#x27; + layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;);
-    }
-  }
-
-});
+export default {
+  name: &#x27;leaflet-marker&#x27;,
+  initialize
+};
 
     </pre>
 </div>

@@ -1821,7 +1821,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.set(&#x27;_newRowPanToObject&#x27;, true);
       }
 
-      if (!Ember.isEmpty(addedLayer._latlngs[0])) {
+      if (!Ember.isEmpty((addedLayer instanceof L.Marker) ? addedLayer._latlng : addedLayer._latlngs[0])) {
         this._showNewRowDialog(tabModel, addedLayer);
       }
     },

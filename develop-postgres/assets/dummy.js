@@ -4896,6 +4896,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers
     assert.ok(true, 'modules/ember-flexberry-gis/initializers/leaflet-editable-measures.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers/leaflet-marker.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/initializers');
+  test('modules/ember-flexberry-gis/initializers/leaflet-marker.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/initializers/leaflet-marker.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers/leaflet-marker.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/initializers/leaflet-marker.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/initializers/leaflet-marker.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/initializers/leaflet.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/initializers');
   test('modules/ember-flexberry-gis/initializers/leaflet.js should pass jscs', function () {
@@ -10854,6 +10867,20 @@ define('dummy/initializers/leaflet-editable-measures', ['exports', 'dummy/config
   };
 
   exports['default'] = _emberFlexberryGisInitializersLeafletEditableMeasures['default'];
+});
+define('dummy/initializers/leaflet-marker', ['exports', 'ember-flexberry-gis/initializers/leaflet-marker'], function (exports, _emberFlexberryGisInitializersLeafletMarker) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisInitializersLeafletMarker['default'];
+    }
+  });
+  Object.defineProperty(exports, 'initialize', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisInitializersLeafletMarker.initialize;
+    }
+  });
 });
 define('dummy/initializers/leaflet', ['exports', 'dummy/config/environment', 'ember-flexberry-gis/initializers/leaflet'], function (exports, _dummyConfigEnvironment, _emberFlexberryGisInitializersLeaflet) {
 
@@ -37656,7 +37683,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.1+f9e36876"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.1+f1517067"});
 }
 
 /* jshint ignore:end */

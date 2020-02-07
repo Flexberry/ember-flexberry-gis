@@ -418,6 +418,8 @@ import intersect from &#x27;npm:@turf/intersect&#x27;;
 import projection from &#x27;npm:@turf/projection&#x27;;
 import rhumbBearing from &#x27;npm:@turf/rhumb-bearing&#x27;;
 import rhumbDistance from &#x27;npm:@turf/rhumb-distance&#x27;;
+import { getLeafletCrs } from &#x27;../utils/leaflet-crs&#x27;;
+import VectorLayer from &#x27;../layers/-private/vector&#x27;;
 
 export default Ember.Mixin.create({
   /**
@@ -481,6 +483,24 @@ export default Ember.Mixin.create({
     leafletObject.eachLayer(function (layerShape) {
       if (!map.hasLayer(layerShape)) {
         map.addLayer(layerShape);
+      }
+    });
+  },
+
+  /**
+    Hide all layer objects.
+
+    @method hideAllLayerObjects
+    @param {string} layerId Layer id.
+  */
+  hideAllLayerObjects(layerId) {
+    const layer = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, layerId);
+    const leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;);
+    var map = Ember.get(leafletObject, &#x27;_map&#x27;);
+
+    leafletObject.eachLayer(function (layerShape) {
+      if (!map.hasLayer(layerShape)) {
+        map.removeLayer(layerShape);
       }
     });
   },
@@ -578,27 +598,31 @@ export default Ember.Mixin.create({
         layerIds.forEach(id =&gt; {
           let intersectedFeaturesCollection = [];
           const layer = layers.findBy(&#x27;id&#x27;, id);
-          let features = Ember.get(layer, &#x27;_leafletObject._layers&#x27;);
-          if (features) {
-            Object.values(features).forEach(feature =&gt; {
-              let intersectionResult;
-              const layerFeatureId = this._getLayerFeatureId(layer, feature);
-              if (layerFeatureId !== featureId) {
-                let objA = featureToSearch;
-                let objB = feature;
-                objA = objA.options.crs.code === &#x27;EPSG:4326&#x27; ? objA.feature : projection.toWgs84(objA.feature);
-                objB = objB.options.crs.code === &#x27;EPSG:4326&#x27; ? objB.feature : projection.toWgs84(objB.feature);
-                if (objA.geometry.type === &#x27;Polygon&#x27; || objA.geometry.type === &#x27;MultiPolygon&#x27;) {
-                  intersectionResult = intersect.default(objA, objB);
-                } else if (objA.geometry.type === &#x27;MultiLineString&#x27; || objA.geometry.type === &#x27;LineString&#x27;) {
-                  intersectionResult = lineIntersect(objA, objB);
+          let className = Ember.get(layer, &#x27;type&#x27;);
+          let layerType = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, className);
+          if (layerType instanceof VectorLayer) {
+            let features = Ember.get(layer, &#x27;_leafletObject._layers&#x27;);
+            if (features) {
+              Object.values(features).forEach(feature =&gt; {
+                let intersectionResult;
+                const layerFeatureId = this._getLayerFeatureId(layer, feature);
+                if (layerFeatureId !== featureId) {
+                  let objA = featureToSearch;
+                  let objB = feature;
+                  objA = objA.options.crs.code === &#x27;EPSG:4326&#x27; ? objA.feature : projection.toWgs84(objA.feature);
+                  objB = objB.options.crs.code === &#x27;EPSG:4326&#x27; ? objB.feature : projection.toWgs84(objB.feature);
+                  if (objA.geometry.type === &#x27;Polygon&#x27; || objA.geometry.type === &#x27;MultiPolygon&#x27;) {
+                    intersectionResult = intersect.default(objA, objB);
+                  } else if (objA.geometry.type === &#x27;MultiLineString&#x27; || objA.geometry.type === &#x27;LineString&#x27;) {
+                    intersectionResult = lineIntersect(objA, objB);
+                  }
                 }
-              }
 
-              if (intersectionResult) {
-                intersectedFeaturesCollection.push(layerFeatureId);
-              }
-            });
+                if (intersectionResult) {
+                  intersectedFeaturesCollection.push(layerFeatureId);
+                }
+              });
+            }
           }
 
           if (intersectedFeaturesCollection.length &gt; 0) {
@@ -894,15 +918,17 @@ export default Ember.Mixin.create({
       const map = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
 
       objectIds.forEach(objectId =&gt; {
-        let object = Object.values(leafletObject._layers).find(shape =&gt; {
-          return Ember.get(shape, &#x27;feature.properties.primarykey&#x27;) === objectId;
+        let objects = Object.values(leafletObject._layers).filter(shape =&gt; {
+          return this._getLayerFeatureId(layer, shape) === objectId;
         });
-        if (object) {
-          if (visibility) {
-            map.addLayer(object);
-          } else {
-            map.removeLayer(object);
-          }
+        if (objects.length &gt; 0) {
+          objects.forEach(obj =&gt; {
+            if (visibility) {
+              map.addLayer(obj);
+            } else {
+              map.removeLayer(obj);
+            }
+          });
         }
       });
     }
@@ -928,7 +954,7 @@ export default Ember.Mixin.create({
     let [destLayerModel, destLeafletLayer] = this._getModelLayerFeature(destination.layerId);
     if (sourceLayerModel &amp;&amp; destLayerModel &amp;&amp; sourceLeafletLayer &amp;&amp; destLeafletLayer &amp;&amp; sourceFeature) {
       let destFeature;
-      switch (destLayerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;)) {
+      switch (destLayerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;).toLowerCase()) {
         case &#x27;polygon&#x27;:
           destFeature = L.polygon(sourceFeature.getLatLngs());
           break;
@@ -1234,15 +1260,41 @@ export default Ember.Mixin.create({
     @param {String} objectId geoJSON object id.
     @param {String} layerId id of layer to change object.
     @param {String} polygon  new object polygon.
+    @param {String} crsName  crs name.
   */
-  editLayerObject(layerId, objectId, polygon) {
+  editLayerObject(layerId, objectId, polygon, crsName) {
     if (polygon) {
-      let [layerModel, leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
-      if (leafletLayer &amp;&amp; featureLayer &amp;&amp; layerModel) {
-        featureLayer.setLatLngs(Ember.get(polygon, &#x27;coordinates&#x27;));
-        if (typeof leafletLayer.editLayer === &#x27;function&#x27;) {
-          leafletLayer.editLayer(featureLayer);
-          return true;
+      let [, leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
+      if (leafletLayer &amp;&amp; featureLayer) {
+        let crs = leafletLayer.options.crs;
+        if (!Ember.isNone(crsName)) {
+          crs = getLeafletCrs(&#x27;{ &quot;code&quot;: &quot;&#x27; + crsName.toUpperCase() + &#x27;&quot;, &quot;definition&quot;: &quot;&quot; }&#x27;, this);
+        }
+
+        let coordsToLatLng = function(coords) {
+          return crs.unproject(L.point(coords));
+        };
+
+        let geoJSON = null;
+        if (!Ember.isNone(crs)) {
+          geoJSON = L.geoJSON(polygon, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
+        } else {
+          geoJSON = L.geoJSON(polygon).getLayers()[0];
+        }
+
+        if (!Ember.isNone(Ember.get(geoJSON, &#x27;feature.geometry&#x27;))) {
+          if (Ember.get(polygon, &#x27;type&#x27;).toLowerCase() !== &#x27;point&#x27;) {
+            featureLayer.setLatLngs(Ember.get(geoJSON, &#x27;feature.geometry.coordinates&#x27;));
+          } else {
+            featureLayer.setLatLng(Ember.get(geoJSON, &#x27;feature.geometry.coordinates&#x27;));
+          }
+
+          if (typeof leafletLayer.editLayer === &#x27;function&#x27;) {
+            leafletLayer.editLayer(featureLayer);
+            return true;
+          }
+        } else {
+          throw &#x27;unable to convert coordinates for this CRS &#x27; + crsName;
         }
       } else {
         throw &#x27;no object or layer found&#x27;;

@@ -415,6 +415,7 @@
 import Ember from &#x27;ember&#x27;;
 import rhumbDestination from &#x27;npm:@turf/rhumb-destination&#x27;;
 import helpers from &#x27;npm:@turf/helpers&#x27;;
+import { getLeafletCrs } from &#x27;../utils/leaflet-crs&#x27;;
 
 /**
   Create polygon object by rhumb.
@@ -434,7 +435,7 @@ import helpers from &#x27;npm:@turf/helpers&#x27;;
       };
   @returns {Object} New featureLayer.
 */
-const createObjectRhumb = (data) =&gt; {
+const createObjectRhumb = (data, layerCrs, that) =&gt; {
   if (Ember.isNone(data.points) || data.points.length === 0) {
     throw new Error(&#x27;Not data.&#x27;);
   }
@@ -517,6 +518,21 @@ const createObjectRhumb = (data) =&gt; {
 
   let coors = [];
 
+  // CRS
+  let startPointInCrs = helpers.point(data.startPoint);
+  if ((!Ember.isNone(data.crs) &amp;&amp; data.crs !== &#x27;EPSG:4326&#x27;) || (Ember.isNone(data.crs) &amp;&amp; layerCrs.code !== &#x27;EPSG:4326&#x27;)) {
+    if (!Ember.isNone(data.crs)) {
+      let crs = getLeafletCrs(&#x27;{ &quot;code&quot;: &quot;&#x27; + data.crs + &#x27;&quot;, &quot;definition&quot;: &quot;&quot; }&#x27;, that);
+      startPointInCrs = crs.unproject(L.point(data.startPoint[0], data.startPoint[1]));
+    } else {
+      startPointInCrs = layerCrs.unproject(L.point(data.startPoint[0], data.startPoint[1]));
+    }
+
+    let crs = getLeafletCrs(&#x27;{ &quot;code&quot;: &quot;EPSG:4326&quot;, &quot;definition&quot;: &quot;&quot; }&#x27;, that);
+    let point = crs.project(startPointInCrs);
+    startPointInCrs = helpers.point([point.x, point.y]);
+  }
+
   if (type === &#x27;Polygon&#x27;) {
     let startPoint;
     let coordinates = [];
@@ -533,7 +549,7 @@ const createObjectRhumb = (data) =&gt; {
       vertex.distance = vertex.distance / 1000;
 
       if (Ember.isNone(startPoint)) {
-        startPoint = rhumbDestination.default(helpers.point(data.startPoint), vertex.distance, bearing, { units: &#x27;kilometers&#x27; });
+        startPoint = rhumbDestination.default(startPointInCrs, vertex.distance, bearing, { units: &#x27;kilometers&#x27; });
       } else {
         startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: &#x27;kilometers&#x27; });
       }
@@ -564,7 +580,7 @@ const createObjectRhumb = (data) =&gt; {
       vertex.distance = vertex.distance / 1000;
 
       if (Ember.isNone(startPoint)) {
-        startPoint = rhumbDestination.default(helpers.point(data.startPoint), vertex.distance, bearing, { units: &#x27;kilometers&#x27; });
+        startPoint = rhumbDestination.default(startPointInCrs, vertex.distance, bearing, { units: &#x27;kilometers&#x27; });
       } else {
         startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: &#x27;kilometers&#x27; });
       }
