@@ -439,6 +439,15 @@ export default Ember.Mixin.create({
         // Remove layer editing.
         this.disableLayerEditing(map);
 
+        Object.values(leafletObject.changes).forEach(item =&gt; {
+          if (item.state === &#x27;updateElement&#x27;) {
+            let filter = new L.Filter.EQ(&#x27;primarykey&#x27;, Ember.get(item, &#x27;feature.properties.primarykey&#x27;));
+            leafletObject.loadFeatures(filter);
+            let id = leafletObject.getLayerId(item);
+            delete leafletObject._layers[id];
+          }
+        });
+
         leafletObject.off(&#x27;save:failed&#x27;, saveFailed);
         resolve({
           layerModel,
