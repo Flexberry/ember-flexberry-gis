@@ -891,5 +891,23 @@ export default Ember.Mixin.create({
     } else {
       throw 'new object settings not passed';
     }
+  },
+
+  /**
+    Upload file.
+    @method uploadFile
+    @param {File} file.
+    @return {Promise} Returns promise
+  */
+  uploadFile(file) {
+    let config = Ember.getOwner(this).resolveRegistration('config:environment');
+
+    return Ember.$.ajax({
+      url: `${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}`,
+      type: 'POST',
+      data: file,
+      cache: false,
+      processData: false
+    });
   }
 });
