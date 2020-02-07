@@ -54,6 +54,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     let newObj = geoJSON.getLayers()[0];
 
     leafletObject.addLayer(newObj);
+
     newObj.layerId = layerId;
 
     return newObj;
