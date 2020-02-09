@@ -20,15 +20,26 @@ export function initialize() {
       }
     */
     setStyle: function (style) {
-      if (!Ember.isNone(style) && !Ember.isNone(style.isImage) && (style.isImage === 'false' || !style.isImage)) {
-        let html = this._parseString(style.options.html);
-        let label = this._createStringLabel(html, this);
-        style.options.html = label;
-        this.setIcon(new L.divIcon(style.options));
-      } else if (!Ember.isNone(style) && !Ember.isNone(style.options)) {
-        this.setIcon(new L.Icon(style.options));
+      if (Ember.isNone(this.styleIsSet) || !this.styleIsSet) {
+        if (!Ember.isNone(style) && !Ember.isNone(style.isImage) && (style.isImage === 'false' || !style.isImage)) {
+          let html = this._parseString(style.options.html);
+          let label = this._createStringLabel(html, this);
+          let opt = Object.assign({}, style.options);
+          opt.html = label;
+          this.setIcon(new L.divIcon(opt));
+          this.style = opt;
+          this.styleIsSet = true;
+        } else if (!Ember.isNone(style) && !Ember.isNone(style.options)) {
+          this.setIcon(new L.Icon(style.options));
+        } else {
+          this.setIcon(new L.Icon.Default());
+        }
       } else {
-        this.setIcon(new L.Icon.Default());
+        if (!Ember.isNone(this.style) && !Ember.isNone(this.style.html)) {
+          this.setIcon(new L.divIcon(this.style));
+        }
+
+        this.styleIsSet = false;
       }
 
       return this;
