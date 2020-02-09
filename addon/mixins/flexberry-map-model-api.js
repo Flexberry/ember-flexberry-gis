@@ -866,17 +866,17 @@ export default Ember.Mixin.create({
         };
 
         let geoJSON = null;
-        if (!Ember.isNone(crs)) {
+        if (!Ember.isNone(crs) && crs.code !== 'EPSG:4326') {
           geoJSON = L.geoJSON(polygon, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
         } else {
           geoJSON = L.geoJSON(polygon).getLayers()[0];
         }
 
         if (!Ember.isNone(Ember.get(geoJSON, 'feature.geometry'))) {
-          if (Ember.get(polygon, 'type').toLowerCase() !== 'point') {
-            featureLayer.setLatLngs(Ember.get(geoJSON, 'feature.geometry.coordinates'));
+          if (Ember.get(geoJSON, 'feature.geometry.type').toLowerCase() !== 'point') {
+            featureLayer.setLatLngs(geoJSON._latlngs);
           } else {
-            featureLayer.setLatLng(Ember.get(geoJSON, 'feature.geometry.coordinates'));
+            featureLayer.setLatLng(geoJSON._latlng);
           }
 
           if (typeof leafletLayer.editLayer === 'function') {
