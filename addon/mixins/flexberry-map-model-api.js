@@ -866,6 +866,7 @@ export default Ember.Mixin.create({
         };
 
         let geoJSON = null;
+
         if (!Ember.isNone(crs) && crs.code !== 'EPSG:4326') {
           geoJSON = L.geoJSON(polygon, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
         } else {
