@@ -1276,17 +1276,17 @@ export default Ember.Mixin.create({
         };
 
         let geoJSON = null;
-        if (!Ember.isNone(crs)) {
+        if (!Ember.isNone(crs) &amp;&amp; crs.code !== &#x27;EPSG:4326&#x27;) {
           geoJSON = L.geoJSON(polygon, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
         } else {
           geoJSON = L.geoJSON(polygon).getLayers()[0];
         }
 
         if (!Ember.isNone(Ember.get(geoJSON, &#x27;feature.geometry&#x27;))) {
-          if (Ember.get(polygon, &#x27;type&#x27;).toLowerCase() !== &#x27;point&#x27;) {
-            featureLayer.setLatLngs(Ember.get(geoJSON, &#x27;feature.geometry.coordinates&#x27;));
+          if (Ember.get(geoJSON, &#x27;feature.geometry.type&#x27;).toLowerCase() !== &#x27;point&#x27;) {
+            featureLayer.setLatLngs(geoJSON._latlngs);
           } else {
-            featureLayer.setLatLng(Ember.get(geoJSON, &#x27;feature.geometry.coordinates&#x27;));
+            featureLayer.setLatLng(geoJSON._latlng);
           }
 
           if (typeof leafletLayer.editLayer === &#x27;function&#x27;) {

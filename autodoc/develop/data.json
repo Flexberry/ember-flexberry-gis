@@ -36885,7 +36885,7 @@
         },
         {
             "file": "addon/initializers/leaflet-marker.js",
-            "line": 37,
+            "line": 48,
             "description": "Create array of strings and feature properies.",
             "itemtype": "method",
             "name": "_parseString",
@@ -36901,7 +36901,7 @@
         },
         {
             "file": "addon/initializers/leaflet-marker.js",
-            "line": 53,
+            "line": 64,
             "description": "Create label string.",
             "itemtype": "method",
             "name": "_createStringLabel",
