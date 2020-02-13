@@ -78,18 +78,27 @@ export default Ember.Mixin.create({
       this.set('compareBtnDisabled', true);
     }
   }),
+
   mapApi: Ember.inject.service(),
 
-  onLeafletMapChange: Ember.observer('leafletMap', function () {
-    let service = this.get('service');
-    let className = this.get('_storageClassName');
-    let key = this.get('model.id');
-    this.set('favFeaturesIds1', service.getFromStorage(className, key));
-    console.log(this.get('favFeaturesIds1'));
-    const map = this.get('leafletMap');
-    const layers = this.get('model.hierarchy');
-    console.log(layers)
-    //this.fromIdArrayToFeatureArray(this.get('favFeaturesIds1'), layers);
+  onLeafletMapChange: Ember.observer('model', function () {
+    let _this = this
+    let api = this.get('mapApi');
+    api.getLayerFeatureId = function (layer, layerObject) {
+      return layerObject.feature.properties.name;
+    };
+    setTimeout(function(){
+     
+      let service = _this.get('service');
+      let className = _this.get('_storageClassName');
+      let key = _this.get('model.id');
+      _this.set('favFeaturesIds1', service.getFromStorage(className, key));
+      const layers = _this.get('model.hierarchy');
+      _this.set('favFeatures', _this.fromIdArrayToFeatureArray(_this.get('favFeaturesIds1')));
+      console.log(_this.get('favFeaturesIds1'));
+      console.log(_this.get('favFeatures'));
+    }, 1500)
+   
     // service.setToStorage(className, key, );
   }), 
 
@@ -126,7 +135,6 @@ export default Ember.Mixin.create({
     */
     addToFavorite(feature) {
       const map = this.get('leafletMap');
-    console.log(map)
       let favFeatures = this.get('favFeatures');
       let favFeaturesIds = this.get('favFeaturesIds1');
       let service = this.get('service');
@@ -149,14 +157,14 @@ export default Ember.Mixin.create({
         Ember.set(feature.properties, 'isFavorite', true);
         if (layerModelIndex !== false) {
           favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);
-          let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.primarykey}
+          let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.name}
           favFeaturesIds.pushObject(featureIds)
           console.log(favFeaturesIds)
           service.setToStorage(className, key, favFeaturesIds);
           this.set('favFeaturesIds1', favFeaturesIds);
         } else {
           favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature);
-          let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.primarykey}
+          let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.name}
           favFeaturesIds.pushObject(featureIds)
           console.log(favFeaturesIds)
           service.setToStorage(className, key, favFeaturesIds);
@@ -269,26 +277,15 @@ export default Ember.Mixin.create({
     return array;
   },
 
-  fromIdArrayToFeatureArray(favFeaturesIds, layers) {
-    layers.forEach(item=> {
-      console.log(item._leafletObject);
+  fromIdArrayToFeatureArray(favFeaturesIds) {
+    let arr = Ember.A();
+    let api = this.get('mapApi').getFromApi('mapModel');
+    favFeaturesIds.forEach(feature=> {
+      let [layerModel, leaflet, feature1] = api._getModelLayerFeature(feature.layerId, feature.featureId);
+        if (feature1) {
+          arr.addObject(feature1);
+        }
     })
-    // console.log(layers);
-    // let l = this.get('store').peekAll('new-platform-flexberry-g-i-s-map-layer');
-    // console.log(l);
-    // let [layerModel, leafletObject, featureLayer] = this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(favFeaturesIds[0].layerId, favFeaturesIds[0].featureId);
-    // console.log(featureLayer)
-    // console.log(leafletObject)
-    
-    // let favFeatures = this.get('favFeatures');
-    // favFeaturesIds.forEach(item => {
-    //   let layer = layers.findBy('id', item.layerId);
-    //   let features = Ember.get(layer, '_leafletObject._layers') || {};
-    //   let object = Object.values(features).find(feature => {
-    //     return feature.properties.primarykey === item.featureId;
-    //   });
-    //   console.log(object);
-    //   let layerModelIndex = this.isLayerModelInArray(favFeatures, object.layerModel);
-    // });
+    return arr;
   }
 });
