@@ -359,8 +359,8 @@ export default Ember.Mixin.create({
     });
 
     if (!Ember.isNone(object)) {
-      let crs = Ember.get(layer,'_leafletObject.options.crs');
-	    let crsTarger = null;
+      let crs = Ember.get(layer, '_leafletObject.options.crs');
+      let crsTarger = null;
 
       let coordsToLatLng = (coords) =>  {
         return crs.unproject(L.point(coords));
@@ -385,8 +385,7 @@ export default Ember.Mixin.create({
       if (!Ember.isNone(crsName)) {
         crsTarger = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
         let geometry = geoJSON.getLayers()[0].getLatLngs();
-        let options = Ember.get(this, 'leafletObject.options');
-        
+
         try {
           geom = transform(geometry);
         }
@@ -396,7 +395,7 @@ export default Ember.Mixin.create({
       }
 
       result = Ember.$.extend({}, geoJSON.getLayers()[0].feature.properties);
-      result.geometry = geom
+      result.geometry = geom;
 
       var obj = object.options.crs.code === 'EPSG:4326' ? object.feature : projection.toWgs84(object.feature);
       result.area = area(obj);
@@ -960,15 +959,16 @@ export default Ember.Mixin.create({
   getCoordPoint(crsName) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       const leafletMap = this.get('mapApi').getFromApi('leafletMap');
-      $(leafletMap._container).css('cursor','crosshair');
+      $(leafletMap._container).css('cursor', 'crosshair');
 
       var getCoord = (e) => {
         $(leafletMap._container).css('cursor','');
         leafletMap.off('click', getCoord);
-        let crs = Ember.get(leafletMap,'options.crs');
+        let crs = Ember.get(leafletMap, 'options.crs');
         if (!Ember.isNone(crsName)) {
           crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
         }
+
         resolve(crs.project(e.latlng));
       };
 
