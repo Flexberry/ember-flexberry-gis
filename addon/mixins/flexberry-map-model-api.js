@@ -339,28 +339,17 @@ export default Ember.Mixin.create({
     @param {String} layerId Id layer
     @param {String} featureId Id object
   */
-  getLayerObjectOptions(layerId, featureId) {
+  getLayerObjectOptions(layerId, featureId, crsName) {
     let result;
     if (Ember.isNone(layerId) || Ember.isNone(featureId)) {
       return result;
     }
 
-    const allLayers = this.get('mapLayer');
-    let layers = Ember.A(allLayers);
-    const layer = layers.findBy('id', layerId);
-    if (Ember.isNone(layer)) {
-      return result;
-    }
-
-    let features = Ember.get(layer, '_leafletObject._layers') || {};
-    let object = Object.values(features).find(feature => {
-      return this._getLayerFeatureId(layer, feature) === featureId;
-    });
-
-    if (!Ember.isNone(object)) {
-      result = Ember.$.extend({}, object.feature.properties);
-      var obj = object.options.crs.code === 'EPSG:4326' ? object.feature : projection.toWgs84(object.feature);
-      result.area = area(obj);
+    let [, leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, featureId);
+    if (leafletLayer && featureLayer) {
+      result = Ember.$.extend({}, featureLayer.feature.properties);
+      let newObj = this.getGeoJsonByCrs(featureLayer)
+      result.area = area(newObj);
     }
 
     return result;
@@ -910,5 +899,22 @@ export default Ember.Mixin.create({
       cache: false,
       processData: false
     });
+  },
+
+  getGeoJsonByCrs(object) {
+    let crs = object.options.crs;
+    let coordsToLatLng = function(coords) {
+      return crs.unproject(L.point(coords));
+    };
+
+    let geoJSON = null;
+    if (crs.code !== 'EPSG:4326') {
+      geoJSON = L.geoJSON(object.feature, { coordsToLatLng: coordsToLatLng.bind(this) });
+      //geoJSON = projection.toWgs84(geoJSON.getLayers()[0].feature);
+    } else {
+      geoJSON = L.geoJSON(object.feature).getLayers()[0].feature;
+    }
+
+    return geoJSON;
   }
 });
