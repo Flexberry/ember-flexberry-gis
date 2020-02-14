@@ -360,7 +360,7 @@ export default Ember.Mixin.create({
 
     if (!Ember.isNone(object)) {
       let crs = Ember.get(layer, '_leafletObject.options.crs');
-      let crsTarger = null;
+      let crsTarget = null;
 
       let coordsToLatLng = (coords) =>  {
         return crs.unproject(L.point(coords));
@@ -377,20 +377,20 @@ export default Ember.Mixin.create({
 
           return coords;
         } else {
-          return crsTarger.project(latlngs);
+          return crsTarget.project(latlngs);
         }
       };
 
       let geom = geoJSON.getLayers()[0].feature.geometry.coordinates;
       if (!Ember.isNone(crsName)) {
-        crsTarger = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
+        crsTarget = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
         let geometry = geoJSON.getLayers()[0].getLatLngs();
 
         try {
           geom = transform(geometry);
         }
         catch (err) {
-          throw err;
+          console.log(err);
         }
       }
 
@@ -963,7 +963,6 @@ export default Ember.Mixin.create({
 
       var getCoord = (e) => {
         Ember.$(leafletMap._container).css('cursor', '');
-        leafletMap.off('click', getCoord);
         let crs = Ember.get(leafletMap, 'options.crs');
         if (!Ember.isNone(crsName)) {
           crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
@@ -972,7 +971,7 @@ export default Ember.Mixin.create({
         resolve(crs.project(e.latlng));
       };
 
-      leafletMap.on('click', getCoord);
+      leafletMap.once('click', getCoord);
     });
   }
 });
