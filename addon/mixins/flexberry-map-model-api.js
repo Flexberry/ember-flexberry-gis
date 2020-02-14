@@ -959,10 +959,10 @@ export default Ember.Mixin.create({
   getCoordPoint(crsName) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       const leafletMap = this.get('mapApi').getFromApi('leafletMap');
-      $(leafletMap._container).css('cursor', 'crosshair');
+      Ember.$(leafletMap._container).css('cursor', 'crosshair');
 
       var getCoord = (e) => {
-        $(leafletMap._container).css('cursor', '');
+        Ember.$(leafletMap._container).css('cursor', '');
         leafletMap.off('click', getCoord);
         let crs = Ember.get(leafletMap, 'options.crs');
         if (!Ember.isNone(crsName)) {
