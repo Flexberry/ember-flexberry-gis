@@ -499,7 +499,7 @@ export default Ember.Mixin.create({
     var map = Ember.get(leafletObject, &#x27;_map&#x27;);
 
     leafletObject.eachLayer(function (layerShape) {
-      if (!map.hasLayer(layerShape)) {
+      if (map.hasLayer(layerShape)) {
         map.removeLayer(layerShape);
       }
     });
@@ -748,8 +748,9 @@ export default Ember.Mixin.create({
     @method getLayerObjectOptions
     @param {String} layerId Id layer
     @param {String} featureId Id object
+    @param {String} crsName crs name, in which to give coordinates
   */
-  getLayerObjectOptions(layerId, featureId) {
+  getLayerObjectOptions(layerId, featureId, crsName) {
     let result;
     if (Ember.isNone(layerId) || Ember.isNone(featureId)) {
       return result;
@@ -768,7 +769,44 @@ export default Ember.Mixin.create({
     });
 
     if (!Ember.isNone(object)) {
-      result = Ember.$.extend({}, object.feature.properties);
+      let crs = Ember.get(layer, &#x27;_leafletObject.options.crs&#x27;);
+      let crsTarget = null;
+
+      let coordsToLatLng = (coords) =&gt;  {
+        return crs.unproject(L.point(coords));
+      };
+
+      let geoJSON = L.geoJSON(object.feature, { coordsToLatLng: coordsToLatLng.bind(this) });
+
+      let transform = (latlngs) =&gt; {
+        if (Ember.isArray(latlngs)) {
+          let coords = [];
+          for (let i = 0; i &lt; latlngs.length; i++) {
+            coords.push(transform(latlngs[i]));
+          }
+
+          return coords;
+        } else {
+          return crsTarget.project(latlngs);
+        }
+      };
+
+      let geom = geoJSON.getLayers()[0].feature.geometry.coordinates;
+      if (!Ember.isNone(crsName)) {
+        crsTarget = getLeafletCrs(&#x27;{ &quot;code&quot;: &quot;&#x27; + crsName.toUpperCase() + &#x27;&quot;, &quot;definition&quot;: &quot;&quot; }&#x27;, this);
+        let geometry = geoJSON.getLayers()[0].getLatLngs();
+
+        try {
+          geom = transform(geometry);
+        }
+        catch (err) {
+          console.log(err);
+        }
+      }
+
+      result = Ember.$.extend({}, geoJSON.getLayers()[0].feature.properties);
+      result.geometry = geom;
+
       var obj = object.options.crs.code === &#x27;EPSG:4326&#x27; ? object.feature : projection.toWgs84(object.feature);
       result.area = area(obj);
     }
@@ -1319,6 +1357,31 @@ export default Ember.Mixin.create({
       data: file,
       cache: false,
       processData: false
+    });
+  },
+
+  /**
+    Get coordinates point.
+    @method getCoordPoint
+    @param {String} crsName crs name, in which to give coordinates
+    @return {Promise} Returns promise
+  */
+  getCoordPoint(crsName) {
+    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      const leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+      Ember.$(leafletMap._container).css(&#x27;cursor&#x27;, &#x27;crosshair&#x27;);
+
+      var getCoord = (e) =&gt; {
+        Ember.$(leafletMap._container).css(&#x27;cursor&#x27;, &#x27;&#x27;);
+        let crs = Ember.get(leafletMap, &#x27;options.crs&#x27;);
+        if (!Ember.isNone(crsName)) {
+          crs = getLeafletCrs(&#x27;{ &quot;code&quot;: &quot;&#x27; + crsName.toUpperCase() + &#x27;&quot;, &quot;definition&quot;: &quot;&quot; }&#x27;, this);
+        }
+
+        resolve(crs.project(e.latlng));
+      };
+
+      leafletMap.once(&#x27;click&#x27;, getCoord);
     });
   }
 });

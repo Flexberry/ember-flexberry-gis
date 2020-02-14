@@ -41699,6 +41699,11 @@
                     "name": "featureId",
                     "description": "Id object",
                     "type": "String"
+                },
+                {
+                    "name": "crsName",
+                    "description": "crs name, in which to give coordinates",
+                    "type": "String"
                 }
             ],
             "class": "FlexberryMaplayerActionsHandlerMixin",
@@ -41706,7 +41711,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 369,
+            "line": 407,
             "description": "Check if objectA contains object B.",
             "itemtype": "method",
             "name": "isContainsObject",
@@ -41737,7 +41742,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 415,
+            "line": 453,
             "description": "Calculate the area of ​​object B that extends beyond the boundaries of object A.",
             "itemtype": "method",
             "name": "getAreaExtends",
@@ -41768,7 +41773,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 469,
+            "line": 507,
             "description": "Get object id by object and layer.",
             "itemtype": "method",
             "name": "_getLayerFeatureId",
@@ -41793,7 +41798,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 486,
+            "line": 524,
             "description": "Determine the visibility of the specified objects by id for the layer.",
             "itemtype": "method",
             "name": "_setVisibilityObjects",
@@ -41821,7 +41826,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 527,
+            "line": 565,
             "description": "Copy Object from Source layer to Destination.",
             "itemtype": "method",
             "name": "copyObject",
@@ -41842,7 +41847,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 582,
+            "line": 620,
             "description": "Calculate the area of intersection between object A and object B .",
             "itemtype": "method",
             "name": "getIntersectionArea",
@@ -41878,7 +41883,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 625,
+            "line": 663,
             "description": "Cleans the service layer.",
             "itemtype": "method",
             "name": "clearServiceLayer",
@@ -41887,7 +41892,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 634,
+            "line": 672,
             "description": "Create image for layer object.",
             "itemtype": "method",
             "name": "getSnapShot",
@@ -41897,7 +41902,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 711,
+            "line": 749,
             "description": "Download image for layer object.",
             "itemtype": "method",
             "name": "downloadSnapShot",
@@ -41906,7 +41911,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 736,
+            "line": 774,
             "description": "Get the object thumb.",
             "itemtype": "method",
             "name": "getRhumb",
@@ -41931,7 +41936,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 833,
+            "line": 871,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
@@ -41952,7 +41957,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 847,
+            "line": 885,
             "description": "Change object polygon.",
             "itemtype": "method",
             "name": "copyObject",
@@ -41983,7 +41988,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 897,
+            "line": 935,
             "description": "Upload file.",
             "itemtype": "method",
             "name": "uploadFile",
@@ -41992,6 +41997,26 @@
                     "name": "file.",
                     "description": "",
                     "type": "File"
+                }
+            ],
+            "return": {
+                "description": "Returns promise",
+                "type": "Promise"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 953,
+            "description": "Get coordinates point.",
+            "itemtype": "method",
+            "name": "getCoordPoint",
+            "params": [
+                {
+                    "name": "crsName",
+                    "description": "crs name, in which to give coordinates",
+                    "type": "String"
                 }
             ],
             "return": {
@@ -45278,15 +45303,15 @@
         },
         {
             "message": "unknown tag: snapt",
-            "line": " addon/mixins/flexberry-map-model-api.js:634"
+            "line": " addon/mixins/flexberry-map-model-api.js:672"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:833"
+            "line": " addon/mixins/flexberry-map-model-api.js:871"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:833"
+            "line": " addon/mixins/flexberry-map-model-api.js:871"
         },
         {
             "message": "replacing incorrect tag: returns with return",
