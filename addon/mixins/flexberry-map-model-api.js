@@ -962,7 +962,7 @@ export default Ember.Mixin.create({
       $(leafletMap._container).css('cursor', 'crosshair');
 
       var getCoord = (e) => {
-        $(leafletMap._container).css('cursor','');
+        $(leafletMap._container).css('cursor', '');
         leafletMap.off('click', getCoord);
         let crs = Ember.get(leafletMap, 'options.crs');
         if (!Ember.isNone(crsName)) {
