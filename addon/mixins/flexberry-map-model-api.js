@@ -348,11 +348,11 @@ export default Ember.Mixin.create({
     let  [, leafletLayer, featureLayer]  = this._getModelLayerFeature(layerId, featureId);
     if (leafletLayer && featureLayer) {
       result = Ember.$.extend({}, featureLayer.feature.properties);
-      let obj = this.convertObjectCoordinates(featureLayer);
+      let obj = this._convertObjectCoordinates(featureLayer);
 
-      result.geometry = featureLaye.feature.geometry.coordinates;
+      result.geometry = featureLayer.feature.geometry.coordinates;
       if (crsName) {
-        let NewObjCrs = this.convertObjectCoordinates(featureLayer, crsName);
+        let NewObjCrs = this._convertObjectCoordinates(featureLayer, crsName);
         result.geometry = NewObjCrs.feature.geometry.coordinates;
       }
       
@@ -363,7 +363,7 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Check if objectA contains object B.
+    Check if object A contains object B.
     @method isContainsObject
     @param {String} objectAId id of first object.
     @param {String} layerAId id of first layer.
@@ -371,27 +371,11 @@ export default Ember.Mixin.create({
     @param {String} layerBId id of second layer.
   */
   isContainsObject(objectAId, layerAId, objectBId, layerBId) {
-    let objA;
-    let objB;
-    const layers = this.get('mapLayer');
-    let layerA = layers.findBy('id', layerAId);
-    let layerB = layers.findBy('id', layerBId);
-    if (layerA && layerB) {
-      let featuresA = Ember.get(layerA, '_leafletObject._layers');
-      objA = Object.values(featuresA).find(feature => {
-        const layerAFeatureId = this._getLayerFeatureId(layerA, feature);
-        return layerAFeatureId === objectAId;
-      });
-      let featuresB = Ember.get(layerB, '_leafletObject._layers');
-      objB = Object.values(featuresB).find(feature => {
-        const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
-        return layerBFeatureId === objectBId;
-      });
-    }
-
-    if (objA && objB) {
-      objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-      objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+    let  [, leafletLayerA, objA]  = this._getModelLayerFeature(layerAId, objectAId);
+    let  [, leafletLayerB, objB]  = this._getModelLayerFeature(layerBId, objectBId);
+    if (objA && objB && leafletLayerA && leafletLayerB) {
+      objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : this._convertObjectCoordinates(objA).feature;
+      objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(objB).feature;
       if (objA.geometry.type === 'MultiPolygon') {
         objA = L.polygon(objA.geometry.coordinates[0]).toGeoJSON();
       }
@@ -913,8 +897,9 @@ export default Ember.Mixin.create({
     @method convertObjectCoordinates
     @param {featureLayer} object.
     @return {featureLayer} Returns provided object with converted coordinates
+    @private
   */
-  convertObjectCoordinates(object, crsName = null) {
+  _convertObjectCoordinates(object, crsName = null) {
     let firstProjection = object.options.crs.code;
     let baseProjection = crsName ? crsName : 'EPSG:4326';
     if (firstProjection !== baseProjection) {
@@ -923,7 +908,7 @@ export default Ember.Mixin.create({
         var arr1 = [];
         arr.forEach(pair => {
           if (object.feature.geometry.type === 'MultiPolygon') {
-            let arr2 = []
+            let arr2 = [];
             pair.forEach(cords => {
               let transdormedCords = proj4(firstProjection, baseProjection, cords);
               arr2.push(transdormedCords);
@@ -931,7 +916,7 @@ export default Ember.Mixin.create({
             arr1.push(arr2);
           } else {         
             let cords = proj4(firstProjection, baseProjection, pair);
-            arr1.push(cords)
+            arr1.push(cords);
           }
         });
         coordinatesArray.push(arr1);
