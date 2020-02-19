@@ -287,14 +287,12 @@ export default Ember.Mixin.create({
     let [, layerObjectB, objB] = this._getModelLayerFeature(secondLayerId, secondLayerObjectId);
     if (layerObjectA && objA && layerObjectB && objB) {
       const getObjectCenterPoint = function (object) {       
-        // let centeredObj = object.options.crs.code === 'EPSG:4326' ? object : this._convertObjectCoordinates(object);
-        let centeredObj = this._convertObjectCoordinates(object);
-        let type = Ember.get(centeredObj, 'geometry.type');
+        let type = Ember.get(object, 'feature.geometry.type');
         if (type === 'Point') {
-          return helpers.point([centeredObj._latlng.lat, centeredObj._latlng.lng]);
+          return helpers.point([object._latlng.lat, object._latlng.lng]);
         } else {
-          let latlngs = centeredObj.getBounds().getCenter();
-          return helpers.point([latlngs.lat, latlngs.lng]);
+          let latlngs = object.getBounds().getCenter();
+          return helpers.point( [latlngs.lat, latlngs.lng]);
         }
       };
       const firstObject =  getObjectCenterPoint.call(this, objA);
@@ -315,77 +313,20 @@ export default Ember.Mixin.create({
     @param {String} crsName crs name, in which to give coordinates
   */
   getLayerObjectOptions(layerId, featureId, crsName) {
-    let result;
-    if (Ember.isNone(layerId) || Ember.isNone(featureId)) {
-      return result;
-    }
-
-    const allLayers = this.get('mapLayer');
-    let layers = Ember.A(allLayers);
-    const layer = layers.findBy('id', layerId);
-    if (Ember.isNone(layer)) {
-      return result;
-    }
-
-    let features = Ember.get(layer, '_leafletObject._layers') || {};
-    let object = Object.values(features).find(feature => {
-      return this._getLayerFeatureId(layer, feature) === featureId;
-    });
-
-    if (!Ember.isNone(object)) {
-      let crs = Ember.get(layer, '_leafletObject.options.crs');
-      let crsTarget = null;
-
-      let coordsToLatLng = (coords) =>  {
-        return crs.unproject(L.point(coords));
-      };
-
-      let geoJSON = L.geoJSON(object.feature, { coordsToLatLng: coordsToLatLng.bind(this) });
-
-      let transform = (latlngs) => {
-        if (Ember.isArray(latlngs)) {
-          let coords = [];
-          for (let i = 0; i < latlngs.length; i++) {
-            coords.push(transform(latlngs[i]));
-          }
-
-          return coords;
-        } else {
-          return crsTarget.project(latlngs);
-        }
-      };
-
-      let geom = geoJSON.getLayers()[0].feature.geometry.coordinates;
-      if (!Ember.isNone(crsName)) {
-        crsTarget = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
-        let geometry = geoJSON.getLayers()[0].getLatLngs();
-
-        try {
-          geom = transform(geometry);
-        }
-        catch (err) {
-          console.log(err);
-        }
+    let result;  
+    let  [, leafletLayer, featureLayer]  = this._getModelLayerFeature(layerId, featureId);
+    if (leafletLayer && featureLayer) {
+      result = Ember.$.extend({}, featureLayer.feature.properties);
+      result.geometry = featureLayer.feature.geometry.coordinates;
+      if (crsName) {    
+        let NewObjCrs = this._convertObjectCoordinates(featureLayer, crsName);
+        result.geometry = NewObjCrs.feature.geometry.coordinates;
       }
+      let obj = featureLayer.options.crs.code === 'EPSG:4326' ? featureLayer.feature : this._convertObjectCoordinates(featureLayer).feature;
+      result.area = area(obj);
+    } 
 
-      result = Ember.$.extend({}, geoJSON.getLayers()[0].feature.properties);
-      result.geometry = geom;
-
-      let obj = this._convertObjectCoordinates(object);
-      result.area = area(obj.feature);
-
-    }
-    return result;
-     
-      // result = Ember.$.extend({}, featureLayer.feature.properties);
-      
-      // result.geometry = featureLayer.feature.geometry.coordinates;
-      // if (crsName) {
-      //   let NewObjCrs = this._convertObjectCoordinates(featureLayer, crsName);
-      //   result.geometry = NewObjCrs.feature.geometry.coordinates;
-      // }
-      
-      // result.area = area(obj.feature);
+    return result;   
   },
 
   /**
@@ -427,25 +368,10 @@ export default Ember.Mixin.create({
     @param {String} layerBId id of second layer.
   */
   getAreaExtends(objectAId, layerAId, objectBId, layerBId) {
-    let objA;
-    let objB;
-    const layers = this.get('mapLayer');
-    let layerA = layers.findBy('id', layerAId);
-    let layerB = layers.findBy('id', layerBId);
-    if (layerA && layerB) {
-      let featuresA = Ember.get(layerA, '_leafletObject._layers');
-      objA = Object.values(featuresA).find(feature => {
-        const layerAFeatureId = this._getLayerFeatureId(layerA, feature);
-        return layerAFeatureId === objectAId;
-      });
-      let featuresB = Ember.get(layerB, '_leafletObject._layers');
-      objB = Object.values(featuresB).find(feature => {
-        const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
-        return layerBFeatureId === objectBId;
-      });
-    }
+    let [, layerObjectA, objA] = this._getModelLayerFeature(layerAId, objectAId);
+    let [, layerObjectB, objB] = this._getModelLayerFeature(layerBId, objectBId);
 
-    if (objA && objB) {
+    if (objA && objB && layerObjectA && layerObjectB) {
       let feature1 = objA.options.crs.code === 'EPSG:4326' ? objA.feature : this._convertObjectCoordinates(objA).feature;
       let feature2 = objB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(objB).feature;
       let intersectionRes = intersect.default(feature2, feature1);
@@ -926,6 +852,26 @@ export default Ember.Mixin.create({
     @private
   */
   _convertObjectCoordinates(object, crsName = null) {
+    //Что с этим делать? куда перенести?
+    // proj4.defs([
+    //   [
+    //     'EPSG:32640',
+    //     '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs'
+    //   ],
+    //   [
+    //     'EPSG:59001',
+    //     '+proj=tmerc +lat_0=0 +lon_0=53.55 +k=1 +x_0=1250000 +y_0=-5914743.504 +ellps=krass +units=m +no_defs +towgs84=23.57,-140.95,-79.8,0.0,0.35,0.79,0.22'
+    //   ],
+    //   [
+    //     'EPSG:59002',
+    //     '+proj=tmerc +lat_0=0 +lon_0=56.55 +k=1 +x_0=2250000 +y_0=-5914743.504 +ellps=krass +units=m +no_defs'+
+    //     ' +towgs84=23.57,-140.95,-79.8,0.0,0.35,0.79,-0.22'
+    //   ],
+    //   [
+    //     'EPSG:59003',
+    //     '+proj=tmerc +lat_0=0 +lon_0=59.55 +k=1 +x_0=3250000 +y_0=-5914743.504 +ellps=krass +units=m +no_defs +towgs84=23.57,-140.95,-79.8,0.0,0.35,0.79,0.22'
+    //   ]
+    // ]);
     let firstProjection = object.options.crs.code;
     let baseProjection = crsName ? crsName : 'EPSG:4326';
     if (firstProjection !== baseProjection) {
