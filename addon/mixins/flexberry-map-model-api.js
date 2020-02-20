@@ -286,7 +286,7 @@ export default Ember.Mixin.create({
     let [, layerObjectA, objA] = this._getModelLayerFeature(firstLayerId, firstLayerObjectId);
     let [, layerObjectB, objB] = this._getModelLayerFeature(secondLayerId, secondLayerObjectId);
     if (layerObjectA && objA && layerObjectB && objB) {
-      const getObjectCenterPoint = function (object) {       
+      const getObjectCenterPoint = function (object) {
         let type = Ember.get(object, 'feature.geometry.type');
         if (type === 'Point') {
           return helpers.point([object._latlng.lat, object._latlng.lng]);
@@ -295,6 +295,7 @@ export default Ember.Mixin.create({
           return helpers.point([latlngs.lat, latlngs.lng]);
         }
       };
+
       const firstObject =  getObjectCenterPoint.call(this, objA);
       const secondObject = getObjectCenterPoint.call(this, objB);
 
@@ -302,7 +303,7 @@ export default Ember.Mixin.create({
       return distance.default(firstObject, secondObject, { units: 'kilometers' }) * 1000;
     } else {
       throw 'Object not found';
-    }   
+    }
   },
 
   /**
@@ -313,20 +314,21 @@ export default Ember.Mixin.create({
     @param {String} crsName crs name, in which to give coordinates
   */
   getLayerObjectOptions(layerId, featureId, crsName) {
-    let result;  
+    let result;
     let  [, leafletLayer, featureLayer]  = this._getModelLayerFeature(layerId, featureId);
     if (leafletLayer && featureLayer) {
       result = Ember.$.extend({}, featureLayer.feature.properties);
       result.geometry = featureLayer.feature.geometry.coordinates;
-      if (crsName) {    
+      if (crsName) {
         let NewObjCrs = this._convertObjectCoordinates(featureLayer, crsName);
         result.geometry = NewObjCrs.feature.geometry.coordinates;
       }
+
       let obj = featureLayer.options.crs.code === 'EPSG:4326' ? featureLayer.feature : this._convertObjectCoordinates(featureLayer).feature;
       result.area = area(obj);
-    } 
+    }
 
-    return result;   
+    return result;
   },
 
   /**
@@ -868,7 +870,7 @@ export default Ember.Mixin.create({
               arr2.push(transdormedCords);
             });
             arr1.push(arr2);
-          } else {         
+          } else {
             let cords = proj4(firstProjection, baseProjection, pair);
             arr1.push(cords);
           }
