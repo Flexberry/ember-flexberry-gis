@@ -41,30 +41,72 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   onTwoObjectsChange: Ember.observer('features.[]', function() {
     this.set('data', this.get('features'));
   }),
-  onTwoObjectsChange: Ember.observer('test.[]', function() {
-     // console.log(layers);
-     
-    //  let l = this.get('mapApi').getFromApi('mapModel').hierarchy;
-    //  console.log(l);
-    //  l.forEach(item => {
-    //    console.log(item._leafletObject)
-    //  })
-    // let [layerModel, leafletObject, featureLayer] = this.get('mapApi').getFromApi('mapModel')._getModelLayerFeature(favFeaturesIds[0].layerId, favFeaturesIds[0].featureId);
-    // console.log(featureLayer)
-    // console.log(leafletObject)
+  // onTwoObjectsChange: Ember.observer('test.[]', function() {
+  //   let _this = this
+  //   let api = this.get('mapApi');
+  //   api.addToApi('getLayerFeatureId', function(layer, layerObject) {
+  //     if (layerObject.feature.properties.hasOwnProperty('primarykey')) {
+  //       return layerObject.feature.properties.primarykey;
+  //     }
+  //     return layerObject.feature.properties.name;
+  //   });
+
+  //   api.addToApi('readyMapLayers', function() {
+  //     return new Ember.RSVP.Promise(resolve=>{
+  //       resolve();
+  //     })
+  //   });
+  //   let r = api.getFromApi('readyMapLayers');
+  //   r().then(()=> {
+  //     setTimeout(function(){
+  //       _this.fromIdArrayToFeatureArray(_this.get('test'));
+  //     }, 2000)
     
-    // let favFeatures = this.get('favFeatures');
-    // favFeaturesIds.forEach(item => {
-    //   let layer = layers.findBy('id', item.layerId);
-    //   let features = Ember.get(layer, '_leafletObject._layers') || {};
-    //   let object = Object.values(features).find(feature => {
-    //     return feature.properties.primarykey === item.featureId;
-    //   });
-    //   console.log(object);
-    //   let layerModelIndex = this.isLayerModelInArray(favFeatures, object.layerModel);
-    // });
-  }),
- 
+  //   });
+  // }),
+
+  // fromIdArrayToFeatureArray(favFeaturesIds) {
+    
+  //   let api = this.get('mapApi').getFromApi('mapModel');
+  //   let favFeatures = Ember.A();
+  //   favFeaturesIds.forEach(layer => {
+  //     let [layerModel, lealfetObject, featureLayer] = api._getModelLayerFeature(layer.layerId, layer.featureId);
+  //     let layerModelIndex = this.isLayerModelInArray(favFeatures, layerModel);
+  //     if (layerModelIndex !== false) {
+  //       favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, featureLayer);
+  //     } else {
+  //       favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, layerModel, featureLayer);
+  //     }
+  //   })
+  //   let layerModelPromise = Ember.A();
+  //   favFeatures.forEach(object => {
+  //     let promise = new Ember.RSVP.Promise((resolve) => {
+  //       resolve(object.features);
+  //     });
+  //     layerModelPromise.addObject({ layerModel: object.layerModel, features: promise });
+  //   });
+  //   this.set('features', favFeatures);
+  //   this.set('data', layerModelPromise);
+   
+  // },
+
+  // addNewFeatureToLayerModel(array, index, feature) {
+  //   let features = array[index].features;
+  //   features.push(feature);
+  //   return array;
+  // },
+
+  // /**
+  //   Adding new layer model and new feature to array.
+
+  //     @method addNewFeatureToNewLayerModel
+  // */
+  // addNewFeatureToNewLayerModel(array, layerModel, feature) {
+  //   let featureArray = Ember.A();
+  //   featureArray.addObject(feature);
+  //   array.addObject({ layerModel: layerModel, features: featureArray });
+  //   return array;
+  // },
 
   actions: {
 
