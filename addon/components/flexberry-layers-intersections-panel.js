@@ -449,9 +449,7 @@ export default Ember.Component.extend({
           if (e.polygonLayer.options.hasOwnProperty('crs')) {
             if (e.polygonLayer.options.crs.code !== 'EPSG:4326') {
               objB = mapModel._convertObjectCoordinates(e.polygonLayer.options.crs.code, e.polygonLayer.feature);
-              baseProjection = e.polygonLayer.options.crs.code
-              // objB = projection.toWgs84(e.polygonLayer.feature);
-              // convertToMercator = true;
+              baseProjection = e.polygonLayer.options.crs.code;
             }
           }
 
@@ -459,8 +457,6 @@ export default Ember.Component.extend({
             if (item.leafletLayer.options.crs.code !== 'EPSG:4326') {
               objA =  mapModel._convertObjectCoordinates(item.leafletLayer.options.crs.code, item.leafletLayer.feature);
               baseProjection = item.leafletLayer.options.crs.code;
-              // objA = projection.toWgs84(item);
-              // convertToMercator = true;
             }
           }
 
@@ -519,7 +515,6 @@ export default Ember.Component.extend({
     feature.intersection.intersectedArea = area(res);
     let mapModel = this.get('mapApi').getFromApi('mapModel');
     if (baseProjection !== 'EPSG:4326') {
-      //let resInBaseProjection = this.convertCords(res, baseProjection);
       let resInBaseProjection =  mapModel._convertObjectCoordinates(null, res, baseProjection);
       feature.intersection.intersectionCords = this.computeCoordinates(resInBaseProjection);
     } else {
@@ -530,31 +525,5 @@ export default Ember.Component.extend({
     if (res.geometry.type === 'Polygon' || res.geometry.type === 'MultiPolygon') {
       feature.intersection.isPolygon = true;
     }
-  },
-
-  convertCords(item, projection) {
-    let firstProjection = 'EPSG:4326'
-    let baseProjection = projection ? projection : 'EPSG:4326';
-    let result = Ember.$.extend(true, {}, item);
-    let coordinatesArray = [];
-    result.geometry.coordinates.forEach(arr => {
-      var arr1 = [];
-      arr.forEach(pair => {
-        if (result.geometry.type === 'MultiPolygon') {
-          let arr2 = [];
-          pair.forEach(cords => {
-            let transdormedCords = proj4(firstProjection, baseProjection, cords);
-            arr2.push(transdormedCords);
-          });
-          arr1.push(arr2);
-        } else {
-          let cords = proj4(firstProjection, baseProjection, pair);
-          arr1.push(cords);
-        }
-      });
-      coordinatesArray.push(arr1);
-    });
-    result.geometry.coordinates = coordinatesArray;
-    return result;
   }
 });
