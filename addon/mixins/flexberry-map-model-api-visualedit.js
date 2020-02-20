@@ -13,10 +13,15 @@ export default Ember.Mixin.create({
     @return {Object} featureLayer.
   */
   changeLayerObjectProperties(layerId, featureId, properties) {
-    let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
-    Object.assign(featureLayer.feature.properties, properties);
-    leafletObject.editLayer(featureLayer);
-    return featureLayer;
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this._getModelLayerFeature(layerId, featureId, load = true).then(([, leafletObject, featureLayer]) => {
+        Object.assign(featureLayer.feature.properties, properties);
+        leafletObject.editLayer(featureLayer);
+        resolve(featureLayer);
+      }).catch((e) => {
+        reject(e);
+      });
+    });
   },
 
   /**
@@ -28,20 +33,32 @@ export default Ember.Mixin.create({
     @return {Object} Feature layer.
   */
   startChangeLayerObject(layerId, featureId) {
-    let [, leafletObject, featureLayer] = this._getModelLayerFeature(layerId, featureId);
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    leafletMap.fitBounds(featureLayer.getBounds());
-    let editTools = this._getEditTools();
-    featureLayer.enableEdit(leafletMap);
-    featureLayer.layerId = layerId;
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this._getModelLayerFeature(layerId, featureId).then(([layerModel, leafletObject, featureLayer]) => {
+        let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+        leafletMap.fitBounds(featureLayer.getBounds());
+        let layers = leafletObject._layers;
+        let featureLayerLoad = Object.values(layers).find(feature => {
+          const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
+          return layerFeatureId === featureId;
+        });
 
-    editTools.on('editable:editing', (e) => {
-      if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayer))) {
-        leafletObject.editLayer(e.layer);
-      }
+        let editTools = this._getEditTools();
+
+        featureLayerLoad.enableEdit(leafletMap);
+        featureLayerLoad.layerId = layerId;
+
+        editTools.on('editable:editing', (e) => {
+          if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayerLoad))) {
+            leafletObject.editLayer(e.layer);
+          }
+        });
+
+        resolve(featureLayerLoad);
+      }).catch((e) => {
+        reject(e);
+      });
     });
-
-    return featureLayer;
   },
 
   /**
@@ -159,7 +176,7 @@ export default Ember.Mixin.create({
   getLayerModel(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     if (Ember.isNone(layer)) {
-      throw 'No layer with such id';
+      throw `Layer '${layerId}' not found`;
     }
 
     return layer;
@@ -173,19 +190,40 @@ export default Ember.Mixin.create({
     @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, leafletObject, featureLayer] or [layerModel, leafletObject, undefined].
     @private
   */
-  _getModelLayerFeature(layerId, featureId) {
-    let layerModel = this.getLayerModel(layerId);
-    let leafletObject = layerModel.get('_leafletObject');
-    let layers = leafletObject._layers;
-    let featureLayer;
-    if (!Ember.isNone(featureId)) {
-      featureLayer = Object.values(layers).find(feature => {
-        const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
-        return layerFeatureId === featureId;
-      });
-    }
+  _getModelLayerFeature(layerId, featureId, load = false) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let layerModel = this.getLayerModel(layerId);
+      if (Ember.isNone(layerModel)) {
+        reject(`Layer '${layerId}' not found`);
+      }
+      let leafletObject = layerModel.get('_leafletObject');
+      if (!Ember.isNone(featureId)) {
+        if (load) {
+          this.loadFeaturesOfLayer(layerId, [featureId]).then((leafletObject) => {
+            let layers = leafletObject._layers;
+            let featureLayer = Object.values(layers).find(feature => {
+              const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
+              return layerFeatureId === featureId;
+            });
+            if (Ember.isNone(featureLayer)) {
+              reject(`Object '${featureId}' not found`);
+            } else {
+              resolve([layerModel, leafletObject, featureLayer]);
+            }
+          });
+        } else {
+          this.getFeaturesOfLayer(layerId, [featureId]).then((featureLayer) => {
+            if (Ember.isE(featureLayer)) {
+              reject(`Object '${featureId}' not found`);
+            } else {
+              resolve([layerModel, leafletObject, featureLayer[0]]);
+            }
+          });
+        }
+      }
 
-    return [layerModel, leafletObject, featureLayer];
+      resolve([layerModel, leafletObject, undefined]);
+    });
   },
 
   /**

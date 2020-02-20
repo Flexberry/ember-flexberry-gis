@@ -163,6 +163,11 @@ export default BaseVectorLayer.extend({
       let newLayer = L.wfst(options, featuresReadFormat)
         .once('load', (e) => {
           let wfsLayer = e.target;
+          if (!wfsLayer.options.showExisting) {
+            let bounds = leafletMap.getBounds();
+            let filter = new L.Filter.BBox(wfsLayer.options.geometryField, bounds, wfsLayer.options.crs);
+            wfsLayer.loadFeatures(filter);
+          }
           wfsLayer.on('save:success', this._setLayerState, this);
           resolve(wfsLayer);
         })

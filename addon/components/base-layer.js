@@ -6,6 +6,7 @@ import Ember from 'ember';
 import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
+import { checkMapZoom } from '../utils/check-zoom';
 
 const {
   assert
@@ -474,6 +475,17 @@ export default Ember.Component.extend(
     }),
 
     /**
+      Observes and handles changes in JSON-string with layer settings.
+      Performs layer's recreation with new settings.
+
+      @method visibilityDidChange
+      @private
+    */
+    _hideAllObjectsDidChange: Ember.observer('index', function () {
+      this._setLayerZIndex();
+    }),
+
+    /**
       Rebuild layers.
 
       @method _fixZIndexFire
@@ -638,6 +650,34 @@ export default Ember.Component.extend(
         leafletMap.on('flexberry-map:search', this._search, this);
         leafletMap.on('flexberry-map:query', this._query, this);
         leafletMap.on('flexberry-map:createObject', this._createObject, this);
+
+        let loadedBounds = leafletMap.getBounds();
+        let continueLoad = () => {
+          let leafletObject = this.get('_leafletObject');
+          if (!Ember.isNone(leafletObject)) {
+            let type = this.get('layerModel.type');
+            let visibility = this.get('layerModel.visibility');
+            let hideObjects = Ember.isNone(leafletObject.hideAllLayerObjects) || !leafletObject.hideAllLayerObjects;
+            if (type === 'wfs' && !leafletObject.options.showExisting && visibility && checkMapZoom(leafletObject) && hideObjects) {
+              let bounds = leafletMap.getBounds();
+
+              if (loadedBounds.contains(bounds)) {
+                return;
+              }
+
+              let oldRectangle = L.rectangle([loadedBounds.getSouthEast(), loadedBounds.getNorthWest()]);
+              let loadedPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, oldRectangle, leafletObject.options.crs));
+
+              loadedBounds.extend(bounds);
+              let newRectangle = L.rectangle([loadedBounds.getSouthEast(), loadedBounds.getNorthWest()]);
+              let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, newRectangle, leafletObject.options.crs);
+
+              let filter = new L.Filter.And(newPart, loadedPart);
+              leafletObject.loadFeatures(filter);
+            }
+          }
+        };
+        leafletMap.on('moveend', continueLoad);
 
         leafletMap.on('flexberry-map:load', (e) => {
           if (!Ember.isNone(this.promiseLoad)) {
