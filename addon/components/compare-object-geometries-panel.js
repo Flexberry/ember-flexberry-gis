@@ -4,7 +4,6 @@ import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import area from 'npm:@turf/area';
 import distance from 'npm:@turf/distance';
 import helpers from 'npm:@turf/helpers';
-import projection from 'npm:@turf/projection';
 import intersect from 'npm:@turf/intersect';
 import difference from 'npm:@turf/difference';
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
@@ -214,7 +213,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     let intersection = intersect.default(firstObject, secondObject);
     if (intersection) {
       let displyCrs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
-      return this.getObjectWithProperties(intersection , displyCrs);
+      return this.getObjectWithProperties(intersection, displyCrs);
     }
 
     return null;
