@@ -5,7 +5,6 @@ import area from 'npm:@turf/area';
 import lineIntersect from 'npm:@turf/line-intersect';
 import * as buffer from 'npm:@turf/buffer';
 import VectorLayer from '../layers/-private/vector';
-import projection from 'npm:@turf/projection';
 /**
   The component for searching for intersections with selected feature.
 
