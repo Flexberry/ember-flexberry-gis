@@ -86,35 +86,25 @@ export default Ember.Mixin.create({
     let className = this.get('_storageClassName');
     let key = this.get('model.id');
     this.set('favFeaturesIds1', service.getFromStorage(className, key));
-    let _this = this
+    let _this = this;
     let api = this.get('mapApi');
-    api.addToApi('getLayerFeatureId', function(layer, layerObject) {
-      if (layerObject.feature.properties.hasOwnProperty('primarykey')) {
-        return layerObject.feature.properties.primarykey;
-      }
-      return layerObject.feature.properties.name;
-    });
 
     api.addToApi('readyMapLayers', function() {
-      return new Ember.RSVP.Promise(resolve=>{
+      return new Ember.RSVP.Promise(resolve => {
         resolve();
-      })
+      });
     });
     let r = api.getFromApi('readyMapLayers');
-    r().then(()=> {
+    r().then(() => {
       setTimeout(function(){
         let service = _this.get('service');
         let className = _this.get('_storageClassName');
         let key = _this.get('model.id');
         _this.set('favFeaturesIds1', service.getFromStorage(className, key));
         _this.fromIdArrayToFeatureArray(_this.get('favFeaturesIds1'));
-      }, 2000)
+      }, 2000);
     
     });
-      
-    
-   
-    // service.setToStorage(className, key, );
   }), 
 
   storageService: Ember.inject.service('local-storage'),
@@ -149,7 +139,6 @@ export default Ember.Mixin.create({
       @param feature
     */
     addToFavorite(feature) {
-      const map = this.get('leafletMap');
       let favFeatures = this.get('favFeatures');
       let favFeaturesIds = this.get('favFeaturesIds1');
       let service = this.get('service');
@@ -160,7 +149,10 @@ export default Ember.Mixin.create({
         Ember.set(feature.properties, 'isFavorite', false);
         if (layerModelIndex !== false) {
           favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
-          ////
+          let obj = favFeaturesIds.findBy('featureId', feature.properties.name);
+          favFeaturesIds.removeObject(obj);
+          service.setToStorage(className, key, favFeaturesIds);
+          this.set('favFeaturesIds1', favFeaturesIds);
         }
 
         if (Ember.get(feature, 'compareEnabled')) {
@@ -172,19 +164,17 @@ export default Ember.Mixin.create({
         Ember.set(feature.properties, 'isFavorite', true);
         if (layerModelIndex !== false) {
           favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);
-          // let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.name}
-          // favFeaturesIds.pushObject(featureIds)
-          // console.log(favFeaturesIds)
-          // service.setToStorage(className, key, favFeaturesIds);
-          // this.set('favFeaturesIds1', favFeaturesIds);
+          let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.name};
+          favFeaturesIds.pushObject(featureIds);
+          service.setToStorage(className, key, favFeaturesIds);
+          this.set('favFeaturesIds1', favFeaturesIds);
+          console.log(feature);
         } else {
           favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature.layerModel, feature);
-          console.log('feature from identification:',feature);
-          // let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.name}
-          // favFeaturesIds.pushObject(featureIds)
-          // console.log(favFeaturesIds)
-          // service.setToStorage(className, key, favFeaturesIds);
-          // this.set('favFeaturesIds1', favFeaturesIds);
+          let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.name};
+          favFeaturesIds.pushObject(featureIds);
+          service.setToStorage(className, key, favFeaturesIds);
+          this.set('favFeaturesIds1', favFeaturesIds);
         }
       }
 
@@ -293,22 +283,20 @@ export default Ember.Mixin.create({
     return array;
   },
 
-  fromIdArrayToFeatureArray(favFeaturesIds) {
-    
-    let api = this.get('mapApi').getFromApi('mapModel');
+  fromIdArrayToFeatureArray(favFeaturesIds) {  
     let favFeatures = Ember.A();
     favFeaturesIds.forEach(layer => {
-      let [layerModel, lealfetObject, featureLayer] = api._getModelLayerFeature(layer.layerId, layer.featureId);
-      featureLayer.feature.leafletLayer = lealfetObject;
+      let [layerModel, featureLayer] = this.getModelLayerFeature(layer.layerId, layer.featureId);
+      featureLayer.feature.leafletLayer = L.geoJSON(featureLayer.feature, { color: featureLayer.options.color});
       featureLayer.feature.layerModel = layerModel;
+      Ember.set(featureLayer.feature.properties, 'isFavorite', true);
       let layerModelIndex = this.isLayerModelInArray(favFeatures, layerModel);
       if (layerModelIndex !== false) {
         favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, featureLayer.feature);
       } else {
         favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, layerModel, featureLayer.feature);
       }
-      console.log(featureLayer.feature)
-    })
+    });
 
     let layerModelPromise = Ember.A();
     favFeatures.forEach(object => {
@@ -319,6 +307,28 @@ export default Ember.Mixin.create({
     });
     this.set('favFeatures', favFeatures);
     this.set('result', layerModelPromise);
-   
-  }
+  },
+
+  /**
+    Get [layerModel, featureLayer] by layer id or layer id and object id.
+
+    @param {string} layerId Layer id.
+    @param {string} [featureId] Object id.
+    @returns {[layerModel, leafletObject, featureLayer]} Get [layerModel, featureLayer] or [layerModel, undefined].
+    @private
+  */
+  getModelLayerFeature(layerId, featureId) {
+    let layerModel = this.get('model.hierarchy').findBy('id', layerId);
+    let leafletObject = layerModel.get('_leafletObject');
+    let layers = leafletObject._layers;
+    let featureLayer;
+    if (!Ember.isNone(featureId)) {
+      featureLayer = Object.values(layers).find(feature => {
+        const layerFeatureId = feature.feature.properties.name;
+        return layerFeatureId === featureId;
+      });
+    }
+
+    return [layerModel, featureLayer];
+  },
 });
