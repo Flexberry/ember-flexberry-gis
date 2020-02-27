@@ -446,13 +446,13 @@ export default Ember.Component.extend({
           let objB = e.polygonLayer.feature;
           let baseProjection = 'EPSG:4326';
           if (Ember.get(e.polygonLayer, 'options.crs.code') !== undefined) {
-              objB = mapModel._convertObjectCoordinates(e.polygonLayer.options.crs.code, e.polygonLayer.feature);
-              baseProjection = e.polygonLayer.options.crs.code;         
+            objB = mapModel._convertObjectCoordinates(e.polygonLayer.options.crs.code, e.polygonLayer.feature);
+            baseProjection = e.polygonLayer.options.crs.code;
           }
 
-          if (Ember.get(item,'leafletLayer.options.crs.code') !== undefined) {
-              objA =  mapModel._convertObjectCoordinates(item.leafletLayer.options.crs.code, item.leafletLayer.feature);
-              baseProjection = item.leafletLayer.options.crs.code;           
+          if (Ember.get(item, 'leafletLayer.options.crs.code') !== undefined) {
+            objA =  mapModel._convertObjectCoordinates(item.leafletLayer.options.crs.code, item.leafletLayer.feature);
+            baseProjection = item.leafletLayer.options.crs.code;
           }
 
           if (bufferR > 0) {
