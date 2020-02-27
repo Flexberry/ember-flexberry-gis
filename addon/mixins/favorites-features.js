@@ -81,30 +81,44 @@ export default Ember.Mixin.create({
 
   mapApi: Ember.inject.service(),
 
+  onLeafletMapDidChange: Ember.observer('leafletMap', function() {
+    let leafletMap = this.get('leafletMap');
+    leafletMap.on('flexberry-map:load', (e) => {
+      Ember.RSVP.allSettled(e.results).then(() => {
+        let pred = new SimplePredicate('userKey', '==', 'Тест1') //eq current user 
+        let builder = new Builder(store)
+        .from('i-i-s-r-g-i-s-p-k-favorite-features')
+        .selectByProjection('FavoriteFeaturesL')
+        .where(pred)
+        let idFeaturesArray = store.query('i-i-s-r-g-i-s-p-k-favorite-features', builder.build());
+        this.fromIdArrayToFeatureArray(idFeaturesArray);
+      })
+    })
+  }),
   onLeafletMapChange: Ember.observer('model', function () {
-    let service = this.get('service');
-    let className = this.get('_storageClassName');
-    let key = this.get('model.id');
-    this.set('favFeaturesIds1', service.getFromStorage(className, key));
-    let _this = this;
-    let api = this.get('mapApi');
-
-    api.addToApi('readyMapLayers', function() {
-      return new Ember.RSVP.Promise(resolve => {
-        resolve();
-      });
-    });
-    let r = api.getFromApi('readyMapLayers');
-    r().then(() => {
-      setTimeout(function(){
-        let service = _this.get('service');
-        let className = _this.get('_storageClassName');
-        let key = _this.get('model.id');
-        _this.set('favFeaturesIds1', service.getFromStorage(className, key));
-        _this.fromIdArrayToFeatureArray(_this.get('favFeaturesIds1'));
-      }, 2000);
-    
-    });
+    // let service = this.get('service');
+    // let className = this.get('_storageClassName');
+    // let key = this.get('model.id');
+    // this.set('favFeaturesIds1', service.getFromStorage(className, key));
+    // let _this = this;
+    //let api = this.get('mapApi');
+    // let leafletMap = this.get('leafletMap');
+    // leafletMap.on('flexberry-map:load', (e) => {
+    //   console.log(e);
+    // })
+    // api.addToApi('readyMapLayers', function() {
+     
+    // });
+    // let r = api.getFromApi('readyMapLayers');
+    // r().then(() => {
+    //   setTimeout(function() {
+    //     let service = _this.get('service');
+    //     let className = _this.get('_storageClassName');
+    //     let key = _this.get('model.id');
+    //     _this.set('favFeaturesIds1', service.getFromStorage(className, key));
+    //     _this.fromIdArrayToFeatureArray(_this.get('favFeaturesIds1'));
+    //   }, 2000);
+    // });
   }), 
 
   storageService: Ember.inject.service('local-storage'),
@@ -139,6 +153,7 @@ export default Ember.Mixin.create({
       @param feature
     */
     addToFavorite(feature) {
+      // let layer = this.get('favServiceLayer');
       let favFeatures = this.get('favFeatures');
       let favFeaturesIds = this.get('favFeaturesIds1');
       let service = this.get('service');
@@ -149,7 +164,7 @@ export default Ember.Mixin.create({
         Ember.set(feature.properties, 'isFavorite', false);
         if (layerModelIndex !== false) {
           favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
-          let obj = favFeaturesIds.findBy('featureId', feature.properties.name);
+          let obj = favFeaturesIds.findBy('featureId', feature.properties.primarykey);
           favFeaturesIds.removeObject(obj);
           service.setToStorage(className, key, favFeaturesIds);
           this.set('favFeaturesIds1', favFeaturesIds);
@@ -164,14 +179,13 @@ export default Ember.Mixin.create({
         Ember.set(feature.properties, 'isFavorite', true);
         if (layerModelIndex !== false) {
           favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);
-          let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.name};
+          let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.primarykey};
           favFeaturesIds.pushObject(featureIds);
           service.setToStorage(className, key, favFeaturesIds);
           this.set('favFeaturesIds1', favFeaturesIds);
-          console.log(feature);
         } else {
           favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature.layerModel, feature);
-          let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.name};
+          let featureIds = {layerId: feature.layerModel.id, featureId: feature.properties.primarykey};
           favFeaturesIds.pushObject(featureIds);
           service.setToStorage(className, key, favFeaturesIds);
           this.set('favFeaturesIds1', favFeaturesIds);
@@ -324,7 +338,7 @@ export default Ember.Mixin.create({
     let featureLayer;
     if (!Ember.isNone(featureId)) {
       featureLayer = Object.values(layers).find(feature => {
-        const layerFeatureId = feature.feature.properties.name;
+        const layerFeatureId = feature.feature.properties.primarykey;
         return layerFeatureId === featureId;
       });
     }
