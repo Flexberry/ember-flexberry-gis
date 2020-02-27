@@ -858,13 +858,12 @@ export default Ember.Mixin.create({
     let firstProjection = projection ? projection : 'EPSG:4326';
     let baseProjection = crsName ? crsName : 'EPSG:4326';
     if (firstProjection !== baseProjection) {
-      const geojson = Ember.$.extend(true, {}, object);
-      let result = L.geoJSON(geojson).getLayers()[0];
+      let result = Ember.$.extend(true, {}, object);
       let coordinatesArray = [];
-      result.feature.geometry.coordinates.forEach(arr => {
+      result.geometry.coordinates.forEach(arr => {
         var arr1 = [];
         arr.forEach(pair => {
-          if (result.feature.geometry.type === 'MultiPolygon') {
+          if (result.geometry.type === 'MultiPolygon') {
             let arr2 = [];
             pair.forEach(cords => {
               let transdormedCords = proj4(firstProjection, baseProjection, cords);
@@ -878,8 +877,8 @@ export default Ember.Mixin.create({
         });
         coordinatesArray.push(arr1);
       });
-      result.feature.geometry.coordinates = coordinatesArray;
-      return result.feature;
+      result.geometry.coordinates = coordinatesArray;
+      return result;
     } else {
       return object;
     }

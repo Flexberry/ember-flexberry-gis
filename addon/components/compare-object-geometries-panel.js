@@ -233,12 +233,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     if (feature) {
       feature.area = area(feature).toFixed(3);
       feature.intersectionCords = [];
-      let featureInCrs;
-      if (displyCrs !== 'EPSG:4326') {
-        let mapModel = this.get('mapApi').getFromApi('mapModel');
-        featureInCrs = mapModel._convertObjectCoordinates(null, feature, displyCrs);
-      }
-
+      let mapModel = this.get('mapApi').getFromApi('mapModel');
+      let featureInCrs = mapModel._convertObjectCoordinates(null, feature, displyCrs);
       featureInCrs.geometry.coordinates.forEach(arr => {
         arr.forEach(pair => {
           if (feature.geometry.type === 'MultiPolygon') {
