@@ -317,7 +317,7 @@ export default Ember.Mixin.create({
     let result;
     let  [, leafletLayer, featureLayer]  = this._getModelLayerFeature(layerId, featureId);
     if (leafletLayer && featureLayer) {
-      result = Ember.$.extend({}, featureLayer.feature.properties);
+      result = Object.assign({}, featureLayer.feature.properties);
       result.geometry = featureLayer.feature.geometry.coordinates;
       if (crsName) {
         let NewObjCrs = this._convertObjectCoordinates(featureLayer.options.crs.code, featureLayer.feature, crsName);
