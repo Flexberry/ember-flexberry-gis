@@ -213,7 +213,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     let intersection = intersect.default(firstObject, secondObject);
     if (intersection) {
       let displayCrs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
-      return this.getObjectWithProperties(intersection, displyCrs);
+      return this.getObjectWithProperties(intersection, displayCrs);
     }
 
     return null;
@@ -222,8 +222,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   getNonIntersection(firstObject, secondObject) {
     let nonIntersection = difference.default(firstObject, secondObject);
     if (nonIntersection) {
-      let displyCrs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
-      return this.getObjectWithProperties(nonIntersection, displyCrs);
+      let displayCrs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
+      return this.getObjectWithProperties(nonIntersection, displayCrs);
     }
 
     return null;
