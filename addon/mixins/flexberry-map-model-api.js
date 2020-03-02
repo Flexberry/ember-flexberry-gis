@@ -855,32 +855,44 @@ export default Ember.Mixin.create({
     @private
   */
   _convertObjectCoordinates(projection, object, crsName = null) {
+    let knownCrs = Ember.getOwner(this).knownForType('coordinate-reference-system');
+    let knownCrsArray = Ember.A(Object.values(knownCrs));
     let firstProjection = projection ? projection : 'EPSG:4326';
-    let baseProjection = crsName ? crsName : 'EPSG:4326';
-    if (firstProjection !== baseProjection) {
-      let result = Ember.$.extend(true, {}, object);
-      let coordinatesArray = [];
-      result.geometry.coordinates.forEach(arr => {
-        var arr1 = [];
-        arr.forEach(pair => {
-          if (result.geometry.type === 'MultiPolygon') {
-            let arr2 = [];
-            pair.forEach(cords => {
-              let transdormedCords = proj4(firstProjection, baseProjection, cords);
-              arr2.push(transdormedCords);
+    let secondProjection = crsName ? crsName : 'EPSG:4326';
+    let firstCrs = knownCrsArray.findBy('code', firstProjection);
+    let secondCrs = knownCrsArray.findBy('code', secondProjection);
+    if (firstCrs && secondCrs) {
+      let firstDefinition = Ember.get(firstCrs, 'definition');
+      let secondDefinition = Ember.get(secondCrs, 'definition');
+      if (firstDefinition && secondDefinition) {
+        if (firstDefinition !== secondDefinition) {
+          let result = Ember.$.extend(true, {}, object);
+          let coordinatesArray = [];
+          result.geometry.coordinates.forEach(arr => {
+            var arr1 = [];
+            arr.forEach(pair => {
+              if (result.geometry.type === 'MultiPolygon') {
+                let arr2 = [];
+                pair.forEach(cords => {
+                  let transdormedCords = proj4(firstDefinition, secondDefinition, cords);
+                  arr2.push(transdormedCords);
+                });
+                arr1.push(arr2);
+              } else {
+                let cords = proj4(firstDefinition, secondDefinition, pair);
+                arr1.push(cords);
+              }
             });
-            arr1.push(arr2);
-          } else {
-            let cords = proj4(firstProjection, baseProjection, pair);
-            arr1.push(cords);
-          }
-        });
-        coordinatesArray.push(arr1);
-      });
-      result.geometry.coordinates = coordinatesArray;
-      return result;
+            coordinatesArray.push(arr1);
+          });
+          result.geometry.coordinates = coordinatesArray;
+          return result;
+        } else {
+          return object;
+        }
+      }
     } else {
-      return object;
+      throw 'unknown coordinate reference system';
     }
   },
 
