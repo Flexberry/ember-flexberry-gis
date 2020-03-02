@@ -5,7 +5,6 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
-import checkIntersect from '../utils/polygon-intersect-check';
 import * as buffer from 'npm:@turf/buffer';
 import * as thelpers from 'npm:@turf/helpers';
 import * as difference from 'npm:@turf/difference';
@@ -862,10 +861,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let editedRows = Ember.get(tabModel, '_editedRows');
       Object.keys(editedRows).filter((key) => editedRows[key]).forEach((key) => {
         let layer = tabModel.get(`featureLink.${key}`);
-        if(layer) {
+        if (layer) {
           layer.disableEdit();
           tabModel.disableDragging(key);
-        } 
+        }
       });
       if (tabModel.get('groupDraggable')) {
         let draggableRows = Ember.get(tabModel, '_draggableRows');
@@ -879,10 +878,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       let selectedTabIndex = this.get('selectedTabIndex');
       this.get('_tabModelsCache').removeObject(tabModel);
-      editedLayers.removeAt(index); 
+      editedLayers.removeAt(index);
       if (selectedTabIndex >= index && selectedTabIndex - 1 >= 0) {
         this.set('selectedTabIndex', selectedTabIndex - 1);
-      }  
+      }
     },
 
     /**
@@ -1239,10 +1238,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let editedRows = Ember.get(tabModel, '_editedRows');
       Object.keys(editedRows).filter((key) => editedRows[key]).forEach((key) => {
         let layer = tabModel.get(`featureLink.${key}`);
-        if(layer) {
+        if (layer) {
           layer.disableEdit();
           tabModel.disableDragging(key);
-        }   
+        }
       });
       Ember.set(tabModel, '_editedRows', {});
       let leafletObject = tabModel.leafletObject;
@@ -1260,8 +1259,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           if (isExist.length === 0) {
             let props = tabModel.properties;
             this.send('onRowGeometryEdit', tabModel, Ember.guidFor(props[props.length - 1]));
-          }   
-        }     
+          }
+        }
+
         leafletObject.off('save:failed', saveFailed);
       };
 
