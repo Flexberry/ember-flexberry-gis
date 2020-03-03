@@ -180,7 +180,7 @@ export default Ember.Mixin.create({
   */
   getIntersectionObjects(layerId, featureId, layerIds) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, featureId).then(([,, featureLayer]) => {
+      this._getModelLayerFeature(layerId, featureId).then(([,,featureLayer]) => {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         let layersIntersect = [];
         layerIds.forEach(id => {
