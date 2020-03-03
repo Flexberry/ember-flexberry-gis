@@ -58,7 +58,7 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
 
     geoserverFake.respondWith('POST', 'http://geoserverFake/geoserver/ows?',
       function (request) {
-        if (request.requestBody.contains('<wfs:GetFeature')) {
+        if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
           request.respond(200, { 'Content-Type': 'application/json' },
           '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",' +
           '"geometry":{"type":"MultiPolygon","coordinates":[[[[6215353.89391635,8117916.10977998],[6215317.82640125,8117408.36954415],' +
@@ -74,7 +74,7 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
           '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
         }
 
-        if (request.requestBody.contains('<wfs:DescribeFeatureType')) {
+        if (request.requestBody.includes('<wfs:DescribeFeatureType') !== -1) {
           request.respond(200, { 'Content-Type': 'text/plain;charset=utf-8' },
           '<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" ' +
           'xmlns:rgisperm="http://rgis.permkrai.ru" elementFormDefault="qualified" targetNamespace="http://rgis.permkrai.ru">' +

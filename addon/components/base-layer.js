@@ -690,15 +690,29 @@ export default Ember.Component.extend(
             if (type === 'wfs' && !leafletObject.options.showExisting && visibility && checkMapZoom(leafletObject) && hideObjects) {
               let bounds = leafletMap.getBounds();
 
-              if (loadedBounds.contains(bounds) && !Ember.isNone(leafletObject.isLoad) && leafletObject.isLoad) {
+              /*if (loadedBounds.contains(bounds) && !Ember.isNone(leafletObject.isLoadFilter)) {
                 return;
-              }
+              }*/
 
-              if (Ember.isNone(leafletObject.isLoad)) {
+              if (Ember.isNone(leafletObject.isLoadBounds)) {
                 let filter = new L.Filter.BBox(leafletObject.options.geometryField, bounds, leafletObject.options.crs);
                 leafletObject.loadFeatures(filter);
-                leafletObject.isLoad = true;
+                leafletObject.isLoadBounds = bounds;
+                loadedBounds = bounds;
                 return;
+              } /*else {
+                if (!Ember.isNone(leafletObject.isLoadBounds) && leafletObject.isLoadBounds.contains(bounds)) {
+                  return;
+                } else {
+                  if (loadedBounds.contains(bounds)) {
+                    return;
+                  }
+                }
+              }*/
+              else {
+                if (loadedBounds.contains(bounds)) {
+                  return;
+                }
               }
 
               let oldRectangle = L.rectangle([loadedBounds.getSouthEast(), loadedBounds.getNorthWest()]);
