@@ -690,7 +690,14 @@ export default Ember.Component.extend(
             if (type === 'wfs' && !leafletObject.options.showExisting && visibility && checkMapZoom(leafletObject) && hideObjects) {
               let bounds = leafletMap.getBounds();
 
-              if (loadedBounds.contains(bounds)) {
+              if (loadedBounds.contains(bounds) && !Ember.isNone(leafletObject.isLoad) && leafletObject.isLoad) {
+                return;
+              }
+
+              if (Ember.isNone(leafletObject.isLoad)) {
+                let filter = new L.Filter.BBox(leafletObject.options.geometryField, bounds, leafletObject.options.crs);
+                leafletObject.loadFeatures(filter);
+                leafletObject.isLoad = true;
                 return;
               }
 

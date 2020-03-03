@@ -170,6 +170,7 @@ export default BaseVectorLayer.extend({
             let bounds = leafletMap.getBounds();
             let filter = new L.Filter.BBox(wfsLayer.options.geometryField, bounds, wfsLayer.options.crs);
             wfsLayer.loadFeatures(filter);
+            wfsLayer.isLoad = true;
           }
 
           wfsLayer.on('save:success', this._setLayerState, this);
