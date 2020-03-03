@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import BaseVectorLayer from '../base-vector-layer';
+import { checkMapZoom } from '../utils/check-zoom';
 
 /**
   WFS layer component for leaflet map.
@@ -163,11 +164,14 @@ export default BaseVectorLayer.extend({
       let newLayer = L.wfst(options, featuresReadFormat)
         .once('load', (e) => {
           let wfsLayer = e.target;
-          if (!wfsLayer.options.showExisting) {
+          let visibility = this.get('layerModel.visibility');
+          if (!wfsLayer.options.showExisting && visibility && checkMapZoom(wfsLayer)) {
+            let leafletMap = this.get('leafletMap');
             let bounds = leafletMap.getBounds();
             let filter = new L.Filter.BBox(wfsLayer.options.geometryField, bounds, wfsLayer.options.crs);
             wfsLayer.loadFeatures(filter);
           }
+
           wfsLayer.on('save:success', this._setLayerState, this);
           resolve(wfsLayer);
         })
@@ -342,30 +346,119 @@ export default BaseVectorLayer.extend({
   },
 
   /**
-    Load features.
+    Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.
 
     @method loadLayerFeatures
-    @param {Object[]} featureIds Feature id.
+    @param {Object} e Event object.
     @returns {Ember.RSVP.Promise} Returns promise.
   */
-  loadLayerFeatures(featureIds) {
+  loadLayerFeatures(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let filter = null;
-      if (!Ember.isNone(featureIds)) {
-        let equals = Ember.A();
-        this.get('_leafletObject').eachLayer((layer) => {
-          let pk = Ember.get(layer, 'feature.properties.primarykey');
-          if (featureIds.includes(pk)) {
-            equals.pushObject(new L.Filter.EQ('primarykey', pk));
+      let leafletObject = this.get('_leafletObject');
+      let featureIds = e.featureIds;
+      if (!leafletObject.options.showExisting) {
+        let loadIds = [];
+        leafletObject.eachLayer((shape) => {
+          const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), shape);
+    
+          if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
+            loadIds.push(id);
           }
         });
-
-        filter = new L.Filter.Or(...equals);
+    
+        if (loadIds.length !== featureIds.length) {
+          let remainingFeat = featureIds.filter((item) => {
+            return loadIds.indexOf(item) === -1;
+          });
+    
+          let filter = null;
+          if (!Ember.isNone(remainingFeat)) {
+            let equals = Ember.A();
+            remainingFeat.forEach((id) => {
+              let pkField = this.get('mapApi').getFromApi('mapModel')._getPkField(this.get('layerModel'));
+              if (featureIds.includes(id)) {
+                equals.pushObject(new L.Filter.EQ(pkField, id));
+              }
+            });
+    
+            filter = new L.Filter.Or(...equals);
+          }
+    
+          leafletObject.loadFeatures(filter);
+          leafletObject.once('load', () => {
+            resolve(leafletObject);
+          });
+        } else {
+          resolve(leafletObject);
+        }
+      } else {
+        resolve(leafletObject);
       }
+    });
+  },
 
-      let result = this.get('_leafletObject').loadFeatures(filter);
-      resolve(result);
-      reject();
+  /**
+    Handles 'flexberry-map:getLayerFeatures' event of leaflet map.
+
+    @method getLayerFeatures
+    @param {Object} e Event object.
+    @returns {Ember.RSVP.Promise} Returns promise.
+  */
+  getLayerFeatures(e) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletObject = this.get('_leafletObject');
+      let featureIds = e.featureIds;
+      if (!leafletObject.options.showExisting) {
+        let filter = null;
+        if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
+          let equals = Ember.A();
+          featureIds.forEach((id) => {
+            let pkField = this.get('mapApi').getFromApi('mapModel')._getPkField(this.get('layerModel'));
+            equals.pushObject(new L.Filter.EQ(pkField, id));
+          });
+
+          filter = new L.Filter.Or(...equals);
+        }
+
+        L.Util.request({
+          url: leafletObject.options.url,
+          data: L.XmlUtil.serializeXmlDocumentString(leafletObject.getFeature(filter)),
+          headers: leafletObject.options.headers || {},
+          withCredentials: leafletObject.options.withCredentials,
+          success: function (responseText) {
+            let exceptionReport = L.XmlUtil.parseOwsExceptionReport(responseText);
+            if (exceptionReport) {
+              reject(exceptionReport.message);
+            }
+
+            let layers = leafletObject.readFormat.responseToLayers(responseText, {
+              coordsToLatLng: leafletObject.options.coordsToLatLng,
+              pointToLayer: leafletObject.options.pointToLayer
+            });
+
+            resolve(layers);
+          },
+          error: function (errorMessage) {
+            reject(errorMessage);
+          }
+        });
+      } else {
+        if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
+          let objects = [];
+          featureIds.forEach((id) => {
+            let features = leafletObject._layers;
+            let obj = Object.values(features).find(feature => {
+              return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), feature) === id;
+            });
+            if (!Ember.isNone(obj)) {
+              objects.push(obj);
+            }
+          });
+          resolve(objects);
+        } else {
+          resolve(Object.values(leafletObject._layers));
+        }
+      }
     });
   }
 });

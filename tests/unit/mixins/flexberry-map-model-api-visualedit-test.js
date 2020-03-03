@@ -10,3 +10,7 @@ test('it works', function(assert) {
   let subject = FlexberryMapModelApiVisualeditObject.create();
   assert.ok(subject);
 });
+
+test('one', function(assert) {
+  assert.ok(true);
+});

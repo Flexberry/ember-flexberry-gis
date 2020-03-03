@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import { checkMapZoom } from '../utils/check-zoom';
 
 export default L.Canvas.extend({

@@ -7,14 +7,14 @@ export default Ember.Mixin.create({
     Change layer object properties.
 
     @method changeLayerObjectProperties
-    @param {string} layerId Layer id.
-    @param {string} featureId Object id.
+    @param {string} layerId Layer ID.
+    @param {string} featureId Object ID.
     @param {Object} properties Object properties.
-    @return {Object} featureLayer.
+    @return {Promise} Layer object.
   */
   changeLayerObjectProperties(layerId, featureId, properties) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, featureId, load = true).then(([, leafletObject, featureLayer]) => {
+      this._getModelLayerFeature(layerId, featureId, true).then(([, leafletObject, featureLayer]) => {
         Object.assign(featureLayer.feature.properties, properties);
         leafletObject.editLayer(featureLayer);
         resolve(featureLayer);
@@ -28,9 +28,9 @@ export default Ember.Mixin.create({
     Start change layer object.
 
     @method startChangeLayerObject
-    @param {string} layerId Layer id.
-    @param {string} featureId Object id.
-    @return {Object} Feature layer.
+    @param {string} layerId Layer ID.
+    @param {string} featureId Object ID.
+    @return {Promise} Feature layer.
   */
   startChangeLayerObject(layerId, featureId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
@@ -79,7 +79,7 @@ export default Ember.Mixin.create({
     editTools.editLayer.clearLayers();
 
     if (!Ember.isNone(layer.layerId)) {
-      let [, leafletObject] = this._getModelLayerFeature(layer.layerId);
+      let [, leafletObject] = this._getModelLeafletObject(layer.layerId);
       if (!Ember.isNone(leafletObject)) {
         if (layer.state === leafletObject.state.insert) {
           leafletObject.removeLayer(layer);
@@ -104,12 +104,13 @@ export default Ember.Mixin.create({
   /**
     Start visual creating of feature
 
+    @method startNewObject
     @param {String} layerId Id of layer in that should started editing
     @param {Object} properties New layer properties
-    @returns noting
+    @returns {Object} Layer object
   */
   startNewObject(layerId, properties) {
-    let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
+    let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
     let editTools = this._getEditTools();
     let newLayer;
 
@@ -168,10 +169,9 @@ export default Ember.Mixin.create({
   /**
     Return leaflet layer thats corresponds to passed layerId.
 
-    @method _getLeafletLayer
-    @param {String} layerId
-    @returns {Object}
-    @private
+    @method getLayerModel
+    @param {String} layerId Layer ID
+    @returns {Object} Layer
   */
   getLayerModel(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
@@ -192,38 +192,148 @@ export default Ember.Mixin.create({
   */
   _getModelLayerFeature(layerId, featureId, load = false) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let layerModel = this.getLayerModel(layerId);
-      if (Ember.isNone(layerModel)) {
-        reject(`Layer '${layerId}' not found`);
-      }
-      let leafletObject = layerModel.get('_leafletObject');
-      if (!Ember.isNone(featureId)) {
-        if (load) {
-          this.loadFeaturesOfLayer(layerId, [featureId]).then((leafletObject) => {
-            let layers = leafletObject._layers;
-            let featureLayer = Object.values(layers).find(feature => {
-              const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
-              return layerFeatureId === featureId;
-            });
-            if (Ember.isNone(featureLayer)) {
-              reject(`Object '${featureId}' not found`);
-            } else {
-              resolve([layerModel, leafletObject, featureLayer]);
-            }
-          });
+      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+      let e = {
+        featureIds: [featureId],
+        layer: layerId,
+        results: Ember.A()
+      };
+
+      if (load) {
+        leafletMap.fire('flexberry-map:loadLayerFeatures', e);
+
+        if (Ember.isEmpty(e.results)) {
+          reject(`Layer '${layerId}' not found`);
         } else {
-          this.getFeaturesOfLayer(layerId, [featureId]).then((featureLayer) => {
-            if (Ember.isE(featureLayer)) {
-              reject(`Object '${featureId}' not found`);
+          let features = Ember.get(e.results[0], 'features');
+          if (features instanceof Ember.RSVP.Promise) {
+            features.then((layerObject) => {
+              let layers = layerObject._layers;
+              let featureLayer = Object.values(layers).find(feature => {
+                const layerFeatureId = this._getLayerFeatureId(e.results[0].layerModel, feature);
+                return layerFeatureId === featureId;
+              });
+              if (Ember.isNone(featureLayer)) {
+                reject(`Object '${featureId}' not found`);
+              } else {
+                resolve([e.results[0].layerModel, e.results[0].leafletObject, featureLayer]);
+              }
+
+              if (Ember.isEmpty(layerObject)) {
+                reject(`Object '${featureId}' not found`);
+              } else {
+                resolve([e.results[0].layerModel, e.results[0].leafletObject, layerObject[0]]);
+              }
+            });
+          }
+        }
+      } else {
+        leafletMap.fire('flexberry-map:getLayerFeatures', e);
+
+        if (Ember.isEmpty(e.results)) {
+          reject(`Layer '${layerId}' not found`);
+        } else {
+          let features = Ember.get(e.results[0], 'features');
+          if (features instanceof Ember.RSVP.Promise) {
+            features.then((layerObject) => {
+              if (Ember.isEmpty(layerObject)) {
+                reject(`Object '${featureId}' not found`);
+              } else {
+                resolve([e.results[0].layerModel, e.results[0].leafletObject, layerObject[0]]);
+              }
+            });
+          }
+        }
+      }
+    });
+  },
+
+  /**
+    Get all features by layer id.
+
+    @method _getFeaturesOfLayer
+    @param {string} layerId Layer id.
+    @returns {Ember.RSVP.Promise} layer objects.
+    @private
+  */
+  _getFeaturesOfLayer(layerId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let e = {
+        featureIds: null,
+        layer: layerId,
+        results: Ember.A()
+      };
+      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+
+      leafletMap.fire('flexberry-map:getLayerFeatures', e);
+      if (Ember.isEmpty(e.results)) {
+        reject(`Layer '${layerId}' not found`);
+      } else {
+        let features = Ember.get(e.results[0], 'features');
+        if (features instanceof Ember.RSVP.Promise) {
+          features.then((layerObject) => {
+            if (Ember.isEmpty(layerObject)) {
+              reject(`Layer '${layerId}' is empty`);
             } else {
-              resolve([layerModel, leafletObject, featureLayer[0]]);
+              resolve([e.results[0].layerModel, layerObject]);
             }
           });
         }
       }
-
-      resolve([layerModel, leafletObject, undefined]);
     });
+  },
+
+  /**
+    Load features by layer id.
+
+    @method _loadFeaturesOfLayer
+    @param {string} layerId Layer id.
+    @param {Object[]} featureIds Array of objects IDs.
+    @returns {Ember.RSVP.Promise} layer objects.
+    @private
+  */
+  _loadFeaturesOfLayer(layerId, featureIds) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let e = {
+        featureIds: featureIds,
+        layer: layerId,
+        results: Ember.A()
+      };
+      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+
+      leafletMap.fire('flexberry-map:loadLayerFeatures', e);
+      if (Ember.isEmpty(e.results)) {
+        reject(`Layer '${layerId}' not found`);
+      } else {
+        let features = Ember.get(e.results[0], 'features');
+        if (features instanceof Ember.RSVP.Promise) {
+          features.then((leafletObject) => {
+            if (Ember.isEmpty(leafletObject)) {
+              reject(`Layer '${layerId}' is empty`);
+            } else {
+              resolve([e.results[0].layerModel, leafletObject]);
+            }
+          });
+        }
+      }
+    });
+  },
+
+  /**
+    Get [layerModel, leafletObject] by layer id.
+
+    @param {string} layerId Layer id.
+    @returns {[layerModel, leafletObject]} Get [layerModel, leafletObject].
+    @private
+  */
+  _getModelLeafletObject(layerId) {
+    let layerModel = this.get('mapLayer').findBy('id', layerId);
+    if (Ember.isNone(layerModel)) {
+      throw `Layer '${layerId}' not found`;
+    }
+
+    let leafletObject = layerModel.get('_leafletObject');
+    return [layerModel, leafletObject];
   },
 
   /**
@@ -232,9 +342,10 @@ export default Ember.Mixin.create({
     @method startChangeMultyLayerObject
     @param {string} layerId Layer id.
     @param {Object} featureLayer Feature layer.
+    @return nothing
   */
   startChangeMultyLayerObject(layerId, featureLayer) {
-    let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
+    let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
 
     let editTools = this._getEditTools();
     let newLayer;
@@ -278,5 +389,4 @@ export default Ember.Mixin.create({
         throw 'Unknown layer type: ' + layerModel.get('settingsAsObject.typeGeometry');
     }
   }
-
 });

@@ -584,6 +584,44 @@ export default Ember.Component.extend(
     },
 
     /**
+      Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.
+
+      @method _loadLayerFeatures
+      @param {Object} e Event object.
+      @returns {Object[]} results Objects.
+    */
+    _loadLayerFeatures(e) {
+      if (this.get('layerModel.id') !== e.layer) {
+        return;
+      }
+
+      e.results.push({
+        layerModel: this.get('layerModel'),
+        leafletObject: this.get('_leafletObject'),
+        features: this.loadLayerFeatures(e)
+      });
+    },
+
+    /**
+      Handles 'flexberry-map:getLayerFeatures' event of leaflet map.
+
+      @method _getLayerFeatures
+      @param {Object} e Event object.
+      @returns {Object[]} results Objects.
+    */
+    _getLayerFeatures(e) {
+      if (this.get('layerModel.id') !== e.layer) {
+        return;
+      }
+
+      e.results.push({
+        layerModel: this.get('layerModel'),
+        leafletObject: this.get('_leafletObject'),
+        features: this.getLayerFeatures(e)
+      });
+    },
+
+    /**
       Returns leaflet layer's bounding box.
 
       @method _getBoundingBox
@@ -650,6 +688,8 @@ export default Ember.Component.extend(
         leafletMap.on('flexberry-map:search', this._search, this);
         leafletMap.on('flexberry-map:query', this._query, this);
         leafletMap.on('flexberry-map:createObject', this._createObject, this);
+        leafletMap.on('flexberry-map:loadLayerFeatures', this._loadLayerFeatures, this);
+        leafletMap.on('flexberry-map:getLayerFeatures', this._getLayerFeatures, this);
 
         let loadedBounds = leafletMap.getBounds();
         let continueLoad = () => {
@@ -677,6 +717,7 @@ export default Ember.Component.extend(
             }
           }
         };
+
         leafletMap.on('moveend', continueLoad);
 
         leafletMap.on('flexberry-map:load', (e) => {
@@ -710,6 +751,8 @@ export default Ember.Component.extend(
         leafletMap.off('flexberry-map:search', this._search, this);
         leafletMap.off('flexberry-map:query', this._query, this);
         leafletMap.off('flexberry-map:createObject', this._createObject, this);
+        leafletMap.off('flexberry-map:loadLayerFeatures', this._loadLayerFeatures, this);
+        leafletMap.off('flexberry-map:getLayerFeatures', this._getLayerFeatures, this);
       }
 
       // Destroy leaflet layer.
@@ -795,6 +838,28 @@ export default Ember.Component.extend(
     */
     query(layerLinks, e) {
       assert('BaseLayer\'s \'query\' method should be overridden.');
+    },
+
+    /**
+      Handles 'flexberry-map:getLayerFeatures' event of leaflet map.
+
+      @method getLayerFeatures
+      @param {Object} e Event object.
+      @returns {Ember.RSVP.Promise} Returns promise.
+    */
+    getLayerFeatures(e) {
+      assert('BaseLayer\'s \'getLayerFeatures\' method should be overridden.');
+    },
+
+    /**
+      Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.
+
+      @method loadLayerFeatures
+      @param {Object} e Event object.
+      @returns {Ember.RSVP.Promise} Returns promise.
+    */
+    loadLayerFeatures(e) {
+      assert('BaseLayer\'s \'loadLayerFeatures\' method should be overridden.');
     },
 
     /**
