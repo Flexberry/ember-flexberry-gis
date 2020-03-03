@@ -475,17 +475,6 @@ export default Ember.Component.extend(
     }),
 
     /**
-      Observes and handles changes in JSON-string with layer settings.
-      Performs layer's recreation with new settings.
-
-      @method visibilityDidChange
-      @private
-    */
-    _hideAllObjectsDidChange: Ember.observer('index', function () {
-      this._setLayerZIndex();
-    }),
-
-    /**
       Rebuild layers.
 
       @method _fixZIndexFire

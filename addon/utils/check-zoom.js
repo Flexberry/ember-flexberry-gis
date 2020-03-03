@@ -4,7 +4,29 @@
 
 import Ember from 'ember';
 
-let checkMapZoom = (layer) =>{
+let checkMapZoomLayer = (layer) => {
+  const mapZoom = layer.leafletMap.getZoom();
+  const minZoom = _getLayerOptionLayer(layer.layerModel, `minZoom`);
+  const maxZoom = _getLayerOptionLayer(layer.layerModel, 'maxZoom');
+  return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom <= mapZoom && mapZoom <= maxZoom;
+};
+
+let _getLayerOptionLayer = (layerModel, propName) => {
+  let zoomResult = Ember.get(layerModel, `${propName}`);
+  if (Ember.isNone(zoomResult)) {
+    const parentLayers = Ember.get(layerModel, 'parent');
+    for (var key in parentLayers) {
+      zoomResult = Ember.get(parentLayers, `${key}.${propName}`);
+      if (!Ember.isNone(zoomResult)) {
+        return zoomResult;
+      }
+    }
+  }
+
+  return zoomResult;
+};
+
+let checkMapZoom = (layer) => {
   const mapZoom = _getMapZoom(layer._map);
   const minZoom = _getLayerOption(layer, 'minZoom');
   const maxZoom = _getLayerOption(layer, 'maxZoom');
@@ -35,5 +57,5 @@ let _getLayerOption = (layer, propName) => {
 };
 
 export {
-  checkMapZoom
+  checkMapZoom, checkMapZoomLayer
 };

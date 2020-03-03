@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import BaseVectorLayer from '../base-vector-layer';
-import { checkMapZoom } from '../utils/check-zoom';
+import { checkMapZoomLayer } from '../../utils/check-zoom';
 
 /**
   WFS layer component for leaflet map.
@@ -165,7 +165,7 @@ export default BaseVectorLayer.extend({
         .once('load', (e) => {
           let wfsLayer = e.target;
           let visibility = this.get('layerModel.visibility');
-          if (!wfsLayer.options.showExisting && visibility && checkMapZoom(wfsLayer)) {
+          if (!wfsLayer.options.showExisting && visibility && checkMapZoomLayer(this)) {
             let leafletMap = this.get('leafletMap');
             let bounds = leafletMap.getBounds();
             let filter = new L.Filter.BBox(wfsLayer.options.geometryField, bounds, wfsLayer.options.crs);
@@ -360,17 +360,17 @@ export default BaseVectorLayer.extend({
         let loadIds = [];
         leafletObject.eachLayer((shape) => {
           const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), shape);
-    
+
           if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
             loadIds.push(id);
           }
         });
-    
+
         if (loadIds.length !== featureIds.length) {
           let remainingFeat = featureIds.filter((item) => {
             return loadIds.indexOf(item) === -1;
           });
-    
+
           let filter = null;
           if (!Ember.isNone(remainingFeat)) {
             let equals = Ember.A();
@@ -380,10 +380,10 @@ export default BaseVectorLayer.extend({
                 equals.pushObject(new L.Filter.EQ(pkField, id));
               }
             });
-    
+
             filter = new L.Filter.Or(...equals);
           }
-    
+
           leafletObject.loadFeatures(filter);
           leafletObject.once('load', () => {
             resolve(leafletObject);

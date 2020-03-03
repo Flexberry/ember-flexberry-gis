@@ -180,7 +180,7 @@ export default Ember.Mixin.create({
   */
   getIntersectionObjects(layerId, featureId, layerIds) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, featureId).then(([, , featureLayer]) => {
+      this._getModelLayerFeature(layerId, featureId).then(([,, featureLayer]) => {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         let layersIntersect = [];
         layerIds.forEach(id => {
@@ -542,34 +542,34 @@ export default Ember.Mixin.create({
     return new Ember.RSVP.Promise((resolve, reject) => {
       this._getModelLayerFeature(source.layerId, source.objectId, source.shouldRemove).then(([, sourceLeafletLayer, sourceFeature]) => {
         let [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
-          let destFeature;
-          switch (destLayerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
-            case 'polygon':
-              destFeature = L.polygon(sourceFeature.getLatLngs());
-              break;
-            case 'polyline':
-              destFeature = L.polyline(sourceFeature.getLatLngs());
-              break;
-            case 'marker':
-              destFeature = L.marker(sourceFeature.getLatLng());
-              break;
-            default:
-              reject(`Unknown layer type: '${destLayerModel.get('settingsAsObject.typeGeometry')}`);
+        let destFeature;
+        switch (destLayerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
+          case 'polygon':
+            destFeature = L.polygon(sourceFeature.getLatLngs());
+            break;
+          case 'polyline':
+            destFeature = L.polyline(sourceFeature.getLatLngs());
+            break;
+          case 'marker':
+            destFeature = L.marker(sourceFeature.getLatLng());
+            break;
+          default:
+            reject(`Unknown layer type: '${destLayerModel.get('settingsAsObject.typeGeometry')}`);
+        }
+
+        if (!Ember.isNone(destFeature)) {
+          destFeature.feature = {
+            properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {})
+          };
+
+          destLeafletLayer.addLayer(destFeature);
+
+          if (source.shouldRemove) {
+            sourceLeafletLayer.removeLayer(sourceFeature);
           }
 
-          if (!Ember.isNone(destFeature)) {
-            destFeature.feature = {
-              properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {})
-            };
-
-            destLeafletLayer.addLayer(destFeature);
-
-            if (source.shouldRemove) {
-              sourceLeafletLayer.removeLayer(sourceFeature);
-            }
-
-            resolve(destFeature);
-          }
+          resolve(destFeature);
+        }
       }).catch((e) => {
         reject(e);
       });
@@ -606,6 +606,7 @@ export default Ember.Mixin.create({
               obj.addTo(serviceLayer);
               result.object = obj;
             }
+
             result.area = area(intersectionRes);
             resolve(result);
           } else {
