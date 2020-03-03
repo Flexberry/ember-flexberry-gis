@@ -74,7 +74,7 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
           '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
         }
 
-        if (request.requestBody.includes('<wfs:DescribeFeatureType') !== -1) {
+        if (request.requestBody.indexOf('<wfs:DescribeFeatureType') !== -1) {
           request.respond(200, { 'Content-Type': 'text/plain;charset=utf-8' },
           '<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" ' +
           'xmlns:rgisperm="http://rgis.permkrai.ru" elementFormDefault="qualified" targetNamespace="http://rgis.permkrai.ru">' +
@@ -214,7 +214,6 @@ test('loadLayerFeatures() with options showExisting = false', function(assert) {
       component._leafletObject = res.target;
 
       component.loadLayerFeatures(e).then((layers) => {
-        console.log(layers);
         assert.ok(layers, 'Load feature of layers with showExisting = false');
         done();
       });
