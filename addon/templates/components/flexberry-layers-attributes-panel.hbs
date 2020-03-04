@@ -216,6 +216,12 @@
                         </div>
                       </div>
                     </div>
+                    {{flexberry-button
+                      tooltip=(t "components.flexberry-layers-attributes-panel.find-intersection")
+                      click=(action "onFindIntersectPolygons" tabModel)
+                      iconClass="close icon"
+                      readonly=(eq tabModel._selectedRowsCount 0)
+                    }}
                   {{/if}}
                   </div>
                   <div class="field">

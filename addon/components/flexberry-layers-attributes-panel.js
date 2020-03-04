@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
+import checkIntersect from '../utils/polygon-intersect-check';
 import * as buffer from 'npm:@turf/buffer';
 import * as thelpers from 'npm:@turf/helpers';
 import * as difference from 'npm:@turf/difference';
@@ -999,6 +1000,38 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       serviceLayer.clearLayers();
     },
 
+    /**
+      Handles find intersecting polygons.
+      @method actions.onFindIntersectPolygons
+    */
+    onFindIntersectPolygons(tabModel) {
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      let selectedFeaturesKeys = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item));
+      let intersectPolygonFeatures = Ember.A();
+      let intersectPolygonFeaturesKeys = Ember.A();
+      selectedFeaturesKeys.forEach((item, index) => {
+        let currentFeature = tabModel.featureLink[item].feature;
+        let currentFeatureGeoJson = currentFeature.leafletLayer.toGeoJSON();
+        let currentFeatureGeometry = currentFeatureGeoJson.geometry;
+        let isIntersect = !Ember.isNone(currentFeatureGeometry) ? checkIntersect(currentFeatureGeometry) : false;
+
+        if (isIntersect) {
+          intersectPolygonFeaturesKeys.push(item);
+          intersectPolygonFeatures.push(currentFeature);
+        }
+      });
+
+      if (intersectPolygonFeatures.length !== 0) {
+        Ember.set(tabModel, '_selectedRows', {});
+        Ember.set(tabModel, 'selectAll', false);
+        let selectedInterctItemsRows = Ember.get(tabModel, '_selectedRows');
+        intersectPolygonFeaturesKeys.forEach((item, index) => {
+          Ember.set(selectedInterctItemsRows, item, true);
+        });
+        Ember.set(tabModel, '_selectedRows', selectedInterctItemsRows);
+        this.send('zoomTo', intersectPolygonFeatures);
+      }
+    },
     /**
       Handles 'Select all' checkbox click.
 
