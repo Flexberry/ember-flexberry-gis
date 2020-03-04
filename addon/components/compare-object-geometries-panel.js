@@ -143,6 +143,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     closePanel() {
       let group = this.get('featuresLayer');
       group.clearLayers();
+      let serviceLayer = this.get('serviceLayer');
+      serviceLayer.clearLayers();
       this.send('selectFeature', null);
       this.sendAction('closeComparePanel');
     },
