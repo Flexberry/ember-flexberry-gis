@@ -129,12 +129,12 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         Ember.set(feature.properties, 'isFavorite', true);
         if (layerModelIndex !== false) {
           favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);
-          let newRecord = { objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id }
+          let newRecord = { objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
           let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
           record.save();
         } else {
           favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature.layerModel, feature);
-          let newRecord = { objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id }
+          let newRecord = { objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id };
           let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', newRecord);
           record.save();
         }
