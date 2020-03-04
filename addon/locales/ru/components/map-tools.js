@@ -75,10 +75,10 @@ export default {
       'caption': 'Добавить полигон'
     },
     'draw-multy-polygon': {
-      'caption': 'Добавить часть/кольцо'
+      'caption': 'Добавить часть'
     },
     'draw-multy-line': {
-      'caption': 'Добавить часть/кольцо'
+      'caption': 'Добавить часть'
     },
     'draw-clear': {
       'caption': 'Очистить'
