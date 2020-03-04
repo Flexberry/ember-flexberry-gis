@@ -43,10 +43,10 @@ export default EditFormController.extend(
       @private
     */
     _comapreGeometriesPanelObserver: Ember.observer('showComapreGeometriesPanel', function () {
-      if(this.get('showComapreGeometriesPanel')) {
+      if (this.get('showComapreGeometriesPanel')) {
         Ember.$('.bottom-compare-panel').css('z-index', 2000);
         Ember.$('.bottom-intersection-panel').css('z-index', 1999);
-        Ember.$('.bottom-attributes-panel').css('z-index', 1998);  
+        Ember.$('.bottom-attributes-panel').css('z-index', 1998);
       }
     }),
 
@@ -58,11 +58,11 @@ export default EditFormController.extend(
       @private
     */
     _intersectionPanelObserver: Ember.observer('showIntersectionPanel', function () {
-      if(this.get('showIntersectionPanel')) {
+      if (this.get('showIntersectionPanel')) {
         Ember.$('.bottom-intersection-panel').css('z-index', 2000);
         Ember.$('.bottom-compare-panel').css('z-index', 1999);
-        Ember.$('.bottom-attributes-panel').css('z-index', 1998);  
-      } 
+        Ember.$('.bottom-attributes-panel').css('z-index', 1998);
+      }
     }),
     /**
       Observes handles changes in editedLayers.length property.
@@ -72,11 +72,11 @@ export default EditFormController.extend(
       @private
     */
     _attributesPanelObserver: Ember.observer('editedLayers.length', function () {
-      if(this.get('editedLayers.length') > 0 ) {
-        Ember.$('.bottom-attributes-panel').css('z-index', 2000);  
+      if (this.get('editedLayers.length') > 0 ) {
+        Ember.$('.bottom-attributes-panel').css('z-index', 2000);
         Ember.$('.bottom-intersection-panel').css('z-index', 1999);
         Ember.$('.bottom-compare-panel').css('z-index', 1998);
-      } 
+      }
     }),
 
     /**

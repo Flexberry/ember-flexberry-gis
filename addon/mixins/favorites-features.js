@@ -81,11 +81,11 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   _onLeafletMapDidChange: Ember.observer('leafletMap', function() {
     let leafletMap = this.get('leafletMap');
     leafletMap.on('flexberry-map:load', (e) => {
-      Ember.RSVP.allSettled(e.results).then(() => {    
+      Ember.RSVP.allSettled(e.results).then(() => {
         let store = this.get('store');
         let idFeaturesArray = store.findAll('i-i-s-r-g-i-s-p-k-favorite-features');
         idFeaturesArray.then((result) => {
-          this.fromIdArrayToFeatureArray(result);                        
+          this.fromIdArrayToFeatureArray(result);
         });
       });
     });
@@ -114,10 +114,10 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
         Ember.set(feature.properties, 'isFavorite', false);
         if (layerModelIndex !== false) {
           favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
-          // let record = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
-          // .filterBy('objectKey', feature.properties.primarykey)
-          // .filterBy('objectLayerKey', feature.layerModel.id);
-          // record[0].destroyRecord();
+          let record = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
+          .filterBy('objectKey', feature.properties.primarykey)
+          .filterBy('objectLayerKey', feature.layerModel.id);
+          record[0].destroyRecord();
         }
 
         if (Ember.get(feature, 'compareEnabled')) {
@@ -128,13 +128,13 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       } else {
         Ember.set(feature.properties, 'isFavorite', true);
         if (layerModelIndex !== false) {
-          favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);      
-          // let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', {objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id});
-          // record.save(); 
+          favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);
+          let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', {objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id});
+          record.save();
         } else {
           favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature.layerModel, feature);
-          // let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', {objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id});
-          // record.save();
+          let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', {objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id});
+          record.save();
         }
       }
 
@@ -253,11 +253,11 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
 
     @method fromIdArrayToFeatureArray
   */
-  fromIdArrayToFeatureArray(favFeaturesIds) {  
+  fromIdArrayToFeatureArray(favFeaturesIds) {
     let favFeatures = Ember.A();
     favFeaturesIds.forEach(layer => {
       let [layerModel, featureLayer] = this.getModelLayerFeature(layer.get('objectLayerKey'), layer.get('objectKey'));
-      featureLayer.feature.leafletLayer = L.geoJSON(featureLayer.feature, { color: featureLayer.options.color});
+      featureLayer.feature.leafletLayer = L.geoJSON(featureLayer.feature, { color: featureLayer.options.color });
       featureLayer.feature.layerModel = layerModel;
       Ember.set(featureLayer.feature.properties, 'isFavorite', true);
       let layerModelIndex = this.isLayerModelInArray(favFeatures, layerModel);

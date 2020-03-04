@@ -34,79 +34,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   compareBtnDisabled: true,
 
-  test: Ember.A(),
-  
-  mapApi: Ember.inject.service(),
-
   onTwoObjectsChange: Ember.observer('features.[]', function() {
     this.set('data', this.get('features'));
   }),
-  // onTwoObjectsChange: Ember.observer('test.[]', function() {
-  //   let _this = this
-  //   let api = this.get('mapApi');
-  //   api.addToApi('getLayerFeatureId', function(layer, layerObject) {
-  //     if (layerObject.feature.properties.hasOwnProperty('primarykey')) {
-  //       return layerObject.feature.properties.primarykey;
-  //     }
-  //     return layerObject.feature.properties.name;
-  //   });
-
-  //   api.addToApi('readyMapLayers', function() {
-  //     return new Ember.RSVP.Promise(resolve=>{
-  //       resolve();
-  //     })
-  //   });
-  //   let r = api.getFromApi('readyMapLayers');
-  //   r().then(()=> {
-  //     setTimeout(function(){
-  //       _this.fromIdArrayToFeatureArray(_this.get('test'));
-  //     }, 2000)
-    
-  //   });
-  // }),
-
-  // fromIdArrayToFeatureArray(favFeaturesIds) {
-    
-  //   let api = this.get('mapApi').getFromApi('mapModel');
-  //   let favFeatures = Ember.A();
-  //   favFeaturesIds.forEach(layer => {
-  //     let [layerModel, lealfetObject, featureLayer] = api._getModelLayerFeature(layer.layerId, layer.featureId);
-  //     let layerModelIndex = this.isLayerModelInArray(favFeatures, layerModel);
-  //     if (layerModelIndex !== false) {
-  //       favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, featureLayer);
-  //     } else {
-  //       favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, layerModel, featureLayer);
-  //     }
-  //   })
-  //   let layerModelPromise = Ember.A();
-  //   favFeatures.forEach(object => {
-  //     let promise = new Ember.RSVP.Promise((resolve) => {
-  //       resolve(object.features);
-  //     });
-  //     layerModelPromise.addObject({ layerModel: object.layerModel, features: promise });
-  //   });
-  //   this.set('features', favFeatures);
-  //   this.set('data', layerModelPromise);
-   
-  // },
-
-  // addNewFeatureToLayerModel(array, index, feature) {
-  //   let features = array[index].features;
-  //   features.push(feature);
-  //   return array;
-  // },
-
-  // /**
-  //   Adding new layer model and new feature to array.
-
-  //     @method addNewFeatureToNewLayerModel
-  // */
-  // addNewFeatureToNewLayerModel(array, layerModel, feature) {
-  //   let featureArray = Ember.A();
-  //   featureArray.addObject(feature);
-  //   array.addObject({ layerModel: layerModel, features: featureArray });
-  //   return array;
-  // },
 
   actions: {
 
