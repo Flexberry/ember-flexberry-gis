@@ -33,6 +33,8 @@ export default Ember.Mixin.create({
     leafletMap.fitBounds(featureLayer.getBounds());
     let editTools = this._getEditTools();
     featureLayer.enableEdit(leafletMap);
+    featureLayer.layerId = layerId;
+
     editTools.on('editable:editing', (e) => {
       if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayer))) {
         leafletObject.editLayer(e.layer);
@@ -42,14 +44,44 @@ export default Ember.Mixin.create({
     return featureLayer;
   },
 
-  cancelEdit() {
+  /**
+    Cancel edit for layer object.
+
+    @method cancelEdit
+    @param {Object} layer layer object.
+    @return nothing
+  */
+  cancelEdit(layer) {
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    this.disableLayerEditing(leafletMap);
     let editTools = this._getEditTools();
+    this.disableLayerEditing(leafletMap);
     editTools.off('editable:drawing:end');
     editTools.off('editable:editing');
     editTools.stopDrawing();
     editTools.featuresLayer.clearLayers();
+    editTools.editLayer.clearLayers();
+
+    if (!Ember.isNone(layer.layerId)) {
+      let [, leafletObject] = this._getModelLayerFeature(layer.layerId);
+      if (!Ember.isNone(leafletObject)) {
+        if (layer.state === leafletObject.state.insert) {
+          leafletObject.removeLayer(layer);
+        } else if (layer.state === leafletObject.state.update) {
+          let map = Ember.get(leafletObject, '_map');
+          map.removeLayer(layer);
+          let filter = new L.Filter.EQ('primarykey', Ember.get(layer, 'feature.properties.primarykey'));
+          let feature = leafletObject.loadFeatures(filter);
+
+          let id = leafletObject.getLayerId(layer);
+          if (id in leafletObject.changes) {
+            delete leafletObject.changes[id];
+            delete leafletObject._layers[id];
+          }
+        }
+      }
+
+      layer.layerId = null;
+    }
   },
 
   /**
@@ -62,7 +94,6 @@ export default Ember.Mixin.create({
   startNewObject(layerId, properties) {
     let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
     let editTools = this._getEditTools();
-
     let newLayer;
 
     let finishDraw = () => {
@@ -81,7 +112,7 @@ export default Ember.Mixin.create({
       editTools.stopDrawing();
     }
 
-    switch (layerModel.get('settingsAsObject.typeGeometry')) {
+    switch (layerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
       case 'polygon':
         newLayer = editTools.startPolygon();
         break;
@@ -95,6 +126,7 @@ export default Ember.Mixin.create({
         throw 'Unknown layer type: ' + layerModel.get('settingsAsObject.typeGeometry');
     }
 
+    newLayer.layerId = layerId;
     return newLayer;
   },
 
@@ -168,6 +200,7 @@ export default Ember.Mixin.create({
 
     let editTools = this._getEditTools();
     let newLayer;
+    featureLayer.layerId = layerId;
 
     const disableDraw = () => {
       editTools.off('editable:drawing:end', disableDraw, this);
@@ -193,7 +226,7 @@ export default Ember.Mixin.create({
 
     editTools.on('editable:drawing:end', disableDraw, this);
 
-    switch (layerModel.get('settingsAsObject.typeGeometry')) {
+    switch (layerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
       case 'polygon':
         newLayer = editTools.startPolygon();
         break;

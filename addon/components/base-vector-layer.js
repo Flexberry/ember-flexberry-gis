@@ -397,5 +397,16 @@ export default BaseLayer.extend({
 
       resolve(features);
     });
+  },
+
+  /**
+    Load features.
+
+    @method loadLayerFeatures
+    @param {Object[]} featureIds Feature id.
+    @returns {Ember.RSVP.Promise} Returns promise.
+  */
+  loadLayerFeatures(featureIds) {
+    assert('BaseVectorLayer\'s \'loadLayerFeatures\' should be overridden.');
   }
 });
