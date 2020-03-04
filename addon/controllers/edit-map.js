@@ -72,7 +72,7 @@ export default EditFormController.extend(
       @private
     */
     _attributesPanelObserver: Ember.observer('editedLayers.length', function () {
-      if (this.get('editedLayers.length') > 0 ) {
+      if (this.get('editedLayers.length') > 0) {
         Ember.$('.bottom-attributes-panel').css('z-index', 2000);
         Ember.$('.bottom-intersection-panel').css('z-index', 1999);
         Ember.$('.bottom-compare-panel').css('z-index', 1998);
