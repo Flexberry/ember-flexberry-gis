@@ -3,9 +3,10 @@
 */
 
 import Ember from 'ember';
+import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
 
-export default Ember.Mixin.create({
+export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
 
   /**
     Array of items in fav with promise.
@@ -32,28 +33,12 @@ export default Ember.Mixin.create({
   showComapreGeometriesPanel: false,
 
   /**
-    Service layer for favorite features.
-    @property favServiceLayer
-    @type Leaflet Object
-    @default L.featureGroup()
-  */
-  favServiceLayer: L.featureGroup(),
-
-  /**
     Array of items in fav list.
     @property favFeatures
     @type Array
     @default Ember.A()
   */
   favFeatures: Ember.A(),
-
-   /**
-    Array of items in fav list.
-    @property favFeatures
-    @type Array
-    @default Ember.A()
-  */
-  favFeaturesIds1: Ember.A(),
 
   /**
     Flag indicates if comapre button disabled.
@@ -129,10 +114,10 @@ export default Ember.Mixin.create({
         Ember.set(feature.properties, 'isFavorite', false);
         if (layerModelIndex !== false) {
           favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
-          let record = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
-          .filterBy('objectKey', feature.properties.primarykey)
-          .filterBy('objectLayerKey', feature.layerModel.id);
-          record[0].destroyRecord();
+          // let record = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
+          // .filterBy('objectKey', feature.properties.primarykey)
+          // .filterBy('objectLayerKey', feature.layerModel.id);
+          // record[0].destroyRecord();
         }
 
         if (Ember.get(feature, 'compareEnabled')) {
@@ -144,12 +129,12 @@ export default Ember.Mixin.create({
         Ember.set(feature.properties, 'isFavorite', true);
         if (layerModelIndex !== false) {
           favFeatures = this.addNewFeatureToLayerModel(favFeatures, layerModelIndex, feature);      
-          let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', {objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id});
-          record.save(); 
+          // let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', {objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id});
+          // record.save(); 
         } else {
           favFeatures = this.addNewFeatureToNewLayerModel(favFeatures, feature.layerModel, feature);
-          let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', {objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id});
-          record.save();
+          // let record = store.createRecord('i-i-s-r-g-i-s-p-k-favorite-features', {objectKey: feature.properties.primarykey, objectLayerKey: feature.layerModel.id});
+          // record.save();
         }
       }
 
