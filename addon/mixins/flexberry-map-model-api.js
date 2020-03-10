@@ -716,13 +716,13 @@ export default Ember.Mixin.create({
               onclone: function(clonedDoc) {
                 let elem = $(clonedDoc).find('[style*="transform: translate"]');
                 elem.each((ind) => {
-                  let item = $(elem[ind]);
-                  let matrix = item.css('transform');
+                  let $item = $(elem[ind]);
+                  let matrix = $item.css('transform');
                   if (matrix !== 'none') {
                     let tr = matrix.split(', ');
-                    item.css('transform','');
-                    item.css('top', tr[5].replace(')','') + 'px');
-                    item.css('left', tr[4] + 'px');
+                    $item.css('transform', '');
+                    $item.css('top', tr[5].replace(')', '') + 'px');
+                    $item.css('left', tr[4] + 'px');
                   }
                 });
               }
@@ -746,7 +746,7 @@ export default Ember.Mixin.create({
 
         let bounds = featureLayer.getBounds();
         if (!Ember.isNone(bounds)) {
-          leafletMap.fitBounds(bounds.pad(1));
+          leafletMap.fitBounds(bounds.pad(0.5));
         }
       } else {
         throw {
