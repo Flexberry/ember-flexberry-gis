@@ -712,7 +712,20 @@ export default Ember.Mixin.create({
             document.getElementsByClassName('leaflet-control-container')[0].style.display = 'none';
 
             let html2canvasOptions = Object.assign({
-              useCORS: true
+              useCORS: true,
+              onclone: function(clonedDoc) {
+                let elem = $(clonedDoc).find('[style*="transform: translate"]');
+                elem.each((ind) => {
+                  let item = $(elem[ind]);
+                  let matrix = item.css('transform');
+                  if (matrix !== 'none') {
+                    let tr = matrix.split(', ');
+                    item.css('transform','');
+                    item.css('top', tr[5].replace(')','') + 'px');
+                    item.css('left', tr[4] + 'px');
+                  }
+                });
+              }
             });
             window.html2canvas($mapPicture[0], html2canvasOptions)
               .then((canvas) => {
