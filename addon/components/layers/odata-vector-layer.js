@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import BaseVectorLayer from 'ember-flexberry-gis/components/base-vector-layer';
 import { Query } from 'ember-flexberry-data';
+import { GeometryPredicate } from 'ember-flexberry-data/query/predicate';
 const { Builder } = Query;
 
 /**
@@ -201,7 +202,15 @@ export default BaseVectorLayer.extend({
         .from(modelName)
         .selectByProjection(projectionName);
 
-      let objs = store.query(modelName, builder.build());
+      let leafletMap = this.get('leafletMap');
+      let bounds = leafletMap.getBounds();
+      let query = new GeometryPredicate(geometryField);
+      let build = builder.build();
+      build.predicate = query.intersects(`SRID=4326;POLYGON(${bounds.getNorthWest().lng} ${bounds.getNorthWest().lat}, ${bounds.getNorthEast().lng} ${bounds.getNorthEast().lat}, 
+        ${bounds.getSouthEast().lng} ${bounds.getSouthEast().lat}, ${bounds.getSouthWest().lng} ${bounds.getSouthWest().lat}`);
+
+      let objs = store.query(modelName, build);
+      //let objs = store.query(modelName, query.intersects(bounds));
       objs.then(res => {
         const options = this.get('options');
         let models = res.toArray();
