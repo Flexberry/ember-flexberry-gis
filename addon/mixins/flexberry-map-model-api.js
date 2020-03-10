@@ -714,9 +714,9 @@ export default Ember.Mixin.create({
             let html2canvasOptions = Object.assign({
               useCORS: true,
               onclone: function(clonedDoc) {
-                let elem = $(clonedDoc).find('[style*="transform: translate"]');
+                let elem = Ember.$(clonedDoc).find('[style*="transform: translate"]');
                 elem.each((ind) => {
-                  let $item = $(elem[ind]);
+                  let $item = Ember.$(elem[ind]);
                   let matrix = $item.css('transform');
                   if (matrix !== 'none') {
                     let tr = matrix.split(', ');
