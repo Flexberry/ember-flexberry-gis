@@ -41902,7 +41902,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 749,
+            "line": 766,
             "description": "Download image for layer object.",
             "itemtype": "method",
             "name": "downloadSnapShot",
@@ -41911,7 +41911,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 774,
+            "line": 791,
             "description": "Get the object thumb.",
             "itemtype": "method",
             "name": "getRhumb",
@@ -41936,7 +41936,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 871,
+            "line": 888,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
@@ -41957,7 +41957,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 885,
+            "line": 902,
             "description": "Change object polygon.",
             "itemtype": "method",
             "name": "copyObject",
@@ -41988,7 +41988,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 935,
+            "line": 952,
             "description": "Upload file.",
             "itemtype": "method",
             "name": "uploadFile",
@@ -42008,7 +42008,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 953,
+            "line": 970,
             "description": "Get coordinates point.",
             "itemtype": "method",
             "name": "getCoordPoint",
@@ -45307,11 +45307,11 @@
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:871"
+            "line": " addon/mixins/flexberry-map-model-api.js:888"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:871"
+            "line": " addon/mixins/flexberry-map-model-api.js:888"
         },
         {
             "message": "replacing incorrect tag: returns with return",

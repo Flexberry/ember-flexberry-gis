@@ -1119,10 +1119,25 @@ export default Ember.Mixin.create({
           Ember.run.later(() =&gt; {
             document.getElementsByClassName(&#x27;leaflet-control-zoom leaflet-bar leaflet-control&#x27;)[0].style.display = &#x27;none&#x27;;
             document.getElementsByClassName(&#x27;history-control leaflet-bar leaflet-control horizontal&#x27;)[0].style.display = &#x27;none&#x27;;
-            document.getElementsByClassName(&#x27;leaflet-control-container&#x27;)[0].style.display = &#x27;none&#x27;;
+            Ember.$(document).find(&#x27;.leaflet-top.leaflet-left&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);
+            Ember.$(document).find(&#x27;.leaflet-top.leaflet-right&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);
+            Ember.$(document).find(&#x27;.leaflet-bottom.leaflet-right&#x27;).css(&#x27;display&#x27;, &#x27;none&#x27;);
 
             let html2canvasOptions = Object.assign({
-              useCORS: true
+              useCORS: true,
+              onclone: function(clonedDoc) {
+                let elem = Ember.$(clonedDoc).find(&#x27;[style*=&quot;transform: translate&quot;]&#x27;);
+                elem.each((ind) =&gt; {
+                  let $item = Ember.$(elem[ind]);
+                  let matrix = $item.css(&#x27;transform&#x27;);
+                  if (matrix !== &#x27;none&#x27;) {
+                    let tr = matrix.split(&#x27;, &#x27;);
+                    $item.css(&#x27;transform&#x27;, &#x27;&#x27;);
+                    $item.css(&#x27;top&#x27;, tr[5].replace(&#x27;)&#x27;, &#x27;&#x27;) + &#x27;px&#x27;);
+                    $item.css(&#x27;left&#x27;, tr[4] + &#x27;px&#x27;);
+                  }
+                });
+              }
             });
             window.html2canvas($mapPicture[0], html2canvasOptions)
               .then((canvas) =&gt; {
@@ -1134,7 +1149,9 @@ export default Ember.Mixin.create({
               .finally(() =&gt; {
                 document.getElementsByClassName(&#x27;leaflet-control-zoom leaflet-bar leaflet-control&#x27;)[0].style.display = &#x27;block&#x27;;
                 document.getElementsByClassName(&#x27;history-control leaflet-bar leaflet-control horizontal&#x27;)[0].style.display = &#x27;block&#x27;;
-                document.getElementsByClassName(&#x27;leaflet-control-container&#x27;)[0].style.display = &#x27;block&#x27;;
+                Ember.$(document).find(&#x27;.leaflet-top.leaflet-left&#x27;).css(&#x27;display&#x27;, &#x27;block&#x27;);
+                Ember.$(document).find(&#x27;.leaflet-top.leaflet-right&#x27;).css(&#x27;display&#x27;, &#x27;block&#x27;);
+                Ember.$(document).find(&#x27;.leaflet-bottom.leaflet-right&#x27;).css(&#x27;display&#x27;, &#x27;block&#x27;);
                 $mapPicture.height(heightMap);
                 $mapPicture.width(widthMap);
               });
@@ -1143,7 +1160,7 @@ export default Ember.Mixin.create({
 
         let bounds = featureLayer.getBounds();
         if (!Ember.isNone(bounds)) {
-          leafletMap.fitBounds(bounds.pad(1));
+          leafletMap.fitBounds(bounds.pad(0.5));
         }
       } else {
         throw {
