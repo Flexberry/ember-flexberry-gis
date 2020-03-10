@@ -709,7 +709,9 @@ export default Ember.Mixin.create({
           Ember.run.later(() => {
             document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'none';
             document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'none';
-            document.getElementsByClassName('leaflet-control-container')[0].style.display = 'none';
+            $(document).find('.leaflet-top.leaflet-left').css('display','none');
+            $(document).find('.leaflet-top.leaflet-right').css('display','none');
+            $(document).find('.leaflet-bottom.leaflet-right').css('display','none');
 
             let html2canvasOptions = Object.assign({
               useCORS: true,
@@ -737,7 +739,9 @@ export default Ember.Mixin.create({
               .finally(() => {
                 document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'block';
                 document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'block';
-                document.getElementsByClassName('leaflet-control-container')[0].style.display = 'block';
+                $(document).find('.leaflet-top.leaflet-left').css('display','block');
+                $(document).find('.leaflet-top.leaflet-right').css('display','block');
+                $(document).find('.leaflet-bottom.leaflet-right').css('display','block');    
                 $mapPicture.height(heightMap);
                 $mapPicture.width(widthMap);
               });
