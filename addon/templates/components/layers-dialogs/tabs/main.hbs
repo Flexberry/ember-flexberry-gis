@@ -24,6 +24,11 @@
             {{t "components.layers-dialogs.edit.tabular-menu.pmodes-tab.caption"}}
           </a>
         {{/if}}
+        {{#if _loadFileAreAvailableForType}}
+          <a class="tab item {{if (eq _activeTab "loadfile-tab") "active"}}" data-tab="loadfile-tab" onclick={{action "onTabClick"}}>
+            {{t "components.layers-dialogs.edit.tabular-menu.loadfile-tab.caption"}}
+          </a>
+        {{/if}}
       </div>
       {{#if _mainSettingsAreAvailableForType}}
         <div class="ui bottom attached tab segment {{if (eq _activeTab "main-tab") "active"}}" data-tab="main-tab">
@@ -70,6 +75,14 @@
             layerEditingFinished=layerEditingFinished
             availableModes=_availableModes
             selectedModeCaption=_selectedModeCaption
+          }}
+        </div>
+      {{/if}}
+      {{#if _loadFileAreAvailableForType}}
+        <div class="ui bottom attached tab segment {{if (eq _activeTab "loadfile-tab") "active"}}" data-tab="loadfile-tab">
+          {{layers-dialogs/tabs/load-file
+            layer=_layer
+            onUploadFile = (action "onUploadFile")
           }}
         </div>
       {{/if}}

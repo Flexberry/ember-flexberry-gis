@@ -311,6 +311,7 @@ export default Ember.Component.extend(
       this._setLayerVisibility();
       this._setLayerStyle();
       this._setLayerOpacity();
+      this._setLayerZIndex();
       const layerInitCallback = this.get('mapApi').getFromApi('layerInitCallback');
       if (typeof layerInitCallback === 'function') {
         layerInitCallback(this);
@@ -640,7 +641,7 @@ export default Ember.Component.extend(
 
         leafletMap.on('flexberry-map:load', (e) => {
           if (!Ember.isNone(this.promiseLoad)) {
-            e.results.push(this.promiseLoad);
+            e.results.push(this.get('_leafletLayerPromise'));
 
             if (e.loadFunc.length === 0) {
               e.loadFunc.push(() => {

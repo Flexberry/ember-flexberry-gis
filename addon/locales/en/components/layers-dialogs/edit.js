@@ -96,6 +96,9 @@ export default {
     },
     'pmodes-tab': {
       'caption': 'Creation by prototype'
+    },
+    'loadfile-tab': {
+      'caption': 'Load from file'
     }
   },
   'groups': {

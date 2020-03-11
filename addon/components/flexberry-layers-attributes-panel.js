@@ -821,8 +821,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       settings.drawTools = {};
       this.set('settings', settings);
-      this.set('_selectedUnit', 'meters');
     }
+
+    this.set('_selectedUnit', 'meters');
   },
 
   actions: {
@@ -864,15 +865,21 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let editedRows = Ember.get(tabModel, '_editedRows');
       Object.keys(editedRows).filter((key) => editedRows[key]).forEach((key) => {
         let layer = tabModel.get(`featureLink.${key}`);
-        layer.disableEdit();
+        if (layer) {
+          layer.disableEdit();
+          tabModel.disableDragging(key);
+        }
       });
-
       if (tabModel.get('groupDraggable')) {
         let draggableRows = Ember.get(tabModel, '_draggableRows');
         tabModel.disableDragging(Object.keys(draggableRows).filter((key) => draggableRows[key]));
       }
 
       let editedLayers = this.get('items');
+      if (editedLayers.length === 1)  {
+        this.set('lastPage', 1);
+      }
+
       let selectedTabIndex = this.get('selectedTabIndex');
       this.get('_tabModelsCache').removeObject(tabModel);
       editedLayers.removeAt(index);
@@ -998,7 +1005,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     /**
       Handles find intersecting polygons.
-
       @method actions.onFindIntersectPolygons
     */
     onFindIntersectPolygons(tabModel) {
@@ -1029,7 +1035,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.send('zoomTo', intersectPolygonFeatures);
       }
     },
-
     /**
       Handles 'Select all' checkbox click.
 
@@ -1266,6 +1271,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} tabModel Related tab model.
     */
     onSaveChangesClick(tabModel) {
+      let editedRows = Ember.get(tabModel, '_editedRows');
+      Object.keys(editedRows).filter((key) => editedRows[key]).forEach((key) => {
+        let layer = tabModel.get(`featureLink.${key}`);
+        if (layer) {
+          layer.disableEdit();
+          tabModel.disableDragging(key);
+        }
+      });
+      Ember.set(tabModel, '_editedRows', {});
       let leafletObject = tabModel.leafletObject;
       let saveFailed = (data) => {
         this.set('error', data);
@@ -1275,6 +1289,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let saveSuccess = (data) => {
         Ember.set(tabModel, 'leafletObject._wasChanged', false);
         tabModel._reload();
+        let editedRows = Ember.get(tabModel, '_editedRows');
+        if (Object.keys(editedRows).length > 0) {
+          let isExist = tabModel.properties.filter((item) => Ember.guidFor(item) === Object.keys(editedRows)[0]);
+          if (isExist.length === 0) {
+            let props = tabModel.properties;
+            this.send('onRowGeometryEdit', tabModel, Ember.guidFor(props[props.length - 1]));
+          }
+        }
+
         leafletObject.off('save:failed', saveFailed);
       };
 
@@ -1400,11 +1423,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} addedLayer Added layer.
     */
     onGeometryAddComplete(tabModel, addedLayer, options) {
+      let editedRows = Ember.get(tabModel, '_editedRows');
+      Object.keys(editedRows).filter((key) => editedRows[key]).forEach((key) => {
+        let layer = tabModel.get(`featureLink.${key}`);
+        layer.disableEdit();
+        tabModel.disableDragging(key);
+      });
       if (!Ember.isNone(options) && Ember.get(options, 'panToAddedObject')) {
         this.set('_newRowPanToObject', true);
       }
 
-      this._showNewRowDialog(tabModel, addedLayer);
+      if (!Ember.isEmpty((addedLayer instanceof L.Marker) ? addedLayer._latlng : addedLayer._latlngs[0])) {
+        this._showNewRowDialog(tabModel, addedLayer);
+      }
     },
 
     /**

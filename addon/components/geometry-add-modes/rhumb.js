@@ -270,26 +270,24 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         points.push(data);
       }
 
+      //Добавить CRS на форму и параметры. Пока считаем что первая точка в СК слоя.
       const data = {
         type: objectType,
         startPoint: startPoints,
         points: points
       };
 
-      const rhumbObj = rhumbOperations.createObjectRhumb(data);
-      const coordinates = rhumbObj.geometry.coordinates;
+      let crsRhumb = Ember.get(this.tabModel, 'leafletObject.options.crs');
+      const rhumbObj = rhumbOperations.createObjectRhumb(data, crsRhumb, this);
+      let coordsToLatLng = function(coords) {
+        return crsRhumb.unproject(L.point(coords));
+      };
 
-      let addedLayer;
-      switch (this._dataForm.objectType) {
-        case 'Polygon':
-          addedLayer = L.polygon(coordinates);
-          break;
-        case 'Line':
-          addedLayer = L.polyline(coordinates);
-          break;
-      }
+      let geoJSON = L.geoJSON(rhumbObj, { coordsToLatLng: coordsToLatLng.bind(this) });
 
-      this.sendAction('complete', addedLayer, { panToAddedObject: true });
+      let newObj = geoJSON.getLayers()[0];
+
+      this.sendAction('complete', newObj, { panToAddedObject: true });
     },
 
     /**
