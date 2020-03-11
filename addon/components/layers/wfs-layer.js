@@ -31,7 +31,8 @@ export default BaseVectorLayer.extend({
     'style',
     'filter',
     'forceMulti',
-    'withCredentials'
+    'withCredentials',
+    'continueLoading'
   ],
 
   /**
@@ -165,7 +166,7 @@ export default BaseVectorLayer.extend({
         .once('load', (e) => {
           let wfsLayer = e.target;
           let visibility = this.get('layerModel.visibility');
-          if (!wfsLayer.options.showExisting && visibility && checkMapZoomLayer(this)) {
+          if (!wfsLayer.options.showExisting && wfsLayer.options.continueLoading && visibility && checkMapZoomLayer(this)) {
             let leafletMap = this.get('leafletMap');
             let bounds = leafletMap.getBounds();
             let filter = new L.Filter.BBox(wfsLayer.options.geometryField, bounds, wfsLayer.options.crs);
@@ -357,7 +358,7 @@ export default BaseVectorLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletObject = this.get('_leafletObject');
       let featureIds = e.featureIds;
-      if (!leafletObject.options.showExisting) {
+      if (!leafletObject.options.showExisting && leafletObject.options.continueLoading) {
         let loadIds = [];
         leafletObject.eachLayer((shape) => {
           const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), shape);
@@ -409,7 +410,7 @@ export default BaseVectorLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletObject = this.get('_leafletObject');
       let featureIds = e.featureIds;
-      if (!leafletObject.options.showExisting) {
+      if (!leafletObject.options.showExisting && leafletObject.options.continueLoading) {
         let filter = null;
         if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
           let equals = Ember.A();

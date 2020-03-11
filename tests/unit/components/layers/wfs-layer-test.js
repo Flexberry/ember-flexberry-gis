@@ -13,7 +13,7 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
   needs: [
     'service:map-api',
     'config:environment',
-    'component:base-layer',
+    'component:base-vector-layer',
     'model:new-platform-flexberry-g-i-s-map'
   ],
   beforeEach: function() {
@@ -27,7 +27,8 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
       crs: L.CRS.EPSG3857,
       typeNSName: 'rgisperm',
       filter: null,
-      version: '1.1.0'
+      version: '1.1.0',
+      continueLoading: true
     };
 
     let leafletOptions = [
@@ -44,7 +45,8 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
       'style',
       'filter',
       'forceMulti',
-      'withCredentials'
+      'withCredentials',
+      'continueLoading'
     ];
 
     param = {
@@ -121,7 +123,7 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
   }
 });
 
-test('getLayerFeatures() with options showExisting = false', function(assert) {
+test('getLayerFeatures() with options showExisting = false and continueLoading = true', function(assert) {
   assert.expect(2);
   var done = assert.async(2);
   Ember.run(() => {
@@ -144,7 +146,7 @@ test('getLayerFeatures() with options showExisting = false', function(assert) {
       component._leafletObject = res.target;
 
       component.getLayerFeatures(e).then((layers) => {
-        assert.ok(layers, 'Get feature of layers with showExisting = false');
+        assert.ok(layers, 'Get feature of layers with showExisting = false and continueLoading = true');
         done();
       });
     });

@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
+import { checkMapZoom } from '../utils/check-zoom';
 
 const { assert } = Ember;
 
@@ -439,5 +440,106 @@ export default BaseLayer.extend({
         resolve(Object.values(leafletObject._layers));
       }
     });
-  }
+  },
+
+  /**
+    Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.
+
+    @method _loadLayerFeatures
+    @param {Object} e Event object.
+    @returns {Object[]} results Objects.
+  */
+  _loadLayerFeatures(e) {
+    if (this.get('layerModel.id') !== e.layer) {
+      return;
+    }
+
+    e.results.push({
+      layerModel: this.get('layerModel'),
+      leafletObject: this.get('_leafletObject'),
+      features: this.loadLayerFeatures(e)
+    });
+  },
+
+  /**
+    Handles 'flexberry-map:getLayerFeatures' event of leaflet map.
+
+    @method _getLayerFeatures
+    @param {Object} e Event object.
+    @returns {Object[]} results Objects.
+  */
+  _getLayerFeatures(e) {
+    if (this.get('layerModel.id') !== e.layer) {
+      return;
+    }
+
+    e.results.push({
+      layerModel: this.get('layerModel'),
+      leafletObject: this.get('_leafletObject'),
+      features: this.getLayerFeatures(e)
+    });
+  },
+
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.on('flexberry-map:loadLayerFeatures', this._loadLayerFeatures, this);
+      leafletMap.on('flexberry-map:getLayerFeatures', this._getLayerFeatures, this);
+
+      let loadedBounds = leafletMap.getBounds();
+      let continueLoad = () => {
+        let leafletObject = this.get('_leafletObject');
+        if (!Ember.isNone(leafletObject)) {
+          let visibility = this.get('layerModel.visibility');
+          let hideObjects = Ember.isNone(leafletObject.hideAllLayerObjects) || !leafletObject.hideAllLayerObjects;
+          if (!leafletObject.options.showExisting && leafletObject.options.continueLoading && visibility && checkMapZoom(leafletObject) && hideObjects) {
+            let bounds = leafletMap.getBounds();
+
+            if (Ember.isNone(leafletObject.isLoadBounds)) {
+              let filter = new L.Filter.BBox(leafletObject.options.geometryField, bounds, leafletObject.options.crs);
+              leafletObject.loadFeatures(filter);
+              leafletObject.isLoadBounds = bounds;
+              loadedBounds = bounds;
+              return;
+            } else {
+              if (loadedBounds.contains(bounds)) {
+                return;
+              }
+            }
+
+            let oldRectangle = L.rectangle([loadedBounds.getSouthEast(), loadedBounds.getNorthWest()]);
+            let loadedPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, oldRectangle, leafletObject.options.crs));
+
+            loadedBounds.extend(bounds);
+            let newRectangle = L.rectangle([loadedBounds.getSouthEast(), loadedBounds.getNorthWest()]);
+            let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, newRectangle, leafletObject.options.crs);
+
+            let filter = new L.Filter.And(newPart, loadedPart);
+            leafletObject.loadFeatures(filter);
+          }
+        }
+      };
+
+      leafletMap.on('moveend', continueLoad);
+    }
+  },
+
+  /**
+    Deinitializes DOM-related component's properties.
+  */
+  willDestroyElement() {
+    this._super(...arguments);
+
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      // Detach custom event-handler.
+      leafletMap.off('flexberry-map:loadLayerFeatures', this._loadLayerFeatures, this);
+      leafletMap.off('flexberry-map:getLayerFeatures', this._getLayerFeatures, this);
+    }
+  },
 });

@@ -6,7 +6,6 @@ import Ember from 'ember';
 import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
-import { checkMapZoom } from '../utils/check-zoom';
 
 const {
   assert
@@ -573,44 +572,6 @@ export default Ember.Component.extend(
     },
 
     /**
-      Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.
-
-      @method _loadLayerFeatures
-      @param {Object} e Event object.
-      @returns {Object[]} results Objects.
-    */
-    _loadLayerFeatures(e) {
-      if (this.get('layerModel.id') !== e.layer) {
-        return;
-      }
-
-      e.results.push({
-        layerModel: this.get('layerModel'),
-        leafletObject: this.get('_leafletObject'),
-        features: this.loadLayerFeatures(e)
-      });
-    },
-
-    /**
-      Handles 'flexberry-map:getLayerFeatures' event of leaflet map.
-
-      @method _getLayerFeatures
-      @param {Object} e Event object.
-      @returns {Object[]} results Objects.
-    */
-    _getLayerFeatures(e) {
-      if (this.get('layerModel.id') !== e.layer) {
-        return;
-      }
-
-      e.results.push({
-        layerModel: this.get('layerModel'),
-        leafletObject: this.get('_leafletObject'),
-        features: this.getLayerFeatures(e)
-      });
-    },
-
-    /**
       Returns leaflet layer's bounding box.
 
       @method _getBoundingBox
@@ -677,58 +638,6 @@ export default Ember.Component.extend(
         leafletMap.on('flexberry-map:search', this._search, this);
         leafletMap.on('flexberry-map:query', this._query, this);
         leafletMap.on('flexberry-map:createObject', this._createObject, this);
-        leafletMap.on('flexberry-map:loadLayerFeatures', this._loadLayerFeatures, this);
-        leafletMap.on('flexberry-map:getLayerFeatures', this._getLayerFeatures, this);
-
-        let loadedBounds = leafletMap.getBounds();
-        let continueLoad = () => {
-          let leafletObject = this.get('_leafletObject');
-          if (!Ember.isNone(leafletObject)) {
-            let type = this.get('layerModel.type');
-            let visibility = this.get('layerModel.visibility');
-            let hideObjects = Ember.isNone(leafletObject.hideAllLayerObjects) || !leafletObject.hideAllLayerObjects;
-            if (type === 'wfs' && !leafletObject.options.showExisting && visibility && checkMapZoom(leafletObject) && hideObjects) {
-              let bounds = leafletMap.getBounds();
-
-              /*if (loadedBounds.contains(bounds) && !Ember.isNone(leafletObject.isLoadFilter)) {
-                return;
-              }*/
-
-              if (Ember.isNone(leafletObject.isLoadBounds)) {
-                let filter = new L.Filter.BBox(leafletObject.options.geometryField, bounds, leafletObject.options.crs);
-                leafletObject.loadFeatures(filter);
-                leafletObject.isLoadBounds = bounds;
-                loadedBounds = bounds;
-                return;
-              } /*else {
-                if (!Ember.isNone(leafletObject.isLoadBounds) && leafletObject.isLoadBounds.contains(bounds)) {
-                  return;
-                } else {
-                  if (loadedBounds.contains(bounds)) {
-                    return;
-                  }
-                }
-              }*/
-              else {
-                if (loadedBounds.contains(bounds)) {
-                  return;
-                }
-              }
-
-              let oldRectangle = L.rectangle([loadedBounds.getSouthEast(), loadedBounds.getNorthWest()]);
-              let loadedPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, oldRectangle, leafletObject.options.crs));
-
-              loadedBounds.extend(bounds);
-              let newRectangle = L.rectangle([loadedBounds.getSouthEast(), loadedBounds.getNorthWest()]);
-              let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, newRectangle, leafletObject.options.crs);
-
-              let filter = new L.Filter.And(newPart, loadedPart);
-              leafletObject.loadFeatures(filter);
-            }
-          }
-        };
-
-        leafletMap.on('moveend', continueLoad);
 
         leafletMap.on('flexberry-map:load', (e) => {
           if (!Ember.isNone(this.promiseLoad)) {
@@ -761,8 +670,6 @@ export default Ember.Component.extend(
         leafletMap.off('flexberry-map:search', this._search, this);
         leafletMap.off('flexberry-map:query', this._query, this);
         leafletMap.off('flexberry-map:createObject', this._createObject, this);
-        leafletMap.off('flexberry-map:loadLayerFeatures', this._loadLayerFeatures, this);
-        leafletMap.off('flexberry-map:getLayerFeatures', this._getLayerFeatures, this);
       }
 
       // Destroy leaflet layer.
@@ -848,28 +755,6 @@ export default Ember.Component.extend(
     */
     query(layerLinks, e) {
       assert('BaseLayer\'s \'query\' method should be overridden.');
-    },
-
-    /**
-      Handles 'flexberry-map:getLayerFeatures' event of leaflet map.
-
-      @method getLayerFeatures
-      @param {Object} e Event object.
-      @returns {Ember.RSVP.Promise} Returns promise.
-    */
-    getLayerFeatures(e) {
-      assert('BaseLayer\'s \'getLayerFeatures\' method should be overridden.');
-    },
-
-    /**
-      Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.
-
-      @method loadLayerFeatures
-      @param {Object} e Event object.
-      @returns {Ember.RSVP.Promise} Returns promise.
-    */
-    loadLayerFeatures(e) {
-      assert('BaseLayer\'s \'loadLayerFeatures\' method should be overridden.');
     },
 
     /**
