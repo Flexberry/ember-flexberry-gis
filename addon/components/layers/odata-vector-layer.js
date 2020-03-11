@@ -157,11 +157,13 @@ export default BaseVectorLayer.extend({
 
     if (innerLayer) {
       const modelProj = model.constructor.projections.get(this.get('projectionName'));
+      innerLayer.options.crs = this.get('crs');
       innerLayer.model = model;
       innerLayer.modelProj = modelProj;
       innerLayer.feature = {
         type: 'Feature',
         properties: this.createPropsFromModel(model),
+        geometry: geometry,
         leafletLayer: innerLayer
       };
       if (typeof (innerLayer.setStyle) === 'function') {
@@ -201,22 +203,24 @@ export default BaseVectorLayer.extend({
       let builder = new Builder(store)
         .from(modelName)
         .selectByProjection(projectionName);
-
-      let leafletMap = this.get('leafletMap');
-      let bounds = leafletMap.getBounds();
-      let query = new GeometryPredicate(geometryField);
       let build = builder.build();
-      build.predicate = query.intersects(`SRID=4326;POLYGON(${bounds.getNorthWest().lng} ${bounds.getNorthWest().lat}, ${bounds.getNorthEast().lng} ${bounds.getNorthEast().lat}, 
-        ${bounds.getSouthEast().lng} ${bounds.getSouthEast().lat}, ${bounds.getSouthWest().lng} ${bounds.getSouthWest().lat}`);
+      let crs = this.get('crs');
+
+      if (this.get('continueLoading')) {
+        let bounds = this.get('leafletMap').getBounds();
+        let query = new GeometryPredicate(geometryField);
+        build.predicate = query.intersects(`SRID=${crs.code.split(':')[1]};POLYGON((${crs.project(bounds.getNorthWest()).x} ${crs.project(bounds.getNorthWest()).y}, ` +
+          `${crs.project(bounds.getNorthEast()).x} ${crs.project(bounds.getNorthEast()).y}, ${crs.project(bounds.getSouthEast()).x} ${crs.project(bounds.getSouthEast()).y}, ` +
+          `${crs.project(bounds.getSouthWest()).x} ${crs.project(bounds.getSouthWest()).y}, ${crs.project(bounds.getNorthWest()).x} ${crs.project(bounds.getNorthWest()).y}))`);
+      }
 
       let objs = store.query(modelName, build);
-      //let objs = store.query(modelName, query.intersects(bounds));
+
       objs.then(res => {
         const options = this.get('options');
         let models = res.toArray();
         let layer = L.featureGroup();
 
-        let crs = this.get('crs');
         layer.options.crs = crs;
 
         L.setOptions(layer, options);
