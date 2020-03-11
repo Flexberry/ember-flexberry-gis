@@ -312,6 +312,7 @@ export default BaseVectorLayer.extend({
       props[prop] = model.get(`${prop}${postfix}`);
     }
 
+    props.primarykey = Ember.get(model,'id');
     return props;
   },
 
