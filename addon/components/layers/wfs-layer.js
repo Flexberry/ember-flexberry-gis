@@ -4,7 +4,7 @@
 
 import Ember from 'ember';
 import BaseVectorLayer from '../base-vector-layer';
-import { checkMapZoomLayer } from '../../utils/check-zoom';
+import { checkMapZoomLayer, checkMapZoom } from '../../utils/check-zoom';
 
 /**
   WFS layer component for leaflet map.
@@ -166,10 +166,10 @@ export default BaseVectorLayer.extend({
         .once('load', (e) => {
           let wfsLayer = e.target;
           let visibility = this.get('layerModel.visibility');
-          if (!wfsLayer.options.showExisting && wfsLayer.options.continueLoading && visibility && checkMapZoomLayer(this)) {
+          if (!options.showExisting && options.continueLoading && visibility && checkMapZoomLayer(this)) {
             let leafletMap = this.get('leafletMap');
             let bounds = leafletMap.getBounds();
-            let filter = new L.Filter.BBox(wfsLayer.options.geometryField, bounds, wfsLayer.options.crs);
+            let filter = new L.Filter.BBox(options.geometryField, bounds, options.crs);
             wfsLayer.loadFeatures(filter);
             wfsLayer.isLoadBounds = bounds;
           }
@@ -462,5 +462,51 @@ export default BaseVectorLayer.extend({
         }
       }
     });
+  },
+
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      let loadedBounds = leafletMap.getBounds();
+      let continueLoad = () => {
+        let leafletObject = this.get('_leafletObject');
+        if (!Ember.isNone(leafletObject)) {
+          let visibility = this.get('layerModel.visibility');
+          let hideObjects = Ember.isNone(leafletObject.hideAllLayerObjects) || !leafletObject.hideAllLayerObjects;
+          if (!leafletObject.options.showExisting && leafletObject.options.continueLoading && visibility && checkMapZoom(leafletObject) && hideObjects) {
+            let bounds = leafletMap.getBounds();
+
+            if (Ember.isNone(leafletObject.isLoadBounds)) {
+              let filter = new L.Filter.BBox(leafletObject.options.geometryField, bounds, leafletObject.options.crs);
+              leafletObject.loadFeatures(filter);
+              leafletObject.isLoadBounds = bounds;
+              loadedBounds = bounds;
+              return;
+            } else {
+              if (loadedBounds.contains(bounds)) {
+                return;
+              }
+            }
+
+            let oldRectangle = L.rectangle([loadedBounds.getSouthEast(), loadedBounds.getNorthWest()]);
+            let loadedPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, oldRectangle, leafletObject.options.crs));
+
+            loadedBounds.extend(bounds);
+            let newRectangle = L.rectangle([loadedBounds.getSouthEast(), loadedBounds.getNorthWest()]);
+            let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, newRectangle, leafletObject.options.crs);
+
+            let filter = new L.Filter.And(newPart, loadedPart);
+            leafletObject.loadFeatures(filter);
+          }
+        }
+      };
+
+      leafletMap.on('moveend', continueLoad);
+    }
   }
 });

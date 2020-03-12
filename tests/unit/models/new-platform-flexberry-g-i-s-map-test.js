@@ -69,8 +69,9 @@ let objB = [{
     }
   },
   _latlngs: [[[L.latLng(58.72884, 55.80677), L.latLng(58.73846, 55.83286), L.latLng(58.72991, 55.83836)]]]
-},
-{
+}];
+
+let objC = [{
   options: {
     crs: {
       code: crsName
@@ -92,8 +93,9 @@ let objB = [{
       coordinates: [[[[55.97843, 58.73810], [55.01448, 58.73329],  [55.98461, 58.72420], [55.97843, 58.73810]]]]
     }
   }
-},
-{
+}];
+
+let objD = [{
   options: {
     crs: {
       code: crsName
@@ -133,14 +135,14 @@ test('substitution _getModelLayerFeature', function (assert) {
 test('isContainsObject', function(assert) {
   let map = this.subject();
   let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
-  _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452').returns(
+  _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
-      resolve([null, null, objA[0]]);
+      resolve([null, null, objA]);
     })
   );
-  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').returns(
+  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
-      resolve([null, null, objB[0]]);
+      resolve([null, null, objB]);
     })
   );
 
@@ -158,24 +160,24 @@ test('isContainsObject', function(assert) {
 test('getAreaExtends', function(assert) {
   let map = this.subject();
   let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
-  _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452').returns(
+  _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
-      resolve([null, null, objA[0]]);
+      resolve([null, null, objA]);
     })
   );
-  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').returns(
+  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
-      resolve([null, null, objB[0]]);
+      resolve([null, null, objB]);
     })
   );
-  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', 'd633ea1d-eb32-423f-8663-a38abc7ba094').returns(
+  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['d633ea1d-eb32-423f-8663-a38abc7ba094']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
-      resolve([null, null, objB[1]]);
+      resolve([null, null, objC]);
     })
   );
-  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '79fd98d0-52ae-44ae-b616-971768196ad8').returns(
+  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['79fd98d0-52ae-44ae-b616-971768196ad8']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
-      resolve([null, null, objB[2]]);
+      resolve([null, null, objD]);
     })
   );
 
@@ -198,19 +200,19 @@ test('getAreaExtends', function(assert) {
 test('getIntersectionArea', function(assert) {
   let map = this.subject();
   let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
-  _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452').returns(
+  _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
-      resolve([null, null, objA[0]]);
+      resolve([null, null, objA]);
     })
   );
-  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').returns(
+  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
-      resolve([null, null, objB[0]]);
+      resolve([null, null, objB]);
     })
   );
-  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', 'd633ea1d-eb32-423f-8663-a38abc7ba094').returns(
+  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['d633ea1d-eb32-423f-8663-a38abc7ba094']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
-      resolve([null, null, objB[1]]);
+      resolve([null, null, objC]);
     })
   );
 
@@ -236,9 +238,9 @@ test('getIntersectionArea', function(assert) {
 test('getRhumb', function(assert) {
   let map = this.subject();
   let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
-  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').returns(
+  _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(
     new Ember.RSVP.Promise((resolve, reject) => {
-      resolve([null, null, objB[0]]);
+      resolve([null, null, objB]);
     })
   );
 

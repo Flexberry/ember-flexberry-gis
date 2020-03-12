@@ -147,7 +147,7 @@ export default Ember.Mixin.create({
   deleteLayerObjects(layerId, featureIds) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let ids = [];
-      this._loadFeaturesOfLayer(layerId, featureIds).then(([layer, leafletObject]) => {
+      this._getModelLayerFeature(layerId, featureIds, true).then(([layer, leafletObject]) => {
         leafletObject.eachLayer(function (shape) {
           const id = this._getLayerFeatureId(layer, shape);
 
@@ -180,7 +180,7 @@ export default Ember.Mixin.create({
   */
   getIntersectionObjects(layerId, featureId, layerIds) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, featureId).then(([, leafletObject, featureLayer]) => {
+      this._getModelLayerFeature(layerId, [featureId]).then(([, leafletObject, featureLayer]) => {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         let layersIntersect = [];
         layerIds.forEach(id => {
@@ -194,12 +194,12 @@ export default Ember.Mixin.create({
           }
         });
 
-        let latlng = featureLayer instanceof L.Marker || featureLayer instanceof L.CircleMarker ?
-          featureLayer.getLatLng() : featureLayer.getBounds().getCenter();
+        let latlng = featureLayer[0] instanceof L.Marker || featureLayer[0] instanceof L.CircleMarker ?
+          featureLayer[0].getLatLng() : featureLayer[0].getBounds().getCenter();
         let e = {
           latlng: latlng,
-          polygonLayer: featureLayer,
-          bufferedMainPolygonLayer:featureLayer,
+          polygonLayer: featureLayer[0],
+          bufferedMainPolygonLayer:featureLayer[0],
           excludedLayers: [],
           layers: layersIntersect,
           results: Ember.A()
@@ -219,13 +219,7 @@ export default Ember.Mixin.create({
             return;
           }
 
-          let features = Ember.get(result, 'features');
-
-          if (!(features instanceof Ember.RSVP.Promise)) {
-            return;
-          }
-
-          promises.pushObject(features);
+          promises.pushObject(Ember.get(result, 'features'));
         });
 
         // Wait for all promises to be settled & call '_finishIdentification' hook.
@@ -248,15 +242,15 @@ export default Ember.Mixin.create({
   */
   getNearObject(layerId, layerObjectId, layerIdsArray) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, layerObjectId).then(([, leafletObject, layerObject]) => {
+      this._getModelLayerFeature(layerId, [layerObjectId]).then(([, leafletObject, layerObject]) => {
         let result = null;
-        let promises = [];
-        layerIdsArray.forEach(lid => {
-          let prom = new Ember.RSVP.Promise((resolve, reject) => {
-            this._getFeaturesOfLayer(lid).then(([layer, featuresLayer]) => {
+        //let promises = [];
+        let promises = layerIdsArray.map(lid => {
+          return new Ember.RSVP.Promise((resolve, reject) => {
+            this._getModelLayerFeature(lid, null).then(([layer, lObject, featuresLayer]) => {
               featuresLayer.forEach(obj => {
                 const id = this._getLayerFeatureId(layer, obj);
-                const distance = this.getDistanceBetweenObjects(layerId, layerObject, lid, obj);
+                const distance = this.getDistanceBetweenObjects(layerId, layerObject[0], lid, obj);
 
                 if (layerId === lid && layerObjectId === id) {
                   return;
@@ -274,14 +268,13 @@ export default Ember.Mixin.create({
               resolve(result);
             });
           });
-          promises.pushObject(prom);
+          //promises.pushObject(prom);
         });
 
         Ember.RSVP.allSettled(promises).then((results) => {
-          let distance = 0;
           let res = null;
           results.forEach((item) => {
-            if (distance < item.value.distance) {
+            if (Ember.isNone(res) || item.value.distance < res.distance) {
               res = item.value;
             }
           });
@@ -336,15 +329,15 @@ export default Ember.Mixin.create({
   getLayerObjectOptions(layerId, featureId, crsName) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let result;
-      this._getModelLayerFeature(layerId, featureId).then(([, leafletObject, layerObject]) => {
-        let crs = Ember.get(layerObject, 'options.crs');
+      this._getModelLayerFeature(layerId, [featureId]).then(([, leafletObject, layerObject]) => {
+        let crs = Ember.get(layerObject[0], 'options.crs');
         let crsTarget = null;
 
         let coordsToLatLng = (coords) =>  {
           return crs.unproject(L.point(coords));
         };
 
-        let geoJSON = L.geoJSON(layerObject.feature, { coordsToLatLng: coordsToLatLng.bind(this) });
+        let geoJSON = L.geoJSON(layerObject[0].feature, { coordsToLatLng: coordsToLatLng.bind(this) });
 
         let transform = (latlngs) => {
           if (Ember.isArray(latlngs)) {
@@ -375,7 +368,7 @@ export default Ember.Mixin.create({
         result = Ember.$.extend({}, geoJSON.getLayers()[0].feature.properties);
         result.geometry = geom;
 
-        var obj = layerObject.options.crs.code === 'EPSG:4326' ? layerObject.feature : projection.toWgs84(layerObject.feature);
+        var obj = layerObject[0].options.crs.code === 'EPSG:4326' ? layerObject[0].feature : projection.toWgs84(layerObject[0].feature);
         result.area = area(obj);
         resolve(result);
       }).catch((e) => {
@@ -395,26 +388,25 @@ export default Ember.Mixin.create({
   */
   isContainsObject(layerAId, objectAId, layerBId, objectBId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerAId, objectAId).then(([, leafletObject, objA]) => {
-        this._getModelLayerFeature(layerBId, objectBId).then(([, leafletObject, objB]) => {
-          objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-          objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
-          if (objA.geometry.type === 'MultiPolygon') {
-            objA = L.polygon(objA.geometry.coordinates[0]).toGeoJSON();
-          }
+      Ember.RSVP.allSettled([
+        this._getModelLayerFeature(layerAId, [objectAId]),
+        this._getModelLayerFeature(layerBId, [objectBId])
+      ]).then((result) => {
+        let [, leafletObjectA, resA] = result[0].value;
+        let [, leafletObjectB, resB] = result[1].value;
+        let objA = resA[0];
+        let objB = resB[0];
+        objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+        objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+        if (objA.geometry.type === 'MultiPolygon') {
+          objA = L.polygon(objA.geometry.coordinates[0]).toGeoJSON();
+        }
 
-          if (objB.geometry.type === 'MultiPolygon') {
-            objB = L.polygon(objB.geometry.coordinates[0]).toGeoJSON();
-          }
+        if (objB.geometry.type === 'MultiPolygon') {
+          objB = L.polygon(objB.geometry.coordinates[0]).toGeoJSON();
+        }
 
-          if (booleanContains(objA, objB)) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        }).catch((e) => {
-          reject(e);
-        });
+        resolve(booleanContains(objA, objB));
       }).catch((e) => {
         reject(e);
       });
@@ -432,20 +424,23 @@ export default Ember.Mixin.create({
   */
   getAreaExtends(layerAId, objectAId, layerBId, objectBId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerAId, objectAId).then(([, leafletObject, objA]) => {
-        this._getModelLayerFeature(layerBId, objectBId).then(([, leafletObject, objB]) => {
-          objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-          objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
-          let intersectionRes = intersect.default(objB, objA);
-          if (intersectionRes) {
-            let resultArea = area(objB) - area(intersectionRes);
-            resolve(resultArea);
-          } else {
-            resolve(area(objB));
-          }
-        }).catch((e) => {
-          reject(e);
-        });
+      Ember.RSVP.allSettled([
+        this._getModelLayerFeature(layerAId, [objectAId]),
+        this._getModelLayerFeature(layerBId, [objectBId])
+      ]).then((result) => {
+        let [, leafletObjectA, resA] = result[0].value;
+        let [, leafletObjectB, resB] = result[1].value;
+        let objA = resA[0];
+        let objB = resB[0];
+        objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+        objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+        let intersectionRes = intersect.default(objB, objA);
+        if (intersectionRes) {
+          let resultArea = area(objB) - area(intersectionRes);
+          resolve(resultArea);
+        } else {
+          resolve(area(objB));
+        }
       }).catch((e) => {
         reject(e);
       });
@@ -540,7 +535,8 @@ export default Ember.Mixin.create({
   */
   copyObject(source, destination) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(source.layerId, source.objectId, source.shouldRemove).then(([, sourceLeafletLayer, sourceFeature]) => {
+      this._getModelLayerFeature(source.layerId, [source.objectId], source.shouldRemove).then(([, sourceLeafletLayer, obj]) => {
+        let sourceFeature = obj[0];
         let [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
         let destFeature;
         switch (destLayerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
@@ -592,29 +588,32 @@ export default Ember.Mixin.create({
         object: null,
         area: null
       };
-      this._getModelLayerFeature(layerAId, objectAId).then(([, leafletObject, objA]) => {
-        this._getModelLayerFeature(layerBId, objectBId).then(([, leafletObject, objB]) => {
-          objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-          objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
-          let intersectionRes = intersect.default(objA, objB);
-          if (intersectionRes) {
-            if (showOnMap) {
-              let obj = L.geoJSON(intersectionRes, {
-                style: { color: 'green' }
-              });
-              let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
-              obj.addTo(serviceLayer);
-              result.object = obj;
-            }
-
-            result.area = area(intersectionRes);
-            resolve(result);
-          } else {
-            reject('Intersection not found');
+      Ember.RSVP.allSettled([
+        this._getModelLayerFeature(layerAId, [objectAId]),
+        this._getModelLayerFeature(layerBId, [objectBId])
+      ]).then((res) => {
+        let [, leafletObjectA, resA] = res[0].value;
+        let [, leafletObjectB, resB] = res[1].value;
+        let objA = resA[0];
+        let objB = resB[0];
+        objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+        objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+        let intersectionRes = intersect.default(objA, objB);
+        if (intersectionRes) {
+          if (showOnMap) {
+            let obj = L.geoJSON(intersectionRes, {
+              style: { color: 'green' }
+            });
+            let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+            obj.addTo(serviceLayer);
+            result.object = obj;
           }
-        }).catch((e) => {
-          reject(e);
-        });
+
+          result.area = area(intersectionRes);
+          resolve(result);
+        } else {
+          reject('Intersection not found');
+        }
       }).catch((e) => {
         reject(e);
       });
@@ -648,7 +647,7 @@ export default Ember.Mixin.create({
   */
   getSnapShot({ layerId, objectId, layerArrIds, options }) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, objectId).then(([, leafletObject, featureLayer]) => {
+      this._getModelLayerFeature(layerId, [objectId]).then(([, leafletObject, featureLayer]) => {
         if (layerArrIds) {
           let allLayers = this.get('mapLayer.canonicalState');
           let allLayersIds = allLayers.map((l) => l.id);
@@ -702,7 +701,7 @@ export default Ember.Mixin.create({
           }, 2000);
         });
 
-        let bounds = featureLayer.getBounds();
+        let bounds = featureLayer[0].getBounds();
         if (!Ember.isNone(bounds)) {
           leafletMap.fitBounds(bounds.pad(1));
         }
@@ -758,9 +757,8 @@ export default Ember.Mixin.create({
   */
   getRhumb(layerId, objectId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, objectId).then(([, leafletObject, featureLayer]) => {
-        let cors;
-        cors = featureLayer._latlngs;
+      this._getModelLayerFeature(layerId, [objectId]).then(([, leafletObject, featureLayer]) => {
+        let cors = featureLayer[0]._latlngs;
         let result = [];
 
         var rowPush = function (vertexNum1, vertexNum2, point1, point2) {
@@ -873,7 +871,7 @@ export default Ember.Mixin.create({
   editLayerObject(layerId, objectId, polygon, crsName) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (polygon) {
-        this._getModelLayerFeature(layerId, objectId, true).then(([, leafletLayer, featureLayer]) => {
+        this._getModelLayerFeature(layerId, [objectId], true).then(([, leafletLayer, featureLayer]) => {
           if (leafletLayer && featureLayer) {
             let crs = leafletLayer.options.crs;
             if (!Ember.isNone(crsName)) {
@@ -893,26 +891,22 @@ export default Ember.Mixin.create({
 
             if (!Ember.isNone(Ember.get(geoJSON, 'feature.geometry'))) {
               if (Ember.get(geoJSON, 'feature.geometry.type').toLowerCase() !== 'point') {
-                featureLayer.setLatLngs(geoJSON._latlngs);
+                featureLayer[0].setLatLngs(geoJSON._latlngs);
               } else {
-                featureLayer.setLatLng(geoJSON._latlng);
+                featureLayer[0].setLatLng(geoJSON._latlng);
               }
 
               if (typeof leafletLayer.editLayer === 'function') {
-                leafletLayer.editLayer(featureLayer);
-                resolve(featureLayer);
+                leafletLayer.editLayer(featureLayer[0]);
+                resolve(featureLayer[0]);
               }
             } else {
               reject(`Unable to convert coordinates for this CRS '${crsName}'`);
             }
-          } else {
-            if (leafletLayer) {
-              reject(`Layer '${layerId}' not found`);
-            } else {
-              if (featureLayer) {
-                reject(`Object '${objectId}' not found`);
-              }
-            }
+          } else if (leafletLayer) {
+            reject(`Layer '${layerId}' not found`);
+          } else if (featureLayer[0]) {
+            reject(`Object '${objectId}' not found`);
           }
         }).catch((e) => {
           reject(e);
@@ -956,7 +950,8 @@ export default Ember.Mixin.create({
         return getPkField(layer);
       }
 
-      return 'primarykey';
+      let field = Ember.get(layer,'settingsAsObject.pkField');
+      return Ember.isNone(field) ? 'primarykey' : field;
     } else {
       throw 'Layer is not VectorLayer';
     }
