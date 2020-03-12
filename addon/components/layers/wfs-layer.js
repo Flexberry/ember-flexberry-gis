@@ -489,6 +489,11 @@ export default BaseVectorLayer.extend({
               return;
             } else {
               if (loadedBounds.contains(bounds)) {
+                if (leafletObject.statusLoadForSnapshot) {
+                  leafletObject.promiseLoadForSnapshot = new Ember.RSVP.Promise((resolve) => {
+                    resolve('loaded');
+                  });
+                }
                 return;
               }
             }
@@ -502,6 +507,22 @@ export default BaseVectorLayer.extend({
 
             let filter = new L.Filter.And(newPart, loadedPart);
             leafletObject.loadFeatures(filter);
+
+            if (leafletObject.statusLoadForSnapshot) {
+              leafletObject.promiseLoadForSnapshot = new Ember.RSVP.Promise((resolve, reject) => {
+                leafletObject.once('load', () => {
+                  resolve('loaded');
+                }).once('error', (e) => {
+                  reject();
+                });
+              });
+            }
+          } else {
+            if (leafletObject.statusLoadForSnapshot) {
+              leafletObject.promiseLoadForSnapshot = new Ember.RSVP.Promise((resolve) => {
+                resolve('loaded');
+              });
+            }
           }
         }
       };

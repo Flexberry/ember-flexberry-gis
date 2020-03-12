@@ -9,6 +9,7 @@ import rhumbBearing from 'npm:@turf/rhumb-bearing';
 import rhumbDistance from 'npm:@turf/rhumb-distance';
 import { getLeafletCrs } from '../utils/leaflet-crs';
 import VectorLayer from '../layers/-private/vector';
+import WfsLayer from '../layers/wfs';
 
 export default Ember.Mixin.create({
   /**
@@ -306,10 +307,10 @@ export default Ember.Mixin.create({
       }
     };
 
-    const firstPoint = getObjectCenter( firstLayer, firstLayerObject);
+    const firstPoint = getObjectCenter(firstLayer, firstLayerObject);
     const firstObject = helpers.point([firstPoint.lat, firstPoint.lng]);
 
-    const secondPoint = getObjectCenter( secondLayer, secondLayerObject);
+    const secondPoint = getObjectCenter(secondLayer, secondLayerObject);
     const secondObject = helpers.point([secondPoint.lat, secondPoint.lng]);
 
     // Get distance in meters.
@@ -639,11 +640,10 @@ export default Ember.Mixin.create({
   */
   getSnapShot({ layerId, objectId, layerArrIds, options }) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, [objectId]).then(([, leafletObject, featureLayer]) => {
+      this._getModelLayerFeature(layerId, [objectId]).then(([layerModel, leafletObject, featureLayer]) => {
+        let allLayers = this.get('mapLayer.canonicalState');
+        let allLayersIds = allLayers.map((l) => l.id);
         if (layerArrIds) {
-          let allLayers = this.get('mapLayer.canonicalState');
-          let allLayersIds = allLayers.map((l) => l.id);
-
           let showLayersIds = layerArrIds;
           showLayersIds.push(layerId);
 
@@ -667,30 +667,64 @@ export default Ember.Mixin.create({
         $mapPicture.height(heightNew);
         $mapPicture.width(widthNew);
 
+        let load = [];
+        let ids = Ember.isEmpty(layerArrIds) ? allLayersIds : layerArrIds;
+        if (ids) {
+          ids.forEach((lid) => {
+            if (lid !== layerId) {
+              let [layer, layerObject] = this._getModelLeafletObject(lid);
+              let className = Ember.get(layer, 'type');
+              let layerType = Ember.getOwner(this).knownForType('layer', className);
+              if (layerType instanceof WfsLayer) {
+                layerObject.statusLoadForSnapshot = true;
+                load.push(layerObject);
+              }
+            }
+          });
+        }
+
+        let className = Ember.get(layerModel, 'type');
+        let layerType = Ember.getOwner(this).knownForType('layer', className);
+        if (layerType instanceof WfsLayer) {
+          leafletObject.statusLoadForSnapshot = true;
+          load.push(leafletObject);
+        }
+
         leafletMap.once('moveend', () => {
           Ember.run.later(() => {
             document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'none';
             document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'none';
             document.getElementsByClassName('leaflet-control-container')[0].style.display = 'none';
 
-            let html2canvasOptions = Object.assign({
-              useCORS: true
+            let promises = load.map((object) => {
+              return object.promiseLoadForSnapshot;
             });
-            window.html2canvas($mapPicture[0], html2canvasOptions)
-              .then((canvas) => {
-                let type = 'image/png';
-                var image64 = canvas.toDataURL(type);
-                resolve(image64);
-              })
-              .catch((e) => reject(e))
-              .finally(() => {
-                document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'block';
-                document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'block';
-                document.getElementsByClassName('leaflet-control-container')[0].style.display = 'block';
-                $mapPicture.height(heightMap);
-                $mapPicture.width(widthMap);
+
+            Ember.RSVP.allSettled(promises).then((e) => {
+              load.forEach((obj) => {
+                obj.statusLoadForSnapshot = false;
+                obj.promiseLoadForSnapshot = null;
               });
-          }, 2000);
+
+              let html2canvasOptions = Object.assign({
+                useCORS: true
+              });
+              window.html2canvas($mapPicture[0], html2canvasOptions)
+                .then((canvas) => {
+                  let type = 'image/png';
+                  var image64 = canvas.toDataURL(type);
+                  resolve(image64);
+                })
+                .catch((e) => reject(e))
+                .finally(() => {
+                  document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'block';
+                  document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'block';
+                  document.getElementsByClassName('leaflet-control-container')[0].style.display = 'block';
+                  $mapPicture.height(heightMap);
+                  $mapPicture.width(widthMap);
+                });
+            });
+          });
         });
 
         let bounds = featureLayer[0].getBounds();
