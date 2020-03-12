@@ -244,7 +244,6 @@ export default Ember.Mixin.create({
     return new Ember.RSVP.Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [layerObjectId]).then(([, leafletObject, layerObject]) => {
         let result = null;
-        //let promises = [];
         let promises = layerIdsArray.map(lid => {
           return new Ember.RSVP.Promise((resolve, reject) => {
             this._getModelLayerFeature(lid, null).then(([layer, lObject, featuresLayer]) => {
@@ -268,7 +267,6 @@ export default Ember.Mixin.create({
               resolve(result);
             });
           });
-          //promises.pushObject(prom);
         });
 
         Ember.RSVP.allSettled(promises).then((results) => {
@@ -950,7 +948,7 @@ export default Ember.Mixin.create({
         return getPkField(layer);
       }
 
-      let field = Ember.get(layer,'settingsAsObject.pkField');
+      let field = Ember.get(layer, 'settingsAsObject.pkField');
       return Ember.isNone(field) ? 'primarykey' : field;
     } else {
       throw 'Layer is not VectorLayer';

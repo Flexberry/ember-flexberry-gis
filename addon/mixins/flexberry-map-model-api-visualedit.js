@@ -230,7 +230,6 @@ export default Ember.Mixin.create({
             featureLayer = layerObject;
           }
 
-          //let leafletObject = load ? layerObject : 
           resolve([e.results[0].layerModel, e.results[0].leafletObject, featureLayer]);
         });
       } else {
