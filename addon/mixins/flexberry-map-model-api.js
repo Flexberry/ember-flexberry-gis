@@ -193,7 +193,7 @@ export default Ember.Mixin.create({
           let layerType = Ember.getOwner(this).knownForType('layer', className);
           if (layerType instanceof VectorLayer) {
             let leafletObject = Ember.get(layer, '_leafletObject');
-            let features = Ember.get(layer, '_leafletObject._layers');       
+            let features = Ember.get(layer, '_leafletObject._layers');
             if (features) {
               Object.values(features).forEach(feature => {
                 let intersectionResult;
@@ -379,7 +379,7 @@ export default Ember.Mixin.create({
 
     if (objA && objB && layerObjectA && layerObjectB) {
       let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA.feature : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
-      let feature2 = olayerObjectB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
+      let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
       let intersectionRes = intersect.default(feature2, feature1);
       if (intersectionRes) {
         let resultArea = area(feature2) - area(intersectionRes);
