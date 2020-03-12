@@ -18,6 +18,9 @@
         height: 250px;
     }
     .multiple.search.selection.dropdown {
+        .dropdown.icon {
+            margin-left:10px;
+        }
         .ui.label.adition {
             margin-left: -20px;
         }
