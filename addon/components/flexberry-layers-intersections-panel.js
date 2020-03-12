@@ -365,7 +365,7 @@ export default Ember.Component.extend({
                   fillOpacity: 0.2
                 });
               }
-  
+
               Ember.set(feature, 'leafletLayer', leafletLayer);
             } else {
               let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
@@ -379,7 +379,6 @@ export default Ember.Component.extend({
 
               Ember.set(feature, 'leafletLayer', leafletLayer);
             }
-            
           });
         });
     });
@@ -483,7 +482,7 @@ export default Ember.Component.extend({
                   item = this.computeFeatureProperties(item, convertToMercator, res);
                 }
               }
-            }      
+            }
           } else if (item.geometry.type === 'MultiLineString' || item.geometry.type === 'LineString') {
             if (Ember.get(objA, 'properties.primarykey') !== Ember.get(objB, 'properties.primarykey')) {
               let intersects = lineIntersect(objA, objB);
