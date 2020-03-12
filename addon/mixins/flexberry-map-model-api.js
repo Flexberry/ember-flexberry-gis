@@ -390,10 +390,8 @@ export default Ember.Mixin.create({
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) => {
-        let [, leafletObjectA, resA] = result[0].value;
-        let [, leafletObjectB, resB] = result[1].value;
-        let objA = resA[0];
-        let objB = resB[0];
+        let objA = result[0].value[2][0];
+        let objB = result[1].value[2][0];
         objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
         objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
         if (objA.geometry.type === 'MultiPolygon') {
@@ -426,10 +424,8 @@ export default Ember.Mixin.create({
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) => {
-        let [, leafletObjectA, resA] = result[0].value;
-        let [, leafletObjectB, resB] = result[1].value;
-        let objA = resA[0];
-        let objB = resB[0];
+        let objA = result[0].value[2][0];
+        let objB = result[1].value[2][0];
         objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
         objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
         let intersectionRes = intersect.default(objB, objA);
@@ -590,10 +586,8 @@ export default Ember.Mixin.create({
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((res) => {
-        let [, leafletObjectA, resA] = res[0].value;
-        let [, leafletObjectB, resB] = res[1].value;
-        let objA = resA[0];
-        let objB = resB[0];
+        let objA = res[0].value[2][0];
+        let objB = res[1].value[2][0];
         objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
         objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
         let intersectionRes = intersect.default(objA, objB);

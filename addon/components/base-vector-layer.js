@@ -5,7 +5,6 @@
 import Ember from 'ember';
 import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
-import { checkMapZoom } from '../utils/check-zoom';
 
 const { assert } = Ember;
 
