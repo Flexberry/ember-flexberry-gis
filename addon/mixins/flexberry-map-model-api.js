@@ -306,10 +306,10 @@ export default Ember.Mixin.create({
       }
     };
 
-    const firstPoint = getObjectCenter.call(this, firstLayer, firstLayerObject);
+    const firstPoint = getObjectCenter( firstLayer, firstLayerObject);
     const firstObject = helpers.point([firstPoint.lat, firstPoint.lng]);
 
-    const secondPoint = getObjectCenter.call(this, secondLayer, secondLayerObject);
+    const secondPoint = getObjectCenter( secondLayer, secondLayerObject);
     const secondObject = helpers.point([secondPoint.lat, secondPoint.lng]);
 
     // Get distance in meters.
