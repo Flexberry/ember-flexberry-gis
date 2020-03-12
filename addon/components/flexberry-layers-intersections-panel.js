@@ -466,11 +466,13 @@ export default Ember.Component.extend({
           }
 
           if (bufferR > 0) {
+            let props = objB.properties;
             objB  = buffer.default(objB.geometry, bufferR, { units: 'meters' });
+            Object.assign(objB.properties, props);
           }
 
           if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
-            if (!Ember.isEqual(Ember.A(objA.geometry.coordinates), objB.geometry.coordinates)) {
+            if (Ember.get(objA, 'properties.primarykey') !== Ember.get(objB, 'properties.primarykey')) {
               let res = intersect.default(objA, objB);
               if (res) {
                 if (square > 0) {
