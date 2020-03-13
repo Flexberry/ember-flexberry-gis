@@ -698,7 +698,6 @@ export default Ember.Mixin.create({
             Ember.$(document).find('.leaflet-top.leaflet-right').css('display', 'none');
             Ember.$(document).find('.leaflet-bottom.leaflet-right').css('display', 'none');
 
-
             let promises = load.map((object) => {
               return object.promiseLoadForSnapshot;
             });

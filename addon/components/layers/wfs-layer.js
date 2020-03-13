@@ -494,6 +494,7 @@ export default BaseVectorLayer.extend({
                     resolve('loaded');
                   });
                 }
+
                 return;
               }
             }
