@@ -676,7 +676,7 @@ export default Ember.Mixin.create({
               let className = Ember.get(layer, 'type');
               let layerType = Ember.getOwner(this).knownForType('layer', className);
               if (layerType instanceof WfsLayer) {
-                layerObject.statusLoadForSnapshot = true;
+                layerObject.statusLoadLayer = true;
                 load.push(layerObject);
               }
             }
@@ -686,7 +686,7 @@ export default Ember.Mixin.create({
         let className = Ember.get(layerModel, 'type');
         let layerType = Ember.getOwner(this).knownForType('layer', className);
         if (layerType instanceof WfsLayer) {
-          leafletObject.statusLoadForSnapshot = true;
+          leafletObject.statusLoadLayer = true;
           load.push(leafletObject);
         }
 
@@ -699,13 +699,13 @@ export default Ember.Mixin.create({
             Ember.$(document).find('.leaflet-bottom.leaflet-right').css('display', 'none');
 
             let promises = load.map((object) => {
-              return object.promiseLoadForSnapshot;
+              return object.promiseLoadLayer;
             });
 
             Ember.RSVP.allSettled(promises).then((e) => {
               load.forEach((obj) => {
-                obj.statusLoadForSnapshot = false;
-                obj.promiseLoadForSnapshot = null;
+                obj.statusLoadLayer = false;
+                obj.promiseLoadLayer = null;
               });
 
               let html2canvasOptions = Object.assign({

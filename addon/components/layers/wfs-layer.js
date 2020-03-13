@@ -487,16 +487,12 @@ export default BaseVectorLayer.extend({
               leafletObject.isLoadBounds = bounds;
               loadedBounds = bounds;
               return;
-            } else {
-              if (loadedBounds.contains(bounds)) {
-                if (leafletObject.statusLoadForSnapshot) {
-                  leafletObject.promiseLoadForSnapshot = new Ember.RSVP.Promise((resolve) => {
-                    resolve('loaded');
-                  });
-                }
-
-                return;
+            } else if (loadedBounds.contains(bounds)) {
+              if (leafletObject.statusLoadLayer) {
+                leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
               }
+
+              return;
             }
 
             let oldRectangle = L.rectangle([loadedBounds.getSouthEast(), loadedBounds.getNorthWest()]);
@@ -509,21 +505,17 @@ export default BaseVectorLayer.extend({
             let filter = new L.Filter.And(newPart, loadedPart);
             leafletObject.loadFeatures(filter);
 
-            if (leafletObject.statusLoadForSnapshot) {
-              leafletObject.promiseLoadForSnapshot = new Ember.RSVP.Promise((resolve, reject) => {
+            if (leafletObject.statusLoadLayer) {
+              leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) => {
                 leafletObject.once('load', () => {
-                  resolve('loaded');
+                  resolve();
                 }).once('error', (e) => {
                   reject();
                 });
               });
             }
-          } else {
-            if (leafletObject.statusLoadForSnapshot) {
-              leafletObject.promiseLoadForSnapshot = new Ember.RSVP.Promise((resolve) => {
-                resolve('loaded');
-              });
-            }
+          } else if (leafletObject.statusLoadLayer) {
+            leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
           }
         }
       };
