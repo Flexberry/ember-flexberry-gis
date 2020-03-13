@@ -3112,6 +3112,13 @@
             "fors": {},
             "namespaces": {}
         },
+        "addon/utils/check-zoom.js": {
+            "name": "addon/utils/check-zoom.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "addon/utils/color-convertor.js": {
             "name": "addon/utils/color-convertor.js",
             "modules": {},
@@ -3931,7 +3938,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 8,
+            "line": 9,
             "description": "WFS layer component for leaflet map.",
             "extends": "BaseVectorLayerComponent"
         },
@@ -11695,7 +11702,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 14,
+            "line": 15,
             "description": "Array containing component's properties which are also leaflet layer options.",
             "itemtype": "property",
             "name": "leafletOptions",
@@ -11705,7 +11712,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 36,
+            "line": 38,
             "description": "Returns features read format depending on 'format', 'options.crs', 'options.geometryField'.\nServer responses format will rely on it.",
             "itemtype": "method",
             "name": "getFeaturesReadFormat",
@@ -11718,7 +11725,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 63,
+            "line": 65,
             "description": "Performs 'getFeature' request to WFS-service related to layer.",
             "params": [
                 {
@@ -11739,7 +11746,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 93,
+            "line": 95,
             "description": "Returns leaflet layer's bounding box.",
             "itemtype": "method",
             "name": "_getBoundingBox",
@@ -11753,7 +11760,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 112,
+            "line": 114,
             "description": "Returns promise with the layer properties object.",
             "itemtype": "method",
             "name": "_getAttributesOptions",
@@ -11764,7 +11771,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 126,
+            "line": 128,
             "description": "Creates leaflet vector layer related to layer type.",
             "itemtype": "method",
             "name": "createVectorLayer",
@@ -11783,7 +11790,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 188,
+            "line": 199,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -11795,7 +11802,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 199,
+            "line": 210,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "identify",
@@ -11826,7 +11833,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 219,
+            "line": 230,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -11871,7 +11878,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 292,
+            "line": 303,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -11902,21 +11909,48 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 339,
-            "description": "Load features.",
+            "line": 350,
+            "description": "Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "loadLayerFeatures",
             "params": [
                 {
-                    "name": "featureIds",
-                    "description": "Feature id.",
-                    "type": "Object[]"
+                    "name": "e",
+                    "description": "Event object.",
+                    "type": "Object"
                 }
             ],
             "return": {
                 "description": "Returns promise.",
                 "type": "Ember.RSVP.Promise"
             },
+            "class": "WfsLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers/wfs-layer.js",
+            "line": 402,
+            "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
+            "itemtype": "method",
+            "name": "getLayerFeatures",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Event object.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Returns promise.",
+                "type": "Ember.RSVP.Promise"
+            },
+            "class": "WfsLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers/wfs-layer.js",
+            "line": 467,
+            "description": "Initializes DOM-related component's properties.",
             "class": "WfsLayerComponent",
             "module": "ember-flexberry-gis"
         },
@@ -25728,20 +25762,74 @@
         {
             "file": "addon/components/base-vector-layer.js",
             "line": 402,
-            "description": "Load features.",
+            "description": "Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "loadLayerFeatures",
             "params": [
                 {
-                    "name": "featureIds",
-                    "description": "Feature id.",
-                    "type": "Object[]"
+                    "name": "e",
+                    "description": "Event object.",
+                    "type": "Object"
                 }
             ],
             "return": {
                 "description": "Returns promise.",
                 "type": "Ember.RSVP.Promise"
             },
+            "class": "BaseVectorLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/base-vector-layer.js",
+            "line": 415,
+            "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
+            "itemtype": "method",
+            "name": "getLayerFeatures",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Event object.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Returns promise.",
+                "type": "Ember.RSVP.Promise"
+            },
+            "class": "BaseVectorLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/base-vector-layer.js",
+            "line": 444,
+            "description": "Handles 'flexberry-map:getOrLoadLayerFeatures' event of leaflet map.",
+            "itemtype": "method",
+            "name": "_getOrLoadLayerFeatures",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Event object.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "results Objects.",
+                "type": "Object[]"
+            },
+            "class": "BaseVectorLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/base-vector-layer.js",
+            "line": 463,
+            "description": "Initializes DOM-related component's properties.",
+            "class": "BaseVectorLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/base-vector-layer.js",
+            "line": 475,
+            "description": "Deinitializes DOM-related component's properties.",
             "class": "BaseVectorLayerComponent",
             "module": "ember-flexberry-gis"
         },
@@ -41176,12 +41264,12 @@
             "params": [
                 {
                     "name": "layerId",
-                    "description": "Layer id.",
+                    "description": "Layer ID.",
                     "type": "String"
                 },
                 {
                     "name": "crsName",
-                    "description": "crs name.",
+                    "description": "Name of coordinate reference system, in which to give coordinates.",
                     "type": "String"
                 },
                 {
@@ -41273,12 +41361,12 @@
             "params": [
                 {
                     "name": "layerId",
-                    "description": "Layer id.",
+                    "description": "Layer ID.",
                     "type": "String"
                 },
                 {
                     "name": "featureId",
-                    "description": "Object id.",
+                    "description": "Object ID.",
                     "type": "String"
                 },
                 {
@@ -41288,40 +41376,40 @@
                 }
             ],
             "return": {
-                "description": "featureLayer.",
-                "type": "Object"
+                "description": "Layer object.",
+                "type": "Promise"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 22,
+            "line": 27,
             "description": "Start change layer object.",
             "itemtype": "method",
             "name": "startChangeLayerObject",
             "params": [
                 {
                     "name": "layerId",
-                    "description": "Layer id.",
+                    "description": "Layer ID.",
                     "type": "String"
                 },
                 {
                     "name": "featureId",
-                    "description": "Object id.",
+                    "description": "Object ID.",
                     "type": "String"
                 }
             ],
             "return": {
                 "description": "Feature layer.",
-                "type": "Object"
+                "type": "Promise"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 47,
+            "line": 64,
             "description": "Cancel edit for layer object.",
             "itemtype": "method",
             "name": "cancelEdit",
@@ -41340,8 +41428,10 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 87,
+            "line": 104,
             "description": "Start visual creating of feature",
+            "itemtype": "method",
+            "name": "startNewObject",
             "params": [
                 {
                     "name": "layerId",
@@ -41355,14 +41445,15 @@
                 }
             ],
             "return": {
-                "description": "noting"
+                "description": "Layer object",
+                "type": "Object"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 133,
+            "line": 151,
             "description": "Get editTools.",
             "itemtype": "method",
             "name": "_getEditTools",
@@ -41377,29 +41468,27 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 151,
+            "line": 169,
             "description": "Return leaflet layer thats corresponds to passed layerId.",
             "itemtype": "method",
-            "name": "_getLeafletLayer",
+            "name": "getLayerModel",
             "params": [
                 {
                     "name": "layerId",
-                    "description": "",
+                    "description": "Layer ID",
                     "type": "String"
                 }
             ],
             "return": {
-                "description": "",
+                "description": "Layer",
                 "type": "Object"
             },
-            "access": "private",
-            "tagname": "",
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 168,
+            "line": 185,
             "description": "Get [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.",
             "params": [
                 {
@@ -41408,10 +41497,14 @@
                     "type": "String"
                 },
                 {
-                    "name": "featureId",
-                    "description": "Object id.",
-                    "type": "String",
-                    "optional": true
+                    "name": "featureIds",
+                    "description": "Array object id.",
+                    "type": "Object[]"
+                },
+                {
+                    "name": "load",
+                    "description": "flag which indicate load or get feature",
+                    "type": "Boolean"
                 }
             ],
             "return": {
@@ -41425,7 +41518,27 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
-            "line": 191,
+            "line": 241,
+            "description": "Get [layerModel, leafletObject] by layer id.",
+            "params": [
+                {
+                    "name": "layerId",
+                    "description": "Layer id.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Get [layerModel, leafletObject].",
+                "type": "[layerModel, leafletObject]"
+            },
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api-visualedit.js",
+            "line": 258,
             "description": "Start creating multy objects.",
             "itemtype": "method",
             "name": "startChangeMultyLayerObject",
@@ -41441,6 +41554,9 @@
                     "type": "Object"
                 }
             ],
+            "return": {
+                "description": "nothing"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
@@ -41456,26 +41572,27 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 22,
-            "description": "Shows specified by id layers.",
-            "itemtype": "method",
-            "name": "showLayers.",
-            "class": "FlexberryMaplayerActionsHandlerMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 31,
-            "description": "Hides specified by id layers.",
+            "line": 33,
+            "description": "Hides layers specified by IDs.",
             "itemtype": "method",
             "name": "hideLayers.",
+            "params": [
+                {
+                    "name": "layerIds",
+                    "description": "Array of layer IDs.",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "nothing"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 40,
-            "description": "Shows id objects for layer.",
+            "line": 44,
+            "description": "Shows objects for layer.",
             "itemtype": "method",
             "name": "showLayerObjects",
             "params": [
@@ -41486,17 +41603,20 @@
                 },
                 {
                     "name": "objectIds",
-                    "description": "Array of id objects.",
+                    "description": "Array of objects IDs.",
                     "type": "String[]"
                 }
             ],
+            "return": {
+                "description": "nothing"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 51,
-            "description": "Hides id objects for layer.",
+            "line": 56,
+            "description": "Hides objects for layer.",
             "itemtype": "method",
             "name": "hideLayerObjects",
             "params": [
@@ -41507,16 +41627,19 @@
                 },
                 {
                     "name": "objectIds",
-                    "description": "Array of id objects.",
-                    "type": "String[]"
+                    "description": "Array of objects IDs.",
+                    "type": "Array"
                 }
             ],
+            "return": {
+                "description": "nothing"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 62,
+            "line": 68,
             "description": "Show all layer objects.",
             "itemtype": "method",
             "name": "showAllLayerObjects",
@@ -41527,12 +41650,15 @@
                     "type": "String"
                 }
             ],
+            "return": {
+                "description": "nothing"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 80,
+            "line": 91,
             "description": "Hide all layer objects.",
             "itemtype": "method",
             "name": "hideAllLayerObjects",
@@ -41543,114 +41669,142 @@
                     "type": "String"
                 }
             ],
-            "class": "FlexberryMaplayerActionsHandlerMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 98,
-            "description": "Creates new layer with specified options.",
-            "itemtype": "method",
-            "name": "createNewLayer.",
-            "class": "FlexberryMaplayerActionsHandlerMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 114,
-            "description": "Remove shape from layer.",
-            "itemtype": "method",
-            "name": "deleteLayerObject.",
-            "params": [
-                {
-                    "name": "layerId",
-                    "description": "Id layer.",
-                    "type": "String"
-                },
-                {
-                    "name": "featureId",
-                    "description": "Id shape.",
-                    "type": "String"
-                }
-            ],
-            "class": "FlexberryMaplayerActionsHandlerMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 124,
-            "description": "Remove shapes from layer.",
-            "itemtype": "method",
-            "name": "deleteLayerObjects.",
-            "params": [
-                {
-                    "name": "layerId",
-                    "description": "Id layer.",
-                    "type": "String"
-                },
-                {
-                    "name": "featureIds",
-                    "description": "Array of id shapes.",
-                    "type": "Object[]"
-                }
-            ],
-            "class": "FlexberryMaplayerActionsHandlerMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 161,
-            "description": "Gets intersected features.",
-            "itemtype": "method",
-            "name": "getIntersectionObjects",
-            "params": [
-                {
-                    "name": "featureId",
-                    "description": "feature id with which we are looking for intersections",
-                    "type": "String"
-                },
-                {
-                    "name": "layerIds",
-                    "description": "array of layers ids",
-                    "type": "Number[]"
-                }
-            ],
-            "class": "FlexberryMaplayerActionsHandlerMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 228,
-            "description": "Get the closest object",
-            "itemtype": "method",
-            "name": "getNearObject",
-            "params": [
-                {
-                    "name": "layerId",
-                    "description": "Layer id of the selected object.",
-                    "type": "String"
-                },
-                {
-                    "name": "layerObjectId",
-                    "description": "Id of the selected object.",
-                    "type": "String"
-                },
-                {
-                    "name": "layerIdsArray",
-                    "description": "Array of id of layers in which to search.",
-                    "type": "Number[]"
-                }
-            ],
             "return": {
-                "description": "Id of the nearest object.",
-                "type": "Object"
+                "description": "nothing"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 277,
+            "line": 112,
+            "description": "Creates new layer with specified options.",
+            "itemtype": "method",
+            "name": "createNewLayer.",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Layer ID."
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 130,
+            "description": "Remove object from layer.",
+            "itemtype": "method",
+            "name": "deleteLayerObject.",
+            "params": [
+                {
+                    "name": "layerId",
+                    "description": "Layer ID.",
+                    "type": "String"
+                },
+                {
+                    "name": "featureId",
+                    "description": "Object ID.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Promise."
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 141,
+            "description": "Remove shapes from layer.",
+            "itemtype": "method",
+            "name": "deleteLayerObjects.",
+            "params": [
+                {
+                    "name": "layerId",
+                    "description": "Layer ID.",
+                    "type": "String"
+                },
+                {
+                    "name": "featureIds",
+                    "description": "Array of objects IDs.",
+                    "type": "Object[]"
+                }
+            ],
+            "return": {
+                "description": "Promise."
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 174,
+            "description": "Gets intersected features.",
+            "itemtype": "method",
+            "name": "getIntersectionObjects",
+            "params": [
+                {
+                    "name": "layerId",
+                    "description": "Layer ID of the selected object.",
+                    "type": "String"
+                },
+                {
+                    "name": "featureId",
+                    "description": "Object ID with which we are looking for intersections.",
+                    "type": "String"
+                },
+                {
+                    "name": "layerIds",
+                    "description": "Array of layers IDs.",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "Array of layers and objects which intersected selected object.",
+                "type": "Promise"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 236,
+            "description": "Get the nearest object",
+            "itemtype": "method",
+            "name": "getNearObject",
+            "params": [
+                {
+                    "name": "layerId",
+                    "description": "Layer ID of the selected object.",
+                    "type": "String"
+                },
+                {
+                    "name": "layerObjectId",
+                    "description": "Object ID of the selected object.",
+                    "type": "String"
+                },
+                {
+                    "name": "layerIdsArray",
+                    "description": "Array of layers IDs in which to search.",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "Object constains distance, layer and layer object.",
+                "type": "Promise"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 288,
             "description": "Get distance between objects",
             "itemtype": "method",
             "name": "getDistanceBetweenObjects",
@@ -41661,9 +41815,9 @@
                     "type": "String"
                 },
                 {
-                    "name": "firstLayerObjectId",
-                    "description": "First layer object id.",
-                    "type": "String"
+                    "name": "firstLayerObject",
+                    "description": "First layer object.",
+                    "type": "Object"
                 },
                 {
                     "name": "secondLayerId",
@@ -41671,9 +41825,9 @@
                     "type": "String"
                 },
                 {
-                    "name": "secondLayerObjectId",
-                    "description": "Second layer object id.",
-                    "type": "String"
+                    "name": "secondLayerObject",
+                    "description": "Second layer object.",
+                    "type": "Object"
                 }
             ],
             "return": {
@@ -41685,95 +41839,107 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 336,
-            "description": "Get layer object attributes.",
+            "line": 320,
+            "description": "Get layer object attributes and coordinates.",
             "itemtype": "method",
             "name": "getLayerObjectOptions",
             "params": [
                 {
                     "name": "layerId",
-                    "description": "Id layer",
+                    "description": "Layer ID.",
                     "type": "String"
                 },
                 {
                     "name": "featureId",
-                    "description": "Id object",
+                    "description": "Object ID.",
                     "type": "String"
                 },
                 {
                     "name": "crsName",
-                    "description": "crs name, in which to give coordinates",
+                    "description": "Name of coordinate reference system, in which to give coordinates.",
                     "type": "String"
                 }
             ],
+            "return": {
+                "description": "Attributes and coordinates",
+                "type": "Promise"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 407,
-            "description": "Check if objectA contains object B.",
+            "line": 379,
+            "description": "Check if object A contains object B.",
             "itemtype": "method",
             "name": "isContainsObject",
             "params": [
                 {
-                    "name": "objectAId",
-                    "description": "id of first object.",
-                    "type": "String"
-                },
-                {
                     "name": "layerAId",
-                    "description": "id of first layer.",
+                    "description": "First layer ID.",
                     "type": "String"
                 },
                 {
-                    "name": "objectBId",
-                    "description": "id of second object.",
+                    "name": "objectAId",
+                    "description": "First object ID.",
                     "type": "String"
                 },
                 {
                     "name": "layerBId",
-                    "description": "id of second layer.",
+                    "description": "Second layer ID.",
+                    "type": "String"
+                },
+                {
+                    "name": "objectBId",
+                    "description": "Second object ID.",
                     "type": "String"
                 }
             ],
+            "return": {
+                "description": "true or false.",
+                "type": "Promise"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 453,
+            "line": 413,
             "description": "Calculate the area of ​​object B that extends beyond the boundaries of object A.",
             "itemtype": "method",
             "name": "getAreaExtends",
             "params": [
                 {
-                    "name": "objectAId",
-                    "description": "id of first object.",
-                    "type": "String"
-                },
-                {
                     "name": "layerAId",
-                    "description": "id of first layer.",
+                    "description": "First layer ID.",
                     "type": "String"
                 },
                 {
-                    "name": "objectBId",
-                    "description": "id of second object.",
+                    "name": "objectAId",
+                    "description": "First object ID.",
                     "type": "String"
                 },
                 {
                     "name": "layerBId",
-                    "description": "id of second layer.",
+                    "description": "Second layer ID.",
+                    "type": "String"
+                },
+                {
+                    "name": "objectBId",
+                    "description": "Second object ID.",
                     "type": "String"
                 }
             ],
+            "return": {
+                "description": "Area",
+                "type": "Promise"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 507,
+            "line": 457,
             "description": "Get object id by object and layer.",
             "itemtype": "method",
             "name": "_getLayerFeatureId",
@@ -41790,7 +41956,7 @@
                 }
             ],
             "return": {
-                "description": "Id object.",
+                "description": "Object ID.",
                 "type": "Number"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
@@ -41798,19 +41964,19 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 524,
+            "line": 474,
             "description": "Determine the visibility of the specified objects by id for the layer.",
             "itemtype": "method",
             "name": "_setVisibilityObjects",
             "params": [
                 {
                     "name": "layerId",
-                    "description": "Layer id.",
+                    "description": "Layer ID.",
                     "type": "String"
                 },
                 {
                     "name": "objectIds",
-                    "description": "Array of id objects.",
+                    "description": "Array of objects IDs.",
                     "type": "String[]"
                 },
                 {
@@ -41826,50 +41992,54 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 565,
-            "description": "Copy Object from Source layer to Destination.",
+            "line": 515,
+            "description": "To copy Object from Source layer to Destination.",
             "itemtype": "method",
             "name": "copyObject",
             "params": [
                 {
                     "name": "source",
-                    "description": "Object with source settings\n{\n  layerId,\n  objectId,\n  shouldRemove\n}",
+                    "description": "Object with source settings\n{\n  layerId, //{string} Layer ID\n  objectId, //{string} Object ID\n  shouldRemove //{Bool} Should remove object from source layer\n}",
                     "type": "Object"
                 },
                 {
                     "name": "destination",
-                    "description": "Object with destination settings\n{\n  layerId,\n  properties\n}",
+                    "description": "Object with destination settings\n{\n  layerId, //{string} Layer ID\n  properties //{Object} Properties of new object.\n}",
                     "type": "Object"
                 }
             ],
+            "return": {
+                "description": "Object in Destination layer",
+                "type": "Promise"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 620,
-            "description": "Calculate the area of intersection between object A and object B .",
+            "line": 570,
+            "description": "Calculate the area of intersection between object A and object B.",
             "itemtype": "method",
             "name": "getIntersectionArea",
             "params": [
                 {
-                    "name": "objectAId",
-                    "description": "id of first object.",
-                    "type": "String"
-                },
-                {
                     "name": "layerAId",
-                    "description": "id of first layer.",
+                    "description": "First layer ID.",
                     "type": "String"
                 },
                 {
-                    "name": "objectBId",
-                    "description": "id of second object.",
+                    "name": "objectAId",
+                    "description": "First object ID.",
                     "type": "String"
                 },
                 {
                     "name": "layerBId",
-                    "description": "id of second layer.",
+                    "description": "Second layer ID.",
+                    "type": "String"
+                },
+                {
+                    "name": "objectBId",
+                    "description": "Second object ID.",
                     "type": "String"
                 },
                 {
@@ -41878,117 +42048,152 @@
                     "type": "Bool"
                 }
             ],
-            "class": "FlexberryMaplayerActionsHandlerMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 663,
-            "description": "Cleans the service layer.",
-            "itemtype": "method",
-            "name": "clearServiceLayer",
-            "class": "FlexberryMaplayerActionsHandlerMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 672,
-            "description": "Create image for layer object.",
-            "itemtype": "method",
-            "name": "getSnapShot",
-            "snapt": "",
-            "class": "FlexberryMaplayerActionsHandlerMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 766,
-            "description": "Download image for layer object.",
-            "itemtype": "method",
-            "name": "downloadSnapShot",
-            "class": "FlexberryMaplayerActionsHandlerMixin",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 791,
-            "description": "Get the object thumb.",
-            "itemtype": "method",
-            "name": "getRhumb",
-            "params": [
-                {
-                    "name": "layerId",
-                    "description": "Layer id.",
-                    "type": "String"
-                },
-                {
-                    "name": "objectId",
-                    "description": "Object id.",
-                    "type": "String"
-                }
-            ],
             "return": {
-                "description": "Table rhumb.",
-                "type": "Array"
+                "description": "If showOnMap = true, return object, which show on map in serviceLayer, and area, else only area.",
+                "type": "Promise"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 888,
+            "line": 616,
+            "description": "Cleans the service layer.",
+            "itemtype": "method",
+            "name": "clearServiceLayer",
+            "return": {
+                "description": "nothing"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 626,
+            "description": "Create image for layer object.",
+            "itemtype": "method",
+            "name": "getSnapShot",
+            "params": [
+                {
+                    "name": "source",
+                    "description": "Object with settings\n{\n  layerId, //{string} Layer ID.\n  objectId, //{string} Object ID.\n  layerArrIds, //{Array} Array of layers IDs.\n  options {\n    width, //{number} width image\n    height //{number} height image\n  }\n}",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Image url.",
+                "type": "Promise"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 757,
+            "description": "Download image for layer object.",
+            "itemtype": "method",
+            "name": "downloadSnapShot",
+            "params": [
+                {
+                    "name": "source",
+                    "description": "Object with settings\n{\n  layerId, //{string} Layer ID.\n  objectId, //{string} Object ID.\n  layerArrIds, //{Array} Array of layers IDs.\n  options {\n    width, //{number} width image\n    height //{number} height image\n  },\n  fileName //{string} File name.\n}",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Image file.",
+                "type": "File"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 794,
+            "description": "Get the object rhumb.",
+            "itemtype": "method",
+            "name": "getRhumb",
+            "params": [
+                {
+                    "name": "layerId",
+                    "description": "Layer ID.",
+                    "type": "String"
+                },
+                {
+                    "name": "objectId",
+                    "description": "Object ID.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Object rhumb.",
+                "type": "Promise"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 883,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
             "params": [
                 {
-                    "name": "layerGroupId",
-                    "description": "Group layer id.",
+                    "name": "layerId",
+                    "description": "Layer ID.",
                     "type": "String"
                 },
                 {
-                    "name": "layerId",
-                    "description": "layer id.",
+                    "name": "layerGroupId",
+                    "description": "Group layer ID.",
                     "type": "String"
                 }
             ],
+            "return": {
+                "description": "nothing"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 902,
-            "description": "Change object polygon.",
+            "line": 905,
+            "description": "Edit object layer.",
             "itemtype": "method",
-            "name": "copyObject",
+            "name": "editLayerObject",
             "params": [
                 {
-                    "name": "objectId",
-                    "description": "geoJSON object id.",
+                    "name": "layerId",
+                    "description": "Layer ID.",
                     "type": "String"
                 },
                 {
-                    "name": "layerId",
-                    "description": "id of layer to change object.",
+                    "name": "objectId",
+                    "description": "Object ID.",
                     "type": "String"
                 },
                 {
                     "name": "polygon",
-                    "description": "new object polygon.",
+                    "description": "Сoordinates of the new object in geoJSON format.",
                     "type": "String"
                 },
                 {
                     "name": "crsName",
-                    "description": "crs name.",
+                    "description": "Name of coordinate reference system.",
                     "type": "String"
                 }
             ],
+            "return": {
+                "description": "Layer object.",
+                "type": "Promise"
+            },
             "class": "FlexberryMaplayerActionsHandlerMixin",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 952,
+            "line": 963,
             "description": "Upload file.",
             "itemtype": "method",
             "name": "uploadFile",
@@ -42000,7 +42205,7 @@
                 }
             ],
             "return": {
-                "description": "Returns promise",
+                "description": "Object in geoJSON format",
                 "type": "Promise"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
@@ -42008,19 +42213,39 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 970,
+            "line": 981,
+            "description": "Get the field to search for objects",
+            "itemtype": "method",
+            "name": "getPkField",
+            "params": [
+                {
+                    "name": "layer.",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "Field name.",
+                "type": "String"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 1003,
             "description": "Get coordinates point.",
             "itemtype": "method",
             "name": "getCoordPoint",
             "params": [
                 {
                     "name": "crsName",
-                    "description": "crs name, in which to give coordinates",
+                    "description": "Name of coordinate reference system, in which to give coordinates.",
                     "type": "String"
                 }
             ],
             "return": {
-                "description": "Returns promise",
+                "description": "Coordinate.",
                 "type": "Promise"
             },
             "class": "FlexberryMaplayerActionsHandlerMixin",
@@ -45019,15 +45244,19 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:126"
+            "line": " addon/components/layers/wfs-layer.js:128"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:188"
+            "line": " addon/components/layers/wfs-layer.js:199"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:339"
+            "line": " addon/components/layers/wfs-layer.js:350"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/components/layers/wfs-layer.js:402"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -45084,6 +45313,14 @@
         {
             "message": "replacing incorrect tag: returns with return",
             "line": " addon/components/base-vector-layer.js:402"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/components/base-vector-layer.js:415"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/components/base-vector-layer.js:444"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -45291,27 +45528,27 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:87"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:104"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:151"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:169"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:168"
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:185"
         },
         {
-            "message": "unknown tag: snapt",
-            "line": " addon/mixins/flexberry-map-model-api.js:672"
-        },
-        {
-            "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:888"
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:241"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:888"
+            "line": " addon/mixins/flexberry-map-model-api.js:883"
+        },
+        {
+            "message": "replacing incorrect tag: parm with param",
+            "line": " addon/mixins/flexberry-map-model-api.js:883"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -45527,7 +45764,11 @@
         },
         {
             "message": "Missing item type\nPerforms 'getFeature' request to WFS-service related to layer.",
-            "line": " addon/components/layers/wfs-layer.js:63"
+            "line": " addon/components/layers/wfs-layer.js:65"
+        },
+        {
+            "message": "Missing item type\nInitializes DOM-related component's properties.",
+            "line": " addon/components/layers/wfs-layer.js:467"
         },
         {
             "message": "Missing item type\nPerforms 'getFeatureInfo' request to WMS-service related to layer.",
@@ -46274,6 +46515,14 @@
             "line": " addon/components/base-layer.js:660"
         },
         {
+            "message": "Missing item type\nInitializes DOM-related component's properties.",
+            "line": " addon/components/base-vector-layer.js:463"
+        },
+        {
+            "message": "Missing item type\nDeinitializes DOM-related component's properties.",
+            "line": " addon/components/base-vector-layer.js:475"
+        },
+        {
             "message": "Missing item type\nReference to component's template.",
             "line": " addon/components/favorites-list.js:6"
         },
@@ -46838,12 +47087,12 @@
             "line": " addon/mixins/flexberry-boundingbox-map-loader.js:14"
         },
         {
-            "message": "Missing item type\nStart visual creating of feature",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:87"
+            "message": "Missing item type\nGet [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.",
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:185"
         },
         {
-            "message": "Missing item type\nGet [layerModel, leafletObject, featureLayer] by layer id or layer id and object id.",
-            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:168"
+            "message": "Missing item type\nGet [layerModel, leafletObject] by layer id.",
+            "line": " addon/mixins/flexberry-map-model-api-visualedit.js:241"
         },
         {
             "message": "Missing item type\nRemoves attached event listeners on destroy.",

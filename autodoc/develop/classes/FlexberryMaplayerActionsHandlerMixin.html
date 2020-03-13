@@ -453,10 +453,6 @@
 
                             </li>
                             <li class="index-item method private">
-                                <a href="#" data-tabid="#methods" data-anchor="#method__getLeafletLayer" data-tablink="_getLeafletLayer">_getLeafletLayer</a>
-
-                            </li>
-                            <li class="index-item method private">
                                 <a href="#" data-tabid="#methods" data-anchor="#method__removeLayerEditing" data-tablink="_removeLayerEditing">_removeLayerEditing</a>
 
                             </li>
@@ -532,10 +528,6 @@
                                 <a href="#" data-tabid="#methods" data-anchor="#method_copyObject" data-tablink="copyObject">copyObject</a>
 
                             </li>
-                            <li class="index-item method">
-                                <a href="#" data-tabid="#methods" data-anchor="#method_copyObject" data-tablink="copyObject">copyObject</a>
-
-                            </li>
                             <li class="index-item method private">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_createLayer" data-tablink="createLayer">createLayer</a>
 
@@ -565,6 +557,10 @@
 
                             </li>
                             <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_editLayerObject" data-tablink="editLayerObject">editLayerObject</a>
+
+                            </li>
+                            <li class="index-item method">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_getAreaExtends" data-tablink="getAreaExtends">getAreaExtends</a>
 
                             </li>
@@ -585,11 +581,19 @@
 
                             </li>
                             <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_getLayerModel" data-tablink="getLayerModel">getLayerModel</a>
+
+                            </li>
+                            <li class="index-item method">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_getLayerObjectOptions" data-tablink="getLayerObjectOptions">getLayerObjectOptions</a>
 
                             </li>
                             <li class="index-item method">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_getNearObject" data-tablink="getNearObject">getNearObject</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_getPkField" data-tablink="getPkField">getPkField</a>
 
                             </li>
                             <li class="index-item method">
@@ -641,15 +645,15 @@
 
                             </li>
                             <li class="index-item method">
-                                <a href="#" data-tabid="#methods" data-anchor="#method_showLayers." data-tablink="showLayers.">showLayers.</a>
-
-                            </li>
-                            <li class="index-item method">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_startChangeLayerObject" data-tablink="startChangeLayerObject">startChangeLayerObject</a>
 
                             </li>
                             <li class="index-item method">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_startChangeMultyLayerObject" data-tablink="startChangeMultyLayerObject">startChangeMultyLayerObject</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_startNewObject" data-tablink="startNewObject">startNewObject</a>
 
                             </li>
                             <li class="index-item method">
@@ -695,7 +699,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api-visualedit.js.html#l133"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-visualedit.js:133</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-visualedit.js.html#l151"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-visualedit.js:151</code></a>
                             </p>
                     
                     
@@ -746,7 +750,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l507"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:507</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l457"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:457</code></a>
                             </p>
                     
                     
@@ -792,71 +796,8 @@
                     
                                 <div class="returns-description">
                                             <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>:
-                                        <p>Id object.</p>
+                                        <p>Object ID.</p>
                     
-                                </div>
-                            </div>
-                    
-                    </div>
-                    <div id="method__getLeafletLayer" class="method item private">
-                        <h3 class="name"><code>_getLeafletLayer</code></h3>
-                    
-                            <div class="args">
-                                <span class="paren">(</span><ul class="args-list inline commas">
-                                    <li class="arg">
-                                            <code>layerId</code>
-                                    </li>
-                                </ul><span class="paren">)</span>
-                            </div>
-                    
-                            <span class="returns-inline">
-                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                            </span>
-                    
-                    
-                            <span class="flag private">private</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api-visualedit.js.html#l151"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-visualedit.js:151</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Return leaflet layer thats corresponds to passed layerId.</p>
-                    
-                        </div>
-                    
-                            <div class="params">
-                                <h4>Parameters:</h4>
-                    
-                                <ul class="params-list">
-                                    <li class="param">
-                                            <code class="param-name">layerId</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            
-                                        </div>
-                    
-                                    </li>
-                                </ul>
-                            </div>
-                    
-                            <div class="returns">
-                                <h4>Returns:</h4>
-                    
-                                <div class="returns-description">
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
                                 </div>
                             </div>
                     
@@ -1022,7 +963,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l524"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:524</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l474"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:474</code></a>
                             </p>
                     
                     
@@ -1044,7 +985,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Layer id.</p>
+                                            <p>Layer ID.</p>
                     
                                         </div>
                     
@@ -1055,7 +996,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Array of id objects.</p>
+                                            <p>Array of objects IDs.</p>
                     
                                         </div>
                     
@@ -2195,7 +2136,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Layer id.</p>
+                                            <p>Layer ID.</p>
                     
                                         </div>
                     
@@ -2206,7 +2147,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>crs name.</p>
+                                            <p>Name of coordinate reference system, in which to give coordinates.</p>
                     
                                         </div>
                     
@@ -2271,7 +2212,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api-visualedit.js.html#l47"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-visualedit.js:47</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-visualedit.js.html#l64"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-visualedit.js:64</code></a>
                             </p>
                     
                     
@@ -2329,7 +2270,7 @@
                             </div>
                     
                             <span class="returns-inline">
-                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
                             </span>
                     
                     
@@ -2363,7 +2304,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Layer id.</p>
+                                            <p>Layer ID.</p>
                     
                                         </div>
                     
@@ -2374,7 +2315,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Object id.</p>
+                                            <p>Object ID.</p>
                     
                                         </div>
                     
@@ -2397,8 +2338,8 @@
                                 <h4>Returns:</h4>
                     
                                 <div class="returns-description">
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
-                                        <p>featureLayer.</p>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        <p>Layer object.</p>
                     
                                 </div>
                             </div>
@@ -2409,6 +2350,9 @@
                     
                             <span class="paren">()</span>
                     
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
                     
                     
                     
@@ -2419,7 +2363,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l663"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:663</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l616"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:616</code></a>
                             </p>
                     
                     
@@ -2432,101 +2376,14 @@
                         </div>
                     
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
                     
-                    </div>
-                    <div id="method_copyObject" class="method item">
-                        <h3 class="name"><code>copyObject</code></h3>
+                                <div class="returns-description">
+                                        <p>nothing</p>
                     
-                            <div class="args">
-                                <span class="paren">(</span><ul class="args-list inline commas">
-                                    <li class="arg">
-                                            <code>objectId</code>
-                                    </li>
-                                    <li class="arg">
-                                            <code>layerId</code>
-                                    </li>
-                                    <li class="arg">
-                                            <code>polygon</code>
-                                    </li>
-                                    <li class="arg">
-                                            <code>crsName</code>
-                                    </li>
-                                </ul><span class="paren">)</span>
+                                </div>
                             </div>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l902"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:902</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Change object polygon.</p>
-                    
-                        </div>
-                    
-                            <div class="params">
-                                <h4>Parameters:</h4>
-                    
-                                <ul class="params-list">
-                                    <li class="param">
-                                            <code class="param-name">objectId</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>geoJSON object id.</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                    <li class="param">
-                                            <code class="param-name">layerId</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>id of layer to change object.</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                    <li class="param">
-                                            <code class="param-name">polygon</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>new object polygon.</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                    <li class="param">
-                                            <code class="param-name">crsName</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>crs name.</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                </ul>
-                            </div>
-                    
                     
                     </div>
                     <div id="method_copyObject" class="method item">
@@ -2543,6 +2400,9 @@
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
+                            </span>
                     
                     
                     
@@ -2553,7 +2413,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l565"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:565</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l515"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:515</code></a>
                             </p>
                     
                     
@@ -2561,7 +2421,7 @@
                         </div>
                     
                         <div class="description">
-                            <p>Copy Object from Source layer to Destination.</p>
+                            <p>To copy Object from Source layer to Destination.</p>
                     
                         </div>
                     
@@ -2577,9 +2437,9 @@
                                         <div class="param-description">
                                             <p>Object with source settings
                     {
-                    layerId,
-                    objectId,
-                    shouldRemove
+                    layerId, //{string} Layer ID
+                    objectId, //{string} Object ID
+                    shouldRemove //{Bool} Should remove object from source layer
                     }</p>
                     
                                         </div>
@@ -2593,8 +2453,8 @@
                                         <div class="param-description">
                                             <p>Object with destination settings
                     {
-                    layerId,
-                    properties
+                    layerId, //{string} Layer ID
+                    properties //{Object} Properties of new object.
                     }</p>
                     
                                         </div>
@@ -2603,6 +2463,15 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        <p>Object in Destination layer</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_createLayer" class="method item private">
@@ -2696,8 +2565,17 @@
                     <div id="method_createNewLayer." class="method item">
                         <h3 class="name"><code>createNewLayer.</code></h3>
                     
-                            <span class="paren">()</span>
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>options</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
                     
                     
                     
@@ -2708,7 +2586,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l98"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:98</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l112"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:112</code></a>
                             </p>
                     
                     
@@ -2720,7 +2598,31 @@
                     
                         </div>
                     
+                            <div class="params">
+                                <h4>Parameters:</h4>
                     
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">options</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                        <p>Layer ID.</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_createPolygonObjectRhumb" class="method item">
@@ -2828,6 +2730,9 @@
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
                     
                     
                     
@@ -2838,7 +2743,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l114"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:114</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l130"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:130</code></a>
                             </p>
                     
                     
@@ -2846,7 +2751,7 @@
                         </div>
                     
                         <div class="description">
-                            <p>Remove shape from layer.</p>
+                            <p>Remove object from layer.</p>
                     
                         </div>
                     
@@ -2860,7 +2765,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Id layer.</p>
+                                            <p>Layer ID.</p>
                     
                                         </div>
                     
@@ -2871,7 +2776,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Id shape.</p>
+                                            <p>Object ID.</p>
                     
                                         </div>
                     
@@ -2879,6 +2784,14 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                        <p>Promise.</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_deleteLayerObjects." class="method item">
@@ -2895,6 +2808,9 @@
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
                     
                     
                     
@@ -2905,7 +2821,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l124"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:124</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l141"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:141</code></a>
                             </p>
                     
                     
@@ -2927,7 +2843,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Id layer.</p>
+                                            <p>Layer ID.</p>
                     
                                         </div>
                     
@@ -2938,7 +2854,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Array of id shapes.</p>
+                                            <p>Array of objects IDs.</p>
                     
                                         </div>
                     
@@ -2946,13 +2862,30 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                        <p>Promise.</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_downloadSnapShot" class="method item">
                         <h3 class="name"><code>downloadSnapShot</code></h3>
                     
-                            <span class="paren">()</span>
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>source</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/API/File" class="crosslink external" target="_blank">File</a></span>
+                            </span>
                     
                     
                     
@@ -2963,7 +2896,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l766"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:766</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l757"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:757</code></a>
                             </p>
                     
                     
@@ -2975,7 +2908,43 @@
                     
                         </div>
                     
+                            <div class="params">
+                                <h4>Parameters:</h4>
                     
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">source</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Object with settings
+                    {
+                    layerId, //{string} Layer ID.
+                    objectId, //{string} Object ID.
+                    layerArrIds, //{Array} Array of layers IDs.
+                    options {
+                    width, //{number} width image
+                    height //{number} height image
+                    },
+                    fileName //{string} File name.
+                    }</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/API/File" class="crosslink external" target="_blank">File</a></span>:
+                                        <p>Image file.</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_editLayer" class="method item private">
@@ -3066,26 +3035,29 @@
                             </div>
                     
                     </div>
-                    <div id="method_getAreaExtends" class="method item">
-                        <h3 class="name"><code>getAreaExtends</code></h3>
+                    <div id="method_editLayerObject" class="method item">
+                        <h3 class="name"><code>editLayerObject</code></h3>
                     
                             <div class="args">
                                 <span class="paren">(</span><ul class="args-list inline commas">
                                     <li class="arg">
-                                            <code>objectAId</code>
+                                            <code>layerId</code>
                                     </li>
                                     <li class="arg">
-                                            <code>layerAId</code>
+                                            <code>objectId</code>
                                     </li>
                                     <li class="arg">
-                                            <code>objectBId</code>
+                                            <code>polygon</code>
                                     </li>
                                     <li class="arg">
-                                            <code>layerBId</code>
+                                            <code>crsName</code>
                                     </li>
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
+                            </span>
                     
                     
                     
@@ -3096,7 +3068,114 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l453"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:453</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l905"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:905</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Edit object layer.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">layerId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Layer ID.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">objectId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Object ID.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">polygon</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Сoordinates of the new object in geoJSON format.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">crsName</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Name of coordinate reference system.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        <p>Layer object.</p>
+                    
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method_getAreaExtends" class="method item">
+                        <h3 class="name"><code>getAreaExtends</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>layerAId</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>objectAId</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>layerBId</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>objectBId</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l413"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:413</code></a>
                             </p>
                     
                     
@@ -3113,34 +3192,23 @@
                     
                                 <ul class="params-list">
                                     <li class="param">
-                                            <code class="param-name">objectAId</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>id of first object.</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                    <li class="param">
                                             <code class="param-name">layerAId</code>
                                             <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>id of first layer.</p>
+                                            <p>First layer ID.</p>
                     
                                         </div>
                     
                                     </li>
                                     <li class="param">
-                                            <code class="param-name">objectBId</code>
+                                            <code class="param-name">objectAId</code>
                                             <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>id of second object.</p>
+                                            <p>First object ID.</p>
                     
                                         </div>
                     
@@ -3151,7 +3219,18 @@
                     
                     
                                         <div class="param-description">
-                                            <p>id of second layer.</p>
+                                            <p>Second layer ID.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">objectBId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Second object ID.</p>
                     
                                         </div>
                     
@@ -3159,6 +3238,15 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        <p>Area</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_getCoordPoint" class="method item">
@@ -3185,7 +3273,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l970"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:970</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l1003"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:1003</code></a>
                             </p>
                     
                     
@@ -3207,7 +3295,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>crs name, in which to give coordinates</p>
+                                            <p>Name of coordinate reference system, in which to give coordinates.</p>
                     
                                         </div>
                     
@@ -3220,7 +3308,7 @@
                     
                                 <div class="returns-description">
                                             <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
-                                        <p>Returns promise</p>
+                                        <p>Coordinate.</p>
                     
                                 </div>
                             </div>
@@ -3235,13 +3323,13 @@
                                             <code>firstLayerId</code>
                                     </li>
                                     <li class="arg">
-                                            <code>firstLayerObjectId</code>
+                                            <code>firstLayerObject</code>
                                     </li>
                                     <li class="arg">
                                             <code>secondLayerId</code>
                                     </li>
                                     <li class="arg">
-                                            <code>secondLayerObjectId</code>
+                                            <code>secondLayerObject</code>
                                     </li>
                                 </ul><span class="paren">)</span>
                             </div>
@@ -3259,7 +3347,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l277"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:277</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l288"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:288</code></a>
                             </p>
                     
                     
@@ -3287,12 +3375,12 @@
                     
                                     </li>
                                     <li class="param">
-                                            <code class="param-name">firstLayerObjectId</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                                            <code class="param-name">firstLayerObject</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>First layer object id.</p>
+                                            <p>First layer object.</p>
                     
                                         </div>
                     
@@ -3309,12 +3397,12 @@
                     
                                     </li>
                                     <li class="param">
-                                            <code class="param-name">secondLayerObjectId</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                                            <code class="param-name">secondLayerObject</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>Second layer object id.</p>
+                                            <p>Second layer object.</p>
                     
                                         </div>
                     
@@ -3339,16 +3427,16 @@
                             <div class="args">
                                 <span class="paren">(</span><ul class="args-list inline commas">
                                     <li class="arg">
-                                            <code>objectAId</code>
-                                    </li>
-                                    <li class="arg">
                                             <code>layerAId</code>
                                     </li>
                                     <li class="arg">
-                                            <code>objectBId</code>
+                                            <code>objectAId</code>
                                     </li>
                                     <li class="arg">
                                             <code>layerBId</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>objectBId</code>
                                     </li>
                                     <li class="arg">
                                             <code>showOnMap</code>
@@ -3356,6 +3444,9 @@
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
+                            </span>
                     
                     
                     
@@ -3366,7 +3457,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l620"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:620</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l570"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:570</code></a>
                             </p>
                     
                     
@@ -3374,7 +3465,7 @@
                         </div>
                     
                         <div class="description">
-                            <p>Calculate the area of intersection between object A and object B .</p>
+                            <p>Calculate the area of intersection between object A and object B.</p>
                     
                         </div>
                     
@@ -3383,34 +3474,23 @@
                     
                                 <ul class="params-list">
                                     <li class="param">
-                                            <code class="param-name">objectAId</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>id of first object.</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                    <li class="param">
                                             <code class="param-name">layerAId</code>
                                             <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>id of first layer.</p>
+                                            <p>First layer ID.</p>
                     
                                         </div>
                     
                                     </li>
                                     <li class="param">
-                                            <code class="param-name">objectBId</code>
+                                            <code class="param-name">objectAId</code>
                                             <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>id of second object.</p>
+                                            <p>First object ID.</p>
                     
                                         </div>
                     
@@ -3421,7 +3501,18 @@
                     
                     
                                         <div class="param-description">
-                                            <p>id of second layer.</p>
+                                            <p>Second layer ID.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">objectBId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Second object ID.</p>
                     
                                         </div>
                     
@@ -3440,6 +3531,15 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        <p>If showOnMap = true, return object, which show on map in serviceLayer, and area, else only area.</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_getIntersectionObjects" class="method item">
@@ -3447,6 +3547,9 @@
                     
                             <div class="args">
                                 <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>layerId</code>
+                                    </li>
                                     <li class="arg">
                                             <code>featureId</code>
                                     </li>
@@ -3456,6 +3559,9 @@
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
+                            </span>
                     
                     
                     
@@ -3466,7 +3572,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l161"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:161</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l174"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:174</code></a>
                             </p>
                     
                     
@@ -3483,23 +3589,34 @@
                     
                                 <ul class="params-list">
                                     <li class="param">
+                                            <code class="param-name">layerId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Layer ID of the selected object.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
                                             <code class="param-name">featureId</code>
                                             <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>feature id with which we are looking for intersections</p>
+                                            <p>Object ID with which we are looking for intersections.</p>
                     
                                         </div>
                     
                                     </li>
                                     <li class="param">
                                             <code class="param-name">layerIds</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number[]</a></span>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>array of layers ids</p>
+                                            <p>Array of layers IDs.</p>
                     
                                         </div>
                     
@@ -3507,6 +3624,80 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        <p>Array of layers and objects which intersected selected object.</p>
+                    
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method_getLayerModel" class="method item">
+                        <h3 class="name"><code>getLayerModel</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>layerId</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_mixins_flexberry-map-model-api-visualedit.js.html#l169"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-visualedit.js:169</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Return leaflet layer thats corresponds to passed layerId.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">layerId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Layer ID</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                                        <p>Layer</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_getLayerObjectOptions" class="method item">
@@ -3526,6 +3717,9 @@
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
+                            </span>
                     
                     
                     
@@ -3536,7 +3730,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l336"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:336</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l320"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:320</code></a>
                             </p>
                     
                     
@@ -3544,7 +3738,7 @@
                         </div>
                     
                         <div class="description">
-                            <p>Get layer object attributes.</p>
+                            <p>Get layer object attributes and coordinates.</p>
                     
                         </div>
                     
@@ -3558,7 +3752,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Id layer</p>
+                                            <p>Layer ID.</p>
                     
                                         </div>
                     
@@ -3569,7 +3763,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Id object</p>
+                                            <p>Object ID.</p>
                     
                                         </div>
                     
@@ -3580,7 +3774,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>crs name, in which to give coordinates</p>
+                                            <p>Name of coordinate reference system, in which to give coordinates.</p>
                     
                                         </div>
                     
@@ -3588,6 +3782,15 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        <p>Attributes and coordinates</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_getNearObject" class="method item">
@@ -3608,7 +3811,7 @@
                             </div>
                     
                             <span class="returns-inline">
-                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
                             </span>
                     
                     
@@ -3620,7 +3823,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l228"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:228</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l236"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:236</code></a>
                             </p>
                     
                     
@@ -3628,7 +3831,7 @@
                         </div>
                     
                         <div class="description">
-                            <p>Get the closest object</p>
+                            <p>Get the nearest object</p>
                     
                         </div>
                     
@@ -3642,7 +3845,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Layer id of the selected object.</p>
+                                            <p>Layer ID of the selected object.</p>
                     
                                         </div>
                     
@@ -3653,18 +3856,18 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Id of the selected object.</p>
+                                            <p>Object ID of the selected object.</p>
                     
                                         </div>
                     
                                     </li>
                                     <li class="param">
                                             <code class="param-name">layerIdsArray</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number[]</a></span>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>Array of id of layers in which to search.</p>
+                                            <p>Array of layers IDs in which to search.</p>
                     
                                         </div>
                     
@@ -3676,8 +3879,72 @@
                                 <h4>Returns:</h4>
                     
                                 <div class="returns-description">
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
-                                        <p>Id of the nearest object.</p>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        <p>Object constains distance, layer and layer object.</p>
+                    
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method_getPkField" class="method item">
+                        <h3 class="name"><code>getPkField</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>layer.</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l981"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:981</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Get the field to search for objects</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">layer.</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>:
+                                        <p>Field name.</p>
                     
                                 </div>
                             </div>
@@ -3698,7 +3965,7 @@
                             </div>
                     
                             <span class="returns-inline">
-                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
                             </span>
                     
                     
@@ -3710,7 +3977,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l791"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:791</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l794"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:794</code></a>
                             </p>
                     
                     
@@ -3718,7 +3985,7 @@
                         </div>
                     
                         <div class="description">
-                            <p>Get the object thumb.</p>
+                            <p>Get the object rhumb.</p>
                     
                         </div>
                     
@@ -3732,7 +3999,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Layer id.</p>
+                                            <p>Layer ID.</p>
                     
                                         </div>
                     
@@ -3743,7 +4010,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Object id.</p>
+                                            <p>Object ID.</p>
                     
                                         </div>
                     
@@ -3755,8 +4022,8 @@
                                 <h4>Returns:</h4>
                     
                                 <div class="returns-description">
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
-                                        <p>Table rhumb.</p>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        <p>Object rhumb.</p>
                     
                                 </div>
                             </div>
@@ -3765,8 +4032,17 @@
                     <div id="method_getSnapShot" class="method item">
                         <h3 class="name"><code>getSnapShot</code></h3>
                     
-                            <span class="paren">()</span>
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>source</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
+                            </span>
                     
                     
                     
@@ -3777,7 +4053,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l672"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:672</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l626"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:626</code></a>
                             </p>
                     
                     
@@ -3789,7 +4065,42 @@
                     
                         </div>
                     
+                            <div class="params">
+                                <h4>Parameters:</h4>
                     
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">source</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Object with settings
+                    {
+                    layerId, //{string} Layer ID.
+                    objectId, //{string} Object ID.
+                    layerArrIds, //{Array} Array of layers IDs.
+                    options {
+                    width, //{number} width image
+                    height //{number} height image
+                    }
+                    }</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        <p>Image url.</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_hideAllLayerObjects" class="method item">
@@ -3803,6 +4114,9 @@
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
                     
                     
                     
@@ -3813,7 +4127,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l80"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:80</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l91"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:91</code></a>
                             </p>
                     
                     
@@ -3843,6 +4157,14 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                        <p>nothing</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_hideLayerObjects" class="method item">
@@ -3859,6 +4181,9 @@
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
                     
                     
                     
@@ -3869,7 +4194,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l51"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:51</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l56"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:56</code></a>
                             </p>
                     
                     
@@ -3877,7 +4202,7 @@
                         </div>
                     
                         <div class="description">
-                            <p>Hides id objects for layer.</p>
+                            <p>Hides objects for layer.</p>
                     
                         </div>
                     
@@ -3898,11 +4223,11 @@
                                     </li>
                                     <li class="param">
                                             <code class="param-name">objectIds</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String[]</a></span>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>Array of id objects.</p>
+                                            <p>Array of objects IDs.</p>
                     
                                         </div>
                     
@@ -3910,58 +4235,30 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                        <p>nothing</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_hideLayers." class="method item">
                         <h3 class="name"><code>hideLayers.</code></h3>
                     
-                            <span class="paren">()</span>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l31"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:31</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Hides specified by id layers.</p>
-                    
-                        </div>
-                    
-                    
-                    
-                    </div>
-                    <div id="method_isContainsObject" class="method item">
-                        <h3 class="name"><code>isContainsObject</code></h3>
-                    
                             <div class="args">
                                 <span class="paren">(</span><ul class="args-list inline commas">
                                     <li class="arg">
-                                            <code>objectAId</code>
-                                    </li>
-                                    <li class="arg">
-                                            <code>layerAId</code>
-                                    </li>
-                                    <li class="arg">
-                                            <code>objectBId</code>
-                                    </li>
-                                    <li class="arg">
-                                            <code>layerBId</code>
+                                            <code>layerIds</code>
                                     </li>
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
                     
                     
                     
@@ -3972,7 +4269,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l407"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:407</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l33"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:33</code></a>
                             </p>
                     
                     
@@ -3980,7 +4277,7 @@
                         </div>
                     
                         <div class="description">
-                            <p>Check if objectA contains object B.</p>
+                            <p>Hides layers specified by IDs.</p>
                     
                         </div>
                     
@@ -3989,34 +4286,96 @@
                     
                                 <ul class="params-list">
                                     <li class="param">
-                                            <code class="param-name">objectAId</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                                            <code class="param-name">layerIds</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>id of first object.</p>
+                                            <p>Array of layer IDs.</p>
                     
                                         </div>
                     
                                     </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                        <p>nothing</p>
+                    
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method_isContainsObject" class="method item">
+                        <h3 class="name"><code>isContainsObject</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>layerAId</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>objectAId</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>layerBId</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>objectBId</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l379"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:379</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Check if object A contains object B.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
                                     <li class="param">
                                             <code class="param-name">layerAId</code>
                                             <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>id of first layer.</p>
+                                            <p>First layer ID.</p>
                     
                                         </div>
                     
                                     </li>
                                     <li class="param">
-                                            <code class="param-name">objectBId</code>
+                                            <code class="param-name">objectAId</code>
                                             <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>id of second object.</p>
+                                            <p>First object ID.</p>
                     
                                         </div>
                     
@@ -4027,7 +4386,18 @@
                     
                     
                                         <div class="param-description">
-                                            <p>id of second layer.</p>
+                                            <p>Second layer ID.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">objectBId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Second object ID.</p>
                     
                                         </div>
                     
@@ -4035,6 +4405,15 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
+                                        <p>true or false.</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_layerToGroup" class="method item">
@@ -4043,14 +4422,17 @@
                             <div class="args">
                                 <span class="paren">(</span><ul class="args-list inline commas">
                                     <li class="arg">
-                                            <code>layerGroupId</code>
+                                            <code>layerId</code>
                                     </li>
                                     <li class="arg">
-                                            <code>layerId</code>
+                                            <code>layerGroupId</code>
                                     </li>
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
                     
                     
                     
@@ -4061,7 +4443,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l888"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:888</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l883"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:883</code></a>
                             </p>
                     
                     
@@ -4078,23 +4460,23 @@
                     
                                 <ul class="params-list">
                                     <li class="param">
-                                            <code class="param-name">layerGroupId</code>
-                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>Group layer id.</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                    <li class="param">
                                             <code class="param-name">layerId</code>
                                             <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
                     
                     
                                         <div class="param-description">
-                                            <p>layer id.</p>
+                                            <p>Layer ID.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">layerGroupId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Group layer ID.</p>
                     
                                         </div>
                     
@@ -4102,6 +4484,14 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                        <p>nothing</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_removeLayer" class="method item private">
@@ -4311,6 +4701,9 @@
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
                     
                     
                     
@@ -4321,7 +4714,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l62"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:62</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l68"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:68</code></a>
                             </p>
                     
                     
@@ -4351,6 +4744,14 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                        <p>nothing</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_showLayerObjects" class="method item">
@@ -4367,6 +4768,9 @@
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
                     
                     
                     
@@ -4377,7 +4781,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l40"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:40</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l44"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:44</code></a>
                             </p>
                     
                     
@@ -4385,7 +4789,7 @@
                         </div>
                     
                         <div class="description">
-                            <p>Shows id objects for layer.</p>
+                            <p>Shows objects for layer.</p>
                     
                         </div>
                     
@@ -4410,7 +4814,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Array of id objects.</p>
+                                            <p>Array of objects IDs.</p>
                     
                                         </div>
                     
@@ -4418,36 +4822,14 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
                     
-                    </div>
-                    <div id="method_showLayers." class="method item">
-                        <h3 class="name"><code>showLayers.</code></h3>
+                                <div class="returns-description">
+                                        <p>nothing</p>
                     
-                            <span class="paren">()</span>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l22"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:22</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Shows specified by id layers.</p>
-                    
-                        </div>
-                    
-                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_startChangeLayerObject" class="method item">
@@ -4465,7 +4847,7 @@
                             </div>
                     
                             <span class="returns-inline">
-                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>
                             </span>
                     
                     
@@ -4477,7 +4859,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api-visualedit.js.html#l22"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-visualedit.js:22</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-visualedit.js.html#l27"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-visualedit.js:27</code></a>
                             </p>
                     
                     
@@ -4499,7 +4881,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Layer id.</p>
+                                            <p>Layer ID.</p>
                     
                                         </div>
                     
@@ -4510,7 +4892,7 @@
                     
                     
                                         <div class="param-description">
-                                            <p>Object id.</p>
+                                            <p>Object ID.</p>
                     
                                         </div>
                     
@@ -4522,7 +4904,7 @@
                                 <h4>Returns:</h4>
                     
                                 <div class="returns-description">
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
                                         <p>Feature layer.</p>
                     
                                 </div>
@@ -4543,6 +4925,9 @@
                                 </ul><span class="paren">)</span>
                             </div>
                     
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
                     
                     
                     
@@ -4553,7 +4938,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api-visualedit.js.html#l191"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-visualedit.js:191</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api-visualedit.js.html#l258"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-visualedit.js:258</code></a>
                             </p>
                     
                     
@@ -4594,6 +4979,93 @@
                                 </ul>
                             </div>
                     
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                        <p>nothing</p>
+                    
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method_startNewObject" class="method item">
+                        <h3 class="name"><code>startNewObject</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>layerId</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>properties</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_mixins_flexberry-map-model-api-visualedit.js.html#l104"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api-visualedit.js:104</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Start visual creating of feature</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">layerId</code>
+                                            <span class="type"><a href="http://emberjs.com/api/classes/String.html" class="crosslink external" target="_blank">String</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Id of layer in that should started editing</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">properties</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>New layer properties</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                                        <p>Layer object</p>
+                    
+                                </div>
+                            </div>
                     
                     </div>
                     <div id="method_uploadFile" class="method item">
@@ -4620,7 +5092,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l952"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:952</code></a>
+                            <a href="../files/addon_mixins_flexberry-map-model-api.js.html#l963"><code>addon&#x2F;mixins&#x2F;flexberry-map-model-api.js:963</code></a>
                             </p>
                     
                     
@@ -4654,7 +5126,7 @@
                     
                                 <div class="returns-description">
                                             <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="crosslink external" target="_blank">Promise</a></span>:
-                                        <p>Returns promise</p>
+                                        <p>Object in geoJSON format</p>
                     
                                 </div>
                             </div>

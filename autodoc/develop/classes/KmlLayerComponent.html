@@ -479,6 +479,10 @@
                                 <a href="#" data-tabid="#methods" data-anchor="#method__getBoundingBox" data-tablink="_getBoundingBox">_getBoundingBox</a>
 
                             </li>
+                            <li class="index-item method inherited">
+                                <a href="#" data-tabid="#methods" data-anchor="#method__getOrLoadLayerFeatures" data-tablink="_getOrLoadLayerFeatures">_getOrLoadLayerFeatures</a>
+
+                            </li>
                             <li class="index-item method private inherited">
                                 <a href="#" data-tabid="#methods" data-anchor="#method__identify" data-tablink="_identify">_identify</a>
 
@@ -565,6 +569,10 @@
                             </li>
                             <li class="index-item method inherited">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_getBoundingBox" data-tablink="getBoundingBox">getBoundingBox</a>
+
+                            </li>
+                            <li class="index-item method inherited">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_getLayerFeatures" data-tablink="getLayerFeatures">getLayerFeatures</a>
 
                             </li>
                             <li class="index-item method inherited">
@@ -1029,6 +1037,68 @@
                     
                                 <div class="returns-description">
                                         <a href="http://leafletjs.com/reference-1.1.0.html#latlngbounds">L.LatLngBounds</a>
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method__getOrLoadLayerFeatures" class="method item inherited">
+                        <h3 class="name"><code>_getOrLoadLayerFeatures</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>e</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object[]</a></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/BaseVectorLayerComponent.html#method__getOrLoadLayerFeatures">BaseVectorLayerComponent</a>:
+                            <a href="../files/addon_components_base-vector-layer.js.html#l444"><code>addon&#x2F;components&#x2F;base-vector-layer.js:444</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            Handles 'flexberry-map:getOrLoadLayerFeatures' event of leaflet map.
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">e</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Event object.
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object[]</a></span>:
+                                        results Objects.
                                 </div>
                             </div>
                     
@@ -2031,6 +2101,68 @@
                             </div>
                     
                     </div>
+                    <div id="method_getLayerFeatures" class="method item inherited">
+                        <h3 class="name"><code>getLayerFeatures</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>e</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                            <span class="returns-inline">
+                                <span class="type">Ember.RSVP.Promise</span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/BaseVectorLayerComponent.html#method_getLayerFeatures">BaseVectorLayerComponent</a>:
+                            <a href="../files/addon_components_base-vector-layer.js.html#l415"><code>addon&#x2F;components&#x2F;base-vector-layer.js:415</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            Handles 'flexberry-map:getLayerFeatures' event of leaflet map.
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">e</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            Event object.
+                                        </div>
+                    
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                            <span class="type">Ember.RSVP.Promise</span>:
+                                        Returns promise.
+                                </div>
+                            </div>
+                    
+                    </div>
                     <div id="method_getLeafletObject" class="method item inherited">
                         <h3 class="name"><code>getLeafletObject</code></h3>
                     
@@ -2306,7 +2438,7 @@
                             <div class="args">
                                 <span class="paren">(</span><ul class="args-list inline commas">
                                     <li class="arg">
-                                            <code>featureIds</code>
+                                            <code>e</code>
                                     </li>
                                 </ul><span class="paren">)</span>
                             </div>
@@ -2332,7 +2464,7 @@
                         </div>
                     
                         <div class="description">
-                            Load features.
+                            Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.
                         </div>
                     
                             <div class="params">
@@ -2340,12 +2472,12 @@
                     
                                 <ul class="params-list">
                                     <li class="param">
-                                            <code class="param-name">featureIds</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object[]</a></span>
+                                            <code class="param-name">e</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
                     
                     
                                         <div class="param-description">
-                                            Feature id.
+                                            Event object.
                                         </div>
                     
                                     </li>

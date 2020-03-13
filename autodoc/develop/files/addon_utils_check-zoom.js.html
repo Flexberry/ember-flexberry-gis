@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>addon/components/base-vector-layer.js - Flexberry Documentation</title>
+    <title>addon/utils/check-zoom.js - Flexberry Documentation</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -403,7 +403,7 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>addon/components/base-vector-layer.js <small>File</small></h1>
+    <h1>addon/utils/check-zoom.js <small>File</small></h1>
 </div>
 
 <div class="file">
@@ -413,488 +413,47 @@
 */
 
 import Ember from &#x27;ember&#x27;;
-import BaseLayer from &#x27;./base-layer&#x27;;
-import { setLeafletLayerOpacity } from &#x27;../utils/leaflet-opacity&#x27;;
 
-const { assert } = Ember;
+let checkMapZoomLayer = (layer) =&gt; {
+  const mapZoom = layer.leafletMap.getZoom();
+  const minZoom = Ember.get(layer, &#x60;minZoom&#x60;);
+  const maxZoom = Ember.get(layer, &#x27;maxZoom&#x27;);
+  return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom &lt;= mapZoom &amp;&amp; mapZoom &lt;= maxZoom;
+};
 
-/**
-  BaseVectorLayer component for other flexberry-gis vector(geojson, kml, etc.) layers.
+let checkMapZoom = (layer) =&gt; {
+  const mapZoom = _getMapZoom(layer._map);
+  const minZoom = _getLayerOption(layer, &#x27;minZoom&#x27;);
+  const maxZoom = _getLayerOption(layer, &#x27;maxZoom&#x27;);
+  return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom &lt;= mapZoom &amp;&amp; mapZoom &lt;= maxZoom;
+};
 
-  @class BaseVectorLayerComponent
-  @extends BaseLayerComponent
- */
-export default BaseLayer.extend({
-  /**
-    Property flag indicates than result layer will be showed as cluster layer.
+let _getMapZoom = (map) =&gt; {
+  if (!Ember.isNone(map) &amp;&amp; map.getZoom) {
+    return map.getZoom();
+  }
 
-    @property clusterize
-    @type Boolean
-    @default false
-   */
-  clusterize: false,
+  return null;
+};
 
-  /**
-    Property contains options for &lt;a href=&quot;http://leaflet.github.io/Leaflet.markercluster/#options&quot;&gt;L.markerClusterGroup&lt;/a&gt;.
-
-    @property clusterOptions
-    @type Object
-    @default null
-   */
-  clusterOptions: null,
-
-  /**
-    Observes and handles changes in {{#crossLink &quot;BaseVectorLayerComponent/clusterize:property&quot;}}&#x27;clusterize&#x27; property{{/crossLink}}.
-    Resets layer with respect to new value of {{#crossLink &quot;BaseVectorLayerComponent/clusterize:property&quot;}}&#x27;clusterize&#x27; property{{/crossLink}}.
-
-    @method _clusterizeDidChange
-    @private
-  */
-  _clusterizeDidChange: Ember.observer(&#x27;clusterize&#x27;, function () {
-    // Call to Ember.run.once is needed because some of layer&#x27;s &#x27;dynamicProperties&#x27; can be unchenged yet (&#x27;clusterize&#x27; is dynamic property),
-    // but Ember.run.once guarantee that all &#x27;dynamicProperies&#x27; will be already chaged before &#x27;_resetLayer&#x27; will be called.
-    Ember.run.once(this, &#x27;_resetLayer&#x27;);
-  }),
-
-  /**
-    Sets leaflet layer&#x27;s opacity.
-
-    @method _setLayerOpacity
-    @private
-  */
-  _setLayerOpacity() {
-    let config = Ember.getOwner(this).resolveRegistration(&#x27;config:environment&#x27;);
-    let maxGeomOpacity = Number(config.userSettings.maxGeometryOpacity);
-    let maxGeomFillOpacity = Number(config.userSettings.maxGeometryFillOpacity);
-
-    let opacity = this.get(&#x27;opacity&#x27;);
-    if (Ember.isNone(opacity)) {
-      return;
-    }
-
-    let leafletLayer = this.get(&#x27;_leafletObject&#x27;);
-    if (Ember.isNone(leafletLayer)) {
-      return;
-    }
-
-    // Some layers-styles hide some of layers with their opacity set to 0, so we don&#x27;t change such layers opacity here.
-    let layersStylesRenderer = this.get(&#x27;_layersStylesRenderer&#x27;);
-    let styleSettings = this.get(&#x27;styleSettings&#x27;);
-    let visibleLeafletLayers = Ember.isNone(styleSettings) ?
-      [leafletLayer] :
-      layersStylesRenderer.getVisibleLeafletLayers({ leafletLayer, styleSettings });
-
-    for (let i = 0, len = visibleLeafletLayers.length; i &lt; len; i++) {
-      setLeafletLayerOpacity({ leafletLayer: visibleLeafletLayers[i], opacity, maxGeomOpacity, maxGeomFillOpacity });
-    }
-  },
-
-  /**
-    Returns promise with the layer properties object.
-
-    @method _getAttributesOptions
-    @private
-  */
-  _getAttributesOptions() {
-    return this._super(...arguments).then((attribitesOptions) =&gt; {
-      let leafletObject = Ember.get(attribitesOptions, &#x27;object&#x27;);
-
-      // Return original vector layer for &#x27;flexberry-layers-attributes-panel&#x27; component instead of marker cluster group.
-      if (leafletObject instanceof L.MarkerClusterGroup) {
-        Ember.set(attribitesOptions, &#x27;object&#x27;, leafletObject._originalVectorLayer);
+let _getLayerOption = (layer, propName) =&gt; {
+  let zoomResult = Ember.get(layer, &#x60;${propName}&#x60;);
+  if (Ember.isNone(zoomResult)) {
+    const parentLayers = Ember.get(layer, &#x27;_eventParents&#x27;);
+    for (var key in parentLayers) {
+      zoomResult = Ember.get(parentLayers, &#x60;${key}.${propName}&#x60;);
+      if (!Ember.isNone(zoomResult)) {
+        return zoomResult;
       }
-
-      Ember.set(attribitesOptions, &#x27;settings.styleSettings&#x27;, this.get(&#x27;styleSettings&#x27;));
-
-      return attribitesOptions;
-    }.bind(this));
-  },
-
-  /**
-    Creates leaflet vector layer related to layer type.
-
-    @method createVectorLayer
-    @param {Object} options Layer options.
-    @returns &lt;a href=&quot;http://leafletjs.com/reference-1.0.1.html#layer&quot;&gt;L.Layer&lt;/a&gt;|&lt;a href=&quot;https://emberjs.com/api/classes/RSVP.Promise.html&quot;&gt;Ember.RSVP.Promise&lt;/a&gt;
-    Leaflet layer or promise returning such layer.
-  */
-  createVectorLayer(options) {
-    assert(&#x27;BaseVectorLayer\&#x27;s \&#x27;createVectorLayer\&#x27; should be overridden.&#x27;);
-  },
-
-  /**
-    Creates read format for the specified leaflet vector layer.
-
-    @method createReadFormat
-    @param {&lt;a href=&quot;http://leafletjs.com/reference-1.0.1.html#layer&quot;&gt;L.Layer&lt;/a&gt;} Leaflet layer.
-    @returns {Object} Read format.
-  */
-  createReadFormat(vectorLayer) {
-    let crs = this.get(&#x27;crs&#x27;);
-    let geometryField = &#x27;geometry&#x27;;
-    let readFormat = new L.Format.GeoJSON({ crs, geometryField });
-
-    let layerPropertiesDescription = &#x60;&#x60;;
-    let layerClass = Ember.getOwner(this).lookup(&#x60;layer:${this.get(&#x27;layerModel.type&#x27;)}&#x60;);
-    let layerProperties = layerClass.getLayerProperties(vectorLayer);
-    for (let i = 0, len = layerProperties.length; i &lt; len; i++) {
-      let layerProperty = layerProperties[i];
-      let layerPropertyValue = layerClass.getLayerPropertyValues(vectorLayer, layerProperty, 1)[0];
-
-      let layerPropertyType = typeof layerPropertyValue;
-      switch (layerPropertyType) {
-        case &#x27;boolean&#x27;:
-          layerPropertyType = &#x27;boolean&#x27;;
-          break;
-        case &#x27;number&#x27;:
-          layerPropertyType = &#x27;decimal&#x27;;
-          break;
-        case &#x27;object&#x27;:
-          layerPropertyType = layerPropertyValue instanceof Date ? &#x27;date&#x27; : &#x27;string&#x27;;
-          break;
-        default:
-          layerPropertyType = &#x27;string&#x27;;
-      }
-
-      layerPropertiesDescription += &#x60;&lt;xsd:element maxOccurs=&quot;1&quot; minOccurs=&quot;0&quot; name=&quot;${layerProperty}&quot; nillable=&quot;true&quot; type=&quot;xsd:${layerPropertyType}&quot;/&gt;&#x60;;
     }
+  }
 
-    let describeFeatureTypeResponse = &#x60;&#x60; +
-      &#x60;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x60; +
-      &#x60;&lt;xsd:schema xmlns:gml=&quot;http://www.opengis.net/gml&quot; &#x60; +
-                  &#x60;xmlns:flexberry=&quot;http://flexberry.ru&quot; &#x60; +
-                  &#x60;xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; &#x60; +
-                  &#x60;elementFormDefault=&quot;qualified&quot; &#x60; +
-                  &#x60;targetNamespace=&quot;http://flexberry.ru&quot;&gt;&#x60; +
-        &#x60;&lt;xsd:import namespace=&quot;http://www.opengis.net/gml&quot; schemaLocation=&quot;http://flexberry.ru/schemas/gml/3.1.1/base/gml.xsd&quot;/&gt;&#x60; +
-          &#x60;&lt;xsd:complexType name=&quot;layerType&quot;&gt;&#x60; +
-            &#x60;&lt;xsd:complexContent&gt;&#x60; +
-              &#x60;&lt;xsd:extension base=&quot;gml:AbstractFeatureType&quot;&gt;&#x60; +
-                &#x60;&lt;xsd:sequence&gt;&#x60; +
-                  &#x60;${layerPropertiesDescription}&#x60; +
-                  &#x60;&lt;xsd:element maxOccurs=&quot;1&quot; minOccurs=&quot;0&quot; name=&quot;${geometryField}&quot; nillable=&quot;true&quot; type=&quot;gml:GeometryPropertyType&quot;/&gt;&#x60; +
-                &#x60;&lt;/xsd:sequence&gt;&#x60; +
-              &#x60;&lt;/xsd:extension&gt;&#x60; +
-            &#x60;&lt;/xsd:complexContent&gt;&#x60; +
-          &#x60;&lt;/xsd:complexType&gt;&#x60; +
-        &#x60;&lt;xsd:element name=&quot;layer&quot; substitutionGroup=&quot;gml:_Feature&quot; type=&quot;flexberry:layerType&quot;/&gt;&#x60; +
-      &#x60;&lt;/xsd:schema&gt;&#x60;;
+  return zoomResult;
+};
 
-    let describeFeatureTypeXml = L.XmlUtil.parseXml(describeFeatureTypeResponse);
-    let featureInfo = describeFeatureTypeXml.documentElement;
-    readFormat.setFeatureDescription(featureInfo);
-
-    return readFormat;
-  },
-
-  /**
-    Clusterizes created vector layer if &#x27;clusterize&#x27; option is enabled.
-
-    @method createClusterLayer
-    @param {&lt;a href=&quot;http://leafletjs.com/reference-1.0.1.html#layer&quot;&gt;L.Layer&lt;/a&gt;} vectorLayer Vector layer which must be clusterized.
-    @return {&lt;a href=&quot;https://github.com/Leaflet/Leaflet.markercluster/blob/master/src/MarkerClusterGroup.js&quot;&gt;L.MarkerClusterGroup&lt;/a&gt;} Clusterized vector layer.
-  */
-  createClusterLayer(vectorLayer) {
-    let clusterLayer = L.markerClusterGroup(this.get(&#x27;clusterOptions&#x27;));
-    clusterLayer.addLayer(vectorLayer);
-
-    clusterLayer._featureGroup.on(&#x27;layeradd&#x27;, this._setLayerOpacity, this);
-    clusterLayer._featureGroup.on(&#x27;layerremove&#x27;, this._setLayerOpacity, this);
-
-    // Original vector layer is necessary for &#x27;flexberry-layers-attributes-panel&#x27; component.
-    clusterLayer._originalVectorLayer = vectorLayer;
-
-    return clusterLayer;
-  },
-
-  /**
-    Destroys clusterized leaflet layer related to layer type.
-
-    @method destroyLayer
-  */
-  destroyClusterLayer(clusterLayer) {
-    clusterLayer._featureGroup.off(&#x27;layeradd&#x27;, this._setLayerOpacity, this);
-    clusterLayer._featureGroup.off(&#x27;layerremove&#x27;, this._setLayerOpacity, this);
-  },
-
-  /**
-    Creates leaflet layer related to layer type.
-
-    @method createLayer
-    @return {&lt;a href=&quot;http://leafletjs.com/reference-1.0.1.html#layer&quot;&gt;L.Layer&lt;/a&gt;|&lt;a href=&quot;https://emberjs.com/api/classes/RSVP.Promise.html&quot;&gt;Ember.RSVP.Promise&lt;/a&gt;}
-    Leaflet layer or promise returning such layer.
-  */
-  createLayer() {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      Ember.RSVP.hash({
-        vectorLayer: this.createVectorLayer()
-      }).then(({ vectorLayer }) =&gt; {
-        // Read format contains &#x27;DescribeFeatureType&#x27; metadata and is necessary for &#x27;flexberry-layers-attributes-panel&#x27; component.
-        let readFormat = vectorLayer.readFormat;
-        if (Ember.isNone(readFormat)) {
-          vectorLayer.readFormat = this.createReadFormat(vectorLayer);
-        }
-
-        vectorLayer.minZoom = this.get(&#x27;minZoom&#x27;);
-        vectorLayer.maxZoom = this.get(&#x27;maxZoom&#x27;);
-
-        if (this.get(&#x27;clusterize&#x27;)) {
-          let clusterLayer = this.createClusterLayer(vectorLayer);
-          resolve(clusterLayer);
-        } else {
-          resolve(vectorLayer);
-        }
-      }).catch((e) =&gt; {
-        reject(e);
-      });
-    });
-  },
-
-  /**
-    Destroys leaflet layer related to layer type.
-
-    @method destroyLayer
-  */
-  destroyLayer() {
-    let leafletLayer = this.get(&#x27;_leafletObject&#x27;);
-    if (leafletLayer instanceof L.MarkerClusterGroup) {
-      this.destroyClusterLayer(leafletLayer);
-    }
-  },
-
-  /**
-    Handles &#x27;flexberry-map:identify&#x27; event of leaflet map.
-
-    @method identify
-    @param {Object} e Event object.
-    @param {&lt;a href=&quot;http://leafletjs.com/reference.html#polygon&quot;&gt;L.Polygon&lt;/a&gt;} polygonLayer Polygon layer related to given area.
-    @param {Object[]} layers Objects describing those layers which must be identified.
-    @param {Object[]} results Objects describing identification results.
-    Every result-object has the following structure: { layer: ..., features: [...] },
-    where &#x27;layer&#x27; is metadata of layer related to identification result, features is array
-    containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
-    or a promise returning such array.
-  */
-  identify(e) {
-    let primitiveSatisfiesBounds = (primitive, bounds) =&gt; {
-      let satisfiesBounds = false;
-
-      if (typeof primitive.forEach === &#x27;function&#x27;) {
-        primitive.forEach(function (nestedGeometry, index) {
-          if (satisfiesBounds) {
-            return;
-          }
-
-          let nestedPrimitive = this.get(index);
-          satisfiesBounds = primitiveSatisfiesBounds(nestedPrimitive, bounds);
-        });
-      } else {
-        satisfiesBounds = primitive.within(bounds) || primitive.intersects(bounds);
-      }
-
-      return satisfiesBounds;
-    };
-
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      try {
-        let features = Ember.A();
-        let bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
-        let leafletLayer = this.get(&#x27;_leafletObject&#x27;);
-        leafletLayer.eachLayer(function (layer) {
-          let geoLayer = layer.toGeoJSON();
-          let primitive = new Terraformer.Primitive(geoLayer.geometry);
-
-          if (primitiveSatisfiesBounds(primitive, bounds)) {
-            features.pushObject(geoLayer);
-          }
-        });
-
-        resolve(features);
-      } catch (e) {
-        reject(e.error || e);
-      }
-    });
-  },
-
-  /**
-    Handles &#x27;flexberry-map:search&#x27; event of leaflet map.
-
-    @method search
-    @param {Object} e Event object.
-    @param {&lt;a href=&quot;http://leafletjs.com/reference-1.0.0.html#latlng&quot;&gt;L.LatLng&lt;/a&gt;} e.latlng Center of the search area.
-    @param {Object[]} layer Object describing layer that must be searched.
-    @param {Object} searchOptions Search options related to layer type.
-    @param {Object} results Hash containing search results.
-    @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
-    or a promise returning such array.
-  */
-  search(e) {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      let searchSettingsPath = &#x27;layerModel.settingsAsObject.searchSettings&#x27;;
-      let leafletLayer = this.get(&#x27;_leafletObject&#x27;);
-      let features = Ember.A();
-
-      let searchFields = (e.context ? this.get(&#x60;${searchSettingsPath}.contextSearchFields&#x60;) : this.get(&#x60;${searchSettingsPath}.searchFields&#x60;)) || Ember.A();
-
-      // If single search field provided - transform it into array.
-      if (!Ember.isArray(searchFields)) {
-        searchFields = Ember.A([searchFields]);
-      }
-
-      leafletLayer.eachLayer((layer) =&gt; {
-        if (features.length &lt; e.searchOptions.maxResultsCount) {
-          let feature = Ember.get(layer, &#x27;feature&#x27;);
-
-          // if layer satisfies search query
-          let contains = false;
-          searchFields.forEach((field) =&gt; {
-            if (feature &amp;&amp; (feature.properties[field])) {
-              contains = contains || feature.properties[field].toLowerCase().includes(e.searchOptions.queryString.toLowerCase());
-            }
-          });
-
-          if (contains) {
-            let foundFeature = layer.toGeoJSON();
-            foundFeature.leafletLayer = L.geoJson(foundFeature);
-            features.pushObject(foundFeature);
-          }
-        }
-      });
-      resolve(features);
-    });
-  },
-
-  /**
-    Handles &#x27;flexberry-map:query&#x27; event of leaflet map.
-
-    @method _query
-    @param {Object} e Event object.
-    @param {Object} queryFilter Object with query filter paramteres
-    @param {Object[]} results.features Array containing leaflet layers objects
-    or a promise returning such array.
-  */
-  query(layerLinks, e) {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      let queryFilter = e.queryFilter;
-      let features = Ember.A();
-      let equals = [];
-
-      layerLinks.forEach((link) =&gt; {
-        let linkParameters = link.get(&#x27;parameters&#x27;);
-
-        if (Ember.isArray(linkParameters) &amp;&amp; linkParameters.length &gt; 0) {
-          linkParameters.forEach(linkParam =&gt; {
-            let property = linkParam.get(&#x27;layerField&#x27;);
-            let propertyValue = queryFilter[linkParam.get(&#x27;queryKey&#x27;)];
-
-            equals.push({ &#x27;prop&#x27;: property, &#x27;value&#x27;: propertyValue });
-          });
-        }
-      });
-
-      let leafletLayer = this.get(&#x27;_leafletObject&#x27;);
-      leafletLayer.eachLayer((layer) =&gt; {
-        let feature = Ember.get(layer, &#x27;feature&#x27;);
-        let meet = true;
-        equals.forEach((equal) =&gt; {
-          meet = meet &amp;&amp; Ember.isEqual(feature.properties[equal.prop], equal.value);
-        });
-
-        if (meet) {
-          features.pushObject(layer.toGeoJSON());
-        }
-      });
-
-      resolve(features);
-    });
-  },
-
-  /**
-    Handles &#x27;flexberry-map:loadLayerFeatures&#x27; event of leaflet map.
-
-    @method loadLayerFeatures
-    @param {Object} e Event object.
-    @returns {Ember.RSVP.Promise} Returns promise.
-  */
-  loadLayerFeatures(e) {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      resolve(this.get(&#x27;_leafletObject&#x27;));
-    });
-  },
-
-  /**
-    Handles &#x27;flexberry-map:getLayerFeatures&#x27; event of leaflet map.
-
-    @method getLayerFeatures
-    @param {Object} e Event object.
-    @returns {Ember.RSVP.Promise} Returns promise.
-  */
-  getLayerFeatures(e) {
-    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      let leafletObject = this.get(&#x27;_leafletObject&#x27;);
-      let featureIds = e.featureIds;
-      if (Ember.isArray(featureIds) &amp;&amp; !Ember.isNone(featureIds)) {
-        let objects = [];
-        featureIds.forEach((id) =&gt; {
-          let features = leafletObject._layers;
-          let obj = Object.values(features).find(feature =&gt; {
-            return this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;)._getLayerFeatureId(this.get(&#x27;layerModel&#x27;), feature) === id;
-          });
-          if (!Ember.isNone(obj)) {
-            objects.push(obj);
-          }
-        });
-        resolve(objects);
-      } else {
-        resolve(Object.values(leafletObject._layers));
-      }
-    });
-  },
-
-  /**
-    Handles &#x27;flexberry-map:getOrLoadLayerFeatures&#x27; event of leaflet map.
-
-    @method _getOrLoadLayerFeatures
-    @param {Object} e Event object.
-    @returns {Object[]} results Objects.
-  */
-  _getOrLoadLayerFeatures(e) {
-    if (this.get(&#x27;layerModel.id&#x27;) !== e.layer) {
-      return;
-    }
-
-    e.results.push({
-      layerModel: this.get(&#x27;layerModel&#x27;),
-      leafletObject: this.get(&#x27;_leafletObject&#x27;),
-      features: e.load ? this.loadLayerFeatures(e) : this.getLayerFeatures(e)
-    });
-  },
-
-  /**
-    Initializes DOM-related component&#x27;s properties.
-  */
-  didInsertElement() {
-    this._super(...arguments);
-
-    let leafletMap = this.get(&#x27;leafletMap&#x27;);
-    if (!Ember.isNone(leafletMap)) {
-      leafletMap.on(&#x27;flexberry-map:getOrLoadLayerFeatures&#x27;, this._getOrLoadLayerFeatures, this);
-    }
-  },
-
-  /**
-    Deinitializes DOM-related component&#x27;s properties.
-  */
-  willDestroyElement() {
-    this._super(...arguments);
-
-    let leafletMap = this.get(&#x27;leafletMap&#x27;);
-    if (!Ember.isNone(leafletMap)) {
-      // Detach custom event-handler.
-      leafletMap.off(&#x27;flexberry-map:getOrLoadLayerFeatures&#x27;, this._getOrLoadLayerFeatures, this);
-    }
-  },
-});
+export {
+  checkMapZoom, checkMapZoomLayer
+};
 
     </pre>
 </div>
