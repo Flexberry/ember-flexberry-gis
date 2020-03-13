@@ -3652,6 +3652,223 @@ define('dummy/tests/unit/components/layers/tile-layer-test.jshint', ['exports'],
     assert.ok(true, 'unit/components/layers/tile-layer-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember', 'ember-qunit', 'sinon', 'dummy/tests/helpers/start-app'], function (exports, _ember, _emberQunit, _sinon, _dummyTestsHelpersStartApp) {
+
+  var app = undefined;
+  var geoserverFake = undefined;
+  var options = undefined;
+  var param = undefined;
+
+  (0, _emberQunit.moduleForComponent)('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
+    unit: true,
+    needs: ['service:map-api', 'config:environment', 'component:base-vector-layer', 'model:new-platform-flexberry-g-i-s-map'],
+    beforeEach: function beforeEach() {
+      app = (0, _dummyTestsHelpersStartApp['default'])();
+
+      options = {
+        url: 'http://geoserverFake/geoserver/ows',
+        geometryField: 'shape',
+        showExisting: false,
+        withCredentials: false,
+        crs: L.CRS.EPSG3857,
+        typeNSName: 'rgisperm',
+        filter: null,
+        version: '1.1.0',
+        continueLoading: true
+      };
+
+      var leafletOptions = ['url', 'version', 'namespaceUri', 'typeNS', 'typeName', 'typeNSName', 'geometryField', 'crs', 'maxFeatures', 'showExisting', 'style', 'filter', 'forceMulti', 'withCredentials', 'continueLoading'];
+
+      param = {
+        format: 'GeoJSON',
+        leafletOptions: leafletOptions
+      };
+      param = _ember['default'].$.extend(param, options);
+
+      geoserverFake = _sinon['default'].fakeServer.create();
+      geoserverFake.autoRespond = true;
+
+      geoserverFake.respondWith('POST', 'http://geoserverFake/geoserver/ows?', function (request) {
+        if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
+          request.respond(200, { 'Content-Type': 'application/json' }, '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",' + '"geometry":{"type":"MultiPolygon","coordinates":[[[[6215353.89391635,8117916.10977998],[6215317.82640125,8117408.36954415],' + '[6215322.83577823,8116959.81224657],[6213934.34777038,8117228.98625252],[6213930.67422719,8117229.84351009],' + '[6214007.26203691,8117650.34021493],[6214045.44462228,8117860.38311881],[6214113.79478966,8118235.47443556],' + '[6214237.35942438,8118229.9015124],[6214247.82345653,8118288.63175866],[6215053.10865244,8118087.57903733],' + '[6215031.95794919,8118033.35145873],[6215042.3106618,8117957.47637766],[6215353.89391635,8117916.10977998]]]]},' + '"geometry_name":"shape","properties":' + '{"id":"000","lesnichestvo":"-","uchastkovoelesnichestvo":"-","nomerkvartala":"141","urochishe":null,"nomer":10,"ploshad":200,"kategoriyazemel":' + '"Эксплуатационные леса","preobladayushayaporoda":"Сосна","bonitet":"2","gruppavozrasta":"Молодняки I гр.","klassvozrasta":"1","klasstovarnosti":' + 'null,"area":373798.7024302,"length":null,"primarykey":"06350c71-ec5c-431e-a5ab-e423cf662128","createtime":null,"creator":null,' + '"edittime":null,"editor":null}}],"totalFeatures":1,"numberMatched":1,"numberReturned":1,"timeStamp":"2020-02-27T04:44:49.909Z",' + '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
+        }
+
+        if (request.requestBody.indexOf('<wfs:DescribeFeatureType') !== -1) {
+          request.respond(200, { 'Content-Type': 'text/plain;charset=utf-8' }, '<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" ' + 'xmlns:rgisperm="http://rgis.permkrai.ru" elementFormDefault="qualified" targetNamespace="http://rgis.permkrai.ru">' + '<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://rgispk.wdepo.ru:80/geoserver/schemas/gml/3.1.1/base/gml.xsd"/>' + '<xsd:complexType name="vydel_utverzhdeno_polygonType">' + '<xsd:complexContent>' + '<xsd:extension base="gml:AbstractFeatureType">' + '<xsd:sequence>' + '<xsd:element maxOccurs="1" minOccurs="1" name="primarykey" nillable="false" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="shape" nillable="true" type="gml:MultiSurfacePropertyType"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="id" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="lesnichestvo" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="uchastkovoelesnichestvo" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="nomerkvartala" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="urochishe" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="nomer" nillable="true" type="xsd:int"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="ploshad" nillable="true" type="xsd:decimal"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="kategoriyazemel" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="preobladayushayaporoda" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="bonitet" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="gruppavozrasta" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="klassvozrasta" nillable="true" type="xsd:int"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="klasstovarnosti" nillable="true" type="xsd:int"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="area" nillable="true" type="xsd:decimal"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="length" nillable="true" type="xsd:decimal"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="createtime" nillable="true" type="xsd:dateTime"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="creator" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="edittime" nillable="true" type="xsd:dateTime"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="editor" nillable="true" type="xsd:string"/>' + '<xsd:element maxOccurs="1" minOccurs="0" name="kl" nillable="true" type="xsd:string"/>' + '</xsd:sequence>' + '</xsd:extension>' + '</xsd:complexContent>' + '</xsd:complexType>' + '<xsd:element name="vydel_utverzhdeno_polygon" substitutionGroup="gml:_Feature" type="rgisperm:vydel_utverzhdeno_polygonType"/>' + '</xsd:schema>');
+        }
+      });
+    },
+    afterEach: function afterEach() {
+      _ember['default'].run(app, 'destroy');
+      geoserverFake.restore();
+    }
+  });
+
+  (0, _emberQunit.test)('getLayerFeatures() with options showExisting = false and continueLoading = true', function (assert) {
+    var _this = this;
+
+    assert.expect(2);
+    var done = assert.async(2);
+    _ember['default'].run(function () {
+      var component = _this.subject(param);
+
+      var store = app.__container__.lookup('service:store');
+      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
+      getmapApiStub.returns(mapModel);
+
+      var getPkFieldStub = _sinon['default'].stub(mapModel, '_getPkField');
+      getPkFieldStub.returns('primarykey');
+
+      L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        var e = {
+          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+          results: _ember['default'].A()
+        };
+        component._leafletObject = res.target;
+
+        component.getLayerFeatures(e).then(function (layers) {
+          assert.ok(layers, 'Get feature of layers with showExisting = false and continueLoading = true');
+          done();
+        });
+      });
+
+      assert.ok(component, 'Create wfs-layer with showExisting = false');
+      done();
+    });
+  });
+
+  (0, _emberQunit.test)('getLayerFeatures() with options showExisting = true', function (assert) {
+    var _this2 = this;
+
+    assert.expect(2);
+    var done = assert.async(2);
+    _ember['default'].run(function () {
+      param.showExisting = true;
+
+      var component = _this2.subject(param);
+
+      var store = app.__container__.lookup('service:store');
+      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
+      getmapApiStub.returns(mapModel);
+
+      var getPkFieldStub = _sinon['default'].stub(mapModel, '_getPkField');
+      getPkFieldStub.returns('primarykey');
+
+      options.showExisting = true;
+      L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        var e = {
+          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+          results: _ember['default'].A()
+        };
+
+        component._leafletObject = res.target;
+
+        component.getLayerFeatures(e).then(function (layers) {
+          assert.ok(layers, 'Get feature of layers with showExisting = true');
+          done();
+        });
+      });
+
+      assert.ok(component, 'Create wfs-layer with showExisting = true');
+      done();
+    });
+  });
+
+  (0, _emberQunit.test)('loadLayerFeatures() with options showExisting = false', function (assert) {
+    var _this3 = this;
+
+    assert.expect(2);
+    var done = assert.async(2);
+    _ember['default'].run(function () {
+      var component = _this3.subject(param);
+
+      var store = app.__container__.lookup('service:store');
+      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
+      getmapApiStub.returns(mapModel);
+
+      var getPkFieldStub = _sinon['default'].stub(mapModel, '_getPkField');
+      getPkFieldStub.returns('primarykey');
+
+      L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        var e = {
+          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+          results: _ember['default'].A()
+        };
+        component._leafletObject = res.target;
+
+        component.loadLayerFeatures(e).then(function (layers) {
+          assert.ok(layers, 'Load feature of layers with showExisting = false');
+          done();
+        });
+      });
+
+      assert.ok(component, 'Create wfs-layer with showExisting = false');
+      done();
+    });
+  });
+
+  (0, _emberQunit.test)('loadLayerFeatures() with options showExisting = true', function (assert) {
+    var _this4 = this;
+
+    assert.expect(2);
+    var done = assert.async(2);
+    _ember['default'].run(function () {
+      param.showExisting = true;
+
+      var component = _this4.subject(param);
+
+      var store = app.__container__.lookup('service:store');
+      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
+      getmapApiStub.returns(mapModel);
+
+      var getPkFieldStub = _sinon['default'].stub(mapModel, '_getPkField');
+      getPkFieldStub.returns('primarykey');
+
+      options.showExisting = true;
+      L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        var e = {
+          featureIds: ['06350c71-ec5c-431e-a5ab-e423cf662128'],
+          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+          results: _ember['default'].A()
+        };
+
+        component._leafletObject = res.target;
+
+        component.loadLayerFeatures(e).then(function (layers) {
+          assert.ok(layers, 'Load feature of layers with showExisting = true');
+          done();
+        });
+      });
+
+      assert.ok(component, 'Create wfs-layer with showExisting = true');
+      done();
+    });
+  });
+});
+define('dummy/tests/unit/components/layers/wfs-layer-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/components/layers');
+  test('unit/components/layers/wfs-layer-test.js should pass jscs', function () {
+    ok(true, 'unit/components/layers/wfs-layer-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/components/layers/wfs-layer-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/components/layers/wfs-layer-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/components/layers/wfs-layer-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/components/layers/wms-layer-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
 
   (0, _emberQunit.moduleForComponent)('layers/wms-layer', 'Unit | Component | layers/wms layer', {
@@ -4254,6 +4471,35 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-savelayer-test.jshint', 
     assert.ok(true, 'unit/mixins/flexberry-map-model-api-savelayer-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/mixins/flexberry-map-model-api-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi) {
+
+  (0, _qunit.module)('Unit | Mixin | flexberry map model api test');
+
+  var mapApiMixinObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApi['default']);
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works FlexberryMapModelApiMixin', function (assert) {
+    var subject = mapApiMixinObject.create();
+    assert.ok(subject);
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/mixins');
+  test('unit/mixins/flexberry-map-model-api-test.js should pass jscs', function () {
+    ok(true, 'unit/mixins/flexberry-map-model-api-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/mixins/flexberry-map-model-api-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/mixins/flexberry-map-model-api-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/mixins/flexberry-map-model-api-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/mixins/flexberry-map-model-api-visualedit-test', ['exports', 'ember', 'ember-flexberry-gis/mixins/flexberry-map-model-api-visualedit', 'qunit'], function (exports, _ember, _emberFlexberryGisMixinsFlexberryMapModelApiVisualedit, _qunit) {
 
   (0, _qunit.module)('Unit | Mixin | flexberry map model api visualedit');
@@ -4263,6 +4509,10 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-visualedit-test', ['expo
     var FlexberryMapModelApiVisualeditObject = _ember['default'].Object.extend(_emberFlexberryGisMixinsFlexberryMapModelApiVisualedit['default']);
     var subject = FlexberryMapModelApiVisualeditObject.create();
     assert.ok(subject);
+  });
+
+  (0, _qunit.test)('one', function (assert) {
+    assert.ok(true);
   });
 });
 define('dummy/tests/unit/mixins/flexberry-map-model-api-visualedit-test.jscs-test', ['exports'], function (exports) {
@@ -4673,18 +4923,220 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-object-setting-
     assert.ok(true, 'unit/models/new-platform-flexberry-g-i-s-map-object-setting-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['exports', 'ember-qunit', 'sinon', 'ember'], function (exports, _emberQunit, _sinon, _ember) {
 
   (0, _emberQunit.moduleForModel)('new-platform-flexberry-g-i-s-map', 'Unit | Model | new-platform-flexberry-g-i-s-map', {
     // Specify the other units that are required for this test.
-    needs: ['model:custom-inflector-rules', 'model:new-platform-flexberry-g-i-s-layer-link', 'model:new-platform-flexberry-g-i-s-layer-metadata', 'model:new-platform-flexberry-g-i-s-link-metadata', 'model:new-platform-flexberry-g-i-s-link-parameter', 'model:new-platform-flexberry-g-i-s-map-layer', 'model:new-platform-flexberry-g-i-s-map-object-setting', 'model:new-platform-flexberry-g-i-s-map', 'model:new-platform-flexberry-g-i-s-parameter-metadata']
+    needs: ['model:custom-inflector-rules', 'model:new-platform-flexberry-g-i-s-layer-link', 'model:new-platform-flexberry-g-i-s-layer-metadata', 'model:new-platform-flexberry-g-i-s-link-metadata', 'model:new-platform-flexberry-g-i-s-link-parameter', 'model:new-platform-flexberry-g-i-s-map-layer', 'model:new-platform-flexberry-g-i-s-map-object-setting', 'model:new-platform-flexberry-g-i-s-map', 'model:new-platform-flexberry-g-i-s-parameter-metadata', 'service:map-api', 'config:environment', 'component:flexberry-map']
   });
+
+  var crsName = 'EPSG:4326';
+  var objA = [{
+    options: {
+      crs: {
+        code: crsName
+      }
+    },
+    feature: {
+      type: 'Feature',
+      id: 'vydel_utverzhdeno_polygon.0017782c-6f34-46b5-ac77-c0a65366c452',
+      geometry_name: 'shape',
+      properties: {
+        id: '141-17',
+        lesnichestvo: 'Закамское',
+        uchastkovoelesnichestvo: 'Чермозское(Чермозское)',
+        nomerkvartala: '141',
+        primarykey: '0017782c-6f34-46b5-ac77-c0a65366c452',
+        area: 10
+      },
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [[[[55.78205, 58.73614], [55.85209, 58.73935], [55.85690, 58.71903], [55.78205, 58.71476], [55.78205, 58.73614]]]]
+      }
+    }
+  }];
+
+  var objB = [{
+    options: {
+      crs: {
+        code: crsName
+      }
+    },
+    feature: {
+      type: 'Feature',
+      id: 'kvartal_utverzhdeno_polygon.45df35c7-f292-44f8-b328-5fd4be739233',
+      geometry_name: 'shape',
+      properties: {
+        nomer: '41',
+        lesnichestvo: 'Закамское',
+        uchastkovoelesnichestvo: 'Чермозское(Чермозское)',
+        primarykey: '45df35c7-f292-44f8-b328-5fd4be739233',
+        area: 20
+      },
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [[[[55.80677, 58.72884], [55.83286, 58.73846], [55.83836, 58.72991], [55.80677, 58.72884]]]]
+      }
+    },
+    _latlngs: [[[L.latLng(58.72884, 55.80677), L.latLng(58.73846, 55.83286), L.latLng(58.72991, 55.83836)]]]
+  }];
+
+  var objC = [{
+    options: {
+      crs: {
+        code: crsName
+      }
+    },
+    feature: {
+      type: 'Feature',
+      id: 'kvartal_utverzhdeno_polygon.d633ea1d-eb32-423f-8663-a38abc7ba094',
+      geometry_name: 'shape',
+      properties: {
+        nomer: '42',
+        lesnichestvo: 'Закамское',
+        uchastkovoelesnichestvo: 'Чермозское(Чермозское)',
+        primarykey: 'd633ea1d-eb32-423f-8663-a38abc7ba094',
+        area: 30
+      },
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [[[[55.97843, 58.73810], [55.01448, 58.73329], [55.98461, 58.72420], [55.97843, 58.73810]]]]
+      }
+    }
+  }];
+
+  var objD = [{
+    options: {
+      crs: {
+        code: crsName
+      }
+    },
+    feature: {
+      type: 'Feature',
+      id: 'kvartal_utverzhdeno_polygon.79fd98d0-52ae-44ae-b616-971768196ad8',
+      geometry_name: 'shape',
+      properties: {
+        nomer: '43',
+        lesnichestvo: 'Закамское',
+        uchastkovoelesnichestvo: 'Чермозское(Чермозское)',
+        primarykey: '79fd98d0-52ae-44ae-b616-971768196ad8',
+        area: 30
+      },
+      geometry: {
+        type: 'MultiPolygon',
+        coordinates: [[[[55.85072, 58.68176], [55.88848, 58.67194], [55.84316, 58.65391], [55.85072, 58.68176]]]]
+      }
+    }
+  }];
 
   (0, _emberQunit.test)('it exists', function (assert) {
     var model = this.subject();
 
-    // let store = this.store();
     assert.ok(!!model);
+  });
+
+  (0, _emberQunit.test)('substitution _getModelLayerFeature', function (assert) {
+    var map = this.subject();
+    var _getModelLayerFeatureStub = _sinon['default'].stub(map, '_getModelLayerFeature');
+    _getModelLayerFeatureStub.withArgs(1).returns(objA);
+    assert.ok(_getModelLayerFeatureStub(1));
+  });
+
+  (0, _emberQunit.test)('isContainsObject', function (assert) {
+    var map = this.subject();
+    var _getModelLayerFeatureStub = _sinon['default'].stub(map, '_getModelLayerFeature');
+    _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
+      resolve([null, null, objA]);
+    }));
+    _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
+      resolve([null, null, objB]);
+    }));
+
+    map.isContainsObject('f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452', '63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').then(function (e) {
+      assert.ok(e, 'Contains');
+    });
+
+    map.isContainsObject('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233', 'f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452').then(function (e) {
+      assert.notOk(e, 'Not contains');
+    });
+  });
+
+  (0, _emberQunit.test)('getAreaExtends', function (assert) {
+    var map = this.subject();
+    var _getModelLayerFeatureStub = _sinon['default'].stub(map, '_getModelLayerFeature');
+    _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
+      resolve([null, null, objA]);
+    }));
+    _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
+      resolve([null, null, objB]);
+    }));
+    _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['d633ea1d-eb32-423f-8663-a38abc7ba094']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
+      resolve([null, null, objC]);
+    }));
+    _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['79fd98d0-52ae-44ae-b616-971768196ad8']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
+      resolve([null, null, objD]);
+    }));
+
+    map.getAreaExtends('f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452', '63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').then(function (e) {
+      assert.equal(e, 0, 'B<A and intersect');
+    });
+
+    map.getAreaExtends('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233', 'f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452').then(function (e) {
+      assert.equal(e, 8887057.32835752, 'B>A and intesect');
+    });
+
+    map.getAreaExtends('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '79fd98d0-52ae-44ae-b616-971768196ad8', '63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', 'd633ea1d-eb32-423f-8663-a38abc7ba094').then(function (e) {
+      assert.equal(e, 43187392.82526295, 'Not intersect');
+    });
+  });
+
+  (0, _emberQunit.test)('getIntersectionArea', function (assert) {
+    var map = this.subject();
+    var _getModelLayerFeatureStub = _sinon['default'].stub(map, '_getModelLayerFeature');
+    _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
+      resolve([null, null, objA]);
+    }));
+    _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
+      resolve([null, null, objB]);
+    }));
+    _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['d633ea1d-eb32-423f-8663-a38abc7ba094']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
+      resolve([null, null, objC]);
+    }));
+
+    map.getIntersectionArea('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233', 'f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452').then(function (e) {
+      assert.equal(e.area, 887494.3528438057, 'Intersect');
+    });
+
+    map.getIntersectionArea('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '79fd98d0-52ae-44ae-b616-971768196ad8', '63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', 'd633ea1d-eb32-423f-8663-a38abc7ba094').then(function (e) {
+      assert.equal(e.area, 0, 'Not area intersect');
+    })['catch'](function (e) {
+      assert.ok(e, 'Not intersect');
+    });
+
+    /* Надо как-то подмешать mapApi.getFromApi('serviceLayer')
+    map.getIntersectionArea('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233',
+    'f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452', true).then((e) => {
+      assert.equal(e.area, 887494.3528438057, 'Intersect and show on map');
+    });*/
+  });
+
+  (0, _emberQunit.test)('getRhumb', function (assert) {
+    var map = this.subject();
+    var _getModelLayerFeatureStub = _sinon['default'].stub(map, '_getModelLayerFeature');
+    _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
+      resolve([null, null, objB]);
+    }));
+
+    map.getRhumb('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').then(function (e) {
+      var rhumb = [{ rib: '1;2', rhumb: 'СВ;54.60899873173304', distance: 1847.0014093569546 }, { rib: '2;3', rhumb: 'ЮВ;18.46239009698718', distance: 1002.3048264780921 }, { rib: '3;1', rhumb: 'ЮЗ;86.26658375754084', distance: 1827.228836727564 }];
+      var result = {
+        startPoint: L.latLng(58.72884, 55.80677),
+        rhumbCoordinates: rhumb,
+        coordinates: objB[0]._latlngs
+      };
+
+      assert.deepEqual(e, result, 'Rhumb');
+    });
   });
 });
 define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test.jscs-test', ['exports'], function (exports) {
