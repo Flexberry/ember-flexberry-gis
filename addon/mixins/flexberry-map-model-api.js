@@ -698,6 +698,7 @@ export default Ember.Mixin.create({
             Ember.$(document).find('.leaflet-top.leaflet-right').css('display', 'none');
             Ember.$(document).find('.leaflet-bottom.leaflet-right').css('display', 'none');
 
+
             let promises = load.map((object) => {
               return object.promiseLoadForSnapshot;
             });
@@ -746,7 +747,7 @@ export default Ember.Mixin.create({
 
         let bounds = featureLayer[0].getBounds();
         if (!Ember.isNone(bounds)) {
-          leafletMap.fitBounds(bounds.pad(1));
+          leafletMap.fitBounds(bounds.pad(0.5));
         }
       }).catch((e) => {
         reject(e);

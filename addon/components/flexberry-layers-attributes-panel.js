@@ -862,15 +862,21 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let editedRows = Ember.get(tabModel, '_editedRows');
       Object.keys(editedRows).filter((key) => editedRows[key]).forEach((key) => {
         let layer = tabModel.get(`featureLink.${key}`);
-        layer.disableEdit();
+        if (layer) {
+          layer.disableEdit();
+          tabModel.disableDragging(key);
+        }
       });
-
       if (tabModel.get('groupDraggable')) {
         let draggableRows = Ember.get(tabModel, '_draggableRows');
         tabModel.disableDragging(Object.keys(draggableRows).filter((key) => draggableRows[key]));
       }
 
       let editedLayers = this.get('items');
+      if (editedLayers.length === 1)  {
+        this.set('lastPage', 1);
+      }
+
       let selectedTabIndex = this.get('selectedTabIndex');
       this.get('_tabModelsCache').removeObject(tabModel);
       editedLayers.removeAt(index);
@@ -996,7 +1002,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     /**
       Handles find intersecting polygons.
-
       @method actions.onFindIntersectPolygons
     */
     onFindIntersectPolygons(tabModel) {
@@ -1027,7 +1032,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         this.send('zoomTo', intersectPolygonFeatures);
       }
     },
-
     /**
       Handles 'Select all' checkbox click.
 
@@ -1264,6 +1268,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} tabModel Related tab model.
     */
     onSaveChangesClick(tabModel) {
+      let editedRows = Ember.get(tabModel, '_editedRows');
+      Object.keys(editedRows).filter((key) => editedRows[key]).forEach((key) => {
+        let layer = tabModel.get(`featureLink.${key}`);
+        if (layer) {
+          layer.disableEdit();
+          tabModel.disableDragging(key);
+        }
+      });
+      Ember.set(tabModel, '_editedRows', {});
       let leafletObject = tabModel.leafletObject;
       let saveFailed = (data) => {
         this.set('error', data);
@@ -1407,6 +1420,12 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @param {Object} addedLayer Added layer.
     */
     onGeometryAddComplete(tabModel, addedLayer, options) {
+      let editedRows = Ember.get(tabModel, '_editedRows');
+      Object.keys(editedRows).filter((key) => editedRows[key]).forEach((key) => {
+        let layer = tabModel.get(`featureLink.${key}`);
+        layer.disableEdit();
+        tabModel.disableDragging(key);
+      });
       if (!Ember.isNone(options) && Ember.get(options, 'panToAddedObject')) {
         this.set('_newRowPanToObject', true);
       }
