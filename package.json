@@ -3,17 +3,12 @@
   "version": "0.8.0-beta.1",
   "description": "Ember Flexberry GIS Addon",
   "license": "MIT",
-  "author": {
-    "name": "Flexberry Team",
-    "email": "mail@flexberry.net",
-    "url": "http://flexberry.net/"
-  },
+  "author": "Flexberry Team <mail@flexberry.net> (http://flexberry.net/)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Flexberry/ember-flexberry-gis.git"
+    "url": "git+https://github.com/Flexberry/ember-flexberry-gis.git"
   },
   "directories": {
-    "doc": "doc",
     "test": "tests"
   },
   "scripts": {
@@ -107,5 +102,10 @@
     "ember-addon",
     "flexberry",
     "gis"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/Flexberry/ember-flexberry-gis/issues"
+  },
+  "homepage": "https://github.com/Flexberry/ember-flexberry-gis#readme",
+  "main": "index.js"
 }
