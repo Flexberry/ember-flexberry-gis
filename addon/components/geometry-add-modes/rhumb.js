@@ -262,8 +262,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       for (let i = 0; i < this._tableData.length; i++) {
         let item = this._tableData[i];
         let data = {
-          rib: i !== this._tableData.length - 1 ? `${i + 1};${i + 2}` : `${i + 1};${1}`,
-          rhumb: `${item.direction};${item.rhumb}`,
+          rhumb: `${item.direction}`,
+          angle: item.rhumb,
           distance: item.distance
         };
 
@@ -274,6 +274,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       const data = {
         type: objectType,
         startPoint: startPoints,
+        skip: 1,
         points: points
       };
 
@@ -283,7 +284,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         return crsRhumb.unproject(L.point(coords));
       };
 
-      let geoJSON = L.geoJSON(rhumbObj, { coordsToLatLng: coordsToLatLng.bind(this) });
+      let geoJSON = L.geoJSON(rhumbObj.objRhumb, { coordsToLatLng: coordsToLatLng.bind(this) });
 
       let newObj = geoJSON.getLayers()[0];
 

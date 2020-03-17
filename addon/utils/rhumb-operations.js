@@ -17,10 +17,11 @@ import { getLeafletCrs } from '../utils/leaflet-crs';
         type: 'LineString',
         properties: { name: 'test_polygon' },
         startPoint: [85, 79],
+        skip:0, 
         points: [
-          { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955 },
-          { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427 },
-          { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685 }
+          { rhumb: 'ЮВ', angle: 86.76787457562546, distance: 8182.6375760837955 },
+          { rhumb: 'СВ', angle: 79.04259420114585, distance: 8476.868426796427 },
+          { rhumb: 'ЮЗ', angle: 86.0047147391561, distance: 16532.122718537685 }
         ]
       };
   @returns {Object} New featureLayer.
@@ -40,66 +41,21 @@ const createObjectRhumb = (data, layerCrs, that) => {
     }
   }
 
-  const points = data.points;
-
-  const degreeToRadian = function (degree) {
-    let deg;
-    let min = 0;
-    let sec = 0;
-
-    const regex = /^([0-8]?[0-9]|90)°([0-5]?[0-9]')?([0-5]?[0-9](,[0-9]*)?")?$/gm;
-    let m;
-
-    while ((m = regex.exec(degree)) !== null) {
-
-      // This is necessary to avoid infinite loops with zero-width matches
-      if (m.index === regex.lastIndex) {
-        regex.lastIndex++;
-      }
-
-      // The result can be accessed through the `m`-variable.
-      m.forEach((match, groupIndex) => {
-        console.log(`Found match, group ${groupIndex}: ${match}`);
-
-        if (!Ember.isNone(match)) {
-          switch (groupIndex) {
-            case 1:
-              deg = parseInt(match);
-              break;
-            case 2:
-              min = parseInt(match.replace("'", ''));
-              break;
-            case 3:
-              sec = parseFloat(match.replace(`"`, '').replace(',', '.'));
-              break;
-          }
-        }
-      });
-    }
-
-    return deg + min / 60 + sec / 3600;
-  };
-
-  const getBearing = function (rhumb) {
+  const getBearing = function (rhumb, angle) {
     let result;
-    const arr = rhumb.split(';');
-    const direct = arr[0];
 
-    // Convert to radians
-    let degree = arr[1].indexOf('°') > 0 ? degreeToRadian(arr[1]) : arr[1];
-
-    switch (direct) {
+    switch (rhumb) {
       case 'СВ':
-        result = parseFloat(degree);
+        result = parseFloat(angle);
         break;
       case 'ЮВ':
-        result = 180 - parseFloat(degree);
+        result = 180 - parseFloat(angle);
         break;
       case 'ЮЗ':
-        result = parseFloat(degree) - 180;
+        result = parseFloat(angle) - 180;
         break;
       case 'СЗ':
-        result = parseFloat(degree) * -1;
+        result = parseFloat(angle) * -1;
         break;
     }
 
@@ -123,73 +79,73 @@ const createObjectRhumb = (data, layerCrs, that) => {
     startPointInCrs = helpers.point([point.x, point.y]);
   }
 
-  if (type === 'Polygon') {
-    let startPoint;
-    let coordinates = [];
+  let startPoint;
+  let coordinates = [];
+  let trackOfBind = [startPointInCrs.geometry.coordinates];
+  let skip = !Ember.isNone(data.skip) ? data.skip : 0;
+  const vertexCount = data.points;
 
-    // Rib sorting
-    const vertexCount = points.sort((a, b) => a.rib.split(';')[0] - b.rib.split(';')[0]);
+  for (let i = 0; i < vertexCount.length; i++) {
+    const vertex = vertexCount[i];
+    const bearing = getBearing(vertex.rhumb, vertex.angle);
 
-    for (let i = 0; i < vertexCount.length; i++) {
-      const vertex = vertexCount[i];
+    // Convert to kilometers
+    vertex.distance = vertex.distance / 1000;
 
-      const bearing = getBearing(vertex.rhumb);
-
-      // Convert to kilometers
-      vertex.distance = vertex.distance / 1000;
-
-      if (Ember.isNone(startPoint)) {
-        startPoint = rhumbDestination.default(startPointInCrs, vertex.distance, bearing, { units: 'kilometers' });
-      } else {
-        startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
+    if (Ember.isNone(startPoint)) {
+      startPoint = rhumbDestination.default(startPointInCrs, vertex.distance, bearing, { units: 'kilometers' });
+      if (skip === 0) {
+        trackOfBind.pop();
+        if (type === 'Polygon') {
+          coordinates.push(startPointInCrs.geometry.coordinates);
+        } else if (type === 'LineString'){
+          coors.push(startPointInCrs.geometry.coordinates);
+        }
       }
-
-      coordinates.push(startPoint.geometry.coordinates);
+    } else {
+      startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
     }
 
-    coors.push(coordinates);
+    if (skip !== 0) {
+      trackOfBind.push(startPoint.geometry.coordinates);
+      skip--;
+    }
 
-    for (let i = 0; i < coors.length; i++) {
-      for (let j = 0; j < coors[i].length; j++) {
-        coors[i][j] = [coors[i][j][0], coors[i][j][1]];
+    if (skip === 0) {
+      if (type === 'Polygon') {
+        coordinates.push(startPoint.geometry.coordinates);
+      } else if (type === 'LineString') {
+        coors.push(startPoint.geometry.coordinates);
       }
     }
   }
 
-  if (type === 'LineString') {
-    let startPoint;
+  if (type === 'Polygon') {
+    coors.push(coordinates);
+  }
 
-    //Rib sorting
-    const vertexCount = points.sort((a, b) => a.rib.split(';')[0] - b.rib.split(';')[0]);
-
-    for (let i = 0; i < vertexCount.length; i++) {
-      const vertex = vertexCount[i];
-      const bearing = getBearing(vertex.rhumb);
-
-      // Convert to kilometers
-      vertex.distance = vertex.distance / 1000;
-
-      if (Ember.isNone(startPoint)) {
-        startPoint = rhumbDestination.default(startPointInCrs, vertex.distance, bearing, { units: 'kilometers' });
-      } else {
-        startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: 'kilometers' });
-      }
-
-      coors.push(startPoint.geometry.coordinates);
-    }
-
-    for (let i = 0; i < coors.length; i++) {
-      coors[i] = [coors[i][0], coors[i][1]];
-    }
+  let trackOfBindObj = null;
+  if (trackOfBind.length !== 0) {
+    trackOfBindObj = {
+      type: 'Feature',
+      geometry: {
+        type: 'LineString',
+        coordinates: trackOfBind
+      },
+      properties: data.properties
+    };
   }
 
   const obj = {
-    type: 'Feature',
-    geometry: {
-      type: type,
-      coordinates: coors
+    objRhumb: {
+      type: 'Feature',
+      geometry: {
+        type: type,
+        coordinates: coors
+      },
+      properties: data.properties
     },
-    properties: data.properties
+    trackOfBind: trackOfBindObj
   };
 
   return obj;
