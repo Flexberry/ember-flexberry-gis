@@ -34,7 +34,7 @@ export default Ember.Component.extend({
     @type String
     @default t('components.flexberry-layers-intersections-panel.show-cords')
   */
-  cordsActionCaption: t ('components.flexberry-layers-intersections-panel.show-cords'),
+  cordsActionCaption: t('components.flexberry-layers-intersections-panel.show-cords'),
 
   /**
     Component's wrapping <div> CSS-classes names.
