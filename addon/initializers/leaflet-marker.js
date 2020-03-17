@@ -10,7 +10,7 @@ export function initialize() {
     /**
       Animate zoom when its changed.
       @method _animateZoom
-      @param {Object} opt animate zoom options 
+      @param {Object} opt animate zoom options
       @private
     */
     _animateZoom: function (opt) {
