@@ -42,9 +42,13 @@
             }
         }
         .cords {
+            padding-top: 0px;
             width:50%;
         }
-    }  
+    }
+    .intersection-cell {
+        vertical-align: top;
+    }
 }
 
 .compare-geometries-panel {

@@ -471,7 +471,7 @@ export default Ember.Component.extend({
           }
 
           if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
-            if (Ember.get(objA, 'properties.primarykey') !== Ember.get(objB, 'properties.primarykey')) {
+            if (Ember.get(objA, 'properties.name') !== Ember.get(objB, 'properties.name')) {
               let res = intersect.default(objA, objB);
               if (res) {
                 if (square > 0) {
@@ -521,7 +521,7 @@ export default Ember.Component.extend({
   computeFeatureProperties(feature, convertToMercator, res) {
     feature.intersection = {};
     feature.intersection.intersectionCords = [];
-    feature.intersection.intersectedArea = area(res);
+    feature.intersection.intersectedArea = area(res).toFixed(3);
     if (convertToMercator) {
       let resInMercator = projection.toMercator(res);
       feature.intersection.intersectionCords = this.computeCoordinates(resInMercator);

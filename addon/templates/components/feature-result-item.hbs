@@ -130,38 +130,58 @@
             </td>
           </tr>
         {{/if}}
-      {{#if feature.intersection.intersectionCords}}
-        <tr>
-          <td>
+        {{#if feature.intersection.intersectionCords}}
+          <tr>
+            <td class="intersection-cell">
               {{t 'components.flexberry-layers-intersections-panel.intersection-cords'}}
-          </td>
-          <td class="cords">
-            {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
-            <div>
-              <table class="ui compact celled table">
-                <tr>
-                  <td>
-                    {{t 'components.flexberry-layers-intersections-panel.x-cord'}}
-                  </td>
-                  <td>
-                    {{t 'components.flexberry-layers-intersections-panel.y-cord'}}
-                  </td>
-                </tr>
-                {{#each feature.intersection.intersectionCords as |cords|}}
+            </td>
+            <td class="cords">   
+              <div>
+                <table class="ui compact celled table">
                   <tr>
                     <td>
-                      {{cords.[0]}}
+                      {{t 'components.flexberry-layers-intersections-panel.x-cord'}}
                     </td>
                     <td>
-                      {{cords.[1]}}
+                      {{t 'components.flexberry-layers-intersections-panel.y-cord'}}
                     </td>
                   </tr>
-                {{/each}}
-              </table>    
-            </div>
-            {{/flexberry-toggler}}       
-          </td>
-        </tr>
+                  {{#if showAllCords}}
+                    {{#each feature.intersection.intersectionCords as |cords|}}
+                      <tr>                  
+                        <td>
+                          {{cords.[0]}}
+                        </td>
+                        <td>
+                          {{cords.[1]}}
+                        </td>                 
+                      </tr>                 
+                    {{/each}}                 
+                  {{else}}
+                    <tr>                  
+                      <td>
+                        {{feature.intersection.intersectionCords.[0].[0]}}
+                      </td>
+                      <td>
+                        {{feature.intersection.intersectionCords.[0].[1]}}
+                      </td>                 
+                    </tr>
+                    <tr>                  
+                      <td>
+                        {{feature.intersection.intersectionCords.[1].[0]}}
+                      </td>
+                      <td>
+                        {{feature.intersection.intersectionCords.[1].[1]}}
+                      </td>                   
+                    </tr>               
+                  {{/if}}
+                </table>
+                <div class="show-cords" {{action "toggleShowAllCords"}}>
+                  {{cordsActionCaption}}
+                </div>
+              </div> 
+            </td>
+          </tr>
         {{/if}}
       {{/if}}
     </table>
