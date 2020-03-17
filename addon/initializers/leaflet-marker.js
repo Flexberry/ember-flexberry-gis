@@ -6,6 +6,13 @@ import Ember from 'ember';
 
 export function initialize() {
   L.Marker.include({
+
+    /**
+      Animate zoom when its changed.
+      @method _animateZoom
+      @param {Object} opt animate zoom options 
+      @private
+    */
     _animateZoom: function (opt) {
       if (this._checkMapZoom()) {
         this.setIcon(new L.Icon.Default());
@@ -16,8 +23,14 @@ export function initialize() {
         this._removeShadow();
       }
     },
+
+    /**
+      Check if current zoom is between allowed layer min and max zoom.
+      @method _checkMapZoom
+      @private
+    */
     _checkMapZoom() {
-      const mapZoom = this._map.getZoom();
+      const mapZoom = Ember.get(this, '_map._animateToZoom');
       const minZoom = Object.values(this._eventParents)[0].minZoom;
       const maxZoom = Object.values(this._eventParents)[0].maxZoom;
       return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom <= mapZoom && mapZoom <= maxZoom;
