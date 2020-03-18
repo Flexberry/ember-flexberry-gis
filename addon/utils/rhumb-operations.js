@@ -17,7 +17,7 @@ import { getLeafletCrs } from '../utils/leaflet-crs';
         type: 'LineString',
         properties: { name: 'test_polygon' },
         startPoint: [85, 79],
-        skip:0, 
+        skip:0,
         points: [
           { rhumb: 'ЮВ', angle: 86.76787457562546, distance: 8182.6375760837955 },
           { rhumb: 'СВ', angle: 79.04259420114585, distance: 8476.868426796427 },
@@ -96,7 +96,7 @@ const createObjectRhumb = (data, layerCrs, that) => {
       if (skip === 0) {
         if (type === 'Polygon') {
           coordinates.push(startPointInCrs.geometry.coordinates);
-        } else if (type === 'LineString'){
+        } else if (type === 'LineString') {
           coors.push(startPointInCrs.geometry.coordinates);
         }
       }

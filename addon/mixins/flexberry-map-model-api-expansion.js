@@ -72,7 +72,7 @@ export default Ember.Mixin.create(rhumbOperations, {
           crs: 'EPSG:3857',
           properties: { name: 'test_polygon' },
           startPoint: [85, 79],
-          skip:0, 
+          skip:0,
           points: [
             { rhumb: 'ЮВ', angle: 86.76787457562546, distance: 8182.6375760837955 },
             { rhumb: 'СВ', angle: 79.04259420114585, distance: 8476.868426796427 },
