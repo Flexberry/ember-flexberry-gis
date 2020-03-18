@@ -5128,8 +5128,11 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['export
     }));
 
     map.getRhumb('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').then(function (e) {
-      var rhumb = [{ rib: '1;2', rhumb: 'СВ;54.60899873173304', distance: 1847.0014093569546 }, { rib: '2;3', rhumb: 'ЮВ;18.46239009698718', distance: 1002.3048264780921 }, { rib: '3;1', rhumb: 'ЮЗ;86.26658375754084', distance: 1827.228836727564 }];
+      var rhumb = [{ rhumb: 'СВ', angle: 54.60899873173304, distance: 1847.0014093569546 }, { rhumb: 'ЮВ', angle: 18.46239009698718, distance: 1002.3048264780921 }, { rhumb: 'ЮЗ', angle: 86.26658375754084, distance: 1827.228836727564 }];
       var result = {
+        type: 'Polygon',
+        crs: 'EPSG:4326',
+        skip: 1,
         startPoint: L.latLng(58.72884, 55.80677),
         rhumbCoordinates: rhumb,
         coordinates: objB[0]._latlngs
