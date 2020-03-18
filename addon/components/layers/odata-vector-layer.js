@@ -94,8 +94,38 @@ export default BaseVectorLayer.extend({
     }
   },
 
+  /**
+    Performs 'getFeature' request to WFS-service related to layer.
+    @param {<a href="https://github.com/Flexberry/Leaflet-WFST#initialization-options">L.WFS initialization options</a>} options WFS layer options.
+    @param {Boolean} [single = false] Flag: indicates whether result should be a single layer.
+  */
+  _getFeature(options, single = false) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      options = Ember.$.extend(options || {}, { showExisting: true });
+      this.createVectorLayer(options).then((wfsLayer) => {
+        if (single) {
+          resolve(wfsLayer);
+        } else {
+          let features = Ember.A();
+
+          // Instead of injectLeafletLayersIntoGeoJSON to avoid duplicate reprojection,
+          // retrieve features from already projected layers & inject layers into retrieved features.
+          wfsLayer.eachLayer((layer) => {
+            let feature = layer.feature;
+            feature.leafletLayer = layer;
+            features.pushObject(feature);
+          });
+
+          resolve(features);
+        }
+      }).catch((e) => {
+        reject(e);
+      });
+    });
+  },
+
   identify(e) {
-    let primitiveSatisfiesBounds = (primitive, bounds) => {
+    /*let primitiveSatisfiesBounds = (primitive, bounds) => {
       let satisfiesBounds = false;
 
       if (typeof primitive.forEach === 'function') {
@@ -133,6 +163,11 @@ export default BaseVectorLayer.extend({
       } catch (e) {
         reject(e.error || e);
       }
+    });*/
+    let filter = new L.Filter.Intersects(this.get('geometryField'), e.polygonLayer, this.get('crs'));
+
+    return this._getFeature({
+      filter
     });
   },
 
@@ -201,7 +236,7 @@ export default BaseVectorLayer.extend({
     @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
     Leaflet layer or promise returning such layer.
   */
-  createVectorLayer() {
+  createVectorLayer(options) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let [build, store, modelName, projectionName, geometryField] = this._getBuildStoreModelProjectionGeom();
       let crs = this.get('crs');
@@ -210,6 +245,8 @@ export default BaseVectorLayer.extend({
       let bounds = this.get('leafletMap').getBounds();
       if (this.get('continueLoading') && visibility && checkMapZoomLayer(this)) {
         build.predicate = this._getGeomPredicateFromBounds(geometryField, crs, bounds);
+      } else {
+        build.count = true;
       }
 
       let objs = store.query(modelName, build);
