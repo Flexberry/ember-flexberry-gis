@@ -1,4 +1,5 @@
 import { moduleForComponent, test } from 'ember-qunit';
+
 // import Ember from 'ember';
 // import hbs from 'htmlbars-inline-precompile';
 // import I18nService from 'ember-i18n/services/i18n';
@@ -6,6 +7,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 // import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
 
 moduleForComponent('flexberry-layers-attributes-panel', 'Integration | Component | flexberry layers attributes panel', {
+
   // beforeEach: function (assert) {
   //   this.register('locale:ru/translations', I18nRuLocale);
   //   this.register('locale:en/translations', I18nEnLocale);
@@ -24,6 +26,7 @@ moduleForComponent('flexberry-layers-attributes-panel', 'Integration | Component
 
 test('it renders', function(assert) {
   assert.equal(this.$().text().trim(), '');
+
   // let geoJsonData = `
   //   {
   //     "type": "FeatureCollection",
