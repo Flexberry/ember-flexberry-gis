@@ -1,9 +1,9 @@
-import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
-import hbs from 'htmlbars-inline-precompile';
-import I18nService from 'ember-i18n/services/i18n';
-import I18nRuLocale from 'ember-flexberry-gis/locales/ru/translations';
-import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
+// import Ember from 'ember';
+// import hbs from 'htmlbars-inline-precompile';
+// import I18nService from 'ember-i18n/services/i18n';
+// import I18nRuLocale from 'ember-flexberry-gis/locales/ru/translations';
+// import I18nEnLocale from 'ember-flexberry-gis/locales/en/translations';
 
 moduleForComponent('flexberry-layers-attributes-panel', 'Integration | Component | flexberry layers attributes panel', {
   // beforeEach: function (assert) {
