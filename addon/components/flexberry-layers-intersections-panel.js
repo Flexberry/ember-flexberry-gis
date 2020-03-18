@@ -471,7 +471,7 @@ export default Ember.Component.extend({
           }
 
           if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
-            if (Ember.get(objA, 'properties.name') !== Ember.get(objB, 'properties.name')) {
+            if (Ember.get(objA, 'properties.primarykey') !== Ember.get(objB, 'properties.primarykey')) {
               let res = intersect.default(objA, objB);
               if (res) {
                 if (square > 0) {
