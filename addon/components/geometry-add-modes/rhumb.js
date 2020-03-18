@@ -213,7 +213,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
     let knownCrs = Ember.getOwner(this).knownForType('coordinate-reference-system');
     let knownCrsArray = Ember.A(Object.values(knownCrs));
-    this.set('_availableCoordinateReferenceSystemsCodes', knownCrsArray.map((knownCrs) => {      
+    this.set('_availableCoordinateReferenceSystemsCodes', knownCrsArray.map((knownCrs) => {
       return Ember.get(knownCrs, 'code');
     }));
   },
@@ -291,7 +291,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         points.push(data);
       }
 
-      let skipNum = this._countSkip()
+      let skipNum = this._countSkip();
       const crsCode  = this._dataForm.crs;
       const data = {
         type: objectType,
@@ -365,10 +365,11 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
         return result.toString(16);
       };
-      let skip = this._tableData.length == 1 ? true : false;
-      const row = {  
+
+      let skip = this._tableData.length === 1 ? true : false;
+      const row = {
         id: getGuid(),
-        number: "0-1",
+        number: '0-1',
         readonly: true,
         skip: skip,
         direction: this._dataFormTable.direction,
@@ -391,9 +392,10 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         let item = this._tableData[i];
         if (item.id === id) {
           this._tableData.removeAt(i, 1);
-          if (this._tableData.length == 1 && this._tableData[0].skip) {
-            Ember.set( this._tableData[0], 'skip', false);
+          if (this._tableData.length === 1 && this._tableData[0].skip) {
+            Ember.set(this._tableData[0], 'skip', false);
           }
+
           this._countOrder();
           return;
         }
@@ -410,15 +412,15 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         let item = this._tableData[i];
         if (item.id === id) {
           if (Ember.get(item, 'readonly')) {
-            Ember.set(item, 'readonly', false)
+            Ember.set(item, 'readonly', false);
           } else {
-            Ember.set(item, 'readonly', true)
+            Ember.set(item, 'readonly', true);
           }
 
           return;
         }
       }
-    }, 
+    },
 
     /**
       Handles click on checkbox.
@@ -436,7 +438,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         }
       } else {
         return;
-      }     
+      }
     }
   },
 
@@ -448,7 +450,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   _countOrder() {
     for (let i = 0; i < this._tableData.length; i++) {
       let item = this._tableData[i];
-      Ember.set(item, 'number', `${i}-${i+1}`);
+      Ember.set(item, 'number', `${i}-${i + 1}`);
     }
   },
 
