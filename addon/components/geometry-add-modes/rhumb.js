@@ -284,7 +284,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         return crsRhumb.unproject(L.point(coords));
       };
 
-      let geoJSON = L.geoJSON(rhumbObj.objRhumb, { coordsToLatLng: coordsToLatLng.bind(this) });
+      let geoJSON = L.geoJSON(rhumbObj, { coordsToLatLng: coordsToLatLng.bind(this) });
 
       let newObj = geoJSON.getLayers()[0];
 

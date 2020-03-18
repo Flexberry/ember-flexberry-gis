@@ -81,7 +81,6 @@ const createObjectRhumb = (data, layerCrs, that) => {
 
   let startPoint;
   let coordinates = [];
-  let trackOfBind = [startPointInCrs.geometry.coordinates];
   let skip = !Ember.isNone(data.skip) ? data.skip : 0;
   const vertexCount = data.points;
 
@@ -95,7 +94,6 @@ const createObjectRhumb = (data, layerCrs, that) => {
     if (Ember.isNone(startPoint)) {
       startPoint = rhumbDestination.default(startPointInCrs, vertex.distance, bearing, { units: 'kilometers' });
       if (skip === 0) {
-        trackOfBind.pop();
         if (type === 'Polygon') {
           coordinates.push(startPointInCrs.geometry.coordinates);
         } else if (type === 'LineString'){
@@ -107,7 +105,6 @@ const createObjectRhumb = (data, layerCrs, that) => {
     }
 
     if (skip !== 0) {
-      trackOfBind.push(startPoint.geometry.coordinates);
       skip--;
     }
 
@@ -124,28 +121,13 @@ const createObjectRhumb = (data, layerCrs, that) => {
     coors.push(coordinates);
   }
 
-  let trackOfBindObj = null;
-  if (trackOfBind.length !== 0) {
-    trackOfBindObj = {
-      type: 'Feature',
-      geometry: {
-        type: 'LineString',
-        coordinates: trackOfBind
-      },
-      properties: data.properties
-    };
-  }
-
   const obj = {
-    objRhumb: {
-      type: 'Feature',
-      geometry: {
-        type: type,
-        coordinates: coors
-      },
-      properties: data.properties
+    type: 'Feature',
+    geometry: {
+      type: type,
+      coordinates: coors
     },
-    trackOfBind: trackOfBindObj
+    properties: data.properties
   };
 
   return obj;

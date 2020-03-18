@@ -815,30 +815,36 @@ export default Ember.Mixin.create({
           const bearing = rhumbBearing.default(pointTo, pointFrom);
 
           let rhumb;
+          let angle;
 
           // Calculates rhumb.
           if (bearing <= 90 && bearing >= 0) {
             // СВ
-            rhumb = 'СВ;' + bearing;
+            rhumb = 'СВ';
+            angle = bearing;
           } else if (bearing <= 180 && bearing >= 90) {
             // ЮВ
-            rhumb = 'ЮВ;' + (180 - bearing);
+            rhumb = 'ЮВ';
+            angle = (180 - bearing);
           } else if (bearing >= -180 && bearing <= -90) {
             // ЮЗ
-            rhumb = 'ЮЗ;' + (180 + bearing);
+            rhumb = 'ЮЗ';
+            angle = (180 + bearing);
           } if (bearing <= 0 && bearing >= -90) {
             // СЗ
-            rhumb = 'СЗ;' + (-1 * bearing);
+            rhumb = 'СЗ';
+            angle = (-1 * bearing);
           }
 
           return {
-            rib: `${vertexNum1 + 1};${vertexNum2 + 1}`,
             rhumb: rhumb,
+            angle: angle,
             distance: distance
           };
         };
 
         let startPoint = null;
+        let type;
         for (let i = 0; i < cors.length; i++) {
           for (let j = 0; j < cors[i].length; j++) {
             let n;
@@ -848,6 +854,7 @@ export default Ember.Mixin.create({
 
             // Polygon.
             if (!Ember.isNone(item.length)) {
+              type = 'Polygon';
               for (let k = 0; k < item.length; k++) {
                 startPoint = k === 0 ? item[k] : startPoint;
                 point1 = item[k];
@@ -859,6 +866,7 @@ export default Ember.Mixin.create({
 
               // LineString.
             } else {
+              type = 'LineString';
               startPoint = j === 0 ? item : startPoint;
               point1 = item;
               n = !Ember.isNone(cors[i][j + 1]) ? j + 1 : 0;
@@ -870,7 +878,10 @@ export default Ember.Mixin.create({
         }
 
         resolve({
+          type: type,
           startPoint: startPoint,
+          crs: 'EPSG:4326',
+          skip: 1,
           rhumbCoordinates: result,
           coordinates: cors
         });
