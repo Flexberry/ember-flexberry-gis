@@ -10308,7 +10308,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 293,
+            "line": 294,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onDeny",
@@ -10317,7 +10317,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 302,
+            "line": 303,
             "description": "The button for adding a new record to the table.",
             "itemtype": "method",
             "name": "actions.onAddRow",
@@ -10326,7 +10326,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 356,
+            "line": 357,
             "description": "Button to delete a record in a table.",
             "itemtype": "method",
             "name": "actions.OnRemoveRow",
@@ -10335,7 +10335,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 373,
+            "line": 374,
             "description": "Сlear form.",
             "itemtype": "method",
             "name": "_dropForm",
@@ -10344,7 +10344,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 388,
+            "line": 389,
             "description": "Сlear form.",
             "itemtype": "method",
             "name": "_dropTableValidForm",
@@ -10353,7 +10353,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 397,
+            "line": 398,
             "description": "Clear form validation.",
             "itemtype": "method",
             "name": "_dropTableForm",
@@ -10362,7 +10362,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 406,
+            "line": 407,
             "description": "Number check.",
             "itemtype": "method",
             "name": "_validFloatNumber",
@@ -10371,7 +10371,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 416,
+            "line": 417,
             "description": "Starp point check.",
             "itemtype": "method",
             "name": "_validStartPoint",
@@ -10380,7 +10380,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 426,
+            "line": 427,
             "description": "Component's action invoking when new geometry was added.",
             "itemtype": "method",
             "name": "sendingActions.complete",
@@ -41299,7 +41299,7 @@
                 },
                 {
                     "name": "data",
-                    "description": "Coordinate objects.\nExample:\nvar data = {\n      type: 'LineString',\n      crs: 'EPSG:3857',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      points: [\n        { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955 },\n        { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427 },\n        { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685 }\n      ]\n    };",
+                    "description": "Coordinate objects.\nExample:\nvar data = {\n      type: 'LineString',\n      crs: 'EPSG:3857',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      skip:0,\n      points: [\n        { rhumb: 'ЮВ', angle: 86.76787457562546, distance: 8182.6375760837955 },\n        { rhumb: 'СВ', angle: 79.04259420114585, distance: 8476.868426796427 },\n        { rhumb: 'ЮЗ', angle: 86.0047147391561, distance: 16532.122718537685 }\n      ]\n    };",
                     "type": "Object"
                 }
             ],
@@ -42134,7 +42134,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 883,
+            "line": 894,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
@@ -42158,7 +42158,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 905,
+            "line": 916,
             "description": "Edit object layer.",
             "itemtype": "method",
             "name": "editLayerObject",
@@ -42193,7 +42193,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 963,
+            "line": 974,
             "description": "Upload file.",
             "itemtype": "method",
             "name": "uploadFile",
@@ -42213,7 +42213,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 981,
+            "line": 992,
             "description": "Get the field to search for objects",
             "itemtype": "method",
             "name": "getPkField",
@@ -42233,7 +42233,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1003,
+            "line": 1014,
             "description": "Get coordinates point.",
             "itemtype": "method",
             "name": "getCoordPoint",
@@ -45112,7 +45112,7 @@
             "params": [
                 {
                     "name": "data",
-                    "description": "Coordinate objects.\nExample:\nvar data = {\n      type: 'LineString',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      points: [\n        { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955 },\n        { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427 },\n        { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685 }\n      ]\n    };",
+                    "description": "Coordinate objects.\nExample:\nvar data = {\n      type: 'LineString',\n      properties: { name: 'test_polygon' },\n      startPoint: [85, 79],\n      skip:0,\n      points: [\n        { rhumb: 'ЮВ', angle: 86.76787457562546, distance: 8182.6375760837955 },\n        { rhumb: 'СВ', angle: 79.04259420114585, distance: 8476.868426796427 },\n        { rhumb: 'ЮЗ', angle: 86.0047147391561, distance: 16532.122718537685 }\n      ]\n    };",
                     "type": "Object"
                 }
             ],
@@ -45544,11 +45544,11 @@
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:883"
+            "line": " addon/mixins/flexberry-map-model-api.js:894"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:883"
+            "line": " addon/mixins/flexberry-map-model-api.js:894"
         },
         {
             "message": "replacing incorrect tag: returns with return",

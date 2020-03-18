@@ -427,10 +427,11 @@ import { getLeafletCrs } from &#x27;../utils/leaflet-crs&#x27;;
         type: &#x27;LineString&#x27;,
         properties: { name: &#x27;test_polygon&#x27; },
         startPoint: [85, 79],
+        skip:0,
         points: [
-          { rib: &#x27;1;2&#x27;, rhumb: &#x27;ЮВ;86.76787457562546&#x27;, distance: 8182.6375760837955 },
-          { rib: &#x27;2;3&#x27;, rhumb: &#x27;СВ;79.04259420114585&#x27;, distance: 8476.868426796427 },
-          { rib: &#x27;3;1&#x27;, rhumb: &#x27;ЮЗ;86.0047147391561&#x27;, distance: 16532.122718537685 }
+          { rhumb: &#x27;ЮВ&#x27;, angle: 86.76787457562546, distance: 8182.6375760837955 },
+          { rhumb: &#x27;СВ&#x27;, angle: 79.04259420114585, distance: 8476.868426796427 },
+          { rhumb: &#x27;ЮЗ&#x27;, angle: 86.0047147391561, distance: 16532.122718537685 }
         ]
       };
   @returns {Object} New featureLayer.
@@ -450,66 +451,21 @@ const createObjectRhumb = (data, layerCrs, that) =&gt; {
     }
   }
 
-  const points = data.points;
-
-  const degreeToRadian = function (degree) {
-    let deg;
-    let min = 0;
-    let sec = 0;
-
-    const regex = /^([0-8]?[0-9]|90)°([0-5]?[0-9]&#x27;)?([0-5]?[0-9](,[0-9]*)?&quot;)?$/gm;
-    let m;
-
-    while ((m = regex.exec(degree)) !== null) {
-
-      // This is necessary to avoid infinite loops with zero-width matches
-      if (m.index === regex.lastIndex) {
-        regex.lastIndex++;
-      }
-
-      // The result can be accessed through the &#x60;m&#x60;-variable.
-      m.forEach((match, groupIndex) =&gt; {
-        console.log(&#x60;Found match, group ${groupIndex}: ${match}&#x60;);
-
-        if (!Ember.isNone(match)) {
-          switch (groupIndex) {
-            case 1:
-              deg = parseInt(match);
-              break;
-            case 2:
-              min = parseInt(match.replace(&quot;&#x27;&quot;, &#x27;&#x27;));
-              break;
-            case 3:
-              sec = parseFloat(match.replace(&#x60;&quot;&#x60;, &#x27;&#x27;).replace(&#x27;,&#x27;, &#x27;.&#x27;));
-              break;
-          }
-        }
-      });
-    }
-
-    return deg + min / 60 + sec / 3600;
-  };
-
-  const getBearing = function (rhumb) {
+  const getBearing = function (rhumb, angle) {
     let result;
-    const arr = rhumb.split(&#x27;;&#x27;);
-    const direct = arr[0];
 
-    // Convert to radians
-    let degree = arr[1].indexOf(&#x27;°&#x27;) &gt; 0 ? degreeToRadian(arr[1]) : arr[1];
-
-    switch (direct) {
+    switch (rhumb) {
       case &#x27;СВ&#x27;:
-        result = parseFloat(degree);
+        result = parseFloat(angle);
         break;
       case &#x27;ЮВ&#x27;:
-        result = 180 - parseFloat(degree);
+        result = 180 - parseFloat(angle);
         break;
       case &#x27;ЮЗ&#x27;:
-        result = parseFloat(degree) - 180;
+        result = parseFloat(angle) - 180;
         break;
       case &#x27;СЗ&#x27;:
-        result = parseFloat(degree) * -1;
+        result = parseFloat(angle) * -1;
         break;
     }
 
@@ -533,64 +489,46 @@ const createObjectRhumb = (data, layerCrs, that) =&gt; {
     startPointInCrs = helpers.point([point.x, point.y]);
   }
 
-  if (type === &#x27;Polygon&#x27;) {
-    let startPoint;
-    let coordinates = [];
+  let startPoint;
+  let coordinates = [];
+  let skip = !Ember.isNone(data.skip) ? data.skip : 0;
+  const vertexCount = data.points;
 
-    // Rib sorting
-    const vertexCount = points.sort((a, b) =&gt; a.rib.split(&#x27;;&#x27;)[0] - b.rib.split(&#x27;;&#x27;)[0]);
+  for (let i = 0; i &lt; vertexCount.length; i++) {
+    const vertex = vertexCount[i];
+    const bearing = getBearing(vertex.rhumb, vertex.angle);
 
-    for (let i = 0; i &lt; vertexCount.length; i++) {
-      const vertex = vertexCount[i];
+    // Convert to kilometers
+    vertex.distance = vertex.distance / 1000;
 
-      const bearing = getBearing(vertex.rhumb);
-
-      // Convert to kilometers
-      vertex.distance = vertex.distance / 1000;
-
-      if (Ember.isNone(startPoint)) {
-        startPoint = rhumbDestination.default(startPointInCrs, vertex.distance, bearing, { units: &#x27;kilometers&#x27; });
-      } else {
-        startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: &#x27;kilometers&#x27; });
+    if (Ember.isNone(startPoint)) {
+      startPoint = rhumbDestination.default(startPointInCrs, vertex.distance, bearing, { units: &#x27;kilometers&#x27; });
+      if (skip === 0) {
+        if (type === &#x27;Polygon&#x27;) {
+          coordinates.push(startPointInCrs.geometry.coordinates);
+        } else if (type === &#x27;LineString&#x27;) {
+          coors.push(startPointInCrs.geometry.coordinates);
+        }
       }
-
-      coordinates.push(startPoint.geometry.coordinates);
+    } else {
+      startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: &#x27;kilometers&#x27; });
     }
 
-    coors.push(coordinates);
+    if (skip !== 0) {
+      skip--;
+    }
 
-    for (let i = 0; i &lt; coors.length; i++) {
-      for (let j = 0; j &lt; coors[i].length; j++) {
-        coors[i][j] = [coors[i][j][0], coors[i][j][1]];
+    if (skip === 0) {
+      if (type === &#x27;Polygon&#x27;) {
+        coordinates.push(startPoint.geometry.coordinates);
+      } else if (type === &#x27;LineString&#x27;) {
+        coors.push(startPoint.geometry.coordinates);
       }
     }
   }
 
-  if (type === &#x27;LineString&#x27;) {
-    let startPoint;
-
-    //Rib sorting
-    const vertexCount = points.sort((a, b) =&gt; a.rib.split(&#x27;;&#x27;)[0] - b.rib.split(&#x27;;&#x27;)[0]);
-
-    for (let i = 0; i &lt; vertexCount.length; i++) {
-      const vertex = vertexCount[i];
-      const bearing = getBearing(vertex.rhumb);
-
-      // Convert to kilometers
-      vertex.distance = vertex.distance / 1000;
-
-      if (Ember.isNone(startPoint)) {
-        startPoint = rhumbDestination.default(startPointInCrs, vertex.distance, bearing, { units: &#x27;kilometers&#x27; });
-      } else {
-        startPoint = rhumbDestination.default(startPoint, vertex.distance, bearing, { units: &#x27;kilometers&#x27; });
-      }
-
-      coors.push(startPoint.geometry.coordinates);
-    }
-
-    for (let i = 0; i &lt; coors.length; i++) {
-      coors[i] = [coors[i][0], coors[i][1]];
-    }
+  if (type === &#x27;Polygon&#x27;) {
+    coors.push(coordinates);
   }
 
   const obj = {

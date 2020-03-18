@@ -672,8 +672,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       for (let i = 0; i &lt; this._tableData.length; i++) {
         let item = this._tableData[i];
         let data = {
-          rib: i !== this._tableData.length - 1 ? &#x60;${i + 1};${i + 2}&#x60; : &#x60;${i + 1};${1}&#x60;,
-          rhumb: &#x60;${item.direction};${item.rhumb}&#x60;,
+          rhumb: &#x60;${item.direction}&#x60;,
+          angle: item.rhumb,
           distance: item.distance
         };
 
@@ -684,6 +684,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       const data = {
         type: objectType,
         startPoint: startPoints,
+        skip: 1,
         points: points
       };
 

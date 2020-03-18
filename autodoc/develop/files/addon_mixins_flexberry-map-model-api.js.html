@@ -1225,30 +1225,36 @@ export default Ember.Mixin.create({
           const bearing = rhumbBearing.default(pointTo, pointFrom);
 
           let rhumb;
+          let angle;
 
           // Calculates rhumb.
           if (bearing &lt;= 90 &amp;&amp; bearing &gt;= 0) {
             // СВ
-            rhumb = &#x27;СВ;&#x27; + bearing;
+            rhumb = &#x27;СВ&#x27;;
+            angle = bearing;
           } else if (bearing &lt;= 180 &amp;&amp; bearing &gt;= 90) {
             // ЮВ
-            rhumb = &#x27;ЮВ;&#x27; + (180 - bearing);
+            rhumb = &#x27;ЮВ&#x27;;
+            angle = (180 - bearing);
           } else if (bearing &gt;= -180 &amp;&amp; bearing &lt;= -90) {
             // ЮЗ
-            rhumb = &#x27;ЮЗ;&#x27; + (180 + bearing);
+            rhumb = &#x27;ЮЗ&#x27;;
+            angle = (180 + bearing);
           } if (bearing &lt;= 0 &amp;&amp; bearing &gt;= -90) {
             // СЗ
-            rhumb = &#x27;СЗ;&#x27; + (-1 * bearing);
+            rhumb = &#x27;СЗ&#x27;;
+            angle = (-1 * bearing);
           }
 
           return {
-            rib: &#x60;${vertexNum1 + 1};${vertexNum2 + 1}&#x60;,
             rhumb: rhumb,
+            angle: angle,
             distance: distance
           };
         };
 
         let startPoint = null;
+        let type;
         for (let i = 0; i &lt; cors.length; i++) {
           for (let j = 0; j &lt; cors[i].length; j++) {
             let n;
@@ -1258,6 +1264,7 @@ export default Ember.Mixin.create({
 
             // Polygon.
             if (!Ember.isNone(item.length)) {
+              type = &#x27;Polygon&#x27;;
               for (let k = 0; k &lt; item.length; k++) {
                 startPoint = k === 0 ? item[k] : startPoint;
                 point1 = item[k];
@@ -1269,6 +1276,7 @@ export default Ember.Mixin.create({
 
               // LineString.
             } else {
+              type = &#x27;LineString&#x27;;
               startPoint = j === 0 ? item : startPoint;
               point1 = item;
               n = !Ember.isNone(cors[i][j + 1]) ? j + 1 : 0;
@@ -1280,7 +1288,10 @@ export default Ember.Mixin.create({
         }
 
         resolve({
+          type: type,
           startPoint: startPoint,
+          crs: &#x27;EPSG:4326&#x27;,
+          skip: 1,
           rhumbCoordinates: result,
           coordinates: cors
         });
