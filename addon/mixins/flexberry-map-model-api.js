@@ -981,7 +981,7 @@ export default Ember.Mixin.create({
     let config = Ember.getOwner(this).resolveRegistration('config:environment');
     let extension = file.name.split('.').pop();
     if (extension === 'gpx') {
-      let possibleData = ['waypoints', 'tracks', 'track_points', 'routes', 'routes_points'];
+      let possibleData = ['waypoints', 'tracks', 'track_points', 'routes', 'route_points'];
       let result = [];
       return new Ember.RSVP.Promise((resolve) => {
         possibleData.forEach(item => {
