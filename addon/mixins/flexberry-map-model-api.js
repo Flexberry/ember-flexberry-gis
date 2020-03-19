@@ -982,7 +982,7 @@ export default Ember.Mixin.create({
     let extension = file.name.split('.').pop();
     if (extension === 'gpx') {
       let possibleData = ['waypoints', 'tracks', 'track_points', 'routes', 'routes_points'];
-      let result = []
+      let result = [];
       return new Ember.RSVP.Promise((resolve) => {
         possibleData.forEach(item => {
           Ember.$.ajax({
@@ -1007,7 +1007,7 @@ export default Ember.Mixin.create({
         cache: false,
         processData: false
       });
-    }  
+    }
   },
 
   /**
