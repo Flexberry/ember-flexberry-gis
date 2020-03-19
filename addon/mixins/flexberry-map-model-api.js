@@ -997,7 +997,7 @@ export default Ember.Mixin.create({
             }
           });
         });
-        resolve(request);
+        resolve(result);
       });
     } else {
       return Ember.$.ajax({
