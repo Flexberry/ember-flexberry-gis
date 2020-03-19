@@ -979,14 +979,35 @@ export default Ember.Mixin.create({
   */
   uploadFile(file) {
     let config = Ember.getOwner(this).resolveRegistration('config:environment');
-
-    return Ember.$.ajax({
-      url: `${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}`,
-      type: 'POST',
-      data: file,
-      cache: false,
-      processData: false
-    });
+    let extension = file.name.split('.').pop();
+    if (extension === 'gpx') {
+      let possibleData = ['waypoints', 'tracks', 'track_points', 'routes', 'routes_points'];
+      let result = []
+      return new Ember.RSVP.Promise((resolve) => {
+        possibleData.forEach(item => {
+          Ember.$.ajax({
+            url: `${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}&FeatureType=${item}`,
+            type: 'POST',
+            data: file,
+            cache: false,
+            processData: false,
+            async: false,
+            success: function(data) {
+              result.push(data);
+            }
+          });
+        });
+        resolve(request);
+      });
+    } else {
+      return Ember.$.ajax({
+        url: `${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}`,
+        type: 'POST',
+        data: file,
+        cache: false,
+        processData: false
+      });
+    }  
   },
 
   /**
