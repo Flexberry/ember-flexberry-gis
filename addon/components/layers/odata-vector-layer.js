@@ -5,8 +5,6 @@
 import Ember from 'ember';
 import BaseVectorLayer from 'ember-flexberry-gis/components/base-vector-layer';
 import { Query } from 'ember-flexberry-data';
-import { GeometryPredicate, NotPredicate, ComplexPredicate, SimplePredicate } from 'ember-flexberry-data/query/predicate';
-import { Condition } from 'ember-flexberry-data/query/condition';
 import { checkMapZoomLayer, checkMapZoom } from '../../utils/check-zoom';
 const { Builder } = Query;
 
@@ -94,38 +92,8 @@ export default BaseVectorLayer.extend({
     }
   },
 
-  /**
-    Performs 'getFeature' request to WFS-service related to layer.
-    @param {<a href="https://github.com/Flexberry/Leaflet-WFST#initialization-options">L.WFS initialization options</a>} options WFS layer options.
-    @param {Boolean} [single = false] Flag: indicates whether result should be a single layer.
-  */
-  _getFeature(options, single = false) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      options = Ember.$.extend(options || {}, { showExisting: true });
-      this.createVectorLayer(options).then((wfsLayer) => {
-        if (single) {
-          resolve(wfsLayer);
-        } else {
-          let features = Ember.A();
-
-          // Instead of injectLeafletLayersIntoGeoJSON to avoid duplicate reprojection,
-          // retrieve features from already projected layers & inject layers into retrieved features.
-          wfsLayer.eachLayer((layer) => {
-            let feature = layer.feature;
-            feature.leafletLayer = layer;
-            features.pushObject(feature);
-          });
-
-          resolve(features);
-        }
-      }).catch((e) => {
-        reject(e);
-      });
-    });
-  },
-
   identify(e) {
-    /*let primitiveSatisfiesBounds = (primitive, bounds) => {
+    let primitiveSatisfiesBounds = (primitive, bounds) => {
       let satisfiesBounds = false;
 
       if (typeof primitive.forEach === 'function') {
@@ -163,11 +131,6 @@ export default BaseVectorLayer.extend({
       } catch (e) {
         reject(e.error || e);
       }
-    });*/
-    let filter = new L.Filter.Intersects(this.get('geometryField'), e.polygonLayer, this.get('crs'));
-
-    return this._getFeature({
-      filter
     });
   },
 
@@ -211,9 +174,14 @@ export default BaseVectorLayer.extend({
         geometry: geometry,
         leafletLayer: innerLayer
       };
-      if (typeof (innerLayer.setStyle) === 'function') {
-        innerLayer.setStyle(Ember.get(layer, 'leafletObject.options.style'));
+      if (geometry.type === 'Point') {
+        innerLayer.options.style = this.get('style');
+      } else {
+        innerLayer.options.style = this.get('styleSettings.style.path');
       }
+
+      innerLayer.setStyle(innerLayer.options.style);
+      this._setLayerState();
 
       if (add) {
         layer.addLayer(innerLayer);
@@ -245,8 +213,9 @@ export default BaseVectorLayer.extend({
       let bounds = this.get('leafletMap').getBounds();
       if (this.get('continueLoading') && visibility && checkMapZoomLayer(this)) {
         build.predicate = this._getGeomPredicateFromBounds(geometryField, crs, bounds);
-      } else {
-        build.count = true;
+      } else if (this.get('continueLoading')) {
+        // Fake request
+        build.predicate = new Query.SimplePredicate('id', Query.FilterOperator.Eq, null);
       }
 
       let objs = store.query(modelName, build);
@@ -257,6 +226,7 @@ export default BaseVectorLayer.extend({
         let layer = L.featureGroup();
 
         layer.options.crs = crs;
+        layer.options.style = this.get('styleSettings');
         layer.options.continueLoading = this.get('continueLoading');
         if (layer.options.continueLoading && visibility && checkMapZoomLayer(this)) {
           layer.isLoadBounds = bounds;
@@ -400,7 +370,7 @@ export default BaseVectorLayer.extend({
     @param {bounds}
   */
   _getGeomPredicateFromBounds(geometryField, crs, bounds) {
-    let query = new GeometryPredicate(geometryField);
+    let query = new Query.GeometryPredicate(geometryField);
     let nw = crs.project(bounds.getNorthWest());
     let ne = crs.project(bounds.getNorthEast());
     let se = crs.project(bounds.getSouthEast());
@@ -440,14 +410,14 @@ export default BaseVectorLayer.extend({
             remainingFeat.forEach((id) => {
               let pkField = this.get('odataPkField');
               if (featureIds.includes(id)) {
-                equals.pushObject(new SimplePredicate(pkField, '==', id));
+                equals.pushObject(new Query.SimplePredicate(pkField, Query.FilterOperator.Eq, id));
               }
             });
 
             if (equals.length === 1) {
               build.predicate = equals[0];
             } else {
-              build.predicate = new ComplexPredicate('or', equals);
+              build.predicate = new Query.ComplexPredicate(Query.Condition.Or, equals);
             }
           }
 
@@ -486,13 +456,13 @@ export default BaseVectorLayer.extend({
           let equals = Ember.A();
           featureIds.forEach((id) => {
             let pkField = this.get('odataPkField');
-            equals.pushObject(new SimplePredicate(pkField, '==', id));
+            equals.pushObject(new Query.SimplePredicate(pkField, Query.FilterOperator.Eq, id));
           });
 
           if (equals.length === 1) {
             build.predicate = equals[0];
           } else {
-            build.predicate = new ComplexPredicate('or', equals);
+            build.predicate = new Query.ComplexPredicate(Query.Condition.Or, equals);
           }
 
           let objs = store.query(modelName, build);
@@ -567,12 +537,12 @@ export default BaseVectorLayer.extend({
               return;
             }
 
-            let loadedPart = new NotPredicate(this._getGeomPredicateFromBounds(geometryField, crs, loadedBounds));
+            let loadedPart = new Query.NotPredicate(this._getGeomPredicateFromBounds(geometryField, crs, loadedBounds));
 
             loadedBounds.extend(bounds);
             let newPart = this._getGeomPredicateFromBounds(geometryField, crs, loadedBounds);
 
-            build.predicate = new ComplexPredicate('and', loadedPart, newPart);
+            build.predicate = new Query.ComplexPredicate(Query.Condition.And, loadedPart, newPart);
 
             let objs = store.query(modelName, build);
 
