@@ -29,21 +29,21 @@ export default MapController.extend({
     */
     applyApiSettings() {
       this.get('mapApi').addToApi('layerInitCallback', function(model) {
-        layer = model.getLeafletObject();
-          layer.eachLayer(function(layerr) {
-            switch (model.layerModel.get('id')) {
-              case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
-                layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
-                break;
-              case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
-                layerr.setStyle({ color: '#008B8B' });
-                break;
-            }
+        let layer = model.getLeafletObject();
+        layer.eachLayer(function(layerr) {
+          switch (model.layerModel.get('id')) {
+            case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
+              layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
+              break;
+            case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
+              layerr.setStyle({ color: '#008B8B' });
+              break;
+          }
 
-            layerr.on('click', function(e) {
-              window.alert(e.target.feature.properties.name);
-            });
+          layerr.on('click', function(e) {
+            window.alert(e.target.feature.properties.name);
           });
+        });
       });
 
       this.send('refreshMap');

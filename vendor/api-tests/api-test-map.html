@@ -117,7 +117,7 @@
       }
 
       frame.contentWindow.mapApi.layerInitCallback = function (model) {
-        layer = model.getLeafletObject();
+        let layer = model.getLeafletObject();
         layer.eachLayer(function (layerr) {
           switch (model.layerModel.get('id')) {
             case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
