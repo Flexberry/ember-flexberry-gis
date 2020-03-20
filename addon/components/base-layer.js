@@ -688,9 +688,7 @@ export default Ember.Component.extend(
       Leaflet layer or promise returning such layer.
     */
     getLeafletObject() {
-      return new Ember.RSVP.Promise((resolve, reject) => {
-        resolve(this.get('_leafletObject'));
-      });
+      return this.get('_leafletObject');
     },
 
     /**

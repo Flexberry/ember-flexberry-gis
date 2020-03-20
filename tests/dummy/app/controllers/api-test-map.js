@@ -29,7 +29,7 @@ export default MapController.extend({
     */
     applyApiSettings() {
       this.get('mapApi').addToApi('layerInitCallback', function(model) {
-        model.getLeafletObject().then(function(layer) {
+        layer = model.getLeafletObject();
           layer.eachLayer(function(layerr) {
             switch (model.layerModel.get('id')) {
               case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
@@ -44,7 +44,6 @@ export default MapController.extend({
               window.alert(e.target.feature.properties.name);
             });
           });
-        });
       });
 
       this.send('refreshMap');
