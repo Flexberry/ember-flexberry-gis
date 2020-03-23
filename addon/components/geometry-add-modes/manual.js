@@ -235,11 +235,11 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
       let baseCrs = Ember.get(tabModel, 'leafletObject.options.crs.code');
       const parsedCoordinates = this._parseStringToCoordinates(coordinates, baseCrs);
-      if(this._isSinglePairInLine(coordinates)) {
+      if (this._isSinglePairInLine(coordinates)) {
         this.set('coordinatesInLineError', false);
       } else {
         this.set('coordinatesInLineError', true);
-        this.set('_coordinatesWithError', true); 
+        this.set('_coordinatesWithError', true);
       }
 
       if (error) {
@@ -256,11 +256,9 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       }
 
       // Prevent dialog from being closed.
-      const coordinatesWithError = () => {   
-        
+      const coordinatesWithError = () => {
         e.closeDialog = false;
-      
-        this.set('_coordinatesWithError', true);         
+        this.set('_coordinatesWithError', true);
         this.set('coordinatesParseError', true);
       };
 
@@ -269,7 +267,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       if (Ember.isNone(parsedCoordinates) || parsedCoordinates.length === 0) {
         return coordinatesWithError();
       }
-   
+
       // Checks the minimum number of points.
       const hasMinCountPoint = (items, n) => {
         for (let i = 0; i < items.length; i++) {
@@ -522,6 +520,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
             if (m.index === regex.lastIndex) {
               regex.lastIndex++;
             }
+
             let crs = this.get('settings.layerCRS.code');
             let cordsToConvert = [parseFloat(m[2]), parseFloat(m[1])];
             let cords = this._projectCoordinates(crs, baseCrs, cordsToConvert);
@@ -639,7 +638,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     let lines = coordinates.split('\n');
     let badLines = false;
     lines.forEach(line => {
-      if(line.split(' ').length !== 2) {
+      if (line.split(' ').length !== 2) {
         badLines = true;
       }
     });
