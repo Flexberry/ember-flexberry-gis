@@ -68,7 +68,9 @@
                       </div>
                       <div class="menu">
                         {{#each _notConnectedProperties as | property |}}
-                          <div class="item" data-value="{{property}}">{{get settings.layersFieldsCaptions property}}</div>
+                          {{#if (get settings.layersFieldsCaptions property)}}
+                            <div class="item" data-value="{{property}}">{{get settings.layersFieldsCaptions property}}</div>
+                          {{/if}}
                         {{/each}}
                       </div>
                     {{/ui-dropdown}}
