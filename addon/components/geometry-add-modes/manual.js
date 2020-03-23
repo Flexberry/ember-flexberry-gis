@@ -113,6 +113,24 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   _geometryField: false,
 
   /**
+    Flag to dispaly parse error.
+
+    @property coordinatesParseError
+    @type Boolean
+    @default false
+  */
+  coordinatesParseError: false,
+
+  /**
+    Flag to display line error.
+
+    @property coordinatesInLineError
+    @type Boolean
+    @default false
+  */
+  coordinatesInLineError: false,
+
+  /**
     Object types.
 
     @property _geometryField
@@ -136,6 +154,10 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   coordinatesFieldLabel: t('components.geometry-add-modes.manual.coordinates-field-label'),
 
   coordinatesFieldPlaceholder: t('components.geometry-add-modes.manual.coordinates-field-placeholder'),
+
+  coordinatesParseErrorLabel: t('components.geometry-add-modes.manual.coordinates-parse-error-label'),
+
+  coordinatesInLineErrorLabel: t('components.geometry-add-modes.manual.coordinates-line-error-label'),
 
   actions: {
     /**
@@ -211,6 +233,15 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
         this.set('_coordinatesWithError', false);
       }
 
+      let baseCrs = Ember.get(tabModel, 'leafletObject.options.crs.code');
+      const parsedCoordinates = this._parseStringToCoordinates(coordinates, baseCrs);
+      if(this._isSinglePairInLine(coordinates)) {
+        this.set('coordinatesInLineError', false);
+      } else {
+        this.set('coordinatesInLineError', true);
+        this.set('_coordinatesWithError', true); 
+      }
+
       if (error) {
         e.closeDialog = false;
         return;
@@ -224,19 +255,21 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
         layer = Ember.get(tabModel, `featureLink.${rowId}`);
       }
 
-      const parsedCoordinates = this._parseStringToCoordinates(coordinates);
-
       // Prevent dialog from being closed.
-      const coordinatesWithError = () => {
+      const coordinatesWithError = () => {   
+        
         e.closeDialog = false;
-        this.set('_coordinatesWithError', true);
+      
+        this.set('_coordinatesWithError', true);         
+        this.set('coordinatesParseError', true);
       };
 
-      if (Ember.isNone(parsedCoordinates) || parsedCoordinates.length === 0) {
+      this.set('coordinatesParseError', false);
 
+      if (Ember.isNone(parsedCoordinates) || parsedCoordinates.length === 0) {
         return coordinatesWithError();
       }
-
+   
       // Checks the minimum number of points.
       const hasMinCountPoint = (items, n) => {
         for (let i = 0; i < items.length; i++) {
@@ -250,7 +283,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
       let addedLayer;
       let latlngs;
-
+      
       switch (objectSelectType) {
         case 'Point':
 
@@ -424,6 +457,8 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       this.set('_coordinatesWithError', null);
       this.set('_geometryField', false);
       this.set('_objectTypeDisabled', true);
+      this.set('coordinatesParseError', false);
+      this.set('coordinatesInLineError', false);
     }
   },
 
@@ -453,7 +488,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     @param {string} coordinates A string with the coordinates.
     @returns {string[]} Array of coordinates of type [[["55.472379","58.733686"]],[["55.472336","58.733789"]]].
   */
-  _parseStringToCoordinates(coordinates) {
+  _parseStringToCoordinates(coordinates, baseCrs) {
     if (Ember.isNone(coordinates)) {
       return null;
     }
@@ -487,8 +522,10 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
             if (m.index === regex.lastIndex) {
               regex.lastIndex++;
             }
-
-            mas.push([m[2], m[1]]);
+            let crs = this.get('settings.layerCRS.code');
+            let cordsToConvert = [parseFloat(m[2]), parseFloat(m[1])];
+            let cords = this._projectCoordinates(crs, baseCrs, cordsToConvert);
+            mas.push(cords);
           }
         }
 
@@ -501,6 +538,26 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     }
 
     return result.length > 0 ? result : null;
+  },
+
+  /**
+    Projects coordinate pair from one crs to another.
+
+    @method _projectCoordinates
+    @param {string} from crs name from project.
+    @param {string} to crs name to project.
+    @param {string} coordinates A string with the coordinates.
+    @returns {string[]} Pair of coordinates of type [55.472379, 58.733686].
+  */
+  _projectCoordinates(from, to, coordinates) {
+    let knownCrs = Ember.getOwner(this).knownForType('coordinate-reference-system');
+    let knownCrsArray = Ember.A(Object.values(knownCrs));
+    let fromCrs = knownCrsArray.findBy('code', from);
+    let fromCrsDefinition = Ember.get(fromCrs, 'definition');
+    let toCrs = knownCrsArray.findBy('code', to);
+    let toCrsDefinition = Ember.get(toCrs, 'definition');
+    let cords = proj4(fromCrsDefinition, toCrsDefinition, coordinates);
+    return cords;
   },
 
   /**
@@ -570,6 +627,28 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
     return result;
   },
+
+  /**
+    Define if line contains more than one coordinate pair.
+
+    @method _isSinglePairInLine
+    @param {Object[]} coordinates Coordinates.
+    @returns {Boolean} true if contains, otherwise false.
+  */
+  _isSinglePairInLine(coordinates) {
+    let lines = coordinates.split('\n');
+    let badLines = false;
+    lines.forEach(line => {
+      if(line.split(' ').length !== 2) {
+        badLines = true;
+      }
+    });
+    if (badLines) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   /**
     Component's action invoking when new geometry was added.
