@@ -293,28 +293,27 @@ export default Ember.Mixin.create({
     @param {Object} secondLayerObject Second layer object.
     @return {number} Distance between objects in meters.
   */
-  getDistanceBetweenObjects(firstLayerId, firstLayerObjectId, secondLayerId, secondLayerObjectId) {
-    let [, layerObjectA, objA] = this._getModelLayerFeature(firstLayerId, firstLayerObjectId);
-    let [, layerObjectB, objB] = this._getModelLayerFeature(secondLayerId, secondLayerObjectId);
-    if (layerObjectA && objA && layerObjectB && objB) {
-      const getObjectCenterPoint = function (object) {
-        let type = Ember.get(object, 'feature.geometry.type');
-        if (type === 'Point') {
-          return helpers.point([object._latlng.lat, object._latlng.lng]);
-        } else {
-          let latlngs = object.getBounds().getCenter();
-          return helpers.point([latlngs.lat, latlngs.lng]);
-        }
-      };
+  getDistanceBetweenObjects(firstLayerId, firstLayerObject, secondLayerId, secondLayerObject) {
+    const firstLayer = this.get('mapLayer').findBy('id', firstLayerId);
+    const secondLayer = this.get('mapLayer').findBy('id', secondLayerId);
 
-      const firstObject =  getObjectCenterPoint.call(this, objA);
-      const secondObject = getObjectCenterPoint.call(this, objB);
+    const getObjectCenter = function (layer, object) {
+      const type = Ember.get(object, 'feature.geometry.type');
+      if (type === 'Point') {
+        return object._latlng;
+      } else {
+        return object.getBounds().getCenter();
+      }
+    };
 
-      // Get distance in meters.
-      return distance.default(firstObject, secondObject, { units: 'kilometers' }) * 1000;
-    } else {
-      throw 'Object not found';
-    }
+    const firstPoint = getObjectCenter(firstLayer, firstLayerObject);
+    const firstObject = helpers.point([firstPoint.lat, firstPoint.lng]);
+
+    const secondPoint = getObjectCenter(secondLayer, secondLayerObject);
+    const secondObject = helpers.point([secondPoint.lat, secondPoint.lng]);
+
+    // Get distance in meters.
+    return distance.default(firstObject, secondObject, { units: 'kilometers' }) * 1000;
   },
 
   /**
@@ -329,22 +328,19 @@ export default Ember.Mixin.create({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let result;
       this._getModelLayerFeature(layerId, [featureId]).then(([, leafletLayer, featureLayer]) => {
-      if (leafletLayer && featureLayer) {
-        result = Object.assign({}, featureLayer.feature.properties);
-        result.geometry = featureLayer.feature.geometry.coordinates;
-        if (crsName) {
-          let NewObjCrs = this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer.feature, crsName);
-          result.geometry = NewObjCrs.geometry.coordinates;
+        if (leafletLayer && featureLayer) {
+          result = Object.assign({}, featureLayer[0].feature.properties);
+          result.geometry = featureLayer[0].feature.geometry.coordinates;
+          if (crsName) {
+            let NewObjCrs = this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer[0].feature, crsName);
+            result.geometry = NewObjCrs.geometry.coordinates;
+          }
+
+          let obj = featureLayer[0].options.crs.code === 'EPSG:4326' ?
+          featureLayer[0].feature : this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer[0].feature);
+          result.area = area(obj);
+          resolve(result);
         }
-
-        let obj = featureLayer.options.crs.code === 'EPSG:4326' ?
-          featureLayer.feature : this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer.feature);
-        result.area = area(obj);
-      }
-
-      var obj = layerObject[0].options.crs.code === 'EPSG:4326' ? layerObject[0].feature : projection.toWgs84(layerObject[0].feature);
-      result.area = area(obj);
-      resolve(result);
       }).catch((e) => {
         reject(e);
       });
@@ -362,31 +358,28 @@ export default Ember.Mixin.create({
   */
   isContainsObject(objectAId, layerAId, objectBId, layerBId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-    Ember.RSVP.allSettled([
-      this._getModelLayerFeature(layerAId, [objectAId]),
-      this._getModelLayerFeature(layerBId, [objectBId])
-    ]).then((result) => {
-      let objA = result[0].value[2][0];
-      let objB = result[1].value[2][0];
-      let leafletLayerA = result[0].value[1][0];
-      let leafletLayerB = result[1].value[1][0];
-      if (objA && objB && leafletLayerA && leafletLayerB) {
-        let feature1 = leafletLayerA.options.crs.code === 'EPSG:4326' ? objA.feature : this._convertObjectCoordinates(leafletLayerA.options.crs.code, objA);
-        let feature2 = leafletLayerB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(leafletLayerB.options.crs.code, objB);
-        if (feature1.geometry.type === 'MultiPolygon') {
-          feature1 = L.polygon(feature1.geometry.coordinates[0]).toGeoJSON();
+      Ember.RSVP.allSettled([
+        this._getModelLayerFeature(layerAId, [objectAId]),
+        this._getModelLayerFeature(layerBId, [objectBId])
+      ]).then((result) => {
+        let objA = result[0].value[2][0];
+        let objB = result[1].value[2][0];
+        let leafletLayerA = result[0].value[1];
+        let leafletLayerB = result[1].value[1];
+        if (objA && objB && leafletLayerA && leafletLayerB) {
+          let feature1 = leafletLayerA.options.crs.code === 'EPSG:4326' ? objA.feature : this._convertObjectCoordinates(leafletLayerA.options.crs.code, objA.feature);
+          let feature2 = leafletLayerB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(leafletLayerB.options.crs.code, objB.feature);
+          if (feature1.geometry.type === 'MultiPolygon') {
+            feature1 = L.polygon(feature1.geometry.coordinates[0]).toGeoJSON();
+          }
+
+          if (feature2.geometry.type === 'MultiPolygon') {
+            feature2 = L.polygon(feature2.geometry.coordinates[0]).toGeoJSON();
+          }
+
+          resolve(booleanContains(feature1, feature2));
         }
 
-        if (feature2.geometry.type === 'MultiPolygon') {
-          feature2 = L.polygon(feature2.geometry.coordinates[0]).toGeoJSON();
-        }
-
-        if (booleanContains(feature1, feature2)) {
-          return true;
-        }
-      }
-
-        resolve(booleanContains(objA, objB));
       }).catch((e) => {
         reject(e);
       });
@@ -410,13 +403,13 @@ export default Ember.Mixin.create({
       ]).then((result) => {
         let objA = result[0].value[2][0];
         let objB = result[1].value[2][0];
-        let layerObjectA = result[0].value[1][0];
-        let layerObjectB = result[1].value[1][0];
-        let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA.feature : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
-        let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
+        let layerObjectA = result[0].value[1];
+        let layerObjectB = result[1].value[1];
+        let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA.feature : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA.feature);
+        let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB.feature);
         let intersectionRes = intersect.default(feature2, feature1);
         if (intersectionRes) {
-          let resultArea = area(objB) - area(intersectionRes);
+          let resultArea = area(feature2) - area(intersectionRes);
           resolve(resultArea);
         } else {
           resolve(area(feature2));
@@ -574,10 +567,10 @@ export default Ember.Mixin.create({
       ]).then((res) => {
         let objA = res[0].value[2][0];
         let objB = res[1].value[2][0];
-        let layerObjectA = res[0].value[1][0];
-        let layerObjectB = res[1].value[1][0];
-        let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA.feature : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
-        let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
+        let layerObjectA = res[0].value[1];
+        let layerObjectB = res[1].value[1];
+        let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA.feature : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA.feature);
+        let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB.feature);
         let intersectionRes = intersect.default(feature1, feature2);
         if (intersectionRes) {
           if (showOnMap) {
