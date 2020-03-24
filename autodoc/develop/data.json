@@ -9711,7 +9711,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 338,
+            "line": 337,
             "description": "Handles uploadFile.",
             "itemtype": "method",
             "name": "actions.uploadFile",
@@ -9720,7 +9720,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 375,
+            "line": 374,
             "description": "Handles button click.",
             "itemtype": "method",
             "name": "actions.onButtonClick",
@@ -9729,7 +9729,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 385,
+            "line": 384,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGeometryAddModeManualComponent/sendingActions.complete:method\"}}'complete' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onApprove",
@@ -9738,7 +9738,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 439,
+            "line": 438,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.hide:method\"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHide",
@@ -9747,7 +9747,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 450,
+            "line": 449,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGeometryAddModeManualComponent/sendingActions.complete:method\"}}'complete' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onApproveImportDialog",
@@ -9756,7 +9756,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 485,
+            "line": 484,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.hide:method\"}}'flexberry-dialog' component's 'hide' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onHideImportDialog",
@@ -9765,7 +9765,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 504,
+            "line": 503,
             "description": "Handles selectAll button click on import result dialog.",
             "itemtype": "method",
             "name": "actions.onImportAllSelect",
@@ -9774,7 +9774,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 520,
+            "line": 519,
             "description": "Handles changing in properties connections.",
             "itemtype": "method",
             "name": "actions.onPropertyConnectionChange",
@@ -9795,7 +9795,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/import.js",
-            "line": 543,
+            "line": 535,
             "description": "Component's action invoking when new geometry was added.",
             "itemtype": "method",
             "name": "sendingActions.importComplete",

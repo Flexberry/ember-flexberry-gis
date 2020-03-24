@@ -736,7 +736,6 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
         }
       }
 
-      layerProperties.unshiftObject(&#x27;&#x27;);
       this.set(&#x27;_propertiesConnection&#x27;, propertiesConnection);
       this.set(&#x27;_notConnectedProperties&#x27;, layerProperties);
     }
@@ -939,14 +938,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
         newValue = undefined;
       }
 
-      let currentValue = this.get(&#x60;_propertiesConnection.${property}&#x60;);
-      let notConnectedProperties = this.get(&#x27;_notConnectedProperties&#x27;);
-      if (currentValue) {
-        notConnectedProperties.pushObject(currentValue);
-      }
-
       this.set(&#x60;_propertiesConnection.${property}&#x60;, newValue);
-      notConnectedProperties.removeObject(newValue);
     }
   },
 
