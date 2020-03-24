@@ -559,7 +559,7 @@
 
                             </li>
                             <li class="index-item method">
-                                <a href="#" data-tabid="#methods" data-anchor="#method_getLeafletObject" data-tablink="getLeafletObject">getLeafletObject</a>
+                                <a href="#" data-tabid="#methods" data-anchor="#method_getLeafletObjectPromise" data-tablink="getLeafletObjectPromise">getLeafletObjectPromise</a>
 
                             </li>
                             <li class="index-item method">
@@ -580,6 +580,10 @@
                             </li>
                             <li class="index-item method">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_query" data-tablink="query">query</a>
+
+                            </li>
+                            <li class="index-item method">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_returnLeafletObject" data-tablink="returnLeafletObject">returnLeafletObject</a>
 
                             </li>
                             <li class="index-item method">
@@ -1225,7 +1229,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_base-layer.js.html#l750"><code>addon&#x2F;components&#x2F;base-layer.js:750</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l760"><code>addon&#x2F;components&#x2F;base-layer.js:760</code></a>
                             </p>
                     
                     
@@ -1642,7 +1646,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_base-layer.js.html#l696"><code>addon&#x2F;components&#x2F;base-layer.js:696</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l706"><code>addon&#x2F;components&#x2F;base-layer.js:706</code></a>
                             </p>
                     
                     
@@ -1776,7 +1780,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_base-layer.js.html#l707"><code>addon&#x2F;components&#x2F;base-layer.js:707</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l717"><code>addon&#x2F;components&#x2F;base-layer.js:717</code></a>
                             </p>
                     
                     
@@ -1809,7 +1813,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_base-layer.js.html#l764"><code>addon&#x2F;components&#x2F;base-layer.js:764</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l774"><code>addon&#x2F;components&#x2F;base-layer.js:774</code></a>
                             </p>
                     
                     
@@ -1832,8 +1836,8 @@
                             </div>
                     
                     </div>
-                    <div id="method_getLeafletObject" class="method item">
-                        <h3 class="name"><code>getLeafletObject</code></h3>
+                    <div id="method_getLeafletObjectPromise" class="method item">
+                        <h3 class="name"><code>getLeafletObjectPromise</code></h3>
                     
                             <span class="paren">()</span>
                     
@@ -1901,7 +1905,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_base-layer.js.html#l715"><code>addon&#x2F;components&#x2F;base-layer.js:715</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l725"><code>addon&#x2F;components&#x2F;base-layer.js:725</code></a>
                             </p>
                     
                     
@@ -2009,7 +2013,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_base-layer.js.html#l810"><code>addon&#x2F;components&#x2F;base-layer.js:810</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l820"><code>addon&#x2F;components&#x2F;base-layer.js:820</code></a>
                             </p>
                     
                     
@@ -2086,7 +2090,7 @@
                                     LeafletOptionsMixin
                                 </a>
                                 but overwritten in
-                            <a href="../files/addon_components_base-layer.js.html#l784"><code>addon&#x2F;components&#x2F;base-layer.js:784</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l794"><code>addon&#x2F;components&#x2F;base-layer.js:794</code></a>
                             </p>
                     
                     
@@ -2305,6 +2309,167 @@
                     
                     
                     </div>
+                    <div id="method_returnLeafletObject" class="method item">
+                        <h3 class="name"><code>returnLeafletObject</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_base-layer.js.html#l696"><code>addon&#x2F;components&#x2F;base-layer.js:696</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Returns leaflet layer.</p>
+                    
+                        </div>
+                    
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                        <p>leafletObject</p>
+                    
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <div id="method_search" class="method item">
+                        <h3 class="name"><code>search</code></h3>
+                    
+                            <div class="args">
+                                <span class="paren">(</span><ul class="args-list inline commas">
+                                    <li class="arg">
+                                            <code>e</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>layer</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>searchOptions</code>
+                                    </li>
+                                    <li class="arg">
+                                            <code>results</code>
+                                    </li>
+                                </ul><span class="paren">)</span>
+                            </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/addon_components_base-layer.js.html#l744"><code>addon&#x2F;components&#x2F;base-layer.js:744</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Handles 'flexberry-map:search' event of leaflet map.</p>
+                    
+                        </div>
+                    
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                    
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">e</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Event object.</p>
+                    
+                                        </div>
+                    
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name">latlng</code>
+                                                        <span class="type"><a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a></span>
+                    
+                                                    <div class="param-description">
+                                                        <p>Center of the search area.</p>
+                    
+                                                    </div>
+                    
+                                                </li>
+                                            </ul>
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">layer</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object[]</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Object describing layer that must be searched.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">searchOptions</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Search options related to layer type.</p>
+                    
+                                        </div>
+                    
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">results</code>
+                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                    
+                    
+                                        <div class="param-description">
+                                            <p>Hash containing search results.</p>
+                    
+                                        </div>
+                    
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name">features</code>
+                                                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object[]</a></span>
+                    
+                                                    <div class="param-description">
+                                                        <p>Array containing (GeoJSON feature-objects)[<a href="http://geojson.org/geojson-spec.html#feature-objects">http://geojson.org/geojson-spec.html#feature-objects</a>]
+                    or a promise returning such array.</p>
+                    
+                                                    </div>
+                    
+                                                </li>
+                                            </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                    
+                    
+                    </div>
                     <div id="method_search" class="method item">
                         <h3 class="name"><code>search</code></h3>
                     
@@ -2425,126 +2590,6 @@
                     
                     
                     </div>
-                    <div id="method_search" class="method item">
-                        <h3 class="name"><code>search</code></h3>
-                    
-                            <div class="args">
-                                <span class="paren">(</span><ul class="args-list inline commas">
-                                    <li class="arg">
-                                            <code>e</code>
-                                    </li>
-                                    <li class="arg">
-                                            <code>layer</code>
-                                    </li>
-                                    <li class="arg">
-                                            <code>searchOptions</code>
-                                    </li>
-                                    <li class="arg">
-                                            <code>results</code>
-                                    </li>
-                                </ul><span class="paren">)</span>
-                            </div>
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/addon_components_base-layer.js.html#l734"><code>addon&#x2F;components&#x2F;base-layer.js:734</code></a>
-                            </p>
-                    
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>Handles 'flexberry-map:search' event of leaflet map.</p>
-                    
-                        </div>
-                    
-                            <div class="params">
-                                <h4>Parameters:</h4>
-                    
-                                <ul class="params-list">
-                                    <li class="param">
-                                            <code class="param-name">e</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>Event object.</p>
-                    
-                                        </div>
-                    
-                                            <ul class="params-list">
-                                                <li class="param">
-                                                        <code class="param-name">latlng</code>
-                                                        <span class="type"><a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a></span>
-                    
-                                                    <div class="param-description">
-                                                        <p>Center of the search area.</p>
-                    
-                                                    </div>
-                    
-                                                </li>
-                                            </ul>
-                                    </li>
-                                    <li class="param">
-                                            <code class="param-name">layer</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object[]</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>Object describing layer that must be searched.</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                    <li class="param">
-                                            <code class="param-name">searchOptions</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>Search options related to layer type.</p>
-                    
-                                        </div>
-                    
-                                    </li>
-                                    <li class="param">
-                                            <code class="param-name">results</code>
-                                            <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                    
-                    
-                                        <div class="param-description">
-                                            <p>Hash containing search results.</p>
-                    
-                                        </div>
-                    
-                                            <ul class="params-list">
-                                                <li class="param">
-                                                        <code class="param-name">features</code>
-                                                        <span class="type"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object[]</a></span>
-                    
-                                                    <div class="param-description">
-                                                        <p>Array containing (GeoJSON feature-objects)[<a href="http://geojson.org/geojson-spec.html#feature-objects">http://geojson.org/geojson-spec.html#feature-objects</a>]
-                    or a promise returning such array.</p>
-                    
-                                                    </div>
-                    
-                                                </li>
-                                            </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                    
-                    
-                    </div>
                     <div id="method_sendingActions.layerDestroy" class="method item">
                         <h3 class="name"><code>sendingActions.layerDestroy</code></h3>
                     
@@ -2566,7 +2611,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_base-layer.js.html#l878"><code>addon&#x2F;components&#x2F;base-layer.js:878</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l888"><code>addon&#x2F;components&#x2F;base-layer.js:888</code></a>
                             </p>
                     
                     
@@ -2641,7 +2686,7 @@
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/addon_components_base-layer.js.html#l869"><code>addon&#x2F;components&#x2F;base-layer.js:869</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l879"><code>addon&#x2F;components&#x2F;base-layer.js:879</code></a>
                             </p>
                     
                     

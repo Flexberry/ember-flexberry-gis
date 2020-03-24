@@ -552,7 +552,7 @@
 
                             </li>
                             <li class="index-item method inherited">
-                                <a href="#" data-tabid="#methods" data-anchor="#method_getLeafletObject" data-tablink="getLeafletObject">getLeafletObject</a>
+                                <a href="#" data-tabid="#methods" data-anchor="#method_getLeafletObjectPromise" data-tablink="getLeafletObjectPromise">getLeafletObjectPromise</a>
 
                             </li>
                             <li class="index-item method inherited">
@@ -573,6 +573,10 @@
                             </li>
                             <li class="index-item method inherited">
                                 <a href="#" data-tabid="#methods" data-anchor="#method_query" data-tablink="query">query</a>
+
+                            </li>
+                            <li class="index-item method inherited">
+                                <a href="#" data-tabid="#methods" data-anchor="#method_returnLeafletObject" data-tablink="returnLeafletObject">returnLeafletObject</a>
 
                             </li>
                             <li class="index-item method inherited">
@@ -1206,7 +1210,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerComponent.html#method__query">BaseLayerComponent</a>:
-                            <a href="../files/addon_components_base-layer.js.html#l750"><code>addon&#x2F;components&#x2F;base-layer.js:750</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l760"><code>addon&#x2F;components&#x2F;base-layer.js:760</code></a>
                             </p>
                     
                     
@@ -1746,7 +1750,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerComponent.html#method_destroyLayer">BaseLayerComponent</a>:
-                            <a href="../files/addon_components_base-layer.js.html#l707"><code>addon&#x2F;components&#x2F;base-layer.js:707</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l717"><code>addon&#x2F;components&#x2F;base-layer.js:717</code></a>
                             </p>
                     
                     
@@ -1778,7 +1782,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerComponent.html#method_getBoundingBox">BaseLayerComponent</a>:
-                            <a href="../files/addon_components_base-layer.js.html#l764"><code>addon&#x2F;components&#x2F;base-layer.js:764</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l774"><code>addon&#x2F;components&#x2F;base-layer.js:774</code></a>
                             </p>
                     
                     
@@ -1799,8 +1803,8 @@
                             </div>
                     
                     </div>
-                    <div id="method_getLeafletObject" class="method item inherited">
-                        <h3 class="name"><code>getLeafletObject</code></h3>
+                    <div id="method_getLeafletObjectPromise" class="method item inherited">
+                        <h3 class="name"><code>getLeafletObjectPromise</code></h3>
                     
                             <span class="paren">()</span>
                     
@@ -1816,7 +1820,7 @@
                     
                         <div class="meta">
                                     <p>Inherited from
-                                    <a href="../classes/BaseLayerComponent.html#method_getLeafletObject">BaseLayerComponent</a>:
+                                    <a href="../classes/BaseLayerComponent.html#method_getLeafletObjectPromise">BaseLayerComponent</a>:
                             <a href="../files/addon_components_base-layer.js.html#l683"><code>addon&#x2F;components&#x2F;base-layer.js:683</code></a>
                             </p>
                     
@@ -1980,7 +1984,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerComponent.html#method_injectLeafletLayersIntoGeoJSON">BaseLayerComponent</a>:
-                            <a href="../files/addon_components_base-layer.js.html#l810"><code>addon&#x2F;components&#x2F;base-layer.js:810</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l820"><code>addon&#x2F;components&#x2F;base-layer.js:820</code></a>
                             </p>
                     
                     
@@ -2053,7 +2057,7 @@
                                     LeafletOptionsMixin
                                 </a>
                                 but overwritten in
-                            <a href="../files/addon_components_base-layer.js.html#l784"><code>addon&#x2F;components&#x2F;base-layer.js:784</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l794"><code>addon&#x2F;components&#x2F;base-layer.js:794</code></a>
                             </p>
                     
                     
@@ -2265,6 +2269,45 @@
                     
                     
                     </div>
+                    <div id="method_returnLeafletObject" class="method item inherited">
+                        <h3 class="name"><code>returnLeafletObject</code></h3>
+                    
+                            <span class="paren">()</span>
+                    
+                            <span class="returns-inline">
+                                <span class="type"></span>
+                            </span>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>Inherited from
+                                    <a href="../classes/BaseLayerComponent.html#method_returnLeafletObject">BaseLayerComponent</a>:
+                            <a href="../files/addon_components_base-layer.js.html#l696"><code>addon&#x2F;components&#x2F;base-layer.js:696</code></a>
+                            </p>
+                    
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            Returns leaflet layer.
+                        </div>
+                    
+                    
+                            <div class="returns">
+                                <h4>Returns:</h4>
+                    
+                                <div class="returns-description">
+                                        leafletObject
+                                </div>
+                            </div>
+                    
+                    </div>
                     <div id="method_search" class="method item">
                         <h3 class="name"><code>search</code></h3>
                     
@@ -2409,7 +2452,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerComponent.html#method_sendingActions.layerDestroy">BaseLayerComponent</a>:
-                            <a href="../files/addon_components_base-layer.js.html#l878"><code>addon&#x2F;components&#x2F;base-layer.js:878</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l888"><code>addon&#x2F;components&#x2F;base-layer.js:888</code></a>
                             </p>
                     
                     
@@ -2482,7 +2525,7 @@
                         <div class="meta">
                                     <p>Inherited from
                                     <a href="../classes/BaseLayerComponent.html#method_sendingActions.layerInit">BaseLayerComponent</a>:
-                            <a href="../files/addon_components_base-layer.js.html#l869"><code>addon&#x2F;components&#x2F;base-layer.js:869</code></a>
+                            <a href="../files/addon_components_base-layer.js.html#l879"><code>addon&#x2F;components&#x2F;base-layer.js:879</code></a>
                             </p>
                     
                     

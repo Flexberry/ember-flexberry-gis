@@ -1587,20 +1587,19 @@ define('dummy/controllers/api-test-map', ['exports', 'ember', 'dummy/controllers
       */
       applyApiSettings: function applyApiSettings() {
         this.get('mapApi').addToApi('layerInitCallback', function (model) {
-          model.getLeafletObject().then(function (layer) {
-            layer.eachLayer(function (layerr) {
-              switch (model.layerModel.get('id')) {
-                case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
-                  layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
-                  break;
-                case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
-                  layerr.setStyle({ color: '#008B8B' });
-                  break;
-              }
+          var layer = model.getLeafletObject();
+          layer.eachLayer(function (layerr) {
+            switch (model.layerModel.get('id')) {
+              case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
+                layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
+                break;
+              case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
+                layerr.setStyle({ color: '#008B8B' });
+                break;
+            }
 
-              layerr.on('click', function (e) {
-                window.alert(e.target.feature.properties.name);
-              });
+            layerr.on('click', function (e) {
+              window.alert(e.target.feature.properties.name);
             });
           });
         });
@@ -37704,7 +37703,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.1+87eb9f30"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.1+b1a29638"});
 }
 
 /* jshint ignore:end */

@@ -1093,7 +1093,7 @@ export default Ember.Component.extend(
     /**
       Returns leaflet layer.
 
-      @method getLeafletObject
+      @method getLeafletObjectPromise
       @returns &lt;a href=&quot;http://leafletjs.com/reference-1.0.1.html#layer&quot;&gt;L.Layer&lt;/a&gt;|&lt;a href=&quot;https://emberjs.com/api/classes/RSVP.Promise.html&quot;&gt;Ember.RSVP.Promise&lt;/a&gt;
       Leaflet layer or promise returning such layer.
     */
@@ -1101,6 +1101,16 @@ export default Ember.Component.extend(
       return new Ember.RSVP.Promise((resolve, reject) =&gt; {
         resolve(this.get(&#x27;_leafletObject&#x27;));
       });
+    },
+
+    /**
+      Returns leaflet layer.
+
+      @method returnLeafletObject
+      @returns leafletObject
+    */
+    returnLeafletObject() {
+      return this.get(&#x27;_leafletObject&#x27;);
     },
 
     /**

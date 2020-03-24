@@ -25261,7 +25261,7 @@
             "line": 683,
             "description": "Returns leaflet layer.",
             "itemtype": "method",
-            "name": "getLeafletObject",
+            "name": "getLeafletObjectPromise",
             "return": {
                 "description": "<a href=\"http://leafletjs.com/reference-1.0.1.html#layer\">L.Layer</a>|<a href=\"https://emberjs.com/api/classes/RSVP.Promise.html\">Ember.RSVP.Promise</a>\nLeaflet layer or promise returning such layer."
             },
@@ -25271,6 +25271,18 @@
         {
             "file": "addon/components/base-layer.js",
             "line": 696,
+            "description": "Returns leaflet layer.",
+            "itemtype": "method",
+            "name": "returnLeafletObject",
+            "return": {
+                "description": "leafletObject"
+            },
+            "class": "BaseLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/base-layer.js",
+            "line": 706,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -25282,7 +25294,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 707,
+            "line": 717,
             "description": "Destroys leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "destroyLayer",
@@ -25291,7 +25303,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 715,
+            "line": 725,
             "description": "Identifies layer's objects inside specified bounding box.",
             "itemtype": "method",
             "name": "identify",
@@ -25329,7 +25341,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 734,
+            "line": 744,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -25374,7 +25386,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 750,
+            "line": 760,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -25405,7 +25417,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 764,
+            "line": 774,
             "description": "Returns leaflet layer's bounding box.",
             "itemtype": "method",
             "name": "getBoundingBox",
@@ -25417,7 +25429,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 784,
+            "line": 794,
             "description": "Observes and handles changes in layer's properties marked as leaflet options.\nPerforms layer's recreation with new options.\nNote: it is overridden method from 'leaflet-options' mixin.",
             "itemtype": "method",
             "name": "leafletOptionsDidChange",
@@ -25433,7 +25445,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 810,
+            "line": 820,
             "description": "Injects (leafelt GeoJSON layers)[http://leafletjs.com/reference-1.0.0.html#geojson] according to current CRS\ninto specified (GeoJSON)[http://geojson.org/geojson-spec] feature, features, or featureCollection",
             "itemtype": "method",
             "name": "injectLeafletLayersIntoGeoJSON",
@@ -25458,7 +25470,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 869,
+            "line": 879,
             "description": "Component's action invoking on layer creation.",
             "itemtype": "method",
             "name": "sendingActions.layerInit",
@@ -25486,7 +25498,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 878,
+            "line": 888,
             "description": "Component's action invoking before the layer destroying.",
             "itemtype": "method",
             "name": "sendingActions.layerDestroy",
@@ -45301,6 +45313,10 @@
         {
             "message": "replacing incorrect tag: returns with return",
             "line": " addon/components/base-layer.js:696"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " addon/components/base-layer.js:706"
         },
         {
             "message": "replacing incorrect tag: returns with return",
