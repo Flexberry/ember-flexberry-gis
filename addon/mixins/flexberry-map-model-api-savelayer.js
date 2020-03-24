@@ -13,7 +13,7 @@ export default Ember.Mixin.create({
     @return {Ember.RSVP.Promise} Returns promise.
   */
   saveLayer(layerId) {
-    let [layerModel, leafletObject] = this._getModelLayerFeature(layerId);
+    let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
 
     if (Ember.isNone(leafletObject)) {
       return new Ember.RSVP.Promise(() => {
