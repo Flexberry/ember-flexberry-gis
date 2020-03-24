@@ -356,19 +356,21 @@ export default Ember.Mixin.create({
     @param {String} objectBId Second object ID.
     @return {Promise} true or false.
   */
-  isContainsObject(objectAId, layerAId, objectBId, layerBId) {
+  isContainsObject(layerAId, objectAId, layerBId, objectBId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.RSVP.allSettled([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) => {
-        let objA = result[0].value[2][0];
-        let objB = result[1].value[2][0];
+        let objA = result[0].value[2][0].feature;
+        let objB = result[1].value[2][0].feature;
         let leafletLayerA = result[0].value[1];
         let leafletLayerB = result[1].value[1];
         if (objA && objB && leafletLayerA && leafletLayerB) {
-          let feature1 = leafletLayerA.options.crs.code === 'EPSG:4326' ? objA.feature : this._convertObjectCoordinates(leafletLayerA.options.crs.code, objA.feature);
-          let feature2 = leafletLayerB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(leafletLayerB.options.crs.code, objB.feature);
+          let feature1 = leafletLayerA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(leafletLayerA.options.crs.code, objA);
+           
+          let feature2 = leafletLayerB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(leafletLayerB.options.crs.code, objB);
+           
           if (feature1.geometry.type === 'MultiPolygon') {
             feature1 = L.polygon(feature1.geometry.coordinates[0]).toGeoJSON();
           }
@@ -395,18 +397,18 @@ export default Ember.Mixin.create({
     @param {String} objectBId Second object ID.
     @return {Promise} Area
   */
-  getAreaExtends(objectAId, layerAId, objectBId, layerBId) {
+  getAreaExtends(layerAId, objectAId, layerBId, objectBId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.RSVP.allSettled([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) => {
-        let objA = result[0].value[2][0];
-        let objB = result[1].value[2][0];
+        let objA = result[0].value[2][0].feature;
+        let objB = result[1].value[2][0].feature;
         let layerObjectA = result[0].value[1];
         let layerObjectB = result[1].value[1];
-        let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA.feature : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA.feature);
-        let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB.feature);
+        let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
+        let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
         let intersectionRes = intersect.default(feature2, feature1);
         if (intersectionRes) {
           let resultArea = area(feature2) - area(intersectionRes);
@@ -555,7 +557,7 @@ export default Ember.Mixin.create({
     @param {Bool} showOnMap flag indicates if intersection area will be displayed on map.
     @return {Promise} If showOnMap = true, return object, which show on map in serviceLayer, and area, else only area.
   */
-  getIntersectionArea(layerAId, objectAId, layerBId, objectBId, showOnMap) {   
+  getIntersectionArea(layerAId, objectAId, layerBId, objectBId, showOnMap) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let result = {
         object: null,
@@ -565,12 +567,12 @@ export default Ember.Mixin.create({
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((res) => {
-        let objA = res[0].value[2][0];
-        let objB = res[1].value[2][0];
+        let objA = res[0].value[2][0].feature;
+        let objB = res[1].value[2][0].feature;
         let layerObjectA = res[0].value[1];
         let layerObjectB = res[1].value[1];
-        let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA.feature : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA.feature);
-        let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB.feature : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB.feature);
+        let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA :this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
+        let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
         let intersectionRes = intersect.default(feature1, feature2);
         if (intersectionRes) {
           if (showOnMap) {
