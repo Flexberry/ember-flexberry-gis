@@ -152,8 +152,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   */
   _dataForm: {
     objectType: null,
-    startPoint: '',
-    crsCode: null,
+    startPoint: ''
   },
 
   /**
@@ -210,12 +209,6 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-
-    let knownCrs = Ember.getOwner(this).knownForType('coordinate-reference-system');
-    let knownCrsArray = Ember.A(Object.values(knownCrs));
-    this.set('_availableCoordinateReferenceSystemsCodes', knownCrsArray.map((knownCrs) => {
-      return Ember.get(knownCrs, 'code');
-    }));
   },
 
   actions: {
@@ -292,7 +285,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       }
 
       let skipNum = this._countSkip();
-      const crsCode  = this._dataForm.crs;
+      const crsCode  = this.get('settings.layerCRS.code');
       const data = {
         type: objectType,
         startPoint: startPoints,

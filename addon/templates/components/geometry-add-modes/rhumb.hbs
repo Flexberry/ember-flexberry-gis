@@ -31,14 +31,10 @@
           </div>
         </div>
         <div class="five wide column">
-          <div class="field {{if _formValid.startPointValid "error" ""}}">
-            <label>
-              {{coordinatesSystemFieldLabel}}
-            </label>
-            {{flexberry-dropdown
-              class="fluid"
-              items=_availableCoordinateReferenceSystemsCodes
-              value=_dataForm.crs
+          <div class="field">         
+            {{flexberry-edit-crs
+              crsCaption=coordinatesSystemFieldLabel
+              coordinateReferenceSystem=settings.layerCRS
             }}
           </div>       
         </div>
