@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../templates/components/feature-result-item';
+import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component for display GeoJSON feature object details
@@ -14,11 +15,26 @@ import layout from '../templates/components/feature-result-item';
 export default Ember.Component.extend({
 
   /**
-  Service for managing map API.
-  @property mapApi
-  @type MapApiService
+    Service for managing map API.
+    @property mapApi
+    @type MapApiService
   */
   mapApi: Ember.inject.service(),
+
+  /**
+    Flag indicates whether to show all coordinates.
+    @property mapApi
+    @type MapApiService
+  */
+  showAllCords: false,
+
+  /**
+    Map command's caption.
+    @property caption
+    @type String
+    @default t('components.flexberry-layers-intersections-panel.show-cords')
+  */
+  cordsActionCaption: t('components.flexberry-layers-intersections-panel.show-cords'),
 
   /**
     Component's wrapping <div> CSS-classes names.
@@ -204,6 +220,20 @@ export default Ember.Component.extend({
   },
 
   actions: {
+
+    /**
+      Handles click on show/hide all intersection coordinates.
+      @method actions.toggleShowAllCords
+    */
+    toggleShowAllCords() {
+      if (this.get('showAllCords')) {
+        this.toggleProperty('showAllCords');
+        this.set('cordsActionCaption', t('components.flexberry-layers-intersections-panel.show-cords'));
+      } else {
+        this.toggleProperty('showAllCords');
+        this.set('cordsActionCaption', t('components.flexberry-layers-intersections-panel.hide-cords'));
+      }
+    },
 
     /**
       Invokes {{#crossLink "FeatureResultItemComponent/sendingActions.selectFeature:method"}}'selectFeature' action{{/crossLink}}.

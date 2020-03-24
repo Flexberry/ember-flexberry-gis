@@ -10,5 +10,7 @@ export default {
   'm2': 'м²',
   'm': 'm',
   'show-on-map': 'Show on map',
-  'results': 'Results'
+  'results': 'Results',
+  'show-cords': 'Expand table',
+  'hide-cords': 'Collapse table',
 };
