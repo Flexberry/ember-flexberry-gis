@@ -5172,7 +5172,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/feature-result-item.js",
-            "line": 8,
+            "line": 9,
             "description": "Component for display GeoJSON feature object details",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>"
         },
@@ -26143,7 +26143,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 16,
+            "line": 17,
             "description": "Service for managing map API.",
             "itemtype": "property",
             "name": "mapApi",
@@ -26153,7 +26153,28 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 23,
+            "line": 24,
+            "description": "Flag indicates whether to show all coordinates.",
+            "itemtype": "property",
+            "name": "mapApi",
+            "type": "MapApiService",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 31,
+            "description": "Map command's caption.",
+            "itemtype": "property",
+            "name": "caption",
+            "type": "String",
+            "default": "t('components.flexberry-layers-intersections-panel.show-cords')",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 39,
             "description": "Component's wrapping <div> CSS-classes names.\n\nAny other CSS-class names can be added through component's 'class' property.\n```handlebars\n{{feature-result-item class=\"my-class\"}}\n```",
             "itemtype": "property",
             "name": "classNames",
@@ -26164,7 +26185,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 37,
+            "line": 53,
             "description": "Components class names bindings.",
             "itemtype": "property",
             "name": "classNameBindings",
@@ -26175,7 +26196,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 46,
+            "line": 62,
             "description": "Flag indicates if intersection panel is active.",
             "itemtype": "property",
             "name": "intersection",
@@ -26186,7 +26207,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 55,
+            "line": 71,
             "description": "Flag indicates if feature is in favorire list.",
             "itemtype": "property",
             "name": "intersection",
@@ -26197,7 +26218,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 64,
+            "line": 80,
             "description": "Flag: indicates whether to display detailed feature info.",
             "itemtype": "property",
             "name": "_infoExpanded",
@@ -26208,7 +26229,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 73,
+            "line": 89,
             "description": "Flag: indicates whether to display links list (if present).",
             "itemtype": "property",
             "name": "_linksExpanded",
@@ -26219,7 +26240,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 82,
+            "line": 98,
             "description": "Property to represent feature.",
             "itemtype": "property",
             "name": "displayProperty",
@@ -26231,7 +26252,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 91,
+            "line": 107,
             "description": "Feature properties excluded from being displayed in info table.",
             "itemtype": "property",
             "name": "_excludedProperties",
@@ -26244,7 +26265,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 103,
+            "line": 119,
             "description": "Features localized properties to being displayed in info table.",
             "itemtype": "property",
             "name": "_localizedProperties",
@@ -26257,7 +26278,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 117,
+            "line": 133,
             "description": "Flag: indicates whether to display detailed feature info.",
             "itemtype": "property",
             "name": "expanded",
@@ -26268,7 +26289,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 128,
+            "line": 144,
             "description": "Flag: indicates whether component is active.",
             "itemtype": "property",
             "name": "isActive",
@@ -26279,14 +26300,14 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 139,
+            "line": 155,
             "description": "Reference to component's template.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 144,
+            "line": 160,
             "description": "Settings for display feature info.",
             "itemtype": "property",
             "name": "displaySettings",
@@ -26297,7 +26318,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 153,
+            "line": 169,
             "description": "Feature's metadata.",
             "itemtype": "property",
             "name": "feature",
@@ -26307,7 +26328,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 161,
+            "line": 177,
             "description": "Current selected feature.",
             "itemtype": "property",
             "name": "feature",
@@ -26317,7 +26338,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 169,
+            "line": 185,
             "description": "Action button hasEditForm display.",
             "itemtype": "property",
             "name": "hasEditForm",
@@ -26328,14 +26349,23 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 178,
+            "line": 194,
             "description": "Initializes DOM-related component's properties.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 208,
+            "line": 224,
+            "description": "Handles click on show/hide all intersection coordinates.",
+            "itemtype": "method",
+            "name": "actions.toggleShowAllCords",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-result-item.js",
+            "line": 238,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.selectFeature:method\"}}'selectFeature' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.selectFeature",
@@ -26344,7 +26374,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 216,
+            "line": 246,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.panTo:method\"}}'panTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.panTo",
@@ -26353,7 +26383,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 224,
+            "line": 254,
             "description": "Invokes {{#crossLink \"FeatureResultItemComponent/sendingActions.zoomTo:method\"}}'zoomTo' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.zoomTo",
@@ -26362,7 +26392,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 232,
+            "line": 262,
             "description": "Show\\hide detailed feature info",
             "itemtype": "method",
             "name": "actions.showInfo",
@@ -26371,7 +26401,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 241,
+            "line": 271,
             "description": "Show\\hide links list (if present).",
             "itemtype": "method",
             "name": "actions.toggleLinks",
@@ -26380,7 +26410,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 249,
+            "line": 279,
             "description": "Process the specified method.",
             "itemtype": "method",
             "name": "actions.goToEditForm",
@@ -26401,7 +26431,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 262,
+            "line": 292,
             "description": "Show\\hide panel for seraching intersections.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.findIntersection",
@@ -26410,7 +26440,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 271,
+            "line": 301,
             "description": "Add feature to favorites list\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToFavorite",
@@ -26419,7 +26449,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 280,
+            "line": 310,
             "description": "Handles click on checkbox.\nAction is sended to layer-result-list.",
             "itemtype": "method",
             "name": "actions.addToCompareGeometries",
@@ -26428,7 +26458,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 289,
+            "line": 319,
             "description": "Pans and zooms to intersection object.",
             "itemtype": "method",
             "name": "actions.panToIntersection",
@@ -26437,7 +26467,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 298,
+            "line": 328,
             "description": "Zooms to intersection and add intersection object on map.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -26446,7 +26476,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 308,
+            "line": 338,
             "description": "Component's action invoking for select feature",
             "itemtype": "method",
             "name": "sendingActions.selectFeature",
@@ -26462,7 +26492,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 314,
+            "line": 344,
             "description": "Component's action invoking for feature zooming",
             "itemtype": "method",
             "name": "sendingActions.zoomTo",
@@ -26478,7 +26508,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 320,
+            "line": 350,
             "description": "Component's action invoking for feature pan",
             "itemtype": "method",
             "name": "sendingActions.panTo",
@@ -30544,7 +30574,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 387,
+            "line": 400,
             "description": "Cleaning after changing feature.",
             "itemtype": "method",
             "name": "clearPanel",
@@ -30553,7 +30583,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 406,
+            "line": 419,
             "description": "Removing layers with identification results.",
             "itemtype": "method",
             "name": "removeLayers",
@@ -30562,7 +30592,7 @@
         },
         {
             "file": "addon/components/flexberry-layers-intersections-panel.js",
-            "line": 424,
+            "line": 437,
             "description": "Searching intersections.",
             "itemtype": "method",
             "name": "_findIntersections",
@@ -46544,11 +46574,11 @@
         },
         {
             "message": "Missing item type\nReference to component's template.",
-            "line": " addon/components/feature-result-item.js:139"
+            "line": " addon/components/feature-result-item.js:155"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/feature-result-item.js:178"
+            "line": " addon/components/feature-result-item.js:194"
         },
         {
             "message": "Missing item type\nReference to component's template.",

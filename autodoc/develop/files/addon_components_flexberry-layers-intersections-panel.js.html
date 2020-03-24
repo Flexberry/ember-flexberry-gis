@@ -764,18 +764,31 @@ export default Ember.Component.extend({
     e.results.forEach((identificationResult) =&gt; {
       identificationResult.features.then(
         (features) =&gt; {
-          // Show new features.
+          //Show new features.
           features.forEach((feature) =&gt; {
-            let leafletLayer = Ember.get(feature, &#x27;leafletLayer&#x27;) || new L.GeoJSON([feature]);
-            if (Ember.typeOf(leafletLayer.setStyle) === &#x27;function&#x27;) {
-              leafletLayer.setStyle({
-                color: &#x27;salmon&#x27;,
-                weight: 2,
-                fillOpacity: 0.3
-              });
-            }
+            if (feature.intersection) {
+              let leafletLayer = Ember.get(feature, &#x27;leafletLayer&#x27;) || new L.GeoJSON([feature]);
+              if (Ember.typeOf(leafletLayer.setStyle) === &#x27;function&#x27;) {
+                leafletLayer.setStyle({
+                  color: &#x27;salmon&#x27;,
+                  weight: 2,
+                  fillOpacity: 0.2
+                });
+              }
 
-            Ember.set(feature, &#x27;leafletLayer&#x27;, leafletLayer);
+              Ember.set(feature, &#x27;leafletLayer&#x27;, leafletLayer);
+            } else {
+              let leafletLayer = Ember.get(feature, &#x27;leafletLayer&#x27;) || new L.GeoJSON([feature]);
+              if (Ember.typeOf(leafletLayer.setStyle) === &#x27;function&#x27;) {
+                leafletLayer.setStyle({
+                  color: &#x27;salmon&#x27;,
+                  weight: 0,
+                  fillOpacity: 0
+                });
+              }
+
+              Ember.set(feature, &#x27;leafletLayer&#x27;, leafletLayer);
+            }
           });
         });
     });
@@ -862,30 +875,35 @@ export default Ember.Component.extend({
           }
 
           if (bufferR &gt; 0) {
+            let props = objB.properties;
             objB  = buffer.default(objB.geometry, bufferR, { units: &#x27;meters&#x27; });
+            Object.assign(objB.properties, props);
           }
 
           if (item.geometry.type === &#x27;Polygon&#x27; || item.geometry.type === &#x27;MultiPolygon&#x27;) {
-            let res = intersect.default(objA, objB);
-            if (res) {
-              if (square &gt; 0) {
-                if (area(res) &gt; square) {
+            if (Ember.get(objA, &#x27;properties.primarykey&#x27;) !== Ember.get(objB, &#x27;properties.primarykey&#x27;)) {
+              let res = intersect.default(objA, objB);
+              if (res) {
+                if (square &gt; 0) {
+                  if (area(res) &gt; square) {
+                    item = this.computeFeatureProperties(item, convertToMercator, res);
+                  }
+                } else {
                   item = this.computeFeatureProperties(item, convertToMercator, res);
                 }
-              } else {
-                item = this.computeFeatureProperties(item, convertToMercator, res);
               }
             }
           } else if (item.geometry.type === &#x27;MultiLineString&#x27; || item.geometry.type === &#x27;LineString&#x27;) {
-            let intersects = lineIntersect(objA, objB);
-
-            if (intersects) {
-              item.intersection = {};
-              item.intersection.intersectionCords = [];
-              intersects.features.forEach(function (feat) {
-                item.intersection.intersectionCords.push(feat.geometry.coordinates);
-              });
-              item.intersection.intersectedObject = intersects;
+            if (Ember.get(objA, &#x27;properties.primarykey&#x27;) !== Ember.get(objB, &#x27;properties.primarykey&#x27;)) {
+              let intersects = lineIntersect(objA, objB);
+              if (intersects) {
+                item.intersection = {};
+                item.intersection.intersectionCords = [];
+                intersects.features.forEach(function (feat) {
+                  item.intersection.intersectionCords.push(feat.geometry.coordinates);
+                });
+                item.intersection.intersectedObject = intersects;
+              }
             }
           }
         });
@@ -913,7 +931,7 @@ export default Ember.Component.extend({
   computeFeatureProperties(feature, convertToMercator, res) {
     feature.intersection = {};
     feature.intersection.intersectionCords = [];
-    feature.intersection.intersectedArea = area(res);
+    feature.intersection.intersectedArea = area(res).toFixed(3);
     if (convertToMercator) {
       let resInMercator = projection.toMercator(res);
       feature.intersection.intersectionCords = this.computeCoordinates(resInMercator);
