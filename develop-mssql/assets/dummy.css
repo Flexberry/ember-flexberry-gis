@@ -1481,6 +1481,9 @@ lang {
 .intersection-panel .multiple.search.selection.dropdown {
   cursor: pointer;
 }
+.intersection-panel .multiple.search.selection.dropdown .dropdown.icon {
+  margin-left: 10px;
+}
 .intersection-panel .multiple.search.selection.dropdown .ui.label.adition {
   margin-left: -20px;
 }
@@ -1499,7 +1502,11 @@ lang {
   margin-top: -10px;
 }
 .intersection-panel .feature-result-item-content.content .cords {
+  padding-top: 0px;
   width: 50%;
+}
+.intersection-panel .intersection-cell {
+  vertical-align: top;
 }
 .compare-geometries-panel .close {
   margin-left: auto;
