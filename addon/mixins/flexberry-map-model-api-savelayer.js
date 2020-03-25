@@ -37,7 +37,7 @@ export default Ember.Mixin.create({
             map.removeLayer(item);
             leafletObject.loadFeatures(filter);
             let id = leafletObject.getLayerId(item);
-            delete leafletObject._layers[id];           
+            delete leafletObject._layers[id];
           }
         });
 
