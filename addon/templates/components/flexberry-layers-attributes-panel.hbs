@@ -74,6 +74,9 @@
                     }}
                     {{component "geometry-add-modes/rhumb"
                         leafletMap=leafletMap
+                        settings=(hash                          
+                          layerCRS=(get tabModel "leafletObject.options.crs")                 
+                        )
                         tabModel=tabModel
                         complete=(action "onGeometryAddComplete" tabModel)
                     }}

@@ -19,7 +19,7 @@
   }}
     <form class="ui form" role="form">
       <div class="ui grid">
-        <div class="eight wide column">
+        <div class="six wide column">
           <div class="field {{if _formValid.startPointValid "error" ""}}">
             <label>
               {{startPointFieldLabel}}
@@ -30,7 +30,15 @@
             }}
           </div>
         </div>
-        <div class="eight wide column">
+        <div class="five wide column">
+          <div class="field">         
+            {{flexberry-edit-crs
+              crsCaption=coordinatesSystemFieldLabel
+              coordinateReferenceSystem=settings.layerCRS
+            }}
+          </div>       
+        </div>
+        <div class="five wide column">
           <div class="field {{if _formValid.typeObjectValid "error" ""}}">
             <label>
               {{typeObjectFieldLabel}}
@@ -56,7 +64,7 @@
             <th>
               {{distanceTh}}
             </th>
-            <th class="narrow">
+            <th class="narrow rhumb">
               {{tableColumnOperation}}
             </th>
           </tr>
@@ -81,7 +89,7 @@
                 {{flexberry-field value=_dataFormTable.distance}}
               </div>
             </td>
-            <td class="narrow">
+            <td class="narrow rhumb">
               {{flexberry-button
                 iconClass="plus icon"
                 click=(action "onAddRow")
@@ -97,6 +105,11 @@
           </label>
           <div class="{{flexberryClassNames.tableBlock}}">
             {{#flexberry-table perPageAvailable=true model=_tableData}}
+             {{#block-slot "column-header-head-0"}}
+                <th>
+                  {{rhumbNumber}}
+                </th>
+              {{/block-slot}}
               {{#block-slot "column-header-head-0"}}
                 <th>
                   {{directionTh}}
@@ -113,31 +126,58 @@
                 </th>
               {{/block-slot}}
               {{#block-slot "column-header-head-0"}}
-                <th class="narrow">
+                <th>
+                  {{rhumbObjectStart}}
+                </th>
+              {{/block-slot}}
+              {{#block-slot "column-header-head-0"}}
+                <th class="narrow rhumb">
                   {{tableColumnOperation}}
                 </th>
               {{/block-slot}}
               {{#block-slot "column-cell-head-0" as |row|}}
                 <td>
-                  {{row.direction}}
+                  {{row.number}}
                 </td>
               {{/block-slot}}
               {{#block-slot "column-cell-head-0" as |row|}}
                 <td>
-                  {{row.rhumb}}
+                  {{flexberry-dropdown
+                    items=_cardinalPoints
+                    value=row.direction
+                    readonly=row.readonly
+                  }}
                 </td>
               {{/block-slot}}
               {{#block-slot "column-cell-head-0" as |row|}}
                 <td>
-                  {{row.distance}}
+                   {{flexberry-field value=row.rhumb readonly=row.readonly}}
                 </td>
               {{/block-slot}}
               {{#block-slot "column-cell-head-0" as |row|}}
-                <td class="narrow">
+                <td>
+                  {{flexberry-field value=row.distance readonly=row.readonly}}
+                </td>
+              {{/block-slot}}
+              {{#block-slot "column-cell-head-0" as |row|}}
+                <td class="checkbox-rhumb">
+                  {{flexberry-ddau-checkbox
+                    value=row.skip
+                    change=(action "onRhumbSkipChange" row.id)
+                  }}
+                </td>
+              {{/block-slot}}
+              {{#block-slot "column-cell-head-0" as |row|}}
+                <td class="narrow rhumb">
+                  {{flexberry-button
+                    iconClass="edit icon"
+                    class =(concat "small-button" (if (not-eq row.readonly true) " active" ""))
+                    click=(action "OnEditRow" row.id)
+                  }}
                   {{flexberry-button
                     iconClass="trash icon"
                     click=(action "OnRemoveRow" row.id)
-                  }}
+                  }}                
                 </td>
               {{/block-slot}}
             {{/flexberry-table}}

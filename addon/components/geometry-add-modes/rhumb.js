@@ -173,6 +173,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     distance: null,
   },
 
+  _availableCoordinateReferenceSystemsCodes: null,
+
   menuButtonTooltip: t('components.geometry-add-modes.rhumb.menu-button-tooltip'),
 
   dialogApproveButtonCaption: t('components.geometry-add-modes.rhumb.dialog-approve-button-caption'),
@@ -196,6 +198,18 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   tableColumnOperation: t('components.geometry-add-modes.rhumb.table-column-operation'),
 
   addCoordinatesFieldLabel: t('components.geometry-add-modes.rhumb.add-coordinates-field-label'),
+
+  coordinatesSystemFieldLabel: t('components.geometry-add-modes.rhumb.crs-code'),
+
+  rhumbNumber: t('components.geometry-add-modes.rhumb.number'),
+
+  rhumbObjectStart: t('components.geometry-add-modes.rhumb.object-start'),
+
+  changePermission: t('components.geometry-add-modes.rhumb.change-permission'),
+
+  init() {
+    this._super(...arguments);
+  },
 
   actions: {
     /**
@@ -270,11 +284,13 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         points.push(data);
       }
 
-      //Добавить CRS на форму и параметры. Пока считаем что первая точка в СК слоя.
+      let skipNum = this._countSkip();
+      const crsCode  = this.get('settings.layerCRS.code');
       const data = {
         type: objectType,
         startPoint: startPoints,
-        skip: 1,
+        skip: skipNum,
+        crs: crsCode,
         points: points
       };
 
@@ -343,8 +359,12 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         return result.toString(16);
       };
 
+      let skip = this._tableData.length === 1 ? true : false;
       const row = {
         id: getGuid(),
+        number: '0-1',
+        readonly: true,
+        skip: skip,
         direction: this._dataFormTable.direction,
         rhumb: this._dataFormTable.rhumb,
         distance: this._dataFormTable.distance
@@ -352,6 +372,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
       this._tableData.pushObject(row);
       this._dropTableForm();
+      this._countOrder();
     },
 
     /**
@@ -364,13 +385,81 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         let item = this._tableData[i];
         if (item.id === id) {
           this._tableData.removeAt(i, 1);
+          if (this._tableData.length === 1 && this._tableData[0].skip) {
+            Ember.set(this._tableData[0], 'skip', false);
+          }
+
+          this._countOrder();
+          return;
+        }
+      }
+    },
+
+    /**
+      Button to edit a record in a table.
+
+      @method actions.OnEditRow
+    */
+    OnEditRow(id) {
+      for (let i = 0; i < this._tableData.length; i++) {
+        let item = this._tableData[i];
+        if (item.id === id) {
+          if (Ember.get(item, 'readonly')) {
+            Ember.set(item, 'readonly', false);
+          } else {
+            Ember.set(item, 'readonly', true);
+          }
 
           return;
         }
       }
+    },
+
+    /**
+      Handles click on checkbox.
+
+      @method actions.onRhumbSkipChange
+    */
+    onRhumbSkipChange(id) {
+      if (confirm(this.get('changePermission'))) {
+        for (let i = 0; i < this._tableData.length; i++) {
+          let item = this._tableData[i];
+          Ember.set(item, 'skip', false);
+          if (item.id === id) {
+            Ember.set(item, 'skip', true);
+          }
+        }
+      } else {
+        return;
+      }
     }
   },
 
+  /**
+    Count order number of rhumbs.
+
+    @method _countSkip
+  */
+  _countOrder() {
+    for (let i = 0; i < this._tableData.length; i++) {
+      let item = this._tableData[i];
+      Ember.set(item, 'number', `${i}-${i + 1}`);
+    }
+  },
+
+  /**
+    Count number of binding rhumbs.
+
+    @method _countSkip
+  */
+  _countSkip() {
+    for (let i = 0; i < this._tableData.length; i++) {
+      let item = this._tableData[i];
+      if (Ember.get(item, 'skip')) {
+        return i;
+      }
+    }
+  },
   /**
     Сlear form.
 

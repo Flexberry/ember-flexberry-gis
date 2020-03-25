@@ -10,5 +10,9 @@ export default {
   'distance-field-label': 'Distance',
   'add-button-caption': 'Add',
   'table-field-label': 'Table rhumb',
-  'table-column-operation': 'Operation'
+  'table-column-operation': 'Operation',
+  'crs-code': 'Coordinate reference system',
+  'number': 'Number',
+  'object-start': 'Start of object',
+  'change-permission': 'Change the initial rhumb of an object?'
 };
