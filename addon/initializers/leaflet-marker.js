@@ -30,7 +30,7 @@ export function initialize() {
         this._removeShadow();
       }
     },
-  
+
     /**
       Update point position
       @method update
@@ -39,16 +39,16 @@ export function initialize() {
       if (Ember.get(this, '_map') && Ember.get(this, '_eventParents')) {
         if (this._checkMapZoom()) {
           if (this._icon && this._map) {
-            var pos = this._map.latLngToLayerPoint(this._latlng).round();
-            this._setPos(pos);
+            let pos1 = this._map.latLngToLayerPoint(this._latlng).round();
+            this._setPos(pos1);
           }
 
           return this;
         }
       } else {
         if (this._icon && this._map) {
-          var pos = this._map.latLngToLayerPoint(this._latlng).round();
-          this._setPos(pos);
+          let pos2 = this._map.latLngToLayerPoint(this._latlng).round();
+          this._setPos(pos2);
         }
 
         return this;
@@ -72,12 +72,12 @@ export function initialize() {
       @method _checkMapZoom
       @private
     */
-   _checkMapZoom() {
-    const mapZoom = Ember.get(this, '_map._zoom');
-    const minZoom = Object.values(this._eventParents)[0].minZoom;
-    const maxZoom = Object.values(this._eventParents)[0].maxZoom;
-    return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom <= mapZoom && mapZoom <= maxZoom;
-  },
+    _checkMapZoom() {
+      const mapZoom = Ember.get(this, '_map._zoom');
+      const minZoom = Object.values(this._eventParents)[0].minZoom;
+      const maxZoom = Object.values(this._eventParents)[0].maxZoom;
+      return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom <= mapZoom && mapZoom <= maxZoom;
+    },
 
     /**
       Style for marker.
