@@ -7119,6 +7119,15 @@ div.ui.secondary.menu.no-margin {
   width: 90px;
   max-width: 90px;
 }
+.ui.table.flexberry-table th.checkbox-rhumb,
+.ui.table.flexberry-table td.checkbox-rhumb {
+  text-align: center;
+}
+.ui.table.flexberry-table th.narrow.rhumb,
+.ui.table.flexberry-table td.narrow.rhumb {
+  width: 120px;
+  max-width: 120px;
+}
 .ui.table.flexberry-table th.checkbox,
 .ui.table.flexberry-table td.checkbox {
   width: 26px;
