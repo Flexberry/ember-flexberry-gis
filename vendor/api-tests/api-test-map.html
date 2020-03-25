@@ -117,23 +117,22 @@
       }
 
       frame.contentWindow.mapApi.layerInitCallback = function (model) {
-        model.getLeafletObject().then(function (layer) {
-          layer.eachLayer(function (layerr) {
-            switch (model.layerModel.get('id')) {
-              case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
-                layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
-                break;
-              case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
-                layerr.setStyle({ color: '#008B8B' });
-                break;
-              case '0cc2cf50-4469-4e41-8549-ed4c2ec0da04':
-                layerr.setStyle({isImage: false, options: {className: 'label', html:'<p>'+'text'+'</p>'}});
-                break;
-            }
-            layerr.on('click', function (e) {
-              alert(e.target.feature.properties.name);
-            })
-          });
+        let layer = model.returnLeafletObject();
+        layer.eachLayer(function (layerr) {
+          switch (model.layerModel.get('id')) {
+            case 'f7670a1f-1acb-4571-923c-1ce3bc88e11e':
+              layerr.setStyle({ color: '#808000', fillColor: '#FFD700' });
+              break;
+            case 'f8dec493-d879-49ae-ad55-f4f18c89cb88':
+              layerr.setStyle({ color: '#008B8B' });
+              break;
+            case '8f2d336c-6233-43d2-9704-b9a4be8840ca':
+              layerr.setStyle({isImage: false, options: {className: 'label', html:'<p>'+layerr.feature.properties.naimenovanie+'</p>'}});
+              break;
+          }
+          layerr.on('click', function (e) {
+            alert(e.target.feature.properties.name);
+          })
         });
       };
 

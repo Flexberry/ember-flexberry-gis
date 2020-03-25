@@ -8,8 +8,8 @@ export default Ember.Mixin.create(rhumbOperations, {
     Add object to layer.
 
     @method addObjectToLayer
-    @param {string} layerId Layer id.
-    @param {string} crsName crs name.
+    @param {string} layerId Layer ID.
+    @param {string} crsName Name of coordinate reference system, in which to give coordinates.
     @param {Object} object Object.
     Example:
     var object = {
@@ -29,7 +29,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       throw new Error('Passed object is null.');
     }
 
-    let [layer, leafletObject] = this._getModelLayerFeature(layerId);
+    let [layer, leafletObject] = this._getModelLeafletObject(layerId);
 
     if (Ember.isNone(layer)) {
       throw new Error('No layer with such id.');
@@ -72,18 +72,18 @@ export default Ember.Mixin.create(rhumbOperations, {
           crs: 'EPSG:3857',
           properties: { name: 'test_polygon' },
           startPoint: [85, 79],
+          skip:0,
           points: [
-            { rib: '1;2', rhumb: 'ЮВ;86.76787457562546', distance: 8182.6375760837955 },
-            { rib: '2;3', rhumb: 'СВ;79.04259420114585', distance: 8476.868426796427 },
-            { rib: '3;1', rhumb: 'ЮЗ;86.0047147391561', distance: 16532.122718537685 }
+            { rhumb: 'ЮВ', angle: 86.76787457562546, distance: 8182.6375760837955 },
+            { rhumb: 'СВ', angle: 79.04259420114585, distance: 8476.868426796427 },
+            { rhumb: 'ЮЗ', angle: 86.0047147391561, distance: 16532.122718537685 }
           ]
         };
     @returns {Object} New featureLayer.
   */
   createPolygonObjectRhumb(layerId, data) {
-    let [, leafletObject] = this._getModelLayerFeature(layerId);
+    let [, leafletObject] = this._getModelLeafletObject(layerId);
     const obj = this.createObjectRhumb(data, leafletObject.options.crs, this);
     return this.addObjectToLayer(layerId, obj, data.crs);
   }
-
 });

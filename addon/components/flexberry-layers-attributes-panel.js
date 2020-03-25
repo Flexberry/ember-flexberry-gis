@@ -1327,10 +1327,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         Ember.set(layer, 'feature', { type: 'Feature' });
         Ember.set(layer.feature, 'properties', data);
         Ember.set(layer.feature, 'leafletLayer', layer);
-        if (typeof (layer.setStyle) === 'function') {
-          layer.setStyle(Ember.get(tabModel, 'leafletObject.options.style'));
-        }
-
         tabModel.leafletObject.addLayer(layer);
       }
 

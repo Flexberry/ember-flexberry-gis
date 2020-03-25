@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import lineIntersect from 'npm:@turf/line-intersect';
 import distance from 'npm:@turf/distance';
 import helpers from 'npm:@turf/helpers';
 import booleanContains from 'npm:@turf/boolean-contains';
@@ -10,6 +9,7 @@ import rhumbBearing from 'npm:@turf/rhumb-bearing';
 import rhumbDistance from 'npm:@turf/rhumb-distance';
 import { getLeafletCrs } from '../utils/leaflet-crs';
 import VectorLayer from '../layers/-private/vector';
+import WfsLayer from '../layers/wfs';
 
 export default Ember.Mixin.create({
   /**
@@ -19,41 +19,47 @@ export default Ember.Mixin.create({
   */
   mapApi: Ember.inject.service(),
 
-  /**
-    Shows specified by id layers.
+  /*
+    Shows layers specified by IDs.
 
     @method showLayers.
+    @param {Array} layerIds Array of layer IDs.
+    @return nothing
   */
   showLayers(layerIds) {
     this._setVisibility(layerIds, true);
   },
 
   /**
-    Hides specified by id layers.
+    Hides layers specified by IDs.
 
     @method hideLayers.
+    @param {Array} layerIds Array of layer IDs.
+    @return nothing
   */
   hideLayers(layerIds) {
     this._setVisibility(layerIds);
   },
 
   /**
-    Shows id objects for layer.
+    Shows objects for layer.
 
     @method showLayerObjects
     @param {string} layerId Layer id.
-    @param {string[]} objectIds Array of id objects.
+    @param {string[]} objectIds Array of objects IDs.
+    @return nothing
   */
   showLayerObjects(layerId, objectIds) {
     this._setVisibilityObjects(layerId, objectIds, true);
   },
 
   /**
-    Hides id objects for layer.
+    Hides objects for layer.
 
     @method hideLayerObjects
     @param {string} layerId Layer id.
-    @param {string[]} objectIds Array of id objects.
+    @param {Array} objectIds Array of objects IDs.
+    @return nothing
   */
   hideLayerObjects(layerId, objectIds) {
     this._setVisibilityObjects(layerId, objectIds, false);
@@ -64,17 +70,22 @@ export default Ember.Mixin.create({
 
     @method showAllLayerObjects
     @param {string} layerId Layer id.
+    @return nothing
   */
   showAllLayerObjects(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     const leafletObject = Ember.get(layer, '_leafletObject');
-    var map = Ember.get(leafletObject, '_map');
+    let map = Ember.get(leafletObject, '_map');
 
     leafletObject.eachLayer(function (layerShape) {
       if (!map.hasLayer(layerShape)) {
         map.addLayer(layerShape);
       }
     });
+
+    leafletObject.hideAllLayerObjects = false;
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    leafletMap.fire('moveend');
   },
 
   /**
@@ -82,6 +93,7 @@ export default Ember.Mixin.create({
 
     @method hideAllLayerObjects
     @param {string} layerId Layer id.
+    @return nothing
   */
   hideAllLayerObjects(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
@@ -93,11 +105,15 @@ export default Ember.Mixin.create({
         map.removeLayer(layerShape);
       }
     });
+
+    leafletObject.hideAllLayerObjects = true;
   },
 
   /**
     Creates new layer with specified options.
     @method createNewLayer.
+    @param {Object} options
+    @return Layer ID.
   */
   createNewLayer(options) {
     options = options || {};
@@ -112,10 +128,11 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Remove shape from layer.
+    Remove object from layer.
     @method deleteLayerObject.
-    @param {String} layerId Id layer.
-    @param {String} featureId Id shape.
+    @param {String} layerId Layer ID.
+    @param {String} featureId Object ID.
+    @return Promise.
   */
   deleteLayerObject(layerId, featureId) {
     this.deleteLayerObjects(layerId, [featureId]);
@@ -124,209 +141,176 @@ export default Ember.Mixin.create({
   /**
     Remove shapes from layer.
     @method deleteLayerObjects.
-    @param {string} layerId Id layer.
-    @param {Object[]} featureIds Array of id shapes.
+    @param {string} layerId Layer ID.
+    @param {Object[]} featureIds Array of objects IDs.
+    @return Promise.
   */
   deleteLayerObjects(layerId, featureIds) {
-    const layers = this.get('mapLayer');
-    const layer = layers.findBy('id', layerId);
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let ids = [];
+      this._getModelLayerFeature(layerId, featureIds, true).then(([layer, leafletObject]) => {
+        leafletObject.eachLayer(function (shape) {
+          const id = this._getLayerFeatureId(layer, shape);
 
-    if (Ember.isNone(layer)) {
-      throw new Error(`Layer '${layerId}' not found.`);
-    }
+          if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
+            ids.push(id);
+            leafletObject.removeLayer(shape);
+          }
+        }.bind(this));
 
-    const leafletObject = Ember.get(layer, '_leafletObject');
-    if (Ember.isNone(leafletObject)) {
-      throw new Error('Layer type not supported');
-    }
-
-    let ids = [];
-    leafletObject.eachLayer(function (shape) {
-      const id = this._getLayerFeatureId(layer, shape);
-
-      if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
-        ids.push(id);
-        leafletObject.removeLayer(shape);
-      }
-    }.bind(this));
-
-    const deleteLayerFromAttrPanelFunc = this.get('mapApi').getFromApi('_deleteLayerFromAttrPanel');
-    ids.forEach((id) => {
-      if (typeof deleteLayerFromAttrPanelFunc === 'function') {
-        deleteLayerFromAttrPanelFunc(id, layer);
-      }
+        const deleteLayerFromAttrPanelFunc = this.get('mapApi').getFromApi('_deleteLayerFromAttrPanel');
+        ids.forEach((id) => {
+          if (typeof deleteLayerFromAttrPanelFunc === 'function') {
+            deleteLayerFromAttrPanelFunc(id, layer);
+          }
+        });
+        resolve();
+      }).catch((e) => {
+        reject(e);
+      });
     });
   },
 
   /**
     Gets intersected features.
     @method getIntersectionObjects
-    @param {string} featureId feature id with which we are looking for intersections
-    @param {number[]} layerIds array of layers ids
+    @param {string} layerId Layer ID of the selected object.
+    @param {string} featureId Object ID with which we are looking for intersections.
+    @param {Array} layerIds Array of layers IDs.
+    @return {Promise} Array of layers and objects which intersected selected object.
   */
-  getIntersectionObjects(featureId, layerIds) {
-    let result = [];
-    let featureToSearch;
-    if (Ember.isArray(layerIds)) {
-      const allLayers = this.get('mapLayer');
-      let layers = Ember.A(allLayers);
-      layers.find(layer => {
-        let features = Ember.get(layer, '_leafletObject._layers');
-        if (!Ember.isNone(features)) {
-          featureToSearch = Object.values(features).find(feature => {
-            if (this._getLayerFeatureId(layer, feature) === featureId) {
-              return true;
-            }
-          });
-
-          if (featureToSearch) {
-            return true;
-          }
-        }
-      });
-      if (!Ember.isNone(featureToSearch)) {
+  getIntersectionObjects(layerId, featureId, layerIds) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this._getModelLayerFeature(layerId, [featureId]).then(([, leafletObject, featureLayer]) => {
+        const leafletMap = this.get('mapApi').getFromApi('leafletMap');
+        let layersIntersect = [];
         layerIds.forEach(id => {
-          let intersectedFeaturesCollection = [];
-          const layer = layers.findBy('id', id);
-          let className = Ember.get(layer, 'type');
-          let layerType = Ember.getOwner(this).knownForType('layer', className);
-          if (layerType instanceof VectorLayer) {
-            let features = Ember.get(layer, '_leafletObject._layers');
-            if (features) {
-              Object.values(features).forEach(feature => {
-                let intersectionResult;
-                const layerFeatureId = this._getLayerFeatureId(layer, feature);
-                if (layerFeatureId !== featureId) {
-                  let objA = featureToSearch;
-                  let objB = feature;
-                  objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-                  objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
-                  if (objA.geometry.type === 'Polygon' || objA.geometry.type === 'MultiPolygon') {
-                    intersectionResult = intersect.default(objA, objB);
-                  } else if (objA.geometry.type === 'MultiLineString' || objA.geometry.type === 'LineString') {
-                    intersectionResult = lineIntersect(objA, objB);
-                  }
-                }
-
-                if (intersectionResult) {
-                  intersectedFeaturesCollection.push(layerFeatureId);
-                }
-              });
+          const layer = this.get('mapLayer').findBy('id', id);
+          if (!Ember.isNone(layer)) {
+            let className = Ember.get(layer, 'type');
+            let layerType = Ember.getOwner(this).knownForType('layer', className);
+            if (layerType instanceof VectorLayer) {
+              layersIntersect.push(layer);
             }
-          }
-
-          if (intersectedFeaturesCollection.length > 0) {
-            result.push({ id: id, intersected_features: intersectedFeaturesCollection });
           }
         });
-      }
-    }
 
-    return result;
+        let latlng = featureLayer[0] instanceof L.Marker || featureLayer[0] instanceof L.CircleMarker ?
+          featureLayer[0].getLatLng() : featureLayer[0].getBounds().getCenter();
+        let e = {
+          latlng: latlng,
+          polygonLayer: featureLayer[0],
+          bufferedMainPolygonLayer:featureLayer[0],
+          excludedLayers: [],
+          layers: layersIntersect,
+          results: Ember.A()
+        };
+
+        if (e.layers.length > 0) {
+          leafletMap.fire('flexberry-map:identify', e);
+        }
+
+        e.results = Ember.isArray(e.results) ? e.results : Ember.A();
+        let promises = Ember.A();
+
+        // Handle each result.
+        // Detach promises from already received features.
+        e.results.forEach((result) => {
+          if (Ember.isNone(result)) {
+            return;
+          }
+
+          promises.pushObject(Ember.get(result, 'features'));
+        });
+
+        // Wait for all promises to be settled & call '_finishIdentification' hook.
+        Ember.RSVP.allSettled(promises).then(() => {
+          resolve(e.results);
+        });
+      }).catch((e) => {
+        reject(e);
+      });
+    });
   },
 
   /**
-    Get the closest object
+    Get the nearest object
     @method getNearObject
-    @param {string} layerId Layer id of the selected object.
-    @param {string} layerObjectId Id of the selected object.
-    @param {number[]} layerIdsArray Array of id of layers in which to search.
-    @return {Object} Id of the nearest object.
+    @param {string} layerId Layer ID of the selected object.
+    @param {string} layerObjectId Object ID of the selected object.
+    @param {Array} layerIdsArray Array of layers IDs in which to search.
+    @return {Promise} Object constains distance, layer and layer object.
   */
   getNearObject(layerId, layerObjectId, layerIdsArray) {
-    const layers = this.get('mapLayer');
-    const layer = layers.findBy('id', layerId);
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this._getModelLayerFeature(layerId, [layerObjectId]).then(([, leafletObject, layerObject]) => {
+        let result = null;
+        let promises = layerIdsArray.map(lid => {
+          return new Ember.RSVP.Promise((resolve, reject) => {
+            this._getModelLayerFeature(lid, null).then(([layer, lObject, featuresLayer]) => {
+              featuresLayer.forEach(obj => {
+                const id = this._getLayerFeatureId(layer, obj);
+                const distance = this.getDistanceBetweenObjects(layerId, layerObject[0], lid, obj);
 
-    if (Ember.isNone(layer)) {
-      throw `Layer '${layerId}' not found.`;
-    }
+                if (layerId === lid && layerObjectId === id) {
+                  return;
+                }
 
-    var result = null;
-    layerIdsArray.forEach(lid => {
-      const layer = layers.findBy('id', lid);
-      if (Ember.isNone(layer)) {
-        throw `Layer '${lid}' not found.`;
-      }
+                if (Ember.isNone(result) || distance < result.distance) {
+                  result = {
+                    distance: distance,
+                    layer: layer,
+                    object: obj,
+                  };
+                }
+              });
 
-      const features = Ember.get(layer, '_leafletObject');
-      if (Ember.isNone(features)) {
-        throw `There are no objects in the '${lid}' layer.`;
-      }
+              resolve(result);
+            });
+          });
+        });
 
-      features.eachLayer(obj => {
-        const id = this._getLayerFeatureId(layer, obj);
-        const distance = this.getDistanceBetweenObjects(layerId, layerObjectId, lid, id);
-
-        if (layerId === lid && layerObjectId === id) {
-          return;
-        }
-
-        if (Ember.isNone(result) || distance < result.distance) {
-          result = {
-            distance: distance,
-            layer: layer,
-            object: obj,
-          };
-        }
+        Ember.RSVP.allSettled(promises).then((results) => {
+          let res = null;
+          results.forEach((item) => {
+            if (Ember.isNone(res) || item.value.distance < res.distance) {
+              res = item.value;
+            }
+          });
+          resolve(res);
+        });
+      }).catch((e) => {
+        reject(e);
       });
     });
-
-    return result;
   },
 
   /**
     Get distance between objects
     @method getDistanceBetweenObjects
     @param {string} firstLayerId First layer id.
-    @param {string} firstLayerObjectId First layer object id.
+    @param {Object} firstLayerObject First layer object.
     @param {string} secondLayerId Second layer id.
-    @param {string} secondLayerObjectId Second layer object id.
+    @param {Object} secondLayerObject Second layer object.
     @return {number} Distance between objects in meters.
   */
-  getDistanceBetweenObjects(firstLayerId, firstLayerObjectId, secondLayerId, secondLayerObjectId) {
-    const layers = this.get('mapLayer');
-    const firstLayer = layers.findBy('id', firstLayerId);
-    if (Ember.isNone(firstLayer)) {
-      throw `Layer '${firstLayerId}' not found.`;
-    }
+  getDistanceBetweenObjects(firstLayerId, firstLayerObject, secondLayerId, secondLayerObject) {
+    const firstLayer = this.get('mapLayer').findBy('id', firstLayerId);
+    const secondLayer = this.get('mapLayer').findBy('id', secondLayerId);
 
-    const secondLayer = layers.findBy('id', secondLayerId);
-    if (Ember.isNone(secondLayer)) {
-      throw `Layer '${secondLayerId}' not found.`;
-    }
-
-    const getObjectCenter = function (layer, objectId) {
-      var result;
-      const features = Ember.get(layer, '_leafletObject');
-      if (Ember.isNone(features)) {
-        throw `There are no objects in the '${layer.id}' layer.`;
-      }
-
-      features.eachLayer(obj => {
-        const id = this._getLayerFeatureId(layer, obj);
-
-        if (id === objectId) {
-          result = obj;
-          return;
-        }
-      });
-
-      if (Ember.isNone(result)) {
-        throw `Object '${objectId}' not found.`;
-      }
-
-      const type = Ember.get(result, 'feature.geometry.type');
+    const getObjectCenter = function (layer, object) {
+      const type = Ember.get(object, 'feature.geometry.type');
       if (type === 'Point') {
-        return result._latlng;
+        return object._latlng;
       } else {
-        return result.getBounds().getCenter();
+        return object.getBounds().getCenter();
       }
     };
 
-    const firstPoint = getObjectCenter.call(this, firstLayer, firstLayerObjectId);
+    const firstPoint = getObjectCenter(firstLayer, firstLayerObject);
     const firstObject = helpers.point([firstPoint.lat, firstPoint.lng]);
 
-    const secondPoint = getObjectCenter.call(this, secondLayer, secondLayerObjectId);
+    const secondPoint = getObjectCenter(secondLayer, secondLayerObject);
     const secondObject = helpers.point([secondPoint.lat, secondPoint.lng]);
 
     // Get distance in meters.
@@ -334,162 +318,128 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Get layer object attributes.
+    Get layer object attributes and coordinates.
     @method getLayerObjectOptions
-    @param {String} layerId Id layer
-    @param {String} featureId Id object
-    @param {String} crsName crs name, in which to give coordinates
+    @param {String} layerId Layer ID.
+    @param {String} featureId Object ID.
+    @param {String} crsName Name of coordinate reference system, in which to give coordinates.
+    @return {Promise} Attributes and coordinates
   */
   getLayerObjectOptions(layerId, featureId, crsName) {
-    let result;
-    if (Ember.isNone(layerId) || Ember.isNone(featureId)) {
-      return result;
-    }
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let result;
+      this._getModelLayerFeature(layerId, [featureId]).then(([, leafletObject, layerObject]) => {
+        let crs = Ember.get(layerObject[0], 'options.crs');
+        let crsTarget = null;
 
-    const allLayers = this.get('mapLayer');
-    let layers = Ember.A(allLayers);
-    const layer = layers.findBy('id', layerId);
-    if (Ember.isNone(layer)) {
-      return result;
-    }
+        let coordsToLatLng = (coords) =>  {
+          return crs.unproject(L.point(coords));
+        };
 
-    let features = Ember.get(layer, '_leafletObject._layers') || {};
-    let object = Object.values(features).find(feature => {
-      return this._getLayerFeatureId(layer, feature) === featureId;
-    });
+        let geoJSON = L.geoJSON(layerObject[0].feature, { coordsToLatLng: coordsToLatLng.bind(this) });
 
-    if (!Ember.isNone(object)) {
-      let crs = Ember.get(layer, '_leafletObject.options.crs');
-      let crsTarget = null;
+        let transform = (latlngs) => {
+          if (Ember.isArray(latlngs)) {
+            let coords = [];
+            for (let i = 0; i < latlngs.length; i++) {
+              coords.push(transform(latlngs[i]));
+            }
 
-      let coordsToLatLng = (coords) =>  {
-        return crs.unproject(L.point(coords));
-      };
-
-      let geoJSON = L.geoJSON(object.feature, { coordsToLatLng: coordsToLatLng.bind(this) });
-
-      let transform = (latlngs) => {
-        if (Ember.isArray(latlngs)) {
-          let coords = [];
-          for (let i = 0; i < latlngs.length; i++) {
-            coords.push(transform(latlngs[i]));
+            return coords;
+          } else {
+            return crsTarget.project(latlngs);
           }
+        };
 
-          return coords;
-        } else {
-          return crsTarget.project(latlngs);
+        let geom = geoJSON.getLayers()[0].feature.geometry.coordinates;
+        if (!Ember.isNone(crsName)) {
+          crsTarget = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
+          let geometry = geoJSON.getLayers()[0].getLatLngs();
+
+          try {
+            geom = transform(geometry);
+          }
+          catch (err) {
+            console.log(err);
+          }
         }
-      };
 
-      let geom = geoJSON.getLayers()[0].feature.geometry.coordinates;
-      if (!Ember.isNone(crsName)) {
-        crsTarget = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
-        let geometry = geoJSON.getLayers()[0].getLatLngs();
+        result = Ember.$.extend({}, geoJSON.getLayers()[0].feature.properties);
+        result.geometry = geom;
 
-        try {
-          geom = transform(geometry);
-        }
-        catch (err) {
-          console.log(err);
-        }
-      }
-
-      result = Ember.$.extend({}, geoJSON.getLayers()[0].feature.properties);
-      result.geometry = geom;
-
-      var obj = object.options.crs.code === 'EPSG:4326' ? object.feature : projection.toWgs84(object.feature);
-      result.area = area(obj);
-    }
-
-    return result;
+        var obj = layerObject[0].options.crs.code === 'EPSG:4326' ? layerObject[0].feature : projection.toWgs84(layerObject[0].feature);
+        result.area = area(obj);
+        resolve(result);
+      }).catch((e) => {
+        reject(e);
+      });
+    });
   },
 
   /**
-    Check if objectA contains object B.
+    Check if object A contains object B.
     @method isContainsObject
-    @param {String} objectAId id of first object.
-    @param {String} layerAId id of first layer.
-    @param {String} objectBId id of second object.
-    @param {String} layerBId id of second layer.
+    @param {String} layerAId First layer ID.
+    @param {String} objectAId First object ID.
+    @param {String} layerBId Second layer ID.
+    @param {String} objectBId Second object ID.
+    @return {Promise} true or false.
   */
-  isContainsObject(objectAId, layerAId, objectBId, layerBId) {
-    let objA;
-    let objB;
-    const layers = this.get('mapLayer');
-    let layerA = layers.findBy('id', layerAId);
-    let layerB = layers.findBy('id', layerBId);
-    if (layerA && layerB) {
-      let featuresA = Ember.get(layerA, '_leafletObject._layers');
-      objA = Object.values(featuresA).find(feature => {
-        const layerAFeatureId = this._getLayerFeatureId(layerA, feature);
-        return layerAFeatureId === objectAId;
+  isContainsObject(layerAId, objectAId, layerBId, objectBId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      Ember.RSVP.allSettled([
+        this._getModelLayerFeature(layerAId, [objectAId]),
+        this._getModelLayerFeature(layerBId, [objectBId])
+      ]).then((result) => {
+        let objA = result[0].value[2][0];
+        let objB = result[1].value[2][0];
+        objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+        objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+        if (objA.geometry.type === 'MultiPolygon') {
+          objA = L.polygon(objA.geometry.coordinates[0]).toGeoJSON();
+        }
+
+        if (objB.geometry.type === 'MultiPolygon') {
+          objB = L.polygon(objB.geometry.coordinates[0]).toGeoJSON();
+        }
+
+        resolve(booleanContains(objA, objB));
+      }).catch((e) => {
+        reject(e);
       });
-      let featuresB = Ember.get(layerB, '_leafletObject._layers');
-      objB = Object.values(featuresB).find(feature => {
-        const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
-        return layerBFeatureId === objectBId;
-      });
-    }
-
-    if (objA && objB) {
-      objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-      objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
-      if (objA.geometry.type === 'MultiPolygon') {
-        objA = L.polygon(objA.geometry.coordinates[0]).toGeoJSON();
-      }
-
-      if (objB.geometry.type === 'MultiPolygon') {
-        objB = L.polygon(objB.geometry.coordinates[0]).toGeoJSON();
-      }
-
-      if (booleanContains(objB, objA)) {
-        return true;
-      }
-    }
-
-    return false;
+    });
   },
 
   /**
     Calculate the area of ​​object B that extends beyond the boundaries of object A.
     @method getAreaExtends
-    @param {String} objectAId id of first object.
-    @param {String} layerAId id of first layer.
-    @param {String} objectBId id of second object.
-    @param {String} layerBId id of second layer.
+    @param {String} layerAId First layer ID.
+    @param {String} objectAId First object ID.
+    @param {String} layerBId Second layer ID.
+    @param {String} objectBId Second object ID.
+    @return {Promise} Area
   */
-  getAreaExtends(objectAId, layerAId, objectBId, layerBId) {
-    let objA;
-    let objB;
-    const layers = this.get('mapLayer');
-    let layerA = layers.findBy('id', layerAId);
-    let layerB = layers.findBy('id', layerBId);
-    if (layerA && layerB) {
-      let featuresA = Ember.get(layerA, '_leafletObject._layers');
-      objA = Object.values(featuresA).find(feature => {
-        const layerAFeatureId = this._getLayerFeatureId(layerA, feature);
-        return layerAFeatureId === objectAId;
+  getAreaExtends(layerAId, objectAId, layerBId, objectBId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      Ember.RSVP.allSettled([
+        this._getModelLayerFeature(layerAId, [objectAId]),
+        this._getModelLayerFeature(layerBId, [objectBId])
+      ]).then((result) => {
+        let objA = result[0].value[2][0];
+        let objB = result[1].value[2][0];
+        objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+        objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+        let intersectionRes = intersect.default(objB, objA);
+        if (intersectionRes) {
+          let resultArea = area(objB) - area(intersectionRes);
+          resolve(resultArea);
+        } else {
+          resolve(area(objB));
+        }
+      }).catch((e) => {
+        reject(e);
       });
-      let featuresB = Ember.get(layerB, '_leafletObject._layers');
-      objB = Object.values(featuresB).find(feature => {
-        const layerBFeatureId = this._getLayerFeatureId(layerB, feature);
-        return layerBFeatureId === objectBId;
-      });
-    }
-
-    if (objA && objB) {
-      objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-      objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
-      let intersectionRes = intersect.default(objB, objA);
-      if (intersectionRes) {
-        let resultArea = area(objB) - area(intersectionRes);
-        return resultArea;
-      } else {
-        return area(objB);
-      }
-    }
-
-    return 0;
+    });
   },
 
   _setVisibility(layerIds, visibility = false) {
@@ -510,12 +460,12 @@ export default Ember.Mixin.create({
     @method _getLayerFeatureId
     @param {Object} layer Layer.
     @param {Object} layerObject Object.
-    @return {number} Id object.
+    @return {number} Object ID.
   */
   _getLayerFeatureId(layer, layerObject) {
-    const getLayerFeatureId = this.get('mapApi').getFromApi('getLayerFeatureId');
-    if (typeof getLayerFeatureId === 'function') {
-      return getLayerFeatureId(layer, layerObject);
+    let field = this._getPkField(layer);
+    if (layerObject.feature.properties.hasOwnProperty(field)) {
+      return Ember.get(layerObject, 'feature.properties.' + field);
     }
 
     return Ember.get(layerObject, 'feature.id');
@@ -525,8 +475,8 @@ export default Ember.Mixin.create({
     Determine the visibility of the specified objects by id for the layer.
 
     @method _setVisibilityObjects
-    @param {string} layerId Layer id.
-    @param {string[]} objectIds Array of id objects.
+    @param {string} layerId Layer ID.
+    @param {string[]} objectIds Array of objects IDs.
     @param {boolean} [visibility=false] visibility Object Visibility.
   */
   _setVisibilityObjects(layerId, objectIds, visibility = false) {
@@ -534,7 +484,7 @@ export default Ember.Mixin.create({
       const layers = this.get('mapLayer');
       const layer = layers.findBy('id', layerId);
       if (Ember.isNone(layer)) {
-        throw 'No layer with such id';
+        throw `Layer '${layerId}' not found.`;
       }
 
       const leafletObject = Ember.get(layer, '_leafletObject');
@@ -563,106 +513,110 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Copy Object from Source layer to Destination.
+    To copy Object from Source layer to Destination.
     @method copyObject
     @param {Object} source Object with source settings
     {
-      layerId,
-      objectId,
-      shouldRemove
+      layerId, //{string} Layer ID
+      objectId, //{string} Object ID
+      shouldRemove //{Bool} Should remove object from source layer
     }
     @param {Object} destination Object with destination settings
     {
-      layerId,
-      properties
+      layerId, //{string} Layer ID
+      properties //{Object} Properties of new object.
     }
+    @return {Promise} Object in Destination layer
   */
   copyObject(source, destination) {
-    let [sourceLayerModel, sourceLeafletLayer, sourceFeature] = this._getModelLayerFeature(source.layerId, source.objectId);
-    let [destLayerModel, destLeafletLayer] = this._getModelLayerFeature(destination.layerId);
-    if (sourceLayerModel && destLayerModel && sourceLeafletLayer && destLeafletLayer && sourceFeature) {
-      let destFeature;
-      switch (destLayerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
-        case 'polygon':
-          destFeature = L.polygon(sourceFeature.getLatLngs());
-          break;
-        case 'polyline':
-          destFeature = L.polyline(sourceFeature.getLatLngs());
-          break;
-        case 'marker':
-          destFeature = L.marker(sourceFeature.getLatLng());
-          break;
-        default:
-          throw 'Unknown layer type: ' + destLayerModel.get('settingsAsObject.typeGeometry');
-      }
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this._getModelLayerFeature(source.layerId, [source.objectId], source.shouldRemove).then(([, sourceLeafletLayer, obj]) => {
+        let sourceFeature = obj[0];
+        let [destLayerModel, destLeafletLayer] = this._getModelLeafletObject(destination.layerId);
+        let destFeature;
+        switch (destLayerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
+          case 'polygon':
+            destFeature = L.polygon(sourceFeature.getLatLngs());
+            break;
+          case 'polyline':
+            destFeature = L.polyline(sourceFeature.getLatLngs());
+            break;
+          case 'marker':
+            destFeature = L.marker(sourceFeature.getLatLng());
+            break;
+          default:
+            reject(`Unknown layer type: '${destLayerModel.get('settingsAsObject.typeGeometry')}`);
+        }
 
-      destFeature.feature = {
-        properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {})
-      };
+        if (!Ember.isNone(destFeature)) {
+          destFeature.feature = {
+            properties: Object.assign({}, sourceFeature.feature.properties, destination.properties || {})
+          };
 
-      destLeafletLayer.addLayer(destFeature);
+          destLeafletLayer.addLayer(destFeature);
 
-      if (source.shouldRemove) {
-        sourceLeafletLayer.removeLayer(sourceFeature);
-      }
-    } else {
-      throw {
-        message: 'Wrong parameters',
-        sourceLayerModel,
-        sourceLeafletLayer,
-        sourceFeature,
-        destLayerModel,
-        destLeafletLayer
-      };
-    }
+          if (source.shouldRemove) {
+            sourceLeafletLayer.removeLayer(sourceFeature);
+          }
+
+          resolve(destFeature);
+        }
+      }).catch((e) => {
+        reject(e);
+      });
+    });
   },
 
   /**
-    Calculate the area of intersection between object A and object B .
+    Calculate the area of intersection between object A and object B.
     @method getIntersectionArea
-    @param {String} objectAId id of first object.
-    @param {String} layerAId id of first layer.
-    @param {String} objectBId id of second object.
-    @param {String} layerBId id of second layer.
+    @param {String} layerAId First layer ID.
+    @param {String} objectAId First object ID.
+    @param {String} layerBId Second layer ID.
+    @param {String} objectBId Second object ID.
     @param {Bool} showOnMap flag indicates if intersection area will be displayed on map.
+    @return {Promise} If showOnMap = true, return object, which show on map in serviceLayer, and area, else only area.
   */
   getIntersectionArea(layerAId, objectAId, layerBId, objectBId, showOnMap) {
-    let [layerA, layerObjectA, objA] = this._getModelLayerFeature(layerAId, objectAId);
-    let [layerB, layerObjectB, objB] = this._getModelLayerFeature(layerBId, objectBId);
-    if (layerObjectA && layerObjectB) {
-      if (layerA && layerB) {
-        if (objA && objB) {
-          return new Ember.RSVP.Promise((resolve, reject) => {
-            objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
-            objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
-            let intersectionRes = intersect.default(objA, objB);
-            if (intersectionRes) {
-              if (showOnMap) {
-                let obj = L.geoJSON(intersectionRes, {
-                  style: { color: 'green' }
-                });
-                let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
-                obj.addTo(serviceLayer);
-                resolve('displayed');
-              }
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let result = {
+        object: null,
+        area: null
+      };
+      Ember.RSVP.allSettled([
+        this._getModelLayerFeature(layerAId, [objectAId]),
+        this._getModelLayerFeature(layerBId, [objectBId])
+      ]).then((res) => {
+        let objA = res[0].value[2][0];
+        let objB = res[1].value[2][0];
+        objA = objA.options.crs.code === 'EPSG:4326' ? objA.feature : projection.toWgs84(objA.feature);
+        objB = objB.options.crs.code === 'EPSG:4326' ? objB.feature : projection.toWgs84(objB.feature);
+        let intersectionRes = intersect.default(objA, objB);
+        if (intersectionRes) {
+          if (showOnMap) {
+            let obj = L.geoJSON(intersectionRes, {
+              style: { color: 'green' }
+            });
+            let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+            obj.addTo(serviceLayer);
+            result.object = obj;
+          }
 
-              resolve(area(intersectionRes));
-            } else {
-              reject('no intersection found');
-            }
-          });
+          result.area = area(intersectionRes);
+          resolve(result);
         } else {
-          throw 'no object with such id';
+          reject('Intersection not found');
         }
-      } else {
-        throw 'no layer with such id';
-      }
-    }
+      }).catch((e) => {
+        reject(e);
+      });
+    });
   },
 
   /**
     Cleans the service layer.
     @method clearServiceLayer
+    @return nothing
   */
   clearServiceLayer() {
     let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
@@ -672,16 +626,24 @@ export default Ember.Mixin.create({
   /**
     Create image for layer object.
     @method  getSnapShot
-    @snapt
+    @param {Object} source Object with settings
+    {
+      layerId, //{string} Layer ID.
+      objectId, //{string} Object ID.
+      layerArrIds, //{Array} Array of layers IDs.
+      options {
+        width, //{number} width image
+        height //{number} height image
+      }
+    }
+    @return {Promise} Image url.
   */
   getSnapShot({ layerId, objectId, layerArrIds, options }) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let [layerModel, leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
-      if (layerModel && leafletLayer && featureLayer) {
+      this._getModelLayerFeature(layerId, [objectId]).then(([layerModel, leafletObject, featureLayer]) => {
+        let allLayers = this.get('mapLayer.canonicalState');
+        let allLayersIds = allLayers.map((l) => l.id);
         if (layerArrIds) {
-          let allLayers = this.get('mapLayer.canonicalState');
-          let allLayersIds = allLayers.map((l) => l.id);
-
           let showLayersIds = layerArrIds;
           showLayersIds.push(layerId);
 
@@ -705,50 +667,108 @@ export default Ember.Mixin.create({
         $mapPicture.height(heightNew);
         $mapPicture.width(widthNew);
 
+        let load = [];
+        let ids = Ember.isEmpty(layerArrIds) ? allLayersIds : layerArrIds;
+        if (ids) {
+          ids.forEach((lid) => {
+            if (lid !== layerId) {
+              let [layer, layerObject] = this._getModelLeafletObject(lid);
+              let className = Ember.get(layer, 'type');
+              let layerType = Ember.getOwner(this).knownForType('layer', className);
+              if (layerType instanceof WfsLayer) {
+                layerObject.statusLoadLayer = true;
+                load.push(layerObject);
+              }
+            }
+          });
+        }
+
+        let className = Ember.get(layerModel, 'type');
+        let layerType = Ember.getOwner(this).knownForType('layer', className);
+        if (layerType instanceof WfsLayer) {
+          leafletObject.statusLoadLayer = true;
+          load.push(leafletObject);
+        }
+
         leafletMap.once('moveend', () => {
           Ember.run.later(() => {
             document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'none';
             document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'none';
-            document.getElementsByClassName('leaflet-control-container')[0].style.display = 'none';
+            Ember.$(document).find('.leaflet-top.leaflet-left').css('display', 'none');
+            Ember.$(document).find('.leaflet-top.leaflet-right').css('display', 'none');
+            Ember.$(document).find('.leaflet-bottom.leaflet-right').css('display', 'none');
 
-            let html2canvasOptions = Object.assign({
-              useCORS: true
+            let promises = load.map((object) => {
+              return object.promiseLoadLayer;
             });
-            window.html2canvas($mapPicture[0], html2canvasOptions)
-              .then((canvas) => {
-                let type = 'image/png';
-                var image64 = canvas.toDataURL(type);
-                resolve(image64);
-              })
-              .catch((e) => reject(e))
-              .finally(() => {
-                document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'block';
-                document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'block';
-                document.getElementsByClassName('leaflet-control-container')[0].style.display = 'block';
-                $mapPicture.height(heightMap);
-                $mapPicture.width(widthMap);
+
+            Ember.RSVP.allSettled(promises).then((e) => {
+              load.forEach((obj) => {
+                obj.statusLoadLayer = false;
+                obj.promiseLoadLayer = null;
               });
-          }, 2000);
+
+              let html2canvasOptions = Object.assign({
+                useCORS: true,
+                onclone: function(clonedDoc) {
+                  let elem = Ember.$(clonedDoc).find('[style*="transform: translate"]');
+                  elem.each((ind) => {
+                    let $item = Ember.$(elem[ind]);
+                    let matrix = $item.css('transform');
+                    if (matrix !== 'none') {
+                      let tr = matrix.split(', ');
+                      $item.css('transform', '');
+                      $item.css('top', tr[5].replace(')', '') + 'px');
+                      $item.css('left', tr[4] + 'px');
+                    }
+                  });
+                }
+              });
+              window.html2canvas($mapPicture[0], html2canvasOptions)
+                .then((canvas) => {
+                  let type = 'image/png';
+                  var image64 = canvas.toDataURL(type);
+                  resolve(image64);
+                })
+                .catch((e) => reject(e))
+                .finally(() => {
+                  document.getElementsByClassName('leaflet-control-zoom leaflet-bar leaflet-control')[0].style.display = 'block';
+                  document.getElementsByClassName('history-control leaflet-bar leaflet-control horizontal')[0].style.display = 'block';
+                  Ember.$(document).find('.leaflet-top.leaflet-left').css('display', 'block');
+                  Ember.$(document).find('.leaflet-top.leaflet-right').css('display', 'block');
+                  Ember.$(document).find('.leaflet-bottom.leaflet-right').css('display', 'block');
+                  $mapPicture.height(heightMap);
+                  $mapPicture.width(widthMap);
+                });
+            });
+          });
         });
 
-        let bounds = featureLayer.getBounds();
+        let bounds = featureLayer[0].getBounds();
         if (!Ember.isNone(bounds)) {
-          leafletMap.fitBounds(bounds.pad(1));
+          leafletMap.fitBounds(bounds.pad(0.5));
         }
-      } else {
-        throw {
-          message: 'Wrong parameters',
-          layerModel,
-          leafletLayer,
-          featureLayer
-        };
-      }
+      }).catch((e) => {
+        reject(e);
+      });
     });
   },
 
   /**
     Download image for layer object.
     @method  downloadSnapShot
+    @param {Object} source Object with settings
+    {
+      layerId, //{string} Layer ID.
+      objectId, //{string} Object ID.
+      layerArrIds, //{Array} Array of layers IDs.
+      options {
+        width, //{number} width image
+        height //{number} height image
+      },
+      fileName //{string} File name.
+    }
+    @return {File} Image file.
   */
   downloadSnapShot({ layerId, objectId, layerArrIds, options, fileName }) {
     this.getSnapShot({ layerId, objectId, layerArrIds, options }).then((uri) => {
@@ -772,171 +792,190 @@ export default Ember.Mixin.create({
   },
 
   /**
-   * Get the object thumb.
-   * @method  getRhumb
-   * @param {string} layerId Layer id.
-   * @param {string} objectId Object id.
-   * @return {array} Table rhumb.
+    Get the object rhumb.
+    @method  getRhumb
+    @param {string} layerId Layer ID.
+    @param {string} objectId Object ID.
+    @return {Promise} Object rhumb.
   */
   getRhumb(layerId, objectId) {
-    const layer = this.get('mapLayer').findBy('id', layerId);
-    const leafletObject = Ember.get(layer, '_leafletObject');
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this._getModelLayerFeature(layerId, [objectId]).then(([, leafletObject, featureLayer]) => {
+        let cors = featureLayer[0]._latlngs;
+        let result = [];
 
-    var cors;
-    leafletObject.eachLayer(function (object) {
-      const id = this._getLayerFeatureId(layer, object);
-      if (!Ember.isNone(id) && objectId === id) {
-        cors = object._latlngs;
-      }
-    }.bind(this));
+        var rowPush = function (vertexNum1, vertexNum2, point1, point2) {
+          const pointFrom = helpers.point([point2.lng, point2.lat]);
+          const pointTo = helpers.point([point1.lng, point1.lat]);
 
-    if (Ember.isNone(cors)) {
-      throw new Error('Object not found');
-    }
+          // We get the distance and translate into meters.
+          const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
 
-    let result = [];
+          // Get the angle.
+          const bearing = rhumbBearing.default(pointTo, pointFrom);
 
-    var rowPush = function (vertexNum1, vertexNum2, point1, point2) {
-      const pointFrom = helpers.point([point2.lng, point2.lat]);
-      const pointTo = helpers.point([point1.lng, point1.lat]);
+          let rhumb;
+          let angle;
 
-      // We get the distance and translate into meters.
-      const distance = rhumbDistance.default(pointFrom, pointTo, { units: 'kilometers' }) * 1000;
-
-      // Get the angle.
-      const bearing = rhumbBearing.default(pointTo, pointFrom);
-
-      let rhumb;
-
-      // Calculates rhumb.
-      if (bearing <= 90 && bearing >= 0) {
-        // СВ
-        rhumb = 'СВ;' + bearing;
-      } else if (bearing <= 180 && bearing >= 90) {
-        // ЮВ
-        rhumb = 'ЮВ;' + (180 - bearing);
-      } else if (bearing >= -180 && bearing <= -90) {
-        // ЮЗ
-        rhumb = 'ЮЗ;' + (180 + bearing);
-      } if (bearing <= 0 && bearing >= -90) {
-        // СЗ
-        rhumb = 'СЗ;' + (-1 * bearing);
-      }
-
-      return {
-        rib: `${vertexNum1 + 1};${vertexNum2 + 1}`,
-        rhumb: rhumb,
-        distance: distance
-      };
-    };
-
-    let startPoint = null;
-    for (let i = 0; i < cors.length; i++) {
-      for (let j = 0; j < cors[i].length; j++) {
-        let n;
-        let point1;
-        let point2;
-        let item = cors[i][j];
-
-        // Polygon.
-        if (!Ember.isNone(item.length)) {
-          for (let k = 0; k < item.length; k++) {
-            startPoint = k === 0 ? item[k] : startPoint;
-            point1 = item[k];
-            n = !Ember.isNone(item[k + 1]) ? k + 1 : 0;
-            point2 = item[n];
-
-            result.push(rowPush(k, n, point1, point2));
+          // Calculates rhumb.
+          if (bearing <= 90 && bearing >= 0) {
+            // СВ
+            rhumb = 'СВ';
+            angle = bearing;
+          } else if (bearing <= 180 && bearing >= 90) {
+            // ЮВ
+            rhumb = 'ЮВ';
+            angle = (180 - bearing);
+          } else if (bearing >= -180 && bearing <= -90) {
+            // ЮЗ
+            rhumb = 'ЮЗ';
+            angle = (180 + bearing);
+          } if (bearing <= 0 && bearing >= -90) {
+            // СЗ
+            rhumb = 'СЗ';
+            angle = (-1 * bearing);
           }
 
-          // LineString.
-        } else {
-          startPoint = j === 0 ? item : startPoint;
-          point1 = item;
-          n = !Ember.isNone(cors[i][j + 1]) ? j + 1 : 0;
-          point2 = cors[i][n];
+          return {
+            rhumb: rhumb,
+            angle: angle,
+            distance: distance
+          };
+        };
 
-          result.push(rowPush(j, n, point1, point2));
+        let startPoint = null;
+        let type;
+        for (let i = 0; i < cors.length; i++) {
+          for (let j = 0; j < cors[i].length; j++) {
+            let n;
+            let point1;
+            let point2;
+            let item = cors[i][j];
+
+            // Polygon.
+            if (!Ember.isNone(item.length)) {
+              type = 'Polygon';
+              for (let k = 0; k < item.length; k++) {
+                startPoint = k === 0 ? item[k] : startPoint;
+                point1 = item[k];
+                n = !Ember.isNone(item[k + 1]) ? k + 1 : 0;
+                point2 = item[n];
+
+                result.push(rowPush(k, n, point1, point2));
+              }
+
+              // LineString.
+            } else {
+              type = 'LineString';
+              startPoint = j === 0 ? item : startPoint;
+              point1 = item;
+              n = !Ember.isNone(cors[i][j + 1]) ? j + 1 : 0;
+              point2 = cors[i][n];
+
+              result.push(rowPush(j, n, point1, point2));
+            }
+          }
         }
-      }
-    }
 
-    return {
-      startPoint: startPoint,
-      rhumbCoordinates: result,
-      coordinates: cors
-    };
+        resolve({
+          type: type,
+          startPoint: startPoint,
+          crs: 'EPSG:4326',
+          skip: 1,
+          rhumbCoordinates: result,
+          coordinates: cors
+        });
+      }).catch((e) => {
+        reject(e);
+      });
+    });
   },
 
   /**
     Add a layer to the group.
 
     @method layerToGroup
-    @parm {string} layerGroupId Group layer id.
-    @parm {string} layerId layer id.
+    @parm {string} layerId Layer ID.
+    @parm {string} layerGroupId Group layer ID.
+    @return nothing
   */
   moveLayerToGroup(layerId, layerGroupId) {
-    const layer = this.get('mapLayer').findBy('id', layerId);
+    const layer = this.get('mapLayer').findBy('id', layerGroupId);
+    if (Ember.isNone(layer)) {
+      throw (`Group layer '${layerGroupId}' not found`);
+    }
 
-    let layerModel = this.getLayerModel(layerGroupId);
+    let layerModel = this.getLayerModel(layerId);
+    if (Ember.isNone(layerModel)) {
+      throw (`Layer '${layerId}' not found`);
+    }
+
     layerModel.set('parent', layer);
   },
 
   /**
-    Change object polygon.
-    @method copyObject
-    @param {String} objectId geoJSON object id.
-    @param {String} layerId id of layer to change object.
-    @param {String} polygon  new object polygon.
-    @param {String} crsName  crs name.
+    Edit object layer.
+    @method editLayerObject
+    @param {String} layerId Layer ID.
+    @param {String} objectId Object ID.
+    @param {String} polygon Сoordinates of the new object in geoJSON format.
+    @param {String} crsName Name of coordinate reference system.
+    @return {Promise} Layer object.
   */
   editLayerObject(layerId, objectId, polygon, crsName) {
-    if (polygon) {
-      let [, leafletLayer, featureLayer] = this._getModelLayerFeature(layerId, objectId);
-      if (leafletLayer && featureLayer) {
-        let crs = leafletLayer.options.crs;
-        if (!Ember.isNone(crsName)) {
-          crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
-        }
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      if (polygon) {
+        this._getModelLayerFeature(layerId, [objectId], true).then(([, leafletLayer, featureLayer]) => {
+          if (leafletLayer && featureLayer) {
+            let crs = leafletLayer.options.crs;
+            if (!Ember.isNone(crsName)) {
+              crs = getLeafletCrs('{ "code": "' + crsName.toUpperCase() + '", "definition": "" }', this);
+            }
 
-        let coordsToLatLng = function(coords) {
-          return crs.unproject(L.point(coords));
-        };
+            let coordsToLatLng = function(coords) {
+              return crs.unproject(L.point(coords));
+            };
 
-        let geoJSON = null;
-        if (!Ember.isNone(crs) && crs.code !== 'EPSG:4326') {
-          geoJSON = L.geoJSON(polygon, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
-        } else {
-          geoJSON = L.geoJSON(polygon).getLayers()[0];
-        }
+            let geoJSON = null;
+            if (!Ember.isNone(crs) && crs.code !== 'EPSG:4326') {
+              geoJSON = L.geoJSON(polygon, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
+            } else {
+              geoJSON = L.geoJSON(polygon).getLayers()[0];
+            }
 
-        if (!Ember.isNone(Ember.get(geoJSON, 'feature.geometry'))) {
-          if (Ember.get(geoJSON, 'feature.geometry.type').toLowerCase() !== 'point') {
-            featureLayer.setLatLngs(geoJSON._latlngs);
-          } else {
-            featureLayer.setLatLng(geoJSON._latlng);
+            if (!Ember.isNone(Ember.get(geoJSON, 'feature.geometry'))) {
+              if (Ember.get(geoJSON, 'feature.geometry.type').toLowerCase() !== 'point') {
+                featureLayer[0].setLatLngs(geoJSON._latlngs);
+              } else {
+                featureLayer[0].setLatLng(geoJSON._latlng);
+              }
+
+              if (typeof leafletLayer.editLayer === 'function') {
+                leafletLayer.editLayer(featureLayer[0]);
+                resolve(featureLayer[0]);
+              }
+            } else {
+              reject(`Unable to convert coordinates for this CRS '${crsName}'`);
+            }
+          } else if (leafletLayer) {
+            reject(`Layer '${layerId}' not found`);
+          } else if (featureLayer[0]) {
+            reject(`Object '${objectId}' not found`);
           }
-
-          if (typeof leafletLayer.editLayer === 'function') {
-            leafletLayer.editLayer(featureLayer);
-            return true;
-          }
-        } else {
-          throw 'unable to convert coordinates for this CRS ' + crsName;
-        }
+        }).catch((e) => {
+          reject(e);
+        });
       } else {
-        throw 'no object or layer found';
+        reject('new object settings not passed');
       }
-    } else {
-      throw 'new object settings not passed';
-    }
+    });
   },
 
   /**
     Upload file.
     @method uploadFile
     @param {File} file.
-    @return {Promise} Returns promise
+    @return {Promise} Object in geoJSON format
   */
   uploadFile(file) {
     let config = Ember.getOwner(this).resolveRegistration('config:environment');
@@ -951,10 +990,32 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Get the field to search for objects
+    @method getPkField
+    @param {Object} layer.
+    @return {String} Field name.
+  */
+  _getPkField(layer) {
+    let className = Ember.get(layer, 'type');
+    let layerType = Ember.getOwner(this).knownForType('layer', className);
+    if (layerType instanceof VectorLayer) {
+      const getPkField = this.get('mapApi').getFromApi('getPkField');
+      if (typeof getPkField === 'function') {
+        return getPkField(layer);
+      }
+
+      let field = Ember.get(layer, 'settingsAsObject.pkField');
+      return Ember.isNone(field) ? 'primarykey' : field;
+    } else {
+      throw 'Layer is not VectorLayer';
+    }
+  },
+
+  /**
     Get coordinates point.
     @method getCoordPoint
-    @param {String} crsName crs name, in which to give coordinates
-    @return {Promise} Returns promise
+    @param {String} crsName Name of coordinate reference system, in which to give coordinates.
+    @return {Promise} Coordinate.
   */
   getCoordPoint(crsName) {
     return new Ember.RSVP.Promise((resolve, reject) => {

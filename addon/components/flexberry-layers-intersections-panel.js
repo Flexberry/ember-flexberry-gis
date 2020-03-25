@@ -354,18 +354,31 @@ export default Ember.Component.extend({
     e.results.forEach((identificationResult) => {
       identificationResult.features.then(
         (features) => {
-          // Show new features.
+          //Show new features.
           features.forEach((feature) => {
-            let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
-            if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
-              leafletLayer.setStyle({
-                color: 'salmon',
-                weight: 2,
-                fillOpacity: 0.3
-              });
-            }
+            if (feature.intersection) {
+              let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+              if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+                leafletLayer.setStyle({
+                  color: 'salmon',
+                  weight: 2,
+                  fillOpacity: 0.2
+                });
+              }
 
-            Ember.set(feature, 'leafletLayer', leafletLayer);
+              Ember.set(feature, 'leafletLayer', leafletLayer);
+            } else {
+              let leafletLayer = Ember.get(feature, 'leafletLayer') || new L.GeoJSON([feature]);
+              if (Ember.typeOf(leafletLayer.setStyle) === 'function') {
+                leafletLayer.setStyle({
+                  color: 'salmon',
+                  weight: 0,
+                  fillOpacity: 0
+                });
+              }
+
+              Ember.set(feature, 'leafletLayer', leafletLayer);
+            }
           });
         });
     });
@@ -452,30 +465,35 @@ export default Ember.Component.extend({
           }
 
           if (bufferR > 0) {
+            let props = objB.properties;
             objB  = buffer.default(objB.geometry, bufferR, { units: 'meters' });
+            Object.assign(objB.properties, props);
           }
 
           if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
-            let res = intersect.default(objA, objB);
-            if (res) {
-              if (square > 0) {
-                if (area(res) > square) {
+            if (Ember.get(objA, 'properties.primarykey') !== Ember.get(objB, 'properties.primarykey')) {
+              let res = intersect.default(objA, objB);
+              if (res) {
+                if (square > 0) {
+                  if (area(res) > square) {
+                    item = this.computeFeatureProperties(item, convertToMercator, res);
+                  }
+                } else {
                   item = this.computeFeatureProperties(item, convertToMercator, res);
                 }
-              } else {
-                item = this.computeFeatureProperties(item, convertToMercator, res);
               }
             }
           } else if (item.geometry.type === 'MultiLineString' || item.geometry.type === 'LineString') {
-            let intersects = lineIntersect(objA, objB);
-
-            if (intersects) {
-              item.intersection = {};
-              item.intersection.intersectionCords = [];
-              intersects.features.forEach(function (feat) {
-                item.intersection.intersectionCords.push(feat.geometry.coordinates);
-              });
-              item.intersection.intersectedObject = intersects;
+            if (Ember.get(objA, 'properties.primarykey') !== Ember.get(objB, 'properties.primarykey')) {
+              let intersects = lineIntersect(objA, objB);
+              if (intersects) {
+                item.intersection = {};
+                item.intersection.intersectionCords = [];
+                intersects.features.forEach(function (feat) {
+                  item.intersection.intersectionCords.push(feat.geometry.coordinates);
+                });
+                item.intersection.intersectedObject = intersects;
+              }
             }
           }
         });
@@ -503,7 +521,7 @@ export default Ember.Component.extend({
   computeFeatureProperties(feature, convertToMercator, res) {
     feature.intersection = {};
     feature.intersection.intersectionCords = [];
-    feature.intersection.intersectedArea = area(res);
+    feature.intersection.intersectedArea = area(res).toFixed(3);
     if (convertToMercator) {
       let resInMercator = projection.toMercator(res);
       feature.intersection.intersectionCords = this.computeCoordinates(resInMercator);

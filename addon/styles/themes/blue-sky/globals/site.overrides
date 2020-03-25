@@ -18,6 +18,9 @@
         height: 250px;
     }
     .multiple.search.selection.dropdown {
+        .dropdown.icon {
+            margin-left:10px;
+        }
         .ui.label.adition {
             margin-left: -20px;
         }
@@ -39,9 +42,13 @@
             }
         }
         .cords {
+            padding-top: 0px;
             width:50%;
         }
-    }  
+    }
+    .intersection-cell {
+        vertical-align: top;
+    }
 }
 
 .compare-geometries-panel {
