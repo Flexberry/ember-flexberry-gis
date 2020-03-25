@@ -6,6 +6,7 @@ import distance from 'npm:@turf/distance';
 import helpers from 'npm:@turf/helpers';
 import intersect from 'npm:@turf/intersect';
 import difference from 'npm:@turf/difference';
+import  union from 'npm:@turf/union';
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   layout,
 
@@ -141,6 +142,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     closePanel() {
       let group = this.get('featuresLayer');
       group.clearLayers();
+      let serviceLayer = this.get('serviceLayer');
+      serviceLayer.clearLayers();
+      this.send('selectFeature', null);
       this.sendAction('closeComparePanel');
     },
 
@@ -220,7 +224,41 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   },
 
   getNonIntersection(firstObject, secondObject) {
-    let nonIntersection = difference.default(firstObject, secondObject);
+    let intersection = intersect.default(firstObject, secondObject);
+    let nonIntersection;
+    if (intersection) {
+      let nonIntersection1 = difference.default(secondObject, intersection);
+      let nonIntersection2 = difference.default(firstObject, intersection);
+
+      if (nonIntersection1 && nonIntersection2) {
+        if (nonIntersection1.geometry.type === 'Polygon') {
+          nonIntersection1 = helpers.polygon(nonIntersection1.geometry.coordinates);
+        }
+
+        if (nonIntersection1.geometry.type === 'MultiPolygon') {
+          nonIntersection1 = helpers.multiPolygon(nonIntersection1.geometry.coordinates);
+        }
+
+        if (nonIntersection2.geometry.type === 'Polygon') {
+          nonIntersection2 = helpers.polygon(nonIntersection2.geometry.coordinates);
+        }
+
+        if (nonIntersection2.geometry.type === 'MultiPolygon') {
+          nonIntersection2 = helpers.multiPolygon(nonIntersection2.geometry.coordinates);
+        }
+
+        nonIntersection = union(nonIntersection1,  nonIntersection2);
+      } else {
+        if (nonIntersection1) {
+          nonIntersection = nonIntersection1;
+        }
+
+        if (nonIntersection2) {
+          nonIntersection = nonIntersection2;
+        }
+      }
+    }
+
     if (nonIntersection) {
       let displayCrs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
       return this.getObjectWithProperties(nonIntersection, displayCrs);
