@@ -6,6 +6,79 @@ import Ember from 'ember';
 
 export function initialize() {
   L.Marker.include({
+
+    /**
+      Animate zoom when its changed.
+      @method _animateZoom
+      @param {Object} opt animate zoom options
+      @private
+    */
+    _animateZoom: function (opt) {
+      if (this._checkAnimateMapZoom()) {
+        if (!this._icon) {
+          if (Ember.get(this, 'styleIsSet')) {
+            this.setIcon(new L.divIcon(this.style));
+          } else {
+            this.setIcon(new L.Icon.Default());
+          }
+        }
+
+        var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center).round();
+        this._setPos(pos);
+      } else {
+        this._removeIcon();
+        this._removeShadow();
+      }
+    },
+
+    /**
+      Update point position
+      @method update
+    */
+    update: function() {
+      if (Ember.get(this, '_map') && Ember.get(this, '_eventParents')) {
+        if (this._checkMapZoom()) {
+          if (this._icon && this._map) {
+            let pos1 = this._map.latLngToLayerPoint(this._latlng).round();
+            this._setPos(pos1);
+          }
+
+          return this;
+        }
+      } else {
+        if (this._icon && this._map) {
+          let pos2 = this._map.latLngToLayerPoint(this._latlng).round();
+          this._setPos(pos2);
+        }
+
+        return this;
+      }
+    },
+
+    /**
+      Check if animate zoom is between allowed layer min and max zoom.
+      @method _checkAnimateMapZoom
+      @private
+    */
+    _checkAnimateMapZoom() {
+      const mapZoom = Ember.get(this, '_map._animateToZoom');
+      const minZoom = Object.values(this._eventParents)[0].minZoom;
+      const maxZoom = Object.values(this._eventParents)[0].maxZoom;
+      return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom <= mapZoom && mapZoom <= maxZoom;
+    },
+
+    /**
+      Check if current zoom is between allowed layer min and max zoom.
+      @method _checkMapZoom
+      @private
+    */
+    _checkMapZoom() {
+      const mapZoom = Ember.get(this, '_map._zoom');
+      const minZoom = Object.values(this._eventParents)[0].minZoom;
+      const maxZoom = Object.values(this._eventParents)[0].maxZoom;
+      return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom <= mapZoom && mapZoom <= maxZoom;
+    },
+
     /**
       Style for marker.
       @method setStyle
