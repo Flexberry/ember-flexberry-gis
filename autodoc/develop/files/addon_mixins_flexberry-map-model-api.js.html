@@ -414,7 +414,6 @@ import helpers from &#x27;npm:@turf/helpers&#x27;;
 import booleanContains from &#x27;npm:@turf/boolean-contains&#x27;;
 import area from &#x27;npm:@turf/area&#x27;;
 import intersect from &#x27;npm:@turf/intersect&#x27;;
-import projection from &#x27;npm:@turf/projection&#x27;;
 import rhumbBearing from &#x27;npm:@turf/rhumb-bearing&#x27;;
 import rhumbDistance from &#x27;npm:@turf/rhumb-distance&#x27;;
 import { getLeafletCrs } from &#x27;../utils/leaflet-crs&#x27;;
@@ -738,48 +737,20 @@ export default Ember.Mixin.create({
   getLayerObjectOptions(layerId, featureId, crsName) {
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
       let result;
-      this._getModelLayerFeature(layerId, [featureId]).then(([, leafletObject, layerObject]) =&gt; {
-        let crs = Ember.get(layerObject[0], &#x27;options.crs&#x27;);
-        let crsTarget = null;
-
-        let coordsToLatLng = (coords) =&gt;  {
-          return crs.unproject(L.point(coords));
-        };
-
-        let geoJSON = L.geoJSON(layerObject[0].feature, { coordsToLatLng: coordsToLatLng.bind(this) });
-
-        let transform = (latlngs) =&gt; {
-          if (Ember.isArray(latlngs)) {
-            let coords = [];
-            for (let i = 0; i &lt; latlngs.length; i++) {
-              coords.push(transform(latlngs[i]));
-            }
-
-            return coords;
-          } else {
-            return crsTarget.project(latlngs);
+      this._getModelLayerFeature(layerId, [featureId]).then(([, leafletLayer, featureLayer]) =&gt; {
+        if (leafletLayer &amp;&amp; featureLayer) {
+          result = Object.assign({}, featureLayer[0].feature.properties);
+          result.geometry = featureLayer[0].feature.geometry.coordinates;
+          if (crsName) {
+            let NewObjCrs = this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer[0].feature, crsName);
+            result.geometry = NewObjCrs.geometry.coordinates;
           }
-        };
 
-        let geom = geoJSON.getLayers()[0].feature.geometry.coordinates;
-        if (!Ember.isNone(crsName)) {
-          crsTarget = getLeafletCrs(&#x27;{ &quot;code&quot;: &quot;&#x27; + crsName.toUpperCase() + &#x27;&quot;, &quot;definition&quot;: &quot;&quot; }&#x27;, this);
-          let geometry = geoJSON.getLayers()[0].getLatLngs();
-
-          try {
-            geom = transform(geometry);
-          }
-          catch (err) {
-            console.log(err);
-          }
+          let obj = featureLayer[0].options.crs.code === &#x27;EPSG:4326&#x27; ?
+          featureLayer[0].feature : this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer[0].feature);
+          result.area = area(obj);
+          resolve(result);
         }
-
-        result = Ember.$.extend({}, geoJSON.getLayers()[0].feature.properties);
-        result.geometry = geom;
-
-        var obj = layerObject[0].options.crs.code === &#x27;EPSG:4326&#x27; ? layerObject[0].feature : projection.toWgs84(layerObject[0].feature);
-        result.area = area(obj);
-        resolve(result);
       }).catch((e) =&gt; {
         reject(e);
       });
@@ -801,19 +772,25 @@ export default Ember.Mixin.create({
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) =&gt; {
-        let objA = result[0].value[2][0];
-        let objB = result[1].value[2][0];
-        objA = objA.options.crs.code === &#x27;EPSG:4326&#x27; ? objA.feature : projection.toWgs84(objA.feature);
-        objB = objB.options.crs.code === &#x27;EPSG:4326&#x27; ? objB.feature : projection.toWgs84(objB.feature);
-        if (objA.geometry.type === &#x27;MultiPolygon&#x27;) {
-          objA = L.polygon(objA.geometry.coordinates[0]).toGeoJSON();
+        let objA = result[0].value[2][0].feature;
+        let objB = result[1].value[2][0].feature;
+        let leafletLayerA = result[0].value[1];
+        let leafletLayerB = result[1].value[1];
+        if (objA &amp;&amp; objB &amp;&amp; leafletLayerA &amp;&amp; leafletLayerB) {
+          let feature1 = leafletLayerA.options.crs.code === &#x27;EPSG:4326&#x27; ? objA : this._convertObjectCoordinates(leafletLayerA.options.crs.code, objA);
+          let feature2 = leafletLayerB.options.crs.code === &#x27;EPSG:4326&#x27; ? objB : this._convertObjectCoordinates(leafletLayerB.options.crs.code, objB);
+
+          if (feature1.geometry.type === &#x27;MultiPolygon&#x27;) {
+            feature1 = L.polygon(feature1.geometry.coordinates[0]).toGeoJSON();
+          }
+
+          if (feature2.geometry.type === &#x27;MultiPolygon&#x27;) {
+            feature2 = L.polygon(feature2.geometry.coordinates[0]).toGeoJSON();
+          }
+
+          resolve(booleanContains(feature1, feature2));
         }
 
-        if (objB.geometry.type === &#x27;MultiPolygon&#x27;) {
-          objB = L.polygon(objB.geometry.coordinates[0]).toGeoJSON();
-        }
-
-        resolve(booleanContains(objA, objB));
       }).catch((e) =&gt; {
         reject(e);
       });
@@ -835,16 +812,18 @@ export default Ember.Mixin.create({
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) =&gt; {
-        let objA = result[0].value[2][0];
-        let objB = result[1].value[2][0];
-        objA = objA.options.crs.code === &#x27;EPSG:4326&#x27; ? objA.feature : projection.toWgs84(objA.feature);
-        objB = objB.options.crs.code === &#x27;EPSG:4326&#x27; ? objB.feature : projection.toWgs84(objB.feature);
-        let intersectionRes = intersect.default(objB, objA);
+        let objA = result[0].value[2][0].feature;
+        let objB = result[1].value[2][0].feature;
+        let layerObjectA = result[0].value[1];
+        let layerObjectB = result[1].value[1];
+        let feature1 = layerObjectA.options.crs.code === &#x27;EPSG:4326&#x27; ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
+        let feature2 = layerObjectB.options.crs.code === &#x27;EPSG:4326&#x27; ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
+        let intersectionRes = intersect.default(feature2, feature1);
         if (intersectionRes) {
-          let resultArea = area(objB) - area(intersectionRes);
+          let resultArea = area(feature2) - area(intersectionRes);
           resolve(resultArea);
         } else {
-          resolve(area(objB));
+          resolve(area(feature2));
         }
       }).catch((e) =&gt; {
         reject(e);
@@ -997,11 +976,13 @@ export default Ember.Mixin.create({
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((res) =&gt; {
-        let objA = res[0].value[2][0];
-        let objB = res[1].value[2][0];
-        objA = objA.options.crs.code === &#x27;EPSG:4326&#x27; ? objA.feature : projection.toWgs84(objA.feature);
-        objB = objB.options.crs.code === &#x27;EPSG:4326&#x27; ? objB.feature : projection.toWgs84(objB.feature);
-        let intersectionRes = intersect.default(objA, objB);
+        let objA = res[0].value[2][0].feature;
+        let objB = res[1].value[2][0].feature;
+        let layerObjectA = res[0].value[1];
+        let layerObjectB = res[1].value[1];
+        let feature1 = layerObjectA.options.crs.code === &#x27;EPSG:4326&#x27; ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
+        let feature2 = layerObjectB.options.crs.code === &#x27;EPSG:4326&#x27; ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
+        let intersectionRes = intersect.default(feature1, feature2);
         if (intersectionRes) {
           if (showOnMap) {
             let obj = L.geoJSON(intersectionRes, {
@@ -1400,6 +1381,55 @@ export default Ember.Mixin.create({
   },
 
   /**
+    Convert coordinates of object to wgs84, or other crsName.
+    @method convertObjectCoordinates
+    @param {featureLayer} object.
+    @return {featureLayer} Returns provided object with converted coordinates
+    @private
+  */
+  _convertObjectCoordinates(projection, object, crsName = null) {
+    let knownCrs = Ember.getOwner(this).knownForType(&#x27;coordinate-reference-system&#x27;);
+    let knownCrsArray = Ember.A(Object.values(knownCrs));
+    let firstProjection = projection ? projection : &#x27;EPSG:4326&#x27;;
+    let secondProjection = crsName ? crsName : &#x27;EPSG:4326&#x27;;
+    let firstCrs = knownCrsArray.findBy(&#x27;code&#x27;, firstProjection);
+    let secondCrs = knownCrsArray.findBy(&#x27;code&#x27;, secondProjection);
+    if (firstCrs &amp;&amp; secondCrs) {
+      let firstDefinition = Ember.get(firstCrs, &#x27;definition&#x27;);
+      let secondDefinition = Ember.get(secondCrs, &#x27;definition&#x27;);
+      if (firstDefinition &amp;&amp; secondDefinition) {
+        if (firstDefinition !== secondDefinition) {
+          let result = Ember.$.extend(true, {}, object);
+          let coordinatesArray = [];
+          result.geometry.coordinates.forEach(arr =&gt; {
+            var arr1 = [];
+            arr.forEach(pair =&gt; {
+              if (result.geometry.type === &#x27;MultiPolygon&#x27;) {
+                let arr2 = [];
+                pair.forEach(cords =&gt; {
+                  let transdormedCords = proj4(firstDefinition, secondDefinition, cords);
+                  arr2.push(transdormedCords);
+                });
+                arr1.push(arr2);
+              } else {
+                let cords = proj4(firstDefinition, secondDefinition, pair);
+                arr1.push(cords);
+              }
+            });
+            coordinatesArray.push(arr1);
+          });
+          result.geometry.coordinates = coordinatesArray;
+          return result;
+        } else {
+          return object;
+        }
+      }
+    } else {
+      throw &#x27;unknown coordinate reference system&#x27;;
+    }
+  },
+
+  /*
     Get the field to search for objects
     @method getPkField
     @param {Object} layer.

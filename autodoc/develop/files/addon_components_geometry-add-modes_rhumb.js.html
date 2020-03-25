@@ -583,6 +583,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     distance: null,
   },
 
+  _availableCoordinateReferenceSystemsCodes: null,
+
   menuButtonTooltip: t(&#x27;components.geometry-add-modes.rhumb.menu-button-tooltip&#x27;),
 
   dialogApproveButtonCaption: t(&#x27;components.geometry-add-modes.rhumb.dialog-approve-button-caption&#x27;),
@@ -606,6 +608,18 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   tableColumnOperation: t(&#x27;components.geometry-add-modes.rhumb.table-column-operation&#x27;),
 
   addCoordinatesFieldLabel: t(&#x27;components.geometry-add-modes.rhumb.add-coordinates-field-label&#x27;),
+
+  coordinatesSystemFieldLabel: t(&#x27;components.geometry-add-modes.rhumb.crs-code&#x27;),
+
+  rhumbNumber: t(&#x27;components.geometry-add-modes.rhumb.number&#x27;),
+
+  rhumbObjectStart: t(&#x27;components.geometry-add-modes.rhumb.object-start&#x27;),
+
+  changePermission: t(&#x27;components.geometry-add-modes.rhumb.change-permission&#x27;),
+
+  init() {
+    this._super(...arguments);
+  },
 
   actions: {
     /**
@@ -680,11 +694,13 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         points.push(data);
       }
 
-      //Добавить CRS на форму и параметры. Пока считаем что первая точка в СК слоя.
+      let skipNum = this._countSkip();
+      const crsCode  = this.get(&#x27;settings.layerCRS.code&#x27;);
       const data = {
         type: objectType,
         startPoint: startPoints,
-        skip: 1,
+        skip: skipNum,
+        crs: crsCode,
         points: points
       };
 
@@ -753,8 +769,12 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         return result.toString(16);
       };
 
+      let skip = this._tableData.length === 1 ? true : false;
       const row = {
         id: getGuid(),
+        number: &#x27;0-1&#x27;,
+        readonly: true,
+        skip: skip,
         direction: this._dataFormTable.direction,
         rhumb: this._dataFormTable.rhumb,
         distance: this._dataFormTable.distance
@@ -762,6 +782,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
       this._tableData.pushObject(row);
       this._dropTableForm();
+      this._countOrder();
     },
 
     /**
@@ -774,13 +795,81 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         let item = this._tableData[i];
         if (item.id === id) {
           this._tableData.removeAt(i, 1);
+          if (this._tableData.length === 1 &amp;&amp; this._tableData[0].skip) {
+            Ember.set(this._tableData[0], &#x27;skip&#x27;, false);
+          }
+
+          this._countOrder();
+          return;
+        }
+      }
+    },
+
+    /**
+      Button to edit a record in a table.
+
+      @method actions.OnEditRow
+    */
+    OnEditRow(id) {
+      for (let i = 0; i &lt; this._tableData.length; i++) {
+        let item = this._tableData[i];
+        if (item.id === id) {
+          if (Ember.get(item, &#x27;readonly&#x27;)) {
+            Ember.set(item, &#x27;readonly&#x27;, false);
+          } else {
+            Ember.set(item, &#x27;readonly&#x27;, true);
+          }
 
           return;
         }
       }
+    },
+
+    /**
+      Handles click on checkbox.
+
+      @method actions.onRhumbSkipChange
+    */
+    onRhumbSkipChange(id) {
+      if (confirm(this.get(&#x27;changePermission&#x27;))) {
+        for (let i = 0; i &lt; this._tableData.length; i++) {
+          let item = this._tableData[i];
+          Ember.set(item, &#x27;skip&#x27;, false);
+          if (item.id === id) {
+            Ember.set(item, &#x27;skip&#x27;, true);
+          }
+        }
+      } else {
+        return;
+      }
     }
   },
 
+  /**
+    Count order number of rhumbs.
+
+    @method _countSkip
+  */
+  _countOrder() {
+    for (let i = 0; i &lt; this._tableData.length; i++) {
+      let item = this._tableData[i];
+      Ember.set(item, &#x27;number&#x27;, &#x60;${i}-${i + 1}&#x60;);
+    }
+  },
+
+  /**
+    Count number of binding rhumbs.
+
+    @method _countSkip
+  */
+  _countSkip() {
+    for (let i = 0; i &lt; this._tableData.length; i++) {
+      let item = this._tableData[i];
+      if (Ember.get(item, &#x27;skip&#x27;)) {
+        return i;
+      }
+    }
+  },
   /**
     Сlear form.
 

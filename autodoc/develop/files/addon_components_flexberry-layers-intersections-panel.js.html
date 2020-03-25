@@ -415,7 +415,6 @@ import area from &#x27;npm:@turf/area&#x27;;
 import lineIntersect from &#x27;npm:@turf/line-intersect&#x27;;
 import * as buffer from &#x27;npm:@turf/buffer&#x27;;
 import VectorLayer from &#x27;../layers/-private/vector&#x27;;
-import projection from &#x27;npm:@turf/projection&#x27;;
 /**
   The component for searching for intersections with selected feature.
 
@@ -543,10 +542,18 @@ export default Ember.Component.extend({
   /**
     Injected ember storage.
 
-    @property folded
+    @property store
     @type Ember.store
   */
   store: Ember.inject.service(),
+
+  /**
+    Injected map Api.
+
+    @property mapApi
+    @type Servie
+  */
+  mapApi: Ember.inject.service(),
 
   /**
     Observer for feature. If changed=&gt; clear form.
@@ -854,24 +861,21 @@ export default Ember.Component.extend({
   _findIntersections(e) {
     let bufferR = this.get(&#x27;bufferR&#x27;);
     let square = this.get(&#x27;square&#x27;);
+    let mapModel = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;);
     e.results.forEach((layer) =&gt; {
       layer.features.then((features) =&gt; {
         features.forEach((item) =&gt; {
           let objA = item;
           let objB = e.polygonLayer.feature;
-          let convertToMercator = false;
-          if (e.polygonLayer.options.hasOwnProperty(&#x27;crs&#x27;)) {
-            if (e.polygonLayer.options.crs.code !== &#x27;EPSG:4326&#x27;) {
-              objB = projection.toWgs84(e.polygonLayer.feature);
-              convertToMercator = true;
-            }
+          let baseProjection = &#x27;EPSG:4326&#x27;;
+          if (Ember.get(e.polygonLayer, &#x27;options.crs.code&#x27;) !== undefined) {
+            objB = mapModel._convertObjectCoordinates(e.polygonLayer.options.crs.code, e.polygonLayer.feature);
+            baseProjection = e.polygonLayer.options.crs.code;
           }
 
-          if (item.hasOwnProperty(&#x27;leafletLayer&#x27;)) {
-            if (item.leafletLayer.options.crs.code !== &#x27;EPSG:4326&#x27;) {
-              objA = projection.toWgs84(item);
-              convertToMercator = true;
-            }
+          if (Ember.get(item, &#x27;leafletLayer.options.crs.code&#x27;) !== undefined) {
+            objA =  mapModel._convertObjectCoordinates(item.leafletLayer.options.crs.code, item.leafletLayer.feature);
+            baseProjection = item.leafletLayer.options.crs.code;
           }
 
           if (bufferR &gt; 0) {
@@ -881,16 +885,14 @@ export default Ember.Component.extend({
           }
 
           if (item.geometry.type === &#x27;Polygon&#x27; || item.geometry.type === &#x27;MultiPolygon&#x27;) {
-            if (Ember.get(objA, &#x27;properties.primarykey&#x27;) !== Ember.get(objB, &#x27;properties.primarykey&#x27;)) {
-              let res = intersect.default(objA, objB);
-              if (res) {
-                if (square &gt; 0) {
-                  if (area(res) &gt; square) {
-                    item = this.computeFeatureProperties(item, convertToMercator, res);
-                  }
-                } else {
-                  item = this.computeFeatureProperties(item, convertToMercator, res);
+            let res = intersect.default(objA, objB);
+            if (res) {
+              if (square &gt; 0) {
+                if (area(res) &gt; square) {
+                  item = this.computeFeatureProperties(item, baseProjection, res);
                 }
+              } else {
+                item = this.computeFeatureProperties(item, baseProjection, res);
               }
             }
           } else if (item.geometry.type === &#x27;MultiLineString&#x27; || item.geometry.type === &#x27;LineString&#x27;) {
@@ -928,13 +930,14 @@ export default Ember.Component.extend({
     return coordinatesArray;
   },
 
-  computeFeatureProperties(feature, convertToMercator, res) {
+  computeFeatureProperties(feature, baseProjection, res) {
     feature.intersection = {};
     feature.intersection.intersectionCords = [];
-    feature.intersection.intersectedArea = area(res).toFixed(3);
-    if (convertToMercator) {
-      let resInMercator = projection.toMercator(res);
-      feature.intersection.intersectionCords = this.computeCoordinates(resInMercator);
+    feature.intersection.intersectedArea = area(res);
+    let mapModel = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;);
+    if (baseProjection !== &#x27;EPSG:4326&#x27;) {
+      let resInBaseProjection =  mapModel._convertObjectCoordinates(null, res, baseProjection);
+      feature.intersection.intersectionCords = this.computeCoordinates(resInBaseProjection);
     } else {
       feature.intersection.intersectionCords = this.computeCoordinates(res);
     }

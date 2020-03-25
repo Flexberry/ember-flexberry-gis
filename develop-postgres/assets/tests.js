@@ -620,9 +620,10 @@ define('dummy/tests/integration/components/flexberry-edit-crs-test.jshint', ['ex
     assert.ok(true, 'integration/components/flexberry-edit-crs-test.js should pass jshint.');
   });
 });
-define('dummy/tests/integration/components/flexberry-layers-attributes-panel-test', ['exports', 'ember', 'ember-qunit', 'ember-i18n/services/i18n', 'ember-flexberry-gis/locales/ru/translations', 'ember-flexberry-gis/locales/en/translations'], function (exports, _ember, _emberQunit, _emberI18nServicesI18n, _emberFlexberryGisLocalesRuTranslations, _emberFlexberryGisLocalesEnTranslations) {
+define('dummy/tests/integration/components/flexberry-layers-attributes-panel-test', ['exports', 'ember-qunit', 'ember', 'ember-i18n/services/i18n', 'ember-flexberry-gis/locales/ru/translations', 'ember-flexberry-gis/locales/en/translations'], function (exports, _emberQunit, _ember, _emberI18nServicesI18n, _emberFlexberryGisLocalesRuTranslations, _emberFlexberryGisLocalesEnTranslations) {
 
   (0, _emberQunit.moduleForComponent)('flexberry-layers-attributes-panel', 'Integration | Component | flexberry layers attributes panel', {
+
     beforeEach: function beforeEach(assert) {
       this.register('locale:ru/translations', _emberFlexberryGisLocalesRuTranslations['default']);
       this.register('locale:en/translations', _emberFlexberryGisLocalesEnTranslations['default']);
@@ -640,6 +641,8 @@ define('dummy/tests/integration/components/flexberry-layers-attributes-panel-tes
   });
 
   (0, _emberQunit.test)('it renders', function (assert) {
+    assert.equal(this.$().text().trim(), '');
+
     var geoJsonData = '\n    {\n      "type": "FeatureCollection",\n      "features": [{\n        "type": "Feature",\n        "geometry": {\n          "type": "Point",\n          "coordinates": [102.0, 0.5]\n        },\n        "properties": {\n          "prop0": "value0"\n        }\n      }\n    ]\n  }';
     var geoJson = L.geoJSON(JSON.parse(geoJsonData));
     _ember['default'].set(geoJson, 'readFormat', {
@@ -654,9 +657,6 @@ define('dummy/tests/integration/components/flexberry-layers-attributes-panel-tes
       name: 'test layer',
       leafletObject: geoJson
     }]));
-    _ember['default'].getOwner(this).knownNamesForType = function () {
-      return [];
-    };
 
     this.render(_ember['default'].HTMLBars.template((function () {
       return {
@@ -4931,6 +4931,13 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['export
   });
 
   var crsName = 'EPSG:4326';
+  var objWithCrs = {
+    options: {
+      crs: {
+        code: crsName
+      }
+    }
+  };
   var objA = [{
     options: {
       crs: {
@@ -5046,10 +5053,10 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['export
     var map = this.subject();
     var _getModelLayerFeatureStub = _sinon['default'].stub(map, '_getModelLayerFeature');
     _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
-      resolve([null, null, objA]);
+      resolve([null, objWithCrs, objA]);
     }));
     _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
-      resolve([null, null, objB]);
+      resolve([null, objWithCrs, objB]);
     }));
 
     map.isContainsObject('f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452', '63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').then(function (e) {
@@ -5065,16 +5072,16 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['export
     var map = this.subject();
     var _getModelLayerFeatureStub = _sinon['default'].stub(map, '_getModelLayerFeature');
     _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
-      resolve([null, null, objA]);
+      resolve([null, objWithCrs, objA]);
     }));
     _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
-      resolve([null, null, objB]);
+      resolve([null, objWithCrs, objB]);
     }));
     _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['d633ea1d-eb32-423f-8663-a38abc7ba094']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
-      resolve([null, null, objC]);
+      resolve([null, objWithCrs, objC]);
     }));
     _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['79fd98d0-52ae-44ae-b616-971768196ad8']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
-      resolve([null, null, objD]);
+      resolve([null, objWithCrs, objD]);
     }));
 
     map.getAreaExtends('f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452', '63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233').then(function (e) {
@@ -5094,13 +5101,13 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['export
     var map = this.subject();
     var _getModelLayerFeatureStub = _sinon['default'].stub(map, '_getModelLayerFeature');
     _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
-      resolve([null, null, objA]);
+      resolve([null, objWithCrs, objA]);
     }));
     _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
-      resolve([null, null, objB]);
+      resolve([null, objWithCrs, objB]);
     }));
     _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['d633ea1d-eb32-423f-8663-a38abc7ba094']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
-      resolve([null, null, objC]);
+      resolve([null, objWithCrs, objC]);
     }));
 
     map.getIntersectionArea('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233', 'f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452').then(function (e) {

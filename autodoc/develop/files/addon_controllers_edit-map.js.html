@@ -446,6 +446,50 @@ export default EditFormController.extend(
     sideBySide: L.control.sideBySide(),
 
     /**
+      Observes handles changes in showComapreGeometriesPanel property.
+      If Comapre Geometries Panel is active bring in to front.
+
+      @method comapreGeometriesPanelObserver
+      @private
+    */
+    _comapreGeometriesPanelObserver: Ember.observer(&#x27;showComapreGeometriesPanel&#x27;, function () {
+      if (this.get(&#x27;showComapreGeometriesPanel&#x27;)) {
+        Ember.$(&#x27;.bottom-compare-panel&#x27;).css(&#x27;z-index&#x27;, 2000);
+        Ember.$(&#x27;.bottom-intersection-panel&#x27;).css(&#x27;z-index&#x27;, 1999);
+        Ember.$(&#x27;.bottom-attributes-panel&#x27;).css(&#x27;z-index&#x27;, 1998);
+      }
+    }),
+
+    /**
+      Observes handles changes in showIntersectionPanel property.
+      If Intersectio nPanel is active bring in to front.
+
+      @method intersectionPanelObserver
+      @private
+    */
+    _intersectionPanelObserver: Ember.observer(&#x27;showIntersectionPanel&#x27;, function () {
+      if (this.get(&#x27;showIntersectionPanel&#x27;)) {
+        Ember.$(&#x27;.bottom-intersection-panel&#x27;).css(&#x27;z-index&#x27;, 2000);
+        Ember.$(&#x27;.bottom-compare-panel&#x27;).css(&#x27;z-index&#x27;, 1999);
+        Ember.$(&#x27;.bottom-attributes-panel&#x27;).css(&#x27;z-index&#x27;, 1998);
+      }
+    }),
+    /**
+      Observes handles changes in editedLayers.length property.
+      If Attributes Panel is active bring in to front.
+
+      @method attributesPanelObserver
+      @private
+    */
+    _attributesPanelObserver: Ember.observer(&#x27;editedLayers.length&#x27;, function () {
+      if (this.get(&#x27;editedLayers.length&#x27;) &gt; 0) {
+        Ember.$(&#x27;.bottom-attributes-panel&#x27;).css(&#x27;z-index&#x27;, 2000);
+        Ember.$(&#x27;.bottom-intersection-panel&#x27;).css(&#x27;z-index&#x27;, 1999);
+        Ember.$(&#x27;.bottom-compare-panel&#x27;).css(&#x27;z-index&#x27;, 1998);
+      }
+    }),
+
+    /**
       Flag indicates if comapre tool active.
 
       @property compareLayersEnabled
