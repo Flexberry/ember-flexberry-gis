@@ -92,46 +92,183 @@ export default BaseVectorLayer.extend({
     }
   },
 
-  identify(e) {
-    let primitiveSatisfiesBounds = (primitive, bounds) => {
-      let satisfiesBounds = false;
-
-      if (typeof primitive.forEach === 'function') {
-        primitive.forEach(function (nestedGeometry, index) {
-          if (satisfiesBounds) {
-            return;
-          }
-
-          let nestedPrimitive = this.get(index);
-          satisfiesBounds = primitiveSatisfiesBounds(nestedPrimitive, bounds);
-        });
-      } else {
-        satisfiesBounds = primitive.within(bounds) || primitive.intersects(bounds);
-      }
-
-      return satisfiesBounds;
-    };
-
+  _getFeature(filter) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      try {
+      let [build, store, modelName] = this._getBuildStoreModelProjectionGeom();
+
+      build.predicate = filter;
+
+      let objs = store.query(modelName, build);
+
+      objs.then(res => {
         let features = Ember.A();
-        let bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
-        let leafletLayer = this.get('_leafletObject');
-        leafletLayer.eachLayer(function (layer) {
-          let geoLayer = layer.toGeoJSON();
-          let primitive = new Terraformer.Primitive(geoLayer.geometry);
-          let id = layer.model.id;
-          geoLayer.properties.primarykey = id;
-          if (primitiveSatisfiesBounds(primitive, bounds)) {
-            features.pushObject(geoLayer);
-          }
+        let models = res.toArray();
+        let layer = L.featureGroup();
+
+        models.forEach(model => {
+          let feat = this.addLayerObject(layer, model, false);
+          features.push(feat.feature);
         });
 
         resolve(features);
-      } catch (e) {
+      }).catch((e) => {
         reject(e.error || e);
+      });
+    });
+  },
+
+  /**
+    Handles 'flexberry-map:identify' event of leaflet map.
+    @method identify
+    @param {Object} e Event object.
+    @param {<a href="http://leafletjs.com/reference.html#polygon">L.Polygon</a>} polygonLayer Polygon layer related to given area.
+    @param {Object[]} layers Objects describing those layers which must be identified.
+    @param {Object[]} results Objects describing identification results.
+  **/
+  identify(e) {
+    let geometryField = this.get('geometryField') || 'geometry';
+    let crs = this.get('crs');
+    let pred = new Query.GeometryPredicate(geometryField);
+    let geom;
+    let typeGeom;
+    let bracketBeg = '';
+    let bracketEnd = '';
+
+    if (e.polygonLayer instanceof L.Marker) {
+      geom = [e.polygonLayer._latlng];
+      typeGeom = 'POINT';
+    } else if (Ember.isArray(e.polygonLayer._latlngs[0])) {
+      geom = e.polygonLayer._latlngs[0];
+      typeGeom = 'POLYGON';
+      bracketBeg = '(';
+      bracketEnd = ')';
+    } else {
+      geom = e.polygonLayer._latlngs;
+      typeGeom = 'LINESTRING';
+    }
+
+    let queryStr = `SRID=${crs.code.split(':')[1]};${typeGeom}(${bracketBeg}`;
+    let coord0 = '';
+    geom.forEach((item) => {
+      if (typeGeom === 'POLYGON' && Ember.isEmpty(coord0)) {
+        coord0 = ', ' + crs.project(item).x + ' ' + crs.project(item).y;
+      }
+
+      queryStr += crs.project(item).x + ' ' + crs.project(item).y + ', ';
+    });
+
+    queryStr = queryStr.slice(0, queryStr.length - 2);
+    let predicate = pred.intersects(queryStr + coord0 + bracketEnd + ')');
+    let featuresPromise = this._getFeature(predicate);
+    return featuresPromise;
+  },
+
+  /**
+    Handles 'flexberry-map:search' event of leaflet map.
+    @method search
+    @param {Object} e Event object.
+    @param {<a href="http://leafletjs.com/reference-1.0.0.html#latlng">L.LatLng</a>} e.latlng Center of the search area.
+    @param {Object[]} layer Object describing layer that must be searched.
+    @param {Object} searchOptions Search options related to layer type.
+    @param {Object} results Hash containing search results.
+    @param {Object[]} results.features Array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects]
+    or a promise returning such array.
+  */
+  search(e) {
+    let searchFields;
+    let searchSettingsPath = 'layerModel.settingsAsObject.searchSettings';
+
+    // If exact field is specified in search options - use it only.
+    let propertyName = e.searchOptions.propertyName;
+    if (!Ember.isBlank(propertyName)) {
+      searchFields = propertyName;
+    } else {
+      searchFields = (e.context ? this.get(`${searchSettingsPath}.contextSearchFields`) : this.get(`${searchSettingsPath}.searchFields`)) || Ember.A();
+    }
+
+    // If single search field provided - transform it into array.
+    if (!Ember.isArray(searchFields)) {
+      searchFields = Ember.A([searchFields]);
+    }
+
+    // Create filter for each search field.
+    let equals = Ember.A();
+    let leafletObject = this.get('_leafletObject');
+    if (!Ember.isNone(leafletObject)) {
+      let type = this.get('layerModel.type');
+      if (!Ember.isBlank(type)) {
+        let layerClass = Ember.getOwner(this).knownForType('layer', type);
+        let layerProperties = layerClass.getLayerProperties(leafletObject);
+        searchFields.forEach((field) => {
+          let ind = layerProperties.indexOf(field);
+          if (ind > -1) {
+            let layerPropertyType = typeof layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
+            let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
+            if (layerPropertyType !== 'string' || (layerPropertyType === 'object' && layerPropertyValue instanceof Date)) {
+              equals.push(new Query.SimplePredicate(field, Query.FilterOperator.Eq, e.searchOptions.queryString));
+            } else {
+              equals.push(new Query.StringPredicate(field).contains(e.searchOptions.queryString));
+            }
+          }
+        });
+      }
+    }
+
+    let filter;
+    if (equals.length === 1) {
+      filter = equals[0];
+    } else {
+      filter = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
+    }
+
+    let featuresPromise = this._getFeature(filter);
+
+    return featuresPromise;
+  },
+
+  /**
+    Handles 'flexberry-map:query' event of leaflet map.
+    @method _query
+    @param {Object[]} layerLinks Array containing metadata for query
+    @param {Object} e Event object.
+    @param {Object} queryFilter Object with query filter paramteres
+    @param {Object[]} results.features Array containing leaflet layers objects
+    or a promise returning such array.
+  */
+  query(layerLinks, e) {
+    let queryFilter = e.queryFilter;
+    let equals = Ember.A();
+    layerLinks.forEach((link) => {
+      let parameters = link.get('parameters');
+
+      if (Ember.isArray(parameters) && parameters.length > 0) {
+        parameters.forEach(linkParam => {
+          let property = linkParam.get('layerField');
+          let propertyValue = queryFilter[linkParam.get('queryKey')];
+          if (Ember.isArray(propertyValue)) {
+            let propertyEquals = Ember.A();
+            propertyValue.forEach((value) => {
+              propertyEquals.pushObject(new Query.SimplePredicate(property, Query.FilterOperator.Eq, value));
+            });
+
+            equals.pushObject(new Query.ComplexPredicate(Query.Condition.Or, ...propertyEquals));
+          } else {
+            equals.pushObject(new Query.SimplePredicate(property, Query.FilterOperator.Eq, propertyValue));
+          }
+        });
       }
     });
+
+    let filter;
+    if (equals.length === 1) {
+      filter = equals[0];
+    } else {
+      filter = new Query.ComplexPredicate(Query.Condition.And, ...equals);
+    }
+
+    let featuresPromise = this._getFeature(filter);
+
+    return featuresPromise;
   },
 
   /**
@@ -206,7 +343,7 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer(options) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let [build, store, modelName, projectionName, geometryField] = this._getBuildStoreModelProjectionGeom();
+      let [build, store, modelName, geometryField, projectionName] = this._getBuildStoreModelProjectionGeom();
       let crs = this.get('crs');
 
       let visibility = this.get('layerModel.visibility');
@@ -248,13 +385,7 @@ export default BaseVectorLayer.extend({
           this.addLayerObject(layer, model);
         });
 
-        let promiseLoad = new Ember.RSVP.Promise((resolve, reject) => {
-          layer.on('load', () => {
-            resolve();
-          }).on('error', (e) => {
-            reject();
-          });
-        });
+        let promiseLoad = Ember.RSVP.resolve();
 
         this.set('promiseLoad', promiseLoad);
 
@@ -321,7 +452,7 @@ export default BaseVectorLayer.extend({
       props[prop] = model.get(`${prop}${postfix}`);
     }
 
-    props.primarykey = Ember.get(model,'id');
+    props.primarykey = Ember.get(model, 'id');
     return props;
   },
 
@@ -358,7 +489,7 @@ export default BaseVectorLayer.extend({
     let builder = new Builder(store)
       .from(modelName)
       .selectByProjection(projectionName);
-    return [builder.build(), store, modelName, projectionName, geometryField];
+    return [builder.build(), store, modelName, geometryField, projectionName];
   },
 
   /**
@@ -417,7 +548,7 @@ export default BaseVectorLayer.extend({
             if (equals.length === 1) {
               build.predicate = equals[0];
             } else {
-              build.predicate = new Query.ComplexPredicate(Query.Condition.Or, equals);
+              build.predicate = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
             }
           }
 
@@ -462,7 +593,7 @@ export default BaseVectorLayer.extend({
           if (equals.length === 1) {
             build.predicate = equals[0];
           } else {
-            build.predicate = new Query.ComplexPredicate(Query.Condition.Or, equals);
+            build.predicate = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
           }
 
           let objs = store.query(modelName, build);
@@ -512,7 +643,7 @@ export default BaseVectorLayer.extend({
           let hideObjects = Ember.isNone(leafletObject.hideAllLayerObjects) || !leafletObject.hideAllLayerObjects;
           if (leafletObject.options.continueLoading && visibility && checkMapZoom(leafletObject) && hideObjects) {
             let bounds = leafletMap.getBounds();
-            let [build, store, modelName, , geometryField] = this._getBuildStoreModelProjectionGeom();
+            let [build, store, modelName, geometryField] = this._getBuildStoreModelProjectionGeom();
             let crs = this.get('crs');
 
             if (Ember.isNone(leafletObject.isLoadBounds)) {
