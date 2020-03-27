@@ -111,7 +111,6 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
       let favFeatures = this.get('favFeatures');
       let layerModelIndex = this.isLayerModelInArray(favFeatures, feature.layerModel);
       if (Ember.get(feature.properties, 'isFavorite')) {
-        Ember.set(feature.properties, 'isFavorite', false);
         if (layerModelIndex !== false) {
           favFeatures = this.removeFeatureFromLayerModel(favFeatures, layerModelIndex, feature);
           let record = store.peekAll('i-i-s-r-g-i-s-p-k-favorite-features')
@@ -119,6 +118,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
           .filterBy('objectLayerKey', feature.layerModel.id);
           record[0].destroyRecord();
         }
+
+        Ember.set(feature.properties, 'isFavorite', false);
 
         if (Ember.get(feature, 'compareEnabled')) {
           Ember.set(feature, 'compareEnabled', false);
@@ -242,7 +243,8 @@ export default Ember.Mixin.create(LeafletZoomToFeatureMixin, {
   */
   removeFeatureFromLayerModel(array, index, feature) {
     let features = array[index].features;
-    features.removeObject(feature);
+    let featureToDelete = features.findBy('properties.primarykey', feature.properties.primarykey);
+    features.removeObject(featureToDelete);
     if (features.length === 0) {
       array.removeAt(index);
     }
