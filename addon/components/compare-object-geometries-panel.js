@@ -121,6 +121,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   featuresLayer: null,
 
   /**
+    Service layer.
+
+    @property serviceLayer
+    @type Object
+    @default null
+  */
+  serviceLayer: null,
+
+  /**
     Observer for leafletMap property adding layer with results.
 
     @property _OnMapChanged

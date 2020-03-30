@@ -490,9 +490,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_displayResults', displayResults);
       this.set('_noData', displayResults.length === 0);
       this.set('_showLoader', false);
-
-      if (displayResults.length === 1) {
-        this.send('zoomTo', displayResults.objectAt(0).features);
+      if (this.get('favoriteMode') !== true) {
+        if (displayResults.length === 1) {
+          this.send('zoomTo', displayResults.objectAt(0).features);
+        }
       }
     });
   })),
