@@ -1012,6 +1012,7 @@ export default Ember.Mixin.create({
           } else {
             coordinatesArray = proj4(firstDefinition, secondDefinition, result.geometry.coordinates);
           }
+
           result.geometry.coordinates = coordinatesArray;
           return result;
         } else {
