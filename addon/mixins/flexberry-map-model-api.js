@@ -991,7 +991,7 @@ export default Ember.Mixin.create({
         if (firstDefinition !== secondDefinition) {
           let result = Ember.$.extend(true, {}, object);
           let coordinatesArray = [];
-          if (result.geometry.type != 'Point') {
+          if (result.geometry.type !== 'Point') {
             result.geometry.coordinates.forEach(arr => {
               var arr1 = [];
               arr.forEach(pair => {
