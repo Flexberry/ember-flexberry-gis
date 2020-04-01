@@ -45,9 +45,8 @@ export default BaseVectorLayer.extend({
 
     Ember.RSVP.all(promises).then(() => {
       console.log('success');
-      this.fire('save:success');
     }).catch(function(r) {
-      this.fire('save:failed', r);
+      console.log('Error: ' + r);
     });
     return this;
   },
