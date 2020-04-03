@@ -65,7 +65,7 @@ export default Ember.Component.extend({
     let selectedItems = this.get('selectedItems');
     if (selectedItems) {
       let length = selectedItems.length;
-      let lastVal = selectedItems[length-1];
+      let lastVal = selectedItems[length - 1];
       if (length > 1) {
         this.$('.fb-selector>a').remove();
         this.$('.fb-selector').append(`<a class="ui label transition visible adition">и ещё ${length - 1}</a>`);
@@ -82,22 +82,13 @@ export default Ember.Component.extend({
           }
         });
 
-        this.$('.fb-selector>input.search').before(`<a class="ui label transition visible" data-value="${lastVal}" style="display: inline-block !important;">${this.get('isObject') ? Ember.get(val[0], 'name') : val[0]}<i class="delete icon"></i></a>`);
+        this.$('.fb-selector>input.search').before(`<a class="ui label transition visible" data-value="${lastVal}" style="display: inline-block !important;">` +
+          `${this.get('isObject') ? Ember.get(val[0], 'name') : val[0]}<i class="delete icon"></i></a>`);
         if (length > 1) {
-          //this.$('.fb-selector>input.search').before(`<a class="ui label transition visible" data-value="${lastVal}" style="display: inline-block !important;">${Ember.get(val[0], 'name')}<i class="delete icon"></i></a>`);
           this.$('.fb-selector>a.adition').remove();
           this.$('.fb-selector').append(`<a class="ui label transition visible adition">и ещё ${length - 1}</a>`);
         } else {
           this.$('.fb-selector>a.adition').remove();
-          /*if (length == 2) {
-            let first = items.filter((item) => {
-              return item.id === selectedItems[0];
-            });
-            this.$('.fb-selector>input.search').before(`<a class="ui label transition visible" data-value="${Ember.get(first[0], 'id')}" style="display: inline-block !important;">${Ember.get(first[0], 'name')}<i class="delete icon"></i></a>`);
-          }
-
-          this.$('.fb-selector>input.search').before(`<a class="ui label transition visible" data-value="${Ember.get(val[0], 'id')}" style="display: inline-block !important;">${Ember.get(val[0], 'name')}<i class="delete icon"></i></a>`);
-          */
         }
         
       }
