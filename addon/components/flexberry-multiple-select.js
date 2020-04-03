@@ -90,7 +90,6 @@ export default Ember.Component.extend({
         } else {
           this.$('.fb-selector>a.adition').remove();
         }
-        
       }
     }
   }),
