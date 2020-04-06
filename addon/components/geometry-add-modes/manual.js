@@ -171,7 +171,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
   onSelectedTpeChanged: Ember.observer('_objectSelectType', function () {
     if (!Ember.isNone(this.get('_objectSelectType'))) {
-      this.set('_geometryField', false)
+      this.set('_geometryField', false);
     }
   }),
 
@@ -498,7 +498,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       this.set('_objectTypeDisabled', true);
       this.set('coordinatesParseError', false);
       this.set('coordinatesInLineError', false);
-      this.set('_objectSelectType', null)
+      this.set('_objectSelectType', null);
     }
   },
 
