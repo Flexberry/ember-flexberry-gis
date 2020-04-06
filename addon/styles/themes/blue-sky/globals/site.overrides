@@ -83,3 +83,9 @@
     cursor:pointer;
     padding-top: 20px;
 }
+form.flexberry-geometry-add-mode-manual-form {
+     .flexberry-textarea textarea {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
