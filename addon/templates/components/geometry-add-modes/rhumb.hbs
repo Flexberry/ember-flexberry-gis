@@ -19,7 +19,7 @@
   }}
     <form class="ui form" role="form">
       <div class="ui grid">
-        <div class="six wide column">
+        <div class="rhumb">
           <div class="field {{if _formValid.startPointValid "error" ""}}">
             <label>
               {{startPointFieldLabel}}
@@ -27,10 +27,11 @@
             {{flexberry-field
               value=_dataForm.startPoint
               placeholder=coordinatesFieldPlaceholder
+              class = "first"
             }}
           </div>
         </div>
-        <div class="five wide column">
+        <div class="rhumb">
           <div class="field">         
             {{flexberry-edit-crs
               crsCaption=coordinatesSystemFieldLabel
@@ -38,12 +39,12 @@
             }}
           </div>       
         </div>
-        <div class="five wide column">
+        <div class="rhumb last">
           <div class="field {{if _formValid.typeObjectValid "error" ""}}">
             <label>
               {{typeObjectFieldLabel}}
             </label>
-            {{flexberry-dropdown items=_objectTypes value=_dataForm.objectType}}
+            {{flexberry-dropdown items=_availableType value=_curType}}
           </div>
         </div>
       </div>
@@ -55,7 +56,7 @@
       <table class="ui celled table flexberry-table">
         <thead>
           <tr>
-            <th>
+            <th class="direction">
               {{directionTh}}
             </th>
             <th>
@@ -142,28 +143,34 @@
               {{/block-slot}}
               {{#block-slot "column-cell-head-0" as |row|}}
                 <td>
-                  {{flexberry-dropdown
-                    items=_cardinalPoints
-                    value=row.direction
-                    readonly=row.readonly
-                  }}
+                  <div class="field {{if row.directionValid "error"}}">
+                    {{flexberry-dropdown
+                      items=_cardinalPoints
+                      value=row.direction
+                      readonly=row.readonly
+                    }}
+                  </div>
                 </td>
               {{/block-slot}}
               {{#block-slot "column-cell-head-0" as |row|}}
                 <td>
-                   {{flexberry-field value=row.rhumb readonly=row.readonly}}
+                  <div class="field {{if row.rhumbValid "error"}}">
+                    {{flexberry-field value=row.rhumb readonly=row.readonly}}
+                  </div>
                 </td>
               {{/block-slot}}
               {{#block-slot "column-cell-head-0" as |row|}}
                 <td>
-                  {{flexberry-field value=row.distance readonly=row.readonly}}
+                  <div class="field {{if row.distanceValid "error"}}">
+                    {{flexberry-field value=row.distance readonly=row.readonly}}
+                  </div>
                 </td>
               {{/block-slot}}
               {{#block-slot "column-cell-head-0" as |row|}}
                 <td class="checkbox-rhumb">
-                  {{flexberry-ddau-checkbox
-                    value=row.skip
-                    change=(action "onRhumbSkipChange" row.id)
+                  {{flexberry-checkbox
+                    value=(get row._skip (ember-guid row))
+                    onChange=(action "onRhumbSkipChange" (ember-guid row) row)
                   }}
                 </td>
               {{/block-slot}}

@@ -72,14 +72,16 @@
                         drawStart=(action "onAddDrawStart" tabModel)
                         importComplete=(action "onImportComplete" tabModel)
                     }}
-                    {{component "geometry-add-modes/rhumb"
-                        leafletMap=leafletMap
-                        settings=(hash                          
-                          layerCRS=(get tabModel "leafletObject.options.crs")                 
-                        )
-                        tabModel=tabModel
-                        complete=(action "onGeometryAddComplete" tabModel)
-                    }}
+                    {{#if (not (eq tabModel.typeGeometry "marker")) }}
+                      {{component "geometry-add-modes/rhumb"
+                          leafletMap=leafletMap
+                          settings=(hash                          
+                            layerCRS=(get tabModel "leafletObject.options.crs")                 
+                          )
+                          tabModel=tabModel
+                          complete=(action "onGeometryAddComplete" tabModel)
+                      }}
+                    {{/if}}
                     {{component "geometry-add-modes/draw"
                         leafletMap=leafletMap
                         settings=(hash
