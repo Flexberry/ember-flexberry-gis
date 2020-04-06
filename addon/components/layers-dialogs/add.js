@@ -144,6 +144,7 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
       if (!Ember.isNone(file)) {
         let layerName = JSON.parse(this.get('getLayerProperties')().settings).layers.split(':');
         let url = JSON.parse(this.get('getLayerProperties')().settings).url.split('/geoserver');
+        let layerProperties = this.get('getLayerProperties')();
         if (!Ember.isNone(layerName)) {
           let _this = this;
           let config = Ember.getOwner(this).resolveRegistration('config:environment');
@@ -159,7 +160,7 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
                     'PUT', 'image/tiff', file,
                     (data) => {
                       this.sendAction('approve', {
-                        layerProperties: this.get('getLayerProperties')(),
+                        layerProperties: layerProperties,
                         layer: this.get('layer')
                       });
                     },

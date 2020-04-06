@@ -17,5 +17,6 @@ export default {
   'change-permission': 'Change the initial rhumb of an object?',
   'coordinates-field-placeholder': '(no value)',
   'object-types-polygon': 'Polygon',
-  'object-types-line': 'Line'
+  'object-types-line': 'Line',
+  'cannot-change-permission': 'One rhumb must be selected as start of object.'
 };
