@@ -457,46 +457,56 @@ export default Ember.Component.extend({
         features.forEach((item) => {
           let objA = item;
           let objB = e.polygonLayer.feature;
-          let baseProjection = 'EPSG:4326';
-          if (Ember.get(e.polygonLayer, 'options.crs.code') !== undefined) {
-            objB = mapModel._convertObjectCoordinates(e.polygonLayer.options.crs.code, e.polygonLayer.feature);
-            baseProjection = e.polygonLayer.options.crs.code;
-          }
+          if (objB.id !== objA.id) {
+            let baseProjection = 'EPSG:4326';
+            if (Ember.get(e.polygonLayer, 'options.crs.code') !== undefined) {
+              objB = mapModel._convertObjectCoordinates(e.polygonLayer.options.crs.code, e.polygonLayer.feature);
+              baseProjection = e.polygonLayer.options.crs.code;
+            }
 
-          if (Ember.get(item, 'leafletLayer.options.crs.code') !== undefined) {
-            objA =  mapModel._convertObjectCoordinates(item.leafletLayer.options.crs.code, item.leafletLayer.feature);
-            baseProjection = item.leafletLayer.options.crs.code;
-          }
+            if (Ember.get(item, 'leafletLayer.options.crs.code') !== undefined) {
+              objA =  mapModel._convertObjectCoordinates(item.leafletLayer.options.crs.code, item.leafletLayer.feature);
+              baseProjection = item.leafletLayer.options.crs.code;
+            }
 
-          if (bufferR > 0) {
-            let props = objB.properties;
-            objB  = buffer.default(objB.geometry, bufferR, { units: 'meters' });
-            Object.assign(objB.properties, props);
-          }
+            if (bufferR > 0) {
+              let props = objB.properties;
+              objB  = buffer.default(objB.geometry, bufferR, { units: 'meters' });
+              Object.assign(objB.properties, props);
+            }
 
-          if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
-            let res = intersect.default(objA, objB);
-            if (res) {
-              if (square > 0) {
-                if (area(res) > square) {
+            if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {
+              let res = intersect.default(objA, objB);
+              if (res) {
+                item.isIntersect = true;
+                if (square > 0) {
+                  if (area(res) > square) {
+                    item = this.computeFeatureProperties(item, baseProjection, res);
+                  }
+                } else {
                   item = this.computeFeatureProperties(item, baseProjection, res);
                 }
               } else {
-                item = this.computeFeatureProperties(item, baseProjection, res);
+                item.isIntersect = false;
+              }
+            } else if (item.geometry.type === 'MultiLineString' || item.geometry.type === 'LineString') {
+              if (Ember.get(objA, 'properties.primarykey') !== Ember.get(objB, 'properties.primarykey')) {
+                let intersects = lineIntersect(objA, objB);
+                if (intersects) {
+                  item.isIntersect = true;
+                  item.intersection = {};
+                  item.intersection.intersectionCords = [];
+                  intersects.features.forEach(function (feat) {
+                    item.intersection.intersectionCords.push(feat.geometry.coordinates);
+                  });
+                  item.intersection.intersectedObject = intersects;
+                } else {
+                  item.isIntersect = false;
+                }
               }
             }
-          } else if (item.geometry.type === 'MultiLineString' || item.geometry.type === 'LineString') {
-            if (Ember.get(objA, 'properties.primarykey') !== Ember.get(objB, 'properties.primarykey')) {
-              let intersects = lineIntersect(objA, objB);
-              if (intersects) {
-                item.intersection = {};
-                item.intersection.intersectionCords = [];
-                intersects.features.forEach(function (feat) {
-                  item.intersection.intersectionCords.push(feat.geometry.coordinates);
-                });
-                item.intersection.intersectedObject = intersects;
-              }
-            }
+          } else {
+            item.isIntersect = false;
           }
         });
       });
@@ -523,7 +533,7 @@ export default Ember.Component.extend({
   computeFeatureProperties(feature, baseProjection, res) {
     feature.intersection = {};
     feature.intersection.intersectionCords = [];
-    feature.intersection.intersectedArea = area(res);
+    feature.intersection.intersectedArea = area(res).toFixed(3);
     let mapModel = this.get('mapApi').getFromApi('mapModel');
     if (baseProjection !== 'EPSG:4326') {
       let resInBaseProjection =  mapModel._convertObjectCoordinates(null, res, baseProjection);

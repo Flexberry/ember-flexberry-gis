@@ -69,45 +69,52 @@
         </a>
       {{/if}}
     {{/if}}
-    {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
-      <div class="ui list transition">
-        {{#if intersection}}
-          {{#each result.features as |feature|}}
-            {{#if feature.intersection}}
-              {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
-                {{component (concat 'feature-result-item-' result.layerModel.type)
-                  feature=feature
-                  infoExpanded=(and (eq result.features.length 1) result.first)
-                  displayProperty="displayValue"
-                  displaySettings=result.settings
-                  selectedFeature=_selectedFeature
-                  selectFeature=(action "selectFeature")
-                  panTo=(action "panTo")
-                  zoomTo=(action "zoomTo")
-                  findIntersection=(action 'findIntersection')
-                  intersection=intersection
-                  zoomToIntersection=(action 'zoomToIntersection')
-                  panToIntersection=panToIntersection
-              }}
-              {{else}}
-                {{feature-result-item
-                  feature=feature
-                  infoExpanded=(and (eq result.features.length 1) result.first)
-                  displayProperty="displayValue"
-                  displaySettings=result.settings
-                  selectedFeature=_selectedFeature
-                  selectFeature=(action "selectFeature")
-                  panTo=(action "panTo")
-                  zoomTo=(action "zoomTo")
-                  findIntersection=(action 'findIntersection')
-                  intersection=intersection
-                  zoomToIntersection=(action 'zoomToIntersection')
-                  panToIntersection=panToIntersection
+    {{#if result.isIntersect}}
+      {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
+        <div class="ui list transition">
+          {{#if intersection}}
+            {{#each result.features as |feature|}}
+              {{#if feature.isIntersect}}
+                {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
+                  {{component (concat 'feature-result-item-' result.layerModel.type)
+                    feature=feature
+                    infoExpanded=(and (eq result.features.length 1) result.first)
+                    displayProperty="displayValue"
+                    displaySettings=result.settings
+                    selectedFeature=_selectedFeature
+                    selectFeature=(action "selectFeature")
+                    panTo=(action "panTo")
+                    zoomTo=(action "zoomTo")
+                    findIntersection=(action 'findIntersection')
+                    intersection=intersection
+                    zoomToIntersection=(action 'zoomToIntersection')
+                    panToIntersection=panToIntersection
                 }}
+                {{else}}
+                  {{feature-result-item
+                    feature=feature
+                    infoExpanded=(and (eq result.features.length 1) result.first)
+                    displayProperty="displayValue"
+                    displaySettings=result.settings
+                    selectedFeature=_selectedFeature
+                    selectFeature=(action "selectFeature")
+                    panTo=(action "panTo")
+                    zoomTo=(action "zoomTo")
+                    findIntersection=(action 'findIntersection')
+                    intersection=intersection
+                    zoomToIntersection=(action 'zoomToIntersection')
+                    panToIntersection=panToIntersection
+                  }}
+                {{/if}}
               {{/if}}
-            {{/if}}
-          {{/each}}
-        {{else}}
+            {{/each}}
+          {{/if}}
+        </div>
+      {{/flexberry-toggler}}
+    {{/if}}
+    {{#if (not intersection)}}
+      {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
+        <div class="ui list transition">
           {{#each result.features as |feature|}}
             {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
               {{component (concat 'feature-result-item-' result.layerModel.type)
@@ -147,8 +154,8 @@
               }}
             {{/if}}
           {{/each}}
-        {{/if}}      
-      </div>
-    {{/flexberry-toggler}}
+        </div>
+      {{/flexberry-toggler}}
+    {{/if}}
   </div>
 {{/each}}

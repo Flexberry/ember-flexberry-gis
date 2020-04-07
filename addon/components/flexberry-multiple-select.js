@@ -34,6 +34,15 @@ export default Ember.Component.extend({
   items: Ember.A(),
 
   /**
+    Flag, indicate that selection was remove.
+
+    @property isRemove
+    @type Boolean
+    @default false
+  */
+  isRemove: false,
+
+  /**
     Array with selected dropdown items.
 
     @property selectedItems
@@ -42,13 +51,45 @@ export default Ember.Component.extend({
   */
   selectedItems: Ember.A(),
 
+  /**
+    Array with selected dropdown items.
+
+    @property selectedLabels
+    @type Object
+    @default Ember.A()
+  */
+  selectedLabels: Ember.A(),
+
   selectedItemsObserver: Ember.observer('selectedItems', function() {
     this.$('.fb-selector>input').val('');
     let selectedItems = this.get('selectedItems');
     if (selectedItems) {
-      if (selectedItems.length > 2) {
+      let length = selectedItems.length;
+      let lastVal = selectedItems[length - 1];
+      if (length > 1) {
         this.$('.fb-selector>a').remove();
-        this.$('.fb-selector').append(`<a class="ui label transition visible adition">и ещё ${selectedItems.length - 1}</a>`);
+        this.$('.fb-selector').append(`<a class="ui label transition visible adition">и ещё ${length - 1}</a>`);
+      }
+
+      if (this.get('isRemove')) {
+        this.set('isRemove', false);
+        let items = this.get('items');
+        let val = items.filter((item) => {
+          if (this.get('isObject')) {
+            return item.id === lastVal;
+          } else {
+            return item === lastVal;
+          }
+        });
+
+        this.$('.fb-selector>input.search').before(`<a class="ui label transition visible" data-value="${lastVal}" style="display: inline-block !important;">` +
+          `${this.get('isObject') ? Ember.get(val[0], 'name') : val[0]}<i class="delete icon"></i></a>`);
+        if (length > 1) {
+          this.$('.fb-selector>a.adition').remove();
+          this.$('.fb-selector').append(`<a class="ui label transition visible adition">и ещё ${length - 1}</a>`);
+        } else {
+          this.$('.fb-selector>a.adition').remove();
+        }
       }
     }
   }),
@@ -132,16 +173,18 @@ export default Ember.Component.extend({
         addResult: addResultCaption,
       },
       allowAdditions: allowAdditions,
-      onChange: (e) => {
-        let itemArray = e.split(',');
-        if (e === '') {
+      onChange: (value) => {
+        let itemArray = value.split(',');
+        if (value === '') {
           itemArray = null;
         }
 
-        Ember.run(() => {
-          this.set('selectedItems', itemArray);
-          this.sendAction('onChange', itemArray);
-        });
+        let selectedItems = this.get('selectedItems');
+        if (!Ember.isNone(selectedItems) && (Ember.isNone(itemArray) || selectedItems.length > itemArray.length)) {
+          this.set('isRemove', true);
+        }
+
+        this.set('selectedItems', itemArray);
       }
     });
   },

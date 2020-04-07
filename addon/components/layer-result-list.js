@@ -290,6 +290,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       result.features.then(
         (features) => {
           if (features.length > 0) {
+            let intersectArray = features.filter((item) => {
+              return !Ember.isNone(item.intersection);
+            });
+
+            let isIntersect = false;
+            if (!Ember.isEmpty(intersectArray)) {
+              isIntersect = true;
+            }
+
             const hasListFormFunc = this.get('mapApi').getFromApi('hasListForm');
             const layerModel = Ember.get(result, 'layerModel');
             let hasListForm;
@@ -319,7 +328,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               layerModel: layerModel,
               hasListForm: hasListForm,
               layerIds: layerIds,
-              dateFormat: Ember.get(layerModel, 'settingsAsObject.displaySettings.dateFormat')
+              dateFormat: Ember.get(layerModel, 'settingsAsObject.displaySettings.dateFormat'),
+              isIntersect: isIntersect
             };
 
             this._processLayerLinkForDisplayResults(result, displayResult);

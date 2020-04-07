@@ -1,8 +1,9 @@
 <label>{{title}}</label>
-<div class="ui fluid multiple search selection dropdown {{selectorName}}">
+<div class="ui fluid multiple selection dropdown {{selectorName}} ">
   <input name="{{selectorName}}" type="hidden" value={{selectedItems}}>
   <i class="dropdown icon" style="margin-right: 20px;"></i>
-   <i class="close icon" {{action 'clear'}} style="margin-right: 0px; right:0; position:absolute; font-size:12px"></i>
+  <i class="close icon" {{action 'clear'}}></i>
+  <input class="search" autocomplete="off" tabindex="0">
   <div class="default text">{{title}}</div>
   <div class="menu">
     {{#if isObject}}

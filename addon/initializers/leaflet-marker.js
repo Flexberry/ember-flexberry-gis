@@ -16,7 +16,7 @@ export function initialize() {
     _animateZoom: function (opt) {
       if (this._checkAnimateMapZoom()) {
         if (!this._icon) {
-          if (Ember.get(this, 'styleIsSet')) {
+          if (!Ember.isNone(this.style) && !Ember.isNone(this.style.html)) {
             this.setIcon(new L.divIcon(this.style));
           } else {
             this.setIcon(new L.Icon.Default());
