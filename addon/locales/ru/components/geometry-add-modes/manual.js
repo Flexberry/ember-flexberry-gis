@@ -10,9 +10,9 @@ export default {
   'coordinates-parse-error-label': 'Некорректно введены координаты. Между парой координат X и Y должен быть пробел.' +
    'Разделителем в десятичной координате должна быть точка.',
   'coordinates-line-error-label': 'Некорректно введены координаты. В строке должна содержаться одна пара координат X и Y через пробел',
-  'point-object-type' : 'Точка',
-  'linestring-object-type' : 'Линия',
-  'multilinestring-object-type' : 'Мультилиния',
-  'polygon-object-type' : 'Полигон',
-  'multipolygon-object-type' : 'Мультиполигон',
+  'point-object-type': 'Точка',
+  'linestring-object-type': 'Линия',
+  'multilinestring-object-type': 'Мультилиния',
+  'polygon-object-type': 'Полигон',
+  'multipolygon-object-type': 'Мультиполигон',
 };

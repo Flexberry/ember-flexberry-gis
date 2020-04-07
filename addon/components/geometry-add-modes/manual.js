@@ -206,7 +206,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     @readonly
     @private
   */
- _availableType: null,
+  _availableType: null,
 
   menuButtonTooltip: t('components.geometry-add-modes.manual.menu-button-tooltip-add'),
 
@@ -274,7 +274,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
           res = factory;
           this._objectSelectType = factory.type;
         }
-      })
+      });
     }
   }),
 
@@ -290,16 +290,16 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       this.set('_dialogVisible', true);
       switch (tabModel.typeGeometry) {
         case 'polygon' :
-          this.set('_objectTypes', this.get('_objectTypesPolygon'))
-          this._updateAvaliableTypes()
+          this.set('_objectTypes', this.get('_objectTypesPolygon'));
+          this._updateAvaliableTypes();
           break;
         case 'polyline' :
-          this.set('_objectTypes', this.get('_objectTypesLine'))
-          this._updateAvaliableTypes()
+          this.set('_objectTypes', this.get('_objectTypesLine'));
+          this._updateAvaliableTypes();
           break;
         case 'marker' :
-          this.set('_objectTypes', this.get('_objectTypesPoint'))
-          this._updateAvaliableTypes()
+          this.set('_objectTypes', this.get('_objectTypesPoint'));
+          this._updateAvaliableTypes();
           break;
       }
 
@@ -327,7 +327,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
                 coordinates[i][j].pop();
               }
             }
-            
+
             let multipolygonObject = this.get('_objectTypesPolygon')[1];
             this.set('_curType', i18n.t(multipolygonObject.captionPath));
             break;
@@ -592,7 +592,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
       this.set('_coordinates', null);
       this.set('_coordinatesWithError', null);
-      this.set('_curType', null)
+      this.set('_curType', null);
       this.set('_geometryField', false);
     },
 
@@ -610,7 +610,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       this.set('coordinatesParseError', false);
       this.set('coordinatesInLineError', false);
       this.set('_objectSelectType', null);
-      this.set('_curType', null)
+      this.set('_curType', null);
     }
   },
 
