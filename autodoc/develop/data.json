@@ -10298,6 +10298,19 @@
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
             "line": 110,
+            "description": "Validation flags for adding a edited record.",
+            "itemtype": "property",
+            "name": "_editValid",
+            "type": "Object",
+            "default": "{\ndirectionValid: false,\nrhumbValid: false,\ndistanceValid: false\n  }",
+            "access": "private",
+            "tagname": "",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 128,
             "description": "List of cardinal points.",
             "itemtype": "property",
             "name": "_cardinalPoints",
@@ -10311,7 +10324,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 121,
+            "line": 139,
             "description": "Data table.",
             "itemtype": "property",
             "name": "_tableData",
@@ -10324,7 +10337,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 131,
+            "line": 149,
             "description": "Object types.",
             "itemtype": "property",
             "name": "_objectTypes",
@@ -10338,7 +10351,28 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 142,
+            "line": 169,
+            "description": "Availble type.",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 174,
+            "description": "Current type.",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 179,
+            "description": "Set _dataForm.objectType.",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 195,
             "description": "Form fields.",
             "itemtype": "property",
             "name": "_dataForm",
@@ -10351,7 +10385,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 158,
+            "line": 211,
             "description": "Fields for adding a new record.",
             "itemtype": "property",
             "name": "_dataFormTable",
@@ -10364,14 +10398,24 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 215,
+            "line": 282,
+            "description": "Type items metadata.",
+            "itemtype": "property",
+            "name": "typeItems",
+            "type": "Object[]",
+            "class": "FlexberryGeometryAddModeRhumbComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/geometry-add-modes/rhumb.js",
+            "line": 306,
             "description": "Handles button click.",
             "class": "FlexberryGeometryAddModeRhumbComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 225,
+            "line": 316,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.approve:method\"}}'flexberry-dialog' component's 'approve' action{{/crossLink}}.\nInvokes {{#crossLink \"FlexberryGeometryAddModeRhumbComponent/sendingActions.complete:method\"}}'complete' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onApprove",
@@ -10380,7 +10424,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 310,
+            "line": 406,
             "description": "Handles {{#crossLink \"FlexberryDialogComponent/sendingActions.deny:method\"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.",
             "itemtype": "method",
             "name": "actions.onDeny",
@@ -10389,7 +10433,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 319,
+            "line": 415,
             "description": "The button for adding a new record to the table.",
             "itemtype": "method",
             "name": "actions.onAddRow",
@@ -10398,7 +10442,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 378,
+            "line": 479,
             "description": "Button to delete a record in a table.",
             "itemtype": "method",
             "name": "actions.OnRemoveRow",
@@ -10407,7 +10451,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 398,
+            "line": 505,
             "description": "Button to edit a record in a table.",
             "itemtype": "method",
             "name": "actions.OnEditRow",
@@ -10416,7 +10460,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 418,
+            "line": 551,
             "description": "Handles click on checkbox.",
             "itemtype": "method",
             "name": "actions.onRhumbSkipChange",
@@ -10425,7 +10469,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 438,
+            "line": 598,
             "description": "Count order number of rhumbs.",
             "itemtype": "method",
             "name": "_countSkip",
@@ -10434,7 +10478,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 450,
+            "line": 610,
             "description": "Count number of binding rhumbs.",
             "itemtype": "method",
             "name": "_countSkip",
@@ -10443,7 +10487,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 463,
+            "line": 623,
             "description": "Сlear form.",
             "itemtype": "method",
             "name": "_dropForm",
@@ -10452,7 +10496,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 478,
+            "line": 639,
             "description": "Сlear form.",
             "itemtype": "method",
             "name": "_dropTableValidForm",
@@ -10461,7 +10505,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 487,
+            "line": 648,
             "description": "Clear form validation.",
             "itemtype": "method",
             "name": "_dropTableForm",
@@ -10470,7 +10514,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 496,
+            "line": 657,
             "description": "Number check.",
             "itemtype": "method",
             "name": "_validFloatNumber",
@@ -10479,7 +10523,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 506,
+            "line": 667,
             "description": "Starp point check.",
             "itemtype": "method",
             "name": "_validStartPoint",
@@ -10488,7 +10532,7 @@
         },
         {
             "file": "addon/components/geometry-add-modes/rhumb.js",
-            "line": 516,
+            "line": 677,
             "description": "Component's action invoking when new geometry was added.",
             "itemtype": "method",
             "name": "sendingActions.complete",
@@ -15003,7 +15047,7 @@
         },
         {
             "file": "addon/components/layers-dialogs/add.js",
-            "line": 181,
+            "line": 182,
             "description": "Handles onUploadFile.",
             "itemtype": "method",
             "name": "actions.onUploadFile",
@@ -46094,8 +46138,20 @@
             "line": " addon/components/geometry-add-modes/rhumb.js:38"
         },
         {
+            "message": "Missing item type\nAvailble type.",
+            "line": " addon/components/geometry-add-modes/rhumb.js:169"
+        },
+        {
+            "message": "Missing item type\nCurrent type.",
+            "line": " addon/components/geometry-add-modes/rhumb.js:174"
+        },
+        {
+            "message": "Missing item type\nSet _dataForm.objectType.",
+            "line": " addon/components/geometry-add-modes/rhumb.js:179"
+        },
+        {
             "message": "Missing item type\nHandles button click.",
-            "line": " addon/components/geometry-add-modes/rhumb.js:215"
+            "line": " addon/components/geometry-add-modes/rhumb.js:306"
         },
         {
             "message": "Missing item type\nReference to component's template.",

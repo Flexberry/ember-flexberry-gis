@@ -552,8 +552,9 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
     onApprove() {
       let file = this.get(&#x27;_fileControl&#x27;);
       if (!Ember.isNone(file)) {
-        let layerName = JSON.parse(this.get(&#x27;getLayerProperties&#x27;)().settings).layers.split(&#x27;:&#x27;);
-        let url = JSON.parse(this.get(&#x27;getLayerProperties&#x27;)().settings).url.split(&#x27;/geoserver&#x27;);
+        let layerProperties = this.get(&#x27;getLayerProperties&#x27;)();
+        let layerName = JSON.parse(layerProperties.settings).layers.split(&#x27;:&#x27;);
+        let url = JSON.parse(layerProperties.settings).url.split(&#x27;/geoserver&#x27;);
         if (!Ember.isNone(layerName)) {
           let _this = this;
           let config = Ember.getOwner(this).resolveRegistration(&#x27;config:environment&#x27;);
@@ -569,7 +570,7 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
                     &#x27;PUT&#x27;, &#x27;image/tiff&#x27;, file,
                     (data) =&gt; {
                       this.sendAction(&#x27;approve&#x27;, {
-                        layerProperties: this.get(&#x27;getLayerProperties&#x27;)(),
+                        layerProperties: layerProperties,
                         layer: this.get(&#x27;layer&#x27;)
                       });
                     },
