@@ -133,13 +133,35 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
   /**
     Object types.
 
-    @property _geometryField
+    @property _types
     @type string[]
     @default ['Point', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon']
     @readonly
     @private
   */
   _types: ['Point', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon'],
+
+  /**
+    Object types in rus locale.
+
+    @property _typesRu
+    @type string[]
+    @default  ['Точка', 'Линия', 'Мультилиния', 'Полигон', 'Мультиполигон']
+    @readonly
+    @private
+  */
+  _typesRu: ['Точка', 'Линия', 'Мультилиния', 'Полигон', 'Мультиполигон'],
+
+  /**
+    Object types are avaliable to choose.
+
+    @property _typesAvaliable
+    @type string[]
+    @default  []
+    @readonly
+    @private
+  */
+  _typesAvaliable: [],
 
   menuButtonTooltip: t('components.geometry-add-modes.manual.menu-button-tooltip-add'),
 
@@ -177,14 +199,14 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       this.set('_dialogVisible', true);
       switch (tabModel.typeGeometry) {
         case 'polygon' :
-          this.set('_types', ['Polygon', 'MultiPolygon']);
+          this.set('_typesAvaliable', ['Полигон', 'Мультиполигон']);
           break;
         case 'polyline' :
-          this.set('_types', ['LineString', 'MultiLineString']);
+          this.set('_typesAvaliable', ['Линия', 'Мультилиния']);
           break;
         case 'marker' :
-          this.set('_types', ['Point']);
-          this.set('_objectSelectType', 'Point');
+          this.set('_typesAvaliable', ['Точка']);
+          this.set('_objectSelectType', 'Точка');
           break;
       }
 
@@ -215,7 +237,9 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
         const str = this._coordinatesToString(coordinates);
         this.set('_coordinates', str);
-        this.set('_objectSelectType', type);
+        let index = this.get('_types').indexOf(type);
+        let typeRu = this.get('_typesRu')[index];
+        this.set('_objectSelectType', typeRu);
         Ember.set(this, 'menuButtonTooltip', t('components.geometry-add-modes.manual.menu-button-tooltip-edit'));
       } else {
         this.set('_coordinates', '');
@@ -234,8 +258,11 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
     onApprove(tabModel, e) {
       const objectSelectType = this.get('_objectSelectType');
 
+      let index = this.get('_typesRu').indexOf(objectSelectType);
+      let objectSelectTypeEn =  this.get('_types')[index];
+
       let error = false;
-      if (Ember.isNone(objectSelectType)) {
+      if (Ember.isNone(objectSelectType1)) {
         error = true;
         this.set('_geometryField', true);
       } else {
@@ -265,7 +292,6 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
 
       let baseCrs = Ember.get(tabModel, 'leafletObject.options.crs.code');
       const parsedCoordinates = this._parseStringToCoordinates(coordinates, baseCrs);
-      
 
       const rowId = this._getRowId(tabModel);
       let edit = false;
@@ -302,7 +328,7 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       let addedLayer;
       let latlngs;
 
-      switch (objectSelectType) {
+      switch (objectSelectTypeEn) {
         case 'Point':
 
           // Only one point.
