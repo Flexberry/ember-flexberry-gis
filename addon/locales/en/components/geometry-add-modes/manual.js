@@ -10,4 +10,9 @@ export default {
   'coordinates-parse-error-label':
    'Incorrectly entered coordinates. There must be a space between the pair of X and Y coordinates. Fractions of coordinates are indicated after the point',
   'coordinates-line-error-label': 'Incorrectly entered coordinates. The line must contain one pair of X and Y coordinates separated by a space',
+  'point-object-type' : 'Point',
+  'linestring-object-type' : 'LineString',
+  'multilinestring-object-type' : 'MultiLineString',
+  'polygon-object-type' : 'Polygon',
+  'multipolygon-object-type' : 'MultiPolygon',
 };
