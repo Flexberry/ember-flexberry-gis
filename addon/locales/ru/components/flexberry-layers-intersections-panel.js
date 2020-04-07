@@ -7,7 +7,7 @@ export default {
   'intersection-cords': 'Координаты пересечения',
   'x-cord': 'X',
   'y-cord': 'Y',
-  'm2': 'м²',
+  'm2': 'm²',
   'm': 'm',
   'show-on-map': 'Приблизить к пересечению',
   'results': 'Результаты',

@@ -336,7 +336,7 @@ export default Ember.Mixin.create({
             result.geometry = NewObjCrs.geometry.coordinates;
           }
 
-          let obj = featureLayer[0].options.crs.code === 'EPSG:4326' ?
+          let obj = leafletLayer.options.crs.code === 'EPSG:4326' ?
           featureLayer[0].feature : this._convertObjectCoordinates(leafletLayer.options.crs.code, featureLayer[0].feature);
           result.area = area(obj);
           resolve(result);
@@ -991,23 +991,28 @@ export default Ember.Mixin.create({
         if (firstDefinition !== secondDefinition) {
           let result = Ember.$.extend(true, {}, object);
           let coordinatesArray = [];
-          result.geometry.coordinates.forEach(arr => {
-            var arr1 = [];
-            arr.forEach(pair => {
-              if (result.geometry.type === 'MultiPolygon') {
-                let arr2 = [];
-                pair.forEach(cords => {
-                  let transdormedCords = proj4(firstDefinition, secondDefinition, cords);
-                  arr2.push(transdormedCords);
-                });
-                arr1.push(arr2);
-              } else {
-                let cords = proj4(firstDefinition, secondDefinition, pair);
-                arr1.push(cords);
-              }
+          if (result.geometry.type !== 'Point') {
+            result.geometry.coordinates.forEach(arr => {
+              var arr1 = [];
+              arr.forEach(pair => {
+                if (result.geometry.type === 'MultiPolygon') {
+                  let arr2 = [];
+                  pair.forEach(cords => {
+                    let transdormedCords = proj4(firstDefinition, secondDefinition, cords);
+                    arr2.push(transdormedCords);
+                  });
+                  arr1.push(arr2);
+                } else {
+                  let cords = proj4(firstDefinition, secondDefinition, pair);
+                  arr1.push(cords);
+                }
+              });
+              coordinatesArray.push(arr1);
             });
-            coordinatesArray.push(arr1);
-          });
+          } else {
+            coordinatesArray = proj4(firstDefinition, secondDefinition, result.geometry.coordinates);
+          }
+
           result.geometry.coordinates = coordinatesArray;
           return result;
         } else {
