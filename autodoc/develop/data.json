@@ -26586,7 +26586,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 328,
+            "line": 327,
             "description": "Zooms to intersection and add intersection object on map.",
             "itemtype": "method",
             "name": "actions.zoomToIntersection",
@@ -26595,7 +26595,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 338,
+            "line": 337,
             "description": "Component's action invoking for select feature",
             "itemtype": "method",
             "name": "sendingActions.selectFeature",
@@ -26611,7 +26611,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 344,
+            "line": 343,
             "description": "Component's action invoking for feature zooming",
             "itemtype": "method",
             "name": "sendingActions.zoomTo",
@@ -26627,7 +26627,7 @@
         },
         {
             "file": "addon/components/feature-result-item.js",
-            "line": 350,
+            "line": 349,
             "description": "Component's action invoking for feature pan",
             "itemtype": "method",
             "name": "sendingActions.panTo",
@@ -33469,6 +33469,17 @@
         {
             "file": "addon/components/flexberry-multiple-select.js",
             "line": 36,
+            "description": "Flag, indicate that selection was remove.",
+            "itemtype": "property",
+            "name": "isRemove",
+            "type": "Boolean",
+            "default": "false",
+            "class": "FlexberryMultipleSelectComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-multiple-select.js",
+            "line": 45,
             "description": "Array with selected dropdown items.",
             "itemtype": "property",
             "name": "selectedItems",
@@ -33479,7 +33490,18 @@
         },
         {
             "file": "addon/components/flexberry-multiple-select.js",
-            "line": 56,
+            "line": 54,
+            "description": "Array with selected dropdown items.",
+            "itemtype": "property",
+            "name": "selectedLabels",
+            "type": "Object",
+            "default": "Ember.A()",
+            "class": "FlexberryMultipleSelectComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/flexberry-multiple-select.js",
+            "line": 97,
             "description": "Dropdown title.",
             "itemtype": "property",
             "name": "title",
@@ -33490,7 +33512,7 @@
         },
         {
             "file": "addon/components/flexberry-multiple-select.js",
-            "line": 65,
+            "line": 106,
             "description": "Flag, allows or forbids manual addition.",
             "itemtype": "property",
             "name": "allowAdditions",
@@ -33501,7 +33523,7 @@
         },
         {
             "file": "addon/components/flexberry-multiple-select.js",
-            "line": 74,
+            "line": 115,
             "description": "Classname.",
             "itemtype": "property",
             "name": "selectorName",
@@ -33512,7 +33534,7 @@
         },
         {
             "file": "addon/components/flexberry-multiple-select.js",
-            "line": 83,
+            "line": 124,
             "description": "Flag indicates whether is array consists of objects or not.",
             "itemtype": "property",
             "name": "isObject",
@@ -33523,7 +33545,7 @@
         },
         {
             "file": "addon/components/flexberry-multiple-select.js",
-            "line": 92,
+            "line": 133,
             "description": "Array with not-selected dropdown items.",
             "itemtype": "property",
             "name": "_usedItems",
@@ -33534,7 +33556,7 @@
         },
         {
             "file": "addon/components/flexberry-multiple-select.js",
-            "line": 115,
+            "line": 156,
             "description": "Hook, working after element insertion",
             "class": "FlexberryMultipleSelectComponent",
             "module": "ember-flexberry-gis"
@@ -34890,7 +34912,7 @@
         },
         {
             "file": "addon/components/layer-result-list.js",
-            "line": 501,
+            "line": 511,
             "description": "Get an array of layer shapes id.",
             "itemtype": "method",
             "name": "_getFeatureShapeIds",
@@ -42554,7 +42576,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1044,
+            "line": 1049,
             "description": "Get coordinates point.",
             "itemtype": "method",
             "name": "getCoordPoint",
@@ -47217,7 +47239,7 @@
         },
         {
             "message": "Missing item type\nHook, working after element insertion",
-            "line": " addon/components/flexberry-multiple-select.js:115"
+            "line": " addon/components/flexberry-multiple-select.js:156"
         },
         {
             "message": "Missing item type\nReference to component's template.",
