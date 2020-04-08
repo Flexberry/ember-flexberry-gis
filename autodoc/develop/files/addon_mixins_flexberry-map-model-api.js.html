@@ -484,17 +484,15 @@ export default Ember.Mixin.create({
   showAllLayerObjects(layerId) {
     const layer = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, layerId);
     const leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;);
-    let map = Ember.get(leafletObject, &#x27;_map&#x27;);
+    let map = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+    leafletObject.hideAllLayerObjects = false;
+    map.fire(&#x27;moveend&#x27;);
 
     leafletObject.eachLayer(function (layerShape) {
       if (!map.hasLayer(layerShape)) {
         map.addLayer(layerShape);
       }
     });
-
-    leafletObject.hideAllLayerObjects = false;
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    leafletMap.fire(&#x27;moveend&#x27;);
   },
 
   /**
@@ -507,7 +505,8 @@ export default Ember.Mixin.create({
   hideAllLayerObjects(layerId) {
     const layer = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, layerId);
     const leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;);
-    var map = Ember.get(leafletObject, &#x27;_map&#x27;);
+    var map = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+    leafletObject.hideAllLayerObjects = true;
 
     leafletObject.eachLayer(function (layerShape) {
       if (map.hasLayer(layerShape)) {
@@ -834,10 +833,12 @@ export default Ember.Mixin.create({
   _setVisibility(layerIds, visibility = false) {
     if (Ember.isArray(layerIds)) {
       const layers = this.get(&#x27;mapLayer&#x27;);
+      let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
       layerIds.forEach(id =&gt; {
         const layer = layers.findBy(&#x27;id&#x27;, id);
         if (layer) {
           layer.set(&#x27;visibility&#x27;, visibility);
+          leafletMap.fire(&#x27;moveend&#x27;);
         }
       });
     }
@@ -898,6 +899,7 @@ export default Ember.Mixin.create({
           });
         }
       });
+      map.fire(&#x27;moveend&#x27;);
     }
   },
 
