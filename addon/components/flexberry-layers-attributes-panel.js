@@ -961,22 +961,19 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       let radius = this.get('_radius');
       let unit = this.get('_selectedUnit');
       let selectedRows = Ember.get(tabModel, '_selectedRows');
-      let selectedFeatures = Object.keys(selectedRows).filter((item) => Ember.get(selectedRows, item))
-        .map((key) => {
-          return tabModel.featureLink[key].feature.leafletLayer.toGeoJSON();
-        });
-
       let leafletMap = this.get('leafletMap');
-      let featureCollection = thelpers.default.featureCollection(selectedFeatures);
-
-      let buf = buffer.default(featureCollection, radius, { units: unit });
       let _bufferLayer = this.get('_bufferLayer');
       if (Ember.isNone(_bufferLayer)) {
         _bufferLayer = L.featureGroup();
         leafletMap.addLayer(_bufferLayer);
       }
 
-      _bufferLayer.addLayer(L.geoJSON(buf));
+      Object.keys(selectedRows).forEach(key => {
+        let item = tabModel.featureLink[key].feature.leafletLayer.toGeoJSON();
+        let buf = buffer.default(item, radius, { units: unit });
+        _bufferLayer.addLayer(L.geoJSON(buf, {key: key}));
+      });
+
       this.set('_bufferLayer', _bufferLayer);
     },
 
@@ -985,9 +982,18 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       @method actions.deleteBuffer
     */
-    deleteBuffer() {
+    deleteBuffer(tabModel) {
       let _bufferLayer = this.get('_bufferLayer');
-      _bufferLayer.clearLayers();
+      let selectedRows = Ember.get(tabModel, '_selectedRows');
+      Object.keys(selectedRows).forEach(key => {
+        if (selectedRows[key]) {
+          Object.values(_bufferLayer._layers).forEach(layer => {
+            if (layer.options.key === key) {
+              _bufferLayer.removeLayer(layer);
+            }
+          });
+        }
+      });
     },
 
     /**
@@ -1666,6 +1672,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     if (!selectAll) {
       Ember.set(tabModel, '_selectedRows', {});
+      this.set('lastPage', this.get('lastPage'));
     } else {
       let selectedRows = Object.assign(...Object.keys(Ember.get(tabModel, 'propertyLink')).map(k => ({
         [k]: true
