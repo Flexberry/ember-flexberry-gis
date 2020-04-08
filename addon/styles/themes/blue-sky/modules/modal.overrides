@@ -133,7 +133,19 @@
         color: @darkbluecolor;
     }
 }
-
+.ui.modal.flexberry-dialog-move {
+     /* кнопка Отмена */
+    .ui.negative.button {
+        font-weight: normal;
+        background-color: @graybluecolor !important;
+        border: solid 1px @graybluecolor !important;
+        color: @whitecolor;
+        margin-left: 0px;
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
 
 .ui.modal.flexberry-add-layer-dialog,
 .ui.modal.flexberry-copy-layer-dialog,
