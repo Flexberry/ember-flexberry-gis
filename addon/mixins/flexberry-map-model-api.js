@@ -74,17 +74,15 @@ export default Ember.Mixin.create({
   showAllLayerObjects(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     const leafletObject = Ember.get(layer, '_leafletObject');
-    let map = Ember.get(leafletObject, '_map');
+    let map = this.get('mapApi').getFromApi('leafletMap');
+    leafletObject.hideAllLayerObjects = false;
+    map.fire('moveend');
 
     leafletObject.eachLayer(function (layerShape) {
       if (!map.hasLayer(layerShape)) {
         map.addLayer(layerShape);
       }
     });
-
-    leafletObject.hideAllLayerObjects = false;
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    leafletMap.fire('moveend');
   },
 
   /**
@@ -97,7 +95,8 @@ export default Ember.Mixin.create({
   hideAllLayerObjects(layerId) {
     const layer = this.get('mapLayer').findBy('id', layerId);
     const leafletObject = Ember.get(layer, '_leafletObject');
-    var map = Ember.get(leafletObject, '_map');
+    var map = this.get('mapApi').getFromApi('leafletMap');
+    leafletObject.hideAllLayerObjects = true;
 
     leafletObject.eachLayer(function (layerShape) {
       if (map.hasLayer(layerShape)) {
@@ -424,10 +423,12 @@ export default Ember.Mixin.create({
   _setVisibility(layerIds, visibility = false) {
     if (Ember.isArray(layerIds)) {
       const layers = this.get('mapLayer');
+      let leafletMap = this.get('mapApi').getFromApi('leafletMap');
       layerIds.forEach(id => {
         const layer = layers.findBy('id', id);
         if (layer) {
           layer.set('visibility', visibility);
+          leafletMap.fire('moveend');
         }
       });
     }
@@ -488,6 +489,7 @@ export default Ember.Mixin.create({
           });
         }
       });
+      map.fire('moveend');
     }
   },
 
