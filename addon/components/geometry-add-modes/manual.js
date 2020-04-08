@@ -311,10 +311,9 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoom
       if (edit) {
         let i18n = this.get('i18n');
         const layer = Ember.get(tabModel, `featureLink.${rowId}`);
-        const geoJSON = layer.toGeoJSON();
-        const type = Ember.get(geoJSON, 'geometry.type');
-
-        let coordinates = geoJSON.geometry.coordinates;
+        const type = Ember.get(layer, 'feature.geometry.type');
+        let layerObject = Ember.$.extend(true, {}, Ember.get(layer, 'feature'));
+        let coordinates = layerObject.geometry.coordinates;
         switch (type) {
           case 'Polygon':
             coordinates.forEach(item => item.pop());
