@@ -231,6 +231,8 @@ export default Ember.Mixin.create({
           }
 
           resolve([e.results[0].layerModel, e.results[0].leafletObject, featureLayer]);
+        }).catch(() => {
+          reject(`Object '${featureIds}' not found`);
         });
       } else {
         reject('Result is not promise');

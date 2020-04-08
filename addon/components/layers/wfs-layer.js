@@ -478,7 +478,7 @@ export default BaseVectorLayer.extend({
         if (!Ember.isNone(leafletObject)) {
           let visibility = this.get('layerModel.visibility');
           let hideObjects = Ember.isNone(leafletObject.hideAllLayerObjects) || !leafletObject.hideAllLayerObjects;
-          if (!leafletObject.options.showExisting && leafletObject.options.continueLoading && visibility && checkMapZoom(leafletObject) && hideObjects) {
+          if (!leafletObject.options.showExisting && leafletObject.options.continueLoading && checkMapZoom(leafletObject) && (hideObjects || visibility)) {
             let bounds = leafletMap.getBounds();
 
             if (Ember.isNone(leafletObject.isLoadBounds)) {
