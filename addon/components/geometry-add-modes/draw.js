@@ -225,7 +225,6 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
     @private
   */
   _createCopyMultiShape(tabModel, layerId, geometryType, featureCollection) {
-    let styleSettings = tabModel.get('styleSettings');
     let feature = featureCollection.features.pop();
     let shape = {};
 

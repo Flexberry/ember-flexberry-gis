@@ -7,7 +7,6 @@ import layout from '../templates/components/flexberry-layers-attributes-panel';
 import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import checkIntersect from '../utils/polygon-intersect-check';
 import * as buffer from 'npm:@turf/buffer';
-import * as thelpers from 'npm:@turf/helpers';
 import * as difference from 'npm:@turf/difference';
 import * as booleanEqual from 'npm:@turf/boolean-equal';
 import * as lineSplit from 'npm:@turf/line-split';
@@ -971,7 +970,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Object.keys(selectedRows).forEach(key => {
         let item = tabModel.featureLink[key].feature.leafletLayer.toGeoJSON();
         let buf = buffer.default(item, radius, { units: unit });
-        _bufferLayer.addLayer(L.geoJSON(buf, {key: key}));
+        _bufferLayer.addLayer(L.geoJSON(buf, { key: key }));
       });
 
       this.set('_bufferLayer', _bufferLayer);
