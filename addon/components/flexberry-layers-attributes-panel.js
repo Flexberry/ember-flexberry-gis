@@ -1672,7 +1672,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
     if (!selectAll) {
       Ember.set(tabModel, '_selectedRows', {});
-      this.set('lastPage', this.get('lastPage'));
     } else {
       let selectedRows = Object.assign(...Object.keys(Ember.get(tabModel, 'propertyLink')).map(k => ({
         [k]: true
