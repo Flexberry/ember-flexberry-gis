@@ -485,13 +485,22 @@ export default Ember.Mixin.create({
     const layer = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, layerId);
     const leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;);
     let map = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    leafletObject.hideAllLayerObjects = false;
+    leafletObject.showLayerObjects = true;
+    leafletObject.statusLoadLayer = true;
     map.fire(&#x27;moveend&#x27;);
 
-    leafletObject.eachLayer(function (layerShape) {
-      if (!map.hasLayer(layerShape)) {
-        map.addLayer(layerShape);
-      }
+    if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+      leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+    }
+
+    leafletObject.promiseLoadLayer.then(() =&gt; {
+      leafletObject.statusLoadLayer = false;
+      leafletObject.promiseLoadLayer = null;
+      leafletObject.eachLayer(function (layerShape) {
+        if (!map.hasLayer(layerShape)) {
+          map.addLayer(layerShape);
+        }
+      });
     });
   },
 
@@ -506,15 +515,13 @@ export default Ember.Mixin.create({
     const layer = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, layerId);
     const leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;);
     var map = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    leafletObject.hideAllLayerObjects = true;
+    leafletObject.showLayerObjects = false;
 
     leafletObject.eachLayer(function (layerShape) {
       if (map.hasLayer(layerShape)) {
         map.removeLayer(layerShape);
       }
     });
-
-    leafletObject.hideAllLayerObjects = true;
   },
 
   /**
@@ -838,7 +845,9 @@ export default Ember.Mixin.create({
         const layer = layers.findBy(&#x27;id&#x27;, id);
         if (layer) {
           layer.set(&#x27;visibility&#x27;, visibility);
-          leafletMap.fire(&#x27;moveend&#x27;);
+          if (visibility) {
+            leafletMap.fire(&#x27;moveend&#x27;);
+          }
         }
       });
     }
@@ -884,22 +893,35 @@ export default Ember.Mixin.create({
       }
 
       const map = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-
-      objectIds.forEach(objectId =&gt; {
-        let objects = Object.values(leafletObject._layers).filter(shape =&gt; {
-          return this._getLayerFeatureId(layer, shape) === objectId;
-        });
-        if (objects.length &gt; 0) {
-          objects.forEach(obj =&gt; {
-            if (visibility) {
-              map.addLayer(obj);
-            } else {
-              map.removeLayer(obj);
-            }
-          });
+      if (visibility) {
+        leafletObject.showLayerObjects = visibility;
+        leafletObject.statusLoadLayer = true;
+        map.fire(&#x27;moveend&#x27;);
+        if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+          leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
         }
+      } else {
+        leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+      }
+
+      leafletObject.promiseLoadLayer.then(() =&gt; {
+        leafletObject.statusLoadLayer = false;
+        leafletObject.promiseLoadLayer = null;
+        objectIds.forEach(objectId =&gt; {
+          let objects = Object.values(leafletObject._layers).filter(shape =&gt; {
+            return this._getLayerFeatureId(layer, shape) === objectId;
+          });
+          if (objects.length &gt; 0) {
+            objects.forEach(obj =&gt; {
+              if (visibility) {
+                map.addLayer(obj);
+              } else {
+                map.removeLayer(obj);
+              }
+            });
+          }
+        });
       });
-      map.fire(&#x27;moveend&#x27;);
     }
   },
 

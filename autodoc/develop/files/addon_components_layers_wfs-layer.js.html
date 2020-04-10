@@ -886,16 +886,29 @@ export default BaseVectorLayer.extend({
       let continueLoad = () =&gt; {
         let leafletObject = this.get(&#x27;_leafletObject&#x27;);
         if (!Ember.isNone(leafletObject)) {
-          let visibility = this.get(&#x27;layerModel.visibility&#x27;);
-          let hideObjects = Ember.isNone(leafletObject.hideAllLayerObjects) || !leafletObject.hideAllLayerObjects;
-          if (!leafletObject.options.showExisting &amp;&amp; leafletObject.options.continueLoading &amp;&amp; checkMapZoom(leafletObject) &amp;&amp; (hideObjects || visibility)) {
+          let show = this.get(&#x27;layerModel.visibility&#x27;) || (!Ember.isNone(leafletObject.showLayerObjects) &amp;&amp; leafletObject.showLayerObjects);
+          let continueLoad = !leafletObject.options.showExisting &amp;&amp; leafletObject.options.continueLoading;
+          if (continueLoad &amp;&amp; checkMapZoom(leafletObject) &amp;&amp; show) {
             let bounds = leafletMap.getBounds();
+            if (!Ember.isNone(leafletObject.showLayerObjects)) {
+              leafletObject.showLayerObjects = false;
+            }
 
             if (Ember.isNone(leafletObject.isLoadBounds)) {
               let filter = new L.Filter.BBox(leafletObject.options.geometryField, bounds, leafletObject.options.crs);
               leafletObject.loadFeatures(filter);
               leafletObject.isLoadBounds = bounds;
               loadedBounds = bounds;
+              if (leafletObject.statusLoadLayer) {
+                leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) =&gt; {
+                  leafletObject.once(&#x27;load&#x27;, () =&gt; {
+                    resolve();
+                  }).once(&#x27;error&#x27;, (e) =&gt; {
+                    reject();
+                  });
+                });
+              }
+
               return;
             } else if (loadedBounds.contains(bounds)) {
               if (leafletObject.statusLoadLayer) {
