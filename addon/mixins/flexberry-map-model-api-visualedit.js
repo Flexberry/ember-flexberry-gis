@@ -36,25 +36,42 @@ export default Ember.Mixin.create({
     return new Ember.RSVP.Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [featureId]).then(([layerModel, leafletObject, featureLayer]) => {
         let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-        leafletMap.fitBounds(featureLayer[0].getBounds());
-        let layers = leafletObject._layers;
-        let featureLayerLoad = Object.values(layers).find(feature => {
-          const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
-          return layerFeatureId === featureId;
+        leafletObject.statusLoadLayer = true;
+        let bounds;
+        if (featureLayer[0] instanceof L.Marker) {
+          let featureGroup = L.featureGroup().addLayer(featureLayer[0]);
+          bounds = featureGroup.getBounds();
+        } else {
+          bounds = featureLayer[0].getBounds();
+        }
+
+        leafletMap.fitBounds(bounds);
+        if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+          leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+        }
+
+        leafletObject.promiseLoadLayer.then(() => {
+          leafletObject.statusLoadLayer = false;
+          leafletObject.promiseLoadLayer = null;
+          let layers = leafletObject._layers;
+          let featureLayerLoad = Object.values(layers).find(feature => {
+            const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
+            return layerFeatureId === featureId;
+          });
+
+          let editTools = this._getEditTools();
+
+          featureLayerLoad.enableEdit(leafletMap);
+          featureLayerLoad.layerId = layerId;
+
+          editTools.on('editable:editing', (e) => {
+            if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayerLoad))) {
+              leafletObject.editLayer(e.layer);
+            }
+          });
+
+          resolve(featureLayerLoad);
         });
-
-        let editTools = this._getEditTools();
-
-        featureLayerLoad.enableEdit(leafletMap);
-        featureLayerLoad.layerId = layerId;
-
-        editTools.on('editable:editing', (e) => {
-          if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayerLoad))) {
-            leafletObject.editLayer(e.layer);
-          }
-        });
-
-        resolve(featureLayerLoad);
       }).catch((e) => {
         reject(e);
       });
