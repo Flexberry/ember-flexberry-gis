@@ -498,6 +498,7 @@ export default BaseVectorLayer.extend({
                   });
                 });
               }
+
               return;
             } else if (loadedBounds.contains(bounds)) {
               if (leafletObject.statusLoadLayer) {
