@@ -3,7 +3,7 @@ import turfCombine from 'npm:@turf/combine';
 
 export default Ember.Mixin.create({
 
-  /**
+  /**ok
     Change layer object properties.
 
     @method changeLayerObjectProperties
@@ -36,8 +36,27 @@ export default Ember.Mixin.create({
     return new Ember.RSVP.Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [featureId]).then(([layerModel, leafletObject, featureLayer]) => {
         let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-        leafletMap.fitBounds(featureLayer[0].getBounds());
-        let layers = leafletObject._layers;
+        let bounds;
+        if (typeof (featureLayer[0].getBounds) === 'function') {
+          bounds = featureLayer[0].getBounds();
+        } else {
+          let featureGroup = L.featureGroup().addLayer(featureLayer[0].feature.leafletLayer);
+          bounds = featureGroup.getBounds();
+        }
+
+        leafletObject.statusLoadLayer = true;
+        leafletMap.fitBounds(bounds);
+        if (leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise) {
+          leafletObject.promiseLoadLayer.then((e) => {
+              leafletObject.statusLoadLayer = false;
+              leafletObject.promiseLoadLayer = null;
+              resolve(this._getObjectToEdit(layerModel, leafletObject, featureId));
+          });
+        } else {
+          resolve(this._getObjectToEdit(layerModel, leafletObject, featureId));
+        }
+
+        /*let layers = leafletObject._layers;
         let featureLayerLoad = Object.values(layers).find(feature => {
           const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
           return layerFeatureId === featureId;
@@ -54,11 +73,42 @@ export default Ember.Mixin.create({
           }
         });
 
-        resolve(featureLayerLoad);
+        resolve(featureLayerLoad);*/
       }).catch((e) => {
         reject(e);
       });
     });
+  },
+
+  /**
+    Get object to edit.
+
+    @method _getObjectToEdit
+    @param {Object} layerModel
+    @param {Object} leafletObject
+    @param {string} featureId
+    @return {Object} Feature layer.
+  */
+  _getObjectToEdit(layerModel, leafletObject, featureId) {
+    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+    let layers = leafletObject._layers;
+    let featureLayerLoad = Object.values(layers).find(feature => {
+      const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
+      return layerFeatureId === featureId;
+    });
+
+    let editTools = this._getEditTools();
+
+    featureLayerLoad.enableEdit(leafletMap);
+    featureLayerLoad.layerId = layerId;
+
+    editTools.on('editable:editing', (e) => {
+      if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayerLoad))) {
+        leafletObject.editLayer(e.layer);
+      }
+    });
+
+    return featureLayerLoad;
   },
 
   /**

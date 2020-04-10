@@ -30,25 +30,31 @@ export default BaseVectorLayer.extend({
     @method save
   */
   save() {
+    let _this = this;
     const promises = Ember.A();
-    this.eachLayer(function(layer) {
+    _this.eachLayer(function(layer) {
       if (Ember.get(layer, 'model.hasDirtyAttributes')) {
         promises.addObject(layer.model.save());
       }
-    }, this);
+    }, _this);
 
-    this.deletedModels.forEach(model => {
+    _this.deletedModels.forEach(model => {
       promises.addObject(model.save());
     });
 
-    this.deletedModels.clear();
+    _this.deletedModels.clear();
 
-    Ember.RSVP.all(promises).then((e) => {
-      console.log('success');
-    }).catch(function(r) {
-      console.log('Error: ' + r);
-    });
-    return this;
+    if (promises.length > 0) {
+      Ember.RSVP.all(promises).then((e) => {
+        console.log('success');
+        _this.fire('save:success');
+      }).catch(function(e) {
+        console.log('Error: ' + e);
+        _this.fire('save:failed', e);
+      });
+    }
+
+    return _this;
   },
 
   /**
@@ -58,6 +64,9 @@ export default BaseVectorLayer.extend({
     @param layer
   */
   editLayer(layer) {
+    if (layer.model) {
+      layer.model.setProperties(layer.feature.properties);
+    }
 
     return this;
   },
@@ -65,26 +74,60 @@ export default BaseVectorLayer.extend({
   /**
     Deletes model in odata layer.
 
-    @method deleteModel
+    @method removeLayer
     @param model
   */
-  deleteModel(model) {
-    model.deleteRecord();
-    model.set('hasChanged', true);
-    this.deletedModels.addObject(model);
+  removeLayer(layer) {
+    L.FeatureGroup.prototype.removeLayer.call(this.get('_leafletObject'), layer);
+    layer.model.deleteRecord();
+    layer.model.set('hasChanged', true);
+    this.deletedModels.addObject(layer.model);
   },
 
-  createLayerObject(layer, objectProperties, geometry) {
-    if (geometry) {
-      const model = this.get('store').createRecord(layer.modelName, objectProperties || {});
+  /**
+    Add layer in model.
+
+    @method addLayer
+    @param layer
+  */
+  addLayer(layer) {
+    //L.FeatureGroup.prototype.addLayer.call(this.get('_leafletObject'), layer);
+    if (!layer.feature.properties.primarykey) {
+      const model = this.get('store').createRecord(this.get('modelName'), layer.feature.properties || {});
       const geometryField = this.get('geometryField') || 'geometry';
       const geometryObject = {};
-      geometryObject.coordinates = this.transformToCoords(geometry.coordinates);
+      if (layer instanceof L.Marker) {
+        geometryObject.coordinates = this.transformToCoords(layer._latlng);
+      } else {
+        geometryObject.coordinates = this.transformToCoords(layer._latlngs);
+      }
+     
       geometryObject.crs = {
         properties: { name: this.get('crs.code') },
         type: 'name'
       };
-      geometryObject.type = geometry.type;
+
+      let typeModel = this.get('geometryType');
+      switch (typeModel) {
+        case 'PointPropertyType':
+          geometryObject.type = 'Point';
+          break;
+        case 'LineStringPropertyType':
+          geometryObject.type = 'LineString';
+          break;
+        case 'PolygonPropertyType':
+          geometryObject.type = 'Polygon';
+          break;
+         case 'MultiLineStringPropertyType':
+          geometryObject.type = 'MultiLineString';
+          break;
+        case 'MultiPolygonPropertyType':
+          geometryObject.type = 'MultiPolygon';
+          break;
+        default:
+          throw 'Unknown type ' + typeModel;
+      };
+
       model.set(geometryField, geometryObject);
 
       return this.addLayerObject(layer, model);
@@ -364,7 +407,8 @@ export default BaseVectorLayer.extend({
       this._setLayerState();
 
       if (add) {
-        layer.addLayer(innerLayer);
+        L.FeatureGroup.prototype.addLayer.call(layer, innerLayer);
+        //layer.addLayer(innerLayer).bind(this);
       }
     }
 
@@ -416,10 +460,10 @@ export default BaseVectorLayer.extend({
 
         layer.save = this.get('save');
         layer.geometryField = geometryField;
-        layer.createLayerObject = this.get('createLayerObject').bind(this);
+        layer.addLayer = this.get('addLayer').bind(this);
         layer.editLayerObjectProperties = this.get('editLayerObjectProperties').bind(this);
         layer.editLayer = this.get('editLayer');
-        layer.deleteModel = this.get('deleteModel');
+        layer.removeLayer = this.get('removeLayer');
         layer.modelName = modelName;
         layer.projectionName = projectionName;
         layer.editformname = modelName + this.get('postfixForEditForm');
