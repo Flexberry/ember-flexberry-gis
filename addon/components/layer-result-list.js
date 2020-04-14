@@ -293,7 +293,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @method _resultObserver
   */
   _resultObserver: Ember.on('init', Ember.observer('results', function () {
-    this.send('selectFeature', null);
     this.set('_hasError', false);
     this.set('_noData', false);
     this.set('_displayResults', null);
@@ -318,6 +317,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       result.features.then(
         (features) => {
           if (features.length > 0) {
+            let intersectArray = features.filter((item) => {
+              return !Ember.isNone(item.intersection);
+            });
+
+            let isIntersect = false;
+            if (!Ember.isEmpty(intersectArray)) {
+              isIntersect = true;
+            }
+
             const hasListFormFunc = this.get('mapApi').getFromApi('hasListForm');
             const layerModel = Ember.get(result, 'layerModel');
             let hasListForm;
@@ -347,7 +355,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
               layerModel: layerModel,
               hasListForm: hasListForm,
               layerIds: layerIds,
-              dateFormat: Ember.get(layerModel, 'settingsAsObject.displaySettings.dateFormat')
+              dateFormat: Ember.get(layerModel, 'settingsAsObject.displaySettings.dateFormat'),
+              isIntersect: isIntersect
             };
 
             this._processLayerLinkForDisplayResults(result, displayResult);
@@ -518,9 +527,10 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_displayResults', displayResults);
       this.set('_noData', displayResults.length === 0);
       this.set('_showLoader', false);
-
-      if (displayResults.length === 1) {
-        this.send('zoomTo', displayResults.objectAt(0).features);
+      if (this.get('favoriteMode') !== true) {
+        if (displayResults.length === 1) {
+          this.send('zoomTo', displayResults.objectAt(0).features);
+        }
       }
     });
   })),

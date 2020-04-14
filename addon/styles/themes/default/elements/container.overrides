@@ -958,10 +958,16 @@
 *********************************************/
 .ui.table.flexberry-table {
   font-size: 12px;
-
   th.narrow, td.narrow {
     width: 90px;
     max-width: 90px;
+  }
+  th.checkbox-rhumb, td.checkbox-rhumb {
+    text-align: center;
+  }
+  th.narrow.rhumb, td.narrow.rhumb {
+    width: 120px;
+    max-width: 120px;
   }
 
   th.checkbox, td.checkbox {

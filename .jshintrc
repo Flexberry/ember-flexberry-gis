@@ -6,7 +6,8 @@
     "L",
     "Terraformer",
     "omnivore",
-    "Chart"
+    "Chart",
+    "proj4"
   ],
   "globals": {
     "moment": true

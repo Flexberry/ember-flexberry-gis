@@ -185,3 +185,19 @@
         }
     }
 }
+
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog {
+    .rhumb {
+        width: 33%;
+        margin: 3% 0;
+    }
+    .rhumb .first {
+        margin-top: 0.455em;
+    }
+    .rhumb.last {
+        padding-right: 5px;
+    }
+    table>tbody .flexberry-dropdown {
+        margin-bottom: 10px;
+    }
+}

@@ -10,5 +10,13 @@ export default {
   'distance-field-label': 'Расстояние, м',
   'add-button-caption': 'Добавить',
   'table-field-label': 'Таблица румбов',
-  'table-column-operation': 'Операция'
+  'table-column-operation': 'Операция',
+  'crs-code': 'Система координат(CRS)',
+  'number': 'Номер',
+  'object-start': 'Начало объекта',
+  'change-permission': 'Изменить начальный румб объекта?',
+  'coordinates-field-placeholder': '(нет значения)',
+  'object-types-polygon': 'Полигон',
+  'object-types-line': 'Линия',
+  'cannot-change-permission': 'Один румб должен быть обязательно выбран в качестве начала объекта.'
 };
