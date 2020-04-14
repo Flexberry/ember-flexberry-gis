@@ -8,7 +8,6 @@ import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-han
 import FlexberryMaplayerActionsHandlerMixin from '../mixins/flexberry-maplayer-actions-handler';
 import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-actions-handler';
 import LocalStorageBindingMixin from '../mixins/local-storage-binding';
-import FavoritesListMixin from '../mixins/favorites-features';
 import sideBySide from 'npm:leaflet-side-by-side';
 /**
   Edit map controller.
@@ -24,8 +23,7 @@ export default EditFormController.extend(
   FlexberryMapActionsHandlerMixin,
   FlexberryMaplayerActionsHandlerMixin,
   LayerResultListActionsHandlerMixin,
-  LocalStorageBindingMixin,
-  FavoritesListMixin, {
+  LocalStorageBindingMixin, {
     /**
       Property contatining sideBySide component.
 
@@ -34,21 +32,6 @@ export default EditFormController.extend(
       @default null
     */
     sideBySide: L.control.sideBySide(),
-
-    /**
-      Observes handles changes in showComapreGeometriesPanel property.
-      If Comapre Geometries Panel is active bring in to front.
-
-      @method comapreGeometriesPanelObserver
-      @private
-    */
-    _comapreGeometriesPanelObserver: Ember.observer('showComapreGeometriesPanel', function () {
-      if (this.get('showComapreGeometriesPanel')) {
-        Ember.$('.bottom-compare-panel').css('z-index', 2000);
-        Ember.$('.bottom-intersection-panel').css('z-index', 1999);
-        Ember.$('.bottom-attributes-panel').css('z-index', 1998);
-      }
-    }),
 
     /**
       Observes handles changes in showIntersectionPanel property.

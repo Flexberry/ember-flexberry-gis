@@ -299,24 +299,6 @@ export default Ember.Component.extend({
     },
 
     /**
-      Add feature to favorites list
-      Action is sended to layer-result-list.
-      @method actions.addToFavorite
-    */
-    addToFavorite() {
-      this.sendAction('addToFavorite', this.get('feature'));
-    },
-
-    /**
-      Handles click on checkbox.
-      Action is sended to layer-result-list.
-      @method actions.addToCompareGeometries
-    */
-    addToCompareGeometries() {
-      this.sendAction('addToCompareGeometries', this.get('feature'));
-    },
-
-    /**
       Pans and zooms to intersection object.
       @method actions.panToIntersection
      */
