@@ -32,29 +32,51 @@ export default BaseVectorLayer.extend({
   save() {
     let _this = this;
     const promises = Ember.A();
-    _this.eachLayer(function(layer) {
+    let leafletObject = _this.get('_leafletObject');
+    leafletObject.eachLayer(function(layer) {
       if (Ember.get(layer, 'model.hasDirtyAttributes')) {
+        if (layer.state === leafletObject.state.insert) {
+          const geometryField = _this.get('geometryField') || 'geometry';
+          let geometryObject = Ember.A();
+          let coordinates = Ember.A();
+          let type = Ember.get(layer, 'feature.geometry.type');
+          if (layer instanceof L.Marker) {
+            coordinates = _this.transformToCoords(layer._latlng);
+          } else {
+            coordinates = _this.transformToCoords(layer._latlngs, type);
+          }
+
+          if (_this.get('forceMulti') && (layer.toGeoJSON().geometry.type === 'Polygon' || layer.toGeoJSON().geometry.type === 'LineString')) {
+            geometryObject = [coordinates];
+          } else {
+            geometryObject = coordinates;
+          }
+
+          Ember.set(layer, 'feature.geometry.coordinates', geometryObject);
+        }
+
         promises.addObject(layer.model.save());
       }
-    }, _this);
+    }, leafletObject);
 
-    _this.deletedModels.forEach(model => {
+    leafletObject.deletedModels.forEach(model => {
       promises.addObject(model.save());
     });
 
-    _this.deletedModels.clear();
+    leafletObject.deletedModels.clear();
 
     if (promises.length > 0) {
       Ember.RSVP.all(promises).then((e) => {
         console.log('success');
-        _this.fire('save:success');
+        _this._setLayerState();
+        leafletObject.fire('save:success');
       }).catch(function(e) {
         console.log('Error: ' + e);
-        _this.fire('save:failed', e);
+        leafletObject.fire('save:failed', e);
       });
     }
 
-    return _this;
+    return leafletObject;
   },
 
   /**
@@ -64,24 +86,39 @@ export default BaseVectorLayer.extend({
     @param layer
   */
   editLayer(layer) {
+    let leafletObject = this.get('_leafletObject');
     if (layer.model) {
+      const geometryField = this.get('geometryField') || 'geometry';
+      const geometryObject = {};
+      geometryObject.coordinates = this._getGeometry(layer);
+      geometryObject.type = Ember.get(layer, 'feature.geometry.type');
+      geometryObject.crs = {
+        properties: { name: this.get('crs.code') },
+        type: 'name'
+      };
+      Ember.set(layer, 'feature.geometry.coordinates', geometryObject.coordinates);
       layer.model.setProperties(layer.feature.properties);
+      layer.model.set(geometryField, geometryObject);
+      layer.state = leafletObject.state.update;
     }
 
-    return this;
+    return leafletObject;
   },
 
   /**
     Deletes model in odata layer.
 
     @method removeLayer
-    @param model
+    @param layer
   */
   removeLayer(layer) {
-    L.FeatureGroup.prototype.removeLayer.call(this.get('_leafletObject'), layer);
-    layer.model.deleteRecord();
-    layer.model.set('hasChanged', true);
-    this.deletedModels.addObject(layer.model);
+    L.FeatureGroup.prototype.removeLayer.call(this, layer);
+    if (layer.state === this.state.remove) {
+      layer.model.deleteRecord();
+      layer.model.set('hasChanged', true);
+      layer.state = this.state.remove;
+      this.deletedModels.addObject(layer.model);
+    }
   },
 
   /**
@@ -91,46 +128,78 @@ export default BaseVectorLayer.extend({
     @param layer
   */
   addLayer(layer) {
-    //L.FeatureGroup.prototype.addLayer.call(this.get('_leafletObject'), layer);
-    if (!layer.feature.properties.primarykey) {
-      const model = this.get('store').createRecord(this.get('modelName'), layer.feature.properties || {});
-      const geometryField = this.get('geometryField') || 'geometry';
-      const geometryObject = {};
-      if (layer instanceof L.Marker) {
-        geometryObject.coordinates = this.transformToCoords(layer._latlng);
-      } else {
-        geometryObject.coordinates = this.transformToCoords(layer._latlngs);
-      }
-     
-      geometryObject.crs = {
-        properties: { name: this.get('crs.code') },
-        type: 'name'
-      };
+    const model = this.get('store').createRecord(this.get('modelName'), layer.feature.properties || {});
+    const geometryField = this.get('geometryField') || 'geometry';
+    const geometryObject = {};
+    let typeModel = this.get('geometryType');
+    switch (typeModel) {
+      case 'PointPropertyType':
+        geometryObject.type = 'Point';
+        break;
+      case 'LineStringPropertyType':
+        geometryObject.type = 'LineString';
+        break;
+      case 'PolygonPropertyType':
+        geometryObject.type = 'Polygon';
+        break;
+      case 'MultiLineStringPropertyType':
+        geometryObject.type = 'MultiLineString';
+        break;
+      case 'MultiPolygonPropertyType':
+        geometryObject.type = 'MultiPolygon';
+        break;
+      default:
+        throw 'Unknown type ' + typeModel;
+    }
 
-      let typeModel = this.get('geometryType');
-      switch (typeModel) {
-        case 'PointPropertyType':
-          geometryObject.type = 'Point';
-          break;
-        case 'LineStringPropertyType':
-          geometryObject.type = 'LineString';
-          break;
-        case 'PolygonPropertyType':
-          geometryObject.type = 'Polygon';
-          break;
-         case 'MultiLineStringPropertyType':
-          geometryObject.type = 'MultiLineString';
-          break;
-        case 'MultiPolygonPropertyType':
-          geometryObject.type = 'MultiPolygon';
-          break;
-        default:
-          throw 'Unknown type ' + typeModel;
-      };
+    geometryObject.coordinates = this._getGeometry(layer);
+    geometryObject.crs = {
+      properties: { name: this.get('crs.code') },
+      type: 'name'
+    };
 
-      model.set(geometryField, geometryObject);
+    model.set(geometryField, geometryObject);
+    let leafletObject = this.get('_leafletObject');
+    layer.state = leafletObject.state.insert;
+    this._setLayerProperties(layer, model, geometryObject, leafletObject);
+    L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
+    return leafletObject;
+  },
 
-      return this.addLayerObject(layer, model);
+  _getGeometry(layer) {
+    let coordinates = Ember.A();
+    let type = layer.toGeoJSON().geometry.type;
+    if (layer instanceof L.Marker) {
+      coordinates = this.transformToCoords(layer._latlng);
+    } else {
+      coordinates = this.transformToCoords(layer._latlngs, type);
+    }
+
+    if (this.get('forceMulti') && (type === 'Polygon' || type === 'LineString')) {
+      return [coordinates];
+    } else {
+      return coordinates;
+    }
+  },
+
+  _setLayerProperties(layer, model, geometry, leafletObject) {
+    const modelProj = model.constructor.projections.get(this.get('projectionName'));
+    layer.options.crs = this.get('crs');
+    layer.model = model;
+    layer.modelProj = modelProj;
+    layer.feature = {
+      type: 'Feature',
+      geometry: geometry,
+      leafletLayer: layer
+    };
+    if (layer.state = leafletObject.state.update) {
+      layer.feature.properties = this.createPropsFromModel(model);
+    }
+
+    if (geometry.type === 'Point') {
+      layer.options.style = this.get('style');
+    } else {
+      layer.options.style = this.get('styleSettings.style.path');
     }
   },
 
@@ -141,15 +210,19 @@ export default BaseVectorLayer.extend({
       if (!Ember.isNone(maxFeatures)) {
         build.top = maxFeatures;
       }
-      
+
       build.predicate = filter;
-
       let objs = store.query(modelName, build);
-
       objs.then(res => {
         let features = Ember.A();
         let models = res.toArray();
         let layer = L.featureGroup();
+        layer.state = {
+          exist: 'exist',
+          insert: 'insertElement',
+          update: 'updateElement',
+          remove: 'removeElement'
+        };
 
         models.forEach(model => {
           let feat = this.addLayerObject(layer, model, false);
@@ -192,7 +265,7 @@ export default BaseVectorLayer.extend({
       queryStr = queryStr.slice(0, queryStr.length - 2);
       queryStr += coord0 + ')';
       return queryStr;
-    }
+    };
 
     if (e.polygonLayer instanceof L.Marker) {
       typeGeom = 'POINT';
@@ -217,12 +290,14 @@ export default BaseVectorLayer.extend({
             break;
           }
         }
+
         if (typeGeom === 'POLYGON') {
           geom += row(e.polygonLayer._latlngs[i], typeGeom);
           if (i !== count1 - 1) {
             geom += ',';
           }
         }
+
         geom += ')';
       }
     } else {
@@ -236,6 +311,7 @@ export default BaseVectorLayer.extend({
             geom += ',';
           }
         }
+
         geom += ')';
       } else {
         typeGeom = 'LINESTRING';
@@ -387,28 +463,12 @@ export default BaseVectorLayer.extend({
     }
 
     if (innerLayer) {
-      const modelProj = model.constructor.projections.get(this.get('projectionName'));
-      innerLayer.options.crs = this.get('crs');
-      innerLayer.model = model;
-      innerLayer.modelProj = modelProj;
-      innerLayer.feature = {
-        type: 'Feature',
-        properties: this.createPropsFromModel(model),
-        geometry: geometry,
-        leafletLayer: innerLayer
-      };
-      if (geometry.type === 'Point') {
-        innerLayer.options.style = this.get('style');
-      } else {
-        innerLayer.options.style = this.get('styleSettings.style.path');
-      }
-
-      innerLayer.setStyle(innerLayer.options.style);
-      this._setLayerState();
-
+      innerLayer.state = layer.state.exist;
+      this._setLayerProperties(innerLayer, model, geometry, layer);
       if (add) {
+        innerLayer.setStyle(innerLayer.options.style);
+        this._setLayerState();
         L.FeatureGroup.prototype.addLayer.call(layer, innerLayer);
-        //layer.addLayer(innerLayer).bind(this);
       }
     }
 
@@ -457,23 +517,29 @@ export default BaseVectorLayer.extend({
         }
 
         L.setOptions(layer, options);
+        layer.state = {
+          exist: 'exist',
+          insert: 'insertElement',
+          update: 'updateElement',
+          remove: 'removeElement'
+        };
 
-        layer.save = this.get('save');
+        layer.save = this.get('save').bind(this);
         layer.geometryField = geometryField;
         layer.addLayer = this.get('addLayer').bind(this);
         layer.editLayerObjectProperties = this.get('editLayerObjectProperties').bind(this);
-        layer.editLayer = this.get('editLayer');
+        layer.editLayer = this.get('editLayer').bind(this);
         layer.removeLayer = this.get('removeLayer');
         layer.modelName = modelName;
         layer.projectionName = projectionName;
         layer.editformname = modelName + this.get('postfixForEditForm');
         layer.deletedModels = Ember.A();
+        layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
         models.forEach(model => {
           this.addLayerObject(layer, model);
         });
 
         let promiseLoad = Ember.RSVP.resolve();
-
         this.set('promiseLoad', promiseLoad);
 
         resolve(layer);
@@ -504,13 +570,20 @@ export default BaseVectorLayer.extend({
 
    @method transformToCoords
    @param {Leaflet Object} latlngs
+   @param {String} type
    @returns coordinates in GeoJSON
    */
-  transformToCoords(latlngs) {
-    if (Array.isArray(latlngs[0])) {
+  transformToCoords(latlngs, type) {
+    if (Array.isArray(latlngs[0]) || (!(latlngs instanceof L.LatLng) && (latlngs[0] instanceof L.LatLng))) {
       let coords = [];
       for (let i = 0; i < latlngs.length; i++) {
-        coords.push(this.transformToCoords(latlngs[i]));
+        coords.push(this.transformToCoords(latlngs[i], type));
+      }
+
+      // ewkt requires closeing polygon
+      if (!Ember.isNone(type) && type.indexOf('Polygon') !== -1 && !Array.isArray(coords[0][0])) {
+        let first = coords[0];
+        coords.push(first);
       }
 
       return coords;
@@ -654,9 +727,7 @@ export default BaseVectorLayer.extend({
         } else {
           resolve(leafletObject);
         }
-      } catch(e) {
-        e;
-      }
+      } catch (e) {}
     });
   },
 
@@ -716,9 +787,7 @@ export default BaseVectorLayer.extend({
             resolve(Object.values(leafletObject._layers));
           }
         }
-      } catch(e) {
-        e;
-      }
+      } catch (e) {}
     });
   },
 
@@ -734,10 +803,14 @@ export default BaseVectorLayer.extend({
       let continueLoad = () => {
         let leafletObject = this.get('_leafletObject');
         if (!Ember.isNone(leafletObject)) {
-          let visibility = this.get('layerModel.visibility');
-          let hideObjects = Ember.isNone(leafletObject.hideAllLayerObjects) || !leafletObject.hideAllLayerObjects;
-          if (leafletObject.options.continueLoading && checkMapZoom(leafletObject) && (hideObjects || visibility)) {
+          let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
+          let continueLoad = leafletObject.options.continueLoading;
+          if (continueLoad && checkMapZoom(leafletObject) && show) {
             let bounds = leafletMap.getBounds();
+            if (!Ember.isNone(leafletObject.showLayerObjects)) {
+              leafletObject.showLayerObjects = false;
+            }
+
             let [build, store, modelName, geometryField] = this._getBuildStoreModelProjectionGeom();
             let crs = this.get('crs');
 
@@ -745,14 +818,16 @@ export default BaseVectorLayer.extend({
               build.predicate = this._getGeomPredicateFromBounds(geometryField, crs, bounds);
               leafletObject.isLoadBounds = bounds;
               loadedBounds = bounds;
-
               let objs = store.query(modelName, build);
-
               objs.then(res => {
                 let models = res.toArray();
                 models.forEach(model => {
                   this.addLayerObject(leafletObject, model);
                 });
+
+                if (leafletObject.statusLoadLayer) {
+                  leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+                }
               });
               return;
             } else if (loadedBounds.contains(bounds)) {
@@ -777,17 +852,11 @@ export default BaseVectorLayer.extend({
               models.forEach(model => {
                 this.addLayerObject(leafletObject, model);
               });
-            });
 
-            if (leafletObject.statusLoadLayer) {
-              leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) => {
-                leafletObject.once('load', () => {
-                  resolve();
-                }).once('error', (e) => {
-                  reject();
-                });
-              });
-            }
+              if (leafletObject.statusLoadLayer) {
+                leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+              }
+            });
           } else if (leafletObject.statusLoadLayer) {
             leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
           }

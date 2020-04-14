@@ -1,9 +1,11 @@
 import Ember from 'ember';
 import turfCombine from 'npm:@turf/combine';
+import WfsLayer from '../layers/wfs';
+import OdataLayer from '../layers/odata-vector';
 
 export default Ember.Mixin.create({
 
-  /**ok
+  /**
     Change layer object properties.
 
     @method changeLayerObjectProperties
@@ -36,79 +38,46 @@ export default Ember.Mixin.create({
     return new Ember.RSVP.Promise((resolve, reject) => {
       this._getModelLayerFeature(layerId, [featureId]).then(([layerModel, leafletObject, featureLayer]) => {
         let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-        let bounds;
-        if (typeof (featureLayer[0].getBounds) === 'function') {
-          bounds = featureLayer[0].getBounds();
-        } else {
-          let featureGroup = L.featureGroup().addLayer(featureLayer[0].feature.leafletLayer);
-          bounds = featureGroup.getBounds();
-        }
-
         leafletObject.statusLoadLayer = true;
-        leafletMap.fitBounds(bounds);
-        if (leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise) {
-          leafletObject.promiseLoadLayer.then((e) => {
-              leafletObject.statusLoadLayer = false;
-              leafletObject.promiseLoadLayer = null;
-              resolve(this._getObjectToEdit(layerModel, leafletObject, featureId));
-          });
+        let bounds;
+        if (featureLayer[0] instanceof L.Marker) {
+          let featureGroup = L.featureGroup().addLayer(featureLayer[0]);
+          bounds = featureGroup.getBounds();
         } else {
-          resolve(this._getObjectToEdit(layerModel, leafletObject, featureId));
+          bounds = featureLayer[0].getBounds();
         }
 
-        /*let layers = leafletObject._layers;
-        let featureLayerLoad = Object.values(layers).find(feature => {
-          const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
-          return layerFeatureId === featureId;
+        leafletMap.fitBounds(bounds);
+        if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+          leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+        }
+
+        leafletObject.promiseLoadLayer.then(() => {
+          leafletObject.statusLoadLayer = false;
+          leafletObject.promiseLoadLayer = null;
+          let layers = leafletObject._layers;
+          let featureLayerLoad = Object.values(layers).find(feature => {
+            const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
+            return layerFeatureId === featureId;
+          });
+
+          let editTools = this._getEditTools();
+
+          featureLayerLoad.enableEdit(leafletMap);
+          featureLayerLoad.layerId = layerId;
+
+          editTools.on('editable:editing', (e) => {
+            if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayerLoad))) {
+              leafletObject.editLayer(e.layer);
+            }
+          });
+
+          resolve(featureLayerLoad);
         });
-
-        let editTools = this._getEditTools();
-
-        featureLayerLoad.enableEdit(leafletMap);
-        featureLayerLoad.layerId = layerId;
-
-        editTools.on('editable:editing', (e) => {
-          if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayerLoad))) {
-            leafletObject.editLayer(e.layer);
-          }
-        });
-
-        resolve(featureLayerLoad);*/
       }).catch((e) => {
         reject(e);
       });
     });
-  },
-
-  /**
-    Get object to edit.
-
-    @method _getObjectToEdit
-    @param {Object} layerModel
-    @param {Object} leafletObject
-    @param {string} featureId
-    @return {Object} Feature layer.
-  */
-  _getObjectToEdit(layerModel, leafletObject, featureId) {
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    let layers = leafletObject._layers;
-    let featureLayerLoad = Object.values(layers).find(feature => {
-      const layerFeatureId = this._getLayerFeatureId(layerModel, feature);
-      return layerFeatureId === featureId;
-    });
-
-    let editTools = this._getEditTools();
-
-    featureLayerLoad.enableEdit(leafletMap);
-    featureLayerLoad.layerId = layerId;
-
-    editTools.on('editable:editing', (e) => {
-      if (Ember.isEqual(Ember.guidFor(e.layer), Ember.guidFor(featureLayerLoad))) {
-        leafletObject.editLayer(e.layer);
-      }
-    });
-
-    return featureLayerLoad;
   },
 
   /**
@@ -121,28 +90,42 @@ export default Ember.Mixin.create({
   cancelEdit(layer) {
     let leafletMap = this.get('mapApi').getFromApi('leafletMap');
     let editTools = this._getEditTools();
-    this.disableLayerEditing(leafletMap);
     editTools.off('editable:drawing:end');
     editTools.off('editable:editing');
     editTools.stopDrawing();
-    editTools.featuresLayer.clearLayers();
-    editTools.editLayer.clearLayers();
 
     if (!Ember.isNone(layer.layerId)) {
-      let [, leafletObject] = this._getModelLeafletObject(layer.layerId);
+      let [layerModel, leafletObject] = this._getModelLeafletObject(layer.layerId);
       if (!Ember.isNone(leafletObject)) {
+        let className = Ember.get(layerModel, 'type');
+        let layerType = Ember.getOwner(this).knownForType('layer', className);
+        if (layerType instanceof OdataLayer) {
+          let model = Ember.get(layer,'model');
+          model.rollbackAttributes();
+        }
+
         if (layer.state === leafletObject.state.insert) {
           leafletObject.removeLayer(layer);
+          let id = editTools.featuresLayer.getLayerId(layer);
+          let editLayer = editTools.featuresLayer.getLayer(id).editor.editLayer;
+          editTools.editLayer.removeLayer(editLayer);
+          editTools.featuresLayer.removeLayer(layer);
         } else if (layer.state === leafletObject.state.update) {
+          let editLayer = layer.editor.editLayer;
+          editTools.editLayer.removeLayer(editLayer);
           let map = Ember.get(leafletObject, '_map');
           map.removeLayer(layer);
-          let filter = new L.Filter.EQ('primarykey', Ember.get(layer, 'feature.properties.primarykey'));
-          let feature = leafletObject.loadFeatures(filter);
-
           let id = leafletObject.getLayerId(layer);
-          if (id in leafletObject.changes) {
+          delete leafletObject._layers[id];
+          if (layerType instanceof WfsLayer) {
+            let filter = new L.Filter.EQ('primarykey', Ember.get(layer, 'feature.properties.primarykey'));
+            leafletObject.loadFeatures(filter);
             delete leafletObject.changes[id];
-            delete leafletObject._layers[id];
+          } else if (layerType instanceof OdataLayer) {
+            let e = {
+              featureIds: [Ember.get(layer, 'feature.properties.primarykey')]
+            };
+            leafletObject.loadLayerFeatures(e);
           }
         }
       }

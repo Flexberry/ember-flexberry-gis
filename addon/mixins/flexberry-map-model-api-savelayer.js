@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import WfsLayer from '../layers/wfs';
 
 export default Ember.Mixin.create({
   saveLayers(layersIds) {
@@ -31,14 +32,18 @@ export default Ember.Mixin.create({
           this.disableLayerEditing(map);
         }
 
-        Object.values(leafletObject.changes).forEach(item => {
-          if (item.state === 'updateElement') {
-            let filter = new L.Filter.EQ('primarykey', Ember.get(item, 'feature.properties.primarykey'));
-            leafletObject.loadFeatures(filter);
-            let id = leafletObject.getLayerId(item);
-            delete leafletObject._layers[id];
-          }
-        });
+        let className = Ember.get(layerModel, 'type');
+        let layerType = Ember.getOwner(this).knownForType('layer', className);
+        if (layerType instanceof WfsLayer) {
+          Object.values(leafletObject.changes).forEach(item => {
+            if (item.state === 'updateElement') {
+              let filter = new L.Filter.EQ('primarykey', Ember.get(item, 'feature.properties.primarykey'));
+              leafletObject.loadFeatures(filter);
+              let id = leafletObject.getLayerId(item);
+              delete leafletObject._layers[id];
+            }
+          });
+        }
 
         leafletObject.off('save:failed', saveFailed);
         resolve({

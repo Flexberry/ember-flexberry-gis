@@ -20,7 +20,7 @@ export default Ember.Mixin.create({
   */
   mapApi: Ember.inject.service(),
 
-  /*OK
+  /*
     Shows layers specified by IDs.
 
     @method showLayers.
@@ -31,7 +31,7 @@ export default Ember.Mixin.create({
     this._setVisibility(layerIds, true);
   },
 
-  /**OK
+  /**
     Hides layers specified by IDs.
 
     @method hideLayers.
@@ -42,7 +42,7 @@ export default Ember.Mixin.create({
     this._setVisibility(layerIds);
   },
 
-  /**ok
+  /**
     Shows objects for layer.
 
     @method showLayerObjects
@@ -54,7 +54,7 @@ export default Ember.Mixin.create({
     this._setVisibilityObjects(layerId, objectIds, true);
   },
 
-  /**ok
+  /**
     Hides objects for layer.
 
     @method hideLayerObjects
@@ -66,7 +66,7 @@ export default Ember.Mixin.create({
     this._setVisibilityObjects(layerId, objectIds, false);
   },
 
-  /**ok
+  /**
     Show all layer objects.
 
     @method showAllLayerObjects
@@ -88,7 +88,7 @@ export default Ember.Mixin.create({
     });
   },
 
-  /**ok
+  /**
     Hide all layer objects.
 
     @method hideAllLayerObjects
@@ -109,7 +109,7 @@ export default Ember.Mixin.create({
     leafletObject.hideAllLayerObjects = true;
   },
 
-  /**ok
+  /**
     Creates new layer with specified options.
     @method createNewLayer.
     @param {Object} options
@@ -127,7 +127,7 @@ export default Ember.Mixin.create({
     });
   },
 
-  /**ok
+  /**
     Remove object from layer.
     @method deleteLayerObject.
     @param {String} layerId Layer ID.
@@ -138,7 +138,7 @@ export default Ember.Mixin.create({
     this.deleteLayerObjects(layerId, [featureId]);
   },
 
-  /**ok
+  /**
     Remove shapes from layer.
     @method deleteLayerObjects.
     @param {string} layerId Layer ID.
@@ -171,7 +171,7 @@ export default Ember.Mixin.create({
     });
   },
 
-  /**ok
+  /**
     Gets intersected features.
     @method getIntersectionObjects
     @param {string} layerId Layer ID of the selected object.
@@ -233,7 +233,7 @@ export default Ember.Mixin.create({
     });
   },
 
-  /**ok
+  /**
     Get the nearest object
     @method getNearObject
     @param {string} layerId Layer ID of the selected object.
@@ -317,7 +317,7 @@ export default Ember.Mixin.create({
     return distance.default(firstObject, secondObject, { units: 'kilometers' }) * 1000;
   },
 
-  /**ok
+  /**
     Get layer object attributes and coordinates.
     @method getLayerObjectOptions
     @param {String} layerId Layer ID.
@@ -376,7 +376,7 @@ export default Ember.Mixin.create({
     });
   },
 
-  /**ok
+  /**
     Check if object A contains object B.
     @method isContainsObject
     @param {String} layerAId First layer ID.
@@ -410,7 +410,7 @@ export default Ember.Mixin.create({
     });
   },
 
-  /**ok
+  /**
     Calculate the area of ​​object B that extends beyond the boundaries of object A.
     @method getAreaExtends
     @param {String} layerAId First layer ID.
@@ -449,8 +449,6 @@ export default Ember.Mixin.create({
         const layer = layers.findBy('id', id);
         if (layer) {
           layer.set('visibility', visibility);
-          let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-          leafletMap.fire('moveend');
         }
       });
     }
@@ -466,11 +464,15 @@ export default Ember.Mixin.create({
   */
   _getLayerFeatureId(layer, layerObject) {
     let field = this._getPkField(layer);
-    if (layerObject.feature.properties.hasOwnProperty(field)) {
-      return Ember.get(layerObject, 'feature.properties.' + field);
-    }
+    if (layerObject.state !== Ember.get(layer, '_leafletObject').state.insert) {
+      if (layerObject.feature.properties.hasOwnProperty(field)) {
+        return Ember.get(layerObject, 'feature.properties.' + field);
+      }
 
-    return Ember.get(layerObject, 'feature.id');
+      return Ember.get(layerObject, 'feature.id');
+    } else {
+      return null;
+    }
   },
 
   /**
@@ -490,7 +492,6 @@ export default Ember.Mixin.create({
       }
 
       const leafletObject = Ember.get(layer, '_leafletObject');
-      leafletObject.hideAllLayerObjects = !visibility;
 
       if (Ember.isNone(leafletObject)) {
         throw 'Layer type not supported';
@@ -512,11 +513,10 @@ export default Ember.Mixin.create({
           });
         }
       });
-      map.fire('moveend');
     }
   },
 
-  /**ok
+  /**
     To copy Object from Source layer to Destination.
     @method copyObject
     @param {Object} source Object with source settings
@@ -571,7 +571,7 @@ export default Ember.Mixin.create({
     });
   },
 
-  /**ok
+  /**
     Calculate the area of intersection between object A and object B.
     @method getIntersectionArea
     @param {String} layerAId First layer ID.
@@ -627,7 +627,7 @@ export default Ember.Mixin.create({
     serviceLayer.clearLayers();
   },
 
-  /**ok
+  /**
     Create image for layer object.
     @method  getSnapShot
     @param {Object} source Object with settings
@@ -758,7 +758,7 @@ export default Ember.Mixin.create({
     });
   },
 
-  /**ok
+  /**
     Download image for layer object.
     @method  downloadSnapShot
     @param {Object} source Object with settings
@@ -795,7 +795,7 @@ export default Ember.Mixin.create({
     });
   },
 
-  /**ok
+  /**
     Get the object rhumb.
     @method  getRhumb
     @param {string} layerId Layer ID.
@@ -884,7 +884,7 @@ export default Ember.Mixin.create({
     });
   },
 
-  /**ok
+  /**
     Add a layer to the group.
 
     @method layerToGroup
@@ -906,7 +906,7 @@ export default Ember.Mixin.create({
     layerModel.set('parent', layer);
   },
 
-  /**ok
+  /**
     Edit object layer.
     @method editLayerObject
     @param {String} layerId Layer ID.
