@@ -66,7 +66,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     let _options = this.get('_options');
     let factories = this.get('availableCRS');
 
-    return factories.filter((factory) => factory.name === _options.coordSystem)[0].crs;
+    return factories.filter((factory) => factory.name === _options.coordSystem)[0];
   }),
 
   /**
@@ -74,7 +74,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
    */
   _format: Ember.computed('_options.format', function() {
     let _options = this.get('_options');
-    let crs = this.get('_crs');
+    let crs = this.get('_crs').crs;
 
     if (_options.format === 'JSON') {
       return new L.Format.GeoJSON({ crs: crs });
@@ -190,7 +190,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
 
       if (type !== 'odata-vector') {
         let wfsLayer = new L.WFS({
-          crs: crs,
+          crs: crs.crs,
           url: layerSettings.url,
           typeNS: layerSettings.typeNS,
           typeName: layerSettings.typeName,
@@ -219,7 +219,12 @@ let FeatureExportDialogComponent = Ember.Component.extend({
         });
 
         layerElem.setAttribute('modelName', modelName);
-        layerElem.setAttribute('srsName', crs.code);
+        if (!Ember.isNone(crs.definition)) {
+          layerElem.setAttribute('srsName', crs.definition);
+        } else {
+          layerElem.setAttribute('srsName', crs.crs.code);
+        }
+        
         let pkListElem = doc.createElement('pkList');
 
         result.features.forEach((feature) => {
