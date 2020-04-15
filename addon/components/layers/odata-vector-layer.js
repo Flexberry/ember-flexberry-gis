@@ -56,6 +56,7 @@ export default BaseVectorLayer.extend({
         }
 
         promises.addObject(layer.model.save());
+        layer.state = leafletObject.state.exist;
       }
     }, leafletObject);
 
@@ -67,7 +68,9 @@ export default BaseVectorLayer.extend({
 
     if (promises.length > 0) {
       Ember.RSVP.all(promises).then((e) => {
-        console.log('success');
+        leafletObject.eachLayer(function(layer) {
+          layer.state = leafletObject.state.exist;
+        });
         _this._setLayerState();
         leafletObject.fire('save:success');
       }).catch(function(e) {

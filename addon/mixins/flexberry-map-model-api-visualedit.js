@@ -100,7 +100,7 @@ export default Ember.Mixin.create({
         let className = Ember.get(layerModel, 'type');
         let layerType = Ember.getOwner(this).knownForType('layer', className);
         if (layerType instanceof OdataLayer) {
-          let model = Ember.get(layer,'model');
+          let model = Ember.get(layer, 'model');
           model.rollbackAttributes();
         }
 

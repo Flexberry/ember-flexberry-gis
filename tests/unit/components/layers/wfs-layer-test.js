@@ -169,8 +169,8 @@ test('getLayerFeatures() with options showExisting = true', function(assert) {
     let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
     getmapApiStub.returns(mapModel);
 
-    let getPkFieldStub = sinon.stub(mapModel, '_getPkField');
-    getPkFieldStub.returns('primarykey');
+    let getLayerFeatureIdStub = sinon.stub(mapModel, '_getLayerFeatureId');
+    getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128')
 
     options.showExisting = true;
     L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
