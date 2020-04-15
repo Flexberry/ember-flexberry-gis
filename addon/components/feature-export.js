@@ -224,7 +224,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
         } else {
           layerElem.setAttribute('srsName', crs.crs.code);
         }
-        
+
         let pkListElem = doc.createElement('pkList');
 
         result.features.forEach((feature) => {
