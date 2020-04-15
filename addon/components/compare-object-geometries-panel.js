@@ -4,9 +4,9 @@ import LeafletZoomToFeatureMixin from '../mixins/leaflet-zoom-to-feature';
 import area from 'npm:@turf/area';
 import distance from 'npm:@turf/distance';
 import helpers from 'npm:@turf/helpers';
-import projection from 'npm:@turf/projection';
 import intersect from 'npm:@turf/intersect';
 import difference from 'npm:@turf/difference';
+import  union from 'npm:@turf/union';
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   layout,
 
@@ -70,7 +70,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('secondObject', secondObject);
       let dist = this.getDistance(firstObject, secondObject);
       this.set('distanceBetween', dist);
-      this.set('intersection', this.getIntesection(firstObject, secondObject));
+      this.set('intersection', this.getIntersection(firstObject, secondObject));
       this.set('nonIntersection', this.getNonIntersection(firstObject, secondObject));
     }
   }),
@@ -121,6 +121,15 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   featuresLayer: null,
 
   /**
+    Service layer.
+
+    @property serviceLayer
+    @type Object
+    @default null
+  */
+  serviceLayer: null,
+
+  /**
     Observer for leafletMap property adding layer with results.
 
     @property _OnMapChanged
@@ -142,6 +151,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     closePanel() {
       let group = this.get('featuresLayer');
       group.clearLayers();
+      let serviceLayer = this.get('serviceLayer');
+      serviceLayer.clearLayers();
+      this.send('selectFeature', null);
       this.sendAction('closeComparePanel');
     },
 
@@ -160,10 +172,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.hidePanel
     */
     panToIntersection(feature) {
-      if (Ember.get(feature, 'crs') === 'EPSG:3857') {
-        feature = projection.toWgs84(feature);
-      }
-
       let center = L.geoJSON(feature).getLayers()[0].getBounds().getCenter();
       let leafletMap = this.get('leafletMap');
       leafletMap.panTo(center);
@@ -175,10 +183,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       @method actions.hidePanel
     */
     zoomToIntersection(feature) {
-      if (Ember.get(feature, 'crs') === 'EPSG:3857') {
-        feature = projection.toWgs84(feature);
-      }
-
       let group = this.get('featuresLayer');
       group.clearLayers();
       let obj = L.geoJSON(feature, {
@@ -210,47 +214,76 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   convertCoordinates(feature) {
     if (Ember.get(feature, 'leafletLayer.options.crs.code')) {
-      return feature.leafletLayer.options.crs.code === 'EPSG:4326' ? feature : projection.toWgs84(feature);
+      let mapModel = this.get('mapApi').getFromApi('mapModel');
+      return feature.leafletLayer.options.crs.code === 'EPSG:4326' ?
+        feature : mapModel._convertObjectCoordinates(Ember.get(feature, 'leafletLayer.options.crs.code'), feature);
     }
 
     return feature;
   },
 
-  getIntesection(firstObject, secondObject) {
+  getIntersection(firstObject, secondObject) {
     let intersection = intersect.default(firstObject, secondObject);
     if (intersection) {
-      if (Ember.get(firstObject, 'leafletLayer.options.crs.code')) {
-        intersection.crs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
-      }
-
-      return this.getObjectWithProperties(intersection);
+      let displayCrs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
+      return this.getObjectWithProperties(intersection, displayCrs);
     }
 
     return null;
   },
 
   getNonIntersection(firstObject, secondObject) {
-    let nonIntersection = difference.default(firstObject, secondObject);
-    if (nonIntersection) {
-      if (Ember.get(firstObject, 'leafletLayer.options.crs.code')) {
-        nonIntersection.crs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
-      }
+    let intersection = intersect.default(firstObject, secondObject);
+    let nonIntersection;
+    if (intersection) {
+      let nonIntersection1 = difference.default(secondObject, intersection);
+      let nonIntersection2 = difference.default(firstObject, intersection);
 
-      return this.getObjectWithProperties(nonIntersection);
+      if (nonIntersection1 && nonIntersection2) {
+        if (nonIntersection1.geometry.type === 'Polygon') {
+          nonIntersection1 = helpers.polygon(nonIntersection1.geometry.coordinates);
+        }
+
+        if (nonIntersection1.geometry.type === 'MultiPolygon') {
+          nonIntersection1 = helpers.multiPolygon(nonIntersection1.geometry.coordinates);
+        }
+
+        if (nonIntersection2.geometry.type === 'Polygon') {
+          nonIntersection2 = helpers.polygon(nonIntersection2.geometry.coordinates);
+        }
+
+        if (nonIntersection2.geometry.type === 'MultiPolygon') {
+          nonIntersection2 = helpers.multiPolygon(nonIntersection2.geometry.coordinates);
+        }
+
+        nonIntersection = union(nonIntersection1,  nonIntersection2);
+      } else {
+        if (nonIntersection1) {
+          nonIntersection = nonIntersection1;
+        }
+
+        if (nonIntersection2) {
+          nonIntersection = nonIntersection2;
+        }
+      }
+    }
+
+    if (nonIntersection) {
+      let displayCrs = Ember.get(firstObject, 'leafletLayer.options.crs.code');
+      return this.getObjectWithProperties(nonIntersection, displayCrs);
     }
 
     return null;
   },
 
-  getObjectWithProperties(feature) {
+  getObjectWithProperties(feature, displаyCrs) {
+    displаyCrs = displаyCrs ? displаyCrs : 'EPSG:4326';
     if (feature) {
       feature.area = area(feature).toFixed(3);
       feature.intersectionCords = [];
-      if (Ember.get(feature, 'crs') === 'EPSG:3857') {
-        feature = projection.toMercator(feature);
-      }
-
-      feature.geometry.coordinates.forEach(arr => {
+      let mapModel = this.get('mapApi').getFromApi('mapModel');
+      let featureInCrs = mapModel._convertObjectCoordinates(null, feature, displаyCrs);
+      featureInCrs.geometry.coordinates.forEach(arr => {
         arr.forEach(pair => {
           if (feature.geometry.type === 'MultiPolygon') {
             pair.forEach(cords => {

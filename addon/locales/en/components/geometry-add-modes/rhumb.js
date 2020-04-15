@@ -10,5 +10,13 @@ export default {
   'distance-field-label': 'Distance',
   'add-button-caption': 'Add',
   'table-field-label': 'Table rhumb',
-  'table-column-operation': 'Operation'
+  'table-column-operation': 'Operation',
+  'crs-code': 'Coordinate reference system',
+  'number': 'Number',
+  'object-start': 'Start of object',
+  'change-permission': 'Change the initial rhumb of an object?',
+  'coordinates-field-placeholder': '(no value)',
+  'object-types-polygon': 'Polygon',
+  'object-types-line': 'Line',
+  'cannot-change-permission': 'One rhumb must be selected as start of object.'
 };
