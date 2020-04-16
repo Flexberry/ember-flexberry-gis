@@ -63,7 +63,7 @@ export default Ember.Mixin.create({
         let hierarchy = this.get('model.hierarchy').sortBy('index');
         hierarchy.forEach((layer) => {
           let leafletObject = layer.get('_leafletObject');
-          if ((leafletObject != null) && (leafletObject.bringToFront instanceof Function) && layer.get('visibility') ) {
+          if ((leafletObject != null) && (leafletObject.bringToFront instanceof Function) && layer.get('visibility')) {
             try {
               let className = Ember.get(layer, 'type');
               let layerType = Ember.getOwner(this).knownForType('layer', className);
