@@ -7557,7 +7557,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/mixins/flexberry-map-actions-handler.js",
-            "line": 7,
+            "line": 8,
             "description": "Mixin containing handlers for\n{{#crossLink \"FlexberryMapComponent\"}}flexberry-map component's{{/crossLink}} actions.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Mixin.html\">Ember.Mixin</a>"
         },
@@ -41525,7 +41525,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-actions-handler.js",
-            "line": 16,
+            "line": 17,
             "description": "Handles {{#crossLink \"FlexberryMapComponent/sendingActions.leafletInit:method\"}}flexberry-map component's 'leafletInit' action{{/crossLink}}.\nIt stores value of action's event object 'map' property in property with given path.",
             "itemtype": "method",
             "name": "actions.onMapInit",
@@ -41556,7 +41556,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-actions-handler.js",
-            "line": 82,
+            "line": 87,
             "description": "Handles {{#crossLink \"FlexberryMapComponent/sendingActions.leafletDestroy:method\"}}flexberry-map component's 'leafletDestroy' action{{/crossLink}}.\nIt cleans up previously stored leaflet map.",
             "itemtype": "method",
             "name": "actions.onMapLeafletDestroy",
@@ -41575,7 +41575,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-actions-handler.js",
-            "line": 123,
+            "line": 128,
             "description": "Handles {{#crossLink \"FlexberryMapComponent/sendingActions.moveend:method\"}}flexberry-map component's 'moveend' action{{/crossLink}}.\nIt mutates values of lat, lng properties with given names to values of new map center.",
             "itemtype": "method",
             "name": "actions.onMapMoveend",
@@ -41611,7 +41611,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-actions-handler.js",
-            "line": 176,
+            "line": 181,
             "description": "Handles {{#crossLink \"FlexberryMapComponent/sendingActions.zoomend:method\"}}flexberry-map component's 'zoomend' action{{/crossLink}}.\nIt mutates value of zoom property with given name to value of new map zoom.",
             "itemtype": "method",
             "name": "actions.onMapZoomend",
