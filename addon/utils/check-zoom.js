@@ -26,7 +26,7 @@ let _getMapZoom = (map) => {
 
 let _getLayerOption = (layer, propName) => {
   let zoomResult = layer[propName];
-  if (!zoomResult) {  
+  if (!zoomResult) {
     for (var key in layer._eventParents) {
       zoomResult = parentLayer[key][propName];
       if (zoomResult) {

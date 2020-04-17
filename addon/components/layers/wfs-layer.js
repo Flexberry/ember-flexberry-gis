@@ -185,7 +185,7 @@ export default BaseVectorLayer.extend({
           e.layers.forEach((layer) => {
             layer.minZoom = this.get('minZoom');
             layer.maxZoom = this.get('maxZoom');
-          })
+          });
         });
 
       let promiseLoad = new Ember.RSVP.Promise((resolve, reject) => {
