@@ -182,7 +182,7 @@ export default BaseVectorLayer.extend({
         })
         .on('load', (e) => {
           this._setLayerState();
-          if(e.layers && e.layers.forEach) {
+          if (e.layers && e.layers.forEach) {
             e.layers.forEach((layer) => {
               layer.minZoom = this.get('minZoom');
               layer.maxZoom = this.get('maxZoom');
