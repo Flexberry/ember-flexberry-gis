@@ -180,8 +180,14 @@ export default BaseVectorLayer.extend({
         .once('error', (e) => {
           reject(e.error || e);
         })
-        .on('load', () => {
+        .on('load', (e) => {
           this._setLayerState();
+          if (e.layers && e.layers.forEach) {
+            e.layers.forEach((layer) => {
+              layer.minZoom = this.get('minZoom');
+              layer.maxZoom = this.get('maxZoom');
+            });
+          }
         });
 
       let promiseLoad = new Ember.RSVP.Promise((resolve, reject) => {
