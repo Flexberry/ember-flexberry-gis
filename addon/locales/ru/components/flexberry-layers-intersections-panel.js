@@ -13,4 +13,7 @@ export default {
   'results': 'Результаты',
   'show-cords': 'Развернуть таблицу',
   'hide-cords': 'Cвернуть таблицу',
+  'select-with-checkmbox': {
+    'chooseCaption': 'Выбрано'
+  }
 };

@@ -1,0 +1,23 @@
+<label>{{title}}</label>
+<div class="{{selectorName}} ">
+  <input name="{{selectorName}}" type="hidden" value={{selectedItems}}> 
+  <div class="multiselect">
+    <div class="selectBox" >
+      <label class="countChoose">{{chooseCaption}}: {{countChoose}}</label>
+      <input type="text" class="search" onkeyup={{action 'autoComplete'}}/>	
+      <i class="dropdown icon" onclick={{action 'showCheckboxes'}}></i>	  
+      <i class="close icon" {{action 'clear'}}></i>
+    </div>
+    <div class="checkboxes" onchange={{action 'changeCheckbox'}}>
+      {{#if isObject}}
+      {{#each items as |item|}}
+        <label><input type="checkbox" value="{{item.id}}" />{{item.name}}</label>
+      {{/each}}
+      {{else}}
+      {{#each items as |item|}}
+        <label><input type="checkbox" value="{{item}}" />{{item}}</label>
+      {{/each}}
+      {{/if}}
+    </div>
+  </div>
+</div>

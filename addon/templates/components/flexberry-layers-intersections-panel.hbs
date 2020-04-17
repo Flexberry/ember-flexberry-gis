@@ -15,10 +15,9 @@
             <div class="field">
               {{t "components.flexberry-layers-intersections-panel.layers-list"}}             
               <div class="field intersection-multiselect">
-                {{flexberry-multiple-select
+                {{select-with-checkbox
                   items=vectorLayers
                   selectedItems=selectedLayers
-                  allowAdditions=false
                   isObject=true
                 }}
               </div>
