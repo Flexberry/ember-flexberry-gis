@@ -17,5 +17,8 @@ export default {
   },
   'existWorkspace-error': {
     'message': 'Можно создавать растры только в рабочей области'
+  },
+  'createLayer': {
+    'message': 'Слой успешно добавлен'
   }
 };

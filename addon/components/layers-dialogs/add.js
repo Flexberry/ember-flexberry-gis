@@ -98,6 +98,15 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
   existWorkspaceErrorMessage: t('components.layers-dialogs.add.existWorkspace-error.message'),
 
   /**
+    Message success: create layer.
+
+    @property createLayerMessage
+    @type String
+    @default t('components.layers-dialogs.add.createLayer.message')
+  */
+  createLayerMessage: t('components.layers-dialogs.add.createLayer.message'),
+
+  /**
     File control.
 
     @property _fileControl
@@ -163,6 +172,7 @@ let FlexberryAddLayerDialogComponent = FlexberryEditLayerDialogComponent.extend(
                         layerProperties: layerProperties,
                         layer: this.get('layer')
                       });
+                      alert(this.get('createLayerMessage'));
                     },
                     (data) => {
                       console.log(data);
