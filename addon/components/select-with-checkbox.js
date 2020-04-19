@@ -105,7 +105,7 @@ export default Ember.Component.extend({
         checkboxes.css('display', 'block');
         this.set('expanded', true);
       } else {
-        checkboxes.css('display','none');
+        checkboxes.css('display', 'none');
         this.set('expanded', false);
       }
     },
@@ -171,12 +171,12 @@ export default Ember.Component.extend({
         }
 
         this.$('.fb-selector .checkboxes label').each((i, item) => {
-            let label = this.$(item);
-            let val = label.text().toLowerCase();
-            if (val.indexOf(search) === -1) {
-              label.addClass('hidden');
-              count--;
-            }
+          let label = this.$(item);
+          let val = label.text().toLowerCase();
+          if (val.indexOf(search) === -1) {
+            label.addClass('hidden');
+            count--;
+          }
         });
         if (count === 0) {
           pHidden.removeClass('hidden');
