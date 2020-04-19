@@ -27,7 +27,7 @@
             <div class="field">
               {{t 'components.flexberry-layers-intersections-panel.square'}}
               <div class="ui right labeled input">
-                {{input type="text" value=square}}
+                {{input type="text" value=square key-up=(action "inputLimit")}}
                 <div class="ui basic label">
                   {{t 'components.flexberry-layers-intersections-panel.m2'}}
                 </div>
@@ -38,7 +38,7 @@
             <div class="field">   
               {{t 'components.flexberry-layers-intersections-panel.buffer'}}
               <div class="ui right labeled input">
-                {{input type="text" value=bufferR}}
+                {{input type="text" value=bufferR key-up=(action "inputLimit")}}
                 <div class="ui basic label">
                   {{t 'components.flexberry-layers-intersections-panel.m'}}
                 </div>

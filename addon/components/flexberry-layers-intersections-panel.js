@@ -201,6 +201,7 @@ export default Ember.Component.extend({
       let polygonLayer = null;
 
       let bufferedMainPolygonLayer;
+      let bufferR = this.get('bufferR');
 
       let latlng;
 
@@ -224,7 +225,12 @@ export default Ember.Component.extend({
 
       latlng = polygonLayer.getBounds().getCenter();
 
-      bufferedMainPolygonLayer = polygonLayer;
+      if (bufferR > 0) {
+        let feat  = buffer.default(polygonLayer.feature.geometry, bufferR, { units: 'meters' });
+        bufferedMainPolygonLayer = L.geoJSON(feat).getLayers()[0];
+      } else {
+        bufferedMainPolygonLayer = polygonLayer;
+      }
 
       // Show map loader.
       let leafletMap = this.get('leafletMap');
@@ -243,10 +249,8 @@ export default Ember.Component.extend({
       @method actions.findIntersections
     */
     closePanel() {
-      let group = this.get('resultsLayer');
-      group.clearLayers();
+      this.clearPanel();
       this.sendAction('closeIntersectionPanel');
-      this.removeLayers();
     },
 
     /**
@@ -271,6 +275,18 @@ export default Ember.Component.extend({
         style: { color: 'green' }
       });
       obj.addTo(group);
+    },
+
+    /**
+      Handles input limit.
+
+      @method actions.inputLimit
+    */
+    inputLimit(str, e) {
+      const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)/g;
+      if (!Ember.isEmpty(str) && regex.test(str)) {
+        this.$(e.target).val(str.replace(regex, ''));
+      }
     }
   },
   /**
@@ -449,7 +465,7 @@ export default Ember.Component.extend({
     @private
   */
   _findIntersections(e) {
-    let bufferR = this.get('bufferR');
+    this.$('.fb-selector .checkboxes').css('display', 'none');
     let square = this.get('square');
     let mapModel = this.get('mapApi').getFromApi('mapModel');
     e.results.forEach((layer) => {
@@ -467,12 +483,6 @@ export default Ember.Component.extend({
             if (Ember.get(item, 'leafletLayer.options.crs.code') !== undefined) {
               objA =  mapModel._convertObjectCoordinates(item.leafletLayer.options.crs.code, item.leafletLayer.feature);
               baseProjection = item.leafletLayer.options.crs.code;
-            }
-
-            if (bufferR > 0) {
-              let props = objB.properties;
-              objB  = buffer.default(objB.geometry, bufferR, { units: 'meters' });
-              Object.assign(objB.properties, props);
             }
 
             if (item.geometry.type === 'Polygon' || item.geometry.type === 'MultiPolygon') {

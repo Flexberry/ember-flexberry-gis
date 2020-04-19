@@ -74,7 +74,6 @@
     .ui.compact.celled.table {
         width:50%;
     }
-  
 }
 .compare-layer-tree {
     height: 52px;
@@ -97,4 +96,41 @@
     right: 0;
     position: absolute;
     font-size: 12px;
+}
+.intersections-panel-input-params-row {
+    .selectBox {
+        position: relative;
+        border-bottom: 1px solid #b1cae8;
+    }
+    .selectBox label, input{
+        display: inline-block;
+    }
+    .selectBox input{
+        width: 79% !important;
+        border-bottom: none !important;
+    }
+    .selectBox .countChoose{
+        padding-top: 1%;
+    }
+    .fb-selector {
+        margin-top: 0.2%;
+    }
+    .checkboxes {
+        display: none;
+        border: 1px solid #b1cae8;
+        max-height: 200px;
+        overflow-x: auto;
+    }
+    .checkboxes label {
+        display: block;
+    }
+    .checkboxes p {
+        margin-left: 10px;
+    }
+    .checkboxes input[type="checkbox"]{
+        margin-right: 10px;
+    }
+    .search {
+        border:0px;
+    }
 }

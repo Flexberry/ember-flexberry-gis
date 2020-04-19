@@ -13,7 +13,6 @@ export default {
   'results': 'Results',
   'show-cords': 'Expand table',
   'hide-cords': 'Collapse table',
-  'select-with-checkmbox': {
-    'chooseCaption': 'Selected'
-  }
+  'chooseCaption': 'Selected',
+  'notResult': 'No result found'
 };
