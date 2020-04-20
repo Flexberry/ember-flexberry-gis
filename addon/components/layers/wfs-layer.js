@@ -268,40 +268,55 @@ export default BaseVectorLayer.extend({
   */
   query(layerLinks, e) {
     let queryFilter = e.queryFilter;
-    let equals = Ember.A();
+    let linkEquals = Ember.A();
 
     layerLinks.forEach((link) => {
       let parameters = link.get('parameters');
-
       if (Ember.isArray(parameters) && parameters.length > 0) {
-          parameters.forEach(linkParam => {
-            let property = linkParam.get('layerField');
-            let propertyValue = queryFilter[linkParam.get('queryKey')];
-            if (Ember.isArray(propertyValue)) {
-              let propertyEquals = Ember.A();
-              propertyValue.forEach((value) => {
-                propertyEquals.pushObject(new L.Filter.EQ(property, value));
-              });
+        let equals = this.getFilterParameters(parameters, queryFilter);
 
-              equals.pushObject(new L.Filter.Or(...propertyEquals));
-            } else {
-              equals.pushObject(new L.Filter.EQ(property, propertyValue));
-            }
-          });
+        if (equals.length === 1) {
+          linkEquals.pushObject(equals[0]);
+        } else {
+          linkEquals.pushObject(new L.Filter.And(...equals));
+        }
       }
     });
 
-    let filter;
-    if (equals.length === 1) {
-      filter = equals[0];
-    } else {
-      filter = new L.Filter.Or(...equals);
-    }
+    let filter = linkEquals.length === 1 ? linkEquals[0] : new L.Filter.Or(...linkEquals);
 
     let featuresPromise = this._getFeature({
       filter
     });
 
     return featuresPromise;
+  },
+
+  /**
+    Get an array of link parameter restrictions.
+    @method getFilterParameters
+    @param {Object[]} linkParameter containing metadata for query
+    @param {Object} queryFilter Object with query filter paramteres
+    @returns Array of Constraints.
+  */
+  getFilterParameters(parameters, queryFilter) {
+    let equals = Ember.A();
+
+    parameters.forEach(linkParam => {
+      let property = linkParam.get('layerField');
+      let propertyValue = queryFilter[linkParam.get('queryKey')];
+      if (Ember.isArray(propertyValue)) {
+        let propertyEquals = Ember.A();
+        propertyValue.forEach((value) => {
+          propertyEquals.pushObject(new L.Filter.EQ(property, value));
+        });
+
+        equals.pushObject(new L.Filter.Or(...propertyEquals));
+      } else {
+        equals.pushObject(new L.Filter.EQ(property, propertyValue));
+      }
+    });
+
+    return equals;
   }
 });
