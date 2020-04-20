@@ -106,8 +106,8 @@
         display: inline-block;
     }
     .selectBox input{
-        width: 79% !important;
-        border-bottom: none !important;
+        width: 75%;
+        border-bottom: none;
     }
     .selectBox .countChoose{
         padding-top: 1%;
