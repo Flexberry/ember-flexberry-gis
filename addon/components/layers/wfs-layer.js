@@ -269,24 +269,25 @@ export default BaseVectorLayer.extend({
   query(layerLinks, e) {
     let queryFilter = e.queryFilter;
     let equals = Ember.A();
+
     layerLinks.forEach((link) => {
       let parameters = link.get('parameters');
 
       if (Ember.isArray(parameters) && parameters.length > 0) {
-        parameters.forEach(linkParam => {
-          let property = linkParam.get('layerField');
-          let propertyValue = queryFilter[linkParam.get('queryKey')];
-          if (Ember.isArray(propertyValue)) {
-            let propertyEquals = Ember.A();
-            propertyValue.forEach((value) => {
-              propertyEquals.pushObject(new L.Filter.EQ(property, value));
-            });
+          parameters.forEach(linkParam => {
+            let property = linkParam.get('layerField');
+            let propertyValue = queryFilter[linkParam.get('queryKey')];
+            if (Ember.isArray(propertyValue)) {
+              let propertyEquals = Ember.A();
+              propertyValue.forEach((value) => {
+                propertyEquals.pushObject(new L.Filter.EQ(property, value));
+              });
 
-            equals.pushObject(new L.Filter.Or(...propertyEquals));
-          } else {
-            equals.pushObject(new L.Filter.EQ(property, propertyValue));
-          }
-        });
+              equals.pushObject(new L.Filter.Or(...propertyEquals));
+            } else {
+              equals.pushObject(new L.Filter.EQ(property, propertyValue));
+            }
+          });
       }
     });
 
@@ -294,7 +295,7 @@ export default BaseVectorLayer.extend({
     if (equals.length === 1) {
       filter = equals[0];
     } else {
-      filter = new L.Filter.And(...equals);
+      filter = new L.Filter.Or(...equals);
     }
 
     let featuresPromise = this._getFeature({
