@@ -622,7 +622,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       }
     },
 
-        /**
+    /**
       Handles input limit.
       @method actions.inputLimit
     */
