@@ -264,6 +264,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
   cannotChangePermission: t('components.geometry-add-modes.rhumb.cannot-change-permission'),
 
+  placeholderNoValue: t('components.geometry-add-modes.rhumb.placeholderNoValue'),
+
   init() {
     this._super(...arguments);
 
@@ -338,7 +340,11 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       }
 
       let skipNum = this._countSkip();
-      if (this._tableData.length === 0 || (this._dataForm.objectType === 'Polygon' && this._tableData.length < skipNum + 2) ||
+      if (Ember.isNone(skipNum)) {
+        alert(this.get('cannotChangePermission'));
+      }
+
+      if (Ember.isNone(skipNum) || this._tableData.length === 0 || (this._dataForm.objectType === 'Polygon' && this._tableData.length < skipNum + 2) ||
         (this._dataForm.objectType === 'Line' && this._tableData.length < skipNum + 1)) {
         this.set('_formValid.tableValid', true);
         error = true;
@@ -401,6 +407,28 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       let newObj = geoJSON.getLayers()[0];
 
       this.sendAction('complete', newObj, { panToAddedObject: true });
+    },
+
+    /**
+      Handles change type.
+    */
+    validType() {
+      if (Ember.isNone(this._dataForm.objectType)) {
+        this.set('_formValid.typeObjectValid', true);
+      } else {
+        this.set('_formValid.typeObjectValid', false);
+      }
+    },
+
+    /**
+      Handles change start point.
+    */
+    validCoord() {
+      if (!this._validStartPoint(this._dataForm.startPoint)) {
+        this.set('_formValid.startPointValid', true);
+      } else {
+        this.set('_formValid.startPointValid', false);
+      }
     },
 
     /**
@@ -492,7 +520,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
               Ember.set(this._tableData[0]._skip, Ember.guidFor(this._tableData[0]), true);
             } else {
               Ember.set(this._tableData[1], 'skip', true);
-              Ember.set(this._tableData[1]._skip, Ember.guidFor(this._tableData[0]), true);
+              Ember.set(this._tableData[1]._skip, Ember.guidFor(this._tableData[1]), true);
             }
           }
 
@@ -591,6 +619,17 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
           Ember.set(row._skip, rowId, checked);  //strange magic
           Ember.set(row._skip, rowId, !checked);
         }
+      }
+    },
+
+        /**
+      Handles input limit.
+      @method actions.inputLimit
+    */
+    onInputLimit(str, e) {
+      const regex = /^\.|[^\d\.]|\.(?=.*\.)|^0+(?=\d)/g;
+      if (!Ember.isEmpty(str) && regex.test(str)) {
+        Ember.$(e.target).val(str.replace(regex, ''));
       }
     }
   },

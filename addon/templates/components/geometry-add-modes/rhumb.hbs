@@ -24,10 +24,12 @@
             <label>
               {{startPointFieldLabel}}
             </label>
-            {{flexberry-field
+            {{input
+              type="text"
               value=_dataForm.startPoint
               placeholder=coordinatesFieldPlaceholder
               class = "first"
+              key-up=(action 'validCoord')
             }}
           </div>
         </div>
@@ -44,7 +46,7 @@
             <label>
               {{typeObjectFieldLabel}}
             </label>
-            {{flexberry-dropdown items=_availableType value=_curType}}
+            {{flexberry-dropdown items=_availableType value=_curType onChange=(action 'validType')}}
           </div>
         </div>
       </div>
@@ -82,12 +84,12 @@
             </td>
             <td>
               <div class="field {{if _addValid.rhumbValid "error"}}">
-                {{flexberry-field value=_dataFormTable.rhumb}}
+                {{input type="text" value=_dataFormTable.rhumb placeholder=placeholderNoValue key-up=(action "onInputLimit")}}
               </div>
             </td>
             <td>
               <div class="field {{if _addValid.distanceValid "error"}}">
-                {{flexberry-field value=_dataFormTable.distance}}
+                {{input type="text" value=_dataFormTable.distance placeholder=placeholderNoValue key-up=(action "onInputLimit")}}
               </div>
             </td>
             <td class="narrow rhumb">
@@ -155,14 +157,14 @@
               {{#block-slot "column-cell-head-0" as |row|}}
                 <td>
                   <div class="field {{if row.rhumbValid "error"}}">
-                    {{flexberry-field value=row.rhumb readonly=row.readonly}}
+                    {{input type="text" value=row.rhumb readonly=(if row.readonly "" readonly) placeholder=placeholderNoValue key-up=(action "onInputLimit")}}
                   </div>
                 </td>
               {{/block-slot}}
               {{#block-slot "column-cell-head-0" as |row|}}
                 <td>
                   <div class="field {{if row.distanceValid "error"}}">
-                    {{flexberry-field value=row.distance readonly=row.readonly}}
+                    {{input type="text" value=row.distance readonly=(if row.readonly "" readonly) placeholder=placeholderNoValue key-up=(action "onInputLimit")}}
                   </div>
                 </td>
               {{/block-slot}}
