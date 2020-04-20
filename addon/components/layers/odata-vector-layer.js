@@ -208,14 +208,14 @@ export default BaseVectorLayer.extend({
 
   _getFeature(filter, maxFeatures) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let [build, store, modelName] = this._getBuildStoreModelProjectionGeom();
+      let obj = this.get('_buildStoreModelProjectionGeom');
 
       if (!Ember.isNone(maxFeatures)) {
-        build.top = maxFeatures;
+        obj.build.top = maxFeatures;
       }
 
-      build.predicate = filter;
-      let objs = store.query(modelName, build);
+      obj.build.predicate = filter;
+      let objs = obj.store.query(obj.modelName, obj.build);
       objs.then(res => {
         let features = Ember.A();
         let models = res.toArray();
@@ -493,19 +493,19 @@ export default BaseVectorLayer.extend({
   */
   createVectorLayer(options) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let [build, store, modelName, geometryField, projectionName] = this._getBuildStoreModelProjectionGeom();
+      let obj = this.get('_buildStoreModelProjectionGeom');
       let crs = this.get('crs');
 
       let visibility = this.get('layerModel.visibility');
       let bounds = this.get('leafletMap').getBounds();
       if (this.get('continueLoading') && visibility && checkMapZoomLayer(this)) {
-        build.predicate = this._getGeomPredicateFromBounds(geometryField, crs, bounds);
+        obj.build.predicate = this._getGeomPredicateFromBounds(obj.geometryField, crs, bounds);
       } else if (this.get('continueLoading')) {
         // Fake request
-        build.predicate = new Query.SimplePredicate('id', Query.FilterOperator.Eq, null);
+        obj.build.predicate = new Query.SimplePredicate('id', Query.FilterOperator.Eq, null);
       }
 
-      let objs = store.query(modelName, build);
+      let objs = obj.store.query(obj.modelName, obj.build);
 
       objs.then(res => {
         const options = this.get('options');
@@ -528,14 +528,14 @@ export default BaseVectorLayer.extend({
         };
 
         layer.save = this.get('save').bind(this);
-        layer.geometryField = geometryField;
+        layer.geometryField = obj.geometryField;
         layer.addLayer = this.get('addLayer').bind(this);
         layer.editLayerObjectProperties = this.get('editLayerObjectProperties').bind(this);
         layer.editLayer = this.get('editLayer').bind(this);
         layer.removeLayer = this.get('removeLayer');
-        layer.modelName = modelName;
-        layer.projectionName = projectionName;
-        layer.editformname = modelName + this.get('postfixForEditForm');
+        layer.modelName = obj.modelName;
+        layer.projectionName = obj.projectionName;
+        layer.editformname = obj.modelName + this.get('postfixForEditForm');
         layer.deletedModels = Ember.A();
         layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
         models.forEach(model => {
@@ -639,7 +639,7 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  _getBuildStoreModelProjectionGeom() {
+  _buildStoreModelProjectionGeom: Ember.computed('modelName', 'projectionName', 'geometryField', 'store', function() {
     const modelName = this.get('modelName');
     const projectionName = this.get('projectionName');
     const geometryField = this.get('geometryField') || 'geometry';
@@ -652,8 +652,14 @@ export default BaseVectorLayer.extend({
     let builder = new Builder(store)
       .from(modelName)
       .selectByProjection(projectionName);
-    return [builder.build(), store, modelName, geometryField, projectionName];
-  },
+    return {
+      build: builder.build(),
+      store: store,
+      modelName: modelName,
+      geometryField: geometryField, 
+      projectionName: projectionName
+    };
+  }),
 
   /**
     Get geometry predicate from bounds
@@ -699,7 +705,7 @@ export default BaseVectorLayer.extend({
               return loadIds.indexOf(item) === -1;
             });
 
-            let [build, store, modelName] = this._getBuildStoreModelProjectionGeom();
+            let obj = this.get('_buildStoreModelProjectionGeom');
             if (!Ember.isNone(remainingFeat)) {
               let equals = Ember.A();
               remainingFeat.forEach((id) => {
@@ -709,13 +715,13 @@ export default BaseVectorLayer.extend({
               });
 
               if (equals.length === 1) {
-                build.predicate = equals[0];
+                obj.build.predicate = equals[0];
               } else {
-                build.predicate = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
+                obj.build.predicate = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
               }
             }
 
-            let objs = store.query(modelName, build);
+            let objs = obj.store.query(obj.modelName, obj.build);
 
             objs.then(res => {
               let models = res.toArray();
@@ -730,7 +736,9 @@ export default BaseVectorLayer.extend({
         } else {
           resolve(leafletObject);
         }
-      } catch (e) {}
+      } catch (e) {
+        console.log(e);
+      }
     });
   },
 
@@ -747,7 +755,7 @@ export default BaseVectorLayer.extend({
         let leafletObject = this.get('_leafletObject');
         let featureIds = e.featureIds;
         if (leafletObject.options.continueLoading) {
-          let [build, store, modelName] = this._getBuildStoreModelProjectionGeom();
+          let obj = this.get('_buildStoreModelProjectionGeom');
           if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
             let equals = Ember.A();
             featureIds.forEach((id) => {
@@ -755,12 +763,12 @@ export default BaseVectorLayer.extend({
             });
 
             if (equals.length === 1) {
-              build.predicate = equals[0];
+              obj.build.predicate = equals[0];
             } else {
-              build.predicate = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
+              obj.build.predicate = new Query.ComplexPredicate(Query.Condition.Or, ...equals);
             }
 
-            let objs = store.query(modelName, build);
+            let objs = obj.store.query(obj.modelName, obj.build);
 
             objs.then(res => {
               let models = res.toArray();
@@ -790,7 +798,9 @@ export default BaseVectorLayer.extend({
             resolve(Object.values(leafletObject._layers));
           }
         }
-      } catch (e) {}
+      } catch (e) {
+        console.log(e);
+      }
     });
   },
 
@@ -808,20 +818,20 @@ export default BaseVectorLayer.extend({
         if (!Ember.isNone(leafletObject)) {
           let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
           let continueLoad = leafletObject.options.continueLoading;
-          if (continueLoad && checkMapZoom(leafletObject) && show) {
+          if (continueLoad && show && checkMapZoom(leafletObject)) {
             let bounds = leafletMap.getBounds();
             if (!Ember.isNone(leafletObject.showLayerObjects)) {
               leafletObject.showLayerObjects = false;
             }
 
-            let [build, store, modelName, geometryField] = this._getBuildStoreModelProjectionGeom();
+            let obj = this.get('_buildStoreModelProjectionGeom');
             let crs = this.get('crs');
 
             if (Ember.isNone(leafletObject.isLoadBounds)) {
-              build.predicate = this._getGeomPredicateFromBounds(geometryField, crs, bounds);
+              obj.build.predicate = this._getGeomPredicateFromBounds(obj.geometryField, crs, bounds);
               leafletObject.isLoadBounds = bounds;
               loadedBounds = bounds;
-              let objs = store.query(modelName, build);
+              let objs = obj.store.query(obj.modelName, obj.build);
               objs.then(res => {
                 let models = res.toArray();
                 models.forEach(model => {

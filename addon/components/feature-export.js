@@ -326,7 +326,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
    */
   request(options) {
     // Default settings.
-    options = L.extend({
+    options = Object.assign({
       async: true,
       method: 'POST',
       data: '',
