@@ -656,7 +656,7 @@ export default BaseVectorLayer.extend({
       build: builder.build(),
       store: store,
       modelName: modelName,
-      geometryField: geometryField, 
+      geometryField: geometryField,
       projectionName: projectionName
     };
   }),
