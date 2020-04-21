@@ -332,8 +332,8 @@ export default Ember.Mixin.create({
         this._getModelLayerFeature(firstLayerId, [firstLayerObjectId]),
         this._getModelLayerFeature(secondLayerId, [secondLayerObjectId])
       ]).then((result) => {
-        let objA = result[0].value[2][0];
-        let objB = result[1].value[2][0];
+        let objA = result[0][2][0];
+        let objB = result[1][2][0];
         resolve(this._getDistanceBetweenObjects(objA, objB));
       }).catch((e) => {
         reject(e);
@@ -387,10 +387,10 @@ export default Ember.Mixin.create({
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) => {
-        let objA = result[0].value[2][0].feature;
-        let objB = result[1].value[2][0].feature;
-        let leafletLayerA = result[0].value[1];
-        let leafletLayerB = result[1].value[1];
+        let objA = result[0][2][0].feature;
+        let objB = result[1][2][0].feature;
+        let leafletLayerA = result[0][1];
+        let leafletLayerB = result[1][1];
         if (objA && objB && leafletLayerA && leafletLayerB) {
           let feature1 = leafletLayerA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(leafletLayerA.options.crs.code, objA);
           let feature2 = leafletLayerB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(leafletLayerB.options.crs.code, objB);
@@ -427,10 +427,10 @@ export default Ember.Mixin.create({
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) => {
-        let objA = result[0].value[2][0].feature;
-        let objB = result[1].value[2][0].feature;
-        let layerObjectA = result[0].value[1];
-        let layerObjectB = result[1].value[1];
+        let objA = result[0][2][0].feature;
+        let objB = result[1][2][0].feature;
+        let layerObjectA = result[0][1];
+        let layerObjectB = result[1][1];
         let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
         let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
         let intersectionRes = intersect.default(feature2, feature1);
@@ -609,10 +609,10 @@ export default Ember.Mixin.create({
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((res) => {
-        let objA = res[0].value[2][0].feature;
-        let objB = res[1].value[2][0].feature;
-        let layerObjectA = res[0].value[1];
-        let layerObjectB = res[1].value[1];
+        let objA = res[0][2][0].feature;
+        let objB = res[1][2][0].feature;
+        let layerObjectA = res[0][1];
+        let layerObjectB = res[1][1];
         let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
         let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
         let intersectionRes = intersect.default(feature1, feature2);
