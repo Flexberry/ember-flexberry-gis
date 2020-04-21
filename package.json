@@ -77,6 +77,7 @@
     "moment": "2.24.0",
     "moment-timezone": "0.5.0",
     "node-uuid": "^1.4.7",
+    "resolve": "1.11.0",
     "semantic-ui-ember": "git+https://github.com/Flexberry/Semantic-UI-Ember.git#version-0.9.3",
     "ui-ember-slider": "0.5.0",
     "leaflet-side-by-side": "2.1.0"
