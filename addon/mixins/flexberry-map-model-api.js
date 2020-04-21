@@ -255,7 +255,7 @@ export default Ember.Mixin.create({
             this._getModelLayerFeature(lid, null).then(([layer, lObject, featuresLayer]) => {
               featuresLayer.forEach(obj => {
                 const id = this._getLayerFeatureId(layer, obj);
-                const distance = this.getDistanceBetweenObjects(layerId, layerObject[0], lid, obj);
+                const distance = this._getDistanceBetweenObjects(layerObject[0], obj);
 
                 if (layerId === lid && layerObjectId === id) {
                   return;
@@ -292,18 +292,13 @@ export default Ember.Mixin.create({
 
   /**
     Get distance between objects
-    @method getDistanceBetweenObjects
-    @param {string} firstLayerId First layer id.
+    @method _getDistanceBetweenObjects
     @param {Object} firstLayerObject First layer object.
-    @param {string} secondLayerId Second layer id.
     @param {Object} secondLayerObject Second layer object.
     @return {number} Distance between objects in meters.
   */
-  getDistanceBetweenObjects(firstLayerId, firstLayerObject, secondLayerId, secondLayerObject) {
-    const firstLayer = this.get('mapLayer').findBy('id', firstLayerId);
-    const secondLayer = this.get('mapLayer').findBy('id', secondLayerId);
-
-    const getObjectCenter = function (layer, object) {
+  _getDistanceBetweenObjects(firstLayerObject, secondLayerObject) {
+    const getObjectCenter = function (object) {
       const type = Ember.get(object, 'feature.geometry.type');
       if (type === 'Point') {
         return object._latlng;
@@ -312,14 +307,38 @@ export default Ember.Mixin.create({
       }
     };
 
-    const firstPoint = getObjectCenter(firstLayer, firstLayerObject);
+    const firstPoint = getObjectCenter(firstLayerObject);
     const firstObject = helpers.point([firstPoint.lat, firstPoint.lng]);
 
-    const secondPoint = getObjectCenter(secondLayer, secondLayerObject);
+    const secondPoint = getObjectCenter(secondLayerObject);
     const secondObject = helpers.point([secondPoint.lat, secondPoint.lng]);
 
     // Get distance in meters.
     return distance.default(firstObject, secondObject, { units: 'kilometers' }) * 1000;
+  },
+
+  /**
+    Get distance between objects
+    @method getDistanceBetweenObjects
+    @param {string} firstLayerId First layer id.
+    @param {string} firstLayerObjectId First layer object id.
+    @param {string} secondLayerId Second layer id.
+    @param {string} secondLayerObjectId Second layer object id.
+    @return {Promise} Distance between objects in meters.
+  */
+  getDistanceBetweenObjects(firstLayerId, firstLayerObjectId, secondLayerId, secondLayerObjectId) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      Ember.RSVP.all([
+        this._getModelLayerFeature(firstLayerId, [firstLayerObjectId]),
+        this._getModelLayerFeature(secondLayerId, [secondLayerObjectId])
+      ]).then((result) => {
+        let objA = result[0].value[2][0];
+        let objB = result[1].value[2][0];
+        resolve(this._getDistanceBetweenObjects(objA, objB));
+      }).catch((e) => {
+        reject(e);
+      });
+    });
   },
 
   /**
@@ -364,7 +383,7 @@ export default Ember.Mixin.create({
   */
   isContainsObject(layerAId, objectAId, layerBId, objectBId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.RSVP.allSettled([
+      Ember.RSVP.all([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) => {
@@ -404,7 +423,7 @@ export default Ember.Mixin.create({
   */
   getAreaExtends(layerAId, objectAId, layerBId, objectBId) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.RSVP.allSettled([
+      Ember.RSVP.all([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) => {
@@ -586,7 +605,7 @@ export default Ember.Mixin.create({
         object: null,
         area: null
       };
-      Ember.RSVP.allSettled([
+      Ember.RSVP.all([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((res) => {
