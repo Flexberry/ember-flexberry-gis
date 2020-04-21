@@ -851,14 +851,14 @@ export default BaseVectorLayer.extend({
               return;
             }
 
-            let loadedPart = new Query.NotPredicate(this._getGeomPredicateFromBounds(geometryField, crs, loadedBounds));
+            let loadedPart = new Query.NotPredicate(this._getGeomPredicateFromBounds(obj.geometryField, crs, loadedBounds));
 
             loadedBounds.extend(bounds);
-            let newPart = this._getGeomPredicateFromBounds(geometryField, crs, loadedBounds);
+            let newPart = this._getGeomPredicateFromBounds(obj.geometryField, crs, loadedBounds);
 
-            build.predicate = new Query.ComplexPredicate(Query.Condition.And, loadedPart, newPart);
+            obj.build.predicate = new Query.ComplexPredicate(Query.Condition.And, loadedPart, newPart);
 
-            let objs = store.query(modelName, build);
+            let objs = obj.store.query(obj.modelName, obj.build);
 
             objs.then(res => {
               let models = res.toArray();
