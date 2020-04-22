@@ -226,7 +226,7 @@ export default Ember.Component.extend({
       latlng = polygonLayer.getBounds().getCenter();
 
       if (bufferR > 0) {
-        let feat  = buffer.default(polygonLayer.feature.geometry, bufferR, { units: 'meters' });
+        let feat = buffer.default(polygonLayer.feature.geometry, bufferR, { units: 'meters' });
         bufferedMainPolygonLayer = L.geoJSON(feat).getLayers()[0];
       } else {
         bufferedMainPolygonLayer = polygonLayer;
