@@ -412,24 +412,22 @@
   @module ember-flexberry-gis
 */
 
-import Ember from &#x27;ember&#x27;;
-
 let checkMapZoomLayer = (layer) =&gt; {
   const mapZoom = layer.leafletMap.getZoom();
-  const minZoom = Ember.get(layer, &#x60;minZoom&#x60;);
-  const maxZoom = Ember.get(layer, &#x27;maxZoom&#x27;);
-  return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom &lt;= mapZoom &amp;&amp; mapZoom &lt;= maxZoom;
+  const minZoom = layer.minZoom;
+  const maxZoom = layer.maxZoom;
+  return !mapZoom || !minZoom || !maxZoom || minZoom &lt;= mapZoom &amp;&amp; mapZoom &lt;= maxZoom;
 };
 
 let checkMapZoom = (layer) =&gt; {
   const mapZoom = _getMapZoom(layer._map);
   const minZoom = _getLayerOption(layer, &#x27;minZoom&#x27;);
   const maxZoom = _getLayerOption(layer, &#x27;maxZoom&#x27;);
-  return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom &lt;= mapZoom &amp;&amp; mapZoom &lt;= maxZoom;
+  return !mapZoom || !minZoom || !maxZoom || minZoom &lt;= mapZoom &amp;&amp; mapZoom &lt;= maxZoom;
 };
 
 let _getMapZoom = (map) =&gt; {
-  if (!Ember.isNone(map) &amp;&amp; map.getZoom) {
+  if (map &amp;&amp; map.getZoom) {
     return map.getZoom();
   }
 
@@ -437,12 +435,12 @@ let _getMapZoom = (map) =&gt; {
 };
 
 let _getLayerOption = (layer, propName) =&gt; {
-  let zoomResult = Ember.get(layer, &#x60;${propName}&#x60;);
-  if (Ember.isNone(zoomResult)) {
-    const parentLayers = Ember.get(layer, &#x27;_eventParents&#x27;);
+  let zoomResult = layer[propName];
+  if (!zoomResult) {
+    const parentLayers = layer._eventParents;
     for (var key in parentLayers) {
-      zoomResult = Ember.get(parentLayers, &#x60;${key}.${propName}&#x60;);
-      if (!Ember.isNone(zoomResult)) {
+      zoomResult = parentLayers[key][propName];
+      if (zoomResult) {
         return zoomResult;
       }
     }

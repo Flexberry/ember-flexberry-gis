@@ -11942,7 +11942,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 199,
+            "line": 205,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -11954,7 +11954,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 210,
+            "line": 216,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "identify",
@@ -11985,7 +11985,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 230,
+            "line": 236,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -12030,7 +12030,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 303,
+            "line": 309,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -12061,7 +12061,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 350,
+            "line": 356,
             "description": "Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "loadLayerFeatures",
@@ -12081,7 +12081,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 402,
+            "line": 408,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -12101,7 +12101,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 467,
+            "line": 473,
             "description": "Initializes DOM-related component's properties.",
             "class": "WfsLayerComponent",
             "module": "ember-flexberry-gis"
@@ -42192,22 +42192,12 @@
             "line": 293,
             "description": "Get distance between objects",
             "itemtype": "method",
-            "name": "getDistanceBetweenObjects",
+            "name": "_getDistanceBetweenObjects",
             "params": [
-                {
-                    "name": "firstLayerId",
-                    "description": "First layer id.",
-                    "type": "String"
-                },
                 {
                     "name": "firstLayerObject",
                     "description": "First layer object.",
                     "type": "Object"
-                },
-                {
-                    "name": "secondLayerId",
-                    "description": "Second layer id.",
-                    "type": "String"
                 },
                 {
                     "name": "secondLayerObject",
@@ -42224,7 +42214,42 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 325,
+            "line": 320,
+            "description": "Get distance between objects",
+            "itemtype": "method",
+            "name": "getDistanceBetweenObjects",
+            "params": [
+                {
+                    "name": "firstLayerId",
+                    "description": "First layer id.",
+                    "type": "String"
+                },
+                {
+                    "name": "firstLayerObjectId",
+                    "description": "First layer object id.",
+                    "type": "String"
+                },
+                {
+                    "name": "secondLayerId",
+                    "description": "Second layer id.",
+                    "type": "String"
+                },
+                {
+                    "name": "secondLayerObjectId",
+                    "description": "Second layer object id.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "Distance between objects in meters.",
+                "type": "Promise"
+            },
+            "class": "FlexberryMaplayerActionsHandlerMixin",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/mixins/flexberry-map-model-api.js",
+            "line": 344,
             "description": "Get layer object attributes and coordinates.",
             "itemtype": "method",
             "name": "getLayerObjectOptions",
@@ -42254,7 +42279,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 356,
+            "line": 375,
             "description": "Check if object A contains object B.",
             "itemtype": "method",
             "name": "isContainsObject",
@@ -42289,7 +42314,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 396,
+            "line": 415,
             "description": "Calculate the area of ​​object B that extends beyond the boundaries of object A.",
             "itemtype": "method",
             "name": "getAreaExtends",
@@ -42324,7 +42349,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 446,
+            "line": 465,
             "description": "Get object id by object and layer.",
             "itemtype": "method",
             "name": "_getLayerFeatureId",
@@ -42349,7 +42374,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 463,
+            "line": 482,
             "description": "Determine the visibility of the specified objects by id for the layer.",
             "itemtype": "method",
             "name": "_setVisibilityObjects",
@@ -42377,7 +42402,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 518,
+            "line": 537,
             "description": "To copy Object from Source layer to Destination.",
             "itemtype": "method",
             "name": "copyObject",
@@ -42402,7 +42427,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 573,
+            "line": 592,
             "description": "Calculate the area of intersection between object A and object B.",
             "itemtype": "method",
             "name": "getIntersectionArea",
@@ -42442,7 +42467,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 621,
+            "line": 640,
             "description": "Cleans the service layer.",
             "itemtype": "method",
             "name": "clearServiceLayer",
@@ -42454,7 +42479,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 631,
+            "line": 650,
             "description": "Create image for layer object.",
             "itemtype": "method",
             "name": "getSnapShot",
@@ -42474,7 +42499,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 762,
+            "line": 781,
             "description": "Download image for layer object.",
             "itemtype": "method",
             "name": "downloadSnapShot",
@@ -42494,7 +42519,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 799,
+            "line": 818,
             "description": "Get the object rhumb.",
             "itemtype": "method",
             "name": "getRhumb",
@@ -42519,7 +42544,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 899,
+            "line": 918,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
@@ -42543,7 +42568,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 921,
+            "line": 940,
             "description": "Edit object layer.",
             "itemtype": "method",
             "name": "editLayerObject",
@@ -42578,7 +42603,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 979,
+            "line": 998,
             "description": "Upload file.",
             "itemtype": "method",
             "name": "uploadFile",
@@ -42598,7 +42623,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 997,
+            "line": 1016,
             "description": "Convert coordinates of object to wgs84, or other crsName.",
             "itemtype": "method",
             "name": "convertObjectCoordinates",
@@ -42620,7 +42645,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1073,
+            "line": 1092,
             "description": "Get coordinates point.",
             "itemtype": "method",
             "name": "getCoordPoint",
@@ -45643,15 +45668,15 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:199"
+            "line": " addon/components/layers/wfs-layer.js:205"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:350"
+            "line": " addon/components/layers/wfs-layer.js:356"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:402"
+            "line": " addon/components/layers/wfs-layer.js:408"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -45947,11 +45972,11 @@
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:899"
+            "line": " addon/mixins/flexberry-map-model-api.js:918"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:899"
+            "line": " addon/mixins/flexberry-map-model-api.js:918"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -46183,7 +46208,7 @@
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/wfs-layer.js:467"
+            "line": " addon/components/layers/wfs-layer.js:473"
         },
         {
             "message": "Missing item type\nPerforms 'getFeatureInfo' request to WMS-service related to layer.",

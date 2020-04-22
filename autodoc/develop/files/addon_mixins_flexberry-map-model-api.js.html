@@ -665,7 +665,7 @@ export default Ember.Mixin.create({
             this._getModelLayerFeature(lid, null).then(([layer, lObject, featuresLayer]) =&gt; {
               featuresLayer.forEach(obj =&gt; {
                 const id = this._getLayerFeatureId(layer, obj);
-                const distance = this.getDistanceBetweenObjects(layerId, layerObject[0], lid, obj);
+                const distance = this._getDistanceBetweenObjects(layerObject[0], obj);
 
                 if (layerId === lid &amp;&amp; layerObjectId === id) {
                   return;
@@ -702,18 +702,13 @@ export default Ember.Mixin.create({
 
   /**
     Get distance between objects
-    @method getDistanceBetweenObjects
-    @param {string} firstLayerId First layer id.
+    @method _getDistanceBetweenObjects
     @param {Object} firstLayerObject First layer object.
-    @param {string} secondLayerId Second layer id.
     @param {Object} secondLayerObject Second layer object.
     @return {number} Distance between objects in meters.
   */
-  getDistanceBetweenObjects(firstLayerId, firstLayerObject, secondLayerId, secondLayerObject) {
-    const firstLayer = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, firstLayerId);
-    const secondLayer = this.get(&#x27;mapLayer&#x27;).findBy(&#x27;id&#x27;, secondLayerId);
-
-    const getObjectCenter = function (layer, object) {
+  _getDistanceBetweenObjects(firstLayerObject, secondLayerObject) {
+    const getObjectCenter = function (object) {
       const type = Ember.get(object, &#x27;feature.geometry.type&#x27;);
       if (type === &#x27;Point&#x27;) {
         return object._latlng;
@@ -722,14 +717,38 @@ export default Ember.Mixin.create({
       }
     };
 
-    const firstPoint = getObjectCenter(firstLayer, firstLayerObject);
+    const firstPoint = getObjectCenter(firstLayerObject);
     const firstObject = helpers.point([firstPoint.lat, firstPoint.lng]);
 
-    const secondPoint = getObjectCenter(secondLayer, secondLayerObject);
+    const secondPoint = getObjectCenter(secondLayerObject);
     const secondObject = helpers.point([secondPoint.lat, secondPoint.lng]);
 
     // Get distance in meters.
     return distance.default(firstObject, secondObject, { units: &#x27;kilometers&#x27; }) * 1000;
+  },
+
+  /**
+    Get distance between objects
+    @method getDistanceBetweenObjects
+    @param {string} firstLayerId First layer id.
+    @param {string} firstLayerObjectId First layer object id.
+    @param {string} secondLayerId Second layer id.
+    @param {string} secondLayerObjectId Second layer object id.
+    @return {Promise} Distance between objects in meters.
+  */
+  getDistanceBetweenObjects(firstLayerId, firstLayerObjectId, secondLayerId, secondLayerObjectId) {
+    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      Ember.RSVP.all([
+        this._getModelLayerFeature(firstLayerId, [firstLayerObjectId]),
+        this._getModelLayerFeature(secondLayerId, [secondLayerObjectId])
+      ]).then((result) =&gt; {
+        let objA = result[0][2][0];
+        let objB = result[1][2][0];
+        resolve(this._getDistanceBetweenObjects(objA, objB));
+      }).catch((e) =&gt; {
+        reject(e);
+      });
+    });
   },
 
   /**
@@ -774,14 +793,14 @@ export default Ember.Mixin.create({
   */
   isContainsObject(layerAId, objectAId, layerBId, objectBId) {
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      Ember.RSVP.allSettled([
+      Ember.RSVP.all([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) =&gt; {
-        let objA = result[0].value[2][0].feature;
-        let objB = result[1].value[2][0].feature;
-        let leafletLayerA = result[0].value[1];
-        let leafletLayerB = result[1].value[1];
+        let objA = result[0][2][0].feature;
+        let objB = result[1][2][0].feature;
+        let leafletLayerA = result[0][1];
+        let leafletLayerB = result[1][1];
         if (objA &amp;&amp; objB &amp;&amp; leafletLayerA &amp;&amp; leafletLayerB) {
           let feature1 = leafletLayerA.options.crs.code === &#x27;EPSG:4326&#x27; ? objA : this._convertObjectCoordinates(leafletLayerA.options.crs.code, objA);
           let feature2 = leafletLayerB.options.crs.code === &#x27;EPSG:4326&#x27; ? objB : this._convertObjectCoordinates(leafletLayerB.options.crs.code, objB);
@@ -814,14 +833,14 @@ export default Ember.Mixin.create({
   */
   getAreaExtends(layerAId, objectAId, layerBId, objectBId) {
     return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-      Ember.RSVP.allSettled([
+      Ember.RSVP.all([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((result) =&gt; {
-        let objA = result[0].value[2][0].feature;
-        let objB = result[1].value[2][0].feature;
-        let layerObjectA = result[0].value[1];
-        let layerObjectB = result[1].value[1];
+        let objA = result[0][2][0].feature;
+        let objB = result[1][2][0].feature;
+        let layerObjectA = result[0][1];
+        let layerObjectB = result[1][1];
         let feature1 = layerObjectA.options.crs.code === &#x27;EPSG:4326&#x27; ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
         let feature2 = layerObjectB.options.crs.code === &#x27;EPSG:4326&#x27; ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
         let intersectionRes = intersect.default(feature2, feature1);
@@ -996,14 +1015,14 @@ export default Ember.Mixin.create({
         object: null,
         area: null
       };
-      Ember.RSVP.allSettled([
+      Ember.RSVP.all([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, [objectBId])
       ]).then((res) =&gt; {
-        let objA = res[0].value[2][0].feature;
-        let objB = res[1].value[2][0].feature;
-        let layerObjectA = res[0].value[1];
-        let layerObjectB = res[1].value[1];
+        let objA = res[0][2][0].feature;
+        let objB = res[1][2][0].feature;
+        let layerObjectA = res[0][1];
+        let layerObjectB = res[1][1];
         let feature1 = layerObjectA.options.crs.code === &#x27;EPSG:4326&#x27; ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
         let feature2 = layerObjectB.options.crs.code === &#x27;EPSG:4326&#x27; ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
         let intersectionRes = intersect.default(feature1, feature2);
