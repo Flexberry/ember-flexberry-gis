@@ -1,4 +1,6 @@
 import Ember from 'ember';
+import jsts from 'npm:jsts';
+import lineIntersect from 'npm:@turf/line-intersect';
 import distance from 'npm:@turf/distance';
 import helpers from 'npm:@turf/helpers';
 import booleanContains from 'npm:@turf/boolean-contains';
@@ -596,7 +598,21 @@ export default Ember.Mixin.create({
         let layerObjectB = res[1].value[1];
         let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
         let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
-        let intersectionRes = intersect.default(feature1, feature2);
+        //let intersectionRes;
+        let geojsonReader = new jsts.io.GeoJSONReader();
+        let objAJsts = geojsonReader.read(feature1.geometry);
+        let objBJsts = geojsonReader.read(feature2.geometry);
+        let intersected = objAJsts.intersection(objBJsts);
+        let geojsonWriter = new jsts.io.GeoJSONWriter();
+        let intersectionRes = geojsonWriter.write(intersected);
+
+        /*if ((feature1.geometry.type.indexOf('Polygon') !== -1 && feature2.geometry.type.indexOf('LineString') !== -1) ||
+          (feature2.geometry.type.indexOf('Polygon') !== -1 && feature1.geometry.type.indexOf('LineString') !== -1)) {
+          intersectionRes = lineIntersect.default(feature1, feature2);
+        } else {
+          intersectionRes = intersect.default(feature1, feature2);
+        }*/
+
         if (intersectionRes) {
           if (showOnMap) {
             let obj = L.geoJSON(intersectionRes, {
