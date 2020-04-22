@@ -537,3 +537,7 @@ form.flexberry-geometry-add-mode-import-form,
 .ui.modal.flexberry-geometry-add-mode-import-result .flexberry-dialog-content {
   overflow: auto;
 }
+
+.rastrMessage .flexberry-dialog-toolbar.actions .flexberry-dialog-cancel-button {
+  display: none;
+}

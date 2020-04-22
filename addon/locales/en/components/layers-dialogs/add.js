@@ -20,5 +20,6 @@ export default {
   },
   'createLayer': {
     'message': 'The layer successfully added'
-  }
+  },
+  'captionRastr': 'information'
 };

@@ -20,5 +20,6 @@ export default {
   },
   'createLayer': {
     'message': 'Слой успешно добавлен'
-  }
+  },
+  'captionRastr': 'Информация'
 };
