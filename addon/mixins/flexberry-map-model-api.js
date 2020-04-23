@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import jsts from 'npm:jsts';
-import lineIntersect from 'npm:@turf/line-intersect';
 import distance from 'npm:@turf/distance';
 import helpers from 'npm:@turf/helpers';
 import booleanContains from 'npm:@turf/boolean-contains';
