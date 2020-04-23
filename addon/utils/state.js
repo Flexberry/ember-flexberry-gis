@@ -3,4 +3,4 @@ export default {
   update: 'updateElement',
   remove: 'removeElement',
   exist: 'exist'
-}
+};
