@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import WfsLayer from '../layers/wfs';
+import state from '../utils/state';
 
 export default Ember.Mixin.create({
   saveLayers(layersIds) {
@@ -36,7 +37,7 @@ export default Ember.Mixin.create({
         let layerType = Ember.getOwner(this).knownForType('layer', className);
         if (layerType instanceof WfsLayer) {
           Object.values(leafletObject.changes).forEach(item => {
-            if (item.state === 'updateElement') {
+            if (item.state === state.update) {
               let filter = new L.Filter.EQ('primarykey', Ember.get(item, 'feature.properties.primarykey'));
               map.removeLayer(item);
               leafletObject.loadFeatures(filter);

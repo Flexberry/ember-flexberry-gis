@@ -6,6 +6,7 @@ import Ember from 'ember';
 import BaseVectorLayer from 'ember-flexberry-gis/components/base-vector-layer';
 import { Query } from 'ember-flexberry-data';
 import { checkMapZoomLayer, checkMapZoom } from '../../utils/check-zoom';
+import state from '../../utils/state';
 const { Builder } = Query;
 
 /**
@@ -35,7 +36,7 @@ export default BaseVectorLayer.extend({
     let leafletObject = _this.get('_leafletObject');
     leafletObject.eachLayer(function(layer) {
       if (Ember.get(layer, 'model.hasDirtyAttributes')) {
-        if (layer.state === leafletObject.state.insert) {
+        if (layer.state === state.insert) {
           const geometryField = _this.get('geometryField') || 'geometry';
           let geometryObject = Ember.A();
           let coordinates = Ember.A();
@@ -56,7 +57,7 @@ export default BaseVectorLayer.extend({
         }
 
         promises.addObject(layer.model.save());
-        layer.state = leafletObject.state.exist;
+        layer.state = state.exist;
       }
     }, leafletObject);
 
@@ -69,7 +70,7 @@ export default BaseVectorLayer.extend({
     if (promises.length > 0) {
       Ember.RSVP.all(promises).then((e) => {
         leafletObject.eachLayer(function(layer) {
-          layer.state = leafletObject.state.exist;
+          layer.state = state.exist;
         });
         _this._setLayerState();
         leafletObject.fire('save:success');
@@ -102,7 +103,7 @@ export default BaseVectorLayer.extend({
       Ember.set(layer, 'feature.geometry.coordinates', geometryObject.coordinates);
       layer.model.setProperties(layer.feature.properties);
       layer.model.set(geometryField, geometryObject);
-      layer.state = leafletObject.state.update;
+      layer.state = state.update;
     }
 
     return leafletObject;
@@ -116,10 +117,10 @@ export default BaseVectorLayer.extend({
   */
   removeLayer(layer) {
     L.FeatureGroup.prototype.removeLayer.call(this, layer);
-    if (layer.state === this.state.remove) {
+    if (layer.state === state.remove) {
       layer.model.deleteRecord();
       layer.model.set('hasChanged', true);
-      layer.state = this.state.remove;
+      layer.state = state.remove;
       this.deletedModels.addObject(layer.model);
     }
   },
@@ -163,7 +164,7 @@ export default BaseVectorLayer.extend({
 
     model.set(geometryField, geometryObject);
     let leafletObject = this.get('_leafletObject');
-    layer.state = leafletObject.state.insert;
+    layer.state = state.insert;
     this._setLayerProperties(layer, model, geometryObject, leafletObject);
     L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
     return leafletObject;
@@ -195,7 +196,7 @@ export default BaseVectorLayer.extend({
       geometry: geometry,
       leafletLayer: layer
     };
-    if (layer.state = leafletObject.state.update) {
+    if (layer.state = state.update) {
       layer.feature.properties = this.createPropsFromModel(model);
     }
 
@@ -220,12 +221,6 @@ export default BaseVectorLayer.extend({
         let features = Ember.A();
         let models = res.toArray();
         let layer = L.featureGroup();
-        layer.state = {
-          exist: 'exist',
-          insert: 'insertElement',
-          update: 'updateElement',
-          remove: 'removeElement'
-        };
 
         models.forEach(model => {
           let feat = this.addLayerObject(layer, model, false);
@@ -402,38 +397,54 @@ export default BaseVectorLayer.extend({
   */
   query(layerLinks, e) {
     let queryFilter = e.queryFilter;
-    let equals = Ember.A();
+    let linkEquals = Ember.A();
     layerLinks.forEach((link) => {
       let parameters = link.get('parameters');
 
       if (Ember.isArray(parameters) && parameters.length > 0) {
-        parameters.forEach(linkParam => {
-          let property = linkParam.get('layerField');
-          let propertyValue = queryFilter[linkParam.get('queryKey')];
-          if (Ember.isArray(propertyValue)) {
-            let propertyEquals = Ember.A();
-            propertyValue.forEach((value) => {
-              propertyEquals.pushObject(new Query.SimplePredicate(property, Query.FilterOperator.Eq, value));
-            });
+        let equals = this.getFilterParameters(parameters, queryFilter);
 
-            equals.pushObject(new Query.ComplexPredicate(Query.Condition.Or, ...propertyEquals));
-          } else {
-            equals.pushObject(new Query.SimplePredicate(property, Query.FilterOperator.Eq, propertyValue));
-          }
-        });
+        if (equals.length === 1) {
+          linkEquals.pushObject(equals[0]);
+        } else {
+          linkEquals.pushObject(new Query.ComplexPredicate(Query.Condition.And, ...equals));
+        }
       }
     });
 
-    let filter;
-    if (equals.length === 1) {
-      filter = equals[0];
-    } else {
-      filter = new Query.ComplexPredicate(Query.Condition.And, ...equals);
-    }
+    let filter = linkEquals.length === 1 ? linkEquals[0] : new Query.ComplexPredicate(Query.Condition.Or, ...linkEquals);
 
     let featuresPromise = this._getFeature(filter);
 
     return featuresPromise;
+  },
+
+  /**
+    Get an array of link parameter restrictions.
+    @method getFilterParameters
+    @param {Object[]} linkParameter containing metadata for query
+    @param {Object} queryFilter Object with query filter paramteres
+    @returns Array of Constraints.
+  */
+  getFilterParameters(parameters, queryFilter) {
+    let equals = Ember.A();
+
+    parameters.forEach(linkParam => {
+      let property = linkParam.get('layerField');
+      let propertyValue = queryFilter[linkParam.get('queryKey')];
+      if (Ember.isArray(propertyValue)) {
+        let propertyEquals = Ember.A();
+        propertyValue.forEach((value) => {
+          propertyEquals.pushObject(new Query.SimplePredicate(property, Query.FilterOperator.Eq, value));
+        });
+
+        equals.pushObject(new Query.ComplexPredicate(Query.Condition.Or, ...propertyEquals));
+      } else {
+        equals.pushObject(new Query.SimplePredicate(property, Query.FilterOperator.Eq, propertyValue));
+      }
+    });
+
+    return equals;
   },
 
   /**
@@ -466,7 +477,7 @@ export default BaseVectorLayer.extend({
     }
 
     if (innerLayer) {
-      innerLayer.state = layer.state.exist;
+      innerLayer.state = state.exist;
       this._setLayerProperties(innerLayer, model, geometry, layer);
       if (add) {
         innerLayer.setStyle(innerLayer.options.style);
@@ -520,13 +531,6 @@ export default BaseVectorLayer.extend({
         }
 
         L.setOptions(layer, options);
-        layer.state = {
-          exist: 'exist',
-          insert: 'insertElement',
-          update: 'updateElement',
-          remove: 'removeElement'
-        };
-
         layer.save = this.get('save').bind(this);
         layer.geometryField = obj.geometryField;
         layer.addLayer = this.get('addLayer').bind(this);

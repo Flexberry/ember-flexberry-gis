@@ -2,6 +2,7 @@ import Ember from 'ember';
 import turfCombine from 'npm:@turf/combine';
 import WfsLayer from '../layers/wfs';
 import OdataLayer from '../layers/odata-vector';
+import state from '../utils/state';
 
 export default Ember.Mixin.create({
 
@@ -104,13 +105,13 @@ export default Ember.Mixin.create({
           model.rollbackAttributes();
         }
 
-        if (layer.state === leafletObject.state.insert) {
+        if (layer.state === state.insert) {
           leafletObject.removeLayer(layer);
           let id = editTools.featuresLayer.getLayerId(layer);
           let editLayer = editTools.featuresLayer.getLayer(id).editor.editLayer;
           editTools.editLayer.removeLayer(editLayer);
           editTools.featuresLayer.removeLayer(layer);
-        } else if (layer.state === leafletObject.state.update) {
+        } else if (layer.state === state.update) {
           let editLayer = layer.editor.editLayer;
           editTools.editLayer.removeLayer(editLayer);
           let map = Ember.get(leafletObject, '_map');
