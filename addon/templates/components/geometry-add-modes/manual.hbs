@@ -1,6 +1,6 @@
 {{flexberry-button
   tooltip=menuButtonTooltip
-  click=(action "onButtonClick")
+  click=(action "onButtonClick" tabModel)
   iconClass="flexberry-map-command-icon location arrow icon"
 }}
 
@@ -14,24 +14,32 @@
     approveButtonCaption=dialogApproveButtonCaption
     denyButtonCaption=dialogDenyButtonCaption
     visible=_dialogVisible
-    approve=(action "onApprove")
+    approve=(action "onApprove" tabModel)
     deny=(action "onDeny")
   }}
   <form class="ui form {{flexberryClassNames.form}}" role="form">
-    {{!-- currently disabled --}}
-    <div class="field disabled">
-      {{flexberry-edit-crs
-        crsCaption=crsFieldLabel
-        coordinateReferenceSystem=settings.layerCRS
-      }}
-    </div>
-    {{!-- currently disabled --}}
-    <div class="field disabled">
-      <label>{{geometryFieldLabel}}</label>
-      {{flexberry-dropdown
-        items=settings.drawTools
-        value="polygon"
-      }}
+    <div class="row">
+      <div class="sixteen wide column">
+        <div class="ui grid">
+          <div class="eight wide column">
+            <div class="field">
+              {{flexberry-edit-crs
+                crsCaption=crsFieldLabel
+                coordinateReferenceSystem=settings.layerCRS
+              }}
+            </div>
+          </div>
+          <div class="eight wide column">
+            <div class="field {{if _objectTypeDisabled "disabled" ""}} {{if _geometryField "error" ""}}">   
+              <label>{{geometryFieldLabel}}</label>
+              {{flexberry-dropdown
+                items=_types
+                value=_objectSelectType
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="field {{if _coordinatesWithError "error" ""}}">
       <label>{{coordinatesFieldLabel}}</label>
@@ -40,7 +48,18 @@
         placeholder=coordinatesFieldPlaceholder
       }}
     </div>
+     {{#if (or coordinatesInLineError coordinatesParseError)}}
+      <div class="ember-view ui message red">
+        <ul class="list">   
+            {{#if coordinatesInLineError}}     
+              <li>{{coordinatesInLineErrorLabel}}</li>
+            {{/if}}
+            {{#if coordinatesParseError}}     
+              <li>{{coordinatesParseErrorLabel}}</li>
+            {{/if}}
+        </ul>
+      </div>
+    {{/if}}
   </form>
-
 {{/flexberry-dialog}}
 {{/if}}

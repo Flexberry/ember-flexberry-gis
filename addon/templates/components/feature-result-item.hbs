@@ -3,19 +3,59 @@
     <a class="icon item" title="{{t "components.feature-result-item.show-info-caption"}}" {{action "showInfo" on="click"}}>
       <i class="caret {{if expanded 'down' 'right'}} icon"></i>
     </a>
-    <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
-      <i class="marker icon"></i>
-    </a>
-    <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
-      <i class="hand paper icon"></i>
-    </a>
+      {{#if intersection}}
+        <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panToIntersection" on="click"}}>
+          <i class="marker icon"></i>
+        </a>
+        <a class="icon item" title="{{t 'components.flexberry-layers-intersections-panel.show-on-map'}}" {{action "zoomToIntersection" on="click"}}>
+          <i class="intersections icon"></i>
+        </a>
+      {{else}}
+        {{#if favoriteMode}}
+          {{flexberry-ddau-checkbox
+            value=feature.compareEnabled
+            change=(action 'addToCompareGeometries')
+          }}
+        {{/if}}
+        <a class="icon item" title="{{t "components.compare-object-geometries.add-to-fav-caption"}}" {{action "addToFavorite" on="click"}}>
+          <i class="fvicon favorites {{if feature.properties.isFavorite "filled" "unfilled"}} icon"></i>
+        </a>
+        <a class="icon item" title="{{t "components.feature-result-item.zoom-to-caption"}}" {{action "zoomTo" on="click"}}>
+          <i class="marker icon"></i>
+        </a>
+        <a class="icon item" title="{{t "components.feature-result-item.pan-to-caption"}}" {{action "panTo" on="click"}}>
+          <i class="hand paper icon"></i>
+        </a>
+        <a class="icon item" title="{{t "components.feature-result-item.find-intersection-caption"}}" {{action "findIntersection" on="click"}}>
+          <i class="intersections icon"></i>
+        </a>
+      {{/if}}
       {{#if (gt feature.editForms.length 0)}}
         {{#if (eq feature.editForms.length 1)}}
-          <a class="feature-result-item-object icon item"
-            title="{{t "components.feature-result-item.select-object-caption"}}"
-            href="{{feature.editForms.[0].url}}" target="_blank">
-            <i class="external icon"></i>
-          </a>
+          {{#if hasEditForm}}
+            <div class="ui dropdown item" {{action "toggleLinks" on="click"}}>
+              {{t "components.feature-result-item.select-object-caption"}}
+              <i class="dropdown icon"></i>
+              <div class="ui menu transition {{if _linksExpanded "visible" "hidden"}}">
+                <a class="feature-result-item-object icon item"
+                  title="{{t "components.feature-result-item.select-object-caption"}}"
+                  href="{{feature.editForms.[0].url}}" target="_blank">
+                  <i class="external icon"></i>
+                </a>
+                <a class="feature-result-item-object icon item"
+                  title="{{t "components.feature-result-item.action-object-caption"}}"
+                  {{action "goToEditForm" feature.layerModel.id featureId}}>
+                  <i class="external icon"></i>
+                </a>
+              </div>
+            </div>
+          {{else}}
+            <a class="feature-result-item-object icon item"
+              title="{{t "components.feature-result-item.select-object-caption"}}"
+              href="{{feature.editForms.[0].url}}" target="_blank">
+              <i class="external icon"></i>
+            </a>
+          {{/if}}
         {{else}}
           <div class="ui dropdown item" {{action "toggleLinks" on="click"}}>
             {{t "components.feature-result-item.select-object-caption"}}
@@ -28,8 +68,23 @@
                     <i class="external icon"></i>
                   </a>
                 {{/each}}
+                {{#if hasEditForm}}
+                  <a class="feature-result-item-object icon item"
+                    title="{{t "components.feature-result-item.action-object-caption"}}"
+                    {{action "goToEditForm" feature.layerModel.id featureId}}>
+                    <i class="external icon"></i>
+                  </a>
+                {{/if}}
             </div>
           </div>
+        {{/if}}
+      {{else}}
+        {{#if hasEditForm}}
+          <a class="feature-result-item-object icon item"
+            title="{{t "components.feature-result-item.action-object-caption"}}"
+            {{action "goToEditForm" feature.layerModel.id featureId}}>
+            <i class="external icon"></i>
+          </a>
         {{/if}}
       {{/if}}
   </div>
@@ -64,6 +119,71 @@
           </tr>
         {{/if}}
       {{/each-in}}
+      {{#if intersection}}
+        {{#if feature.intersection.isPolygon}}
+          <tr>
+            <td>
+              {{t 'components.flexberry-layers-intersections-panel.square'}}
+            </td>
+            <td>
+              {{feature.intersection.intersectedArea}} {{t 'components.flexberry-layers-intersections-panel.m2'}}
+            </td>
+          </tr>
+        {{/if}}
+        {{#if feature.intersection.intersectionCords}}
+          <tr>
+            <td class="intersection-cell">
+              {{t 'components.flexberry-layers-intersections-panel.intersection-cords'}}
+            </td>
+            <td class="cords">   
+              <div>
+                <table class="ui compact celled table">
+                  <tr>
+                    <td>
+                      {{t 'components.flexberry-layers-intersections-panel.x-cord'}}
+                    </td>
+                    <td>
+                      {{t 'components.flexberry-layers-intersections-panel.y-cord'}}
+                    </td>
+                  </tr>
+                  {{#if showAllCords}}
+                    {{#each feature.intersection.intersectionCords as |cords|}}
+                      <tr>                  
+                        <td>
+                          {{cords.[0]}}
+                        </td>
+                        <td>
+                          {{cords.[1]}}
+                        </td>                 
+                      </tr>                 
+                    {{/each}}                 
+                  {{else}}
+                    <tr>                  
+                      <td>
+                        {{feature.intersection.intersectionCords.[0].[0]}}
+                      </td>
+                      <td>
+                        {{feature.intersection.intersectionCords.[0].[1]}}
+                      </td>                 
+                    </tr>
+                    <tr>                  
+                      <td>
+                        {{feature.intersection.intersectionCords.[1].[0]}}
+                      </td>
+                      <td>
+                        {{feature.intersection.intersectionCords.[1].[1]}}
+                      </td>                   
+                    </tr>               
+                  {{/if}}
+                </table>
+                <div class="show-cords" {{action "toggleShowAllCords"}}>
+                  {{cordsActionCaption}}
+                </div>
+              </div> 
+            </td>
+          </tr>
+        {{/if}}
+      {{/if}}
     </table>
   {{/if}}
 </div>

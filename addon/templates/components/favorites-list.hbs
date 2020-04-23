@@ -1,0 +1,12 @@
+<button type="submit" class="ui button compare" {{action "compareTwoGeometries"}} disabled={{compareBtnDisabled}}>
+  {{t "components.compare-object-geometries.compare-objects-caption"}}
+</button>
+{{layer-result-list
+  results=data
+  serviceLayer=serviceLayer
+  leafletMap=leafletMap
+  favoriteMode=true
+  addToFavorite=(action "addToFavorite")
+  addToCompareGeometries=(action 'addToCompareGeometries')
+  showIntersectionPanel=(action 'showIntersectionPanel')
+}}

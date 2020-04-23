@@ -24,7 +24,7 @@ export default {
     @type String
     @default null
   */
-  definition: null,
+  definition: '+title=WGS 84 (long/lat) +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees',
 
   /**
     Creates CRS instance CRS.

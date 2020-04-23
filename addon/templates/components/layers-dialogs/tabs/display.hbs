@@ -53,7 +53,7 @@
         <div class="ui bottom attached tab segment {{if (eq _activeTab "search-tab") "active"}}" data-tab="search-tab">
           {{layers-dialogs/tabs/search-settings
             value=_layer.settings.searchSettings
-            _layerType=_layer.type
+            layerType=_layer.type
             _leafletObjectMethod=_layer.leafletObjectGetter
           }}
         </div>

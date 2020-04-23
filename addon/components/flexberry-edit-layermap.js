@@ -226,13 +226,15 @@ export default Ember.Component.extend(
       '_layerSettingsAreAvailableForType',
       '_bboxSettingsAreAvailableForType',
       '_pmodesAreAvailableForType',
+      '_loadFileAreAvailableForType',
       function () {
         // Group is available when at least one of it's tab is available.
         return this.get('_mainSettingsAreAvailableForType') ||
           this.get('_crsSettingsAreAvailableForType') ||
           this.get('_layerSettingsAreAvailableForType') ||
           this.get('_bboxSettingsAreAvailableForType') ||
-          this.get('_pmodesAreAvailableForType');
+          this.get('_pmodesAreAvailableForType') ||
+          this.get('_loadFileAreAvailableForType');
       }
     ),
 
@@ -287,6 +289,20 @@ export default Ember.Component.extend(
       let _availableModes = this.get('_availableModes');
 
       return newLayerIsExpectedToBeCreated && Ember.isArray(_availableModes) && !Ember.isBlank(_availableModes);
+    }),
+
+    /**
+      Flag: indicates whether load file modes are available.
+
+      @property _loadFileAreAvailableForType
+      @type Boolean
+      @readonly
+    */
+    _loadFileAreAvailableForType: Ember.computed('_layer.type', '_typeIsReadonly', function () {
+      let className = this.get('_layer.type');
+      let newLayerIsExpectedToBeCreated = !this.get('_typeIsReadonly');
+
+      return Ember.getOwner(this).isKnownNameForType('layer', className) && className === 'wms' && newLayerIsExpectedToBeCreated;
     }),
 
     /**
@@ -537,6 +553,15 @@ export default Ember.Component.extend(
       onEditingFinished(layer) {
         this.set('layer', layer);
         this._createInnerLayer();
+      },
+
+      /**
+        Handles onUploadFile.
+
+        @method actions.onUploadFile
+      */
+      onUploadFile(file) {
+        this.sendAction('onUploadFile', file);
       }
     },
 

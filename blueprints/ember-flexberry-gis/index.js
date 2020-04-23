@@ -12,7 +12,7 @@ module.exports = {
       // Leaflet.
       {
         name: 'leaflet',
-        target: '1.2.0'
+        target: '1.5.1'
       },
 
       // Leaflet.Proj4.
@@ -122,6 +122,12 @@ module.exports = {
       {
         name: 'chart.js',
         target: '2.7.1'
+      },
+
+      // Used in `gradients/gradient-edit` component.
+      {
+        name: 'jquery-minicolors',
+        target: '2.3.4'
       }
     ]).then(function () {
       return _this.addAddonsToProject({

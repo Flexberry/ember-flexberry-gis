@@ -36,7 +36,7 @@ const flexberryClassNames = {
   templates/my-map-form.hbs
   ```handlebars
   {{#flexberry-maptoolbar leafletMap=leafletMap as |maptoolbar|}}
-    {{map-commands/export execute=(action "onMapCommandExecute" target=maptoolbar)}}
+    {{map-commands/export leafletMap=leafletMap}}
   {{/flexberry-maptoolbar}}
   ```
 
@@ -45,6 +45,16 @@ const flexberryClassNames = {
   @uses <a href="https://github.com/ciena-blueplanet/ember-block-slots#usage">SlotsMixin</a>
 */
 let ExportMapCommandComponent = Ember.Component.extend({
+    /**
+      Map command to execute.
+
+      @property _command
+      @type String
+      @default null
+      @private
+    */
+    _command: null,
+
     /**
       Flag: indicates whether export dialog has been already requested by user or not.
 
@@ -73,16 +83,6 @@ let ExportMapCommandComponent = Ember.Component.extend({
       @default false
     */
     _showDownloadingFileSettings: false,
-
-    /**
-      Event object from latest 'execute' action for 'export-download' or 'export-print' mode.
-
-      @property _executeActionEventObject
-      @type Object
-      @default null
-      @private
-    */
-    _executeActionEventObject: null,
 
     /**
       Flag: indicates whether export is in progress.
@@ -261,13 +261,8 @@ let ExportMapCommandComponent = Ember.Component.extend({
     timeout: 30000,
 
     actions: {
-      /**
-        Handles {{#crossLink "BaseMapCommandComponent/sendingActions.execute:method"}}base map-command's 'execute' action{{/crossLink}}.
-
-        @method actions.onExportDownloadMapCommandExecute
-        @param {Object} e Base map-command's 'execute' action event-object.
-      */
-      onExportDownloadMapCommandExecute(e) {
+      onMapCommandButtonClick(e) {
+        this.set('_command', 'export-download');
         this._showExportDialog({ isDownloadDialog: true, executeActionEventObject: e });
       },
 
@@ -278,6 +273,7 @@ let ExportMapCommandComponent = Ember.Component.extend({
         @param {Object} e Base map-command's 'execute' action event-object.
       */
       onExportPrintMapCommandExecute(e) {
+        this.set('_command', 'export-print');
         this._showExportDialog({ isDownloadDialog: false, executeActionEventObject: e });
       },
 
@@ -289,87 +285,17 @@ let ExportMapCommandComponent = Ember.Component.extend({
         @param {Object} e Action's event object.
       */
       onExportDialogApprove(e) {
-        let options = Ember.get(e, 'exportOptions');
-
-        if (this.get('_exportIsInProgress')) {
-          // Prevent new export until already executing export will be completed.
-          e.closeDialog = false;
-          return;
-        }
-
-        let mapCommand = this.get('_executeActionEventObject.mapCommand');
-        if (Ember.isNone(mapCommand)) {
-          return;
-        }
-
-        // Listen to map-command's 'execute' event & handle it.
-        mapCommand.one('execute', (e) => {
-          // Hide possibly shown error message.
-          this.set('_showExportErrorMessage', false);
-
-          // Show delay indicator.
-          this.set('_exportIsInProgress', true);
-
-          e.executionResult.then(() => {
-            // Export successfully completed.
-            // Hide delay indicator.
-            this.set('_exportIsInProgress', false);
-
-            // Hide dialog.
-            this._hideExportDialog();
-          }).catch((reason) => {
-            // Export failed, so don't hide dialog.
-            // Hide delay indicator.
-            this.set('_exportIsInProgress', false);
-
-            // Show error message.
-            this.set('_showExportErrorMessage', true);
-            this.set('_exportErrorMessage', (reason || 'Map export error').toString());
-          });
-        });
-
-        // Prevent export dialog from hiding until export will be completed.
+        this.set('_exportIsInProgress', true);
         e.closeDialog = false;
-
-        // Set 'execute' flag to true, to force map-comand to be executed (not just initialized).
-        let executeActionEventObject = this.get('_executeActionEventObject');
-        Ember.set(executeActionEventObject, 'execute', true);
-
-        this.sendAction('execute', options, executeActionEventObject);
-      },
-
-      /**
-        Handles export dialog's 'deny' action.
-
-        @method actions.onExportDialogDeny
-        @param {Object} e Action's event object.
-      */
-      onExportDialogDeny(e) {
-        // Prevent export dialog from hiding until already executing export will be completed.
-        e.closeDialog = !this.get('_exportIsInProgress');
-      },
-
-      /**
-        Handles export dialog's 'beforeHide' action.
-
-        @method actions.onExportDialogBeforeHide
-        @param {Object} e Action's event object.
-      */
-      onExportDialogBeforeHide(e) {
-        // Prevent export dialog from hiding until already executing export will be completed.
-        e.closeDialog = !this.get('_exportIsInProgress');
-      },
-
-      /**
-        Handles export dialog's 'hide' action.
-
-        @method actions.onExportDialogHide
-        @param {Object} e Action's event object.
-      */
-      onExportDialogHide(e) {
-        // Dialog is hidden.
-        // Hide error message.
-        this.set('_showExportErrorMessage', false);
+        let leafletMap = this.get('leafletMap');
+        let mapCommandName = this.get('_command');
+        let mapCommandProperties = null;
+        let mapCommandExecutionOptions = Ember.get(e, 'exportOptions');
+        leafletMap.flexberryMap.commands.execute(mapCommandName, mapCommandProperties, mapCommandExecutionOptions).then(()=> {
+          this.set('_exportIsInProgress', false);
+          e.closeDialog = true;
+          this. _hideExportDialog();
+        });
       }
     },
 
@@ -386,14 +312,6 @@ let ExportMapCommandComponent = Ember.Component.extend({
 
       let isDownloadDialog = Ember.get(options, 'isDownloadDialog');
       this.set('_showDownloadingFileSettings', isDownloadDialog);
-
-      // Delay execution, but send action to initialize map-command.
-      let executeActionEventObject = Ember.get(options, 'executeActionEventObject');
-      Ember.set(executeActionEventObject, 'execute', false);
-      this.sendAction('execute', executeActionEventObject);
-
-      // Remember event-object to execute command later (when dialog will be approved).
-      this.set('_executeActionEventObject', executeActionEventObject);
 
       // Include dialog to markup.
       this.set('_exportDialogHasBeenRequested', true);
@@ -427,8 +345,6 @@ let ExportMapCommandComponent = Ember.Component.extend({
     */
     willDestroy() {
       this._super(...arguments);
-
-      this.set('_executeActionEventObject', null);
     }
 
     /**

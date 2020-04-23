@@ -99,6 +99,9 @@ export default {
     },
     'label-settings-tab': {
       'caption': 'Labels settings'
+    },
+    'loadfile-tab': {
+      'caption': 'Load from file'
     }
   },
   'groups': {

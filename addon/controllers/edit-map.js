@@ -8,7 +8,8 @@ import FlexberryMapActionsHandlerMixin from '../mixins/flexberry-map-actions-han
 import FlexberryMaplayerActionsHandlerMixin from '../mixins/flexberry-maplayer-actions-handler';
 import LayerResultListActionsHandlerMixin from '../mixins/layer-result-list-actions-handler';
 import LocalStorageBindingMixin from '../mixins/local-storage-binding';
-
+import FavoritesListMixin from '../mixins/favorites-features';
+import sideBySide from 'npm:leaflet-side-by-side';
 /**
   Edit map controller.
 
@@ -23,7 +24,70 @@ export default EditFormController.extend(
   FlexberryMapActionsHandlerMixin,
   FlexberryMaplayerActionsHandlerMixin,
   LayerResultListActionsHandlerMixin,
-  LocalStorageBindingMixin, {
+  LocalStorageBindingMixin,
+  FavoritesListMixin, {
+    /**
+      Property contatining sideBySide component.
+
+      @property sideBySide
+      @type L.control.sideBySide
+      @default null
+    */
+    sideBySide: L.control.sideBySide(),
+
+    /**
+      Observes handles changes in showComapreGeometriesPanel property.
+      If Comapre Geometries Panel is active bring in to front.
+
+      @method comapreGeometriesPanelObserver
+      @private
+    */
+    _comapreGeometriesPanelObserver: Ember.observer('showComapreGeometriesPanel', function () {
+      if (this.get('showComapreGeometriesPanel')) {
+        Ember.$('.bottom-compare-panel').css('z-index', 2000);
+        Ember.$('.bottom-intersection-panel').css('z-index', 1999);
+        Ember.$('.bottom-attributes-panel').css('z-index', 1998);
+      }
+    }),
+
+    /**
+      Observes handles changes in showIntersectionPanel property.
+      If Intersectio nPanel is active bring in to front.
+
+      @method intersectionPanelObserver
+      @private
+    */
+    _intersectionPanelObserver: Ember.observer('showIntersectionPanel', function () {
+      if (this.get('showIntersectionPanel')) {
+        Ember.$('.bottom-intersection-panel').css('z-index', 2000);
+        Ember.$('.bottom-compare-panel').css('z-index', 1999);
+        Ember.$('.bottom-attributes-panel').css('z-index', 1998);
+      }
+    }),
+    /**
+      Observes handles changes in editedLayers.length property.
+      If Attributes Panel is active bring in to front.
+
+      @method attributesPanelObserver
+      @private
+    */
+    _attributesPanelObserver: Ember.observer('editedLayers.length', function () {
+      if (this.get('editedLayers.length') > 0) {
+        Ember.$('.bottom-attributes-panel').css('z-index', 2000);
+        Ember.$('.bottom-intersection-panel').css('z-index', 1999);
+        Ember.$('.bottom-compare-panel').css('z-index', 1998);
+      }
+    }),
+
+    /**
+      Flag indicates if comapre tool active.
+
+      @property compareLayersEnabled
+      @type Boolean
+      @default false
+    */
+    compareLayersEnabled: false,
+
     /**
       Leaflet map.
 
@@ -42,6 +106,14 @@ export default EditFormController.extend(
       @default null
      */
     geofilter: null,
+
+    /**
+      Is intersection panel enabled.
+      @property setting
+      @type Boolean
+      @default false
+    */
+    showIntersectionPanel: false,
 
     /**
       Query parameter, contains map object setting primary key
@@ -239,5 +311,31 @@ export default EditFormController.extend(
       }
 
       return layer;
+    },
+
+    actions: {
+      /**
+        Handles click on compare-layers button.
+
+        @method showCompareSideBar
+      */
+      showCompareSideBar() {
+        if (sideBySide) {
+          if (this.get('sidebar.0.active') !== true) {
+            this.set('sidebar.0.active', true);
+          }
+
+          if (!this.get('sidebarOpened')) {
+            this.send('toggleSidebar', {
+              changed: false,
+              tabName: 'treeview'
+            });
+          }
+
+          setTimeout(() => {
+            this.toggleProperty('compareLayersEnabled');
+          }, 500);
+        }
+      },
     }
   });

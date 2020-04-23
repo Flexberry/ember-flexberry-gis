@@ -45,3 +45,20 @@
     }
   }
 }
+.ui.bottom.bottompanel {
+  .intersections-panel-form-row {
+    margin-left:10px;
+    margim-right: 10px;
+    .intersections-panel-results-row {
+      overflow-y: scroll;
+      height: 200px;
+    }
+  }
+}
+.intersection-panel-exit-icon {
+  margin-left: auto;
+  margin-right: 14px;
+}
+.field.intersection-multiselect: hover { 
+  cursor:pointer;
+}

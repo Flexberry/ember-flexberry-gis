@@ -19,6 +19,13 @@ const isMapLimitKey = 'GISLinked';
 export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
   /**
+  Service for managing map API.
+  @property mapApi
+  @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
+  /**
     Component's wrapping <div> CSS-classes names.
 
     Any other CSS-class names can be added through component's 'class' property.
@@ -31,6 +38,24 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @default ['layer-result-list']
   */
   classNames: ['layer-result-list'],
+
+  /**
+    Flag indicates if intersection panel is active.
+
+    @property intersection
+    @type Boolean
+    @default false
+  */
+  intersection: false,
+
+  /**
+    Flag indicates if layer-result-list used with favorites list.
+
+    @property favoriteMode
+    @type Boolean
+    @default false
+  */
+  favoriteMode: false,
 
   /**
     Reference to component's template.
@@ -111,13 +136,76 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
    */
   _linksExpanded: false,
 
+  /**
+    Action button hasListForm display.
+
+    @property hasListForm
+    @type boolean
+    @default false
+  */
+  hasListForm: true,
+
   actions: {
+
     /**
       Show\hide links list (if present).
       @method actions.toggleLinks
-     */
+    */
     toggleLinks() {
       this.set('_linksExpanded', !this.get('_linksExpanded'));
+    },
+
+    /**
+      Process the specified method.
+      @method actions.goToListForm
+      @param {String} layerId Id layer
+      @param {String[]} objectsIdArray Array of id objects
+    */
+    goToListForm(layerId, objectsIdArray) {
+      const goToListFormFunc = this.get('mapApi').getFromApi('goToListForm');
+      if (typeof goToListFormFunc === 'function') {
+        goToListFormFunc(layerId, objectsIdArray);
+      }
+    },
+
+    /**
+      Action is sended to layer-result-list-action-handler.
+      Action shows intersection panel.
+      @method actions.findIntersection
+      @param feature
+    */
+    findIntersection(feature) {
+      this.sendAction('showIntersectionPanel', feature);
+    },
+
+    /**
+      Action adds feature to favorites.
+
+      @method actions.findIntersection
+      @param feature
+    */
+    addToFavorite(feature) {
+      this.sendAction('addToFavorite', feature);
+    },
+
+    /**
+      Action adds feature to array for comparing geometries.
+
+      @method actions.addToCompareGeometries
+      @param feature
+    */
+    addToCompareGeometries(feature) {
+      this.sendAction('addToCompareGeometries', feature);
+    },
+
+    /**
+      Action zooms to intersection and shows object on map.
+
+      @method actions.zoomToIntersection
+      @param feature
+    */
+    zoomToIntersection(feature) {
+      this.sendAction('zoomToIntersection', feature);
     }
   },
 
@@ -178,7 +266,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @method _resultObserver
   */
   _resultObserver: Ember.on('init', Ember.observer('results', function () {
-    this.send('selectFeature', null);
     this.set('_hasError', false);
     this.set('_noData', false);
     this.set('_displayResults', null);
@@ -203,14 +290,46 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       result.features.then(
         (features) => {
           if (features.length > 0) {
+            let intersectArray = features.filter((item) => {
+              return !Ember.isNone(item.intersection);
+            });
+
+            let isIntersect = false;
+            if (!Ember.isEmpty(intersectArray)) {
+              isIntersect = true;
+            }
+
+            const hasListFormFunc = this.get('mapApi').getFromApi('hasListForm');
+            const layerModel = Ember.get(result, 'layerModel');
+            let hasListForm;
+            if (typeof hasListFormFunc === 'function') {
+              hasListForm = hasListFormFunc(layerModel.id);
+            }
+
+            let layerIds = Ember.A();
+            if (hasListForm) {
+              layerIds = Ember.A(features).map(feature => {
+                const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
+                if (typeof getLayerFeatureIdFunc === 'function') {
+                  return getLayerFeatureIdFunc(layerModel, feature.leafletLayer);
+                }
+
+                return Ember.get(feature, 'id');
+              });
+            }
+
             let displayResult = {
-              name: Ember.get(result, 'layerModel.name') || '',
-              settings: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings'),
-              displayProperties: Ember.get(result, 'layerModel.settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
+              name: Ember.get(layerModel, 'name') || '',
+              settings: Ember.get(layerModel, 'settingsAsObject.displaySettings.featuresPropertiesSettings'),
+              displayProperties: Ember.get(layerModel, 'settingsAsObject.displaySettings.featuresPropertiesSettings.displayProperty'),
               listForms: Ember.A(),
               editForms: Ember.A(),
               features: Ember.A(features),
-              layerModel: Ember.get(result, 'layerModel')
+              layerModel: layerModel,
+              hasListForm: hasListForm,
+              layerIds: layerIds,
+              dateFormat: Ember.get(layerModel, 'settingsAsObject.displaySettings.dateFormat'),
+              isIntersect: isIntersect
             };
 
             this._processLayerLinkForDisplayResults(result, displayResult);
@@ -219,8 +338,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         }
       );
     });
-
-    let getFeatureDisplayProperty = (feature, featuresPropertiesSettings) => {
+    let getFeatureDisplayProperty = (feature, featuresPropertiesSettings, dateFormat) => {
       let displayPropertyIsCallback = Ember.get(featuresPropertiesSettings, 'displayPropertyIsCallback') === true;
       let displayProperty = Ember.get(featuresPropertiesSettings, 'displayProperty');
 
@@ -234,6 +352,13 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
       if (!displayPropertyIsCallback) {
         let featureProperties = Ember.get(feature, 'properties') || {};
+
+        for (var prop in featureProperties) {
+          let value = featureProperties[prop];
+          if (value instanceof Date && !Ember.isNone(value) && !Ember.isEmpty(value) && !Ember.isEmpty(dateFormat)) {
+            featureProperties[prop] = moment(value).format(dateFormat);
+          }
+        }
 
         let displayValue = Ember.none;
         displayProperty.forEach((prop) => {
@@ -298,10 +423,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
           let listForms = result.listForms;
 
           result.features.forEach((feature) => {
-            feature.displayValue = getFeatureDisplayProperty(feature, result.settings);
-            feature.layerModel = Ember.get(result, 'layerModel');
-            feature.editForms = Ember.A();
-
+            Ember.set(feature, 'displayValue', getFeatureDisplayProperty(feature, result.settings, result.dateFormat));
+            Ember.set(feature, 'layerModel', Ember.get(result, 'layerModel'));
+            Ember.set(feature, 'editForms', Ember.A());
             if (editForms.length === 0) {
               return;
             }
@@ -349,6 +473,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
             });
           });
 
+          let shapeIds = this._getFeatureShapeIds(result.features);
+          Ember.set(result, 'shapeIds', shapeIds);
+
           let forms = Ember.A();
           if (objectList.length === 0 || listForms.length === 0) {
             return;
@@ -373,10 +500,35 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_displayResults', displayResults);
       this.set('_noData', displayResults.length === 0);
       this.set('_showLoader', false);
-
-      if (displayResults.length === 1) {
-        this.send('zoomTo', displayResults.objectAt(0).features);
+      if (this.get('favoriteMode') !== true) {
+        if (displayResults.length === 1) {
+          this.send('zoomTo', displayResults.objectAt(0).features);
+        }
       }
     });
-  }))
+  })),
+
+  /**
+    Get an array of layer shapes id.
+    @method _getFeatureShapeIds
+    @param {Object} features Layer object
+    @return {String[]} Array of layer shapes id
+  */
+  _getFeatureShapeIds(features) {
+    var shapeIds = [];
+    features.forEach((feature) => {
+      let shapeId;
+      const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
+      if (typeof getLayerFeatureIdFunc === 'function') {
+
+        //Need to implement id definition function
+        shapeId = getLayerFeatureIdFunc(feature.layerModel, feature.leafletLayer);
+      } else {
+        shapeId = feature.id;
+      }
+
+      shapeIds.push(shapeId);
+    });
+    return shapeIds;
+  }
 });

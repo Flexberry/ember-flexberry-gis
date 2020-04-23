@@ -22,7 +22,22 @@ export default Ember.Controller.extend({
   */
   objectlistviewEventsService: Ember.inject.service('objectlistview-events'),
 
+  /**
+    Service for managing the state of the application.
+     @property appState
+    @type AppStateService
+  */
+  appState: Ember.inject.service(),
+
   actions: {
+    /**
+      Call `updateWidthTrigger` for `objectlistviewEventsService`.
+      @method actions.updateWidth
+    */
+    updateWidth() {
+      this.get('objectlistviewEventsService').updateWidthTrigger();
+    },
+
     /**
       Toggles application sitemap's side bar.
 
@@ -30,35 +45,17 @@ export default Ember.Controller.extend({
     */
     toggleSidebar() {
       let sidebar = Ember.$('.ui.sidebar.main.menu');
-      let objectlistviewEventsService = this.get('objectlistviewEventsService');
-      sidebar.sidebar({
-        closable: false,
-        dimPage: false,
-        onHide: function() {
-          Ember.$('.sidebar.icon.text-menu-show').removeClass('hidden');
-          Ember.$('.sidebar.icon.text-menu-hide').addClass('hidden');
-        },
-        onHidden: function() {
-          objectlistviewEventsService.updateWidthTrigger();
-        },
-        onShow: function() {
-          objectlistviewEventsService.updateWidthTrigger();
-        }
-      }).sidebar('toggle');
+      sidebar.sidebar('toggle');
 
       if (Ember.$('.inverted.vertical.main.menu').hasClass('visible')) {
         Ember.$('.sidebar.icon.text-menu-show').removeClass('hidden');
         Ember.$('.sidebar.icon.text-menu-hide').addClass('hidden');
         Ember.$('.bgw-opacity').addClass('hidden');
+        Ember.$('.full.height').css({ transition: 'width 0.45s ease-in-out 0s', width: '100%' });
       } else {
         Ember.$('.sidebar.icon.text-menu-show').addClass('hidden');
         Ember.$('.sidebar.icon.text-menu-hide').removeClass('hidden');
         Ember.$('.bgw-opacity').removeClass('hidden');
-      }
-
-      if (Ember.$('.inverted.vertical.main.menu').hasClass('visible')) {
-        Ember.$('.full.height').css({ transition: 'width 0.45s ease-in-out 0s', width: '100%' });
-      } else {
         Ember.$('.full.height').css({ transition: 'width 0.3s ease-in-out 0s', width: 'calc(100% - ' + sidebar.width() + 'px)' });
       }
     },
@@ -69,20 +66,7 @@ export default Ember.Controller.extend({
       @method actions.toggleSidebarMobile
     */
     toggleSidebarMobile() {
-      let sidebar = Ember.$('.ui.sidebar.main.menu');
-      let objectlistviewEventsService = this.get('objectlistviewEventsService');
-      sidebar.sidebar({
-        onHide: function() {
-          Ember.$('.sidebar.icon.text-menu-show').removeClass('hidden');
-          Ember.$('.sidebar.icon.text-menu-hide').addClass('hidden');
-        },
-        onHidden: function() {
-          objectlistviewEventsService.updateWidthTrigger();
-        },
-        onShow: function() {
-          objectlistviewEventsService.updateWidthTrigger();
-        }
-      }).sidebar('toggle');
+      Ember.$('.ui.sidebar.main.menu').sidebar('toggle');
 
       if (Ember.$('.inverted.vertical.main.menu').hasClass('visible')) {
         Ember.$('.sidebar.icon.text-menu-show').removeClass('hidden');
@@ -216,6 +200,11 @@ export default Ember.Controller.extend({
           link: 'gis-search-form',
           caption: i18n.t('forms.application.sitemap.gis.gis-search-form.caption'),
           title: i18n.t('forms.application.sitemap.gis.gis-search-form.title'),
+          children: null
+        }, {
+          link: 'new-platform-flexberry-g-i-s-map-object-setting-l',
+          caption: i18n.t('forms.application.sitemap.map-object-setting.caption'),
+          title: i18n.t('forms.application.sitemap.map-object-setting.title'),
           children: null
         }]
       }, {

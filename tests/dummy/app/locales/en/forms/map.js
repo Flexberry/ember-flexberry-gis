@@ -4,6 +4,8 @@ export default {
   'searchbuttontooltip': 'Show search',
   'bookmarksbuttontooltip': 'Spatial bookmarks',
   'identifybuttontooltip': 'Show identification',
+  'favoritesbuttontooltip': 'Show favorites',
+  'createobjectbuttontooltip': 'Show object creation',
 
   'tabbar': {
     'treeview': {
@@ -17,6 +19,12 @@ export default {
     },
     'bookmarks': {
       'caption': 'Spatial bookmarks'
+    },
+    'favorites': {
+      'caption': 'Favorites'
+    },
+    'createObject': {
+      'caption': 'Create object'
     }
   }
 };

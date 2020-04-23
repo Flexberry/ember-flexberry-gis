@@ -9,7 +9,7 @@ export default {
     'tooltip': 'Приблизить к границам слоя'
   },
   'add-button': {
-    'tooltip': 'Добавить новй дочерний слой'
+    'tooltip': 'Добавить новый дочерний слой'
   },
   'copy-button': {
     'tooltip': 'Создать копию слоя'

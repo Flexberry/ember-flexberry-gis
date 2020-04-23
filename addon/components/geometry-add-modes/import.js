@@ -326,7 +326,6 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
         }
       }
 
-      layerProperties.unshiftObject('');
       this.set('_propertiesConnection', propertiesConnection);
       this.set('_notConnectedProperties', layerProperties);
     }
@@ -409,18 +408,20 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
       let newLayers = Ember.A();
 
       selectedJSON.features.forEach((feature) => {
-        let newLayer = L.geoJSON(feature, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
-        if (newLayer.getLatLng instanceof Function) {
-          let coords = newLayer.getLatLng();
-          checkCoords(coords.lat, coords.lng, coords.lat, coords.lng);
-        }
+        if (!Ember.isNone(feature.geometry)) {
+          let newLayer = L.geoJSON(feature, { coordsToLatLng: coordsToLatLng.bind(this) }).getLayers()[0];
+          if (newLayer.getLatLng instanceof Function) {
+            let coords = newLayer.getLatLng();
+            checkCoords(coords.lat, coords.lng, coords.lat, coords.lng);
+          }
 
-        if (newLayer.getBounds instanceof Function) {
-          let bounds = newLayer.getBounds();
-          checkCoords(bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast());
-        }
+          if (newLayer.getBounds instanceof Function) {
+            let bounds = newLayer.getBounds();
+            checkCoords(bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast());
+          }
 
-        newLayers.pushObject(newLayer);
+          newLayers.pushObject(newLayer);
+        }
       }, this);
 
       if (this.get('_showError')) {
@@ -527,14 +528,7 @@ let FlexberryGeometryAddModeImportComponent = Ember.Component.extend({
         newValue = undefined;
       }
 
-      let currentValue = this.get(`_propertiesConnection.${property}`);
-      let notConnectedProperties = this.get('_notConnectedProperties');
-      if (currentValue) {
-        notConnectedProperties.pushObject(currentValue);
-      }
-
       this.set(`_propertiesConnection.${property}`, newValue);
-      notConnectedProperties.removeObject(newValue);
     }
   },
 

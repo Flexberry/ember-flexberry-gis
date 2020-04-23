@@ -41,12 +41,23 @@
   &.help {
     cursor: help;
   }
-  &-loader {
-    z-index: 10001 !important;
 
+  .flexberry-map-loader.ui.loader {
+    display: none;
+    z-index: 10001 !important;
     color: @flexberryMapLoaderColor;
-    &-dimmer {
-      z-index: 10000 !important;
+
+    &.active {
+      display: block;
+    }
+  }
+
+  .flexberry-map-loader-dimmer.ui.dimmer {
+    display: none;
+    z-index: 10000 !important;
+
+    &.active {
+      display: block;
     }
   }
 }
@@ -242,6 +253,7 @@
   flex-wrap: wrap;
 }
 .ui.menu.flexberry-maptoolbar {
+    z-index: 1000 !important;
     margin: 10px 10px 0px 10px;
     background-color: transparent !important; // боримся с технологическими стилями
     overflow: visible;
@@ -321,8 +333,11 @@
     }
     /* переход к точке */
     .flexberry-identify-map-tool {
-        border-radius: 0px 5px 5px 0px;
         left: 284px;
+    }
+    .flexberry-compare-map-tool {
+        border-radius: 0px 5px 5px 0px;
+        left: 320px;
     }
     .flexberry-full-extent-map-command {
         border-radius: 5px;
@@ -403,6 +418,19 @@
     i.icon.hand.paper:before {
         content: "\e823";
     }
+     /* поиск пересечений */
+    i.icon.intersections:before {
+      font-family: Icons;
+      content: "\f24d";
+    }
+    i.icon.favorites:before {
+      font-family: Icons;
+      content: "\f006"; 
+    }
+    i.icon.compare:before {
+      font-family: Icons;
+      content: "\f0ec";
+    }
     /* + */
     i.icon.zoom:before {
         content: "\e831";
@@ -451,6 +479,11 @@
     /* видимые слои */
     i.icon.checkmark.box:before {
         content: "\e829";
+    }
+    /* Favorites */
+    i.icon.favorites:before {
+      font-family: Icons;
+      content:"\f006"
     }
     /* верхний видимый */
     i.icon.chevron.up:before {
@@ -688,6 +721,14 @@
     &>.icon.item {
       font-size: 1.15em;
     }
+    .icon.favorites:before {
+      font-family: Icons;
+      content: "\f006";
+    }
+    .icon.favorites.filled:before {
+      font-family: Icons;
+      content: "\f005";
+    }
   }
   .ui.accordion .title .dropdown.icon {
     padding: 0 !important;
@@ -917,10 +958,16 @@
 *********************************************/
 .ui.table.flexberry-table {
   font-size: 12px;
-
   th.narrow, td.narrow {
     width: 90px;
     max-width: 90px;
+  }
+  th.checkbox-rhumb, td.checkbox-rhumb {
+    text-align: center;
+  }
+  th.narrow.rhumb, td.narrow.rhumb {
+    width: 120px;
+    max-width: 120px;
   }
 
   th.checkbox, td.checkbox {
@@ -1228,4 +1275,31 @@ form.flexberry-edit-layermap {
     width: 110px;
     height: 14px;
   }
+}
+
+/* создание объектов */
+.ui.tab.createObject {
+  .coordinates-area {
+    width: 100%;
+    margin: 8px 0 0 0;
+
+    .flexberry-textarea {
+      width: 100%;
+
+      textarea {
+        min-height: 240px;
+        max-height: 480px;
+        min-width: 100%;
+        max-width: 100%;
+      }
+    }
+  }
+}
+
+.flexberry-gis-edit-panel .flexberry-buttons.left {
+  float: left;
+}
+
+.flexberry-gis-edit-panel .flexberry-buttons.right {
+  float: right;
 }

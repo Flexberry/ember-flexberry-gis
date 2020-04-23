@@ -139,6 +139,15 @@ export default Ember.Component.extend(
     */
     onBoundingBoxChange(e) {
       this.set('layer.boundingBox', e.bboxGeoJSON);
+    },
+
+    /**
+      Handles onUploadFile.
+
+      @method actions.onUploadFile
+    */
+    onUploadFile(file) {
+      this.sendAction('onUploadFile', file);
     }
   }
 });

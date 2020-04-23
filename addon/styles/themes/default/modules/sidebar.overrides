@@ -562,6 +562,21 @@
 
       .buttons {
         display: inline-block;
+
+        i.icon.multy-polygon:before {
+          content: "\f248";
+        }
+
+        i.icon.multy-line:before {
+          content: "\f248";
+        }
+
+        i.icon.map-marker:before {
+          content: "\f041";
+        }
+        .draw {
+         border: none;
+        }
       }
 
       .flexberry-geometry-add-mode-draw, .flexberry-geometry-buffer,

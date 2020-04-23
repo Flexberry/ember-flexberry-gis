@@ -225,6 +225,9 @@ export default BaseLayer.extend({
           vectorLayer.readFormat = this.createReadFormat(vectorLayer);
         }
 
+        vectorLayer.minZoom = this.get('minZoom');
+        vectorLayer.maxZoom = this.get('maxZoom');
+
         if (this.get('clusterize')) {
           let clusterLayer = this.createClusterLayer(vectorLayer);
           resolve(clusterLayer);
@@ -394,5 +397,91 @@ export default BaseLayer.extend({
 
       resolve(features);
     });
-  }
+  },
+
+  /**
+    Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.
+
+    @method loadLayerFeatures
+    @param {Object} e Event object.
+    @returns {Ember.RSVP.Promise} Returns promise.
+  */
+  loadLayerFeatures(e) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      resolve(this.get('_leafletObject'));
+    });
+  },
+
+  /**
+    Handles 'flexberry-map:getLayerFeatures' event of leaflet map.
+
+    @method getLayerFeatures
+    @param {Object} e Event object.
+    @returns {Ember.RSVP.Promise} Returns promise.
+  */
+  getLayerFeatures(e) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let leafletObject = this.get('_leafletObject');
+      let featureIds = e.featureIds;
+      if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
+        let objects = [];
+        featureIds.forEach((id) => {
+          let features = leafletObject._layers;
+          let obj = Object.values(features).find(feature => {
+            return this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), feature) === id;
+          });
+          if (!Ember.isNone(obj)) {
+            objects.push(obj);
+          }
+        });
+        resolve(objects);
+      } else {
+        resolve(Object.values(leafletObject._layers));
+      }
+    });
+  },
+
+  /**
+    Handles 'flexberry-map:getOrLoadLayerFeatures' event of leaflet map.
+
+    @method _getOrLoadLayerFeatures
+    @param {Object} e Event object.
+    @returns {Object[]} results Objects.
+  */
+  _getOrLoadLayerFeatures(e) {
+    if (this.get('layerModel.id') !== e.layer) {
+      return;
+    }
+
+    e.results.push({
+      layerModel: this.get('layerModel'),
+      leafletObject: this.get('_leafletObject'),
+      features: e.load ? this.loadLayerFeatures(e) : this.getLayerFeatures(e)
+    });
+  },
+
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      leafletMap.on('flexberry-map:getOrLoadLayerFeatures', this._getOrLoadLayerFeatures, this);
+    }
+  },
+
+  /**
+    Deinitializes DOM-related component's properties.
+  */
+  willDestroyElement() {
+    this._super(...arguments);
+
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap)) {
+      // Detach custom event-handler.
+      leafletMap.off('flexberry-map:getOrLoadLayerFeatures', this._getOrLoadLayerFeatures, this);
+    }
+  },
 });

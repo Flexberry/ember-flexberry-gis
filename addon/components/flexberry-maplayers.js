@@ -10,10 +10,10 @@ import RequiredActionsMixin from 'ember-flexberry/mixins/required-actions';
 import DomActionsMixin from 'ember-flexberry/mixins/dom-actions';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import DynamicPropertiesMixin from '../mixins/dynamic-properties';
+import TileLayer from '../layers/tile';
 
 import layout from '../templates/components/flexberry-maplayers';
 import { translationMacro as t } from 'ember-i18n';
-
 /**
   Component's CSS-classes names.
   JSON-object containing string constants with CSS-classes names related to component's hbs-markup elements.
@@ -371,6 +371,118 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
     */
     showFooter: true,
 
+    /**
+      String contains on what side to add layer in sideBySide control.
+
+      @property side
+      @type String
+      @default 'Left'
+    */
+    side: 'Left',
+
+    /**
+      Property contatining sideBySide component.
+
+      @property sideBySide
+      @type L.control.sideBySide
+      @default null
+    */
+    sideBySide: null,
+
+    /**
+      Proprty containing layer on left side of sideBySide control.
+
+      @property leftLayer
+      @type String
+      @default null
+    */
+    leftLayer: null,
+
+    /**
+      Proprty containing layer on right side of sideBySide control.
+
+      @property rightLayer
+      @type String
+      @default null
+    */
+    rightLayer: null,
+
+    /**
+      Proprty containing current active layers.
+
+      @property currentLayers
+      @type Array
+      @default []
+    */
+    currentLayers: [],
+
+    /**
+      Flag indicates if compare layers mode enabled.
+
+      @property compareLayersEnabled
+      @type Boolean
+      @default false
+    */
+    compareLayersEnabled: false,
+
+    /**
+      Proprty containing raster layers to compare.
+
+      @property rasterLayers
+      @type Array
+      @default []
+    */
+    rasterLayers: [],
+
+    /**
+      Adds side by side control to map and removes current visible layers.
+
+      @method onCompareLayersEnabled
+    */
+    onCompareLayersEnabled: Ember.observer('compareLayersEnabled', function() {
+      if (this.get('compareLayersEnabled')) {
+        let layers = this.get('layers');
+        let layersArray = [];
+        let rasterLayers = [];
+        layers.forEach(layer => {
+          if (layer.get('visibility')) {
+            layersArray.push(layer);
+          }
+
+          let className = Ember.get(layer, 'type');
+          let layerType = Ember.getOwner(this).knownForType('layer', className);
+          if (layerType instanceof TileLayer) {
+            layer.side = null;
+            rasterLayers.push(layer);
+          }
+
+          layer.set('visibility', false);
+        });
+        this.set('rasterLayers', rasterLayers);
+        this.set('currentLayers', layersArray);
+        let map = this.get('leafletMap');
+        this.get('sideBySide').addTo(map);
+      } else {
+        this.get('sideBySide').remove();
+        if (this.get('rightLayer')) {
+          this.set('rightLayer.visibility', false);
+          this.set('rightLayer.side', null);
+          this.set('rightLayer', null);
+        }
+
+        if (this.get('leftLayer')) {
+          this.set('leftLayer.visibility', false);
+          this.set('leftLayer.side', null);
+          this.set('leftLayer', null);
+        }
+
+        let layersToAdd = this.get('currentLayers');
+        layersToAdd.forEach(layer => {
+          Ember.set(layer, 'visibility', true);
+        });
+      }
+    }),
+
     actions: {
       /**
         Handles add button's 'click' event.
@@ -404,8 +516,83 @@ let FlexberryMaplayersComponent = Ember.Component.extend(
       onAddDialogApprove(...args) {
         // Send outer 'add' action.
         this.sendAction('add', ...args);
+      },
+
+      /**
+        Handles clicks on left side button.
+
+        @method actions.onLeftClick
+      */
+      onLeftClick() {
+        this.set('side', 'Left');
+      },
+
+      /**
+        Handles clicks on right side button.
+
+        @method actions.onLeftClick
+      */
+      onRightClick() {
+        this.set('side', 'Right');
+      },
+
+      /**
+        Handles click on checkbox.
+
+        @method action.onChange
+        @param {Object} layer Layer to add.
+        @param {Object} e event args.
+      */
+      onChange(layer, e) {
+        let sbs = this.get('sideBySide');
+        if (e.newValue === false) {
+          if (this.get('side') === 'Left') {
+            sbs.setLeftLayers(null);
+            this.get('leftLayer._leafletObject').remove();
+            this.set('leftLayer.side', null);
+            this.set('leftLayer.visibility', false);
+            this.set('leftLayer', null);
+          } else {
+            sbs.setRightLayers(null);
+            this.get('rightLayer._leafletObject').remove();
+            this.set('rightLayer.side', null);
+            this.set('rightLayer.visibility', false);
+            this.set('rightLayer', null);
+          }
+        } else {
+          Ember.set(layer, 'visibility', true);
+          let map = this.get('leafletMap');
+
+          if (this.get('side') === 'Left') {
+            if (this.get('leftLayer') !== null) {
+              sbs.setLeftLayers(null);
+              this.get('leftLayer._leafletObject').remove();
+              this.set('leftLayer.visibility', false);
+              this.set('leftLayer.side', null);
+            }
+
+            let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
+            Ember.set(layer, 'side', 'Left');
+            this.set('leftLayer', layer);
+            sbs.setLeftLayers(leafletObject);
+          }
+
+          if (this.get('side') === 'Right')  {
+            if (this.get('rightLayer') !== null) {
+              sbs.setLeftLayers(null);
+              this.get('rightLayer._leafletObject').remove();
+              this.set('rightLayer.visibility', false);
+              this.set('rightLayer.side', null);
+            }
+
+            let leafletObject = Ember.get(layer, '_leafletObject').addTo(map);
+            Ember.set(layer, 'side', 'Right');
+            this.set('rightLayer', layer);
+            sbs.setRightLayers(leafletObject);
+          }
+        }
       }
-    }
+    },
 
     /**
       Component's action invoking when user wants to add child layer into layers tree root.

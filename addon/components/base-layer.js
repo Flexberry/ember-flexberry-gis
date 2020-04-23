@@ -53,6 +53,14 @@ export default Ember.Component.extend(
     _layersStylesRenderer: Ember.inject.service('layers-styles-renderer'),
 
     /**
+      Service for managing map API.
+
+      @property mapApi
+      @type MapApiService
+    */
+    mapApi: Ember.inject.service(),
+
+    /**
       Overload wrapper tag name for disabling wrapper.
     */
     tagName: '',
@@ -181,6 +189,14 @@ export default Ember.Component.extend(
     bounds: null,
 
     /**
+      Promise storage property.
+
+      @property promiseLoad
+      @type Object promise
+    */
+    promiseLoad: null,
+
+    /**
       Creates leaflet layer related to layer type.
 
       @method _createLayer
@@ -210,6 +226,11 @@ export default Ember.Component.extend(
         }
 
         this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel') });
+
+        // After saving, arrange layers by index.
+        leafletLayer.on('save:success', () => {
+          this._fixZIndexFire();
+        });
 
         return leafletLayer;
       }).catch((errorMessage) => {
@@ -266,6 +287,7 @@ export default Ember.Component.extend(
       @private
     */
     _resetLayer() {
+
       // Destroy previously created leaflet layer (created with old settings).
       this._destroyLayer();
 
@@ -273,8 +295,9 @@ export default Ember.Component.extend(
       this._createLayer();
 
       // Wait for the layer creation to be finished and set it's state related to new settings.
-      this.get('_leafletLayerPromise').then((leafletLayer) => {
+      this.get('_leafletLayerPromise').then(() => {
         this._setLayerState();
+        this._setLayerZIndex();
       });
     },
 
@@ -286,9 +309,13 @@ export default Ember.Component.extend(
     */
     _setLayerState() {
       this._setLayerVisibility();
-      this._setLayerZIndex();
       this._setLayerStyle();
       this._setLayerOpacity();
+      this._setLayerZIndex();
+      const layerInitCallback = this.get('mapApi').getFromApi('layerInitCallback');
+      if (typeof layerInitCallback === 'function') {
+        layerInitCallback(this);
+      }
     },
 
     /**
@@ -298,12 +325,20 @@ export default Ember.Component.extend(
       @private
     */
     _setLayerZIndex() {
-      let leafletLayer = this.get('_leafletObject');
-      if (Ember.isNone(leafletLayer) || Ember.typeOf(leafletLayer.setZIndex) !== 'function') {
+      const leafletLayer = this.get('_leafletObject');
+      if (Ember.isNone(leafletLayer)) {
         return;
       }
 
-      leafletLayer.setZIndex(this.get('index'));
+      const setZIndexFunc = Ember.get(leafletLayer, 'setZIndex');
+      if (Ember.typeOf(setZIndexFunc) !== 'function') {
+        return;
+      }
+
+      const index = this.get('index');
+      leafletLayer.setZIndex(index);
+
+      this._fixZIndexFire();
     },
 
     /**
@@ -371,6 +406,10 @@ export default Ember.Component.extend(
       }
 
       leafletContainer.addLayer(leafletLayer);
+      let leafletMap = this.get('leafletMap');
+      if (!Ember.isNone(leafletMap)) {
+        leafletMap.fire('moveend');
+      }
     },
 
     /**
@@ -409,6 +448,7 @@ export default Ember.Component.extend(
     */
     _visibilityDidChange: Ember.observer('visibility', function () {
       this._setLayerVisibility();
+      this._fixZIndexFire();
     }),
 
     /**
@@ -436,6 +476,20 @@ export default Ember.Component.extend(
       // so we must restore opacity to user defined value.
       this._setLayerOpacity();
     }),
+
+    /**
+      Rebuild layers.
+
+      @method _fixZIndexFire
+      @private
+    */
+    _fixZIndexFire: function () {
+      const leafletMap = this.get('leafletMap');
+
+      if (!Ember.isNone(leafletMap)) {
+        leafletMap.fire('fixZIndex');
+      }
+    },
 
     /**
       Handles 'flexberry-map:identify' event of leaflet map.
@@ -533,6 +587,33 @@ export default Ember.Component.extend(
     },
 
     /**
+      Handles 'flexberry-map:createObject' event of leaflet map.
+
+      @method createObject
+      @param {Object} e Event object.
+      @param {Object} queryFilter Object with query filter parameters
+      @param {Object} mapObjectSetting Object describing current query setting
+      @param {Object} results Hash containing createObject results.
+    */
+    _createObject(e) {
+      let layerLinks =
+        this.get('layerModel.layerLink')
+          .filter(link => link.get('mapObjectSetting.id').toLowerCase() === e.mapObjectSetting.toLowerCase());
+
+      if (!Ember.isArray(layerLinks) || layerLinks.length === 0) {
+        return;
+      }
+
+      layerLinks.forEach((link) => {
+        e.results.push({
+          layerModel: this.get('layerModel'),
+          linkParameters: link.get('parameters'),
+          queryFilter: e.queryFilter
+        });
+      });
+    },
+
+    /**
       Initializes component.
     */
     init() {
@@ -555,10 +636,28 @@ export default Ember.Component.extend(
 
       let leafletMap = this.get('leafletMap');
       if (!Ember.isNone(leafletMap)) {
+
         // Attach custom event-handler.
         leafletMap.on('flexberry-map:identify', this._identify, this);
         leafletMap.on('flexberry-map:search', this._search, this);
         leafletMap.on('flexberry-map:query', this._query, this);
+        leafletMap.on('flexberry-map:createObject', this._createObject, this);
+
+        leafletMap.on('flexberry-map:load', (e) => {
+          if (!Ember.isNone(this.promiseLoad)) {
+            e.results.push(this.get('_leafletLayerPromise'));
+
+            if (e.loadFunc.length === 0) {
+              e.loadFunc.push(() => {
+
+                if (!Ember.isNone(leafletMap.fire)) {
+                  leafletMap.fire('fixZIndex');
+                }
+              });
+            }
+          }
+
+        }, this);
       }
     },
 
@@ -574,6 +673,7 @@ export default Ember.Component.extend(
         leafletMap.off('flexberry-map:identify', this._identify, this);
         leafletMap.off('flexberry-map:search', this._search, this);
         leafletMap.off('flexberry-map:query', this._query, this);
+        leafletMap.off('flexberry-map:createObject', this._createObject, this);
       }
 
       // Destroy leaflet layer.
@@ -583,7 +683,7 @@ export default Ember.Component.extend(
     /**
       Returns leaflet layer.
 
-      @method getLeafletObject
+      @method getLeafletObjectPromise
       @returns <a href="http://leafletjs.com/reference-1.0.1.html#layer">L.Layer</a>|<a href="https://emberjs.com/api/classes/RSVP.Promise.html">Ember.RSVP.Promise</a>
       Leaflet layer or promise returning such layer.
     */
@@ -591,6 +691,16 @@ export default Ember.Component.extend(
       return new Ember.RSVP.Promise((resolve, reject) => {
         resolve(this.get('_leafletObject'));
       });
+    },
+
+    /**
+      Returns leaflet layer.
+
+      @method returnLeafletObject
+      @returns leafletObject
+    */
+    returnLeafletObject() {
+      return this.get('_leafletObject');
     },
 
     /**

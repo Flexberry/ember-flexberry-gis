@@ -43,6 +43,8 @@ export default BaseLayer.extend({
       clusterize: false,
       clusterOptions: undefined,
       filter: '',
+      minZoom: 0,
+      maxZoom: 25,
 
       // Layer style 'simple' is default for vector layers (see ember-flexberry-gis/layers-styles/simple).
       styleSettings: layersStylesRenderer.getDefaultStyleSettings('simple'),

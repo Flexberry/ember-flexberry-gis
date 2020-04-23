@@ -1,0 +1,234 @@
+<h3 class="ui header">{{t "forms.map.caption"}}</h3>
+<form class="ui form flexberry-vertical-form" role="form">
+  {{ui-message
+    type="success"
+    closeable=true
+    visible=showFormSuccessMessage
+    caption=formSuccessMessageCaption
+    message=formSuccessMessage
+    onShow=(action "onSuccessMessageShow")
+    onHide=(action "onSuccessMessageHide")
+  }}
+  {{flexberry-error error=error}}
+  <div class="field">
+    <div class="flexberry-edit-panel">
+      <button type="button" class="ui button" {{action "applyApiSettings"}}>Set layerInitCallback</button>
+    </div>
+  </div>
+  <div class="sidebar-wrapper">
+    {{flexberry-tab-bar
+      change=(action "toggleSidebar")
+      items=sidebarItems
+    }}
+    <div class="ui very wide right sidebar pushable tabbar">
+      <div data-tab="treeview" class="ui tab treeview">
+        <h3>{{t "forms.map.tabbar.treeview.caption"}}</h3>
+        {{#if showTree}}
+          {{flexberry-maplayers
+            class="styled"
+            leafletMap=leafletMap
+            layers=(get-with-dynamic-actions this "model.hierarchy"
+              hierarchyPropertyName="layers"
+              pathKeyword="layerPath"
+              dynamicActions=(array
+                (hash
+                  on="add"
+                  actionName="onMapLayerAdd"
+                  actionArguments=(array "{% layerPath %}")
+                )
+                (hash
+                  on="copy"
+                  actionName="onMapLayerCopy"
+                  actionArguments=(array "model.hierarchy")
+                )
+                (hash
+                  on="edit"
+                  actionName="onMapLayerEdit"
+                  actionArguments=(array "{% layerPath %}")
+                )
+                (hash
+                  on="remove"
+                  actionName="onMapLayerRemove"
+                  actionArguments=(array "{% layerPath %}")
+                )
+                (hash
+                  on="changeVisibility"
+                  actionName="onMapLayerChangeVisibility"
+                  actionArguments=(array "{% layerPath %}.visibility")
+                )
+                (hash
+                  on="changeOpacity"
+                  actionName="onMapLayerChangeOpacity"
+                  actionArguments=(array "{% layerPath %}.settingsAsObject.opacity")
+                )
+                (hash
+                  on="fitBounds"
+                  actionName="onMapLayerFitBounds"
+                  actionArguments=(array "{% layerPath %}.bounds")
+                )
+                (hash
+                  on="attributesEdit"
+                  actionName="onAttributesEdit"
+                  actionArguments=(array "{% layerPath %}"
+                    (hash
+                      itemsPath="editedLayers"
+                      selectedTabIndexPath="editedLayersSelectedTabIndex"
+                      foldedPath="editedLayersPanelFolded"
+                      loadingPath="editedLayersPanelLoading"
+                    )
+                  )
+                )
+              )
+            )
+            add=(action "onMapLayerAdd" "model.hierarchy")
+          }}
+        {{else}}
+          <div class="ui form loading" style="height: 100%;">
+          </div>
+        {{/if}}
+      </div>
+      <div data-tab="search" class="ui tab search">
+        <h3>{{t "forms.map.tabbar.search.caption"}}</h3>
+        {{flexberry-search-panel
+          querySearch=(action "querySearch")
+          clearSearch=(action "clearSearch")
+          searchInProcess=searchInProcess
+          searchSettings=(flexberry-search-properties-osm-ru "http://openstreetmap.ru/api/autocomplete?q={query}")
+        }}
+        {{layer-result-list
+          results=searchResults
+          serviceLayer=serviceLayer
+          leafletMap=leafletMap
+          featureSelected=(action "onLayerFeatureSelected")
+        }}
+      </div>
+      <div data-tab="identify" class="ui tab identify">
+        <h3>{{t "forms.map.tabbar.identify.caption"}}</h3>
+        {{flexberry-identify-panel
+          layerMode=identifyToolLayerMode
+          toolMode=identifyToolToolMode
+          bufferActive=identifyToolBufferActive
+          bufferUnits=identifyToolBufferUnits
+          bufferRadius=identifyToolBufferRadius
+          layers=model.hierarchy
+          leafletMap=leafletMap
+          identificationFinished=(action "onIdentificationFinished")
+        }}
+        {{layer-result-list
+          results=identifyToolResults
+          serviceLayer=serviceLayer
+          leafletMap=leafletMap
+          featureSelected=(action "onLayerFeatureSelected")
+        }}
+      </div>
+      <div data-tab="bookmarks" class="ui tab bookmarks">
+        <h3>{{t "forms.map.tabbar.bookmarks.caption"}}</h3>
+        {{spatial-bookmark
+          leafletMap=leafletMap
+          storageKey=model.id
+        }}
+      </div>
+    </div>
+  </div>
+  <div class={{concat "bottompanel-wrapper" (if (or (gt editedLayers.length 0) editedLayersPanelLoading) "" " hidden")}}>
+    {{flexberry-layers-attributes-panel
+      items=editedLayers
+      serviceLayer=serviceLayer
+      selectedTabIndex=editedLayersSelectedTabIndex
+      folded=editedLayersPanelFolded
+      settings=editedLayersPanelSettings
+      loading=editedLayersPanelLoading
+      leafletMap=leafletMap
+    }}
+  </div>
+  <div class="row">
+    <div class="sixteen wide column">
+      {{#flexberry-maptoolbar}}
+        {{map-commands/full-extent
+          lat=model.lat
+          lng=model.lng
+          zoom=model.zoom
+          leafletMap=leafletMap
+        }}
+        {{map-commands/edit
+          mapModel=model
+          leafletMap=leafletMap
+        }}
+        {{scale-control
+          imperial=false
+          leafletMap=leafletMap
+        }}
+        {{history-control leafletMap=leafletMap}}
+        {{map-tools/drag leafletMap=leafletMap}}
+        {{map-tools/zoom-in leafletMap=leafletMap}}
+        {{map-tools/zoom-out leafletMap=leafletMap}}
+        {{map-tools/identify
+          layerMode=identifyToolLayerMode
+          toolMode=identifyToolToolMode
+          bufferActive=identifyToolBufferActive
+          bufferUnits=identifyToolBufferUnits
+          bufferRadius=identifyToolBufferRadius
+          layers=model.hierarchy
+          leafletMap=leafletMap
+        }}
+        {{map-commands/go-to leafletMap=leafletMap}}
+        {{map-commands/locate leafletMap=leafletMap}}
+        {{map-commands/search leafletMap=leafletMap}}
+        {{map-tools/measure leafletMap=leafletMap}}
+        {{map-tools/draw leafletMap=leafletMap}}
+        {{map-commands/export
+          iconClass="external share icon"
+          timeout=30000
+          defaultMapCaption=model.name
+          leafletMap=leafletMap
+        }}
+      {{/flexberry-maptoolbar}}
+    </div>
+  </div>
+  <div class="mappanel">
+    <div class="pusher">
+      {{#flexberry-map
+        zoomSnap=1
+        zoomDelta=1
+        lat=model.lat
+        lng=model.lng
+        zoom=model.zoom
+        zoomControl=true
+        queryFilter=queryFilter
+        mapObjectSetting=setting
+        leafletInit=(action "onMapLeafletInit" "leafletMap")
+        serviceLayerInit=(action "onServiceLayerInit" "serviceLayer")
+        leafletDestroy=(action "onMapLeafletDestroy" "leafletMap")
+        moveend=(action "onMapMoveend" "model.lat" "model.lng")
+        zoomend=(action "onMapZoomend" "model.zoom")
+        queryFinished=(action "onIdentificationFinished")
+      }}
+        {{flexberry-layers
+          leafletMap=leafletMap
+          leafletContainer=leafletMap
+          layers=model.hierarchy
+        }}
+        {{switch-scale-control
+          leafletMap=leafletMap
+          updateWhenIdle=true
+          scales=switchScaleControlScales
+        }}
+        {{#minimap-control
+          minimized=true
+          leafletMap=leafletMap as |groupLayers|
+        }}
+          {{flexberry-layers
+            leafletContainer=groupLayers
+            layers=model.hierarchy
+            forMinimap=true
+          }}
+        {{/minimap-control}}
+      {{/flexberry-map}}
+    </div>
+  </div>
+  {{flexberry-mapinfo
+    mapId=model.id
+    name=model.name
+    description=model.description
+  }}
+</form>

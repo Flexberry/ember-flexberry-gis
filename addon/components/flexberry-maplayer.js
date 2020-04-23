@@ -48,6 +48,8 @@ const flexberryClassNames = {
   copyButton: flexberryClassNamesPrefix + '-copy-button',
   editButton: flexberryClassNamesPrefix + '-edit-button',
   removeButton: flexberryClassNamesPrefix + '-remove-button',
+  boundsButton: flexberryClassNamesPrefix + '-bounds-button',
+  attributesButton: flexberryClassNamesPrefix + '-attributes-button',
   caption: flexberryClassNamesPrefix + '-caption-label',
   legendToggler: flexberryClassNamesPrefix + '-legend-toggler',
   preventExpandCollapse: FlexberryTreenodeComponent.flexberryClassNames.preventExpandCollapse,
@@ -459,7 +461,16 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     */
     _labelsLayer: null,
 
+    //side to add layer to comapre
+    side: '',
+
+    //compare enabled
+    compareLayersEnabled: false,
+
     actions: {
+      onAddCompare() {
+        //добавление в зависимости от стороны
+      },
       /**
         Handles {{#crossLink "FlexberryTreenodeComponent/sendingActions.headerClick:method"}}'flexberry-treenode' component's 'headerClick' action{{/crossLink}}.
         Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.headerClick:method"}}'headerClick' action{{/crossLink}}.

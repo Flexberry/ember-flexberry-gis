@@ -29,7 +29,7 @@
   <div class="sidebar-wrapper">
     {{flexberry-tab-bar
       change=(action "toggleSidebar")
-      items=sidebarItems
+      items=_sidebarFiltered
     }}
     <div class="ui very wide right sidebar pushable tabbar">
       <div data-tab="treeview" class="ui tab treeview">
@@ -38,7 +38,9 @@
           {{flexberry-maplayers
             class="styled"
             leafletMap=leafletMap
-            layers=(get-with-dynamic-actions this "model.hierarchy"
+            compareLayersEnabled=compareLayersEnabled
+            sideBySide=sideBySide
+            layers=(get-with-dynamic-actions this "model.hierarchy"       
               hierarchyPropertyName="layers"
               pathKeyword="layerPath"
               dynamicActions=(array
@@ -108,26 +110,33 @@
         }}
         {{layer-result-list
           results=searchResults
-          featureSelected=(action 'onLayerFeatureSelected')
           serviceLayer=serviceLayer
           leafletMap=leafletMap
+          showIntersectionPanel=(action 'onIntersectionPanel')
+          featureSelected=(action "onLayerFeatureSelected")
+          addToFavorite=(action "addToFavorite")
         }}
       </div>
       <div data-tab="identify" class="ui tab identify">
         <h3>{{t "forms.map.tabbar.identify.caption"}}</h3>
         {{flexberry-identify-panel
+          layerMode=identifyToolLayerMode
+          toolMode=identifyToolToolMode
+          bufferActive=identifyToolBufferActive
+          bufferUnits=identifyToolBufferUnits
+          bufferRadius=identifyToolBufferRadius
+          layers=model.hierarchy
           leafletMap=leafletMap
-          layerMode=identifyLayersOption
-          toolMode=identifyToolOption
-          onBufferSet=(action "onBufferSet")
-          identificationFinished=(action 'onIdentificationFinished')
-          clear=(action 'clearIdentification')
+          identificationFinished=(action "onIdentificationFinished")
+          identificationClear=(action "onIdentificationClear")
         }}
         {{layer-result-list
-          results=identifyResults
+          results=identifyToolResults
           serviceLayer=serviceLayer
-          featureSelected=(action 'onLayerFeatureSelected')
           leafletMap=leafletMap
+          showIntersectionPanel=(action 'onIntersectionPanel')
+          featureSelected=(action "onLayerFeatureSelected")
+          addToFavorite=(action "addToFavorite")
         }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
@@ -137,63 +146,109 @@
           storageKey=model.id
         }}
       </div>
+      <div data-tab="createObject" class="ui tab createObject">
+      <h3>{{t "forms.map.tabbar.createObject.caption"}}</h3>
+      {{#each createItems as |createItem|}}
+        {{flexberry-create-object-geometry
+          createItem=createItem
+          leafletMap=leafletMap
+        }}
+      {{/each}}
+      </div>
+      <div data-tab="favorites" class="ui tab bookmarks">
+        <h3>{{t "forms.map.tabbar.favorites.caption"}}</h3>
+        {{favorites-list
+          features=result
+          compareBtnDisabled=compareBtnDisabled
+          serviceLayer=serviceLayer
+          leafletMap=leafletMap
+          showIntersectionPanel=(action 'onIntersectionPanel')
+          compareTwoGeometries=(action 'OnCompareTwoGeometries')
+          addToFavorite=(action "addToFavorite")
+          addToCompareGeometries=(action 'addToCompareGeometries')
+        }}
+      </div>
     </div>
   </div>
   <div class={{concat "bottompanel-wrapper" (if (or (gt editedLayers.length 0) editedLayersPanelLoading) "" " hidden")}}>
     {{flexberry-layers-attributes-panel
       items=editedLayers
       serviceLayer=serviceLayer
-      leafletMap=leafletMap
       selectedTabIndex=editedLayersSelectedTabIndex
       folded=editedLayersPanelFolded
       settings=editedLayersPanelSettings
       loading=editedLayersPanelLoading
+      leafletMap=leafletMap
+    }}
+  </div>
+  <div class={{concat "bottompanel-wrapper intersection-panel" (if showIntersectionPanel "" " hidden")}}>
+    {{flexberry-layers-intersections-panel
+      layers=model.hierarchy
+      leafletMap=leafletMap
+      settings=editedLayersPanelSettings
+      loading=editedLayersPanelLoading
+      closeIntersectionPanel=(action "closeIntersectionPanel")
+      feature=feature
+      disaplayName=feature.properties.name
+    }}
+  </div>
+  <div class={{concat "bottompanel-wrapper compare-geometries-panel" (if showComapreGeometriesPanel "" " hidden")}}>
+    {{compare-object-geometries-panel
+      layers=model.hierarchy
+      leafletMap=leafletMap
+      settings=editedLayersPanelSettings
+      closeComparePanel=(action "closeComparePanel")
+      twoObjects=twoObjectToCompare
     }}
   </div>
   <div class="row">
     <div class="sixteen wide column">
-      {{#flexberry-maptoolbar
-        leafletMap=leafletMap
-        layers=model.hierarchy as |mapToolbar|
-      }}
+      {{#flexberry-maptoolbar}}
         {{map-commands/full-extent
-          execute=(action "onMapCommandExecute" target=mapToolbar)
           lat=model.lat
           lng=model.lng
           zoom=model.zoom
-        }}
-        {{map-commands/edit
-          execute=(action "onMapCommandExecute" target=mapToolbar)
-          mapModel=model
-        }}
-        {{scale-control map=leafletMap imperial=false}}
-        {{history-control map=leafletMap}}
-        {{map-tools/drag activate=(action "onMapToolActivate" target=mapToolbar)}}
-        {{map-tools/zoom-in activate=(action "onMapToolActivate" target=mapToolbar)}}
-        {{map-tools/zoom-out activate=(action "onMapToolActivate" target=mapToolbar)}}
-        {{map-tools/identify
-          activate=(action "onMapToolActivate" target=mapToolbar)
-          bufferActive=bufferActive
-          bufferUnits=bufferUnits
-          bufferRadius=bufferRadius          
-          layerMode=identifyLayersOption
-          toolMode=identifyToolOption
           leafletMap=leafletMap
         }}
-        {{map-commands/go-to
-          execute=(action "onMapCommandExecute" target=mapToolbar)
+        {{map-commands/edit
+          mapModel=model
+          leafletMap=leafletMap
         }}
-        {{map-commands/locate
-        	execute=(action "onMapCommandExecute" target=mapToolbar)
+        {{scale-control
+          imperial=false
+          leafletMap=leafletMap
         }}
-        {{map-commands/search execute=(action "onMapCommandExecute" target=mapToolbar)}}
-        {{map-tools/measure activate=(action "onMapToolActivate" target=mapToolbar)}}
-        {{map-tools/draw activate=(action "onMapToolActivate" target=mapToolbar)}}
+        {{history-control leafletMap=leafletMap}}
+        {{map-tools/drag leafletMap=leafletMap}}
+        {{map-tools/zoom-in leafletMap=leafletMap}}
+        {{map-tools/zoom-out leafletMap=leafletMap}}
+        {{map-tools/identify
+          layerMode=identifyToolLayerMode
+          toolMode=identifyToolToolMode
+          bufferActive=identifyToolBufferActive
+          bufferUnits=identifyToolBufferUnits
+          bufferRadius=identifyToolBufferRadius
+          layers=model.hierarchy
+          leafletMap=leafletMap
+        }}
+        {{map-tools/compare
+          leafletMap=leafletMap
+          showCompareSideBar=(action "showCompareSideBar")
+        }}
+        {{map-commands/go-to leafletMap=leafletMap}}
+        {{map-commands/locate leafletMap=leafletMap}}
+        {{map-commands/search
+          leafletMap=leafletMap
+          layers=model.hierarchy
+        }}
+        {{map-tools/measure leafletMap=leafletMap}}
+        {{map-tools/draw leafletMap=leafletMap}}
         {{map-commands/export
+          iconClass="external share icon"
           timeout=30000
           defaultMapCaption=model.name
-          execute=(action "onMapCommandExecute" target=mapToolbar)
-          iconClass="external share icon"
+          leafletMap=leafletMap
+          layers=model.hierarchy
         }}
       {{/flexberry-maptoolbar}}
     </div>
@@ -214,6 +269,8 @@
         leafletDestroy=(action "onMapLeafletDestroy" "leafletMap")
         moveend=(action "onMapMoveend" "model.lat" "model.lng")
         zoomend=(action "onMapZoomend" "model.zoom")
+        queryFinished=(action "onQueryFinished")
+        onCreateObject=(action "onCreateObject")
       }}
         {{flexberry-layers
           leafletMap=leafletMap
@@ -221,13 +278,13 @@
           layers=model.hierarchy
         }}
         {{switch-scale-control
-          map=leafletMap
+          leafletMap=leafletMap
           updateWhenIdle=true
           scales=switchScaleControlScales
         }}
         {{#minimap-control
           minimized=true
-          map=leafletMap as |groupLayers|
+          leafletMap=leafletMap as |groupLayers|
         }}
           {{flexberry-layers
             leafletContainer=groupLayers
