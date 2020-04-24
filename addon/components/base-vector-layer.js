@@ -46,13 +46,17 @@ export default BaseLayer.extend({
     Ember.run.once(this, '_resetLayer');
   }),
 
+  /**
+    @method _getPane
+    @private
+  */
   _getPane: function () {
     let index = this.get('layerModel.index');
     if (index) {
-      return  {
+      return {
         name: 'vectorLayerPane' + index,
         index: index
-      }
+      };
     }
 
     return null;
@@ -230,7 +234,7 @@ export default BaseLayer.extend({
     let thisPane = this._getPane();
     return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.RSVP.hash({
-        vectorLayer: this.createVectorLayer(thisPane ? {pane: thisPane.name} : {})
+        vectorLayer: this.createVectorLayer(thisPane ? { pane: thisPane.name } : {})
       }).then(({ vectorLayer }) => {
         // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
         let readFormat = vectorLayer.readFormat;
