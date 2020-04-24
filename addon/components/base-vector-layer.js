@@ -46,6 +46,18 @@ export default BaseLayer.extend({
     Ember.run.once(this, '_resetLayer');
   }),
 
+  _getPane: function () {
+    let index = this.get('layerModel.index');
+    if (index) {
+      return  {
+        name: 'vectorLayerPane' + index,
+        index: index
+      }
+    }
+
+    return null;
+  },
+
   /**
     Sets leaflet layer's opacity.
 
@@ -215,9 +227,10 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
+    let thisPane = this._getPane();
     return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.RSVP.hash({
-        vectorLayer: this.createVectorLayer()
+        vectorLayer: this.createVectorLayer(thisPane ? {pane: thisPane.name} : {})
       }).then(({ vectorLayer }) => {
         // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
         let readFormat = vectorLayer.readFormat;

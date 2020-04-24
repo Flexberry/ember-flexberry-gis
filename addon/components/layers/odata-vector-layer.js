@@ -112,6 +112,11 @@ export default BaseVectorLayer.extend({
       innerLayer = L.marker(geometryCoordinates);
     }
 
+    let pane = this._getPane();
+    if (pane) {
+      Ember.set(innerLayer, 'options.pane', { pane: pane.name });
+    }
+
     if (innerLayer) {
       const modelProj = model.constructor.projections.get(this.get('projectionName'));
       innerLayer.model = model;

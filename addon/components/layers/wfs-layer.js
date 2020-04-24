@@ -56,10 +56,18 @@ export default BaseVectorLayer.extend({
     let options = this.get('options');
     let crs = Ember.get(options, 'crs');
     let geometryField = Ember.get(options, 'geometryField');
-    return new L.Format[format]({
+
+    let readFormatOptions = {
       crs,
       geometryField
-    });
+    };
+
+    let pane = this._getPane();
+    if (pane) {
+      readFormatOptions.pane = pane.name;
+    }
+
+    return new L.Format[format](readFormatOptions);
   },
 
   /**
