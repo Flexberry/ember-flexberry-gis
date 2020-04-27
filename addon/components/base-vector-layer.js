@@ -1043,7 +1043,11 @@ export default BaseLayer.extend({
   */
   _setLayerVisibility() {
     if (this.get('visibility')) {
-      let labelsLayer = this.get('_labelsLayer');
+      this._addLayerToLeafletContainer();
+      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
+        this._addLabelsToLeafletContainer();
+      }
+      /*let labelsLayer = this.get('_labelsLayer');
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_leafletObject'))) {
         if (!Ember.isNone(labelsLayer) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
           let leafletMap = this.get('leafletMap');
@@ -1051,9 +1055,9 @@ export default BaseLayer.extend({
         } else {
           this._addLabelsToLeafletContainer();
         }
-      }
+      }*/
 
-      this._addLayerToLeafletContainer();
+      
     } else {
       this._removeLayerFromLeafletContainer();
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
