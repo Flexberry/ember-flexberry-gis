@@ -270,7 +270,7 @@ export default BaseVectorLayer.extend({
         searchFields.forEach((field) => {
           let typeField = fieldsType[field];
           if (!Ember.isBlank(typeField)) {
-            if(typeField !== 'string') {
+            if (typeField !== 'string') {
               equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
             } else {
               equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', {

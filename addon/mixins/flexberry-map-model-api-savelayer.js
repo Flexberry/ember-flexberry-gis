@@ -35,7 +35,7 @@ export default Ember.Mixin.create({
           if (item.state === 'updateElement') {
             let filter = new L.Filter.EQ('primarykey', Ember.get(item, 'feature.properties.primarykey'));
             if (map.hasLayer(item)) {
-              map.removeLayer(item); 
+              map.removeLayer(item);
               leafletObject.loadFeatures(filter);
               let id = leafletObject.getLayerId(item);
               delete leafletObject._layers[id];

@@ -24,15 +24,15 @@ export function initialize() {
             }
           }
 
-          var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center).round();
+          let pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center).round();
           this._setPos(pos);
         } else {
           this._removeIcon();
           this._removeShadow();
         }
       } else {
-        var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center).round();
-		    this._setPos(pos);
+        let pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center).round();
+        this._setPos(pos);
       }
     },
 
