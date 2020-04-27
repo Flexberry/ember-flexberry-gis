@@ -522,31 +522,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
       */
       onVisibilityCheckboxChange(...args) {
         this.sendAction('changeVisibility', ...args);
-        let leafletMap = this.get('leafletMap');
-        if (!this.get('layer.visibility')) {
-          let idlabelsLayer = this.get('layer.settingsAsObject.labelSettings.labelsLayer');
-          var _this = this;
-          leafletMap.eachLayer(function(layer) {
-            if (layer._idLeafletObject === idlabelsLayer) {
-              _this.set('_labelsLayer', layer);
-              var self = layer._this;
-              leafletMap.off('moveend', self._showLabelsMovingMap, self);
-              leafletMap.off('zoomend', self._setVisibilityScaleRange, self);
-              if (self.get('_layerType') === 'line') {
-                leafletMap.off('zoomend', self._updatePositionLabelForLine, self);
-              }
-
-              leafletMap.removeLayer(layer);
-            }
-          });
-        } else {
-          let labelsLayer = this.get('_labelsLayer');
-          if (Ember.isNone(labelsLayer)) {
-            return;
-          }
-
-          leafletMap.addLayer(labelsLayer);
-        }
       },
 
       /**

@@ -329,7 +329,6 @@ export default Ember.Component.extend({
               if (layer._idLeafletObject === idlabelsLayer) {
                 var self = layer._this;
                 leafletMap.off('moveend', self._showLabelsMovingMap, self);
-                leafletMap.off('zoomend', self._setVisibilityScaleRange, self);
                 if (self.get('_layerType') === 'line') {
                   leafletMap.off('zoomend', self._updatePositionLabelForLine, self);
                 }
