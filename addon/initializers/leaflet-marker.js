@@ -14,20 +14,25 @@ export function initialize() {
       @private
     */
     _animateZoom: function (opt) {
-      if (this._checkAnimateMapZoom()) {
-        if (!this._icon) {
-          if (!Ember.isNone(this.style) && !Ember.isNone(this.style.html)) {
-            this.setIcon(new L.divIcon(this.style));
-          } else {
-            this.setIcon(new L.Icon.Default());
+      if (Ember.get(this, '_eventParents') && Ember.get(this, '_map')) {
+        if (this._checkAnimateMapZoom()) {
+          if (!this._icon) {
+            if (!Ember.isNone(this.style) && !Ember.isNone(this.style.html)) {
+              this.setIcon(new L.divIcon(this.style));
+            } else {
+              this.setIcon(new L.Icon.Default());
+            }
           }
-        }
 
-        var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center).round();
-        this._setPos(pos);
+          var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center).round();
+          this._setPos(pos);
+        } else {
+          this._removeIcon();
+          this._removeShadow();
+        }
       } else {
-        this._removeIcon();
-        this._removeShadow();
+        var pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center).round();
+		    this._setPos(pos);
       }
     },
 
