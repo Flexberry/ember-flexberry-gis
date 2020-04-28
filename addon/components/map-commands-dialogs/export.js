@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/map-commands-dialogs/export';
+import html2canvasClone from '../../utils/html2canvas-clone';
 
 /**
   Constants representing default print/eport options.
@@ -1659,20 +1660,6 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     });
   },
 
-  _onclone(clonedDoc) {
-    let elem = Ember.$(clonedDoc).find('[style*="transform: translate"]');
-    elem.each((ind) => {
-      let $item = Ember.$(elem[ind]);
-      let matrix = $item.css('transform');
-      if (matrix !== 'none') {
-        let tr = matrix.split(', ');
-        $item.css('transform', '');
-        $item.css('top', tr[5].replace(')', '') + 'px');
-        $item.css('left', tr[4] + 'px');
-      }
-    });
-  },
-
   /**
     Export's map with respect to selected export options.
 
@@ -1686,7 +1673,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       return window.html2canvas($sheetOfPaper[0], {
         useCORS: true,
         onclone: function(clonedDoc) {
-          _this._onclone(clonedDoc);
+          html2canvasClone(clonedDoc);
         }
       }).then((canvas) => {
         let type = 'image/png';
@@ -1706,7 +1693,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       return window.html2canvas($sheetOfLegend[0], {
         useCORS: true,
         onclone: function(clonedDoc) {
-          _this._onclone(clonedDoc);
+          html2canvasClone(clonedDoc);
         }
       }).then((canvas) => {
         $sheetOfLegend.addClass('hidden');
@@ -1743,7 +1730,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     return window.html2canvas($leafletMap[0], {
       useCORS: true,
       onclone: function(clonedDoc) {
-        _this._onclone(clonedDoc);
+        html2canvasClone(clonedDoc);
       }
     }).then((canvas) => {
       $leafletShadows.removeAttr('data-html2canvas-ignore');
@@ -1753,17 +1740,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       return window.html2canvas($leafletShadows[0], {
         useCORS: true,
         onclone: function(clonedDoc) {
-          let elem = Ember.$(clonedDoc).find('[style*="transform: translate"]');
-          elem.each((ind) => {
-            let $item = Ember.$(elem[ind]);
-            let matrix = $item.css('transform');
-            if (matrix !== 'none') {
-              let tr = matrix.split(', ');
-              $item.css('transform', '');
-              $item.css('top', tr[5].replace(')', '') + 'px');
-              $item.css('left', tr[4] + 'px');
-            }
-          });
+          html2canvasClone(clonedDoc);
         }
       }).then((shadowsCanvas) => {
         drawContext.drawImage(shadowsCanvas, 0, 0);
@@ -1774,7 +1751,7 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
         return window.html2canvas($leafletMarkers[0], {
           useCORS: true,
           onclone: function(clonedDoc) {
-            _this._onclone(clonedDoc);
+            html2canvasClone(clonedDoc);
           }
         }).then((markersCanvas) => {
           drawContext.drawImage(markersCanvas, 0, 0);

@@ -6,7 +6,6 @@ import Ember from 'ember';
 
 export function initialize() {
   L.Marker.include({
-
     /**
       Animate zoom when its changed.
       @method _animateZoom
@@ -14,7 +13,7 @@ export function initialize() {
       @private
     */
     _animateZoom: function (opt) {
-      if (Ember.get(this, '_eventParents') && Ember.get(this, '_map')) {
+      if (this._eventParents && this._map) {
         if (this._checkAnimateMapZoom()) {
           if (!this._icon) {
             if (!Ember.isNone(this.style) && !Ember.isNone(this.style.html)) {
@@ -41,7 +40,7 @@ export function initialize() {
       @method update
     */
     update: function() {
-      if (Ember.get(this, '_map') && Ember.get(this, '_eventParents')) {
+      if (this._map && this._eventParents) {
         if (this._checkMapZoom()) {
           if (this._icon && this._map) {
             let pos1 = this._map.latLngToLayerPoint(this._latlng).round();
