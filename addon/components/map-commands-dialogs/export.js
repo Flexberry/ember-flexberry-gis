@@ -1668,7 +1668,6 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
   export(pageNumber) {
     let $sheetOfPaper = this.get('_$sheetOfPaper');
     let $sheetOfLegend = this.get('_$sheetOfLegend');
-    let _this = this;
     let exportSheetOfPaper = () => {
       return window.html2canvas($sheetOfPaper[0], {
         useCORS: true,
