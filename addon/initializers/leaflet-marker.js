@@ -6,69 +6,44 @@ import Ember from 'ember';
 
 export function initialize() {
   L.Marker.include({
-    /**
-      Animate zoom when its changed.
-      @method _animateZoom
-      @param {Object} opt animate zoom options
+     /**
+      Set position when zoom changed.
+      @method _setPos
+      @param {Object} pos position
       @private
     */
-    _animateZoom: function (opt) {
-      if (this._eventParents && this._map) {
-        if (this._checkAnimateMapZoom()) {
-          if (!this._icon) {
-            if (!Ember.isNone(this.style) && !Ember.isNone(this.style.html)) {
-              this.setIcon(new L.divIcon(this.style));
-            } else {
-              this.setIcon(new L.Icon.Default());
-            }
+    _setPos: function (pos) {
+      if (!this._eventParents || (this._eventParents && this._checkMapZoom())) {
+        if (this._icon) {
+          if (L.DomUtil.hasClass(this._icon, 'hidden')) {
+            L.DomUtil.removeClass(this._icon, 'hidden');
           }
 
-          let pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center).round();
-          this._setPos(pos);
-        } else {
-          this._removeIcon();
-          this._removeShadow();
+          L.DomUtil.setPosition(this._icon, pos);
         }
-      } else {
-        let pos = this._map._latLngToNewLayerPoint(this._latlng, opt.zoom, opt.center).round();
-        this._setPos(pos);
-      }
-    },
-
-    /**
-      Update point position
-      @method update
-    */
-    update: function() {
-      if (this._map && this._eventParents) {
-        if (this._checkMapZoom()) {
-          if (this._icon && this._map) {
-            let pos1 = this._map.latLngToLayerPoint(this._latlng).round();
-            this._setPos(pos1);
+    
+        if (this._shadow) {
+          if (L.DomUtil.hasClass(this._icon, 'hidden')) {
+            L.DomUtil.removeClass(this._icon, 'hidden');
           }
 
-          return this;
+          L.DomUtil.setPosition(this._shadow, pos);
+        }
+    
+        this._zIndex = pos.y + this.options.zIndexOffset;
+    
+        if (this._icon) {
+          this._icon.style.zIndex = this._zIndex;
         }
       } else {
-        if (this._icon && this._map) {
-          let pos2 = this._map.latLngToLayerPoint(this._latlng).round();
-          this._setPos(pos2);
+        if (this._icon) {
+          L.DomUtil.addClass(this._icon, 'hidden');
         }
-
-        return this;
+    
+        if (this._shadow) {
+          L.DomUtil.addClass(this._shadow, 'hidden');
+        }
       }
-    },
-
-    /**
-      Check if animate zoom is between allowed layer min and max zoom.
-      @method _checkAnimateMapZoom
-      @private
-    */
-    _checkAnimateMapZoom() {
-      const mapZoom = Ember.get(this, '_map._animateToZoom');
-      const minZoom = Object.values(this._eventParents)[0].minZoom;
-      const maxZoom = Object.values(this._eventParents)[0].maxZoom;
-      return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom <= mapZoom && mapZoom <= maxZoom;
     },
 
     /**
@@ -77,7 +52,9 @@ export function initialize() {
       @private
     */
     _checkMapZoom() {
-      const mapZoom = Ember.get(this, '_map._zoom');
+      const _mapZoom = this._map._zoom;
+      const _animZoom = this._map._animateToZoom;
+      const mapZoom = (!Ember.isNone(_animZoom) && _animZoom !== _mapZoom) ? _animZoom : _mapZoom;
       const minZoom = Object.values(this._eventParents)[0].minZoom;
       const maxZoom = Object.values(this._eventParents)[0].maxZoom;
       return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom <= mapZoom && mapZoom <= maxZoom;
