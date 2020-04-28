@@ -6,7 +6,7 @@ import Ember from 'ember';
 
 export function initialize() {
   L.Marker.include({
-     /**
+    /**
       Set position when zoom changed.
       @method _setPos
       @param {Object} pos position
@@ -21,7 +21,7 @@ export function initialize() {
 
           L.DomUtil.setPosition(this._icon, pos);
         }
-    
+
         if (this._shadow) {
           if (L.DomUtil.hasClass(this._icon, 'hidden')) {
             L.DomUtil.removeClass(this._icon, 'hidden');
@@ -29,9 +29,9 @@ export function initialize() {
 
           L.DomUtil.setPosition(this._shadow, pos);
         }
-    
+
         this._zIndex = pos.y + this.options.zIndexOffset;
-    
+
         if (this._icon) {
           this._icon.style.zIndex = this._zIndex;
         }
@@ -39,7 +39,7 @@ export function initialize() {
         if (this._icon) {
           L.DomUtil.addClass(this._icon, 'hidden');
         }
-    
+
         if (this._shadow) {
           L.DomUtil.addClass(this._shadow, 'hidden');
         }
