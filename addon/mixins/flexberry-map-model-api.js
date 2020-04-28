@@ -727,7 +727,6 @@ export default Ember.Mixin.create({
               return object.promiseLoadLayer;
             });
 
-
             Ember.RSVP.allSettled(promises).then((e) => {
               load.forEach((obj) => {
                 obj.statusLoadLayer = false;
