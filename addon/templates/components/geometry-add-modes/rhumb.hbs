@@ -18,6 +18,12 @@
     deny=(action "onDeny")
   }}
     <form class="ui form" role="form">
+      {{#if isError}}
+        {{ui-message
+          type="error"
+          message=message
+        }}
+      {{/if}}
       <div class="ui grid">
         <div class="rhumb">
           <div class="field {{if _formValid.startPointValid "error" ""}}">

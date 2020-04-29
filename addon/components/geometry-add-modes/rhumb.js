@@ -209,6 +209,21 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
   },
 
   /**
+    Error message.
+  */
+  message: '',
+
+  /**
+    Flag indicates whether to show error message.
+
+    @property _dialogVisible
+    @type Boolean
+    @default false
+    @private
+  */
+  isError: false,
+
+  /**
     Fields for adding a new record.
 
     @property _dataFormTable
@@ -341,7 +356,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
       let skipNum = this._countSkip();
       if (Ember.isNone(skipNum)) {
-        alert(this.get('cannotChangePermission'));
+        this.set(isError, true);
+        this.set(message, this.get('cannotChangePermission'))
       }
 
       if (Ember.isNone(skipNum) || this._tableData.length === 0 || (this._dataForm.objectType === 'Polygon' && this._tableData.length < skipNum + 2) ||
@@ -413,22 +429,14 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       Handles change type.
     */
     validType() {
-      if (Ember.isNone(this._dataForm.objectType)) {
-        this.set('_formValid.typeObjectValid', true);
-      } else {
-        this.set('_formValid.typeObjectValid', false);
-      }
+      this.set('_formValid.typeObjectValid', Ember.isNone(this._dataForm.objectType));
     },
 
     /**
       Handles change start point.
     */
     validCoord() {
-      if (!this._validStartPoint(this._dataForm.startPoint)) {
-        this.set('_formValid.startPointValid', true);
-      } else {
-        this.set('_formValid.startPointValid', false);
-      }
+      this.set('_formValid.startPointValid', !this._validStartPoint(this._dataForm.startPoint));
     },
 
     /**
@@ -614,7 +622,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         }
       } else if (!Ember.isEmpty(curSkip) && row.id === Ember.get(curSkip[0], 'id')) {
         if (Ember.get(curSkip[0], 'skip')) {
-          alert(this.get('cannotChangePermission'));
+          this.set(isError, true);
+          this.set(message, this.get('cannotChangePermission'))
           options.checked = !checked;
           Ember.set(row._skip, rowId, checked);  //strange magic
           Ember.set(row._skip, rowId, !checked);
