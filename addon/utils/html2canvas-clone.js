@@ -1,9 +1,10 @@
 import Ember from 'ember';
+
 /**
   Callback function which is called when the Document has been cloned for rendering, can be used to modify
   the contents that will be rendered without affecting the original source document.
   @param {html} clonedDoc
- */
+*/
 export default function html2canvasClone(clonedDoc) {
   let elem = Ember.$(clonedDoc).find('[style*="transform: translate"]');
   elem.each((ind) => {
