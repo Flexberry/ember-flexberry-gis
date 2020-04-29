@@ -10069,6 +10069,19 @@ define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/get-bo
     assert.ok(true, 'modules/ember-flexberry-gis/utils/get-bounds-from-polygon.js should pass jshint.');
   });
 });
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/html2canvas-clone.jscs-test', ['exports'], function (exports) {
+  module('JSCS - modules/ember-flexberry-gis/utils');
+  test('modules/ember-flexberry-gis/utils/html2canvas-clone.js should pass jscs', function () {
+    ok(true, 'modules/ember-flexberry-gis/utils/html2canvas-clone.js should pass jscs.');
+  });
+});
+define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/html2canvas-clone.jshint', ['exports'], function (exports) {
+  QUnit.module('JSHint - modules/ember-flexberry-gis/utils/html2canvas-clone.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'modules/ember-flexberry-gis/utils/html2canvas-clone.js should pass jshint.');
+  });
+});
 define('dummy/ember-flexberry-gis/tests/modules/ember-flexberry-gis/utils/leaflet-crs.jscs-test', ['exports'], function (exports) {
   module('JSCS - modules/ember-flexberry-gis/utils');
   test('modules/ember-flexberry-gis/utils/leaflet-crs.js should pass jscs', function () {
@@ -37574,6 +37587,14 @@ define('dummy/utils/get-projection-by-name', ['exports', 'ember-flexberry/utils/
     }
   });
 });
+define('dummy/utils/html2canvas-clone', ['exports', 'ember-flexberry-gis/utils/html2canvas-clone'], function (exports, _emberFlexberryGisUtilsHtml2canvasClone) {
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function get() {
+      return _emberFlexberryGisUtilsHtml2canvasClone['default'];
+    }
+  });
+});
 define('dummy/utils/i18n/compile-template', ['exports', 'ember-i18n/utils/i18n/compile-template'], function (exports, _emberI18nUtilsI18nCompileTemplate) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -37703,7 +37724,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.1+b1c906b7"});
+  require("dummy/app")["default"].create({"backendUrl":"http://134.209.30.115:1818","backendUrls":{"root":"http://134.209.30.115:1818","api":"http://134.209.30.115:1818/odata"},"log":{"enabled":false},"useUserSettingsService":false,"mapApiService":true,"offline":{"dbName":"ember-flexberry-gis-dummy","offlineEnabled":false,"modeSwitchOnErrorsEnabled":false,"syncDownWhenOnlineEnabled":false},"name":"ember-flexberry-gis","version":"0.8.0-beta.1+a9ca0a33"});
 }
 
 /* jshint ignore:end */
