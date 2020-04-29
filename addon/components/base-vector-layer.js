@@ -5,7 +5,7 @@
 import Ember from 'ember';
 import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
-import * as jsts from 'npm:jsts';
+import jsts from 'npm:jsts';
 
 const { assert } = Ember;
 
@@ -235,7 +235,6 @@ export default BaseLayer.extend({
             this._addLabelsToLeafletContainer();
           });
         }
-            
 
         if (this.get('clusterize')) {
           let clusterLayer = this.createClusterLayer(vectorLayer);
@@ -503,6 +502,7 @@ export default BaseLayer.extend({
 
   _createLayer() {
     this._super(...arguments);
+
     // add labels
     if (this.get('labelSettings.signMapObjects') && this.get('showExisting') !== false) {
       this.get('_leafletLayerPromise').then((leafletLayer) => {
@@ -553,7 +553,7 @@ export default BaseLayer.extend({
       let dynamicLoad = this.get('showExisting') === false && this.get('continueLoading');
       let intersectBBox = layer.getBounds ? bbox.intersects(layer.getBounds()) : bbox.contains(layer.getLatLng());
       let staticLoad = this.get('showExisting') !== false && intersectBBox;
-      if (!layer._label && (dynamicLoad || staticLoad) ) {
+      if (!layer._label && (dynamicLoad || staticLoad)) {
         let label = '';
         let isProp = false;
         expResult.forEach(function(element) {
@@ -629,9 +629,9 @@ export default BaseLayer.extend({
       zIndexOffset: 1000
     });
     label.style = {
-        className: 'label',
-        html:html,
-        iconSize: [iconWidth, iconHeight]
+      className: 'label',
+      html:html,
+      iconSize: [iconWidth, iconHeight]
     };
     labelsLayer.addLayer(label);
     layer._label = label;
@@ -943,6 +943,7 @@ export default BaseLayer.extend({
       if (!Ember.isNone(labelsLayer) && Ember.isNone(leafletObject._labelsLayer)) {
         labelsLayer.clearLayers();
       }
+
       if (Ember.isNone(labelsLayer)) {
         labelsLayer = L.featureGroup();
         let minScaleRange = this.get('labelSettings.scaleRange.minScaleRange') || this.get('minZoom');
