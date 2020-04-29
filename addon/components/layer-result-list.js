@@ -49,15 +49,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   intersection: false,
 
   /**
-    Flag indicates if layer-result-list used with favorites list.
-
-    @property favoriteMode
-    @type Boolean
-    @default false
-  */
-  favoriteMode: false,
-
-  /**
     Reference to component's template.
   */
   layout,
@@ -179,26 +170,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     },
 
     /**
-      Action adds feature to favorites.
-
-      @method actions.findIntersection
-      @param feature
-    */
-    addToFavorite(feature) {
-      this.sendAction('addToFavorite', feature);
-    },
-
-    /**
-      Action adds feature to array for comparing geometries.
-
-      @method actions.addToCompareGeometries
-      @param feature
-    */
-    addToCompareGeometries(feature) {
-      this.sendAction('addToCompareGeometries', feature);
-    },
-
-    /**
       Action zooms to intersection and shows object on map.
 
       @method actions.zoomToIntersection
@@ -266,6 +237,7 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     @method _resultObserver
   */
   _resultObserver: Ember.on('init', Ember.observer('results', function () {
+    this.send('selectFeature', null);
     this.set('_hasError', false);
     this.set('_noData', false);
     this.set('_displayResults', null);
@@ -500,10 +472,8 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       this.set('_displayResults', displayResults);
       this.set('_noData', displayResults.length === 0);
       this.set('_showLoader', false);
-      if (this.get('favoriteMode') !== true) {
-        if (displayResults.length === 1) {
-          this.send('zoomTo', displayResults.objectAt(0).features);
-        }
+      if (displayResults.length === 1) {
+        this.send('zoomTo', displayResults.objectAt(0).features);
       }
     });
   })),

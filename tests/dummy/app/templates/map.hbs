@@ -114,7 +114,6 @@
           leafletMap=leafletMap
           showIntersectionPanel=(action 'onIntersectionPanel')
           featureSelected=(action "onLayerFeatureSelected")
-          addToFavorite=(action "addToFavorite")
         }}
       </div>
       <div data-tab="identify" class="ui tab identify">
@@ -136,7 +135,6 @@
           leafletMap=leafletMap
           showIntersectionPanel=(action 'onIntersectionPanel')
           featureSelected=(action "onLayerFeatureSelected")
-          addToFavorite=(action "addToFavorite")
         }}
       </div>
       <div data-tab="bookmarks" class="ui tab bookmarks">
@@ -154,19 +152,6 @@
           leafletMap=leafletMap
         }}
       {{/each}}
-      </div>
-      <div data-tab="favorites" class="ui tab bookmarks">
-        <h3>{{t "forms.map.tabbar.favorites.caption"}}</h3>
-        {{favorites-list
-          features=result
-          compareBtnDisabled=compareBtnDisabled
-          serviceLayer=serviceLayer
-          leafletMap=leafletMap
-          showIntersectionPanel=(action 'onIntersectionPanel')
-          compareTwoGeometries=(action 'OnCompareTwoGeometries')
-          addToFavorite=(action "addToFavorite")
-          addToCompareGeometries=(action 'addToCompareGeometries')
-        }}
       </div>
     </div>
   </div>
@@ -190,15 +175,6 @@
       closeIntersectionPanel=(action "closeIntersectionPanel")
       feature=feature
       disaplayName=feature.properties.name
-    }}
-  </div>
-  <div class={{concat "bottompanel-wrapper compare-geometries-panel" (if showComapreGeometriesPanel "" " hidden")}}>
-    {{compare-object-geometries-panel
-      layers=model.hierarchy
-      leafletMap=leafletMap
-      settings=editedLayersPanelSettings
-      closeComparePanel=(action "closeComparePanel")
-      twoObjects=twoObjectToCompare
     }}
   </div>
   <div class="row">

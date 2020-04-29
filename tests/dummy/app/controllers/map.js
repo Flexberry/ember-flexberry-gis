@@ -167,11 +167,6 @@ export default EditMapController.extend(EditFormControllerOperationsIndicationMi
     selector: 'bookmarks',
     captionPath: 'forms.map.bookmarksbuttontooltip',
     iconClass: 'bookmark icon'
-  }, {
-    selector: 'favorites',
-    captionPath: 'forms.map.favoritesbuttontooltip',
-    iconClass: 'favorites icon',
-    class: 'favorite'
   }]),
 
   _sidebarFiltered: Ember.computed('sidebar', 'createObject', function () {
