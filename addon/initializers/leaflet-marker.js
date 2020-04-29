@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import { checkMapZoom } from '../utils/check-zoom';
 
 export function initialize() {
   L.Marker.include({
@@ -13,13 +14,14 @@ export function initialize() {
       @private
     */
     _setPos: function (pos) {
-      if (!this._eventParents || (this._eventParents && this._checkMapZoom())) {
+      if (!this._eventParents || (this._eventParents && checkMapZoom(this))) {
         if (this._icon) {
           if (L.DomUtil.hasClass(this._icon, 'hidden')) {
             L.DomUtil.removeClass(this._icon, 'hidden');
           }
 
           L.DomUtil.setPosition(this._icon, pos);
+          this._icon.style.zIndex = this._zIndex;
         }
 
         if (this._shadow) {
@@ -31,10 +33,6 @@ export function initialize() {
         }
 
         this._zIndex = pos.y + this.options.zIndexOffset;
-
-        if (this._icon) {
-          this._icon.style.zIndex = this._zIndex;
-        }
       } else {
         if (this._icon) {
           L.DomUtil.addClass(this._icon, 'hidden');
@@ -44,20 +42,6 @@ export function initialize() {
           L.DomUtil.addClass(this._shadow, 'hidden');
         }
       }
-    },
-
-    /**
-      Check if current zoom is between allowed layer min and max zoom.
-      @method _checkMapZoom
-      @private
-    */
-    _checkMapZoom() {
-      const _mapZoom = this._map._zoom;
-      const _animZoom = this._map._animateToZoom;
-      const mapZoom = (!Ember.isNone(_animZoom) && _animZoom !== _mapZoom) ? _animZoom : _mapZoom;
-      const minZoom = Object.values(this._eventParents)[0].minZoom;
-      const maxZoom = Object.values(this._eventParents)[0].maxZoom;
-      return Ember.isNone(mapZoom) || Ember.isNone(minZoom) || Ember.isNone(maxZoom) || minZoom <= mapZoom && mapZoom <= maxZoom;
     },
 
     /**
