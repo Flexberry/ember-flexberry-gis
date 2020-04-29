@@ -675,16 +675,12 @@ export default BaseVectorLayer.extend({
     let equals = Ember.A();
     let leafletObject = this.get(&#x27;_leafletObject&#x27;);
     if (!Ember.isNone(leafletObject)) {
-      let type = this.get(&#x27;layerModel.type&#x27;);
-      if (!Ember.isBlank(type)) {
-        let layerClass = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, type);
-        let layerProperties = layerClass.getLayerProperties(leafletObject);
+      let fieldsType = Ember.get(leafletObject, &#x27;readFormat.featureType.fieldTypes&#x27;);
+      if (!Ember.isBlank(fieldsType)) {
         searchFields.forEach((field) =&gt; {
-          let ind = layerProperties.indexOf(field);
-          if (ind &gt; -1) {
-            let layerPropertyType = typeof layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            if (layerPropertyType !== &#x27;string&#x27; || (layerPropertyType === &#x27;object&#x27; &amp;&amp; layerPropertyValue instanceof Date)) {
+          let typeField = fieldsType[field];
+          if (!Ember.isBlank(typeField)) {
+            if (typeField !== &#x27;string&#x27;) {
               equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
             } else {
               equals.push(new L.Filter.Like(field, &#x27;*&#x27; + e.searchOptions.queryString + &#x27;*&#x27;, {

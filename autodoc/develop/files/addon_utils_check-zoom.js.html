@@ -428,7 +428,13 @@ let checkMapZoom = (layer) =&gt; {
 
 let _getMapZoom = (map) =&gt; {
   if (map &amp;&amp; map.getZoom) {
-    return map.getZoom();
+    let _mapZoom = map.getZoom();
+    let _animZoom = map._animateToZoom;
+    if (map._animatingZoom &amp;&amp; !isNaN(_animZoom) &amp;&amp; _animZoom !== _mapZoom) {
+      return _animZoom;
+    }
+
+    return _mapZoom;
   }
 
   return null;

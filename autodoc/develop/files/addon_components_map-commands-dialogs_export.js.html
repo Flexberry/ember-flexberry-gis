@@ -414,6 +414,7 @@
 
 import Ember from &#x27;ember&#x27;;
 import layout from &#x27;../../templates/components/map-commands-dialogs/export&#x27;;
+import html2canvasClone from &#x27;../../utils/html2canvas-clone&#x27;;
 
 /**
   Constants representing default print/eport options.
@@ -2079,7 +2080,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
     let $sheetOfLegend = this.get(&#x27;_$sheetOfLegend&#x27;);
     let exportSheetOfPaper = () =&gt; {
       return window.html2canvas($sheetOfPaper[0], {
-        useCORS: true
+        useCORS: true,
+        onclone: function(clonedDoc) {
+          html2canvasClone(clonedDoc);
+        }
       }).then((canvas) =&gt; {
         let type = &#x27;image/png&#x27;;
         return {
@@ -2096,7 +2100,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
       $sheetOfLegend.removeClass(&#x27;hidden&#x27;);
 
       return window.html2canvas($sheetOfLegend[0], {
-        useCORS: true
+        useCORS: true,
+        onclone: function(clonedDoc) {
+          html2canvasClone(clonedDoc);
+        }
       }).then((canvas) =&gt; {
         $sheetOfLegend.addClass(&#x27;hidden&#x27;);
         $sheetOfPaper.removeClass(&#x27;hidden&#x27;);
@@ -2130,14 +2137,20 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
     // Export only map without markers.
     return window.html2canvas($leafletMap[0], {
-      useCORS: true
+      useCORS: true,
+      onclone: function(clonedDoc) {
+        html2canvasClone(clonedDoc);
+      }
     }).then((canvas) =&gt; {
       $leafletShadows.removeAttr(&#x27;data-html2canvas-ignore&#x27;);
       let drawContext = canvas.getContext(&#x27;2d&#x27;);
 
       // Export marker&#x27;s shadows.
       return window.html2canvas($leafletShadows[0], {
-        useCORS: true
+        useCORS: true,
+        onclone: function(clonedDoc) {
+          html2canvasClone(clonedDoc);
+        }
       }).then((shadowsCanvas) =&gt; {
         drawContext.drawImage(shadowsCanvas, 0, 0);
         $leafletMarkers.removeAttr(&#x27;data-html2canvas-ignore&#x27;);
@@ -2145,7 +2158,10 @@ let FlexberryExportMapCommandDialogComponent = Ember.Component.extend({
 
         // Export markers.
         return window.html2canvas($leafletMarkers[0], {
-          useCORS: true
+          useCORS: true,
+          onclone: function(clonedDoc) {
+            html2canvasClone(clonedDoc);
+          }
         }).then((markersCanvas) =&gt; {
           drawContext.drawImage(markersCanvas, 0, 0);
           $leafletMarkers.css({ &#x27;width&#x27;: 0, &#x27;height&#x27;: 0 });

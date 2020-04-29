@@ -419,6 +419,7 @@ import rhumbDistance from &#x27;npm:@turf/rhumb-distance&#x27;;
 import { getLeafletCrs } from &#x27;../utils/leaflet-crs&#x27;;
 import VectorLayer from &#x27;../layers/-private/vector&#x27;;
 import WfsLayer from &#x27;../layers/wfs&#x27;;
+import html2canvasClone from &#x27;../utils/html2canvas-clone&#x27;;
 
 export default Ember.Mixin.create({
   /**
@@ -1109,7 +1110,7 @@ export default Ember.Mixin.create({
               let [layer, layerObject] = this._getModelLeafletObject(lid);
               let className = Ember.get(layer, &#x27;type&#x27;);
               let layerType = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, className);
-              if (layerType instanceof WfsLayer) {
+              if (layerType instanceof WfsLayer &amp;&amp; !Ember.isNone(layerObject)) {
                 layerObject.statusLoadLayer = true;
                 load.push(layerObject);
               }
@@ -1145,17 +1146,7 @@ export default Ember.Mixin.create({
               let html2canvasOptions = Object.assign({
                 useCORS: true,
                 onclone: function(clonedDoc) {
-                  let elem = Ember.$(clonedDoc).find(&#x27;[style*=&quot;transform: translate&quot;]&#x27;);
-                  elem.each((ind) =&gt; {
-                    let $item = Ember.$(elem[ind]);
-                    let matrix = $item.css(&#x27;transform&#x27;);
-                    if (matrix !== &#x27;none&#x27;) {
-                      let tr = matrix.split(&#x27;, &#x27;);
-                      $item.css(&#x27;transform&#x27;, &#x27;&#x27;);
-                      $item.css(&#x27;top&#x27;, tr[5].replace(&#x27;)&#x27;, &#x27;&#x27;) + &#x27;px&#x27;);
-                      $item.css(&#x27;left&#x27;, tr[4] + &#x27;px&#x27;);
-                    }
-                  });
+                  html2canvasClone(clonedDoc);
                 }
               });
               window.html2canvas($mapPicture[0], html2canvasOptions)
