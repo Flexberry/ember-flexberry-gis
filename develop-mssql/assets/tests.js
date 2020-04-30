@@ -3754,8 +3754,8 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
       var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
       getmapApiStub.returns(mapModel);
 
-      var getPkFieldStub = _sinon['default'].stub(mapModel, '_getPkField');
-      getPkFieldStub.returns('primarykey');
+      var getLayerFeatureIdStub = _sinon['default'].stub(mapModel, '_getLayerFeatureId');
+      getLayerFeatureIdStub.returns('06350c71-ec5c-431e-a5ab-e423cf662128');
 
       options.showExisting = true;
       L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
