@@ -9,6 +9,7 @@ import rhumbDistance from 'npm:@turf/rhumb-distance';
 import { getLeafletCrs } from '../utils/leaflet-crs';
 import VectorLayer from '../layers/-private/vector';
 import WfsLayer from '../layers/wfs';
+import OdataLayer from '../layers/odata-vector';
 import html2canvasClone from '../utils/html2canvas-clone';
 
 export default Ember.Mixin.create({
@@ -76,6 +77,7 @@ export default Ember.Mixin.create({
     const layer = this.get('mapLayer').findBy('id', layerId);
     const leafletObject = Ember.get(layer, '_leafletObject');
     let map = this.get('mapApi').getFromApi('leafletMap');
+
     leafletObject.showLayerObjects = true;
     leafletObject.statusLoadLayer = true;
     map.fire('moveend');
@@ -473,11 +475,15 @@ export default Ember.Mixin.create({
   */
   _getLayerFeatureId(layer, layerObject) {
     let field = this._getPkField(layer);
-    if (layerObject.feature.properties.hasOwnProperty(field)) {
-      return Ember.get(layerObject, 'feature.properties.' + field);
-    }
+    if (layerObject.state !== Ember.get(layer, '_leafletObject').state.insert) {
+      if (layerObject.feature.properties.hasOwnProperty(field)) {
+        return Ember.get(layerObject, 'feature.properties.' + field);
+      }
 
-    return Ember.get(layerObject, 'feature.id');
+      return Ember.get(layerObject, 'feature.id');
+    } else {
+      return null;
+    }
   },
 
   /**
@@ -700,7 +706,7 @@ export default Ember.Mixin.create({
               let [layer, layerObject] = this._getModelLeafletObject(lid);
               let className = Ember.get(layer, 'type');
               let layerType = Ember.getOwner(this).knownForType('layer', className);
-              if (layerType instanceof WfsLayer && !Ember.isNone(layerObject)) {
+              if ((layerType instanceof WfsLayer || layerType instanceof OdataLayer) && !Ember.isNone(layerObject)) {
                 layerObject.statusLoadLayer = true;
                 load.push(layerObject);
               }
@@ -710,7 +716,7 @@ export default Ember.Mixin.create({
 
         let className = Ember.get(layerModel, 'type');
         let layerType = Ember.getOwner(this).knownForType('layer', className);
-        if (layerType instanceof WfsLayer) {
+        if (layerType instanceof WfsLayer || layerType instanceof OdataLayer) {
           leafletObject.statusLoadLayer = true;
           load.push(leafletObject);
         }

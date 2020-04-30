@@ -77,12 +77,6 @@ export default {
     'geometry-type-textbox': {
       'caption': 'Geometry type'
     },
-    'coords-function-textbox': {
-      'caption': 'Coords transformation method'
-    },
-    'latlng-function-textbox': {
-      'caption': 'LatLngs transformation method'
-    },
     'min-zoom': {
       'caption': 'Min zoom'
     },

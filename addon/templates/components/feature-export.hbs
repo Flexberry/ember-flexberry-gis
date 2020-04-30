@@ -1,0 +1,34 @@
+{{#if _dialogRequested}}
+{{#flexberry-dialog
+  class=class
+  contentClass=(if showErrorMessage "has error message" "")
+  caption=caption
+  approveButtonCaption=approveButtonCaption
+  denyButtonCaption=denyButtonCaption
+  visible=visible
+  approve=(action "onApprove")
+}}
+<form class="ui form" role="form">
+  <div class="ui celled grid">
+    <div class="column">
+      <div class="field">
+        <label>{{t "components.layer-result-list.flexberry-export.formatCaption"}}</label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=_availableFormats
+          value=_options.format
+        }}
+      </div>
+      <div class="field">
+        <label>{{t "components.layer-result-list.flexberry-export.crsCaption"}}</label>
+        {{flexberry-dropdown
+          class="fluid"
+          items=availableCRSNames
+          value=_options.coordSystem
+        }}
+      </div>
+    </div>
+  </div>
+</form>
+{{/flexberry-dialog}}
+{{/if}}
