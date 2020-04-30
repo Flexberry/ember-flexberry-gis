@@ -326,7 +326,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     onOpenDialog() {
       this.set('_dialogHasBeenRequested', true);
       this.set('_dialogVisible', true);
-      this.set('isError', false)
+      this.set('isError', false);
 
       this._dropForm();
     },
