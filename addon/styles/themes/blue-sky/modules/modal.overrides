@@ -192,7 +192,7 @@
         margin: 3% 0;
     }
     .rhumb .first {
-        margin-top: 0.455em;
+        margin-top: 0.2em;
     }
     .rhumb.last {
         padding-right: 5px;

@@ -326,6 +326,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     onOpenDialog() {
       this.set('_dialogHasBeenRequested', true);
       this.set('_dialogVisible', true);
+      this.set('isError', false)
 
       this._dropForm();
     },
@@ -339,6 +340,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     onApprove(e) {
       this._dropTableValidForm();
       let error = false;
+      this.set('isError', false);
 
       if (Ember.isNone(this._dataForm.objectType)) {
         this.set('_formValid.typeObjectValid', true);
@@ -356,8 +358,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
 
       let skipNum = this._countSkip();
       if (Ember.isNone(skipNum)) {
-        this.set(isError, true);
-        this.set(message, this.get('cannotChangePermission'))
+        this.set('isError', true);
+        this.set('message', this.get('cannotChangePermission'));
       }
 
       if (Ember.isNone(skipNum) || this._tableData.length === 0 || (this._dataForm.objectType === 'Polygon' && this._tableData.length < skipNum + 2) ||
@@ -492,6 +494,10 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
       };
 
       let skip = (this._tableData.length === 1 && !this._tableData[0].skip) ? true : false;
+      if (this.get('isError') && skip) {
+        this.set('isError', false);
+      }
+
       const row = {
         id: getGuid(),
         number: '0-1',
@@ -591,6 +597,7 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
     */
     onRhumbSkipChange(rowId, row, options) {
       let checked = options.checked;
+      this.set('isError', false);
       let curSkip = this._tableData.filter((item) => {
         return Ember.get(item, 'skip');
       });
@@ -622,8 +629,8 @@ let FlexberryGeometryAddModeRhumbComponent = Ember.Component.extend({
         }
       } else if (!Ember.isEmpty(curSkip) && row.id === Ember.get(curSkip[0], 'id')) {
         if (Ember.get(curSkip[0], 'skip')) {
-          this.set(isError, true);
-          this.set(message, this.get('cannotChangePermission'))
+          this.set('isError', true);
+          this.set('message', this.get('cannotChangePermission'));
           options.checked = !checked;
           Ember.set(row._skip, rowId, checked);  //strange magic
           Ember.set(row._skip, rowId, !checked);

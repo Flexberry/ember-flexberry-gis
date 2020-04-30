@@ -375,18 +375,6 @@
   .error input[type="text"]::-webkit-input-placeholder {/* WebKit, Blink, Edge */
     color: #9F3A38;
   }
-  .error input[type="text"]:-moz-placeholder {/* Mozilla Firefox 4 to 18 */
-    color: #9F3A38;
-  }
-  .error input[type="text"]::-moz-placeholder {/* Mozilla Firefox 19+ */
-    color: #9F3A38;
-  }
-  .error input[type="text"]:-ms-input-placeholder {/* Internet Explorer 10-11 */
-    color: #9F3A38;
-  }
-  .error input[type="text"]::-ms-input-placeholder {/* Microsoft Edge */
-    color: #9F3A38;
-  }
   .error input[type="text"]::placeholder {/* Most modern browsers support this now. */
     color: #9F3A38;
   }
