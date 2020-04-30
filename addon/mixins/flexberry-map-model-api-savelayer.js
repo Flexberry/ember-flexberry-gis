@@ -45,6 +45,7 @@ export default Ember.Mixin.create({
                 let id = leafletObject.getLayerId(item);
                 delete leafletObject._layers[id];
               }
+            }
           });
         }
 
