@@ -410,6 +410,9 @@
     <pre class="prettyprint linenums">
 import Ember from &#x27;ember&#x27;;
 import turfCombine from &#x27;npm:@turf/combine&#x27;;
+import WfsLayer from &#x27;../layers/wfs&#x27;;
+import OdataLayer from &#x27;../layers/odata-vector&#x27;;
+import state from &#x27;../utils/state&#x27;;
 
 export default Ember.Mixin.create({
 
@@ -498,28 +501,42 @@ export default Ember.Mixin.create({
   cancelEdit(layer) {
     let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
     let editTools = this._getEditTools();
-    this.disableLayerEditing(leafletMap);
     editTools.off(&#x27;editable:drawing:end&#x27;);
     editTools.off(&#x27;editable:editing&#x27;);
     editTools.stopDrawing();
-    editTools.featuresLayer.clearLayers();
-    editTools.editLayer.clearLayers();
 
     if (!Ember.isNone(layer.layerId)) {
-      let [, leafletObject] = this._getModelLeafletObject(layer.layerId);
+      let [layerModel, leafletObject] = this._getModelLeafletObject(layer.layerId);
       if (!Ember.isNone(leafletObject)) {
-        if (layer.state === leafletObject.state.insert) {
+        let className = Ember.get(layerModel, &#x27;type&#x27;);
+        let layerType = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, className);
+        if (layerType instanceof OdataLayer) {
+          let model = Ember.get(layer, &#x27;model&#x27;);
+          model.rollbackAttributes();
+        }
+
+        if (layer.state === state.insert) {
           leafletObject.removeLayer(layer);
-        } else if (layer.state === leafletObject.state.update) {
+          let id = editTools.featuresLayer.getLayerId(layer);
+          let editLayer = editTools.featuresLayer.getLayer(id).editor.editLayer;
+          editTools.editLayer.removeLayer(editLayer);
+          editTools.featuresLayer.removeLayer(layer);
+        } else if (layer.state === state.update) {
+          let editLayer = layer.editor.editLayer;
+          editTools.editLayer.removeLayer(editLayer);
           let map = Ember.get(leafletObject, &#x27;_map&#x27;);
           map.removeLayer(layer);
-          let filter = new L.Filter.EQ(&#x27;primarykey&#x27;, Ember.get(layer, &#x27;feature.properties.primarykey&#x27;));
-          let feature = leafletObject.loadFeatures(filter);
-
           let id = leafletObject.getLayerId(layer);
-          if (id in leafletObject.changes) {
+          delete leafletObject._layers[id];
+          if (layerType instanceof WfsLayer) {
+            let filter = new L.Filter.EQ(&#x27;primarykey&#x27;, Ember.get(layer, &#x27;feature.properties.primarykey&#x27;));
+            leafletObject.loadFeatures(filter);
             delete leafletObject.changes[id];
-            delete leafletObject._layers[id];
+          } else if (layerType instanceof OdataLayer) {
+            let e = {
+              featureIds: [Ember.get(layer, &#x27;feature.properties.primarykey&#x27;)]
+            };
+            leafletObject.loadLayerFeatures(e);
           }
         }
       }
@@ -658,6 +675,8 @@ export default Ember.Mixin.create({
           }
 
           resolve([e.results[0].layerModel, e.results[0].leafletObject, featureLayer]);
+        }).catch(() =&gt; {
+          reject(&#x60;Object &#x27;${featureIds}&#x27; not found&#x60;);
         });
       } else {
         reject(&#x27;Result is not promise&#x27;);

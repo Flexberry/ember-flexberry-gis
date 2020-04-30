@@ -409,6 +409,8 @@
 <div class="file">
     <pre class="prettyprint linenums">
 import Ember from &#x27;ember&#x27;;
+import WfsLayer from &#x27;../layers/wfs&#x27;;
+import state from &#x27;../utils/state&#x27;;
 
 export default Ember.Mixin.create({
   saveLayers(layersIds) {
@@ -441,17 +443,21 @@ export default Ember.Mixin.create({
           this.disableLayerEditing(map);
         }
 
-        Object.values(leafletObject.changes).forEach(item =&gt; {
-          if (item.state === &#x27;updateElement&#x27;) {
-            let filter = new L.Filter.EQ(&#x27;primarykey&#x27;, Ember.get(item, &#x27;feature.properties.primarykey&#x27;));
-            if (map.hasLayer(item)) {
-              map.removeLayer(item);
-              leafletObject.loadFeatures(filter);
-              let id = leafletObject.getLayerId(item);
-              delete leafletObject._layers[id];
+        let className = Ember.get(layerModel, &#x27;type&#x27;);
+        let layerType = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, className);
+        if (layerType instanceof WfsLayer) {
+          Object.values(leafletObject.changes).forEach(item =&gt; {
+            if (item.state === state.update) {
+              let filter = new L.Filter.EQ(&#x27;primarykey&#x27;, Ember.get(item, &#x27;feature.properties.primarykey&#x27;));
+              if (map.hasLayer(item)) {
+                map.removeLayer(item);
+                leafletObject.loadFeatures(filter);
+                let id = leafletObject.getLayerId(item);
+                delete leafletObject._layers[id];
+              }
             }
-          }
-        });
+          });
+        }
 
         leafletObject.off(&#x27;save:failed&#x27;, saveFailed);
         resolve({

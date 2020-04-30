@@ -6919,7 +6919,8 @@ div.ui.secondary.menu.no-margin {
   word-break: break-word;
   word-wrap: break-word;
 }
-.layer-result-list .feature-result-item-select.icon.item {
+.layer-result-list .feature-result-item-select.icon.item,
+.layer-result-list .feature-result-item-upload.icon.item {
   font-size: 1.4em;
 }
 .layer-result-list .feature-result-item-list.icon.item {
@@ -15528,6 +15529,36 @@ ol.ui.horizontal.list li:before,
 ***************************************/
 .layer-result-list .flexberry-toggler-content .item:not(.icon) {
   padding: 5px;
+}
+.layer-result-list .flexberry-toggler-content .item:not(.icon) {
+  padding: 5px;
+}
+.layer-result-list .feature-result-item-upload,
+.layer-result-list .feature-result-item-select,
+.layer-result-list .feature-result-item-list {
+  margin-top: 0.6em;
+  position: absolute;
+}
+.layer-result-list .feature-result-item-select {
+  left: 1.7em;
+}
+.layer-result-list .feature-result-item-upload {
+  left: 3em;
+}
+.layer-result-list .feature-result-item-list + .layer-result-list-toggler .title .flexberry-toggler-caption,
+.layer-result-list .feature-result-item-upload + .layer-result-list-toggler .title .flexberry-toggler-caption {
+  margin-left: 3.7em;
+  max-width: calc(100% - 4em);
+}
+.layer-result-list .feature-result-item-list + .feature-result-item-upload {
+  left: 4.7em;
+}
+.layer-result-list .feature-result-item-list {
+  left: 3.3em;
+}
+.layer-result-list .feature-result-item-list + .feature-result-item-upload + .layer-result-list-toggler .title .flexberry-toggler-caption {
+  margin-left: 5.7em;
+  max-width: calc(100% - 6em);
 }
 /*!
  * # Semantic UI - Loader

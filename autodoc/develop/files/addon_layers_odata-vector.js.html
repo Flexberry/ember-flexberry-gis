@@ -441,19 +441,6 @@ export default VectorLayer.extend({
   operations: [&#x27;edit&#x27;, &#x27;remove&#x27;, &#x27;identify&#x27;, &#x27;search&#x27;, &#x27;attributes&#x27;, &#x27;legend&#x27;],
 
   /**
-    Creates new search settings object (with search settings related to layer-type).
-
-    @method createSearchSettings
-    @returns {Object} New search settings object (with search settings related to layer-type).
-  */
-  createSearchSettings() {
-    return {
-      canBeSearched: true,
-      canBeContextSearched: true
-    };
-  },
-
-  /**
     Creates new settings object (with settings related to layer-type).
 
     @method createSettings
@@ -466,9 +453,7 @@ export default VectorLayer.extend({
       modelName: undefined,
       projectionName: undefined,
       geometryField: &#x27;geometry&#x27;,
-      geometryType: &#x27;PolygonPropertyType&#x27;,
-      coordsToLatLng: undefined,
-      latLngToCoords: undefined
+      geometryType: &#x27;PolygonPropertyType&#x27;
     });
     Ember.set(settings, &#x27;searchSettings&#x27;, this.createSearchSettings());
     return settings;
@@ -494,7 +479,8 @@ export default VectorLayer.extend({
 
     props.forEach((key) =&gt; {
       let prop = projection.attributes[key];
-      if (!prop.options.hidden) {
+      const geometryField = leafletObject.geometryField;
+      if (!prop.options.hidden &amp;&amp; key !== geometryField) {
         fields.addObject(key);
       }
     });

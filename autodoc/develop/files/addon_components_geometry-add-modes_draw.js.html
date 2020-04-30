@@ -587,6 +587,10 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
             if (this.tabModel.leafletObject.hasLayer(layer)) {
               this.tabModel.leafletObject.removeLayer(layer);
             }
+
+            if (Ember.get(layer, &#x27;model&#x27;)) {
+              this.tabModel.leafletObject.deleteModel(layer.model);
+            }
           }
         }.bind(this));
 
@@ -597,6 +601,11 @@ let FlexberryGeometryAddModeDrawComponent = Ember.Component.extend({
 
         // Create a new multi shape with old shape data.
         let shape = this._createCopyMultiShape(this.tabModel, layerId, geometryType, fcCombined);
+
+        const tabLeafletObject = this.tabModel.get(&#x27;leafletObject&#x27;);
+        if (tabLeafletObject.createLayerObject) {
+          shape = tabLeafletObject.createLayerObject(tabLeafletObject, Ember.get(shape, &#x27;feature.properties&#x27;), shape.toGeoJSON().geometry);
+        }
 
         // Create a multiple shape.
         shape.addTo(this.tabModel.leafletObject);
