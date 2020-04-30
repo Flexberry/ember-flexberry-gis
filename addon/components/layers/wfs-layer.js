@@ -180,8 +180,14 @@ export default BaseVectorLayer.extend({
         .once('error', (e) => {
           reject(e.error || e);
         })
-        .on('load', () => {
+        .on('load', (e) => {
           this._setLayerState();
+          if (e.layers && e.layers.forEach) {
+            e.layers.forEach((layer) => {
+              layer.minZoom = this.get('minZoom');
+              layer.maxZoom = this.get('maxZoom');
+            });
+          }
         });
 
       let promiseLoad = new Ember.RSVP.Promise((resolve, reject) => {
@@ -259,16 +265,12 @@ export default BaseVectorLayer.extend({
     let equals = Ember.A();
     let leafletObject = this.get('_leafletObject');
     if (!Ember.isNone(leafletObject)) {
-      let type = this.get('layerModel.type');
-      if (!Ember.isBlank(type)) {
-        let layerClass = Ember.getOwner(this).knownForType('layer', type);
-        let layerProperties = layerClass.getLayerProperties(leafletObject);
+      let fieldsType = Ember.get(leafletObject, 'readFormat.featureType.fieldTypes');
+      if (!Ember.isBlank(fieldsType)) {
         searchFields.forEach((field) => {
-          let ind = layerProperties.indexOf(field);
-          if (ind > -1) {
-            let layerPropertyType = typeof layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            if (layerPropertyType !== 'string' || (layerPropertyType === 'object' && layerPropertyValue instanceof Date)) {
+          let typeField = fieldsType[field];
+          if (!Ember.isBlank(typeField)) {
+            if (typeField !== 'string') {
               equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
             } else {
               equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', {
@@ -478,7 +480,7 @@ export default BaseVectorLayer.extend({
         if (!Ember.isNone(leafletObject)) {
           let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
           let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
-          if (continueLoad && checkMapZoom(leafletObject) && show) {
+          if (continueLoad && show && checkMapZoom(leafletObject)) {
             let bounds = leafletMap.getBounds();
             if (!Ember.isNone(leafletObject.showLayerObjects)) {
               leafletObject.showLayerObjects = false;

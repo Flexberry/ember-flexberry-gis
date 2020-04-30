@@ -3,6 +3,7 @@
 */
 
 import Ember from 'ember';
+import TileLayer from '../layers/tile';
 
 /**
   Mixin containing handlers for
@@ -64,7 +65,11 @@ export default Ember.Mixin.create({
           let leafletObject = layer.get('_leafletObject');
           if ((leafletObject != null) && (leafletObject.bringToFront instanceof Function) && layer.get('visibility')) {
             try {
-              leafletObject.bringToFront();
+              let className = Ember.get(layer, 'type');
+              let layerType = Ember.getOwner(this).knownForType('layer', className);
+              if (!(layerType instanceof TileLayer)) {
+                leafletObject.bringToFront();
+              }
             } catch (e) {
               //Terrible trouble, we need to figure it out
             }

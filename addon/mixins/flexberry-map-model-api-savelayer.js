@@ -26,7 +26,7 @@ export default Ember.Mixin.create({
     return new Ember.RSVP.Promise((resolve, reject) => {
       const saveSuccess = (data) => {
         Ember.set(leafletObject, '_wasChanged', false);
-        const map = Ember.get(leafletObject, '_map');
+        const map = this.get('mapApi').getFromApi('leafletMap');
 
         if (!Ember.isNone(map)) {
           // Remove layer editing.
@@ -39,11 +39,12 @@ export default Ember.Mixin.create({
           Object.values(leafletObject.changes).forEach(item => {
             if (item.state === state.update) {
               let filter = new L.Filter.EQ('primarykey', Ember.get(item, 'feature.properties.primarykey'));
-              map.removeLayer(item);
-              leafletObject.loadFeatures(filter);
-              let id = leafletObject.getLayerId(item);
-              delete leafletObject._layers[id];
-            }
+              if (map.hasLayer(item)) {
+                map.removeLayer(item);
+                leafletObject.loadFeatures(filter);
+                let id = leafletObject.getLayerId(item);
+                delete leafletObject._layers[id];
+              }
           });
         }
 
