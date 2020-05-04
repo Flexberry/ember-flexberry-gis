@@ -170,6 +170,12 @@ export default BaseVectorLayer.extend({
     return leafletObject;
   },
 
+  /**
+    Get geometry from layer in ewkt array
+
+    @method _getGeometry
+    @param {Object} layer
+  */
   _getGeometry(layer) {
     let coordinates = Ember.A();
     let type = layer.toGeoJSON().geometry.type;
@@ -186,19 +192,28 @@ export default BaseVectorLayer.extend({
     }
   },
 
+  /**
+    Set layer properties
+
+    @method _setLayerProperties
+    @param {Object} layer layer
+    @param {Ember.Model} model feature's model
+    @param {Object} geometry
+    @param {Object} leafletObject
+  */
   _setLayerProperties(layer, model, geometry, leafletObject) {
     const modelProj = model.constructor.projections.get(this.get('projectionName'));
     layer.options.crs = this.get('crs');
     layer.model = model;
     layer.modelProj = modelProj;
+    layer.minZoom = this.get('minZoom');
+    layer.maxZoom = this.get('maxZoom');
     layer.feature = {
       type: 'Feature',
       geometry: geometry,
       leafletLayer: layer
     };
-    if (layer.state = state.update) {
-      layer.feature.properties = this.createPropsFromModel(model);
-    }
+    layer.feature.properties = this._setPropsFromModel(model, leafletObject);
 
     if (geometry.type === 'Point') {
       layer.options.style = this.get('style');
@@ -207,6 +222,13 @@ export default BaseVectorLayer.extend({
     }
   },
 
+  /**
+    Get feature, not add to map
+
+    @method _getFeature
+    @param filter
+    @param maxFeatures
+  */
   _getFeature(filter, maxFeatures) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let obj = this.get('_buildStoreModelProjectionGeom');
@@ -448,6 +470,45 @@ export default BaseVectorLayer.extend({
   },
 
   /**
+    Get properties from model to be showed in attribute panel
+
+    @method _getPropsfromModel
+    @param {Ember.Model} model feature's model
+  */
+  _getPropsfromModel(model) {
+    let props = [];
+    for (let prop in model.toJSON()) {
+      let postfix = '';
+      if (model.get(prop) instanceof Object && model.get(`${prop}.name`)) {
+        postfix = '.name';
+      }
+
+      props.push(`${prop}${postfix}`);
+    }
+
+    return props;
+  },
+
+  /**
+    Set properties from model to be showed in attribute panel
+
+    @method _setPropsFromModel
+    @param {Ember.Model} model feature's model
+  */
+  _setPropsFromModel(model, leafletObject) {
+    if (!leafletObject.properties) {
+      leafletObject.properties = this._getPropsfromModel(model);
+    }
+
+    let props = {};
+    leafletObject.properties.forEach(prop => {
+      props[prop] = model.get(`${prop}`);
+    });
+    props.primarykey = Ember.get(model, 'id');
+    return props;
+  },
+
+  /**
     Adds layer object.
 
     @method addLayerObject
@@ -480,8 +541,6 @@ export default BaseVectorLayer.extend({
       innerLayer.state = state.exist;
       this._setLayerProperties(innerLayer, model, geometry, layer);
       if (add) {
-        innerLayer.setStyle(innerLayer.options.style);
-        this._setLayerState();
         L.FeatureGroup.prototype.addLayer.call(layer, innerLayer);
       }
     }
@@ -489,6 +548,13 @@ export default BaseVectorLayer.extend({
     return innerLayer;
   },
 
+  /**
+    Edit layer object properties
+
+    @method editLayerObjectProperties
+    @param {Ember.Model} model feature's model
+    @param {Object} objectProperties feature's properties
+  */
   editLayerObjectProperties(model, objectProperties) {
     if (model) {
       model.setProperties(objectProperties);
@@ -531,6 +597,8 @@ export default BaseVectorLayer.extend({
         }
 
         L.setOptions(layer, options);
+        layer.minZoom = this.get('minZoom');
+        layer.maxZoom = this.get('maxZoom');
         layer.save = this.get('save').bind(this);
         layer.geometryField = obj.geometryField;
         layer.addLayer = this.get('addLayer').bind(this);
@@ -546,6 +614,7 @@ export default BaseVectorLayer.extend({
           this.addLayerObject(layer, model);
         });
 
+        this._setLayerState();
         let promiseLoad = Ember.RSVP.resolve();
         this.set('promiseLoad', promiseLoad);
 
@@ -600,27 +669,6 @@ export default BaseVectorLayer.extend({
     const latLng = latlngs instanceof L.LatLng ? latlngs : L.latLng(latlngs[1], latlngs[0]);
     const point = crs.project(latLng);
     return [point.x, point.y];
-  },
-
-  /**
-   Creates object to be showed in attribute panel
-
-   @method createPropsFromModel
-   @param {Ember.Model} model feature's model
-   */
-  createPropsFromModel(model) {
-    let props = {};
-    for (let prop in model.toJSON()) {
-      let postfix = '';
-      if (model.get(prop) instanceof Object && model.get(`${prop}.name`)) {
-        postfix = '.name';
-      }
-
-      props[prop] = model.get(`${prop}${postfix}`);
-    }
-
-    props.primarykey = Ember.get(model, 'id');
-    return props;
   },
 
   createReadFormat() {
@@ -732,6 +780,7 @@ export default BaseVectorLayer.extend({
               models.forEach(model => {
                 this.addLayerObject(leafletObject, model);
               });
+              this._setLayerState();
               resolve(leafletObject);
             });
           } else {
@@ -841,6 +890,7 @@ export default BaseVectorLayer.extend({
                 models.forEach(model => {
                   this.addLayerObject(leafletObject, model);
                 });
+                this._setLayerState();
 
                 if (leafletObject.statusLoadLayer) {
                   leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
@@ -869,6 +919,7 @@ export default BaseVectorLayer.extend({
               models.forEach(model => {
                 this.addLayerObject(leafletObject, model);
               });
+              this._setLayerState();
 
               if (leafletObject.statusLoadLayer) {
                 leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
