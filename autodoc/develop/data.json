@@ -11708,7 +11708,73 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 237,
+            "line": 173,
+            "description": "Get geometry from layer in ewkt array",
+            "itemtype": "method",
+            "name": "_getGeometry",
+            "params": [
+                {
+                    "name": "layer",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "ODataVectorLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers/odata-vector-layer.js",
+            "line": 195,
+            "description": "Set layer properties",
+            "itemtype": "method",
+            "name": "_setLayerProperties",
+            "params": [
+                {
+                    "name": "layer",
+                    "description": "layer",
+                    "type": "Object"
+                },
+                {
+                    "name": "model",
+                    "description": "feature's model",
+                    "type": "Ember.Model"
+                },
+                {
+                    "name": "geometry",
+                    "description": "",
+                    "type": "Object"
+                },
+                {
+                    "name": "leafletObject",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "ODataVectorLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers/odata-vector-layer.js",
+            "line": 225,
+            "description": "Get feature, not add to map",
+            "itemtype": "method",
+            "name": "_getFeature",
+            "params": [
+                {
+                    "name": "filter",
+                    "description": ""
+                },
+                {
+                    "name": "maxFeatures",
+                    "description": ""
+                }
+            ],
+            "class": "ODataVectorLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers/odata-vector-layer.js",
+            "line": 259,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "identify",
@@ -11739,7 +11805,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 326,
+            "line": 348,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -11784,7 +11850,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 389,
+            "line": 411,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -11815,7 +11881,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 422,
+            "line": 444,
             "description": "Get an array of link parameter restrictions.",
             "itemtype": "method",
             "name": "getFilterParameters",
@@ -11839,7 +11905,39 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 450,
+            "line": 472,
+            "description": "Get properties from model to be showed in attribute panel",
+            "itemtype": "method",
+            "name": "_getPropsfromModel",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "feature's model",
+                    "type": "Ember.Model"
+                }
+            ],
+            "class": "ODataVectorLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers/odata-vector-layer.js",
+            "line": 492,
+            "description": "Set properties from model to be showed in attribute panel",
+            "itemtype": "method",
+            "name": "_setPropsFromModel",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "feature's model",
+                    "type": "Ember.Model"
+                }
+            ],
+            "class": "ODataVectorLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers/odata-vector-layer.js",
+            "line": 511,
             "description": "Adds layer object.",
             "itemtype": "method",
             "name": "addLayerObject",
@@ -11862,7 +11960,28 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 498,
+            "line": 551,
+            "description": "Edit layer object properties",
+            "itemtype": "method",
+            "name": "editLayerObjectProperties",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "feature's model",
+                    "type": "Ember.Model"
+                },
+                {
+                    "name": "objectProperties",
+                    "description": "feature's properties",
+                    "type": "Object"
+                }
+            ],
+            "class": "ODataVectorLayerComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/layers/odata-vector-layer.js",
+            "line": 564,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -11874,7 +11993,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 575,
+            "line": 644,
             "description": "Projects geometry from latlng to coords.",
             "itemtype": "method",
             "name": "transformToCoords",
@@ -11898,23 +12017,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 605,
-            "description": "Creates object to be showed in attribute panel",
-            "itemtype": "method",
-            "name": "createPropsFromModel",
-            "params": [
-                {
-                    "name": "model",
-                    "description": "feature's model",
-                    "type": "Ember.Model"
-                }
-            ],
-            "class": "ODataVectorLayerComponent",
-            "module": "ember-flexberry-gis"
-        },
-        {
-            "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 632,
+            "line": 680,
             "description": "Returns promise with the layer properties object.",
             "itemtype": "method",
             "name": "_getAttributesOptions",
@@ -11925,7 +12028,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 668,
+            "line": 716,
             "description": "Get geometry predicate from bounds",
             "itemtype": "method",
             "name": "_getGeomPredicateFromBounds",
@@ -11951,7 +12054,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 685,
+            "line": 733,
             "description": "Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "loadLayerFeatures",
@@ -11971,7 +12074,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 749,
+            "line": 798,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -11991,7 +12094,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 811,
+            "line": 860,
             "description": "Initializes DOM-related component's properties.",
             "class": "ODataVectorLayerComponent",
             "module": "ember-flexberry-gis"
@@ -46103,35 +46206,35 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:422"
+            "line": " addon/components/layers/odata-vector-layer.js:444"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:498"
+            "line": " addon/components/layers/odata-vector-layer.js:564"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:575"
+            "line": " addon/components/layers/odata-vector-layer.js:644"
         },
         {
             "message": "param name missing: {geometryField}",
-            "line": " addon/components/layers/odata-vector-layer.js:668"
+            "line": " addon/components/layers/odata-vector-layer.js:716"
         },
         {
             "message": "param name missing: {crs}",
-            "line": " addon/components/layers/odata-vector-layer.js:668"
+            "line": " addon/components/layers/odata-vector-layer.js:716"
         },
         {
             "message": "param name missing: {bounds}",
-            "line": " addon/components/layers/odata-vector-layer.js:668"
+            "line": " addon/components/layers/odata-vector-layer.js:716"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:685"
+            "line": " addon/components/layers/odata-vector-layer.js:733"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:749"
+            "line": " addon/components/layers/odata-vector-layer.js:798"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -46675,7 +46778,7 @@
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/odata-vector-layer.js:811"
+            "line": " addon/components/layers/odata-vector-layer.js:860"
         },
         {
             "message": "Missing item type\nPerforms 'getFeature' request to WFS-service related to layer.",
