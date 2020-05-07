@@ -6,6 +6,8 @@ export default {
   'identifybuttontooltip': 'Идентификация',
   'favoritesbuttontooltip': 'Избранное',
   'createobjectbuttontooltip': 'Создание объекта',
+  'xCaption': 'Долгота',
+  'yCaption': 'Широта',
 
   'tabbar': {
     'treeview': {
