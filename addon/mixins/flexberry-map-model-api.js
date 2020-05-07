@@ -11,6 +11,7 @@ import VectorLayer from '../layers/-private/vector';
 import WfsLayer from '../layers/wfs';
 import OdataLayer from '../layers/odata-vector';
 import html2canvasClone from '../utils/html2canvas-clone';
+import state from '../utils/state';
 
 export default Ember.Mixin.create({
   /**
@@ -78,12 +79,31 @@ export default Ember.Mixin.create({
     const leafletObject = Ember.get(layer, '_leafletObject');
     let map = this.get('mapApi').getFromApi('leafletMap');
 
-    leafletObject.showLayerObjects = true;
-    leafletObject.statusLoadLayer = true;
-    map.fire('moveend');
+    let showExisting = leafletObject.options.showExisting;
+    let continueLoading = leafletObject.options.continueLoading;
+    if (!showExisting && !continueLoading) {
+      if (!Ember.isNone(leafletObject)) {
+        leafletObject.eachLayer((layerShape) => {
+          if (map.hasLayer(layerShape)) {
+            map.removeLayer(layerShape);
+          }
+        });
+        leafletObject.clearLayers();
+      }
 
-    if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
-      leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+      leafletObject.promiseLoadLayer =  new Ember.RSVP.Promise((resolve) => {
+        this._getModelLayerFeature(layerId, null, true).then(() => {
+          resolve();
+        });
+      });
+    } else {
+      leafletObject.showLayerObjects = true;
+      leafletObject.statusLoadLayer = true;
+      map.fire('moveend');
+
+      if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+        leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+      }
     }
 
     leafletObject.promiseLoadLayer.then(() => {
@@ -458,7 +478,25 @@ export default Ember.Mixin.create({
         if (layer) {
           layer.set('visibility', visibility);
           if (visibility) {
-            leafletMap.fire('moveend');
+            let leafletObject = Ember.get(layer, '_leafletObject');
+            let showExisting = leafletObject.options.showExisting;
+            let continueLoading = leafletObject.options.continueLoading;
+            if (!showExisting && !continueLoading) {
+              if (!Ember.isNone(leafletObject)) {
+                leafletObject.eachLayer((layerShape) => {
+                  if (map.hasLayer(layerShape)) {
+                    map.removeLayer(layerShape);
+                  }
+                });
+                leafletObject.clearLayers();
+              }
+
+              this._getModelLayerFeature(id, null, true).then(() => {
+                layer.set('visibility', visibility);
+              });
+            } else {
+              leafletMap.fire('moveend');
+            }
           }
         }
       });
@@ -475,7 +513,7 @@ export default Ember.Mixin.create({
   */
   _getLayerFeatureId(layer, layerObject) {
     let field = this._getPkField(layer);
-    if (layerObject.state !== Ember.get(layer, '_leafletObject').state.insert) {
+    if (layerObject.state !== state.insert) {
       if (layerObject.feature.properties.hasOwnProperty(field)) {
         return Ember.get(layerObject, 'feature.properties.' + field);
       }
@@ -509,12 +547,22 @@ export default Ember.Mixin.create({
       }
 
       const map = this.get('mapApi').getFromApi('leafletMap');
-      if (visibility) {
-        leafletObject.showLayerObjects = visibility;
-        leafletObject.statusLoadLayer = true;
-        map.fire('moveend');
-        if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
-          leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+      if (visibility) {        
+        let showExisting = leafletObject.options.showExisting;
+        let continueLoading = leafletObject.options.continueLoading;
+        if (!showExisting && !continueLoading) {
+          leafletObject.promiseLoadLayer =  new Ember.RSVP.Promise((resolve) => {
+            this._getModelLayerFeature(layerId, objectIds, true).then(() => {
+              resolve();
+            });
+          });
+        } else {
+          leafletObject.showLayerObjects = visibility;
+          leafletObject.statusLoadLayer = true;
+          map.fire('moveend');
+          if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+            leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+          }
         }
       } else {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();

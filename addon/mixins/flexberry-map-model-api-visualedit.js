@@ -252,7 +252,7 @@ export default Ember.Mixin.create({
           let featureLayer = [];
           if (load) {
             let layers = layerObject._layers;
-            if (featureIds.length === 1) {
+            if (!Ember.isNone(featureIds) && featureIds.length === 1) {
               let obj = Object.values(layers).find(feature => {
                 const layerFeatureId = this._getLayerFeatureId(e.results[0].layerModel, feature);
                 return layerFeatureId === featureIds[0];
