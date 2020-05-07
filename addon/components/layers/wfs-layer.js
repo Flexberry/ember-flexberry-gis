@@ -379,7 +379,6 @@ export default BaseVectorLayer.extend({
               return loadIds.indexOf(item) === -1;
             });
 
-            
             if (!Ember.isNone(remainingFeat)) {
               let equals = Ember.A();
               remainingFeat.forEach((id) => {

@@ -484,8 +484,8 @@ export default Ember.Mixin.create({
             if (!showExisting && !continueLoading) {
               if (!Ember.isNone(leafletObject)) {
                 leafletObject.eachLayer((layerShape) => {
-                  if (map.hasLayer(layerShape)) {
-                    map.removeLayer(layerShape);
+                  if (leafletMap.hasLayer(layerShape)) {
+                    leafletMap.removeLayer(layerShape);
                   }
                 });
                 leafletObject.clearLayers();
@@ -547,7 +547,7 @@ export default Ember.Mixin.create({
       }
 
       const map = this.get('mapApi').getFromApi('leafletMap');
-      if (visibility) {        
+      if (visibility) {
         let showExisting = leafletObject.options.showExisting;
         let continueLoading = leafletObject.options.continueLoading;
         if (!showExisting && !continueLoading) {
