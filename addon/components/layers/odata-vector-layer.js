@@ -834,7 +834,6 @@ export default BaseVectorLayer.extend({
           }).catch((e) => {
             reject('error');
           });
-          
         } else {
           if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
             let objects = [];

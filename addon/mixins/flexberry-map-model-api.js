@@ -279,7 +279,7 @@ export default Ember.Mixin.create({
                 success: function(data) {
                   _this._getModelLayerFeature(lid, [data.value.split('|')[0]]).then(([, leafletObject, layerObject]) => {
                     resolve({
-                      distance: parseFloat(data.value.split('|')[1].replace(',','.')),
+                      distance: parseFloat(data.value.split('|')[1].replace(',', '.')),
                       layer: layerModel,
                       object: layerObject[0],
                     });
