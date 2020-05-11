@@ -163,11 +163,13 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     let type = layer.get('settingsAsObject.typeGeometry');
     let formats = this.get('_availableFormats');
     if (type === 'polyline' || type === 'marker') {
-      this.set('_availableFormats', formats.push('GPX'));
+      formats.push('GPX');
+      this.set('_availableFormats', formats);
     } else {
       let ind = formats.indexOf('GPX');
       if (ind !== -1) {
-        this.set('_availableFormats', formats.splice(ind));
+        formats.splice(ind);
+        this.set('_availableFormats', formats);
       }
     }
   }),
@@ -297,6 +299,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     let visible = this.get('visible');
 
     if (visible) {
+      this.set('_options', Ember.$.extend(true, {}, defaultOptions));
       this.set('_dialogRequested', true);
     }
   }),

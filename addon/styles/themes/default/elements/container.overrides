@@ -822,6 +822,15 @@
   }
 }
 
+.ui.bottom.bottompanel .intersections-panel-form-row {
+    .feature-result-item-upload {
+      display: none;
+    }
+    .flexberry-toggler-caption {
+      margin-left: 0px;
+    }
+}
+
 /*********************************************
             Search form
 *********************************************/
