@@ -277,9 +277,9 @@ export default Ember.Mixin.create({
                 url: `${config.APP.backendUrls.getNearDistance}(geom='${geom}', table='${table}')`,
                 type: 'GET',
                 success: function(data) {
-                  _this._getModelLayerFeature(lid, [data.value.split('|')[0]]).then(([, leafletObject, layerObject]) => {
+                  _this._getModelLayerFeature(lid, [data.pk]).then(([, leafletObject, layerObject]) => {
                     resolve({
-                      distance: parseFloat(data.value.split('|')[1].replace(',', '.')),
+                      distance: data.distance,
                       layer: layerModel,
                       object: layerObject[0],
                     });
