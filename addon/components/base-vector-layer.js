@@ -72,7 +72,7 @@ export default BaseLayer.extend({
   */
   _getRenderer: function(pane) {
     if (!this.get('_renderer')) {
-      this.set('_renderer', L.canvas({pane: pane}));
+      this.set('_renderer', L.canvas({ pane: pane }));
     }
 
     return this.get('_renderer');
