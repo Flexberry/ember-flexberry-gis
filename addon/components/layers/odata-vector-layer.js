@@ -215,6 +215,12 @@ export default BaseVectorLayer.extend({
     };
     layer.feature.properties = this._setPropsFromModel(model, leafletObject);
 
+    let pane = this._getPane();
+    if (pane) {
+      layer.options.pane = pane.name;
+      layer.options.renderer = this._getRenderer(pane.name);
+    }
+
     if (geometry.type === 'Point') {
       layer.options.style = this.get('style');
     } else {
@@ -537,11 +543,6 @@ export default BaseVectorLayer.extend({
       innerLayer = L.marker(geometryCoordinates);
     }
 
-    let pane = this._getPane();
-    if (pane) {
-      Ember.set(innerLayer, 'options.pane', { pane: pane.name });
-    }
-
     if (innerLayer) {
       innerLayer.state = state.exist;
       this._setLayerProperties(innerLayer, model, geometry, layer);
@@ -615,6 +616,13 @@ export default BaseVectorLayer.extend({
         layer.editformname = obj.modelName + this.get('postfixForEditForm');
         layer.deletedModels = Ember.A();
         layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
+
+        let pane = this._getPane();
+        if (pane) {
+          layer.options.pane = pane.name;
+          layer.options.renderer = this._getRenderer(pane.name);
+        }
+
         models.forEach(model => {
           this.addLayerObject(layer, model);
         });

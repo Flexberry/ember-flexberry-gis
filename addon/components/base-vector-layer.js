@@ -50,16 +50,49 @@ export default BaseLayer.extend({
     @method _getPane
     @private
   */
-  _getPane: function () {
-    let index = this.get('layerModel.index');
+  _getPane: function() {
+    let index = this.get('index');
     if (index) {
       return {
-        name: 'vectorLayerPane' + index,
+        name: 'vectorLayerPane' + this.get('layerModel.id'),
         index: index
       };
     }
 
     return null;
+  },
+
+  _renderer: null,
+
+  /**
+    Gets leaflet layer's renderer.
+
+    @method _setLayerZIndex
+    @private
+  */
+  _getRenderer: function(pane) {
+    if (!this.get('_renderer')) {
+      this.set('_renderer', L.canvas({pane: pane}));
+    }
+
+    return this.get('_renderer');
+  },
+
+  /**
+    Sets leaflet layer's zindex.
+
+    @method _setLayerZIndex
+    @private
+  */
+  _setLayerZIndex: function() {
+    let thisPane = this._getPane();
+    let leafletMap = this.get('leafletMap');
+    if (thisPane && !Ember.isNone(leafletMap)) {
+      let pane = leafletMap.getPane(thisPane.name);
+      if (pane) {
+        pane.style.zIndex = thisPane.index;
+      }
+    }
   },
 
   /**
@@ -231,10 +264,9 @@ export default BaseLayer.extend({
     Leaflet layer or promise returning such layer.
   */
   createLayer() {
-    let thisPane = this._getPane();
     return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.RSVP.hash({
-        vectorLayer: this.createVectorLayer(thisPane ? { pane: thisPane.name } : {})
+        vectorLayer: this.createVectorLayer()
       }).then(({ vectorLayer }) => {
         // Read format contains 'DescribeFeatureType' metadata and is necessary for 'flexberry-layers-attributes-panel' component.
         let readFormat = vectorLayer.readFormat;
