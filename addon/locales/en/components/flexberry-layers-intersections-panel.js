@@ -14,5 +14,7 @@ export default {
   'show-cords': 'Expand table',
   'hide-cords': 'Collapse table',
   'chooseCaption': 'Selected',
-  'notResult': 'No result found'
+  'notResult': 'No result found',
+  'search-placeholder': 'Search',
+  'selectAllText': 'Select all'
 };

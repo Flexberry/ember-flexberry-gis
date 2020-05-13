@@ -1,47 +1,54 @@
 import Ember from 'ember';
 import layout from '../templates/components/select-with-checkbox';
+import FlexberryDropdown from 'ember-flexberry/components/flexberry-dropdown';
+import { translationMacro as t } from 'ember-i18n';
 
-export default Ember.Component.extend({
+const {
+  observer,
+  A,
+  on
+} = Ember;
+
+export default FlexberryDropdown.extend({
   /**
     Reference to component's template.
   */
   layout,
 
-  /**
-    Array with all dropdown items.
-
-    @property items
-    @type Object
-    @default Ember.A()
-  */
-  items: Ember.A(),
+  selectAllText: t('components.flexberry-layers-intersections-panel.selectAllText'),
 
   /**
-    Array with selected dropdown items.
-
-    @property selectedItems
-    @type Object
-    @default Ember.A()
+    Search for occurrences in the entire text (SemanticUI settings).
   */
-  selectedItems: Ember.A(),
+  fullTextSearch: true,
+
+  isAllSelected: false,
+
+  isClearAllVisible: true,
+
+  isSearchVisible: true,
+
+  isSelectAllVisible: true,
+
+  noResults:  t('components.flexberry-layers-intersections-panel.notResult'),
+
+  message: { noResults:  '' },
 
   /**
-    Dropdown title.
-
-    @property title
-    @type String
-    @default undefined
-  */
-  title: undefined,
-
-  /**
-    Classname.
-
-    @property selectorName
-    @type String
-    @default 'fb-selector'
-  */
-  selectorName: 'fb-selector',
+   * Storage for the items state.
+   * @example
+   * ```javascript
+   * [
+   *   {
+   *     key: '2e46cce0-b9fa-4b34-b417-4bd600a89c5d',
+   *     value: 'Подтверждена',
+   *     isVisible: false
+   *   },
+   *   ...
+   * ]
+   * ```
+   */
+  state: null,
 
   /**
     Flag indicates whether is array consists of objects or not.
@@ -53,13 +60,13 @@ export default Ember.Component.extend({
   isObject: false,
 
   /**
-    Flag indicates whether dropdown expanded or not.
+    Array with selected dropdown items.
 
-    @property expanded
-    @type Boolean
-    @default false
+    @property selectedItems
+    @type Object
+    @default Ember.A()
   */
-  expanded: false,
+  selectedItems: Ember.A(),
 
   /**
     Count selected items.
@@ -70,133 +77,59 @@ export default Ember.Component.extend({
   */
   countChoose: 0,
 
-  /**
-    Height div.
-
-    @property heightDiv
-    @type Number
-    @default 0
-  */
-  heightDiv: null,
-
-  /**
-    Hook, working after element insertion
-  */
-  didInsertElement() {
-    let maxHeight = this.$('.fb-selector .checkboxes').css('max-height');
-    let itemsCount = this.get('items').length;
-    if (itemsCount > 8) {
-      this.set('heightDiv', maxHeight);
-    } else {
-      let chHeight = this.$('.fb-selector .checkboxes label').height();
-      this.set('heightDiv', chHeight * itemsCount);
-    }
+  init() {
+    this._super(...arguments);
+    this.set('state', A());
+    let noRes = this.get('noResults').toString();
+    this.set('message', { noResults:  noRes });
   },
 
+  stateObserver: observer('state.@each.isVisible', function () {
+    let filteredState = this.get('state').filterBy('isVisible');
+    const value = filteredState.map((item)=>item.key);
+    this.set('selectedItems', value);
+    this.set('countChoose', value.length);
+  }),
+
+  itemsObserver: on('init', observer('items', function () {
+    const state = Object.entries(this.get('items'))
+      .filter(([key, value]) => !Ember.isNone(value))
+      .map(([i, val]) => {
+        let value = val;
+        let key = i;
+        if (this.get('isObject')) {
+          value = Ember.get(val, 'name');
+          key = val.id;
+        }
+
+        return Ember.Object.create({ key, value, isVisible: false });
+      });
+
+    this.get('state').addObjects(state);
+  })),
+
   actions: {
-    /**
-      Handles click on a dropdown button.
+    selectAll() {
+      const state = this.get('state');
 
-      @method actions.showCheckboxes
-    */
-    showCheckboxes() {
-      let checkboxes = this.$('.fb-selector .checkboxes');
-      if (!this.get('expanded')) {
-        checkboxes.css('display', 'block');
-        this.set('expanded', true);
+      if (this.get('isAllSelected')) {
+        this.send('clearAll');
       } else {
-        checkboxes.css('display', 'none');
-        this.set('expanded', false);
+        state.setEach('isVisible', true);
       }
+
+      this.toggleProperty('isAllSelected');
     },
 
-    /**
-      Handles click on a clear button.
-
-      @method actions.clear
-    */
-    clear() {
-      this.set('selectedItems', Ember.A());
-      let checkboxes = this.$('.fb-selector .checkboxes input:checkbox');
-      checkboxes.each((i, item) => {
-        let checkbox = this.$(item);
-        if (checkbox[0].checked) {
-          checkbox[0].checked = false;
-        }
-      });
-      this.set('countChoose', 0);
+    clearAll() {
+      this.get('state').setEach('isVisible', false);
     },
 
-    /**
-      Handles click on a checkbox.
+    onHide() {
+      const dropdown = this.get('dropdownDomElement').context;
 
-      @method actions.changeCheckbox
-    */
-    changeCheckbox() {
-      let itemArray = this.get('selectedItems');
-      let checkboxes = this.$('.fb-selector .checkboxes input:checkbox');
-      checkboxes.each((i, item) => {
-        let checkbox = this.$(item);
-        let val = checkbox.val();
-        let elem = itemArray.indexOf(val);
-        if (checkbox[0].checked && elem === -1) {
-          itemArray.push(val);
-          this.set('selectedItems', itemArray);
-        } else if (!checkbox[0].checked  && elem !== -1) {
-          itemArray.splice(elem, 1);
-          this.set('selectedItems', itemArray);
-        }
-      });
-      if (this.get('countChoose') !== itemArray.length) {
-        this.set('countChoose', itemArray.length);
-      }
-    },
-
-    /**
-      Handles changes search field.
-
-      @method actions.autoComplete
-    */
-    autoComplete(e) {
-      let elem = this.$('.fb-selector .search');
-      let search = elem.val().toLowerCase();
-      if (!Ember.isEmpty(search)) {
-        this.$('.fb-selector .checkboxes label.hidden').each((i, item) => {
-          this.$(item).removeClass('hidden');
-        });
-        let count = this.get('items').length;
-        let pHidden = this.$('.fb-selector .checkboxes p');
-        if (!pHidden.hasClass('hidden')) {
-          pHidden.addClass('hidden');
-        }
-
-        this.$('.fb-selector .checkboxes label').each((i, item) => {
-          let label = this.$(item);
-          let val = label.text().toLowerCase();
-          if (val.indexOf(search) === -1) {
-            label.addClass('hidden');
-            count--;
-          }
-        });
-        if (count === 0) {
-          pHidden.removeClass('hidden');
-        }
-
-        let visibleCount = count === 0 ? 1 : count;
-        if (visibleCount <= 8) {
-          let chHeight = this.$('.fb-selector .checkboxes label').height();
-          this.set('heightDiv', chHeight * visibleCount);
-        }
-
-        let checkboxes = this.$('.fb-selector .checkboxes');
-        if (!this.get('expanded')) {
-          checkboxes.css('display', 'block');
-          this.set('expanded', true);
-        }
-      } else {
-        this.$('.fb-selector .checkboxes label.hidden').each((i, item) => {
-          this.$(item).removeClass('hidden');
-        });
+      if (!dropdown) {
+        return;
       }
     }
   }
