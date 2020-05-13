@@ -73,7 +73,7 @@ export default BaseVectorLayer.extend({
           layer.state = state.exist;
         });
         _this._setLayerState();
-        leafletObject.fire('save:success');
+        leafletObject.fire('save:success', { layers: e });
       }).catch(function(e) {
         console.log('Error: ' + e);
         leafletObject.fire('save:failed', e);
@@ -117,12 +117,10 @@ export default BaseVectorLayer.extend({
   */
   removeLayer(layer) {
     L.FeatureGroup.prototype.removeLayer.call(this, layer);
-    if (layer.state === state.remove) {
-      layer.model.deleteRecord();
-      layer.model.set('hasChanged', true);
-      layer.state = state.remove;
-      this.deletedModels.addObject(layer.model);
-    }
+    layer.model.deleteRecord();
+    layer.model.set('hasChanged', true);
+    layer.state = state.remove;
+    this.deletedModels.addObject(layer.model);
   },
 
   /**
@@ -214,6 +212,7 @@ export default BaseVectorLayer.extend({
       leafletLayer: layer
     };
     layer.feature.properties = this._setPropsFromModel(model, leafletObject);
+    layer.feature.id = this.get('modelName') + '.' + layer.feature.properties.primarykey;
 
     if (geometry.type === 'Point') {
       layer.options.style = this.get('style');
@@ -843,7 +842,6 @@ export default BaseVectorLayer.extend({
           }).catch((e) => {
             reject('error');
           });
-
         } else {
           if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
             let objects = [];
