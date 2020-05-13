@@ -291,20 +291,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
                 Ember.set(layer, 'feature', {});
               }
 
-              if (!Ember.isNone(layer.model)) {
-                let data = {};
-                for (let prop in layer.model.toJSON()) {
-                  let postfix = '';
-                  if (layer.model.get(prop) instanceof Object && layer.model.get(prop + '.name')) {
-                    postfix = '.name';
-                  }
-
-                  data[prop] = layer.model.get('' + prop + postfix);
-                }
-
-                Ember.set(layer, 'feature.properties', data);
-              }
-
               let props = Ember.get(layer, 'feature.properties');
               let propId = Ember.guidFor(props);
               if (Ember.isNone(Ember.get(layer, 'feature.leafletLayer'))) {
@@ -406,17 +392,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
             if (this.get('groupDraggable') && selectedLayer.indexOf(dragLayer) > -1) {
               selectedLayer.forEach((layer) => {
-                if (!Ember.isNone(layer.model)) {
-                  this.updateGeometryInModel(layer, layer.model);
-                }
-
                 this._triggerChanged.call([this, layer, true], { layer: layer });
               });
             } else {
-              if (!Ember.isNone(dragLayer.model)) {
-                this.updateGeometryInModel(dragLayer, dragLayer.model);
-              }
-
               this._triggerChanged.call([this, dragLayer, true], { layer: dragLayer });
             }
 
@@ -1000,7 +978,9 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
     */
     onClearFoundItemClick() {
       let serviceLayer = this.get('serviceLayer');
-      serviceLayer.clearLayers();
+      if (!Ember.isNone(serviceLayer)) {
+        serviceLayer.clearLayers();
+      }
     },
 
     /**
@@ -1208,13 +1188,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
       Ember.set(leafletMap, 'editTools', editTools);
       let isMarker = layer instanceof L.Marker || layer instanceof L.CircleMarker;
 
-      let updateGeometryInModel = function() {
-        let [tabModel, layer] = this;
-        if (!Ember.isNone(layer.model)) {
-          tabModel.updateGeometryInModel(layer, layer.model);
-        }
-      };
-
       // Remove layer editing.
       leafletMap.eachLayer(function (layer) {
         let enabled = Ember.get(layer, 'editor._enabled');
@@ -1244,8 +1217,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
         layer.enableEdit(leafletMap);
         leafletMap.on('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
         leafletMap.on('editable:vertex:dragstart', this._startSnapping, this);
-        leafletMap.on('editable:vertex:dragend', updateGeometryInModel, [tabModel, layer]);
-        leafletMap.on('editable:vertex:deleted', updateGeometryInModel, [tabModel, layer]);
       } else {
         if (!isMarker) {
           tabModel.disableDragging(rowId);
@@ -1253,8 +1224,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
 
         layer.disableEdit();
         leafletMap.off('editable:editing', tabModel._triggerChanged, [tabModel, layer, true]);
-        leafletMap.off('editable:vertex:dragend', updateGeometryInModel, [tabModel, layer]);
-        leafletMap.off('editable:vertex:deleted', updateGeometryInModel, [tabModel, layer]);
 
         let addedLayers = Ember.get(tabModel, '_addedLayers') || {};
         if (!Ember.isNone(addedLayers[Ember.guidFor(layer)])) {
@@ -1720,9 +1689,6 @@ export default Ember.Component.extend(LeafletZoomToFeatureMixin, {
   */
   _deleteLayerByKey(tabModel, key, selectedRows, editedRows, editedRowsChange) {
     let layer = tabModel.featureLink[key];
-    if (Ember.get(layer, 'model')) {
-      tabModel.leafletObject.deleteModel(layer.model);
-    }
 
     tabModel.leafletObject.removeLayer(layer);
 

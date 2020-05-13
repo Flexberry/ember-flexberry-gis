@@ -30,7 +30,8 @@ module.exports = function (environment) {
       backendUrls: {
         root: backendUrl,
         api: backendUrl + '/odata',
-        featureExportApi: backendUrl + '/api/featureexport'
+        featureExportApi: backendUrl + '/api/featureexport',
+        getNearDistance: backendUrl + '/odata/GetNearDistance'
       },
 
       // Log service settings.
