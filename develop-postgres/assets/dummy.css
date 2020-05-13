@@ -7036,6 +7036,12 @@ div.ui.secondary.menu.no-margin {
 .details .detail {
   font-size: 13px;
 }
+.ui.bottom.bottompanel .intersections-panel-form-row .feature-result-item-upload {
+  display: none;
+}
+.ui.bottom.bottompanel .intersections-panel-form-row .flexberry-toggler-caption {
+  margin-left: 0px;
+}
 /*********************************************
             Search form
 *********************************************/

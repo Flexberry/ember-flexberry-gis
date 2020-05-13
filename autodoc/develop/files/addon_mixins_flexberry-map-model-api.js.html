@@ -421,6 +421,7 @@ import VectorLayer from &#x27;../layers/-private/vector&#x27;;
 import WfsLayer from &#x27;../layers/wfs&#x27;;
 import OdataLayer from &#x27;../layers/odata-vector&#x27;;
 import html2canvasClone from &#x27;../utils/html2canvas-clone&#x27;;
+import state from &#x27;../utils/state&#x27;;
 
 export default Ember.Mixin.create({
   /**
@@ -488,12 +489,31 @@ export default Ember.Mixin.create({
     const leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;);
     let map = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
 
-    leafletObject.showLayerObjects = true;
-    leafletObject.statusLoadLayer = true;
-    map.fire(&#x27;moveend&#x27;);
+    let showExisting = leafletObject.options.showExisting;
+    let continueLoading = leafletObject.options.continueLoading;
+    if (!showExisting &amp;&amp; !continueLoading) {
+      if (!Ember.isNone(leafletObject)) {
+        leafletObject.eachLayer((layerShape) =&gt; {
+          if (map.hasLayer(layerShape)) {
+            map.removeLayer(layerShape);
+          }
+        });
+        leafletObject.clearLayers();
+      }
 
-    if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
-      leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+      leafletObject.promiseLoadLayer =  new Ember.RSVP.Promise((resolve) =&gt; {
+        this._getModelLayerFeature(layerId, null, true).then(() =&gt; {
+          resolve();
+        });
+      });
+    } else {
+      leafletObject.showLayerObjects = true;
+      leafletObject.statusLoadLayer = true;
+      map.fire(&#x27;moveend&#x27;);
+
+      if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+        leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+      }
     }
 
     leafletObject.promiseLoadLayer.then(() =&gt; {
@@ -665,26 +685,58 @@ export default Ember.Mixin.create({
         let result = null;
         let promises = layerIdsArray.map(lid =&gt; {
           return new Ember.RSVP.Promise((resolve, reject) =&gt; {
-            this._getModelLayerFeature(lid, null).then(([layer, lObject, featuresLayer]) =&gt; {
-              featuresLayer.forEach(obj =&gt; {
-                const id = this._getLayerFeatureId(layer, obj);
-                const distance = this._getDistanceBetweenObjects(layerObject[0], obj);
-
-                if (layerId === lid &amp;&amp; layerObjectId === id) {
-                  return;
-                }
-
-                if (Ember.isNone(result) || distance &lt; result.distance) {
-                  result = {
-                    distance: distance,
-                    layer: layer,
-                    object: obj,
-                  };
+            let layerModel = this.getLayerModel(lid);
+            let className = Ember.get(layerModel, &#x27;type&#x27;);
+            let layerType = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, className);
+            if (layerType instanceof OdataLayer) {
+              let table = null;
+              Ember.$.ajax({
+                url: &#x27;assets/flexberry/models/&#x27; + layerModel.get(&#x27;_leafletObject.modelName&#x27;) + &#x27;.json&#x27;,
+                async: false,
+                success: function(data) {
+                  table = data.className;
                 }
               });
+              let center = this.getObjectCenter(layerObject[0]);
+              let geom = &#x60;SRID=4326;POINT(${center.lng} ${center.lat})&#x60;;
+              geom = geom.replace(&#x27;.&#x27;, &#x27;,&#x27;).replace(&#x27;.&#x27;, &#x27;,&#x27;);
+              let config = Ember.getOwner(this).resolveRegistration(&#x27;config:environment&#x27;);
+              let _this = this;
+              Ember.$.ajax({
+                url: &#x60;${config.APP.backendUrls.getNearDistance}(geom=&#x27;${geom}&#x27;, table=&#x27;${table}&#x27;)&#x60;,
+                type: &#x27;GET&#x27;,
+                success: function(data) {
+                  _this._getModelLayerFeature(lid, [data.pk]).then(([, leafletObject, layerObject]) =&gt; {
+                    resolve({
+                      distance: data.distance,
+                      layer: layerModel,
+                      object: layerObject[0],
+                    });
+                  });
+                }
+              });
+            } else {
+              this._getModelLayerFeature(lid, null).then(([layer, lObject, featuresLayer]) =&gt; {
+                featuresLayer.forEach(obj =&gt; {
+                  const id = this._getLayerFeatureId(layer, obj);
+                  const distance = this._getDistanceBetweenObjects(layerObject[0], obj);
 
-              resolve(result);
-            });
+                  if (layerId === lid &amp;&amp; layerObjectId === id) {
+                    return;
+                  }
+
+                  if (Ember.isNone(result) || distance &lt; result.distance) {
+                    result = {
+                      distance: distance,
+                      layer: layer,
+                      object: obj,
+                    };
+                  }
+                });
+
+                resolve(result);
+              });
+            }
           });
         });
 
@@ -703,6 +755,15 @@ export default Ember.Mixin.create({
     });
   },
 
+  getObjectCenter(object) {
+    const type = Ember.get(object, &#x27;feature.geometry.type&#x27;);
+    if (type === &#x27;Point&#x27;) {
+      return object._latlng;
+    } else {
+      return object.getBounds().getCenter();
+    }
+  },
+
   /**
     Get distance between objects
     @method _getDistanceBetweenObjects
@@ -711,19 +772,10 @@ export default Ember.Mixin.create({
     @return {number} Distance between objects in meters.
   */
   _getDistanceBetweenObjects(firstLayerObject, secondLayerObject) {
-    const getObjectCenter = function (object) {
-      const type = Ember.get(object, &#x27;feature.geometry.type&#x27;);
-      if (type === &#x27;Point&#x27;) {
-        return object._latlng;
-      } else {
-        return object.getBounds().getCenter();
-      }
-    };
-
-    const firstPoint = getObjectCenter(firstLayerObject);
+    const firstPoint = this.getObjectCenter(firstLayerObject);
     const firstObject = helpers.point([firstPoint.lat, firstPoint.lng]);
 
-    const secondPoint = getObjectCenter(secondLayerObject);
+    const secondPoint = this.getObjectCenter(secondLayerObject);
     const secondObject = helpers.point([secondPoint.lat, secondPoint.lng]);
 
     // Get distance in meters.
@@ -868,7 +920,25 @@ export default Ember.Mixin.create({
         if (layer) {
           layer.set(&#x27;visibility&#x27;, visibility);
           if (visibility) {
-            leafletMap.fire(&#x27;moveend&#x27;);
+            let leafletObject = Ember.get(layer, &#x27;_leafletObject&#x27;);
+            let showExisting = leafletObject.options.showExisting;
+            let continueLoading = leafletObject.options.continueLoading;
+            if (!showExisting &amp;&amp; !continueLoading) {
+              if (!Ember.isNone(leafletObject)) {
+                leafletObject.eachLayer((layerShape) =&gt; {
+                  if (leafletMap.hasLayer(layerShape)) {
+                    leafletMap.removeLayer(layerShape);
+                  }
+                });
+                leafletObject.clearLayers();
+              }
+
+              this._getModelLayerFeature(id, null, true).then(() =&gt; {
+                layer.set(&#x27;visibility&#x27;, visibility);
+              });
+            } else {
+              leafletMap.fire(&#x27;moveend&#x27;);
+            }
           }
         }
       });
@@ -885,7 +955,7 @@ export default Ember.Mixin.create({
   */
   _getLayerFeatureId(layer, layerObject) {
     let field = this._getPkField(layer);
-    if (layerObject.state !== Ember.get(layer, &#x27;_leafletObject&#x27;).state.insert) {
+    if (layerObject.state !== state.insert) {
       if (layerObject.feature.properties.hasOwnProperty(field)) {
         return Ember.get(layerObject, &#x27;feature.properties.&#x27; + field);
       }
@@ -920,11 +990,21 @@ export default Ember.Mixin.create({
 
       const map = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
       if (visibility) {
-        leafletObject.showLayerObjects = visibility;
-        leafletObject.statusLoadLayer = true;
-        map.fire(&#x27;moveend&#x27;);
-        if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
-          leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+        let showExisting = leafletObject.options.showExisting;
+        let continueLoading = leafletObject.options.continueLoading;
+        if (!showExisting &amp;&amp; !continueLoading) {
+          leafletObject.promiseLoadLayer =  new Ember.RSVP.Promise((resolve) =&gt; {
+            this._getModelLayerFeature(layerId, objectIds, true).then(() =&gt; {
+              resolve();
+            });
+          });
+        } else {
+          leafletObject.showLayerObjects = visibility;
+          leafletObject.statusLoadLayer = true;
+          map.fire(&#x27;moveend&#x27;);
+          if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+            leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+          }
         }
       } else {
         leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
