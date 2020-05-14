@@ -6,7 +6,8 @@ import { translationMacro as t } from 'ember-i18n';
 const {
   observer,
   A,
-  on
+  on,
+  $
 } = Ember;
 
 export default FlexberryDropdown.extend({
@@ -77,6 +78,15 @@ export default FlexberryDropdown.extend({
   */
   countChoose: 0,
 
+  /**
+    Classname.
+
+    @property selectorName
+    @type String
+    @default 'fb-selector'
+  */
+  class: 'fb-selector',
+
   init() {
     this._super(...arguments);
     this.set('state', A());
@@ -123,6 +133,10 @@ export default FlexberryDropdown.extend({
 
     clearAll() {
       this.get('state').setEach('isVisible', false);
+      $('.search-field').val('');
+      $('.fb-selector .item.filtered').each((i, item) => {
+        $(item).removeClass("filtered");
+      });
     },
 
     onHide() {

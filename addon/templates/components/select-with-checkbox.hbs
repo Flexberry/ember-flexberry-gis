@@ -1,6 +1,6 @@
 <label>{{title}}</label>
 {{#ui-dropdown
-  class=(concat "flexberry-dropdown multi-dropdown" class " selection" (if readonly " disabled" ""))
+  class=(concat "flexberry-dropdown multi-dropdown " class " selection" (if readonly " disabled" ""))
   onHide=(action 'onHide')
   onShow=(action 'onShowHide')
   on=on

@@ -92,6 +92,9 @@
     & > i.dropdown.icon {
         margin-right: 5px;
     }
+    .item .flexberry-checkbox.ui.checkbox {
+        width: 100%;
+    }
 }
 .intersections-panel-form-row {
     .flexberry-dropdown.multi-dropdown.selection {
