@@ -596,8 +596,10 @@ export default BaseLayer.extend({
     if (lType.indexOf('Polygon') !== -1) {
       let geojsonReader = new jsts.io.GeoJSONReader();
       let objJsts = geojsonReader.read(layer.feature.geometry);
-      let centroid = objJsts.getCentroid();
-      latlng = layer.getBounds().getCenter();
+      let centroidJsts = objJsts.getInteriorPoint();
+      let geojsonWriter = new jsts.io.GeoJSONWriter();
+      let centroid = geojsonWriter.write(centroidJsts);
+      latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0])
       html = '<p style="' + style + '">' + text + '</p>';
     }
 
