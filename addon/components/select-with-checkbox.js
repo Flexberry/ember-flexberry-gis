@@ -135,7 +135,7 @@ export default FlexberryDropdown.extend({
       this.get('state').setEach('isVisible', false);
       $('.search-field').val('');
       $('.fb-selector .item.filtered').each((i, item) => {
-        $(item).removeClass("filtered");
+        $(item).removeClass('filtered');
       });
     },
 
