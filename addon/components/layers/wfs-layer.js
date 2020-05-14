@@ -172,6 +172,8 @@ export default BaseVectorLayer.extend({
             let filter = new L.Filter.BBox(options.geometryField, bounds, options.crs);
             wfsLayer.loadFeatures(filter);
             wfsLayer.isLoadBounds = bounds;
+          } else if (!options.showExisting && !options.continueLoading && visibility) {
+            wfsLayer.loadFeatures(options.filter);
           }
 
           wfsLayer.on('save:success', this._setLayerState, this);
@@ -265,16 +267,12 @@ export default BaseVectorLayer.extend({
     let equals = Ember.A();
     let leafletObject = this.get('_leafletObject');
     if (!Ember.isNone(leafletObject)) {
-      let type = this.get('layerModel.type');
-      if (!Ember.isBlank(type)) {
-        let layerClass = Ember.getOwner(this).knownForType('layer', type);
-        let layerProperties = layerClass.getLayerProperties(leafletObject);
+      let fieldsType = Ember.get(leafletObject, 'readFormat.featureType.fieldTypes');
+      if (!Ember.isBlank(fieldsType)) {
         searchFields.forEach((field) => {
-          let ind = layerProperties.indexOf(field);
-          if (ind > -1) {
-            let layerPropertyType = typeof layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            let layerPropertyValue = layerClass.getLayerPropertyValues(leafletObject, layerProperties[ind], 1)[0];
-            if (layerPropertyType !== 'string' || (layerPropertyType === 'object' && layerPropertyValue instanceof Date)) {
+          let typeField = fieldsType[field];
+          if (!Ember.isBlank(typeField)) {
+            if (typeField !== 'string') {
               equals.push(new L.Filter.EQ(field, e.searchOptions.queryString));
             } else {
               equals.push(new L.Filter.Like(field, '*' + e.searchOptions.queryString + '*', {
@@ -364,41 +362,44 @@ export default BaseVectorLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletObject = this.get('_leafletObject');
       let featureIds = e.featureIds;
-      if (!leafletObject.options.showExisting && leafletObject.options.continueLoading) {
-        let loadIds = [];
-        leafletObject.eachLayer((shape) => {
-          const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), shape);
+      if (!leafletObject.options.showExisting) {
+        let filter = null;
+        if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
+          let loadIds = [];
+          leafletObject.eachLayer((shape) => {
+            const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), shape);
 
-          if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
-            loadIds.push(id);
-          }
-        });
-
-        if (loadIds.length !== featureIds.length) {
-          let remainingFeat = featureIds.filter((item) => {
-            return loadIds.indexOf(item) === -1;
+            if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
+              loadIds.push(id);
+            }
           });
 
-          let filter = null;
-          if (!Ember.isNone(remainingFeat)) {
-            let equals = Ember.A();
-            remainingFeat.forEach((id) => {
-              let pkField = this.get('mapApi').getFromApi('mapModel')._getPkField(this.get('layerModel'));
-              if (featureIds.includes(id)) {
-                equals.pushObject(new L.Filter.EQ(pkField, id));
-              }
+          if (loadIds.length !== featureIds.length) {
+            let remainingFeat = featureIds.filter((item) => {
+              return loadIds.indexOf(item) === -1;
             });
 
-            filter = new L.Filter.Or(...equals);
-          }
+            if (!Ember.isNone(remainingFeat)) {
+              let equals = Ember.A();
+              remainingFeat.forEach((id) => {
+                let pkField = this.get('mapApi').getFromApi('mapModel')._getPkField(this.get('layerModel'));
+                if (featureIds.includes(id)) {
+                  equals.pushObject(new L.Filter.EQ(pkField, id));
+                }
+              });
 
-          leafletObject.loadFeatures(filter);
-          leafletObject.once('load', () => {
+              filter = new L.Filter.Or(...equals);
+            }
+          } else {
             resolve(leafletObject);
-          });
-        } else {
-          resolve(leafletObject);
+            return;
+          }
         }
+
+        leafletObject.loadFeatures(filter);
+        leafletObject.once('load', () => {
+          resolve(leafletObject);
+        });
       } else {
         resolve(leafletObject);
       }
@@ -416,7 +417,7 @@ export default BaseVectorLayer.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       let leafletObject = this.get('_leafletObject');
       let featureIds = e.featureIds;
-      if (!leafletObject.options.showExisting && leafletObject.options.continueLoading) {
+      if (!leafletObject.options.showExisting) {
         let filter = null;
         if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
           let equals = Ember.A();

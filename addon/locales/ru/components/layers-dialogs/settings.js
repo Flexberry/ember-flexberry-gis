@@ -95,12 +95,6 @@ export default {
     'geometry-type-textbox': {
       'caption': 'Тип геометрии'
     },
-    'coords-function-textbox': {
-      'caption': 'Метод преобразования координат'
-    },
-    'latlng-function-textbox': {
-      'caption': 'Метод преобразования широты и долготы'
-    },
     'min-zoom': {
       'caption': 'Минимальное приближение карты'
     },

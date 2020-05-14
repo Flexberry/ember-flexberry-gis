@@ -29,7 +29,9 @@ module.exports = function (environment) {
       // It's a custom property, used to prevent duplicate backend urls in sources.
       backendUrls: {
         root: backendUrl,
-        api: backendUrl + '/odata'
+        api: backendUrl + '/odata',
+        featureExportApi: backendUrl + '/api/featureexport',
+        getNearDistance: backendUrl + '/odata/GetNearDistance'
       },
 
       // Log service settings.
