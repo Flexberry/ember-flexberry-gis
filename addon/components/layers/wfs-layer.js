@@ -62,10 +62,10 @@ export default BaseVectorLayer.extend({
       geometryField
     };
 
-    let pane = this._getPane();
+    let pane = this.get('_pane');
     if (pane) {
-      readFormatOptions.pane = pane.name;
-      readFormatOptions.renderer = this._getRenderer(pane.name);
+      readFormatOptions.pane = pane;
+      readFormatOptions.renderer = this.get('_renderer');
     }
 
     return new L.Format[format](readFormatOptions);
@@ -137,10 +137,10 @@ export default BaseVectorLayer.extend({
   _addLayer(layer) {
     let leafletObject = this.get('_leafletObject');
 
-    let pane = this._getPane();
+    let pane = this.get('_pane');
     if (pane) {
-      layer.options.pane = pane.name;
-      layer.options.renderer = this._getRenderer(pane.name);
+      layer.options.pane = pane;
+      layer.options.renderer = this.get('_renderer');
     }
 
     leafletObject.baseAddLayer(layer);

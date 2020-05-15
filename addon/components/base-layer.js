@@ -179,9 +179,12 @@ export default Ember.Component.extend(
       return crs;
     }),
 
-    _getPane: function () {
-      return null;
-    },
+    /**
+      @property _pane
+      @type String
+      @readOnly
+    */
+    _pane: null,
 
     /**
       This layer bounding box.
@@ -402,13 +405,14 @@ export default Ember.Component.extend(
         return;
       }
 
-      let thisPane = this._getPane();
+      let thisPane = this.get('_pane');
       if (thisPane) {
         let leafletMap = this.get('leafletMap');
         if (thisPane && !Ember.isNone(leafletMap)) {
-          let pane = leafletMap.getPane(thisPane.name);
+          let pane = leafletMap.getPane(thisPane);
           if (!pane || Ember.isNone(pane)) {
-            leafletMap.createPane(thisPane.name).style.zIndex = thisPane.index;
+            leafletMap.createPane(thisPane);
+            this._setLayerZIndex();
           }
         }
       }

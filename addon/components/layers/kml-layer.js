@@ -61,10 +61,10 @@ export default BaseVectorLayer.extend({
   createVectorLayer(options) {
     options = Ember.$.extend({}, this.get('options'), options);
 
-    let pane = this._getPane();
+    let pane = this.get('_pane');
     if (pane) {
-      options.pane = pane.name;
-      options.renderer = this._getRenderer(pane.name);
+      options.pane = pane;
+      options.renderer = this.get('_renderer');
     }
 
     let layerWithOptions = L.geoJSON([], options);

@@ -47,36 +47,23 @@ export default BaseLayer.extend({
   }),
 
   /**
-    @method _getPane
-    @private
+    @property _pane
+    @type String
+    @readOnly
   */
-  _getPane: function() {
-    let index = this.get('index');
-    if (index) {
-      return {
-        name: 'vectorLayerPane' + this.get('layerModel.id'),
-        index: index
-      };
-    }
-
-    return null;
-  },
-
-  _renderer: null,
+  _pane: Ember.computed('layerModel.id', function () {
+    return 'vectorLayerPane' + this.get('layerModel.id');
+  }),
 
   /**
-    Gets leaflet layer's renderer.
-
-    @method _setLayerZIndex
-    @private
+    @property _renderer
+    @type Object
+    @readOnly
   */
-  _getRenderer: function(pane) {
-    if (!this.get('_renderer')) {
-      this.set('_renderer', L.canvas({ pane: pane }));
-    }
-
-    return this.get('_renderer');
-  },
+  _renderer: Ember.computed('_pane', function () {
+    let pane = this.get('_pane');
+    return L.canvas({ pane: pane });
+  }),
 
   /**
     Sets leaflet layer's zindex.
@@ -85,12 +72,12 @@ export default BaseLayer.extend({
     @private
   */
   _setLayerZIndex: function() {
-    let thisPane = this._getPane();
+    let thisPane = this.get('_pane');
     let leafletMap = this.get('leafletMap');
     if (thisPane && !Ember.isNone(leafletMap)) {
-      let pane = leafletMap.getPane(thisPane.name);
+      let pane = leafletMap.getPane(thisPane);
       if (pane) {
-        pane.style.zIndex = thisPane.index;
+        pane.style.zIndex = this.get('index');
       }
     }
   },

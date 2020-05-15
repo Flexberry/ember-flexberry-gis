@@ -213,11 +213,11 @@ export default BaseVectorLayer.extend({
     };
     layer.feature.properties = this._setPropsFromModel(model, leafletObject);
     layer.feature.id = this.get('modelName') + '.' + layer.feature.properties.primarykey;
-    
-    let pane = this._getPane();
+
+    let pane = this.get('_pane');
     if (pane) {
-      layer.options.pane = pane.name;
-      layer.options.renderer = this._getRenderer(pane.name);
+      layer.options.pane = pane;
+      layer.options.renderer = this.get('_renderer');
     }
 
     if (geometry.type === 'Point') {
@@ -616,10 +616,10 @@ export default BaseVectorLayer.extend({
         layer.deletedModels = Ember.A();
         layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
 
-        let pane = this._getPane();
+        let pane = this.get('_pane');
         if (pane) {
-          layer.options.pane = pane.name;
-          layer.options.renderer = this._getRenderer(pane.name);
+          layer.options.pane = pane;
+          layer.options.renderer = this.get('_renderer');
         }
 
         models.forEach(model => {
