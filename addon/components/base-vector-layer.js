@@ -493,8 +493,7 @@ export default BaseLayer.extend({
         leafletMap.off('moveend', this._showLabelsMovingMap, this);
       }
 
-      let lType = this.get('_leafletObject').getLayers()[0].toGeoJSON().geometry.type;
-      if (lType.indexOf('LineString') !== -1) {
+      if (this.get('settings.typeGeometry') === 'polyline') {
         leafletMap.off('zoomend', this._updatePositionLabelForLine, this);
       }
     }
@@ -599,7 +598,7 @@ export default BaseLayer.extend({
       let centroidJsts = objJsts.getInteriorPoint();
       let geojsonWriter = new jsts.io.GeoJSONWriter();
       let centroid = geojsonWriter.write(centroidJsts);
-      latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0])
+      latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);
       html = '<p style="' + style + '">' + text + '</p>';
     }
 
@@ -958,8 +957,7 @@ export default BaseLayer.extend({
           leafletMap.on('moveend', this._showLabelsMovingMap, this);
         }
 
-        let lType = leafletObject.getLayers()[0].toGeoJSON().geometry.type;
-        if (lType.indexOf('LineString') !== -1) {
+        if (this.get('settings.typeGeometry') === 'polyline') {
           //this._updatePositionLabelForLine();
           leafletMap.on('zoomend', this._updatePositionLabelForLine, this);
         }
@@ -974,9 +972,7 @@ export default BaseLayer.extend({
       //this._addLabelsToLeafletContainer();
       //leafletMap.on('moveend', this._showLabelsMovingMap, this);
 
-      let lType = leafletObject.getLayers()[0].toGeoJSON().geometry.type;
-
-      if (lType.indexOf('LineString') !== -1) {
+      if (this.get('settings.typeGeometry') === 'polyline') {
         this._updatePositionLabelForLine();
         //leafletMap.on('zoomend', this._updatePositionLabelForLine, this);
       }
@@ -1003,11 +999,13 @@ export default BaseLayer.extend({
   */
   _addLabelsToLeafletContainer() {
     let labelsLayer = this.get('_labelsLayer');
+    let leafletMap = this.get('leafletMap');
 
     if (Ember.isNone(labelsLayer)) {
       this._showLabels();
       labelsLayer = this.get('_labelsLayer');
-      let leafletMap = this.get('leafletMap');
+      leafletMap.addLayer(labelsLayer);
+    } else if (!leafletMap.hasLayer(labelsLayer)) {
       leafletMap.addLayer(labelsLayer);
     } else {
       this._showLabels();
@@ -1050,17 +1048,6 @@ export default BaseLayer.extend({
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
         this._addLabelsToLeafletContainer();
       }
-      /*let labelsLayer = this.get('_labelsLayer');
-      if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_leafletObject'))) {
-        if (!Ember.isNone(labelsLayer) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
-          let leafletMap = this.get('leafletMap');
-          leafletMap.addLayer(labelsLayer);
-        } else {
-          this._addLabelsToLeafletContainer();
-        }
-      }*/
-
-      
     } else {
       this._removeLayerFromLeafletContainer();
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {

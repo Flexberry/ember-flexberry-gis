@@ -63,7 +63,7 @@ const createcommonLabelSettings = function () {
     },
     location: {
       locationPoint: 'overRight',
-      lineLocationSelect: null
+      lineLocationSelect: 'Over the line'
     },
     scaleRange: {
       minScaleRange: null,

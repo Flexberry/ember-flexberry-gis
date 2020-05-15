@@ -147,7 +147,7 @@ export default Ember.Component.extend({
     @default null
     @private
   */
-  _layerType: null,
+  //_layerType: null,
 
   /**
     Hash containing location label.
@@ -158,6 +158,16 @@ export default Ember.Component.extend({
     @private
   */
   _scaleRangeCaption: 'components.layers-dialogs.settings.group.tab.labels-settings.scale-range-caption',
+
+  /**
+    Containing available location of the line layer.
+
+    @property _itemsLineLocation
+    @type Object[]
+    @default null
+    @private
+  */
+  _itemsLineLocation: null,
 
   /**
     Containing available location of the line layer.
@@ -174,6 +184,42 @@ export default Ember.Component.extend({
     let along = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.along`).toString();
     let under = i18n.t(`components.layers-dialogs.settings.group.tab.labels-settings.availableLineLocation.under`).toString();
     result = Ember.A([over, along, under]);
+    let itemLineLocation = {
+      over: over,
+      along: along,
+      under: under
+    };
+    this.set('_itemsLineLocation', itemLineLocation);
+    return result;
+  }),
+
+  /**
+    Location of the line layer.
+
+    @property _lineLocationSelect
+    @type String
+    @default null
+    @private
+  */
+  _lineLocationSelect: Ember.computed('value.location.lineLocationSelect', '_itemsLineLocation', function() {
+    let location = this.get('value.location.lineLocationSelect');
+    let items = this.get('_itemsLineLocation');
+    let result = items['over'];
+    let setting = 'over';
+    if (!Ember.isNone(items)) {
+      for (var key in items) {
+        if (key === location) {
+          result = items[key];
+          setting = key;
+          break;
+        }
+      }
+    }
+
+    if (Ember.isNone(location)) {
+      this.set('value.location.lineLocationSelect', setting);
+    }
+
     return result;
   }),
 
@@ -266,14 +312,14 @@ export default Ember.Component.extend({
 
             _this.set('_availableLayerProperties', availableLayerProperties);
 
-            let lType = leafletObject.getLayers()[0].toGeoJSON().geometry.type;
-            if (lType === 'Point' || lType === 'MultiPoint') {
+            /*let lType = this.get('settingsAsObject.typeGeometry');
+            if (lType === 'marker') {
               this.set('_layerType', 'point');
             }
 
-            if (lType === 'LineString' || lType === 'MultiLineString') {
+            if (lType === 'polyline') {
               this.set('_layerType', 'line');
-            }
+            }*/
           }
         }).catch(() => {
           _this.set('_leafletObjectIsLoading', false);
@@ -892,6 +938,25 @@ export default Ember.Component.extend({
 
   actions: {
     /**
+      Handles onLineLocationSelect - dropdown change.
+      @method actions.onLineLocationSelect
+    */
+    onLineLocationSelect(location) {
+      let items = this.get('_itemsLineLocation');
+      let result = 'over';
+      if (!Ember.isNone(items)) {
+        for (var key in items) {
+          if (items[key] === location) {
+            result = key;
+            break;
+          }
+        }
+      }
+
+      this.set('value.location.lineLocationSelect', result);
+    },
+
+    /**
       Handles signMapObjects-checkbox change.
       @method actions.signMapObjectsCheckboxDidChange
     */
@@ -940,7 +1005,7 @@ export default Ember.Component.extend({
       @method actions.applyLabel
     */
     applyLabel() {
-      let leafletMap = this.get('leafletMap');
+      /*let leafletMap = this.get('leafletMap');
       let leafletObject = this.get('_leafletObject');
       let labelsLayer = this.get('_labelsLayer');
       this.set('_labelsLayer', labelsLayer);
@@ -966,7 +1031,7 @@ export default Ember.Component.extend({
 
       if (this.get('value.signMapObjects') && leafletMap.hasLayer(leafletObject)) {
         this._showLabels();
-      }
+      }*/
     },
 
     /**

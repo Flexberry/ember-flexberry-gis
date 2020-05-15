@@ -130,7 +130,7 @@
     </div>
   </div>
 </div>
-{{#if (eq _layerType "point")}}
+{{#if (eq settingsAsObject.typeGeometry "marker")}}
   <div class="field">
     <label>{{t _locationCaption}}</label>
     <div class="ui grid">
@@ -209,13 +209,14 @@
     </div>
   </div>
 {{/if}}
-{{#if  (eq _layerType "line")}}
+{{#if  (eq settingsAsObject.typeGeometry "polyline")}}
   <div class="field">
     <label>{{t _locationCaption}}</label>
     {{flexberry-dropdown
       items=_availableLineLocation
-      value=value.location.lineLocationSelect
+      value=_lineLocationSelect
       readonly=(not value.signMapObjects)
+      onChange=(action "onLineLocationSelect")
     }}
   </div>
 {{/if}}
