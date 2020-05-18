@@ -895,7 +895,7 @@ export default BaseVectorLayer.extend({
         if (!Ember.isNone(leafletObject)) {
           let show = this.get(&#x27;layerModel.visibility&#x27;) || (!Ember.isNone(leafletObject.showLayerObjects) &amp;&amp; leafletObject.showLayerObjects);
           let continueLoad = !leafletObject.options.showExisting &amp;&amp; leafletObject.options.continueLoading;
-          if (continueLoad &amp;&amp; show &amp;&amp; checkMapZoom(leafletObject)) {
+          if (leafletMap.hasLayer(leafletObject) &amp;&amp; continueLoad &amp;&amp; show &amp;&amp; checkMapZoom(leafletObject)) {
             let bounds = leafletMap.getBounds();
             if (!Ember.isNone(leafletObject.showLayerObjects)) {
               leafletObject.showLayerObjects = false;

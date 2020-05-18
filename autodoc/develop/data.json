@@ -26724,76 +26724,90 @@
         {
             "file": "addon/components/feature-export.js",
             "line": 57,
-            "description": "Request dialog to show.",
+            "description": "All availble crs name.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-export.js",
             "line": 62,
+            "description": "Request dialog to show.",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-export.js",
+            "line": 67,
             "description": "Current crs.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 72,
+            "line": 77,
             "description": "Current data format.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 94,
+            "line": 99,
             "description": "Upload file extension.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 119,
+            "line": 124,
             "description": "Layer settings",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 137,
+            "line": 142,
             "description": "Layout.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 142,
+            "line": 147,
             "description": "Style.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 147,
+            "line": 152,
             "description": "Dialog visibility.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 152,
+            "line": 157,
             "description": "Data to upload.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 157,
+            "line": 162,
             "description": "GPX format only polyline and marker",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 178,
+            "line": 182,
+            "description": "Filter crs for difference formats",
+            "class": "FeatureResultItemComponent",
+            "module": "ember-flexberry-gis"
+        },
+        {
+            "file": "addon/components/feature-export.js",
+            "line": 199,
             "description": "Approve and start of export.",
             "params": [
                 {
@@ -26807,21 +26821,21 @@
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 261,
+            "line": 282,
             "description": "Initializes component.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 295,
+            "line": 316,
             "description": "When the first time show window, then his need to show.",
             "class": "FeatureResultItemComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 307,
+            "line": 328,
             "description": "Data loading.",
             "params": [
                 {
@@ -26840,7 +26854,7 @@
         },
         {
             "file": "addon/components/feature-export.js",
-            "line": 326,
+            "line": 347,
             "description": "Data request.",
             "params": [
                 {
@@ -47569,64 +47583,72 @@
             "line": " addon/components/feature-export.js:52"
         },
         {
-            "message": "Missing item type\nRequest dialog to show.",
+            "message": "Missing item type\nAll availble crs name.",
             "line": " addon/components/feature-export.js:57"
         },
         {
-            "message": "Missing item type\nCurrent crs.",
+            "message": "Missing item type\nRequest dialog to show.",
             "line": " addon/components/feature-export.js:62"
         },
         {
+            "message": "Missing item type\nCurrent crs.",
+            "line": " addon/components/feature-export.js:67"
+        },
+        {
             "message": "Missing item type\nCurrent data format.",
-            "line": " addon/components/feature-export.js:72"
+            "line": " addon/components/feature-export.js:77"
         },
         {
             "message": "Missing item type\nUpload file extension.",
-            "line": " addon/components/feature-export.js:94"
+            "line": " addon/components/feature-export.js:99"
         },
         {
             "message": "Missing item type\nLayer settings",
-            "line": " addon/components/feature-export.js:119"
+            "line": " addon/components/feature-export.js:124"
         },
         {
             "message": "Missing item type\nLayout.",
-            "line": " addon/components/feature-export.js:137"
-        },
-        {
-            "message": "Missing item type\nStyle.",
             "line": " addon/components/feature-export.js:142"
         },
         {
-            "message": "Missing item type\nDialog visibility.",
+            "message": "Missing item type\nStyle.",
             "line": " addon/components/feature-export.js:147"
         },
         {
-            "message": "Missing item type\nData to upload.",
+            "message": "Missing item type\nDialog visibility.",
             "line": " addon/components/feature-export.js:152"
         },
         {
-            "message": "Missing item type\nGPX format only polyline and marker",
+            "message": "Missing item type\nData to upload.",
             "line": " addon/components/feature-export.js:157"
         },
         {
+            "message": "Missing item type\nGPX format only polyline and marker",
+            "line": " addon/components/feature-export.js:162"
+        },
+        {
+            "message": "Missing item type\nFilter crs for difference formats",
+            "line": " addon/components/feature-export.js:182"
+        },
+        {
             "message": "Missing item type\nApprove and start of export.",
-            "line": " addon/components/feature-export.js:178"
+            "line": " addon/components/feature-export.js:199"
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/feature-export.js:261"
+            "line": " addon/components/feature-export.js:282"
         },
         {
             "message": "Missing item type\nWhen the first time show window, then his need to show.",
-            "line": " addon/components/feature-export.js:295"
+            "line": " addon/components/feature-export.js:316"
         },
         {
             "message": "Missing item type\nData loading.",
-            "line": " addon/components/feature-export.js:307"
+            "line": " addon/components/feature-export.js:328"
         },
         {
             "message": "Missing item type\nData request.",
-            "line": " addon/components/feature-export.js:326"
+            "line": " addon/components/feature-export.js:347"
         },
         {
             "message": "Missing item type\nReference to component's template.",

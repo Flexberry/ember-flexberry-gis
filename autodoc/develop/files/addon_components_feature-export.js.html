@@ -420,7 +420,7 @@ import {
  */
 const defaultOptions = {
   format: &#x27;JSON&#x27;,
-  coordSystem: &#x27;EPSG:3857&#x27;
+  coordSystem: &#x27;EPSG:4326&#x27;
 };
 
 /**
@@ -463,6 +463,11 @@ let FeatureExportDialogComponent = Ember.Component.extend({
    * Availble crs name.
    */
   _availableCRSNames: null,
+
+  /**
+   * All availble crs name.
+   */
+  _allCRSNames: null,
 
   /**
    * Request dialog to show.
@@ -584,6 +589,22 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     }
   }),
 
+  /**
+   * Filter crs for difference formats
+   */
+  _filterCRS: Ember.observer(&#x27;_options.format&#x27;, function() {
+    let selectedFormat = this.get(&#x27;_options.format&#x27;);
+    if (selectedFormat === &#x27;KML&#x27;) {
+      let crs4326Names = [];
+      crs4326Names.push(defaultOptions.coordSystem);
+      this.set(&#x27;_crs4326Names&#x27;, crs4326Names);
+      this.set(&#x27;availableCRSNames&#x27;, this.get(&#x27;_crs4326Names&#x27;));
+      this.set(&#x27;_options.coordSystem&#x27;, defaultOptions.coordSystem);
+    } else {
+      this.set(&#x27;availableCRSNames&#x27;, this.get(&#x27;_allCRSNames&#x27;));
+    }
+  }),
+
   actions: {
     /**
      * Approve and start of export.
@@ -698,7 +719,7 @@ let FeatureExportDialogComponent = Ember.Component.extend({
     }
 
     this.set(&#x27;availableCRSNames&#x27;, availableCRSNames);
-
+    this.set(&#x27;_allCRSNames&#x27;, availableCRSNames);
     this.set(&#x27;_options&#x27;, Ember.$.extend(true, {}, defaultOptions));
   },
 

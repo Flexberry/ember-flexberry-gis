@@ -988,7 +988,7 @@ export default BaseVectorLayer.extend({
       let showExisting = this.get(&#x27;showExisting&#x27;);
       if (!showExisting &amp;&amp; continueLoading &amp;&amp; visibility &amp;&amp; checkMapZoomLayer(this)) {
         obj.build.predicate = this._getGeomPredicateFromBounds(obj.geometryField, crs, bounds);
-      } else if (!showExisting &amp;&amp; !continueLoading &amp;&amp; !visibility) {
+      } else {
         // Fake request
         obj.build.predicate = new Query.SimplePredicate(&#x27;id&#x27;, Query.FilterOperator.Eq, null);
       }
@@ -1289,7 +1289,7 @@ export default BaseVectorLayer.extend({
         if (!Ember.isNone(leafletObject)) {
           let show = this.get(&#x27;layerModel.visibility&#x27;) || (!Ember.isNone(leafletObject.showLayerObjects) &amp;&amp; leafletObject.showLayerObjects);
           let continueLoad = !leafletObject.options.showExisting &amp;&amp; leafletObject.options.continueLoading;
-          if (continueLoad &amp;&amp; show &amp;&amp; checkMapZoom(leafletObject)) {
+          if (leafletMap.hasLayer(leafletObject) &amp;&amp; continueLoad &amp;&amp; show &amp;&amp; checkMapZoom(leafletObject)) {
             let bounds = leafletMap.getBounds();
             if (!Ember.isNone(leafletObject.showLayerObjects)) {
               leafletObject.showLayerObjects = false;
