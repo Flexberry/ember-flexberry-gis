@@ -180,6 +180,13 @@ export default Ember.Component.extend(
     }),
 
     /**
+      @property _pane
+      @type String
+      @readOnly
+    */
+    _pane: null,
+
+    /**
       This layer bounding box.
 
       @property bounds
@@ -226,11 +233,6 @@ export default Ember.Component.extend(
         }
 
         this.sendAction('layerInit', { leafletObject: leafletLayer, layerModel: this.get('layerModel') });
-
-        // After saving, arrange layers by index.
-        leafletLayer.on('save:success', () => {
-          this._fixZIndexFire();
-        });
 
         return leafletLayer;
       }).catch((errorMessage) => {
@@ -337,8 +339,6 @@ export default Ember.Component.extend(
 
       const index = this.get('index');
       leafletLayer.setZIndex(index);
-
-      this._fixZIndexFire();
     },
 
     /**
@@ -405,6 +405,18 @@ export default Ember.Component.extend(
         return;
       }
 
+      let thisPane = this.get('_pane');
+      if (thisPane) {
+        let leafletMap = this.get('leafletMap');
+        if (thisPane && !Ember.isNone(leafletMap)) {
+          let pane = leafletMap.getPane(thisPane);
+          if (!pane || Ember.isNone(pane)) {
+            leafletMap.createPane(thisPane);
+            this._setLayerZIndex();
+          }
+        }
+      }
+
       leafletContainer.addLayer(leafletLayer);
       let leafletMap = this.get('leafletMap');
       if (!Ember.isNone(leafletMap)) {
@@ -448,7 +460,6 @@ export default Ember.Component.extend(
     */
     _visibilityDidChange: Ember.observer('visibility', function () {
       this._setLayerVisibility();
-      this._fixZIndexFire();
     }),
 
     /**
@@ -476,20 +487,6 @@ export default Ember.Component.extend(
       // so we must restore opacity to user defined value.
       this._setLayerOpacity();
     }),
-
-    /**
-      Rebuild layers.
-
-      @method _fixZIndexFire
-      @private
-    */
-    _fixZIndexFire: function () {
-      const leafletMap = this.get('leafletMap');
-
-      if (!Ember.isNone(leafletMap)) {
-        leafletMap.fire('fixZIndex');
-      }
-    },
 
     /**
       Handles 'flexberry-map:identify' event of leaflet map.
@@ -646,15 +643,6 @@ export default Ember.Component.extend(
         leafletMap.on('flexberry-map:load', (e) => {
           if (!Ember.isNone(this.promiseLoad)) {
             e.results.push(this.get('_leafletLayerPromise'));
-
-            if (e.loadFunc.length === 0) {
-              e.loadFunc.push(() => {
-
-                if (!Ember.isNone(leafletMap.fire)) {
-                  leafletMap.fire('fixZIndex');
-                }
-              });
-            }
           }
 
         }, this);
