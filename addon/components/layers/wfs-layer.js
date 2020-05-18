@@ -384,8 +384,10 @@ export default BaseVectorLayer.extend({
         equals.pushObject(new L.Filter.Or(...propertyEquals));
       } else {
         equals.pushObject(new L.Filter.EQ(property, propertyValue));
-        }
-        return equals;
+      }
+    });
+
+    return equals;
     });
 
   /**
