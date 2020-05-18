@@ -457,6 +457,42 @@ export default BaseLayer.extend({
   }),
 
   /**
+    @property _pane
+    @type String
+    @readOnly
+  */
+  _pane: Ember.computed(&#x27;layerModel.id&#x27;, function () {
+    return &#x27;vectorLayerPane&#x27; + this.get(&#x27;layerModel.id&#x27;);
+  }),
+
+  /**
+    @property _renderer
+    @type Object
+    @readOnly
+  */
+  _renderer: Ember.computed(&#x27;_pane&#x27;, function () {
+    let pane = this.get(&#x27;_pane&#x27;);
+    return L.canvas({ pane: pane });
+  }),
+
+  /**
+    Sets leaflet layer&#x27;s zindex.
+
+    @method _setLayerZIndex
+    @private
+  */
+  _setLayerZIndex: function() {
+    let thisPane = this.get(&#x27;_pane&#x27;);
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    if (thisPane &amp;&amp; !Ember.isNone(leafletMap)) {
+      let pane = leafletMap.getPane(thisPane);
+      if (pane) {
+        pane.style.zIndex = this.get(&#x27;index&#x27;);
+      }
+    }
+  },
+
+  /**
     Sets leaflet layer&#x27;s opacity.
 
     @method _setLayerOpacity

@@ -466,10 +466,19 @@ export default BaseVectorLayer.extend({
     let options = this.get(&#x27;options&#x27;);
     let crs = Ember.get(options, &#x27;crs&#x27;);
     let geometryField = Ember.get(options, &#x27;geometryField&#x27;);
-    return new L.Format[format]({
+
+    let readFormatOptions = {
       crs,
       geometryField
-    });
+    };
+
+    let pane = this.get(&#x27;_pane&#x27;);
+    if (pane) {
+      readFormatOptions.pane = pane;
+      readFormatOptions.renderer = this.get(&#x27;_renderer&#x27;);
+    }
+
+    return new L.Format[format](readFormatOptions);
   },
 
   /**
@@ -535,6 +544,18 @@ export default BaseVectorLayer.extend({
     });
   },
 
+  _addLayer(layer) {
+    let leafletObject = this.get(&#x27;_leafletObject&#x27;);
+
+    let pane = this.get(&#x27;_pane&#x27;);
+    if (pane) {
+      layer.options.pane = pane;
+      layer.options.renderer = this.get(&#x27;_renderer&#x27;);
+    }
+
+    leafletObject.baseAddLayer(layer);
+  },
+
   /**
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
@@ -587,6 +608,8 @@ export default BaseVectorLayer.extend({
           }
 
           wfsLayer.on(&#x27;save:success&#x27;, this._setLayerState, this);
+          Ember.set(wfsLayer, &#x27;baseAddLayer&#x27;, wfsLayer.addLayer);
+          wfsLayer.addLayer = this.get(&#x27;_addLayer&#x27;).bind(this);
           resolve(wfsLayer);
         })
         .once(&#x27;error&#x27;, (e) =&gt; {
