@@ -1,0 +1,23 @@
+﻿{
+  "propertyLookup": [
+    {
+      "master": null,
+      "displayAttributeName": null,
+      "required": false,
+      "relationName": "DefaultMap",
+      "projection": "MapL",
+      "detailModelName": null
+    }
+  ],
+  "external": false,
+  "caption": "Настройка объектов карты",
+  "name": "NewPlatformFlexberryGISMapObjectSettingE",
+  "className": "MapObjectSettingE",
+  "attrs": [],
+  "projections": [
+    {
+      "modelName": "new-platform-flexberry-g-i-s-map-object-setting",
+      "modelProjection": "MapObjectSettingE"
+    }
+  ]
+}

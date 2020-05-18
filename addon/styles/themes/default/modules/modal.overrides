@@ -352,6 +352,7 @@
 .ui.modal.flexberry-edit-map-dialog,
 .ui.modal.flexberry-edit-layer-attributes-dialog,
 .ui.modal.flexberry-geometry-add-mode-manual-dialog,
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog,
 .ui.modal.flexberry-geometry-add-mode-geoprovider-dialog,
 .ui.modal.flexberry-geometry-add-mode-import-dialog,
 .ui.modal.flexberry-geometry-add-mode-import-result {
@@ -366,11 +367,19 @@
   }
 }
 
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog {
+  .flexberry-geometry-add-mode-rhumb-table-block {
+    overflow: auto;
+    height: 170px;
+  }
+}
+
 .ui.modal.flexberry-add-layer-dialog,
 .ui.modal.flexberry-copy-layer-dialog,
 .ui.modal.flexberry-edit-layer-dialog,
 .ui.modal.flexberry-edit-map-dialog,
 .ui.modal.flexberry-edit-layer-attributes-dialog,
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog,
 .ui.modal.flexberry-geometry-add-mode-manual-dialog {
   &> .flexberry-dialog-content.content {
     // Same as dialog content's max-height in Semantic UI.
@@ -408,7 +417,7 @@
   }
 }
 
-.ui.modal.flexberry-geometry-add-mode-import-dialog {
+.ui.modal.flexberry-geometry-add-mode-import-dialog, .layers-dialogs-data-tabs {
   .import-from-file input {
     display: none;
   }
@@ -439,6 +448,7 @@ form.flexberry-edit-layermap,
 form.flexberry-edit-map,
 form.flexberry-edit-layer-attributes,
 form.flexberry-geometry-add-mode-manual-form,
+form.flexberry-geometry-add-mode-rhumb-form,
 form.flexberry-geometry-add-mode-geoprovider-form {
   height: 100%;
 

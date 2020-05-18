@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../../templates/components/geometry-add-modes/manual';
+import LeafletZoomToFeatureMixin from '../../mixins/leaflet-zoom-to-feature';
 import { translationMacro as t } from 'ember-i18n';
 
 /**
@@ -28,7 +29,8 @@ const flexberryClassNames = {
   form: flexberryClassNamesPrefix + '-form'
 };
 
-let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
+let FlexberryGeometryAddModeManualComponent = Ember.Component.extend(LeafletZoomToFeatureMixin, {
+
   /**
     Reference to component's template.
   */
@@ -90,7 +92,56 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
   */
   _coordinatesWithError: false,
 
-  menuButtonTooltip: t('components.geometry-add-modes.manual.menu-button-tooltip'),
+  /**
+    Flag to disable object type selection.
+
+    @property _objectTypeDisabled
+    @type Boolean
+    @default true
+    @private
+  */
+  _objectTypeDisabled: true,
+
+  /**
+    Object type selection error flag.
+
+    @property _geometryField
+    @type Boolean
+    @default false
+    @private
+  */
+  _geometryField: false,
+
+  /**
+    Flag to dispaly parse error.
+
+    @property coordinatesParseError
+    @type Boolean
+    @default false
+  */
+  coordinatesParseError: false,
+
+  /**
+    Flag to display line error.
+
+    @property coordinatesInLineError
+    @type Boolean
+    @default false
+  */
+  coordinatesInLineError: false,
+
+  /**
+    Object types.
+
+    @property _geometryField
+    @type string[]
+    @default ['Point', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon']
+    @readonly
+    @private
+  */
+  _types: ['Point', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon'],
+
+  menuButtonTooltip: t('components.geometry-add-modes.manual.menu-button-tooltip-add'),
 
   dialogApproveButtonCaption: t('components.geometry-add-modes.manual.dialog-approve-button-caption'),
 
@@ -104,13 +155,55 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
 
   coordinatesFieldPlaceholder: t('components.geometry-add-modes.manual.coordinates-field-placeholder'),
 
+  coordinatesParseErrorLabel: t('components.geometry-add-modes.manual.coordinates-parse-error-label'),
+
+  coordinatesInLineErrorLabel: t('components.geometry-add-modes.manual.coordinates-line-error-label'),
+
   actions: {
     /**
       Handles button click.
+
+      @method actions.onButtonClick
+      @param {Object} tabModel Tab model.
     */
-    onButtonClick() {
+    onButtonClick(tabModel) {
       this.set('_dialogHasBeenRequested', true);
       this.set('_dialogVisible', true);
+
+      const rowId = this._getRowId(tabModel);
+      const edit = Ember.get(tabModel, `_editedRows.${rowId}`);
+
+      this.set('_objectTypeDisabled', edit);
+
+      if (edit) {
+        const layer = Ember.get(tabModel, `featureLink.${rowId}`);
+        const geoJSON = layer.toGeoJSON();
+        const type = Ember.get(geoJSON, 'geometry.type');
+
+        let coordinates = geoJSON.geometry.coordinates;
+        switch (type) {
+          case 'Polygon':
+            coordinates.forEach(item => item.pop());
+            break;
+          case 'MultiPolygon':
+            for (let i = 0; i < coordinates.length; i++) {
+              for (let j = 0; j < coordinates[i].length; j++) {
+                coordinates[i][j].pop();
+              }
+            }
+
+            break;
+        }
+
+        const str = this._coordinatesToString(coordinates);
+        this.set('_coordinates', str);
+
+        this.set('_objectSelectType', type);
+        Ember.set(this, 'menuButtonTooltip', t('components.geometry-add-modes.manual.menu-button-tooltip-edit'));
+      } else {
+        this.set('_coordinates', '');
+        Ember.set(this, 'menuButtonTooltip', t('components.geometry-add-modes.manual.menu-button-tooltip-add'));
+      }
     },
 
     /**
@@ -118,67 +211,443 @@ let FlexberryGeometryAddModeManualComponent = Ember.Component.extend({
       Invokes {{#crossLink "FlexberryGeometryAddModeManualComponent/sendingActions.complete:method"}}'complete' action{{/crossLink}}.
 
       @method actions.onApprove
+      @param {Object} tabModel Tab model.
+      @param {Object} e Object event.
     */
-    onApprove(e) {
-      let parsedCoordinates = this.parseCoordinates();
-      if (Ember.isNone(parsedCoordinates)) {
-        // Prevent dialog from being closed.
-        e.closeDialog = false;
+    onApprove(tabModel, e) {
+      const objectSelectType = this.get('_objectSelectType');
 
+      let error = false;
+      if (Ember.isNone(objectSelectType)) {
+        error = true;
+        this.set('_geometryField', true);
+      } else {
+        this.set('_geometryField', false);
+      }
+
+      const coordinates = this.get('_coordinates');
+      if (Ember.isEmpty(coordinates)) {
+        error = true;
+        this.set('_coordinatesWithError', true);
+      } else {
+        this.set('_coordinatesWithError', false);
+      }
+
+      let baseCrs = Ember.get(tabModel, 'leafletObject.options.crs.code');
+      const parsedCoordinates = this._parseStringToCoordinates(coordinates, baseCrs);
+      if (this._isSinglePairInLine(coordinates)) {
+        this.set('coordinatesInLineError', false);
+      } else {
+        this.set('coordinatesInLineError', true);
+        this.set('_coordinatesWithError', true);
+      }
+
+      if (error) {
+        e.closeDialog = false;
         return;
       }
 
-      // create a polygon with provided coordinates
-      let addedLayer = L.polygon(parsedCoordinates);
+      const rowId = this._getRowId(tabModel);
+      let edit = false;
+      let layer;
+      if (!Ember.isNone(rowId)) {
+        edit = Ember.get(tabModel, `_editedRows.${rowId}`);
+        layer = Ember.get(tabModel, `featureLink.${rowId}`);
+      }
+
+      // Prevent dialog from being closed.
+      const coordinatesWithError = () => {
+        e.closeDialog = false;
+        this.set('_coordinatesWithError', true);
+        this.set('coordinatesParseError', true);
+      };
+
+      this.set('coordinatesParseError', false);
+
+      if (Ember.isNone(parsedCoordinates) || parsedCoordinates.length === 0) {
+        return coordinatesWithError();
+      }
+
+      // Checks the minimum number of points.
+      const hasMinCountPoint = (items, n) => {
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].length < n) {
+            return false;
+          }
+        }
+
+        return true;
+      };
+
+      let addedLayer;
+      let latlngs;
+
+      switch (objectSelectType) {
+        case 'Point':
+
+          // Only one point.
+          if (parsedCoordinates.length > 1 || (parsedCoordinates.length === 1 && parsedCoordinates[0].length > 1)) {
+
+            return coordinatesWithError();
+          }
+
+          if (edit) {
+            if (!Ember.isNone(layer.feature.geometry)) {
+              Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates[0][0]);
+            }
+
+            latlngs = { lat: parsedCoordinates[0][0][0], lng: parsedCoordinates[0][0][1] };
+
+          } else {
+            addedLayer = new L.marker(parsedCoordinates[0][0]);
+          }
+
+          break;
+        case 'LineString':
+          if (!hasMinCountPoint(parsedCoordinates, 2)) {
+
+            return coordinatesWithError();
+          }
+
+          if (edit) {
+            if (!Ember.isNone(layer.feature.geometry)) {
+              Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates);
+            }
+
+            latlngs = [];
+            for (let i = 0; i < parsedCoordinates.length; i++) {
+              for (let j = 0; j < parsedCoordinates[i].length; j++) {
+                latlngs.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
+              }
+            }
+          } else {
+            let coors = [];
+            for (let i = 0; i < parsedCoordinates.length; i++) {
+              for (let j = 0; j < parsedCoordinates[i].length; j++) {
+                coors.push(parsedCoordinates[i][j]);
+              }
+            }
+
+            addedLayer = L.polyline(coors);
+          }
+
+          break;
+        case 'MultiLineString':
+          if (!hasMinCountPoint(parsedCoordinates, 2)) {
+
+            return coordinatesWithError();
+          }
+
+          if (edit) {
+            if (!Ember.isNone(layer.feature.geometry)) {
+              Ember.set(layer, 'feature.geometry.coordinates', parsedCoordinates);
+            }
+
+            latlngs = [];
+            for (let i = 0; i < parsedCoordinates.length; i++) {
+              let mas = [];
+              for (let j = 0; j < parsedCoordinates[i].length; j++) {
+                mas.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
+              }
+
+              latlngs.push(mas);
+            }
+
+          } else {
+            addedLayer = L.polyline(parsedCoordinates);
+          }
+
+          break;
+        case 'Polygon':
+          if (!hasMinCountPoint(parsedCoordinates, 3)) {
+
+            return coordinatesWithError();
+          }
+
+          if (edit) {
+            latlngs = [];
+            let coors = [];
+            for (let i = 0; i < parsedCoordinates.length; i++) {
+              let masLatLng = [];
+              let mas = [];
+              for (let j = 0; j < parsedCoordinates[i].length; j++) {
+                masLatLng.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
+                mas.push(parsedCoordinates[i][j]);
+              }
+
+              latlngs.push(masLatLng);
+              coors.push(mas);
+            }
+
+            if (!Ember.isNone(layer.feature.geometry)) {
+              Ember.set(layer, 'feature.geometry.coordinates', coors);
+            }
+          } else {
+            addedLayer = L.polygon(parsedCoordinates);
+          }
+
+          break;
+        case 'MultiPolygon':
+          if (!hasMinCountPoint(parsedCoordinates, 3)) {
+
+            return coordinatesWithError();
+          }
+
+          if (edit) {
+            latlngs = [];
+            let coors = [];
+            for (let i = 0; i < parsedCoordinates.length; i++) {
+              let masLatLng = [];
+              let mas = [];
+              for (let j = 0; j < parsedCoordinates[i].length; j++) {
+                masLatLng.push(L.latLng(parsedCoordinates[i][j][0], parsedCoordinates[i][j][1]));
+                mas.push(parsedCoordinates[i][j]);
+              }
+
+              latlngs.push([masLatLng]);
+              coors.push([mas]);
+            }
+
+            if (!Ember.isNone(layer.feature.geometry)) {
+              Ember.set(layer, 'feature.geometry.coordinates', coors);
+            }
+
+          } else {
+            addedLayer = L.polygon(parsedCoordinates);
+          }
+
+          break;
+      }
+
+      if (edit) {
+        if (objectSelectType === 'Point') {
+          layer._latlng = latlngs;
+        } else {
+          layer._latlngs = latlngs;
+        }
+
+        let leafletMap = this.get('leafletMap');
+
+        // Deletes and draws in a new location.
+        leafletMap.removeLayer(layer);
+        leafletMap.addLayer(layer);
+
+        tabModel.leafletObject.editLayer(layer);
+        Ember.set(tabModel, 'leafletObject._wasChanged', true);
+
+        this.send('zoomTo', [layer.feature]);
+      } else {
+        this.sendAction('complete', addedLayer, { panToAddedObject: true });
+      }
+
       this.set('_coordinates', null);
       this.set('_coordinatesWithError', null);
-
-      this.sendAction('complete', addedLayer, { panToAddedObject: true });
     },
 
     /**
       Handles {{#crossLink "FlexberryDialogComponent/sendingActions.deny:method"}}'flexberry-dialog' component's 'deny' action{{/crossLink}}.
 
       @method actions.onDeny
+      @param {Object} e Object event.
     */
     onDeny(e) {
       this.set('_coordinates', null);
       this.set('_coordinatesWithError', null);
+      this.set('_geometryField', false);
+      this.set('_objectTypeDisabled', true);
+      this.set('coordinatesParseError', false);
+      this.set('coordinatesInLineError', false);
     }
   },
 
   /**
-    Parses coordinates.
+    Get row id.
 
-    @method parseCoordinates
-    @return {Object} Parsed coordinates if it is valid or null.
+    @method _getRowId
+    @param {Object} tabModel Tab model.
+    @returns {string} Row id.
   */
-  parseCoordinates() {
-    let coordinates = this.get('_coordinates');
-    let result = null;
+  _getRowId(tabModel) {
+    const editedRows = Ember.get(tabModel, '_editedRows');
+    const keys = Object.keys(editedRows);
 
+    let rowId;
+    if (!Ember.isNone(keys[0])) {
+      rowId = keys[0];
+    }
+
+    return rowId;
+  },
+
+  /**
+    Get an array of coordinates from a coordinate line.
+
+    @method _parseCoordinates
+    @param {string} coordinates A string with the coordinates.
+    @returns {string[]} Array of coordinates of type [[["55.472379","58.733686"]],[["55.472336","58.733789"]]].
+  */
+  _parseStringToCoordinates(coordinates, baseCrs) {
     if (Ember.isNone(coordinates)) {
-      this.set('_coordinatesWithError', true);
-    } else {
-      let lines = coordinates.split('\n');
-      lines.forEach((line) => {
-        let check = line.match(/(.*) (.*)/);
-        if (!check) {
-          this.set('_coordinatesWithError', true);
-          return null;
+      return null;
+    }
+
+    const regex = /^([0-9]+[.][0-9]+) ([0-9]+[.][0-9]+)/gm;
+    let lines = coordinates.split('\n');
+    let result = [];
+
+    let k = 0;
+    for (let i = 0; i < lines.length; i++) {
+      lines[i] = lines[i].trim();
+      if (lines[i] === '' || i === lines.length - 1) {
+
+        let items;
+
+        if (k === 0) {
+          items = lines.slice(k, i + 1);
+        } else if (i === lines.length - 1) {
+          items = lines.slice(k + 1, i + 1);
+        } else {
+          items = lines.slice(k + 1, i);
         }
 
-        result = result || [];
-        result.push([check[1], check[2]]);
-      });
+        let mas = [];
+
+        for (let j = 0; j < items.length; j++) {
+          let str = items[j];
+
+          let m;
+          while ((m = regex.exec(str)) !== null) {
+            if (m.index === regex.lastIndex) {
+              regex.lastIndex++;
+            }
+
+            let crs = this.get('settings.layerCRS.code');
+            let cordsToConvert = [parseFloat(m[2]), parseFloat(m[1])];
+            let cords = this._projectCoordinates(crs, baseCrs, cordsToConvert);
+            mas.push(cords);
+          }
+        }
+
+        if (mas.length > 0) {
+          result.push(mas);
+        }
+
+        k = i;
+      }
     }
 
-    if (!Ember.isNone(result)) {
-      this.set('_coordinatesWithError', false);
+    return result.length > 0 ? result : null;
+  },
+
+  /**
+    Projects coordinate pair from one crs to another.
+
+    @method _projectCoordinates
+    @param {string} from crs name from project.
+    @param {string} to crs name to project.
+    @param {string} coordinates A string with the coordinates.
+    @returns {string[]} Pair of coordinates of type [55.472379, 58.733686].
+  */
+  _projectCoordinates(from, to, coordinates) {
+    let knownCrs = Ember.getOwner(this).knownForType('coordinate-reference-system');
+    let knownCrsArray = Ember.A(Object.values(knownCrs));
+    let fromCrs = knownCrsArray.findBy('code', from);
+    let fromCrsDefinition = Ember.get(fromCrs, 'definition');
+    let toCrs = knownCrsArray.findBy('code', to);
+    let toCrsDefinition = Ember.get(toCrs, 'definition');
+    let cords = proj4(fromCrsDefinition, toCrsDefinition, coordinates);
+    return cords;
+  },
+
+  /**
+    Get the depth of the array.
+
+    @method _countDimensions
+    @param {Object[]} value Array.
+    @returns {number} value Array depth.
+  */
+  _countDimensions(value) {
+    return Array.isArray(value) ? 1 + Math.max(...value.map(this._countDimensions.bind(this))) : 0;
+  },
+
+  /**
+    Get coordinate line.
+
+    @method _coordinatesToString
+    @param {Object[]} coordinates Coordinates.
+  */
+  _coordinatesToString(coordinates) {
+
+    // Get array depth.
+    const arrDepth = this._countDimensions(coordinates);
+
+    let coors = [];
+    switch (arrDepth) {
+      case 1: // Point.
+        coors.push(coordinates);
+        break;
+      case 2: // LineString.
+        coors = coordinates;
+        break;
+      case 3: // Polygon and MultiLineString.
+        for (let i = 0; i < coordinates.length; i++) {
+          for (let j = 0; j < coordinates[i].length; j++) {
+            let item = coordinates[i][j];
+            coors.push(item);
+          }
+
+          if (i !== coordinates.length - 1) {
+            coors.push(null);
+          }
+        }
+
+        break;
+      case 4: // MultiPolygon.
+        for (let i = 0; i < coordinates.length; i++) {
+          for (let j = 0; j < coordinates[i].length; j++) {
+            for (let k = 0; k < coordinates[i][j].length; k++) {
+              let item = coordinates[i][j][k];
+              coors.push(item);
+            }
+          }
+
+          if (i !== coordinates.length - 1) {
+            coors.push(null);
+          }
+        }
+
+        break;
+      default:
+        throw new Error('Coordinate array error.');
     }
+
+    let result = '';
+    coors.forEach(item => result += item !== null ? `${item[0]} ${item[1]} \n` : '\n');
 
     return result;
   },
+
+  /**
+    Define if line contains more than one coordinate pair.
+
+    @method _isSinglePairInLine
+    @param {Object[]} coordinates Coordinates.
+    @returns {Boolean} true if contains, otherwise false.
+  */
+  _isSinglePairInLine(coordinates) {
+    let lines = coordinates.split('\n');
+    let badLines = false;
+    lines.forEach(line => {
+      if (line.split(' ').length !== 2) {
+        badLines = true;
+      }
+    });
+    if (badLines) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   /**
     Component's action invoking when new geometry was added.

@@ -4,6 +4,7 @@
 
 import Ember from 'ember';
 import layout from '../templates/components/feature-result-item';
+import { translationMacro as t } from 'ember-i18n';
 
 /**
   Component for display GeoJSON feature object details
@@ -12,6 +13,28 @@ import layout from '../templates/components/feature-result-item';
   @extends <a href="http://emberjs.com/api/classes/Ember.Component.html">Ember.Component</a>
  */
 export default Ember.Component.extend({
+
+  /**
+    Service for managing map API.
+    @property mapApi
+    @type MapApiService
+  */
+  mapApi: Ember.inject.service(),
+
+  /**
+    Flag indicates whether to show all coordinates.
+    @property mapApi
+    @type MapApiService
+  */
+  showAllCords: false,
+
+  /**
+    Map command's caption.
+    @property caption
+    @type String
+    @default t('components.flexberry-layers-intersections-panel.show-cords')
+  */
+  cordsActionCaption: t('components.flexberry-layers-intersections-panel.show-cords'),
 
   /**
     Component's wrapping <div> CSS-classes names.
@@ -35,6 +58,24 @@ export default Ember.Component.extend({
     @default ['isActive:active']
   */
   classNameBindings: ['isActive:active'],
+
+  /**
+    Flag indicates if intersection panel is active.
+
+    @property intersection
+    @type Boolean
+    @default false
+  */
+  intersection: false,
+
+  /**
+    Flag indicates if feature is in favorire list.
+
+    @property intersection
+    @type Boolean
+    @default false
+  */
+  favoriteMode: false,
 
   /**
     Flag: indicates whether to display detailed feature info.
@@ -141,7 +182,58 @@ export default Ember.Component.extend({
   */
   selectedFeature: null,
 
+  /**
+    Action button hasEditForm display.
+
+    @property hasEditForm
+    @type boolean
+    @default false
+  */
+  hasEditForm: false,
+
+  /**
+    Initializes DOM-related component's properties.
+  */
+  didInsertElement() {
+    this._super(...arguments);
+    const hasEditFormFunc = this.get('mapApi').getFromApi('hasEditForm');
+
+    if (typeof hasEditFormFunc === 'function') {
+      const layerId = this.get('feature.layerModel.id');
+
+      let shapeId;
+      const getLayerFeatureIdFunc = this.get('mapApi').getFromApi('getLayerFeatureId');
+      if (typeof getLayerFeatureIdFunc === 'function') {
+        const layer = this.get('feature.layerModel');
+        const shape = this.get('feature');
+
+        //Need to implement id definition function
+        shapeId = getLayerFeatureIdFunc(layer, shape.leafletLayer);
+      } else {
+        shapeId = this.get('feature.id');
+      }
+
+      const hasEditForm = hasEditFormFunc(layerId, shapeId);
+      this.set('featureId', shapeId);
+      this.set('hasEditForm', hasEditForm);
+    }
+  },
+
   actions: {
+
+    /**
+      Handles click on show/hide all intersection coordinates.
+      @method actions.toggleShowAllCords
+    */
+    toggleShowAllCords() {
+      if (this.get('showAllCords')) {
+        this.toggleProperty('showAllCords');
+        this.set('cordsActionCaption', t('components.flexberry-layers-intersections-panel.show-cords'));
+      } else {
+        this.toggleProperty('showAllCords');
+        this.set('cordsActionCaption', t('components.flexberry-layers-intersections-panel.hide-cords'));
+      }
+    },
 
     /**
       Invokes {{#crossLink "FeatureResultItemComponent/sendingActions.selectFeature:method"}}'selectFeature' action{{/crossLink}}.
@@ -182,6 +274,63 @@ export default Ember.Component.extend({
      */
     toggleLinks() {
       this.set('_linksExpanded', !this.get('_linksExpanded'));
+    },
+
+    /**
+      Process the specified method.
+      @method actions.goToEditForm
+      @param {String} layerId Id layer
+      @param {String[]} objectId Array Id object
+    */
+    goToEditForm(layerId, objectId) {
+      const goToEditFormFunc = this.get('mapApi').getFromApi('goToEditForm');
+      if (typeof goToEditFormFunc === 'function') {
+        goToEditFormFunc(layerId, objectId);
+      }
+    },
+
+    /**
+      Show\hide panel for seraching intersections.
+      Action is sended to layer-result-list.
+      @method actions.findIntersection
+    */
+    findIntersection() {
+      this.sendAction('findIntersection', this.get('feature'));
+    },
+
+    /**
+      Add feature to favorites list
+      Action is sended to layer-result-list.
+      @method actions.addToFavorite
+    */
+    addToFavorite() {
+      this.sendAction('addToFavorite', this.get('feature'));
+    },
+
+    /**
+      Handles click on checkbox.
+      Action is sended to layer-result-list.
+      @method actions.addToCompareGeometries
+    */
+    addToCompareGeometries() {
+      this.sendAction('addToCompareGeometries', this.get('feature'));
+    },
+
+    /**
+      Pans and zooms to intersection object.
+      @method actions.panToIntersection
+     */
+    panToIntersection() {
+      this.sendAction('zoomTo', this.get('feature'));
+    },
+
+    /**
+      Zooms to intersection and add intersection object on map.
+      @method actions.zoomToIntersection
+     */
+    zoomToIntersection() {
+      this.sendAction('zoomTo', this.get('feature'));
+      this.sendAction('zoomToIntersection', this.get('feature'));
     }
   }
 

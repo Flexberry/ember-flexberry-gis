@@ -1,0 +1,55 @@
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.odata-vector.model-name-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.modelName
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.odata-vector.projection-name-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.projectionName
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.odata-vector.geometry-field-textbox.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.geometryField
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.odata-vector.min-zoom.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.minZoom
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.odata-vector.max-zoom.caption"}}
+  </label>
+  {{flexberry-textbox
+    class="fluid"
+    value=settings.maxZoom
+  }}
+</div>
+<div class="field">
+  <label>
+    {{t "components.layers-dialogs.settings.odata-vector.geometry-type-textbox.caption"}}
+  </label>
+  {{flexberry-dropdown
+    class="compact"
+    items=geometryTypes
+    value=settings.geometryType
+  }}
+</div>

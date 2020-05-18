@@ -5,6 +5,12 @@
 import Ember from 'ember';
 import LeafletOptionsMixin from '../mixins/leaflet-options';
 import LeafletPropertiesMixin from '../mixins/leaflet-properties';
+import LeafletMapInteractionMixin from '../mixins/leaflet-map/map-interaction';
+import LeafletMapLoaderMixin from '../mixins/leaflet-map/map-loader';
+import LeafletMapToolsMixin from '../mixins/leaflet-map/map-tools';
+import LeafletMapCommandsMixin from '../mixins/leaflet-map/map-commands';
+import LeafletMapSidebarMixin from '../mixins/leaflet-map/map-sidebar';
+import Renderer from '../objects/custom-renderer';
 
 import layout from '../templates/components/flexberry-map';
 
@@ -15,8 +21,6 @@ import layout from '../templates/components/flexberry-map';
   @property {Object} flexberryClassNames
   @property {String} flexberryClassNames.prefix Component's CSS-class names prefix ('flexberry-map').
   @property {String} flexberryClassNames.wrapper Component's wrapping <div> CSS-class name ('flexberry-map').
-  @property {String} flexberryClassNames.loader Component's loader CSS-class name ('flexberry-map-loader').
-  @property {String} flexberryClassNames.loaderDimmer Component's loader's dimmer CSS-class name ('flexberry-map-loader-dimmer').
   @readonly
   @static
 
@@ -25,9 +29,7 @@ import layout from '../templates/components/flexberry-map';
 const flexberryClassNamesPrefix = 'flexberry-map';
 const flexberryClassNames = {
   prefix: flexberryClassNamesPrefix,
-  wrapper: flexberryClassNamesPrefix,
-  loader: flexberryClassNamesPrefix + '-loader',
-  loaderDimmer: flexberryClassNamesPrefix + '-loader-dimmer'
+  wrapper: flexberryClassNamesPrefix
 };
 
 /**
@@ -42,7 +44,14 @@ const flexberryClassNames = {
  */
 let FlexberryMapComponent = Ember.Component.extend(
   LeafletOptionsMixin,
-  LeafletPropertiesMixin, {
+  LeafletPropertiesMixin,
+
+  // Mixins containing leaflet map extensions (order is important).
+  LeafletMapInteractionMixin,
+  LeafletMapLoaderMixin,
+  LeafletMapToolsMixin,
+  LeafletMapCommandsMixin,
+  LeafletMapSidebarMixin, {
     /**
       Leaflet map.
 
@@ -62,28 +71,6 @@ let FlexberryMapComponent = Ember.Component.extend(
       @private
     */
     _$leafletContainer: null,
-
-    /**
-      Flag: indicates whether map loader is shown or not.
-      Use leaflet map's 'showLoader', 'hideLoader' methods to set this property value.
-
-      @property _isLoaderShown
-      @type Boolean
-      @default false
-      @private
-    */
-    _isLoaderShown: false,
-
-    /**
-      Map loader's content.
-      Use leaflet map's 'setLoaderContent' to set this property value.
-
-      @property _loaderContent
-      @type String
-      @default ''
-      @private
-    */
-    _loaderContent: '',
 
     /**
       Reference to component's template.
@@ -110,7 +97,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       @type String[]
       @default ['flexberry-map']
     */
-    classNames: ['flexberry-map'],
+    classNames: [flexberryClassNames.wrapper],
 
     /**
       List of leaflet map options which will be passed into leaflet map.
@@ -214,7 +201,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       Array of map layers.
 
       @property layers
-      @type Array of NewPlatformFlexberryGISMapLayer
+      @type NewPlatformFlexberryGISMapLayer[]
     */
     layers: null,
 
@@ -226,6 +213,13 @@ let FlexberryMapComponent = Ember.Component.extend(
       @default null
      */
     queryFilter: null,
+
+    /**
+      Service for managing map API.
+      @property mapApi
+      @type MapApiService
+    */
+    mapApi: Ember.inject.service(),
 
     /**
       Injects additional methods into initialized leaflet map.
@@ -282,18 +276,13 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     /**
       Removes injected additional methods from initialized leaflet map.
+      Runs search query related to the specified URL params: 'queryFilter' and 'mapObjectSetting'.
+      Shows map loader, triggeres leaflet map event 'flexberry-map:query', then starts query and waits for all query requests to be finished,
+      and finally calls to '_finishQuery' hook.
 
-      @method _removeMapLoaderMethods
-      @param {<a href="http://leafletjs.com/reference-1.0.0.html#map">L.Map</a>} leafletMap initialized leaflet map.
+      @method _runQuery
       @private
     */
-    _removeMapLoaderMethods(leafletMap) {
-      delete leafletMap.setLoaderContent;
-      delete leafletMap.showLoader;
-      delete leafletMap.hideLoader;
-      delete leafletMap._fireDOMEvent;
-    },
-
     _runQuery(queryFilter, mapObjectSetting) {
       let serviceLayer = this.get('serviceLayer');
       let leafletMap = this.get('_leafletObject');
@@ -305,9 +294,8 @@ let FlexberryMapComponent = Ember.Component.extend(
         serviceLayer: serviceLayer
       };
 
-      // Show map loader
-      leafletMap.setLoaderContent(this.get('i18n').t('components.flexberry-map.queryText'));
-      leafletMap.showLoader();
+      // Show map loader.
+      leafletMap.flexberryMap.loader.show({ content: this.get('i18n').t('map-tools.identify.loader-message') });
 
       leafletMap.fire('flexberry-map:query', e);
 
@@ -323,7 +311,6 @@ let FlexberryMapComponent = Ember.Component.extend(
         }
 
         let features = Ember.get(result, 'features');
-
         if (!(features instanceof Ember.RSVP.Promise)) {
           return;
         }
@@ -331,29 +318,47 @@ let FlexberryMapComponent = Ember.Component.extend(
         promises.pushObject(features);
       });
 
-      // Wait for all promises to be settled & call '_finishIdentification' hook.
+      // Wait for all promises to be settled & call '_finishQuery' hook.
       Ember.RSVP.allSettled(promises).then(() => {
         this._finishQuery(e);
       });
     },
 
+    _createObject(queryFilter, mapObjectSetting) {
+      if (!Ember.isBlank(queryFilter) && !Ember.isBlank(mapObjectSetting)) {
+
+        let e = {
+          queryFilter: queryFilter,
+          mapObjectSetting: mapObjectSetting,
+          results: Ember.A()
+        };
+
+        let leafletMap = this.get('_leafletObject');
+
+        leafletMap.fire('flexberry-map:createObject', e);
+        if (e.results.length) {
+          this.sendAction('onCreateObject', e.results);
+        }
+      }
+    },
+
     /**
-      Finishes query.
+      Handles search query finish.
+      Shows query results on map, hides map loader, triggers 'queryFinished' action and related leaflet map event 'flexberry-map:queryFinished'.
 
       @method _finishQuery
       @param {Object} e Event object.
       @param {Object[]} results Objects describing query results.
       Every result-object has the following structure: { layer: ..., features: [...] },
-      where 'layer' is metadata of layer related to query result, features is array
-      containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
-      @return {<a href="http://leafletjs.com/reference.html#popup">L.Popup</a>} Popup containing identification results.
+      where 'layer' is metadata of a layer related to query result,
+      and 'features' is an array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
       @private
     */
     _finishQuery(e) {
       let leafletMap = this.get('_leafletObject');
 
-      e.results.forEach((identificationResult) => {
-        identificationResult.features.then(
+      e.results.forEach((queryResult) => {
+        queryResult.features.then(
           (features) => {
             // Show new features.
             features.forEach((feature) => {
@@ -372,8 +377,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       });
 
       // Hide map loader.
-      leafletMap.setLoaderContent('');
-      leafletMap.hideLoader();
+      leafletMap.flexberryMap.loader.hide({ content: '' });
 
       // Fire custom event on leaflet map.
       leafletMap.fire('flexberry-map:queryFinished', e);
@@ -410,9 +414,9 @@ let FlexberryMapComponent = Ember.Component.extend(
     */
     _localeDidChange: Ember.observer('i18n.locale', function() {
       let i18n = this.get('i18n');
+      let $leafletContainer = this.get('_$leafletContainer');
 
-      if (this.get('zoomControl')) {
-        let $leafletContainer = this.get('_$leafletContainer');
+      if (this.get('zoomControl') && $leafletContainer) {
         let $zoomControl = $leafletContainer.find('.leaflet-control-container .leaflet-control-zoom');
         let $zoomInButton = $zoomControl.find('.leaflet-control-zoom-in');
         let $zoomOutButton = $zoomControl.find('.leaflet-control-zoom-out');
@@ -424,6 +428,7 @@ let FlexberryMapComponent = Ember.Component.extend(
 
     /**
       Handles leaflet map container's resize.
+      Initializes in 'initLeafletMap' hook.
 
       @property _onLeafletContainerResize
       @type function
@@ -438,14 +443,147 @@ let FlexberryMapComponent = Ember.Component.extend(
     didInsertElement() {
       this._super(...arguments);
 
+      // Store map's container as jQuery object.
       let $leafletContainer = this.$();
       this.set('_$leafletContainer', $leafletContainer);
 
-      // Initialize leaflet map.
-      let leafletMap = L.map($leafletContainer[0], this.get('options'));
+      let options = this.get('options');
+      options.renderer = new Renderer();
+
+      // Create leaflet map.
+      let leafletMap = L.map($leafletContainer[0], options);
       this.set('_leafletObject', leafletMap);
 
-      this._injectMapLoaderMethods(leafletMap);
+      // Perform initializations.
+      this.willInitLeafletMap(leafletMap);
+      this.initLeafletMap(leafletMap);
+      this.initServiceLayer(leafletMap);
+
+      // Run search query if 'queryFilter' is defined.
+      let queryFilter = this.get('queryFilter');
+      let mapObjectSetting = this.get('mapObjectSetting');
+      if (!Ember.isBlank(queryFilter)) {
+        Ember.run.scheduleOnce('afterRender', this, function () {
+          this._runQuery(queryFilter, mapObjectSetting);
+        });
+      }
+
+      const mapApi = this.get('mapApi');
+      if (Ember.isNone(mapApi.getFromApi('runQuery'))) {
+        mapApi.addToApi('runQuery',  this._runQuery.bind(this));
+        this.set('_hasQueryApi', true);
+      }
+
+      if (Ember.isNone(mapApi.getFromApi('createObject'))) {
+        mapApi.addToApi('createObject',  this._createObject.bind(this));
+        this.set('_hasCreateObjectApi', true);
+      }
+
+      if (Ember.isNone(mapApi.getFromApi('leafletMap'))) {
+        mapApi.addToApi('leafletMap',  leafletMap);
+        this.set('_hasLeafletMap', true);
+      }
+
+      if (Ember.isNone(mapApi.getFromApi('serviceLayer'))) {
+        mapApi.addToApi('serviceLayer',  this.get('serviceLayer'));
+        this.set('_hasServiceLayer', true);
+      }
+
+      Ember.run.scheduleOnce('afterRender', this, function () {
+        this.load(leafletMap, mapApi);
+      });
+    },
+
+    /**
+      Run an array of prommis.
+
+      @parm {Object} mapApi Object mapApi.
+    */
+    load(leafletMap, mapApi) {
+      let e = {
+        results: [],
+        loadFunc: []
+      };
+
+      leafletMap.fire('flexberry-map:load', e);
+
+      Ember.RSVP.allSettled(e.results).then(function (array) {
+        const readyMapLayers = mapApi.getFromApi('readyMapLayers');
+        const errorMapLayers = mapApi.getFromApi('errorMapLayers');
+
+        const rejected = array.filter((item) => { return item.state === 'rejected'; }).length > 0;
+
+        if (!Ember.isNone(readyMapLayers) && !rejected) {
+          readyMapLayers();
+        } else if (!Ember.isNone(errorMapLayers) && rejected) {
+          errorMapLayers();
+        }
+
+        if (e.loadFunc.length > 0) {
+          const func = e.loadFunc.pop();
+          func();
+        }
+
+      });
+    },
+
+    /**
+      Destroys DOM-related component's properties.
+    */
+    willDestroyElement() {
+      this._super(...arguments);
+
+      let leafletMap = this.get('_leafletObject');
+      if (!Ember.isNone(leafletMap)) {
+        this.destroyServiceLayer(leafletMap);
+        this.willDestroyLeafletMap(leafletMap);
+        this.destroyLeafletMap(leafletMap);
+      }
+    },
+
+    /**
+      Performs some initialization before leaflet map will be initialized.
+
+      @param {Object} leafletMap Leaflet map.
+    */
+    willInitLeafletMap(leafletMap) {
+      // Add 'flexberryMap' namespace to leafletMap.
+      leafletMap.flexberryMap = {};
+
+      // Temporary store leafletMap as global object to simplify debugging.
+      // TODO: Remove it before changes will be pushed to origin.
+      window.leafletMap = leafletMap;
+
+      // See 'willInitLeafletMap' implementations in mixins which are mixed to 'leaflet-map'.
+      this._super(...arguments);
+    },
+
+    /**
+      Performs some clean up before leaflet map will be destroyed.
+
+      @param {Object} leafletMap Leaflet map.
+    */
+    willDestroyLeafletMap(leafletMap) {
+      // See 'willDestroyLeafletMap' implementations in mixins which are mixed to 'leaflet-map'.
+      this._super(...arguments);
+
+      // Remove 'flexberryMap' namespace forom leafletMap.
+      delete leafletMap.flexberryMap;
+
+      // Temporary store leafletMap as global object to simplify debugging.
+      // TODO: Remove it before changes will be pushed to origin.
+      delete window.leafletMap;
+    },
+
+    /**
+      Initializes leaflet map related properties.
+
+      @param {Object} leafletMap Leaflet map.
+    */
+    initLeafletMap(leafletMap) {
+      // See 'initLeafletMap' implementations in mixins which are mixed to 'leaflet-map'.
+      this._super(...arguments);
+
       leafletMap.on('moveend', this._moveend, this);
       leafletMap.on('zoomend', this._zoomend, this);
 
@@ -463,56 +601,89 @@ let FlexberryMapComponent = Ember.Component.extend(
         }
       };
       this.set('_onLeafletContainerResize', onLeafletContainerResize);
+
+      let $leafletContainer = this.get('_$leafletContainer');
       $leafletContainer.resize(onLeafletContainerResize);
+
+      // Update text resources on the map and it's tools to math the current locale.
+      Ember.run.scheduleOnce('afterRender', this, '_localeDidChange');
 
       this.sendAction('leafletInit', {
         map: leafletMap
       });
-
-      let serviceLayer = L.featureGroup();
-      leafletMap.addLayer(serviceLayer);
-      this.set('serviceLayer', serviceLayer);
-      this.sendAction('serviceLayerInit', serviceLayer);
-
-      let queryFilter = this.get('queryFilter');
-      let mapObjectSetting = this.get('mapObjectSetting');
-
-      if (!Ember.isBlank(queryFilter)) {
-        Ember.run.scheduleOnce('afterRender', this, function () {
-          this._runQuery(queryFilter, mapObjectSetting);
-        });
-      }
-
-      Ember.run.scheduleOnce('afterRender', this, '_localeDidChange');
+      this.get('mapApi').addToApi('leafletMap', leafletMap);
     },
 
     /**
-      Destroys DOM-related component's properties.
+      Destroys leaflet map.
+
+      @param {Object} leafletMap Leaflet map.
     */
-    willDestroyElement() {
+    destroyLeafletMap(leafletMap) {
+      // See 'destroyLeafletMap' implementations in mixins which are mixed to 'leaflet-map'.
       this._super(...arguments);
 
-      let leafletMap = this.get('_leafletObject');
-      if (!Ember.isNone(leafletMap)) {
-        // Destroy leaflet map.
-        this._removeMapLoaderMethods(leafletMap);
-        leafletMap.off('moveend', this._moveend, this);
-        leafletMap.off('zoomend', this._zoomend, this);
+      leafletMap.off('moveend', this._moveend, this);
+      leafletMap.off('zoomend', this._zoomend, this);
 
-        // Unbind map container's resize event handler.
-        let $leafletContainer = this.get('_$leafletContainer');
-        let onLeafletContainerResize = this.get('_onLeafletContainerResize');
-        if (!Ember.isNone($leafletContainer) && !Ember.isNone(onLeafletContainerResize)) {
-          $leafletContainer.removeResize(onLeafletContainerResize);
-          this.set('_onLeafletContainerResize', null);
-        }
-
-        leafletMap.remove();
-        this.set('_leafletObject', null);
-        this.set('_$leafletContainer', null);
-
-        this.sendAction('leafletDestroy');
+      // Unbind map container's resize event handler.
+      let $leafletContainer = this.get('_$leafletContainer');
+      let onLeafletContainerResize = this.get('_onLeafletContainerResize');
+      if (!Ember.isNone($leafletContainer) && !Ember.isNone(onLeafletContainerResize)) {
+        $leafletContainer.removeResize(onLeafletContainerResize);
+        this.set('_onLeafletContainerResize', null);
       }
+
+      Ember.run.scheduleOnce('afterRender', this, '_localeDidChange');
+      leafletMap.remove();
+      this.set('_leafletObject', null);
+      this.set('_$leafletContainer', null);
+
+      if (this.get('_hasQueryApi')) {
+        this.get('mapApi').addToApi('runQuery', undefined);
+      }
+
+      if (this.get('_hasCreateObjectApi')) {
+        this.get('mapApi').addToApi('createObject', undefined);
+      }
+
+      if (this.get('_hasLeafletMap')) {
+        this.get('mapApi').addToApi('leafletMap', undefined);
+      }
+
+      if (this.get('_hasServiceLayer')) {
+        this.get('mapApi').addToApi('serviceLayer', undefined);
+      }
+
+      this.sendAction('leafletDestroy');
+    },
+
+    /**
+      Initializes map's service layer.
+
+      @param {Object} leafletMap Leaflet map.
+    */
+    initServiceLayer(leafletMap) {
+      let serviceLayer = L.featureGroup();
+      this.set('serviceLayer', serviceLayer);
+
+      leafletMap.addLayer(serviceLayer);
+      this.sendAction('serviceLayerInit', serviceLayer);
+    },
+
+    /**
+      Destroys map's service layer.
+
+      @param {Object} leafletMap Leaflet map.
+    */
+    destroyServiceLayer(leafletMap) {
+      let serviceLayer = this.get('serviceLayer');
+      if (!Ember.isNone(serviceLayer) && leafletMap.hasLayer(serviceLayer)) {
+        leafletMap.removeLayer(serviceLayer);
+      }
+
+      this.set('serviceLayer', null);
+      this.sendAction('serviceLayerDestroy');
     },
 
     /**
@@ -530,6 +701,19 @@ let FlexberryMapComponent = Ember.Component.extend(
     */
 
     /**
+      Component's action invoking when map's service layer initialized.
+
+      @method sendingActions.serviceLayerInit
+      @param {Object} serviceLayer Service layer.
+    */
+
+    /**
+      Component's action invoking when maps's service layer destroyed.
+
+      @method sendingActions.serviceLayerDestroy
+    */
+
+    /**
       Component's action invoking when query on map load finished.
 
       @method sendingActions.queryFinished
@@ -539,7 +723,7 @@ let FlexberryMapComponent = Ember.Component.extend(
     actions: {
       /**
         Handles edit dialog's 'approve' action.
-        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.add:method"}}'edit'{{/crossLink}} action.
+        Invokes component's {{#crossLink "FlexberryMaplayerComponent/sendingActions.edit:method"}}'edit'{{/crossLink}} action.
 
         @method actions.onEditDialogApprove
         @param {Object} e Action's event object.

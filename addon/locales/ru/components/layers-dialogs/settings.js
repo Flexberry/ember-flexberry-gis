@@ -66,6 +66,27 @@ export default {
 
   'kml': Kml,
 
+  'odata-vector': {
+    'model-name-textbox': {
+      'caption': 'Имя модели'
+    },
+    'projection-name-textbox': {
+      'caption': 'Представление'
+    },
+    'geometry-field-textbox': {
+      'caption': 'Поле геометрии'
+    },
+    'geometry-type-textbox': {
+      'caption': 'Тип геометрии'
+    },
+    'min-zoom': {
+      'caption': 'Минимальное приближение карты'
+    },
+    'max-zoom': {
+      'caption': 'Максимальное приближение карты'
+    }
+  },
+
   'geocoder-osm-overpass': {
     'url-textbox': {
       'caption': 'Url'

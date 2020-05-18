@@ -3,22 +3,43 @@
   {{yield}} is required here to make yield-slots available.
 --}}
 {{yield}}
-
-{{#yield-slot "above-tree" (block-params this)}}
-  {{yield}}
-{{/yield-slot}}
-
-{{#flexberry-tree
-  _isRoot=_isRoot
-  _hasHeader=_hasHeader
-  _hasContent=_hasContent
-  class=(concat flexberryClassNames.wrapper " " class)
-  placeholder=placeholder
-  exclusive=exclusive
-  collapsible=collapsible
-  animateChildren=animateChildren
-  duration=duration
-}}
+{{#if compareLayersEnabled}}
+   <div class="ui pointing group secondary menu">
+      <a class="item {{if (eq side "Left") "active"}}" onclick={{action "onLeftClick"}}>
+        {{t "components.flexberry-maplayers.left-part"}}
+      </a>
+      <a class="item {{if (eq side "Right") "active"}}" onclick={{action "onRightClick"}}>
+        {{t "components.flexberry-maplayers.right-part"}}
+      </a>
+  </div>
+  {{#each rasterLayers as |layer|}}
+    {{#if (not layer.isDeleted)}}
+      <div class="compare-layer-tree">
+        {{flexberry-ddau-checkbox
+          class=(concat flexberryClassNames.visibilityCheckbox " " flexberryClassNames.preventExpandCollapse)
+          value=layer.visibility
+          change=(action "onChange" layer)
+          readonly=(and (not-eq side layer.side) (not-eq layer.side null) true)
+        }} 
+        {{layer.name}}
+      </div>
+    {{/if}}
+  {{/each}}
+{{else}}
+  {{#yield-slot "above-tree" (block-params this)}}
+    {{yield}}
+  {{/yield-slot}}
+  {{#flexberry-tree
+    _isRoot=_isRoot
+    _hasHeader=_hasHeader
+    _hasContent=_hasContent
+    class=(concat flexberryClassNames.wrapper " " class)
+    placeholder=placeholder
+    exclusive=exclusive
+    collapsible=collapsible
+    animateChildren=animateChildren
+    duration=duration
+  }}
   {{#block-slot "header"}}
     {{#yield-slot "header" (block-params this)}}
       {{yield}}
@@ -56,22 +77,23 @@
       {{yield}}
     {{/yield-slot}}
   {{/block-slot}}
-{{/flexberry-tree}}
+  {{/flexberry-tree}}
 
-{{#yield-slot "under-tree" (block-params this)}}
+  {{#yield-slot "under-tree" (block-params this)}}
   {{yield}}
-{{/yield-slot}}
+  {{/yield-slot}}
 
-{{!--
-  Semantic UI modal dialogs takes long time to be initialized
-  so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
---}}
-{{#if _addDialogHasBeenRequested}}
-  {{component "layers-dialogs/add"
-    class=flexberryClassNames.addDialog
-    visible=_addDialogIsVisible
-    layer=_addDialogLayer
-    leafletMap=leafletMap
-    approve=(action "onAddDialogApprove")
-  }}
+  {{!--
+    Semantic UI modal dialogs takes long time to be initialized
+    so include each dialog in the markup only if dialog has been requested by user (similar "lazy load").
+  --}}
+  {{#if _addDialogHasBeenRequested}}
+    {{component "layers-dialogs/add"
+      class=flexberryClassNames.addDialog
+      visible=_addDialogIsVisible
+      layer=_addDialogLayer
+      leafletMap=leafletMap
+      approve=(action "onAddDialogApprove")
+    }}
+  {{/if}}
 {{/if}}

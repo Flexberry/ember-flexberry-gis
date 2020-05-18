@@ -8,15 +8,36 @@
     <a class="feature-result-item-select icon item"
       title="{{t "components.feature-result-item.select-all-caption"}}"
       {{action "zoomTo" result.features}}>
+      {{#if (eq intersection false)}}
       <i class="marker icon"></i>
+      {{/if}}
     </a>
     {{#if (gt result.listForms.length 0)}}
       {{#if (eq result.listForms.length 1)}}
-        <a class="feature-result-item-list icon item"
-          title="{{t "components.layer-result-list.select-list-caption"}}"
-          href="{{result.listForms.[0].url}}" target="_blank">
-          <i class="list icon"></i>
-        </a>
+        {{#if result.hasListForm}}
+          <div class="ui dropdown item" {{action "toggleLinks" on="click"}}>
+            <i class="dropdown icon"></i>
+            {{t "components.layer-result-list.select-list-caption"}}
+            <div class="ui menu transition {{if _linksExpanded "visible" "hidden"}}">
+              <a class="feature-result-item-list icon item"
+                title="{{t "components.layer-result-list.select-list-caption"}}"
+                href="{{result.listForms.[0].url}}" target="_blank">
+                <i class="list icon"></i>
+              </a>
+              <a class="feature-result-item-list icon item"
+                title="{{t "components.layer-result-list.select-list-caption"}}"
+                {{action "goToListForm" result.layerModel.id result.layerIds}}>
+                <i class="list icon"></i>
+              </a>
+            </div>
+          </div>
+        {{else}}
+          <a class="feature-result-item-list icon item"
+            title="{{t "components.layer-result-list.select-list-caption"}}"
+            href="{{result.listForms.[0].url}}" target="_blank">
+            <i class="list icon"></i>
+          </a>
+        {{/if}}
       {{else}}
         <div class="ui dropdown item" {{action "toggleLinks" on="click"}}>
           <i class="dropdown icon"></i>
@@ -29,38 +50,124 @@
                   <i class="list icon"></i>
                 </a>
               {{/each}}
+              {{#if result.hasListForm}}
+                <a class="feature-result-item-list icon item"
+                  title="{{t "components.layer-result-list.select-list-caption"}}"
+                  {{action "goToListForm" result.layerModel.id result.layerIds}}>
+                  <i class="list icon"></i>
+                </a>
+              {{/if}}
           </div>
         </div>
       {{/if}}
+    {{else}}
+      {{#if result.hasListForm}}
+        <a class="feature-result-item-list icon item"
+          title="{{t "components.layer-result-list.select-list-caption"}}"
+          {{action "goToListForm" result.layerModel.id result.layerIds}}>
+          <i class="list icon"></i>
+        </a>
+      {{/if}}
     {{/if}}
-    {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
-      <div class="ui list transition">
-        {{#each result.features as |feature|}}
-          {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
-            {{component (concat 'feature-result-item-' result.layerModel.type)
-              feature=feature
-              infoExpanded=(and (eq result.features.length 1) result.first)
-              displayProperty="displayValue"
-              displaySettings=result.settings
-              selectedFeature=_selectedFeature
-              selectFeature=(action "selectFeature")
-              panTo=(action "panTo")
-              zoomTo=(action "zoomTo")
-            }}
-          {{else}}
-            {{feature-result-item
-              feature=feature
-              infoExpanded=(and (eq result.features.length 1) result.first)
-              displayProperty="displayValue"
-              displaySettings=result.settings
-              selectedFeature=_selectedFeature
-              selectFeature=(action "selectFeature")
-              panTo=(action "panTo")
-              zoomTo=(action "zoomTo")
-            }}
+    {{#if (or (eq result.layerModel.type "wfs") (eq result.layerModel.type "wms-wfs") (eq result.layerModel.type "odata-vector"))}}
+      <a class="feature-result-item-upload icon item" 
+        title="{{t "components.layer-result-list.flexberry-export-caption"}}"
+        {{action "upload" result}}>
+        <i class="upload icon"></i>
+      </a>
+    {{/if}}
+    {{#if result.isIntersect}}
+      {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
+        <div class="ui list transition">
+          {{#if intersection}}
+            {{#each result.features as |feature|}}
+              {{#if feature.isIntersect}}
+                {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
+                  {{component (concat 'feature-result-item-' result.layerModel.type)
+                    feature=feature
+                    infoExpanded=(and (eq result.features.length 1) result.first)
+                    displayProperty="displayValue"
+                    displaySettings=result.settings
+                    selectedFeature=_selectedFeature
+                    selectFeature=(action "selectFeature")
+                    panTo=(action "panTo")
+                    zoomTo=(action "zoomTo")
+                    findIntersection=(action 'findIntersection')
+                    intersection=intersection
+                    zoomToIntersection=(action 'zoomToIntersection')
+                    panToIntersection=panToIntersection
+                }}
+                {{else}}
+                  {{feature-result-item
+                    feature=feature
+                    infoExpanded=(and (eq result.features.length 1) result.first)
+                    displayProperty="displayValue"
+                    displaySettings=result.settings
+                    selectedFeature=_selectedFeature
+                    selectFeature=(action "selectFeature")
+                    panTo=(action "panTo")
+                    zoomTo=(action "zoomTo")
+                    findIntersection=(action 'findIntersection')
+                    intersection=intersection
+                    zoomToIntersection=(action 'zoomToIntersection')
+                    panToIntersection=panToIntersection
+                  }}
+                {{/if}}
+              {{/if}}
+            {{/each}}
           {{/if}}
-        {{/each}}
-      </div>
+        </div>
       {{/flexberry-toggler}}
+    {{/if}}
+    {{#if (not intersection)}}
+      {{#flexberry-toggler caption=result.name expanded=result.first class='layer-result-list-toggler'}}
+        <div class="ui list transition">
+          {{#each result.features as |feature|}}
+            {{#if (known-for-type 'component' (concat 'feature-result-item-' result.layerModel.type))}}
+              {{component (concat 'feature-result-item-' result.layerModel.type)
+                feature=feature
+                infoExpanded=(and (eq result.features.length 1) result.first)
+                displayProperty="displayValue"
+                displaySettings=result.settings
+                selectedFeature=_selectedFeature
+                selectFeature=(action "selectFeature")
+                panTo=(action "panTo")
+                zoomTo=(action "zoomTo")
+                findIntersection=(action 'findIntersection')
+                intersection=intersection
+                zoomToIntersection=(action 'zoomToIntersection')
+                panToIntersection=panToIntersection
+                favoriteMode=favoriteMode
+                addToFavorite=(action 'addToFavorite')
+                addToCompareGeometries=(action 'addToCompareGeometries')
+            }}
+            {{else}}
+              {{feature-result-item
+                feature=feature
+                infoExpanded=(and (eq result.features.length 1) result.first)
+                displayProperty="displayValue"
+                displaySettings=result.settings
+                selectedFeature=_selectedFeature
+                selectFeature=(action "selectFeature")
+                panTo=(action "panTo")
+                zoomTo=(action "zoomTo")
+                findIntersection=(action 'findIntersection')
+                intersection=intersection
+                zoomToIntersection=(action 'zoomToIntersection')
+                panToIntersection=panToIntersection
+                favoriteMode=favoriteMode
+                addToFavorite=(action 'addToFavorite')
+                addToCompareGeometries=(action 'addToCompareGeometries')
+              }}
+            {{/if}}
+          {{/each}}
+        </div>
+      {{/flexberry-toggler}}
+    {{/if}}
   </div>
 {{/each}}
+{{feature-export
+  visible=exportDialogVisible
+  result=exportResult
+  availableCRS=availableCRS
+}}

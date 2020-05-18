@@ -12,7 +12,7 @@
       caption=exportDownloadCaption
       tooltip=exportDownloadTooltip
       iconClass=exportDownloadIconClass
-      execute=(action "onExportDownloadMapCommandExecute")
+      click=(action "onMapCommandButtonClick")
     }}
     {{map-commands/base
       class=(concat flexberryClassNames.exportPrint " " exportPrintClass)
@@ -20,7 +20,7 @@
       caption=exportPrintCaption
       tooltip=exportPrintTooltip
       iconClass=exportPrintIconClass
-      execute=(action "onExportPrintMapCommandExecute")
+      click=(action "onExportPrintMapCommandExecute")
     }}
   {{/block-slot}}
 {{/map-commands/base}}
@@ -33,13 +33,10 @@
     showDownloadingFileSettings=_showDownloadingFileSettings
     showErrorMessage=_showExportErrorMessage
     errorMessage=_exportErrorMessage
-    leafletMap=_executeActionEventObject.mapCommand.leafletMap
-    layers=_executeActionEventObject.mapCommand.layers
+    leafletMap=leafletMap
+    layers=layers
     defaultMapCaption=defaultMapCaption
     timeout=timeout
     approve=(action "onExportDialogApprove")
-    deny=(action "onExportDialogDeny")
-    beforeHide=(action "onExportDialogBeforeHide")
-    hide=(action "onExportDialogHide")
   }}
 {{/if}}

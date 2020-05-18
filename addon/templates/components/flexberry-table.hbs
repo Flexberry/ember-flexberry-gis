@@ -36,7 +36,7 @@
             {{yield}}
           {{/yield-slot}}
           {{#each-in header as |fieldName value|}}
-            {{#if allowEdit}}
+            {{#if allowEditOnList}}
               <td onclick={{action "onCellClick" (concat (ember-guid row) "_" fieldName)}}>
                 {{#if (eq (get fieldTypes fieldName) "boolean")}}
                   {{flexberry-checkbox
@@ -79,9 +79,7 @@
         <th colspan="{{_columnCount}}">
           <div class="ui secondary menu no-margin">
             <div class="ui basic buttons">
-              <button class="ui {{unless hasPreviousPage "disabled"}} button" {{action (if this.attrs.previousPage this.attrs.previousPage "previousPage")}}>
-                <i class="prev-page icon"></i>
-              </button>
+              <button class="ui {{unless hasPreviousPage "disabled"}} button prev-page-button" {{action (if this.attrs.previousPage this.attrs.previousPage "previousPage")}}/>
               {{#each pages as |page|}}
                 {{#if page.isEllipsis}}
                   <button class="ui button disabled">...</button>
@@ -97,9 +95,7 @@
                   {{/if}}
                 {{/if}}
               {{/each}}
-              <button class="ui {{unless hasNextPage "disabled"}} button" {{action (if this.attrs.nextPage this.attrs.nextPage "nextPage")}}>
-                <i class="next-page icon"></i>
-              </button>
+              <button class="ui {{unless hasNextPage "disabled"}} button next-page-button" {{action (if this.attrs.nextPage this.attrs.nextPage "nextPage")}}/>
             </div>
             {{#if perPageAvailable}}
               <div class="right menu">

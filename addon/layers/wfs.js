@@ -34,7 +34,8 @@ export default VectorLayer.extend(WfsFilterParserMixin, {
       format: undefined,
       namespaceUri: undefined,
       readonly: undefined,
-      forceMulti: undefined
+      forceMulti: undefined,
+      withCredentials: false
     });
 
     return settings;

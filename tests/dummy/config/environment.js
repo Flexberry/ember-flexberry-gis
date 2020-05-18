@@ -8,17 +8,6 @@ module.exports = function (environment) {
     backendUrl = 'http://localhost:6500';
   }
 
-  if (environment === 'mssql-backend') {
-    // Use `ember server --environment=mssql-backend` command for mssql backend usage.
-    backendUrl = 'https://flexberry-gis-test-stand.azurewebsites.net';
-  }
-
-  if (environment === 'production') {
-    if (process.argv.indexOf('--postfix=-mssql') >= 0) {
-      backendUrl = 'https://flexberry-gis-test-stand.azurewebsites.net';
-    }
-  }
-
   var ENV = {
     repositoryName: 'ember-flexberry-gis',
     modulePrefix: 'dummy',
@@ -40,7 +29,9 @@ module.exports = function (environment) {
       // It's a custom property, used to prevent duplicate backend urls in sources.
       backendUrls: {
         root: backendUrl,
-        api: backendUrl + '/odata'
+        api: backendUrl + '/odata',
+        featureExportApi: backendUrl + '/api/featureexport',
+        getNearDistance: backendUrl + '/odata/GetNearDistance'
       },
 
       // Log service settings.
@@ -51,6 +42,9 @@ module.exports = function (environment) {
 
       // Flag: indicates whether to use user settings service or not.
       useUserSettingsService: false,
+
+      // Flag: indicates whether to use map api service or not.
+      mapApiService: true,
 
       // Custom property with offline mode settings.
       offline: {

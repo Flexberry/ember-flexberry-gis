@@ -10,6 +10,7 @@
 .ui.modal.flexberry-edit-map-dialog,
 .ui.modal.flexberry-edit-layer-attributes-dialog,
 .ui.modal.flexberry-geometry-add-mode-manual-dialog,
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog,
 .ui.modal.flexberry-geometry-add-mode-geoprovider-dialog,
 .ui.modal.flexberry-geometry-add-mode-import-dialog,
 .ui.modal.flexberry-geometry-add-mode-import-result,
@@ -140,6 +141,7 @@
 .ui.modal.flexberry-edit-map-dialog,
 .ui.modal.flexberry-edit-layer-attributes-dialog,
 .ui.modal.flexberry-geometry-add-mode-manual-dialog,
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog,
 .ui.modal.flexberry-geometry-add-mode-geoprovider-dialog {
     .ui.form {
         margin-top: 10px;
@@ -150,6 +152,13 @@
     }
     .flexberry-jsonarea div.row:first-child {
         text-align: center;
+    }
+}
+
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog {
+    .flexberry-geometry-add-mode-rhumb-table-block {
+        overflow: auto;
+        height: 170px;
     }
 }
 
@@ -174,5 +183,21 @@
                 }
             }
         }
+    }
+}
+
+.ui.modal.flexberry-geometry-add-mode-rhumb-dialog {
+    .rhumb {
+        width: 33%;
+        margin: 3% 0;
+    }
+    .rhumb .first {
+        margin-top: 0.455em;
+    }
+    .rhumb.last {
+        padding-right: 5px;
+    }
+    table>tbody .flexberry-dropdown {
+        margin-bottom: 10px;
     }
 }

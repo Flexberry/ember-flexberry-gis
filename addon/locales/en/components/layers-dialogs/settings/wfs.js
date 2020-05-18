@@ -46,5 +46,11 @@ export default {
   },
   'forceMulti': {
     'caption': 'Create multi geometries'
+  },
+  'min-zoom': {
+    'caption': 'Min zoom'
+  },
+  'max-zoom': {
+    'caption': 'Max zoom'
   }
 };

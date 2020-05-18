@@ -74,7 +74,20 @@ export default Ember.Mixin.create({
       if (!Ember.isNone(bounds)) {
         // 'bound.pad(1)' bounds with zoom decreased by 1 point (padding).
         //  That allows to make map's bounds slightly larger than serviceLayer's bounds to make better UI.
-        this.get('leafletMap').fitBounds(bounds.pad(1));
+
+        let sidebarElement = Ember.$('.sidebar-wrapper:visible .sidebar');
+        const widthPadding = sidebarElement.width() || 0;
+
+        let bottompanelElement = Ember.$('.bottompanel-wrapper:visible .bottom.bottompanel');
+        const heightPadding = bottompanelElement.height() || 0;
+
+        let bboxZoom = leafletMap.getBoundsZoom(bounds.pad(1));
+        let minZoom = Ember.isArray(feature) ? Ember.get(feature[0], 'leafletLayer.minZoom') : Ember.get(feature, 'leafletLayer.minZoom');
+        if (!Ember.isNone(minZoom) && minZoom > bboxZoom) {
+          leafletMap.flyTo(bounds.getCenter(), minZoom);
+        } else {
+          leafletMap.fitBounds(bounds.pad(1));
+        }
       }
     },
 
