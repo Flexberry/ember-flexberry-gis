@@ -389,6 +389,7 @@ export default BaseVectorLayer.extend({
 
     return equals;
     },
+
   /**
     Handles 'flexberry-map:loadLayerFeatures' event of leaflet map.
 

@@ -3,31 +3,38 @@ node_js:
   - "8"
 
 sudo: required
+
 cache:
   yarn: true
   directories:
-  - "$HOME/.npm"
-  - "$HOME/.cache"
-  - node_modules
+    - $HOME/.npm
+    - $HOME/.cache
+    - node_modules
+
 env:
-- EMBER_TRY_SCENARIO=default
+  - EMBER_TRY_SCENARIO=default
+
 matrix:
   fast_finish: true
+
 dist: trusty
+
 addons:
   chrome: stable
+
 before_install:
-- sudo chown root /opt/google/chrome/chrome-sandbox
-- sudo chmod 4755 /opt/google/chrome/chrome-sandbox
-- google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222
-  http://localhost &
-- yarn global add ember-cli@2.4.3
-- yarn global add bower
+  - sudo chown root /opt/google/chrome/chrome-sandbox
+  - sudo chmod 4755 /opt/google/chrome/chrome-sandbox
+  - google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost &
+  - yarn global add ember-cli@2.4.3
+  - yarn global add bower
 install:
-- yarn install
-- bower install
+  - yarn install
+  - bower install
+
 script:
-- ember try:one $EMBER_TRY_SCENARIO test
+  - ember try:one $EMBER_TRY_SCENARIO test
+
 after_success:
   - test $EMBER_TRY_SCENARIO == "default"
     && test $TRAVIS_PULL_REQUEST == "false"
@@ -36,6 +43,7 @@ after_success:
     && bash scripts/deploy-to-gh-pages.sh -postgres
     && ember build --gh-pages --brunch=$TRAVIS_BRANCH --environment=mssql-backend
     && bash scripts/deploy-to-gh-pages.sh -mssql no-doc
+
 deploy:
   provider: npm
   email: mail@flexberry.net
