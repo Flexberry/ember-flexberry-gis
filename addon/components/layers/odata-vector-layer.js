@@ -578,7 +578,7 @@ export default BaseVectorLayer.extend({
       let showExisting = this.get('showExisting');
       if (!showExisting && continueLoading && visibility && checkMapZoomLayer(this)) {
         obj.build.predicate = this._getGeomPredicateFromBounds(obj.geometryField, crs, bounds);
-      } else if (!showExisting && !continueLoading && !visibility) {
+      } else {
         // Fake request
         obj.build.predicate = new Query.SimplePredicate('id', Query.FilterOperator.Eq, null);
       }
@@ -879,7 +879,7 @@ export default BaseVectorLayer.extend({
         if (!Ember.isNone(leafletObject)) {
           let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
           let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
-          if (continueLoad && show && checkMapZoom(leafletObject)) {
+          if (leafletMap.hasLayer(leafletObject) && continueLoad && show && checkMapZoom(leafletObject)) {
             let bounds = leafletMap.getBounds();
             if (!Ember.isNone(leafletObject.showLayerObjects)) {
               leafletObject.showLayerObjects = false;
