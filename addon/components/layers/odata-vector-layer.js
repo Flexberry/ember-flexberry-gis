@@ -74,6 +74,7 @@ export default BaseVectorLayer.extend({
           if (layer.state === state.insert) {
             insertedIds.push(layer);
           }
+
           layer.state = state.exist;
         });
         _this._setLayerState();
