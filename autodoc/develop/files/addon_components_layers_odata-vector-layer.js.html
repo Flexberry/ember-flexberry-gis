@@ -417,6 +417,7 @@ import BaseVectorLayer from &#x27;ember-flexberry-gis/components/base-vector-lay
 import { Query } from &#x27;ember-flexberry-data&#x27;;
 import { checkMapZoomLayer, checkMapZoom } from &#x27;../../utils/check-zoom&#x27;;
 import state from &#x27;../../utils/state&#x27;;
+import generateUniqueId from &#x27;ember-flexberry-data/utils/generate-unique-id&#x27;;
 const { Builder } = Query;
 
 /**
@@ -467,7 +468,6 @@ export default BaseVectorLayer.extend({
         }
 
         promises.addObject(layer.model.save());
-        layer.state = state.exist;
       }
     }, leafletObject);
 
@@ -479,11 +479,16 @@ export default BaseVectorLayer.extend({
 
     if (promises.length &gt; 0) {
       Ember.RSVP.all(promises).then((e) =&gt; {
+        let insertedIds = [];
         leafletObject.eachLayer(function(layer) {
+          if (layer.state === state.insert) {
+            insertedIds.push(layer);
+          }
+
           layer.state = state.exist;
         });
         _this._setLayerState();
-        leafletObject.fire(&#x27;save:success&#x27;, { layers: e });
+        leafletObject.fire(&#x27;save:success&#x27;, { layers: insertedIds });
       }).catch(function(e) {
         console.log(&#x27;Error: &#x27; + e);
         leafletObject.fire(&#x27;save:failed&#x27;, e);
@@ -573,6 +578,7 @@ export default BaseVectorLayer.extend({
     model.set(geometryField, geometryObject);
     let leafletObject = this.get(&#x27;_leafletObject&#x27;);
     layer.state = state.insert;
+    model.set(&#x27;id&#x27;, generateUniqueId());
     this._setLayerProperties(layer, model, geometryObject, leafletObject);
     L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
     return leafletObject;
