@@ -220,12 +220,6 @@ export default BaseVectorLayer.extend({
     layer.feature.properties = this._setPropsFromModel(model, leafletObject);
     layer.feature.id = this.get('modelName') + '.' + layer.feature.properties.primarykey;
 
-    let pane = this.get('_pane');
-    if (pane) {
-      layer.options.pane = pane;
-      layer.options.renderer = this.get('_renderer');
-    }
-
     if (geometry.type === 'Point') {
       layer.options.style = this.get('style');
     } else {
@@ -624,13 +618,6 @@ export default BaseVectorLayer.extend({
         layer.editformname = obj.modelName + this.get('postfixForEditForm');
         layer.deletedModels = Ember.A();
         layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
-
-        let pane = this.get('_pane');
-        if (pane) {
-          layer.options.pane = pane;
-          layer.options.renderer = this.get('_renderer');
-        }
-
         models.forEach(model => {
           this.addLayerObject(layer, model);
         });
@@ -836,7 +823,6 @@ export default BaseVectorLayer.extend({
         if (!leafletObject.options.showExisting) {
           let obj = this.get('_buildStoreModelProjectionGeom');
           obj.build.predicate = null;
-
           if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
             let equals = Ember.A();
             featureIds.forEach((id) => {

@@ -47,42 +47,6 @@ export default BaseLayer.extend({
   }),
 
   /**
-    @property _pane
-    @type String
-    @readOnly
-  */
-  _pane: Ember.computed('layerModel.id', function () {
-    return 'vectorLayerPane' + this.get('layerModel.id');
-  }),
-
-  /**
-    @property _renderer
-    @type Object
-    @readOnly
-  */
-  _renderer: Ember.computed('_pane', function () {
-    let pane = this.get('_pane');
-    return L.canvas({ pane: pane });
-  }),
-
-  /**
-    Sets leaflet layer's zindex.
-
-    @method _setLayerZIndex
-    @private
-  */
-  _setLayerZIndex: function() {
-    let thisPane = this.get('_pane');
-    let leafletMap = this.get('leafletMap');
-    if (thisPane && !Ember.isNone(leafletMap)) {
-      let pane = leafletMap.getPane(thisPane);
-      if (pane) {
-        pane.style.zIndex = this.get('index');
-      }
-    }
-  },
-
-  /**
     Sets leaflet layer's opacity.
 
     @method _setLayerOpacity
