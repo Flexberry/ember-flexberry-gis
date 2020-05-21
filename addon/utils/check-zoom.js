@@ -10,7 +10,11 @@ let checkMapZoomLayer = (layer) => {
 };
 
 let checkMapZoom = (layer) => {
-  const mapZoom = _getMapZoom(layer._map);
+  let map = layer._map;
+  if (!map) {
+    map = layer.leafletMap;
+  }
+  const mapZoom = _getMapZoom(map);
   const minZoom = _getLayerOption(layer, 'minZoom');
   const maxZoom = _getLayerOption(layer, 'maxZoom');
   return !mapZoom || !minZoom || !maxZoom || minZoom <= mapZoom && mapZoom <= maxZoom;

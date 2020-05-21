@@ -217,6 +217,7 @@ export default Ember.Component.extend(
       }).then(({
         leafletLayer
       }) => {
+        leafletLayer.leafletMap = this.get('leafletMap');
         this.set('_leafletObject', leafletLayer);
 
         if (Ember.isPresent(this.get('layerModel'))) {

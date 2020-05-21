@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
+import Renderer from '../objects/custom-renderer';
 
 const { assert } = Ember;
 
@@ -62,7 +63,7 @@ export default BaseLayer.extend({
   */
   _renderer: Ember.computed('_pane', function () {
     let pane = this.get('_pane');
-    return L.canvas({ pane: pane });
+    return new Renderer({ pane: pane });
   }),
 
   /**
@@ -77,7 +78,7 @@ export default BaseLayer.extend({
     if (thisPane && !Ember.isNone(leafletMap)) {
       let pane = leafletMap.getPane(thisPane);
       if (pane) {
-        pane.style.zIndex = this.get('index');
+        pane.style.zIndex = this.get('index') + 200;
       }
     }
   },
