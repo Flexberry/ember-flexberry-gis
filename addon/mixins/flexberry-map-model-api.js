@@ -84,12 +84,31 @@ export default Ember.Mixin.create({
       const leafletObject = Ember.get(layer, '_leafletObject');
       let map = this.get('mapApi').getFromApi('leafletMap');
 
-      leafletObject.showLayerObjects = true;
-      leafletObject.statusLoadLayer = true;
-      map.fire('moveend');
+      let showExisting = leafletObject.options.showExisting;
+      let continueLoading = leafletObject.options.continueLoading;
+      if (!showExisting && !continueLoading) {
+        if (!Ember.isNone(leafletObject)) {
+          leafletObject.eachLayer((layerShape) => {
+            if (map.hasLayer(layerShape)) {
+              map.removeLayer(layerShape);
+            }
+          });
+          leafletObject.clearLayers();
+        }
 
-      if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
-        leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+        leafletObject.promiseLoadLayer =  new Ember.RSVP.Promise((resolve) => {
+          this._getModelLayerFeature(layerId, null, true).then(() => {
+            resolve();
+          });
+        });
+      } else {
+        leafletObject.showLayerObjects = true;
+        leafletObject.statusLoadLayer = true;
+        map.fire('moveend');
+
+        if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+          leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+        }
       }
 
       leafletObject.promiseLoadLayer.then(() => {
@@ -584,11 +603,21 @@ export default Ember.Mixin.create({
 
         const map = this.get('mapApi').getFromApi('leafletMap');
         if (visibility) {
-          leafletObject.showLayerObjects = visibility;
-          leafletObject.statusLoadLayer = true;
-          map.fire('moveend');
-          if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
-            leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+          let showExisting = leafletObject.options.showExisting;
+          let continueLoading = leafletObject.options.continueLoading;
+          if (!showExisting && !continueLoading) {
+            leafletObject.promiseLoadLayer =  new Ember.RSVP.Promise((resolve) => {
+              this._getModelLayerFeature(layerId, objectIds, true).then(() => {
+                resolve();
+              });
+            });
+          } else {
+            leafletObject.showLayerObjects = visibility;
+            leafletObject.statusLoadLayer = true;
+            map.fire('moveend');
+            if (Ember.isNone(leafletObject.promiseLoadLayer) || !(leafletObject.promiseLoadLayer instanceof Ember.RSVP.Promise)) {
+              leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
+            }
           }
         } else {
           leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
