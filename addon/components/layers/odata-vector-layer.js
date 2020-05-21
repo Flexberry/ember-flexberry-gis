@@ -625,6 +625,7 @@ export default BaseVectorLayer.extend({
         layer.deletedModels = Ember.A();
         layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
 
+        let leafletMap = this.get('leafletMap');
         if (!Ember.isNone(leafletMap)) {
           let thisPane = this.get('_pane');
           let pane = leafletMap.getPane(thisPane);
@@ -904,7 +905,7 @@ export default BaseVectorLayer.extend({
         if (!Ember.isNone(leafletObject)) {
           let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
           let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
-          if (leafletMap.hasLayer(leafletObject) && continueLoad && show && checkMapZoom(leafletObject)) {
+          if (continueLoad && show && checkMapZoom(leafletObject)) {
             let bounds = leafletMap.getBounds();
             if (!Ember.isNone(leafletObject.showLayerObjects)) {
               leafletObject.showLayerObjects = false;
