@@ -78,24 +78,24 @@ export default Ember.Mixin.create(rhumbOperations, {
             "coordinates": [
               [
                 [
-                  56.18425369262695,
-                  58.07197581354065
+                  56.18425,
+                  58.07197
                 ],
                 [
-                  56.210689544677734,
-                  58.07197581354065
+                  56.21068,
+                  58.07197
                 ],
                 [
-                  56.210689544677734,
-                  58.07987312382643
+                  56.21068,
+                  58.07987
                 ],
                 [
-                  56.18425369262695,
-                  58.07987312382643
+                  56.18425,
+                  58.07987
                 ],
                 [
-                  56.18425369262695,
-                  58.07197581354065
+                  56.18425,
+                  58.07197
                 ]
               ]
             ]
@@ -115,24 +115,24 @@ export default Ember.Mixin.create(rhumbOperations, {
             "coordinates": [
               [
                 [
-                  56.19712829589844,
-                  58.067708723599544
+                  56.19712,
+                  58.06770
                 ],
                 [
-                  56.22322082519531,
-                  58.067708723599544
+                  56.22322,
+                  58.06770
                 ],
                 [
-                  56.22322082519531,
-                  58.075516203173024
+                  56.22322,
+                  58.07551
                 ],
                 [
-                  56.19712829589844,
-                  58.075516203173024
+                  56.19712,
+                  58.07551
                 ],
                 [
-                  56.19712829589844,
-                  58.067708723599544
+                  56.19712,
+                  58.06770
                 ]
               ]
             ]
@@ -151,7 +151,7 @@ export default Ember.Mixin.create(rhumbOperations, {
   createMulti(objects)
   {
     let geojsonReader = new jsts.io.GeoJSONReader();
-    let geojsonWriter = new jsts.io.GeoJSONWriter();  
+    let geojsonWriter = new jsts.io.GeoJSONWriter();
     let geometries = [];
     let separateObjects = [];
     let resultObject = null;
@@ -162,21 +162,24 @@ export default Ember.Mixin.create(rhumbOperations, {
       return objects[0];
     }
 
-    for (var i = 0; i < objects.length; i++)
+    for (let i = 0; i < objects.length; i++)
     {
-      objects[i] = objects[i].crs.properties.name === 'EPSG:4326' ? objects[i] : this._convertObjectCoordinates(objects[i].crs.properties.name, objects[i]);  
+      if (!Ember.isNone(objects[i].crs)) {
+        objects[i] = objects[i].crs.properties.name.toUpperCase() === 'EPSG:4326' ? objects[i]
+        : this._convertObjectCoordinates(objects[i].crs.properties.name.toUpperCase(), objects[i]);
+      } else { throw "error: object must have 'crs' attribute"; }
     }
 
     //read the geometry of features
-    for (var i=0; i < objects.length; i++)
+    for (let i = 0; i < objects.length; i++)
     {
-      geometries.push(geojsonReader.read(objects[i].geometry))
-      if (i != 0 && geometries[i].getGeometryType() != geometries[i-1].getGeometryType())
-        throw 'error: type mismatch. Objects must have the same type';
+      geometries.push(geojsonReader.read(objects[i].geometry));
+      if (i !== 0 && geometries[i].getGeometryType() !== geometries[i - 1].getGeometryType())
+        { throw 'error: type mismatch. Objects must have the same type'; }
     }
 
     //check the intersections and calculate the difference between objects
-    for (var i = 0; i < geometries.length; i++) {
+    for (let i = 0; i < geometries.length; i++) {
       let current = geometries[i];
       for (var j = 0; j < geometries.length; j++) {
         if (i !== j) {
@@ -185,17 +188,21 @@ export default Ember.Mixin.create(rhumbOperations, {
           }
         }
       }
+
       separateObjects.push(current);
     }
 
     //union the objects
     separateObjects.forEach(function(element, i) {
-      if (i === 0) { resultObject = element; }
-      else {resultObject = resultObject.union(element); }
+      if (i === 0) {
+        resultObject = element;
+      } else {
+        resultObject = resultObject.union(element);
+      }
     });
 
     let unionres = geojsonWriter.write(resultObject);
-    
+
     const multiObj = {
       type: 'Feature',
       geometry: {
@@ -208,9 +215,8 @@ export default Ember.Mixin.create(rhumbOperations, {
           name: 'EPSG:4326'
         }
       }
-    }
+    };
 
-    //let result = mapApi.mapModel.addObjectToLayer('56f4b518-e375-4b24-be2f-88d48110c0a3', multiObj, multiObj.crs.properties.name);
     return multiObj;
   },
 
@@ -239,13 +245,6 @@ export default Ember.Mixin.create(rhumbOperations, {
     let [, leafletObject] = this._getModelLeafletObject(layerId);
     const obj = this.createObjectRhumb(data, leafletObject.options.crs, this);
 
-    let crs = leafletObject.options.crs;
-    if (!Ember.isNone(data.crs)) {
-      crs = getLeafletCrs('{ "code": "' + data.crs.toUpperCase() + '", "definition": "" }', this);
-    }
-    obj.crs = crs;
-    
     return obj;
-    //this.addObjectToLayer(layerId, obj, data.crs);
   }
 });
