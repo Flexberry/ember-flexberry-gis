@@ -289,3 +289,55 @@ test('getDistanceBetweenObjects', function(assert) {
     assert.equal(e, 536.4476316355142, 'distance');
   });
 });
+
+test('getmulticircuitobject', function(assert) {
+  let map = this.subject();
+  let objA = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'Polygon',
+      coordinates: [[[56.18425, 58.07197], [56.21068, 58.07197], [56.21068, 58.07987], [56.18425, 58.07987], [56.18425, 58.07197]]]
+    },
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326'
+      }
+    }
+  };
+  let objB = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'Polygon',
+      coordinates: [[[56.19712, 58.06770], [56.22322, 58.06770], [56.22322, 58.07551], [56.19712, 58.07551], [56.19712, 58.06770]]]
+    },
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326'
+      }
+    }
+  };
+  let multiObject = {
+    type: 'Feature',
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [[[[56.19712, 58.07197], [56.18425, 58.07197], [56.18425, 58.07987],
+[56.21068, 58.07987], [56.21068, 58.07551], [56.19712, 58.07551], [56.19712, 58.07197]]],
+[[[56.21068, 58.07551], [56.22322, 58.07551], [56.22322, 58.0677],
+[56.19712, 58.0677], [56.19712, 58.07197], [56.21068, 58.07197], [56.21068, 58.07551]]]]
+    },
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326'
+      }
+    }
+  };
+
+  let resultObj = map.createMulti([objA, objB]);
+
+  assert.deepEqual(resultObj, multiObject, 'multi object');
+});
