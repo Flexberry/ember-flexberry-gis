@@ -413,6 +413,7 @@
 */
 
 import Ember from &#x27;ember&#x27;;
+import TileLayer from &#x27;../layers/tile&#x27;;
 
 /**
   Mixin containing handlers for
@@ -467,6 +468,26 @@ export default Ember.Mixin.create({
 
       Ember.set(this, leafletMapPropertyPath, e.map);
       Ember.set(window, leafletMapPropertyPath, e.map);
+
+      let checkZIndex = function checkZIndex(e) {
+        let hierarchy = this.get(&#x27;model.hierarchy&#x27;).sortBy(&#x27;index&#x27;);
+        hierarchy.forEach((layer) =&gt; {
+          let leafletObject = layer.get(&#x27;_leafletObject&#x27;);
+          if ((leafletObject != null) &amp;&amp; (leafletObject.bringToFront instanceof Function) &amp;&amp; layer.get(&#x27;visibility&#x27;)) {
+            try {
+              let className = Ember.get(layer, &#x27;type&#x27;);
+              let layerType = Ember.getOwner(this).knownForType(&#x27;layer&#x27;, className);
+              if (!(layerType instanceof TileLayer)) {
+                leafletObject.bringToFront();
+              }
+            } catch (e) {
+              //Terrible trouble, we need to figure it out
+            }
+          }
+        });
+      };
+
+      e.map.on(&#x27;fixZIndex&#x27;, checkZIndex, this);
     },
 
     onServiceLayerInit(property, serviceLayer) {

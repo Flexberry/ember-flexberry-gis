@@ -471,12 +471,6 @@ export default BaseVectorLayer.extend({
   createVectorLayer(options) {
     options = Ember.$.extend({}, this.get(&#x27;options&#x27;), options);
 
-    let pane = this.get(&#x27;_pane&#x27;);
-    if (pane) {
-      options.pane = pane;
-      options.renderer = this.get(&#x27;_renderer&#x27;);
-    }
-
     let layerWithOptions = L.geoJSON([], options);
     Ember.assert(&#x27;The option \&#x27;kmlUrl\&#x27; or \&#x27;kmlString\&#x27; should be defined!&#x27;, Ember.isPresent(options.kmlUrl) || Ember.isPresent(options.kmlString));
 
