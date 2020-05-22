@@ -219,6 +219,7 @@ export default BaseVectorLayer.extend({
     };
     layer.feature.properties = this._setPropsFromModel(model, leafletObject);
     layer.feature.id = this.get('modelName') + '.' + layer.feature.properties.primarykey;
+    layer.leafletMap = this.get('leafletMap');
 
     let pane = this.get('_pane');
     if (pane) {

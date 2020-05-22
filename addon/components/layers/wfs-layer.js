@@ -143,6 +143,7 @@ export default BaseVectorLayer.extend({
       layer.options.renderer = this.get('_renderer');
     }
 
+    layer.leafletMap = this.get('leafletMap');
     leafletObject.baseAddLayer(layer);
   },
 
@@ -222,6 +223,7 @@ export default BaseVectorLayer.extend({
             e.layers.forEach((layer) => {
               layer.minZoom = this.get('minZoom');
               layer.maxZoom = this.get('maxZoom');
+              layer.leafletMap = this.get('leafletMap');
             });
           }
         });

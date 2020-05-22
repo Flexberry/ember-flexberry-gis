@@ -10,6 +10,12 @@ import Renderer from '../objects/custom-renderer';
 const { assert } = Ember;
 
 /**
+  Because z-index leaflet-tile-pane = 200.
+  Do more just in case
+*/
+const begIndex = 300;
+
+/**
   BaseVectorLayer component for other flexberry-gis vector(geojson, kml, etc.) layers.
 
   @class BaseVectorLayerComponent
@@ -78,7 +84,7 @@ export default BaseLayer.extend({
     if (thisPane && !Ember.isNone(leafletMap)) {
       let pane = leafletMap.getPane(thisPane);
       if (pane) {
-        pane.style.zIndex = this.get('index') + 200;
+        pane.style.zIndex = this.get('index') + begIndex;
       }
     }
   },
