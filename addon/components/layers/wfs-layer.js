@@ -56,10 +56,19 @@ export default BaseVectorLayer.extend({
     let options = this.get('options');
     let crs = Ember.get(options, 'crs');
     let geometryField = Ember.get(options, 'geometryField');
-    return new L.Format[format]({
+
+    let readFormatOptions = {
       crs,
       geometryField
-    });
+    };
+
+    let pane = this.get('_pane');
+    if (pane) {
+      readFormatOptions.pane = pane;
+      readFormatOptions.renderer = this.get('_renderer');
+    }
+
+    return new L.Format[format](readFormatOptions);
   },
 
   /**
@@ -125,6 +134,19 @@ export default BaseVectorLayer.extend({
     });
   },
 
+  _addLayer(layer) {
+    let leafletObject = this.get('_leafletObject');
+
+    let pane = this.get('_pane');
+    if (pane) {
+      layer.options.pane = pane;
+      layer.options.renderer = this.get('_renderer');
+    }
+
+    layer.leafletMap = this.get('leafletMap');
+    leafletObject.baseAddLayer(layer);
+  },
+
   /**
     Creates leaflet vector layer related to layer type.
     @method createVectorLayer
@@ -166,8 +188,8 @@ export default BaseVectorLayer.extend({
         .once('load', (e) => {
           let wfsLayer = e.target;
           let visibility = this.get('layerModel.visibility');
+          let leafletMap = this.get('leafletMap');
           if (!options.showExisting && options.continueLoading && visibility && checkMapZoomLayer(this)) {
-            let leafletMap = this.get('leafletMap');
             let bounds = leafletMap.getBounds();
             let filter = new L.Filter.BBox(options.geometryField, bounds, options.crs);
             wfsLayer.loadFeatures(filter);
@@ -177,6 +199,19 @@ export default BaseVectorLayer.extend({
           }
 
           wfsLayer.on('save:success', this._setLayerState, this);
+          Ember.set(wfsLayer, 'baseAddLayer', wfsLayer.addLayer);
+          wfsLayer.addLayer = this.get('_addLayer').bind(this);
+          if (!Ember.isNone(leafletMap)) {
+            let thisPane = this.get('_pane');
+            let pane = leafletMap.getPane(thisPane);
+            if (!pane || Ember.isNone(pane)) {
+              leafletMap.createPane(thisPane);
+              wfsLayer.options.pane = thisPane;
+              wfsLayer.options.renderer = this.get('_renderer');
+              this._setLayerZIndex();
+            }
+          }
+
           resolve(wfsLayer);
         })
         .once('error', (e) => {
@@ -188,6 +223,7 @@ export default BaseVectorLayer.extend({
             e.layers.forEach((layer) => {
               layer.minZoom = this.get('minZoom');
               layer.maxZoom = this.get('maxZoom');
+              layer.leafletMap = this.get('leafletMap');
             });
           }
         });
@@ -485,7 +521,7 @@ export default BaseVectorLayer.extend({
         if (!Ember.isNone(leafletObject)) {
           let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
           let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
-          if (leafletMap.hasLayer(leafletObject) && continueLoad && show && checkMapZoom(leafletObject)) {
+          if (continueLoad && show && checkMapZoom(leafletObject)) {
             let bounds = leafletMap.getBounds();
             if (!Ember.isNone(leafletObject.showLayerObjects)) {
               leafletObject.showLayerObjects = false;
