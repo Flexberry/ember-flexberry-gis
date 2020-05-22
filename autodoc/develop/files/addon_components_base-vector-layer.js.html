@@ -415,8 +415,15 @@
 import Ember from &#x27;ember&#x27;;
 import BaseLayer from &#x27;./base-layer&#x27;;
 import { setLeafletLayerOpacity } from &#x27;../utils/leaflet-opacity&#x27;;
+import Renderer from &#x27;../objects/custom-renderer&#x27;;
 
 const { assert } = Ember;
+
+/**
+  Because z-index leaflet-tile-pane = 200.
+  Do more just in case
+*/
+const begIndex = 300;
 
 /**
   BaseVectorLayer component for other flexberry-gis vector(geojson, kml, etc.) layers.
@@ -455,6 +462,42 @@ export default BaseLayer.extend({
     // but Ember.run.once guarantee that all &#x27;dynamicProperies&#x27; will be already chaged before &#x27;_resetLayer&#x27; will be called.
     Ember.run.once(this, &#x27;_resetLayer&#x27;);
   }),
+
+  /**
+    @property _pane
+    @type String
+    @readOnly
+  */
+  _pane: Ember.computed(&#x27;layerModel.id&#x27;, function () {
+    return &#x27;vectorLayerPane&#x27; + this.get(&#x27;layerModel.id&#x27;);
+  }),
+
+  /**
+    @property _renderer
+    @type Object
+    @readOnly
+  */
+  _renderer: Ember.computed(&#x27;_pane&#x27;, function () {
+    let pane = this.get(&#x27;_pane&#x27;);
+    return new Renderer({ pane: pane });
+  }),
+
+  /**
+    Sets leaflet layer&#x27;s zindex.
+
+    @method _setLayerZIndex
+    @private
+  */
+  _setLayerZIndex: function() {
+    let thisPane = this.get(&#x27;_pane&#x27;);
+    let leafletMap = this.get(&#x27;leafletMap&#x27;);
+    if (thisPane &amp;&amp; !Ember.isNone(leafletMap)) {
+      let pane = leafletMap.getPane(thisPane);
+      if (pane) {
+        pane.style.zIndex = this.get(&#x27;index&#x27;) + begIndex;
+      }
+    }
+  },
 
   /**
     Sets leaflet layer&#x27;s opacity.
