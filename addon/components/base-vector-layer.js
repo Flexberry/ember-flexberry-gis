@@ -489,6 +489,8 @@ export default BaseLayer.extend({
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       leafletMap.off('flexberry-map:getOrLoadLayerFeatures', this._getOrLoadLayerFeatures, this);
+
+      //for label
       if (this.get('showExisting') !== false) {
         leafletMap.off('moveend', this._showLabelsMovingMap, this);
       }
@@ -1052,6 +1054,13 @@ export default BaseLayer.extend({
       this._removeLayerFromLeafletContainer();
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
         this._removeLabelsFromLeafletContainer();
+        if (this.get('showExisting') !== false) {
+          leafletMap.off('moveend', this._showLabelsMovingMap, this);
+        }
+
+        if (this.get('settings.typeGeometry') === 'polyline') {
+          leafletMap.off('zoomend', this._updatePositionLabelForLine, this);
+        }
       }
     }
   },
