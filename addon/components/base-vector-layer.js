@@ -902,30 +902,32 @@ export default BaseLayer.extend({
     @method _updatePositionLabelForLine
   */
   _updatePositionLabelForLine() {
-    let _this = this;
-    let leafletObject = _this.get('_leafletObject');
-    if (!Ember.isNone(leafletObject)) {
-      leafletObject.eachLayer(function(layer) {
-        if (!Ember.isNone(layer._path)) {
-          let svg = layer._svg;
-          _this._setLabelLine(layer, svg);
-          let d = layer._path.getAttribute('d');
-          let path = svg.firstChild.firstChild;
-          path.setAttribute('d', d);
-          let id = path.getAttribute('id');
+    if (this.get('leafletMap').hasLayer(labelsLayer)) {
+      let _this = this;
+      let leafletObject = _this.get('_leafletObject');
+      if (!Ember.isNone(leafletObject)) {
+        leafletObject.eachLayer(function(layer) {
+          if (!Ember.isNone(layer._path)) {
+            let svg = layer._svg;
+            _this._setLabelLine(layer, svg);
+            let d = layer._path.getAttribute('d');
+            let path = svg.firstChild.firstChild;
+            path.setAttribute('d', d);
+            let id = path.getAttribute('id');
 
-          Ember.$('path#' + id).attr('d', d);
-          Ember.$('svg#svg-' + id).attr('width', svg.getAttribute('width'));
-          Ember.$('svg#svg-' + id).attr('height', svg.getAttribute('height'));
+            Ember.$('path#' + id).attr('d', d);
+            Ember.$('svg#svg-' + id).attr('width', svg.getAttribute('width'));
+            Ember.$('svg#svg-' + id).attr('height', svg.getAttribute('height'));
 
-          let options = layer._textOptions;
-          let text = layer._text;
-          let textNode = layer._textNode;
+            let options = layer._textOptions;
+            let text = layer._text;
+            let textNode = layer._textNode;
 
-          _this._setAlignForLine(layer, text, options.align, textNode);
-          Ember.$('text#text-' + id).attr('dx', textNode.getAttribute('dx'));
-        }
-      });
+            _this._setAlignForLine(layer, text, options.align, textNode);
+            Ember.$('text#text-' + id).attr('dx', textNode.getAttribute('dx'));
+          }
+        });
+      }
     }
   },
 
@@ -988,9 +990,11 @@ export default BaseLayer.extend({
   */
   _showLabelsMovingMap() {
     let labelsLayer = this.get('_labelsLayer');
-    let labelSettingsString = this.get('labelSettings.labelSettingsString');
-    let arrLabelString = this._parseString(labelSettingsString);
-    this._addLabelsToLeafletContainer();
+    if (this.get('leafletMap').hasLayer(labelsLayer)) {
+      let labelSettingsString = this.get('labelSettings.labelSettingsString');
+      let arrLabelString = this._parseString(labelSettingsString);
+      this._addLabelsToLeafletContainer();
+    }
   },
 
   /**
@@ -1054,13 +1058,6 @@ export default BaseLayer.extend({
       this._removeLayerFromLeafletContainer();
       if (this.get('labelSettings.signMapObjects') && !Ember.isNone(this.get('_labelsLayer')) && !Ember.isNone(this.get('_leafletObject._labelsLayer'))) {
         this._removeLabelsFromLeafletContainer();
-        if (this.get('showExisting') !== false) {
-          leafletMap.off('moveend', this._showLabelsMovingMap, this);
-        }
-
-        if (this.get('settings.typeGeometry') === 'polyline') {
-          leafletMap.off('zoomend', this._updatePositionLabelForLine, this);
-        }
       }
     }
   },
