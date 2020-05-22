@@ -44497,6 +44497,9 @@ img.item-minus {
   -ms-user-select: none;
   user-select: none;
 }
+.leaflet-marker-pane {
+  z-index: 2500;
+}
 /**
  * All ember-flexberry addon styles.
  */
