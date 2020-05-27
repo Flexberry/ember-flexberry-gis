@@ -219,7 +219,7 @@ export default Ember.Mixin.create({
     @param {Array} layerIds Array of layers IDs.
     @return {Promise} Array of layers and objects which intersected selected object.
   */
-  getIntersectionObjects(feature, crsName, layerIds) {
+  getIntersectionObjects(feature, crsName = 'EPSG:4326', layerIds) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       if (!Ember.isNone(feature) && feature.hasOwnProperty('geometry')) {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
@@ -234,8 +234,7 @@ export default Ember.Mixin.create({
           }
         });
 
-        let crs = crsName ? crsName : 'EPSG:4326';
-        let featureCrs = crs === 'EPSG:4326' ? feature : this._convertObjectCoordinates(crs, feature);
+        let featureCrs = crsName === 'EPSG:4326' ? feature : this._convertObjectCoordinates(crsName, feature);
         let featureLayer = L.GeoJSON.geometryToLayer(featureCrs);
         let latlng = featureLayer instanceof L.Marker || featureLayer instanceof L.CircleMarker ?
           featureLayer.getLatLng() : featureLayer.getBounds().getCenter();
