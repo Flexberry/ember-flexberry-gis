@@ -320,6 +320,20 @@ test('getmulticircuitobject', function(assert) {
       }
     }
   };
+  let objC = {
+    type: 'Feature',
+    properties: {},
+    geometry: {
+      type: 'Polygon',
+      coordinates: [[[56.21644, 58.07864], [56.23197, 58.07864], [56.23197, 58.08608], [56.21644, 58.08608], [56.21644, 58.07864]]]
+    },
+    crs: {
+      type: 'name',
+      properties: {
+        name: 'EPSG:4326'
+      }
+    }
+  };
   let multiObject = {
     type: 'Feature',
     geometry: {
@@ -327,7 +341,9 @@ test('getmulticircuitobject', function(assert) {
       coordinates: [[[[56.19712, 58.07197], [56.18425, 58.07197], [56.18425, 58.07987],
 [56.21068, 58.07987], [56.21068, 58.07551], [56.19712, 58.07551], [56.19712, 58.07197]]],
 [[[56.21068, 58.07551], [56.22322, 58.07551], [56.22322, 58.0677],
-[56.19712, 58.0677], [56.19712, 58.07197], [56.21068, 58.07197], [56.21068, 58.07551]]]]
+[56.19712, 58.0677], [56.19712, 58.07197], [56.21068, 58.07197], [56.21068, 58.07551]]],
+[[[56.21644, 58.07864], [56.21644, 58.08608], [56.23197, 58.08608], [56.23197, 58.07864],
+[56.21644, 58.07864]]]]
     },
     crs: {
       type: 'name',
@@ -337,7 +353,7 @@ test('getmulticircuitobject', function(assert) {
     }
   };
 
-  let resultObj = map.createMulti([objA, objB]);
+  let resultObj = map.createMulti([objA, objB, objC]);
 
   assert.deepEqual(resultObj, multiObject, 'multi object');
 });

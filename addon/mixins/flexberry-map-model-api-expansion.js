@@ -67,9 +67,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     @method createMulti
     @param {array} objects Array of objects to union.
     Example:
-    var objects = {
-      "type": "FeatureCollection",
-      "features": [
+    let objects = [
         {
           "type": "Feature",
           "properties": {},
@@ -109,9 +107,27 @@ export default Ember.Mixin.create(rhumbOperations, {
               "name": "EPSG:4326"
             }
           }
-        }
-      ]
-    }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [[56.21644, 58.07864],
+                [56.23197, 58.07864],
+                [56.23197, 58.08608],
+                [56.21644, 58.08608],
+                [56.21644, 58.07864]]
+            ]
+          },
+          "crs": {
+            "type": "name",
+            "properties": {
+              "name": "EPSG:4326"
+            }
+          }
+        }];
     @returns {Object} new multi-circuit object.
   */
   createMulti(objects)
@@ -128,21 +144,19 @@ export default Ember.Mixin.create(rhumbOperations, {
       return objects[0];
     }
 
-    for (let i = 0; i < objects.length; i++)
-    {
-      if (!Ember.isNone(objects[i].crs)) {
-        objects[i] = objects[i].crs.properties.name.toUpperCase() === 'EPSG:4326' ? objects[i]
-        : this._convertObjectCoordinates(objects[i].crs.properties.name.toUpperCase(), objects[i]);
+    objects.forEach(function(element, i) {
+      if (!Ember.isNone(element.crs)) {
+        objects[i] = element.crs.properties.name.toUpperCase() === 'EPSG:4326' ? element
+        : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
       } else { throw "error: object must have 'crs' attribute"; }
-    }
+    }, this);
 
     //read the geometry of features
-    for (let i = 0; i < objects.length; i++)
-    {
-      geometries.push(geojsonReader.read(objects[i].geometry));
+    objects.forEach(function(element, i) {
+      geometries.push(geojsonReader.read(element.geometry));
       if (i !== 0 && geometries[i].getGeometryType() !== geometries[i - 1].getGeometryType())
         { throw 'error: type mismatch. Objects must have the same type'; }
-    }
+    });
 
     //check the intersections and calculate the difference between objects
     for (let i = 0; i < geometries.length; i++) {
