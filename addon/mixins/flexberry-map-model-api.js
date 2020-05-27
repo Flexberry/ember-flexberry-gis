@@ -214,14 +214,14 @@ export default Ember.Mixin.create({
   /**
     Gets intersected features.
     @method getIntersectionObjects
-    @param {string} layerId Layer ID of the selected object.
-    @param {string} featureId Object ID with which we are looking for intersections.
+    @param {Object} feature GeoJson Feature.
+    @param {string} crsName Name of coordinate reference system, in which to give coordinates.
     @param {Array} layerIds Array of layers IDs.
     @return {Promise} Array of layers and objects which intersected selected object.
   */
-  getIntersectionObjects(layerId, featureId, layerIds) {
+  getIntersectionObjects(feature, crsName, layerIds) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      this._getModelLayerFeature(layerId, [featureId]).then(([, leafletObject, featureLayer]) => {
+      if (!Ember.isNone(feature) && feature.hasOwnProperty('geometry')) {
         const leafletMap = this.get('mapApi').getFromApi('leafletMap');
         let layersIntersect = [];
         layerIds.forEach(id => {
@@ -234,12 +234,15 @@ export default Ember.Mixin.create({
           }
         });
 
-        let latlng = featureLayer[0] instanceof L.Marker || featureLayer[0] instanceof L.CircleMarker ?
-          featureLayer[0].getLatLng() : featureLayer[0].getBounds().getCenter();
+        let crs = crsName ? crsName : 'EPSG:4326';
+        let featureCrs = crs === 'EPSG:4326' ? feature : this._convertObjectCoordinates(crs, feature);
+        let featureLayer = L.GeoJSON.geometryToLayer(featureCrs);
+        let latlng = featureLayer instanceof L.Marker || featureLayer instanceof L.CircleMarker ?
+          featureLayer.getLatLng() : featureLayer.getBounds().getCenter();
         let e = {
           latlng: latlng,
-          polygonLayer: featureLayer[0],
-          bufferedMainPolygonLayer:featureLayer[0],
+          polygonLayer: featureLayer,
+          bufferedMainPolygonLayer:featureLayer,
           excludedLayers: [],
           layers: layersIntersect,
           results: Ember.A()
@@ -266,9 +269,7 @@ export default Ember.Mixin.create({
         Ember.RSVP.allSettled(promises).then(() => {
           resolve(e.results);
         });
-      }).catch((e) => {
-        reject(e);
-      });
+      }
     });
   },
 
