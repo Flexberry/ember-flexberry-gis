@@ -962,7 +962,6 @@ export default BaseLayer.extend({
         }
 
         if (this.get('settings.typeGeometry') === 'polyline') {
-          //this._updatePositionLabelForLine();
           leafletMap.on('zoomend', this._updatePositionLabelForLine, this);
         }
       } else {
@@ -971,14 +970,8 @@ export default BaseLayer.extend({
 
       this._createStringLabel(arrLabelString, labelsLayer);
       this.set('_labelsLayer', labelsLayer);
-
-
-      //this._addLabelsToLeafletContainer();
-      //leafletMap.on('moveend', this._showLabelsMovingMap, this);
-
       if (this.get('settings.typeGeometry') === 'polyline') {
         this._updatePositionLabelForLine();
-        //leafletMap.on('zoomend', this._updatePositionLabelForLine, this);
       }
     }
   },
@@ -1016,14 +1009,6 @@ export default BaseLayer.extend({
     } else {
       this._showLabels();
     }
-
-    //let leafletMap = this.get('leafletMap');// || this._targetObject.leafletMap;
-    //leafletMap.addLayer(labelsLayer);
-    /*let lType = this.get('_leafletObject').getLayers()[0].toGeoJSON().geometry.type;
-
-    if (lType.indexOf('LineString') !== -1) {
-      this._updatePositionLabelForLine();
-    }*/
   },
 
   /**
