@@ -451,16 +451,6 @@ let FlexberryMaplayerComponent = Ember.Component.extend(
     */
     hasBeenExpanded: false,
 
-    /**
-      Containing labels layer to hide it with the layer.
-
-      @property _labelsLayer
-      @type Object[]
-      @default null
-      @private
-    */
-    _labelsLayer: null,
-
     //side to add layer to comapre
     side: '',
 

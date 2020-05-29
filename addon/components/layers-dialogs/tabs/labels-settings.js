@@ -214,16 +214,6 @@ export default Ember.Component.extend({
   }),
 
   /**
-    Containing labels layer.
-
-    @property _labelsLayer
-    @type Object[]
-    @default null
-    @private
-  */
-  _labelsLayer: null,
-
-  /**
     Containing array of strings and feature properies.
 
     @property _arrLabelString

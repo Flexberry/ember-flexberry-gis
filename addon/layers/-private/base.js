@@ -68,8 +68,7 @@ const createcommonLabelSettings = function () {
     scaleRange: {
       minScaleRange: null,
       maxScaleRange: null
-    },
-    labelsLayer: null
+    }
   };
 };
 
