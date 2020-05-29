@@ -6,8 +6,15 @@ import Ember from 'ember';
 import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
 import jsts from 'npm:jsts';
+import Renderer from '../objects/custom-renderer';
 
 const { assert } = Ember;
+
+/**
+  Because z-index leaflet-tile-pane = 200.
+  Do more just in case
+*/
+const begIndex = 300;
 
 /**
   BaseVectorLayer component for other flexberry-gis vector(geojson, kml, etc.) layers.
@@ -46,6 +53,42 @@ export default BaseLayer.extend({
     // but Ember.run.once guarantee that all 'dynamicProperies' will be already chaged before '_resetLayer' will be called.
     Ember.run.once(this, '_resetLayer');
   }),
+
+  /**
+    @property _pane
+    @type String
+    @readOnly
+  */
+  _pane: Ember.computed('layerModel.id', function () {
+    return 'vectorLayerPane' + this.get('layerModel.id');
+  }),
+
+  /**
+    @property _renderer
+    @type Object
+    @readOnly
+  */
+  _renderer: Ember.computed('_pane', function () {
+    let pane = this.get('_pane');
+    return new Renderer({ pane: pane });
+  }),
+
+  /**
+    Sets leaflet layer's zindex.
+
+    @method _setLayerZIndex
+    @private
+  */
+  _setLayerZIndex: function() {
+    let thisPane = this.get('_pane');
+    let leafletMap = this.get('leafletMap');
+    if (thisPane && !Ember.isNone(leafletMap)) {
+      let pane = leafletMap.getPane(thisPane);
+      if (pane) {
+        pane.style.zIndex = this.get('index') + begIndex;
+      }
+    }
+  },
 
   /**
     Sets leaflet layer's opacity.
@@ -598,7 +641,7 @@ export default BaseLayer.extend({
 
     if (lType.indexOf('Polygon') !== -1) {
       let geojsonReader = new jsts.io.GeoJSONReader();
-      let objJsts = geojsonReader.read(layer.feature.geometry);
+      let objJsts = geojsonReader.read(layer.toGeoJSON().geometry);
       let centroidJsts = objJsts.getInteriorPoint();
       let geojsonWriter = new jsts.io.GeoJSONWriter();
       let centroid = geojsonWriter.write(centroidJsts);
