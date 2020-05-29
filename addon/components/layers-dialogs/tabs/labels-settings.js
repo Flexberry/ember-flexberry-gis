@@ -194,7 +194,7 @@ export default Ember.Component.extend({
   _lineLocationSelect: Ember.computed('value.location.lineLocationSelect', '_itemsLineLocation', function() {
     let location = this.get('value.location.lineLocationSelect');
     let items = this.get('_itemsLineLocation');
-    let result = items['over'];
+    let result = items.over;
     let setting = 'over';
     if (!Ember.isNone(items)) {
       for (var key in items) {

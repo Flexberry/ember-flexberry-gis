@@ -948,6 +948,7 @@ export default BaseLayer.extend({
     @method _updatePositionLabelForLine
   */
   _updatePositionLabelForLine() {
+    let labelsLayer = this.get('_labelsLayer');
     if (this.get('leafletMap').hasLayer(labelsLayer)) {
       let _this = this;
       let leafletObject = _this.get('_leafletObject');
