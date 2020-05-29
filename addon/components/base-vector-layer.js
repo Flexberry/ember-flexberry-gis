@@ -230,9 +230,11 @@ export default BaseLayer.extend({
         vectorLayer.maxZoom = this.get('maxZoom');
 
         // add labels
-        if (this.get('labelSettings.signMapObjects') && this.get('showExisting') === false) {
+        if (this.get('showExisting') === false) {
           vectorLayer.on('load', (e) => {
-            this._addLabelsToLeafletContainer();
+            if (this.get('labelSettings.signMapObjects')) {
+              this._addLabelsToLeafletContainer();
+            }
           });
         }
 
@@ -637,6 +639,7 @@ export default BaseLayer.extend({
       iconSize: [iconWidth, iconHeight]
     };
     labelsLayer.addLayer(label);
+    label.feature = layer.feature;
     layer._label = label;
   },
 
