@@ -144,7 +144,7 @@ export default Ember.Mixin.create(rhumbOperations, {
       return objects[0];
     }
 
-    objects.forEach(function(element, i) {
+    objects.forEach((element, i) => {
       if (!Ember.isNone(element.crs)) {
         objects[i] = element.crs.properties.name.toUpperCase() === 'EPSG:4326' ? element
         : this._convertObjectCoordinates(element.crs.properties.name.toUpperCase(), element);
@@ -152,7 +152,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     }, this);
 
     //read the geometry of features
-    objects.forEach(function(element, i) {
+    objects.forEach((element, i) => {
       geometries.push(geojsonReader.read(element.geometry));
       if (i !== 0 && geometries[i].getGeometryType() !== geometries[i - 1].getGeometryType())
         { throw 'error: type mismatch. Objects must have the same type'; }
@@ -173,7 +173,7 @@ export default Ember.Mixin.create(rhumbOperations, {
     }
 
     //union the objects
-    separateObjects.forEach(function(element, i) {
+    separateObjects.forEach((element, i) => {
       if (i === 0) {
         resultObject = element;
       } else {
@@ -201,7 +201,7 @@ export default Ember.Mixin.create(rhumbOperations, {
   },
 
   /**
-    Create polygon object by rhumb.
+    Create Object by rhumb.
 
     @method createPolygonObjectRhumb
     @param {string} layerId Layer id.
@@ -219,7 +219,7 @@ export default Ember.Mixin.create(rhumbOperations, {
             { rhumb: 'ЮЗ', angle: 86.0047147391561, distance: 16532.122718537685 }
           ]
         };
-    @returns {Object} New polygon object.
+    @returns {Object} New GeoJSON Feature.
   */
   createPolygonObjectRhumb(layerId, data) {
     let [, leafletObject] = this._getModelLeafletObject(layerId);
