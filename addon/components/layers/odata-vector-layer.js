@@ -35,7 +35,7 @@ export default BaseVectorLayer.extend({
     let _this = this;
     const promises = Ember.A();
     let leafletObject = _this.get('_leafletObject');
-    leafletObject.eachLayer(function(layer) {
+    leafletObject.eachLayer(function (layer) {
       if (Ember.get(layer, 'model.hasDirtyAttributes')) {
         if (layer.state === state.insert) {
           const geometryField = _this.get('geometryField') || 'geometry';
@@ -70,7 +70,7 @@ export default BaseVectorLayer.extend({
     if (promises.length > 0) {
       Ember.RSVP.all(promises).then((e) => {
         let insertedIds = [];
-        leafletObject.eachLayer(function(layer) {
+        leafletObject.eachLayer(function (layer) {
           if (layer.state === state.insert) {
             insertedIds.push(layer);
           }
@@ -79,7 +79,7 @@ export default BaseVectorLayer.extend({
         });
         _this._setLayerState();
         leafletObject.fire('save:success', { layers: insertedIds });
-      }).catch(function(e) {
+      }).catch(function (e) {
         console.log('Error: ' + e);
         leafletObject.fire('save:failed', e);
       });
@@ -283,7 +283,7 @@ export default BaseVectorLayer.extend({
     let geom = '';
     let typeGeom;
 
-    let row = function(geom, typeGeom) {
+    let row = function (geom, typeGeom) {
       let coord0 = '';
       let queryStr = '(';
       geom.forEach((item) => {
@@ -457,7 +457,7 @@ export default BaseVectorLayer.extend({
     Get an array of link parameter restrictions.
     @method getFilterParameters
     @param {Object[]} linkParameter containing metadata for query
-    @param {Object} queryFilter Object with query filter paramteres
+    @param {Object} queryFilter Object with query filter parameteres
     @returns Array of Constraints.
   */
   getFilterParameters(parameters, queryFilter) {
@@ -472,7 +472,11 @@ export default BaseVectorLayer.extend({
           propertyEquals.pushObject(new Query.SimplePredicate(property, Query.FilterOperator.Eq, value));
         });
 
-        equals.pushObject(new Query.ComplexPredicate(Query.Condition.Or, ...propertyEquals));
+        if (propertyEquals.length === 1) {
+          equals.pushObject(propertyEquals[0]);
+        } else {
+          equals.pushObject(new Query.ComplexPredicate(Query.Condition.Or, ...propertyEquals));
+        }
       } else {
         equals.pushObject(new Query.SimplePredicate(property, Query.FilterOperator.Eq, propertyValue));
       }
@@ -719,7 +723,7 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  _buildStoreModelProjectionGeom: Ember.computed('modelName', 'projectionName', 'geometryField', 'store', function() {
+  _buildStoreModelProjectionGeom: Ember.computed('modelName', 'projectionName', 'geometryField', 'store', function () {
     const modelName = this.get('modelName');
     const projectionName = this.get('projectionName');
     const geometryField = this.get('geometryField') || 'geometry';
