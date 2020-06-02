@@ -596,62 +596,61 @@ export default BaseVectorLayer.extend({
         obj.build.predicate = new Query.SimplePredicate('id', Query.FilterOperator.Eq, null);
       }
 
+      const options = this.get('options');
+      let layer = L.featureGroup();
+
+      layer.options.crs = crs;
+      layer.options.style = this.get('styleSettings');
+      layer.options.continueLoading = continueLoading;
+      layer.options.showExisting = showExisting;
+      if (!showExisting && continueLoading && visibility && checkMapZoomLayer(this)) {
+        layer.isLoadBounds = bounds;
+      }
+
+      L.setOptions(layer, options);
+      layer.minZoom = this.get('minZoom');
+      layer.maxZoom = this.get('maxZoom');
+      layer.save = this.get('save').bind(this);
+      layer.geometryField = obj.geometryField;
+      layer.addLayer = this.get('addLayer').bind(this);
+      layer.editLayerObjectProperties = this.get('editLayerObjectProperties').bind(this);
+      layer.editLayer = this.get('editLayer').bind(this);
+      layer.removeLayer = this.get('removeLayer');
+      layer.modelName = obj.modelName;
+      layer.projectionName = obj.projectionName;
+      layer.editformname = obj.modelName + this.get('postfixForEditForm');
+      layer.deletedModels = Ember.A();
+      layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
+
+      let leafletMap = this.get('leafletMap');
+      if (!Ember.isNone(leafletMap)) {
+        let thisPane = this.get('_pane');
+        let pane = leafletMap.getPane(thisPane);
+        if (!pane || Ember.isNone(pane)) {
+          leafletMap.createPane(thisPane);
+          layer.options.pane = thisPane;
+          layer.options.renderer = this.get('_renderer');
+          this._setLayerZIndex();
+        }
+      }
+
+      let promiseLoad = Ember.RSVP.resolve();
+      this.set('promiseLoad', promiseLoad);
+
       let objs = obj.store.query(obj.modelName, obj.build);
-
       objs.then(res => {
-        const options = this.get('options');
         let models = res.toArray();
-        let layer = L.featureGroup();
-
-        layer.options.crs = crs;
-        layer.options.style = this.get('styleSettings');
-        layer.options.continueLoading = continueLoading;
-        layer.options.showExisting = showExisting;
-        if (!showExisting && continueLoading && visibility && checkMapZoomLayer(this)) {
-          layer.isLoadBounds = bounds;
-        }
-
-        L.setOptions(layer, options);
-        layer.minZoom = this.get('minZoom');
-        layer.maxZoom = this.get('maxZoom');
-        layer.save = this.get('save').bind(this);
-        layer.geometryField = obj.geometryField;
-        layer.addLayer = this.get('addLayer').bind(this);
-        layer.editLayerObjectProperties = this.get('editLayerObjectProperties').bind(this);
-        layer.editLayer = this.get('editLayer').bind(this);
-        layer.removeLayer = this.get('removeLayer');
-        layer.modelName = obj.modelName;
-        layer.projectionName = obj.projectionName;
-        layer.editformname = obj.modelName + this.get('postfixForEditForm');
-        layer.deletedModels = Ember.A();
-        layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
-
-        let leafletMap = this.get('leafletMap');
-        if (!Ember.isNone(leafletMap)) {
-          let thisPane = this.get('_pane');
-          let pane = leafletMap.getPane(thisPane);
-          if (!pane || Ember.isNone(pane)) {
-            leafletMap.createPane(thisPane);
-            layer.options.pane = thisPane;
-            layer.options.renderer = this.get('_renderer');
-            this._setLayerZIndex();
-          }
-        }
 
         models.forEach(model => {
           this.addLayerObject(layer, model);
         });
 
         layer.fire('load', {});
-
         this._setLayerState();
-        let promiseLoad = Ember.RSVP.resolve();
-        this.set('promiseLoad', promiseLoad);
-
-        resolve(layer);
       }).catch((e) => {
-        reject(e);
       });
+
+      resolve(layer);
     });
   },
 

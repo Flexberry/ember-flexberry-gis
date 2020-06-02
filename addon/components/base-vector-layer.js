@@ -79,7 +79,7 @@ export default BaseLayer.extend({
     @method _setLayerZIndex
     @private
   */
-  _setLayerZIndex: function() {
+  _setLayerZIndex: function () {
     let thisPane = this.get('_pane');
     let leafletMap = this.get('leafletMap');
     if (thisPane && !Ember.isNone(leafletMap)) {
@@ -196,22 +196,22 @@ export default BaseLayer.extend({
     let describeFeatureTypeResponse = `` +
       `<?xml version="1.0" encoding="UTF-8"?>` +
       `<xsd:schema xmlns:gml="http://www.opengis.net/gml" ` +
-                  `xmlns:flexberry="http://flexberry.ru" ` +
-                  `xmlns:xsd="http://www.w3.org/2001/XMLSchema" ` +
-                  `elementFormDefault="qualified" ` +
-                  `targetNamespace="http://flexberry.ru">` +
-        `<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://flexberry.ru/schemas/gml/3.1.1/base/gml.xsd"/>` +
-          `<xsd:complexType name="layerType">` +
-            `<xsd:complexContent>` +
-              `<xsd:extension base="gml:AbstractFeatureType">` +
-                `<xsd:sequence>` +
-                  `${layerPropertiesDescription}` +
-                  `<xsd:element maxOccurs="1" minOccurs="0" name="${geometryField}" nillable="true" type="gml:GeometryPropertyType"/>` +
-                `</xsd:sequence>` +
-              `</xsd:extension>` +
-            `</xsd:complexContent>` +
-          `</xsd:complexType>` +
-        `<xsd:element name="layer" substitutionGroup="gml:_Feature" type="flexberry:layerType"/>` +
+      `xmlns:flexberry="http://flexberry.ru" ` +
+      `xmlns:xsd="http://www.w3.org/2001/XMLSchema" ` +
+      `elementFormDefault="qualified" ` +
+      `targetNamespace="http://flexberry.ru">` +
+      `<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://flexberry.ru/schemas/gml/3.1.1/base/gml.xsd"/>` +
+      `<xsd:complexType name="layerType">` +
+      `<xsd:complexContent>` +
+      `<xsd:extension base="gml:AbstractFeatureType">` +
+      `<xsd:sequence>` +
+      `${layerPropertiesDescription}` +
+      `<xsd:element maxOccurs="1" minOccurs="0" name="${geometryField}" nillable="true" type="gml:GeometryPropertyType"/>` +
+      `</xsd:sequence>` +
+      `</xsd:extension>` +
+      `</xsd:complexContent>` +
+      `</xsd:complexType>` +
+      `<xsd:element name="layer" substitutionGroup="gml:_Feature" type="flexberry:layerType"/>` +
       `</xsd:schema>`;
 
     let describeFeatureTypeXml = L.XmlUtil.parseXml(describeFeatureTypeResponse);
@@ -271,15 +271,6 @@ export default BaseLayer.extend({
 
         vectorLayer.minZoom = this.get('minZoom');
         vectorLayer.maxZoom = this.get('maxZoom');
-
-        // add labels
-        if (this.get('showExisting') === false) {
-          vectorLayer.on('load', (e) => {
-            if (this.get('labelSettings.signMapObjects')) {
-              this._addLabelsToLeafletContainer();
-            }
-          });
-        }
 
         if (this.get('clusterize')) {
           let clusterLayer = this.createClusterLayer(vectorLayer);
@@ -550,7 +541,7 @@ export default BaseLayer.extend({
     this._super(...arguments);
 
     // add labels
-    if (this.get('labelSettings.signMapObjects') && this.get('showExisting') !== false) {
+    if (this.get('labelSettings.signMapObjects')) {
       this.get('_leafletLayerPromise').then((leafletLayer) => {
         this._addLabelsToLeafletContainer();
       });
@@ -571,7 +562,7 @@ export default BaseLayer.extend({
     let exp = expression.trim();
     let reg = /'(.+?)'/g;
     let expResult = exp.split(reg).filter(x => x !== '');
-    return expResult ?  expResult : null;
+    return expResult ? expResult : null;
   },
 
   /**
@@ -602,7 +593,8 @@ export default BaseLayer.extend({
       if (!layer._label && (dynamicLoad || staticLoad)) {
         let label = '';
         let isProp = false;
-        expResult.forEach(function(element) {
+
+        expResult.forEach(function (element) {
           for (let key in layer.feature.properties) {
             if (key === element && !Ember.isNone(layer.feature.properties[key]) && !Ember.isBlank(layer.feature.properties[key])) {
               label += layer.feature.properties[key];
@@ -610,9 +602,15 @@ export default BaseLayer.extend({
             }
           }
 
-          label += !isProp ?  element : '';
+          label += !isProp ? element : '';
           isProp = false;
         });
+
+        const layerLabelCallback = this.get('mapApi').getFromApi('layerLabelCallback');
+        if (typeof layerLabelCallback === 'function') {
+          label = layerLabelCallback(layer, label);
+        }
+
         this._createLabel(label, layer, style, labelsLayer);
       }
     });
@@ -642,11 +640,18 @@ export default BaseLayer.extend({
     if (lType.indexOf('Polygon') !== -1) {
       let geojsonReader = new jsts.io.GeoJSONReader();
       let objJsts = geojsonReader.read(layer.toGeoJSON().geometry);
-      let centroidJsts = objJsts.getInteriorPoint();
-      let geojsonWriter = new jsts.io.GeoJSONWriter();
-      let centroid = geojsonWriter.write(centroidJsts);
-      latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);
-      html = '<p style="' + style + '">' + text + '</p>';
+
+      try {
+        let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
+        if (!objJsts.isValid()) console.log(layer.toGeoJSON().id);
+        let geojsonWriter = new jsts.io.GeoJSONWriter();
+        let centroid = geojsonWriter.write(centroidJsts);
+        latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);
+        html = '<p style="' + style + '">' + text + '</p>';
+      }
+      catch (e) {
+        console.error(e.message + ': ' + layer.toGeoJSON().id);
+      }
     }
 
     if (lType.indexOf('Point') !== -1) {
@@ -668,6 +673,8 @@ export default BaseLayer.extend({
       html = Ember.$(layer._svgConteiner).html();
     }
 
+    if (!latlng) return;
+
     let label = L.marker(latlng, {
       icon: L.divIcon({
         className: 'label',
@@ -678,11 +685,14 @@ export default BaseLayer.extend({
     });
     label.style = {
       className: 'label',
-      html:html,
+      html: html,
       iconSize: [iconWidth, iconHeight]
     };
     labelsLayer.addLayer(label);
     label.feature = layer.feature;
+    label.minZoom = labelsLayer.minZoom;
+    label.maxZoom = labelsLayer.maxZoom;
+    label.leafletMap = labelsLayer.leafletMap;
     layer._label = label;
   },
 
@@ -907,7 +917,7 @@ export default BaseLayer.extend({
 
     let textNode = L.SVG.create('text');
     let textPath = L.SVG.create('textPath');
-    let dy =  0;
+    let dy = 0;
     let sizeFont = parseInt(this.get('labelSettings.options.captionFontSize'));
     let _lineLocationSelect = this.get('labelSettings.location.lineLocationSelect');
 
@@ -953,7 +963,7 @@ export default BaseLayer.extend({
       let _this = this;
       let leafletObject = _this.get('_leafletObject');
       if (!Ember.isNone(leafletObject)) {
-        leafletObject.eachLayer(function(layer) {
+        leafletObject.eachLayer(function (layer) {
           if (!Ember.isNone(layer._path)) {
             let svg = layer._svg;
             _this._setLabelLine(layer, svg);
@@ -978,7 +988,7 @@ export default BaseLayer.extend({
     }
   },
 
-  _labelsLayer:null,
+  _labelsLayer: null,
 
   /**
     Show lables
@@ -1002,6 +1012,7 @@ export default BaseLayer.extend({
         let maxScaleRange = this.get('labelSettings.scaleRange.maxScaleRange') || this.get('maxZoom');
         labelsLayer.minZoom = minScaleRange;
         labelsLayer.maxZoom = maxScaleRange;
+        labelsLayer.leafletMap = leafletMap;
         leafletObject._labelsLayer = labelsLayer;
 
         if (this.get('showExisting') !== false) {
