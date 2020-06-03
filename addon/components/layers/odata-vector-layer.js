@@ -106,7 +106,6 @@ export default BaseVectorLayer.extend({
         type: 'name'
       };
       Ember.set(layer, 'feature.geometry.coordinates', geometryObject.coordinates);
-      layer.model.setProperties(layer.feature.properties);
       layer.model.set(geometryField, geometryObject);
       layer.state = state.update;
     }
@@ -166,10 +165,11 @@ export default BaseVectorLayer.extend({
     };
 
     model.set(geometryField, geometryObject);
-    let leafletObject = this.get('_leafletObject');
-    layer.state = state.insert;
     model.set('id', generateUniqueId());
-    this._setLayerProperties(layer, model, geometryObject, leafletObject);
+    layer.state = state.insert;
+
+    this._setLayerProperties(layer, model, geometryObject);
+    let leafletObject = this.get('_leafletObject');
     L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
     return leafletObject;
   },
@@ -203,9 +203,8 @@ export default BaseVectorLayer.extend({
     @param {Object} layer layer
     @param {Ember.Model} model feature's model
     @param {Object} geometry
-    @param {Object} leafletObject
   */
-  _setLayerProperties(layer, model, geometry, leafletObject) {
+  _setLayerProperties(layer, model, geometry) {
     const modelProj = model.constructor.projections.get(this.get('projectionName'));
     layer.options.crs = this.get('crs');
     layer.model = model;
@@ -217,7 +216,25 @@ export default BaseVectorLayer.extend({
       geometry: geometry,
       leafletLayer: layer
     };
-    layer.feature.properties = this._setPropsFromModel(model, leafletObject);
+
+    layer.feature.properties = new Proxy(model, {
+      get: function (target, prop) {
+        if (prop === 'primarykey') {
+          return target.get('id');
+        }
+
+        return target.get(prop);
+      },
+      set: function (target, prop, value) {
+        if (prop === 'primarykey') {
+          target.set('id', value);
+          return;
+        }
+
+        target.set(prop, value);
+      }
+    });
+
     layer.feature.id = this.get('modelName') + '.' + layer.feature.properties.primarykey;
     layer.leafletMap = this.get('leafletMap');
 
@@ -555,7 +572,7 @@ export default BaseVectorLayer.extend({
 
     if (innerLayer) {
       innerLayer.state = state.exist;
-      this._setLayerProperties(innerLayer, model, geometry, layer);
+      this._setLayerProperties(innerLayer, model, geometry);
       if (add) {
         L.FeatureGroup.prototype.addLayer.call(layer, innerLayer);
       }
