@@ -35,7 +35,7 @@ export default BaseVectorLayer.extend({
     let _this = this;
     const promises = Ember.A();
     let leafletObject = _this.get('_leafletObject');
-    leafletObject.eachLayer(function(layer) {
+    leafletObject.eachLayer(function (layer) {
       if (Ember.get(layer, 'model.hasDirtyAttributes')) {
         if (layer.state === state.insert) {
           const geometryField = _this.get('geometryField') || 'geometry';
@@ -70,7 +70,7 @@ export default BaseVectorLayer.extend({
     if (promises.length > 0) {
       Ember.RSVP.all(promises).then((e) => {
         let insertedIds = [];
-        leafletObject.eachLayer(function(layer) {
+        leafletObject.eachLayer(function (layer) {
           if (layer.state === state.insert) {
             insertedIds.push(layer);
           }
@@ -79,7 +79,7 @@ export default BaseVectorLayer.extend({
         });
         _this._setLayerState();
         leafletObject.fire('save:success', { layers: insertedIds });
-      }).catch(function(e) {
+      }).catch(function (e) {
         console.log('Error: ' + e);
         leafletObject.fire('save:failed', e);
       });
@@ -106,7 +106,6 @@ export default BaseVectorLayer.extend({
         type: 'name'
       };
       Ember.set(layer, 'feature.geometry.coordinates', geometryObject.coordinates);
-      layer.model.setProperties(layer.feature.properties);
       layer.model.set(geometryField, geometryObject);
       layer.state = state.update;
     }
@@ -166,10 +165,11 @@ export default BaseVectorLayer.extend({
     };
 
     model.set(geometryField, geometryObject);
-    let leafletObject = this.get('_leafletObject');
-    layer.state = state.insert;
     model.set('id', generateUniqueId());
-    this._setLayerProperties(layer, model, geometryObject, leafletObject);
+    layer.state = state.insert;
+
+    this._setLayerProperties(layer, model, geometryObject);
+    let leafletObject = this.get('_leafletObject');
     L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
     return leafletObject;
   },
@@ -203,9 +203,8 @@ export default BaseVectorLayer.extend({
     @param {Object} layer layer
     @param {Ember.Model} model feature's model
     @param {Object} geometry
-    @param {Object} leafletObject
   */
-  _setLayerProperties(layer, model, geometry, leafletObject) {
+  _setLayerProperties(layer, model, geometry) {
     const modelProj = model.constructor.projections.get(this.get('projectionName'));
     layer.options.crs = this.get('crs');
     layer.model = model;
@@ -217,7 +216,25 @@ export default BaseVectorLayer.extend({
       geometry: geometry,
       leafletLayer: layer
     };
-    layer.feature.properties = this._setPropsFromModel(model, leafletObject);
+
+    layer.feature.properties = new Proxy(model, {
+      get: function (target, prop) {
+        if (prop === 'primarykey') {
+          return target.get('id');
+        }
+
+        return target.get(prop);
+      },
+      set: function (target, prop, value) {
+        if (prop === 'primarykey') {
+          target.set('id', value);
+          return;
+        }
+
+        target.set(prop, value);
+      }
+    });
+
     layer.feature.id = this.get('modelName') + '.' + layer.feature.properties.primarykey;
     layer.leafletMap = this.get('leafletMap');
 
@@ -283,7 +300,7 @@ export default BaseVectorLayer.extend({
     let geom = '';
     let typeGeom;
 
-    let row = function(geom, typeGeom) {
+    let row = function (geom, typeGeom) {
       let coord0 = '';
       let queryStr = '(';
       geom.forEach((item) => {
@@ -457,7 +474,7 @@ export default BaseVectorLayer.extend({
     Get an array of link parameter restrictions.
     @method getFilterParameters
     @param {Object[]} linkParameter containing metadata for query
-    @param {Object} queryFilter Object with query filter paramteres
+    @param {Object} queryFilter Object with query filter parameteres
     @returns Array of Constraints.
   */
   getFilterParameters(parameters, queryFilter) {
@@ -472,7 +489,11 @@ export default BaseVectorLayer.extend({
           propertyEquals.pushObject(new Query.SimplePredicate(property, Query.FilterOperator.Eq, value));
         });
 
-        equals.pushObject(new Query.ComplexPredicate(Query.Condition.Or, ...propertyEquals));
+        if (propertyEquals.length === 1) {
+          equals.pushObject(propertyEquals[0]);
+        } else {
+          equals.pushObject(new Query.ComplexPredicate(Query.Condition.Or, ...propertyEquals));
+        }
       } else {
         equals.pushObject(new Query.SimplePredicate(property, Query.FilterOperator.Eq, propertyValue));
       }
@@ -551,7 +572,7 @@ export default BaseVectorLayer.extend({
 
     if (innerLayer) {
       innerLayer.state = state.exist;
-      this._setLayerProperties(innerLayer, model, geometry, layer);
+      this._setLayerProperties(innerLayer, model, geometry);
       if (add) {
         L.FeatureGroup.prototype.addLayer.call(layer, innerLayer);
       }
@@ -719,7 +740,7 @@ export default BaseVectorLayer.extend({
     });
   },
 
-  _buildStoreModelProjectionGeom: Ember.computed('modelName', 'projectionName', 'geometryField', 'store', function() {
+  _buildStoreModelProjectionGeom: Ember.computed('modelName', 'projectionName', 'geometryField', 'store', function () {
     const modelName = this.get('modelName');
     const projectionName = this.get('projectionName');
     const geometryField = this.get('geometryField') || 'geometry';

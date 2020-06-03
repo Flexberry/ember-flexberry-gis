@@ -1104,12 +1104,20 @@ export default Ember.Mixin.create({
   uploadFile(file) {
     let config = Ember.getOwner(this).resolveRegistration('config:environment');
 
-    return Ember.$.ajax({
-      url: `${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}`,
-      type: 'POST',
-      data: file,
-      cache: false,
-      processData: false
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      Ember.$.ajax({
+        url: `${config.APP.backendUrl}/controls/FileUploaderHandler.ashx?FileName=${file.name}`,
+        type: 'POST',
+        data: file,
+        cache: false,
+        processData: false,
+        success: function(data) {
+          resolve(data);
+        },
+        error: function(e) {
+          reject(e);
+        }
+      });
     });
   },
 
