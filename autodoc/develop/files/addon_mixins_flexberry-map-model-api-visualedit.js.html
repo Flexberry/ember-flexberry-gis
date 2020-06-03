@@ -554,43 +554,49 @@ export default Ember.Mixin.create({
     @returns {Object} Layer object
   */
   startNewObject(layerId, properties) {
-    let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
-    let editTools = this._getEditTools();
-    let newLayer;
+    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      try {
+        let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
+        let editTools = this._getEditTools();
+        let newLayer;
 
-    let finishDraw = () =&gt; {
-      editTools.off(&#x27;editable:drawing:end&#x27;, finishDraw, this);
-      editTools.stopDrawing();
-      let defaultProperties = layerModel.get(&#x27;settingsAsObject.defaultProperties&#x27;) || {};
-      newLayer.feature = { properties: Ember.merge(defaultProperties, properties) };
-      newLayer.remove();
-      leafletObject.addLayer(newLayer);
-    };
+        let finishDraw = () =&gt; {
+          editTools.off(&#x27;editable:drawing:end&#x27;, finishDraw, this);
+          editTools.stopDrawing();
+          let defaultProperties = layerModel.get(&#x27;settingsAsObject.defaultProperties&#x27;) || {};
+          newLayer.feature = { properties: Ember.merge(defaultProperties, properties) };
+          newLayer.remove();
+          leafletObject.addLayer(newLayer);
+          resolve(newLayer);
+        };
 
-    editTools.on(&#x27;editable:drawing:end&#x27;, finishDraw, this);
+        editTools.on(&#x27;editable:drawing:end&#x27;, finishDraw, this);
 
-    let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
-    leafletMap.fire(&#x27;flexberry-map:switchToDefaultMapTool&#x27;);
-    if (editTools.drawing()) {
-      editTools.stopDrawing();
-    }
+        let leafletMap = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;leafletMap&#x27;);
+        leafletMap.fire(&#x27;flexberry-map:switchToDefaultMapTool&#x27;);
+        if (editTools.drawing()) {
+          editTools.stopDrawing();
+        }
 
-    switch (layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;).toLowerCase()) {
-      case &#x27;polygon&#x27;:
-        newLayer = editTools.startPolygon();
-        break;
-      case &#x27;polyline&#x27;:
-        newLayer = editTools.startPolyline();
-        break;
-      case &#x27;marker&#x27;:
-        newLayer = editTools.startMarker();
-        break;
-      default:
-        throw &#x27;Unknown layer type: &#x27; + layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;);
-    }
+        switch (layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;).toLowerCase()) {
+          case &#x27;polygon&#x27;:
+            newLayer = editTools.startPolygon();
+            break;
+          case &#x27;polyline&#x27;:
+            newLayer = editTools.startPolyline();
+            break;
+          case &#x27;marker&#x27;:
+            newLayer = editTools.startMarker();
+            break;
+          default:
+            throw &#x27;Unknown layer type: &#x27; + layerModel.get(&#x27;settingsAsObject.typeGeometry&#x27;);
+        }
 
-    newLayer.layerId = layerId;
-    return newLayer;
+        newLayer.layerId = layerId;
+      } catch (error) {
+        reject(error);
+      }
+    });
   },
 
   /**

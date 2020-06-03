@@ -3621,6 +3621,62 @@ define('dummy/tests/unit/components/layers/group-layer-test.jshint', ['exports']
     assert.ok(true, 'unit/components/layers/group-layer-test.js should pass jshint.');
   });
 });
+define('dummy/tests/unit/components/layers/odata-vector-layer-test', ['exports', 'ember', 'ember-qunit', 'dummy/tests/helpers/start-app', 'ember-flexberry-data'], function (exports, _ember, _emberQunit, _dummyTestsHelpersStartApp, _emberFlexberryData) {
+
+  var app = undefined;
+
+  (0, _emberQunit.moduleForComponent)('layers/odata-vector-layer', 'Unit | Component | layers/odata vector layer', {
+    unit: true,
+    needs: ['service:map-api', 'config:environment', 'model:new-platform-flexberry-g-i-s-link-parameter'],
+    beforeEach: function beforeEach() {
+      app = (0, _dummyTestsHelpersStartApp['default'])();
+    },
+    afterEach: function afterEach() {
+      _ember['default'].run(app, 'destroy');
+    }
+  });
+
+  (0, _emberQunit.test)('getFilterParameters return SimplePredicate on single value in array', function (assert) {
+    var _this = this;
+
+    assert.expect(2);
+    var done = assert.async(1);
+    _ember['default'].run(function () {
+      // arrange
+      var component = _this.subject();
+      var linkParameter = _ember['default'].Object.create({
+        'queryKey': 'PK',
+        'layerField': 'testField'
+      });
+
+      // act
+      var result = component.getFilterParameters([linkParameter], { 'PK': ['id1'] });
+
+      // assert
+      var firstValue = result[0];
+      assert.ok(firstValue instanceof _emberFlexberryData.Query.SimplePredicate);
+      assert.equal(firstValue.toString(), '(testField eq id1)');
+      done();
+    });
+  });
+});
+define('dummy/tests/unit/components/layers/odata-vector-layer-test.jscs-test', ['exports'], function (exports) {
+  'use strict';
+
+  module('JSCS - unit/components/layers');
+  test('unit/components/layers/odata-vector-layer-test.js should pass jscs', function () {
+    ok(true, 'unit/components/layers/odata-vector-layer-test.js should pass jscs.');
+  });
+});
+define('dummy/tests/unit/components/layers/odata-vector-layer-test.jshint', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('JSHint - unit/components/layers/odata-vector-layer-test.js');
+  QUnit.test('should pass jshint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/components/layers/odata-vector-layer-test.js should pass jshint.');
+  });
+});
 define('dummy/tests/unit/components/layers/tile-layer-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
 
   (0, _emberQunit.moduleForComponent)('layers/tile-layer', 'Unit | Component | layers/tile layer', {
@@ -4471,7 +4527,7 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-savelayer-test.jshint', 
     assert.ok(true, 'unit/mixins/flexberry-map-model-api-savelayer-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/mixins/flexberry-map-model-api-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi) {
+define('dummy/tests/unit/mixins/flexberry-map-model-api-test', ['exports', 'ember', 'qunit', 'ember-flexberry-gis/mixins/flexberry-map-model-api', 'sinon'], function (exports, _ember, _qunit, _emberFlexberryGisMixinsFlexberryMapModelApi, _sinon) {
 
   (0, _qunit.module)('Unit | Mixin | flexberry map model api test');
 
@@ -4481,6 +4537,40 @@ define('dummy/tests/unit/mixins/flexberry-map-model-api-test', ['exports', 'embe
   (0, _qunit.test)('it works FlexberryMapModelApiMixin', function (assert) {
     var subject = mapApiMixinObject.create();
     assert.ok(subject);
+  });
+
+  (0, _qunit.test)('uploadFile should send post request with fileName and data to backend and return Ember.RSVP.Promise', function (assert) {
+    assert.expect(4);
+    var done = assert.async(1);
+    var server = _sinon['default'].fakeServer.create();
+    server.respondWith('uploadfileresponse');
+    var configStub = _sinon['default'].stub(_ember['default'], 'getOwner');
+    configStub.returns({
+      resolveRegistration: function resolveRegistration() {
+        return {
+          'APP': {
+            'backendUrl': 'stubbackend'
+          }
+        };
+      }
+    });
+
+    var subject = mapApiMixinObject.create();
+    var payload = { 'name': 'testFile' };
+
+    var result = subject.uploadFile(payload);
+    server.respond();
+
+    assert.ok(result instanceof _ember['default'].RSVP.Promise);
+    assert.deepEqual(server.requests[0].requestBody, payload);
+    assert.equal(server.requests[0].url, 'stubbackend/controls/FileUploaderHandler.ashx?FileName=testFile');
+    result.then(function (e) {
+      assert.equal(e, 'uploadfileresponse');
+      done();
+    });
+
+    configStub.restore();
+    server.restore();
   });
 });
 define('dummy/tests/unit/mixins/flexberry-map-model-api-test.jscs-test', ['exports'], function (exports) {
