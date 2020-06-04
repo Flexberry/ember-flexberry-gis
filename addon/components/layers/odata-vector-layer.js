@@ -167,7 +167,6 @@ export default BaseVectorLayer.extend({
     model.set(geometryField, geometryObject);
     model.set('id', generateUniqueId());
     layer.state = state.insert;
-
     this._setLayerProperties(layer, model, geometryObject);
     let leafletObject = this.get('_leafletObject');
     L.FeatureGroup.prototype.addLayer.call(leafletObject, layer);
@@ -228,13 +227,24 @@ export default BaseVectorLayer.extend({
       set: function (target, prop, value) {
         if (prop === 'primarykey') {
           target.set('id', value);
-
         } else {
           target.set(prop, value);
         }
 
         return true;
-      }
+      },
+      ownKeys(target) {
+        let modelKeys = Object.keys(target.toJSON());
+        modelKeys.push('primarykey');
+        return modelKeys;
+      },
+      getOwnPropertyDescriptor(target, name) {
+        const proxy = this;
+        return { get value() { return proxy.get(target, name); }, configurable: true, enumerable: true, writable: true };
+      },
+      has: function(target, prop) {
+        return target.has(prop);
+      },
     });
 
     layer.feature.id = this.get('modelName') + '.' + layer.feature.properties.primarykey;
