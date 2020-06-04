@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>addon/components/flexberry-map.js - Flexberry Documentation</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="Flexberry Documentation" src="../assets/css/logo.png" style="max-height: 65%;" title="Flexberry Documentation">
+            Flexberry Documentation
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>develop</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/ApplicationInitializer", "classes/ApplicationInstance", "classes/ApplicationInstanceInitializer", "classes/ArrayContainsHelper", "classes/BaseChartTypeComponent", "classes/BaseControlComponent", "classes/BaseEditMode", "classes/BaseGeoProvider", "classes/BaseLayer", "classes/BaseLayerComponent", "classes/BaseLayerStyle", "classes/BaseLayerStyleLegendComponent", "classes/BaseLayerTreenodeContentComponent", "classes/BaseLegendComponent", "classes/BaseMapCommand", "classes/BaseMapCommandComponent", "classes/BaseMapTool", "classes/BaseMapToolComponent", "classes/BaseMarkerStyle", "classes/BaseModeComponent", "classes/BaseNonclickableMapTool", "classes/BaseVectorLayerComponent", "classes/CategorizedLayersStyleGradientToolsComponent", "classes/CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent", "classes/CategorizedLayersStyleLayerPropertyDropdownComponent", "classes/CategorizedLayerStyle", "classes/CategorizedLayerStyleLegendComponent", "classes/ChartsRendererService", "classes/ColumnComponent", "classes/DefaultMarkersStyleComponent", "classes/DefaultMarkerStyle", "classes/DivControlComponent", "classes/DragMapTool", "classes/DragMapToolComponent", "classes/DrawCircleMapTool", "classes/DrawClearMapTool", "classes/DrawMapTool", "classes/DrawMapToolComponent", "classes/DrawMarkerMapTool", "classes/DrawPolygonMapTool", "classes/DrawPolylineMapTool", "classes/DrawRectangleMapTool", "classes/DynamicPropertiesMixin", "classes/EarthCrs", "classes/EditMapCommand", "classes/EditMapCommandComponent", "classes/EditMapController", "classes/EditMapNewRoute", "classes/EmberGuidHelper", "classes/EmptyLayersStyleComponent", "classes/EmptyLayerStyle", "classes/EmptyLayerStyleLegendComponent", "classes/Epsg3395Crs", "classes/Epsg3857Crs", "classes/Epsg4326Crs", "classes/ExportDownloadMapCommand", "classes/ExportMapCommand", "classes/ExportMapCommandComponent", "classes/ExportPrintMapCommand", "classes/FeatureResultItemComponent", "classes/FlexberryAddLayerDialogComponent", "classes/FlexberryBoundingboxComponent", "classes/FlexberryBoundingboxMapLoaderMixin", "classes/FlexberryCopyLayerDialogComponent", "classes/FlexberryDisplaySettingsComponent", "classes/FlexberryEditLayerAttributesDialogComponent", "classes/FlexberryEditLayerDialogComponent", "classes/FlexberryEditMapDialogComponent", "classes/FlexberryExportMapCommandDialogComponent", "classes/FlexberryGeometryAddModeDrawComponent", "classes/FlexberryGeometryAddModeGeoProviderComponent", "classes/FlexberryGeometryAddModeManualComponent", "classes/FlexberryGeometryAddModeRhumbComponent", "classes/FlexberryGoToMapCommandDialogComponent", "classes/FlexberryIdentificationSettingsComponent", "classes/FlexberryIdentifyPanelComponent", "classes/FlexberryLayersAttributesPanelComponent", "classes/FlexberryLayersComponent", "classes/FlexberryLayersDropdownComponent", "classes/FlexberryLayerslegendsComponent", "classes/FlexberryLinksEditorActionsHandlerMixin", "classes/FlexberryLinksEditorComponent", "classes/FlexberryMapActionsHandlerMixin", "classes/FlexberryMapComponent", "classes/FlexberryMapinfoComponent", "classes/FlexberryMaplayerActionsHandlerMixin", "classes/FlexberryMaplayerComponent", "classes/FlexberryMaplayersComponent", "classes/FlexberryMaptoolbarComponent", "classes/FlexberryMaptoolbarComponet", "classes/FlexberryMultipleSelectComponent", "classes/FlexberryRemoveLayerDialogComponent", "classes/FlexberrySearchComponent", "classes/FlexberrySearchMapCommandDialogComponent", "classes/FlexberryTableComponent", "classes/FullExtentMapCommand", "classes/FullExtentMapCommandComponent", "classes/GeocoderBaseLayerComponent", "classes/GeocoderOsmOverpassLayerComponent", "classes/GeocoderOsmOverpassLayerSettingsComponent", "classes/GeocoderOsmRuLayer", "classes/GeocoderOsmRuLayerComponent", "classes/GeocoderOsmRuLayerSettingsComponent", "classes/GeocoderOsmRuSearchSettingsComponent", "classes/GeoJsonFilterParserMixin", "classes/GeoJSONLayer", "classes/GeoJSONLayerComponent", "classes/GeoJSONLayerSettingsComponent", "classes/GeojsonLegendComponent", "classes/GeoJSONSearchSettingsComponent", "classes/GisSearchFormController", "classes/GisSearchFormRoute", "classes/GoToMapCommand", "classes/GoToMapCommandComponent", "classes/GradientEditComponent", "classes/GradientStylesLoadRendererService", "classes/GraduatedLayersStyleComponent", "classes/GraduatedLayerStyleLegendComponent", "classes/GroupLayer", "classes/GroupLayerComponent", "classes/GroupLayerSettingsComponent", "classes/HeaderFromProjectionHelper", "classes/HistoryControlComponent", "classes/IdentifyAllMarkerMapTool", "classes/IdentifyAllMixin", "classes/IdentifyAllPolygonMapTool", "classes/IdentifyAllPolylineMapTool", "classes/IdentifyAllRectangleMapTool", "classes/IdentifyAllVisibleMarkerMapTool", "classes/IdentifyAllVisiblePolygonMapTool", "classes/IdentifyAllVisiblePolylineMapTool", "classes/IdentifyAllVisibleRectangleMapTool", "classes/IdentifyMapTool", "classes/IdentifyMapToolComponent", "classes/IdentifyTopMixin", "classes/IdentifyTopVisibleMarkerMapTool", "classes/IdentifyTopVisiblePolygonMapTool", "classes/IdentifyTopVisiblePolylineMapTool", "classes/IdentifyTopVisibleRectangleMapTool", "classes/IdentifyVisibleMixin", "classes/ImageMarkersStyleComponent", "classes/ImageMarkersStyleIconEditorComponent", "classes/ImageMarkerStyle", "classes/IndexChartComponent", "classes/IsNoneHelper", "classes/JsonTransform", "classes/KmlLayer", "classes/KmlLayerComponent", "classes/KmlLayerSettingsComponent", "classes/KmlLegendComponent", "classes/KMLSearchSettingsComponent", "classes/KnownForTypeHelper", "classes/LayerModelMixin", "classes/LayerResultListActionsHandlerMixin", "classes/LayerResultListComponent", "classes/LayersStylesEditorComponent", "classes/LayersStylesRendererService", "classes/LeafletCrsMixin", "classes/LeafletEventsMixin", "classes/LeafletMapCommandsMixin", "classes/LeafletMapInteractionMixin", "classes/LeafletMapLoaderMixin", "classes/LeafletMapToolsMixin", "classes/LeafletMapVisibilityMixin", "classes/LeafletOptionsMixin", "classes/LeafletPropertiesMixin", "classes/LeafletZoomToFeatureMixin", "classes/LegendControlComponent", "classes/LineComponent", "classes/ListMapController", "classes/ListMapRoute", "classes/LocalStorageBindingMixin", "classes/LocalStorageService", "classes/LocateMapCommand", "classes/LocateMapCommandComponent", "classes/MapApiService", "classes/MapInfoComponent", "classes/MapRoute", "classes/MapStoreService", "classes/MarkerIdentifyMapTool", "classes/MarkersStylesEditorComponent", "classes/MarkersStylesRendererService", "classes/MeasureAreaMapTool", "classes/MeasureClearMapTool", "classes/MeasureCoordinatesMapTool", "classes/MeasureDistanceMapTool", "classes/MeasureMapTool", "classes/MeasureMapToolComponent", "classes/MeasureRadiusMapTool", "classes/MetadataEditMode", "classes/MetadataModeComponent", "classes/MiniMapComponent", "classes/NewNewPlatformFlexberryGISLayerMetadataERoute", "classes/NewPlatformFlexberrtGISLayerMetadataEController", "classes/NewPlatformFlexberrtGISLayerMetadataLController", "classes/NewPlatformFlexberryGISLayerLayerMetadataOfflineSerializer", "classes/NewPlatformFlexberryGISLayerLinkModel", "classes/NewPlatformFlexberryGISLayerLinkOfflineSerializer", "classes/NewPlatformFlexberryGISLayerLinkSerializer", "classes/NewPlatformFlexberryGISLayerMetadataERoute", "classes/NewPlatformFlexberryGISLayerMetadataLRoute", "classes/NewPlatformFlexberryGISLayerMetadataModel", "classes/NewPlatformFlexberryGISLayerMetadataSerializer", "classes/NewPlatformFlexberryGISLinkMetadataModel", "classes/NewPlatformFlexberryGISLinkMetadataOfflineSerializer", "classes/NewPlatformFlexberryGISLinkMetadataSerializer", "classes/NewPlatformFlexberryGISLinkParameterModel", "classes/NewPlatformFlexberryGISLinkParameterOfflineSerializer", "classes/NewPlatformFlexberryGISLinkParameterSerializer", "classes/NewPlatformFlexberryGISMapLayerModel", "classes/NewPlatformFlexberryGISMapLayerOfflineSerializer", "classes/NewPlatformFlexberryGISMapLayerSerializer", "classes/NewPlatformFlexberryGISMapModel", "classes/NewPlatformFlexberryGISMapObjectSettingModel", "classes/NewPlatformFlexberryGISMapObjectSettingOfflineSerializer", "classes/NewPlatformFlexberryGISMapObjectSettingSerializer", "classes/NewPlatformFlexberryGISMapOfflineSerializer", "classes/NewPlatformFlexberryGISMapSerializer", "classes/NewPlatformFlexberryGISParameterMetadataOfflineSerializer", "classes/NewPlatformFlexberryGISParameterMetadataSerializer", "classes/NewPlatformFlexberyGISLayerLinkModelMixin", "classes/NewPlatformFlexberyGISLayerLinkOfflineSerializerMixin", "classes/NewPlatformFlexberyGISLayerLinkSerializerMixin", "classes/NewPlatformFlexberyGISLayerMetadataModelMixin", "classes/NewPlatformFlexberyGISLayerMetadataOfflineSerializerMixin", "classes/NewPlatformFlexberyGISLayerMetadataSerializerMixin", "classes/NewPlatformFlexberyGISLinkMetadataModelMixin", "classes/NewPlatformFlexberyGISLinkMetadataOfflineSerializerMixin", "classes/NewPlatformFlexberyGISLinkMetadataSerializerMixin", "classes/NewPlatformFlexberyGISLinkParameterModelMixin", "classes/NewPlatformFlexberyGISLinkParameterOfflineSerializerMixin", "classes/NewPlatformFlexberyGISLinkParameterSerializerMixin", "classes/NewPlatformFlexberyGISMapLayerModelMixin", "classes/NewPlatformFlexberyGISMapLayerOfflineSerializerMixin", "classes/NewPlatformFlexberyGISMapLayerSerializerMixin", "classes/NewPlatformFlexberyGISMapModelMixin", "classes/NewPlatformFlexberyGISMapObjectSettingModelMixin", "classes/NewPlatformFlexberyGISMapObjectSettingOfflineSerializerMixin", "classes/NewPlatformFlexberyGISMapObjectSettingSerializerMixin", "classes/NewPlatformFlexberyGISMapOfflineSerializerMixin", "classes/NewPlatformFlexberyGISMapSerializerMixin", "classes/NewPlatformFlexberyGISParameterMetadataModelMixin", "classes/NewPlatformFlexberyGISParameterMetadataOfflineSerializerMixin", "classes/NewPlatformFlexberyGISParameterMetadataSerializerMixin", "classes/ObjectContainsHelper", "classes/ODataSettingsComponent", "classes/ODataVectorlayer", "classes/ODataVectorLayerComponent", "classes/ODataVectorSearchSettingsComponent", "classes/OSMLayerComponent", "classes/PieComponent", "classes/PolygonIdentifyMapTool", "classes/PolylineIdentifyMapTool", "classes/Proj4Crs", "classes/RectangleIdentifyMapTool", "classes/RectangleMapTool", "classes/RegexTestHelper", "classes/ScaleControlComponent", "classes/SearchAttributesMapCommand", "classes/SearchClearMapCommand", "classes/SearchMapCommand", "classes/SearchMapCommandComponent", "classes/SearchShowMapCommand", "classes/SimpleCrs", "classes/SimpleLayersStyleComponent", "classes/SimpleLayersStyleFillEditorComponent", "classes/SimpleLayersStylePathEditorComponent", "classes/SimpleLayersStyleStrokeDashArrayDropdownComponent", "classes/SimpleLayersStyleStrokeEditorComponent", "classes/SimpleLayersStyleStrokeLineCapDropdownComponent", "classes/SimpleLayersStyleStrokeLineJoinDropdownComponent", "classes/SimpleLayerStyle", "classes/SimpleLayerStyleLegendComponent", "classes/SpatialBookmarkComponent", "classes/SwitchScaleControlComponent", "classes/TileLayer", "classes/TileLayerComponent", "classes/TileLayerSettingsComponent", "classes/UniqueLayersStyleComponent", "classes/UniqueLayerStyle", "classes/UniqueLayerStyleLegendComponent", "classes/Utils.CheckIntersect", "classes/Utils.Convertor", "classes/Utils.Interpolator", "classes/Utils.LayerCopy", "classes/Utils.LayerCreate", "classes/Utils.Layers", "classes/Utils.LeafletOpacity", "classes/VectorLayer", "classes/VectorLegendComponent", "classes/WfsFilterParserMixin", "classes/WfsLayer", "classes/WfsLayerComponent", "classes/WfsLayerSettingsComponent", "classes/WfsLegendComponent", "classes/WFSSearchSettingsComponent", "classes/WmsLayer", "classes/WMSLayerComponent", "classes/WmsLayerSettingsComponent", "classes/WmsLegendComponent", "classes/WmsSingleTileLayer", "classes/WMSSingleTileLayerComponent", "classes/WmsSingleTileLayerSettingsComponent", "classes/WmsSingleTileLegendComponent", "classes/WmsWfsLayer", "classes/WmsWfsLayerComponent", "classes/YandexMapsGeoCoder", "classes/ZoomInMapTool", "classes/ZoomInMapToolComponent", "classes/ZoomOutMaptool", "classes/ZoomOutMapToolComponent", "classes/ZoomsliderControlComponent", "modules/ember-flexberry", "modules/ember-flexberry-gis", "modules/ember-flexberry-gis-csw", "modules/ember-flexberry-gis-dummy"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <h3>APIs</h3>
+	        <div id="sidebar">
+	            <ul id="main-nav" class="nav nav-tabs" style="margin-bottom:0;">
+	                <li class="active"><a href="#classes" data-toggle="tab">Classes</a></li>
+	                <li><a href="#modules" data-toggle="tab">Modules</a></li>
+	            </ul>
+	    
+	            <div id="api-tabview-filter">
+	                <input type="search" placeholder="Type to filter APIs">
+	            </div>
+	    
+	            <div class="tab-content" style="border: 1px solid #DDD; border-top:0;">
+	                <div class="tab-pane active" id="classes">
+	                    <ul id="api-classes" class="nav nav-list">
+	                            <li><a href="../classes/ApplicationInitializer.html">ApplicationInitializer</a></li>
+	                            <li><a href="../classes/ApplicationInstance.html">ApplicationInstance</a></li>
+	                            <li><a href="../classes/ApplicationInstanceInitializer.html">ApplicationInstanceInitializer</a></li>
+	                            <li><a href="../classes/ArrayContainsHelper.html">ArrayContainsHelper</a></li>
+	                            <li><a href="../classes/BaseChartTypeComponent.html">BaseChartTypeComponent</a></li>
+	                            <li><a href="../classes/BaseControlComponent.html">BaseControlComponent</a></li>
+	                            <li><a href="../classes/BaseEditMode.html">BaseEditMode</a></li>
+	                            <li><a href="../classes/BaseGeoProvider.html">BaseGeoProvider</a></li>
+	                            <li><a href="../classes/BaseLayer.html">BaseLayer</a></li>
+	                            <li><a href="../classes/BaseLayerComponent.html">BaseLayerComponent</a></li>
+	                            <li><a href="../classes/BaseLayerStyle.html">BaseLayerStyle</a></li>
+	                            <li><a href="../classes/BaseLayerStyleLegendComponent.html">BaseLayerStyleLegendComponent</a></li>
+	                            <li><a href="../classes/BaseLayerTreenodeContentComponent.html">BaseLayerTreenodeContentComponent</a></li>
+	                            <li><a href="../classes/BaseLegendComponent.html">BaseLegendComponent</a></li>
+	                            <li><a href="../classes/BaseMapCommand.html">BaseMapCommand</a></li>
+	                            <li><a href="../classes/BaseMapCommandComponent.html">BaseMapCommandComponent</a></li>
+	                            <li><a href="../classes/BaseMapTool.html">BaseMapTool</a></li>
+	                            <li><a href="../classes/BaseMapToolComponent.html">BaseMapToolComponent</a></li>
+	                            <li><a href="../classes/BaseMarkerStyle.html">BaseMarkerStyle</a></li>
+	                            <li><a href="../classes/BaseModeComponent.html">BaseModeComponent</a></li>
+	                            <li><a href="../classes/BaseNonclickableMapTool.html">BaseNonclickableMapTool</a></li>
+	                            <li><a href="../classes/BaseVectorLayerComponent.html">BaseVectorLayerComponent</a></li>
+	                            <li><a href="../classes/CategorizedLayersStyleGradientToolsComponent.html">CategorizedLayersStyleGradientToolsComponent</a></li>
+	                            <li><a href="../classes/CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent.html">CategorizedLayersStyleLayerBaseCategorizedLayerStyleComponent</a></li>
+	                            <li><a href="../classes/CategorizedLayersStyleLayerPropertyDropdownComponent.html">CategorizedLayersStyleLayerPropertyDropdownComponent</a></li>
+	                            <li><a href="../classes/CategorizedLayerStyle.html">CategorizedLayerStyle</a></li>
+	                            <li><a href="../classes/CategorizedLayerStyleLegendComponent.html">CategorizedLayerStyleLegendComponent</a></li>
+	                            <li><a href="../classes/ChartsRendererService.html">ChartsRendererService</a></li>
+	                            <li><a href="../classes/ColumnComponent.html">ColumnComponent</a></li>
+	                            <li><a href="../classes/DefaultMarkersStyleComponent.html">DefaultMarkersStyleComponent</a></li>
+	                            <li><a href="../classes/DefaultMarkerStyle.html">DefaultMarkerStyle</a></li>
+	                            <li><a href="../classes/DivControlComponent.html">DivControlComponent</a></li>
+	                            <li><a href="../classes/DragMapTool.html">DragMapTool</a></li>
+	                            <li><a href="../classes/DragMapToolComponent.html">DragMapToolComponent</a></li>
+	                            <li><a href="../classes/DrawCircleMapTool.html">DrawCircleMapTool</a></li>
+	                            <li><a href="../classes/DrawClearMapTool.html">DrawClearMapTool</a></li>
+	                            <li><a href="../classes/DrawMapTool.html">DrawMapTool</a></li>
+	                            <li><a href="../classes/DrawMapToolComponent.html">DrawMapToolComponent</a></li>
+	                            <li><a href="../classes/DrawMarkerMapTool.html">DrawMarkerMapTool</a></li>
+	                            <li><a href="../classes/DrawPolygonMapTool.html">DrawPolygonMapTool</a></li>
+	                            <li><a href="../classes/DrawPolylineMapTool.html">DrawPolylineMapTool</a></li>
+	                            <li><a href="../classes/DrawRectangleMapTool.html">DrawRectangleMapTool</a></li>
+	                            <li><a href="../classes/DynamicPropertiesMixin.html">DynamicPropertiesMixin</a></li>
+	                            <li><a href="../classes/EarthCrs.html">EarthCrs</a></li>
+	                            <li><a href="../classes/EditMapCommand.html">EditMapCommand</a></li>
+	                            <li><a href="../classes/EditMapCommandComponent.html">EditMapCommandComponent</a></li>
+	                            <li><a href="../classes/EditMapController.html">EditMapController</a></li>
+	                            <li><a href="../classes/EditMapNewRoute.html">EditMapNewRoute</a></li>
+	                            <li><a href="../classes/EmberGuidHelper.html">EmberGuidHelper</a></li>
+	                            <li><a href="../classes/EmptyLayersStyleComponent.html">EmptyLayersStyleComponent</a></li>
+	                            <li><a href="../classes/EmptyLayerStyle.html">EmptyLayerStyle</a></li>
+	                            <li><a href="../classes/EmptyLayerStyleLegendComponent.html">EmptyLayerStyleLegendComponent</a></li>
+	                            <li><a href="../classes/Epsg3395Crs.html">Epsg3395Crs</a></li>
+	                            <li><a href="../classes/Epsg3857Crs.html">Epsg3857Crs</a></li>
+	                            <li><a href="../classes/Epsg4326Crs.html">Epsg4326Crs</a></li>
+	                            <li><a href="../classes/ExportDownloadMapCommand.html">ExportDownloadMapCommand</a></li>
+	                            <li><a href="../classes/ExportMapCommand.html">ExportMapCommand</a></li>
+	                            <li><a href="../classes/ExportMapCommandComponent.html">ExportMapCommandComponent</a></li>
+	                            <li><a href="../classes/ExportPrintMapCommand.html">ExportPrintMapCommand</a></li>
+	                            <li><a href="../classes/FeatureResultItemComponent.html">FeatureResultItemComponent</a></li>
+	                            <li><a href="../classes/FlexberryAddLayerDialogComponent.html">FlexberryAddLayerDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryBoundingboxComponent.html">FlexberryBoundingboxComponent</a></li>
+	                            <li><a href="../classes/FlexberryBoundingboxMapLoaderMixin.html">FlexberryBoundingboxMapLoaderMixin</a></li>
+	                            <li><a href="../classes/FlexberryCopyLayerDialogComponent.html">FlexberryCopyLayerDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryDisplaySettingsComponent.html">FlexberryDisplaySettingsComponent</a></li>
+	                            <li><a href="../classes/FlexberryEditLayerAttributesDialogComponent.html">FlexberryEditLayerAttributesDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryEditLayerDialogComponent.html">FlexberryEditLayerDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryEditMapDialogComponent.html">FlexberryEditMapDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryExportMapCommandDialogComponent.html">FlexberryExportMapCommandDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryGeometryAddModeDrawComponent.html">FlexberryGeometryAddModeDrawComponent</a></li>
+	                            <li><a href="../classes/FlexberryGeometryAddModeGeoProviderComponent.html">FlexberryGeometryAddModeGeoProviderComponent</a></li>
+	                            <li><a href="../classes/FlexberryGeometryAddModeManualComponent.html">FlexberryGeometryAddModeManualComponent</a></li>
+	                            <li><a href="../classes/FlexberryGeometryAddModeRhumbComponent.html">FlexberryGeometryAddModeRhumbComponent</a></li>
+	                            <li><a href="../classes/FlexberryGoToMapCommandDialogComponent.html">FlexberryGoToMapCommandDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryIdentificationSettingsComponent.html">FlexberryIdentificationSettingsComponent</a></li>
+	                            <li><a href="../classes/FlexberryIdentifyPanelComponent.html">FlexberryIdentifyPanelComponent</a></li>
+	                            <li><a href="../classes/FlexberryLayersAttributesPanelComponent.html">FlexberryLayersAttributesPanelComponent</a></li>
+	                            <li><a href="../classes/FlexberryLayersComponent.html">FlexberryLayersComponent</a></li>
+	                            <li><a href="../classes/FlexberryLayersDropdownComponent.html">FlexberryLayersDropdownComponent</a></li>
+	                            <li><a href="../classes/FlexberryLayerslegendsComponent.html">FlexberryLayerslegendsComponent</a></li>
+	                            <li><a href="../classes/FlexberryLinksEditorActionsHandlerMixin.html">FlexberryLinksEditorActionsHandlerMixin</a></li>
+	                            <li><a href="../classes/FlexberryLinksEditorComponent.html">FlexberryLinksEditorComponent</a></li>
+	                            <li><a href="../classes/FlexberryMapActionsHandlerMixin.html">FlexberryMapActionsHandlerMixin</a></li>
+	                            <li><a href="../classes/FlexberryMapComponent.html">FlexberryMapComponent</a></li>
+	                            <li><a href="../classes/FlexberryMapinfoComponent.html">FlexberryMapinfoComponent</a></li>
+	                            <li><a href="../classes/FlexberryMaplayerActionsHandlerMixin.html">FlexberryMaplayerActionsHandlerMixin</a></li>
+	                            <li><a href="../classes/FlexberryMaplayerComponent.html">FlexberryMaplayerComponent</a></li>
+	                            <li><a href="../classes/FlexberryMaplayersComponent.html">FlexberryMaplayersComponent</a></li>
+	                            <li><a href="../classes/FlexberryMaptoolbarComponent.html">FlexberryMaptoolbarComponent</a></li>
+	                            <li><a href="../classes/FlexberryMaptoolbarComponet.html">FlexberryMaptoolbarComponet</a></li>
+	                            <li><a href="../classes/FlexberryMultipleSelectComponent.html">FlexberryMultipleSelectComponent</a></li>
+	                            <li><a href="../classes/FlexberryRemoveLayerDialogComponent.html">FlexberryRemoveLayerDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberrySearchComponent.html">FlexberrySearchComponent</a></li>
+	                            <li><a href="../classes/FlexberrySearchMapCommandDialogComponent.html">FlexberrySearchMapCommandDialogComponent</a></li>
+	                            <li><a href="../classes/FlexberryTableComponent.html">FlexberryTableComponent</a></li>
+	                            <li><a href="../classes/FullExtentMapCommand.html">FullExtentMapCommand</a></li>
+	                            <li><a href="../classes/FullExtentMapCommandComponent.html">FullExtentMapCommandComponent</a></li>
+	                            <li><a href="../classes/GeocoderBaseLayerComponent.html">GeocoderBaseLayerComponent</a></li>
+	                            <li><a href="../classes/GeocoderOsmOverpassLayerComponent.html">GeocoderOsmOverpassLayerComponent</a></li>
+	                            <li><a href="../classes/GeocoderOsmOverpassLayerSettingsComponent.html">GeocoderOsmOverpassLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/GeocoderOsmRuLayer.html">GeocoderOsmRuLayer</a></li>
+	                            <li><a href="../classes/GeocoderOsmRuLayerComponent.html">GeocoderOsmRuLayerComponent</a></li>
+	                            <li><a href="../classes/GeocoderOsmRuLayerSettingsComponent.html">GeocoderOsmRuLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/GeocoderOsmRuSearchSettingsComponent.html">GeocoderOsmRuSearchSettingsComponent</a></li>
+	                            <li><a href="../classes/GeoJsonFilterParserMixin.html">GeoJsonFilterParserMixin</a></li>
+	                            <li><a href="../classes/GeoJSONLayer.html">GeoJSONLayer</a></li>
+	                            <li><a href="../classes/GeoJSONLayerComponent.html">GeoJSONLayerComponent</a></li>
+	                            <li><a href="../classes/GeoJSONLayerSettingsComponent.html">GeoJSONLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/GeojsonLegendComponent.html">GeojsonLegendComponent</a></li>
+	                            <li><a href="../classes/GeoJSONSearchSettingsComponent.html">GeoJSONSearchSettingsComponent</a></li>
+	                            <li><a href="../classes/GisSearchFormController.html">GisSearchFormController</a></li>
+	                            <li><a href="../classes/GisSearchFormRoute.html">GisSearchFormRoute</a></li>
+	                            <li><a href="../classes/GoToMapCommand.html">GoToMapCommand</a></li>
+	                            <li><a href="../classes/GoToMapCommandComponent.html">GoToMapCommandComponent</a></li>
+	                            <li><a href="../classes/GradientEditComponent.html">GradientEditComponent</a></li>
+	                            <li><a href="../classes/GradientStylesLoadRendererService.html">GradientStylesLoadRendererService</a></li>
+	                            <li><a href="../classes/GraduatedLayersStyleComponent.html">GraduatedLayersStyleComponent</a></li>
+	                            <li><a href="../classes/GraduatedLayerStyleLegendComponent.html">GraduatedLayerStyleLegendComponent</a></li>
+	                            <li><a href="../classes/GroupLayer.html">GroupLayer</a></li>
+	                            <li><a href="../classes/GroupLayerComponent.html">GroupLayerComponent</a></li>
+	                            <li><a href="../classes/GroupLayerSettingsComponent.html">GroupLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/HeaderFromProjectionHelper.html">HeaderFromProjectionHelper</a></li>
+	                            <li><a href="../classes/HistoryControlComponent.html">HistoryControlComponent</a></li>
+	                            <li><a href="../classes/IdentifyAllMarkerMapTool.html">IdentifyAllMarkerMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllMixin.html">IdentifyAllMixin</a></li>
+	                            <li><a href="../classes/IdentifyAllPolygonMapTool.html">IdentifyAllPolygonMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllPolylineMapTool.html">IdentifyAllPolylineMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllRectangleMapTool.html">IdentifyAllRectangleMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllVisibleMarkerMapTool.html">IdentifyAllVisibleMarkerMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllVisiblePolygonMapTool.html">IdentifyAllVisiblePolygonMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllVisiblePolylineMapTool.html">IdentifyAllVisiblePolylineMapTool</a></li>
+	                            <li><a href="../classes/IdentifyAllVisibleRectangleMapTool.html">IdentifyAllVisibleRectangleMapTool</a></li>
+	                            <li><a href="../classes/IdentifyMapTool.html">IdentifyMapTool</a></li>
+	                            <li><a href="../classes/IdentifyMapToolComponent.html">IdentifyMapToolComponent</a></li>
+	                            <li><a href="../classes/IdentifyTopMixin.html">IdentifyTopMixin</a></li>
+	                            <li><a href="../classes/IdentifyTopVisibleMarkerMapTool.html">IdentifyTopVisibleMarkerMapTool</a></li>
+	                            <li><a href="../classes/IdentifyTopVisiblePolygonMapTool.html">IdentifyTopVisiblePolygonMapTool</a></li>
+	                            <li><a href="../classes/IdentifyTopVisiblePolylineMapTool.html">IdentifyTopVisiblePolylineMapTool</a></li>
+	                            <li><a href="../classes/IdentifyTopVisibleRectangleMapTool.html">IdentifyTopVisibleRectangleMapTool</a></li>
+	                            <li><a href="../classes/IdentifyVisibleMixin.html">IdentifyVisibleMixin</a></li>
+	                            <li><a href="../classes/ImageMarkersStyleComponent.html">ImageMarkersStyleComponent</a></li>
+	                            <li><a href="../classes/ImageMarkersStyleIconEditorComponent.html">ImageMarkersStyleIconEditorComponent</a></li>
+	                            <li><a href="../classes/ImageMarkerStyle.html">ImageMarkerStyle</a></li>
+	                            <li><a href="../classes/IndexChartComponent.html">IndexChartComponent</a></li>
+	                            <li><a href="../classes/IsNoneHelper.html">IsNoneHelper</a></li>
+	                            <li><a href="../classes/JsonTransform.html">JsonTransform</a></li>
+	                            <li><a href="../classes/KmlLayer.html">KmlLayer</a></li>
+	                            <li><a href="../classes/KmlLayerComponent.html">KmlLayerComponent</a></li>
+	                            <li><a href="../classes/KmlLayerSettingsComponent.html">KmlLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/KmlLegendComponent.html">KmlLegendComponent</a></li>
+	                            <li><a href="../classes/KMLSearchSettingsComponent.html">KMLSearchSettingsComponent</a></li>
+	                            <li><a href="../classes/KnownForTypeHelper.html">KnownForTypeHelper</a></li>
+	                            <li><a href="../classes/LayerModelMixin.html">LayerModelMixin</a></li>
+	                            <li><a href="../classes/LayerResultListActionsHandlerMixin.html">LayerResultListActionsHandlerMixin</a></li>
+	                            <li><a href="../classes/LayerResultListComponent.html">LayerResultListComponent</a></li>
+	                            <li><a href="../classes/LayersStylesEditorComponent.html">LayersStylesEditorComponent</a></li>
+	                            <li><a href="../classes/LayersStylesRendererService.html">LayersStylesRendererService</a></li>
+	                            <li><a href="../classes/LeafletCrsMixin.html">LeafletCrsMixin</a></li>
+	                            <li><a href="../classes/LeafletEventsMixin.html">LeafletEventsMixin</a></li>
+	                            <li><a href="../classes/LeafletMapCommandsMixin.html">LeafletMapCommandsMixin</a></li>
+	                            <li><a href="../classes/LeafletMapInteractionMixin.html">LeafletMapInteractionMixin</a></li>
+	                            <li><a href="../classes/LeafletMapLoaderMixin.html">LeafletMapLoaderMixin</a></li>
+	                            <li><a href="../classes/LeafletMapToolsMixin.html">LeafletMapToolsMixin</a></li>
+	                            <li><a href="../classes/LeafletMapVisibilityMixin.html">LeafletMapVisibilityMixin</a></li>
+	                            <li><a href="../classes/LeafletOptionsMixin.html">LeafletOptionsMixin</a></li>
+	                            <li><a href="../classes/LeafletPropertiesMixin.html">LeafletPropertiesMixin</a></li>
+	                            <li><a href="../classes/LeafletZoomToFeatureMixin.html">LeafletZoomToFeatureMixin</a></li>
+	                            <li><a href="../classes/LegendControlComponent.html">LegendControlComponent</a></li>
+	                            <li><a href="../classes/LineComponent.html">LineComponent</a></li>
+	                            <li><a href="../classes/ListMapController.html">ListMapController</a></li>
+	                            <li><a href="../classes/ListMapRoute.html">ListMapRoute</a></li>
+	                            <li><a href="../classes/LocalStorageBindingMixin.html">LocalStorageBindingMixin</a></li>
+	                            <li><a href="../classes/LocalStorageService.html">LocalStorageService</a></li>
+	                            <li><a href="../classes/LocateMapCommand.html">LocateMapCommand</a></li>
+	                            <li><a href="../classes/LocateMapCommandComponent.html">LocateMapCommandComponent</a></li>
+	                            <li><a href="../classes/MapApiService.html">MapApiService</a></li>
+	                            <li><a href="../classes/MapInfoComponent.html">MapInfoComponent</a></li>
+	                            <li><a href="../classes/MapRoute.html">MapRoute</a></li>
+	                            <li><a href="../classes/MapStoreService.html">MapStoreService</a></li>
+	                            <li><a href="../classes/MarkerIdentifyMapTool.html">MarkerIdentifyMapTool</a></li>
+	                            <li><a href="../classes/MarkersStylesEditorComponent.html">MarkersStylesEditorComponent</a></li>
+	                            <li><a href="../classes/MarkersStylesRendererService.html">MarkersStylesRendererService</a></li>
+	                            <li><a href="../classes/MeasureAreaMapTool.html">MeasureAreaMapTool</a></li>
+	                            <li><a href="../classes/MeasureClearMapTool.html">MeasureClearMapTool</a></li>
+	                            <li><a href="../classes/MeasureCoordinatesMapTool.html">MeasureCoordinatesMapTool</a></li>
+	                            <li><a href="../classes/MeasureDistanceMapTool.html">MeasureDistanceMapTool</a></li>
+	                            <li><a href="../classes/MeasureMapTool.html">MeasureMapTool</a></li>
+	                            <li><a href="../classes/MeasureMapToolComponent.html">MeasureMapToolComponent</a></li>
+	                            <li><a href="../classes/MeasureRadiusMapTool.html">MeasureRadiusMapTool</a></li>
+	                            <li><a href="../classes/MetadataEditMode.html">MetadataEditMode</a></li>
+	                            <li><a href="../classes/MetadataModeComponent.html">MetadataModeComponent</a></li>
+	                            <li><a href="../classes/MiniMapComponent.html">MiniMapComponent</a></li>
+	                            <li><a href="../classes/NewNewPlatformFlexberryGISLayerMetadataERoute.html">NewNewPlatformFlexberryGISLayerMetadataERoute</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberrtGISLayerMetadataEController.html">NewPlatformFlexberrtGISLayerMetadataEController</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberrtGISLayerMetadataLController.html">NewPlatformFlexberrtGISLayerMetadataLController</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerLayerMetadataOfflineSerializer.html">NewPlatformFlexberryGISLayerLayerMetadataOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerLinkModel.html">NewPlatformFlexberryGISLayerLinkModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerLinkOfflineSerializer.html">NewPlatformFlexberryGISLayerLinkOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerLinkSerializer.html">NewPlatformFlexberryGISLayerLinkSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerMetadataERoute.html">NewPlatformFlexberryGISLayerMetadataERoute</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerMetadataLRoute.html">NewPlatformFlexberryGISLayerMetadataLRoute</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerMetadataModel.html">NewPlatformFlexberryGISLayerMetadataModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLayerMetadataSerializer.html">NewPlatformFlexberryGISLayerMetadataSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLinkMetadataModel.html">NewPlatformFlexberryGISLinkMetadataModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLinkMetadataOfflineSerializer.html">NewPlatformFlexberryGISLinkMetadataOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLinkMetadataSerializer.html">NewPlatformFlexberryGISLinkMetadataSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLinkParameterModel.html">NewPlatformFlexberryGISLinkParameterModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLinkParameterOfflineSerializer.html">NewPlatformFlexberryGISLinkParameterOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISLinkParameterSerializer.html">NewPlatformFlexberryGISLinkParameterSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapLayerModel.html">NewPlatformFlexberryGISMapLayerModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapLayerOfflineSerializer.html">NewPlatformFlexberryGISMapLayerOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapLayerSerializer.html">NewPlatformFlexberryGISMapLayerSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapModel.html">NewPlatformFlexberryGISMapModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapObjectSettingModel.html">NewPlatformFlexberryGISMapObjectSettingModel</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapObjectSettingOfflineSerializer.html">NewPlatformFlexberryGISMapObjectSettingOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapObjectSettingSerializer.html">NewPlatformFlexberryGISMapObjectSettingSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapOfflineSerializer.html">NewPlatformFlexberryGISMapOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISMapSerializer.html">NewPlatformFlexberryGISMapSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISParameterMetadataOfflineSerializer.html">NewPlatformFlexberryGISParameterMetadataOfflineSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberryGISParameterMetadataSerializer.html">NewPlatformFlexberryGISParameterMetadataSerializer</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLayerLinkModelMixin.html">NewPlatformFlexberyGISLayerLinkModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLayerLinkOfflineSerializerMixin.html">NewPlatformFlexberyGISLayerLinkOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLayerLinkSerializerMixin.html">NewPlatformFlexberyGISLayerLinkSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLayerMetadataModelMixin.html">NewPlatformFlexberyGISLayerMetadataModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLayerMetadataOfflineSerializerMixin.html">NewPlatformFlexberyGISLayerMetadataOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLayerMetadataSerializerMixin.html">NewPlatformFlexberyGISLayerMetadataSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLinkMetadataModelMixin.html">NewPlatformFlexberyGISLinkMetadataModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLinkMetadataOfflineSerializerMixin.html">NewPlatformFlexberyGISLinkMetadataOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLinkMetadataSerializerMixin.html">NewPlatformFlexberyGISLinkMetadataSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLinkParameterModelMixin.html">NewPlatformFlexberyGISLinkParameterModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLinkParameterOfflineSerializerMixin.html">NewPlatformFlexberyGISLinkParameterOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISLinkParameterSerializerMixin.html">NewPlatformFlexberyGISLinkParameterSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapLayerModelMixin.html">NewPlatformFlexberyGISMapLayerModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapLayerOfflineSerializerMixin.html">NewPlatformFlexberyGISMapLayerOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapLayerSerializerMixin.html">NewPlatformFlexberyGISMapLayerSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapModelMixin.html">NewPlatformFlexberyGISMapModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapObjectSettingModelMixin.html">NewPlatformFlexberyGISMapObjectSettingModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapObjectSettingOfflineSerializerMixin.html">NewPlatformFlexberyGISMapObjectSettingOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapObjectSettingSerializerMixin.html">NewPlatformFlexberyGISMapObjectSettingSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapOfflineSerializerMixin.html">NewPlatformFlexberyGISMapOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISMapSerializerMixin.html">NewPlatformFlexberyGISMapSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISParameterMetadataModelMixin.html">NewPlatformFlexberyGISParameterMetadataModelMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISParameterMetadataOfflineSerializerMixin.html">NewPlatformFlexberyGISParameterMetadataOfflineSerializerMixin</a></li>
+	                            <li><a href="../classes/NewPlatformFlexberyGISParameterMetadataSerializerMixin.html">NewPlatformFlexberyGISParameterMetadataSerializerMixin</a></li>
+	                            <li><a href="../classes/ObjectContainsHelper.html">ObjectContainsHelper</a></li>
+	                            <li><a href="../classes/ODataSettingsComponent.html">ODataSettingsComponent</a></li>
+	                            <li><a href="../classes/ODataVectorlayer.html">ODataVectorlayer</a></li>
+	                            <li><a href="../classes/ODataVectorLayerComponent.html">ODataVectorLayerComponent</a></li>
+	                            <li><a href="../classes/ODataVectorSearchSettingsComponent.html">ODataVectorSearchSettingsComponent</a></li>
+	                            <li><a href="../classes/OSMLayerComponent.html">OSMLayerComponent</a></li>
+	                            <li><a href="../classes/PieComponent.html">PieComponent</a></li>
+	                            <li><a href="../classes/PolygonIdentifyMapTool.html">PolygonIdentifyMapTool</a></li>
+	                            <li><a href="../classes/PolylineIdentifyMapTool.html">PolylineIdentifyMapTool</a></li>
+	                            <li><a href="../classes/Proj4Crs.html">Proj4Crs</a></li>
+	                            <li><a href="../classes/RectangleIdentifyMapTool.html">RectangleIdentifyMapTool</a></li>
+	                            <li><a href="../classes/RectangleMapTool.html">RectangleMapTool</a></li>
+	                            <li><a href="../classes/RegexTestHelper.html">RegexTestHelper</a></li>
+	                            <li><a href="../classes/ScaleControlComponent.html">ScaleControlComponent</a></li>
+	                            <li><a href="../classes/SearchAttributesMapCommand.html">SearchAttributesMapCommand</a></li>
+	                            <li><a href="../classes/SearchClearMapCommand.html">SearchClearMapCommand</a></li>
+	                            <li><a href="../classes/SearchMapCommand.html">SearchMapCommand</a></li>
+	                            <li><a href="../classes/SearchMapCommandComponent.html">SearchMapCommandComponent</a></li>
+	                            <li><a href="../classes/SearchShowMapCommand.html">SearchShowMapCommand</a></li>
+	                            <li><a href="../classes/SimpleCrs.html">SimpleCrs</a></li>
+	                            <li><a href="../classes/SimpleLayersStyleComponent.html">SimpleLayersStyleComponent</a></li>
+	                            <li><a href="../classes/SimpleLayersStyleFillEditorComponent.html">SimpleLayersStyleFillEditorComponent</a></li>
+	                            <li><a href="../classes/SimpleLayersStylePathEditorComponent.html">SimpleLayersStylePathEditorComponent</a></li>
+	                            <li><a href="../classes/SimpleLayersStyleStrokeDashArrayDropdownComponent.html">SimpleLayersStyleStrokeDashArrayDropdownComponent</a></li>
+	                            <li><a href="../classes/SimpleLayersStyleStrokeEditorComponent.html">SimpleLayersStyleStrokeEditorComponent</a></li>
+	                            <li><a href="../classes/SimpleLayersStyleStrokeLineCapDropdownComponent.html">SimpleLayersStyleStrokeLineCapDropdownComponent</a></li>
+	                            <li><a href="../classes/SimpleLayersStyleStrokeLineJoinDropdownComponent.html">SimpleLayersStyleStrokeLineJoinDropdownComponent</a></li>
+	                            <li><a href="../classes/SimpleLayerStyle.html">SimpleLayerStyle</a></li>
+	                            <li><a href="../classes/SimpleLayerStyleLegendComponent.html">SimpleLayerStyleLegendComponent</a></li>
+	                            <li><a href="../classes/SpatialBookmarkComponent.html">SpatialBookmarkComponent</a></li>
+	                            <li><a href="../classes/SwitchScaleControlComponent.html">SwitchScaleControlComponent</a></li>
+	                            <li><a href="../classes/TileLayer.html">TileLayer</a></li>
+	                            <li><a href="../classes/TileLayerComponent.html">TileLayerComponent</a></li>
+	                            <li><a href="../classes/TileLayerSettingsComponent.html">TileLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/UniqueLayersStyleComponent.html">UniqueLayersStyleComponent</a></li>
+	                            <li><a href="../classes/UniqueLayerStyle.html">UniqueLayerStyle</a></li>
+	                            <li><a href="../classes/UniqueLayerStyleLegendComponent.html">UniqueLayerStyleLegendComponent</a></li>
+	                            <li><a href="../classes/Utils.CheckIntersect.html">Utils.CheckIntersect</a></li>
+	                            <li><a href="../classes/Utils.Convertor.html">Utils.Convertor</a></li>
+	                            <li><a href="../classes/Utils.Interpolator.html">Utils.Interpolator</a></li>
+	                            <li><a href="../classes/Utils.LayerCopy.html">Utils.LayerCopy</a></li>
+	                            <li><a href="../classes/Utils.LayerCreate.html">Utils.LayerCreate</a></li>
+	                            <li><a href="../classes/Utils.Layers.html">Utils.Layers</a></li>
+	                            <li><a href="../classes/Utils.LeafletOpacity.html">Utils.LeafletOpacity</a></li>
+	                            <li><a href="../classes/VectorLayer.html">VectorLayer</a></li>
+	                            <li><a href="../classes/VectorLegendComponent.html">VectorLegendComponent</a></li>
+	                            <li><a href="../classes/WfsFilterParserMixin.html">WfsFilterParserMixin</a></li>
+	                            <li><a href="../classes/WfsLayer.html">WfsLayer</a></li>
+	                            <li><a href="../classes/WfsLayerComponent.html">WfsLayerComponent</a></li>
+	                            <li><a href="../classes/WfsLayerSettingsComponent.html">WfsLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/WfsLegendComponent.html">WfsLegendComponent</a></li>
+	                            <li><a href="../classes/WFSSearchSettingsComponent.html">WFSSearchSettingsComponent</a></li>
+	                            <li><a href="../classes/WmsLayer.html">WmsLayer</a></li>
+	                            <li><a href="../classes/WMSLayerComponent.html">WMSLayerComponent</a></li>
+	                            <li><a href="../classes/WmsLayerSettingsComponent.html">WmsLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/WmsLegendComponent.html">WmsLegendComponent</a></li>
+	                            <li><a href="../classes/WmsSingleTileLayer.html">WmsSingleTileLayer</a></li>
+	                            <li><a href="../classes/WMSSingleTileLayerComponent.html">WMSSingleTileLayerComponent</a></li>
+	                            <li><a href="../classes/WmsSingleTileLayerSettingsComponent.html">WmsSingleTileLayerSettingsComponent</a></li>
+	                            <li><a href="../classes/WmsSingleTileLegendComponent.html">WmsSingleTileLegendComponent</a></li>
+	                            <li><a href="../classes/WmsWfsLayer.html">WmsWfsLayer</a></li>
+	                            <li><a href="../classes/WmsWfsLayerComponent.html">WmsWfsLayerComponent</a></li>
+	                            <li><a href="../classes/YandexMapsGeoCoder.html">YandexMapsGeoCoder</a></li>
+	                            <li><a href="../classes/ZoomInMapTool.html">ZoomInMapTool</a></li>
+	                            <li><a href="../classes/ZoomInMapToolComponent.html">ZoomInMapToolComponent</a></li>
+	                            <li><a href="../classes/ZoomOutMaptool.html">ZoomOutMaptool</a></li>
+	                            <li><a href="../classes/ZoomOutMapToolComponent.html">ZoomOutMapToolComponent</a></li>
+	                            <li><a href="../classes/ZoomsliderControlComponent.html">ZoomsliderControlComponent</a></li>
+	                    </ul>
+	                </div>
+	    
+	                <div class="tab-pane" id="modules">
+	                    <ul id="api-modules" class="nav nav-list">
+	                            <li><a href="../modules/ember-flexberry.html">ember-flexberry</a></li>
+	                            <li><a href="../modules/ember-flexberry-gis.html">ember-flexberry-gis</a></li>
+	                            <li><a href="../modules/ember-flexberry-gis-csw.html">ember-flexberry-gis-csw</a></li>
+	                            <li><a href="../modules/ember-flexberry-gis-dummy.html">ember-flexberry-gis-dummy</a></li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>addon/components/flexberry-map.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+/**
+  @module ember-flexberry-gis
+*/
+
+import Ember from &#x27;ember&#x27;;
+import LeafletOptionsMixin from &#x27;../mixins/leaflet-options&#x27;;
+import LeafletPropertiesMixin from &#x27;../mixins/leaflet-properties&#x27;;
+import LeafletMapInteractionMixin from &#x27;../mixins/leaflet-map/map-interaction&#x27;;
+import LeafletMapLoaderMixin from &#x27;../mixins/leaflet-map/map-loader&#x27;;
+import LeafletMapToolsMixin from &#x27;../mixins/leaflet-map/map-tools&#x27;;
+import LeafletMapCommandsMixin from &#x27;../mixins/leaflet-map/map-commands&#x27;;
+import LeafletMapSidebarMixin from &#x27;../mixins/leaflet-map/map-sidebar&#x27;;
+import Renderer from &#x27;../objects/custom-renderer&#x27;;
+
+import layout from &#x27;../templates/components/flexberry-map&#x27;;
+
+/**
+  Component&#x27;s CSS-classes names.
+  JSON-object containing string constants with CSS-classes names related to component&#x27;s .hbs markup elements.
+
+  @property {Object} flexberryClassNames
+  @property {String} flexberryClassNames.prefix Component&#x27;s CSS-class names prefix (&#x27;flexberry-map&#x27;).
+  @property {String} flexberryClassNames.wrapper Component&#x27;s wrapping &lt;div&gt; CSS-class name (&#x27;flexberry-map&#x27;).
+  @readonly
+  @static
+
+  @for FlexberryMapComponent
+*/
+const flexberryClassNamesPrefix = &#x27;flexberry-map&#x27;;
+const flexberryClassNames = {
+  prefix: flexberryClassNamesPrefix,
+  wrapper: flexberryClassNamesPrefix
+};
+
+/**
+  Flexberry map component.
+  Wraps [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) into ember component.
+
+  @class FlexberryMapComponent
+  @extends &lt;a href=&quot;http://emberjs.com/api/classes/Ember.Component.html&quot;&gt;Ember.Component&lt;/a&gt;
+  @uses LeafletOptionsMixin
+  @uses LeafletPropertiesMixin
+  @uses LeafletEventsMixin
+ */
+let FlexberryMapComponent = Ember.Component.extend(
+  LeafletOptionsMixin,
+  LeafletPropertiesMixin,
+
+  // Mixins containing leaflet map extensions (order is important).
+  LeafletMapInteractionMixin,
+  LeafletMapLoaderMixin,
+  LeafletMapToolsMixin,
+  LeafletMapCommandsMixin,
+  LeafletMapSidebarMixin, {
+    /**
+      Leaflet map.
+
+      @property _leafletObject
+      @type &lt;a href=&quot;http://leafletjs.com/reference-1.0.0.html#map&quot;&gt;L.Map&lt;/a&gt;
+      @default null
+      @private
+    */
+    _leafletObject: null,
+
+    /**
+      Leaflet map container.
+
+      @property _$leafletContainer
+      @type &lt;a href=&quot;http://learn.jquery.com/using-jquery-core/jquery-object/&quot;&gt;jQuery.Object&lt;/a&gt;
+      @default null
+      @private
+    */
+    _$leafletContainer: null,
+
+    /**
+      Reference to component&#x27;s template.
+    */
+    layout,
+
+    /**
+      Reference to component&#x27;s CSS-classes names.
+      Must be also a component&#x27;s instance property to be available from component&#x27;s .hbs template.
+    */
+    flexberryClassNames,
+
+    /**
+      Component&#x27;s wrapping &lt;div&gt; CSS-classes names.
+
+      Any other CSS-class names can be added through component&#x27;s &#x27;class&#x27; property.
+      &#x60;&#x60;&#x60;handlebars
+      {{#flexberry-map class=&quot;my-class&quot;}}
+        Map&#x27;s content
+      {{/flexberry-map}}
+      &#x60;&#x60;&#x60;
+
+      @property classNames
+      @type String[]
+      @default [&#x27;flexberry-map&#x27;]
+    */
+    classNames: [flexberryClassNames.wrapper],
+
+    /**
+      List of leaflet map options which will be passed into leaflet map.
+    */
+    leafletOptions: [
+
+      // Map state options.
+      &#x27;center&#x27;, &#x27;zoom&#x27;, &#x27;minZoom&#x27;, &#x27;maxZoom&#x27;, &#x27;maxBounds&#x27;, &#x27;maxBoundsViscosity&#x27;, &#x27;crs&#x27;, &#x27;preferCanvas&#x27;,
+
+      // Interaction options.
+      &#x27;dragging&#x27;, &#x27;touchZoom&#x27;, &#x27;scrollWheelZoom&#x27;, &#x27;doubleClickZoom&#x27;, &#x27;boxZoom&#x27;,
+      &#x27;zoomSnap&#x27;, &#x27;zoomDelta&#x27;, &#x27;tap&#x27;, &#x27;tapTolerance&#x27;, &#x27;trackResize&#x27;, &#x27;worldCopyJump&#x27;,
+      &#x27;closePopupOnClick&#x27;, &#x27;bounceAtZoomLimits&#x27;,
+
+      // Keyboard navigation options.
+      &#x27;keyboard&#x27;, &#x27;keyboardPanOffset&#x27;, &#x27;keyboardZoomOffset&#x27;,
+
+      // Panning Inertia Options.
+      &#x27;inertia&#x27;, &#x27;inertiaDeceleration&#x27;, &#x27;inertiaMaxSpeed&#x27;, &#x27;inertiaThreshold&#x27;,
+
+      // Control options.
+      &#x27;zoomControl&#x27;, &#x27;attributionControl&#x27;,
+
+      // Animation options.
+      &#x27;fadeAnimation&#x27;, &#x27;zoomAnimation&#x27;, &#x27;zoomAnimationThreshold&#x27;, &#x27;markerZoomAnimation&#x27;
+    ],
+
+    /**
+      List of leaflet map properties bindings.
+    */
+    leafletProperties: [&#x27;zoom:setZoom&#x27;, &#x27;center:panTo:zoomPanOptions&#x27;, &#x27;maxBounds:setMaxBounds&#x27;, &#x27;bounds:fitBounds:fitBoundsOptions&#x27;],
+
+    /**
+      Map center latitude.
+
+      @property lat
+      @type Number
+      @default null
+    */
+    lat: null,
+
+    /**
+      Map center longitude.
+
+      @property lng
+      @type Number
+      @default null
+    */
+    lng: null,
+
+    /**
+      Map center.
+
+      @property center
+      @type &lt;a href=&quot;http://leafletjs.com/reference-1.0.0.html#latlng&quot;&gt;L.LatLng&lt;/a&gt;
+      @default [0, 0]
+      @readOnly
+    */
+    center: Ember.computed(&#x27;lat&#x27;, &#x27;lng&#x27;, function () {
+      return L.latLng(this.get(&#x27;lat&#x27;) || 0, this.get(&#x27;lng&#x27;) || 0);
+    }),
+
+    /**
+      Map zoom.
+
+      @property zoom
+      @type Number
+      @default null
+    */
+    zoom: null,
+
+    /**
+      Forces the map&#x27;s zoom level to always be a multiple of this.
+
+      @property zoomSnap
+      @type Number
+      @default 0
+    */
+    zoomSnap: 0,
+
+    /**
+      Controls how much the map&#x27;s zoom level will change after a zoomIn(), zoomOut(),
+      pressing + or - on the keyboard, or using the zoom controls.
+
+      @property zoomDelta
+      @type Number
+      @default 0.25
+    */
+    zoomDelta: 0.25,
+
+    /**
+      Flag: indicates whether all paths should be rendered on a &#x27;Canvas&#x27; renderer instead of &#x27;SVG&#x27;.
+
+      @property preferCanvas
+      @type Boolean
+      @default true
+    */
+    preferCanvas: true,
+
+    /**
+      Array of map layers.
+
+      @property layers
+      @type NewPlatformFlexberryGISMapLayer[]
+    */
+    layers: null,
+
+    /**
+      JSON object with query parameters
+
+      @property queryFilter
+      @type object
+      @default null
+     */
+    queryFilter: null,
+
+    /**
+      Service for managing map API.
+      @property mapApi
+      @type MapApiService
+    */
+    mapApi: Ember.inject.service(),
+
+    /**
+      Injects additional methods into initialized leaflet map.
+
+      @method _injectMapLoaderMethods
+      @param {&lt;a href=&quot;http://leafletjs.com/reference-1.0.0.html#map&quot;&gt;L.Map&lt;/a&gt;} leafletMap initialized leaflet map.
+      @private
+    */
+    _injectMapLoaderMethods(leafletMap) {
+      // Sets map loader&#x27;s content.
+      leafletMap.setLoaderContent = (content) =&gt; {
+        this.set(&#x27;_loaderContent&#x27;, content);
+      };
+
+      // Shows map loader.
+      leafletMap.showLoader = () =&gt; {
+        // Remember current handlers states &amp; disable them,
+        // to disable dragging, zoom, keyboard events handling, etc.
+        leafletMap._handlers.forEach((handler) =&gt; {
+          handler._beforeLoaderState = handler.enabled();
+
+          if (handler._beforeLoaderState === true) {
+            handler.disable();
+          }
+        });
+
+        this.set(&#x27;_isLoaderShown&#x27;, true);
+      };
+
+      // Hides map loader.
+      leafletMap.hideLoader = () =&gt; {
+        this.set(&#x27;_isLoaderShown&#x27;, false);
+
+        // Restore handlers states,
+        // to restore dragging, zoom, keyboard events handling, etc.
+        leafletMap._handlers.forEach((handler) =&gt; {
+          if (handler._beforeLoaderState === true) {
+            handler.enable();
+          }
+        });
+      };
+
+      // Prevents DOM events from being triggered while map loader is shown.
+      // Call to L.DOMEvent.StopPropagation doesn&#x27;t take an effect, so override map&#x27;s &#x27;_fireDOMEvent&#x27; method.
+      let originalFireDOMEvent = leafletMap._fireDOMEvent;
+      leafletMap._fireDOMEvent = (...args) =&gt; {
+        if (this.get(&#x27;_isLoaderShown&#x27;)) {
+          return;
+        }
+
+        originalFireDOMEvent.apply(leafletMap, args);
+      };
+    },
+
+    /**
+      Removes injected additional methods from initialized leaflet map.
+      Runs search query related to the specified URL params: &#x27;queryFilter&#x27; and &#x27;mapObjectSetting&#x27;.
+      Shows map loader, triggeres leaflet map event &#x27;flexberry-map:query&#x27;, then starts query and waits for all query requests to be finished,
+      and finally calls to &#x27;_finishQuery&#x27; hook.
+
+      @method _runQuery
+      @private
+    */
+    _runQuery(queryFilter, mapObjectSetting) {
+      let serviceLayer = this.get(&#x27;serviceLayer&#x27;);
+      let leafletMap = this.get(&#x27;_leafletObject&#x27;);
+
+      let e = {
+        queryFilter: queryFilter,
+        mapObjectSetting: mapObjectSetting,
+        results: Ember.A(),
+        serviceLayer: serviceLayer
+      };
+
+      // Show map loader.
+      leafletMap.flexberryMap.loader.show({ content: this.get(&#x27;i18n&#x27;).t(&#x27;map-tools.identify.loader-message&#x27;) });
+
+      leafletMap.fire(&#x27;flexberry-map:query&#x27;, e);
+
+      // Promises array could be totally changed in &#x27;flexberry-map:query&#x27; event handlers, we should prevent possible errors.
+      e.results = Ember.isArray(e.results) ? e.results : Ember.A();
+      let promises = Ember.A();
+
+      // Handle each result.
+      // Detach promises from already received features.
+      e.results.forEach((result) =&gt; {
+        if (Ember.isNone(result)) {
+          return;
+        }
+
+        let features = Ember.get(result, &#x27;features&#x27;);
+        if (!(features instanceof Ember.RSVP.Promise)) {
+          return;
+        }
+
+        promises.pushObject(features);
+      });
+
+      // Wait for all promises to be settled &amp; call &#x27;_finishQuery&#x27; hook.
+      Ember.RSVP.allSettled(promises).then(() =&gt; {
+        this._finishQuery(e);
+      });
+    },
+
+    _createObject(queryFilter, mapObjectSetting) {
+      if (!Ember.isBlank(queryFilter) &amp;&amp; !Ember.isBlank(mapObjectSetting)) {
+
+        let e = {
+          queryFilter: queryFilter,
+          mapObjectSetting: mapObjectSetting,
+          results: Ember.A()
+        };
+
+        let leafletMap = this.get(&#x27;_leafletObject&#x27;);
+
+        leafletMap.fire(&#x27;flexberry-map:createObject&#x27;, e);
+        if (e.results.length) {
+          this.sendAction(&#x27;onCreateObject&#x27;, e.results);
+        }
+      }
+    },
+
+    /**
+      Handles search query finish.
+      Shows query results on map, hides map loader, triggers &#x27;queryFinished&#x27; action and related leaflet map event &#x27;flexberry-map:queryFinished&#x27;.
+
+      @method _finishQuery
+      @param {Object} e Event object.
+      @param {Object[]} results Objects describing query results.
+      Every result-object has the following structure: { layer: ..., features: [...] },
+      where &#x27;layer&#x27; is metadata of a layer related to query result,
+      and &#x27;features&#x27; is an array containing (GeoJSON feature-objects)[http://geojson.org/geojson-spec.html#feature-objects].
+      @private
+    */
+    _finishQuery(e) {
+      let leafletMap = this.get(&#x27;_leafletObject&#x27;);
+
+      e.results.forEach((queryResult) =&gt; {
+        queryResult.features.then(
+          (features) =&gt; {
+            // Show new features.
+            features.forEach((feature) =&gt; {
+              let leafletLayer = Ember.get(feature, &#x27;leafletLayer&#x27;) || new L.GeoJSON([feature]);
+              if (Ember.typeOf(leafletLayer.setStyle) === &#x27;function&#x27;) {
+                leafletLayer.setStyle({
+                  color: &#x27;salmon&#x27;,
+                  weight: 2,
+                  fillOpacity: 0.3
+                });
+              }
+
+              Ember.set(feature, &#x27;leafletLayer&#x27;, leafletLayer);
+            });
+          });
+      });
+
+      // Hide map loader.
+      leafletMap.flexberryMap.loader.hide({ content: &#x27;&#x27; });
+
+      // Fire custom event on leaflet map.
+      leafletMap.fire(&#x27;flexberry-map:queryFinished&#x27;, e);
+      this.sendAction(&#x27;queryFinished&#x27;, e);
+    },
+
+    /**
+      Handles leaflet map&#x27;s moveend event.
+
+      @method _moveend
+      @param {Object} e Event object.
+      @private
+    */
+    _moveend(e) {
+      this.sendAction(&#x27;moveend&#x27;, e);
+    },
+
+    /**
+      Handles leaflet map&#x27;s zoomend event.
+
+      @method _zoomend
+      @param {Object} e Event object.
+      @private
+    */
+    _zoomend(e) {
+      this.sendAction(&#x27;zoomend&#x27;, e);
+    },
+
+    /**
+      Observes changhes in application&#x27;s current locale, and refreshes some GUI related to it.
+
+      @method localeDidChange
+      @private
+    */
+    _localeDidChange: Ember.observer(&#x27;i18n.locale&#x27;, function() {
+      let i18n = this.get(&#x27;i18n&#x27;);
+      let $leafletContainer = this.get(&#x27;_$leafletContainer&#x27;);
+
+      if (this.get(&#x27;zoomControl&#x27;) &amp;&amp; $leafletContainer) {
+        let $zoomControl = $leafletContainer.find(&#x27;.leaflet-control-container .leaflet-control-zoom&#x27;);
+        let $zoomInButton = $zoomControl.find(&#x27;.leaflet-control-zoom-in&#x27;);
+        let $zoomOutButton = $zoomControl.find(&#x27;.leaflet-control-zoom-out&#x27;);
+
+        $zoomInButton.attr(&#x27;title&#x27;, i18n.t(&#x27;components.flexberry-map.zoom-control.zoom-in-button.title&#x27;));
+        $zoomOutButton.attr(&#x27;title&#x27;, i18n.t(&#x27;components.flexberry-map.zoom-control.zoom-out-button.title&#x27;));
+      }
+    }),
+
+    /**
+      Handles leaflet map container&#x27;s resize.
+      Initializes in &#x27;initLeafletMap&#x27; hook.
+
+      @property _onLeafletContainerResize
+      @type function
+      @default null
+      @private
+    */
+    _onLeafletContainerResize: null,
+
+    /**
+      Initializes DOM-related component&#x27;s properties.
+    */
+    didInsertElement() {
+      this._super(...arguments);
+
+      // Store map&#x27;s container as jQuery object.
+      let $leafletContainer = this.$();
+      this.set(&#x27;_$leafletContainer&#x27;, $leafletContainer);
+
+      let options = this.get(&#x27;options&#x27;);
+      options.renderer = new Renderer();
+
+      // Create leaflet map.
+      let leafletMap = L.map($leafletContainer[0], options);
+      this.set(&#x27;_leafletObject&#x27;, leafletMap);
+
+      // Perform initializations.
+      this.willInitLeafletMap(leafletMap);
+      this.initLeafletMap(leafletMap);
+      this.initServiceLayer(leafletMap);
+
+      // Run search query if &#x27;queryFilter&#x27; is defined.
+      let queryFilter = this.get(&#x27;queryFilter&#x27;);
+      let mapObjectSetting = this.get(&#x27;mapObjectSetting&#x27;);
+      if (!Ember.isBlank(queryFilter)) {
+        Ember.run.scheduleOnce(&#x27;afterRender&#x27;, this, function () {
+          this._runQuery(queryFilter, mapObjectSetting);
+        });
+      }
+
+      const mapApi = this.get(&#x27;mapApi&#x27;);
+      if (Ember.isNone(mapApi.getFromApi(&#x27;runQuery&#x27;))) {
+        mapApi.addToApi(&#x27;runQuery&#x27;,  this._runQuery.bind(this));
+        this.set(&#x27;_hasQueryApi&#x27;, true);
+      }
+
+      if (Ember.isNone(mapApi.getFromApi(&#x27;createObject&#x27;))) {
+        mapApi.addToApi(&#x27;createObject&#x27;,  this._createObject.bind(this));
+        this.set(&#x27;_hasCreateObjectApi&#x27;, true);
+      }
+
+      if (Ember.isNone(mapApi.getFromApi(&#x27;leafletMap&#x27;))) {
+        mapApi.addToApi(&#x27;leafletMap&#x27;,  leafletMap);
+        this.set(&#x27;_hasLeafletMap&#x27;, true);
+      }
+
+      if (Ember.isNone(mapApi.getFromApi(&#x27;serviceLayer&#x27;))) {
+        mapApi.addToApi(&#x27;serviceLayer&#x27;,  this.get(&#x27;serviceLayer&#x27;));
+        this.set(&#x27;_hasServiceLayer&#x27;, true);
+      }
+
+      Ember.run.scheduleOnce(&#x27;afterRender&#x27;, this, function () {
+        this.load(leafletMap, mapApi);
+      });
+    },
+
+    /**
+      Run an array of prommis.
+
+      @parm {Object} mapApi Object mapApi.
+    */
+    load(leafletMap, mapApi) {
+      let e = {
+        results: [],
+        loadFunc: []
+      };
+
+      leafletMap.fire(&#x27;flexberry-map:load&#x27;, e);
+
+      Ember.RSVP.allSettled(e.results).then(function (array) {
+        const readyMapLayers = mapApi.getFromApi(&#x27;readyMapLayers&#x27;);
+        const errorMapLayers = mapApi.getFromApi(&#x27;errorMapLayers&#x27;);
+
+        const rejected = array.filter((item) =&gt; { return item.state === &#x27;rejected&#x27;; }).length &gt; 0;
+
+        if (!Ember.isNone(readyMapLayers) &amp;&amp; !rejected) {
+          readyMapLayers();
+        } else if (!Ember.isNone(errorMapLayers) &amp;&amp; rejected) {
+          errorMapLayers();
+        }
+
+        if (e.loadFunc.length &gt; 0) {
+          const func = e.loadFunc.pop();
+          func();
+        }
+
+      });
+    },
+
+    /**
+      Destroys DOM-related component&#x27;s properties.
+    */
+    willDestroyElement() {
+      this._super(...arguments);
+
+      let leafletMap = this.get(&#x27;_leafletObject&#x27;);
+      if (!Ember.isNone(leafletMap)) {
+        this.destroyServiceLayer(leafletMap);
+        this.willDestroyLeafletMap(leafletMap);
+        this.destroyLeafletMap(leafletMap);
+      }
+    },
+
+    /**
+      Performs some initialization before leaflet map will be initialized.
+
+      @param {Object} leafletMap Leaflet map.
+    */
+    willInitLeafletMap(leafletMap) {
+      // Add &#x27;flexberryMap&#x27; namespace to leafletMap.
+      leafletMap.flexberryMap = {};
+
+      // Temporary store leafletMap as global object to simplify debugging.
+      // TODO: Remove it before changes will be pushed to origin.
+      window.leafletMap = leafletMap;
+
+      // See &#x27;willInitLeafletMap&#x27; implementations in mixins which are mixed to &#x27;leaflet-map&#x27;.
+      this._super(...arguments);
+    },
+
+    /**
+      Performs some clean up before leaflet map will be destroyed.
+
+      @param {Object} leafletMap Leaflet map.
+    */
+    willDestroyLeafletMap(leafletMap) {
+      // See &#x27;willDestroyLeafletMap&#x27; implementations in mixins which are mixed to &#x27;leaflet-map&#x27;.
+      this._super(...arguments);
+
+      // Remove &#x27;flexberryMap&#x27; namespace forom leafletMap.
+      delete leafletMap.flexberryMap;
+
+      // Temporary store leafletMap as global object to simplify debugging.
+      // TODO: Remove it before changes will be pushed to origin.
+      delete window.leafletMap;
+    },
+
+    /**
+      Initializes leaflet map related properties.
+
+      @param {Object} leafletMap Leaflet map.
+    */
+    initLeafletMap(leafletMap) {
+      // See &#x27;initLeafletMap&#x27; implementations in mixins which are mixed to &#x27;leaflet-map&#x27;.
+      this._super(...arguments);
+
+      leafletMap.on(&#x27;moveend&#x27;, this._moveend, this);
+      leafletMap.on(&#x27;zoomend&#x27;, this._zoomend, this);
+
+      // Bind map container&#x27;s resize event handler.
+      let onLeafletContainerResize = {
+        onResizeStart: () =&gt; {
+          leafletMap.fire(&#x27;containerResizeStart&#x27;);
+        },
+        onResize: () =&gt; {
+          leafletMap.invalidateSize(false);
+          leafletMap.fire(&#x27;containerResize&#x27;);
+        },
+        onResizeEnd: () =&gt; {
+          leafletMap.fire(&#x27;containerResizeEnd&#x27;);
+        }
+      };
+      this.set(&#x27;_onLeafletContainerResize&#x27;, onLeafletContainerResize);
+
+      let $leafletContainer = this.get(&#x27;_$leafletContainer&#x27;);
+      $leafletContainer.resize(onLeafletContainerResize);
+
+      // Update text resources on the map and it&#x27;s tools to math the current locale.
+      Ember.run.scheduleOnce(&#x27;afterRender&#x27;, this, &#x27;_localeDidChange&#x27;);
+
+      this.sendAction(&#x27;leafletInit&#x27;, {
+        map: leafletMap
+      });
+      this.get(&#x27;mapApi&#x27;).addToApi(&#x27;leafletMap&#x27;, leafletMap);
+    },
+
+    /**
+      Destroys leaflet map.
+
+      @param {Object} leafletMap Leaflet map.
+    */
+    destroyLeafletMap(leafletMap) {
+      // See &#x27;destroyLeafletMap&#x27; implementations in mixins which are mixed to &#x27;leaflet-map&#x27;.
+      this._super(...arguments);
+
+      leafletMap.off(&#x27;moveend&#x27;, this._moveend, this);
+      leafletMap.off(&#x27;zoomend&#x27;, this._zoomend, this);
+
+      // Unbind map container&#x27;s resize event handler.
+      let $leafletContainer = this.get(&#x27;_$leafletContainer&#x27;);
+      let onLeafletContainerResize = this.get(&#x27;_onLeafletContainerResize&#x27;);
+      if (!Ember.isNone($leafletContainer) &amp;&amp; !Ember.isNone(onLeafletContainerResize)) {
+        $leafletContainer.removeResize(onLeafletContainerResize);
+        this.set(&#x27;_onLeafletContainerResize&#x27;, null);
+      }
+
+      Ember.run.scheduleOnce(&#x27;afterRender&#x27;, this, &#x27;_localeDidChange&#x27;);
+      leafletMap.remove();
+      this.set(&#x27;_leafletObject&#x27;, null);
+      this.set(&#x27;_$leafletContainer&#x27;, null);
+
+      if (this.get(&#x27;_hasQueryApi&#x27;)) {
+        this.get(&#x27;mapApi&#x27;).addToApi(&#x27;runQuery&#x27;, undefined);
+      }
+
+      if (this.get(&#x27;_hasCreateObjectApi&#x27;)) {
+        this.get(&#x27;mapApi&#x27;).addToApi(&#x27;createObject&#x27;, undefined);
+      }
+
+      if (this.get(&#x27;_hasLeafletMap&#x27;)) {
+        this.get(&#x27;mapApi&#x27;).addToApi(&#x27;leafletMap&#x27;, undefined);
+      }
+
+      if (this.get(&#x27;_hasServiceLayer&#x27;)) {
+        this.get(&#x27;mapApi&#x27;).addToApi(&#x27;serviceLayer&#x27;, undefined);
+      }
+
+      this.sendAction(&#x27;leafletDestroy&#x27;);
+    },
+
+    /**
+      Initializes map&#x27;s service layer.
+
+      @param {Object} leafletMap Leaflet map.
+    */
+    initServiceLayer(leafletMap) {
+      let serviceLayer = L.featureGroup();
+      this.set(&#x27;serviceLayer&#x27;, serviceLayer);
+
+      leafletMap.addLayer(serviceLayer);
+      this.sendAction(&#x27;serviceLayerInit&#x27;, serviceLayer);
+    },
+
+    /**
+      Destroys map&#x27;s service layer.
+
+      @param {Object} leafletMap Leaflet map.
+    */
+    destroyServiceLayer(leafletMap) {
+      let serviceLayer = this.get(&#x27;serviceLayer&#x27;);
+      if (!Ember.isNone(serviceLayer) &amp;&amp; leafletMap.hasLayer(serviceLayer)) {
+        leafletMap.removeLayer(serviceLayer);
+      }
+
+      this.set(&#x27;serviceLayer&#x27;, null);
+      this.sendAction(&#x27;serviceLayerDestroy&#x27;);
+    },
+
+    /**
+      Component&#x27;s action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) initialized.
+
+      @method sendingActions.leafletInit
+      @param {Object} e Action&#x27;s event object.
+      @param {Boolean} e.map Initialized leaflet map.
+    */
+
+    /**
+      Component&#x27;s action invoking when [leaflet map](http://leafletjs.com/reference-1.0.0.html#map) destroyed.
+
+      @method sendingActions.leafletDestroy
+    */
+
+    /**
+      Component&#x27;s action invoking when map&#x27;s service layer initialized.
+
+      @method sendingActions.serviceLayerInit
+      @param {Object} serviceLayer Service layer.
+    */
+
+    /**
+      Component&#x27;s action invoking when maps&#x27;s service layer destroyed.
+
+      @method sendingActions.serviceLayerDestroy
+    */
+
+    /**
+      Component&#x27;s action invoking when query on map load finished.
+
+      @method sendingActions.queryFinished
+      @param {Object} e Query result object.
+    */
+
+    actions: {
+      /**
+        Handles edit dialog&#x27;s &#x27;approve&#x27; action.
+        Invokes component&#x27;s {{#crossLink &quot;FlexberryMaplayerComponent/sendingActions.edit:method&quot;}}&#x27;edit&#x27;{{/crossLink}} action.
+
+        @method actions.onEditDialogApprove
+        @param {Object} e Action&#x27;s event object.
+        @param {Object} e.layerProperties Object containing edited layer properties, which must be merged to layer on action.
+      */
+      onEditDialogApprove(...args) {
+        // Send outer &#x27;edit&#x27; action.
+        this.sendAction(&#x27;edit&#x27;, ...args);
+      },
+    }
+  }
+);
+
+// Add component&#x27;s CSS-class names as component&#x27;s class static constants
+// to make them available outside of the component instance.
+FlexberryMapComponent.reopenClass({
+  flexberryClassNames
+});
+
+export default FlexberryMapComponent;
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>
