@@ -228,10 +228,12 @@ export default BaseVectorLayer.extend({
       set: function (target, prop, value) {
         if (prop === 'primarykey') {
           target.set('id', value);
-          return;
+
+        } else {
+          target.set(prop, value);
         }
 
-        target.set(prop, value);
+        return true;
       }
     });
 
