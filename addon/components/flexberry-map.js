@@ -417,7 +417,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       if (event.originalEvent._stopped) { return; }
 
       var currentTarget = event.originalEvent.target;
-			var removed;
+      var removed;
 
       // hide the target node
       removed = { node: currentTarget, pointerEvents: currentTarget.style.pointerEvents };
