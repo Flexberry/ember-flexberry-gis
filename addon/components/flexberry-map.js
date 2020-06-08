@@ -416,11 +416,8 @@ let FlexberryMapComponent = Ember.Component.extend(
     _forwardClick(event) {
       if (event.originalEvent._stopped) { return; }
 
-      var currentTarget = event.originalEvent.target;
-      var removed;
-
-      // hide the target node
-      removed = { node: currentTarget, pointerEvents: currentTarget.style.pointerEvents };
+      let currentTarget = event.originalEvent.target;
+      let removed = { node: currentTarget, pointerEvents: currentTarget.style.pointerEvents };
       currentTarget.style.pointerEvents = 'none';
 
       // attempt to grab the next layer below
@@ -435,7 +432,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       ) {
 
         var ev = new MouseEvent(event.originalEvent.type, event.originalEvent);
-        !nextTarget.dispatchEvent(ev);
+        nextTarget.dispatchEvent(ev);
         L.DomEvent.stop(event);
       }
 
