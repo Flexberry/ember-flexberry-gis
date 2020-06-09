@@ -104,9 +104,9 @@ export default SearchMapCommand.extend({
         let layearBounds = featuresLayer.getBounds();
 
         if (leafletMap.getBoundsZoom(layearBounds) < minimalVisibleZoom) {
-          leafletMap.setView(layearBounds.getCenter(), minimalVisibleZoom)
+          leafletMap.setView(layearBounds.getCenter(), minimalVisibleZoom);
         } else {
-          leafletMap.fitBounds(layearBounds)
+          leafletMap.fitBounds(layearBounds);
         }
       }, 10);
     });

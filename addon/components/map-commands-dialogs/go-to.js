@@ -270,7 +270,7 @@ let FlexberryGoToMapCommandDialogComponent = Ember.Component.extend({
         this.set('_options', {
           x: '',
           y: ''
-        })
+        });
         this.set('_showErrorMessage', false);
       },
 
