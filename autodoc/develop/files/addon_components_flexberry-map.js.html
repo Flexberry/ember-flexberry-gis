@@ -817,12 +817,46 @@ let FlexberryMapComponent = Ember.Component.extend(
     },
 
     /**
+      Handles leaflet map&#x27;s click event. Forward this event to all layers
+
+      @method _forwardClick
+      @param {Object} e Event object.
+      @private
+    */
+    _forwardClick(event) {
+      if (event.originalEvent._stopped) { return; }
+
+      let currentTarget = event.originalEvent.target;
+      let removed = { node: currentTarget, pointerEvents: currentTarget.style.pointerEvents };
+      currentTarget.style.pointerEvents = &#x27;none&#x27;;
+
+      // attempt to grab the next layer below
+      let nextTarget = document.elementFromPoint(event.originalEvent.clientX, event.originalEvent.clientY);
+
+      // we keep drilling down until we get stopped,
+      // or we reach the map container itself
+      if (
+        nextTarget &amp;&amp;
+        nextTarget.nodeName.toLowerCase() !== &#x27;body&#x27; &amp;&amp;
+        nextTarget.classList.value.indexOf(&#x27;leaflet-container&#x27;) === -1
+      ) {
+
+        var ev = new MouseEvent(event.originalEvent.type, event.originalEvent);
+        nextTarget.dispatchEvent(ev);
+        L.DomEvent.stop(event);
+      }
+
+      // restore pointerEvents
+      removed.node.style.pointerEvents = removed.pointerEvents;
+    },
+
+    /**
       Observes changhes in application&#x27;s current locale, and refreshes some GUI related to it.
 
       @method localeDidChange
       @private
     */
-    _localeDidChange: Ember.observer(&#x27;i18n.locale&#x27;, function() {
+    _localeDidChange: Ember.observer(&#x27;i18n.locale&#x27;, function () {
       let i18n = this.get(&#x27;i18n&#x27;);
       let $leafletContainer = this.get(&#x27;_$leafletContainer&#x27;);
 
@@ -864,6 +898,8 @@ let FlexberryMapComponent = Ember.Component.extend(
       let leafletMap = L.map($leafletContainer[0], options);
       this.set(&#x27;_leafletObject&#x27;, leafletMap);
 
+      L.DomEvent.on(leafletMap, &#x27;click&#x27;, this._forwardClick, this);
+
       // Perform initializations.
       this.willInitLeafletMap(leafletMap);
       this.initLeafletMap(leafletMap);
@@ -880,22 +916,22 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       const mapApi = this.get(&#x27;mapApi&#x27;);
       if (Ember.isNone(mapApi.getFromApi(&#x27;runQuery&#x27;))) {
-        mapApi.addToApi(&#x27;runQuery&#x27;,  this._runQuery.bind(this));
+        mapApi.addToApi(&#x27;runQuery&#x27;, this._runQuery.bind(this));
         this.set(&#x27;_hasQueryApi&#x27;, true);
       }
 
       if (Ember.isNone(mapApi.getFromApi(&#x27;createObject&#x27;))) {
-        mapApi.addToApi(&#x27;createObject&#x27;,  this._createObject.bind(this));
+        mapApi.addToApi(&#x27;createObject&#x27;, this._createObject.bind(this));
         this.set(&#x27;_hasCreateObjectApi&#x27;, true);
       }
 
       if (Ember.isNone(mapApi.getFromApi(&#x27;leafletMap&#x27;))) {
-        mapApi.addToApi(&#x27;leafletMap&#x27;,  leafletMap);
+        mapApi.addToApi(&#x27;leafletMap&#x27;, leafletMap);
         this.set(&#x27;_hasLeafletMap&#x27;, true);
       }
 
       if (Ember.isNone(mapApi.getFromApi(&#x27;serviceLayer&#x27;))) {
-        mapApi.addToApi(&#x27;serviceLayer&#x27;,  this.get(&#x27;serviceLayer&#x27;));
+        mapApi.addToApi(&#x27;serviceLayer&#x27;, this.get(&#x27;serviceLayer&#x27;));
         this.set(&#x27;_hasServiceLayer&#x27;, true);
       }
 
