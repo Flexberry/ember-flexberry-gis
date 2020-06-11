@@ -1074,7 +1074,7 @@ export default BaseVectorLayer.extend({
           let thisPane = this.get(&#x27;_pane&#x27;);
           let pane = leafletMap.getPane(thisPane);
           if (!pane || Ember.isNone(pane)) {
-            leafletMap.createPane(thisPane);
+            this._createPane(thisPane);
             layer.options.pane = thisPane;
             layer.options.renderer = this.get(&#x27;_renderer&#x27;);
             this._setLayerZIndex();
