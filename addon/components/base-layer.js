@@ -219,8 +219,8 @@ export default Ember.Component.extend(
         var target = e.target;
         var ev = new MouseEvent(e.type, e);
 
-        let removed = { node: target, display: target.style.display };
-        target.style.display = 'none';
+        let removed = { node: target, pointerEvents: target.style.pointerEvents };
+        target.style.pointerEvents = 'none';
         target = document.elementFromPoint(e.clientX, e.clientY);
 
         if (target && target !== pane) {
@@ -230,7 +230,7 @@ export default Ember.Component.extend(
           }
         }
 
-        removed.node.style.display = removed.display;
+        removed.node.style.pointerEvents = removed.pointerEvents;
       });
     },
 
