@@ -222,7 +222,7 @@ export default Ember.Component.extend(
         target.style.pointerEvents = 'none';
         target = document.elementFromPoint(e.clientX, e.clientY);
 
-        if (target && target !== pane) {
+        if (target && target !== pane && target.parentElement && target.parentElement.classList.value.indexOf("leaflet-vectorLayer") !== -1) {
           let stopped = !target.dispatchEvent(ev);
           if (stopped || ev._stopped) {
             L.DomEvent.stop(e);
