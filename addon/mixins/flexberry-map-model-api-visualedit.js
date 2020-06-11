@@ -154,7 +154,7 @@ export default Ember.Mixin.create({
           editTools.off('editable:drawing:end', finishDraw, this);
           editTools.stopDrawing();
           let defaultProperties = layerModel.get('settingsAsObject.defaultProperties') || {};
-          newLayer.feature = { properties: Ember.merge(defaultProperties, properties) };
+          newLayer.feature = { type: 'Feature', properties: Ember.merge(defaultProperties, properties) };
           newLayer.remove();
           leafletObject.addLayer(newLayer);
           resolve(newLayer);
