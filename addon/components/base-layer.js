@@ -6,6 +6,7 @@ import Ember from 'ember';
 import DynamicPropertiesMixin from 'ember-flexberry-gis/mixins/dynamic-properties';
 import DynamicActionsMixin from 'ember-flexberry/mixins/dynamic-actions';
 import LeafletOptionsMixin from 'ember-flexberry-gis/mixins/leaflet-options';
+import intersect from 'npm:@turf/intersect';
 
 const {
   assert
@@ -211,9 +212,22 @@ export default Ember.Component.extend(
     _createPane(name) {
       let leafletMap = this.get('leafletMap');
       let pane = leafletMap.createPane(name);
+      let layer = this;
 
       L.DomEvent.on(pane, 'click', function (e) {
         if (e._stopped) { return; }
+        let l = layer;
+
+        if (l.leafletMap.hasLayer(l._leafletObject)) {
+          var point = l.leafletMap.mouseEventToLayerPoint(e);
+
+          let intersect = false;
+          l._leafletObject.eachLayer(function (layer) {
+            intersect = intersect || layer._containsPoint(point);
+          });
+
+          if (intersect) return;
+        }
 
         var target = e.target;
         var ev = new MouseEvent(e.type, e);
