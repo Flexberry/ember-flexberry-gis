@@ -121,10 +121,12 @@ export default BaseVectorLayer.extend({
   */
   removeLayer(layer) {
     L.FeatureGroup.prototype.removeLayer.call(this, layer);
-    layer.model.deleteRecord();
-    layer.model.set('hasChanged', true);
-    layer.state = state.remove;
-    this.deletedModels.addObject(layer.model);
+    if (layer.state !== state.insert) {
+      layer.model.deleteRecord();
+      layer.model.set('hasChanged', true);
+      layer.state = state.remove;
+      this.deletedModels.addObject(layer.model);
+    }
   },
 
   /**

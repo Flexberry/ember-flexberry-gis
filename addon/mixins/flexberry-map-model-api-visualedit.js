@@ -107,10 +107,12 @@ export default Ember.Mixin.create({
 
         if (layer.state === state.insert) {
           leafletObject.removeLayer(layer);
-          let id = editTools.featuresLayer.getLayerId(layer);
-          let editLayer = editTools.featuresLayer.getLayer(id).editor.editLayer;
-          editTools.editLayer.removeLayer(editLayer);
-          editTools.featuresLayer.removeLayer(layer);
+          if (editTools.featuresLayer.getLayers().length !== 0) {
+            let id = editTools.featuresLayer.getLayerId(layer);
+            let editLayer = editTools.featuresLayer.getLayer(id).editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+            editTools.featuresLayer.removeLayer(layer);
+          }
         } else if (layer.state === state.update) {
           let editLayer = layer.editor.editLayer;
           editTools.editLayer.removeLayer(editLayer);
