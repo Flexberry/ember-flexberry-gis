@@ -215,6 +215,7 @@ export default Ember.Component.extend(
 
       L.DomEvent.on(pane, 'click', function (e) {
         if (e._stopped) { return; }
+
         let l = layer;
 
         if (l.leafletMap.hasLayer(l._leafletObject)) {
@@ -225,7 +226,7 @@ export default Ember.Component.extend(
             intersect = intersect || layer._containsPoint(point);
           });
 
-          if (intersect) return;
+          if (intersect) { return; }
         }
 
         var target = e.target;
@@ -235,7 +236,7 @@ export default Ember.Component.extend(
         target.style.pointerEvents = 'none';
         target = document.elementFromPoint(e.clientX, e.clientY);
 
-        if (target && target !== pane && target.parentElement && target.parentElement.classList.value.indexOf("leaflet-vectorLayer") !== -1) {
+        if (target && target !== pane && target.parentElement && target.parentElement.classList.value.indexOf('leaflet-vectorLayer') !== -1) {
           let stopped = !target.dispatchEvent(ev);
           if (stopped || ev._stopped) {
             L.DomEvent.stop(e);
