@@ -5137,7 +5137,7 @@
             "module": "ember-flexberry-gis",
             "namespace": "",
             "file": "addon/components/base-layer.js",
-            "line": 14,
+            "line": 15,
             "description": "BaseLayer component for other flexberry-gis layers.",
             "extends": "<a href=\"http://emberjs.com/api/classes/Ember.Component.html\">Ember.Component</a>",
             "uses": [
@@ -25241,7 +25241,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 26,
+            "line": 27,
             "description": "Leaflet layer object init by settings from model.",
             "itemtype": "property",
             "name": "_leafletObject",
@@ -25254,7 +25254,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 36,
+            "line": 37,
             "description": "Promise returning Leaflet layer.",
             "itemtype": "property",
             "name": "leafletLayerPromise",
@@ -25267,7 +25267,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 46,
+            "line": 47,
             "description": "Reference to 'layers-styles-renderer' servie.",
             "itemtype": "property",
             "name": "_layersStylesRenderer",
@@ -25279,7 +25279,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 55,
+            "line": 56,
             "description": "Service for managing map API.",
             "itemtype": "property",
             "name": "mapApi",
@@ -25289,14 +25289,14 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 63,
+            "line": 64,
             "description": "Overload wrapper tag name for disabling wrapper.",
             "class": "BaseLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 68,
+            "line": 69,
             "description": "Array containing component's properties which are also leaflet layer options (see leaflet-options mixin).",
             "itemtype": "property",
             "name": "leafletOptions",
@@ -25306,7 +25306,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 76,
+            "line": 77,
             "description": "Array containing component's properties which are also leaflet layer options callbacks (see leaflet-options mixin).",
             "itemtype": "property",
             "name": "leafletOptionsCallbacks",
@@ -25316,7 +25316,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 84,
+            "line": 85,
             "description": "Hash containing default implementations for leaflet layer options callbacks (see leaflet-options mixin).",
             "itemtype": "property",
             "name": "defaultLeafletOptionsCallbacks",
@@ -25326,7 +25326,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 103,
+            "line": 104,
             "description": "Leaflet map.",
             "itemtype": "property",
             "name": "leafletMap",
@@ -25337,7 +25337,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 112,
+            "line": 113,
             "description": "Leaflet container for layers.",
             "itemtype": "property",
             "name": "leafletContainer",
@@ -25348,7 +25348,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 121,
+            "line": 122,
             "description": "Layer metadata.",
             "itemtype": "property",
             "name": "layerModel",
@@ -25359,7 +25359,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 130,
+            "line": 131,
             "description": "This layer index, used for layer ordering in Map.",
             "itemtype": "property",
             "name": "index",
@@ -25370,7 +25370,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 139,
+            "line": 140,
             "description": "Flag, indicates visible or not current layer on map.",
             "itemtype": "property",
             "name": "visibility",
@@ -25381,7 +25381,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 148,
+            "line": 149,
             "description": "This layer opacity.",
             "itemtype": "property",
             "name": "opacity",
@@ -25392,7 +25392,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 157,
+            "line": 158,
             "description": "Hash containing layer's style settings.",
             "itemtype": "property",
             "name": "styleSettings",
@@ -25403,7 +25403,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 166,
+            "line": 167,
             "description": "Layer's coordinate reference system (CRS).",
             "itemtype": "property",
             "name": "crs",
@@ -25414,7 +25414,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 182,
+            "line": 183,
             "itemtype": "property",
             "name": "_pane",
             "type": "String",
@@ -25424,7 +25424,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 189,
+            "line": 190,
             "description": "This layer bounding box.",
             "itemtype": "property",
             "name": "bounds",
@@ -25435,7 +25435,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 198,
+            "line": 199,
             "description": "Promise storage property.",
             "itemtype": "property",
             "name": "promiseLoad",
@@ -25445,7 +25445,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 206,
+            "line": 207,
             "description": "Creates map pane",
             "itemtype": "method",
             "name": "_createPane",
@@ -25456,7 +25456,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 250,
+            "line": 251,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "_createLayer",
@@ -25467,7 +25467,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 288,
+            "line": 289,
             "description": "Destroys leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "_destroyLayer",
@@ -25478,7 +25478,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 311,
+            "line": 312,
             "description": "Returns promise with the layer properties object.",
             "itemtype": "method",
             "name": "_getAttributesOptions",
@@ -25489,7 +25489,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 330,
+            "line": 331,
             "description": "Resets leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "_resetLayer",
@@ -25500,7 +25500,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 351,
+            "line": 352,
             "description": "Sets leaflet layer's state related to actual settings.",
             "itemtype": "method",
             "name": "_setLayerState",
@@ -25511,7 +25511,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 368,
+            "line": 369,
             "description": "Sets leaflet layer's zindex.",
             "itemtype": "method",
             "name": "_setLayerZIndex",
@@ -25522,7 +25522,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 389,
+            "line": 390,
             "description": "Sets leaflet layer's visibility.",
             "itemtype": "method",
             "name": "_setLayerVisibility",
@@ -25533,7 +25533,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 403,
+            "line": 404,
             "description": "Sets leaflet layer's visibility.",
             "itemtype": "method",
             "name": "_setLayerOpacity",
@@ -25544,7 +25544,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 418,
+            "line": 419,
             "description": "Sets leaflet layer's style.",
             "itemtype": "method",
             "name": "_setLayerStyle",
@@ -25555,7 +25555,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 440,
+            "line": 441,
             "description": "Adds layer to it's leaflet container.",
             "itemtype": "method",
             "name": "_addLayerToLeafletContainer",
@@ -25566,7 +25566,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 472,
+            "line": 473,
             "description": "Removes layer from it's leaflet container.",
             "itemtype": "method",
             "name": "_removeLayerFromLeafletContainer",
@@ -25577,7 +25577,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 488,
+            "line": 489,
             "description": "Observes and handles changes in JSON-string with layer settings.\nPerforms layer's recreation with new settings.",
             "itemtype": "method",
             "name": "visibilityDidChange",
@@ -25588,7 +25588,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 499,
+            "line": 500,
             "description": "Observes and handles changes in {{#crossLink \"BaseLayerComponent/visibility:property\"}}'visibility' property{{/crossLink}}.\nSwitches layer's visibility.",
             "itemtype": "method",
             "name": "visibilityDidChange",
@@ -25599,7 +25599,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 510,
+            "line": 511,
             "description": "Observes and handles changes in {{#crossLink \"BaseLayerComponent/opacity:property\"}}'opacity' property{{/crossLink}}.\nChanges layer's opacity.",
             "itemtype": "method",
             "name": "_opacityDidChange",
@@ -25610,7 +25610,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 521,
+            "line": 522,
             "description": "Observes and handles changes in {{#crossLink \"BaseLayerComponent/styleSettings:property\"}}'styleSettings' property{{/crossLink}}.\nChanges layer's style settings.",
             "itemtype": "method",
             "name": "_styleSettingsDidChange",
@@ -25621,7 +25621,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 536,
+            "line": 537,
             "description": "Handles 'flexberry-map:identify' event of leaflet map.",
             "itemtype": "method",
             "name": "_identify",
@@ -25661,7 +25661,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 565,
+            "line": 566,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -25706,7 +25706,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 590,
+            "line": 591,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "query",
@@ -25737,7 +25737,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 620,
+            "line": 621,
             "description": "Returns leaflet layer's bounding box.",
             "itemtype": "method",
             "name": "_getBoundingBox",
@@ -25751,7 +25751,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 631,
+            "line": 632,
             "description": "Handles 'flexberry-map:createObject' event of leaflet map.",
             "itemtype": "method",
             "name": "createObject",
@@ -25782,28 +25782,28 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 658,
+            "line": 659,
             "description": "Initializes component.",
             "class": "BaseLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 668,
+            "line": 669,
             "description": "Initializes DOM-related component's properties.",
             "class": "BaseLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 697,
+            "line": 698,
             "description": "Deinitializes DOM-related component's properties.",
             "class": "BaseLayerComponent",
             "module": "ember-flexberry-gis"
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 716,
+            "line": 717,
             "description": "Returns leaflet layer.",
             "itemtype": "method",
             "name": "getLeafletObjectPromise",
@@ -25815,7 +25815,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 729,
+            "line": 730,
             "description": "Returns leaflet layer.",
             "itemtype": "method",
             "name": "returnLeafletObject",
@@ -25827,7 +25827,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 739,
+            "line": 740,
             "description": "Creates leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "createLayer",
@@ -25839,7 +25839,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 750,
+            "line": 751,
             "description": "Destroys leaflet layer related to layer type.",
             "itemtype": "method",
             "name": "destroyLayer",
@@ -25848,7 +25848,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 758,
+            "line": 759,
             "description": "Identifies layer's objects inside specified bounding box.",
             "itemtype": "method",
             "name": "identify",
@@ -25886,7 +25886,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 777,
+            "line": 778,
             "description": "Handles 'flexberry-map:search' event of leaflet map.",
             "itemtype": "method",
             "name": "search",
@@ -25931,7 +25931,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 793,
+            "line": 794,
             "description": "Handles 'flexberry-map:query' event of leaflet map.",
             "itemtype": "method",
             "name": "_query",
@@ -25962,7 +25962,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 807,
+            "line": 808,
             "description": "Returns leaflet layer's bounding box.",
             "itemtype": "method",
             "name": "getBoundingBox",
@@ -25974,7 +25974,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 827,
+            "line": 828,
             "description": "Observes and handles changes in layer's properties marked as leaflet options.\nPerforms layer's recreation with new options.\nNote: it is overridden method from 'leaflet-options' mixin.",
             "itemtype": "method",
             "name": "leafletOptionsDidChange",
@@ -25990,7 +25990,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 853,
+            "line": 854,
             "description": "Injects (leafelt GeoJSON layers)[http://leafletjs.com/reference-1.0.0.html#geojson] according to current CRS\ninto specified (GeoJSON)[http://geojson.org/geojson-spec] feature, features, or featureCollection",
             "itemtype": "method",
             "name": "injectLeafletLayersIntoGeoJSON",
@@ -26015,7 +26015,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 912,
+            "line": 913,
             "description": "Component's action invoking on layer creation.",
             "itemtype": "method",
             "name": "sendingActions.layerInit",
@@ -26043,7 +26043,7 @@
         },
         {
             "file": "addon/components/base-layer.js",
-            "line": 921,
+            "line": 922,
             "description": "Component's action invoking before the layer destroying.",
             "itemtype": "method",
             "name": "sendingActions.layerDestroy",
@@ -46399,15 +46399,15 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/base-layer.js:716"
+            "line": " addon/components/base-layer.js:717"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/base-layer.js:729"
+            "line": " addon/components/base-layer.js:730"
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/base-layer.js:739"
+            "line": " addon/components/base-layer.js:740"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -47623,19 +47623,19 @@
         },
         {
             "message": "Missing item type\nOverload wrapper tag name for disabling wrapper.",
-            "line": " addon/components/base-layer.js:63"
+            "line": " addon/components/base-layer.js:64"
         },
         {
             "message": "Missing item type\nInitializes component.",
-            "line": " addon/components/base-layer.js:658"
+            "line": " addon/components/base-layer.js:659"
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/base-layer.js:668"
+            "line": " addon/components/base-layer.js:669"
         },
         {
             "message": "Missing item type\nDeinitializes DOM-related component's properties.",
-            "line": " addon/components/base-layer.js:697"
+            "line": " addon/components/base-layer.js:698"
         },
         {
             "message": "Missing item type\nBecause z-index leaflet-tile-pane = 200.\nDo more just in case",

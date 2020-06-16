@@ -416,6 +416,7 @@ import Ember from &#x27;ember&#x27;;
 import DynamicPropertiesMixin from &#x27;ember-flexberry-gis/mixins/dynamic-properties&#x27;;
 import DynamicActionsMixin from &#x27;ember-flexberry/mixins/dynamic-actions&#x27;;
 import LeafletOptionsMixin from &#x27;ember-flexberry-gis/mixins/leaflet-options&#x27;;
+import { checkMapZoomLayer } from &#x27;../utils/check-zoom&#x27;;
 
 const {
   assert
@@ -628,7 +629,7 @@ export default Ember.Component.extend(
 
         let l = layer;
 
-        if (l.leafletMap.hasLayer(l._leafletObject)) {
+        if (l.leafletMap.hasLayer(l._leafletObject) &amp;&amp; checkMapZoomLayer(l)) {
           var point = l.leafletMap.mouseEventToLayerPoint(e);
 
           let intersect = false;
