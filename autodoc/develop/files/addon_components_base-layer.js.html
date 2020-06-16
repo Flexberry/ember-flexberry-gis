@@ -621,9 +621,23 @@ export default Ember.Component.extend(
     _createPane(name) {
       let leafletMap = this.get(&#x27;leafletMap&#x27;);
       let pane = leafletMap.createPane(name);
+      let layer = this;
 
       L.DomEvent.on(pane, &#x27;click&#x27;, function (e) {
         if (e._stopped) { return; }
+
+        let l = layer;
+
+        if (l.leafletMap.hasLayer(l._leafletObject)) {
+          var point = l.leafletMap.mouseEventToLayerPoint(e);
+
+          let intersect = false;
+          l._leafletObject.eachLayer(function (layer) {
+            intersect = intersect || layer._containsPoint(point);
+          });
+
+          if (intersect) { return; }
+        }
 
         var target = e.target;
         var ev = new MouseEvent(e.type, e);
@@ -632,7 +646,7 @@ export default Ember.Component.extend(
         target.style.pointerEvents = &#x27;none&#x27;;
         target = document.elementFromPoint(e.clientX, e.clientY);
 
-        if (target &amp;&amp; target !== pane) {
+        if (target &amp;&amp; target !== pane &amp;&amp; target.parentElement &amp;&amp; target.parentElement.classList.value.indexOf(&#x27;leaflet-vectorLayer&#x27;) !== -1) {
           let stopped = !target.dispatchEvent(ev);
           if (stopped || ev._stopped) {
             L.DomEvent.stop(e);
