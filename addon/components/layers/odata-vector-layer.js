@@ -323,8 +323,8 @@ export default BaseVectorLayer.extend({
     }
 
     const geojson = {
-      "type": type,
-      "coordinates": coordInCrs
+      'type': type,
+      'coordinates': coordInCrs
     };
     let coordToWkt = wkt.geojsonToWKT(geojson);
     let crs = this.get('crs');
