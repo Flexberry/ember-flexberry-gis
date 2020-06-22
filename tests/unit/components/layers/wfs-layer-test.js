@@ -60,6 +60,15 @@ moduleForComponent('layers/wfs-layer', 'Unit | Component | layers/wfs layer', {
 
     geoserverFake.respondWith('POST', 'http://geoserverFake/geoserver/ows?',
       function (request) {
+        if (request.requestBody === '<wfs:GetFeature xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="application/json">' +
+          '<wfs:Query typeName="les:povorottochkipoint32640" srsName="EPSG:3857"><ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><Not><Or>' +
+          '<ogc:PropertyIsEqualTo matchCase="false"><ogc:PropertyName>primarykey</ogc:PropertyName><ogc:Literal>475adc5b-fee4-4e8c-bed0-93746a9f00f0' +
+          '</ogc:Literal></ogc:PropertyIsEqualTo></Or></Not></ogc:Filter></wfs:Query></wfs:GetFeature>') {
+          request.respond(200, { 'Content-Type': 'application/json' },
+          '{"type":"FeatureCollection","features":[],"totalFeatures":0,"numberMatched":0,"numberReturned":0,"timeStamp":"2020-02-27T04:44:49.909Z",' +
+          '"crs":null}');
+        }
+
         if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
           request.respond(200, { 'Content-Type': 'application/json' },
           '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",' +
@@ -259,6 +268,45 @@ test('loadLayerFeatures() with options showExisting = true', function(assert) {
     });
 
     assert.ok(component, 'Create wfs-layer with showExisting = true');
+    done();
+  });
+});
+
+test('loadLayerFeatures() with options showExisting = false, call 2 times', function(assert) {
+  assert.expect(3);
+  var done = assert.async(3);
+  Ember.run(() => {
+    param.continueLoading = false;
+    let component = this.subject(param);
+
+    let store = app.__container__.lookup('service:store');
+    let mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+    let getmapApiStub = sinon.stub(component.get('mapApi'), 'getFromApi');
+    getmapApiStub.returns(mapModel);
+
+    let getPkFieldStub = sinon.stub(mapModel, '_getPkField');
+    getPkFieldStub.returns('primarykey');
+
+    options.continueLoading = false;
+    L.wfst(options, component.getFeaturesReadFormat()).once('load', (res) => {
+      let e = {
+        featureIds: null,
+        layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+        results: Ember.A()
+      };
+      component._leafletObject = res.target;
+
+      component.loadLayerFeatures(e).then((layers) => {
+        assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 1 times');
+        done();
+        component.loadLayerFeatures(e).then((layers) => {
+          assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 2 times');
+          done();
+        });
+      });
+    });
+
+    assert.ok(component, 'Create wfs-layer with showExisting = false');
     done();
   });
 });
