@@ -814,10 +814,10 @@ export default BaseVectorLayer.extend({
                 loadIds.push(id);
               }
             });
-    
+
             return loadIds;
           };
-    
+
           let makeFilterEqOr = (loadedFeatures) => {
             if (loadedFeatures.length > 0) {
               let equals = Ember.A();
@@ -833,7 +833,7 @@ export default BaseVectorLayer.extend({
                 return new Query.ComplexPredicate(Query.Condition.Or, ...equals);
               }
             }
-    
+
             return null;
           };
 
@@ -957,7 +957,7 @@ export default BaseVectorLayer.extend({
         if (!Ember.isNone(leafletObject)) {
           let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
           let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
-          let notContinueLoad = leafletObject.options.showExisting === false && leafletObject.options.continueLoading === false
+          let notContinueLoad = leafletObject.options.showExisting === false && leafletObject.options.continueLoading === false;
           if (continueLoad && show && checkMapZoom(leafletObject)) {
             let bounds = leafletMap.getBounds();
             if (!Ember.isNone(leafletObject.showLayerObjects)) {
