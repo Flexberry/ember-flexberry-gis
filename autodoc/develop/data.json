@@ -12063,7 +12063,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 809,
+            "line": 825,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -12083,7 +12083,7 @@
         },
         {
             "file": "addon/components/layers/odata-vector-layer.js",
-            "line": 873,
+            "line": 889,
             "description": "Initializes DOM-related component's properties.",
             "class": "ODataVectorLayerComponent",
             "module": "ember-flexberry-gis"
@@ -12458,7 +12458,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 462,
+            "line": 477,
             "description": "Handles 'flexberry-map:getLayerFeatures' event of leaflet map.",
             "itemtype": "method",
             "name": "getLayerFeatures",
@@ -12478,7 +12478,7 @@
         },
         {
             "file": "addon/components/layers/wfs-layer.js",
-            "line": 527,
+            "line": 542,
             "description": "Initializes DOM-related component's properties.",
             "class": "WfsLayerComponent",
             "module": "ember-flexberry-gis"
@@ -42984,7 +42984,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 561,
+            "line": 552,
             "description": "Get object id by object and layer.",
             "itemtype": "method",
             "name": "_getLayerFeatureId",
@@ -43009,7 +43009,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 582,
+            "line": 573,
             "description": "Determine the visibility of the specified objects by id for the layer.",
             "itemtype": "method",
             "name": "_setVisibilityObjects",
@@ -43037,7 +43037,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 649,
+            "line": 640,
             "description": "To copy Object from Source layer to Destination.",
             "itemtype": "method",
             "name": "copyObject",
@@ -43062,7 +43062,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 704,
+            "line": 695,
             "description": "Calculate the area of intersection between object A and object B.",
             "itemtype": "method",
             "name": "getIntersectionArea",
@@ -43102,7 +43102,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 752,
+            "line": 743,
             "description": "Cleans the service layer.",
             "itemtype": "method",
             "name": "clearServiceLayer",
@@ -43114,7 +43114,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 762,
+            "line": 753,
             "description": "Create image for layer object.",
             "itemtype": "method",
             "name": "getSnapShot",
@@ -43134,7 +43134,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 881,
+            "line": 872,
             "description": "Download image for layer object.",
             "itemtype": "method",
             "name": "downloadSnapShot",
@@ -43154,7 +43154,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 918,
+            "line": 909,
             "description": "Get the object rhumb.",
             "itemtype": "method",
             "name": "getRhumb",
@@ -43179,7 +43179,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1018,
+            "line": 1009,
             "description": "Add a layer to the group.",
             "itemtype": "method",
             "name": "layerToGroup",
@@ -43203,7 +43203,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1040,
+            "line": 1031,
             "description": "Edit object layer.",
             "itemtype": "method",
             "name": "editLayerObject",
@@ -43238,7 +43238,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1098,
+            "line": 1089,
             "description": "Upload file.",
             "itemtype": "method",
             "name": "uploadFile",
@@ -43258,7 +43258,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1128,
+            "line": 1119,
             "description": "Convert coordinates of object to wgs84, or other crsName.",
             "itemtype": "method",
             "name": "convertObjectCoordinates",
@@ -43280,7 +43280,7 @@
         },
         {
             "file": "addon/mixins/flexberry-map-model-api.js",
-            "line": 1227,
+            "line": 1218,
             "description": "Get coordinates point.",
             "itemtype": "method",
             "name": "getCoordPoint",
@@ -46321,7 +46321,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/odata-vector-layer.js:809"
+            "line": " addon/components/layers/odata-vector-layer.js:825"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -46345,7 +46345,7 @@
         },
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " addon/components/layers/wfs-layer.js:462"
+            "line": " addon/components/layers/wfs-layer.js:477"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -46637,11 +46637,11 @@
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:1018"
+            "line": " addon/mixins/flexberry-map-model-api.js:1009"
         },
         {
             "message": "replacing incorrect tag: parm with param",
-            "line": " addon/mixins/flexberry-map-model-api.js:1018"
+            "line": " addon/mixins/flexberry-map-model-api.js:1009"
         },
         {
             "message": "replacing incorrect tag: returns with return",
@@ -46869,7 +46869,7 @@
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/odata-vector-layer.js:873"
+            "line": " addon/components/layers/odata-vector-layer.js:889"
         },
         {
             "message": "Missing item type\nPerforms 'getFeature' request to WFS-service related to layer.",
@@ -46877,7 +46877,7 @@
         },
         {
             "message": "Missing item type\nInitializes DOM-related component's properties.",
-            "line": " addon/components/layers/wfs-layer.js:527"
+            "line": " addon/components/layers/wfs-layer.js:542"
         },
         {
             "message": "Missing item type\nPerforms 'getFeatureInfo' request to WMS-service related to layer.",

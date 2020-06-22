@@ -947,15 +947,6 @@ export default Ember.Mixin.create({
             let showExisting = leafletObject.options.showExisting;
             let continueLoading = leafletObject.options.continueLoading;
             if (!showExisting &amp;&amp; !continueLoading) {
-              if (!Ember.isNone(leafletObject)) {
-                leafletObject.eachLayer((layerShape) =&gt; {
-                  if (leafletMap.hasLayer(layerShape)) {
-                    leafletMap.removeLayer(layerShape);
-                  }
-                });
-                leafletObject.clearLayers();
-              }
-
               this._getModelLayerFeature(id, null, true).then(() =&gt; {
                 layer.set(&#x27;visibility&#x27;, visibility);
               });

@@ -3745,6 +3745,10 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
       geoserverFake.autoRespond = true;
 
       geoserverFake.respondWith('POST', 'http://geoserverFake/geoserver/ows?', function (request) {
+        if (request.requestBody === '<wfs:GetFeature xmlns:wfs="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="application/json">' + '<wfs:Query typeName="les:povorottochkipoint32640" srsName="EPSG:3857"><ogc:Filter xmlns:ogc="http://www.opengis.net/ogc"><Not><Or>' + '<ogc:PropertyIsEqualTo matchCase="false"><ogc:PropertyName>primarykey</ogc:PropertyName><ogc:Literal>475adc5b-fee4-4e8c-bed0-93746a9f00f0' + '</ogc:Literal></ogc:PropertyIsEqualTo></Or></Not></ogc:Filter></wfs:Query></wfs:GetFeature>') {
+          request.respond(200, { 'Content-Type': 'application/json' }, '{"type":"FeatureCollection","features":[],"totalFeatures":0,"numberMatched":0,"numberReturned":0,"timeStamp":"2020-02-27T04:44:49.909Z",' + '"crs":null}');
+        }
+
         if (request.requestBody.indexOf('<wfs:GetFeature') !== -1) {
           request.respond(200, { 'Content-Type': 'application/json' }, '{"type":"FeatureCollection","features":[{"type":"Feature","id":"vydel_utverzhdeno_polygon.06350c71-ec5c-431e-a5ab-e423cf662128",' + '"geometry":{"type":"MultiPolygon","coordinates":[[[[6215353.89391635,8117916.10977998],[6215317.82640125,8117408.36954415],' + '[6215322.83577823,8116959.81224657],[6213934.34777038,8117228.98625252],[6213930.67422719,8117229.84351009],' + '[6214007.26203691,8117650.34021493],[6214045.44462228,8117860.38311881],[6214113.79478966,8118235.47443556],' + '[6214237.35942438,8118229.9015124],[6214247.82345653,8118288.63175866],[6215053.10865244,8118087.57903733],' + '[6215031.95794919,8118033.35145873],[6215042.3106618,8117957.47637766],[6215353.89391635,8117916.10977998]]]]},' + '"geometry_name":"shape","properties":' + '{"id":"000","lesnichestvo":"-","uchastkovoelesnichestvo":"-","nomerkvartala":"141","urochishe":null,"nomer":10,"ploshad":200,"kategoriyazemel":' + '"Эксплуатационные леса","preobladayushayaporoda":"Сосна","bonitet":"2","gruppavozrasta":"Молодняки I гр.","klassvozrasta":"1","klasstovarnosti":' + 'null,"area":373798.7024302,"length":null,"primarykey":"06350c71-ec5c-431e-a5ab-e423cf662128","createtime":null,"creator":null,' + '"edittime":null,"editor":null}}],"totalFeatures":1,"numberMatched":1,"numberReturned":1,"timeStamp":"2020-02-27T04:44:49.909Z",' + '"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::3857"}}}');
         }
@@ -3904,6 +3908,47 @@ define('dummy/tests/unit/components/layers/wfs-layer-test', ['exports', 'ember',
       });
 
       assert.ok(component, 'Create wfs-layer with showExisting = true');
+      done();
+    });
+  });
+
+  (0, _emberQunit.test)('loadLayerFeatures() with options showExisting = false, call 2 times', function (assert) {
+    var _this5 = this;
+
+    assert.expect(3);
+    var done = assert.async(3);
+    _ember['default'].run(function () {
+      param.continueLoading = false;
+      var component = _this5.subject(param);
+
+      var store = app.__container__.lookup('service:store');
+      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
+      getmapApiStub.returns(mapModel);
+
+      var getPkFieldStub = _sinon['default'].stub(mapModel, '_getPkField');
+      getPkFieldStub.returns('primarykey');
+
+      options.continueLoading = false;
+      L.wfst(options, component.getFeaturesReadFormat()).once('load', function (res) {
+        var e = {
+          featureIds: null,
+          layer: 'f34ea73d-9f00-4f02-b02d-675d459c972b',
+          results: _ember['default'].A()
+        };
+        component._leafletObject = res.target;
+
+        component.loadLayerFeatures(e).then(function (layers) {
+          assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 1 times');
+          done();
+          component.loadLayerFeatures(e).then(function (layers) {
+            assert.equal(layers.getLayers().length, 1, 'Load feature of layers with showExisting = false, 2 times');
+            done();
+          });
+        });
+      });
+
+      assert.ok(component, 'Create wfs-layer with showExisting = false');
       done();
     });
   });
