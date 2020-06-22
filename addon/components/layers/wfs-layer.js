@@ -415,36 +415,51 @@ export default BaseVectorLayer.extend({
       let leafletObject = this.get('_leafletObject');
       let featureIds = e.featureIds;
       if (!leafletObject.options.showExisting) {
-        let filter = null;
-        if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
+        let getLoadedFeatures = (featureIds) => {
           let loadIds = [];
           leafletObject.eachLayer((shape) => {
             const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), shape);
-
-            if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
+            if (!Ember.isNone(id) && ((Ember.isArray(featureIds) && !Ember.isNone(featureIds) && featureIds.indexOf(id) !== -1) || !loadIds.includes(id))) {
               loadIds.push(id);
             }
           });
+
+          return loadIds;
+        };
+
+        let makeFilterEqOr = (loadedFeatures) => {
+          if (loadedFeatures.length > 0) {
+            let equals = Ember.A();
+            loadedFeatures.forEach((id) => {
+              let pkField = this.get('mapApi').getFromApi('mapModel')._getPkField(this.get('layerModel'));
+              equals.pushObject(new L.Filter.EQ(pkField, id));
+            });
+
+            return new L.Filter.Or(...equals);
+          }
+
+          return null;
+        };
+
+        let filter = null;
+        if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {// load features by id
+          let loadIds = getLoadedFeatures(featureIds);
 
           if (loadIds.length !== featureIds.length) {
             let remainingFeat = featureIds.filter((item) => {
               return loadIds.indexOf(item) === -1;
             });
 
-            if (!Ember.isNone(remainingFeat)) {
-              let equals = Ember.A();
-              remainingFeat.forEach((id) => {
-                let pkField = this.get('mapApi').getFromApi('mapModel')._getPkField(this.get('layerModel'));
-                if (featureIds.includes(id)) {
-                  equals.pushObject(new L.Filter.EQ(pkField, id));
-                }
-              });
-
-              filter = new L.Filter.Or(...equals);
-            }
+            filter = makeFilterEqOr(remainingFeat);
           } else {
             resolve(leafletObject);
             return;
+          }
+        } else {// load objects that don't exist yet
+          let alreadyLoaded = getLoadedFeatures(null);
+          let filterEqOr = makeFilterEqOr(alreadyLoaded);
+          if (!Ember.isNone(filterEqOr)) {
+            filter = new L.Filter.Not(makeFilterEqOr(alreadyLoaded));
           }
         }
 
@@ -537,6 +552,7 @@ export default BaseVectorLayer.extend({
         if (!Ember.isNone(leafletObject)) {
           let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
           let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
+          let notContinueLoad = leafletObject.options.showExisting === false && leafletObject.options.continueLoading === false;
           if (continueLoad && show && checkMapZoom(leafletObject)) {
             let bounds = leafletMap.getBounds();
             if (!Ember.isNone(leafletObject.showLayerObjects)) {
@@ -577,6 +593,24 @@ export default BaseVectorLayer.extend({
             let filter = new L.Filter.And(newPart, loadedPart);
             leafletObject.loadFeatures(filter);
 
+            if (leafletObject.statusLoadLayer) {
+              leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) => {
+                leafletObject.once('load', () => {
+                  resolve();
+                }).once('error', (e) => {
+                  reject();
+                });
+              });
+            }
+          } else if (notContinueLoad && this.get('layerModel.visibility') && Ember.isNone(leafletObject.isLoaded)) {// loaded for not ContinueLoad
+            leafletObject.isLoaded = true;
+            let e = {
+              featureIds: null,
+              layer: this.get('layerModel.id'),
+              load: true,
+              results: Ember.A()
+            };
+            this.loadLayerFeatures(e);
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) => {
                 leafletObject.once('load', () => {
