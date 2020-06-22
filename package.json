@@ -20,6 +20,7 @@
     "node": ">= 0.10.0"
   },
   "devDependencies": {
+    "@terraformer/wkt": "2.0.7",
     "@turf/area": "^5.1.5",
     "@turf/boolean-contains": "^5.1.5",
     "@turf/boolean-equal": "^5.1.5",
@@ -73,16 +74,15 @@
     "ember-sinon": "0.5.0",
     "ember-try": "^0.2.2",
     "inflection": "1.10.0",
+    "jsts": "1.6.1",
+    "leaflet-side-by-side": "2.1.0",
     "loader.js": "^4.0.1",
     "moment": "2.24.0",
     "moment-timezone": "0.5.0",
     "node-uuid": "^1.4.7",
     "resolve": "1.11.0",
     "semantic-ui-ember": "git+https://github.com/Flexberry/Semantic-UI-Ember.git#version-0.9.3",
-    "ui-ember-slider": "0.5.0",
-    "leaflet-side-by-side": "2.1.0",
-    "jsts": "1.6.1",
-    "@terraformer/wkt": "2.0.7"
+    "ui-ember-slider": "0.5.0"
   },
   "dependencies": {
     "ember-cli-babel": "^5.1.6",
