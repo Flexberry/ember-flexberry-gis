@@ -707,16 +707,16 @@ export default Ember.Mixin.create({
     @param {String} layerAId First layer ID.
     @param {String} objectAId First object ID.
     @param {String} layerBId Second layer ID.
-    @param {Array} objectBId Array of object IDs in second layer.
+    @param {Array} objectBIds Array of object IDs in second layer.
     @param {Bool} showOnMap flag indicates if intersection area will be displayed on map.
     @return {Promise} If showOnMap = true, return objects, which show on map in serviceLayer, and area, else only area.
   */
-  getIntersectionArea(layerAId, objectAId, layerBId, objectBId, showOnMap) {
+  getIntersectionArea(layerAId, objectAId, layerBId, objectBIds, showOnMap) {
     return new Ember.RSVP.Promise((resolve, reject) => {
       let result = Ember.A();
       Ember.RSVP.all([
         this._getModelLayerFeature(layerAId, [objectAId]),
-        this._getModelLayerFeature(layerBId, objectBId)
+        this._getModelLayerFeature(layerBId, objectBIds)
       ]).then((res) => {
         let layerObjectA = res[0][1];
         let layerObjectB = res[1][1];
