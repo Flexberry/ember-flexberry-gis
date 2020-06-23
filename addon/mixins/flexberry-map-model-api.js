@@ -721,10 +721,10 @@ export default Ember.Mixin.create({
         let layerObjectA = res[0][1];
         let layerObjectB = res[1][1];
         let objA = res[0][2][0].feature;
+        let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
         let featuresB = res[1][2];
         featuresB.forEach((feat) => {
           let objB = feat.feature;
-          let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
           let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
           let intersectionRes = intersect.default(feature1, feature2);
           if (intersectionRes) {
