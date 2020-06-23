@@ -702,46 +702,55 @@ export default Ember.Mixin.create({
   },
 
   /**
-    Calculate the area of intersection between object A and object B.
+    Calculate the area of intersection between object A and objects in array B.
     @method getIntersectionArea
     @param {String} layerAId First layer ID.
     @param {String} objectAId First object ID.
     @param {String} layerBId Second layer ID.
-    @param {Array} objectBId Arrau object ID in second layer.
+    @param {Array} objectBId Array of object IDs in second layer.
     @param {Bool} showOnMap flag indicates if intersection area will be displayed on map.
-    @return {Promise} If showOnMap = true, return object, which show on map in serviceLayer, and area, else only area.
+    @return {Promise} If showOnMap = true, return objects, which show on map in serviceLayer, and area, else only area.
   */
   getIntersectionArea(layerAId, objectAId, layerBId, objectBId, showOnMap) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let result = {
-        object: null,
-        area: null
-      };
+      let result = Ember.A();
       Ember.RSVP.all([
         this._getModelLayerFeature(layerAId, [objectAId]),
         this._getModelLayerFeature(layerBId, objectBId)
       ]).then((res) => {
-        let objA = res[0][2][0].feature;
-        let objB = res[1][2][0].feature;
         let layerObjectA = res[0][1];
         let layerObjectB = res[1][1];
-        let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
-        let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
-        let intersectionRes = intersect.default(feature1, feature2);
-        if (intersectionRes) {
-          if (showOnMap) {
-            let obj = L.geoJSON(intersectionRes, {
-              style: { color: 'green' }
-            });
-            let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
-            obj.addTo(serviceLayer);
-            result.object = obj;
-          }
+        let objA = res[0][2][0].feature;
+        let featuresB = res[1][2];
+        featuresB.forEach((feat) => {
+          let objB = feat.feature;
+          let feature1 = layerObjectA.options.crs.code === 'EPSG:4326' ? objA : this._convertObjectCoordinates(layerObjectA.options.crs.code, objA);
+          let feature2 = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
+          let intersectionRes = intersect.default(feature1, feature2);
+          if (intersectionRes) {
+            let object = {
+              id: objB.properties.primarykey,
+              area: area(intersectionRes)
+            };
+            if (showOnMap) {
+              let obj = L.geoJSON(intersectionRes, {
+                style: { color: 'green' }
+              });
+              let serviceLayer = this.get('mapApi').getFromApi('serviceLayer');
+              obj.addTo(serviceLayer);
+              object.objectIntesect = obj;
+            }
 
-          result.area = area(intersectionRes);
+            result.pushObject(object);
+          } else {
+            result.pushObject({
+              id: objB.properties.primarykey,
+              area: 'Intersection not found'
+            });
+          }
+        });
+        if (!Ember.isNone(result)) {
           resolve(result);
-        } else {
-          reject('Intersection not found');
         }
       }).catch((e) => {
         reject(e);
