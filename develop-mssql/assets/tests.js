@@ -5238,6 +5238,7 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['export
     _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
       resolve([null, objWithCrs, objA]);
     }));
+
     _getModelLayerFeatureStub.withArgs('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['45df35c7-f292-44f8-b328-5fd4be739233']).returns(new _ember['default'].RSVP.Promise(function (resolve, reject) {
       resolve([null, objWithCrs, objB]);
     }));
@@ -5245,21 +5246,15 @@ define('dummy/tests/unit/models/new-platform-flexberry-g-i-s-map-test', ['export
       resolve([null, objWithCrs, objC]);
     }));
 
-    map.getIntersectionArea('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233', 'f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452').then(function (e) {
-      assert.equal(e.area, 887494.3528438057, 'Intersect');
+    map.getIntersectionArea('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233', 'f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).then(function (e) {
+      assert.equal(e[0].area, 887494.3528438057, 'Intersect');
     });
 
-    map.getIntersectionArea('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '79fd98d0-52ae-44ae-b616-971768196ad8', '63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', 'd633ea1d-eb32-423f-8663-a38abc7ba094').then(function (e) {
-      assert.equal(e.area, 0, 'Not area intersect');
+    map.getIntersectionArea('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '79fd98d0-52ae-44ae-b616-971768196ad8', '63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', ['d633ea1d-eb32-423f-8663-a38abc7ba094']).then(function (e) {
+      assert.equal(e[0].area, 'Intersection not found', 'Not area intersect');
     })['catch'](function (e) {
       assert.ok(e, 'Not intersect');
     });
-
-    /* Надо как-то подмешать mapApi.getFromApi('serviceLayer')
-    map.getIntersectionArea('63b3f6fb-3d4c-4acc-ab93-1b4fa31f9b0e', '45df35c7-f292-44f8-b328-5fd4be739233',
-    'f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452', true).then((e) => {
-      assert.equal(e.area, 887494.3528438057, 'Intersect and show on map');
-    });*/
   });
 
   (0, _emberQunit.test)('getRhumb', function (assert) {
