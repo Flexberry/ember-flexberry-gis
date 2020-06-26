@@ -107,10 +107,12 @@ export default Ember.Mixin.create({
 
         if (layer.state === state.insert) {
           leafletObject.removeLayer(layer);
-          let id = editTools.featuresLayer.getLayerId(layer);
-          let editLayer = editTools.featuresLayer.getLayer(id).editor.editLayer;
-          editTools.editLayer.removeLayer(editLayer);
-          editTools.featuresLayer.removeLayer(layer);
+          if (editTools.featuresLayer.getLayers().length !== 0) {
+            let id = editTools.featuresLayer.getLayerId(layer);
+            let editLayer = editTools.featuresLayer.getLayer(id).editor.editLayer;
+            editTools.editLayer.removeLayer(editLayer);
+            editTools.featuresLayer.removeLayer(layer);
+          }
         } else if (layer.state === state.update) {
           let editLayer = layer.editor.editLayer;
           editTools.editLayer.removeLayer(editLayer);
@@ -144,43 +146,49 @@ export default Ember.Mixin.create({
     @returns {Object} Layer object
   */
   startNewObject(layerId, properties) {
-    let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
-    let editTools = this._getEditTools();
-    let newLayer;
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      try {
+        let [layerModel, leafletObject] = this._getModelLeafletObject(layerId);
+        let editTools = this._getEditTools();
+        let newLayer;
 
-    let finishDraw = () => {
-      editTools.off('editable:drawing:end', finishDraw, this);
-      editTools.stopDrawing();
-      let defaultProperties = layerModel.get('settingsAsObject.defaultProperties') || {};
-      newLayer.feature = { properties: Ember.merge(defaultProperties, properties) };
-      newLayer.remove();
-      leafletObject.addLayer(newLayer);
-    };
+        let finishDraw = () => {
+          editTools.off('editable:drawing:end', finishDraw, this);
+          editTools.stopDrawing();
+          let defaultProperties = layerModel.get('settingsAsObject.defaultProperties') || {};
+          newLayer.feature = { type: 'Feature', properties: Ember.merge(defaultProperties, properties) };
+          newLayer.remove();
+          leafletObject.addLayer(newLayer);
+          resolve(newLayer);
+        };
 
-    editTools.on('editable:drawing:end', finishDraw, this);
+        editTools.on('editable:drawing:end', finishDraw, this);
 
-    let leafletMap = this.get('mapApi').getFromApi('leafletMap');
-    leafletMap.fire('flexberry-map:switchToDefaultMapTool');
-    if (editTools.drawing()) {
-      editTools.stopDrawing();
-    }
+        let leafletMap = this.get('mapApi').getFromApi('leafletMap');
+        leafletMap.fire('flexberry-map:switchToDefaultMapTool');
+        if (editTools.drawing()) {
+          editTools.stopDrawing();
+        }
 
-    switch (layerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
-      case 'polygon':
-        newLayer = editTools.startPolygon();
-        break;
-      case 'polyline':
-        newLayer = editTools.startPolyline();
-        break;
-      case 'marker':
-        newLayer = editTools.startMarker();
-        break;
-      default:
-        throw 'Unknown layer type: ' + layerModel.get('settingsAsObject.typeGeometry');
-    }
+        switch (layerModel.get('settingsAsObject.typeGeometry').toLowerCase()) {
+          case 'polygon':
+            newLayer = editTools.startPolygon();
+            break;
+          case 'polyline':
+            newLayer = editTools.startPolyline();
+            break;
+          case 'marker':
+            newLayer = editTools.startMarker();
+            break;
+          default:
+            throw 'Unknown layer type: ' + layerModel.get('settingsAsObject.typeGeometry');
+        }
 
-    newLayer.layerId = layerId;
-    return newLayer;
+        newLayer.layerId = layerId;
+      } catch (error) {
+        reject(error);
+      }
+    });
   },
 
   /**

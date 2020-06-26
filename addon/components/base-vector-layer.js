@@ -549,6 +549,29 @@ export default BaseLayer.extend({
   },
 
   /**
+    Observes and handles changes in {{#crossLink "BaseLayerComponent/visibility:property"}}'visibility' property{{/crossLink}}.
+    Switches layer's visibility.
+
+    @method visibilityDidChange
+    @private
+  */
+  _zoomMinDidChange: Ember.observer('labelSettings.scaleRange.minScaleRange', function () {
+    let minZoom = this.get('labelSettings.scaleRange.minScaleRange');
+    let labelsLayer = this.get('_labelsLayer');
+    if (Ember.isNone(labelsLayer) && Ember.isNone(minZoom)) {
+      labelsLayer.minZoom = minZoom;
+    }
+  }),
+
+  _zoomMaxDidChange: Ember.observer('labelSettings.scaleRange.maxScaleRange', function () {
+    let maxZoom = this.get('labelSettings.scaleRange.maxScaleRange');
+    let labelsLayer = this.get('_labelsLayer');
+    if (Ember.isNone(labelsLayer) && Ember.isNone(maxZoom)) {
+      labelsLayer.maxZoom = maxZoom;
+    }
+  }),
+
+  /**
     Create array of strings and feature properies.
 
     @method _parseString
@@ -606,11 +629,6 @@ export default BaseLayer.extend({
           isProp = false;
         });
 
-        const layerLabelCallback = this.get('mapApi').getFromApi('layerLabelCallback');
-        if (typeof layerLabelCallback === 'function') {
-          label = layerLabelCallback(layer, label);
-        }
-
         this._createLabel(label, layer, style, labelsLayer);
       }
     });
@@ -629,9 +647,9 @@ export default BaseLayer.extend({
     let lType = layer.toGeoJSON().geometry.type;
 
     let latlng = null;
-    let ctx = layer._renderer ? layer._renderer._ctx : document.getElementsByTagName('canvas')[0].getContext('2d');
-    let widthText = ctx ? ctx.measureText(text).width : 100;
-    let iconWidth = widthText;
+    /*let ctx = layer._renderer ? layer._renderer._ctx : document.getElementsByTagName('canvas')[0].getContext('2d');
+    let widthText = ctx ? ctx.measureText(text).width : 100;*/
+    let iconWidth = 10;//widthText;
 
     let iconHeight = 40;
     let positionPoint = '';
@@ -643,11 +661,14 @@ export default BaseLayer.extend({
 
       try {
         let centroidJsts = objJsts.isValid() ? objJsts.getInteriorPoint() : objJsts.getCentroid();
-        if (!objJsts.isValid()) console.log(layer.toGeoJSON().id);
+        if (!objJsts.isValid()) {
+           console.log(layer.toGeoJSON().id);
+        }
+
         let geojsonWriter = new jsts.io.GeoJSONWriter();
         let centroid = geojsonWriter.write(centroidJsts);
         latlng = L.latLng(centroid.coordinates[1], centroid.coordinates[0]);
-        html = '<p style="' + style + '">' + text + '</p>';
+        html = '<div style="' + style + '">' + text + '</div>';
       }
       catch (e) {
         console.error(e.message + ': ' + layer.toGeoJSON().id);
@@ -657,7 +678,7 @@ export default BaseLayer.extend({
     if (lType.indexOf('Point') !== -1) {
       latlng = layer.getLatLng();
       positionPoint = this._setPositionPoint(iconWidth);
-      html = '<p style="' + style + positionPoint + '">' + text + '</p>';
+      html = '<div style="' + style + positionPoint + '">' + text + '</div>';
     }
 
     if (lType.indexOf('LineString') !== -1) {
@@ -673,7 +694,14 @@ export default BaseLayer.extend({
       html = Ember.$(layer._svgConteiner).html();
     }
 
-    if (!latlng) return;
+    const layerLabelCallback = this.get('mapApi').getFromApi('layerLabelCallback');
+    if (typeof layerLabelCallback === 'function') {
+      html = layerLabelCallback(layer, text);
+    }
+
+    if (!latlng) {
+      return;
+    }
 
     let label = L.marker(latlng, {
       icon: L.divIcon({
@@ -708,7 +736,7 @@ export default BaseLayer.extend({
     let shiftVerTop = '-60px;';
     let shiftVerBottom = '30px;';
 
-    switch (this.get('value.location.locationPoint')) {
+    switch (this.get('labelSettings.location.locationPoint')) {
       case 'overLeft':
         stylePoint = 'margin-right: ' + shiftHor + 'px; margin-top: ' + shiftVerTop;
         break;

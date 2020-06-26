@@ -412,7 +412,7 @@ let FlexberryMapComponent = Ember.Component.extend(
       @method localeDidChange
       @private
     */
-    _localeDidChange: Ember.observer('i18n.locale', function() {
+    _localeDidChange: Ember.observer('i18n.locale', function () {
       let i18n = this.get('i18n');
       let $leafletContainer = this.get('_$leafletContainer');
 
@@ -470,22 +470,22 @@ let FlexberryMapComponent = Ember.Component.extend(
 
       const mapApi = this.get('mapApi');
       if (Ember.isNone(mapApi.getFromApi('runQuery'))) {
-        mapApi.addToApi('runQuery',  this._runQuery.bind(this));
+        mapApi.addToApi('runQuery', this._runQuery.bind(this));
         this.set('_hasQueryApi', true);
       }
 
       if (Ember.isNone(mapApi.getFromApi('createObject'))) {
-        mapApi.addToApi('createObject',  this._createObject.bind(this));
+        mapApi.addToApi('createObject', this._createObject.bind(this));
         this.set('_hasCreateObjectApi', true);
       }
 
       if (Ember.isNone(mapApi.getFromApi('leafletMap'))) {
-        mapApi.addToApi('leafletMap',  leafletMap);
+        mapApi.addToApi('leafletMap', leafletMap);
         this.set('_hasLeafletMap', true);
       }
 
       if (Ember.isNone(mapApi.getFromApi('serviceLayer'))) {
-        mapApi.addToApi('serviceLayer',  this.get('serviceLayer'));
+        mapApi.addToApi('serviceLayer', this.get('serviceLayer'));
         this.set('_hasServiceLayer', true);
       }
 

@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import BaseVectorLayer from '../base-vector-layer';
 import { checkMapZoomLayer, checkMapZoom } from '../../utils/check-zoom';
+import jsts from 'npm:jsts';
 
 /**
   WFS layer component for leaflet map.
@@ -193,7 +194,7 @@ export default BaseVectorLayer.extend({
             let bounds = leafletMap.getBounds();
             let filter = new L.Filter.BBox(options.geometryField, bounds, options.crs);
             wfsLayer.loadFeatures(filter);
-            wfsLayer.isLoadBounds = bounds;
+            wfsLayer.isLoadBounds = L.rectangle(bounds);
           } else if (!options.showExisting && !options.continueLoading && visibility) {
             wfsLayer.loadFeatures(options.filter);
           }
@@ -205,7 +206,7 @@ export default BaseVectorLayer.extend({
             let thisPane = this.get('_pane');
             let pane = leafletMap.getPane(thisPane);
             if (!pane || Ember.isNone(pane)) {
-              leafletMap.createPane(thisPane);
+              this._createPane(thisPane);
               wfsLayer.options.pane = thisPane;
               wfsLayer.options.renderer = this.get('_renderer');
               this._setLayerZIndex();
@@ -415,36 +416,51 @@ export default BaseVectorLayer.extend({
       let leafletObject = this.get('_leafletObject');
       let featureIds = e.featureIds;
       if (!leafletObject.options.showExisting) {
-        let filter = null;
-        if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {
+        let getLoadedFeatures = (featureIds) => {
           let loadIds = [];
           leafletObject.eachLayer((shape) => {
             const id = this.get('mapApi').getFromApi('mapModel')._getLayerFeatureId(this.get('layerModel'), shape);
-
-            if (!Ember.isNone(id) && featureIds.indexOf(id) !== -1) {
+            if (!Ember.isNone(id) && ((Ember.isArray(featureIds) && !Ember.isNone(featureIds) && featureIds.indexOf(id) !== -1) || !loadIds.includes(id))) {
               loadIds.push(id);
             }
           });
+
+          return loadIds;
+        };
+
+        let makeFilterEqOr = (loadedFeatures) => {
+          if (loadedFeatures.length > 0) {
+            let equals = Ember.A();
+            loadedFeatures.forEach((id) => {
+              let pkField = this.get('mapApi').getFromApi('mapModel')._getPkField(this.get('layerModel'));
+              equals.pushObject(new L.Filter.EQ(pkField, id));
+            });
+
+            return new L.Filter.Or(...equals);
+          }
+
+          return null;
+        };
+
+        let filter = null;
+        if (Ember.isArray(featureIds) && !Ember.isNone(featureIds)) {// load features by id
+          let loadIds = getLoadedFeatures(featureIds);
 
           if (loadIds.length !== featureIds.length) {
             let remainingFeat = featureIds.filter((item) => {
               return loadIds.indexOf(item) === -1;
             });
 
-            if (!Ember.isNone(remainingFeat)) {
-              let equals = Ember.A();
-              remainingFeat.forEach((id) => {
-                let pkField = this.get('mapApi').getFromApi('mapModel')._getPkField(this.get('layerModel'));
-                if (featureIds.includes(id)) {
-                  equals.pushObject(new L.Filter.EQ(pkField, id));
-                }
-              });
-
-              filter = new L.Filter.Or(...equals);
-            }
+            filter = makeFilterEqOr(remainingFeat);
           } else {
             resolve(leafletObject);
             return;
+          }
+        } else {// load objects that don't exist yet
+          let alreadyLoaded = getLoadedFeatures(null);
+          let filterEqOr = makeFilterEqOr(alreadyLoaded);
+          if (!Ember.isNone(filterEqOr)) {
+            filter = new L.Filter.Not(makeFilterEqOr(alreadyLoaded));
           }
         }
 
@@ -537,17 +553,26 @@ export default BaseVectorLayer.extend({
         if (!Ember.isNone(leafletObject)) {
           let show = this.get('layerModel.visibility') || (!Ember.isNone(leafletObject.showLayerObjects) && leafletObject.showLayerObjects);
           let continueLoad = !leafletObject.options.showExisting && leafletObject.options.continueLoading;
+          let notContinueLoad = leafletObject.options.showExisting === false && leafletObject.options.continueLoading === false;
           if (continueLoad && show && checkMapZoom(leafletObject)) {
             let bounds = leafletMap.getBounds();
             if (!Ember.isNone(leafletObject.showLayerObjects)) {
               leafletObject.showLayerObjects = false;
             }
 
+            let geojsonReader = new jsts.io.GeoJSONReader();
+            if (loadedBounds instanceof L.LatLngBounds) {
+              loadedBounds = L.rectangle(loadedBounds);
+            }
+
+            let loadedBoundsJsts = geojsonReader.read(loadedBounds.toGeoJSON().geometry);
+            let boundsJsts = geojsonReader.read(L.rectangle(bounds).toGeoJSON().geometry);
+
             if (Ember.isNone(leafletObject.isLoadBounds)) {
               let filter = new L.Filter.BBox(leafletObject.options.geometryField, bounds, leafletObject.options.crs);
               leafletObject.loadFeatures(filter);
-              leafletObject.isLoadBounds = bounds;
-              loadedBounds = bounds;
+              leafletObject.isLoadBounds = L.rectangle(bounds);
+              loadedBounds = L.rectangle(bounds);
               if (leafletObject.statusLoadLayer) {
                 leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) => {
                   leafletObject.once('load', () => {
@@ -559,7 +584,7 @@ export default BaseVectorLayer.extend({
               }
 
               return;
-            } else if (loadedBounds.contains(bounds)) {
+            } else if (loadedBoundsJsts.contains(boundsJsts)) {
               if (leafletObject.statusLoadLayer) {
                 leafletObject.promiseLoadLayer = Ember.RSVP.resolve();
               }
@@ -567,16 +592,34 @@ export default BaseVectorLayer.extend({
               return;
             }
 
-            let oldRectangle = L.rectangle([loadedBounds.getSouthEast(), loadedBounds.getNorthWest()]);
-            let loadedPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, oldRectangle, leafletObject.options.crs));
+            let oldPart = new L.Filter.Not(new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs));
 
-            loadedBounds.extend(bounds);
-            let newRectangle = L.rectangle([loadedBounds.getSouthEast(), loadedBounds.getNorthWest()]);
-            let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, newRectangle, leafletObject.options.crs);
+            let unionJsts = loadedBoundsJsts.union(boundsJsts);
+            let geojsonWriter = new jsts.io.GeoJSONWriter();
+            loadedBounds = L.geoJSON(geojsonWriter.write(unionJsts)).getLayers()[0];
 
-            let filter = new L.Filter.And(newPart, loadedPart);
+            let newPart = new L.Filter.Intersects(leafletObject.options.geometryField, loadedBounds, leafletObject.options.crs);
+            let filter = new L.Filter.And(newPart, oldPart);
             leafletObject.loadFeatures(filter);
 
+            if (leafletObject.statusLoadLayer) {
+              leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) => {
+                leafletObject.once('load', () => {
+                  resolve();
+                }).once('error', (e) => {
+                  reject();
+                });
+              });
+            }
+          } else if (notContinueLoad && this.get('layerModel.visibility') && Ember.isNone(leafletObject.isLoaded)) {// loaded for not ContinueLoad
+            leafletObject.isLoaded = true;
+            let e = {
+              featureIds: null,
+              layer: this.get('layerModel.id'),
+              load: true,
+              results: Ember.A()
+            };
+            this.loadLayerFeatures(e);
             if (leafletObject.statusLoadLayer) {
               leafletObject.promiseLoadLayer = new Ember.RSVP.Promise((resolve, reject) => {
                 leafletObject.once('load', () => {
