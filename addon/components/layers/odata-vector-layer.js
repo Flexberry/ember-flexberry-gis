@@ -340,11 +340,74 @@ export default BaseVectorLayer.extend({
     @param {Object[]} results Objects describing identification results.
   **/
   identify(e) {
-    let geometryField = this.get('geometryField') || 'geometry';
-    let pred = new Query.GeometryPredicate(geometryField);
-    let predicate = pred.intersects(this.geomToEWKT(e.polygonLayer));
-    let featuresPromise = this._getFeature(predicate);
-    return featuresPromise;
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let geometryField = this.get('geometryField') || 'geometry';
+      let table;
+      Ember.$.ajax({
+        url: 'assets/flexberry/models/' + this.get('modelName')+ '.json',
+        async: false,
+        success: function (data) {
+          table = data.className;
+        }
+      });
+      let geom = this.geomToEWKT(e.polygonLayer);
+      let config = Ember.getOwner(this).resolveRegistration('config:environment');
+      let _this = this;
+      const adapter = this.get('store').adapterFor('application');
+      adapter.callEmberOdataAction('GetIntersectionAndArea', {
+        geom: geom,
+        table: table }, null, null, _this.get('store'), table, (data) => {
+          let features = Ember.A();
+          data.forEach(res => {
+            console.log(res);
+          });
+          resolve(features);
+        },
+        () => {
+          console.log("This is a failCallback function");
+        }, null);
+      /*adapter.callAction({
+        actionName: 'GetIntersectionAndArea',
+        data: {
+          geom: geom,
+          table: table },
+        successCallback: (data) => {
+          let features = Ember.A();
+          data.forEach(res => {
+            console.log(res);
+          });
+          resolve(features);
+        },
+        failCallback: () => {
+          console.log("This is a failCallback function");
+        },
+        store: _this.get('store'),
+        modelName: table
+      });*/
+      /*Ember.$.ajax({
+        url: `${config.APP.backendUrls.getIntersectionAndArea}`,
+        dataType: 'json',
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({
+          geom: geom,
+          table: table
+        }),
+        success: function (data) {
+          let features = Ember.A();
+          data.forEach(res => {
+            console.log(res);
+          });
+          //features.push(feat.feature);
+          resolve(features);
+
+        }
+      });*/
+      //let pred = new Query.GeometryPredicate(geometryField);
+      //let predicate = pred.intersects(this.geomToEWKT(e.polygonLayer));
+      //let featuresPromise = this._getFeature(predicate);
+      //return featuresPromise;
+    });
   },
 
   /**
