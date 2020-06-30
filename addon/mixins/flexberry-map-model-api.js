@@ -267,21 +267,6 @@ export default Ember.Mixin.create({
 
         // Wait for all promises to be settled & call '_finishIdentification' hook.
         Ember.RSVP.allSettled(promises).then(() => {
-          e.results.forEach(res => {
-            let layerType = this._getTypeLayer(res.layerModel);
-            if (layerType instanceof VectorLayer && !(layerType instanceof OdataLayer)) {
-              res.features._result.forEach(feature => {
-                let featureA = e.polygonLayer.toGeoJSON();
-                let objB = feature;
-                let layerObjectB = feature.leafletLayer;
-                let featureB = layerObjectB.options.crs.code === 'EPSG:4326' ? objB : this._convertObjectCoordinates(layerObjectB.options.crs.code, objB);
-                let intersectionRes = intersect.default(featureB, featureA);
-                if (intersectionRes) {
-                  feature.intesectionArea = area(intersectionRes);
-                }
-              });
-            }
-          });
           resolve(e.results);
         });
       }
