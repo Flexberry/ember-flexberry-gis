@@ -356,7 +356,7 @@ export default BaseVectorLayer.extend({
       let geometryField = this.get('geometryField') || 'geometry';
       let table;
       Ember.$.ajax({
-        url: 'assets/flexberry/models/' + this.get('modelName')+ '.json',
+        url: 'assets/flexberry/models/' + this.get('modelName') + '.json',
         async: false,
         success: function (data) {
           table = data.className;
@@ -368,19 +368,20 @@ export default BaseVectorLayer.extend({
       let token;
       let headers;
       if (!Ember.isNone(session)) {
-         token = session.get('data.authenticated.token') || session.get('data.authenticated.access_token');
+        token = session.get('data.authenticated.token') || session.get('data.authenticated.access_token');
       }
 
       if (!Ember.isNone(token)) {
-        headers = {Authorization: 'Bearer ' + token};
+        headers = { Authorization: 'Bearer ' + token };
       }
+
       let _this = this;
       Ember.$.ajax({
         url: `${config.APP.backendUrls.getIntersectionAndArea}`,
         dataType: 'json',
         type: 'POST',
         headers: headers,
-        contentType: "application/json; charset=utf-8",
+        contentType: 'application/json; charset=utf-8',
         data: JSON.stringify({
           geom: geom,
           table: table
