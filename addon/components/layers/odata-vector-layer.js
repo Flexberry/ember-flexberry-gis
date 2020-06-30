@@ -26,8 +26,6 @@ export default BaseVectorLayer.extend({
 
   store: Ember.inject.service(),
 
-  session: Ember.inject.service('session'),
-
   postfixForEditForm: '-e',
 
   /**
@@ -353,55 +351,38 @@ export default BaseVectorLayer.extend({
   **/
   identify(e) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      let geometryField = this.get('geometryField') || 'geometry';
-      let table;
       Ember.$.ajax({
         url: 'assets/flexberry/models/' + this.get('modelName') + '.json',
-        async: false,
-        success: function (data) {
-          table = data.className;
-        }
-      });
-      let geom = this.geomToEWKT(e.polygonLayer, true);
-      let config = Ember.getOwner(this).resolveRegistration('config:environment');
-      let session = this.get('session');
-      let token;
-      let headers;
-      if (!Ember.isNone(session)) {
-        token = session.get('data.authenticated.token') || session.get('data.authenticated.access_token');
-      }
-
-      if (!Ember.isNone(token)) {
-        headers = { Authorization: 'Bearer ' + token };
-      }
-
-      let _this = this;
-      Ember.$.ajax({
-        url: `${config.APP.backendUrls.getIntersectionAndArea}`,
-        dataType: 'json',
-        type: 'POST',
-        headers: headers,
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({
-          geom: geom,
-          table: table
-        }),
-        success: function (data) {
-          let features = Ember.A();
-          let layer = L.featureGroup();
-          data.forEach(res => {
-            let obj = res.dataObject;
-            obj[Object.keys(res)[2]] = res.shape;
-            let model = Ember.Object.create(obj);
-            let feat = _this.addLayerObject(layer, model, false);
-            feat.feature.intesectionArea = res.area;
-            let primarykey = feat.feature.properties.__PrimaryKey.Guid;
-            feat.feature.id = _this.get('modelName') + '.' + primarykey;
-            feat.feature.properties.primarykey = primarykey;
-            features.push(feat.feature);
-          });
-          resolve(features);
-        }
+      }).then(m => {
+        let geom = this.geomToEWKT(e.polygonLayer, true);
+        let config = Ember.getOwner(this).resolveRegistration('config:environment');
+        let _this = this;
+        Ember.$.ajax({
+          url: `${config.APP.backendUrls.getIntersectionAndArea}`,
+          dataType: 'json',
+          type: 'POST',
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify({
+            geom: geom,
+            table: m.className
+          }),
+          success: function (data) {
+            let features = Ember.A();
+            let layer = L.featureGroup();
+            data.forEach(res => {
+              let obj = res.dataObject;
+              obj[Object.keys(res)[2]] = res.shape;
+              let model = Ember.Object.create(obj);
+              let feat = _this.addLayerObject(layer, model, false);
+              feat.feature.intesectionArea = res.area;
+              let primarykey = feat.feature.properties.__PrimaryKey.Guid;
+              feat.feature.id = _this.get('modelName') + '.' + primarykey;
+              feat.feature.properties.primarykey = primarykey;
+              features.push(feat.feature);
+            });
+            resolve(features);
+          }
+        });
       });
     });
   },
