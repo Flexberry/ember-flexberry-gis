@@ -6,6 +6,7 @@ import Ember from 'ember';
 import BaseVectorLayer from '../base-vector-layer';
 import { checkMapZoomLayer, checkMapZoom } from '../../utils/check-zoom';
 import featureWithAreaIntersect from '../../utils/feature-with-area-intersect';
+import jsts from 'npm:jsts';
 
 /**
   WFS layer component for leaflet map.
