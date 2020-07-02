@@ -284,3 +284,25 @@ test('getDistanceBetweenObjects', function(assert) {
     assert.equal(e, 536.4476316355142, 'distance');
   });
 });
+
+test('getLayerObjectOptions', function(assert) {
+  let map = this.subject();
+  let _getModelLayerFeatureStub = sinon.stub(map, '_getModelLayerFeature');
+  _getModelLayerFeatureStub.withArgs('f34ea73d-9f00-4f02-b02d-675d459c972b', ['0017782c-6f34-46b5-ac77-c0a65366c452']).returns(
+    new Ember.RSVP.Promise((resolve, reject) => {
+      resolve([null, objWithCrs, objA]);
+    })
+  );
+  let expectedResult = {
+    area: 9774551.681201326,
+	geometry: [[[[55.78205,58.73614], [55.85209,58.73935], [55.8569,58.71903], [55.78205,58.71476], [55.78205,58.73614]]]],
+    id: '141-17',
+    lesnichestvo: 'Закамское',
+    nomerkvartala: '141',
+    primarykey: '0017782c-6f34-46b5-ac77-c0a65366c452',
+    uchastkovoelesnichestvo: 'Чермозское(Чермозское)'
+  };
+  map.getLayerObjectOptions('f34ea73d-9f00-4f02-b02d-675d459c972b', '0017782c-6f34-46b5-ac77-c0a65366c452').then((e) => {
+    assert.deepEqual(e, expectedResult);
+  });
+});
