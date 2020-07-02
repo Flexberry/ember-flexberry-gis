@@ -208,7 +208,7 @@ export default BaseVectorLayer.extend({
     @param {Object} geometry
   */
   _setLayerProperties(layer, model, geometry) {
-    const modelProj = model.constructor.projections.get(this.get('projectionName'));
+    const modelProj = this.get('projectionName');
     layer.options.crs = this.get('crs');
     layer.model = model;
     layer.modelProj = modelProj;
@@ -306,29 +306,39 @@ export default BaseVectorLayer.extend({
 
     @method geomToEWKT
     @param {Object} layer layer
+    @param {Boolean} CRS4326
     @returns {String} geometry as EWKT format.
   */
-  geomToEWKT(layer) {
-    let coordInCrs = this._getGeometry(layer);
-    let type = layer.toGeoJSON().geometry.type;
-    if (this.get('forceMulti')) {
-      switch (type) {
-        case 'Polygon':
-          type = 'MultiPolygon';
-          break;
-        case 'LineString':
-          type = 'MultiLineString';
-          break;
+  geomToEWKT(layer, CRS4326 = false) {
+    let coordInCrs;
+    let geojson;
+    let crs;
+    if (!CRS4326) {
+      coordInCrs = this._getGeometry(layer);
+      let type = layer.toGeoJSON().geometry.type;
+      if (this.get('forceMulti')) {
+        switch (type) {
+          case 'Polygon':
+            type = 'MultiPolygon';
+            break;
+          case 'LineString':
+            type = 'MultiLineString';
+            break;
+        }
       }
+
+      geojson = {
+        'type': type,
+        'coordinates': coordInCrs
+      };
+      crs = this.get('crs').code.split(':')[1];
+    } else {
+      geojson = layer.toGeoJSON().geometry;
+      crs = '4326';
     }
 
-    const geojson = {
-      'type': type,
-      'coordinates': coordInCrs
-    };
     let coordToWkt = wkt.geojsonToWKT(geojson);
-    let crs = this.get('crs');
-    return `SRID=${crs.code.split(':')[1]};${coordToWkt}`;
+    return `SRID=${crs};${coordToWkt}`;
   },
 
   /**
@@ -340,11 +350,41 @@ export default BaseVectorLayer.extend({
     @param {Object[]} results Objects describing identification results.
   **/
   identify(e) {
-    let geometryField = this.get('geometryField') || 'geometry';
-    let pred = new Query.GeometryPredicate(geometryField);
-    let predicate = pred.intersects(this.geomToEWKT(e.polygonLayer));
-    let featuresPromise = this._getFeature(predicate);
-    return featuresPromise;
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      Ember.$.ajax({
+        url: 'assets/flexberry/models/' + this.get('modelName') + '.json',
+      }).then(m => {
+        let geom = this.geomToEWKT(e.polygonLayer, true);
+        let config = Ember.getOwner(this).resolveRegistration('config:environment');
+        let _this = this;
+        Ember.$.ajax({
+          url: `${config.APP.backendUrls.getIntersectionAndArea}`,
+          dataType: 'json',
+          type: 'POST',
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify({
+            geom: geom,
+            table: m.className
+          }),
+          success: function (data) {
+            let features = Ember.A();
+            let layer = L.featureGroup();
+            data.forEach(res => {
+              let obj = res.dataObject;
+              obj[Object.keys(res)[2]] = res.shape;
+              let model = Ember.Object.create(obj);
+              let feat = _this.addLayerObject(layer, model, false);
+              feat.feature.intesectionArea = res.area;
+              let primarykey = feat.feature.properties.__PrimaryKey.Guid;
+              feat.feature.id = _this.get('modelName') + '.' + primarykey;
+              feat.feature.properties.primarykey = primarykey;
+              features.push(feat.feature);
+            });
+            resolve(features);
+          }
+        });
+      });
+    });
   },
 
   /**
