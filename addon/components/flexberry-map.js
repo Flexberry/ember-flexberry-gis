@@ -448,7 +448,6 @@ let FlexberryMapComponent = Ember.Component.extend(
       this.set('_$leafletContainer', $leafletContainer);
 
       let options = this.get('options');
-      options.renderer = new Renderer();
 
       // Create leaflet map.
       let leafletMap = L.map($leafletContainer[0], options);

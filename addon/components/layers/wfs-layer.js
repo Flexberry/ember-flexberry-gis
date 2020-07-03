@@ -140,6 +140,10 @@ export default BaseVectorLayer.extend({
 
     let pane = this.get('_pane');
     if (pane) {
+      if (layer instanceof L.Marker) {
+        layer.options.shadowPane = pane;
+      }
+
       layer.options.pane = pane;
       layer.options.renderer = this.get('_renderer');
     }
@@ -202,7 +206,7 @@ export default BaseVectorLayer.extend({
           wfsLayer.on('save:success', this._setLayerState, this);
           Ember.set(wfsLayer, 'baseAddLayer', wfsLayer.addLayer);
           wfsLayer.addLayer = this.get('_addLayer').bind(this);
-          /*if (!Ember.isNone(leafletMap)) {
+          if (!Ember.isNone(leafletMap)) {
             let thisPane = this.get('_pane');
             let pane = leafletMap.getPane(thisPane);
             if (!pane || Ember.isNone(pane)) {
@@ -211,8 +215,7 @@ export default BaseVectorLayer.extend({
               wfsLayer.options.renderer = this.get('_renderer');
               this._setLayerZIndex();
             }
-          }*/
-
+          }
           resolve(wfsLayer);
         })
         .once('error', (e) => {
@@ -220,13 +223,6 @@ export default BaseVectorLayer.extend({
         })
         .on('load', (e) => {
           this._setLayerState();
-          if (e.layers && e.layers.forEach) {
-            e.layers.forEach((layer) => {
-              layer.minZoom = this.get('minZoom');
-              layer.maxZoom = this.get('maxZoom');
-              layer.leafletMap = this.get('leafletMap');
-            });
-          }
         });
 
       let promiseLoad = new Ember.RSVP.Promise((resolve, reject) => {

@@ -212,8 +212,6 @@ export default BaseVectorLayer.extend({
     layer.options.crs = this.get('crs');
     layer.model = model;
     layer.modelProj = modelProj;
-    layer.minZoom = this.get('minZoom');
-    layer.maxZoom = this.get('maxZoom');
     layer.feature = {
       type: 'Feature',
       geometry: geometry,
@@ -256,6 +254,10 @@ export default BaseVectorLayer.extend({
 
     let pane = this.get('_pane');
     if (pane) {
+      if (layer instanceof L.Marker) {
+        layer.options.shadowPane = pane;
+      }
+
       layer.options.pane = pane;
       layer.options.renderer = this.get('_renderer');
     }
@@ -617,17 +619,17 @@ export default BaseVectorLayer.extend({
       layer.deletedModels = Ember.A();
       layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
 
-      /*let leafletMap = this.get('leafletMap');
+      let leafletMap = this.get('leafletMap');
       if (!Ember.isNone(leafletMap)) {
         let thisPane = this.get('_pane');
         let pane = leafletMap.getPane(thisPane);
         if (!pane || Ember.isNone(pane)) {
-          leafletMap.createPane(thisPane);
+          this._createPane(thisPane);
           layer.options.pane = thisPane;
           layer.options.renderer = this.get('_renderer');
           this._setLayerZIndex();
         }
-      }*/
+      }
 
       let objs = obj.store.query(obj.modelName, obj.build);
       objs.then(res => {

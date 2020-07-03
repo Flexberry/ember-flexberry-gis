@@ -6,7 +6,6 @@ import Ember from 'ember';
 import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
 import jsts from 'npm:jsts';
-import Renderer from '../objects/custom-renderer';
 import { checkMapZoom } from '../utils/check-zoom';
 
 const { assert } = Ember;
@@ -84,7 +83,6 @@ export default BaseLayer.extend({
   */
   _renderer: Ember.computed('_pane', function () {
     let pane = this.get('_pane');
-    //return new Renderer({ pane: pane });
     return L.canvas({ pane: pane });
   }),
 
@@ -536,11 +534,17 @@ export default BaseLayer.extend({
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       leafletMap.on('flexberry-map:getOrLoadLayerFeatures', this._getOrLoadLayerFeatures, this);
-      leafletMap.on('zoomend', this._checkZoom, this);
+      leafletMap.on('zoomend', this._checkZoomPane, this);
     }
   },
 
-  _checkZoom() {
+  /**
+    Switches pane depending on the zoom.
+
+    @method _checkZoomPane
+    @private
+  */
+  _checkZoomPane() {
     let leafletObject = this.get('_leafletObject');
     let thisPane = this.get('_pane');
     let leafletMap = this.get('leafletMap');
@@ -603,15 +607,14 @@ export default BaseLayer.extend({
         this._addLabelsToLeafletContainer();
       }
 
-      this._checkZoom();
+      this._checkZoomPane();
     });
   },
 
   /**
-    Observes and handles changes in {{#crossLink "BaseLayerComponent/visibility:property"}}'visibility' property{{/crossLink}}.
-    Switches layer's visibility.
+    Switches labels layer's minScaleRange.
 
-    @method visibilityDidChange
+    @method _zoomMinDidChange
     @private
   */
   _zoomMinDidChange: Ember.observer('labelSettings.scaleRange.minScaleRange', function () {
@@ -619,14 +622,22 @@ export default BaseLayer.extend({
     let labelsLayer = this.get('_labelsLayer');
     if (!Ember.isNone(labelsLayer) && !Ember.isNone(minZoom)) {
       labelsLayer.minZoom = minZoom;
+      this._checkZoomPane();
     }
   }),
 
+  /**
+    Switches labels layer's maxScaleRange.
+
+    @method _zoomMaxDidChange
+    @private
+  */
   _zoomMaxDidChange: Ember.observer('labelSettings.scaleRange.maxScaleRange', function () {
     let maxZoom = this.get('labelSettings.scaleRange.maxScaleRange');
     let labelsLayer = this.get('_labelsLayer');
     if (!Ember.isNone(labelsLayer) && !Ember.isNone(maxZoom)) {
       labelsLayer.maxZoom = maxZoom;
+      this._checkZoomPane();
     }
   }),
 
@@ -704,12 +715,8 @@ export default BaseLayer.extend({
   */
   _createLabel(text, layer, style, labelsLayer) {
     let lType = layer.toGeoJSON().geometry.type;
-
     let latlng = null;
-    /*let ctx = layer._renderer ? layer._renderer._ctx : document.getElementsByTagName('canvas')[0].getContext('2d');
-    let widthText = ctx ? ctx.measureText(text).width : 100;*/
-    let iconWidth = 10;//widthText;
-
+    let iconWidth = 10;
     let iconHeight = 40;
     let positionPoint = '';
     let html = '';
@@ -778,8 +785,6 @@ export default BaseLayer.extend({
     };
     labelsLayer.addLayer(label);
     label.feature = layer.feature;
-    label.minZoom = labelsLayer.minZoom;
-    label.maxZoom = labelsLayer.maxZoom;
     label.leafletMap = labelsLayer.leafletMap;
     layer._label = label;
   },
