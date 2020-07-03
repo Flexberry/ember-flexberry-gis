@@ -617,7 +617,7 @@ export default BaseVectorLayer.extend({
       layer.deletedModels = Ember.A();
       layer.loadLayerFeatures = this.get('loadLayerFeatures').bind(this);
 
-      let leafletMap = this.get('leafletMap');
+      /*let leafletMap = this.get('leafletMap');
       if (!Ember.isNone(leafletMap)) {
         let thisPane = this.get('_pane');
         let pane = leafletMap.getPane(thisPane);
@@ -627,7 +627,7 @@ export default BaseVectorLayer.extend({
           layer.options.renderer = this.get('_renderer');
           this._setLayerZIndex();
         }
-      }
+      }*/
 
       let objs = obj.store.query(obj.modelName, obj.build);
       objs.then(res => {

@@ -7,6 +7,7 @@ import BaseLayer from './base-layer';
 import { setLeafletLayerOpacity } from '../utils/leaflet-opacity';
 import jsts from 'npm:jsts';
 import Renderer from '../objects/custom-renderer';
+import { checkMapZoom } from '../utils/check-zoom';
 
 const { assert } = Ember;
 
@@ -60,7 +61,20 @@ export default BaseLayer.extend({
     @readOnly
   */
   _pane: Ember.computed('layerModel.id', function () {
-    return 'vectorLayerPane' + this.get('layerModel.id');
+    return 'vectorLayer' + this.get('layerModel.id');
+  }),
+
+  /**
+    @property _paneLabel
+    @type String
+    @readOnly
+  */
+  _paneLabel: Ember.computed('layerModel.id', 'labelSettings.signMapObjects', function () {
+    if (this.get('labelSettings.signMapObjects')) {
+      return 'labelLayer' + this.get('layerModel.id');
+    }
+
+    return null;
   }),
 
   /**
@@ -70,7 +84,8 @@ export default BaseLayer.extend({
   */
   _renderer: Ember.computed('_pane', function () {
     let pane = this.get('_pane');
-    return new Renderer({ pane: pane });
+    //return new Renderer({ pane: pane });
+    return L.canvas({ pane: pane });
   }),
 
   /**
@@ -86,6 +101,14 @@ export default BaseLayer.extend({
       let pane = leafletMap.getPane(thisPane);
       if (pane) {
         pane.style.zIndex = this.get('index') + begIndex;
+      }
+    }
+
+    let thisPaneLabel = this.get('_paneLabel');
+    if (thisPaneLabel && !Ember.isNone(leafletMap)) {
+      let pane = leafletMap.getPane(thisPaneLabel);
+      if (pane) {
+        pane.style.zIndex = this.get('index') + begIndex + 1; //to make the label layer higher than the vector layer
       }
     }
   },
@@ -513,6 +536,40 @@ export default BaseLayer.extend({
     let leafletMap = this.get('leafletMap');
     if (!Ember.isNone(leafletMap)) {
       leafletMap.on('flexberry-map:getOrLoadLayerFeatures', this._getOrLoadLayerFeatures, this);
+      leafletMap.on('zoomend', this._checkZoom, this);
+    }
+  },
+
+  _checkZoom() {
+    let leafletObject = this.get('_leafletObject');
+    let thisPane = this.get('_pane');
+    let leafletMap = this.get('leafletMap');
+    if (!Ember.isNone(leafletMap) && thisPane && !Ember.isNone(leafletObject)) {
+      let pane = leafletMap.getPane(thisPane);
+      let mapPane = leafletMap._mapPane;
+      if (!Ember.isNone(mapPane) && !Ember.isNone(pane)) {
+        let existPaneDomElem = Ember.$(mapPane).children(`[class*='${thisPane}']`).length;
+        if (existPaneDomElem > 0  && !checkMapZoom(leafletObject)) {
+          L.DomUtil.remove(pane);
+        } else if (existPaneDomElem === 0 && checkMapZoom(leafletObject)) {
+          mapPane.appendChild(pane);
+        }
+      }
+    }
+
+    let thisPaneLabel = this.get('_paneLabel');
+    if (this.get('labelSettings.signMapObjects') && !Ember.isNone(leafletMap) && thisPaneLabel && !Ember.isNone(leafletObject)) {
+      let pane = leafletMap.getPane(thisPaneLabel);
+      let labelsLayer = this.get('_labelsLayer');
+      let mapPane = leafletMap._mapPane;
+      if (!Ember.isNone(mapPane) && !Ember.isNone(pane) && !Ember.isNone(labelsLayer)) {
+        let existPaneDomElem = Ember.$(mapPane).children(`[class*='${thisPaneLabel}']`).length;
+        if (existPaneDomElem > 0 && !checkMapZoom(labelsLayer)) {
+          L.DomUtil.remove(pane);
+        } else if (existPaneDomElem === 0 && checkMapZoom(labelsLayer)) {
+          mapPane.appendChild(pane);
+        }
+      }
     }
   },
 
@@ -541,11 +598,13 @@ export default BaseLayer.extend({
     this._super(...arguments);
 
     // add labels
-    if (this.get('labelSettings.signMapObjects')) {
-      this.get('_leafletLayerPromise').then((leafletLayer) => {
+    this.get('_leafletLayerPromise').then((leafletLayer) => {
+      if (this.get('labelSettings.signMapObjects')) {
         this._addLabelsToLeafletContainer();
-      });
-    }
+      }
+
+      this._checkZoom();
+    });
   },
 
   /**
@@ -558,7 +617,7 @@ export default BaseLayer.extend({
   _zoomMinDidChange: Ember.observer('labelSettings.scaleRange.minScaleRange', function () {
     let minZoom = this.get('labelSettings.scaleRange.minScaleRange');
     let labelsLayer = this.get('_labelsLayer');
-    if (Ember.isNone(labelsLayer) && Ember.isNone(minZoom)) {
+    if (!Ember.isNone(labelsLayer) && !Ember.isNone(minZoom)) {
       labelsLayer.minZoom = minZoom;
     }
   }),
@@ -566,7 +625,7 @@ export default BaseLayer.extend({
   _zoomMaxDidChange: Ember.observer('labelSettings.scaleRange.maxScaleRange', function () {
     let maxZoom = this.get('labelSettings.scaleRange.maxScaleRange');
     let labelsLayer = this.get('_labelsLayer');
-    if (Ember.isNone(labelsLayer) && Ember.isNone(maxZoom)) {
+    if (!Ember.isNone(labelsLayer) && !Ember.isNone(maxZoom)) {
       labelsLayer.maxZoom = maxZoom;
     }
   }),
@@ -696,7 +755,7 @@ export default BaseLayer.extend({
 
     const layerLabelCallback = this.get('mapApi').getFromApi('layerLabelCallback');
     if (typeof layerLabelCallback === 'function') {
-      html = layerLabelCallback(layer, text);
+      html = layerLabelCallback(this, layer, text);
     }
 
     if (!latlng) {
@@ -709,7 +768,8 @@ export default BaseLayer.extend({
         html: html,
         iconSize: [iconWidth, iconHeight]
       }),
-      zIndexOffset: 1000
+      zIndexOffset: 1000,
+      pane: this.get('_paneLabel')
     });
     label.style = {
       className: 'label',
@@ -1085,6 +1145,18 @@ export default BaseLayer.extend({
   _addLabelsToLeafletContainer() {
     let labelsLayer = this.get('_labelsLayer');
     let leafletMap = this.get('leafletMap');
+
+    let thisPane = this.get('_paneLabel');
+    if (thisPane) {
+      let leafletMap = this.get('leafletMap');
+      if (thisPane && !Ember.isNone(leafletMap)) {
+        let pane = leafletMap.getPane(thisPane);
+        if (!pane || Ember.isNone(pane)) {
+          this._createPane(thisPane);
+          this._setLayerZIndex();
+        }
+      }
+    }
 
     if (Ember.isNone(labelsLayer)) {
       this._showLabels();

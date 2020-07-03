@@ -202,7 +202,7 @@ export default BaseVectorLayer.extend({
           wfsLayer.on('save:success', this._setLayerState, this);
           Ember.set(wfsLayer, 'baseAddLayer', wfsLayer.addLayer);
           wfsLayer.addLayer = this.get('_addLayer').bind(this);
-          if (!Ember.isNone(leafletMap)) {
+          /*if (!Ember.isNone(leafletMap)) {
             let thisPane = this.get('_pane');
             let pane = leafletMap.getPane(thisPane);
             if (!pane || Ember.isNone(pane)) {
@@ -211,7 +211,7 @@ export default BaseVectorLayer.extend({
               wfsLayer.options.renderer = this.get('_renderer');
               this._setLayerZIndex();
             }
-          }
+          }*/
 
           resolve(wfsLayer);
         })
