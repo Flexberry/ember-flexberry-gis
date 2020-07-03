@@ -216,6 +216,7 @@ export default BaseVectorLayer.extend({
               this._setLayerZIndex();
             }
           }
+
           resolve(wfsLayer);
         })
         .once('error', (e) => {
