@@ -618,7 +618,7 @@ export default BaseVectorLayer.extend({
     @param {Object} geometry
   */
   _setLayerProperties(layer, model, geometry) {
-    const modelProj = model.constructor.projections.get(this.get(&#x27;projectionName&#x27;));
+    const modelProj = this.get(&#x27;projectionName&#x27;);
     layer.options.crs = this.get(&#x27;crs&#x27;);
     layer.model = model;
     layer.modelProj = modelProj;
@@ -716,29 +716,39 @@ export default BaseVectorLayer.extend({
 
     @method geomToEWKT
     @param {Object} layer layer
+    @param {Boolean} CRS4326
     @returns {String} geometry as EWKT format.
   */
-  geomToEWKT(layer) {
-    let coordInCrs = this._getGeometry(layer);
-    let type = layer.toGeoJSON().geometry.type;
-    if (this.get(&#x27;forceMulti&#x27;)) {
-      switch (type) {
-        case &#x27;Polygon&#x27;:
-          type = &#x27;MultiPolygon&#x27;;
-          break;
-        case &#x27;LineString&#x27;:
-          type = &#x27;MultiLineString&#x27;;
-          break;
+  geomToEWKT(layer, CRS4326 = false) {
+    let coordInCrs;
+    let geojson;
+    let crs;
+    if (!CRS4326) {
+      coordInCrs = this._getGeometry(layer);
+      let type = layer.toGeoJSON().geometry.type;
+      if (this.get(&#x27;forceMulti&#x27;)) {
+        switch (type) {
+          case &#x27;Polygon&#x27;:
+            type = &#x27;MultiPolygon&#x27;;
+            break;
+          case &#x27;LineString&#x27;:
+            type = &#x27;MultiLineString&#x27;;
+            break;
+        }
       }
+
+      geojson = {
+        &#x27;type&#x27;: type,
+        &#x27;coordinates&#x27;: coordInCrs
+      };
+      crs = this.get(&#x27;crs&#x27;).code.split(&#x27;:&#x27;)[1];
+    } else {
+      geojson = layer.toGeoJSON().geometry;
+      crs = &#x27;4326&#x27;;
     }
 
-    const geojson = {
-      &#x27;type&#x27;: type,
-      &#x27;coordinates&#x27;: coordInCrs
-    };
     let coordToWkt = wkt.geojsonToWKT(geojson);
-    let crs = this.get(&#x27;crs&#x27;);
-    return &#x60;SRID=${crs.code.split(&#x27;:&#x27;)[1]};${coordToWkt}&#x60;;
+    return &#x60;SRID=${crs};${coordToWkt}&#x60;;
   },
 
   /**
@@ -750,11 +760,41 @@ export default BaseVectorLayer.extend({
     @param {Object[]} results Objects describing identification results.
   **/
   identify(e) {
-    let geometryField = this.get(&#x27;geometryField&#x27;) || &#x27;geometry&#x27;;
-    let pred = new Query.GeometryPredicate(geometryField);
-    let predicate = pred.intersects(this.geomToEWKT(e.polygonLayer));
-    let featuresPromise = this._getFeature(predicate);
-    return featuresPromise;
+    return new Ember.RSVP.Promise((resolve, reject) =&gt; {
+      Ember.$.ajax({
+        url: &#x27;assets/flexberry/models/&#x27; + this.get(&#x27;modelName&#x27;) + &#x27;.json&#x27;,
+      }).then(m =&gt; {
+        let geom = this.geomToEWKT(e.polygonLayer, true);
+        let config = Ember.getOwner(this).resolveRegistration(&#x27;config:environment&#x27;);
+        let _this = this;
+        Ember.$.ajax({
+          url: &#x60;${config.APP.backendUrls.getIntersectionAndArea}&#x60;,
+          dataType: &#x27;json&#x27;,
+          type: &#x27;POST&#x27;,
+          contentType: &#x27;application/json; charset=utf-8&#x27;,
+          data: JSON.stringify({
+            geom: geom,
+            table: m.className
+          }),
+          success: function (data) {
+            let features = Ember.A();
+            let layer = L.featureGroup();
+            data.forEach(res =&gt; {
+              let obj = res.dataObject;
+              obj[Object.keys(res)[2]] = res.shape;
+              let model = Ember.Object.create(obj);
+              let feat = _this.addLayerObject(layer, model, false);
+              feat.feature.intesectionArea = res.area;
+              let primarykey = feat.feature.properties.__PrimaryKey.Guid;
+              feat.feature.id = _this.get(&#x27;modelName&#x27;) + &#x27;.&#x27; + primarykey;
+              feat.feature.properties.primarykey = primarykey;
+              features.push(feat.feature);
+            });
+            resolve(features);
+          }
+        });
+      });
+    });
   },
 
   /**
@@ -1200,7 +1240,11 @@ export default BaseVectorLayer.extend({
                 return loadIds.indexOf(item) === -1;
               });
 
-              obj.build.predicate = makeFilterEqOr(remainingFeat);
+              if (!Ember.isEmpty(remainingFeat)) {
+                obj.build.predicate = makeFilterEqOr(remainingFeat);
+              } else { // If objects is already loaded, do fake request
+                obj.build.predicate = new Query.SimplePredicate(&#x27;id&#x27;, Query.FilterOperator.Eq, null);
+              }
             } else {
               resolve(leafletObject);
               return;

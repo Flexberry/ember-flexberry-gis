@@ -416,6 +416,7 @@ import Ember from &#x27;ember&#x27;;
 import BaseLayer from &#x27;./base-layer&#x27;;
 import { setLeafletLayerOpacity } from &#x27;../utils/leaflet-opacity&#x27;;
 import Renderer from &#x27;../objects/custom-renderer&#x27;;
+import featureWithAreaIntersect from &#x27;../utils/feature-with-area-intersect&#x27;;
 
 const { assert } = Ember;
 
@@ -743,12 +744,21 @@ export default BaseLayer.extend({
         let features = Ember.A();
         let bounds = new Terraformer.Primitive(e.polygonLayer.toGeoJSON());
         let leafletLayer = this.get(&#x27;_leafletObject&#x27;);
+        let mapModel = this.get(&#x27;mapApi&#x27;).getFromApi(&#x27;mapModel&#x27;);
         leafletLayer.eachLayer(function (layer) {
           let geoLayer = layer.toGeoJSON();
           let primitive = new Terraformer.Primitive(geoLayer.geometry);
 
           if (primitiveSatisfiesBounds(primitive, bounds)) {
-            features.pushObject(geoLayer);
+            let feature;
+            if (geoLayer.geometry.type === &#x27;GeometryCollection&#x27;) {
+              geoLayer.geometry.geometries.forEach(feat =&gt; {
+                let geoObj = { type: &#x27;Feature&#x27;, geometry: feat };
+                features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoObj, leafletLayer, mapModel));
+              });
+            } else {
+              features.pushObject(featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), geoLayer, leafletLayer, mapModel));
+            }
           }
         });
 

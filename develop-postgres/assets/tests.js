@@ -3380,83 +3380,100 @@ define('dummy/tests/unit/components/base-layer-test.jshint', ['exports'], functi
     assert.ok(true, 'unit/components/base-layer-test.js should pass jshint.');
   });
 });
-define('dummy/tests/unit/components/base-vector-layer-test', ['exports', 'ember-qunit'], function (exports, _emberQunit) {
+define('dummy/tests/unit/components/base-vector-layer-test', ['exports', 'ember', 'ember-qunit', 'sinon', 'dummy/tests/helpers/start-app'], function (exports, _ember, _emberQunit, _sinon, _dummyTestsHelpersStartApp) {
+
+  var app = undefined;
 
   (0, _emberQunit.moduleForComponent)('base-vector-layer', 'Unit | Component | base-vector-layer', {
-    unit: true
+    unit: true,
+    needs: ['service:map-api', 'config:environment', 'component:base-vector-layer', 'model:new-platform-flexberry-g-i-s-map'],
+    beforeEach: function beforeEach() {
+      app = (0, _dummyTestsHelpersStartApp['default'])();
+    },
+    afterEach: function afterEach() {
+      _ember['default'].run(app, 'destroy');
+    }
   });
 
   (0, _emberQunit.test)('it identify on \'geojson\' layer', function (assert) {
-    /*
-      9  . . . . . . . . .
-      8 MPMP . .CpCp .MLML
-      7 MP .MP . . . . . .
-      6  .MPMP . P P .MLML
-      5  . . . . P P . . .
-      4  .CPCP . . . . L .
-      3  . .CP . . . p . L
-      2 CLCL . . . . . L .
-      1 CL . .MpMp . . . .
-      0  1 2 3 4 5 6 7 8 9
-    */
-    var component = this.subject({
-      _createLayer: function _createLayer() {
-        this.set('_leafletObject', L.geoJson([{
-          type: 'Feature',
-          geometry: { type: 'Point', coordinates: [3, 7] }
-        }, {
-          type: 'Feature',
-          geometry: { type: 'MultiPoint', coordinates: [[1, 4], [1, 5]] }
-        }, {
-          type: 'Feature',
-          geometry: { type: 'LineString', coordinates: [[2, 8], [3, 9], [4, 8]] }
-        }, {
-          type: 'Feature',
-          geometry: { type: 'MultiLineString', coordinates: [[[6, 8], [6, 9]], [[8, 8], [8, 9]]] }
-        }, {
-          type: 'Feature',
-          geometry: { type: 'Polygon', coordinates: [[[5, 5], [5, 6], [6, 6], [6, 5]]] }
-        }, {
-          type: 'Feature',
-          geometry: { type: 'MultiPolygon', coordinates: [[[[7, 1], [8, 1], [8, 2]]], [[[6, 2], [6, 3], [7, 3]]]] }
-        }, {
-          type: 'GeometryCollection',
-          geometries: [{ type: 'Polygon', coordinates: [[[3, 3], [4, 3], [4, 2]]] }, { type: 'LineString', coordinates: [[1, 1], [2, 1], [2, 2]] }]
-        }, {
-          type: 'FeatureCollection',
-          features: [{ type: 'Feature', geometry: { type: 'Point', coordinates: [8, 5] } }, { type: 'Feature', geometry: { type: 'Point', coordinates: [8, 6] } }]
-        }]));
-      }
-    });
-
-    var select = function select() {
-      var _arguments = arguments;
-
-      return {
-        polygonLayer: {
-          toGeoJSON: function toGeoJSON() {
-            return {
-              type: 'Feature',
-              geometry: { type: 'Polygon', coordinates: _arguments }
-            };
-          }
-        }
-      };
-    };
+    var _this = this;
 
     assert.expect(3);
     var done = assert.async(3);
-    component.identify(select([[4, 4], [2, 4], [2, 6], [4, 6]])).then(function (results) {
-      assert.equal(results.length, 0, 'Empty area is selected.');
-    })['finally'](done);
+    _ember['default'].run(function () {
+      /*
+        9  . . . . . . . . .
+        8 MPMP . .CpCp .MLML
+        7 MP .MP . . . . . .
+        6  .MPMP . P P .MLML
+        5  . . . . P P . . .
+        4  .CPCP . . . . L .
+        3  . .CP . . . p . L
+        2 CLCL . . . . . L .
+        1 CL . .MpMp . . . .
+        0  1 2 3 4 5 6 7 8 9
+      */
+      var component = _this.subject({
+        _createLayer: function _createLayer() {
+          this.set('_leafletObject', L.geoJson([{
+            type: 'Feature',
+            geometry: { type: 'Point', coordinates: [3, 7] }
+          }, {
+            type: 'Feature',
+            geometry: { type: 'MultiPoint', coordinates: [[1, 4], [1, 5]] }
+          }, {
+            type: 'Feature',
+            geometry: { type: 'LineString', coordinates: [[2, 8], [3, 9], [4, 8]] }
+          }, {
+            type: 'Feature',
+            geometry: { type: 'MultiLineString', coordinates: [[[6, 8], [6, 9]], [[8, 8], [8, 9]]] }
+          }, {
+            type: 'Feature',
+            geometry: { type: 'Polygon', coordinates: [[[5, 5], [5, 6], [6, 6], [6, 5]]] }
+          }, {
+            type: 'Feature',
+            geometry: { type: 'MultiPolygon', coordinates: [[[[7, 1], [8, 1], [8, 2]]], [[[6, 2], [6, 3], [7, 3]]]] }
+          }, {
+            type: 'GeometryCollection',
+            geometries: [{ type: 'Polygon', coordinates: [[[3, 3], [4, 3], [4, 2]]] }, { type: 'LineString', coordinates: [[1, 1], [2, 1], [2, 2]] }]
+          }, {
+            type: 'FeatureCollection',
+            features: [{ type: 'Feature', geometry: { type: 'Point', coordinates: [8, 5] } }, { type: 'Feature', geometry: { type: 'Point', coordinates: [8, 6] } }]
+          }]));
+          this.set('_leafletObject.options', { crs: L.CRS.EPSG4326 });
+        }
+      });
 
-    component.identify(select([[9, 5], [8, 8], [6, 6]])).then(function (results) {
-      assert.equal(results.length, 3, 'Point (from FeatureCollection), MultiLineString and Polygon.');
-    })['finally'](done);
+      var select = function select(ar) {
+        return {
+          polygonLayer: {
+            toGeoJSON: function toGeoJSON() {
+              return {
+                type: 'Feature',
+                geometry: { type: 'Polygon', coordinates: ar }
+              };
+            }
+          }
+        };
+      };
 
-    component.identify(select([[9, 1], [1, 1], [1, 9], [9, 9]])).then(function (results) {
-      assert.equal(results.length, 9, 'All geometries is selected.');
-    })['finally'](done);
+      var store = app.__container__.lookup('service:store');
+      var mapModel = store.createRecord('new-platform-flexberry-g-i-s-map');
+      var getmapApiStub = _sinon['default'].stub(component.get('mapApi'), 'getFromApi');
+      getmapApiStub.returns(mapModel);
+
+      component.identify(select([[[4, 4], [2, 4], [2, 6], [4, 6], [4, 4]]])).then(function (results) {
+        assert.equal(results.length, 0, 'Empty area is selected.');
+      })['finally'](done);
+
+      component.identify(select([[[9, 5], [8, 8], [6, 6], [9, 5]]])).then(function (results) {
+        assert.equal(results.length, 3, 'Point (from FeatureCollection), MultiLineString and Polygon.');
+      })['finally'](done);
+
+      component.identify(select([[[9, 1], [1, 1], [1, 9], [9, 9], [9, 1]]])).then(function (results) {
+        assert.equal(results.length, 10, 'All geometries is selected.');
+      })['finally'](done);
+    });
   });
 });
 define('dummy/tests/unit/components/base-vector-layer-test.jscs-test', ['exports'], function (exports) {
