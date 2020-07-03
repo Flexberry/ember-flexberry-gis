@@ -5,6 +5,7 @@
 import Ember from 'ember';
 import BaseVectorLayer from '../base-vector-layer';
 import { checkMapZoomLayer, checkMapZoom } from '../../utils/check-zoom';
+import featureWithAreaIntersect from '../../utils/feature-with-area-intersect';
 import jsts from 'npm:jsts';
 
 /**
@@ -262,10 +263,18 @@ export default BaseVectorLayer.extend({
     or a promise returning such array.
   */
   identify(e) {
-    let filter = new L.Filter.Intersects(this.get('geometryField'), e.polygonLayer, this.get('crs'));
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let filter = new L.Filter.Intersects(this.get('geometryField'), e.polygonLayer, this.get('crs'));
 
-    return this._getFeature({
-      filter
+      this._getFeature({
+        filter
+      }).then(res => {
+        let mapModel = this.get('mapApi').getFromApi('mapModel');
+        res.forEach(feature => {
+          feature = featureWithAreaIntersect(e.polygonLayer.toGeoJSON(), feature, feature.leafletLayer, mapModel);
+        });
+        resolve(res);
+      });
     });
   },
 
@@ -447,8 +456,11 @@ export default BaseVectorLayer.extend({
             let remainingFeat = featureIds.filter((item) => {
               return loadIds.indexOf(item) === -1;
             });
-
-            filter = makeFilterEqOr(remainingFeat);
+            if (!Ember.isEmpty(remainingFeat)) {
+              filter = makeFilterEqOr(remainingFeat);
+            } else { // If objects is already loaded, do fake request
+              filter = new L.Filter.GmlObjectID(null);
+            }
           } else {
             resolve(leafletObject);
             return;
