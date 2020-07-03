@@ -830,7 +830,11 @@ export default BaseVectorLayer.extend({
                 return loadIds.indexOf(item) === -1;
               });
 
-              obj.build.predicate = makeFilterEqOr(remainingFeat);
+              if (!Ember.isEmpty(remainingFeat)) {
+                obj.build.predicate = makeFilterEqOr(remainingFeat);
+              } else { // If objects is already loaded, do fake request
+                obj.build.predicate = new Query.SimplePredicate('id', Query.FilterOperator.Eq, null);
+              }
             } else {
               resolve(leafletObject);
               return;

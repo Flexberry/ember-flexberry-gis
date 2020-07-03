@@ -459,8 +459,11 @@ export default BaseVectorLayer.extend({
             let remainingFeat = featureIds.filter((item) => {
               return loadIds.indexOf(item) === -1;
             });
-
-            filter = makeFilterEqOr(remainingFeat);
+            if (!Ember.isEmpty(remainingFeat)) {
+              filter = makeFilterEqOr(remainingFeat);
+            } else { // If objects is already loaded, do fake request
+              filter = new L.Filter.GmlObjectID(null);
+            }
           } else {
             resolve(leafletObject);
             return;
