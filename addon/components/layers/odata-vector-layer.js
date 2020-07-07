@@ -350,7 +350,7 @@ export default BaseVectorLayer.extend({
     @param {Object[]} results Objects describing identification results.
   **/
   identify(e) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+   return new Ember.RSVP.Promise((resolve, reject) => {
       Ember.$.ajax({
         url: 'assets/flexberry/models/' + this.get('modelName') + '.json',
       }).then(m => {
@@ -952,6 +952,10 @@ export default BaseVectorLayer.extend({
             }
 
             let obj = this.get('_buildStoreModelProjectionGeom');
+
+            let adapter = Ember.getOwner(this).lookup('adapter:application');
+            adapter.batchLoadModel(obj.modelName, obj.projectionName, '0002f24d-b2b8-414c-a242-2c7102ba04d1', obj.store).then(e=>console.log(e));
+
             obj.build.predicate = null;
             let crs = this.get('crs');
             let geojsonReader = new jsts.io.GeoJSONReader();
