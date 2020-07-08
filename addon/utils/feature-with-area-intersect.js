@@ -11,7 +11,12 @@ export default function featureWithAreaIntersect(featureA, geoLayer, leafletLaye
   let geojsonWriter = new jsts.io.GeoJSONWriter();
   let intersectionRes = geojsonWriter.write(intersected);
   if (intersectionRes) {
-    geoLayer.properties.intesectionArea = area(intersectionRes);
+    let intesectArea = area(intersectionRes);
+    if (!Ember.isNone(geoLayer.properties)) {
+      geoLayer.properties.intesectionArea = intesectArea;
+    } else {
+      geoLayer.properties={ intesectionArea: intesectArea };
+    }
   }
 
   return geoLayer;
