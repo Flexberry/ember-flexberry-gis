@@ -350,41 +350,11 @@ export default BaseVectorLayer.extend({
     @param {Object[]} results Objects describing identification results.
   **/
   identify(e) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      Ember.$.ajax({
-        url: 'assets/flexberry/models/' + this.get('modelName') + '.json',
-      }).then(m => {
-        let geom = this.geomToEWKT(e.polygonLayer, true);
-        let config = Ember.getOwner(this).resolveRegistration('config:environment');
-        let _this = this;
-        Ember.$.ajax({
-          url: `${config.APP.backendUrls.getIntersectionAndArea}`,
-          dataType: 'json',
-          type: 'POST',
-          contentType: 'application/json; charset=utf-8',
-          data: JSON.stringify({
-            geom: geom,
-            table: m.className
-          }),
-          success: function (data) {
-            let features = Ember.A();
-            let layer = L.featureGroup();
-            data.forEach(res => {
-              let obj = res.dataObject;
-              obj[Object.keys(res)[2]] = res.shape;
-              let model = Ember.Object.create(obj);
-              let feat = _this.addLayerObject(layer, model, false);
-              feat.feature.intesectionArea = res.area;
-              let primarykey = feat.feature.properties.__PrimaryKey.Guid;
-              feat.feature.id = _this.get('modelName') + '.' + primarykey;
-              feat.feature.properties.primarykey = primarykey;
-              features.push(feat.feature);
-            });
-            resolve(features);
-          }
-        });
-      });
-    });
+    let geometryField = this.get('geometryField') || 'geometry';
+    let pred = new Query.GeometryPredicate(geometryField);
+    let predicate = pred.intersects(this.geomToEWKT(e.polygonLayer));
+    let featuresPromise = this._getFeature(predicate);
+    return featuresPromise;
   },
 
   /**
