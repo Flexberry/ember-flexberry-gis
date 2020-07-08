@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import jsts from 'npm:jsts';
 import area from 'npm:@turf/area';
 
@@ -15,7 +16,7 @@ export default function featureWithAreaIntersect(featureA, geoLayer, leafletLaye
     if (!Ember.isNone(geoLayer.properties)) {
       geoLayer.properties.intesectionArea = intesectArea;
     } else {
-      geoLayer.properties={ intesectionArea: intesectArea };
+      geoLayer.properties = { intesectionArea: intesectArea };
     }
   }
 
